@@ -89,16 +89,8 @@ plant_parameter <- function(x, SpParams, parName) {
     .Call(`_medfate_cohortNumericParameter`, x, SpParams, parName)
 }
 
-species_parameter <- function(SP, SpParams, parName) {
-    .Call(`_medfate_speciesNumericParameter`, SP, SpParams, parName)
-}
-
 plant_characterParameter <- function(x, SpParams, parName) {
     .Call(`_medfate_cohortCharacterParameter`, x, SpParams, parName)
-}
-
-species_characterParameter <- function(SP, SpParams, parName) {
-    .Call(`_medfate_speciesCharacterParameter`, SP, SpParams, parName)
 }
 
 plant_species <- function(x) {
@@ -593,10 +585,6 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
     .Call(`_medfate_longwaveRadiationSHAW`, LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction)
 }
 
-.checkSpeciesParameters <- function(SpParams, params) {
-    invisible(.Call(`_medfate_checkSpeciesParameters`, SpParams, params))
-}
-
 .paramsBelow <- function(above, Z50, Z95, soil, paramsAnatomydf, paramsTranspirationdf, control) {
     .Call(`_medfate_paramsBelow`, above, Z50, Z95, soil, paramsAnatomydf, paramsTranspirationdf, control)
 }
@@ -635,6 +623,18 @@ resetInputs <- function(x) {
 
 .modifyInputParam <- function(x, paramType, paramName, cohort, newValue, message) {
     invisible(.Call(`_medfate_modifyInputParam`, x, paramType, paramName, cohort, newValue, message))
+}
+
+.checkSpeciesParameters <- function(SpParams, params) {
+    invisible(.Call(`_medfate_checkSpeciesParameters`, SpParams, params))
+}
+
+species_parameter <- function(SP, SpParams, parName) {
+    .Call(`_medfate_speciesNumericParameter`, SP, SpParams, parName)
+}
+
+species_characterParameter <- function(SP, SpParams, parName) {
+    .Call(`_medfate_speciesCharacterParameter`, SP, SpParams, parName)
 }
 
 .gdd <- function(DOY, Temp, Tbase = 5.0, cum = 0.0) {

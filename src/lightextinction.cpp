@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include "forestutils.h"
+#include "paramutils.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -30,25 +31,17 @@ NumericVector parcohortC(NumericVector H, NumericVector LAI_expanded,  NumericVe
 
 // [[Rcpp::export(".parcohort")]]
 NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
-  NumericVector kPARSP = SpParams["kPAR"];  
   int n = SP.size();
-  NumericVector kPAR(n), LAI_dead(n);
-  for(int i=0; i<n;i++) {
-    kPAR[i] = kPARSP[SP[i]];
-    LAI_dead[i]=0.0;
-  }
+  NumericVector LAI_dead(n, 0.0);
+  NumericVector kPAR = kPARWithImputation(SP, SpParams);  
   return(parcohortC(H,LAI,LAI_dead,kPAR,CR));
 }
 
 // [[Rcpp::export(".parheight")]]
 NumericVector parheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
   int n = SP.size();
-  NumericVector kPARSP = SpParams["kPAR"];  
-  NumericVector kPAR(n), LAI_dead(n);
-  for(int i=0; i<n;i++) {
-    kPAR[i] = kPARSP[SP[i]];
-    LAI_dead[i]=0.0;
-  }
+  NumericVector kPAR = kPARWithImputation(SP, SpParams);  
+  NumericVector LAI_dead(n, 0.0);
   NumericVector AL(heights.size());
   for(int i=0; i<heights.size();i++) AL[i] = availableLight(heights[i], H,LAI,LAI_dead, kPAR,CR);
   return(AL);
@@ -57,10 +50,10 @@ NumericVector parheight(NumericVector heights, IntegerVector SP, NumericVector H
 // [[Rcpp::export(".swrheight")]]
 NumericVector swrheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
   int n = SP.size();
-  NumericVector kPARSP = SpParams["kPAR"];  
+  NumericVector kPAR = kPARWithImputation(SP, SpParams);  
   NumericVector kSWR(n), LAI_dead(n);
   for(int i=0; i<n;i++) {
-    kSWR[i] = kPARSP[SP[i]]/1.35;
+    kSWR[i] = kPAR[i]/1.35;
     LAI_dead[i]=0.0;
   }
   NumericVector AL(heights.size());

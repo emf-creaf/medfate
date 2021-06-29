@@ -6,27 +6,13 @@
 #include "soil.h"
 #include "woodformation.h"
 #include "forestutils.h"
+#include "paramutils.h"
 #include "tissuemoisture.h"
 #include "hydraulics.h"
 #include "stdlib.h"
 
 using namespace Rcpp;
 
-/***
- * Parameter checking
- */
-// [[Rcpp::export(".checkSpeciesParameters")]]
-void checkSpeciesParameters(DataFrame SpParams, CharacterVector params) {
-  NumericVector values;
-  String s;
-  for(int i =0;i<params.size();i++){
-    s = params[i];
-    if(!SpParams.containsElementNamed(params[i])) {
-      Rcout << params[i]<<"\n";
-      stop("Parameter column missing in species params");
-    }
-  }
-}
 
 DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingSpParams) {
   IntegerVector SP = above["SP"];
@@ -74,28 +60,15 @@ DataFrame paramsInterception(DataFrame above, DataFrame SpParams, List control) 
   String transpirationMode = control["transpirationMode"];
   bool fillMissingSpParams = control["fillMissingSpParams"];
   
-  CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
   NumericVector alphaSWR = speciesNumericParameter(SP, SpParams, "alphaSWR");
   NumericVector gammaSWR = speciesNumericParameter(SP, SpParams, "gammaSWR");
   NumericVector kPAR = speciesNumericParameter(SP, SpParams, "kPAR");
   NumericVector g = speciesNumericParameter(SP, SpParams, "g");
   if(fillMissingSpParams) {
-    for(int j=0; j<numCohorts;j++) {
-      if(NumericVector::is_na(alphaSWR[j])) alphaSWR[j] = 0.7;
-      if(leafShape[j] == "broad") {
-        if(NumericVector::is_na(g[j])) g[j] = 0.5;
-        if(NumericVector::is_na(gammaSWR[j])) gammaSWR[j] = 0.18;
-        if(NumericVector::is_na(kPAR[j])) kPAR[j] = 0.55;
-      } else if(leafShape[j]=="Linear") {
-        if(NumericVector::is_na(g[j])) g[j] = 0.8;
-        if(NumericVector::is_na(gammaSWR[j])) gammaSWR[j] = 0.15;
-        if(NumericVector::is_na(kPAR[j])) kPAR[j] = 0.45;
-      } else if(leafShape[j]=="Needle" | leafShape[j]=="Scale"){
-        if(NumericVector::is_na(g[j])) g[j] = 1.0;
-        if(NumericVector::is_na(gammaSWR[j])) gammaSWR[j] = 0.14;
-        if(NumericVector::is_na(kPAR[j])) kPAR[j] = 0.50;
-      }
-    }
+    alphaSWR = alphaSWRWithImputation(SP, SpParams);
+    gammaSWR = gammaSWRWithImputation(SP, SpParams);
+    kPAR = kPARWithImputation(SP, SpParams);
+    g = gWithImputation(SP, SpParams);
   }
   DataFrame paramsInterceptiondf;
   if(transpirationMode=="Granier") {
@@ -122,6 +95,7 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
   NumericVector Hmed = speciesNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
   NumericVector Al2As = speciesNumericParameter(SP, SpParams, "Al2As");
   NumericVector SLA = speciesNumericParameter(SP, SpParams, "SLA");
+  if(fillMissingSpParams) SLA = specificLeafAreaWithImputation(SP, SpParams);
   NumericVector LeafDensity = speciesNumericParameter(SP, SpParams, "LeafDensity");
   NumericVector WoodDensity = speciesNumericParameter(SP, SpParams, "WoodDensity");
   NumericVector FineRootDensity = speciesNumericParameter(SP, SpParams, "FineRootDensity");
@@ -141,29 +115,6 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
   
   if(fillMissingSpParams) {
     for(int c=0;c<numCohorts;c++){ //default values for missing data
-      if(NumericVector::is_na(SLA[c]) && !CharacterVector::is_na(LeafShape[c]) && !CharacterVector::is_na(LeafSize[c])) {
-        if(LeafShape[c]=="Linear") {
-          if(LeafSize[c]=="Small") {
-            SLA[c] = 13.189;
-          } else if(LeafSize[c]=="Medium") {
-            SLA[c] = 4.144;
-          } else if(LeafSize[c]=="Large") {
-            SLA[c]= 5.522;
-          }
-        } else if(LeafShape[c]=="Broad") {
-          if(LeafSize[c]=="Small") {
-            SLA[c] = 9.540;
-          } else if(LeafSize[c]=="Medium") {
-            SLA[c] = 11.499;
-          } else if(LeafSize[c]=="Large") {
-            SLA[c]= 16.039;
-          }
-        } else if(LeafShape[c]=="Needle") { 
-          SLA[c] = 9.024;
-        } else if(LeafShape[c]=="Scale") { 
-          SLA[c] = 4.544;
-        }
-      }
       if(NumericVector::is_na(leafwidth[c]) && !CharacterVector::is_na(LeafShape[c]) && !CharacterVector::is_na(LeafSize[c])) {
         if(LeafShape[c]=="Linear") {
           leafwidth[c]= 0.6393182;
@@ -368,13 +319,13 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
   NumericVector Kmax_rootxylem = speciesNumericParameter(SP, SpParams, "Kmax_rootxylem");
   NumericVector VCroot_c = speciesNumericParameter(SP, SpParams, "VCroot_c");
   NumericVector VCroot_d = speciesNumericParameter(SP, SpParams, "VCroot_d");
-  NumericVector SLA = speciesNumericParameter(SP, SpParams, "SLA");
   NumericVector Narea = speciesNumericParameter(SP, SpParams, "Narea");
   NumericVector Vmax298 = speciesNumericParameter(SP, SpParams, "Vmax298");
   NumericVector Jmax298 = speciesNumericParameter(SP, SpParams, "Jmax298");
   NumericVector pRootDisc = speciesNumericParameter(SP, SpParams, "pRootDisc");
   
   NumericVector Al2As = paramsAnatomydf["Al2As"];
+  NumericVector SLA = paramsAnatomydf["SLA"];
   
   NumericVector VCstem_kmax(numCohorts);
   NumericVector VCroottot_kmax(numCohorts, 0.0);
@@ -737,18 +688,18 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
 DataFrame paramsAllometries(DataFrame above, DataFrame SpParams, bool fillMissingSpParams) {
   IntegerVector SP = above["SP"];
   
-  NumericVector Aash = speciesNumericParameter(SP, SpParams, "a_ash");
-  NumericVector Bash = speciesNumericParameter(SP, SpParams, "b_ash");
-  NumericVector Absh = speciesNumericParameter(SP, SpParams, "a_bsh");
-  NumericVector Bbsh = speciesNumericParameter(SP, SpParams, "b_bsh");
-  NumericVector Acr = speciesNumericParameter(SP, SpParams, "a_cr");
-  NumericVector B1cr = speciesNumericParameter(SP, SpParams, "b_1cr");
-  NumericVector B2cr = speciesNumericParameter(SP, SpParams, "b_2cr");
-  NumericVector B3cr = speciesNumericParameter(SP, SpParams, "b_3cr");
-  NumericVector C1cr = speciesNumericParameter(SP, SpParams, "c_1cr");
-  NumericVector C2cr = speciesNumericParameter(SP, SpParams, "c_2cr");
-  NumericVector Acw = speciesNumericParameter(SP, SpParams, "a_cw");
-  NumericVector Bcw = speciesNumericParameter(SP, SpParams, "b_cw");
+  NumericVector Aash = shrubAllometricCoefficientWithImputation(SP, SpParams, "a_ash");
+  NumericVector Bash = shrubAllometricCoefficientWithImputation(SP, SpParams, "b_ash");
+  NumericVector Absh = shrubAllometricCoefficientWithImputation(SP, SpParams, "a_bsh");
+  NumericVector Bbsh = shrubAllometricCoefficientWithImputation(SP, SpParams, "b_bsh");
+  NumericVector Acr = treeAllometricCoefficientWithImputation(SP, SpParams, "a_cr");
+  NumericVector B1cr = treeAllometricCoefficientWithImputation(SP, SpParams, "b_1cr");
+  NumericVector B2cr = treeAllometricCoefficientWithImputation(SP, SpParams, "b_2cr");
+  NumericVector B3cr = treeAllometricCoefficientWithImputation(SP, SpParams, "b_3cr");
+  NumericVector C1cr = treeAllometricCoefficientWithImputation(SP, SpParams, "c_1cr");
+  NumericVector C2cr = treeAllometricCoefficientWithImputation(SP, SpParams, "c_2cr");
+  NumericVector Acw = treeAllometricCoefficientWithImputation(SP, SpParams, "a_cw");
+  NumericVector Bcw = treeAllometricCoefficientWithImputation(SP, SpParams, "b_cw");
 
   DataFrame paramsAllometriesdf = DataFrame::create(_["Aash"] = Aash, _["Bash"] = Bash, _["Absh"] = Absh, _["Bbsh"] = Bbsh,
                                                     _["Acr"] = Acr, _["B1cr"] = B1cr, _["B2cr"] = B2cr, _["B3cr"] = B3cr,

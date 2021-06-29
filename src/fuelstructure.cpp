@@ -289,6 +289,7 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
   CharacterVector leafLitterType = leafLitterFuelType(object, SpParams);
   for(int i=0;i<cohLoading.size();i++) { //defaults
     if(NumericVector::is_na(cohParticleDensity[i])) cohParticleDensity[i] = 400.0;
+    if(NumericVector::is_na(cohpDead[i])) cohpDead[i] = 0.05;
   }
   //Canopy limits and loading  
   double canopyBaseHeight = liveStrat["canopyBaseHeight"];

@@ -3,6 +3,7 @@
 #include <math.h>
 #include "carbon.h"
 #include "forestutils.h"
+#include "paramutils.h"
 using namespace Rcpp;
 
 
