@@ -20,29 +20,21 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_dead = above["LAI_dead"];
   int numCohorts = SP.size();
+  
+  NumericVector leafDuration  = speciesNumericParameterWithImputation(SP, SpParams, "LeafDuration", fillMissingSpParams);
+  NumericVector Sgdd  = speciesNumericParameterWithImputation(SP, SpParams, "Sgdd", fillMissingSpParams);
+  NumericVector Tbgdd = speciesNumericParameterWithImputation(SP, SpParams, "Tbgdd", fillMissingSpParams);
+  NumericVector Ssen = speciesNumericParameterWithImputation(SP, SpParams, "Ssen", fillMissingSpParams);
+  NumericVector Phsen = speciesNumericParameterWithImputation(SP, SpParams, "Phsen", fillMissingSpParams);
+  NumericVector Tbsen  = speciesNumericParameterWithImputation(SP, SpParams, "Tbsen", fillMissingSpParams);
+  
   CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
-  NumericVector leafDuration  = speciesNumericParameter(SP, SpParams, "LeafDuration");
-  NumericVector Sgdd  = speciesNumericParameter(SP, SpParams, "Sgdd");
-  NumericVector Tbgdd = speciesNumericParameter(SP, SpParams, "Tbgdd");
-  NumericVector Ssen = speciesNumericParameter(SP, SpParams, "Ssen");
-  NumericVector Phsen = speciesNumericParameter(SP, SpParams, "Phsen");
-  NumericVector Tbsen  = speciesNumericParameter(SP, SpParams, "Tbsen");
-  if(fillMissingSpParams) {
-    for(int j=0; j<numCohorts;j++) {
-      if(NumericVector::is_na(Tbgdd[j])) Tbgdd[j]= 5.0;
-      if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") { //Delpierre et al 2009
-        if(NumericVector::is_na(Ssen[j])) Ssen[j] = 8268.0;
-        if(NumericVector::is_na(Phsen[j])) Phsen[j] = 12.5;
-        if(NumericVector::is_na(Tbsen[j])) Tbsen[j] = 28.5;
-        LAI_expanded[j] = 0.0; //Set initial LAI to zero, assuming simulations start at Jan 1st
-        if(phenoType[j] == "winter-semideciduous") LAI_dead[j] = LAI_live[j];
-      } else if(phenoType[j] == "oneflush-evergreen") {
-        if(NumericVector::is_na(Ssen[j])) Ssen[j] = 8268.0;
-        if(NumericVector::is_na(Phsen[j])) Phsen[j] = 12.5;
-        if(NumericVector::is_na(Tbsen[j])) Tbsen[j] = 28.5;
-      }
+  for(int j=0; j<numCohorts;j++) {
+    if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") { 
+      LAI_expanded[j] = 0.0; //Set initial LAI to zero, assuming simulations start at Jan 1st
+      if(phenoType[j] == "winter-semideciduous") LAI_dead[j] = LAI_live[j];
     }
-  }
+  } 
   DataFrame paramsPhenologydf = DataFrame::create(
     _["PhenologyType"] = phenoType,
     _["LeafDuration"] = leafDuration,
@@ -171,12 +163,6 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
   bool fillMissingSpParams = control["fillMissingSpParams"];
   
   NumericVector dVec = soil["dVec"];
-  
-  CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
-  CharacterVector GrowthForm = speciesCharacterParameter(SP, SpParams, "GrowthForm");
-  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
-  
-
   
   NumericVector Vmax298 = speciesNumericParameterWithImputation(SP, SpParams, "Vmax298", fillMissingSpParams);
   NumericVector Jmax298 = speciesNumericParameterWithImputation(SP, SpParams, "Jmax298", fillMissingSpParams);
@@ -389,6 +375,8 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   
   IntegerVector SP = above["SP"];
   int numCohorts = SP.size();
+
+  NumericVector WoodC = speciesNumericParameterWithImputation(SP, SpParams, "WoodC", fillMissingSpParams);
   
   NumericVector RERleaf = speciesNumericParameter(SP, SpParams, "RERleaf");
   NumericVector RERsapwood = speciesNumericParameter(SP, SpParams, "RERsapwood");
@@ -396,7 +384,6 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   NumericVector RGRleafmax = speciesNumericParameter(SP, SpParams, "RGRleafmax");
   NumericVector RGRsapwoodmax = speciesNumericParameter(SP, SpParams, "RGRsapwoodmax");
   NumericVector RGRfinerootmax = speciesNumericParameter(SP, SpParams, "RGRfinerootmax");
-  NumericVector WoodC = speciesNumericParameter(SP, SpParams, "WoodC");
   NumericVector fHDmin = speciesNumericParameter(SP, SpParams, "fHDmin");
   NumericVector fHDmax = speciesNumericParameter(SP, SpParams, "fHDmax");
   
@@ -418,8 +405,6 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
       if(NumericVector::is_na(RERleaf[c])) RERleaf[c] = RERleaf_default;
       if(NumericVector::is_na(RERsapwood[c])) RERsapwood[c] = RERsapwood_default;
       if(NumericVector::is_na(RERfineroot[c])) RERfineroot[c] = RERfineroot_default;
-      
-      if(NumericVector::is_na(WoodC[c])) WoodC[c] = 0.5;
     }
   }
   
