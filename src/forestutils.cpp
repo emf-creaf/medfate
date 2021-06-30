@@ -256,8 +256,8 @@ NumericVector dbhClassDensity(List x, NumericVector DBHbreaks) {
 
 //area of an individual (in m2)
 NumericVector shrubIndividualAreaMED(IntegerVector SP, NumericVector Cover, NumericVector H, DataFrame SpParams){
-  NumericVector aShrubArea = shrubAllometricCoefficientWithImputation(SP,SpParams, "a_ash");
-  NumericVector bShrubArea = shrubAllometricCoefficientWithImputation(SP,SpParams, "b_ash");
+  NumericVector aShrubArea = speciesNumericParameterWithImputation(SP,SpParams, "a_ash",true);
+  NumericVector bShrubArea = speciesNumericParameterWithImputation(SP,SpParams, "b_ash",true);
   int ncoh = SP.size();
   NumericVector areaind(ncoh);
   for(int i=0;i<ncoh;i++) {
@@ -366,7 +366,7 @@ NumericVector cohortHeight(List x) {
  */
 // [[Rcpp::export(".shrubCrownRatio")]]
 NumericVector shrubCrownRatio(IntegerVector SP, DataFrame SpParams) {
-  return(shrubAllometricCoefficientWithImputation(SP, SpParams, "cr"));
+  return(speciesNumericParameterWithImputation(SP, SpParams, "cr", true));
 }
 
 double crownCompetitionFactorMED(NumericVector N, NumericVector dbh, NumericVector Acw, NumericVector Bcw) {
@@ -381,8 +381,8 @@ double crownCompetitionFactorMED(NumericVector N, NumericVector dbh, NumericVect
   return(ccf);
 }
 double crownCompetitionFactorMED(IntegerVector SP, NumericVector N, NumericVector dbh, DataFrame SpParams) {
-  NumericVector Acw = treeAllometricCoefficientWithImputation(SP, SpParams, "a_cw");
-  NumericVector Bcw = treeAllometricCoefficientWithImputation(SP, SpParams, "b_cw");
+  NumericVector Acw = speciesNumericParameterWithImputation(SP, SpParams, "a_cw",true);
+  NumericVector Bcw = speciesNumericParameterWithImputation(SP, SpParams, "b_cw",true);
   return(crownCompetitionFactorMED(N,dbh,Acw,Bcw));
 }
 
@@ -421,12 +421,12 @@ NumericVector treeCrownRatioMED(IntegerVector SP, NumericVector N, NumericVector
   NumericVector BAL = largerTreeBasalArea(N, dbh);
   double ccf = crownCompetitionFactorMED(SP, N, dbh, SpParams);
   // Rcout<<ccf<<"\n";
-  NumericVector Acr = treeAllometricCoefficientWithImputation(SP, SpParams, "a_cr");
-  NumericVector B1cr = treeAllometricCoefficientWithImputation(SP, SpParams, "b_1cr");
-  NumericVector B2cr = treeAllometricCoefficientWithImputation(SP, SpParams, "b_2cr");
-  NumericVector B3cr = treeAllometricCoefficientWithImputation(SP, SpParams, "b_3cr");
-  NumericVector C1cr = treeAllometricCoefficientWithImputation(SP, SpParams, "c_1cr");
-  NumericVector C2cr = treeAllometricCoefficientWithImputation(SP, SpParams, "c_2cr");
+  NumericVector Acr = speciesNumericParameterWithImputation(SP, SpParams, "a_cr",true);
+  NumericVector B1cr = speciesNumericParameterWithImputation(SP, SpParams, "b_1cr",true);
+  NumericVector B2cr = speciesNumericParameterWithImputation(SP, SpParams, "b_2cr",true);
+  NumericVector B3cr = speciesNumericParameterWithImputation(SP, SpParams, "b_3cr",true);
+  NumericVector C1cr = speciesNumericParameterWithImputation(SP, SpParams, "c_1cr",true);
+  NumericVector C2cr = speciesNumericParameterWithImputation(SP, SpParams, "c_2cr",true);
   int ntree = SP.size();
   NumericVector treeCR(ntree);
   for(int i=0;i<ntree;i++) {
@@ -444,7 +444,7 @@ NumericVector cohortCrownRatio(List x, DataFrame SpParams, String mode = "MED") 
   int ntree = treeData.nrows();
   int nshrub = shrubData.nrows();
   IntegerVector shrubSP = shrubData["Species"];  
-  NumericVector crSh = shrubAllometricCoefficientWithImputation(shrubSP, SpParams, "cr");
+  NumericVector crSh = speciesNumericParameterWithImputation(shrubSP, SpParams, "cr",true);
   int numCohorts  = ntree+nshrub;
   NumericVector treeCR;
   if(mode=="MED") {
@@ -496,10 +496,10 @@ NumericVector cohortCrownLength(List x, DataFrame SpParams, String mode = "MED")
  * Foliar biomass (in kg/m2)
  */
 NumericVector treeFoliarBiomassMED(IntegerVector SP, NumericVector N, NumericVector dbh, DataFrame SpParams, double gdd = NA_REAL){
-  NumericVector afbt = treeAllometricCoefficientWithImputation(SP, SpParams, "a_fbt");
-  NumericVector bfbt = treeAllometricCoefficientWithImputation(SP, SpParams, "b_fbt");
-  NumericVector cfbt = treeAllometricCoefficientWithImputation(SP, SpParams, "c_fbt");
-  NumericVector dfbt = treeAllometricCoefficientWithImputation(SP, SpParams, "d_fbt");
+  NumericVector afbt = speciesNumericParameterWithImputation(SP, SpParams, "a_fbt",true);
+  NumericVector bfbt = speciesNumericParameterWithImputation(SP, SpParams, "b_fbt",true);
+  NumericVector cfbt = speciesNumericParameterWithImputation(SP, SpParams, "c_fbt",true);
+  NumericVector dfbt = speciesNumericParameterWithImputation(SP, SpParams, "d_fbt",true);
   NumericVector ltba = largerTreeBasalArea(N,dbh);
   int ncoh = N.size();
   NumericVector lb(ncoh);
@@ -535,8 +535,8 @@ NumericVector treeFoliarBiomassUS(IntegerVector SP, NumericVector N, NumericVect
 
 NumericVector shrubFoliarBiomassMED(IntegerVector SP, NumericVector Cover, NumericVector H, NumericVector CR, 
                                     DataFrame SpParams, double gdd = NA_REAL){
-  NumericVector aShrubFuel = shrubAllometricCoefficientWithImputation(SP, SpParams, "a_bsh");
-  NumericVector bShrubFuel = shrubAllometricCoefficientWithImputation(SP, SpParams, "b_bsh");
+  NumericVector aShrubFuel = speciesNumericParameterWithImputation(SP, SpParams, "a_bsh",true);
+  NumericVector bShrubFuel = speciesNumericParameterWithImputation(SP, SpParams, "b_bsh",true);
   NumericVector Sgdd = speciesNumericParameter(SP, SpParams, "Sgdd");
   NumericVector pDead = speciesNumericParameter(SP, SpParams, "pDead");
   NumericVector fTreeFuel = speciesNumericParameter(SP, SpParams, "r635");
@@ -769,8 +769,8 @@ NumericVector treeFuelUS(IntegerVector SP, NumericVector N, NumericVector Foliag
 }
 
 NumericVector shrubFuelMED(IntegerVector SP, NumericVector Cover, NumericVector H, NumericVector CR, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true){
-  NumericVector aShrubFuel = shrubAllometricCoefficientWithImputation(SP, SpParams, "a_bsh");
-  NumericVector bShrubFuel = shrubAllometricCoefficientWithImputation(SP, SpParams, "b_bsh");
+  NumericVector aShrubFuel = speciesNumericParameterWithImputation(SP, SpParams, "a_bsh",true);
+  NumericVector bShrubFuel = speciesNumericParameterWithImputation(SP, SpParams, "b_bsh",true);
   NumericVector pDead = speciesNumericParameter(SP, SpParams, "pDead");
   NumericVector fTreeFuel = speciesNumericParameterWithImputation(SP, SpParams, "r635", true);
 

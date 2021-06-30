@@ -15,6 +15,3 @@ CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parN
 
 NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame SpParams, String parName, bool fillMissing = true);
 NumericVector cohortNumericParameterWithImputation(List x, DataFrame SpParams, String parName, bool fillMissing = true);
-
-NumericVector treeAllometricCoefficientWithImputation(IntegerVector SP, DataFrame SpParams, String parName);
-NumericVector shrubAllometricCoefficientWithImputation(IntegerVector SP, DataFrame SpParams, String parName);

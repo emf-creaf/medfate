@@ -3,6 +3,7 @@
 -------------------------------
 
 # Version 2.3.0
+- IMPORTANT: New species parameter tables
 - New control parameter 'fillMissingSpParams'
 - New species categorical params (for inbuilt imputation) 'LeafShape' and 'LeafSize'
 - Parameter 'Flammability' index eliminated (non-meansurable property of flammability).

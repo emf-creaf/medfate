@@ -173,152 +173,34 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
   NumericVector dVec = soil["dVec"];
   
   CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
-  CharacterVector Order = speciesCharacterParameter(SP, SpParams, "Order");
   CharacterVector GrowthForm = speciesCharacterParameter(SP, SpParams, "GrowthForm");
   CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
   
-  NumericVector Hmed = speciesNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
-  NumericVector Gswmin = speciesNumericParameter(SP, SpParams, "Gswmin");
-  NumericVector Gswmax = speciesNumericParameter(SP, SpParams, "Gswmax");
-  NumericVector VCleaf_kmax = speciesNumericParameter(SP, SpParams, "VCleaf_kmax");
-  NumericVector Kmax_stemxylem = speciesNumericParameter(SP, SpParams, "Kmax_stemxylem");
-  NumericVector VCleaf_c = speciesNumericParameter(SP, SpParams, "VCleaf_c");
-  NumericVector VCleaf_d = speciesNumericParameter(SP, SpParams, "VCleaf_d");
-  NumericVector VCstem_c = speciesNumericParameter(SP, SpParams, "VCstem_c");
-  NumericVector VCstem_d = speciesNumericParameter(SP, SpParams, "VCstem_d");
-  NumericVector Kmax_rootxylem = speciesNumericParameter(SP, SpParams, "Kmax_rootxylem");
-  NumericVector VCroot_c = speciesNumericParameter(SP, SpParams, "VCroot_c");
-  NumericVector VCroot_d = speciesNumericParameter(SP, SpParams, "VCroot_d");
-  NumericVector Narea = speciesNumericParameter(SP, SpParams, "Narea");
-  NumericVector Vmax298 = speciesNumericParameter(SP, SpParams, "Vmax298");
-  NumericVector Jmax298 = speciesNumericParameter(SP, SpParams, "Jmax298");
-  NumericVector pRootDisc = speciesNumericParameter(SP, SpParams, "pRootDisc");
+
+  
+  NumericVector Vmax298 = speciesNumericParameterWithImputation(SP, SpParams, "Vmax298", fillMissingSpParams);
+  NumericVector Jmax298 = speciesNumericParameterWithImputation(SP, SpParams, "Jmax298", fillMissingSpParams);
+  NumericVector VCleaf_kmax = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_kmax", fillMissingSpParams);
+  NumericVector Gswmax = speciesNumericParameterWithImputation(SP, SpParams, "Gswmax", fillMissingSpParams);
+  NumericVector Gswmin = speciesNumericParameterWithImputation(SP, SpParams, "Gswmin", fillMissingSpParams);
+  NumericVector pRootDisc = speciesNumericParameterWithImputation(SP, SpParams, "pRootDisc", fillMissingSpParams);
+  NumericVector Kmax_stemxylem = speciesNumericParameterWithImputation(SP, SpParams, "Kmax_stemxylem", fillMissingSpParams);
+  NumericVector Kmax_rootxylem = speciesNumericParameterWithImputation(SP, SpParams, "Kmax_rootxylem", fillMissingSpParams);
+  NumericVector VCstem_c = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_c", fillMissingSpParams);
+  NumericVector VCstem_d = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_d", fillMissingSpParams);
+  NumericVector VCleaf_c = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_c", fillMissingSpParams);
+  NumericVector VCleaf_d = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_d", fillMissingSpParams);
+  NumericVector VCroot_c = speciesNumericParameterWithImputation(SP, SpParams, "VCroot_c", fillMissingSpParams);
+  NumericVector VCroot_d = speciesNumericParameterWithImputation(SP, SpParams, "VCroot_d", fillMissingSpParams);
   
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   NumericVector SLA = paramsAnatomydf["SLA"];
+  NumericVector Hmed =  paramsAnatomydf["Hmed"];
   
   NumericVector VCstem_kmax(numCohorts);
   NumericVector VCroottot_kmax(numCohorts, 0.0);
   NumericVector VGrhizotot_kmax(numCohorts, 0.0);
   NumericVector Plant_kmax(numCohorts, 0.0);
-  
-  
-  if(fillMissingSpParams) {
-    for(int c=0;c<numCohorts;c++){
-      if(NumericVector::is_na(pRootDisc[c])) pRootDisc[c] = 0.0;
-      
-      if(NumericVector::is_na(Kmax_stemxylem[c])) {
-        // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
-        if(Group[c]=="Angiosperm") {
-          if((GrowthForm[c]=="Shrub") && (phenoType[c] == "winter-deciduous" | phenoType[c] == "winter-semideciduous")) {
-            Kmax_stemxylem[c] = 1.55; //Angiosperm deciduous shrub
-          } else if((GrowthForm[c]=="Tree" | GrowthForm[c]=="Tree/Shrub") && (phenoType[c] == "winter-deciduous" | phenoType[c] == "winter-semideciduous")) {
-            Kmax_stemxylem[c] = 1.58; //Angiosperm winter-deciduous tree
-          } else { 
-            Kmax_stemxylem[c] = 2.43; //Angiosperm evergreen tree
-          }
-        } else {
-          if(GrowthForm[c]=="Shrub") {
-            Kmax_stemxylem[c] = 0.24; //Gymnosperm shrub
-          } else {
-            Kmax_stemxylem[c] = 0.48; //Gymnosperm tree
-          }
-        }
-      }
-      //Oliveras I, Martínez-Vilalta J, Jimenez-Ortiz T, et al (2003) Hydraulic architecture of Pinus halepensis, P . pinea and Tetraclinis articulata in a dune ecosystem of Eastern Spain. Plant Ecol 131–141
-      if(NumericVector::is_na(Kmax_rootxylem[c])) Kmax_rootxylem[c] = 4.0*Kmax_stemxylem[c];
-      
-      
-      //Xylem vulnerability curve
-      if(NumericVector::is_na(VCstem_d[c]) | NumericVector::is_na(VCstem_c[c])) {
-        double psi50 = NA_REAL;
-        // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
-        if(Group[c]=="Angiosperm") {
-          if((GrowthForm[c]=="Shrub") && (phenoType[c] != "winter-deciduous") && (phenoType[c] != "winter-semideciduous")) {
-            psi50 = -5.09; //Angiosperm evergreen shrub
-          } else if((GrowthForm[c]!="Shrub") && (phenoType[c] == "winter-deciduous" | phenoType[c] == "winter-semideciduous")) {
-            psi50 = -2.34; //Angiosperm winter-deciduous tree
-          } else { 
-            psi50 = -1.51; //Angiosperm evergreen tree
-          }
-        } else {
-          if(GrowthForm[c]=="Shrub") {
-            psi50 = -8.95; //Gymnosperm shrub
-          } else {
-            psi50 = -4.17; //Gymnosperm tree
-          }
-        }
-        double psi88 = 1.2593*psi50 - 1.4264; //Regression using data from Choat et al. 2012
-        NumericVector par = psi2Weibull(psi50, psi88);
-        if(NumericVector::is_na(VCstem_c[c])) VCstem_c[c] = par["c"];
-        if(NumericVector::is_na(VCstem_d[c])) VCstem_d[c] = par["d"];
-      }
-      
-      //Default root vulnerability curve parameters if missing
-      if(NumericVector::is_na(VCroot_d[c]) | NumericVector::is_na(VCroot_c[c])) {
-        double psi50stem = VCstem_d[c]*pow(0.6931472,1.0/VCstem_c[c]);
-        double psi50root = 0.742*psi50stem + 0.4892; //Regression using data from Bartlett et al. 2016
-        double psi88root = 1.2593*psi50root - 1.4264; //Regression using data from Choat et al. 2012
-        NumericVector par = psi2Weibull(psi50root, psi88root);
-        if(NumericVector::is_na(VCroot_c[c])) VCroot_c[c] = par["c"];
-        if(NumericVector::is_na(VCroot_d[c])) VCroot_d[c] = par["d"];
-      }
-      //Sack, L., & Holbrook, N.M. 2006. Leaf Hydraulics. Annual Review of Plant Biology 57: 361–381.
-      if(NumericVector::is_na(VCleaf_kmax[c])) { 
-        if(Group[c]=="Angiosperm") {
-          VCleaf_kmax[c] = 8.0;
-        } else {
-          VCleaf_kmax[c] = 6.0;
-        }
-      } 
-      //Default vulnerability curve parameters if missing
-      if(NumericVector::is_na(VCleaf_c[c])) VCleaf_c[c] = VCstem_c[c];
-      if(NumericVector::is_na(VCleaf_d[c])) VCleaf_d[c] = VCstem_d[c]/1.5;
-      //Duursma RA, Blackman CJ, Lopéz R, et al (2018) On the minimum leaf conductance: its role in models of plant water use, and ecological and environmental controls. New Phytol. doi: 10.1111/nph.15395
-      if(NumericVector::is_na(Gswmin[c])) {
-        if(Order[c]=="Pinales") {
-          Gswmin[c] = 0.003;
-        } else if(Order[c]=="Araucariales") {
-          Gswmin[c] = 0.003;
-        } else if(Order[c]=="Ericales") {
-          Gswmin[c] = 0.004;
-        } else if(Order[c]=="Fagales") {
-          Gswmin[c] = 0.0045;
-        } else if(Order[c]=="Rosales") {
-          Gswmin[c] = 0.0045;
-        } else if(Order[c]=="Cupressales") {
-          Gswmin[c] = 0.0045;
-        } else if(Order[c]=="Lamiales") {
-          Gswmin[c] = 0.0055;
-        } else if(Order[c]=="Fabales") {
-          Gswmin[c] = 0.0065;
-        } else if(Order[c]=="Myrtales") {
-          Gswmin[c] = 0.0075;
-        } else if(Order[c]=="Poales") {
-          Gswmin[c] = 0.0110;
-        } else {
-          Gswmin[c] = 0.0049;
-        }
-      }
-      //Mencuccini M (2003) The ecological significance of long-distance water transport : short-term regulation , long-term acclimation and the hydraulic costs of stature across plant life forms. Plant Cell Environ 26:163–182
-      if(NumericVector::is_na(Gswmax[c])) Gswmax[c] = 0.12115*pow(VCleaf_kmax[c], 0.633);
-      
-
-      if(NumericVector::is_na(Vmax298[c]))  {
-        if(!NumericVector::is_na(SLA[c]) & !NumericVector::is_na(Narea[c]))  {
-          //Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173
-          double lnN = log(Narea[c]);
-          double lnSLA = log(SLA[c]/1000.0); //SLA in m2*g-1
-          Vmax298[c] = exp(1.993 + 2.555*lnN - 0.372*lnSLA + 0.422*lnN*lnSLA);
-        } else {
-          Vmax298[c] = 100.0; //Default value of Vmax298 = 100.0
-        }
-      }
-      //Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173
-      if(NumericVector::is_na(Jmax298[c])) Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c])); 
-      
-    }
-  }
 
   // Scaled conductance parameters parameters
   for(int c=0;c<numCohorts;c++){
@@ -558,18 +440,18 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
 DataFrame paramsAllometries(DataFrame above, DataFrame SpParams, bool fillMissingSpParams) {
   IntegerVector SP = above["SP"];
   
-  NumericVector Aash = shrubAllometricCoefficientWithImputation(SP, SpParams, "a_ash");
-  NumericVector Bash = shrubAllometricCoefficientWithImputation(SP, SpParams, "b_ash");
-  NumericVector Absh = shrubAllometricCoefficientWithImputation(SP, SpParams, "a_bsh");
-  NumericVector Bbsh = shrubAllometricCoefficientWithImputation(SP, SpParams, "b_bsh");
-  NumericVector Acr = treeAllometricCoefficientWithImputation(SP, SpParams, "a_cr");
-  NumericVector B1cr = treeAllometricCoefficientWithImputation(SP, SpParams, "b_1cr");
-  NumericVector B2cr = treeAllometricCoefficientWithImputation(SP, SpParams, "b_2cr");
-  NumericVector B3cr = treeAllometricCoefficientWithImputation(SP, SpParams, "b_3cr");
-  NumericVector C1cr = treeAllometricCoefficientWithImputation(SP, SpParams, "c_1cr");
-  NumericVector C2cr = treeAllometricCoefficientWithImputation(SP, SpParams, "c_2cr");
-  NumericVector Acw = treeAllometricCoefficientWithImputation(SP, SpParams, "a_cw");
-  NumericVector Bcw = treeAllometricCoefficientWithImputation(SP, SpParams, "b_cw");
+  NumericVector Aash = speciesNumericParameterWithImputation(SP, SpParams, "a_ash",fillMissingSpParams);
+  NumericVector Bash = speciesNumericParameterWithImputation(SP, SpParams, "b_ash",fillMissingSpParams);
+  NumericVector Absh = speciesNumericParameterWithImputation(SP, SpParams, "a_bsh",fillMissingSpParams);
+  NumericVector Bbsh = speciesNumericParameterWithImputation(SP, SpParams, "b_bsh",fillMissingSpParams);
+  NumericVector Acr = speciesNumericParameterWithImputation(SP, SpParams, "a_cr",fillMissingSpParams);
+  NumericVector B1cr = speciesNumericParameterWithImputation(SP, SpParams, "b_1cr",fillMissingSpParams);
+  NumericVector B2cr = speciesNumericParameterWithImputation(SP, SpParams, "b_2cr",fillMissingSpParams);
+  NumericVector B3cr = speciesNumericParameterWithImputation(SP, SpParams, "b_3cr",fillMissingSpParams);
+  NumericVector C1cr = speciesNumericParameterWithImputation(SP, SpParams, "c_1cr",fillMissingSpParams);
+  NumericVector C2cr = speciesNumericParameterWithImputation(SP, SpParams, "c_2cr",fillMissingSpParams);
+  NumericVector Acw = speciesNumericParameterWithImputation(SP, SpParams, "a_cw",fillMissingSpParams);
+  NumericVector Bcw = speciesNumericParameterWithImputation(SP, SpParams, "b_cw",fillMissingSpParams);
 
   DataFrame paramsAllometriesdf = DataFrame::create(_["Aash"] = Aash, _["Bash"] = Bash, _["Absh"] = Absh, _["Bbsh"] = Bbsh,
                                                     _["Acr"] = Acr, _["B1cr"] = B1cr, _["B2cr"] = B2cr, _["B3cr"] = B3cr,

@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "forestutils.h"
+#include "hydraulics.h"
 #include "tissuemoisture.h"
 using namespace Rcpp;
 
@@ -560,6 +561,198 @@ NumericVector psiExtractWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(Psi_Extract);
 }
+NumericVector KmaxStemXylemWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector Kmax_stemxylem = speciesNumericParameter(SP, SpParams, "Kmax_stemxylem");
+  CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
+  CharacterVector GrowthForm = speciesCharacterParameter(SP, SpParams, "GrowthForm");
+  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
+  for(int c=0;c<Kmax_stemxylem.size();c++) {
+    if(NumericVector::is_na(Kmax_stemxylem[c])) {
+      // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
+      if(Group[c]=="Angiosperm") {
+        if((GrowthForm[c]=="Shrub") && (phenoType[c] == "winter-deciduous" | phenoType[c] == "winter-semideciduous")) {
+          Kmax_stemxylem[c] = 1.55; //Angiosperm deciduous shrub
+        } else if((GrowthForm[c]=="Tree" | GrowthForm[c]=="Tree/Shrub") && (phenoType[c] == "winter-deciduous" | phenoType[c] == "winter-semideciduous")) {
+          Kmax_stemxylem[c] = 1.58; //Angiosperm winter-deciduous tree
+        } else { 
+          Kmax_stemxylem[c] = 2.43; //Angiosperm evergreen tree
+        }
+      } else {
+        if(GrowthForm[c]=="Shrub") {
+          Kmax_stemxylem[c] = 0.24; //Gymnosperm shrub
+        } else {
+          Kmax_stemxylem[c] = 0.48; //Gymnosperm tree
+        }
+      }
+    }
+  }
+  return(Kmax_stemxylem);
+}
+NumericVector KmaxRootXylemWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector Kmax_stemxylem = KmaxStemXylemWithImputation(SP, SpParams);
+  NumericVector Kmax_rootxylem = speciesNumericParameter(SP, SpParams, "Kmax_rootxylem");
+  for(int c=0;c<Kmax_rootxylem.size();c++) {
+    //Oliveras I, Martínez-Vilalta J, Jimenez-Ortiz T, et al (2003) Hydraulic architecture of Pinus halepensis, P . pinea and Tetraclinis articulata in a dune ecosystem of Eastern Spain. Plant Ecol 131–141
+    if(NumericVector::is_na(Kmax_rootxylem[c])) Kmax_rootxylem[c] = 4.0*Kmax_stemxylem[c];
+  }
+  return(Kmax_rootxylem);
+}
+NumericVector VCleafkmaxWithImputation(IntegerVector SP, DataFrame SpParams) {
+  CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
+  NumericVector VCleaf_kmax = speciesNumericParameter(SP, SpParams, "VCleaf_kmax");
+  for(int c=0;c<VCleaf_kmax.size();c++) {
+    //Sack, L., & Holbrook, N.M. 2006. Leaf Hydraulics. Annual Review of Plant Biology 57: 361–381.
+    if(NumericVector::is_na(VCleaf_kmax[c])) {
+      if(Group[c]=="Angiosperm") VCleaf_kmax[c] = 8.0; 
+      else VCleaf_kmax[c] = 6.0; 
+    }
+  }
+  return(VCleaf_kmax);
+}
+NumericVector GswmaxWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector VCleaf_kmax = VCleafkmaxWithImputation(SP, SpParams);
+  NumericVector Gswmax = speciesNumericParameter(SP, SpParams, "Gswmax");
+  for(int c=0;c<Gswmax.size();c++) {
+    //Mencuccini M (2003) The ecological significance of long-distance water transport : short-term regulation , long-term acclimation and the hydraulic costs of stature across plant life forms. Plant Cell Environ 26:163–182
+    if(NumericVector::is_na(Gswmax[c])) Gswmax[c] = 0.12115*pow(VCleaf_kmax[c], 0.633);
+  }
+  return(Gswmax);
+}
+NumericVector GswminWithImputation(IntegerVector SP, DataFrame SpParams) {
+  CharacterVector Order = speciesCharacterParameter(SP, SpParams, "Order");
+  NumericVector VCleaf_kmax = VCleafkmaxWithImputation(SP, SpParams);
+  NumericVector Gswmin = speciesNumericParameter(SP, SpParams, "Gswmin");
+  for(int c=0;c<Gswmin.size();c++) {
+    //Duursma RA, Blackman CJ, Lopéz R, et al (2018) On the minimum leaf conductance: its role in models of plant water use, and ecological and environmental controls. New Phytol. doi: 10.1111/nph.15395
+    if(NumericVector::is_na(Gswmin[c])) {
+      if(Order[c]=="Pinales") {
+        Gswmin[c] = 0.003;
+      } else if(Order[c]=="Araucariales") {
+        Gswmin[c] = 0.003;
+      } else if(Order[c]=="Ericales") {
+        Gswmin[c] = 0.004;
+      } else if(Order[c]=="Fagales") {
+        Gswmin[c] = 0.0045;
+      } else if(Order[c]=="Rosales") {
+        Gswmin[c] = 0.0045;
+      } else if(Order[c]=="Cupressales") {
+        Gswmin[c] = 0.0045;
+      } else if(Order[c]=="Lamiales") {
+        Gswmin[c] = 0.0055;
+      } else if(Order[c]=="Fabales") {
+        Gswmin[c] = 0.0065;
+      } else if(Order[c]=="Myrtales") {
+        Gswmin[c] = 0.0075;
+      } else if(Order[c]=="Poales") {
+        Gswmin[c] = 0.0110;
+      } else {
+        Gswmin[c] = 0.0049;
+      }
+    }
+  }
+  return(Gswmin);
+}
+NumericVector Vmax298WithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector SLA = specificLeafAreaWithImputation(SP, SpParams);
+  NumericVector Narea = speciesNumericParameter(SP, SpParams, "Narea");
+  NumericVector Vmax298 = speciesNumericParameter(SP, SpParams, "Vmax298");
+  for(int c=0;c<Vmax298.size();c++) {
+    if(NumericVector::is_na(Vmax298[c]))  {
+      if(!NumericVector::is_na(SLA[c]) & !NumericVector::is_na(Narea[c]))  {
+        //Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173
+        double lnN = log(Narea[c]);
+        double lnSLA = log(SLA[c]/1000.0); //SLA in m2*g-1
+        Vmax298[c] = exp(1.993 + 2.555*lnN - 0.372*lnSLA + 0.422*lnN*lnSLA);
+      } else {
+        Vmax298[c] = 100.0; //Default value of Vmax298 = 100.0
+      }
+    }
+  }
+  return(Vmax298);
+}
+NumericVector Jmax298WithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector Vmax298 = Vmax298WithImputation(SP, SpParams);
+  NumericVector Jmax298 = speciesNumericParameter(SP, SpParams, "Jmax298");
+  for(int c=0;c<Jmax298.size();c++) {
+    //Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173
+    if(NumericVector::is_na(Jmax298[c])) Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c])); 
+  }
+  return(Jmax298);
+}
+NumericVector VCstemDWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector VCstem_d = speciesNumericParameter(SP, SpParams, "VCstem_d");
+  NumericVector psi50(VCstem_d.size(), NA_REAL);
+  NumericVector psi50Imp = psi50Imputation(psi50, SP, SpParams);
+  for(int c=0;c<VCstem_d.size();c++) {
+    if(NumericVector::is_na(VCstem_d[c])) {
+      double psi88 = 1.2593*psi50Imp[c] - 1.4264; //Regression using data from Choat et al. 2012
+      NumericVector par = psi2Weibull(psi50Imp[c], psi88);
+      VCstem_d[c] = par["d"];
+    }
+  }
+  return(VCstem_d);
+}
+NumericVector VCstemCWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector VCstem_c = speciesNumericParameter(SP, SpParams, "VCstem_c");
+  NumericVector psi50(VCstem_c.size(), NA_REAL);
+  NumericVector psi50Imp = psi50Imputation(psi50, SP, SpParams);
+  for(int c=0;c<VCstem_c.size();c++) {
+    if(NumericVector::is_na(VCstem_c[c])) {
+      double psi88 = 1.2593*psi50Imp[c] - 1.4264; //Regression using data from Choat et al. 2012
+      NumericVector par = psi2Weibull(psi50Imp[c], psi88);
+      VCstem_c[c] = par["c"];
+    }
+  }
+  return(VCstem_c);
+}
+NumericVector VCleafDWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector VCleaf_d = speciesNumericParameter(SP, SpParams, "VCleaf_d");
+  NumericVector VCstem_d = VCstemDWithImputation(SP, SpParams);
+  for(int c=0;c<VCleaf_d.size();c++) {
+    if(NumericVector::is_na(VCleaf_d[c])) VCleaf_d[c] = VCstem_d[c]/1.5;
+  }
+  return(VCleaf_d);
+}
+NumericVector VCleafCWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector VCleaf_c = speciesNumericParameter(SP, SpParams, "VCleaf_c");
+  NumericVector VCstem_c = VCstemCWithImputation(SP, SpParams);
+  for(int c=0;c<VCleaf_c.size();c++) {
+    if(NumericVector::is_na(VCleaf_c[c])) VCleaf_c[c] = VCstem_c[c];
+  }
+  return(VCleaf_c);
+}
+NumericVector VCrootDWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector VCroot_d = speciesNumericParameter(SP, SpParams, "VCroot_d");
+  NumericVector VCstem_d = VCstemDWithImputation(SP, SpParams);
+  NumericVector VCstem_c = VCstemCWithImputation(SP, SpParams);
+  for(int c=0;c<VCroot_d.size();c++) {
+    if(NumericVector::is_na(VCroot_d[c])) {
+      double psi50stem = VCstem_d[c]*pow(0.6931472,1.0/VCstem_c[c]);
+      double psi50root = 0.742*psi50stem + 0.4892; //Regression using data from Bartlett et al. 2016
+      double psi88root = 1.2593*psi50root - 1.4264; //Regression using data from Choat et al. 2012
+      NumericVector par = psi2Weibull(psi50root, psi88root);
+      VCroot_d[c] = par["d"];
+    }
+  }
+  return(VCroot_d);
+}
+NumericVector VCrootCWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector VCroot_c = speciesNumericParameter(SP, SpParams, "VCroot_c");
+  NumericVector VCstem_d = VCstemDWithImputation(SP, SpParams);
+  NumericVector VCstem_c = VCstemCWithImputation(SP, SpParams);
+  for(int c=0;c<VCroot_c.size();c++) {
+    if(NumericVector::is_na(VCroot_c[c])) {
+      double psi50stem = VCstem_d[c]*pow(0.6931472,1.0/VCstem_c[c]);
+      double psi50root = 0.742*psi50stem + 0.4892; //Regression using data from Bartlett et al. 2016
+      double psi88root = 1.2593*psi50root - 1.4264; //Regression using data from Choat et al. 2012
+      NumericVector par = psi2Weibull(psi50root, psi88root);
+      VCroot_c[c] = par["c"];
+    }
+  }
+  return(VCroot_c);
+}
+
+
 /** Allometric coefficient retrieval with imputation */
 NumericVector shrubAllometricCoefficientWithImputation(IntegerVector SP, DataFrame SpParams, String parName) {
   NumericVector coef = speciesNumericParameter(SP,SpParams, parName);
@@ -709,6 +902,26 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "WUE") return(WUEWithImputation(SP, SpParams));
     else if(parName == "Psi_Critic") return(psiCriticWithImputation(SP, SpParams));
     else if(parName == "Psi_Extract") return(psiExtractWithImputation(SP, SpParams));
+    else if(parName == "Kmax_stemxylem") return(KmaxStemXylemWithImputation(SP, SpParams));
+    else if(parName == "Kmax_rootxylem") return(KmaxRootXylemWithImputation(SP, SpParams));
+    else if(parName == "VCleaf_kmax") return(VCleafkmaxWithImputation(SP, SpParams));
+    else if(parName == "Gswmax") return(GswmaxWithImputation(SP, SpParams));
+    else if(parName == "Gswmin") return(GswminWithImputation(SP, SpParams));
+    else if(parName == "Vmax298") return(Vmax298WithImputation(SP, SpParams));
+    else if(parName == "Jmax298") return(Jmax298WithImputation(SP, SpParams));
+    else if(parName == "VCstem_c") return(VCstemCWithImputation(SP, SpParams));
+    else if(parName == "VCstem_d") return(VCstemDWithImputation(SP, SpParams));
+    else if(parName == "VCleaf_c") return(VCleafCWithImputation(SP, SpParams));
+    else if(parName == "VCleaf_d") return(VCleafDWithImputation(SP, SpParams));
+    else if(parName == "VCroot_c") return(VCrootCWithImputation(SP, SpParams));
+    else if(parName == "VCroot_d") return(VCrootDWithImputation(SP, SpParams));
+    else if(parName == "a_fbt" | parName == "b_fbt"| parName == "c_fbt"| parName == "d_fbt") return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
+    else if(parName == "a_cw" | parName == "b_cw") return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
+    else if(parName == "a_cr" | parName == "b_1cr"| parName == "b_2cr"| parName == "b_3cr") return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
+    else if(parName == "c_1cr"| parName == "c_2cr") return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
+    else if(parName == "a_ash"| parName == "b_ash") return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName));
+    else if(parName == "a_bsh"| parName == "b_bsh") return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName));
+    else if(parName == "a_btsh"| parName == "b_btsh"| parName == "cr") return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName));
   }
   return(speciesNumericParameter(SP, SpParams,parName));
 }
