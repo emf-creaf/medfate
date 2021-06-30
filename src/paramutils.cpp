@@ -466,6 +466,58 @@ NumericVector leafAFWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(leafAF);
 }
+NumericVector pRootDiscWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector pRootDisc = speciesNumericParameter(SP, SpParams, "pRootDisc");
+  for(int c=0;c<pRootDisc.size();c++) {
+    if(NumericVector::is_na(pRootDisc[c])) {
+      pRootDisc[c] = 0.0;
+    }
+  }
+  return(pRootDisc);
+}
+NumericVector TmaxLAIWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector Tmax_LAI = speciesNumericParameter(SP, SpParams, "Tmax_LAI");
+  for(int c=0;c<Tmax_LAI.size();c++) {
+    if(NumericVector::is_na(Tmax_LAI[c])) {
+      Tmax_LAI[c] = 0.134;//Granier coefficient for LAI
+    }
+  }
+  return(Tmax_LAI);
+}
+NumericVector TmaxLAIsqWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector Tmax_LAIsq = speciesNumericParameter(SP, SpParams, "Tmax_LAIsq");
+  for(int c=0;c<Tmax_LAIsq.size();c++) {
+    if(NumericVector::is_na(Tmax_LAIsq[c])) {
+      Tmax_LAIsq[c] = -0.006; //Granier coefficient for LAI^2
+    }
+  }
+  return(Tmax_LAIsq);
+}
+NumericVector WUEWithImputation(IntegerVector SP, DataFrame SpParams) {
+  CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
+  CharacterVector leafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
+  NumericVector WUE = speciesNumericParameter(SP, SpParams, "WUE");
+  for(int c=0;c<WUE.size();c++) {
+    if(NumericVector::is_na(WUE[c])) {
+      if(leafShape[c]=="Linear") {
+        WUE[c]= 3.707131;
+      } else if(leafShape[c]=="Needle") {
+        WUE[c]= 3.707131;
+      } else if(leafShape[c]=="Broad") {
+        if(leafSize[c]=="Small") {
+          WUE[c] = 4.289629;
+        } else if(leafSize[c]=="Medium") {
+          WUE[c] = 3.982086;
+        } else if(leafSize[c]=="Large") {
+          WUE[c]= 3.027647;
+        }
+      } else if(leafShape[c]=="Scale") { 
+        WUE[c] = 1.665034;
+      }
+    }
+  }
+  return(WUE);
+}
 
 /** Allometric coefficient retrieval with imputation */
 NumericVector shrubAllometricCoefficientWithImputation(IntegerVector SP, DataFrame SpParams, String parName) {
@@ -610,6 +662,10 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "LeafPI0") return(leafPI0WithImputation(SP, SpParams));
     else if(parName == "LeafEPS") return(leafEPSWithImputation(SP, SpParams));
     else if(parName == "LeafAF") return(leafAFWithImputation(SP, SpParams));
+    else if(parName == "pRootDisc") return(pRootDiscWithImputation(SP, SpParams));
+    else if(parName == "Tmax_LAI") return(TmaxLAIWithImputation(SP, SpParams));
+    else if(parName == "Tmax_LAIsq") return(TmaxLAIsqWithImputation(SP, SpParams));
+    else if(parName == "WUE") return(WUEWithImputation(SP, SpParams));
   }
   return(speciesNumericParameter(SP, SpParams,parName));
 }

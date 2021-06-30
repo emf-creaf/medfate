@@ -143,11 +143,14 @@ DataFrame paramsWaterStorage(DataFrame above, DataFrame SpParams,
 
 DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool fillMissingSpParams) {
   IntegerVector SP = above["SP"];
-  NumericVector WUE = speciesNumericParameter(SP, SpParams, "WUE");
+  
+  NumericVector pRootDisc = speciesNumericParameterWithImputation(SP, SpParams, "pRootDisc", fillMissingSpParams);
+  NumericVector Tmax_LAI = speciesNumericParameterWithImputation(SP, SpParams, "Tmax_LAI", true);
+  NumericVector Tmax_LAIsq = speciesNumericParameterWithImputation(SP, SpParams, "Tmax_LAIsq", true);
+  NumericVector WUE = speciesNumericParameterWithImputation(SP, SpParams, "WUE", fillMissingSpParams);
+  
   NumericVector Psi_Extract = speciesNumericParameter(SP, SpParams, "Psi_Extract");
   NumericVector Psi_Critic = speciesNumericParameter(SP, SpParams, "Psi_Critic");
-  NumericVector pRootDisc = speciesNumericParameter(SP, SpParams, "pRootDisc");
-  NumericVector Tmax_LAI(SP.size(), NA_REAL);
   
   CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
   CharacterVector Order = speciesCharacterParameter(SP, SpParams, "Order");
@@ -156,35 +159,9 @@ DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool 
   CharacterVector LeafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
   CharacterVector LeafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
   
-  //Granier's parameters will not raise error messages when missing and will be filled always 
-  if(SpParams.containsElementNamed("Tmax_LAI")) Tmax_LAI = speciesNumericParameter(SP, SpParams, "Tmax_LAI");
-  NumericVector Tmax_LAIsq(SP.size(), NA_REAL);
-  if(SpParams.containsElementNamed("Tmax_LAIsq")) Tmax_LAIsq = speciesNumericParameter(SP, SpParams, "Tmax_LAIsq");
-  for(int c=0;c<SP.size();c++) {
-    if(NumericVector::is_na(Tmax_LAI[c])) Tmax_LAI[c] = 0.134; //Granier coefficient for LAI
-    if(NumericVector::is_na(Tmax_LAIsq[c])) Tmax_LAIsq[c] =-0.006; //Granier coefficient for LAI^2
-  }
-  
+
   if(fillMissingSpParams) {
     for(int c=0;c<SP.size();c++) {
-      if(NumericVector::is_na(WUE[c]) && !CharacterVector::is_na(LeafShape[c]) && !CharacterVector::is_na(LeafSize[c])) {
-        if(LeafShape[c]=="Linear") {
-          WUE[c]= 3.707131;
-        } else if(LeafShape[c]=="Needle") {
-          WUE[c]= 3.707131;
-        } else if(LeafShape[c]=="Broad") {
-          if(LeafSize[c]=="Small") {
-            WUE[c] = 4.289629;
-          } else if(LeafSize[c]=="Medium") {
-            WUE[c] = 3.982086;
-          } else if(LeafSize[c]=="Large") {
-            WUE[c]= 3.027647;
-          }
-        } else if(LeafShape[c]=="Scale") { 
-          WUE[c] = 1.665034;
-        }
-      }
-      if(NumericVector::is_na(pRootDisc[c])) pRootDisc[c] = 0.0;
       if(NumericVector::is_na(Psi_Critic[c])) {
         // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
         if(Group[c]=="Angiosperm") {
