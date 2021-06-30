@@ -85,14 +85,6 @@ plant_ID <- function(x, treeOffset = 0L, shrubOffset = 0L) {
     .Call(`_medfate_cohortIDs`, x, treeOffset, shrubOffset)
 }
 
-plant_parameter <- function(x, SpParams, parName) {
-    .Call(`_medfate_cohortNumericParameter`, x, SpParams, parName)
-}
-
-plant_characterParameter <- function(x, SpParams, parName) {
-    .Call(`_medfate_cohortCharacterParameter`, x, SpParams, parName)
-}
-
 plant_species <- function(x) {
     .Call(`_medfate_cohortSpecies`, x)
 }
@@ -629,12 +621,20 @@ resetInputs <- function(x) {
     invisible(.Call(`_medfate_checkSpeciesParameters`, SpParams, params))
 }
 
-species_parameter <- function(SP, SpParams, parName) {
-    .Call(`_medfate_speciesNumericParameter`, SP, SpParams, parName)
-}
-
 species_characterParameter <- function(SP, SpParams, parName) {
     .Call(`_medfate_speciesCharacterParameter`, SP, SpParams, parName)
+}
+
+plant_characterParameter <- function(x, SpParams, parName) {
+    .Call(`_medfate_cohortCharacterParameter`, x, SpParams, parName)
+}
+
+species_parameter <- function(SP, SpParams, parName, fillMissing = TRUE) {
+    .Call(`_medfate_speciesNumericParameterWithImputation`, SP, SpParams, parName, fillMissing)
+}
+
+plant_parameter <- function(x, SpParams, parName, fillMissing = TRUE) {
+    .Call(`_medfate_cohortNumericParameterWithImputation`, x, SpParams, parName, fillMissing)
 }
 
 .gdd <- function(DOY, Temp, Tbase = 5.0, cum = 0.0) {

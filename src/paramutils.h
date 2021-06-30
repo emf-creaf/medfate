@@ -10,12 +10,11 @@ void checkSpeciesParameters(DataFrame SpParams, CharacterVector params);
 
 NumericVector speciesNumericParameter(IntegerVector SP, DataFrame SpParams, String parName);
 CharacterVector speciesCharacterParameter(IntegerVector SP, DataFrame SpParams, String parName);
-NumericVector fineFoliarRatioWithImputation(IntegerVector SP, DataFrame SpParams);
-NumericVector specificLeafAreaWithImputation(IntegerVector SP, DataFrame SpParams);
+NumericVector cohortNumericParameter(List x, DataFrame SpParams, String parName);
+CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parName);
+
+NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame SpParams, String parName, bool fillMissing = true);
+NumericVector cohortNumericParameterWithImputation(List x, DataFrame SpParams, String parName, bool fillMissing = true);
+
 NumericVector treeAllometricCoefficientWithImputation(IntegerVector SP, DataFrame SpParams, String parName);
 NumericVector shrubAllometricCoefficientWithImputation(IntegerVector SP, DataFrame SpParams, String parName);
-
-NumericVector kPARWithImputation(IntegerVector SP, DataFrame SpParams);
-NumericVector gammaSWRWithImputation(IntegerVector SP, DataFrame SpParams);
-NumericVector alphaSWRWithImputation(IntegerVector SP, DataFrame SpParams);
-NumericVector gWithImputation(IntegerVector SP, DataFrame SpParams);

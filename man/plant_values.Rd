@@ -42,7 +42,7 @@ plant_fuel(x, SpParams, gdd = NA, includeDead = TRUE, mode = "MED")
 plant_height(x)
 plant_ID(x, treeOffset = 0, shrubOffset = 0)
 plant_LAI(x, SpParams, gdd = NA, mode = "MED")
-plant_parameter(x, SpParams, parName)
+plant_parameter(x, SpParams, parName, fillMissing = TRUE)
 plant_phytovolume(x, SpParams)
 plant_species(x)
 plant_speciesName(x, SpParams)
@@ -57,6 +57,7 @@ plant_speciesName(x, SpParams)
   \item{smallBranchDecompositionRate}{Decomposition rate of small branches.}
   \item{includeDead}{A flag to indicate that standing dead fuels (dead branches) are included.}
   \item{treeOffset, shrubOffset}{Integers to offset cohort IDs.}
+  \item{fillMissing}{A boolean flag to try imputation on missing values.}
 }
 \value{
 A vector with values for each plant of the input \code{\link{forest}} object:

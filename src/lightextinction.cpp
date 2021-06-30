@@ -33,14 +33,14 @@ NumericVector parcohortC(NumericVector H, NumericVector LAI_expanded,  NumericVe
 NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
   int n = SP.size();
   NumericVector LAI_dead(n, 0.0);
-  NumericVector kPAR = kPARWithImputation(SP, SpParams);  
+  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true);  
   return(parcohortC(H,LAI,LAI_dead,kPAR,CR));
 }
 
 // [[Rcpp::export(".parheight")]]
 NumericVector parheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
   int n = SP.size();
-  NumericVector kPAR = kPARWithImputation(SP, SpParams);  
+  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true);  
   NumericVector LAI_dead(n, 0.0);
   NumericVector AL(heights.size());
   for(int i=0; i<heights.size();i++) AL[i] = availableLight(heights[i], H,LAI,LAI_dead, kPAR,CR);
@@ -50,7 +50,7 @@ NumericVector parheight(NumericVector heights, IntegerVector SP, NumericVector H
 // [[Rcpp::export(".swrheight")]]
 NumericVector swrheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
   int n = SP.size();
-  NumericVector kPAR = kPARWithImputation(SP, SpParams);  
+  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true);  
   NumericVector kSWR(n), LAI_dead(n);
   for(int i=0; i<n;i++) {
     kSWR[i] = kPAR[i]/1.35;

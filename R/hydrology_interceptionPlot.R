@@ -1,7 +1,7 @@
 hydrology_interceptionPlot<-function(x, SpParams, ER = 0.05, gdd = NA, throughfall = FALSE){
   
   LAI_coh = plant_LAI(x, SpParams, gdd)
-  g_coh = plant_parameter(x, SpParams, "g")
+  g_coh = plant_parameter(x, SpParams, "g", TRUE)
   
   Cm = sum(LAI_coh*g_coh)
   

@@ -60,16 +60,10 @@ DataFrame paramsInterception(DataFrame above, DataFrame SpParams, List control) 
   String transpirationMode = control["transpirationMode"];
   bool fillMissingSpParams = control["fillMissingSpParams"];
   
-  NumericVector alphaSWR = speciesNumericParameter(SP, SpParams, "alphaSWR");
-  NumericVector gammaSWR = speciesNumericParameter(SP, SpParams, "gammaSWR");
-  NumericVector kPAR = speciesNumericParameter(SP, SpParams, "kPAR");
-  NumericVector g = speciesNumericParameter(SP, SpParams, "g");
-  if(fillMissingSpParams) {
-    alphaSWR = alphaSWRWithImputation(SP, SpParams);
-    gammaSWR = gammaSWRWithImputation(SP, SpParams);
-    kPAR = kPARWithImputation(SP, SpParams);
-    g = gWithImputation(SP, SpParams);
-  }
+  NumericVector alphaSWR = speciesNumericParameterWithImputation(SP, SpParams, "alphaSWR", fillMissingSpParams);
+  NumericVector gammaSWR = speciesNumericParameterWithImputation(SP, SpParams, "gammaSWR", fillMissingSpParams);
+  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", fillMissingSpParams);
+  NumericVector g = speciesNumericParameterWithImputation(SP, SpParams, "g", fillMissingSpParams);
   DataFrame paramsInterceptiondf;
   if(transpirationMode=="Granier") {
     paramsInterceptiondf = DataFrame::create(_["kPAR"] = kPAR, 
@@ -94,8 +88,7 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
   NumericVector Hmax = speciesNumericParameter(SP, SpParams, "Hmax");
   NumericVector Hmed = speciesNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
   NumericVector Al2As = speciesNumericParameter(SP, SpParams, "Al2As");
-  NumericVector SLA = speciesNumericParameter(SP, SpParams, "SLA");
-  if(fillMissingSpParams) SLA = specificLeafAreaWithImputation(SP, SpParams);
+  NumericVector SLA = speciesNumericParameterWithImputation(SP, SpParams, "SLA", fillMissingSpParams);
   NumericVector LeafDensity = speciesNumericParameter(SP, SpParams, "LeafDensity");
   NumericVector WoodDensity = speciesNumericParameter(SP, SpParams, "WoodDensity");
   NumericVector FineRootDensity = speciesNumericParameter(SP, SpParams, "FineRootDensity");
@@ -103,10 +96,9 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
   if(SpParams.containsElementNamed("conduit2sapwood")) {
     conduit2sapwood = speciesNumericParameter(SP, SpParams, "conduit2sapwood");
   }
-  NumericVector r635 = speciesNumericParameter(SP, SpParams, "r635");
-  if(fillMissingSpParams) r635 = fineFoliarRatioWithImputation(SP, SpParams); 
-
-  NumericVector leafwidth = speciesNumericParameter(SP, SpParams, "LeafWidth");
+  NumericVector r635 = speciesNumericParameterWithImputation(SP, SpParams, "r635", fillMissingSpParams);
+  NumericVector leafwidth = speciesNumericParameterWithImputation(SP, SpParams, "LeafWidth", fillMissingSpParams);
+  
   NumericVector SRL = speciesNumericParameter(SP, SpParams, "SRL");  
   NumericVector RLD = speciesNumericParameter(SP, SpParams, "RLD");  
   
@@ -115,23 +107,6 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
   
   if(fillMissingSpParams) {
     for(int c=0;c<numCohorts;c++){ //default values for missing data
-      if(NumericVector::is_na(leafwidth[c]) && !CharacterVector::is_na(LeafShape[c]) && !CharacterVector::is_na(LeafSize[c])) {
-        if(LeafShape[c]=="Linear") {
-          leafwidth[c]= 0.6393182;
-        } else if(LeafShape[c]=="Needle") {
-          leafwidth[c]= 0.3792844;
-        } else if(LeafShape[c]=="Broad") {
-          if(LeafSize[c]=="Small") {
-            leafwidth[c] = 0.6439761;
-          } else if(LeafSize[c]=="Medium") {
-            leafwidth[c] = 3.0537686;
-          } else if(LeafSize[c]=="Large") {
-            leafwidth[c]= 6.8980354;
-          }
-        } else if(LeafShape[c]=="Scale") { 
-          leafwidth[c] = 0.1007839;
-        }
-      }
       if(NumericVector::is_na(WoodDensity[c])) WoodDensity[c] = 0.652;
       if(NumericVector::is_na(LeafDensity[c])) LeafDensity[c] = 0.7;
       if(NumericVector::is_na(FineRootDensity[c])) FineRootDensity[c] = 0.165; 

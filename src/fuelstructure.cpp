@@ -2,6 +2,7 @@
 #include <Rcpp.h>
 #include "spwb.h"
 #include "forestutils.h"
+#include "paramutils.h"
 #include "fuelmoisture.h"
 using namespace Rcpp;
 
@@ -279,8 +280,8 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
     if(NumericVector::is_na(cohCL[i])) cohCL[i] = 0.0;
   }
   
-  NumericVector cohSAV = surfaceToAreaRatioWithImputation(object, SpParams);
-  NumericVector cohHeatContent = heatContentWithImputation(object, SpParams);
+  NumericVector cohSAV = cohortNumericParameterWithImputation(object, SpParams, "SAV", true);
+  NumericVector cohHeatContent = cohortNumericParameterWithImputation(object, SpParams, "HeatContent", true);
   
   NumericVector cohParticleDensity = cohortNumericParameter(object, SpParams, "ParticleDensity");
   NumericVector cohCR = cohortCrownRatio(object, SpParams, mode);

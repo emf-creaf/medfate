@@ -23,7 +23,7 @@ species_foliarBiomass(x, SpParams, gdd = NA, mode = "MED")
 species_fuel(x, SpParams, gdd = NA, includeDead = TRUE, mode = "MED")
 species_LAI(x, SpParams, gdd = NA, mode = "MED")
 species_phytovolume(x, SpParams)
-species_parameter(SP, SpParams, parName)
+species_parameter(SP, SpParams, parName, fillMissing = TRUE)
 species_characterParameter(SP, SpParams, parName)
 }
 \arguments{
@@ -34,6 +34,7 @@ species_characterParameter(SP, SpParams, parName)
   \item{mode}{Calculation mode, either "MED" or "US".}
   \item{SP}{An integer vector of species codes.}
   \item{parName}{A string with a parameter name.}
+  \item{fillMissing}{A boolean flag to try imputation on missing values.}
 }
 \value{
 A vector with values for each species in \code{SpParams}:
@@ -65,7 +66,7 @@ data(exampleforestMED)
 # Species basal area in the forest plot
 species_basalArea(exampleforestMED, SpParamsMED)
 
-# Value of parameter `Psi_Extract` for species 54 (Pinus halepensis)
-# and 68 (Quercus ilex)
-species_parameter(c(54, 68), SpParamsMED, "Psi_Extract")
+# Value of parameter `Psi_Extract` for species 157 (Pinus halepensis)
+# and 176 (Quercus ilex)
+species_parameter(c(157,176), SpParamsMED, "Psi_Extract")
 }
