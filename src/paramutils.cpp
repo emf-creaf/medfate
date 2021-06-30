@@ -8,6 +8,7 @@ using namespace Rcpp;
 int findRowIndex(int sp, DataFrame SpParams) {
   IntegerVector spIndexSP = SpParams["SpIndex"];
   for(int i=0;i<spIndexSP.length();i++) if(spIndexSP[i]==sp) return(i);
+  Rcerr << sp << " not found!\n";
   stop("Species code not found in SpParams");
   return(NA_INTEGER);
 }
