@@ -30,7 +30,7 @@ The aim of the exercises presented here are:
 
 ## Preparing model inputs
 
-As an example data set we will use here the same data sets provided to illustrate simulation functions in **medfate**. This data set consists of a forest with two tree species (*Pinus halepensis*/T1_54 and *Quercus ilex*/T2_68) and one shrub species (*Quercus coccifera*/S1_65 or Kermes oak). 
+As an example data set we will use here the same data sets provided to illustrate simulation functions in **medfate**. This data set consists of a forest with two tree species (*Pinus halepensis*/T1_157 and *Quercus ilex*/T2_176) and one shrub species (*Quercus coccifera*/S1_174 or Kermes oak). 
 
 We begin by loading the package and the example forest data:
 ```{r}
@@ -84,9 +84,9 @@ In the following code we define a vector of parameter names (using naming rules 
 
 ```{r}
 #Parameter names of interest
-parNames = c("T1_54/LAI_live", "T2_68/LAI_live", "S1_65/LAI_live",
-             "T1_54/Z50", "T2_68/Z50", "S1_65/Z50",
-             "T1_54/Psi_Extract", "T2_68/Psi_Extract", "S1_65/Psi_Extract",
+parNames = c("T1_157/LAI_live", "T2_176/LAI_live", "S1_174/LAI_live",
+             "T1_157/Z50", "T2_176/Z50", "S1_174/Z50",
+             "T1_157/Psi_Extract", "T2_176/Psi_Extract", "S1_174/Psi_Extract",
              "rfc@1", "rfc@2")
 #Parameter minimum and maximum values
 parMin = c(0.1,0.1,0.1,
@@ -274,7 +274,7 @@ To simplify our analysis and avoid problems of parameter identifiability, we foc
 
 ```{r}
 #Parameter names of interest
-parNames = c("T1_54/Z50", "T2_68/Z50", "S1_65/Z50")
+parNames = c("T1_157/Z50", "T2_176/Z50", "S1_174/Z50")
 #Parameter minimum and maximum values
 parMin = c(100,100,100)
 parMax = c(1000,1000,1000)
@@ -400,7 +400,7 @@ and compare the prior prediction uncertainty with the posterior prediction uncer
 ```{r, fig.height=4, fig.width=5}
 plot(density(unlist(lapply(MS_prior, sf_transp))), main = "Transpiration", 
      xlab = "Total transpiration (mm)",
-     xlim = c(280,295), ylim = c(0,1.2))
+     xlim = c(320,345), ylim = c(0,0.5))
 lines(density(unlist(lapply(MS, sf_transp))), col = "red")
 legend("topleft", legend = c("Prior", "Posterior"), 
        col = c("black", "red"), lty=1, bty="n")

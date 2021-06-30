@@ -104,7 +104,7 @@ control = defaultControl("Granier")
 x1 = forest2spwbInput(exampleforestMED,examplesoil1, SpParamsMED, control)
 
 #Parameter names of interest
-parNames = c("T1_54/Z50", "T1_54/Z95")
+parNames = c("T1_157/Z50", "T1_157/Z95")
 
 #Specify parameter matrix
 parMatrix <- cbind(c(200,300), c(500,1000))
@@ -120,7 +120,7 @@ multiple_runs(parMatrix,
               
 #Load observed data (in this case the same simulation results with some added error)  
 # Generate a prediction function for total transpiration over the simulated period
-# as a function of parameters "Z50" and "Z95" for cohort "T1_54"
+# as a function of parameters "Z50" and "Z95" for cohort "T1_157"
 of<-optimization_function(parNames = parNames,
                           x = x1,
                           meteo = examplemeteo, 
@@ -133,7 +133,7 @@ of(parMatrix)
 
 
 # Generate a loglikelihood function for soil water content
-# as a function of parameters "Z50" and "Z95" for cohort "T1_54"
+# as a function of parameters "Z50" and "Z95" for cohort "T1_157"
 data(exampleobs)
 oef<-optimization_evaluation_function(parNames = parNames,
                 x = x1,
