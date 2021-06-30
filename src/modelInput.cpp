@@ -148,40 +148,9 @@ DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool 
   NumericVector Tmax_LAI = speciesNumericParameterWithImputation(SP, SpParams, "Tmax_LAI", true);
   NumericVector Tmax_LAIsq = speciesNumericParameterWithImputation(SP, SpParams, "Tmax_LAIsq", true);
   NumericVector WUE = speciesNumericParameterWithImputation(SP, SpParams, "WUE", fillMissingSpParams);
+  NumericVector Psi_Critic = speciesNumericParameterWithImputation(SP, SpParams, "Psi_Critic", fillMissingSpParams);
+  NumericVector Psi_Extract = speciesNumericParameterWithImputation(SP, SpParams, "Psi_Extract", fillMissingSpParams);
   
-  NumericVector Psi_Extract = speciesNumericParameter(SP, SpParams, "Psi_Extract");
-  NumericVector Psi_Critic = speciesNumericParameter(SP, SpParams, "Psi_Critic");
-  
-  CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
-  CharacterVector Order = speciesCharacterParameter(SP, SpParams, "Order");
-  CharacterVector GrowthForm = speciesCharacterParameter(SP, SpParams, "GrowthForm");
-  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
-  CharacterVector LeafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
-  CharacterVector LeafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
-  
-
-  if(fillMissingSpParams) {
-    for(int c=0;c<SP.size();c++) {
-      if(NumericVector::is_na(Psi_Critic[c])) {
-        // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
-        if(Group[c]=="Angiosperm") {
-          if((GrowthForm[c]=="Shrub") && (phenoType[c] != "winter-deciduous") && (phenoType[c] != "winter-semideciduous")) {
-            Psi_Critic[c] = -5.09; //Angiosperm evergreen shrub
-          } else if((GrowthForm[c]!="Shrub") && (phenoType[c] == "winter-deciduous" | phenoType[c] == "winter-semideciduous")) {
-            Psi_Critic[c] = -2.34; //Angiosperm winter-deciduous tree
-          } else { 
-            Psi_Critic[c] = -1.51; //Angiosperm evergreen tree
-          }
-        } else {
-          if(GrowthForm[c]=="Shrub") {
-            Psi_Critic[c] = -8.95; //Gymnosperm shrub
-          } else {
-            Psi_Critic[c] = -4.17; //Gymnosperm tree
-          }
-        }
-      }
-    }
-  }
   DataFrame paramsTranspirationdf = DataFrame::create(_["Tmax_LAI"] = Tmax_LAI,
                                                       _["Tmax_LAIsq"] = Tmax_LAIsq,
                                                       _["Psi_Extract"]=Psi_Extract,

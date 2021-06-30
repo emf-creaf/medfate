@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "forestutils.h"
+#include "tissuemoisture.h"
 using namespace Rcpp;
 
 int findRowIndex(int sp, DataFrame SpParams) {
@@ -518,7 +519,47 @@ NumericVector WUEWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(WUE);
 }
-
+NumericVector psi50Imputation(NumericVector psi50, IntegerVector SP, DataFrame SpParams) {
+  CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
+  CharacterVector GrowthForm = speciesCharacterParameter(SP, SpParams, "GrowthForm");
+  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
+  for(int c=0;c<psi50.size();c++) {
+    if(NumericVector::is_na(psi50[c])) {
+      // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
+      if(Group[c]=="Angiosperm") {
+        if((GrowthForm[c]=="Shrub") && (phenoType[c] != "winter-deciduous") && (phenoType[c] != "winter-semideciduous")) {
+          psi50[c] = -5.09; //Angiosperm evergreen shrub
+        } else if((GrowthForm[c]!="Shrub") && (phenoType[c] == "winter-deciduous" | phenoType[c] == "winter-semideciduous")) {
+          psi50[c] = -2.34; //Angiosperm winter-deciduous tree
+        } else { 
+          psi50[c] = -1.51; //Angiosperm evergreen tree
+        }
+      } else {
+        if(GrowthForm[c]=="Shrub") {
+          psi50[c] = -8.95; //Gymnosperm shrub
+        } else {
+          psi50[c] = -4.17; //Gymnosperm tree
+        }
+      }
+    }
+  }
+  return(psi50);
+}
+NumericVector psiCriticWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector Psi_Critic = speciesNumericParameter(SP, SpParams, "Psi_Critic");
+  return(psi50Imputation(Psi_Critic, SP, SpParams));
+}
+NumericVector psiExtractWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector leafPI0 = leafPI0WithImputation(SP, SpParams);
+  NumericVector leafEPS = leafEPSWithImputation(SP, SpParams);
+  NumericVector Psi_Extract = speciesNumericParameter(SP, SpParams, "Psi_Extract");
+  for(int c=0;c<Psi_Extract.size();c++) {
+    if(NumericVector::is_na(Psi_Extract[c])) {
+      Psi_Extract[c] = turgorLossPoint(leafPI0[c], leafEPS[c]);
+    }
+  }
+  return(Psi_Extract);
+}
 /** Allometric coefficient retrieval with imputation */
 NumericVector shrubAllometricCoefficientWithImputation(IntegerVector SP, DataFrame SpParams, String parName) {
   NumericVector coef = speciesNumericParameter(SP,SpParams, parName);
@@ -666,6 +707,8 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "Tmax_LAI") return(TmaxLAIWithImputation(SP, SpParams));
     else if(parName == "Tmax_LAIsq") return(TmaxLAIsqWithImputation(SP, SpParams));
     else if(parName == "WUE") return(WUEWithImputation(SP, SpParams));
+    else if(parName == "Psi_Critic") return(psiCriticWithImputation(SP, SpParams));
+    else if(parName == "Psi_Extract") return(psiExtractWithImputation(SP, SpParams));
   }
   return(speciesNumericParameter(SP, SpParams,parName));
 }
