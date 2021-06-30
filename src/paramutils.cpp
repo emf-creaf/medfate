@@ -323,6 +323,150 @@ NumericVector leafWidthWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(leafwidth);
 }
+NumericVector Al2AsWithImputation(IntegerVector SP, DataFrame SpParams) {
+  CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
+  CharacterVector leafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
+  NumericVector Al2As = speciesNumericParameter(SP, SpParams, "Al2As");
+  for(int c=0;c<Al2As.size();c++) {
+    if(NumericVector::is_na(Al2As[c])) {
+      if(leafShape[c]=="Linear") {
+        Al2As[c]= 2156.0;
+      } else if(leafShape[c]=="Needle") {
+        Al2As[c]= 2751.7;
+      } else if(leafShape[c]=="Broad") {
+        if(leafSize[c]=="Small") {
+          Al2As[c] = 2284.9;
+        } else if(leafSize[c]=="Medium") {
+          Al2As[c] = 2446.1;
+        } else if(leafSize[c]=="Large") {
+          Al2As[c]= 4768.7;
+        }
+      } else if(leafShape[c]=="Scale") { 
+        Al2As[c] = 1696.6;
+      }
+    }
+  }
+  return(Al2As);
+}
+NumericVector woodDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector woodDensity = speciesNumericParameter(SP, SpParams, "WoodDensity");
+  for(int c=0;c<woodDensity.size();c++) {
+    if(NumericVector::is_na(woodDensity[c])) {
+      woodDensity[c] = 0.652;
+    }
+  }
+  return(woodDensity);
+}
+NumericVector leafDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector leafDensity = speciesNumericParameter(SP, SpParams, "LeafDensity");
+  for(int c=0;c<leafDensity.size();c++) {
+    if(NumericVector::is_na(leafDensity[c])) {
+      leafDensity[c] = 0.7;
+    }
+  }
+  return(leafDensity);
+}
+NumericVector fineRootDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector fineRootDensity = speciesNumericParameter(SP, SpParams, "FineRootDensity");
+  for(int c=0;c<fineRootDensity.size();c++) {
+    if(NumericVector::is_na(fineRootDensity[c])) {
+      fineRootDensity[c] = 0.165;
+    }
+  }
+  return(fineRootDensity);
+}
+NumericVector specificRootLengthWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector specificRootLength = speciesNumericParameter(SP, SpParams, "SRL");
+  for(int c=0;c<specificRootLength.size();c++) {
+    if(NumericVector::is_na(specificRootLength[c])) {
+      specificRootLength[c] = 3870.0;
+    }
+  }
+  return(specificRootLength);
+}
+NumericVector rootLengthDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector rootLengthDensity = speciesNumericParameter(SP, SpParams, "RLD");
+  for(int c=0;c<rootLengthDensity.size();c++) {
+    if(NumericVector::is_na(rootLengthDensity[c])) {
+      rootLengthDensity[c] = 10.0;
+    }
+  }
+  return(rootLengthDensity);
+}
+NumericVector conduit2sapwoodWithImputation(IntegerVector SP, DataFrame SpParams) {
+  CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
+  NumericVector conduit2sapwood = speciesNumericParameter(SP, SpParams, "conduit2sapwood");
+  for(int c=0;c<conduit2sapwood.size();c++) {
+    if(NumericVector::is_na(conduit2sapwood[c])) {
+      if(Group[c]=="Angiosperm") conduit2sapwood[c] = 0.70; //20-40% parenchyma in angiosperms.
+      else conduit2sapwood[c] = 0.925; //5-10% parenchyma in gymnosperms (https://link.springer.com/chapter/10.1007/978-3-319-15783-2_8)
+    }
+  }
+  return(conduit2sapwood);
+}
+NumericVector stemPI0WithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector WoodDensity = woodDensityWithImputation(SP, SpParams);
+  NumericVector StemPI0 = speciesNumericParameter(SP, SpParams, "StemPI0");
+  for(int c=0;c<StemPI0.size();c++) {
+    //From: Christoffersen, B.O., Gloor, M., Fauset, S., Fyllas, N.M., Galbraith, D.R., Baker, T.R., Rowland, L., Fisher, R.A., Binks, O.J., Sevanto, S.A., Xu, C., Jansen, S., Choat, B., Mencuccini, M., McDowell, N.G., & Meir, P. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0: 1–60.
+    if(NumericVector::is_na(StemPI0[c])) {
+      StemPI0[c] = 0.52 - 4.16*WoodDensity[c];
+    }
+  }
+  return(StemPI0);
+}
+NumericVector stemEPSWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector WoodDensity = woodDensityWithImputation(SP, SpParams);
+  NumericVector StemEPS = speciesNumericParameter(SP, SpParams, "StemEPS");
+  for(int c=0;c<StemEPS.size();c++) {
+    //From: Christoffersen, B.O., Gloor, M., Fauset, S., Fyllas, N.M., Galbraith, D.R., Baker, T.R., Rowland, L., Fisher, R.A., Binks, O.J., Sevanto, S.A., Xu, C., Jansen, S., Choat, B., Mencuccini, M., McDowell, N.G., & Meir, P. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0: 1–60.
+    if(NumericVector::is_na(StemEPS[c])) {
+      StemEPS[c] = sqrt(1.02*exp(8.5*WoodDensity[c])-2.89); 
+    }
+  }
+  return(StemEPS);
+}
+NumericVector stemAFWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector conduit2sapwood = conduit2sapwoodWithImputation(SP, SpParams);
+  NumericVector stemAF = speciesNumericParameter(SP, SpParams, "StemAF");
+  for(int c=0;c<stemAF.size();c++) {
+    if(NumericVector::is_na(stemAF[c])) {
+      stemAF[c] = conduit2sapwood[c]; 
+    }
+  }
+  return(stemAF);
+}
+NumericVector leafPI0WithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector leafPI0 = speciesNumericParameter(SP, SpParams, "LeafPI0");
+  for(int c=0;c<leafPI0.size();c++) {
+    //From: Bartlett MK, Scoffoni C, Sack L (2012) The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis. Ecol Lett 15:393–405. doi: 10.1111/j.1461-0248.2012.01751.x
+    if(NumericVector::is_na(leafPI0[c])) {
+      leafPI0[c] = -2.0;//Average for Mediterranean climate species
+    }
+  }
+  return(leafPI0);
+}
+NumericVector leafEPSWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector leafEPS = speciesNumericParameter(SP, SpParams, "LeafEPS");
+  for(int c=0;c<leafEPS.size();c++) {
+    //From: Bartlett MK, Scoffoni C, Sack L (2012) The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis. Ecol Lett 15:393–405. doi: 10.1111/j.1461-0248.2012.01751.x
+    if(NumericVector::is_na(leafEPS[c])) {
+      leafEPS[c] = 17.0;//Average for Mediterranean climate species
+    }
+  }
+  return(leafEPS);
+}
+NumericVector leafAFWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector leafAF = speciesNumericParameter(SP, SpParams, "LeafAF");
+  for(int c=0;c<leafAF.size();c++) {
+    //From: Bartlett MK, Scoffoni C, Sack L (2012) The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis. Ecol Lett 15:393–405. doi: 10.1111/j.1461-0248.2012.01751.x
+    if(NumericVector::is_na(leafAF[c])) {
+      leafAF[c] = 0.29; //Average for Mediterranean climate species
+    }
+  }
+  return(leafAF);
+}
+
 /** Allometric coefficient retrieval with imputation */
 NumericVector shrubAllometricCoefficientWithImputation(IntegerVector SP, DataFrame SpParams, String parName) {
   NumericVector coef = speciesNumericParameter(SP,SpParams, parName);
@@ -453,6 +597,19 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "SAV") return(surfaceToAreaRatioWithImputation(SP, SpParams));
     else if(parName == "HeatContent") return(heatContentWithImputation(SP, SpParams));
     else if(parName == "LeafWidth") return(leafWidthWithImputation(SP, SpParams));
+    else if(parName == "Al2As") return(Al2AsWithImputation(SP, SpParams));
+    else if(parName == "WoodDensity") return(woodDensityWithImputation(SP, SpParams));
+    else if(parName == "LeafDensity") return(leafDensityWithImputation(SP, SpParams));
+    else if(parName == "FineRootDensity") return(fineRootDensityWithImputation(SP, SpParams));
+    else if(parName == "SRL") return(specificRootLengthWithImputation(SP, SpParams));
+    else if(parName == "RLD") return(rootLengthDensityWithImputation(SP, SpParams));
+    else if(parName == "conduit2sapwood") return(conduit2sapwoodWithImputation(SP, SpParams));
+    else if(parName == "StemPI0") return(stemPI0WithImputation(SP, SpParams));
+    else if(parName == "StemEPS") return(stemEPSWithImputation(SP, SpParams));
+    else if(parName == "StemAF") return(stemAFWithImputation(SP, SpParams));
+    else if(parName == "LeafPI0") return(leafPI0WithImputation(SP, SpParams));
+    else if(parName == "LeafEPS") return(leafEPSWithImputation(SP, SpParams));
+    else if(parName == "LeafAF") return(leafAFWithImputation(SP, SpParams));
   }
   return(speciesNumericParameter(SP, SpParams,parName));
 }

@@ -81,60 +81,21 @@ DataFrame paramsInterception(DataFrame above, DataFrame SpParams, List control) 
 
 DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpParams) {
   IntegerVector SP = above["SP"];
-  int numCohorts = SP.size();
-  
-  CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
-  
+
   NumericVector Hmax = speciesNumericParameter(SP, SpParams, "Hmax");
   NumericVector Hmed = speciesNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
-  NumericVector Al2As = speciesNumericParameter(SP, SpParams, "Al2As");
+  
+  NumericVector Al2As = speciesNumericParameterWithImputation(SP, SpParams, "Al2As", fillMissingSpParams);
   NumericVector SLA = speciesNumericParameterWithImputation(SP, SpParams, "SLA", fillMissingSpParams);
-  NumericVector LeafDensity = speciesNumericParameter(SP, SpParams, "LeafDensity");
-  NumericVector WoodDensity = speciesNumericParameter(SP, SpParams, "WoodDensity");
-  NumericVector FineRootDensity = speciesNumericParameter(SP, SpParams, "FineRootDensity");
-  NumericVector conduit2sapwood(numCohorts, NA_REAL);
-  if(SpParams.containsElementNamed("conduit2sapwood")) {
-    conduit2sapwood = speciesNumericParameter(SP, SpParams, "conduit2sapwood");
-  }
   NumericVector r635 = speciesNumericParameterWithImputation(SP, SpParams, "r635", fillMissingSpParams);
   NumericVector leafwidth = speciesNumericParameterWithImputation(SP, SpParams, "LeafWidth", fillMissingSpParams);
-  
-  NumericVector SRL = speciesNumericParameter(SP, SpParams, "SRL");  
-  NumericVector RLD = speciesNumericParameter(SP, SpParams, "RLD");  
-  
-  CharacterVector LeafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
-  CharacterVector LeafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
-  
-  if(fillMissingSpParams) {
-    for(int c=0;c<numCohorts;c++){ //default values for missing data
-      if(NumericVector::is_na(WoodDensity[c])) WoodDensity[c] = 0.652;
-      if(NumericVector::is_na(LeafDensity[c])) LeafDensity[c] = 0.7;
-      if(NumericVector::is_na(FineRootDensity[c])) FineRootDensity[c] = 0.165; 
-      if(NumericVector::is_na(conduit2sapwood[c])) {
-        if(Group[c]=="Angiosperm") conduit2sapwood[c] = 0.70; //20-40% parenchyma in angiosperms.
-        else conduit2sapwood[c] = 0.925; //5-10% parenchyma in gymnosperms (https://link.springer.com/chapter/10.1007/978-3-319-15783-2_8)
-      }
-      if(NumericVector::is_na(Al2As[c]) && !CharacterVector::is_na(LeafShape[c]) && !CharacterVector::is_na(LeafSize[c])) {
-        if(LeafShape[c]=="Linear") {
-          Al2As[c]= 2156.0;
-        } else if(LeafShape[c]=="Needle") {
-          Al2As[c]= 2751.7;
-        } else if(LeafShape[c]=="Broad") {
-          if(LeafSize[c]=="Small") {
-            Al2As[c] = 2284.9;
-          } else if(LeafSize[c]=="Medium") {
-            Al2As[c] = 2446.1;
-          } else if(LeafSize[c]=="Large") {
-            Al2As[c]= 4768.7;
-          }
-        } else if(LeafShape[c]=="Scale") { 
-          Al2As[c] = 1696.6;
-        }
-      }
-      if(NumericVector::is_na(SRL[c])) SRL[c] = 3870.0; 
-      if(NumericVector::is_na(RLD[c])) RLD[c] = 10.0;
-    }
-  }
+  NumericVector WoodDensity = speciesNumericParameterWithImputation(SP, SpParams, "WoodDensity", fillMissingSpParams);
+  NumericVector LeafDensity = speciesNumericParameterWithImputation(SP, SpParams, "LeafDensity", fillMissingSpParams);
+  NumericVector FineRootDensity = speciesNumericParameterWithImputation(SP, SpParams, "FineRootDensity", fillMissingSpParams);
+  NumericVector SRL = speciesNumericParameterWithImputation(SP, SpParams, "SRL", fillMissingSpParams);  
+  NumericVector RLD = speciesNumericParameterWithImputation(SP, SpParams, "RLD", fillMissingSpParams);  
+  NumericVector conduit2sapwood = speciesNumericParameterWithImputation(SP, SpParams, "conduit2sapwood", fillMissingSpParams);
+
   DataFrame paramsAnatomydf = DataFrame::create(
     _["Hmax"] = Hmax,_["Hmed"] = Hmed,
     _["Al2As"] = Al2As, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
@@ -153,12 +114,12 @@ DataFrame paramsWaterStorage(DataFrame above, DataFrame SpParams,
   NumericVector H = above["H"];
   int numCohorts = SP.size();
   
-  NumericVector LeafPI0 = speciesNumericParameter(SP, SpParams, "LeafPI0");
-  NumericVector LeafEPS = speciesNumericParameter(SP, SpParams, "LeafEPS");
-  NumericVector LeafAF = speciesNumericParameter(SP, SpParams, "LeafAF");
-  NumericVector StemPI0 = speciesNumericParameter(SP, SpParams, "StemPI0");
-  NumericVector StemEPS = speciesNumericParameter(SP, SpParams, "StemEPS");
-  NumericVector StemAF = speciesNumericParameter(SP, SpParams, "StemAF");
+  NumericVector StemPI0 = speciesNumericParameterWithImputation(SP, SpParams, "StemPI0", fillMissingSpParams);
+  NumericVector StemEPS = speciesNumericParameterWithImputation(SP, SpParams, "StemEPS", fillMissingSpParams);
+  NumericVector StemAF = speciesNumericParameterWithImputation(SP, SpParams, "StemAF", fillMissingSpParams);
+  NumericVector LeafPI0 = speciesNumericParameterWithImputation(SP, SpParams, "LeafPI0", fillMissingSpParams);
+  NumericVector LeafEPS = speciesNumericParameterWithImputation(SP, SpParams, "LeafEPS", fillMissingSpParams);
+  NumericVector LeafAF = speciesNumericParameterWithImputation(SP, SpParams, "LeafAF", fillMissingSpParams);
   
   NumericVector Vsapwood(numCohorts), Vleaf(numCohorts);
   
@@ -166,19 +127,7 @@ DataFrame paramsWaterStorage(DataFrame above, DataFrame SpParams,
   NumericVector LeafDensity = paramsAnatomydf["LeafDensity"];
   NumericVector SLA = paramsAnatomydf["SLA"];
   NumericVector Al2As = paramsAnatomydf["Al2As"];
-  
-  if(fillMissingSpParams) {
-    for(int c=0;c<numCohorts;c++){
-      //From: Christoffersen, B.O., Gloor, M., Fauset, S., Fyllas, N.M., Galbraith, D.R., Baker, T.R., Rowland, L., Fisher, R.A., Binks, O.J., Sevanto, S.A., Xu, C., Jansen, S., Choat, B., Mencuccini, M., McDowell, N.G., & Meir, P. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0: 1–60.
-      if(NumericVector::is_na(StemPI0[c])) StemPI0[c] = 0.52 - 4.16*WoodDensity[c]; 
-      if(NumericVector::is_na(StemEPS[c])) StemEPS[c] = sqrt(1.02*exp(8.5*WoodDensity[c])-2.89); 
-      if(NumericVector::is_na(StemAF[c])) StemAF[c] = 0.8;
-      //From: Bartlett MK, Scoffoni C, Sack L (2012) The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis. Ecol Lett 15:393–405. doi: 10.1111/j.1461-0248.2012.01751.x
-      if(NumericVector::is_na(LeafPI0[c])) LeafPI0[c] = -2.0; //Average values for Mediterranean climate species
-      if(NumericVector::is_na(LeafEPS[c])) LeafEPS[c] = 17.0;
-      if(NumericVector::is_na(LeafAF[c])) LeafAF[c] = 0.29;
-    }
-  }
+
   //Calculate stem and leaf capacity per leaf area (in m3·m-2)
   for(int c=0;c<numCohorts;c++){
     Vsapwood[c] = stemWaterCapacity(Al2As[c], H[c], WoodDensity[c]); 
