@@ -5,14 +5,7 @@ date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: TRUE
-vignette: >
-  %\VignetteIndexEntry{Sensitivity analysis and calibration}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignettePackage{medfate}
-  \usepackage[utf8]{inputenc}
 ---
-<!-- Compile using (Rmd is not included in build): -->
-<!-- rmarkdown::render("vignettes/SensitivityCalibration.Rmd",output_dir = "vignettes") -->
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
