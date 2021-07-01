@@ -14,6 +14,9 @@ articles:
     - starts_with("Advanced")
     - starts_with("ForestGrowth")
     - starts_with("ForestDynamics")
+- title: Model parametrization
+  contents:
+    - starts_with("SpeciesParameterization")
 - title: Model analysis
   contents:
     - starts_with("Sensitivity")

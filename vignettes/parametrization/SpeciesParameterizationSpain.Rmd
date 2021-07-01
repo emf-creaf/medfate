@@ -1,0 +1,551 @@
+---
+title: "Species parameterization for Spain"
+author: "Miquel De Cáceres"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: TRUE
+---
+
+## Introduction
+
+```{r message=FALSE}
+library(tidyverse)
+library(medfate)
+library(openxlsx)
+library(medfateutils)
+```
+
+Set the path to forest inventory data (in my computer)
+```{r}
+IFN_path = "/home/miquel/OneDrive/Datasets/IFN/"
+```
+
+Set path to trait and allometry databases:
+
+```{r}
+Database_path = "/home/miquel/OneDrive/Professional/Recerca/MedfateSpeciesParametrization/"
+```
+
+
+## Initialize species parameter table for IFN
+
+### Load IFN taxonomic codification
+Load species codes from IFN2-3 and IFN4
+```{r}
+IFN23_species_data <- read.csv(paste0(IFN_path,"Sources/SpeciesCodesIFN23.txt"), 
+                             sep="\t")
+IFN23_species_data<-IFN23_species_data[,c(1,2)]
+IFN23_species_data$IFNCODE<-as.character(IFN23_species_data$IFNCODE)
+
+IFN4_shrub_species_data <- read.csv(paste0(IFN_path,"Sources/shrubcodesifn4.txt"), 
+                             sep="\t")
+IFN4_shrub_species_data$IFNCODE<-as.character(IFN4_shrub_species_data$IFNCODE)
+IFN4_tree_species_data <- read.csv(paste0(IFN_path,"Sources/treecodesifn4.txt"), 
+                                    sep="\t")
+IFN4_tree_species_data$IFNCODE<-as.character(IFN4_tree_species_data$IFNCODE)
+IFN4_tree_species_data<-IFN4_tree_species_data[,c(1,2)]
+```
+
+Merge the two code data sets:
+```{r}
+newShrubs <- !(IFN4_shrub_species_data$IFNCODE %in% IFN23_species_data$IFNCODE)
+newTrees <- !(IFN4_tree_species_data$IFNCODE %in% IFN23_species_data$IFNCODE)
+IFN_species_data <- bind_rows(IFN23_species_data, 
+                              IFN4_shrub_species_data[newShrubs, ], 
+                              IFN4_tree_species_data[newTrees,])
+IFN_species_data <- IFN_species_data[order(as.numeric(IFN_species_data$IFNCODE)),]
+```
+
+```{r}
+dim(IFN_species_data)
+head(IFN_species_data)
+```
+
+### Define IFN codes to exclude
+Define codes to be excluded because they have low taxonomic content or refer to unsuitable growth forms (vines):
+```{r}
+codesOut <- c("19", # Otras coniferas 
+              "10", # Sin asignar
+              "20", # Pinos
+              "29", # Otros pinos
+              "30",  #Mezcla de coniferas
+              "40", #Quercus
+              "49", #Otros quercus
+              "50", #Mezcla de <e1>rboles de ribera
+              "59", #Otros <e1>rboles rip<ed>colas
+              "70", #Mezcla de frondosas de gran porte
+              "80", #Laurisilva
+              "89", #Otras laurisilvas
+              "90", #Mezcla de peque<f1>as frondosas
+              "99", #Otras frondosas
+              "1500", # Cultivo en mosaico
+              "8000", #	Matorral en mosaico
+              "9000", #Herbazal en mosaico
+              "3400", #Prado en mosaico
+              "3500", #Pastizal-Matorral en mosaico
+              "103", #Otras papilionoideas altas
+              "104", #Otras papilionoideas bajas
+              "3104", #Genista (H.t.<1,5 m)
+              "141", #Hedera helix
+              "149" #Smilax aspera
+              )
+```
+
+Remove taxa from the IFN taxonomic definition data frame:
+```{r}
+IFN_species_data <- IFN_species_data[!(IFN_species_data$IFNCODE %in% codesOut), ]
+dim(IFN_species_data)
+```
+
+### Define taxonomic entities to merge into groups
+Define genus-level taxa. These are necessary for taxa where the forest inventory records do not always have identifications at species-level resolution:
+```{r}
+genus_level <- c("Acacia spp.:7/207/307",
+                 "Adenocarpus spp.:2103/3163",
+                 "Atriplex spp.:133",
+                 "Artemisia spp.:126/159/1159",
+                 "Asparagus spp.:138/1138/2138",
+                 "Astragalus spp.:6104",
+                 "Betula spp.:73/273/373",
+                 "Bupleurum spp.:124/1124/2124",
+                 "Calicotome spp.:2104/2105/9072",
+                 "Chamaerops humilis:369/3690",
+                 "Clematis spp.:132/1132/2132",
+                 "Crataegus spp.:15/215/315/415/515",
+                 "Coronilla spp.:152/1152/3152/5104",
+                 "Cotoneaster spp.:118",
+                 "Daphne spp.:110/1110/2110/3110",
+                 "Dorycnium spp.:154/7104/1154",
+                 "Echium sp.:161",
+                 "Erinacea spp.:1104/1166",
+                 "Eucalyptus spp.:60/61/62/63/64/264/364/464",
+                 "Euphorbia spp.:162/1162/2162/3162",
+                 "Fraxinus spp.:55/255/355/455",
+                 "Genistella spp.:9104",
+                 "Helianthemum spp.:142",
+                 "Helichrysum spp.:128/2128",
+                 "Larix spp.:35/235/335/435",
+                 "Lavandula spp.:109/1109/2109/3109/4109",
+                 "Lonicera spp.:144/1144/2144/3144/4144/5144/9012",
+                 "Halimium spp.:117/1117/4117/5117/6117",
+                 "Ilex spp.:65/82/282",
+                 "Juglans spp.:75/275",
+                 "Morus spp.:399/499/599",
+                 "Ononis spp.:156/8104",
+                 "Osyris spp.:135/1135/2135",
+                 "Platanus spp.:79/279",
+                 "Populus spp.:51/52/58/258",
+                 "Phlomis spp.:171/1171/2171",
+                 "Phoenix spp.:69/269/469",
+                 "Prunus spp.:95/295/395/495/595/1095/1195/2950/148",
+                 "Pyrus spp.:16/1165/2165",
+                 "Retama spp.:4103",
+                 "Rhamnus spp.:4/122/1122/2122/3122/4122/389/5122/6122",
+                 "Rhododendron spp.:108",
+                 "Ribes spp.:131/1131/2131",
+                 "Rosa spp.:119",
+                 "Rubus spp.:121/1121/2121/3121",
+                 "Salix spp.:57/257/357/457/557/657/757/857/858/957",
+                 "Sambucus spp.:97/197/297/2970",
+                 "Santolina spp.:127/1127/2127",
+                 "Sorbus spp.:78/278/378/478/578/678/778",
+                 "Spartium spp.:3103/9103",
+                 "Spiraea spp.:134/1134",
+                 "Tamarix spp.:53/253",
+                 "Teline spp.:165/9077/9078/9202",
+                 "Teucrium spp.:179/1179",
+                 "Tilia spp.:77/277/377",
+                 "Thymelaea spp.:151",
+                 "Thuja spp.:319",
+                 "Thymus spp.:129/1129",
+                 "Ulex spp.:157/1103/6103/3164",
+                 "Ulmus spp.:56/256/356/456",
+                 "Vaccinium spp.:137/1137",
+                 "Viburnum spp.:115/1115/4115/3115/2115"
+                 )
+```
+Define groups of taxa at species level, where different synonyms are merged, different codes have been used for the same species or the species have subspecies entities which we want to merge: 
+```{r}
+assimilated_species<-c("Acer campestre:76/776",
+                       "Amelanchier ovalis:2/200",
+                       "Buxus sempervirens:91/291/2910/9071/9100",
+                       "Cistus albidus:101/3101",
+                       "Cornus sanguinea:9/900",
+                       "Cytisus fontanesii:9074",
+                       "Cytisus scoparius:4104/1167/5103/8103",
+                       "Cytisus commutatus:9011/9201/9481",
+                       "Cytisus oromediterraneus:5155/4167",
+                       "Erica scoparia:283/6102",
+                       "Erica arborea:83/102/1102",
+                       "Euonymus europaeus:5/500",
+                       "Frangula alnus:3/300",
+                       "Genista horrida:177", # Echinospartum horridum -> Genista horrida
+                       "Genista cinerea:8155/1355",
+                       "Genista scorpius:155/3155",
+                       "Juniperus communis:37/3700",
+                       "Juniperus phoenicea:39/238/239/1139",
+                       "Medicago arborea:145/9076",
+                       "Myrtus communis:6/600",
+                       "Myrica faya:81/281",
+                       "Pistacia terebinthus:93/9300",
+                       "Quercus ilex:45/245",
+                       "Quercus faginea:44/344",
+                       "Quercus suber:46/646/746/846/946",
+                       "Salvia rosmarinus:114") # Rosmarinus officinalis -> Salvia rosmarinus
+```
+
+Build a data frame with group names and codes.
+```{r}
+groups_df <- data.frame("Groups" = c(genus_level,
+                                     assimilated_species)) %>%
+  separate("Groups", into=c("group_names", "group_codes"), sep=":")
+head(groups_df)
+```
+
+### Initialize species parameter table
+
+```{r}
+data("SpParamsDefinition")
+```
+
+```{r eval = FALSE}
+SpParams <-initSpParams(IFN_species_data$IFNCODE, IFN_species_data$IFNNAME,
+                             SpParamsDefinition,
+                             groups_df$group_codes, groups_df$group_names,
+                             fill_taxonomic = TRUE, verbose = FALSE)
+```
+
+```{r include = FALSE}
+# saveRDS(SpParamsSPAIN, "SpParamsSPAIN_init.rds")
+SpParams = readRDS("SpParamsSPAIN_init.rds")
+```
+
+```{r}
+head(SpParams[,1:7])
+```
+
+```{r}
+names(SpParams[-c(1:7)])
+```
+
+## Populate parameters from forest inventory data
+
+### Load IFN data
+
+```{r}
+
+shrubDataIFN2 <-readRDS(paste0(IFN_path,"Products/IFN2/Rdata/shrubDataIFN2_Spain.rds"))
+shrubDataIFN2$ID<-as.character(shrubDataIFN2$ID)
+shrubDataIFN3 <-readRDS(paste0(IFN_path,"Products/IFN3/Rdata/shrubDataIFN3_Spain.rds"))
+shrubDataIFN4 <-readRDS(paste0(IFN_path,"Products/IFN4/Rdata/shrubDataIFN4_Spain.rds"))
+
+piesMayoresDataIFN2<-readRDS(paste0(IFN_path,"Products/IFN2/Rdata/piesMayoresDataIFN2_Spain.rds"))
+piesMenoresDataIFN2<-readRDS(paste0(IFN_path,"Products/IFN2/Rdata/piesMenoresDataIFN2_Spain.rds"))
+piesMenoresDataIFN2$ID = as.character(piesMenoresDataIFN2$ID)
+piesMenoresDataIFN2$Species = as.character(piesMenoresDataIFN2$Species)
+treeDataIFN3<-readRDS(paste0(IFN_path,"Products/IFN3/Rdata/treeDataIFN3_Spain.rds"))
+treeDataIFN4<-readRDS(paste0(IFN_path,"Products/IFN4/Rdata/treeDataIFN4_Spain.rds"))
+
+shrubDataIFN <-bind_rows(shrubDataIFN2[,c("ID","Species", "H")],
+                         shrubDataIFN3[,c("ID","Species", "H")],
+                         shrubDataIFN4[,c("ID","Species", "H")])
+
+treeDataIFN <-bind_rows(piesMayoresDataIFN2[,c("ID","Species", "H", "DBH")],
+                        piesMenoresDataIFN2[,c("ID","Species", "H", "DBH")],
+                        treeDataIFN3[,c("ID","Species", "H", "DBH")],
+                        treeDataIFN4[,c("ID","Species", "H", "DBH")])
+```
+
+### Populate growth form
+
+```{r}
+shrub_codes <- as.numeric(shrubDataIFN$Species)
+tree_codes <- as.numeric(treeDataIFN$Species)
+
+# Check species that appear both as trees and shrubs
+sum(unique(shrub_codes) %in% unique(tree_codes))
+```
+
+```{r}
+SpParams = populateGrowthForm(SpParams, 
+                              tree_codes, shrub_codes,
+                              erase_previous = TRUE,
+                              fill_fromGenus = TRUE)
+
+```
+
+Manually set to tree the growth form of remaining species
+```{r}
+missingGrowthFormSpecies = SpParams[is.na(SpParams$GrowthForm), c("Name")]
+print(missingGrowthFormSpecies)
+SpParams$GrowthForm[SpParams$Name %in% missingGrowthFormSpecies] = "Tree"
+```
+
+### Populate height
+
+```{r}
+species_codes <- c(treeDataIFN$Species, shrubDataIFN$Species)
+height_values <- c(treeDataIFN$H, shrubDataIFN$H)*100 # m to cm
+
+SpParams <- populateHeightParams(SpParams,
+                                 species_codes, height_values,
+                                 erase_previous = TRUE)
+```
+
+```{r}
+table(is.na(SpParams$Hmax), SpParams$GrowthForm)
+SpParams$Hmax[is.na(SpParams$Hmax) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$Hmax[SpParams$GrowthForm != "Shrub"], na.rm=TRUE))
+SpParams$Hmax[is.na(SpParams$Hmax) & SpParams$GrowthForm == "Shrub"] = round(mean(SpParams$Hmax[SpParams$GrowthForm == "Shrub"], na.rm=TRUE))
+table(is.na(SpParams$Hmax), SpParams$GrowthForm)
+
+table(is.na(SpParams$Hmed), SpParams$GrowthForm)
+SpParams$Hmed[is.na(SpParams$Hmed) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$Hmed[SpParams$GrowthForm != "Shrub"], na.rm=TRUE))
+SpParams$Hmed[is.na(SpParams$Hmed) & SpParams$GrowthForm == "Shrub"] = round(mean(SpParams$Hmed[SpParams$GrowthForm == "Shrub"], na.rm=TRUE))
+table(is.na(SpParams$Hmed), SpParams$GrowthForm)
+```
+
+### Populate diameter/height ratio
+
+```{r}
+tree_species_codes <- treeDataIFN$Species
+tree_height_values <- treeDataIFN$H*100 # m to cm
+tree_diameter_values <- treeDataIFN$DBH
+
+SpParams <- populateTreeDiameterHeightParams(SpParams,
+                                             tree_species_codes, 
+                                             tree_height_values,
+                                             tree_diameter_values,
+                                             erase_previous = TRUE)
+```
+
+```{r}
+table(is.na(SpParams$fHDmin), SpParams$GrowthForm)
+table(is.na(SpParams$fHDmax), SpParams$GrowthForm)
+SpParams$fHDmax[is.na(SpParams$fHDmax) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$fHDmax, na.rm=TRUE))
+SpParams$fHDmin[is.na(SpParams$fHDmin) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$fHDmin, na.rm=TRUE))
+table(is.na(SpParams$fHDmin), SpParams$GrowthForm)
+table(is.na(SpParams$fHDmax), SpParams$GrowthForm)
+```
+
+
+```{r include = FALSE}
+saveRDS(SpParams, "SpParamsSPAIN_SFI.rds")
+```
+
+## Populate allometric coefficients
+
+### Shrub allometric equations
+
+```{r}
+library(medfuels)
+```
+
+
+```{r}
+
+data("sp_params_area")
+data("sp_params_fine")
+data("sp_params_total")
+data("group_params_area")
+data("group_params_fine")
+data("group_params_total")
+data("species_groups")
+```
+
+Correct synonymy mistakes
+```{r}
+
+species_groups[species_groups$name=="Rosmarinus officinalis","Genus"]<- "Salvia"
+species_groups[species_groups$name=="Rosmarinus officinalis","Species"]<- "rosmarinus"
+species_groups[species_groups$name=="Rosmarinus officinalis","author"]<- "Schleid."
+species_groups[species_groups$name=="Rosmarinus officinalis","name"]<- "Salvia rosmarinus"
+
+species_groups[species_groups$name=="Lithospermum fruticosum","Genus"]<- "Lithodora"
+species_groups[species_groups$name=="Lithospermum fruticosum","Species"]<- "fruticosa"
+species_groups[species_groups$name=="Lithospermum fruticosum","author"]<- "(L.) Griseb."
+species_groups[species_groups$name=="Lithospermum fruticosum","name"]<- "Lithodora fruticosa"
+```
+
+
+```{r}
+shrub_sel <-SpParams$GrowthForm %in% c("Shrub", "Tree/Shrub")
+```
+
+```{r}
+retrieveCoefficientsFromMedfuels <-function(SpParams, sp_params_allom, group_params_allom, species_groups) {
+  a_coef<-rep(NA, nrow(SpParams))
+  b_coef<-rep(NA, nrow(SpParams))
+  sp_allom = row.names(sp_params_allom)
+  gr_allom = row.names(group_params_allom)
+  gen_sp = paste(species_groups$Genus, species_groups$Species)
+  nshrub <- 0
+  nmis <- 0
+  for(i in 1:nrow(SpParams)) {
+    growth_form <- SpParams$GrowthForm[i]
+    if(growth_form %in% c("Shrub", "Tree/Shrub")) {
+      nshrub <- nshrub +1
+      nm <- SpParams$Name[i]
+      gen <- strsplit(nm," ")[[1]][1]
+      if(nm %in% sp_allom) { # If species-specific allometry available
+        sp_row<-which(sp_allom==nm) 
+        a_coef[i] = sp_params_allom$a[sp_row]
+        b_coef[i] = sp_params_allom$b[sp_row]
+      } else if (nm %in% gen_sp) { # If species is found in medfuels species table
+        form_raunkiaer <-  species_groups$`shrub type`[which(gen_sp==nm)[1]]
+        gr_row<-which(gr_allom==form_raunkiaer) 
+        a_coef[i] = group_params_allom$a[gr_row]
+        b_coef[i] = group_params_allom$b[gr_row]
+      } else if (gen %in% species_groups$Genus) { # If genus occurs in medfuels table
+        forms_raunkiaer <-  species_groups$`shrub type`[which(species_groups$Genus==gen)]
+        # Find most-frequent  raunkiaer form
+        tfr<-table(forms_raunkiaer)
+        tfr<-tfr[order(tfr, decreasing=TRUE)]
+        gr_row<-which(gr_allom==names(tfr)[1]) 
+        a_coef[i] = group_params_allom$a[gr_row]
+        b_coef[i] = group_params_allom$b[gr_row]
+      } else {
+        nmis <- nmis + 1
+        if(growth_form=="Tree/Shrub") { # If tree/shrub assing MPh data
+          message(paste0("Data for '", nm,"' could not be retrieved and will be assigned 'MP'."))
+          a_coef[i] = group_params_allom["MP","a"]
+          b_coef[i] = group_params_allom["MP","b"]
+        } else {
+          message(paste0("Data for '", nm,"' could not be retrieved and will be assigned 'NP'."))
+          a_coef[i] = group_params_allom["NP","a"]
+          b_coef[i] = group_params_allom["NP","b"]
+        }
+      }
+    }
+  }
+  if(nmis>0) message(paste0(nmis,
+                            " missing values (out of ",
+                            nshrub,
+                            " shrub species) after populating with input data.\n"))
+  return(data.frame(Name = SpParams$Name, 
+                    GrothForm = SpParams$GrowthForm,
+                    a = a_coef, b = b_coef))
+}
+```
+
+```{r}
+area_coef_df <- retrieveCoefficientsFromMedfuels(SpParams, 
+                                                 sp_params_area, 
+                                                 group_params_area, 
+                                                 species_groups)
+SpParams$a_ash[shrub_sel] <- area_coef_df$a[shrub_sel]
+SpParams$b_ash[shrub_sel] <- area_coef_df$b[shrub_sel]
+
+fine_coef_df <- retrieveCoefficientsFromMedfuels(SpParams, 
+                                                 sp_params_fine, 
+                                                 group_params_fine, 
+                                                 species_groups)
+SpParams$a_bsh[shrub_sel] <- fine_coef_df$a[shrub_sel]
+SpParams$b_bsh[shrub_sel] <- fine_coef_df$b[shrub_sel]
+
+total_coef_df <- retrieveCoefficientsFromMedfuels(SpParams, 
+                                                 sp_params_total, 
+                                                 group_params_total, 
+                                                 species_groups)
+SpParams$a_btsh[shrub_sel] <- total_coef_df$a[shrub_sel]
+SpParams$b_btsh[shrub_sel] <- total_coef_df$b[shrub_sel]
+```
+
+### Shrub crown ratio and Pdead
+
+```{r}
+shrub_pdead_cr <- read.table(paste0(Database_path,"AllometryDatabases/ShrubAllometries/Shrub_Pdead_CR.txt"), 
+                             sep="\t", dec=",", header=T) %>% 
+  separate(Name, c("Genus", "Species"), sep=" ") %>% 
+  unite("Name" , c("Genus", "Species"), sep=" ", na.rm=TRUE)
+shrub_cr<-data.frame(value = shrub_pdead_cr$CR.mean,
+                     row.names = shrub_pdead_cr$Name)
+shrub_pdead<-data.frame(value = shrub_pdead_cr$Pdead.mean,
+                     row.names = shrub_pdead_cr$Name)
+
+sp_params_allom = shrub_cr[1:27,, drop=FALSE]
+group_params_allom = shrub_cr[28:34,, drop=FALSE]
+
+```
+
+```{r}
+
+retrieveValuesFromMedfuels <-function(SpParams, sp_params_allom, 
+                                       group_params_allom, species_groups) {
+  sp_params_allom <-sp_params_allom[!is.na(sp_params_allom$value),,drop=FALSE]
+  group_params_allom <-group_params_allom[!is.na(group_params_allom$value),,drop=FALSE]
+  coef<-rep(NA, nrow(SpParams))
+  sp_allom = row.names(sp_params_allom)
+  gr_allom = row.names(group_params_allom)
+  gen_sp = paste(species_groups$Genus, species_groups$Species)
+  nshrub <- 0
+  nmis <- 0
+  for(i in 1:nrow(SpParams)) {
+    growth_form <- SpParams$GrowthForm[i]
+    if(growth_form %in% c("Shrub", "Tree/Shrub")) {
+      nshrub <- nshrub +1
+      nm <- SpParams$Name[i]
+      gen <- strsplit(nm," ")[[1]][1]
+      if(nm %in% sp_allom) { # If species-specific allometry available
+        sp_row<-which(sp_allom==nm) 
+        coef[i] = sp_params_allom$value[sp_row]
+      } else if (nm %in% gen_sp) { # If species is found in medfuels species table
+        form_raunkiaer <-  species_groups$`shrub type`[which(gen_sp==nm)[1]]
+        if(form_raunkiaer %in% gr_allom) {
+          gr_row<-which(gr_allom==form_raunkiaer) 
+          coef[i] = group_params_allom$value[gr_row]
+        }
+      } else if (gen %in% species_groups$Genus) { # If genus occurs in medfuels table
+        forms_raunkiaer <-  species_groups$`shrub type`[which(species_groups$Genus==gen)]
+        # Find most-frequent  raunkiaer form
+        tfr<-table(forms_raunkiaer)
+        tfr<-tfr[order(tfr, decreasing=TRUE)]
+        if(names(tfr)[1] %in% gr_allom) {
+          gr_row<-which(gr_allom==names(tfr)[1])
+          coef[i] = group_params_allom$value[gr_row]
+        } 
+      } 
+      
+      if(is.na(coef[i])  && (growth_form=="Tree/Shrub") && ("MP" %in% gr_allom) ) { # If tree/shrub assing MPh data
+        coef[i] = group_params_allom["MP","value"]
+      } 
+      if(is.na(coef[i])) {
+        message(paste0("Data for '", nm,"' could not be retrieved."))
+        nmis <- nmis + 1
+      }
+    }
+  }
+  if(nmis>0) message(paste0(nmis,
+                            " missing values (out of ",
+                            nshrub,
+                            " shrub species) after populating with input data.\n"))
+  return(data.frame(Name = SpParams$Name, 
+                    GrothForm = SpParams$GrowthForm,
+                    coef =coef))
+}
+
+cr_df <- retrieveValuesFromMedfuels(SpParams, shrub_cr[1:27,, drop=FALSE], shrub_cr[28:34,, drop=FALSE], species_groups)
+pdead_df <- retrieveValuesFromMedfuels(SpParams, shrub_pdead[1:27,, drop=FALSE], shrub_pdead[28:34,, drop=FALSE], species_groups)
+cr_df$coef[is.na(cr_df$coef)] <- mean(cr_df$coef, na.rm=TRUE)
+pdead_df$coef[is.na(pdead_df$coef)] <- mean(pdead_df$coef, na.rm=TRUE)
+
+SpParams$cr[shrub_sel] <-cr_df$coef[shrub_sel]
+SpParams$pDead[shrub_sel] <-pdead_df$coef[shrub_sel]
+```
+### Tree allometries
+
+```{r}
+fb_models <- openxlsx::read.xlsx(paste0(Database_path, "AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"), sheet= "Tree_FB_models", rowNames = TRUE)
+cr_models <- openxlsx::read.xlsx(paste0(Database_path,"AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"), sheet= "Tree_CR_models", rowNames = TRUE)
+cw_models <- openxlsx::read.xlsx(paste0(Database_path,"AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"), sheet= "Tree_CW_models", rowNames = TRUE)
+
+```
+
+```{r}
+SpParams <- populateTreeAllometries(SpParams, fb_models, "foliarbiomass", erase_previous = TRUE)
+SpParams <- populateTreeAllometries(SpParams, cr_models, "crownratio", erase_previous = TRUE)
+SpParams <- populateTreeAllometries(SpParams, cw_models, "crownwidth", erase_previous = TRUE)
+```
+```{r include = FALSE}
+saveRDS(SpParams, "SpParamsSPAIN_allom.rds")
+```
