@@ -98,7 +98,7 @@
 <code class="sourceCode R"><span class="va">IFN_path</span> <span class="op">=</span> <span class="st">"/home/miquel/OneDrive/Datasets/IFN/"</span></code></pre></div>
 <p>Set path to trait and allometry databases:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Database_path</span> <span class="op">=</span> <span class="st">"/home/miquel/OneDrive/Professional/Recerca/MedfateSpeciesParametrization/"</span></code></pre></div>
+<code class="sourceCode R"><span class="va">DB_path</span> <span class="op">=</span> <span class="st">"/home/miquel/OneDrive/Professional/Recerca/MedfateSpeciesParametrization/"</span></code></pre></div>
 </div>
 <div id="initialize-species-parameter-table-for-ifn" class="section level2">
 <h2 class="hasAnchor">
@@ -650,7 +650,7 @@
 <h3 class="hasAnchor">
 <a href="#shrub-crown-ratio-and-pdead" class="anchor"></a>Shrub crown ratio and Pdead</h3>
 <div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">shrub_pdead_cr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">Database_path</span>,<span class="st">"AllometryDatabases/ShrubAllometries/Shrub_Pdead_CR.txt"</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="va">shrub_pdead_cr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"AllometryDatabases/ShrubAllometries/Shrub_Pdead_CR.txt"</span><span class="op">)</span>, 
                              sep<span class="op">=</span><span class="st">"\t"</span>, dec<span class="op">=</span><span class="st">","</span>, header<span class="op">=</span><span class="cn">T</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">separate</span><span class="op">(</span><span class="va">Name</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Genus"</span>, <span class="st">"Species"</span><span class="op">)</span>, sep<span class="op">=</span><span class="st">" "</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">unite</span><span class="op">(</span><span class="st">"Name"</span> , <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Genus"</span>, <span class="st">"Species"</span><span class="op">)</span>, sep<span class="op">=</span><span class="st">" "</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -878,9 +878,9 @@
 <h3 class="hasAnchor">
 <a href="#tree-allometries" class="anchor"></a>Tree allometries</h3>
 <div class="sourceCode" id="cb264"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fb_models</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">Database_path</span>, <span class="st">"AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"</span><span class="op">)</span>, sheet<span class="op">=</span> <span class="st">"Tree_FB_models"</span>, rowNames <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">cr_models</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">Database_path</span>,<span class="st">"AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"</span><span class="op">)</span>, sheet<span class="op">=</span> <span class="st">"Tree_CR_models"</span>, rowNames <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">cw_models</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">Database_path</span>,<span class="st">"AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"</span><span class="op">)</span>, sheet<span class="op">=</span> <span class="st">"Tree_CW_models"</span>, rowNames <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">fb_models</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"</span><span class="op">)</span>, sheet<span class="op">=</span> <span class="st">"Tree_FB_models"</span>, rowNames <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">cr_models</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"</span><span class="op">)</span>, sheet<span class="op">=</span> <span class="st">"Tree_CR_models"</span>, rowNames <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">cw_models</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"</span><span class="op">)</span>, sheet<span class="op">=</span> <span class="st">"Tree_CW_models"</span>, rowNames <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb265"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTreeAllometries.html">populateTreeAllometries</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">fb_models</span>, <span class="st">"foliarbiomass"</span>, erase_previous <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <pre><code>## Assignments species: 24 genus: 17 family: 0 order:0 group: 0</code></pre>
@@ -893,6 +893,369 @@
 <code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTreeAllometries.html">populateTreeAllometries</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">cw_models</span>, <span class="st">"crownwidth"</span>, erase_previous <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <pre><code>## Assignments species: 11 genus: 18 family: 0 order:0 group: 0</code></pre>
 <pre><code>## 77 missing allometry coefficients (out of 106 tree species) after populating with input data.</code></pre>
+</div>
+</div>
+<div id="populate-functional-traits" class="section level2">
+<h2 class="hasAnchor">
+<a href="#populate-functional-traits" class="anchor"></a>Populate functional traits</h2>
+<div id="read-trait-databases-except-try" class="section level3">
+<h3 class="hasAnchor">
+<a href="#read-trait-databases-except-try" class="anchor"></a>Read trait databases (except TRY)</h3>
+<div class="sourceCode" id="cb274"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#  Hydratry</span>
+<span class="va">fn_hydratry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"TraitDatabases/HydraTRY/HydraTRY.xlsx"</span><span class="op">)</span>
+<span class="va">hydratry</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="va">fn_hydratry</span>, rowNames <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> 
+
+<span class="co">#  Martin-StPaul et al. (2017)</span>
+<span class="va">fn_martin_stpaul</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"TraitDatabases/MartinStPaul_et_al_2017/DataBase.xlsx"</span><span class="op">)</span>
+<span class="va">martin_stpaul</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="va">fn_martin_stpaul</span>, sheet<span class="op">=</span><span class="st">"ALL"</span><span class="op">)</span>
+<span class="va">martin_stpaul</span><span class="op">&lt;-</span><span class="va">martin_stpaul</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"P50"</span>, <span class="st">"P12"</span>, <span class="st">"Ptlp"</span><span class="op">)</span><span class="op">]</span>
+
+<span class="co"># Choat et al. (2012)</span>
+<span class="va">fn_choat</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"TraitDatabases/Choat_et_al_2012/nature11688-s2.xls"</span><span class="op">)</span>
+<span class="va">hydraulic_choat</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">fn_choat</span><span class="op">)</span>
+<span class="va">hydraulic_choat</span> <span class="op">&lt;-</span><span class="va">hydraulic_choat</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"P50"</span>, <span class="st">"P88"</span><span class="op">)</span><span class="op">]</span> <span class="co"># Remove unit row</span>
+
+<span class="co"># Bartlett et al. 2012</span>
+<span class="va">fn_bartlett</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/Bartlett_et_al_2012/Bartlett_2012_ELE_data.xlsx"</span><span class="op">)</span>
+<span class="va">bartlett</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="va">fn_bartlett</span>, rowNames <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> 
+
+<span class="co"># Duursma et al. 2018</span>
+<span class="va">fn_duursma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/Duursma_et_al_2018/gmindatabase.csv"</span><span class="op">)</span>
+<span class="va">duursma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv2</a></span><span class="op">(</span><span class="va">fn_duursma</span>, sep<span class="op">=</span><span class="st">","</span><span class="op">)</span>
+
+<span class="co"># Hoshika et al. 2018 </span>
+<span class="va">fn_hoshika</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/Hoshika_et_al_2018/Hoshika_et_al_2018.xlsx"</span><span class="op">)</span>
+<span class="va">hoshika</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="va">fn_hoshika</span><span class="op">)</span> 
+<span class="va">hoshika</span><span class="op">$</span><span class="va">Species</span> <span class="op">&lt;-</span> <span class="fu">str_replace</span><span class="op">(</span>string <span class="op">=</span> <span class="va">hoshika</span><span class="op">$</span><span class="va">Species</span>,pattern <span class="op">=</span> <span class="st">"_"</span>, replacement <span class="op">=</span> <span class="st">" "</span><span class="op">)</span>
+
+<span class="co"># BROT</span>
+<span class="va">fn_brot2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/Brot/BROT2_dat.csv"</span><span class="op">)</span>
+<span class="va">brot2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv2</a></span><span class="op">(</span><span class="va">fn_brot2</span><span class="op">)</span>
+
+<span class="co">#Global wood density database</span>
+<span class="co"># Zanne, A.E., Lopez-Gonzalez, G.*, Coomes, D.A., Ilic, J., Jansen, S., Lewis, S.L., Miller, R.B., Swenson, N.G., Wiemann, M.C., and Chave, J. 2009. Global wood density database. </span>
+<span class="co"># Dryad. Identifier: http://hdl.handle.net/10255/dryad.235.</span>
+<span class="va">fn_gwdd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/GlobalWoodDensityDatabase/GlobalWoodDensityDatabase.xls"</span><span class="op">)</span>
+<span class="va">gwdd</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">fn_gwdd</span>, sheet<span class="op">=</span><span class="fl">2</span><span class="op">)</span>
+
+<span class="co"># Flammability</span>
+<span class="va">fn_flam</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/FuelAttributes/FuelAttributes.xlsx"</span><span class="op">)</span>
+<span class="va">flam</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">fn_flam</span>, sheet<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
+
+<span class="co"># Fine-fuel ratio</span>
+<span class="va">fn_ffr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/FineFuelRatio/FineFuelRatio.xlsx"</span><span class="op">)</span>
+<span class="va">ffr</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">fn_ffr</span>, sheet<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
+
+<span class="co"># Fuel moisture content</span>
+<span class="va">fn_fmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/FMC/FMC.xlsx"</span><span class="op">)</span>
+<span class="va">fmc_field</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">fn_fmc</span>, sheet<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
+<span class="va">fmc_bib</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">fn_fmc</span>, sheet<span class="op">=</span><span class="fl">2</span><span class="op">)</span>
+
+<span class="co"># Yebra et al. (2020)</span>
+<span class="va">fn_yebra</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/LFMC_Yebra_et_al_2020/Globe-LFMC-v2.xlsx"</span><span class="op">)</span>
+<span class="va">fmc_yebra</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="va">fn_yebra</span>, sheet<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="life-form" class="section level3">
+<h3 class="hasAnchor">
+<a href="#life-form" class="anchor"></a>Life form</h3>
+<p>Load TRY life form data</p>
+<div class="sourceCode" id="cb275"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">TRY_life_form</span>  <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/TRY/TRY_traits/TRY_343.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Homogenize life form values into six categories:</p>
+<div class="sourceCode" id="cb276"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">TRY_life_form</span>  <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/TRY/TRY_traits/TRY_343.rds"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">TRY_life_form</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">[</span><span class="va">TRY_life_form</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                             <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Ch"</span>, <span class="st">"CH"</span>, <span class="st">"Cha"</span>, <span class="st">"chamaephyte"</span>, <span class="st">"Chamaephytes"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Chamaephyte"</span>
+<span class="va">TRY_life_form</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">[</span><span class="va">TRY_life_form</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                             <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Cryptophytes"</span>, <span class="st">"cryptophyte"</span>,
+                               <span class="st">"G"</span>, <span class="st">"geophyte"</span>, <span class="st">"Geophytes"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Cryptophyte"</span>
+<span class="va">TRY_life_form</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">[</span><span class="va">TRY_life_form</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                             <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Ep"</span>, <span class="st">"epiphyte"</span>,<span class="st">"Epiphytes"</span>, <span class="st">"liana"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Epiphyte"</span>
+<span class="va">TRY_life_form</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">[</span><span class="va">TRY_life_form</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                             <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"H"</span>, <span class="st">"hemicryptophyte"</span>, <span class="st">"Hemicryptophytes"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Hemicryptophyte"</span>
+<span class="va">TRY_life_form</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">[</span><span class="va">TRY_life_form</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                             <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"hydrophyte"</span>, <span class="st">"Hydrophytes"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Hydrophyte"</span>
+<span class="va">TRY_life_form</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">[</span><span class="va">TRY_life_form</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                             <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Mega- meso- and micro- phanerophyte"</span>,
+                               <span class="st">"Phanerophyte (mega-,meso-, nano-)"</span>,
+                               <span class="st">"Mega-, meso- and microphanerophyte"</span>,
+                               <span class="st">"megaphanerophyte"</span>, <span class="st">"Megaphanerophyte"</span>,
+                               <span class="st">"Micro-phanerophytes"</span>, <span class="st">"Nanophanerophyt"</span>,
+                               <span class="st">"nanophanerophyte"</span>, <span class="st">"Nanophanerophyte"</span>,
+                               <span class="st">"phanerophyte"</span>, <span class="st">"Phanerophytes"</span>, <span class="st">"shrub"</span>, <span class="st">"tree"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Phanerophyte"</span>
+<span class="va">TRY_life_form</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">[</span><span class="va">TRY_life_form</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                             <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"T"</span>, <span class="st">"therophyte"</span>, <span class="st">"Therophyte (annual land plant)"</span>, <span class="st">"Therophytes"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Therophyte"</span>
+<span class="va">TRY_life_form</span><span class="op">&lt;-</span><span class="va">TRY_life_form</span><span class="op">[</span><span class="va">TRY_life_form</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Chamaephyte"</span>, <span class="st">"Cryptophyte"</span>,
+                                                               <span class="st">"Epiphyte"</span>, <span class="st">"Hemicryptophyte"</span>, <span class="st">"Hydrophyte"</span>,
+                                                               <span class="st">"Phanerophyte"</span><span class="op">)</span><span class="op">]</span></code></pre></div>
+<p>Call <code><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits()</a></code> to parse TRY values:</p>
+<div class="sourceCode" id="cb277"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">TRY_life_form</span>,
+                           trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LifeForm"</span> <span class="op">=</span> <span class="st">"OrigValueStr"</span><span class="op">)</span>,
+                           character_traits <span class="op">=</span> <span class="cn">TRUE</span>,
+                           taxon_column <span class="op">=</span> <span class="st">"AccSpeciesName"</span><span class="op">)</span></code></pre></div>
+<pre><code>## Mapping [OrigValueStr -&gt; LifeForm] species: 86 conspecific: 116 genus: 0 family: 0 order: 0 group: 0</code></pre>
+<pre><code>## 17 missing trait values (7.8 %) after populating with input data.</code></pre>
+<p>Check which species have missing values:</p>
+<div class="sourceCode" id="cb280"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">SpParams</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">LifeForm</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"LifeForm"</span><span class="op">)</span><span class="op">]</span></code></pre></div>
+<pre><code>##                         Name LifeForm
+## 14  Ampelodesmos mauritanica     &lt;NA&gt;
+## 17    Apollonias canariensis     &lt;NA&gt;
+## 20   Arctostaphylos uva-ursi     &lt;NA&gt;
+## 114          Genistella spp.     &lt;NA&gt;
+## 115    Gleditsia triacanthos     &lt;NA&gt;
+## 117            Halimium spp.     &lt;NA&gt;
+## 118    Heberdenia bahamensis     &lt;NA&gt;
+## 136           Lithodora spp.     &lt;NA&gt;
+## 149   Paliurus spina-christi     &lt;NA&gt;
+## 153             Phlomis spp.     &lt;NA&gt;
+## 155         Picconia excelsa     &lt;NA&gt;
+## 169   Pleiomeris canariensis     &lt;NA&gt;
+## 185              Retama spp.     &lt;NA&gt;
+## 206              Teline spp.     &lt;NA&gt;
+## 216            Vella spinosa     &lt;NA&gt;
+## 218          Visnea mocanera     &lt;NA&gt;
+## 219           Zizyphus lotus     &lt;NA&gt;</code></pre>
+<p>Fill missing values manually:</p>
+<div class="sourceCode" id="cb282"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">SpParams</span><span class="op">$</span><span class="va">LifeForm</span><span class="op">[</span><span class="va">SpParams</span><span class="op">$</span><span class="va">Name</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Arctostaphylos uva-ursi"</span>, <span class="st">"Genistella spp."</span>, 
+                                       <span class="st">"Halimium spp."</span>, <span class="st">"Lithodora spp."</span>, <span class="st">"Phlomis spp."</span>,
+                                       <span class="st">"Vella spinosa"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Chamaephyte"</span>
+<span class="va">SpParams</span><span class="op">$</span><span class="va">LifeForm</span><span class="op">[</span><span class="va">SpParams</span><span class="op">$</span><span class="va">Name</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Ampelodesmos mauritanica"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Hemicryptophyte"</span>
+<span class="va">SpParams</span><span class="op">$</span><span class="va">LifeForm</span><span class="op">[</span><span class="va">SpParams</span><span class="op">$</span><span class="va">Name</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Apollonias canariensis"</span>, <span class="st">"Gleditsia triacanthos"</span>,
+                                       <span class="st">"Heberdenia bahamensis"</span>, <span class="st">"Picconia excelsa"</span>, <span class="st">"Pleiomeris canariensis"</span>,
+                                       <span class="st">"Paliurus spina-christi"</span>, <span class="st">"Retama spp."</span>, <span class="st">"Teline spp."</span>,
+                                       <span class="st">"Visnea mocanera"</span>, <span class="st">"Zizyphus lotus"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Phanerophyte"</span></code></pre></div>
+<p>Show the number of taxa for each life form:</p>
+<div class="sourceCode" id="cb283"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">LifeForm</span>, useNA <span class="op">=</span> <span class="st">"ifany"</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+##     Chamaephyte     Cryptophyte Hemicryptophyte    Phanerophyte 
+##              52               1              13             153</code></pre>
+</div>
+<div id="leaf-shape" class="section level3">
+<h3 class="hasAnchor">
+<a href="#leaf-shape" class="anchor"></a>Leaf shape</h3>
+<p>Load TRY leaf shape data</p>
+<div class="sourceCode" id="cb285"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">TRY_leaf_shape</span>  <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/TRY/TRY_traits/TRY_43.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Homogenize TRY leaf shape values into five categories:</p>
+<div class="sourceCode" id="cb286"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">TRY_leaf_shape</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">[</span><span class="va">TRY_leaf_shape</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                             <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"broadleaved"</span>, <span class="st">"broad-leaved"</span>, <span class="st">"B"</span>, <span class="st">"broadleaf"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Broad"</span>
+<span class="va">TRY_leaf_shape</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">[</span><span class="va">TRY_leaf_shape</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                              <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"needleleaved"</span>, <span class="st">"needle-leaved"</span>,<span class="st">"needle"</span>,<span class="st">"needle-leaf"</span>, <span class="st">"N"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Needle"</span>
+<span class="va">TRY_leaf_shape</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">[</span><span class="va">TRY_leaf_shape</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                              <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"scale-shaped"</span>, <span class="st">"scale"</span>, <span class="st">"scale-like"</span>, <span class="st">"scale-leaf"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Scale"</span>
+<span class="va">TRY_leaf_shape</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">[</span><span class="va">TRY_leaf_shape</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                              <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"narrowleaved"</span>, <span class="st">"linear"</span>, <span class="st">"Cylindrical"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Linear"</span>
+<span class="va">TRY_leaf_shape</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">[</span><span class="va">TRY_leaf_shape</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                              <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"photosynthetic stem"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Spines"</span>
+<span class="va">TRY_leaf_shape</span><span class="op">&lt;-</span><span class="va">TRY_leaf_shape</span><span class="op">[</span><span class="va">TRY_leaf_shape</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                                 <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Broad"</span>, <span class="st">"Needle"</span>, <span class="st">"Scale"</span>, <span class="st">"Linear"</span>, <span class="st">"Spines"</span><span class="op">)</span>,
+                               <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AccSpeciesName"</span>, <span class="st">"OrigValueStr"</span><span class="op">)</span><span class="op">]</span>
+<span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">TRY_leaf_shape</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"LeafShape"</span><span class="op">)</span></code></pre></div>
+<p>Homogenize BROT2 leaf shape values into the same five categories:</p>
+<div class="sourceCode" id="cb287"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">brot2_LeafShape</span> <span class="op">&lt;-</span> <span class="va">brot2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Trait</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LeafShape"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Taxon"</span>, <span class="st">"Data"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">brot2_LeafShape</span><span class="op">$</span><span class="va">Data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html">toupper</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/substr.html">substring</a></span><span class="op">(</span><span class="va">brot2_LeafShape</span><span class="op">$</span><span class="va">Data</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, 
+                              <span class="fu"><a href="https://rdrr.io/r/base/substr.html">substring</a></span><span class="op">(</span><span class="va">brot2_LeafShape</span><span class="op">$</span><span class="va">Data</span>, <span class="fl">2</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span>
+<span class="va">brot2_LeafShape</span><span class="op">$</span><span class="va">Data</span><span class="op">[</span><span class="va">brot2_LeafShape</span><span class="op">$</span><span class="va">Data</span><span class="op">==</span><span class="st">"Needle-like"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Needle"</span>
+<span class="va">brot2_LeafShape</span><span class="op">$</span><span class="va">Data</span><span class="op">[</span><span class="va">brot2_LeafShape</span><span class="op">$</span><span class="va">Data</span><span class="op">==</span><span class="st">"Scale-like"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Scale"</span>
+<span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">brot2_LeafShape</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"LeafShape"</span><span class="op">)</span></code></pre></div>
+<p>Merge data sets and call <code><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits()</a></code> to parse leaf shape values:</p>
+<div class="sourceCode" id="cb288"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">LeafShape_data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">brot2_LeafShape</span>,
+                       <span class="va">TRY_leaf_shape</span><span class="op">)</span>
+<span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">LeafShape_data</span>, 
+                           trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LeafShape"</span> <span class="op">=</span> <span class="st">"LeafShape"</span><span class="op">)</span>,
+                           character_traits <span class="op">=</span> <span class="cn">TRUE</span>,
+                           taxon_column <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></code></pre></div>
+<pre><code>## Mapping [LeafShape -&gt; LeafShape] species: 138 conspecific: 79 genus: 0 family: 0 order: 0 group: 0</code></pre>
+<pre><code>## 2 missing trait values (0.9 %) after populating with input data.</code></pre>
+<p>Show which species have missing values:</p>
+<div class="sourceCode" id="cb291"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">SpParams</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">LeafShape</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"LeafShape"</span><span class="op">)</span><span class="op">]</span></code></pre></div>
+<pre><code>##                       Name LeafShape
+## 114        Genistella spp.      &lt;NA&gt;
+## 207 Tetraclinis articulata      &lt;NA&gt;</code></pre>
+<p>Fill missing values manually:</p>
+<div class="sourceCode" id="cb293"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">SpParams</span><span class="op">$</span><span class="va">LeafShape</span><span class="op">[</span><span class="va">SpParams</span><span class="op">$</span><span class="va">Name</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Genistella spp."</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Broad"</span>
+<span class="va">SpParams</span><span class="op">$</span><span class="va">LeafShape</span><span class="op">[</span><span class="va">SpParams</span><span class="op">$</span><span class="va">Name</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Tetraclinis articulata"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Scale"</span></code></pre></div>
+<p>Show the number of taxa for each leaf shape:</p>
+<div class="sourceCode" id="cb294"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">LeafShape</span>, useNA <span class="op">=</span> <span class="st">"ifany"</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+##  Broad Linear Needle  Scale 
+##    182      1     29      7</code></pre>
+</div>
+<div id="leaf-size" class="section level3">
+<h3 class="hasAnchor">
+<a href="#leaf-size" class="anchor"></a>Leaf size</h3>
+<p>Load TRY leaf area data:</p>
+<div class="sourceCode" id="cb296"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">TRY_leaf_area</span>  <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"TraitDatabases/TRY/TRY_traits/TRY_3110.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Classify TRY leaf area values into three leaf size categories:</p>
+<div class="sourceCode" id="cb297"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">TRY_leaf_area</span><span class="op">$</span><span class="va">LeafSize</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">TRY_leaf_area</span><span class="op">$</span><span class="va">StdValue</span><span class="op">)</span>, 
+                             breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">225</span>, <span class="fl">2025</span>,<span class="fl">100000</span><span class="op">)</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Small"</span>, <span class="st">"Medium"</span>, <span class="st">"Large"</span><span class="op">)</span><span class="op">)</span> 
+<span class="va">TRY_LeafSize</span><span class="op">&lt;-</span><span class="va">TRY_leaf_area</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AccSpeciesName"</span>, <span class="st">"LeafSize"</span><span class="op">)</span><span class="op">]</span>
+<span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">TRY_LeafSize</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Species"</span></code></pre></div>
+<p>Split BROT2 data into leaf area values and leaf size strings:</p>
+<div class="sourceCode" id="cb298"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">brot2_LeafArea</span> <span class="op">&lt;-</span> <span class="va">brot2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Trait</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LeafArea"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Taxon"</span>, <span class="st">"Trait"</span>, <span class="st">"Data"</span>, <span class="st">"Units"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">brot2_LeafSize</span> <span class="op">&lt;-</span> <span class="va">brot2_LeafArea</span><span class="op">[</span><span class="va">brot2_LeafArea</span><span class="op">$</span><span class="va">Units</span><span class="op">==</span><span class="st">"[5]"</span>,<span class="op">]</span>
+<span class="va">brot2_LeafArea</span> <span class="op">&lt;-</span> <span class="va">brot2_LeafArea</span><span class="op">[</span><span class="va">brot2_LeafArea</span><span class="op">$</span><span class="va">Units</span><span class="op">==</span><span class="st">"mm2"</span>,<span class="op">]</span></code></pre></div>
+<p>Reclassify BROT2 leaf size data into three categories</p>
+<div class="sourceCode" id="cb299"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">brot2_LeafSize</span><span class="op">$</span><span class="va">Data</span><span class="op">[</span><span class="va">brot2_LeafSize</span><span class="op">$</span><span class="va">Data</span><span class="op">==</span><span class="st">"very small"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"small"</span>
+<span class="va">brot2_LeafSize</span><span class="op">$</span><span class="va">Data</span><span class="op">[</span><span class="va">brot2_LeafSize</span><span class="op">$</span><span class="va">Data</span><span class="op">==</span><span class="st">"very large"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"large"</span>
+<span class="va">brot2_LeafSize</span><span class="op">$</span><span class="va">Data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chartr.html">toupper</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/substr.html">substring</a></span><span class="op">(</span><span class="va">brot2_LeafSize</span><span class="op">$</span><span class="va">Data</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, 
+                              <span class="fu"><a href="https://rdrr.io/r/base/substr.html">substring</a></span><span class="op">(</span><span class="va">brot2_LeafSize</span><span class="op">$</span><span class="va">Data</span>, <span class="fl">2</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">""</span><span class="op">)</span>
+<span class="va">brot2_LeafSize</span> <span class="op">&lt;-</span> <span class="va">brot2_LeafSize</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Taxon"</span>, <span class="st">"Data"</span><span class="op">)</span><span class="op">]</span>
+<span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">brot2_LeafSize</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"LeafSize"</span><span class="op">)</span></code></pre></div>
+<p>Classify BRO2 leaf area values into three categories:</p>
+<div class="sourceCode" id="cb300"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">brot2_LeafArea</span><span class="op">$</span><span class="va">LeafSize</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cut.html">cut</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">brot2_LeafArea</span><span class="op">$</span><span class="va">Data</span><span class="op">)</span>, 
+                              breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">225</span>, <span class="fl">2025</span>,<span class="fl">100000</span><span class="op">)</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Small"</span>, <span class="st">"Medium"</span>, <span class="st">"Large"</span><span class="op">)</span><span class="op">)</span> 
+<span class="va">brot2_LeafArea</span> <span class="op">&lt;-</span> <span class="va">brot2_LeafArea</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Taxon"</span>, <span class="st">"LeafSize"</span><span class="op">)</span><span class="op">]</span>
+<span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">brot2_LeafArea</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Species"</span></code></pre></div>
+<p>Merge data sets and call <code><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits()</a></code> to parse leaf size values:</p>
+<div class="sourceCode" id="cb301"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">LeafSize_data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">brot2_LeafSize</span>,
+                      <span class="va">brot2_LeafArea</span>,
+                      <span class="va">TRY_LeafSize</span><span class="op">)</span>
+
+<span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">LeafSize_data</span>, 
+                           trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LeafSize"</span> <span class="op">=</span> <span class="st">"LeafSize"</span><span class="op">)</span>,
+                           character_traits <span class="op">=</span> <span class="cn">TRUE</span>,
+                           taxon_column <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></code></pre></div>
+<pre><code>## Mapping [LeafSize -&gt; LeafSize] species: 79 conspecific: 112 genus: 0 family: 0 order: 0 group: 0</code></pre>
+<pre><code>## 28 missing trait values (12.8 %) after populating with input data.</code></pre>
+<p>Show species with missing values:</p>
+<div class="sourceCode" id="cb304"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">SpParams</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">LeafSize</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"LeafSize"</span><span class="op">)</span><span class="op">]</span></code></pre></div>
+<pre><code>##                            Name LeafSize
+## 10             Adenocarpus spp.     &lt;NA&gt;
+## 14     Ampelodesmos mauritanica     &lt;NA&gt;
+## 17       Apollonias canariensis     &lt;NA&gt;
+## 33             Cedrus atlantica     &lt;NA&gt;
+## 34               Cedrus deodara     &lt;NA&gt;
+## 35                Cedrus libani     &lt;NA&gt;
+## 38     Chamaecyparis lawsoniana     &lt;NA&gt;
+## 41   Chamaespartium tridentatum     &lt;NA&gt;
+## 54          Coriaria myrtifolia     &lt;NA&gt;
+## 64  Cytisophyllum sessilifolium     &lt;NA&gt;
+## 74          Daboecia cantabrica     &lt;NA&gt;
+## 77               Dracaena drago     &lt;NA&gt;
+## 90                Erinacea spp.     &lt;NA&gt;
+## 96           Flueggea tinctoria     &lt;NA&gt;
+## 114             Genistella spp.     &lt;NA&gt;
+## 118       Heberdenia bahamensis     &lt;NA&gt;
+## 130          Kleinia neriifolia     &lt;NA&gt;
+## 149      Paliurus spina-christi     &lt;NA&gt;
+## 155            Picconia excelsa     &lt;NA&gt;
+## 169      Pleiomeris canariensis     &lt;NA&gt;
+## 172       Pseudotsuga menziesii     &lt;NA&gt;
+## 187           Rhododendron spp.     &lt;NA&gt;
+## 200            Sophora japonica     &lt;NA&gt;
+## 202               Spartium spp.     &lt;NA&gt;
+## 206                 Teline spp.     &lt;NA&gt;
+## 216               Vella spinosa     &lt;NA&gt;
+## 218             Visnea mocanera     &lt;NA&gt;
+## 219              Zizyphus lotus     &lt;NA&gt;</code></pre>
+<p>Fill missing values manually:</p>
+<div class="sourceCode" id="cb306"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">SpParams</span><span class="op">$</span><span class="va">LeafSize</span><span class="op">[</span><span class="va">SpParams</span><span class="op">$</span><span class="va">Name</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Apollonias canariensis"</span>,
+                                       <span class="st">"Ampelodesmos mauritanica"</span>,
+                                       <span class="st">"Dracaena drago"</span>, <span class="st">"Heberdenia bahamensis"</span>,
+                                       <span class="st">"Picconia excelsa"</span>, <span class="st">"Pleiomeris canariensis"</span>,
+                                       <span class="st">"Visnea mocanera"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Large"</span>
+<span class="va">SpParams</span><span class="op">$</span><span class="va">LeafSize</span><span class="op">[</span><span class="va">SpParams</span><span class="op">$</span><span class="va">Name</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Coriaria myrtifolia"</span>, <span class="st">"Flueggea tinctoria"</span>,
+                                       <span class="st">"Kleinia neriifolia"</span>, <span class="st">"Rhododendron spp."</span>,
+                                       <span class="st">"Sophora japonica"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Medium"</span>
+<span class="va">SpParams</span><span class="op">$</span><span class="va">LeafSize</span><span class="op">[</span><span class="va">SpParams</span><span class="op">$</span><span class="va">Name</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Adenocarpus spp."</span>, <span class="st">"Cedrus atlantica"</span>,
+                                       <span class="st">"Cedrus deodara"</span>, <span class="st">"Cedrus libani"</span>,
+                                       <span class="st">"Chamaecyparis lawsoniana"</span>,
+                                       <span class="st">"Chamaespartium tridentatum"</span>,
+                                       <span class="st">"Cytisophyllum sessilifolium"</span>,
+                                       <span class="st">"Daboecia cantabrica"</span>,
+                                       <span class="st">"Erinacea spp."</span>, <span class="st">"Genistella spp."</span>,
+                                       <span class="st">"Paliurus spina-christi"</span>, <span class="st">"Pseudotsuga menziesii"</span>,
+                                       <span class="st">"Spartium spp."</span>, <span class="st">"Teline spp."</span>, <span class="st">"Vella spinosa"</span>,
+                                       <span class="st">"Zizyphus lotus"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Small"</span></code></pre></div>
+<p>Show the number of taxa for each leaf size:</p>
+<div class="sourceCode" id="cb307"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">LeafSize</span>, useNA <span class="op">=</span> <span class="st">"ifany"</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+##  Large Medium  Small 
+##     50     68    101</code></pre>
+</div>
+<div id="phenology-type" class="section level3">
+<h3 class="hasAnchor">
+<a href="#phenology-type" class="anchor"></a>Phenology type</h3>
+<div class="sourceCode" id="cb309"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">TRY_phenology</span>  <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"TraitDatabases/TRY/TRY_traits/TRY_37.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb310"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">TRY_phenology</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">[</span><span class="va">TRY_phenology</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                             <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"evergreen"</span>, <span class="st">"E"</span>, <span class="st">"EV"</span>, <span class="st">"always summer green"</span>,
+                               <span class="st">"Evergreen broad-leaved"</span>, <span class="st">"Evergreen scale-like"</span>,
+                               <span class="st">"Evergreen needle-leaved"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"oneflush-evergreen"</span>
+<span class="va">TRY_phenology</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">[</span><span class="va">TRY_phenology</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                             <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"deciduous"</span>, <span class="st">"D"</span>, <span class="st">"Deciduous broad-leaved"</span>, <span class="st">"Deciduous"</span>,
+                               <span class="st">"Nonevergreen"</span>, <span class="st">"winter deciduous"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"winter-deciduous"</span>
+<span class="va">TRY_phenology</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">[</span><span class="va">TRY_phenology</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                             <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"semi-deciduous"</span>,
+                               <span class="st">"semi-evergreen"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"winter-semideciduous"</span>
+<span class="va">TRY_phenology</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">[</span><span class="va">TRY_phenology</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> 
+                             <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"drought semi-deciduous"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"drought-semideciduous"</span>
+<span class="va">TRY_phenology</span><span class="op">&lt;-</span><span class="va">TRY_phenology</span><span class="op">[</span><span class="va">TRY_phenology</span><span class="op">$</span><span class="va">OrigValueStr</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"progressive-evergreen"</span>,
+                                                               <span class="st">"oneflush-evergreen"</span>, 
+                                                               <span class="st">"winter-semideciduous"</span>,
+                                                               <span class="st">"winter-deciduous"</span>,
+                                                               <span class="st">"drought-semideciduous"</span><span class="op">)</span><span class="op">]</span>
+<span class="va">TRY_phenology</span><span class="op">&lt;-</span><span class="va">TRY_phenology</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AccSpeciesName"</span>, <span class="st">"OrigValueStr"</span><span class="op">)</span><span class="op">]</span>
+<span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">TRY_phenology</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>,<span class="st">"LeafPhenology"</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb311"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">brot2_LeafPhenology</span> <span class="op">&lt;-</span> <span class="va">brot2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Trait</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LeafPhenology"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Taxon"</span>, <span class="st">"Data"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">brot2_LeafPhenology</span><span class="op">$</span><span class="va">Data</span><span class="op">[</span><span class="va">brot2_LeafPhenology</span><span class="op">$</span><span class="va">Data</span><span class="op">==</span><span class="st">"drought semi-deciduous"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"drought-semideciduous"</span>
+<span class="va">brot2_LeafPhenology</span><span class="op">$</span><span class="va">Data</span><span class="op">[</span><span class="va">brot2_LeafPhenology</span><span class="op">$</span><span class="va">Data</span><span class="op">==</span><span class="st">"evergreen"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"oneflush-evergreen"</span>
+<span class="va">brot2_LeafPhenology</span><span class="op">$</span><span class="va">Data</span><span class="op">[</span><span class="va">brot2_LeafPhenology</span><span class="op">$</span><span class="va">Data</span><span class="op">==</span><span class="st">"winter deciduous"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"winter-deciduous"</span>
+<span class="va">brot2_LeafPhenology</span><span class="op">$</span><span class="va">Data</span><span class="op">[</span><span class="va">brot2_LeafPhenology</span><span class="op">$</span><span class="va">Data</span><span class="op">==</span><span class="st">"winter semi-deciduous"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"winter-semideciduous"</span>
+<span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">brot2_LeafPhenology</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>,<span class="st">"LeafPhenology"</span><span class="op">)</span></code></pre></div>
+<p>Merge data sets and call <code><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits()</a></code> to parse leaf phenology:</p>
+<div class="sourceCode" id="cb312"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">LeafPhenology_data</span> <span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">brot2_LeafPhenology</span>,
+                          <span class="va">TRY_phenology</span><span class="op">)</span>
+<span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">LeafPhenology_data</span>, 
+                           trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PhenologyType"</span> <span class="op">=</span> <span class="st">"LeafPhenology"</span><span class="op">)</span>,
+                           character_traits <span class="op">=</span> <span class="cn">TRUE</span>,
+                           taxon_column <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></code></pre></div>
+<pre><code>## Mapping [LeafPhenology -&gt; PhenologyType] species: 123 conspecific: 93 genus: 0 family: 0 order: 0 group: 0</code></pre>
+<pre><code>## 3 missing trait values (1.4 %) after populating with input data.</code></pre>
+<p>Show which species have missing values:</p>
+<div class="sourceCode" id="cb315"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">SpParams</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">PhenologyType</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Name"</span>, <span class="st">"PhenologyType"</span><span class="op">)</span><span class="op">]</span></code></pre></div>
+<pre><code>##                       Name PhenologyType
+## 114        Genistella spp.          &lt;NA&gt;
+## 169 Pleiomeris canariensis          &lt;NA&gt;
+## 216          Vella spinosa          &lt;NA&gt;</code></pre>
+<p>Fill missing values manually:</p>
+<div class="sourceCode" id="cb317"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">SpParams</span><span class="op">$</span><span class="va">PhenologyType</span><span class="op">[</span><span class="va">SpParams</span><span class="op">$</span><span class="va">Name</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Vella spinosa"</span>, <span class="st">"Genistella spp."</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"winter-deciduous"</span>
+<span class="va">SpParams</span><span class="op">$</span><span class="va">PhenologyType</span><span class="op">[</span><span class="va">SpParams</span><span class="op">$</span><span class="va">Name</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Pleiomeris canariensis"</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="st">"oneflush-evergreen"</span></code></pre></div>
+<p>Show the number of taxa for each phenology type:</p>
+<div class="sourceCode" id="cb318"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">PhenologyType</span>, useNA <span class="op">=</span> <span class="st">"ifany"</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## drought-semideciduous    oneflush-evergreen      winter-deciduous 
+##                     3                   122                    94</code></pre>
 </div>
 </div>
   </div>
