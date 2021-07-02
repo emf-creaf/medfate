@@ -259,7 +259,7 @@
 <span class='va'>x1</span> <span class='op'>=</span> <span class='fu'><a href='modelInput.html'>forest2spwbInput</a></span><span class='op'>(</span><span class='va'>exampleforestMED</span>,<span class='va'>examplesoil1</span>, <span class='va'>SpParamsMED</span>, <span class='va'>control</span><span class='op'>)</span>
 
 <span class='co'>#Parameter names of interest</span>
-<span class='va'>parNames</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"T1_54/Z50"</span>, <span class='st'>"T1_54/Z95"</span><span class='op'>)</span>
+<span class='va'>parNames</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"T1_157/Z50"</span>, <span class='st'>"T1_157/Z95"</span><span class='op'>)</span>
 
 <span class='co'>#Specify parameter matrix</span>
 <span class='va'>parMatrix</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>200</span>,<span class='fl'>300</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>500</span>,<span class='fl'>1000</span><span class='op'>)</span><span class='op'>)</span>
@@ -272,16 +272,16 @@
 <span class='fu'>multiple_runs</span><span class='op'>(</span><span class='va'>parMatrix</span>, 
               <span class='va'>x1</span>, <span class='va'>examplemeteo</span>, latitude <span class='op'>=</span> <span class='fl'>42</span>, elevation <span class='op'>=</span> <span class='fl'>100</span>,
               summary_function <span class='op'>=</span> <span class='va'>sf</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 1. Parameter values = [200, 500] f = 290.820608960178
-#&gt; 2. Parameter values = [300, 1000] f = 290.851518236748</div><div class='output co'>#&gt; [[1]]
-#&gt; [1] 290.8206
+</div><div class='output co'>#&gt; 1. Parameter values = [200, 500] f = 339.613438624293
+#&gt; 2. Parameter values = [300, 1000] f = 340.331576417271</div><div class='output co'>#&gt; [[1]]
+#&gt; [1] 339.6134
 #&gt; 
 #&gt; [[2]]
-#&gt; [1] 290.8515
+#&gt; [1] 340.3316
 #&gt; </div><div class='input'>              
 <span class='co'>#Load observed data (in this case the same simulation results with some added error)  </span>
 <span class='co'># Generate a prediction function for total transpiration over the simulated period</span>
-<span class='co'># as a function of parameters "Z50" and "Z95" for cohort "T1_54"</span>
+<span class='co'># as a function of parameters "Z50" and "Z95" for cohort "T1_157"</span>
 <span class='va'>of</span><span class='op'>&lt;-</span><span class='fu'>optimization_function</span><span class='op'>(</span>parNames <span class='op'>=</span> <span class='va'>parNames</span>,
                           x <span class='op'>=</span> <span class='va'>x1</span>,
                           meteo <span class='op'>=</span> <span class='va'>examplemeteo</span>, 
@@ -290,11 +290,11 @@
 
 <span class='co'># Evaluate for the values of the parameter matrix</span>
 <span class='fu'>of</span><span class='op'>(</span><span class='va'>parMatrix</span><span class='op'>[</span><span class='fl'>1</span>, <span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 290.8206</div><div class='input'><span class='fu'>of</span><span class='op'>(</span><span class='va'>parMatrix</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 290.8206 290.8515</div><div class='input'>
+</div><div class='output co'>#&gt; [1] 339.6134</div><div class='input'><span class='fu'>of</span><span class='op'>(</span><span class='va'>parMatrix</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 339.6134 340.3316</div><div class='input'>
 
 <span class='co'># Generate a loglikelihood function for soil water content</span>
-<span class='co'># as a function of parameters "Z50" and "Z95" for cohort "T1_54"</span>
+<span class='co'># as a function of parameters "Z50" and "Z95" for cohort "T1_157"</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>exampleobs</span><span class='op'>)</span>
 <span class='va'>oef</span><span class='op'>&lt;-</span><span class='fu'>optimization_evaluation_function</span><span class='op'>(</span>parNames <span class='op'>=</span> <span class='va'>parNames</span>,
                 x <span class='op'>=</span> <span class='va'>x1</span>,
@@ -304,8 +304,8 @@
 
 <span class='co'># Loglikelihood for the values of the parameter matrix</span>
 <span class='fu'>oef</span><span class='op'>(</span><span class='va'>parMatrix</span><span class='op'>[</span><span class='fl'>1</span>, <span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] -246.5046</div><div class='input'><span class='fu'>oef</span><span class='op'>(</span><span class='va'>parMatrix</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] -246.5046  872.7216</div><div class='input'>
+</div><div class='output co'>#&gt; [1] -1330.649</div><div class='input'><span class='fu'>oef</span><span class='op'>(</span><span class='va'>parMatrix</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] -1330.6490   478.2192</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

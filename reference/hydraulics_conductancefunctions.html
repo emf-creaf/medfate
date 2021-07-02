@@ -135,7 +135,7 @@
 <span class='fu'>hydraulics_xylemConductance</span><span class='op'>(</span><span class='va'>psi</span>, <span class='va'>kxylemmax</span>, <span class='va'>c</span>, <span class='va'>d</span><span class='op'>)</span>
 <span class='fu'>hydraulics_xylemPsi</span><span class='op'>(</span><span class='va'>kxylem</span>, <span class='va'>kxylemmax</span>, <span class='va'>c</span>, <span class='va'>d</span><span class='op'>)</span>
 <span class='fu'>hydraulics_correctConductanceForViscosity</span><span class='op'>(</span><span class='va'>kxylem</span>, <span class='va'>temp</span><span class='op'>)</span>
-<span class='fu'>hydraulics_psi2Weibull</span><span class='op'>(</span><span class='va'>psi50</span>, <span class='va'>psi88</span><span class='op'>)</span></pre>
+<span class='fu'>hydraulics_psi2Weibull</span><span class='op'>(</span><span class='va'>psi50</span>, psi88 <span class='op'>=</span> <span class='cn'>NA</span>, psi12 <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -217,8 +217,8 @@
       <td><p>Proportion of maximum conductance considered critical for hydraulic functioning.</p></td>
     </tr>
     <tr>
-      <th>psi50, psi88</th>
-      <td><p>Water potentials (in MPa) corresponding to 50% and 88% of percent loss of conductance.</p></td>
+      <th>psi50, psi88, psi12</th>
+      <td><p>Water potentials (in MPa) corresponding to 50%, 88% and 12% percent conductance loss.</p></td>
     </tr>
     <tr>
       <th>temp</th>

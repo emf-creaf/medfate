@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Data tables with species parameter values for Mediterranean and US — SpParams • medfate</title>
+<title>Data tables with species parameter definition and values for Mediterranean and US — SpParams • medfate</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Data tables with species parameter values for Mediterranean and US — SpParams" />
-<meta property="og:description" content="A data sets of species parameter values, resulting from bibliographic search, fit to empirical data or expert-based guesses." />
+<meta property="og:title" content="Data tables with species parameter definition and values for Mediterranean and US — SpParams" />
+<meta property="og:description" content="A data sets of species parameter definition and values, the latter resulting from existing databases, fit to empirical data or expert-based guesses." />
 
 
 
@@ -114,151 +114,23 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Data tables with species parameter values for Mediterranean and US</h1>
+    <h1>Data tables with species parameter definition and values for Mediterranean and US</h1>
     
     <div class="hidden name"><code>SpParams.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A data sets of species parameter values, resulting from bibliographic search, fit to empirical data or expert-based guesses.</p>
+    <p>A data sets of species parameter definition and values, the latter resulting from existing databases, fit to empirical data or expert-based guesses.</p>
     </div>
 
-    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"SpParamsMED"</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"SpParamsDefinition"</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"SpParamsMED"</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"SpParamsUS"</span><span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>A data frame with species as rows and the following columns (variables), grouped by categories.</p><dl>
-  Plant identity:
-  
-    <code>Name</code>: A factor with taxon names (mostly species names).
-    <code>IFNcodes</code>: A factor with levels corresponding to species codes in the Third Spanish forest inventory (DGCN 2005).
-    <code>SpIndex</code>: A numeric vector of the species index.
-    <code>Group</code>: Either "Gymnosperm" or "Angiosperm".
-    <code>Order</code>: Taxonomical order.
-    <code>Family</code>: Taxonomical family.
-    <code>GrowthForm</code>: Either <code>Shrub</code>, <code>Tree</code> and <code>Tree/Shrub</code>.
-  
-  Plant size:
-  
-    <code>Hmax</code>: Maximum plant height (in cm).
-    <code>Hmed</code>: Median plant height (in cm).
-    <code>Z50</code>: Rooting depth (in mm) corresponding to 50% of fine roots.
-    <code>Z95</code>: Rooting depth (in mm) corresponding to 95% of fine roots.
-  
-  Shrub allometric coefficients (calibrated for Catalonia; see De CáceresCaceres et al. 2019):
-  
-    <code>a_ash</code>, <code>b_ash</code>: Allometric coefficients relating shrub height with the projected area of shrub individuals.
-    <code>a_bsh</code>, <code>b_bsh</code>: Allometric coefficients relating phytovolume with dry weight of shrub individuals.
-    <code>cr</code>: Ratio between shrub crown length and total height.
-  
-  Tree allometric coefficients (calibrated for Catalonia):
-  
-    <code>a_fbt</code>, <code>b_fbt</code>, <code>c_fbt</code>, <code>d_fbt</code>: Regression coefficients used to calculate foliar biomass of an individual tree from its dbh and the cummulative basal area of larger trees.
-    <code>a_cr</code>, <code>b_1cr</code>, <code>b_2cr</code>, <code>b_3cr</code>, <code>c_1cr</code>, <code>c_2cr</code>: Regression coefficients used to calculate crown ratio of trees.
-    <code>a_cw</code>, <code>b_cw</code>: Regression coefficients used to calculated crown width of trees.
-  
-  Phenology:
-    
-    <code>PhenologyType</code>: Leaf phenology type, either "oneflush-evergreen" (new leaves develop in spring-summer), "progressive-evergreen" (new leaves develop during any season), "winter-deciduous" (leaf senescence in autumn, new leaves in spring-summer) or "winter-semideciduous" (same as before, but abscission of senescent leaves occurs when new leaves are produced).
-    <code>LeafDuration</code>: Leaf duration (in years).
-    <code>Sgdd</code>: Degree days for leaf budburst (in Celsius).
-    <code>Tbgdd</code>: Base temperature for the calculation of degree days to leaf budburst.
-    <code>Ssen</code>: Degree days corresponding to leaf senescence.
-    <code>Phsen</code>: Photoperiod corresponding to start counting senescence degree-days.
-    <code>Tbsen</code>: Base temperature for the calculation of degree days to leaf senescence.
-  
-  Anatomy:
-    
-    <code>SLA</code>: Specific leaf area (mm2/mg = m2/kg).
-    <code>LeafDensity</code>: Density of leaf tissue (dry weight over volume).
-    <code>WoodDensity</code>: Wood density (at 0 percent humidity!).
-    <code>FineRootDensity</code>: Density of fine root tissue (dry weight over volume).
-    <code>conduit2sapwood</code>: Proportion of sapwood corresponding to conducive elements (vessels or tracheids) as opposed to parenchymatic tissue.
-    <code>r635</code>: Ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm.
-    <code>pDead</code>: Proportion of total fine fuels that are dead
-    <code>Al2As</code>: Leaf area to sapwood area ratio (in m2·m-2).
-    <code>LeafWidth</code>: Leaf width (in cm).
-    <code>SRL</code>: Specific root length (cm/g).
-    <code>RLD</code>: Fine root length density (i.e. density of root length per soil volume) (cm·cm-3).
-  
-  Tissue moisture:
-    
-    <code>maxFMC</code>: Maximum fuel moisture (in percent of dry weight)
-    <code>minFMC</code>: Minimum fuel moisture (in percent of dry weight)
-    <code>LeafPI0</code>: Osmotic potential at full turgor of leaves (MPa).
-    <code>LeafEPS</code>: Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of leaves (MPa).
-    <code>LeafAF</code>: Apoplastic fraction (proportion of water outside the living cells) in leaves.
-    <code>StemPI0</code>: Osmotic potential at full turgor of symplastic xylem tissue (MPa).
-    <code>StemEPS</code>: Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of symplastic xylem tissue (Mpa).
-    <code>StemAF</code>: Apoplastic fraction (proportion of water outside the living cells) in stem xylem.
-    
-  Flammability:
-    
-    <code>LigninPercent</code>: Percent of lignin+cutin over dry weight in leaves.
-    <code>ParticleDensity</code>: Particle density (kg/m3).
-    <code>LeafLitterFuelType</code>: Fuel type for leaf litter, with levels <code>Broadleaved</code>, <code>LongLinear</code>, <code>Scale</code> and <code>ShortLinear</code>.
-    <code>Flammability</code>: Flammability modifier (either 1 or 2 for normal or high, respectively).
-    <code>SAV</code>: Surface-area-to-volume ratio of the small fuel (1h) fraction (leaves and branches &lt; 6.35mm) (m2/m3).
-    <code>HeatContent</code>: High fuel heat content (kJ/kg).
-    
-  Extinction:
-    
-    <code>gammaSWR</code>: Reflectance (albedo) for SWR (<code>gammaPAR = 0.8*gammaSWR</code>).
-    <code>alphaSWR</code>: Absorbance coefficient for SWR (<code>alphaPAR = alphaSWR * 1.35</code>).
-    <code>kPAR</code>: Extinction coeficient for PAR (<code>kSWR = kPAR/1.35</code>).
-    <code>g</code>: Canopy water storage capacity per LAI unit (in mm/LAI).
-    
-  Transpiration/Photosynthesis:
-    
-     <code>Tmax_LAI</code>: Coefficient relating LAI with the ratio of maximum transpiration over potential evapotranspiration.
-    <code>Tmax_LAIsq</code>: Coefficient relating squared LAI with the ratio of maximum transpiration over potential evapotranspiration.
-    <code>Psi_Extract</code>: Water potential corresponding to 50% stomatal conductance (in MPa).
-    <code>Psi_Critic</code>: Water potential corresponding to 50% of stem cavitation (in MPa).
-    <code>WUE</code>: Water use efficiency for carbon assimilation (gross photosynthesis) (g C /mm water).
-    <code>pRootDisc</code>: Relative root conductance leading to hydraulic disconnection from a soil layer.
-    <code>Gswmin</code>: Minimum stomatal conductance to water vapor per leaf area unit (in mol·s-1·m-2).
-    <code>Gswmax</code>: Maximum stomatal conductance to water vapor per leaf area unit (in mol·s-1·m-2).
-    <code>VCleaf_kmax</code>: Leaf hydraulic conductance (in mmol H2O·s-1·m-2·MPa-1).
-    <code>VCleaf_c</code>, <code>VCleaf_d</code>: Parameters of the leaf vulnerability curve (<code>VCleaf_d</code> in MPa).
-    <code>Kmax_stemxylem</code>: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-1·MPa-1).
-    <code>VCstem_c</code>, <code>VCstem_d</code>: Parameters of the stem xylem vulnerability curve (<code>VCstem_d</code> in MPa).
-    <code>Kmax_rootxylem</code>: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).
-    <code>VCroot_c</code>, <code>VCroot_d</code>: Parameters of the root xylem vulnerability curve (<code>VCroot_d</code> in MPa).
-    <code>Narea</code>: Nitrogen contrentration per leaf area (in g·m-2).
-    <code>Vmax298</code>: Maximum Rubisco carboxilation rate at 25ºC (in micromol CO2·s-1·m-2).
-    <code>Jmax298</code>: Maximum electron transport rate at 25ºC (in micromol electrons·s-1·m-2).
-  
-  Growth:
-    
-    <code>WoodC</code>: Wood carbon content per dry weight (g C /g dry).
-    <code>RERleaf</code>: Maintenance respiration rate for leaves (g gluc · g dry-1 · day-1).
-    <code>RERsapwood</code>: Maintenance respiration rate for living cells of sapwood (g gluc · g dry-1 · day-1).
-    <code>RERfineroot</code>: Maintenance respiration rate for fine roots (g gluc · g dry-1 · day-1).
-    <code>RGRleafmax</code>: Maximum leaf area growth rate relative to sapwood area (in m2·cm-2· day-1).
-    <code>RGRsapwoodmax</code>: Maximum sapwood area relative growth rate (in cm2·cm-2·day-1).
-    <code>RGRfinerootmax</code>: Maximum fine root relative growth rate (in g dry·g dry-1· day-1).
-    <code>fHDmin</code>: Minimum value of the height-to-diameter ratio (dimensionless).
-    <code>fHDmax</code>: Maximum value of the height-to-diameter ratio (dimensionless).
-    
-  Recruitment:
-    
-    <code>SeedProductionHeight</code>: Minimum height (cm) for seed production.
-    <code>MinTempRecr</code>: Minimum average temperature (Celsius) of the coldest month for successful recruitment.
-    <code>MinMoistureRecr</code>: Minimum value of the moisture index (annual precipitation over annual PET) for successful recruitment.
-    <code>MinFPARRecr</code>: Minimum percentage of PAR at the ground level for successful recruitment.
-    <code>RecrTreeDBH</code>: Recruitment DBH (cm) for trees.
-    <code>RecrTreeHeight</code>: Recruitment height (cm) for trees.
-    <code>RecrTreeDensity</code>: Recruitment density (ind·ha-1) for trees.
-    <code>RecrShrubCover</code>: Recruitment cover (%) for shrubs.
-    <code>RecrShrubHeight</code>: Recruitment height (cm) for shrubs.
-    <code>RecrZ50</code>: Soil depth (mm) corresponding to 50% of fine roots for recruitment.
-    <code>RecrZ95</code>: Soil depth (mm) corresponding to 95% of fine roots for recruitment.
-  
-  
-</dl>
-
+    <p>Data frame <code>SpParamsDefinition</code> has parameters in rows and columns 'ParameterName', 'ParameterGroup', 'Definition', 'Type' and 'Units'. Data frames <code>SpParamsMED</code> and <code>SpParamsUS</code> have species or genus as rows and column names equal to parameter names in <code>SpParamsDefinition</code>.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>See details of parameterization in De Caceres et al. (2015) and De Caceres et al. (2021).</p>

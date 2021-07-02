@@ -122,7 +122,15 @@
 <a href="#version-230" class="anchor"></a>Version 2.3.0<small> Unreleased </small>
 </h1>
 <ul>
+<li>IMPORTANT: New species parameter tables</li>
 <li>New control parameter ‘fillMissingSpParams’</li>
+<li>New species categorical params (for inbuilt imputation) ‘LeafShape’ and ‘LeafSize’</li>
+<li>Parameter ‘Flammability’ index eliminated (non-meansurable property of flammability).</li>
+<li>Parameter ‘LeafLitterFuelType’ eliminated because it is derived from ‘LeafShape’ and ‘LeafSize’.</li>
+<li>Defaults added for ‘r635’, ‘heatContent’, ‘LigninPercent’ and ‘SAV’ according to ‘LeafShape’ and ‘LeafSize’</li>
+<li>New function ‘getSpParamsDefinition()’ returns definition of species parameters.</li>
+<li>Inbuilt defaults added for shrub allometries, depending on ‘LifeForm’ and ‘Hmax’, and for tree allometries, depending on ‘Group’.</li>
+<li>Default value added for ‘pDead’.</li>
 </ul>
 </div>
     <div id="version-223" class="section level1">

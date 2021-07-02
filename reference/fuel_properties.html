@@ -222,7 +222,6 @@
 <li><p><code>pDead</code>: Proportion of dead fuels.</p></li>
 <li><p><code>FAI</code>: Fuel area index (unitless).</p></li>
 <li><p><code>h</code>: High heat content (in kJ/kg).</p></li>
-<li><p><code>etaF</code>: Flammability modifier (between 1 and 2).</p></li>
 <li><p><code>RV</code>: Reactive volume (in m3/m2).</p></li>
 <li><p><code>MinFMC</code>: Minimum fuel moisture content (as percent over dry weight).</p></li>
 <li><p><code>MaxFMC</code>: Maximum fuel moisture content (as percent over dry weight).</p></li>
@@ -273,46 +272,46 @@
 #&gt; [1] 80
 #&gt; 
 #&gt; $understoryLAI
-#&gt; [1] 0.01017256
+#&gt; [1] 0.009045797
 #&gt; 
 #&gt; $canopyBaseHeight
-#&gt; [1] 260
+#&gt; [1] 270
 #&gt; 
 #&gt; $canopyTopHeight
 #&gt; [1] 740
 #&gt; 
 #&gt; $canopyAbsoluteBaseHeight
-#&gt; [1] 220
+#&gt; [1] 260
 #&gt; 
 #&gt; $canopyAbsoluteTopHeight
 #&gt; [1] 800
 #&gt; 
 #&gt; $canopyLAI
-#&gt; [1] 1.543083
+#&gt; [1] 1.856981
 #&gt; </div><div class='input'>
 <span class='co'>#Calculate fuel properties according to FCCS</span>
 <span class='va'>fccs</span> <span class='op'>=</span> <span class='fu'>fuel_FCCS</span><span class='op'>(</span><span class='va'>exampleforestMED</span>, <span class='fl'>50</span>,<span class='fl'>100</span>, <span class='va'>SpParamsMED</span><span class='op'>)</span>
 <span class='va'>fccs</span>
 </div><div class='output co'>#&gt;                 w cover hbc htc habc hatc       delta        rhob rhop
-#&gt; canopy 0.66429990   100 2.6 7.4  2.2  8.0 5.051677308  0.13150086  400
+#&gt; canopy 0.62795536   100 2.7 7.4  2.6  8.0 4.754913510  0.13206452  400
 #&gt; shrub  0.02372309    50 0.4 0.5  0.0  0.8 0.642625347  0.03691589  400
 #&gt; herb   0.02800000    10 0.0  NA  0.0   NA 0.200000000  0.14000000  400
-#&gt; woody  0.18743669    NA 0.0  NA  0.0   NA 0.007091816 26.43000000  400
-#&gt; litter 0.16705054    NA 0.0  NA  0.0   NA 0.008144384 20.51113233  400
+#&gt; woody  0.21125902    NA 0.0  NA  0.0   NA 0.007993153 26.43000000  400
+#&gt; litter 0.27653223    NA 0.0  NA  0.0   NA 0.014259749 19.39250312  400
 #&gt;                  PV         beta   betarel etabetarel     sigma      pDead
-#&gt; canopy 1.660750e-03 3.287521e-04 0.2117231  0.4657068  5274.119 0.08060296
-#&gt; shrub  5.930772e-05 9.228973e-05 0.2966359  0.5993643  4141.000 0.10856686
-#&gt; herb   7.000000e-05 3.500000e-04 0.7702823  0.9692037 11483.000 0.00000000
-#&gt; woody  4.685917e-04 6.607500e-02 0.7702823  0.9692037  1601.050 1.00000000
-#&gt; litter 4.176263e-04 5.127783e-02 9.0578003  0.1484447  7301.295 1.00000000
-#&gt;              FAI        h etaF           RV   MinFMC    MaxFMC ActFMC
-#&gt; canopy 8.7589911 21044.37    1 1.660750e-03 78.34051 101.81002     NA
-#&gt; shrub  0.2455933 21100.00    1 5.930772e-05 43.00000  98.35104     NA
-#&gt; herb   0.8038100 18608.00    1 7.000000e-05       NA        NA     NA
-#&gt; woody  0.7502388 18608.00    1 4.685917e-04       NA        NA     NA
-#&gt; litter 3.0492131 18608.00    1 4.176263e-04       NA        NA     NA</div><div class='input'>
+#&gt; canopy 1.569888e-03 3.301613e-04 0.2107675  0.4640480  5227.832 0.02157466
+#&gt; shrub  5.930772e-05 9.228973e-05 0.3529540  0.6741035  4141.000 0.07627965
+#&gt; herb   7.000000e-05 3.500000e-04 0.9032102  0.9950024 11483.000 0.00000000
+#&gt; woody  5.281476e-04 6.607500e-02 0.9032102  0.9950024  1601.050 1.00000000
+#&gt; litter 6.913306e-04 4.848126e-02 9.2520482  0.1424810  7441.017 1.00000000
+#&gt;              FAI        h           RV   MinFMC    MaxFMC ActFMC
+#&gt; canopy 8.2071127 20978.41 1.569888e-03 74.39303 112.51518     NA
+#&gt; shrub  0.2455933 20117.67 5.930772e-05 63.64891  96.53441     NA
+#&gt; herb   0.8038100 18608.00 7.000000e-05       NA        NA     NA
+#&gt; woody  0.8455906 18608.00 5.281476e-04       NA        NA     NA
+#&gt; litter 5.1442027 18608.00 6.913306e-04       NA        NA     NA</div><div class='input'>
 <span class='fu'>fuel_windAdjustmentFactor</span><span class='op'>(</span><span class='va'>fccs</span><span class='op'>$</span><span class='va'>htc</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span>, <span class='va'>fccs</span><span class='op'>$</span><span class='va'>hbc</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>, <span class='va'>fccs</span><span class='op'>$</span><span class='va'>htc</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>, <span class='va'>fccs</span><span class='op'>$</span><span class='va'>cover</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.1968428</div></pre>
+</div><div class='output co'>#&gt; [1] 0.1989258</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

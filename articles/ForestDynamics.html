@@ -70,13 +70,13 @@
 
       
 
-      </header><script src="ForestDynamics_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="ForestDynamics_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Forest dynamics</h1>
                         <h4 class="author">Miquel De Caceres</h4>
             
-            <h4 class="date">2021-06-21</h4>
+            <h4 class="date">2021-07-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/master/vignettes/ForestDynamics.Rmd"><code>vignettes/ForestDynamics.Rmd</code></a></small>
       <div class="hidden name"><code>ForestDynamics.Rmd</code></div>
@@ -120,12 +120,12 @@
 ## 
 ## $treeData
 ##   Species   N   DBH Height Z50  Z95
-## 1      54 168 37.55    800 750 3000
-## 2      68 384 14.60    660 750 3000
+## 1     157 168 37.55    800 750 3000
+## 2     176 384 14.60    660 750 3000
 ## 
 ## $shrubData
 ##   Species Cover Height Z50  Z95
-## 1      65  3.75     80 300 1500
+## 1     174  3.75     80 300 1500
 ## 
 ## $herbCover
 ## [1] 10
@@ -194,20 +194,20 @@
 <pre><code>## Simulating forest dynamics for year 2001 (1/3)
 ##    (a) Growth/mortality
 ##    (b) Recruitment
-##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 39.8
-##        Tree species with seed rain: 54,68 recruited: &lt;none&gt;
+##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 34.7
+##        Tree species with seed rain: 157,176 recruited: &lt;none&gt;
 ##    (c) Summaries
 ## Simulating forest dynamics for year 2002 (2/3)
 ##    (a) Growth/mortality
 ##    (b) Recruitment
-##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.18   FPAR (%): 39.8
-##        Tree species with seed rain: 54,68 recruited: &lt;none&gt;
+##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.18   FPAR (%): 34.7
+##        Tree species with seed rain: 157,176 recruited: &lt;none&gt;
 ##    (c) Summaries
 ## Simulating forest dynamics for year 2003 (3/3)
 ##    (a) Growth/mortality
 ##    (b) Recruitment
-##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 37.4
-##        Tree species with seed rain: 54,68 recruited: &lt;none&gt;
+##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 34.1
+##        Tree species with seed rain: 157,176 recruited: &lt;none&gt;
 ##    (c) Summaries</code></pre>
 <p>It is worth noting that, while <code><a href="../reference/fordyn.html">fordyn()</a></code> calls function <code><a href="../reference/growth.html">growth()</a></code> internally for each simulated year, the <code>verbose</code> option of the control parameters only affects function <code><a href="../reference/fordyn.html">fordyn()</a></code> (i.e. all console output from <code><a href="../reference/growth.html">growth()</a></code> is hidden). Recruitment and summaries are done only once a year at the level of function <code><a href="../reference/fordyn.html">fordyn()</a></code>.</p>
 </div>
@@ -221,39 +221,39 @@
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">StandSummary</span></code></pre></div>
 <pre><code>##   Step LeafAreaIndex TreeDensityLive TreeBasalAreaLive ShrubCoverLive MaxHeight
-## 1    0      1.662671        552.0000          25.03330           3.75  800.0000
-## 2    1      1.917676        546.3412          26.85181           3.75  824.6012
-## 3    2      1.923576        540.7403          26.91888           3.75  828.9720
-## 4    3      2.242156        535.1969          29.20546           3.75  855.8489</code></pre>
+## 1    0      1.975892        552.0000          25.03330           3.75  800.0000
+## 2    1      2.130140        546.3412          26.22610           3.75  822.4523
+## 3    2      2.128087        540.7403          26.37692           3.75  828.4633
+## 4    3      2.277215        535.1969          27.78177           3.75  857.4339</code></pre>
 <p>where we can observe an increase in stand basal area and leaf area index during years 1 and 3, but a reduction during the second (drier) year. Species-level analogous statistics are shown using:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">SpeciesSummary</span></code></pre></div>
 <pre><code>##    Step Species LeafAreaIndex TreeDensityLive TreeBasalAreaLive ShrubCoverLive
-## 1     0      54    0.81670117        168.0000         18.604545           0.00
-## 2     0      65    0.04817502          0.0000          0.000000           3.75
-## 3     0      68    0.79779523        384.0000          6.428754           0.00
-## 4     1      54    0.91991321        166.2777         19.624708           0.00
-## 5     1      65    0.04817502          0.0000          0.000000           3.75
-## 6     1      68    0.94958748        380.0634          7.227105           0.00
-## 7     2      54    0.91812052        164.5731         19.644870           0.00
-## 8     2      65    0.04817502          0.0000          0.000000           3.75
-## 9     2      68    0.95728001        376.1672          7.274006           0.00
-## 10    3      54    1.02616274        162.8860         20.807347           0.00
-## 11    3      65    0.04817502          0.0000          0.000000           3.75
-## 12    3      68    1.16781834        372.3109          8.398109           0.00
+## 1     0     157     1.0064372        168.0000         18.604545           0.00
+## 2     0     174     0.0428389          0.0000          0.000000           3.75
+## 3     0     176     0.9266157        384.0000          6.428754           0.00
+## 4     1     157     1.1354038        166.2777         19.567711           0.00
+## 5     1     174     0.0428389          0.0000          0.000000           3.75
+## 6     1     176     0.9518974        380.0634          6.658392           0.00
+## 7     2     157     1.1509293        164.5731         19.683049           0.00
+## 8     2     174     0.0428389          0.0000          0.000000           3.75
+## 9     2     176     0.9343188        376.1672          6.693873           0.00
+## 10    3     157     1.3154515        162.8860         20.996554           0.00
+## 11    3     174     0.0428389          0.0000          0.000000           3.75
+## 12    3     176     0.9189245        372.3109          6.785214           0.00
 ##    MaxHeight
 ## 1   800.0000
 ## 2    80.0000
 ## 3   660.0000
-## 4   824.6012
+## 4   822.4523
 ## 5    80.0000
-## 6   685.5271
-## 7   828.9720
+## 6   666.4290
+## 7   828.4633
 ## 8    80.0000
-## 9   688.9028
-## 10  855.8489
+## 9   668.7073
+## 10  857.4339
 ## 11   80.0000
-## 12  722.4229</code></pre>
+## 12  672.3763</code></pre>
 </div>
 <div id="treeshrub-tables" class="section level3">
 <h3 class="hasAnchor">
@@ -262,24 +262,24 @@
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">TreeTable</span></code></pre></div>
 <pre><code>##   Step Year Cohort Species             Name        N      DBH   Height Z50  Z95
-## 1    0   NA  T1_54      54 Pinus halepensis 168.0000 37.55000 800.0000 750 3000
-## 2    0   NA  T2_68      68     Quercus ilex 384.0000 14.60000 660.0000 750 3000
-## 3    1 2001  T1_54      54 Pinus halepensis 166.2777 38.76498 824.6012 750 3000
-## 4    1 2001  T2_68      68     Quercus ilex 380.0634 15.55999 685.5271 750 3000
-## 5    2 2002  T1_54      54 Pinus halepensis 164.5731 38.98523 828.9720 750 3000
-## 6    2 2002  T2_68      68     Quercus ilex 376.1672 15.69103 688.9028 750 3000
-## 7    3 2003  T1_54      54 Pinus halepensis 162.8860 40.32938 855.8489 750 3000
-## 8    3 2003  T2_68      68     Quercus ilex 372.3109 16.94700 722.4229 750 3000</code></pre>
+## 1    0   NA T1_157     157 Pinus halepensis 168.0000 37.55000 800.0000 750 3000
+## 2    0   NA T2_176     176     Quercus ilex 384.0000 14.60000 660.0000 750 3000
+## 3    1 2001 T1_157     157 Pinus halepensis 166.2777 38.70865 822.4523 750 3000
+## 4    1 2001 T2_176     176     Quercus ilex 380.0634 14.93522 666.4290 750 3000
+## 5    2 2002 T1_157     157 Pinus halepensis 164.5731 39.02310 828.4633 750 3000
+## 6    2 2002 T2_176     176     Quercus ilex 376.1672 15.05232 668.7073 750 3000
+## 7    3 2003 T1_157     157 Pinus halepensis 162.8860 40.51232 857.4339 750 3000
+## 8    3 2003 T2_176     176     Quercus ilex 372.3109 15.23295 672.3763 750 3000</code></pre>
 <p>The same can be shown for dead trees, where we see larger mortality rates during the second (drier) year:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">DeadTreeTable</span></code></pre></div>
 <pre><code>##   Step Year Cohort Species             Name        N      DBH   Height Z50  Z95
-## 1    1 2001  T1_54      54 Pinus halepensis 1.722253 38.76498 824.6012 750 3000
-## 2    1 2001  T2_68      68     Quercus ilex 3.936579 15.55999 685.5271 750 3000
-## 3    2 2002  T1_54      54 Pinus halepensis 1.704598 38.98523 828.9720 750 3000
-## 4    2 2002  T2_68      68     Quercus ilex 3.896223 15.69103 688.9028 750 3000
-## 5    3 2003  T1_54      54 Pinus halepensis 1.687123 40.32938 855.8489 750 3000
-## 6    3 2003  T2_68      68     Quercus ilex 3.856281 16.94700 722.4229 750 3000</code></pre>
+## 1    1 2001 T1_157     157 Pinus halepensis 1.722253 38.70865 822.4523 750 3000
+## 2    1 2001 T2_176     176     Quercus ilex 3.936579 14.93522 666.4290 750 3000
+## 3    2 2002 T1_157     157 Pinus halepensis 1.704598 39.02310 828.4633 750 3000
+## 4    2 2002 T2_176     176     Quercus ilex 3.896223 15.05232 668.7073 750 3000
+## 5    3 2003 T1_157     157 Pinus halepensis 1.687123 40.51232 857.4339 750 3000
+## 6    3 2003 T2_176     176     Quercus ilex 3.856281 15.23295 672.3763 750 3000</code></pre>
 </div>
 <div id="accessing-the-output-from-function-growth" class="section level3">
 <h3 class="hasAnchor">
