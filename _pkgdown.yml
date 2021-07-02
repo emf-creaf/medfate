@@ -16,10 +16,10 @@ articles:
     - starts_with("ForestDynamics")
 - title: Model parametrization
   contents:
-    - starts_with("SpeciesParameterization")
+    - starts_with("parametrization/SpeciesParameterization")
 - title: Model analysis
   contents:
-    - starts_with("Sensitivity")
+    - starts_with("modelanalysis/Sensitivity")
     
 reference:
 - title: Forest definition

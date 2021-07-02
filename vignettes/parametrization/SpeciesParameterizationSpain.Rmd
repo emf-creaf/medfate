@@ -24,7 +24,7 @@ IFN_path = "/home/miquel/OneDrive/Datasets/IFN/"
 Set path to trait and allometry databases:
 
 ```{r}
-Database_path = "/home/miquel/OneDrive/Professional/Recerca/MedfateSpeciesParametrization/"
+DB_path = "/home/miquel/OneDrive/Professional/Recerca/MedfateSpeciesParametrization/"
 ```
 
 
@@ -217,7 +217,7 @@ SpParams <-initSpParams(IFN_species_data$IFNCODE, IFN_species_data$IFNNAME,
 ```
 
 ```{r include = FALSE}
-# saveRDS(SpParamsSPAIN, "SpParamsSPAIN_init.rds")
+# saveRDS(SpParams, "SpParamsSPAIN_init.rds")
 SpParams = readRDS("SpParamsSPAIN_init.rds")
 ```
 
@@ -229,7 +229,7 @@ head(SpParams[,1:7])
 names(SpParams[-c(1:7)])
 ```
 
-## Populate parameters from forest inventory data
+## Parameters drawn from IFN data
 
 ### Load IFN data
 
@@ -257,7 +257,7 @@ treeDataIFN <-bind_rows(piesMayoresDataIFN2[,c("ID","Species", "H", "DBH")],
                         treeDataIFN4[,c("ID","Species", "H", "DBH")])
 ```
 
-### Populate growth form
+### Growth form
 
 ```{r}
 shrub_codes <- as.numeric(shrubDataIFN$Species)
@@ -282,7 +282,7 @@ print(missingGrowthFormSpecies)
 SpParams$GrowthForm[SpParams$Name %in% missingGrowthFormSpecies] = "Tree"
 ```
 
-### Populate height
+### Maximum/median height
 
 ```{r}
 species_codes <- c(treeDataIFN$Species, shrubDataIFN$Species)
@@ -305,7 +305,7 @@ SpParams$Hmed[is.na(SpParams$Hmed) & SpParams$GrowthForm == "Shrub"] = round(mea
 table(is.na(SpParams$Hmed), SpParams$GrowthForm)
 ```
 
-### Populate diameter/height ratio
+### Diameter/height ratio
 
 ```{r}
 tree_species_codes <- treeDataIFN$Species
@@ -322,8 +322,14 @@ SpParams <- populateTreeDiameterHeightParams(SpParams,
 ```{r}
 table(is.na(SpParams$fHDmin), SpParams$GrowthForm)
 table(is.na(SpParams$fHDmax), SpParams$GrowthForm)
+```
+
+```{r}
 SpParams$fHDmax[is.na(SpParams$fHDmax) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$fHDmax, na.rm=TRUE))
 SpParams$fHDmin[is.na(SpParams$fHDmin) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$fHDmin, na.rm=TRUE))
+```
+
+```{r}
 table(is.na(SpParams$fHDmin), SpParams$GrowthForm)
 table(is.na(SpParams$fHDmax), SpParams$GrowthForm)
 ```
@@ -333,7 +339,7 @@ table(is.na(SpParams$fHDmax), SpParams$GrowthForm)
 saveRDS(SpParams, "SpParamsSPAIN_SFI.rds")
 ```
 
-## Populate allometric coefficients
+## Allometric coefficients
 
 ### Shrub allometric equations
 
@@ -454,7 +460,7 @@ SpParams$b_btsh[shrub_sel] <- total_coef_df$b[shrub_sel]
 ### Shrub crown ratio and Pdead
 
 ```{r}
-shrub_pdead_cr <- read.table(paste0(Database_path,"AllometryDatabases/ShrubAllometries/Shrub_Pdead_CR.txt"), 
+shrub_pdead_cr <- read.table(paste0(DB_path,"AllometryDatabases/ShrubAllometries/Shrub_Pdead_CR.txt"), 
                              sep="\t", dec=",", header=T) %>% 
   separate(Name, c("Genus", "Species"), sep=" ") %>% 
   unite("Name" , c("Genus", "Species"), sep=" ", na.rm=TRUE)
@@ -535,9 +541,9 @@ SpParams$pDead[shrub_sel] <-pdead_df$coef[shrub_sel]
 ### Tree allometries
 
 ```{r}
-fb_models <- openxlsx::read.xlsx(paste0(Database_path, "AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"), sheet= "Tree_FB_models", rowNames = TRUE)
-cr_models <- openxlsx::read.xlsx(paste0(Database_path,"AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"), sheet= "Tree_CR_models", rowNames = TRUE)
-cw_models <- openxlsx::read.xlsx(paste0(Database_path,"AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"), sheet= "Tree_CW_models", rowNames = TRUE)
+fb_models <- openxlsx::read.xlsx(paste0(DB_path, "AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"), sheet= "Tree_FB_models", rowNames = TRUE)
+cr_models <- openxlsx::read.xlsx(paste0(DB_path,"AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"), sheet= "Tree_CR_models", rowNames = TRUE)
+cw_models <- openxlsx::read.xlsx(paste0(DB_path,"AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"), sheet= "Tree_CW_models", rowNames = TRUE)
 
 ```
 
@@ -549,3 +555,789 @@ SpParams <- populateTreeAllometries(SpParams, cw_models, "crownwidth", erase_pre
 ```{r include = FALSE}
 saveRDS(SpParams, "SpParamsSPAIN_allom.rds")
 ```
+
+
+## Plant functional traits
+
+### Trait databases (except TRY)
+```{r}
+#  Hydratry
+fn_hydratry <- file.path(DB_path,"TraitDatabases/HydraTRY/HydraTRY.xlsx")
+hydratry <- openxlsx::read.xlsx(fn_hydratry, rowNames = FALSE) 
+
+#  Martin-StPaul et al. (2017)
+fn_martin_stpaul <- file.path(DB_path,"TraitDatabases/MartinStPaul_et_al_2017/DataBase.xlsx")
+martin_stpaul <- read.xlsx(fn_martin_stpaul, sheet="ALL")
+martin_stpaul<-martin_stpaul[,c("Species", "P50", "P12", "Ptlp")]
+
+# Choat et al. (2012)
+fn_choat <-file.path(DB_path,"TraitDatabases/Choat_et_al_2012/nature11688-s2.xls")
+choat <- readxl::read_excel(fn_choat)
+choat <-choat[-1, c("Species", "P50", "P88")] # Remove unit row
+
+# Bartlett et al. 2012
+fn_bartlett <- file.path(DB_path, "TraitDatabases/Bartlett_et_al_2012/Bartlett_2012_ELE_data.xlsx")
+bartlett <- openxlsx::read.xlsx(fn_bartlett, rowNames = FALSE) 
+
+# Duursma et al. 2018
+fn_duursma <- file.path(DB_path, "TraitDatabases/Duursma_et_al_2018/gmindatabase.csv")
+duursma <- read.csv2(fn_duursma, sep=",")
+
+# Hoshika et al. 2018 
+fn_hoshika <- file.path(DB_path, "TraitDatabases/Hoshika_et_al_2018/Hoshika_et_al_2018.xlsx")
+hoshika <- openxlsx::read.xlsx(fn_hoshika) 
+hoshika$Species <- str_replace(string = hoshika$Species,pattern = "_", replacement = " ")
+
+# BROT
+fn_brot2 <- file.path(DB_path, "TraitDatabases/Brot/BROT2_dat.csv")
+brot2 <- read.csv2(fn_brot2)
+
+#Global wood density database
+# Zanne, A.E., Lopez-Gonzalez, G.*, Coomes, D.A., Ilic, J., Jansen, S., Lewis, S.L., Miller, R.B., Swenson, N.G., Wiemann, M.C., and Chave, J. 2009. Global wood density database. 
+# Dryad. Identifier: http://hdl.handle.net/10255/dryad.235.
+fn_gwdd <- file.path(DB_path, "TraitDatabases/GlobalWoodDensityDatabase/GlobalWoodDensityDatabase.xls")
+gwdd <- readxl::read_excel(fn_gwdd, sheet=2)
+
+# Flammability
+fn_flam <- file.path(DB_path, "TraitDatabases/FuelAttributes/FuelAttributes.xlsx")
+flam <- readxl::read_excel(fn_flam, sheet=1)
+
+# Fine-fuel ratio
+fn_ffr <- file.path(DB_path, "TraitDatabases/FineFuelRatio/FineFuelRatio.xlsx")
+ffr <- readxl::read_excel(fn_ffr, sheet=1)
+
+# Fuel moisture content
+fn_fmc <- file.path(DB_path, "TraitDatabases/FMC/FMC.xlsx")
+fmc_field <- readxl::read_excel(fn_fmc, sheet=1)
+fmc_bib <- readxl::read_excel(fn_fmc, sheet=2)
+
+# Yebra et al. (2020)
+fn_yebra <- file.path(DB_path, "TraitDatabases/LFMC_Yebra_et_al_2020/Globe-LFMC-v2.xlsx")
+fmc_yebra <- openxlsx::read.xlsx(fn_yebra, sheet=2)
+```
+
+
+### Life form
+
+Load TRY life form data 
+```{r}
+TRY_life_form  <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_343.rds"))
+```
+
+Homogenize life form values into six categories:
+```{r}
+TRY_life_form  <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_343.rds"))
+TRY_life_form$OrigValueStr[TRY_life_form$OrigValueStr %in% 
+                             c("Ch", "CH", "Cha", "chamaephyte", "Chamaephytes")] = "Chamaephyte"
+TRY_life_form$OrigValueStr[TRY_life_form$OrigValueStr %in% 
+                             c("Cryptophytes", "cryptophyte",
+                               "G", "geophyte", "Geophytes")] = "Cryptophyte"
+TRY_life_form$OrigValueStr[TRY_life_form$OrigValueStr %in% 
+                             c("Ep", "epiphyte","Epiphytes", "liana")] = "Epiphyte"
+TRY_life_form$OrigValueStr[TRY_life_form$OrigValueStr %in% 
+                             c("H", "hemicryptophyte", "Hemicryptophytes")] = "Hemicryptophyte"
+TRY_life_form$OrigValueStr[TRY_life_form$OrigValueStr %in% 
+                             c("hydrophyte", "Hydrophytes")] = "Hydrophyte"
+TRY_life_form$OrigValueStr[TRY_life_form$OrigValueStr %in% 
+                             c("Mega- meso- and micro- phanerophyte",
+                               "Phanerophyte (mega-,meso-, nano-)",
+                               "Mega-, meso- and microphanerophyte",
+                               "megaphanerophyte", "Megaphanerophyte",
+                               "Micro-phanerophytes", "Nanophanerophyt",
+                               "nanophanerophyte", "Nanophanerophyte",
+                               "phanerophyte", "Phanerophytes", "shrub", "tree")] = "Phanerophyte"
+TRY_life_form$OrigValueStr[TRY_life_form$OrigValueStr %in% 
+                             c("T", "therophyte", "Therophyte (annual land plant)", "Therophytes")] = "Therophyte"
+TRY_life_form<-TRY_life_form[TRY_life_form$OrigValueStr %in% c("Chamaephyte", "Cryptophyte",
+                                                               "Epiphyte", "Hemicryptophyte", "Hydrophyte",
+                                                               "Phanerophyte")]
+```
+
+Call `populateTraits()` to parse TRY values:
+```{r}
+SpParams <- populateTraits(SpParams, TRY_life_form,
+                           trait_mapping = c("LifeForm" = "OrigValueStr"),
+                           character_traits = TRUE,
+                           taxon_column = "AccSpeciesName")
+```
+
+
+Check which species have missing values:
+```{r}
+SpParams[is.na(SpParams$LifeForm), c("Name", "LifeForm")]
+```
+Fill missing values manually:
+```{r}
+SpParams$LifeForm[SpParams$Name %in% c("Arctostaphylos uva-ursi", "Genistella spp.", 
+                                       "Halimium spp.", "Lithodora spp.", "Phlomis spp.",
+                                       "Vella spinosa")] = "Chamaephyte"
+SpParams$LifeForm[SpParams$Name %in% c("Ampelodesmos mauritanica")] = "Hemicryptophyte"
+SpParams$LifeForm[SpParams$Name %in% c("Apollonias canariensis", "Gleditsia triacanthos",
+                                       "Heberdenia bahamensis", "Picconia excelsa", "Pleiomeris canariensis",
+                                       "Paliurus spina-christi", "Retama spp.", "Teline spp.",
+                                       "Visnea mocanera", "Zizyphus lotus")] = "Phanerophyte"
+```
+Show the number of taxa for each life form:
+```{r}
+table(SpParams$LifeForm, useNA = "ifany")
+```
+
+
+### Leaf shape
+
+Load TRY leaf shape data 
+```{r}
+TRY_leaf_shape  <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_43.rds"))
+```
+
+Homogenize TRY leaf shape values into five categories:
+```{r}
+TRY_leaf_shape$OrigValueStr[TRY_leaf_shape$OrigValueStr %in% 
+                             c("broadleaved", "broad-leaved", "B", "broadleaf")] = "Broad"
+TRY_leaf_shape$OrigValueStr[TRY_leaf_shape$OrigValueStr %in% 
+                              c("needleleaved", "needle-leaved","needle","needle-leaf", "N")] = "Needle"
+TRY_leaf_shape$OrigValueStr[TRY_leaf_shape$OrigValueStr %in% 
+                              c("scale-shaped", "scale", "scale-like", "scale-leaf")] = "Scale"
+TRY_leaf_shape$OrigValueStr[TRY_leaf_shape$OrigValueStr %in% 
+                              c("narrowleaved", "linear", "Cylindrical")] = "Linear"
+TRY_leaf_shape$OrigValueStr[TRY_leaf_shape$OrigValueStr %in% 
+                              c("photosynthetic stem")] = "Spines"
+TRY_leaf_shape<-TRY_leaf_shape[TRY_leaf_shape$OrigValueStr %in% 
+                                 c("Broad", "Needle", "Scale", "Linear", "Spines"),
+                               c("AccSpeciesName", "OrigValueStr")]
+names(TRY_leaf_shape) = c("Species", "LeafShape")
+```
+Homogenize BROT2 leaf shape values into the same five categories:
+```{r}
+brot2_LeafShape <- brot2 %>% filter(Trait %in% c("LeafShape")) %>% 
+  select(c("Taxon", "Data"))
+brot2_LeafShape$Data <- paste(toupper(substring(brot2_LeafShape$Data, 1, 1)), 
+                              substring(brot2_LeafShape$Data, 2), sep = "")
+brot2_LeafShape$Data[brot2_LeafShape$Data=="Needle-like"] = "Needle"
+brot2_LeafShape$Data[brot2_LeafShape$Data=="Scale-like"] = "Scale"
+names(brot2_LeafShape) = c("Species", "LeafShape")
+```
+Merge data sets and call `populateTraits()` to parse leaf shape values:
+```{r}
+LeafShape_data = rbind(brot2_LeafShape,
+                       TRY_leaf_shape)
+SpParams <- populateTraits(SpParams, LeafShape_data, 
+                           trait_mapping = c("LeafShape" = "LeafShape"),
+                           character_traits = TRUE,
+                           taxon_column = "Species")
+```
+
+Show which species have missing values:
+```{r}
+SpParams[is.na(SpParams$LeafShape), c("Name", "LeafShape")]
+```
+
+Fill missing values manually:
+```{r}
+SpParams$LeafShape[SpParams$Name %in% c("Genistella spp.")] = "Broad"
+SpParams$LeafShape[SpParams$Name %in% c("Tetraclinis articulata")] = "Scale"
+```
+Show the number of taxa for each leaf shape:
+```{r}
+table(SpParams$LeafShape, useNA = "ifany")
+```
+
+### Leaf size
+
+Load TRY leaf area data: 
+```{r}
+TRY_leaf_area  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_3110.rds"))
+```
+Classify TRY leaf area values into three leaf size categories:
+```{r}
+TRY_leaf_area$LeafSize <-cut(as.numeric(TRY_leaf_area$StdValue), 
+                             breaks = c(0,225, 2025,100000), labels = c("Small", "Medium", "Large")) 
+TRY_LeafSize<-TRY_leaf_area[,c("AccSpeciesName", "LeafSize")]
+names(TRY_LeafSize)[1] = "Species"
+```
+Split BROT2 data into leaf area values and leaf size strings:
+```{r}
+brot2_LeafArea <- brot2 %>% filter(Trait %in% c("LeafArea")) %>% 
+  select(c("Taxon", "Trait", "Data", "Units"))
+brot2_LeafSize <- brot2_LeafArea[brot2_LeafArea$Units=="[5]",]
+brot2_LeafArea <- brot2_LeafArea[brot2_LeafArea$Units=="mm2",]
+```
+Reclassify BROT2 leaf size data into three categories 
+```{r}
+brot2_LeafSize$Data[brot2_LeafSize$Data=="very small"] = "small"
+brot2_LeafSize$Data[brot2_LeafSize$Data=="very large"] = "large"
+brot2_LeafSize$Data <- paste(toupper(substring(brot2_LeafSize$Data, 1, 1)), 
+                              substring(brot2_LeafSize$Data, 2), sep = "")
+brot2_LeafSize <- brot2_LeafSize[,c("Taxon", "Data")]
+names(brot2_LeafSize) = c("Species", "LeafSize")
+```
+Classify BRO2 leaf area values into three categories:
+```{r}
+brot2_LeafArea$LeafSize = cut(as.numeric(brot2_LeafArea$Data), 
+                              breaks = c(0,225, 2025,100000), labels = c("Small", "Medium", "Large")) 
+brot2_LeafArea <- brot2_LeafArea[,c("Taxon", "LeafSize")]
+names(brot2_LeafArea)[1] = "Species"
+```
+Merge data sets and call `populateTraits()` to parse leaf size values:
+```{r}
+LeafSize_data = rbind(brot2_LeafSize,
+                      brot2_LeafArea,
+                      TRY_LeafSize)
+
+SpParams <- populateTraits(SpParams, LeafSize_data, 
+                           trait_mapping = c("LeafSize" = "LeafSize"),
+                           character_traits = TRUE,
+                           taxon_column = "Species")
+```
+Show species with missing values:
+```{r}
+SpParams[is.na(SpParams$LeafSize), c("Name", "LeafSize")]
+```
+Fill missing values manually:
+```{r}
+SpParams$LeafSize[SpParams$Name %in% c("Apollonias canariensis",
+                                       "Ampelodesmos mauritanica",
+                                       "Dracaena drago", "Heberdenia bahamensis",
+                                       "Picconia excelsa", "Pleiomeris canariensis",
+                                       "Visnea mocanera")] = "Large"
+SpParams$LeafSize[SpParams$Name %in% c("Coriaria myrtifolia", "Flueggea tinctoria",
+                                       "Kleinia neriifolia", "Rhododendron spp.",
+                                       "Sophora japonica")] = "Medium"
+SpParams$LeafSize[SpParams$Name %in% c("Adenocarpus spp.", "Cedrus atlantica",
+                                       "Cedrus deodara", "Cedrus libani",
+                                       "Chamaecyparis lawsoniana",
+                                       "Chamaespartium tridentatum",
+                                       "Cytisophyllum sessilifolium",
+                                       "Daboecia cantabrica",
+                                       "Erinacea spp.", "Genistella spp.",
+                                       "Paliurus spina-christi", "Pseudotsuga menziesii",
+                                       "Spartium spp.", "Teline spp.", "Vella spinosa",
+                                       "Zizyphus lotus")] = "Small"
+```
+
+Show the number of taxa for each leaf size:
+```{r}
+table(SpParams$LeafSize, useNA = "ifany")
+```
+
+### Phenology type
+
+```{r}
+TRY_phenology  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_37.rds"))
+```
+
+```{r}
+TRY_phenology$OrigValueStr[TRY_phenology$OrigValueStr %in% 
+                             c("evergreen", "E", "EV", "always summer green",
+                               "Evergreen broad-leaved", "Evergreen scale-like",
+                               "Evergreen needle-leaved")] = "oneflush-evergreen"
+TRY_phenology$OrigValueStr[TRY_phenology$OrigValueStr %in% 
+                             c("deciduous", "D", "Deciduous broad-leaved", "Deciduous",
+                               "Nonevergreen", "winter deciduous")] = "winter-deciduous"
+TRY_phenology$OrigValueStr[TRY_phenology$OrigValueStr %in% 
+                             c("semi-deciduous",
+                               "semi-evergreen")] = "winter-semideciduous"
+TRY_phenology$OrigValueStr[TRY_phenology$OrigValueStr %in% 
+                             c("drought semi-deciduous")] = "drought-semideciduous"
+TRY_phenology<-TRY_phenology[TRY_phenology$OrigValueStr %in% c("progressive-evergreen",
+                                                               "oneflush-evergreen", 
+                                                               "winter-semideciduous",
+                                                               "winter-deciduous",
+                                                               "drought-semideciduous")]
+TRY_phenology<-TRY_phenology[,c("AccSpeciesName", "OrigValueStr")]
+names(TRY_phenology) = c("Species","LeafPhenology")
+```
+
+```{r}
+brot2_LeafPhenology <- brot2 %>% filter(Trait %in% c("LeafPhenology")) %>% 
+  select(c("Taxon", "Data"))
+brot2_LeafPhenology$Data[brot2_LeafPhenology$Data=="drought semi-deciduous"] = "drought-semideciduous"
+brot2_LeafPhenology$Data[brot2_LeafPhenology$Data=="evergreen"] = "oneflush-evergreen"
+brot2_LeafPhenology$Data[brot2_LeafPhenology$Data=="winter deciduous"] = "winter-deciduous"
+brot2_LeafPhenology$Data[brot2_LeafPhenology$Data=="winter semi-deciduous"] = "winter-semideciduous"
+names(brot2_LeafPhenology) = c("Species","LeafPhenology")
+```
+Merge data sets and call `populateTraits()` to parse leaf phenology:
+```{r}
+LeafPhenology_data =rbind(brot2_LeafPhenology,
+                          TRY_phenology)
+SpParams <- populateTraits(SpParams, LeafPhenology_data, 
+                           trait_mapping = c("PhenologyType" = "LeafPhenology"),
+                           character_traits = TRUE,
+                           taxon_column = "Species")
+```
+Show which species have missing values:
+```{r}
+SpParams[is.na(SpParams$PhenologyType), c("Name", "PhenologyType")]
+```
+
+Fill missing values manually:
+```{r}
+SpParams$PhenologyType[SpParams$Name %in% c("Vella spinosa", "Genistella spp.")] = "winter-deciduous"
+SpParams$PhenologyType[SpParams$Name %in% c("Pleiomeris canariensis")] = "oneflush-evergreen"
+```
+Show the number of taxa for each phenology type:
+```{r}
+table(SpParams$PhenologyType, useNA = "ifany")
+```
+
+### Maximum rooting depth (Z95)
+```{r}
+TRY_Z95 <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_6.rds"))
+```
+
+
+```{r}
+TRY_Z95 <-TRY_Z95[TRY_Z95$OriglName %in% c("Max Rooting Depth (m)",
+                                           "Rooting depth",
+                                           "Rooting depth (m)",
+                                           "Rooting depth_max",
+                                           "RootDepth"),]
+TRY_Z95 <- TRY_Z95[, c("AccSpeciesName", "StdValue")]
+names(TRY_Z95) <- c("Species", "Z95")
+```
+
+```{r}
+brot2_Z95 <- brot2 %>% filter(Trait %in% c("RootDepth")) %>% 
+  select(c("Taxon", "Data"))
+brot2_Z95$Data <- as.numeric(brot2_Z95$Data)
+names(brot2_Z95) <- c("Species", "Z95")
+```
+
+```{r}
+Z95_data = rbind(TRY_Z95,
+                 brot2_Z95)
+Z95_data$Z95<- pmax(Z95_data$Z95, 0.15) # Minimum of 15 cm depth
+Z95_data$Z95<- pmin(Z95_data$Z95, 10) # Maximum of 10 m depth
+SpParams <- populateTraits(SpParams, Z95_data, 
+                           trait_mapping = c("Z95" = "Z95"),
+                           scalar_functions = c("Z95" = function(x) {round(x*1000)}),
+                           taxon_column = "Species")
+```
+
+```{r}
+table(is.na(SpParams$Z95), SpParams$GrowthForm)
+```
+
+```{r}
+SpParams$Z95[is.na(SpParams$Z95) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$Z95[SpParams$GrowthForm != "Shrub"], na.rm=TRUE))
+SpParams$Z95[is.na(SpParams$Z95) & SpParams$GrowthForm == "Shrub"] = round(mean(SpParams$Z95[SpParams$GrowthForm == "Shrub"], na.rm=TRUE))
+```
+
+```{r}
+table(is.na(SpParams$Z95), SpParams$GrowthForm)
+```
+
+### Leaf duration ($LD$)
+
+```{r}
+TRY_LeafDuration  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_12.rds"))
+TRY_LeafDuration <- TRY_LeafDuration[, c("AccSpeciesName", "StdValue")]
+names(TRY_LeafDuration) <- c("Species", "LeafDuration")
+```
+
+Adapt data sources:
+```{r}
+names(hydratry)[names(hydratry)=="LL"] = "LeafDuration"
+brot2_LeafDuration <- brot2 %>% filter(Trait %in% c("LeafLifespan")) %>% 
+  select(c("Taxon", "Data"))
+brot2_LeafDuration$Data <- as.numeric(brot2_LeafDuration$Data)
+names(brot2_LeafDuration) <- c("Species", "LeafDuration")
+```
+
+```{r}
+LeafDuration_data<-rbind(hydratry[,c("Species","LeafDuration")],
+                         TRY_LeafDuration,
+                         brot2_LeafDuration)
+SpParams <- populateTraits(SpParams, LeafDuration_data, 
+                                trait_mapping = c("LeafDuration" = "LeafDuration"),
+                                scalar_functions = c("LeafDuration" = function(x) {x/12}),
+                                taxon_column = "Species")
+```
+
+### Specific leaf area ($SLA$)
+
+```{r}
+TRY_SLA <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_3117.rds"))
+TRY_SLA <- TRY_SLA[, c("AccSpeciesName", "StdValue")]
+names(TRY_SLA) <- c("Species", "SLA")
+```
+
+```{r}
+brot2_SLA <- brot2 %>% filter(Trait %in% c("SLA")) %>% 
+  select(c("Taxon", "Data"))
+brot2_SLA$Data <- as.numeric(brot2_SLA$Data)
+names(brot2_SLA) <- c("Species", "SLA")
+```
+
+```{r}
+SLA_data = rbind(hydratry[,c("Species","SLA")],
+                 TRY_SLA,
+                 brot2_SLA)
+SpParams <- populateTraits(SpParams, SLA_data, 
+                           trait_mapping = list("SLA" = "SLA") ,
+                           taxon_column = "Species")
+```
+
+### Leaf density
+
+```{r}
+TRY_LeafDensity  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_48.rds"))
+SpParams <- populateTraits(SpParams, TRY_LeafDensity, 
+                           trait_mapping = c("LeafDensity" = "StdValue"),
+                           taxon_column = "AccSpeciesName")
+```
+
+### Wood density
+
+```{r}
+TRY_WoodDensity  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_4.rds"))
+```
+
+```{r}
+TRY_WoodDensity <- TRY_WoodDensity[, c("AccSpeciesName", "StdValue")]
+names(TRY_WoodDensity) <- c("Species", "WoodDensity")
+gwdd_WoodDensity<-gwdd[,c("Binomial", "Wood density (g/cm^3), oven dry mass/fresh volume")]
+names(gwdd_WoodDensity)<-c("Species", "WoodDensity")
+```
+
+```{r}
+names(hydratry)[names(hydratry)=="WD"] = "WoodDensity"
+```
+
+```{r}
+brot2_WoodDensity <- brot2 %>% filter(Trait %in% c("StemDensity")) %>% 
+  select(c("Taxon", "Data"))
+brot2_WoodDensity$Data <- as.numeric(brot2_WoodDensity$Data)
+names(brot2_WoodDensity) <- c("Species", "WoodDensity")
+```
+
+```{r}
+WoodDensity_data<-rbind(hydratry[,c("Species","WoodDensity")],
+                        TRY_WoodDensity,
+                        brot2_WoodDensity,
+                        gwdd_WoodDensity)
+SpParams <- populateTraits(SpParams, WoodDensity_data, 
+                           trait_mapping = c("WoodDensity" = "WoodDensity"),
+                           taxon_column = "Species")
+```
+
+### Fine fuel ratio ($r_{6.35}$)
+
+```{r}
+SpParams <- populateTraits(SpParams, as.data.frame(ffr), 
+                           trait_mapping = c("r635" = "r635"),
+                           taxon_column = "Species")
+```
+
+### Fraction of dead material ($P_{dead}$)
+
+```{r}
+table(is.na(SpParams$pDead))
+```
+
+
+```{r}
+brot2_DF <- brot2 %>% filter(Trait %in% c("DeadFuel")) %>% 
+  select(c("Taxon", "Trait", "Data", "Units")) %>% 
+  filter(Units=="%")
+brot2_DF$Data <- as.numeric(brot2_DF$Data)
+```
+
+```{r}
+SpParams <- populateTraits(SpParams, brot2_DF, 
+                           trait_mapping = c("pDead" = "Data"),
+                           scalar_functions = c("pDead"= function(x){x/100}),
+                           taxon_column = "Taxon")
+```
+
+### Leaf area to sapwood area ratio ($1/H_v$)
+
+```{r}
+TRY_Hv  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_171.rds"))
+```
+
+```{r}
+TRY_Hv$StdValue[TRY_Hv$OriglName=="Huber value"]<-1/as.numeric(TRY_Hv$OrigValueStr[TRY_Hv$OriglName=="Huber value"])
+TRY_Hv$StdValue[TRY_Hv$OriglName=="leaf.area.per.sapwood.area"]<-TRY_Hv$StdValue[TRY_Hv$OriglName=="leaf.area.per.sapwood.area"]*100
+TRY_Hv$StdValue[TRY_Hv$OriglName=="Sapwood: leaf area ratio"]<-10000/as.numeric(TRY_Hv$OrigValueStr[TRY_Hv$OriglName=="Sapwood: leaf area ratio"])
+TRY_Hv$StdValue[TRY_Hv$OriglName=="The ratio of leaf area attached per unit sapwood cross-section area (m2 cm-2)"]<-10000*as.numeric(TRY_Hv$OrigValueStr[TRY_Hv$OriglName=="The ratio of leaf area attached per unit sapwood cross-section area (m2 cm-2)"])
+TRY_Hv$StdValue[TRY_Hv$OriglName=="values at base of living crown, m2/cm2"]<-10000*as.numeric(TRY_Hv$OrigValueStr[TRY_Hv$OriglName=="values at base of living crown, m2/cm2"])
+TRY_Hv$StdValue[TRY_Hv$OriglName=="values at breast height, m2/cm2"]<-10000*as.numeric(TRY_Hv$OrigValueStr[TRY_Hv$OriglName=="values at breast height, m2/cm2"])
+summary(TRY_Hv$StdValue)
+TRY_Hv <- TRY_Hv[, c("AccSpeciesName", "StdValue")]
+names(TRY_Hv) <- c("Species", "Al2As")
+```
+
+
+```{r}
+hydratry_Hv <-hydratry[,c("Species","Hv")]
+hydratry_Hv$Hv<- 10000/hydratry_Hv$Hv
+names(hydratry_Hv) <- c("Species", "Al2As")
+```
+
+```{r}
+Hv_data<-rbind(TRY_Hv,
+               hydratry_Hv)
+SpParams <- populateTraits(SpParams, Hv_data,
+                           trait_mapping = c("Al2As" = "Al2As"),
+                           taxon_column = "Species")
+```
+
+### Leaf width
+
+```{r}
+TRY_LW <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_145.rds"))
+```
+
+```{r}
+SpParams <- populateTraits(SpParams, TRY_LW,
+                           trait_mapping = c("LeafWidth" = "StdValue"),
+                           taxon_column = "AccSpeciesName")
+```
+
+### Specific root length ($SRL$)
+
+```{r}
+TRY_SRL  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_614.rds"))
+SpParams <- populateTraits(SpParams, TRY_SRL, 
+                           trait_mapping = c("SRL" = "StdValue"),
+                           taxon_column = "AccSpeciesName")
+
+```
+
+### Minimum/maximum fuel moisture content
+
+```{r}
+fmc_yebra$Species.collected[fmc_yebra$Species.collected=="Rosmarinus officinalis"] = "Salvia officinalis"
+
+FMC_data <- rbind(fmc_field[,c("Species name", "MinFMC_DW", "MaxFMC_DW")],
+                  fmc_bib[,c("Species name", "MinFMC_DW", "MaxFMC_DW")])
+FMC_data$`Species name`[FMC_data$`Species name`=="Rosmarinus officinalis"] = "Salvia officinalis"
+```
+
+```{r}
+SpParams <- populateTraits(SpParams, fmc_yebra, 
+                           trait_mapping = c("minFMC" = "LFMC.value"),
+                           summary_function = function(x) {as.numeric(quantile(x,probs=0.05))},
+                           summary_params = NULL,
+                           taxon_column = "Species.collected")
+SpParams <- populateTraits(SpParams, fmc_yebra, 
+                           trait_mapping = c("maxFMC" = "LFMC.value"),
+                           summary_function = function(x) {as.numeric(quantile(x,probs=0.95))},
+                           summary_params = NULL,
+                           taxon_column = "Species.collected")
+```
+
+
+```{r}
+SpParams <- populateTraits(SpParams, as.data.frame(FMC_data), 
+                           trait_mapping = c("minFMC" = "MinFMC_DW",
+                                             "maxFMC" = "MaxFMC_DW"),
+                           taxon_column = "Species name", erase_previous = FALSE)
+```
+
+### Leaf pressure-volume curve
+
+```{r}
+names(bartlett)[names(bartlett)=="πo.(MPa)"] = "LeafPI0"
+names(bartlett)[names(bartlett)=="ε.(MPa)"] = "LeafEPS"
+```
+
+```{r}
+TRY_LeafPI0  <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_188.rds"))
+TRY_LeafPI0 <- TRY_LeafPI0[, c("AccSpeciesName", "StdValue")]
+names(TRY_LeafPI0) <- c("Species", "LeafPI0")
+TRY_LeafPI0$LeafPI0 <- -1*TRY_LeafPI0$LeafPI0 
+```
+
+```{r}
+TRY_LeafEPS  <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_190.rds"))
+TRY_LeafEPS$StdValue <- as.numeric(TRY_LeafEPS$OrigValueStr) 
+TRY_LeafEPS <- TRY_LeafEPS[, c("AccSpeciesName", "StdValue")]
+names(TRY_LeafEPS) <- c("Species", "LeafEPS")
+```
+
+
+```{r}
+LeafPI0_data = rbind(TRY_LeafPI0[, c("Species", "LeafPI0")],
+                     bartlett[,c("Species", "LeafPI0")])
+SpParams <- populateTraits(SpParams, LeafPI0_data, 
+                           trait_mapping = c("LeafPI0" = "LeafPI0"),
+                           taxon_column = "Species")
+```
+
+```{r}
+LeafEPS_data = rbind(TRY_LeafEPS[, c("Species", "LeafEPS")],
+                     bartlett[,c("Species", "LeafEPS")])
+SpParams <- populateTraits(SpParams, LeafEPS_data, 
+                           trait_mapping = c("LeafEPS" = "LeafEPS"),
+                           taxon_column = "Species")
+```
+
+```{r}
+SpParams <- populateTraits(SpParams, bartlett, 
+                           trait_mapping = c("LeafAF" = "af"),
+                           taxon_column = "Species")
+```
+
+### Fuel flammability
+
+```{r}
+SpParams <- populateTraits(SpParams, as.data.frame(flam), 
+                           trait_mapping = c("HeatContent" = "High calorific value [J/kg]",
+                                             "SAV" = "SurfaceAreaVolume[m2/m3]"),
+                           taxon_column = "Species name")
+```
+
+### Lignin content
+
+```{r}
+TRY_Lignin  <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_87.rds"))
+
+SpParams <- populateTraits(SpParams, TRY_Lignin, 
+                           trait_mapping = c("LigninPercent" = "StdValue"),
+                           scalar_functions = c("LigninPercent" = function(x){x/10}), #mg/g to % 
+                           taxon_column = "AccSpeciesName")
+```
+
+### Stomatal closure ($\Psi_{extract}$)
+
+```{r}
+names(bartlett)[names(bartlett)=="πtlp.(MPa)"] = "Ptlp"
+names(hydratry)[names(hydratry)=="PItlp"] = "Ptlp"
+```
+
+```{r}
+Ptlp_data = rbind(martin_stpaul[, c("Species", "Ptlp")],
+                  hydratry[, c("Species", "Ptlp")],
+                  bartlett[,c("Species", "Ptlp")])
+SpParams <- populateTraits(SpParams, Ptlp_data, 
+                           trait_mapping = list("Psi_Extract" = "Ptlp"),
+                           taxon_column = "Species")
+```
+
+### Critical water potential ($\Psi_{critic}$)
+
+```{r}
+P50_data = rbind(martin_stpaul[, c("Species", "P50")],
+                 choat[, c("Species", "P50")],
+                 hydratry[, c("Species", "P50")])
+```
+
+```{r}
+SpParams <- populateTraits(SpParams, P50_data, 
+                           trait_mapping = list("Psi_Critic" = "P50"),
+                           taxon_column = "Species")
+```
+
+### Water use efficiency ($WUE$)
+
+```{r}
+TRY_WUE  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_134.rds"))
+TRY_WUE <- TRY_WUE %>% filter(StdValue < 40)
+SpParams <- populateTraits(SpParams, TRY_WUE, 
+                           trait_mapping = c("WUE" = "StdValue"),
+                           taxon_column = "AccSpeciesName")
+```
+
+### Minimum/maximum stomatal conductance ($G_{swmin}$ and $G_{swmax}$)
+
+```{r}
+duursma$gmin <- as.numeric(duursma$gmin)
+SpParams <- populateTraits(SpParams, duursma, 
+                           trait_mapping = list("Gswmin" = "gmin"),
+                           taxon_column = "species",
+                           scalar_functions = list("Gswmin" = function(x) {x/1000})) #From mmol·s-1·m-2 to mol·s-1·m-2
+
+```
+
+```{r}
+SpParams <- populateTraits(SpParams, hoshika, 
+                           trait_mapping = list("Gswmax" = "gmax.(mol.m-2.s-1)") ,
+                           taxon_column = "Species")
+```
+
+### Stem maximum hydraulic conductivity ($K_{stem, max, ref}$) 
+
+```{r}
+SpParams <- populateTraits(SpParams, hydratry, 
+                           trait_mapping = c("Kmax_stemxylem" = "Ks"),
+                           taxon_column = "Species")
+```
+
+### Stem hydraulic vulnerability
+
+```{r}
+martin_stpaul$VCstem_c <- NA
+martin_stpaul$VCstem_d <- NA
+for(i in 1:nrow(martin_stpaul)) {
+  if((!is.na(martin_stpaul$P50[i])) && (!is.na(martin_stpaul$P12[i]))) {
+    weib = hydraulics_psi2Weibull(psi50 = martin_stpaul$P50[i],
+                                  psi12 = martin_stpaul$P12[i])
+    martin_stpaul$VCstem_c[i] = weib[["c"]]
+    martin_stpaul$VCstem_d[i] = weib[["d"]]
+  }
+}
+choat$P50 = as.numeric(choat$P50)
+choat$P88 = as.numeric(choat$P88)
+choat$VCstem_c <- NA
+choat$VCstem_d <- NA
+for(i in 1:nrow(choat)) {
+  if((!is.na(choat$P50[i])) && (!is.na(choat$P88[i]))) {
+    weib = hydraulics_psi2Weibull(psi50 = choat$P50[i],
+                                  psi88 = choat$P88[i])
+    choat$VCstem_c[i] = weib[["c"]]
+    choat$VCstem_d[i] = weib[["d"]]
+  }
+}
+```
+
+```{r}
+VC_data = rbind(martin_stpaul[, c("Species", "VCstem_c", "VCstem_d")],
+                choat[, c("Species", "VCstem_c", "VCstem_d")])
+SpParams <- populateTraits(SpParams, VC_data, 
+                           trait_mapping = list("VCstem_c" = "VCstem_c",
+                                                "VCstem_d" = "VCstem_d"),
+                           taxon_column = "Species")
+```
+
+### Photosynthetic capacity
+
+```{r}
+TRY_Narea <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_50.rds"))
+TRY_Narea <- TRY_Narea[, c("AccSpeciesName", "StdValue")]
+names(TRY_Narea) <- c("Species", "Narea")
+```
+```{r}
+Narea_data <-rbind(hydratry[,c("Species", "Narea")],
+                   TRY_Narea)
+SpParams <- populateTraits(SpParams, Narea_data, 
+                                trait_mapping = c("Narea" = "Narea"),
+                                taxon_column = "Species")
+```
+
+```{r}
+TRY_Vmax298  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_186.rds"))
+SpParams <- populateTraits(SpParams, TRY_Vmax298, 
+                           trait_mapping = c("Vmax298" = "StdValue"),
+                           taxon_column = "AccSpeciesName")
+```
+
+```{r}
+TRY_Jmax298  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_269.rds"))
+SpParams <- populateTraits(SpParams, TRY_Jmax298, 
+                           trait_mapping = c("Jmax298" = "StdValue"),
+                           taxon_column = "AccSpeciesName")
+```
+
+### Wood carbon content
+
+```{r}
+TRY_WoodC <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_407.rds"))
+SpParams <- populateTraits(SpParams, TRY_WoodC, 
+                           trait_mapping = c("WoodC" = "StdValue"),
+                           scalar_functions = c("WoodC" = function(x){x/1000}), #mg/g to g/g 
+                           taxon_column = "AccSpeciesName")
+```
+
