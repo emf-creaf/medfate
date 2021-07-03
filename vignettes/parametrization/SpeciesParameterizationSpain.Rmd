@@ -9,29 +9,62 @@ output:
 
 ## Introduction
 
-```{r message=FALSE}
-library(tidyverse)
-library(medfate)
-library(openxlsx)
-library(medfateutils)
+This vignette describes the procedures used to obtain the species parameter data table `SpParamsMED` included in package **medfate**. The taxon entities chosen are intended to cover most of the taxa reported in Spanish National Forest Inventory surveys (*Inventario Forestal Nacional* or IFN). 
+
+### Required packages
+Installed version of **medfate** should be **ver 2.3** or higher. 
+```{r, eval = FALSE}
+install.packages("medfate")
 ```
 
-Set the path to forest inventory data (in my computer)
+If the version at CRAN is older, the package should be installed from GitHub. Package **medfateutils** is important for the parametrization process, as it includes several functions useful for parsing data sources and populating parameter tables. Package **medfateutils** is installed only `from GitHub via `remotes::install_github()`.
+
+```{r, eval = FALSE}
+remotes::install_github("emf-creaf/medfateutils")
+```
+
+Once we have **medfate** and **medfateutils**, we load them as well as other packages needed for this vignette:
+```{r message=FALSE}
+library(medfate)
+library(medfateutils)
+library(tidyverse)
+library(openxlsx)
+```
+
+### Target parameters
+The set of species parameters needed to run the models included in **medfate** are described in a dataframe called `SpParamsDefinition`: 
+
+
+```{r}
+data("SpParamsDefinition")
+SpParamsDefinition$ParameterName
+```
+It is obvious that such a sheer number of parameters cannot be searched for manually. Hence, it is important to draw them for data bases. Not all model parameters have their counterpart in publicly-available databases, so even using trait data bases it is unlikely that one finds appropriate parameter values for all species. Luckily, **medfate** has inbuilt imputation procedures to estimate missing values for many parameters before starting model simulations. However, imputed parameter estimates will often be worse than estimates coming from data bases. Hence, we should put a strong effort in finding source parameter data before relying on inbuilt imputation.
+
+### Source data paths
+
+We begin by defining file paths (in my computer) to access source data for parameter filling. Source data includes forest inventory (i.e. IFN) data as well as trait and allometry data bases:
 ```{r}
 IFN_path = "/home/miquel/OneDrive/Datasets/IFN/"
-```
-
-Set path to trait and allometry databases:
-
-```{r}
 DB_path = "/home/miquel/OneDrive/Professional/Recerca/MedfateSpeciesParametrization/"
 ```
 
+### Steps to build a species parameter table
 
+The following sections describe different phases required to build a species parameter table for simulations with **medfate**:
+
+ 1. Initialize the parameter table with target taxonomic entities.
+ 2. Draw species parameters from forest inventory (IFN in our case) data.
+ 3. Populate tree and shrub allometric coefficients from suitable allometric databases.
+ 4. Populate plant functional traits from available data bases
+ 5. Populate recruitment limits using bioclimatic data, forest inventory data and previous parameter estimates.
+ 
 ## Initialize species parameter table for IFN
 
+The first step to obtain a species parameter table is to define the target  entities that will be considered functionally distinct in **medfate** simulations. There is no *a priori* need to limit such entities to species taxonomy, nor to particular taxonomic ranks. However, in our case we will define either entities either at species or genus level.
+
 ### Load IFN taxonomic codification
-Load species codes from IFN2-3 and IFN4
+Model simulations will normally entail a resolution of target entities than forest inventory data. Therefore, it will be usual to lump entities treated as separated in the forest inventory. In our case, we begin by loading shrub and tree species codes used in the second, third, and fourth editions of IFN, i.e. IFN2, IFN3 and IFN4:
 ```{r}
 IFN23_species_data <- read.csv(paste0(IFN_path,"Sources/SpeciesCodesIFN23.txt"), 
                              sep="\t")
@@ -47,7 +80,7 @@ IFN4_tree_species_data$IFNCODE<-as.character(IFN4_tree_species_data$IFNCODE)
 IFN4_tree_species_data<-IFN4_tree_species_data[,c(1,2)]
 ```
 
-Merge the two code data sets:
+Merge the two code data sets by adding to the codes of IFN2-3 those species codes that were new in IFN4:
 ```{r}
 newShrubs <- !(IFN4_shrub_species_data$IFNCODE %in% IFN23_species_data$IFNCODE)
 newTrees <- !(IFN4_tree_species_data$IFNCODE %in% IFN23_species_data$IFNCODE)
@@ -56,14 +89,14 @@ IFN_species_data <- bind_rows(IFN23_species_data,
                               IFN4_tree_species_data[newTrees,])
 IFN_species_data <- IFN_species_data[order(as.numeric(IFN_species_data$IFNCODE)),]
 ```
-
+The final table of species names and codes is:
 ```{r}
 dim(IFN_species_data)
 head(IFN_species_data)
 ```
 
 ### Define IFN codes to exclude
-Define codes to be excluded because they have low taxonomic content or refer to unsuitable growth forms (vines):
+We used the word 'species' for IFN entities, but in fact not all IFN entities are binomial species. In some cases, subspecies are recorded, while in others identification is at genus level or even uses non-scientific names. We thus need to manually define a set of entities (IFN codes) to be excluded because they have low taxonomic content or refer to unsuitable growth forms (vines):
 ```{r}
 codesOut <- c("19", # Otras coniferas 
               "10", # Sin asignar
@@ -99,7 +132,7 @@ dim(IFN_species_data)
 ```
 
 ### Define taxonomic entities to merge into groups
-Define genus-level taxa. These are necessary for taxa where the forest inventory records do not always have identifications at species-level resolution:
+Initialization will normally require defining groups of entities to be treated together in **medfate**. In our case, we need to define genus-level groups. These are necessary for taxa where the forest inventory records do not always have identifications at species-level resolution:
 ```{r}
 genus_level <- c("Acacia spp.:7/207/307",
                  "Adenocarpus spp.:2103/3163",
@@ -165,7 +198,7 @@ genus_level <- c("Acacia spp.:7/207/307",
                  "Viburnum spp.:115/1115/4115/3115/2115"
                  )
 ```
-Define groups of taxa at species level, where different synonyms are merged, different codes have been used for the same species or the species have subspecies entities which we want to merge: 
+Groups were manually defined as strings where ':' was used to separate the group name from the set of codes forming the group, which were separated using '/'. We also define groups of taxa at species level, where different synonyms are merged, different codes have been used for the same species or the species have subspecies entities which we want to merge: 
 ```{r}
 assimilated_species<-c("Acer campestre:76/776",
                        "Amelanchier ovalis:2/200",
@@ -195,7 +228,7 @@ assimilated_species<-c("Acer campestre:76/776",
                        "Salvia rosmarinus:114") # Rosmarinus officinalis -> Salvia rosmarinus
 ```
 
-Build a data frame with group names and codes.
+We now build a data frame with group names and codes, by merging the information of these two groups. We now separate group names and the set of codes defining the group:
 ```{r}
 groups_df <- data.frame("Groups" = c(genus_level,
                                      assimilated_species)) %>%
@@ -205,36 +238,31 @@ head(groups_df)
 
 ### Initialize species parameter table
 
-```{r}
-data("SpParamsDefinition")
-```
-
+Once we have IFN species names and codes, as well the definition of IFN entities to merge, we can call function `initSpParams()` from package **medfateutils**. This function also takes the data frame `SpParamsDefinition` as argument, from which it takes the set of parameter names to be filled:
 ```{r eval = FALSE}
 SpParams <-initSpParams(IFN_species_data$IFNCODE, IFN_species_data$IFNNAME,
-                             SpParamsDefinition,
-                             groups_df$group_codes, groups_df$group_names,
-                             fill_taxonomic = TRUE, verbose = FALSE)
+                        SpParamsDefinition,
+                        groups_df$group_codes, groups_df$group_names,
+                        fill_taxonomic = TRUE, verbose = FALSE)
 ```
-
+Option `fill_taxonomic` tells function `initSpParams()` to use package **taxize** to find taxonomic classification of the species/genus entities.
 ```{r include = FALSE}
 # saveRDS(SpParams, "SpParamsSPAIN_init.rds")
 SpParams = readRDS("SpParamsSPAIN_init.rds")
 ```
-
+The result of calling `initSpParams()` is a data frame with as many rows as target entities and columns corresponding to the parameters defined in `SpParamsDefinition`. Most parameters are missing, obviously, but the function already filled taxonomic data:
 ```{r}
 head(SpParams[,1:7])
 ```
 
-```{r}
-names(SpParams[-c(1:7)])
-```
-
 ## Parameters drawn from IFN data
+
+Some plant size parameters, such as maximum height or minimum/maximum values of the height-to-diameter ratio, can be derived from forest inventory data. In addition, it is important that medfate's growth form (either tree or shrub) matches the treatment given in forest inventory surveys. Diameters are normally measured in 'tree' entities, whereas shrubs are often measured using cover indices. Thus, the growth form parameter should also be derived from forest inventory.
 
 ### Load IFN data
 
+We first load IFN tree and shrub data corresponding to the three surveys (tree data is in two different tables in the case of IFN2): 
 ```{r}
-
 shrubDataIFN2 <-readRDS(paste0(IFN_path,"Products/IFN2/Rdata/shrubDataIFN2_Spain.rds"))
 shrubDataIFN2$ID<-as.character(shrubDataIFN2$ID)
 shrubDataIFN3 <-readRDS(paste0(IFN_path,"Products/IFN3/Rdata/shrubDataIFN3_Spain.rds"))
@@ -246,7 +274,9 @@ piesMenoresDataIFN2$ID = as.character(piesMenoresDataIFN2$ID)
 piesMenoresDataIFN2$Species = as.character(piesMenoresDataIFN2$Species)
 treeDataIFN3<-readRDS(paste0(IFN_path,"Products/IFN3/Rdata/treeDataIFN3_Spain.rds"))
 treeDataIFN4<-readRDS(paste0(IFN_path,"Products/IFN4/Rdata/treeDataIFN4_Spain.rds"))
-
+```
+We merge the data sets into two tables, one for shrubs and the other for trees, taking only columns `ID` (plot identification), `Species` (code), `H` (height) and `DBH` (for trees).
+```{r}
 shrubDataIFN <-bind_rows(shrubDataIFN2[,c("ID","Species", "H")],
                          shrubDataIFN3[,c("ID","Species", "H")],
                          shrubDataIFN4[,c("ID","Species", "H")])
@@ -258,24 +288,24 @@ treeDataIFN <-bind_rows(piesMayoresDataIFN2[,c("ID","Species", "H", "DBH")],
 ```
 
 ### Growth form
-
+To tell medfate which target entities are shrubs, trees (or both, since some species occur in both tree and shrub tables), we can simply take the species code vectors:
 ```{r}
 shrub_codes <- as.numeric(shrubDataIFN$Species)
 tree_codes <- as.numeric(treeDataIFN$Species)
-
-# Check species that appear both as trees and shrubs
-sum(unique(shrub_codes) %in% unique(tree_codes))
 ```
 
+Before populating growth form, we can check how many species appear both as trees and shrubs:
+```{r}
+sum(unique(shrub_codes) %in% unique(tree_codes))
+```
+We can populate column `GrowthForm` of the species parameter table by calling function `populateGrowthForm()` of package **medfateutils**:
 ```{r}
 SpParams = populateGrowthForm(SpParams, 
                               tree_codes, shrub_codes,
-                              erase_previous = TRUE,
                               fill_fromGenus = TRUE)
 
 ```
-
-Manually set to tree the growth form of remaining species
+Some codes (particularly, those excluded above) may not be recognized according to the target entity definition of `SpParams` and are ignored. The option `fill_fromGenus = TRUE` is used to tell function `populateGrowthForm()` that all species of the same entity should have the same growth form, so that even if some codes are not mentioned, for whatever reason, growth forms are also defined. Some species may have been defined in the IFN species definition but then be missing from the tree/shrub tables. We identify them and manually set to tree the growth form of these:
 ```{r}
 missingGrowthFormSpecies = SpParams[is.na(SpParams$GrowthForm), c("Name")]
 print(missingGrowthFormSpecies)
@@ -284,60 +314,60 @@ SpParams$GrowthForm[SpParams$Name %in% missingGrowthFormSpecies] = "Tree"
 
 ### Maximum/median height
 
+Maximum and median heights for each target entity can be obtained from observed height distributions. Thus, we define species identity and height (in cm) vectors from tree/shrub data:
 ```{r}
 species_codes <- c(treeDataIFN$Species, shrubDataIFN$Species)
 height_values <- c(treeDataIFN$H, shrubDataIFN$H)*100 # m to cm
-
-SpParams <- populateHeightParams(SpParams,
-                                 species_codes, height_values,
-                                 erase_previous = TRUE)
 ```
+and then call function `populateHeightParams()` to populate parameters `Hmax` and `Hmed`, corresponding to maximum and median heights.
+```{r}
+SpParams <- populateHeightParams(SpParams,
+                                 species_codes, height_values)
+```
+By default, maximum height is defined as the 99% quantile of the height distribution, whereas median height corresponds to the 50% quantile. 
 
+Parameters `Hmax` and `Hmed` are strict, meaning that medfate does not have inbuilt imputation procedures for them, so we must complete their columns in the parameter table. We can inspect the missing values for each growth form: 
 ```{r}
 table(is.na(SpParams$Hmax), SpParams$GrowthForm)
+table(is.na(SpParams$Hmed), SpParams$GrowthForm)
+```
+and then use the species with known values for each growth from to impute species averages:
+```{r}
 SpParams$Hmax[is.na(SpParams$Hmax) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$Hmax[SpParams$GrowthForm != "Shrub"], na.rm=TRUE))
 SpParams$Hmax[is.na(SpParams$Hmax) & SpParams$GrowthForm == "Shrub"] = round(mean(SpParams$Hmax[SpParams$GrowthForm == "Shrub"], na.rm=TRUE))
-table(is.na(SpParams$Hmax), SpParams$GrowthForm)
 
-table(is.na(SpParams$Hmed), SpParams$GrowthForm)
 SpParams$Hmed[is.na(SpParams$Hmed) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$Hmed[SpParams$GrowthForm != "Shrub"], na.rm=TRUE))
 SpParams$Hmed[is.na(SpParams$Hmed) & SpParams$GrowthForm == "Shrub"] = round(mean(SpParams$Hmed[SpParams$GrowthForm == "Shrub"], na.rm=TRUE))
-table(is.na(SpParams$Hmed), SpParams$GrowthForm)
 ```
 
 ### Diameter/height ratio
 
+Minimum and maximum diameter/height ratios are used in medfate to translate diameter growth into height growth. We first assemble three data vectors needed to populate these parameters (heights and diameters in cm):
 ```{r}
 tree_species_codes <- treeDataIFN$Species
 tree_height_values <- treeDataIFN$H*100 # m to cm
 tree_diameter_values <- treeDataIFN$DBH
-
+```
+and then call function `populateTreeDiameterHeightParams()` from package **medfateutils**:
+```{r}
 SpParams <- populateTreeDiameterHeightParams(SpParams,
                                              tree_species_codes, 
                                              tree_height_values,
-                                             tree_diameter_values,
-                                             erase_previous = TRUE)
+                                             tree_diameter_values)
 ```
+This function fills parameters `fHDmin` and `fHDmax`, corresponding to the minimum and maximum values of the height-to-diameter ratio. The 5% and 95% quantile values are used for these parameters, respectively, by default. 
 
+Missing values may occur after imputation:  
 ```{r}
 table(is.na(SpParams$fHDmin), SpParams$GrowthForm)
 table(is.na(SpParams$fHDmax), SpParams$GrowthForm)
 ```
-
+Since `fHDmin` and `fHDmax` are strict parameters, we use shrub and tree averages to fill the remaining cases:
 ```{r}
 SpParams$fHDmax[is.na(SpParams$fHDmax) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$fHDmax, na.rm=TRUE))
 SpParams$fHDmin[is.na(SpParams$fHDmin) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$fHDmin, na.rm=TRUE))
 ```
 
-```{r}
-table(is.na(SpParams$fHDmin), SpParams$GrowthForm)
-table(is.na(SpParams$fHDmax), SpParams$GrowthForm)
-```
-
-
-```{r include = FALSE}
-saveRDS(SpParams, "SpParamsSPAIN_SFI.rds")
-```
 
 ## Allometric coefficients
 
@@ -617,7 +647,8 @@ fmc_yebra <- openxlsx::read.xlsx(fn_yebra, sheet=2)
 ```
 
 
-### Life form
+### Plant/leaf classification
+#### Life form
 
 Load TRY life form data 
 ```{r}
@@ -683,7 +714,7 @@ table(SpParams$LifeForm, useNA = "ifany")
 ```
 
 
-### Leaf shape
+#### Leaf shape
 
 Load TRY leaf shape data 
 ```{r}
@@ -742,7 +773,7 @@ Show the number of taxa for each leaf shape:
 table(SpParams$LeafShape, useNA = "ifany")
 ```
 
-### Leaf size
+#### Leaf size
 
 Load TRY leaf area data: 
 ```{r}
@@ -820,7 +851,7 @@ Show the number of taxa for each leaf size:
 table(SpParams$LeafSize, useNA = "ifany")
 ```
 
-### Phenology type
+#### Phenology type
 
 ```{r}
 TRY_phenology  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_37.rds"))
@@ -881,7 +912,10 @@ Show the number of taxa for each phenology type:
 table(SpParams$PhenologyType, useNA = "ifany")
 ```
 
-### Maximum rooting depth (Z95)
+### Plant size
+We already populated some plant size parameters from forest inventory data. Here we draw values for parameters that are not normally measured in forest inventory data (for obvious reasons), such as maximum rooting depth.
+
+#### Maximum rooting depth
 ```{r}
 TRY_Z95 <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_6.rds"))
 ```
@@ -928,7 +962,9 @@ SpParams$Z95[is.na(SpParams$Z95) & SpParams$GrowthForm == "Shrub"] = round(mean(
 table(is.na(SpParams$Z95), SpParams$GrowthForm)
 ```
 
-### Leaf duration ($LD$)
+### Leaf phenology
+
+#### Leaf duration
 
 ```{r}
 TRY_LeafDuration  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_12.rds"))
@@ -955,7 +991,8 @@ SpParams <- populateTraits(SpParams, LeafDuration_data,
                                 taxon_column = "Species")
 ```
 
-### Specific leaf area ($SLA$)
+### Anatomy
+#### Specific leaf area
 
 ```{r}
 TRY_SLA <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_3117.rds"))
@@ -979,7 +1016,7 @@ SpParams <- populateTraits(SpParams, SLA_data,
                            taxon_column = "Species")
 ```
 
-### Leaf density
+#### Leaf density
 
 ```{r}
 TRY_LeafDensity  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_48.rds"))
@@ -988,7 +1025,7 @@ SpParams <- populateTraits(SpParams, TRY_LeafDensity,
                            taxon_column = "AccSpeciesName")
 ```
 
-### Wood density
+#### Wood density
 
 ```{r}
 TRY_WoodDensity  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_4.rds"))
@@ -1022,7 +1059,7 @@ SpParams <- populateTraits(SpParams, WoodDensity_data,
                            taxon_column = "Species")
 ```
 
-### Fine fuel ratio ($r_{6.35}$)
+#### Fine fuel ratio
 
 ```{r}
 SpParams <- populateTraits(SpParams, as.data.frame(ffr), 
@@ -1030,7 +1067,7 @@ SpParams <- populateTraits(SpParams, as.data.frame(ffr),
                            taxon_column = "Species")
 ```
 
-### Fraction of dead material ($P_{dead}$)
+#### Fraction of dead material ($P_{dead}$)
 
 ```{r}
 table(is.na(SpParams$pDead))
@@ -1051,7 +1088,7 @@ SpParams <- populateTraits(SpParams, brot2_DF,
                            taxon_column = "Taxon")
 ```
 
-### Leaf area to sapwood area ratio ($1/H_v$)
+#### Leaf area to sapwood area ratio
 
 ```{r}
 TRY_Hv  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_171.rds"))
@@ -1084,7 +1121,7 @@ SpParams <- populateTraits(SpParams, Hv_data,
                            taxon_column = "Species")
 ```
 
-### Leaf width
+#### Leaf width
 
 ```{r}
 TRY_LW <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_145.rds"))
@@ -1096,7 +1133,7 @@ SpParams <- populateTraits(SpParams, TRY_LW,
                            taxon_column = "AccSpeciesName")
 ```
 
-### Specific root length ($SRL$)
+#### Specific root length
 
 ```{r}
 TRY_SRL  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_614.rds"))
@@ -1106,7 +1143,8 @@ SpParams <- populateTraits(SpParams, TRY_SRL,
 
 ```
 
-### Minimum/maximum fuel moisture content
+### Tissue moisture
+#### Minimum/maximum fuel moisture content
 
 ```{r}
 fmc_yebra$Species.collected[fmc_yebra$Species.collected=="Rosmarinus officinalis"] = "Salvia officinalis"
@@ -1137,7 +1175,7 @@ SpParams <- populateTraits(SpParams, as.data.frame(FMC_data),
                            taxon_column = "Species name", erase_previous = FALSE)
 ```
 
-### Leaf pressure-volume curve
+#### Leaf pressure-volume curve
 
 ```{r}
 names(bartlett)[names(bartlett)=="πo.(MPa)"] = "LeafPI0"
@@ -1183,6 +1221,8 @@ SpParams <- populateTraits(SpParams, bartlett,
 
 ### Fuel flammability
 
+#### Heat content and surface area to volume ratio
+
 ```{r}
 SpParams <- populateTraits(SpParams, as.data.frame(flam), 
                            trait_mapping = c("HeatContent" = "High calorific value [J/kg]",
@@ -1190,7 +1230,7 @@ SpParams <- populateTraits(SpParams, as.data.frame(flam),
                            taxon_column = "Species name")
 ```
 
-### Lignin content
+#### Lignin content
 
 ```{r}
 TRY_Lignin  <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_87.rds"))
@@ -1201,7 +1241,8 @@ SpParams <- populateTraits(SpParams, TRY_Lignin,
                            taxon_column = "AccSpeciesName")
 ```
 
-### Stomatal closure ($\Psi_{extract}$)
+### Transpiration/photosynthesis
+#### Water potential determining stomatal closure
 
 ```{r}
 names(bartlett)[names(bartlett)=="πtlp.(MPa)"] = "Ptlp"
@@ -1217,7 +1258,7 @@ SpParams <- populateTraits(SpParams, Ptlp_data,
                            taxon_column = "Species")
 ```
 
-### Critical water potential ($\Psi_{critic}$)
+#### Critical water potential
 
 ```{r}
 P50_data = rbind(martin_stpaul[, c("Species", "P50")],
@@ -1231,7 +1272,7 @@ SpParams <- populateTraits(SpParams, P50_data,
                            taxon_column = "Species")
 ```
 
-### Water use efficiency ($WUE$)
+#### Water use efficiency
 
 ```{r}
 TRY_WUE  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_134.rds"))
@@ -1241,8 +1282,8 @@ SpParams <- populateTraits(SpParams, TRY_WUE,
                            taxon_column = "AccSpeciesName")
 ```
 
-### Minimum/maximum stomatal conductance ($G_{swmin}$ and $G_{swmax}$)
-
+#### Minimum/maximum stomatal conductance
+ ($G_{swmin}$ and $G_{swmax}$)
 ```{r}
 duursma$gmin <- as.numeric(duursma$gmin)
 SpParams <- populateTraits(SpParams, duursma, 
@@ -1258,7 +1299,8 @@ SpParams <- populateTraits(SpParams, hoshika,
                            taxon_column = "Species")
 ```
 
-### Stem maximum hydraulic conductivity ($K_{stem, max, ref}$) 
+#### Stem maximum hydraulic conductivity
+($K_{stem, max, ref}$) 
 
 ```{r}
 SpParams <- populateTraits(SpParams, hydratry, 
@@ -1266,7 +1308,7 @@ SpParams <- populateTraits(SpParams, hydratry,
                            taxon_column = "Species")
 ```
 
-### Stem hydraulic vulnerability
+#### Stem hydraulic vulnerability
 
 ```{r}
 martin_stpaul$VCstem_c <- NA
@@ -1302,7 +1344,7 @@ SpParams <- populateTraits(SpParams, VC_data,
                            taxon_column = "Species")
 ```
 
-### Photosynthetic capacity
+#### Photosynthetic capacity
 
 ```{r}
 TRY_Narea <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_50.rds"))
@@ -1331,7 +1373,8 @@ SpParams <- populateTraits(SpParams, TRY_Jmax298,
                            taxon_column = "AccSpeciesName")
 ```
 
-### Wood carbon content
+### Carbon balance and growth
+#### Wood carbon content
 
 ```{r}
 TRY_WoodC <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_407.rds"))
@@ -1341,3 +1384,4 @@ SpParams <- populateTraits(SpParams, TRY_WoodC,
                            taxon_column = "AccSpeciesName")
 ```
 
+## Recruitment parameters
