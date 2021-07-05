@@ -453,8 +453,8 @@ SpParams <- populateShrubAllometriesFromMedfuels(SpParams,
                                              species_groups)
 ```
 
-### Shrub crown ratio and pDead
-Although not included in **medfuels**, we can use the same strategy to populate parameters `pDead` and `cr` for shrubs, corresponding to the proportion of dead elements and the crown ratio. First we load the data frame:
+### Shrub crown ratio and fraction of dead material
+Although not included in **medfuels**, we can use the same strategy to populate the fraction of dead material (`pDead` or $P_{dead}$) and the crown ratio (`cr`) for shrubs. First we load the data frame:
 ```{r}
 shrub_pdead_cr <- read.table(paste0(DB_path,"AllometryDatabases/ShrubAllometries/Shrub_Pdead_CR.txt"), 
                              sep="\t", dec=",", header=T) %>% 
@@ -517,9 +517,21 @@ saveRDS(SpParams, "SpParamsSPAIN_allom.rds")
 
 Although we used specific functions to map most of the parameters so far, package **medfateutils** offers a generic function, called `populateTraits()`, to help mapping trait values from data bases into model parameters. In this section we will extensively use this function to fill a large number of parameters.
 
-### Load trait databases (except TRY)
+### Trait mapping from TRY
 
-We begin by loading a several trait data bases, compiled from literature publications or assembled by ourselves.
+The TRY database is a primary source for plant traits. We created a list of TRY trait definitions that could be mapped to **medfate** parameters. The following table shows the mapping:
+
+```{r}
+TRY_mapping = openxlsx::read.xlsx(file.path(DB_path, "TraitDatabases/TRY/TraitCorrespondence.xlsx"))
+knitr::kable(TRY_mapping[!is.na(TRY_mapping$Used) & TRY_mapping$Used=="YES",c(1,3,4)], 
+             row.names = FALSE)
+```
+
+We then queried TRY for public data regarding the list of TraitIDs and split the result into one database for each trait, using the TRY TraitID as file name. Data for these plant traits will be progressively loaded as required in the following subsections.
+
+### Additional trait databases
+
+Additional plant trait databases can be used for parameter estimation. We begin by loading several trait data bases, that drawn from literature publications or assembled by ourselves.
 ```{r}
 #  HYDRATRY
 fn_hydratry <- file.path(DB_path,"TraitDatabases/HydraTRY/HydraTRY.xlsx")
@@ -576,7 +588,7 @@ fn_yebra <- file.path(DB_path, "TraitDatabases/LFMC_Yebra_et_al_2020/Globe-LFMC-
 fmc_yebra <- openxlsx::read.xlsx(fn_yebra, sheet=2)
 ```
 
-The list does not include the TRY database. In this case we first created a list of TRY trait definitions that could be mapped to **medfate** parameters. We then queried TRY and split the result into one database for each trait, using the TRY trait ID as file name. Data for these plant traits will be progressively loaded as required.
+
 
 ### Plant/leaf classification
 
@@ -584,7 +596,7 @@ Plant and leaf classification parameters (i.e. plant life form, leaf phenology, 
 
 #### Life form
 
-A large number of life form records can be found in TRY. We load TRY life form data first: 
+A large number of life form records can be found in TRY. We load TRY life form data (TraitID = 343) first: 
 ```{r}
 TRY_life_form  <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_343.rds"))
 ```
@@ -649,11 +661,11 @@ table(SpParams$LifeForm, useNA = "ifany")
 
 #### Leaf shape
 
-A large number of leaf shape records can be found in TRY (its name in the data base is "Leaf form"). We load TRY leaf shape data first:
+A large number of leaf shape records can be found in TRY (its name in the data base is "Leaf type"). We begin by loading TRY leaf form data (TraitID = 43):
 ```{r}
 TRY_leaf_shape  <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_43.rds"))
 ```
-Since life form descriptions in TRY are not standardized, we standardize life form values into five categories:
+Since leaf shape descriptions in TRY are not standardized, we standardize leaf shape values into five categories:
 ```{r}
 TRY_leaf_shape$OrigValueStr[TRY_leaf_shape$OrigValueStr %in% 
                              c("broadleaved", "broad-leaved", "B", "broadleaf")] = "Broad"
@@ -890,9 +902,15 @@ SpParams$Z95[is.na(SpParams$Z95) & SpParams$GrowthForm != "Shrub"] = round(mean(
 SpParams$Z95[is.na(SpParams$Z95) & SpParams$GrowthForm == "Shrub"] = round(mean(SpParams$Z95[SpParams$GrowthForm == "Shrub"], na.rm=TRUE))
 ```
 
+The distribution of $Z95$ values for shrub species and non-shrub species can be shown using:
+```{r}
+summary(SpParams[SpParams$GrowthForm == "Shrub",c("Z95")])
+summary(SpParams[SpParams$GrowthForm != "Shrub",c("Z95")])
+```
+
 ### Leaf phenology
 
-Most parameters regulating leaf phenological phases (i.e. bud dormancy, budburst, senescence, bud formation, ...) require calibration exercises. However, here we can map leaf duration.
+Most parameters regulating leaf phenological phases (i.e. bud dormancy, budburst, senescence, bud formation, ...) require calibration exercises using observed weather data and phenological records. However, here we can map leaf duration from available data bases.
 
 #### Leaf duration
 Leaf lifespan is available from TRY for many species (TraitID 12). We load records for this trait, which is already standardized into month units:
@@ -923,7 +941,7 @@ In this case, and the following ones, the trait is not strict, so that we do not
 
 ### Anatomy
 
-In this subsection we map several plant anatomy traits into model parameters. All of them are imputable, so that missing values do not need to be handled here.
+In this subsection we map several plant anatomy traits into model parameters. All anatomical traits in **medfate** are imputable, so that missing values do not need to be handled here.
 
 #### Specific leaf area
 
@@ -949,7 +967,10 @@ SpParams <- populateTraits(SpParams, SLA_data,
                            trait_mapping = list("SLA" = "SLA") ,
                            taxon_column = "Species")
 ```
-
+The distribution of parameter values is:
+```{r}
+summary(SpParams[,c("SLA")])
+```
 #### Leaf density
 
 Leaf density (leaf dry mass per leaf volume, in $g \cdot cm^{-3}$) is available in TRY (TraitID = 48). Since we do not have other data sources we directly use this data set to populate parameter `LeafDensity` ($LD$):
@@ -959,7 +980,10 @@ SpParams <- populateTraits(SpParams, TRY_LeafDensity,
                            trait_mapping = c("LeafDensity" = "StdValue"),
                            taxon_column = "AccSpeciesName")
 ```
-
+The distribution of parameter values is:
+```{r}
+summary(SpParams[,c("LeafDensity")])
+```
 #### Wood density
 Wood density (stem dry mass per leaf volume, in $g \cdot cm^{-3}$) is available in TRY (TraitID = 4):
 ```{r}
@@ -994,7 +1018,10 @@ SpParams <- populateTraits(SpParams, WoodDensity_data,
                            trait_mapping = c("WoodDensity" = "WoodDensity"),
                            taxon_column = "Species")
 ```
-
+The distribution of parameter values is:
+```{r}
+summary(SpParams[,c("WoodDensity")])
+```
 #### Fine fuel ratio
 The fine fuel ratio, i.e. the ratio between dry mass of leaves and the dry mass of leaves and branchlets (< 6.35 mm), is a parameter that is harder to get from trait data bases. Here we use our own compilation of values to populate parameter `r635` ($r_{6.35}$):
 ```{r}
@@ -1002,15 +1029,18 @@ SpParams <- populateTraits(SpParams, as.data.frame(ffr),
                            trait_mapping = c("r635" = "r635"),
                            taxon_column = "Species")
 ```
-
+The distribution of parameter values is:
+```{r}
+summary(SpParams[,c("r635")])
+```
 #### Fraction of dead material 
 
-The fraction of standing dead biomass ($P_{dead}$) was already populated from shrubs in the section devoted to allometries:
+The fraction of standing dead biomass ($P_{dead}$) was already populated for shrubs in the section devoted to allometries, although several target entities still have missing values:
 
 ```{r}
 table(is.na(SpParams$pDead))
 ```
-However, we reduce some of these missing values with data from BROT2. We first select "DeadFuel" records from this data base:
+We tried to reduce some of these missing values with data from BROT2. We first select "DeadFuel" records from this data base:
 ```{r}
 brot2_DF <- brot2 %>% filter(Trait %in% c("DeadFuel")) %>% 
   select(c("Taxon", "Trait", "Data", "Units")) %>% 
@@ -1025,7 +1055,10 @@ SpParams <- populateTraits(SpParams, brot2_DF,
                            taxon_column = "Taxon",
                            erase_previous = FALSE)
 ```
-
+The distribution of parameter values is:
+```{r}
+summary(SpParams[,c("pDead")])
+```
 #### Leaf area to sapwood area ratio
 The leaf area to sapwood area ratio `Al2As` is also known as the inverse of the Huber value. This trait can be found in the TRY database (TraitID = 171):
 ```{r}
@@ -1062,6 +1095,11 @@ SpParams <- populateTraits(SpParams, Hv_data,
                            taxon_column = "Species")
 ```
 
+The distribution of parameter values is:
+```{r}
+summary(SpParams[,c("Al2As")])
+```
+
 #### Leaf width
 Leaf width ($LW$ in cm) records can be obtained from TRY (TraitID = 145), so we directly use this data source to populate the trait without transformation:
 ```{r}
@@ -1071,6 +1109,10 @@ SpParams <- populateTraits(SpParams, TRY_LW,
                            taxon_column = "AccSpeciesName")
 ```
 
+The distribution of parameter values is:
+```{r}
+summary(SpParams[,c("LeafWidth")])
+```
 #### Specific root length
 
 Finally, specific fine root length ($SRL$) is the fine root length per fine root dry mass and can also be retrieved from TRY (TraitID = 614):
@@ -1082,17 +1124,19 @@ SpParams <- populateTraits(SpParams, TRY_SRL,
 
 ```
 
+The distribution of parameter values is:
+```{r}
+summary(SpParams[,c("SRL")])
+```
 ### Tissue moisture
-#### Minimum/maximum fuel moisture content
+Plant tissue moisture parameters in **medfate** include those specifying maximum/minimum moisture content in leaves/branchlets as well as parameters describing the pressure-volume curve of leaves and stem tissues.
 
+#### Minimum/maximum fuel moisture content
+Fuel moisture content is usually defined as the mass of water per dry mass of fuel tissue. We used the database of Yebra et al. (2020) as primary source of fuel moisture content. We first update the name of some species in the data base:
 ```{r}
 fmc_yebra$Species.collected[fmc_yebra$Species.collected=="Rosmarinus officinalis"] = "Salvia officinalis"
-
-FMC_data <- rbind(fmc_field[,c("Species name", "MinFMC_DW", "MaxFMC_DW")],
-                  fmc_bib[,c("Species name", "MinFMC_DW", "MaxFMC_DW")])
-FMC_data$`Species name`[FMC_data$`Species name`=="Rosmarinus officinalis"] = "Salvia officinalis"
 ```
-
+and call `populateTraits()` to determine parameters `minFMC` ($FMC_{min}$) and `maxFMC` ($FMC_{max}$) using the 5\% and 95\% lowest quantile values, respectively:
 ```{r}
 SpParams <- populateTraits(SpParams, fmc_yebra, 
                            trait_mapping = c("minFMC" = "LFMC.value"),
@@ -1106,36 +1150,46 @@ SpParams <- populateTraits(SpParams, fmc_yebra,
                            taxon_column = "Species.collected")
 ```
 
-
+We now complement these values with additional data assembled by ourselves, from publications or field work:
+```{r}
+FMC_data <- rbind(fmc_field[,c("Species name", "MinFMC_DW", "MaxFMC_DW")],
+                  fmc_bib[,c("Species name", "MinFMC_DW", "MaxFMC_DW")])
+FMC_data$`Species name`[FMC_data$`Species name`=="Rosmarinus officinalis"] = "Salvia officinalis"
+```
+Note that the call to `populateTraits()` includes `erase_previous = FALSE` to avoid overwriting values on those estimated from Yebra et al. (2020):
 ```{r}
 SpParams <- populateTraits(SpParams, as.data.frame(FMC_data), 
                            trait_mapping = c("minFMC" = "MinFMC_DW",
                                              "maxFMC" = "MaxFMC_DW"),
                            taxon_column = "Species name", erase_previous = FALSE)
 ```
+The distribution of $FMC_{min}$ and $FMC_{max}$ parameter values is:
+```{r}
+summary(SpParams[,c("minFMC", "maxFMC")])
+```
 
 #### Leaf pressure-volume curve
 
+Leaf osmotic potential at full turgor (`LeafPI0` or $\pi_{0,leaf}$) and leaf elastic modulus (`LeafEPS` or $\epsilon_{leaf}$) describe leaf pressure-volume curves. These traits can be obtained from TRY and Bartlett et al. (2012). We begin by changing the column names of this second database:
 ```{r}
 names(bartlett)[names(bartlett)=="πo.(MPa)"] = "LeafPI0"
 names(bartlett)[names(bartlett)=="ε.(MPa)"] = "LeafEPS"
 ```
-
+we then load TRY data for $\pi_{0,leaf}$ (TraitID = 188):
 ```{r}
 TRY_LeafPI0  <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_188.rds"))
 TRY_LeafPI0 <- TRY_LeafPI0[, c("AccSpeciesName", "StdValue")]
 names(TRY_LeafPI0) <- c("Species", "LeafPI0")
 TRY_LeafPI0$LeafPI0 <- -1*TRY_LeafPI0$LeafPI0 
 ```
-
+and TRY data for $\epsilon_{leaf}$ (TraitID = 190):
 ```{r}
 TRY_LeafEPS  <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_190.rds"))
 TRY_LeafEPS$StdValue <- as.numeric(TRY_LeafEPS$OrigValueStr) 
 TRY_LeafEPS <- TRY_LeafEPS[, c("AccSpeciesName", "StdValue")]
 names(TRY_LeafEPS) <- c("Species", "LeafEPS")
 ```
-
-
+We then fill $\pi_{0,leaf}$ with the TRY and Bartlett et al. (2012) data sources merged:
 ```{r}
 LeafPI0_data = rbind(TRY_LeafPI0[, c("Species", "LeafPI0")],
                      bartlett[,c("Species", "LeafPI0")])
@@ -1143,7 +1197,7 @@ SpParams <- populateTraits(SpParams, LeafPI0_data,
                            trait_mapping = c("LeafPI0" = "LeafPI0"),
                            taxon_column = "Species")
 ```
-
+And we do the same for $\epsilon_{leaf}$:
 ```{r}
 LeafEPS_data = rbind(TRY_LeafEPS[, c("Species", "LeafEPS")],
                      bartlett[,c("Species", "LeafEPS")])
@@ -1152,15 +1206,24 @@ SpParams <- populateTraits(SpParams, LeafEPS_data,
                            taxon_column = "Species")
 ```
 
+Finally, we use Bartlett et al. (2012) to provide suitable values for the fraction of apoplastic tissue (`LeafAF` or $f_{apo,leaf}$):
 ```{r}
 SpParams <- populateTraits(SpParams, bartlett, 
                            trait_mapping = c("LeafAF" = "af"),
                            taxon_column = "Species")
 ```
 
+The statistical distributions of the three parameters is summarized below:
+```{r}
+summary(SpParams[,c("LeafPI0", "LeafEPS", "LeafAF")])
+```
 ### Fuel flammability
 
+Fuel flammability properties are needed to predict potential fire behavior on forest stands on the basis of its composition and structure.
+
 #### Heat content and surface area to volume ratio
+
+We compiled  in a database bibliographic values of calorific heat value ($h$, in $J \cdot kg^{-1}$) and the surface area to volume ratio ($\sigma$, in $m^2 \cdot m^{-3}$) for different Mediterranean plant species. We use this data set to populate the corresponding **medfate** parameters:
 
 ```{r}
 SpParams <- populateTraits(SpParams, as.data.frame(flam), 
@@ -1168,8 +1231,12 @@ SpParams <- populateTraits(SpParams, as.data.frame(flam),
                                              "SAV" = "SurfaceAreaVolume[m2/m3]"),
                            taxon_column = "Species name")
 ```
-
+The statistical distributions of the two parameters is summarized below:
+```{r}
+summary(SpParams[,c("HeatContent", "SAV")])
+```
 #### Lignin content
+The lignin content per dry mass of leaves is included in TRY (TraitID = 87) with standardized units mg/g. To parse this trait into `LigninPercent` ($LI$) we simply divide values by 10.
 
 ```{r}
 TRY_Lignin  <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_87.rds"))
@@ -1179,15 +1246,23 @@ SpParams <- populateTraits(SpParams, TRY_Lignin,
                            scalar_functions = c("LigninPercent" = function(x){x/10}), #mg/g to % 
                            taxon_column = "AccSpeciesName")
 ```
+The distribution of parameter values is:
+```{r}
+summary(SpParams[,c("LigninPercent")])
+```
 
-### Transpiration/photosynthesis
+### Transpiration/photosynthesis (Granier's model)
+The three following subsections provide suitable values for parameters regulating transpiration and photosynthesis under the Granier transpiration model.
+
 #### Water potential determining stomatal closure
+
+Parameter $\Psi_{extract}$ (`Psi_Extract`) is the water potential at which transpiration is 50% of its maximum, for a given species. We decided to populate values for this parameter using the water potential corresponding to turgor loss point ($\Psi_{tlp}$), which is available in Bartlett et al (2012) and HYDRATRY databases:
 
 ```{r}
 names(bartlett)[names(bartlett)=="πtlp.(MPa)"] = "Ptlp"
 names(hydratry)[names(hydratry)=="PItlp"] = "Ptlp"
 ```
-
+The mapping is done by calling `populateTraits()` on a merged dataset:
 ```{r}
 Ptlp_data = rbind(martin_stpaul[, c("Species", "Ptlp")],
                   hydratry[, c("Species", "Ptlp")],
@@ -1196,23 +1271,35 @@ SpParams <- populateTraits(SpParams, Ptlp_data,
                            trait_mapping = list("Psi_Extract" = "Ptlp"),
                            taxon_column = "Species")
 ```
-
+The distribution of parameter values is:
+```{r}
+summary(SpParams[,c("Psi_Extract")])
+```
 #### Critical water potential
-
+Parameter $\Psi_{critic}$ (`Psi_Critic`) is the water potential corresponding to 50\% of loss of hydraulic conductance in the stem, also known as $\Psi_{50}$. This trait can be found in three data bases: 
 ```{r}
 P50_data = rbind(martin_stpaul[, c("Species", "P50")],
                  choat[, c("Species", "P50")],
                  hydratry[, c("Species", "P50")])
 ```
-
+The mapping is done by calling `populateTraits()` on a merged dataset:
 ```{r}
 SpParams <- populateTraits(SpParams, P50_data, 
                            trait_mapping = list("Psi_Critic" = "P50"),
                            taxon_column = "Species")
 ```
 
-#### Water use efficiency
+We want to ensure that $\Psi_{critic} \leq \Psi_{extract}$ by using:
+```{r}
+SpParams$Psi_Critic = pmin(SpParams$Psi_Critic, SpParams$Psi_Extract, na.rm=TRUE)
+```
+The distribution of parameter values is:
+```{r}
+summary(SpParams[,c("Psi_Critic")])
+```
 
+#### Water use efficiency
+Water use efficiency  ($WUE$) is the leaf transpiration rate per photosynthesis rate. We can draw values of the water use efficiency from TRY (TraitID = 134), after filtering out extreme values:
 ```{r}
 TRY_WUE  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_134.rds"))
 TRY_WUE <- TRY_WUE %>% filter(StdValue < 40)
@@ -1220,35 +1307,49 @@ SpParams <- populateTraits(SpParams, TRY_WUE,
                            trait_mapping = c("WUE" = "StdValue"),
                            taxon_column = "AccSpeciesName")
 ```
+The distribution of parameter values is:
+```{r}
+summary(SpParams[,c("WUE")])
+```
+
+### Transpiration/photosynthesis (Sperry's model)
+
+Simulations with the Sperry's transpiration model require many species-specific parameters, several of them unavailable in plant trait data bases. Here we make an effort to provide suitable values for some of them, particularly stem hydraulic efficiency and vulnerability. Others are estimated in **medfate** via inbuilt imputation or scaling procedures, as described in medfate's reference book. 
 
 #### Minimum/maximum stomatal conductance
- ($G_{swmin}$ and $G_{swmax}$)
+Minimum and maximum values of leaf conductance to water vapor ($G_{swmin}$ and $G_{swmax}$) can be drawn from databases of Duursma et al. (2018) and Hoshika et al (2018), respectively. We first populate $G_{swmin}$ using data from Duursma et al. (2018), while chaning the units from $mmol\cdot s^{-1} \cdot m^{-2}$ to $mol\cdot s^{-1} \cdot m^{-2}$:
 ```{r}
 duursma$gmin <- as.numeric(duursma$gmin)
 SpParams <- populateTraits(SpParams, duursma, 
                            trait_mapping = list("Gswmin" = "gmin"),
                            taxon_column = "species",
-                           scalar_functions = list("Gswmin" = function(x) {x/1000})) #From mmol·s-1·m-2 to mol·s-1·m-2
-
+                           scalar_functions = list("Gswmin" = function(x) {x/1000})) 
 ```
-
+We then populate $G_{swmax}$ using data from Hoshika et al. (2018) without any change in units:
 ```{r}
 SpParams <- populateTraits(SpParams, hoshika, 
                            trait_mapping = list("Gswmax" = "gmax.(mol.m-2.s-1)") ,
                            taxon_column = "Species")
 ```
+The statistical distributions of the two parameters is summarized below:
+```{r}
+summary(SpParams[,c("Gswmin", "Gswmax")])
+```
 
 #### Stem maximum hydraulic conductivity
-($K_{stem, max, ref}$) 
+Stem maximum hydraulic conductivity ($K_{stem, max, ref}$) is an important parameter used in **medfate** to estimate stem maximum conductance, which defines plant hydraulic efficiency. Here we populate some values from HYDRATRY: 
 
 ```{r}
 SpParams <- populateTraits(SpParams, hydratry, 
                            trait_mapping = c("Kmax_stemxylem" = "Ks"),
                            taxon_column = "Species")
 ```
-
+The distribution of parameter values is:
+```{r}
+summary(SpParams[,c("Kmax_stemxylem")])
+```
 #### Stem hydraulic vulnerability
-
+Stem hydraulic vulnerability is described in **medfate** using Weibull-type curves, which are described using two parameters. Trait databases normally report vulnerability using water potential corresponding to different levels of conductance loss, i.e. $\Psi_{12}$, $\Psi_{50}$, $\Psi_{88}$, etc. Here we first estimate Weibull coefficients from Martin-StPaul et al (2017) data on $\Psi_{12}$, $\Psi_{50}$:
 ```{r}
 martin_stpaul$VCstem_c <- NA
 martin_stpaul$VCstem_d <- NA
@@ -1260,6 +1361,9 @@ for(i in 1:nrow(martin_stpaul)) {
     martin_stpaul$VCstem_d[i] = weib[["d"]]
   }
 }
+```
+and we do something similar from Choat et al (2012) data on $\Psi_{50}$, $\Psi_{88}$:
+```{r}
 choat$P50 = as.numeric(choat$P50)
 choat$P88 = as.numeric(choat$P88)
 choat$VCstem_c <- NA
@@ -1273,7 +1377,7 @@ for(i in 1:nrow(choat)) {
   }
 }
 ```
-
+We then merge the two data sets and populate Weibull coefficients using `populateTraits()`:
 ```{r}
 VC_data = rbind(martin_stpaul[, c("Species", "VCstem_c", "VCstem_d")],
                 choat[, c("Species", "VCstem_c", "VCstem_d")])
@@ -1283,28 +1387,36 @@ SpParams <- populateTraits(SpParams, VC_data,
                            taxon_column = "Species")
 ```
 
-#### Photosynthetic capacity
+The statistical distributions of the stem vulnerability parameters is summarized below:
+```{r}
+summary(SpParams[,c("VCstem_c", "VCstem_d")])
+```
 
+
+#### Photosynthetic capacity
+Photosynthetic capacity in Sperry's model is primarily determined by the $Vmax$ and $Jmax$ coefficients of the well-known Farquhar's photosynthesis model. However, **medfate** allows estimating these coefficients from $SLA$ and the nitrogen concentration in leaves, $N_{area}$. Hence it is useful to draw this latter parameter from trait databases. Here we first extract nitrogen concentration per leaf area values from TRY (TraitID = 50):
 ```{r}
 TRY_Narea <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_50.rds"))
 TRY_Narea <- TRY_Narea[, c("AccSpeciesName", "StdValue")]
 names(TRY_Narea) <- c("Species", "Narea")
 ```
+We then merge them with available data from HYDRATRY and call the population function:
 ```{r}
 Narea_data <-rbind(hydratry[,c("Species", "Narea")],
                    TRY_Narea)
 SpParams <- populateTraits(SpParams, Narea_data, 
-                                trait_mapping = c("Narea" = "Narea"),
-                                taxon_column = "Species")
+                           trait_mapping = c("Narea" = "Narea"),
+                           taxon_column = "Species")
 ```
 
+TRY also offers $V_{max}$ values (TraitID = 186), which we take as estimates for **medfate**'s $V_{max298}$ the maximum Rubisco carboxilation rate at 25 degrees Celsius: 
 ```{r}
 TRY_Vmax298  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_186.rds"))
 SpParams <- populateTraits(SpParams, TRY_Vmax298, 
                            trait_mapping = c("Vmax298" = "StdValue"),
                            taxon_column = "AccSpeciesName")
 ```
-
+The same happens with TRY's $J_{max}$ values (TraitID = 269), which we take as estimates for **medfate**'s $J_{max298}$ the maximum electron transport rate at 25 degrees Celsius: 
 ```{r}
 TRY_Jmax298  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_269.rds"))
 SpParams <- populateTraits(SpParams, TRY_Jmax298, 
@@ -1312,17 +1424,27 @@ SpParams <- populateTraits(SpParams, TRY_Jmax298,
                            taxon_column = "AccSpeciesName")
 ```
 
-### Carbon balance and growth
-#### Wood carbon content
+The statistical distributions of the three parameters is summarized below:
+```{r}
+summary(SpParams[,c("Narea", "Vmax298", "Jmax298")])
+```
 
+### Carbon balance and growth
+Carbon balance and growth simulations require many parameters that are hard to measure experimentally and, hence, need to be estimated via calibration or expert-based guesses. Here we map only one parameter describing the amount of carbon per dry wood tissue.
+
+#### Wood carbon content
+Stem carbon content per stem dry mass is given by TRY (TraitID = 407) and can be easily mapped, after transforming units from mg/g to g/g: 
 ```{r}
 TRY_WoodC <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_407.rds"))
 SpParams <- populateTraits(SpParams, TRY_WoodC, 
                            trait_mapping = c("WoodC" = "StdValue"),
-                           scalar_functions = c("WoodC" = function(x){x/1000}), #mg/g to g/g 
+                           scalar_functions = c("WoodC" = function(x){x/1000}), 
                            taxon_column = "AccSpeciesName")
 ```
-
+The distribution of parameter values is:
+```{r}
+summary(SpParams[,c("WoodC")])
+```
 ## Recruitment parameters
 
 This document describes the parametrization of bioclimatic recruitment thresholds for the forest dynamics model `fordyn()` included in `medfate`. Specifically, we aim to find suitable values for parameters:
