@@ -507,7 +507,7 @@ NumericVector treeFoliarBiomassMED(IntegerVector SP, NumericVector N, NumericVec
     lb[i] = ((N[i]/10000)*afbt[i]*pow(dbh[i], bfbt[i])*exp(cfbt[i]*ltba[i])*pow(dbh[i], dfbt[i]*ltba[i]));
   }
   if(!NumericVector::is_na(gdd)) {
-    NumericVector Sgdd = speciesNumericParameter(SP, SpParams, "Sgdd");
+    NumericVector Sgdd = speciesNumericParameterWithImputation(SP, SpParams, "Sgdd");
     for(int i=0;i<ncoh;i++) {
       if(!NumericVector::is_na(SP[i])) lb[i] = lb[i]*leafDevelopmentStatus(Sgdd[i], gdd);
     }
@@ -524,7 +524,7 @@ NumericVector treeFoliarBiomassUS(IntegerVector SP, NumericVector N, NumericVect
     lb[i] = N[i] * FoliageBiomass[i] / 10000.0;
   }
   if(!NumericVector::is_na(gdd)) {
-    NumericVector Sgdd = speciesNumericParameter(SP, SpParams, "Sgdd");
+    NumericVector Sgdd = speciesNumericParameterWithImputation(SP, SpParams, "Sgdd");
     for(int i=0;i<ncoh;i++) {
       if(!NumericVector::is_na(SP[i])) lb[i] = lb[i]*leafDevelopmentStatus(Sgdd[i], gdd);
     }
@@ -537,20 +537,21 @@ NumericVector shrubFoliarBiomassMED(IntegerVector SP, NumericVector Cover, Numer
                                     DataFrame SpParams, double gdd = NA_REAL){
   NumericVector aShrubFuel = speciesNumericParameterWithImputation(SP, SpParams, "a_bsh",true);
   NumericVector bShrubFuel = speciesNumericParameterWithImputation(SP, SpParams, "b_bsh",true);
-  NumericVector Sgdd = speciesNumericParameter(SP, SpParams, "Sgdd");
-  NumericVector pDead = speciesNumericParameter(SP, SpParams, "pDead");
-  NumericVector fTreeFuel = speciesNumericParameter(SP, SpParams, "r635");
+  NumericVector Sgdd = speciesNumericParameterWithImputation(SP, SpParams, "Sgdd");
+  NumericVector pDead = speciesNumericParameterWithImputation(SP, SpParams, "pDead");
+  NumericVector fTreeFuel = speciesNumericParameterWithImputation(SP, SpParams, "r635");
   int ncoh = SP.size();
   double W = 0.0; //Fine fuel
   NumericVector fb(ncoh);
   NumericVector areaind = shrubIndividualAreaMED(SP,Cover,H,SpParams); 
   double volind = NA_REAL,weightkgind = NA_REAL;
   for(int i=0;i<ncoh;i++) {
+    // Rcout<<i<<": "<< H[i]<<" "<<CR[i]<<" "<<aShrubFuel[i]<<" "<<bShrubFuel[i]<< " "<< pDead[i]<<" "<<fTreeFuel[i]<<" "<< areaind[i]<<".\n";
     if((!NumericVector::is_na(Cover[i])) & (!NumericVector::is_na(H[i]))) {
       volind = areaind[i]*((H[i]-(H[i]*(1.0-CR[i])))/100.0); //Crown phytovolume of an individual (in m3)
       weightkgind = aShrubFuel[i]*pow(volind,bShrubFuel[i]); //Fuel (in kg) of an individual (includes dead fuels)
-      if(NumericVector::is_na(pDead[i])) pDead[i] = 0.05;
       weightkgind = weightkgind - (weightkgind*pDead[i]); //Removes dead fuels
+      // Rcout<<volind<< " "<<weightkgind;
       if(areaind[i]>0.0) {
         // multiply by 'number of individuals' per m2 
         W = weightkgind*(Cover[i]/(100*areaind[i]));  //Fine fuel (kg/m2)
@@ -568,7 +569,7 @@ NumericVector shrubFoliarBiomassMED(IntegerVector SP, NumericVector Cover, Numer
 NumericVector shrubFoliarBiomassUS(IntegerVector SP, NumericVector H, 
                                    NumericVector SingleShrubCrownArea, NumericVector FoliageBiomassPerUnitArea, 
                                    DataFrame SpParams, double gdd = NA_REAL){
-  NumericVector Sgdd = speciesNumericParameter(SP, SpParams, "Sgdd");
+  NumericVector Sgdd = speciesNumericParameterWithImputation(SP, SpParams, "Sgdd");
   int ncoh = SP.size();
   NumericVector fb(ncoh);
   NumericVector areaind = shrubIndividualAreaUS(H,SingleShrubCrownArea); //SingleShrubCrownArea added here
@@ -718,9 +719,9 @@ double standPhytovolume(List x, DataFrame SpParams) {
  */
 NumericVector treeFuelMED(IntegerVector SP, NumericVector N, NumericVector dbh, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true){
   NumericVector fb = treeFoliarBiomassMED(SP, N, dbh, SpParams, NA_REAL); //Do not include phenology (to have correct estimates of branch biomass)
-  NumericVector Sgdd = speciesNumericParameter(SP, SpParams, "Sgdd");
+  NumericVector Sgdd = speciesNumericParameterWithImputation(SP, SpParams, "Sgdd");
   NumericVector fTreeFuel = speciesNumericParameterWithImputation(SP, SpParams, "r635", true);
-  NumericVector pDead = speciesNumericParameter(SP, SpParams, "pDead");
+  NumericVector pDead = speciesNumericParameterWithImputation(SP, SpParams, "pDead");
   int ncoh = N.size();
   double ftf = 0.0, btf = 0.0;
   NumericVector fuel(ncoh);
@@ -733,7 +734,6 @@ NumericVector treeFuelMED(IntegerVector SP, NumericVector N, NumericVector dbh, 
       } 
       fuel[i] =  ftf + btf; //Tree fuel (kg per m2) is sum of both fuels
       if(includeDead) {
-        if(NumericVector::is_na(pDead[i])) pDead[i] = 0.05;
         fuel[i] = fuel[i] + fuel[i]*pDead[i]; //If required add fine dead fuels (proportion of live fuels)
       }
     }
@@ -744,9 +744,9 @@ NumericVector treeFuelMED(IntegerVector SP, NumericVector N, NumericVector dbh, 
 
 NumericVector treeFuelUS(IntegerVector SP, NumericVector N, NumericVector FoliageBiomass, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true){
   NumericVector fb = treeFoliarBiomassUS(SP, N, FoliageBiomass, SpParams, NA_REAL); //Do not include phenology (to have correct estimates of branch biomass)
-  NumericVector Sgdd = speciesNumericParameter(SP, SpParams, "Sgdd");
+  NumericVector Sgdd = speciesNumericParameterWithImputation(SP, SpParams, "Sgdd");
   NumericVector fTreeFuel = speciesNumericParameterWithImputation(SP, SpParams, "r635", true);
-  NumericVector pDead = speciesNumericParameter(SP, SpParams, "pDead");
+  NumericVector pDead = speciesNumericParameterWithImputation(SP, SpParams, "pDead");
   int ncoh = N.size();
   double ftf = 0.0, btf = 0.0;
   NumericVector fuel(ncoh);
@@ -759,7 +759,6 @@ NumericVector treeFuelUS(IntegerVector SP, NumericVector N, NumericVector Foliag
       } 
       fuel[i] =  ftf + btf; //Tree fuel (kg per m2) is sum of both fuels
       if(includeDead) {
-        if(NumericVector::is_na(pDead[i])) pDead[i] = 0.05;
         fuel[i] = fuel[i] + fuel[i]*pDead[i]; //If required add fine dead fuels (proportion of live fuels) 
       }
     }
@@ -771,7 +770,7 @@ NumericVector treeFuelUS(IntegerVector SP, NumericVector N, NumericVector Foliag
 NumericVector shrubFuelMED(IntegerVector SP, NumericVector Cover, NumericVector H, NumericVector CR, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true){
   NumericVector aShrubFuel = speciesNumericParameterWithImputation(SP, SpParams, "a_bsh",true);
   NumericVector bShrubFuel = speciesNumericParameterWithImputation(SP, SpParams, "b_bsh",true);
-  NumericVector pDead = speciesNumericParameter(SP, SpParams, "pDead");
+  NumericVector pDead = speciesNumericParameterWithImputation(SP, SpParams, "pDead");
   NumericVector fTreeFuel = speciesNumericParameterWithImputation(SP, SpParams, "r635", true);
 
   int ncoh = SP.size();
@@ -784,7 +783,6 @@ NumericVector shrubFuelMED(IntegerVector SP, NumericVector Cover, NumericVector 
       volind = areaind[i]*(H[i]/100.0); //Phytovolume of an individual (in m3)
       weightkgind = aShrubFuel[i]*pow(volind,bShrubFuel[i]); //Dry weight (in kg) of an individual
       if(!includeDead) {
-        if(NumericVector::is_na(pDead[i])) pDead[i] = 0.05;
         weightkgind = weightkgind - (weightkgind*pDead[i]); //Remove dead fuels if asked 
       }
       if(areaind[i]>0.0) {
@@ -797,7 +795,7 @@ NumericVector shrubFuelMED(IntegerVector SP, NumericVector Cover, NumericVector 
   //Remove (if necessary), the weight due to leaves that are not there
    if(!NumericVector::is_na(gdd)) {
     double fsf = 0.0, bsf = 0.0;
-    NumericVector Sgdd = speciesNumericParameter(SP, SpParams, "Sgdd");
+    NumericVector Sgdd = speciesNumericParameterWithImputation(SP, SpParams, "Sgdd");
     for(int i=0;i<ncoh;i++) {
       fsf = W[i]/fTreeFuel[i]; //foliar biomass
       bsf = W[i] - fsf; //branch biomass
@@ -824,7 +822,7 @@ NumericVector shrubFuelUS(IntegerVector SP, NumericVector H,
   //Remove (if necessary), the weight due to leaves that are not there
   if(!NumericVector::is_na(gdd)) {
     double fsf = 0.0, bsf = 0.0;
-    NumericVector Sgdd = speciesNumericParameter(SP, SpParams, "Sgdd");
+    NumericVector Sgdd = speciesNumericParameterWithImputation(SP, SpParams, "Sgdd");
     for(int i=0;i<ncoh;i++) {
       fsf = W[i]/fTreeFuel[i]; //foliar biomass
       bsf = W[i] - fsf; //branch biomass

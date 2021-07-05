@@ -300,6 +300,15 @@ NumericVector heatContentWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(cohHeatContent);
 }
+NumericVector proportionDeadWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector pDead = speciesNumericParameter(SP, SpParams, "pDead");
+  for(int c=0;c<pDead.size();c++) {
+    if(NumericVector::is_na(pDead[c])) {
+      pDead[c] = 0.05;
+    }
+  }
+  return(pDead);
+}
 NumericVector leafWidthWithImputation(IntegerVector SP, DataFrame SpParams) {
   CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
   CharacterVector leafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
@@ -952,6 +961,7 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "LigninPercent") return(ligninPercentWithImputation(SP, SpParams));
     else if(parName == "SAV") return(surfaceToAreaRatioWithImputation(SP, SpParams));
     else if(parName == "HeatContent") return(heatContentWithImputation(SP, SpParams));
+    else if(parName == "pDead") return(proportionDeadWithImputation(SP,SpParams));
     else if(parName == "LeafWidth") return(leafWidthWithImputation(SP, SpParams));
     else if(parName == "Al2As") return(Al2AsWithImputation(SP, SpParams));
     else if(parName == "WoodDensity") return(woodDensityWithImputation(SP, SpParams));
