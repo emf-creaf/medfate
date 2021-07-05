@@ -1461,13 +1461,13 @@
 <div id="fraction-of-dead-material" class="section level4">
 <h4 class="hasAnchor">
 <a href="#fraction-of-dead-material" class="anchor"></a>Fraction of dead material</h4>
-<p>The fraction of standing dead biomass (<span class="math inline">\(P_{dead}\)</span>) was already populated from shrubs in the section devoted to allometries:</p>
+<p>The fraction of standing dead biomass (<span class="math inline">\(P_{dead}\)</span>) was already populated for shrubs in the section devoted to allometries, although several target entities still have missing values:</p>
 <div class="sourceCode" id="cb193"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">pDead</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## FALSE  TRUE 
 ##   122    97</code></pre>
-<p>However, we reduce some of these missing values with data from BROT2. We first select “DeadFuel” records from this data base:</p>
+<p>We tried to reduce some of these missing values with data from BROT2. We first select “DeadFuel” records from this data base:</p>
 <div class="sourceCode" id="cb195"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">brot2_DF</span> <span class="op">&lt;-</span> <span class="va">brot2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Trait</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"DeadFuel"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Taxon"</span>, <span class="st">"Trait"</span>, <span class="st">"Data"</span>, <span class="st">"Units"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -1787,45 +1787,69 @@
                            taxon_column <span class="op">=</span> <span class="st">"AccSpeciesName"</span><span class="op">)</span></code></pre></div>
 <pre><code>## Mapping [StdValue -&gt; WUE] species: 7 conspecific: 32 genus: 0 family: 0 order: 0 group: 0</code></pre>
 <pre><code>## 180 missing trait values (82.2 %) after populating with input data.</code></pre>
+<p>The distribution of parameter values is:</p>
+<div class="sourceCode" id="cb277"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"WUE"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##   1.476   2.433   2.774   3.596   3.613  30.170     180</code></pre>
 </div>
 </div>
 <div id="transpirationphotosynthesis-sperrys-model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#transpirationphotosynthesis-sperrys-model" class="anchor"></a>Transpiration/photosynthesis (Sperry’s model)</h3>
+<p>Simulations with the Sperry’s transpiration model require many species-specific parameters, several of them unavailable in plant trait data bases. Here we make an effort to provide suitable values for some of them, particularly stem hydraulic efficiency and vulnerability. Others are estimated in <strong>medfate</strong> via inbuilt imputation or scaling procedures, as described in medfate’s reference book.</p>
 <div id="minimummaximum-stomatal-conductance" class="section level4">
 <h4 class="hasAnchor">
 <a href="#minimummaximum-stomatal-conductance" class="anchor"></a>Minimum/maximum stomatal conductance</h4>
-<p>(<span class="math inline">\(G_{swmin}\)</span> and <span class="math inline">\(G_{swmax}\)</span>)</p>
-<div class="sourceCode" id="cb277"><pre class="downlit sourceCode r">
+<p>Minimum and maximum values of leaf conductance to water vapor (<span class="math inline">\(G_{swmin}\)</span> and <span class="math inline">\(G_{swmax}\)</span>) can be drawn from databases of Duursma et al. (2018) and Hoshika et al (2018), respectively. We first populate <span class="math inline">\(G_{swmin}\)</span> using data from Duursma et al. (2018), while chaning the units from <span class="math inline">\(mmol\cdot s^{-1} \cdot m^{-2}\)</span> to <span class="math inline">\(mol\cdot s^{-1} \cdot m^{-2}\)</span>:</p>
+<div class="sourceCode" id="cb279"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">duursma</span><span class="op">$</span><span class="va">gmin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">duursma</span><span class="op">$</span><span class="va">gmin</span><span class="op">)</span>
 <span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">duursma</span>, 
                            trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"Gswmin"</span> <span class="op">=</span> <span class="st">"gmin"</span><span class="op">)</span>,
                            taxon_column <span class="op">=</span> <span class="st">"species"</span>,
-                           scalar_functions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"Gswmin"</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="va">x</span><span class="op">/</span><span class="fl">1000</span><span class="op">}</span><span class="op">)</span><span class="op">)</span> <span class="co">#From mmol·s-1·m-2 to mol·s-1·m-2</span></code></pre></div>
+                           scalar_functions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"Gswmin"</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="va">x</span><span class="op">/</span><span class="fl">1000</span><span class="op">}</span><span class="op">)</span><span class="op">)</span> </code></pre></div>
 <pre><code>## Mapping [gmin -&gt; Gswmin] species: 18 conspecific: 52 genus: 0 family: 0 order: 0 group: 0</code></pre>
 <pre><code>## 149 missing trait values (68 %) after populating with input data.</code></pre>
-<div class="sourceCode" id="cb280"><pre class="downlit sourceCode r">
+<p>We then populate <span class="math inline">\(G_{swmax}\)</span> using data from Hoshika et al. (2018) without any change in units:</p>
+<div class="sourceCode" id="cb282"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">hoshika</span>, 
                            trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"Gswmax"</span> <span class="op">=</span> <span class="st">"gmax.(mol.m-2.s-1)"</span><span class="op">)</span> ,
                            taxon_column <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></code></pre></div>
 <pre><code>## Mapping [gmax.(mol.m-2.s-1) -&gt; Gswmax] species: 17 conspecific: 33 genus: 0 family: 0 order: 0 group: 0</code></pre>
 <pre><code>## 169 missing trait values (77.2 %) after populating with input data.</code></pre>
+<p>The statistical distributions of the two parameters is summarized below:</p>
+<div class="sourceCode" id="cb285"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Gswmin"</span>, <span class="st">"Gswmax"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></code></pre></div>
+<pre><code>##      Gswmin            Gswmax      
+##  Min.   :0.00057   Min.   :0.0480  
+##  1st Qu.:0.00302   1st Qu.:0.1941  
+##  Median :0.00383   Median :0.2423  
+##  Mean   :0.00476   Mean   :0.2823  
+##  3rd Qu.:0.00600   3rd Qu.:0.3387  
+##  Max.   :0.01392   Max.   :0.8000  
+##  NA's   :149       NA's   :169</code></pre>
 </div>
 <div id="stem-maximum-hydraulic-conductivity" class="section level4">
 <h4 class="hasAnchor">
 <a href="#stem-maximum-hydraulic-conductivity" class="anchor"></a>Stem maximum hydraulic conductivity</h4>
-<p>(<span class="math inline">\(K_{stem, max, ref}\)</span>)</p>
-<div class="sourceCode" id="cb283"><pre class="downlit sourceCode r">
+<p>Stem maximum hydraulic conductivity (<span class="math inline">\(K_{stem, max, ref}\)</span>) is an important parameter used in <strong>medfate</strong> to estimate stem maximum conductance, which defines plant hydraulic efficiency. Here we populate some values from HYDRATRY:</p>
+<div class="sourceCode" id="cb287"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">hydratry</span>, 
                            trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Kmax_stemxylem"</span> <span class="op">=</span> <span class="st">"Ks"</span><span class="op">)</span>,
                            taxon_column <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></code></pre></div>
 <pre><code>## Mapping [Ks -&gt; Kmax_stemxylem] species: 36 conspecific: 74 genus: 0 family: 0 order: 0 group: 0</code></pre>
 <pre><code>## 109 missing trait values (49.8 %) after populating with input data.</code></pre>
+<p>The distribution of parameter values is:</p>
+<div class="sourceCode" id="cb290"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Kmax_stemxylem"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##  0.0722  0.3505  0.5537  1.4268  1.6721 15.6400     109</code></pre>
 </div>
 <div id="stem-hydraulic-vulnerability" class="section level4">
 <h4 class="hasAnchor">
 <a href="#stem-hydraulic-vulnerability" class="anchor"></a>Stem hydraulic vulnerability</h4>
-<div class="sourceCode" id="cb286"><pre class="downlit sourceCode r">
+<p>Stem hydraulic vulnerability is described in <strong>medfate</strong> using Weibull-type curves, which are described using two parameters. Trait databases normally report vulnerability using water potential corresponding to different levels of conductance loss, i.e. <span class="math inline">\(\Psi_{12}\)</span>, <span class="math inline">\(\Psi_{50}\)</span>, <span class="math inline">\(\Psi_{88}\)</span>, etc. Here we first estimate Weibull coefficients from Martin-StPaul et al (2017) data on <span class="math inline">\(\Psi_{12}\)</span>, <span class="math inline">\(\Psi_{50}\)</span>:</p>
+<div class="sourceCode" id="cb292"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">martin_stpaul</span><span class="op">$</span><span class="va">VCstem_c</span> <span class="op">&lt;-</span> <span class="cn">NA</span>
 <span class="va">martin_stpaul</span><span class="op">$</span><span class="va">VCstem_d</span> <span class="op">&lt;-</span> <span class="cn">NA</span>
 <span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">martin_stpaul</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
@@ -1835,8 +1859,10 @@
     <span class="va">martin_stpaul</span><span class="op">$</span><span class="va">VCstem_c</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">=</span> <span class="va">weib</span><span class="op">[[</span><span class="st">"c"</span><span class="op">]</span><span class="op">]</span>
     <span class="va">martin_stpaul</span><span class="op">$</span><span class="va">VCstem_d</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">=</span> <span class="va">weib</span><span class="op">[[</span><span class="st">"d"</span><span class="op">]</span><span class="op">]</span>
   <span class="op">}</span>
-<span class="op">}</span>
-<span class="va">choat</span><span class="op">$</span><span class="va">P50</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">choat</span><span class="op">$</span><span class="va">P50</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+<p>and we do something similar from Choat et al (2012) data on <span class="math inline">\(\Psi_{50}\)</span>, <span class="math inline">\(\Psi_{88}\)</span>:</p>
+<div class="sourceCode" id="cb293"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">choat</span><span class="op">$</span><span class="va">P50</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">choat</span><span class="op">$</span><span class="va">P50</span><span class="op">)</span>
 <span class="va">choat</span><span class="op">$</span><span class="va">P88</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">choat</span><span class="op">$</span><span class="va">P88</span><span class="op">)</span>
 <span class="va">choat</span><span class="op">$</span><span class="va">VCstem_c</span> <span class="op">&lt;-</span> <span class="cn">NA</span>
 <span class="va">choat</span><span class="op">$</span><span class="va">VCstem_d</span> <span class="op">&lt;-</span> <span class="cn">NA</span>
@@ -1848,7 +1874,8 @@
     <span class="va">choat</span><span class="op">$</span><span class="va">VCstem_d</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">=</span> <span class="va">weib</span><span class="op">[[</span><span class="st">"d"</span><span class="op">]</span><span class="op">]</span>
   <span class="op">}</span>
 <span class="op">}</span></code></pre></div>
-<div class="sourceCode" id="cb287"><pre class="downlit sourceCode r">
+<p>We then merge the two data sets and populate Weibull coefficients using <code><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits()</a></code>:</p>
+<div class="sourceCode" id="cb294"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">VC_data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">martin_stpaul</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"VCstem_c"</span>, <span class="st">"VCstem_d"</span><span class="op">)</span><span class="op">]</span>,
                 <span class="va">choat</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"VCstem_c"</span>, <span class="st">"VCstem_d"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
 <span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">VC_data</span>, 
@@ -1859,52 +1886,85 @@
 <pre><code>## 93 missing trait values (42.5 %) after populating with input data.</code></pre>
 <pre><code>## Mapping [VCstem_d -&gt; VCstem_d] species: 57 conspecific: 69 genus: 0 family: 0 order: 0 group: 0</code></pre>
 <pre><code>## 93 missing trait values (42.5 %) after populating with input data.</code></pre>
+<p>The statistical distributions of the stem vulnerability parameters is summarized below:</p>
+<div class="sourceCode" id="cb299"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"VCstem_c"</span>, <span class="st">"VCstem_d"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></code></pre></div>
+<pre><code>##     VCstem_c          VCstem_d       
+##  Min.   : 0.7318   Min.   :-11.4166  
+##  1st Qu.: 3.1676   1st Qu.: -7.1716  
+##  Median : 6.0850   Median : -4.3007  
+##  Mean   : 6.1681   Mean   : -5.2581  
+##  3rd Qu.: 8.0985   3rd Qu.: -3.6800  
+##  Max.   :19.4287   Max.   : -0.6767  
+##  NA's   :93        NA's   :93</code></pre>
 </div>
 <div id="photosynthetic-capacity" class="section level4">
 <h4 class="hasAnchor">
 <a href="#photosynthetic-capacity" class="anchor"></a>Photosynthetic capacity</h4>
-<div class="sourceCode" id="cb292"><pre class="downlit sourceCode r">
+<p>Photosynthetic capacity in Sperry’s model is primarily determined by the <span class="math inline">\(Vmax\)</span> and <span class="math inline">\(Jmax\)</span> coefficients of the well-known Farquhar’s photosynthesis model. However, <strong>medfate</strong> allows estimating these coefficients from <span class="math inline">\(SLA\)</span> and the nitrogen concentration in leaves, <span class="math inline">\(N_{area}\)</span>. Hence it is useful to draw this latter parameter from trait databases. Here we first extract nitrogen concentration per leaf area values from TRY (TraitID = 50):</p>
+<div class="sourceCode" id="cb301"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">TRY_Narea</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"TraitDatabases/TRY/TRY_traits/TRY_50.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">TRY_Narea</span> <span class="op">&lt;-</span> <span class="va">TRY_Narea</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AccSpeciesName"</span>, <span class="st">"StdValue"</span><span class="op">)</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">TRY_Narea</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Narea"</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb293"><pre class="downlit sourceCode r">
+<p>We then merge them with available data from HYDRATRY and call the population function:</p>
+<div class="sourceCode" id="cb302"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Narea_data</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">hydratry</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Narea"</span><span class="op">)</span><span class="op">]</span>,
                    <span class="va">TRY_Narea</span><span class="op">)</span>
 <span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">Narea_data</span>, 
-                                trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Narea"</span> <span class="op">=</span> <span class="st">"Narea"</span><span class="op">)</span>,
-                                taxon_column <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></code></pre></div>
+                           trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Narea"</span> <span class="op">=</span> <span class="st">"Narea"</span><span class="op">)</span>,
+                           taxon_column <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></code></pre></div>
 <pre><code>## Mapping [Narea -&gt; Narea] species: 86 conspecific: 108 genus: 0 family: 0 order: 0 group: 0</code></pre>
 <pre><code>## 25 missing trait values (11.4 %) after populating with input data.</code></pre>
-<div class="sourceCode" id="cb296"><pre class="downlit sourceCode r">
+<p>TRY also offers <span class="math inline">\(V_{max}\)</span> values (TraitID = 186), which we take as estimates for <strong>medfate</strong>’s <span class="math inline">\(V_{max298}\)</span> the maximum Rubisco carboxilation rate at 25 degrees Celsius:</p>
+<div class="sourceCode" id="cb305"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">TRY_Vmax298</span>  <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"TraitDatabases/TRY/TRY_traits/TRY_186.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">TRY_Vmax298</span>, 
                            trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Vmax298"</span> <span class="op">=</span> <span class="st">"StdValue"</span><span class="op">)</span>,
                            taxon_column <span class="op">=</span> <span class="st">"AccSpeciesName"</span><span class="op">)</span></code></pre></div>
 <pre><code>## Mapping [StdValue -&gt; Vmax298] species: 22 conspecific: 82 genus: 0 family: 0 order: 0 group: 0</code></pre>
 <pre><code>## 115 missing trait values (52.5 %) after populating with input data.</code></pre>
-<div class="sourceCode" id="cb299"><pre class="downlit sourceCode r">
+<p>The same happens with TRY’s <span class="math inline">\(J_{max}\)</span> values (TraitID = 269), which we take as estimates for <strong>medfate</strong>’s <span class="math inline">\(J_{max298}\)</span> the maximum electron transport rate at 25 degrees Celsius:</p>
+<div class="sourceCode" id="cb308"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">TRY_Jmax298</span>  <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"TraitDatabases/TRY/TRY_traits/TRY_269.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">TRY_Jmax298</span>, 
                            trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Jmax298"</span> <span class="op">=</span> <span class="st">"StdValue"</span><span class="op">)</span>,
                            taxon_column <span class="op">=</span> <span class="st">"AccSpeciesName"</span><span class="op">)</span></code></pre></div>
 <pre><code>## Mapping [StdValue -&gt; Jmax298] species: 19 conspecific: 65 genus: 0 family: 0 order: 0 group: 0</code></pre>
 <pre><code>## 135 missing trait values (61.6 %) after populating with input data.</code></pre>
+<p>The statistical distributions of the three parameters is summarized below:</p>
+<div class="sourceCode" id="cb311"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Narea"</span>, <span class="st">"Vmax298"</span>, <span class="st">"Jmax298"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></code></pre></div>
+<pre><code>##      Narea           Vmax298           Jmax298      
+##  Min.   :0.1688   Min.   :  5.574   Min.   : 45.48  
+##  1st Qu.:1.4448   1st Qu.: 38.689   1st Qu.: 84.09  
+##  Median :1.7131   Median : 55.010   Median :103.23  
+##  Mean   :1.8856   Mean   : 56.552   Mean   :111.99  
+##  3rd Qu.:2.3335   3rd Qu.: 68.095   3rd Qu.:140.34  
+##  Max.   :4.0752   Max.   :123.460   Max.   :204.62  
+##  NA's   :25       NA's   :115       NA's   :135</code></pre>
 </div>
 </div>
 <div id="carbon-balance-and-growth" class="section level3">
 <h3 class="hasAnchor">
 <a href="#carbon-balance-and-growth" class="anchor"></a>Carbon balance and growth</h3>
+<p>Carbon balance and growth simulations require many parameters that are hard to measure experimentally and, hence, need to be estimated via calibration or expert-based guesses. Here we map only one parameter describing the amount of carbon per dry wood tissue.</p>
 <div id="wood-carbon-content" class="section level4">
 <h4 class="hasAnchor">
 <a href="#wood-carbon-content" class="anchor"></a>Wood carbon content</h4>
-<div class="sourceCode" id="cb302"><pre class="downlit sourceCode r">
+<p>Stem carbon content per stem dry mass is given by TRY (TraitID = 407) and can be easily mapped, after transforming units from mg/g to g/g:</p>
+<div class="sourceCode" id="cb313"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">TRY_WoodC</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"TraitDatabases/TRY/TRY_traits/TRY_407.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">TRY_WoodC</span>, 
                            trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"WoodC"</span> <span class="op">=</span> <span class="st">"StdValue"</span><span class="op">)</span>,
-                           scalar_functions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"WoodC"</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="va">x</span><span class="op">/</span><span class="fl">1000</span><span class="op">}</span><span class="op">)</span>, <span class="co">#mg/g to g/g </span>
+                           scalar_functions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"WoodC"</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="va">x</span><span class="op">/</span><span class="fl">1000</span><span class="op">}</span><span class="op">)</span>, 
                            taxon_column <span class="op">=</span> <span class="st">"AccSpeciesName"</span><span class="op">)</span></code></pre></div>
 <pre><code>## Mapping [StdValue -&gt; WoodC] species: 31 conspecific: 75 genus: 0 family: 0 order: 0 group: 0</code></pre>
 <pre><code>## 113 missing trait values (51.6 %) after populating with input data.</code></pre>
+<p>The distribution of parameter values is:</p>
+<div class="sourceCode" id="cb316"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"WoodC"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##  0.4150  0.4758  0.4817  0.4858  0.5021  0.5920     113</code></pre>
 </div>
 </div>
 </div>
@@ -1928,7 +1988,7 @@
 <h4 class="hasAnchor">
 <a href="#mean-temperature-of-the-coldest-month-and-moisture-index" class="anchor"></a>Mean temperature of the coldest month and moisture index</h4>
 <p>Load yearly climatic data (from Santander’s Group) between 1981 and 2015, for all IFN plots in Spain:</p>
-<div class="sourceCode" id="cb305"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb318"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pr_year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"IFNbioclimatic/Sources/pr_year.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">pet_year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"IFNbioclimatic/Sources/pet_year.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">tmin_year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"IFNbioclimatic/Sources/tmin_year.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -1942,7 +2002,7 @@
 <code>pet_year</code> contains the annual potential evapotranspiration for each year and plot.</li>
 </ul>
 <p>We calculate interannual means for tmin and the annual moisture index, for the period 1995-2005 that includes IFN3 (around 2000):</p>
-<div class="sourceCode" id="cb306"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb319"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">yearStrings</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"1995-01-01"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"2005-01-01"</span><span class="op">)</span>, by<span class="op">=</span><span class="st">"year"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">pet_year</span><span class="op">@</span><span class="va">data</span><span class="op">[</span><span class="va">pet_year</span><span class="op">@</span><span class="va">data</span><span class="op">&lt;</span><span class="fl">100</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span>
 <span class="va">ppet_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowMeans</a></span><span class="op">(</span><span class="va">pr_year</span><span class="op">@</span><span class="va">data</span><span class="op">[</span>,<span class="va">yearStrings</span><span class="op">]</span><span class="op">/</span><span class="va">pet_year</span><span class="op">@</span><span class="va">data</span><span class="op">[</span>,<span class="va">yearStrings</span><span class="op">]</span>, 
@@ -1963,10 +2023,10 @@
 <h4 class="hasAnchor">
 <a href="#percentage-of-par-reaching-the-ground" class="anchor"></a>Percentage of PAR reaching the ground</h4>
 <p>If foliar biomass allometries were available for all species in Spain, PAR calculations could include all Spanish forest plots. However, foliar biomass (and hence LAI) values can only be calculated for Catalonia. We hence, load the list of <code>forest</code> objects corresponding to IFN3 plots in Catalonia:</p>
-<div class="sourceCode" id="cb308"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb321"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">forest_list</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>We then calculate percentage of PAR reaching the ground using <code>medfate</code> function <code><a href="../../reference/Vertical%20profiles.html">vprofile_PARExtinction()</a></code>:</p>
-<div class="sourceCode" id="cb309"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb322"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">par_groundIFN3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">forest_list</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">par_groundIFN3</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">forest_list</span><span class="op">)</span>
 <span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">forest_list</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
@@ -1978,20 +2038,20 @@
   <span class="op">}</span>
 <span class="op">}</span></code></pre></div>
 <p>Some plots could have missing <code>par_groundIFN3</code> values, which could be the result of missing parameter values in <code>SpParams</code>:</p>
-<div class="sourceCode" id="cb310"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb323"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">par_groundIFN3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## FALSE 
 ## 85909</code></pre>
 <p>Subset plots with PAR data:</p>
-<div class="sourceCode" id="cb312"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb325"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">par_groundIFN3</span> <span class="op">&lt;-</span> <span class="va">par_groundIFN3</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">par_groundIFN3</span><span class="op">)</span><span class="op">]</span></code></pre></div>
 </div>
 <div id="subset-of-plots-with-available-information" class="section level4">
 <h4 class="hasAnchor">
 <a href="#subset-of-plots-with-available-information" class="anchor"></a>Subset of plots with available information</h4>
 <p>Define vectors of plot IDs for which there is information about bioclimatic and light conditions:</p>
-<div class="sourceCode" id="cb313"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb326"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">plotBioclim</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/row.names.html">row.names</a></span><span class="op">(</span><span class="va">bioclimIFN34</span><span class="op">)</span>
 <span class="va">plotPAR</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">par_groundIFN3</span><span class="op">)</span></code></pre></div>
 <p>Since we took Spain for bioclimatic limits and Catalonia for PAR, there are more plots with bioclimatic information (n = 81152) than with PAR information (n = 85909).</p>
@@ -2004,19 +2064,19 @@
 <h4 class="hasAnchor">
 <a href="#load-and-filter-ifn3-data" class="anchor"></a>Load and filter IFN3 data</h4>
 <p>We begin by loading IFN3 data tables (regeneration data, tree data and shrub data):</p>
-<div class="sourceCode" id="cb314"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb327"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">reg</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN3/Rdata/regDataIFN3_Spain.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">tree</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN3/Rdata/treeDataIFN3_Spain.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">shrub</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN3/Rdata/shrubDataIFN3_Spain.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>We filter the three datasets according to available plot bioclimatic information:</p>
-<div class="sourceCode" id="cb315"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb328"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">regFiltBioclim</span> <span class="op">&lt;-</span> <span class="va">reg</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">ID</span> <span class="op">%in%</span> <span class="va">plotBioclim</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">mutate</span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <pre><code>## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion</code></pre>
-<div class="sourceCode" id="cb317"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb330"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">treeFiltBioclim</span> <span class="op">&lt;-</span> <span class="va">tree</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">ID</span> <span class="op">%in%</span> <span class="va">plotBioclim</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">mutate</span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -2029,14 +2089,14 @@
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p>We do the same for PAR information, which corresponds to IFN3 plots in Catalonia, only:</p>
-<div class="sourceCode" id="cb318"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb331"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">regFiltPAR</span> <span class="op">&lt;-</span> <span class="va">reg</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">ID</span> <span class="op">%in%</span> <span class="va">plotPAR</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">mutate</span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <pre><code>## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion</code></pre>
-<div class="sourceCode" id="cb320"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb333"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">treeFiltPAR</span> <span class="op">&lt;-</span> <span class="va">tree</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">ID</span> <span class="op">%in%</span> <span class="va">plotPAR</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">mutate</span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -2053,16 +2113,16 @@
 <h4 class="hasAnchor">
 <a href="#target-species" class="anchor"></a>Target species</h4>
 <p>Determine the IFN species to be characterized, by finding unique species codes:</p>
-<div class="sourceCode" id="cb321"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb334"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">spUnique</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">regFiltBioclim</span><span class="op">$</span><span class="va">Species</span>, 
                           <span class="va">treeFiltBioclim</span><span class="op">$</span><span class="va">Species</span>, 
                           <span class="va">shrubFiltBioclim</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>There are 338 species to be characterized.</p>
 <p>Translate IFN species codes to medfate species codes (some species are considered together in <code>medfate</code>):</p>
-<div class="sourceCode" id="cb322"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb335"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Species_medfate</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/translateIFNSpeciesCodes.html">translateIFNSpeciesCodes</a></span><span class="op">(</span><span class="va">spUnique</span>, <span class="va">SpParams</span><span class="op">$</span><span class="va">IFNcodes</span><span class="op">)</span></code></pre></div>
 <p>Some IFN species do not have counterparts in <code>SpParams</code>, as these were discarded when defining the set of target species:</p>
-<div class="sourceCode" id="cb323"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb336"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">Species_medfate</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## FALSE  TRUE 
@@ -2072,10 +2132,10 @@
 <h4 class="hasAnchor">
 <a href="#quantile-tables" class="anchor"></a>Quantile tables</h4>
 <p>Define quantile probabilities (1%, 5% and 10%):</p>
-<div class="sourceCode" id="cb325"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb338"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">probs</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span><span class="op">)</span></code></pre></div>
 <p>We now create quantile output tables, including a column <code>n</code> with the number of plots on which quantiles are based:</p>
-<div class="sourceCode" id="cb326"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb339"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">q_ppet</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Species <span class="op">=</span> <span class="va">spUnique</span>, 
                    Species_medfate <span class="op">=</span> <span class="va">Species_medfate</span>,
                    q1 <span class="op">=</span> <span class="cn">NA</span>,
@@ -2085,7 +2145,7 @@
 <span class="va">q_tmin</span><span class="op">&lt;-</span><span class="va">q_ppet</span>
 <span class="va">q_par</span> <span class="op">&lt;-</span> <span class="va">q_ppet</span></code></pre></div>
 <p>We fill quantile output for minimum temperature and moisture index. This is done by finding (for each species), the set of plots where the species is present (either as adult, regeneration or shrub) and subseting the bioclimatic information corresponding to this set of plots. Quantiles are estimated from this set, as long as it contains more than 1 plot. The number of plots in the set is also stored:</p>
-<div class="sourceCode" id="cb327"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb340"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">spUnique</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">sp</span> <span class="op">=</span> <span class="va">spUnique</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>
   <span class="va">ids_reg_bioclim</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">regFiltBioclim</span><span class="op">$</span><span class="va">ID</span><span class="op">[</span><span class="va">regFiltBioclim</span><span class="op">$</span><span class="va">Species</span><span class="op">==</span><span class="va">sp</span><span class="op">]</span><span class="op">)</span>
@@ -2118,7 +2178,7 @@
 ## 5       5              91 0.4252543 0.5574783 0.5911608   54
 ## 6       6             142 0.3132141 0.4302611 0.4747681  691</code></pre>
 <p>We now fill quantile output for PAR limits in a similar way. Here we focus on regeneration and shrub data tables only, because the adults in the plot may have recruited long ago, when light conditions in the ground where quite different:</p>
-<div class="sourceCode" id="cb330"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb343"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">spUnique</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">sp</span> <span class="op">=</span> <span class="va">spUnique</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>
   <span class="va">ids_reg_par</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">regFiltPAR</span><span class="op">$</span><span class="va">ID</span><span class="op">[</span><span class="va">regFiltPAR</span><span class="op">$</span><span class="va">Species</span><span class="op">==</span><span class="va">sp</span><span class="op">]</span><span class="op">)</span>
@@ -2144,7 +2204,7 @@
 <h3 class="hasAnchor">
 <a href="#fill-medfate-parameters" class="anchor"></a>Fill medfate parameters</h3>
 <p>For each species in medfate we find the corresponding IFN species in the quantile tables. If the relationship is univocal, 1% quantile value of the IFN species is stored. If there are more than one IFN species for the target medfate species, we keep the weighted average of 1% quantile values, using the number of plots as weights.</p>
-<div class="sourceCode" id="cb332"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb345"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">SPtarget</span> <span class="op">=</span> <span class="va">SpParams</span><span class="op">$</span><span class="va">SpIndex</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>
   <span class="co">#MinFPARRecr</span>
@@ -2190,7 +2250,7 @@
 
 ## Warning in n * q1: longer object length is not a multiple of shorter object
 ## length</code></pre>
-<div class="sourceCode" id="cb334"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb347"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"MinFPARRecr"</span>,<span class="st">"MinTempRecr"</span>,<span class="st">"MinMoistureRecr"</span><span class="op">)</span>, drop<span class="op">=</span><span class="cn">FALSE</span><span class="op">]</span><span class="op">)</span></code></pre></div>
 <pre><code>##   MinFPARRecr        MinTempRecr      MinMoistureRecr 
 ##  Min.   : 0.00000   Min.   :-5.8988   Min.   :0.1790  
