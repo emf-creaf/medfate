@@ -76,7 +76,7 @@
       <h1 data-toc-skip>Species parameterization for Spain</h1>
                         <h4 class="author">Miquel De Cáceres</h4>
             
-            <h4 class="date">2021-07-05</h4>
+            <h4 class="date">2021-07-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/master/vignettes/parametrization/SpeciesParameterizationSpain.Rmd"><code>vignettes/parametrization/SpeciesParameterizationSpain.Rmd</code></a></small>
       <div class="hidden name"><code>SpeciesParameterizationSpain.Rmd</code></div>
@@ -88,7 +88,8 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>This vignette describes the procedures used to obtain the species parameter data table <code>SpParamsMED</code> included in package <strong>medfate</strong>. The taxon entities chosen are intended to cover most of the taxa reported in Spanish National Forest Inventory surveys (<em>Inventario Forestal Nacional</em> or IFN).</p>
+<p>This vignette describes the procedures used to obtain the species parameter data table <code>SpParamsMED</code> included in package <strong>medfate</strong>. The taxon entities chosen are intended to cover most of the woody plant taxa in Spain, as they are reported in the Spanish National Forest Inventory surveys (<em>Inventario Forestal Nacional</em> or IFN).</p>
+<p>The vignette is not self-contained, in the sense that it cannot be reproduced without access to data sets that are not included. Nevertheless, it is intended to serve as example of species parameterization for other regions.</p>
 <div id="required-packages" class="section level3">
 <h3 class="hasAnchor">
 <a href="#required-packages" class="anchor"></a>Required packages</h3>
@@ -98,13 +99,13 @@
 <p>If the version at CRAN is older, the package should be installed from GitHub via <code><a href="https://remotes.r-lib.org/reference/install_github.html">remotes::install_github()</a></code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"emf-creaf/medfate"</span><span class="op">)</span></code></pre></div>
-<p>Package <strong>medfateutils</strong> is important for the parametrization process, as it includes several functions that facilitate parsing data sources into parameter values. Package <strong>medfateutils</strong> is installed only from GitHub:</p>
+<p>Package <strong>medfateutils</strong> is important for the species parameterization process, as it includes several functions that facilitate parsing data sources into parameter values. Package <strong>medfateutils</strong> is installed only from GitHub:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"emf-creaf/medfateutils"</span><span class="op">)</span></code></pre></div>
-<p>Package <strong>medfuels</strong> is needed because it includes allometric coefficients for Mediterranean shrub species. As before, package <strong>medfuels</strong> is installed only from GitHub:</p>
+<p>Package <strong>medfuels</strong> is also needed because it includes allometric coefficients for Mediterranean shrub species. As before, package <strong>medfuels</strong> is installed only from GitHub:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"spif-ctfc/medfuels"</span><span class="op">)</span></code></pre></div>
-<p>Once we have <strong>medfate</strong>, <strong>medfateutils</strong> and <strong>medfuels</strong>, we load them as well as other packages needed for this vignette:</p>
+<p>Once we have <strong>medfate</strong>, <strong>medfateutils</strong> and <strong>medfuels</strong>, we load them and other common packages that we will employ in this vignette:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/emf-creaf/medfate">medfate</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">medfateutils</span><span class="op">)</span>
@@ -155,12 +156,12 @@
 ## [100] "RecrTreeHeight"       "RecrShrubHeight"      "RecrTreeDensity"     
 ## [103] "RecrShrubCover"       "RecrZ50"              "RecrZ95"             
 ## [106] "MinTempRecr"          "MinMoistureRecr"      "MinFPARRecr"</code></pre>
-<p>It is obvious that such a sheer number of parameters cannot be searched for manually, even for a small number of target species. Hence, it is important to draw values for data bases. Not all model parameters have their counterpart in publicly-available databases, and even when using trait data bases it is unlikely that one will find appropriate parameter values for all species. Luckily, <strong>medfate</strong> has inbuilt imputation procedures to estimate missing values for many parameters before starting model simulations. However, imputed parameter estimates will normally be worse than estimates coming from data bases. Hence, we should put a strong effort in finding source parameter data before relying on inbuilt imputation.</p>
+<p>It is obvious that such a sheer number of parameters cannot be searched for manually, even for a small number of target species. Hence, it is important to draw values from allometric and plant trait data bases. Not all model parameters have their counterpart in publicly-available databases, and even when using data bases it is unlikely that one will find appropriate parameter values for all species. To help with this situation, <strong>medfate</strong> has <em>inbuilt imputation procedures</em> to estimate missing values for many parameters before starting model simulations. However, imputed parameter estimates will normally be worse than estimates coming from data bases. Hence, we should put a strong effort in finding source parameter data before relying on inbuilt imputation.</p>
 </div>
 <div id="source-data-paths" class="section level3">
 <h3 class="hasAnchor">
 <a href="#source-data-paths" class="anchor"></a>Source data paths</h3>
-<p>We begin by defining file paths (in my computer) to access source data for parameter filling. Source data includes forest inventory (i.e. IFN) data as well as trait and allometry data bases:</p>
+<p>We begin by defining file paths (in my computer) to access source data for parameter filling. Source data includes forest inventory (i.e. IFN) data as well as plant trait and allometric data bases:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">IFN_path</span> <span class="op">=</span> <span class="st">"/home/miquel/OneDrive/Datasets/IFN/"</span>
 <span class="va">DB_path</span> <span class="op">=</span> <span class="st">"/home/miquel/OneDrive/Professional/Recerca/MedfateSpeciesParametrization/"</span></code></pre></div>
@@ -168,7 +169,7 @@
 <div id="steps-to-build-a-species-parameter-table" class="section level3">
 <h3 class="hasAnchor">
 <a href="#steps-to-build-a-species-parameter-table" class="anchor"></a>Steps to build a species parameter table</h3>
-<p>The following sections describe different steps that we used to obtain the species parameter table <code>SpParamsMED</code> for simulations with <strong>medfate</strong>, which can be grouped into five main steps:</p>
+<p>The following sections describe different steps that we used to obtain the species parameter table <code>SpParamsMED</code> for simulations with <strong>medfate</strong>, which can be grouped into five main tasks:</p>
 <ol style="list-style-type: decimal">
 <li>Initialize the parameter table with target taxonomic entities.</li>
 <li>Draw species parameters from forest inventory (IFN in our case) data.</li>
@@ -181,11 +182,12 @@
 <div id="initialize-species-parameter-table-for-ifn" class="section level2">
 <h2 class="hasAnchor">
 <a href="#initialize-species-parameter-table-for-ifn" class="anchor"></a>Initialize species parameter table for IFN</h2>
-<p>The first step is to define the target entities that will be considered functionally distinct in <strong>medfate</strong> simulations. There is no <em>a priori</em> need to limit such entities to taxons, nor to particular taxonomic ranks. Nevertheless, in this vignette we will define taxonomic entities either at species or genus level.</p>
+<p>The first task is to define the target entities that will be considered functionally distinct in <strong>medfate</strong> simulations. There is no <em>a priori</em> need to limit such entities to biological taxa, nor to particular taxonomic ranks. Nevertheless, in this vignette we will define taxonomic entities either at the <strong>species</strong> or <strong>genus</strong> levels.</p>
 <div id="load-ifn-taxon-codes" class="section level3">
 <h3 class="hasAnchor">
 <a href="#load-ifn-taxon-codes" class="anchor"></a>Load IFN taxon codes</h3>
-<p>Model simulations will normally entail a resolution of target entities lower than forest inventory data, because a finer biological resolution results in higher numbers of missing parameter values. Therefore, it will be usual to lump entities treated as separated in the forest inventory. In our case, we begin by loading shrub and tree species codes used in the second, third, and fourth editions of IFN, i.e. IFN2, IFN3 and IFN4:</p>
+<p>Model simulations will normally entail a lower biological resolution of target entities than used in forest inventory data, because the finer the biological resolution the large the number of missing parameter values. Therefore, it will be usual to consider together entities that are treated as distinct in the forest inventory.</p>
+<p>In our case, we begin by loading shrub and tree species codes used in the second, third, and fourth editions of IFN, i.e. IFN2, IFN3 and IFN4:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">IFN23_species_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Sources/SpeciesCodesIFN23.txt"</span><span class="op">)</span>, 
                              sep<span class="op">=</span><span class="st">"\t"</span><span class="op">)</span>
@@ -207,7 +209,7 @@
                               <span class="va">IFN4_shrub_species_data</span><span class="op">[</span><span class="va">newShrubs</span>, <span class="op">]</span>, 
                               <span class="va">IFN4_tree_species_data</span><span class="op">[</span><span class="va">newTrees</span>,<span class="op">]</span><span class="op">)</span>
 <span class="va">IFN_species_data</span> <span class="op">&lt;-</span> <span class="va">IFN_species_data</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">IFN_species_data</span><span class="op">$</span><span class="va">IFNCODE</span><span class="op">)</span><span class="op">)</span>,<span class="op">]</span></code></pre></div>
-<p>The final table of species names and codes has 411 and looks like:</p>
+<p>The final table of species names and codes has 411 rows and looks like:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">IFN_species_data</span><span class="op">)</span></code></pre></div>
 <pre><code>##   IFNCODE               IFNNAME
@@ -217,11 +219,12 @@
 ## 4       4     Rhamnus alaternus
 ## 5       5    Euonymus europaeus
 ## 6       6       Myrtus communis</code></pre>
+<p>So far, we used the word <em>species</em> for IFN biological entities, but in fact not all IFN entities are binomial species. In some cases, subspecies are recorded, while in others identification is at genus level or even uses non-scientific names. Hence, the set of entities needs to be revised and we illustrate the process in the following two sections.</p>
 </div>
 <div id="define-ifn-codes-to-exclude" class="section level3">
 <h3 class="hasAnchor">
 <a href="#define-ifn-codes-to-exclude" class="anchor"></a>Define IFN codes to exclude</h3>
-<p>We used the word ‘species’ for IFN entities, but in fact not all IFN entities are binomial species. In some cases, subspecies are recorded, while in others identification is at genus level or even uses non-scientific names. We thus need to manually define a set of entities (IFN codes) to be excluded because they have low taxonomic content or refer to unsuitable growth forms (vines):</p>
+<p>We need to manually define a set of entities (IFN codes) to be excluded because they have low taxonomic information, refer to habitat descriptions or to undesired growth forms (e.g. vines):</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">codesOut</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"19"</span>, <span class="co"># Otras coniferas </span>
               <span class="st">"10"</span>, <span class="co"># Sin asignar</span>
@@ -251,7 +254,7 @@
 <p>We remove taxa from the IFN taxonomic definition data frame:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">IFN_species_data</span> <span class="op">&lt;-</span> <span class="va">IFN_species_data</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">IFN_species_data</span><span class="op">$</span><span class="va">IFNCODE</span> <span class="op">%in%</span> <span class="va">codesOut</span><span class="op">)</span>, <span class="op">]</span></code></pre></div>
-<p>so that we are kept with 387 taxa.</p>
+<p>so that we are left with 387 taxa.</p>
 </div>
 <div id="define-taxonomic-entities-to-merge-into-groups" class="section level3">
 <h3 class="hasAnchor">
@@ -321,7 +324,7 @@
                  <span class="st">"Vaccinium spp.:137/1137"</span>,
                  <span class="st">"Viburnum spp.:115/1115/4115/3115/2115"</span>
                  <span class="op">)</span></code></pre></div>
-<p>Groups were manually defined as strings where ‘:’ was used to separate the group name from the set of codes forming the group, which were separated using ‘/’. We also define groups of taxa at species level, where different synonyms are merged, different codes have been used for the same species or the species have subspecies entities which we want to merge:</p>
+<p>Groups were manually defined as strings where ‘:’ was used to separate the group name from the set of codes forming the group, which were separated using ‘/’. We also define groups of taxa at species level, where different synonyms are merged, different codes have been used for the same species, or to merge sub-specific records:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">assimilated_species</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Acer campestre:76/776"</span>,
                        <span class="st">"Amelanchier ovalis:2/200"</span>,
@@ -349,7 +352,7 @@
                        <span class="st">"Quercus faginea:44/344"</span>,
                        <span class="st">"Quercus suber:46/646/746/846/946"</span>,
                        <span class="st">"Salvia rosmarinus:114"</span><span class="op">)</span> <span class="co"># Rosmarinus officinalis -&gt; Salvia rosmarinus</span></code></pre></div>
-<p>We now build a data frame with group names and codes, by merging the information of these two groups. We now separate group names and the set of codes defining the group:</p>
+<p>We now build a data frame with group names and codes, by merging the information of these two groups of taxa. We also separate group names from the set of codes defining the group into columns of a data frame:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">groups_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="st">"Groups"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">genus_level</span>,
                                      <span class="va">assimilated_species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -366,13 +369,13 @@
 <div id="initialize-species-parameter-table" class="section level3">
 <h3 class="hasAnchor">
 <a href="#initialize-species-parameter-table" class="anchor"></a>Initialize species parameter table</h3>
-<p>Once we have IFN species names and codes, as well the definition of IFN entities to merge, we can call function <code><a href="https://rdrr.io/pkg/medfateutils/man/initSpParams.html">initSpParams()</a></code> from package <strong>medfateutils</strong>. This function also takes the data frame <code>SpParamsDefinition</code> as argument, from which it takes the set of parameter names to be filled:</p>
+<p>Once we have IFN species names and codes, as well as the definition of the IFN biological entities to merge, we can call function <code><a href="https://rdrr.io/pkg/medfateutils/man/initSpParams.html">initSpParams()</a></code> from package <strong>medfateutils</strong>. This function also takes the data frame <code>SpParamsDefinition</code> as argument, from which it takes the set of parameter names to be filled:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/initSpParams.html">initSpParams</a></span><span class="op">(</span><span class="va">IFN_species_data</span><span class="op">$</span><span class="va">IFNCODE</span>, <span class="va">IFN_species_data</span><span class="op">$</span><span class="va">IFNNAME</span>,
                         <span class="va">SpParamsDefinition</span>,
                         <span class="va">groups_df</span><span class="op">$</span><span class="va">group_codes</span>, <span class="va">groups_df</span><span class="op">$</span><span class="va">group_names</span>,
                         fill_taxonomic <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<p>Option <code>fill_taxonomic</code> tells function <code><a href="https://rdrr.io/pkg/medfateutils/man/initSpParams.html">initSpParams()</a></code> to use package <strong>taxize</strong> to find taxonomic classification of the species/genus entities.</p>
+<p>Option <code>fill_taxonomic</code> tells function <code><a href="https://rdrr.io/pkg/medfateutils/man/initSpParams.html">initSpParams()</a></code> to use package <strong>taxize</strong> to find taxonomic classification of the species/genus entities. This provides very useful information for parameterization, but makes the process of initialization a bit slower.</p>
 <p>The result of calling <code><a href="https://rdrr.io/pkg/medfateutils/man/initSpParams.html">initSpParams()</a></code> is a data frame with <code><a href="https://rdrr.io/r/base/nrow.html">nrow(SpParams)</a></code> rows corresponding to target entities and columns corresponding to the parameters defined in <code>SpParamsDefinition</code>. Most parameters are missing, obviously, but <code><a href="https://rdrr.io/pkg/medfateutils/man/initSpParams.html">initSpParams()</a></code> already filled taxonomic data:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span><span class="op">)</span></code></pre></div>
@@ -395,7 +398,7 @@
 <div id="parameters-drawn-from-ifn-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#parameters-drawn-from-ifn-data" class="anchor"></a>Parameters drawn from IFN data</h2>
-<p>Some plant size parameters, such as maximum height or minimum/maximum values of the height-to-diameter ratio, can be derived from forest inventory data. In addition, it is important that medfate’s growth form (either “Tree” or “Shrub”) matches the treatment given in forest inventory surveys. Diameters are normally measured in “Tree” entities, whereas shrubs are often measured using cover indices. Thus, the growth form parameter should also be derived from forest inventory.</p>
+<p>Some plant size parameters, such as maximum height or minimum/maximum values of the height-to-diameter ratio, can be derived from forest inventory data. In addition, it is important that medfate’s parameter <code>GrowthForm</code> (either “Tree”, “Tree/Shrub” or “Shrub”) matches the treatment given in forest inventory surveys. Diameters are normally measured in “Tree” entities, whereas shrubs are often measured using cover indices, and some species may be recorded in either way. Thus, the <code>GrowthForm</code> parameter should also be derived from forest inventory.</p>
 <div id="load-ifn-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#load-ifn-data" class="anchor"></a>Load IFN data</h3>
@@ -430,7 +433,7 @@
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">shrub_codes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">shrubDataIFN</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span>
 <span class="va">tree_codes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">treeDataIFN</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span></code></pre></div>
-<p>Before populating growth form, we can check how many species appear both as trees and shrubs:</p>
+<p>Before populating parameter <code>GrowthForm</code>, we can check how many species appear both as trees and shrubs:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">shrub_codes</span><span class="op">)</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">tree_codes</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 20</code></pre>
@@ -448,7 +451,7 @@
 <pre><code>## Species 'Genista anglica' assigned growth form 'Shrub'</code></pre>
 <pre><code>## Species 'Genista dorycnifolia' assigned growth form 'Shrub'</code></pre>
 <pre><code>## Species 'Genista hystrix' assigned growth form 'Shrub'</code></pre>
-<p>Some codes (particularly, those excluded above) may not be recognized according to the target entity definition of <code>SpParams</code> and are ignored. The option <code>fill_fromGenus = TRUE</code> is used to tell function <code><a href="https://rdrr.io/pkg/medfateutils/man/populateSpParamsFromInventory.html">populateGrowthForm()</a></code> that all species of the same entity should have the same growth form, so that even if some codes are not mentioned, for whatever reason, growth forms are also defined. Some species may have been defined in the IFN species definition but then be missing from the tree/shrub tables. We identify them:</p>
+<p>Some codes (particularly, those excluded above) may not be recognized according to the target entity definition of <code>SpParams</code> and are ignored. The option <code>fill_fromGenus = TRUE</code> was used to tell function <code><a href="https://rdrr.io/pkg/medfateutils/man/populateSpParamsFromInventory.html">populateGrowthForm()</a></code> to impute growth form of species with missing value from the growth form of other species of the same genus, if homogeneous. Some species may still have missing growth form after the imputation process. We identify them:</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">missingGrowthFormSpecies</span> <span class="op">=</span> <span class="va">SpParams</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">GrowthForm</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Name"</span><span class="op">)</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">missingGrowthFormSpecies</span><span class="op">)</span></code></pre></div>
