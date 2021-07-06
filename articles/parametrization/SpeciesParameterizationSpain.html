@@ -158,14 +158,6 @@
 ## [106] "MinTempRecr"          "MinMoistureRecr"      "MinFPARRecr"</code></pre>
 <p>It is obvious that such a sheer number of parameters cannot be searched for manually, even for a small number of target species. Hence, it is important to draw values from allometric and plant trait data bases. Not all model parameters have their counterpart in publicly-available databases, and even when using data bases it is unlikely that one will find appropriate parameter values for all species. To help with this situation, <strong>medfate</strong> has <em>inbuilt imputation procedures</em> to estimate missing values for many parameters before starting model simulations. However, imputed parameter estimates will normally be worse than estimates coming from data bases. Hence, we should put a strong effort in finding source parameter data before relying on inbuilt imputation.</p>
 </div>
-<div id="source-data-paths" class="section level3">
-<h3 class="hasAnchor">
-<a href="#source-data-paths" class="anchor"></a>Source data paths</h3>
-<p>We begin by defining file paths (in my computer) to access source data for parameter filling. Source data includes forest inventory (i.e. IFN) data as well as plant trait and allometric data bases:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">IFN_path</span> <span class="op">=</span> <span class="st">"/home/miquel/OneDrive/Datasets/IFN/"</span>
-<span class="va">DB_path</span> <span class="op">=</span> <span class="st">"/home/miquel/OneDrive/Professional/Recerca/MedfateSpeciesParametrization/"</span></code></pre></div>
-</div>
 <div id="steps-to-build-a-species-parameter-table" class="section level3">
 <h3 class="hasAnchor">
 <a href="#steps-to-build-a-species-parameter-table" class="anchor"></a>Steps to build a species parameter table</h3>
@@ -177,6 +169,14 @@
 <li>Populate plant functional traits from available data bases</li>
 <li>Populate recruitment limits using bioclimatic data, forest inventory data and previous parameter estimates.</li>
 </ol>
+</div>
+<div id="source-data-paths" class="section level3">
+<h3 class="hasAnchor">
+<a href="#source-data-paths" class="anchor"></a>Source data paths</h3>
+<p>Befores starting, we define file paths (in my computer) to access source data for parameter filling. Source data includes forest inventory (i.e. IFN) data as well as plant trait and allometric data bases:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">IFN_path</span> <span class="op">=</span> <span class="st">"/home/miquel/OneDrive/Datasets/IFN/"</span>
+<span class="va">DB_path</span> <span class="op">=</span> <span class="st">"/home/miquel/OneDrive/Professional/Recerca/MedfateSpeciesParametrization/"</span></code></pre></div>
 </div>
 </div>
 <div id="initialize-species-parameter-table-for-ifn" class="section level2">
@@ -940,54 +940,54 @@
 <div class="sourceCode" id="cb108"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fn_hydratry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"TraitDatabases/HydraTRY/HydraTRY.xlsx"</span><span class="op">)</span>
 <span class="va">hydratry</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="va">fn_hydratry</span>, rowNames <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> </code></pre></div>
-<p>Plant hydraulic traits can also be found in <span class="citation">(Martin-StPaul, Delzon, and Cochard 2017)</span>:</p>
+<p>Plant hydraulic traits can also be found in <span class="citation">Martin-StPaul, Delzon, and Cochard (2017)</span>:</p>
 <div class="sourceCode" id="cb109"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fn_martin_stpaul</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"TraitDatabases/MartinStPaul_et_al_2017/DataBase.xlsx"</span><span class="op">)</span>
 <span class="va">martin_stpaul</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="va">fn_martin_stpaul</span>, sheet<span class="op">=</span><span class="st">"ALL"</span><span class="op">)</span>
 <span class="va">martin_stpaul</span><span class="op">&lt;-</span><span class="va">martin_stpaul</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"P50"</span>, <span class="st">"P12"</span>, <span class="st">"Ptlp"</span><span class="op">)</span><span class="op">]</span></code></pre></div>
-<p>and <span class="citation">(Choat et al. 2012)</span>:</p>
+<p>and <span class="citation">Choat et al. (2012)</span>:</p>
 <div class="sourceCode" id="cb110"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fn_choat</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"TraitDatabases/Choat_et_al_2012/nature11688-s2.xls"</span><span class="op">)</span>
 <span class="va">choat</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">fn_choat</span><span class="op">)</span>
 <span class="va">choat</span> <span class="op">&lt;-</span><span class="va">choat</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"P50"</span>, <span class="st">"P88"</span><span class="op">)</span><span class="op">]</span> <span class="co"># Remove unit row</span></code></pre></div>
-<p><span class="citation">(Bartlett, Scoffoni, and Sack 2012)</span></p>
+<p><span class="citation">Bartlett, Scoffoni, and Sack (2012)</span> provides values for leaf pressure-volume curves:</p>
 <div class="sourceCode" id="cb111"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fn_bartlett</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/Bartlett_et_al_2012/Bartlett_2012_ELE_data.xlsx"</span><span class="op">)</span>
 <span class="va">bartlett</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="va">fn_bartlett</span>, rowNames <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> </code></pre></div>
-<p><span class="citation">(Duursma et al. 2018)</span></p>
+<p><span class="citation">Duursma et al. (2018)</span> is a good source of minimum stomatal conductance:</p>
 <div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fn_duursma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/Duursma_et_al_2018/gmindatabase.csv"</span><span class="op">)</span>
 <span class="va">duursma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv2</a></span><span class="op">(</span><span class="va">fn_duursma</span>, sep<span class="op">=</span><span class="st">","</span><span class="op">)</span></code></pre></div>
-<p><span class="citation">(Hoshika et al. 2018)</span></p>
+<p>whereas <span class="citation">Hoshika et al. (2018)</span> provides maximum stomatal conductance values:</p>
 <div class="sourceCode" id="cb113"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fn_hoshika</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/Hoshika_et_al_2018/Hoshika_et_al_2018.xlsx"</span><span class="op">)</span>
 <span class="va">hoshika</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="va">fn_hoshika</span><span class="op">)</span> 
 <span class="va">hoshika</span><span class="op">$</span><span class="va">Species</span> <span class="op">&lt;-</span> <span class="fu">str_replace</span><span class="op">(</span>string <span class="op">=</span> <span class="va">hoshika</span><span class="op">$</span><span class="va">Species</span>,pattern <span class="op">=</span> <span class="st">"_"</span>, replacement <span class="op">=</span> <span class="st">" "</span><span class="op">)</span></code></pre></div>
-<p>BROT2 <span class="citation">(Tavşanoǧlu and Pausas 2018)</span></p>
+<p>BROT2 database <span class="citation">(Tavşanoǧlu and Pausas 2018)</span> is particularly useful for Mediterranean plants, containing many anatomical, phenological and morphological traits:</p>
 <div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fn_brot2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/Brot/BROT2_dat.csv"</span><span class="op">)</span>
 <span class="va">brot2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv2</a></span><span class="op">(</span><span class="va">fn_brot2</span><span class="op">)</span></code></pre></div>
-<p>Global wood density database <span class="citation">(Zanne et al. 2009)</span>:</p>
+<p>Another source of data is the Global wood density database <span class="citation">(Zanne et al. 2009)</span>:</p>
 <div class="sourceCode" id="cb115"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fn_gwdd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/GlobalWoodDensityDatabase/GlobalWoodDensityDatabase.xls"</span><span class="op">)</span>
 <span class="va">gwdd</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">fn_gwdd</span>, sheet<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
-<p>Flammability</p>
+<p>and <span class="citation">Yebra et al. (2019)</span> provides estimates of fine fuel moisture content for a large number of species worldwide:</p>
 <div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fn_yebra</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/LFMC_Yebra_et_al_2019/Globe-LFMC-v2.xlsx"</span><span class="op">)</span>
+<span class="va">fmc_yebra</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="va">fn_yebra</span>, sheet<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
+<p>We complemented the formed data bases with our own compilation of plant traits, including flammability traits:</p>
+<div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fn_flam</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/FuelAttributes/FuelAttributes.xlsx"</span><span class="op">)</span>
 <span class="va">flam</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">fn_flam</span>, sheet<span class="op">=</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
-<p>Fine-fuel ratio</p>
-<div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
+<p>the ratio of leaf dry mass to fine fuel dry mass:</p>
+<div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fn_ffr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/FineFuelRatio/FineFuelRatio.xlsx"</span><span class="op">)</span>
 <span class="va">ffr</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">fn_ffr</span>, sheet<span class="op">=</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
-<p>Fuel moisture content</p>
-<div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
+<p>and minimum/maximum fuel moisture contents:</p>
+<div class="sourceCode" id="cb119"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fn_fmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/FMC/FMC.xlsx"</span><span class="op">)</span>
 <span class="va">fmc_field</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">fn_fmc</span>, sheet<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
 <span class="va">fmc_bib</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">fn_fmc</span>, sheet<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
-<p>Yebra et al. (2020)</p>
-<div class="sourceCode" id="cb119"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fn_yebra</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/LFMC_Yebra_et_al_2020/Globe-LFMC-v2.xlsx"</span><span class="op">)</span>
-<span class="va">fmc_yebra</span> <span class="op">&lt;-</span> <span class="fu">openxlsx</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/read.xlsx.html">read.xlsx</a></span><span class="op">(</span><span class="va">fn_yebra</span>, sheet<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="plantleaf-classification" class="section level3">
 <h3 class="hasAnchor">
@@ -1095,7 +1095,7 @@
                                  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Broad"</span>, <span class="st">"Needle"</span>, <span class="st">"Scale"</span>, <span class="st">"Linear"</span>, <span class="st">"Spines"</span><span class="op">)</span>,
                                <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AccSpeciesName"</span>, <span class="st">"OrigValueStr"</span><span class="op">)</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">TRY_leaf_shape</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"LeafShape"</span><span class="op">)</span></code></pre></div>
-<p>Leaf shape data is also available from database BROT2. We also standardize BROT2 leaf shape values into the same five categories:</p>
+<p>Leaf shape data is also available from database BROT2 <span class="citation">(Tavşanoǧlu and Pausas 2018)</span>. We also standardize BROT2 leaf shape values into the same five categories:</p>
 <div class="sourceCode" id="cb133"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">brot2_LeafShape</span> <span class="op">&lt;-</span> <span class="va">brot2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Trait</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LeafShape"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Taxon"</span>, <span class="st">"Data"</span><span class="op">)</span><span class="op">)</span>
@@ -1143,7 +1143,7 @@
                              breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">225</span>, <span class="fl">2025</span>,<span class="fl">100000</span><span class="op">)</span>, labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Small"</span>, <span class="st">"Medium"</span>, <span class="st">"Large"</span><span class="op">)</span><span class="op">)</span> 
 <span class="va">TRY_LeafSize</span><span class="op">&lt;-</span><span class="va">TRY_leaf_area</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AccSpeciesName"</span>, <span class="st">"LeafSize"</span><span class="op">)</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">TRY_LeafSize</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Species"</span></code></pre></div>
-<p>Database BROT2 contains both leaf area measurements and categorical leaf size data. We thus split BROT2 data into leaf area values and leaf size strings:</p>
+<p>Database BROT2 <span class="citation">(Tavşanoǧlu and Pausas 2018)</span> contains both leaf area measurements and categorical leaf size data. We thus split BROT2 data into leaf area values and leaf size strings:</p>
 <div class="sourceCode" id="cb144"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">brot2_LeafArea</span> <span class="op">&lt;-</span> <span class="va">brot2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Trait</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LeafArea"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Taxon"</span>, <span class="st">"Trait"</span>, <span class="st">"Data"</span>, <span class="st">"Units"</span><span class="op">)</span><span class="op">)</span>
@@ -1261,7 +1261,7 @@
                                                                <span class="st">"drought-semideciduous"</span><span class="op">)</span><span class="op">]</span>
 <span class="va">TRY_phenology</span><span class="op">&lt;-</span><span class="va">TRY_phenology</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AccSpeciesName"</span>, <span class="st">"OrigValueStr"</span><span class="op">)</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">TRY_phenology</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>,<span class="st">"LeafPhenology"</span><span class="op">)</span></code></pre></div>
-<p>Leaf phenology types are also available in BROT2, so we select them and map the existing values into <strong>medfate</strong> categories:</p>
+<p>Leaf phenology types are also available in BROT2 <span class="citation">(Tavşanoǧlu and Pausas 2018)</span>, so we select them and map the existing values into <strong>medfate</strong> categories:</p>
 <div class="sourceCode" id="cb157"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">brot2_LeafPhenology</span> <span class="op">&lt;-</span> <span class="va">brot2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Trait</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LeafPhenology"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Taxon"</span>, <span class="st">"Data"</span><span class="op">)</span><span class="op">)</span>
@@ -1319,7 +1319,7 @@
                                            <span class="st">"RootDepth"</span><span class="op">)</span>,<span class="op">]</span>
 <span class="va">TRY_Z95</span> <span class="op">&lt;-</span> <span class="va">TRY_Z95</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AccSpeciesName"</span>, <span class="st">"StdValue"</span><span class="op">)</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">TRY_Z95</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Z95"</span><span class="op">)</span></code></pre></div>
-<p>Rooting depth values are also available from BROT2 database (some of these records are also in TRY). As before, we assume values to correspond to parameter <code>Z95</code>.</p>
+<p>Rooting depth values are also available from BROT2 <span class="citation">(Tavşanoǧlu and Pausas 2018)</span> (some of these records are also in TRY). As before, we assume values to correspond to parameter <code>Z95</code>.</p>
 <div class="sourceCode" id="cb168"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">brot2_Z95</span> <span class="op">&lt;-</span> <span class="va">brot2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Trait</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"RootDepth"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Taxon"</span>, <span class="st">"Data"</span><span class="op">)</span><span class="op">)</span>
@@ -1371,7 +1371,7 @@
 <code class="sourceCode R"><span class="va">TRY_LeafDuration</span>  <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"TraitDatabases/TRY/TRY_traits/TRY_12.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">TRY_LeafDuration</span> <span class="op">&lt;-</span> <span class="va">TRY_LeafDuration</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AccSpeciesName"</span>, <span class="st">"StdValue"</span><span class="op">)</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">TRY_LeafDuration</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"LeafDuration"</span><span class="op">)</span></code></pre></div>
-<p>Leaf lifespan is also available from BROT2, also in number of months:</p>
+<p>Leaf lifespan is also available from BROT2 <span class="citation">(Tavşanoǧlu and Pausas 2018)</span>, also in number of months:</p>
 <div class="sourceCode" id="cb180"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">hydratry</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">hydratry</span><span class="op">)</span><span class="op">==</span><span class="st">"LL"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"LeafDuration"</span>
 <span class="va">brot2_LeafDuration</span> <span class="op">&lt;-</span> <span class="va">brot2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Trait</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LeafLifespan"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -1404,13 +1404,13 @@
 <code class="sourceCode R"><span class="va">TRY_SLA</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"TraitDatabases/TRY/TRY_traits/TRY_3117.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">TRY_SLA</span> <span class="op">&lt;-</span> <span class="va">TRY_SLA</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AccSpeciesName"</span>, <span class="st">"StdValue"</span><span class="op">)</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">TRY_SLA</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"SLA"</span><span class="op">)</span></code></pre></div>
-<p>We also select SLA records from BROT2, already in the same units as TRY.</p>
+<p>We also select SLA records from BROT2 <span class="citation">(Tavşanoǧlu and Pausas 2018)</span>, already in the same units as TRY.</p>
 <div class="sourceCode" id="cb185"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">brot2_SLA</span> <span class="op">&lt;-</span> <span class="va">brot2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Trait</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SLA"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Taxon"</span>, <span class="st">"Data"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">brot2_SLA</span><span class="op">$</span><span class="va">Data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">brot2_SLA</span><span class="op">$</span><span class="va">Data</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">brot2_SLA</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"SLA"</span><span class="op">)</span></code></pre></div>
-<p>And we merge these two sources with SLA values coming from database HYDRATRY. The whole set is used to call <code><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits()</a></code> and populate <span class="math inline">\(SLA\)</span> parameter values without any transformation:</p>
+<p>And we merge these two sources with SLA values coming from database HydraTRY <span class="citation">(Mencuccini et al. 2019)</span>. The whole set is used to call <code><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits()</a></code> and populate <span class="math inline">\(SLA\)</span> parameter values without any transformation:</p>
 <div class="sourceCode" id="cb186"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">SLA_data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">hydratry</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>,<span class="st">"SLA"</span><span class="op">)</span><span class="op">]</span>,
                  <span class="va">TRY_SLA</span>,
@@ -1451,14 +1451,14 @@
 <code class="sourceCode R"><span class="va">TRY_WoodDensity</span>  <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"TraitDatabases/TRY/TRY_traits/TRY_4.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">TRY_WoodDensity</span> <span class="op">&lt;-</span> <span class="va">TRY_WoodDensity</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AccSpeciesName"</span>, <span class="st">"StdValue"</span><span class="op">)</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">TRY_WoodDensity</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"WoodDensity"</span><span class="op">)</span></code></pre></div>
-<p>Wood density records are also available from the ‘Global Wood Density Database’:</p>
+<p>Wood density records are also available from the ‘Global Wood Density Database’ <span class="citation">(Zanne et al. 2009)</span>:</p>
 <div class="sourceCode" id="cb197"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">gwdd_WoodDensity</span><span class="op">&lt;-</span><span class="va">gwdd</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Binomial"</span>, <span class="st">"Wood density (g/cm^3), oven dry mass/fresh volume"</span><span class="op">)</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">gwdd_WoodDensity</span><span class="op">)</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"WoodDensity"</span><span class="op">)</span></code></pre></div>
-<p>Wood density is also part of HYDRATRY database:</p>
+<p>Wood density is also part of HydraTRY database <span class="citation">(Mencuccini et al. 2019)</span>:</p>
 <div class="sourceCode" id="cb198"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">hydratry</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">hydratry</span><span class="op">)</span><span class="op">==</span><span class="st">"WD"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"WoodDensity"</span></code></pre></div>
-<p>and we can also find wood density estimates in BROT2:</p>
+<p>and we can also find wood density estimates in BROT2 <span class="citation">(Tavşanoǧlu and Pausas 2018)</span>:</p>
 <div class="sourceCode" id="cb199"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">brot2_WoodDensity</span> <span class="op">&lt;-</span> <span class="va">brot2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Trait</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"StemDensity"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Taxon"</span>, <span class="st">"Data"</span><span class="op">)</span><span class="op">)</span>
@@ -1506,7 +1506,7 @@
 <pre><code>## 
 ## FALSE  TRUE 
 ##   122    97</code></pre>
-<p>We tried to reduce some of these missing values with data from BROT2. We first select “DeadFuel” records from this data base:</p>
+<p>We tried to reduce some of these missing values with data from BROT2 <span class="citation">(Tavşanoǧlu and Pausas 2018)</span>. We first select “DeadFuel” records from this data base:</p>
 <div class="sourceCode" id="cb212"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">brot2_DF</span> <span class="op">&lt;-</span> <span class="va">brot2</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Trait</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"DeadFuel"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Taxon"</span>, <span class="st">"Trait"</span>, <span class="st">"Data"</span>, <span class="st">"Units"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -1548,7 +1548,7 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">TRY_Al2As</span><span class="op">$</span><span class="va">Al2As</span><span class="op">)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##    81.3  1862.8  3911.5  5300.5  6867.5 84200.0</code></pre>
-<p>Huber values are also available from HIDRATRY, so we transform them into <code>Al2As</code>:</p>
+<p>Huber values are also available from HydraTRY <span class="citation">(Mencuccini et al. 2019)</span>, so we transform them into <code>Al2As</code>:</p>
 <div class="sourceCode" id="cb222"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">hydratry_Al2As</span> <span class="op">&lt;-</span><span class="va">hydratry</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>,<span class="st">"Hv"</span><span class="op">)</span><span class="op">]</span>
 <span class="va">hydratry_Al2As</span><span class="op">$</span><span class="va">Hv</span><span class="op">&lt;-</span> <span class="fl">10000</span><span class="op">/</span><span class="va">hydratry_Al2As</span><span class="op">$</span><span class="va">Hv</span>
@@ -1610,7 +1610,7 @@
 <div id="minimummaximum-fuel-moisture-content" class="section level4">
 <h4 class="hasAnchor">
 <a href="#minimummaximum-fuel-moisture-content" class="anchor"></a>Minimum/maximum fuel moisture content</h4>
-<p>Fuel moisture content is usually defined as the mass of water per dry mass of fuel tissue. We used the database of Yebra et al. (2020) as primary source of fuel moisture content. We first update the name of some species in the data base:</p>
+<p>Fuel moisture content is usually defined as the mass of water per dry mass of fuel tissue. We used the database of <span class="citation">Yebra et al. (2019)</span> as primary source of fuel moisture content. We first update the name of some species in the data base:</p>
 <div class="sourceCode" id="cb238"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fmc_yebra</span><span class="op">$</span><span class="va">Species.collected</span><span class="op">[</span><span class="va">fmc_yebra</span><span class="op">$</span><span class="va">Species.collected</span><span class="op">==</span><span class="st">"Rosmarinus officinalis"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Salvia officinalis"</span></code></pre></div>
 <p>and call <code><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits()</a></code> to determine parameters <code>minFMC</code> (<span class="math inline">\(FMC_{min}\)</span>) and <code>maxFMC</code> (<span class="math inline">\(FMC_{max}\)</span>) using the 5% and 95% lowest quantile values, respectively:</p>
@@ -1635,7 +1635,7 @@
 <code class="sourceCode R"><span class="va">FMC_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">fmc_field</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species name"</span>, <span class="st">"MinFMC_DW"</span>, <span class="st">"MaxFMC_DW"</span><span class="op">)</span><span class="op">]</span>,
                   <span class="va">fmc_bib</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species name"</span>, <span class="st">"MinFMC_DW"</span>, <span class="st">"MaxFMC_DW"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
 <span class="va">FMC_data</span><span class="op">$</span><span class="va">`Species name`</span><span class="op">[</span><span class="va">FMC_data</span><span class="op">$</span><span class="va">`Species name`</span><span class="op">==</span><span class="st">"Rosmarinus officinalis"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Salvia officinalis"</span></code></pre></div>
-<p>Note that the call to <code><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits()</a></code> includes <code>erase_previous = FALSE</code> to avoid overwriting values on those estimated from Yebra et al. (2020):</p>
+<p>Note that the call to <code><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits()</a></code> includes <code>erase_previous = FALSE</code> to avoid overwriting values on those estimated from <span class="citation">Yebra et al. (2019)</span>:</p>
 <div class="sourceCode" id="cb245"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">FMC_data</span><span class="op">)</span>, 
                            trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"minFMC"</span> <span class="op">=</span> <span class="st">"MinFMC_DW"</span>,
@@ -1660,7 +1660,7 @@
 <div id="leaf-pressure-volume-curve" class="section level4">
 <h4 class="hasAnchor">
 <a href="#leaf-pressure-volume-curve" class="anchor"></a>Leaf pressure-volume curve</h4>
-<p>Leaf osmotic potential at full turgor (<code>LeafPI0</code> or <span class="math inline">\(\pi_{0,leaf}\)</span>) and leaf elastic modulus (<code>LeafEPS</code> or <span class="math inline">\(\epsilon_{leaf}\)</span>) describe leaf pressure-volume curves. These traits can be obtained from TRY and Bartlett et al. (2012). We begin by changing the column names of this second database:</p>
+<p>Leaf osmotic potential at full turgor (<code>LeafPI0</code> or <span class="math inline">\(\pi_{0,leaf}\)</span>) and leaf elastic modulus (<code>LeafEPS</code> or <span class="math inline">\(\epsilon_{leaf}\)</span>) describe leaf pressure-volume curves. These traits can be obtained from TRY <span class="citation">(Kattge et al. 2011)</span> and <span class="citation">Bartlett, Scoffoni, and Sack (2012)</span>. We begin by changing the column names of this second database:</p>
 <div class="sourceCode" id="cb252"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">bartlett</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">bartlett</span><span class="op">)</span><span class="op">==</span><span class="st">"πo.(MPa)"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"LeafPI0"</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">bartlett</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">bartlett</span><span class="op">)</span><span class="op">==</span><span class="st">"ε.(MPa)"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"LeafEPS"</span></code></pre></div>
@@ -1676,7 +1676,7 @@
 <span class="va">TRY_LeafEPS</span><span class="op">$</span><span class="va">StdValue</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">TRY_LeafEPS</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">)</span> 
 <span class="va">TRY_LeafEPS</span> <span class="op">&lt;-</span> <span class="va">TRY_LeafEPS</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AccSpeciesName"</span>, <span class="st">"StdValue"</span><span class="op">)</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">TRY_LeafEPS</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"LeafEPS"</span><span class="op">)</span></code></pre></div>
-<p>We then fill <span class="math inline">\(\pi_{0,leaf}\)</span> with the TRY and Bartlett et al. (2012) data sources merged:</p>
+<p>We then fill <span class="math inline">\(\pi_{0,leaf}\)</span> with the TRY and <span class="citation">Bartlett, Scoffoni, and Sack (2012)</span> data sources merged:</p>
 <div class="sourceCode" id="cb255"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">LeafPI0_data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">TRY_LeafPI0</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"LeafPI0"</span><span class="op">)</span><span class="op">]</span>,
                      <span class="va">bartlett</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"LeafPI0"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
@@ -1694,7 +1694,7 @@
                            taxon_column <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></code></pre></div>
 <pre><code>## Mapping [LeafEPS -&gt; LeafEPS] species: 15 conspecific: 49 genus: 0 family: 0 order: 0 group: 0</code></pre>
 <pre><code>## 155 missing trait values (70.8 %) after populating with input data.</code></pre>
-<p>Finally, we use Bartlett et al. (2012) to provide suitable values for the fraction of apoplastic tissue (<code>LeafAF</code> or <span class="math inline">\(f_{apo,leaf}\)</span>):</p>
+<p>Finally, we use <span class="citation">Bartlett, Scoffoni, and Sack (2012)</span> to provide suitable values for the fraction of apoplastic tissue (<code>LeafAF</code> or <span class="math inline">\(f_{apo,leaf}\)</span>):</p>
 <div class="sourceCode" id="cb261"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">bartlett</span>, 
                            trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LeafAF"</span> <span class="op">=</span> <span class="st">"af"</span><span class="op">)</span>,
@@ -1770,7 +1770,7 @@
 <div id="water-potential-determining-stomatal-closure" class="section level4">
 <h4 class="hasAnchor">
 <a href="#water-potential-determining-stomatal-closure" class="anchor"></a>Water potential determining stomatal closure</h4>
-<p>Parameter <span class="math inline">\(\Psi_{extract}\)</span> (<code>Psi_Extract</code>) is the water potential at which transpiration is 50% of its maximum, for a given species. We decided to populate values for this parameter using the water potential corresponding to turgor loss point (<span class="math inline">\(\Psi_{tlp}\)</span>), which is available in Bartlett et al (2012) and HYDRATRY databases:</p>
+<p>Parameter <span class="math inline">\(\Psi_{extract}\)</span> (<code>Psi_Extract</code>) is the water potential at which transpiration is 50% of its maximum, for a given species. We decided to populate values for this parameter using the water potential corresponding to turgor loss point (<span class="math inline">\(\Psi_{tlp}\)</span>), which is available in <span class="citation">Bartlett, Scoffoni, and Sack (2012)</span> and HydraTRY <span class="citation">(Mencuccini et al. 2019)</span>:</p>
 <div class="sourceCode" id="cb278"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">bartlett</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">bartlett</span><span class="op">)</span><span class="op">==</span><span class="st">"πtlp.(MPa)"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Ptlp"</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">hydratry</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">hydratry</span><span class="op">)</span><span class="op">==</span><span class="st">"PItlp"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Ptlp"</span></code></pre></div>
@@ -1793,7 +1793,7 @@
 <div id="critical-water-potential" class="section level4">
 <h4 class="hasAnchor">
 <a href="#critical-water-potential" class="anchor"></a>Critical water potential</h4>
-<p>Parameter <span class="math inline">\(\Psi_{critic}\)</span> (<code>Psi_Critic</code>) is the water potential corresponding to 50% of loss of hydraulic conductance in the stem, also known as <span class="math inline">\(\Psi_{50}\)</span>. This trait can be found in three data bases:</p>
+<p>Parameter <span class="math inline">\(\Psi_{critic}\)</span> (<code>Psi_Critic</code>) is the water potential corresponding to 50% of loss of hydraulic conductance in the stem, also known as <span class="math inline">\(\Psi_{50}\)</span>. This trait can be found in three data bases <span class="citation">(Martin-StPaul, Delzon, and Cochard 2017; Choat et al. 2012; Mencuccini et al. 2019)</span>:</p>
 <div class="sourceCode" id="cb284"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">P50_data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">martin_stpaul</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"P50"</span><span class="op">)</span><span class="op">]</span>,
                  <span class="va">choat</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"P50"</span><span class="op">)</span><span class="op">]</span>,
@@ -1840,7 +1840,7 @@
 <div id="minimummaximum-stomatal-conductance" class="section level4">
 <h4 class="hasAnchor">
 <a href="#minimummaximum-stomatal-conductance" class="anchor"></a>Minimum/maximum stomatal conductance</h4>
-<p>Minimum and maximum values of leaf conductance to water vapor (<span class="math inline">\(G_{swmin}\)</span> and <span class="math inline">\(G_{swmax}\)</span>) can be drawn from databases of Duursma et al. (2018) and Hoshika et al (2018), respectively. We first populate <span class="math inline">\(G_{swmin}\)</span> using data from Duursma et al. (2018), while chaning the units from <span class="math inline">\(mmol\cdot s^{-1} \cdot m^{-2}\)</span> to <span class="math inline">\(mol\cdot s^{-1} \cdot m^{-2}\)</span>:</p>
+<p>Minimum and maximum values of leaf conductance to water vapor (<span class="math inline">\(G_{swmin}\)</span> and <span class="math inline">\(G_{swmax}\)</span>) can be drawn from databases of <span class="citation">Duursma et al. (2018)</span> and <span class="citation">Hoshika et al. (2018)</span>, respectively. We first populate <span class="math inline">\(G_{swmin}\)</span> using data from <span class="citation">Duursma et al. (2018)</span>, while changing the units from <span class="math inline">\(mmol\cdot s^{-1} \cdot m^{-2}\)</span> to <span class="math inline">\(mol\cdot s^{-1} \cdot m^{-2}\)</span>:</p>
 <div class="sourceCode" id="cb296"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">duursma</span><span class="op">$</span><span class="va">gmin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">duursma</span><span class="op">$</span><span class="va">gmin</span><span class="op">)</span>
 <span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">duursma</span>, 
@@ -1849,7 +1849,7 @@
                            scalar_functions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"Gswmin"</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="va">x</span><span class="op">/</span><span class="fl">1000</span><span class="op">}</span><span class="op">)</span><span class="op">)</span> </code></pre></div>
 <pre><code>## Mapping [gmin -&gt; Gswmin] species: 18 conspecific: 52 genus: 0 family: 0 order: 0 group: 0</code></pre>
 <pre><code>## 149 missing trait values (68 %) after populating with input data.</code></pre>
-<p>We then populate <span class="math inline">\(G_{swmax}\)</span> using data from Hoshika et al. (2018) without any change in units:</p>
+<p>We then populate <span class="math inline">\(G_{swmax}\)</span> using data from <span class="citation">Hoshika et al. (2018)</span> without any change in units:</p>
 <div class="sourceCode" id="cb299"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">hoshika</span>, 
                            trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="st">"Gswmax"</span> <span class="op">=</span> <span class="st">"gmax.(mol.m-2.s-1)"</span><span class="op">)</span> ,
@@ -1871,7 +1871,7 @@
 <div id="stem-maximum-hydraulic-conductivity" class="section level4">
 <h4 class="hasAnchor">
 <a href="#stem-maximum-hydraulic-conductivity" class="anchor"></a>Stem maximum hydraulic conductivity</h4>
-<p>Stem maximum hydraulic conductivity (<span class="math inline">\(K_{stem, max, ref}\)</span>) is an important parameter used in <strong>medfate</strong> to estimate stem maximum conductance, which defines plant hydraulic efficiency. Here we populate some values from HYDRATRY:</p>
+<p>Stem maximum hydraulic conductivity (<span class="math inline">\(K_{stem, max, ref}\)</span>) is an important parameter used in <strong>medfate</strong> to estimate stem maximum conductance, which defines plant hydraulic efficiency. Here we populate some values from HydraTRY <span class="citation">(Mencuccini et al. 2019)</span>:</p>
 <div class="sourceCode" id="cb304"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">hydratry</span>, 
                            trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Kmax_stemxylem"</span> <span class="op">=</span> <span class="st">"Ks"</span><span class="op">)</span>,
@@ -1887,7 +1887,7 @@
 <div id="stem-hydraulic-vulnerability" class="section level4">
 <h4 class="hasAnchor">
 <a href="#stem-hydraulic-vulnerability" class="anchor"></a>Stem hydraulic vulnerability</h4>
-<p>Stem hydraulic vulnerability is described in <strong>medfate</strong> using Weibull-type curves, which are described using two parameters. Trait databases normally report vulnerability using water potential corresponding to different levels of conductance loss, i.e. <span class="math inline">\(\Psi_{12}\)</span>, <span class="math inline">\(\Psi_{50}\)</span>, <span class="math inline">\(\Psi_{88}\)</span>, etc. Here we first estimate Weibull coefficients from Martin-StPaul et al (2017) data on <span class="math inline">\(\Psi_{12}\)</span>, <span class="math inline">\(\Psi_{50}\)</span>:</p>
+<p>Stem hydraulic vulnerability is described in <strong>medfate</strong> using Weibull-type curves, which are described using two parameters. Trait databases normally report vulnerability using water potential corresponding to different levels of conductance loss, i.e. <span class="math inline">\(\Psi_{12}\)</span>, <span class="math inline">\(\Psi_{50}\)</span>, <span class="math inline">\(\Psi_{88}\)</span>, etc. Here we first estimate Weibull coefficients from <span class="citation">Martin-StPaul, Delzon, and Cochard (2017)</span> data on <span class="math inline">\(\Psi_{12}\)</span>, <span class="math inline">\(\Psi_{50}\)</span>:</p>
 <div class="sourceCode" id="cb309"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">martin_stpaul</span><span class="op">$</span><span class="va">VCstem_c</span> <span class="op">&lt;-</span> <span class="cn">NA</span>
 <span class="va">martin_stpaul</span><span class="op">$</span><span class="va">VCstem_d</span> <span class="op">&lt;-</span> <span class="cn">NA</span>
@@ -1899,7 +1899,7 @@
     <span class="va">martin_stpaul</span><span class="op">$</span><span class="va">VCstem_d</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">=</span> <span class="va">weib</span><span class="op">[[</span><span class="st">"d"</span><span class="op">]</span><span class="op">]</span>
   <span class="op">}</span>
 <span class="op">}</span></code></pre></div>
-<p>and we do something similar from Choat et al (2012) data on <span class="math inline">\(\Psi_{50}\)</span>, <span class="math inline">\(\Psi_{88}\)</span>:</p>
+<p>and we do something similar from <span class="citation">Choat et al. (2012)</span> data on <span class="math inline">\(\Psi_{50}\)</span>, <span class="math inline">\(\Psi_{88}\)</span>:</p>
 <div class="sourceCode" id="cb310"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">choat</span><span class="op">$</span><span class="va">P50</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">choat</span><span class="op">$</span><span class="va">P50</span><span class="op">)</span>
 <span class="va">choat</span><span class="op">$</span><span class="va">P88</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">choat</span><span class="op">$</span><span class="va">P88</span><span class="op">)</span>
@@ -1945,7 +1945,7 @@
 <code class="sourceCode R"><span class="va">TRY_Narea</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>,<span class="st">"TraitDatabases/TRY/TRY_traits/TRY_50.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">TRY_Narea</span> <span class="op">&lt;-</span> <span class="va">TRY_Narea</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AccSpeciesName"</span>, <span class="st">"StdValue"</span><span class="op">)</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">TRY_Narea</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Narea"</span><span class="op">)</span></code></pre></div>
-<p>We then merge them with available data from HYDRATRY and call the population function:</p>
+<p>We then merge them with available data from HydraTRY <span class="citation">(Mencuccini et al. 2019)</span> and call the population function:</p>
 <div class="sourceCode" id="cb319"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Narea_data</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">hydratry</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Narea"</span><span class="op">)</span><span class="op">]</span>,
                    <span class="va">TRY_Narea</span><span class="op">)</span>
@@ -2010,7 +2010,7 @@
 <div id="recruitment-parameters" class="section level2">
 <h2 class="hasAnchor">
 <a href="#recruitment-parameters" class="anchor"></a>Recruitment parameters</h2>
-<p>This document describes the parametrization of bioclimatic recruitment thresholds for the forest dynamics model <code><a href="../../reference/fordyn.html">fordyn()</a></code> included in <code>medfate</code>. Specifically, we aim to find suitable values for parameters:</p>
+<p>This section describes the parametrization of bioclimatic recruitment thresholds for the forest dynamics model <code><a href="../../reference/fordyn.html">fordyn()</a></code> included in <code>medfate</code>. Specifically, we aim to find suitable values for parameters:</p>
 <ul>
 <li>
 <code>MinTempRecr</code>: Minimum average temperature of the coldest month necessary for recruiting.</li>
@@ -2026,7 +2026,7 @@
 <div id="mean-temperature-of-the-coldest-month-and-moisture-index" class="section level4">
 <h4 class="hasAnchor">
 <a href="#mean-temperature-of-the-coldest-month-and-moisture-index" class="anchor"></a>Mean temperature of the coldest month and moisture index</h4>
-<p>Load yearly climatic data (from Santander’s Group) between 1981 and 2015, for all IFN plots in Spain:</p>
+<p>Load yearly weather data (from Santander’s Group) between 1981 and 2015, for all IFN plots in Spain:</p>
 <div class="sourceCode" id="cb335"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pr_year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"IFNbioclimatic/Sources/pr_year.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">pet_year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"IFNbioclimatic/Sources/pet_year.rds"</span><span class="op">)</span><span class="op">)</span>
@@ -2061,7 +2061,7 @@
 <div id="percentage-of-par-reaching-the-ground" class="section level4">
 <h4 class="hasAnchor">
 <a href="#percentage-of-par-reaching-the-ground" class="anchor"></a>Percentage of PAR reaching the ground</h4>
-<p>If foliar biomass allometries were available for all species in Spain, PAR calculations could include all Spanish forest plots. However, foliar biomass (and hence LAI) values can only be calculated for Catalonia. We hence, load the list of <code>forest</code> objects corresponding to IFN3 plots in Catalonia:</p>
+<p>To calculate the percentage of PAR reaching the ground we need forest plot data as well as suitable parameters for leaf area estimation and light extinction. Hence, this part of the parameterization process requires other parameters to be estimated first. In addition, we will make use of <strong>medfate</strong> functions to estimate PAR extinction, which require <code>forest</code> objects. Hence we need forest inventory data in the form of a list of <code>forest</code> objects (see function <code>IFN2forestlist</code> from package <strong>medfateutils</strong>). Assuming we have converted IFN3 data into this form, we load the list of <code>forest</code> objects corresponding to IFN3 plots in Spain:</p>
 <div class="sourceCode" id="cb338"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">forest_list</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>We then calculate percentage of PAR reaching the ground using <code>medfate</code> function <code><a href="../../reference/Vertical%20profiles.html">vprofile_PARExtinction()</a></code>:</p>
@@ -2093,7 +2093,7 @@
 <div class="sourceCode" id="cb343"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">plotBioclim</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/row.names.html">row.names</a></span><span class="op">(</span><span class="va">bioclimIFN34</span><span class="op">)</span>
 <span class="va">plotPAR</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">par_groundIFN3</span><span class="op">)</span></code></pre></div>
-<p>Since we took Spain for bioclimatic limits and Catalonia for PAR, there are more plots with bioclimatic information (n = 81152) than with PAR information (n = 85909).</p>
+<p>Since we took Spain for bioclimatic limits, there are n = 81152 plots with bioclimatic information and n = 85909 plots with PAR information.</p>
 </div>
 </div>
 <div id="characterizing-distribution-of-bioclimatic-variables-for-ifn-species" class="section level3">
@@ -2127,7 +2127,7 @@
   <span class="fu">mutate</span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
-<p>We do the same for PAR information, which corresponds to IFN3 plots in Catalonia, only:</p>
+<p>We do the same for PAR information:</p>
 <div class="sourceCode" id="cb348"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">regFiltPAR</span> <span class="op">&lt;-</span> <span class="va">reg</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">ID</span> <span class="op">%in%</span> <span class="va">plotPAR</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -2156,7 +2156,7 @@
 <code class="sourceCode R"><span class="va">spUnique</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">regFiltBioclim</span><span class="op">$</span><span class="va">Species</span>, 
                           <span class="va">treeFiltBioclim</span><span class="op">$</span><span class="va">Species</span>, 
                           <span class="va">shrubFiltBioclim</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>There are 338 species to be characterized.</p>
+<p>There are 338 species to be characterized. Note that we used the full set of IFN species codes and not the entities in <code>SpParams</code>. This is because we want to characterize the bioclimatic limits of the original species.</p>
 <p>Translate IFN species codes to medfate species codes (some species are considered together in <code>medfate</code>):</p>
 <div class="sourceCode" id="cb352"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Species_medfate</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/translateIFNSpeciesCodes.html">translateIFNSpeciesCodes</a></span><span class="op">(</span><span class="va">spUnique</span>, <span class="va">SpParams</span><span class="op">$</span><span class="va">IFNcodes</span><span class="op">)</span></code></pre></div>
@@ -2328,6 +2328,9 @@ Mencuccini, Maurizio, Teresa Rosas, Lucy Rowland, Brendan Choat, Hans Cornelisse
 </div>
 <div id="ref-Tavsanoglu2018" class="csl-entry">
 Tavşanoǧlu, Çaǧatay, and Juli G. Pausas. 2018. <span>“<span class="nocase">A functional trait database for Mediterranean Basin plants</span>.”</span> <em>Scientific Data</em> 5: 1–18. <a href="https://doi.org/10.1038/sdata.2018.135">https://doi.org/10.1038/sdata.2018.135</a>.
+</div>
+<div id="ref-Yebra2019" class="csl-entry">
+Yebra, Marta, Gianluca Scortechini, Abdulbaset Badi, María Eugenia Beget, Matthias M. Boer, Ross Bradstock, Emilio Chuvieco, et al. 2019. <span>“<span class="nocase">Globe-LFMC, a global plant water status database for vegetation ecophysiology and wildfire applications</span>.”</span> <em>Scientific Data</em> 6 (1): 155. <a href="https://doi.org/10.1038/s41597-019-0164-9">https://doi.org/10.1038/s41597-019-0164-9</a>.
 </div>
 <div id="ref-Zanne2009" class="csl-entry">
 Zanne, A. E., G. Lopez-Gonzalez, D. A. Coomes, J. Ilic, S. Jansen, S. L. Lewis, R. B. Miller, N. G. Swenson, M. C. Wiemann, and J. Chave. 2009. <span>“<span class="nocase">Global wood density database</span>.”</span> <a href="http://datadryad.org/handle/10255/dryad.235">http://datadryad.org/handle/10255/dryad.235</a>.
