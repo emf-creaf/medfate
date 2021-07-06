@@ -22,23 +22,32 @@ library(medfate)
 
 ## About this vignette
 
-Any forest water balance model needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since `medfate` differentiates between species,  **species-specific parameters** are also needed. This vignette explains data structures required as input to run simulations using the package. Package [medfateutils](https://github.com/emf-creaf/medfateutils) provides functions for creating suitable inputs for simulations with `medfate`.
+Any process-based model of forest functioning and dynamics needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since `medfate` allows simulating cohorts belonging to different species,  **species-specific parameters** are also needed. This vignette explains data structures required as input to run simulations using the package. 
+
+Package [medfateutils](https://github.com/emf-creaf/medfateutils) provides functions for creating suitable inputs for simulations with `medfate`.
 
 ## Species-specific parameters
 
-Simulation models in `medfate` require a data frame with species parameter values. The package provides a default data set of parameter values for Mediterranean species (rows), resulting from bibliographic search, fit to empirical data or expert-based guesses:
+Simulation models in `medfate` require a data frame with species parameter values. The package provides a default data set of parameter values for a set of Mediterranean species. The set of species are reported in the Spanish National Forest Inventory. Hence they represent woody taxa found in Spain, but may not be sufficient for other areas. The values of the parameter table were obtained from global trait data bases, bibliographic searches, fit to empirical data or expert-based guesses:
 
 ```{r}
 data("SpParamsMED")
 ```
 
-These species commonly occur in the Spanish forest inventory of Catalonia, but may not be sufficient for other areas. A large number of parameters (columns) can be found in `SpParamsMED`:
+ A large number of parameters (columns) can be found in `SpParamsMED`:
 
 ```{r}
 names(SpParamsMED)
 ```
 
-Not all parameters are needed for all models. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation at https://emf-creaf.github.io/medfatebook/index.html.
+Not all parameters are needed for all models. The user can find parameter definitions in `SpParamsDefinition`:
+
+```{r}
+data("SpParamsDefinition")
+knitr::kable(SpParamsDefinition[,-2])
+```
+
+To fully understand the role of parameters in the model, the user should read the details of model design and formulation at https://emf-creaf.github.io/medfatebook/index.html. An example of how to define and populate a species parameter table for a given region is given in article '*Species parameterization for Spain*'. 
 
 ## Vegetation
 

@@ -26,7 +26,7 @@ The R package `medfate` has been designed to study the characteristics and simul
 library(medfate)
 ```
 
-Package vignettes only cover how to run models using the package functions. Complete documentation on the design and formulation of medfate models can be found in the **medfate reference book** at https://emf-creaf.github.io/medfatebook/index.html.
+Vignettes included in the package only cover how to run models using package functions. Additional articles covering model analysis and parameterization can be found in the [package website](https://emf-creaf.github.io/medfate/). Complete documentation on the design and formulation of medfate models can be found in the [medfate reference book](https://emf-creaf.github.io/medfatebook/index.html). 
 
 
 ## Dynamic simulation functions
