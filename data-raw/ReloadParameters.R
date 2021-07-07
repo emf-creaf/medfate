@@ -17,8 +17,8 @@ usethis::use_data(SpParamsUS, overwrite = T)
 rm(SpParamsUS)
 
 ## Density family means
-density_family_means = read.csv2("data-raw/density_family_means.csv", dec=".")
-usethis::use_data(density_family_means, internal=TRUE, overwrite=TRUE)
+trait_family_means = read.csv2("data-raw/trait_family_means.csv", dec=".")
+usethis::use_data(trait_family_means, internal=TRUE, overwrite=TRUE)
 
 ## Modify exampleforestMED
 data(exampleforestMED)

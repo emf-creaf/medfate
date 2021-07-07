@@ -5,7 +5,7 @@
 # Version 2.3.1
 - IMPORTANT: New species parameter tables
 - New control parameter 'fillMissingSpParams'
-- Defaults for 'LeafDensity' and 'WoodDensity' from taxonomical family.
+- Defaults for 'LeafDensity', 'WoodDensity', 'LeafPI0', 'LeafEPS' and 'LeafAF' from taxonomical family.
 - New species categorical params (for inbuilt imputation) 'LeafShape' and 'LeafSize'
 - Parameter 'Flammability' index eliminated (non-meansurable property of flammability).
 - Parameter 'LeafLitterFuelType' eliminated because it is derived from 'LeafShape' and 'LeafSize'.

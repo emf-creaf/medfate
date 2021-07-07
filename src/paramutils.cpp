@@ -363,9 +363,9 @@ NumericVector woodDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector woodDensity = speciesNumericParameter(SP, SpParams, "WoodDensity");
   //Access internal data frame "density_family_means"
   Environment pkg = Environment::namespace_env("medfate");
-  DataFrame DFM = Rcpp::as<Rcpp::DataFrame>(pkg["density_family_means"]);
-  CharacterVector fams = DFM.attr("row.names");
-  NumericVector fam_wood_density = DFM["WoodDensity"];
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_wood_density = TFM["WoodDensity"];
   CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
   for(int c=0;c<woodDensity.size();c++) {
     if(NumericVector::is_na(woodDensity[c])) {
@@ -385,9 +385,9 @@ NumericVector leafDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector leafDensity = speciesNumericParameter(SP, SpParams, "LeafDensity");
   //Access internal data frame "density_family_means"
   Environment pkg = Environment::namespace_env("medfate");
-  DataFrame DFM = Rcpp::as<Rcpp::DataFrame>(pkg["density_family_means"]);
-  CharacterVector fams = DFM.attr("row.names");
-  NumericVector fam_leaf_density = DFM["LeafDensity"];
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_leaf_density = TFM["LeafDensity"];
   CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
   for(int c=0;c<leafDensity.size();c++) {
     if(NumericVector::is_na(leafDensity[c])) {
@@ -475,9 +475,22 @@ NumericVector stemAFWithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 NumericVector leafPI0WithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector leafPI0 = speciesNumericParameter(SP, SpParams, "LeafPI0");
+  //Access internal data frame "density_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_leaf_PI0 = TFM["LeafPI0"];
+  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
   for(int c=0;c<leafPI0.size();c++) {
-    //From: Bartlett MK, Scoffoni C, Sack L (2012) The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis. Ecol Lett 15:393–405. doi: 10.1111/j.1461-0248.2012.01751.x
     if(NumericVector::is_na(leafPI0[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          leafPI0[c] = fam_leaf_PI0[i];
+        }
+      }
+    }
+    if(NumericVector::is_na(leafPI0[c])) {
+      //From: Bartlett MK, Scoffoni C, Sack L (2012) The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis. Ecol Lett 15:393–405. doi: 10.1111/j.1461-0248.2012.01751.x
       leafPI0[c] = -2.0;//Average for Mediterranean climate species
     }
   }
@@ -485,7 +498,20 @@ NumericVector leafPI0WithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 NumericVector leafEPSWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector leafEPS = speciesNumericParameter(SP, SpParams, "LeafEPS");
+  //Access internal data frame "density_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_leaf_EPS = TFM["LeafEPS"];
+  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
   for(int c=0;c<leafEPS.size();c++) {
+    if(NumericVector::is_na(leafEPS[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          leafEPS[c] = fam_leaf_EPS[i];
+        }
+      }
+    }
     //From: Bartlett MK, Scoffoni C, Sack L (2012) The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis. Ecol Lett 15:393–405. doi: 10.1111/j.1461-0248.2012.01751.x
     if(NumericVector::is_na(leafEPS[c])) {
       leafEPS[c] = 17.0;//Average for Mediterranean climate species
@@ -495,7 +521,20 @@ NumericVector leafEPSWithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 NumericVector leafAFWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector leafAF = speciesNumericParameter(SP, SpParams, "LeafAF");
+  //Access internal data frame "density_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_leaf_AF = TFM["LeafAF"];
+  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
   for(int c=0;c<leafAF.size();c++) {
+    if(NumericVector::is_na(leafAF[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          leafAF[c] = fam_leaf_AF[i];
+        }
+      }
+    }
     //From: Bartlett MK, Scoffoni C, Sack L (2012) The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis. Ecol Lett 15:393–405. doi: 10.1111/j.1461-0248.2012.01751.x
     if(NumericVector::is_na(leafAF[c])) {
       leafAF[c] = 0.29; //Average for Mediterranean climate species
