@@ -361,7 +361,20 @@ NumericVector Al2AsWithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 NumericVector woodDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector woodDensity = speciesNumericParameter(SP, SpParams, "WoodDensity");
+  //Access internal data frame "density_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame DFM = Rcpp::as<Rcpp::DataFrame>(pkg["density_family_means"]);
+  CharacterVector fams = DFM.attr("row.names");
+  NumericVector fam_wood_density = DFM["WoodDensity"];
+  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
   for(int c=0;c<woodDensity.size();c++) {
+    if(NumericVector::is_na(woodDensity[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          woodDensity[c] = fam_wood_density[i];
+        }
+      }
+    }
     if(NumericVector::is_na(woodDensity[c])) {
       woodDensity[c] = 0.652;
     }
@@ -370,7 +383,20 @@ NumericVector woodDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 NumericVector leafDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector leafDensity = speciesNumericParameter(SP, SpParams, "LeafDensity");
+  //Access internal data frame "density_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame DFM = Rcpp::as<Rcpp::DataFrame>(pkg["density_family_means"]);
+  CharacterVector fams = DFM.attr("row.names");
+  NumericVector fam_leaf_density = DFM["LeafDensity"];
+  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
   for(int c=0;c<leafDensity.size();c++) {
+    if(NumericVector::is_na(leafDensity[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          leafDensity[c] = fam_leaf_density[i];
+        }
+      }
+    }
     if(NumericVector::is_na(leafDensity[c])) {
       leafDensity[c] = 0.7;
     }

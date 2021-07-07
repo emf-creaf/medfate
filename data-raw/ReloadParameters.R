@@ -16,6 +16,10 @@ SpParamsUS <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsUS.xlsx",
 usethis::use_data(SpParamsUS, overwrite = T)
 rm(SpParamsUS)
 
+## Density family means
+density_family_means = read.csv2("data-raw/density_family_means.csv", dec=".")
+usethis::use_data(density_family_means, internal=TRUE, overwrite=TRUE)
+
 ## Modify exampleforestMED
 data(exampleforestMED)
 exampleforestMED$treeData$Species[1] = SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"]
