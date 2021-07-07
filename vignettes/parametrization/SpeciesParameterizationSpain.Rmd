@@ -559,7 +559,7 @@ We then queried TRY for public data regarding the list of TraitIDs and split the
 
 ### Additional trait databases
 
-Additional plant trait databases can be used for parameter estimation. We begin by loading several trait data bases, that drawn from literature publications or assembled by ourselves. One of them is HydraTRY [@Mencuccini2019], which contains hydraulic plant traits:
+Additional plant trait databases can be used for parameter estimation. We begin by loading several trait data bases, that drawn from literature publications or assembled by ourselves. One of them is HydraTRY [@Mencuccini2019;@SanchezMartinez2020], which contains hydraulic plant traits:
 ```{r}
 fn_hydratry <- file.path(DB_path,"TraitDatabases/HydraTRY/HydraTRY.xlsx")
 hydratry <- openxlsx::read.xlsx(fn_hydratry, rowNames = FALSE) 
@@ -598,7 +598,7 @@ hoshika$Species <- str_replace(string = hoshika$Species,pattern = "_", replaceme
 
 BROT2 database [@Tavsanoglu2018] is particularly useful for Mediterranean plants, containing many anatomical, phenological and morphological traits:
 ```{r}
-fn_brot2 <- file.path(DB_path, "TraitDatabases/Brot/BROT2_dat.csv")
+fn_brot2 <- file.path(DB_path, "TraitDatabases/BROT2/BROT2_dat.csv")
 brot2 <- read.csv2(fn_brot2)
 ```
 
@@ -1001,7 +1001,7 @@ brot2_SLA <- brot2 %>% filter(Trait %in% c("SLA")) %>%
 brot2_SLA$Data <- as.numeric(brot2_SLA$Data)
 names(brot2_SLA) <- c("Species", "SLA")
 ```
-And we merge these two sources with SLA values coming from database HydraTRY [@Mencuccini2019]. The whole set is used to call `populateTraits()` and populate $SLA$ parameter values without any transformation:
+And we merge these two sources with SLA values coming from database HydraTRY [@Mencuccini2019;@SanchezMartinez2020]. The whole set is used to call `populateTraits()` and populate $SLA$ parameter values without any transformation:
 ```{r}
 SLA_data = rbind(hydratry[,c("Species","SLA")],
                  TRY_SLA,
@@ -1041,7 +1041,7 @@ Wood density records are also available from the 'Global Wood Density Database' 
 gwdd_WoodDensity<-gwdd[,c("Binomial", "Wood density (g/cm^3), oven dry mass/fresh volume")]
 names(gwdd_WoodDensity)<-c("Species", "WoodDensity")
 ```
-Wood density is also part of HydraTRY database [@Mencuccini2019]:
+Wood density is also part of HydraTRY database [@Mencuccini2019;@SanchezMartinez2020]:
 ```{r}
 names(hydratry)[names(hydratry)=="WD"] = "WoodDensity"
 ```
@@ -1124,7 +1124,7 @@ We use a summary of the data to check the range of values and median ones, which
 summary(TRY_Al2As$Al2As)
 ```
 
-Huber values are also available from HydraTRY [@Mencuccini2019], so we transform them into `Al2As`:
+Huber values are also available from HydraTRY [@Mencuccini2019;@SanchezMartinez2020], so we transform them into `Al2As`:
 ```{r}
 hydratry_Al2As <-hydratry[,c("Species","Hv")]
 hydratry_Al2As$Hv<- 10000/hydratry_Al2As$Hv
@@ -1300,7 +1300,7 @@ The three following subsections provide suitable values for parameters regulatin
 
 #### Water potential determining stomatal closure
 
-Parameter $\Psi_{extract}$ (`Psi_Extract`) is the water potential at which transpiration is 50% of its maximum, for a given species. We decided to populate values for this parameter using the water potential corresponding to turgor loss point ($\Psi_{tlp}$), which is available in @Bartlett2012 and HydraTRY [@Mencuccini2019]:
+Parameter $\Psi_{extract}$ (`Psi_Extract`) is the water potential at which transpiration is 50% of its maximum, for a given species. We decided to populate values for this parameter using the water potential corresponding to turgor loss point ($\Psi_{tlp}$), which is available in @Bartlett2012 and HydraTRY [@Mencuccini2019;@SanchezMartinez2020]:
 
 ```{r}
 names(bartlett)[names(bartlett)=="πtlp.(MPa)"] = "Ptlp"
@@ -1320,12 +1320,32 @@ The distribution of parameter values is:
 summary(SpParams[,c("Psi_Extract")])
 ```
 #### Critical water potential
-Parameter $\Psi_{critic}$ (`Psi_Critic`) is the water potential corresponding to 50\% of loss of hydraulic conductance in the stem, also known as $\Psi_{50}$. This trait can be found in three data bases [@Martin-StPaul2017;@Choat2012;@Mencuccini2019]: 
+Parameter $\Psi_{critic}$ (`Psi_Critic`) is the water potential corresponding to 50\% of loss of hydraulic conductance in the stem, also known as $\Psi_{50}$. This trait can be found in three data bases [@Martin-StPaul2017;@Choat2012;@Mencuccini2019;@SanchezMartinez2020]: 
 ```{r}
 P50_data = rbind(martin_stpaul[, c("Species", "P50")],
                  choat[, c("Species", "P50")],
                  hydratry[, c("Species", "P50")])
 ```
+TRY also contains data from xylem vulnerability curves, which mostly overlaps other data sources, but from which we can perhaps obtain additional $\Psi_{50}$ records [@Pausas2016;@Manzoni2013]:
+```{r}
+TRY_VC <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_719.rds"))
+VC_str <- c("Reference P50",
+            "Xylem water potential at which 50% of conductivity is lost (P50)",
+            "Stem P50")
+TRY_P50 <- TRY_VC[TRY_VC$DataName %in% VC_str, c("AccSpeciesName", "OrigValueStr")]
+names(TRY_P50)<-c("Species", "P50")
+```
+We convert string $\Psi_{50}$ records to numeric values and change the sign of positive values:
+```{r}
+TRY_P50$P50 <- as.numeric(TRY_P50$P50)
+TRY_P50 <- TRY_P50[!is.na(TRY_P50$P50),]
+TRY_P50$P50[TRY_P50$P50>0] <- -TRY_P50$P50[TRY_P50$P50>0]
+```
+And we can now merge TRY data with the other sources:
+```{r}
+P50_data = rbind(P50_data, TRY_P50)
+```
+
 The mapping is done by calling `populateTraits()` on a merged dataset:
 ```{r}
 SpParams <- populateTraits(SpParams, P50_data, 
@@ -1381,7 +1401,7 @@ summary(SpParams[,c("Gswmin", "Gswmax")])
 ```
 
 #### Stem maximum hydraulic conductivity
-Stem maximum hydraulic conductivity ($K_{stem, max, ref}$) is an important parameter used in **medfate** to estimate stem maximum conductance, which defines plant hydraulic efficiency. Here we populate some values from HydraTRY [@Mencuccini2019]: 
+Stem maximum hydraulic conductivity ($K_{stem, max, ref}$) is an important parameter used in **medfate** to estimate stem maximum conductance, which defines plant hydraulic efficiency. Here we populate some values from HydraTRY [@Mencuccini2019;@SanchezMartinez2020]: 
 
 ```{r}
 SpParams <- populateTraits(SpParams, hydratry, 
@@ -1421,6 +1441,9 @@ for(i in 1:nrow(choat)) {
   }
 }
 ```
+
+
+
 We then merge the two data sets and populate Weibull coefficients using `populateTraits()`:
 ```{r}
 VC_data = rbind(martin_stpaul[, c("Species", "VCstem_c", "VCstem_d")],
@@ -1444,7 +1467,7 @@ TRY_Narea <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_50.rds"
 TRY_Narea <- TRY_Narea[, c("AccSpeciesName", "StdValue")]
 names(TRY_Narea) <- c("Species", "Narea")
 ```
-We then merge them with available data from HydraTRY [@Mencuccini2019] and call the population function:
+We then merge them with available data from HydraTRY [@Mencuccini2019;@SanchezMartinez2020] and call the population function:
 ```{r}
 Narea_data <-rbind(hydratry[,c("Species", "Narea")],
                    TRY_Narea)
@@ -1756,7 +1779,10 @@ summary(SpParams[,c("MinFPARRecr","MinTempRecr","MinMoistureRecr"), drop=FALSE])
 ```
 
 ```{r, include = FALSE}
-saveRDS(SpParams, "SpParamsSPAIN_recr.rds")
+wb <- openxlsx::createWorkbook()
+openxlsx::addWorksheet(wb, "SpParamsMED")
+openxlsx::writeDataTable(wb, "SpParamsMED", SpParams)
+openxlsx::saveWorkbook(wb,"../../data-raw/SpParamsMED.xlsx", overwrite=TRUE)
 ```
 
 ## References

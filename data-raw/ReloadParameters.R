@@ -7,11 +7,11 @@ rm(MEGANParams)
 SpParamsDefinition <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsDefinition.xlsx",
                                               sheet="Definition", na = "NA"), stringsAsFactors=FALSE)
 usethis::use_data(SpParamsDefinition, overwrite = T)
-SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/SpParams.xlsx",
+SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsMED.xlsx",
                                               sheet="SpParamsMED", na = "NA"), stringsAsFactors=FALSE)
 usethis::use_data(SpParamsMED, overwrite = T)
 rm(SpParamsMED)
-SpParamsUS <-as.data.frame(readxl::read_xlsx("data-raw/SpParams.xlsx",
+SpParamsUS <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsUS.xlsx",
                                               sheet="SpParamsUS", na = "NA"), stringsAsFactors=FALSE)
 usethis::use_data(SpParamsUS, overwrite = T)
 rm(SpParamsUS)
