@@ -781,17 +781,33 @@ NumericVector VCstemCWithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 NumericVector VCleafDWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector VCleaf_d = speciesNumericParameter(SP, SpParams, "VCleaf_d");
-  NumericVector VCstem_d = VCstemDWithImputation(SP, SpParams);
+  NumericVector leafPI0 = leafPI0WithImputation(SP, SpParams);
+  NumericVector leafEPS = leafEPSWithImputation(SP, SpParams);
   for(int c=0;c<VCleaf_d.size();c++) {
-    if(NumericVector::is_na(VCleaf_d[c])) VCleaf_d[c] = VCstem_d[c]/1.5;
+    if(NumericVector::is_na(VCleaf_d[c])) {
+      double leaf_tlp = turgorLossPoint(leafPI0[c], leafEPS[c]);
+      //From Bartlett,et al (2016). The correlations and sequence of plant stomatal, hydraulic, and wilting responses to drought. Proceedings of the National Academy of Sciences of the United States of America, 113(46), 13098–13103. https://doi.org/10.1073/pnas.1604088113
+      double leaf_P50 = std::min(0.0, 0.9944*leaf_tlp + 0.2486);
+      double leaf_P88 = 1.2593*leaf_P50 - 1.4264; //Regression using data from Choat et al. 2012
+      NumericVector par = psi2Weibull(leaf_P50, leaf_P88);
+      VCleaf_d[c] = par["d"];
+    }
   }
   return(VCleaf_d);
 }
 NumericVector VCleafCWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector VCleaf_c = speciesNumericParameter(SP, SpParams, "VCleaf_c");
-  NumericVector VCstem_c = VCstemCWithImputation(SP, SpParams);
+  NumericVector leafPI0 = leafPI0WithImputation(SP, SpParams);
+  NumericVector leafEPS = leafEPSWithImputation(SP, SpParams);
   for(int c=0;c<VCleaf_c.size();c++) {
-    if(NumericVector::is_na(VCleaf_c[c])) VCleaf_c[c] = VCstem_c[c];
+    if(NumericVector::is_na(VCleaf_c[c])) {
+      double leaf_tlp = turgorLossPoint(leafPI0[c], leafEPS[c]);
+      //From Bartlett,et al (2016). The correlations and sequence of plant stomatal, hydraulic, and wilting responses to drought. Proceedings of the National Academy of Sciences of the United States of America, 113(46), 13098–13103. https://doi.org/10.1073/pnas.1604088113
+      double leaf_P50 = std::min(0.0, 0.9944*leaf_tlp + 0.2486);
+      double leaf_P88 = 1.2593*leaf_P50 - 1.4264; //Regression using data from Choat et al. 2012
+      NumericVector par = psi2Weibull(leaf_P50, leaf_P88);
+      VCleaf_c[c] = par["c"];
+    }
   }
   return(VCleaf_c);
 }
