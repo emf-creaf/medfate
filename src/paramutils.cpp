@@ -338,7 +338,20 @@ NumericVector Al2AsWithImputation(IntegerVector SP, DataFrame SpParams) {
   CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
   CharacterVector leafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
   NumericVector Al2As = speciesNumericParameter(SP, SpParams, "Al2As");
+  //Access internal data frame "trait_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_Al2As = TFM["Al2As"];
+  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
   for(int c=0;c<Al2As.size();c++) {
+    if(NumericVector::is_na(Al2As[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          Al2As[c] = fam_Al2As[i];
+        }
+      }
+    }
     if(NumericVector::is_na(Al2As[c])) {
       if(leafShape[c]=="Linear") {
         Al2As[c]= 2156.0;
@@ -573,7 +586,20 @@ NumericVector WUEWithImputation(IntegerVector SP, DataFrame SpParams) {
   CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
   CharacterVector leafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
   NumericVector WUE = speciesNumericParameter(SP, SpParams, "WUE");
+  //Access internal data frame "trait_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_WUE = TFM["WUE"];
+  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
   for(int c=0;c<WUE.size();c++) {
+    if(NumericVector::is_na(WUE[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          WUE[c] = fam_WUE[i];
+        }
+      }
+    }
     if(NumericVector::is_na(WUE[c])) {
       if(leafShape[c]=="Linear") {
         WUE[c]= 3.707131;
@@ -598,7 +624,20 @@ NumericVector psi50Imputation(NumericVector psi50, IntegerVector SP, DataFrame S
   CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
   CharacterVector GrowthForm = speciesCharacterParameter(SP, SpParams, "GrowthForm");
   CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
+  //Access internal data frame "trait_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_P50 = TFM["P50"];
+  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
   for(int c=0;c<psi50.size();c++) {
+    if(NumericVector::is_na(psi50[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          psi50[c] = fam_P50[i];
+        }
+      }
+    }
     if(NumericVector::is_na(psi50[c])) {
       // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
       if(Group[c]=="Angiosperm") {
@@ -682,7 +721,20 @@ NumericVector KmaxStemXylemWithImputation(IntegerVector SP, DataFrame SpParams) 
   CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
   CharacterVector GrowthForm = speciesCharacterParameter(SP, SpParams, "GrowthForm");
   CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
+  //Access internal data frame "trait_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_Ks = TFM["Kmax_stemxylem"];
+  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
   for(int c=0;c<Kmax_stemxylem.size();c++) {
+    if(NumericVector::is_na(Kmax_stemxylem[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          Kmax_stemxylem[c] = fam_Ks[i];
+        }
+      }
+    }
     if(NumericVector::is_na(Kmax_stemxylem[c])) {
       // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
       if(Group[c]=="Angiosperm") {
@@ -862,7 +914,20 @@ NumericVector VCrootCWithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 NumericVector WoodCWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector WoodC = speciesNumericParameter(SP, SpParams, "WoodC");
+  //Access internal data frame "trait_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_WoodC = TFM["WoodC"];
+  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
   for(int c=0;c<WoodC.size();c++) {
+    if(NumericVector::is_na(WoodC[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          WoodC[c] = fam_WoodC[i];
+        }
+      }
+    }
     if(NumericVector::is_na(WoodC[c])) {
       WoodC[c] = 0.5; 
     }

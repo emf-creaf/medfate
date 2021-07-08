@@ -1325,6 +1325,7 @@ Parameter $\Psi_{critic}$ (`Psi_Critic`) is the water potential corresponding to
 P50_data = rbind(martin_stpaul[, c("Species", "P50")],
                  choat[, c("Species", "P50")],
                  hydratry[, c("Species", "P50")])
+P50_data$P50 <- as.numeric(P50_data$P50)
 ```
 TRY also contains data from xylem vulnerability curves, which mostly overlaps other data sources, but from which we can perhaps obtain additional $\Psi_{50}$ records [@Pausas2016;@Manzoni2013]:
 ```{r}
