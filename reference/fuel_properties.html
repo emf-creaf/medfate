@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.1</span>
       </span>
     </div>
 
@@ -272,7 +272,7 @@
 #&gt; [1] 80
 #&gt; 
 #&gt; $understoryLAI
-#&gt; [1] 0.009045797
+#&gt; [1] 0.0083744
 #&gt; 
 #&gt; $canopyBaseHeight
 #&gt; [1] 270
@@ -293,23 +293,23 @@
 <span class='va'>fccs</span> <span class='op'>=</span> <span class='fu'>fuel_FCCS</span><span class='op'>(</span><span class='va'>exampleforestMED</span>, <span class='fl'>50</span>,<span class='fl'>100</span>, <span class='va'>SpParamsMED</span><span class='op'>)</span>
 <span class='va'>fccs</span>
 </div><div class='output co'>#&gt;                 w cover hbc htc habc hatc       delta        rhob rhop
-#&gt; canopy 0.62795536   100 2.7 7.4  2.6  8.0 4.754913510  0.13206452  400
+#&gt; canopy 0.61531386   100 2.7 7.4  2.6  8.0 4.770490365  0.12898336  400
 #&gt; shrub  0.02372309    50 0.4 0.5  0.0  0.8 0.642625347  0.03691589  400
 #&gt; herb   0.02800000    10 0.0  NA  0.0   NA 0.200000000  0.14000000  400
-#&gt; woody  0.21125902    NA 0.0  NA  0.0   NA 0.007993153 26.43000000  400
-#&gt; litter 0.27653223    NA 0.0  NA  0.0   NA 0.014259749 19.39250312  400
-#&gt;                  PV         beta   betarel etabetarel     sigma      pDead
-#&gt; canopy 1.569888e-03 3.301613e-04 0.2107675  0.4640480  5227.832 0.02157466
-#&gt; shrub  5.930772e-05 9.228973e-05 0.3529540  0.6741035  4141.000 0.07627965
-#&gt; herb   7.000000e-05 3.500000e-04 0.9032102  0.9950024 11483.000 0.00000000
-#&gt; woody  5.281476e-04 6.607500e-02 0.9032102  0.9950024  1601.050 1.00000000
-#&gt; litter 6.913306e-04 4.848126e-02 9.2520482  0.1424810  7441.017 1.00000000
+#&gt; woody  0.20319943    NA 0.0  NA  0.0   NA 0.007688211 26.43000000  400
+#&gt; litter 0.27544624    NA 0.0  NA  0.0   NA 0.014186176 19.41652394  400
+#&gt;                  PV         beta   betarel etabetarel     sigma        pDead
+#&gt; canopy 1.538285e-03 3.224584e-04 0.2068014  0.4571254  5252.030 0.0004042436
+#&gt; shrub  5.930772e-05 9.228973e-05 0.3335222  0.6494899  4141.000 0.1448400000
+#&gt; herb   7.000000e-05 3.500000e-04 0.8582671  0.9889544 11483.000 0.0000000000
+#&gt; woody  5.079986e-04 6.607500e-02 0.8582671  0.9889544  1601.050 1.0000000000
+#&gt; litter 6.886156e-04 4.854131e-02 9.2478770  0.1426090  7438.017 1.0000000000
 #&gt;              FAI        h           RV   MinFMC    MaxFMC ActFMC
-#&gt; canopy 8.2071127 20978.41 1.569888e-03 74.39303 112.51518     NA
+#&gt; canopy 8.0791175 21012.89 1.538285e-03 74.74129 112.91297     NA
 #&gt; shrub  0.2455933 20117.67 5.930772e-05 63.64891  96.53441     NA
 #&gt; herb   0.8038100 18608.00 7.000000e-05       NA        NA     NA
-#&gt; woody  0.8455906 18608.00 5.281476e-04       NA        NA     NA
-#&gt; litter 5.1442027 18608.00 6.913306e-04       NA        NA     NA</div><div class='input'>
+#&gt; woody  0.8133311 18608.00 5.079986e-04       NA        NA     NA
+#&gt; litter 5.1219343 18608.00 6.886156e-04       NA        NA     NA</div><div class='input'>
 <span class='fu'>fuel_windAdjustmentFactor</span><span class='op'>(</span><span class='va'>fccs</span><span class='op'>$</span><span class='va'>htc</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span>, <span class='va'>fccs</span><span class='op'>$</span><span class='va'>hbc</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>, <span class='va'>fccs</span><span class='op'>$</span><span class='va'>htc</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>, <span class='va'>fccs</span><span class='op'>$</span><span class='va'>cover</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 0.1989258</div></pre>
   </div>

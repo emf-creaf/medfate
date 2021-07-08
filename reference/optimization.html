@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.1</span>
       </span>
     </div>
 
@@ -272,12 +272,12 @@
 <span class='fu'>multiple_runs</span><span class='op'>(</span><span class='va'>parMatrix</span>, 
               <span class='va'>x1</span>, <span class='va'>examplemeteo</span>, latitude <span class='op'>=</span> <span class='fl'>42</span>, elevation <span class='op'>=</span> <span class='fl'>100</span>,
               summary_function <span class='op'>=</span> <span class='va'>sf</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; 1. Parameter values = [200, 500] f = 339.613438624293
-#&gt; 2. Parameter values = [300, 1000] f = 340.331576417271</div><div class='output co'>#&gt; [[1]]
-#&gt; [1] 339.6134
+</div><div class='output co'>#&gt; 1. Parameter values = [200, 500] f = 339.135934304705
+#&gt; 2. Parameter values = [300, 1000] f = 339.840547785392</div><div class='output co'>#&gt; [[1]]
+#&gt; [1] 339.1359
 #&gt; 
 #&gt; [[2]]
-#&gt; [1] 340.3316
+#&gt; [1] 339.8405
 #&gt; </div><div class='input'>              
 <span class='co'>#Load observed data (in this case the same simulation results with some added error)  </span>
 <span class='co'># Generate a prediction function for total transpiration over the simulated period</span>
@@ -290,8 +290,8 @@
 
 <span class='co'># Evaluate for the values of the parameter matrix</span>
 <span class='fu'>of</span><span class='op'>(</span><span class='va'>parMatrix</span><span class='op'>[</span><span class='fl'>1</span>, <span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 339.6134</div><div class='input'><span class='fu'>of</span><span class='op'>(</span><span class='va'>parMatrix</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 339.6134 340.3316</div><div class='input'>
+</div><div class='output co'>#&gt; [1] 339.1359</div><div class='input'><span class='fu'>of</span><span class='op'>(</span><span class='va'>parMatrix</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 339.1359 339.8405</div><div class='input'>
 
 <span class='co'># Generate a loglikelihood function for soil water content</span>
 <span class='co'># as a function of parameters "Z50" and "Z95" for cohort "T1_157"</span>
@@ -304,8 +304,8 @@
 
 <span class='co'># Loglikelihood for the values of the parameter matrix</span>
 <span class='fu'>oef</span><span class='op'>(</span><span class='va'>parMatrix</span><span class='op'>[</span><span class='fl'>1</span>, <span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] -1330.649</div><div class='input'><span class='fu'>oef</span><span class='op'>(</span><span class='va'>parMatrix</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] -1330.6490   478.2192</div><div class='input'>
+</div><div class='output co'>#&gt; [1] -1318.884</div><div class='input'><span class='fu'>oef</span><span class='op'>(</span><span class='va'>parMatrix</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] -1318.8835   484.2604</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

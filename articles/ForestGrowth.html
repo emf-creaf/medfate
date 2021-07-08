@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.1</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@
       <h1 data-toc-skip>Forest growth</h1>
                         <h4 class="author">Miquel De Caceres</h4>
             
-            <h4 class="date">2021-07-07</h4>
+            <h4 class="date">2021-07-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/master/vignettes/ForestGrowth.Rmd"><code>vignettes/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -193,22 +193,22 @@
 <p>Element <code>above</code> contains the aboveground structure data that we already know, but with additional columns that describe the estimated initial amount of sapwood area and carbon reserves (if required):</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">above</span></code></pre></div>
-<pre><code>##         SP        N   DBH Cover   H        CR          SA  LAI_live
-## T1_157 157 168.0000 37.55    NA 800 0.6605196 349.0550668 1.0064372
-## T2_176 176 384.0000 14.60    NA 660 0.6055642  97.2338913 0.9266157
-## S1_174 174 749.4923    NA  3.75  80 0.8032817   0.9248208 0.0428389
+<pre><code>##         SP        N   DBH Cover   H        CR          SA   LAI_live
+## T1_157 157 168.0000 37.55    NA 800 0.6605196 349.0550668 1.00643723
+## T2_176 176 384.0000 14.60    NA 660 0.6055642  97.2338913 0.92661573
+## S1_174 174 749.4923    NA  3.75  80 0.8032817   0.8561788 0.03965932
 ##        LAI_expanded LAI_dead
-## T1_157    1.0064372        0
-## T2_176    0.9266157        0
-## S1_174    0.0428389        0</code></pre>
+## T1_157   1.00643723        0
+## T2_176   0.92661573        0
+## S1_174   0.03965932        0</code></pre>
 <p>As with the soil input object, the <code>growthInput</code> object will be modified during simulations. In the case of <code><a href="../reference/growth.html">growth()</a></code>, these modifications concern <code>SA</code>, <code>fastCstorage</code>, <code>slowCstorage</code>, <code>LAI_expanded</code> and <code>LAI_dead</code> in element <code>above</code>, as well as canopy variables.</p>
 <p>Elements starting with <code>params*</code> contain cohort-specific model parameters. Aboveground parameters related to plant transpiration can be seen in <code>paramsTransp</code>:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsTransp</span></code></pre></div>
 <pre><code>##        Tmax_LAI Tmax_LAIsq Psi_Extract Psi_Critic      WUE pRootDisc
-## T1_157    0.134     -0.006   -2.600000  -4.298444 3.613308         0
-## T2_176    0.134     -0.006   -3.001667  -4.218333 1.475715         0
-## S1_174    0.134     -0.006   -3.455000  -6.951667 2.433101         0</code></pre>
+## T1_157    0.134     -0.006   -2.600000  -3.816852 3.613308         0
+## T2_176    0.134     -0.006   -3.001667  -3.001667 1.475715         0
+## S1_174    0.134     -0.006   -3.455000  -6.950920 2.433101         0</code></pre>
 <p>Belowground parameters can be seen in <code>below</code> and include root distribution as well as maximum root and rhizosphere conductances by soil layer:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">below</span></code></pre></div>
@@ -256,18 +256,18 @@
 ## Initial snowpack content (mm): 0
 ## Performing daily simulations 
 ##  Year 2001:.................................... [update structural variables] done.
-## Final soil water content (mm): 167.073
+## Final soil water content (mm): 168.009
 ## Final snowpack content (mm): 0
-## Change in soil water content (mm): -17.9959
-## Soil water balance result (mm): -17.9959
+## Change in soil water content (mm): -17.0602
+## Soil water balance result (mm): -17.0602
 ## Change in snowpack water content (mm): 0
-## Snowpack water balance result (mm): 7.10543e-15
+## Snowpack water balance result (mm): 0
 ## Water balance components:
 ##   Precipitation (mm) 513
 ##   Rain (mm) 462 Snow (mm) 51
-##   Interception (mm) 91 Net rainfall (mm) 372
-##   Infiltration (mm) 413 Runoff (mm) 10 Deep drainage (mm) 108
-##   Soil evaporation (mm) 41 Transpiration (mm) 283</code></pre>
+##   Interception (mm) 90 Net rainfall (mm) 372
+##   Infiltration (mm) 413 Runoff (mm) 10 Deep drainage (mm) 116
+##   Soil evaporation (mm) 41 Transpiration (mm) 273</code></pre>
 <p>While water/carbon balances and growth of leaf/sapwood/root tissues is performed on a daily basis, structural variables are only updated once a year, here coinciding with the end of the simulation.</p>
 </div>
 <div id="plotting-results" class="section level2">

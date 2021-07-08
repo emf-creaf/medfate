@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.1</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@
       <h1 data-toc-skip>Preparing inputs</h1>
                         <h4 class="author">Miquel De Caceres</h4>
             
-            <h4 class="date">2021-07-07</h4>
+            <h4 class="date">2021-07-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/master/vignettes/PreparingInputs.Rmd"><code>vignettes/PreparingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>PreparingInputs.Rmd</code></div>
@@ -848,10 +848,10 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">above</span> <span class="op">=</span> <span class="fu"><a href="../reference/modelInput.html">forest2aboveground</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
 <span class="va">above</span></code></pre></div>
-<pre><code>##         SP        N   DBH Cover   H        CR  LAI_live LAI_expanded LAI_dead
-## T1_157 157 168.0000 37.55    NA 800 0.6605196 1.0064372    1.0064372        0
-## T2_176 176 384.0000 14.60    NA 660 0.6055642 0.9266157    0.9266157        0
-## S1_174 174 749.4923    NA  3.75  80 0.8032817 0.0428389    0.0428389        0</code></pre>
+<pre><code>##         SP        N   DBH Cover   H        CR   LAI_live LAI_expanded LAI_dead
+## T1_157 157 168.0000 37.55    NA 800 0.6605196 1.00643723   1.00643723        0
+## T2_176 176 384.0000 14.60    NA 660 0.6055642 0.92661573   0.92661573        0
+## S1_174 174 749.4923    NA  3.75  80 0.8032817 0.03965932   0.03965932        0</code></pre>
 <p>Note that the call to <code><a href="../reference/modelInput.html">forest2aboveground()</a></code> included species parameters, because species-specific values are needed to calculate leaf area from tree diameters or shrub cover. Columns <code>N</code>, <code>DBH</code> and <code>Cover</code> are required for simulating growth, but not for soil water balance, which only requires columns <code>SP</code>, <code>H</code> (in cm), <code>CR</code> (i.e. the crown ratio), <code>LAI_live</code>, <code>LAI_expanded</code> and <code>LAI_dead</code>. Here plant cohorts are given unique codes that tell us whether they correspond to trees or shrubs, but the user can use other row identifiers as long as they are unique. In practice, the user only needs to worry to calculate the values for <code>LAI_live</code>. <code>LAI_live</code> and <code>LAI_expanded</code> can contain the same LAI values, and <code>LAI_dead</code> is normally zero. This is so because models update <code>LAI_expanded</code> and <code>LAI_dead</code> according to the leaf phenology of species.</p>
 <p>Aboveground leaf area distribution (with or without distinguishing among cohorts) can be examined by calling function <code><a href="../reference/Vertical%20profiles.html">vprofile_leafAreaDensity()</a></code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">

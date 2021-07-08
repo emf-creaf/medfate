@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.1</span>
       </span>
     </div>
 
@@ -240,37 +240,37 @@
 #&gt; Initial snowpack content (mm): 0
 #&gt; Performing daily simulations 
 #&gt;  Year 2001:....................................done.
-#&gt; Final soil water content (mm): 256.371
+#&gt; Final soil water content (mm): 256.647
 #&gt; Final snowpack content (mm): 0
-#&gt; Change in soil water content (mm): -34.8853
-#&gt; Soil water balance result (mm): -34.8853
+#&gt; Change in soil water content (mm): -34.6099
+#&gt; Soil water balance result (mm): -34.6099
 #&gt; Change in snowpack water content (mm): 0
-#&gt; Snowpack water balance result (mm): 7.10543e-15
+#&gt; Snowpack water balance result (mm): 0
 #&gt; Water balance components:
 #&gt;   Precipitation (mm) 513
 #&gt;   Rain (mm) 462 Snow (mm) 51
 #&gt;   Interception (mm) 100 Net rainfall (mm) 362
 #&gt;   Infiltration (mm) 404 Runoff (mm) 9 Deep drainage (mm) 63
-#&gt;   Soil evaporation (mm) 42 Transpiration (mm) 333</div><div class='input'>
+#&gt;   Soil evaporation (mm) 43 Transpiration (mm) 333</div><div class='input'>
 <span class='co'>#Load observed data (in this case the same simulation results with some added error)  </span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>exampleobs</span><span class='op'>)</span>
 
 <span class='co'>#Evaluation statistics for soil water content</span>
 <span class='fu'>evaluation_stats</span><span class='op'>(</span><span class='va'>S1</span>, <span class='va'>exampleobs</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;             n          Bias           MAE             r           NSE 
-#&gt; 365.000000000  -0.001498874   0.002879038   0.952669647   0.857428648 
+#&gt; 365.000000000  -0.001464911   0.002856992   0.952869740   0.860223171 
 #&gt;        NSEabs 
-#&gt;   0.598447922 </div><div class='input'>
+#&gt;   0.601522753 </div><div class='input'>
 <span class='co'>#NSE only</span>
 <span class='fu'>evaluation_metric</span><span class='op'>(</span><span class='va'>S1</span>, <span class='va'>exampleobs</span>, metric<span class='op'>=</span><span class='st'>"NSE"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.8574286</div><div class='input'>
+</div><div class='output co'>#&gt; [1] 0.8602232</div><div class='input'>
 
 <span class='co'>#Comparison of temporal dynamics</span>
 <span class='fu'>evaluation_plot</span><span class='op'>(</span><span class='va'>S1</span>, <span class='va'>exampleobs</span><span class='op'>)</span>
 </div><div class='img'><img src='evaluation-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'>#Loglikelihood value</span>
 <span class='fu'>evaluation_metric</span><span class='op'>(</span><span class='va'>S1</span>, <span class='va'>exampleobs</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 1325.289</div></pre>
+</div><div class='output co'>#&gt; [1] 1325.797</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
