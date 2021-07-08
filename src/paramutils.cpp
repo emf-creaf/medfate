@@ -361,7 +361,7 @@ NumericVector Al2AsWithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 NumericVector woodDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector woodDensity = speciesNumericParameter(SP, SpParams, "WoodDensity");
-  //Access internal data frame "density_family_means"
+  //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
@@ -383,7 +383,7 @@ NumericVector woodDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 NumericVector leafDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector leafDensity = speciesNumericParameter(SP, SpParams, "LeafDensity");
-  //Access internal data frame "density_family_means"
+  //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
@@ -475,7 +475,7 @@ NumericVector stemAFWithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 NumericVector leafPI0WithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector leafPI0 = speciesNumericParameter(SP, SpParams, "LeafPI0");
-  //Access internal data frame "density_family_means"
+  //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
@@ -498,7 +498,7 @@ NumericVector leafPI0WithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 NumericVector leafEPSWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector leafEPS = speciesNumericParameter(SP, SpParams, "LeafEPS");
-  //Access internal data frame "density_family_means"
+  //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
@@ -521,7 +521,7 @@ NumericVector leafEPSWithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 NumericVector leafAFWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector leafAF = speciesNumericParameter(SP, SpParams, "LeafAF");
-  //Access internal data frame "density_family_means"
+  //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
@@ -635,6 +635,48 @@ NumericVector psiExtractWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(Psi_Extract);
 }
+NumericVector GswmaxWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector Gswmax = speciesNumericParameter(SP, SpParams, "Gswmax");
+  //Access internal data frame "trait_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_gswmax = TFM["Gswmax"];
+  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  
+  for(int c=0;c<Gswmax.size();c++) {
+    if(NumericVector::is_na(Gswmax[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          Gswmax[c] = fam_gswmax[i];
+        }
+      }
+    }
+    if(NumericVector::is_na(Gswmax[c])) Gswmax[c] = 0.200;
+  }
+  return(Gswmax);
+}
+NumericVector GswminWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector Gswmin = speciesNumericParameter(SP, SpParams, "Gswmin");
+  //Access internal data frame "trait_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_gswmin = TFM["Gswmin"];
+  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  for(int c=0;c<Gswmin.size();c++) {
+    if(NumericVector::is_na(Gswmin[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          Gswmin[c] = fam_gswmin[i];
+        }
+      }
+    }
+    if(NumericVector::is_na(Gswmin[c])) Gswmin[c] = 0.0049;
+  }
+  return(Gswmin);
+}
+
 NumericVector KmaxStemXylemWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector Kmax_stemxylem = speciesNumericParameter(SP, SpParams, "Kmax_stemxylem");
   CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
@@ -672,59 +714,16 @@ NumericVector KmaxRootXylemWithImputation(IntegerVector SP, DataFrame SpParams) 
   return(Kmax_rootxylem);
 }
 NumericVector VCleafkmaxWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
   NumericVector VCleaf_kmax = speciesNumericParameter(SP, SpParams, "VCleaf_kmax");
+  NumericVector Gswmax = GswmaxWithImputation(SP, SpParams);
   for(int c=0;c<VCleaf_kmax.size();c++) {
-    //Sack, L., & Holbrook, N.M. 2006. Leaf Hydraulics. Annual Review of Plant Biology 57: 361–381.
+    //Franks, P. J. (2006). Higher rates of leaf gas exchange are associated with higher leaf hydrodynamic pressure gradients. Plant, Cell and Environment, 29(4), 584–592. https://doi.org/10.1111/j.1365-3040.2005.01434.x
+    //Original coefficients were c=0.02 and m = 1.4 but did not match graphical representation
     if(NumericVector::is_na(VCleaf_kmax[c])) {
-      if(Group[c]=="Angiosperm") VCleaf_kmax[c] = 8.0; 
-      else VCleaf_kmax[c] = 6.0; 
+      VCleaf_kmax[c] = pow(Gswmax[c]/0.015,1.0/1.3);
     }
   }
   return(VCleaf_kmax);
-}
-NumericVector GswmaxWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector VCleaf_kmax = VCleafkmaxWithImputation(SP, SpParams);
-  NumericVector Gswmax = speciesNumericParameter(SP, SpParams, "Gswmax");
-  for(int c=0;c<Gswmax.size();c++) {
-    //Mencuccini M (2003) The ecological significance of long-distance water transport : short-term regulation , long-term acclimation and the hydraulic costs of stature across plant life forms. Plant Cell Environ 26:163–182
-    if(NumericVector::is_na(Gswmax[c])) Gswmax[c] = 0.12115*pow(VCleaf_kmax[c], 0.633);
-  }
-  return(Gswmax);
-}
-NumericVector GswminWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector Order = speciesCharacterParameter(SP, SpParams, "Order");
-  NumericVector VCleaf_kmax = VCleafkmaxWithImputation(SP, SpParams);
-  NumericVector Gswmin = speciesNumericParameter(SP, SpParams, "Gswmin");
-  for(int c=0;c<Gswmin.size();c++) {
-    //Duursma RA, Blackman CJ, Lopéz R, et al (2018) On the minimum leaf conductance: its role in models of plant water use, and ecological and environmental controls. New Phytol. doi: 10.1111/nph.15395
-    if(NumericVector::is_na(Gswmin[c])) {
-      if(Order[c]=="Pinales") {
-        Gswmin[c] = 0.003;
-      } else if(Order[c]=="Araucariales") {
-        Gswmin[c] = 0.003;
-      } else if(Order[c]=="Ericales") {
-        Gswmin[c] = 0.004;
-      } else if(Order[c]=="Fagales") {
-        Gswmin[c] = 0.0045;
-      } else if(Order[c]=="Rosales") {
-        Gswmin[c] = 0.0045;
-      } else if(Order[c]=="Cupressales") {
-        Gswmin[c] = 0.0045;
-      } else if(Order[c]=="Lamiales") {
-        Gswmin[c] = 0.0055;
-      } else if(Order[c]=="Fabales") {
-        Gswmin[c] = 0.0065;
-      } else if(Order[c]=="Myrtales") {
-        Gswmin[c] = 0.0075;
-      } else if(Order[c]=="Poales") {
-        Gswmin[c] = 0.0110;
-      } else {
-        Gswmin[c] = 0.0049;
-      }
-    }
-  }
-  return(Gswmin);
 }
 NumericVector Vmax298WithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector SLA = specificLeafAreaWithImputation(SP, SpParams);

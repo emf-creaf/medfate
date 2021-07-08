@@ -16,7 +16,7 @@ SpParamsUS <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsUS.xlsx",
 usethis::use_data(SpParamsUS, overwrite = T)
 rm(SpParamsUS)
 
-## Density family means
+## Trait family means
 trait_family_means = read.csv2("data-raw/trait_family_means.csv", dec=".")
 usethis::use_data(trait_family_means, internal=TRUE, overwrite=TRUE)
 
