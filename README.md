@@ -50,11 +50,14 @@ devtools::install_github("emf-creaf/medfate",
 -   The package includes a number of *vignettes* that illustrate how to
     run simulation models in **medfate**.
 
--   Complete documentation of the models included in the package can be
-    found at the *reference book*
-    <https://emf-creaf.github.io/medfatebook/index.html>.
+-   Additional articles can be found at the package
+    [website](https://emf-creaf.github.io/medfate/).
 
-## Companion packages
+-   Complete documentation of the models included in the package can be
+    found in [medfate’s reference
+    book](https://emf-creaf.github.io/medfatebook/index.html).
+
+## Companion R packages
 
 During the development of **medfate** some functions have been
 originally placed there and then moved to more specialized packages
