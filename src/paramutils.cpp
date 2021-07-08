@@ -725,9 +725,29 @@ NumericVector VCleafkmaxWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(VCleaf_kmax);
 }
+NumericVector NareaWithImputation(IntegerVector SP, DataFrame SpParams){
+  NumericVector Narea = speciesNumericParameter(SP, SpParams, "Narea");
+  //Access internal data frame "trait_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_Narea = TFM["Narea"];
+  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  for(int c=0;c<Narea.size();c++) {
+    if(NumericVector::is_na(Narea[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          Narea[c] = fam_Narea[i];
+        }
+      }
+    }
+    if(NumericVector::is_na(Narea[c])) Narea[c] = 1.885577;
+  }
+  return(Narea);
+}
 NumericVector Vmax298WithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector SLA = specificLeafAreaWithImputation(SP, SpParams);
-  NumericVector Narea = speciesNumericParameter(SP, SpParams, "Narea");
+  NumericVector Narea = NareaWithImputation(SP, SpParams);
   NumericVector Vmax298 = speciesNumericParameter(SP, SpParams, "Vmax298");
   for(int c=0;c<Vmax298.size();c++) {
     if(NumericVector::is_na(Vmax298[c]))  {
@@ -1067,6 +1087,7 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "VCleaf_kmax") return(VCleafkmaxWithImputation(SP, SpParams));
     else if(parName == "Gswmax") return(GswmaxWithImputation(SP, SpParams));
     else if(parName == "Gswmin") return(GswminWithImputation(SP, SpParams));
+    else if(parName == "Narea") return(NareaWithImputation(SP, SpParams));
     else if(parName == "Vmax298") return(Vmax298WithImputation(SP, SpParams));
     else if(parName == "Jmax298") return(Jmax298WithImputation(SP, SpParams));
     else if(parName == "VCstem_c") return(VCstemCWithImputation(SP, SpParams));
