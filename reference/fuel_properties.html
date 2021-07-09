@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.2</span>
       </span>
     </div>
 
@@ -292,24 +292,24 @@
 <span class='co'>#Calculate fuel properties according to FCCS</span>
 <span class='va'>fccs</span> <span class='op'>=</span> <span class='fu'>fuel_FCCS</span><span class='op'>(</span><span class='va'>exampleforestMED</span>, <span class='fl'>50</span>,<span class='fl'>100</span>, <span class='va'>SpParamsMED</span><span class='op'>)</span>
 <span class='va'>fccs</span>
-</div><div class='output co'>#&gt;                 w cover hbc htc habc hatc       delta        rhob rhop
-#&gt; canopy 0.61531386   100 2.7 7.4  2.6  8.0 4.770490365  0.12898336  400
-#&gt; shrub  0.02372309    50 0.4 0.5  0.0  0.8 0.642625347  0.03691589  400
-#&gt; herb   0.02800000    10 0.0  NA  0.0   NA 0.200000000  0.14000000  400
-#&gt; woody  0.20319943    NA 0.0  NA  0.0   NA 0.007688211 26.43000000  400
-#&gt; litter 0.27544624    NA 0.0  NA  0.0   NA 0.014186176 19.41652394  400
+</div><div class='output co'>#&gt;                 w cover hbc htc habc hatc       delta        rhob     rhop
+#&gt; canopy 0.61531386   100 2.7 7.4  2.6  8.0 4.770490365  0.12898336 593.5150
+#&gt; shrub  0.02372309    50 0.4 0.5  0.0  0.8 0.642625347  0.03691589 308.7209
+#&gt; herb   0.02800000    10 0.0  NA  0.0   NA 0.200000000  0.14000000 400.0000
+#&gt; woody  0.20319943    NA 0.0  NA  0.0   NA 0.007688211 26.43000000 171.3280
+#&gt; litter 0.27544624    NA 0.0  NA  0.0   NA 0.014186176 19.41652394 387.1262
 #&gt;                  PV         beta   betarel etabetarel     sigma        pDead
-#&gt; canopy 1.538285e-03 3.224584e-04 0.2068014  0.4571254  5252.030 0.0004042436
-#&gt; shrub  5.930772e-05 9.228973e-05 0.3335222  0.6494899  4141.000 0.1448400000
-#&gt; herb   7.000000e-05 3.500000e-04 0.8582671  0.9889544 11483.000 0.0000000000
-#&gt; woody  5.079986e-04 6.607500e-02 0.8582671  0.9889544  1601.050 1.0000000000
-#&gt; litter 6.886156e-04 4.854131e-02 9.2478770  0.1426090  7438.017 1.0000000000
+#&gt; canopy 1.069526e-03 0.0002241962 0.1483048  0.3475696  5252.030 0.0004042436
+#&gt; shrub  7.684315e-05 0.0001195769 1.1271871  0.9925659  4141.000 0.1448400000
+#&gt; herb   7.000000e-05 0.0003500000 3.1390396  0.3696781 11483.000 0.0000000000
+#&gt; woody  1.186026e-03 0.1542654897 3.1390396  0.3696781  1601.050 1.0000000000
+#&gt; litter 7.115153e-04 0.0501555387 9.2478770  0.1426090  7438.017 1.0000000000
 #&gt;              FAI        h           RV   MinFMC    MaxFMC ActFMC
-#&gt; canopy 8.0791175 21012.89 1.538285e-03 74.74129 112.91297     NA
-#&gt; shrub  0.2455933 20117.67 5.930772e-05 63.64891  96.53441     NA
+#&gt; canopy 5.7941052 21012.89 1.036728e-03 74.74129 112.91297     NA
+#&gt; shrub  0.3182075 20117.67 7.684315e-05 63.64891  96.53441     NA
 #&gt; herb   0.8038100 18608.00 7.000000e-05       NA        NA     NA
-#&gt; woody  0.8133311 18608.00 5.079986e-04       NA        NA     NA
-#&gt; litter 5.1219343 18608.00 6.886156e-04       NA        NA     NA</div><div class='input'>
+#&gt; woody  1.8988864 18608.00 1.186026e-03       NA        NA     NA
+#&gt; litter 5.2922629 18608.00 7.115153e-04       NA        NA     NA</div><div class='input'>
 <span class='fu'>fuel_windAdjustmentFactor</span><span class='op'>(</span><span class='va'>fccs</span><span class='op'>$</span><span class='va'>htc</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span>, <span class='va'>fccs</span><span class='op'>$</span><span class='va'>hbc</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>, <span class='va'>fccs</span><span class='op'>$</span><span class='va'>htc</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>, <span class='va'>fccs</span><span class='op'>$</span><span class='va'>cover</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] 0.1989258</div></pre>
   </div>

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.2</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@
       <h1 data-toc-skip>Preparing inputs</h1>
                         <h4 class="author">Miquel De Caceres</h4>
             
-            <h4 class="date">2021-07-08</h4>
+            <h4 class="date">2021-07-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/master/vignettes/PreparingInputs.Rmd"><code>vignettes/PreparingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>PreparingInputs.Rmd</code></div>
@@ -112,30 +112,31 @@
 ##  [28] "c_fbt"                "d_fbt"                "a_cr"                
 ##  [31] "b_1cr"                "b_2cr"                "b_3cr"               
 ##  [34] "c_1cr"                "c_2cr"                "a_cw"                
-##  [37] "b_cw"                 "LeafDuration"         "Sgdd"                
-##  [40] "Tbgdd"                "Ssen"                 "Phsen"               
-##  [43] "Tbsen"                "SLA"                  "LeafDensity"         
-##  [46] "WoodDensity"          "FineRootDensity"      "conduit2sapwood"     
-##  [49] "r635"                 "pDead"                "Al2As"               
-##  [52] "LeafWidth"            "SRL"                  "RLD"                 
-##  [55] "maxFMC"               "minFMC"               "LeafPI0"             
-##  [58] "LeafEPS"              "LeafAF"               "StemPI0"             
-##  [61] "StemEPS"              "StemAF"               "SAV"                 
-##  [64] "HeatContent"          "LigninPercent"        "ParticleDensity"     
-##  [67] "gammaSWR"             "alphaSWR"             "kPAR"                
-##  [70] "g"                    "Tmax_LAI"             "Tmax_LAIsq"          
-##  [73] "Psi_Extract"          "Psi_Critic"           "WUE"                 
-##  [76] "pRootDisc"            "Gswmin"               "Gswmax"              
-##  [79] "VCleaf_kmax"          "VCleaf_c"             "VCleaf_d"            
-##  [82] "Kmax_stemxylem"       "VCstem_c"             "VCstem_d"            
-##  [85] "Kmax_rootxylem"       "VCroot_c"             "VCroot_d"            
-##  [88] "Narea"                "Vmax298"              "Jmax298"             
-##  [91] "WoodC"                "RERleaf"              "RERsapwood"          
-##  [94] "RERfineroot"          "RGRleafmax"           "RGRsapwoodmax"       
-##  [97] "RGRfinerootmax"       "SeedProductionHeight" "RecrTreeDBH"         
-## [100] "RecrTreeHeight"       "RecrShrubHeight"      "RecrTreeDensity"     
-## [103] "RecrShrubCover"       "RecrZ50"              "RecrZ95"             
-## [106] "MinTempRecr"          "MinMoistureRecr"      "MinFPARRecr"</code></pre>
+##  [37] "b_cw"                 "LeafDuration"         "t0gdd"               
+##  [40] "Sgdd"                 "Tbgdd"                "Ssen"                
+##  [43] "Phsen"                "Tbsen"                "xsen"                
+##  [46] "ysen"                 "SLA"                  "LeafDensity"         
+##  [49] "WoodDensity"          "FineRootDensity"      "conduit2sapwood"     
+##  [52] "r635"                 "pDead"                "Al2As"               
+##  [55] "LeafWidth"            "SRL"                  "RLD"                 
+##  [58] "maxFMC"               "minFMC"               "LeafPI0"             
+##  [61] "LeafEPS"              "LeafAF"               "StemPI0"             
+##  [64] "StemEPS"              "StemAF"               "SAV"                 
+##  [67] "HeatContent"          "LigninPercent"        "gammaSWR"            
+##  [70] "alphaSWR"             "kPAR"                 "g"                   
+##  [73] "Tmax_LAI"             "Tmax_LAIsq"           "Psi_Extract"         
+##  [76] "Psi_Critic"           "WUE"                  "pRootDisc"           
+##  [79] "Gswmin"               "Gswmax"               "VCleaf_kmax"         
+##  [82] "VCleaf_c"             "VCleaf_d"             "Kmax_stemxylem"      
+##  [85] "VCstem_c"             "VCstem_d"             "Kmax_rootxylem"      
+##  [88] "VCroot_c"             "VCroot_d"             "Narea"               
+##  [91] "Vmax298"              "Jmax298"              "WoodC"               
+##  [94] "RERleaf"              "RERsapwood"           "RERfineroot"         
+##  [97] "RGRleafmax"           "RGRsapwoodmax"        "RGRfinerootmax"      
+## [100] "SeedProductionHeight" "RecrTreeDBH"          "RecrTreeHeight"      
+## [103] "RecrShrubHeight"      "RecrTreeDensity"      "RecrShrubCover"      
+## [106] "RecrZ50"              "RecrZ95"              "MinTempRecr"         
+## [109] "MinMoistureRecr"      "MinFPARRecr"</code></pre>
 <p>Not all parameters are needed for all models. The user can find parameter definitions in <code>SpParamsDefinition</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"SpParamsDefinition"</span><span class="op">)</span>
@@ -383,172 +384,184 @@
 <td align="left">years</td>
 </tr>
 <tr class="odd">
+<td align="left">t0gdd</td>
+<td align="left">Date to start the accumulation of degree days</td>
+<td align="left">Numeric</td>
+<td align="left">days</td>
+</tr>
+<tr class="even">
 <td align="left">Sgdd</td>
 <td align="left">Degree days for leaf budburst</td>
 <td align="left">Numeric</td>
 <td align="left">ºC</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Tbgdd</td>
 <td align="left">Base temperature for the calculation of degree days to leaf budburst</td>
 <td align="left">Numeric</td>
 <td align="left">ºC</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Ssen</td>
 <td align="left">Degree days corresponding to senescence</td>
 <td align="left">Numeric</td>
 <td align="left">ºC</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Phsen</td>
 <td align="left">Photoperiod corresponding to start counting senescence</td>
 <td align="left">Numeric</td>
 <td align="left">hours</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Tbsen</td>
 <td align="left">Base temperature for the calculation of degree days to senescence</td>
 <td align="left">Numeric</td>
 <td align="left">ºC</td>
 </tr>
+<tr class="odd">
+<td align="left">xsen</td>
+<td align="left">{0,1,2} discrete values, to allow for any absent/proportional/more than proportional effects of temperature</td>
+<td align="left">Integer</td>
+<td align="left">{0,1,2}</td>
+</tr>
 <tr class="even">
+<td align="left">ysen</td>
+<td align="left">{0,1,2} discrete values, to allow for any absent/proportional/more than proportional effects of photoperiod</td>
+<td align="left">Integer</td>
+<td align="left">{0,1,2}</td>
+</tr>
+<tr class="odd">
 <td align="left">SLA</td>
 <td align="left">Specific leaf area (mm2/mg = m2/kg)</td>
 <td align="left">Numeric</td>
 <td align="left">m2/kg</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LeafDensity</td>
 <td align="left">Density of leaf tissue (dry weight over volume)</td>
 <td align="left">Numeric</td>
 <td align="left">g/cm3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">WoodDensity</td>
 <td align="left">Wood tissue density (at 0% humidity!)</td>
 <td align="left">Numeric</td>
 <td align="left">g/cm3</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">FineRootDensity</td>
 <td align="left">Density of fine root tissue (dry weight over volume).</td>
 <td align="left">Numeric</td>
 <td align="left">g/cm3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">conduit2sapwood</td>
 <td align="left">Proportion of sapwood corresponding to conducive elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="left">Numeric</td>
 <td align="left">[0,1]</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">r635</td>
 <td align="left">Ratio of foliar (photosynthetic) + small branches (&lt;6.35 mm) dry biomass to foliar (photosynthetic) dry biomass</td>
 <td align="left">Numeric</td>
 <td align="left">&gt;=1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">pDead</td>
 <td align="left">Proportion of total fine fuels that are dead</td>
 <td align="left">Numeric</td>
 <td align="left">[0,1]</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Al2As</td>
 <td align="left">Leaf area to sapwood area ratio</td>
 <td align="left">Numeric</td>
 <td align="left">m2·m-2</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">LeafWidth</td>
 <td align="left">Leaf width</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">SRL</td>
 <td align="left">Specific root length</td>
 <td align="left">Numeric</td>
 <td align="left">cm/g</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RLD</td>
 <td align="left">Fine root length density (density of root length per soil volume)</td>
 <td align="left">Numeric</td>
 <td align="left">cm/cm3</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">maxFMC</td>
 <td align="left">Maximum fuel moisture (in percent of dry weight)</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">minFMC</td>
 <td align="left">Minimum fuel moisture (in percent of dry weight)</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LeafPI0</td>
 <td align="left">Osmotic potential at full turgor of leaves</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">LeafEPS</td>
 <td align="left">Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of leaves</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LeafAF</td>
 <td align="left">Apoplastic fraction (proportion of water outside the living cells) in leaves</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">StemPI0</td>
 <td align="left">Osmotic potential at full turgor of symplastic xylem tissue</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">StemEPS</td>
 <td align="left">Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of symplastic xylem tissue</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">StemAF</td>
 <td align="left">Apoplastic fraction (proportion of water outside the living cells) in stem xylem</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">SAV</td>
 <td align="left">Surface-area-to-volume ratio of the small fuel (1h) fraction (leaves and branches &lt; 6.35mm)</td>
 <td align="left">Numeric</td>
 <td align="left">m2/m3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">HeatContent</td>
 <td align="left">High fuel heat content</td>
 <td align="left">Numeric</td>
 <td align="left">kJ/kg</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LigninPercent</td>
 <td align="left">Percent of lignin+cutin over dry weight in leaves</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
-</tr>
-<tr class="even">
-<td align="left">ParticleDensity</td>
-<td align="left">Density of fuel particles</td>
-<td align="left">Numeric</td>
-<td align="left">kg/m3</td>
 </tr>
 <tr class="odd">
 <td align="left">gammaSWR</td>
