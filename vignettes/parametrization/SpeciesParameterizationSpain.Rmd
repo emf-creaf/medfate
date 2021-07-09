@@ -545,7 +545,7 @@ SpParams <- populateTreeAllometries(SpParams, cw_models, "crownwidth")
 ```
 
 ```{r include = FALSE}
-saveRDS(SpParams, "SpParamsSPAIN_allom.rds")
+if(params$store_spparams) saveRDS(SpParams, "SpParamsSPAIN_allom.rds")
 ```
 
 
@@ -626,8 +626,8 @@ fmc_yebra <- openxlsx::read.xlsx(fn_yebra, sheet=2)
 We complemented the formed data bases with our own compilation of plant traits, including leaf phenology:
 ```{r}
 fn_pheno <- file.path(DB_path, "TraitDatabases/LeafPhenology/LeafPhenology.xlsx")
-budburst <- readxl::read_excel(fn_pheno, sheet=1)
-senescence <- readxl::read_excel(fn_pheno, sheet=2)
+budburst <- as.data.frame(readxl::read_excel(fn_pheno, sheet=1))
+senescence <- as.data.frame(readxl::read_excel(fn_pheno, sheet=2))
 ```
 
 flammability traits:
@@ -972,7 +972,7 @@ summary(SpParams[SpParams$GrowthForm != "Shrub",c("Z95")])
 
 Most parameters regulating leaf phenological phases (i.e. bud dormancy, budburst, senescence, bud formation, ...) require calibration exercises using observed weather data and phenological records. 
 
-We compiled a data base with published leaf budburst models [@Vitasse2011]:
+We compiled a data base with published leaf budburst models [@Vitasse2011;@Asse2020]:
 ```{r}
 budburst
 ```
@@ -980,14 +980,14 @@ and leaf senescence models [@Delpierre2009; @Vitasse2011]:
 ```{r}
 senescence
 ```
-We use the leaf budburst model data base to replace the phenology type and leaf phenology parameters:
+Note that some species are repeated. Since we cannot average model parameters, due to parameter correlation, in cases of more than one model by species we selected the one based on a larger sample size (table column `N`), and codified the result in a table column called `Accepted`. We use the leaf budburst model data base to replace the phenology type and leaf phenology parameters:
 ```{r}
-SpParams <- populateTraits(SpParams, as.data.frame(budburst), 
+SpParams <- populateTraits(SpParams, budburst[budburst$Accepted=="Y",], 
                            trait_mapping = c("PhenologyType" = "PhenologyType"),
                            taxon_column = "Species",
                            character_traits = TRUE,
                            erase_previous = TRUE)
-SpParams <- populateTraits(SpParams, as.data.frame(budburst), 
+SpParams <- populateTraits(SpParams, budburst[budburst$Accepted=="Y",], 
                            trait_mapping = c("t0gdd" = "t0gdd",
                                              "Tbgdd" = "Tbgdd",
                                              "Sgdd" = "Sgdd"),
@@ -996,7 +996,7 @@ SpParams <- populateTraits(SpParams, as.data.frame(budburst),
 ```
 Similarly, we use the senescence model database to fill the parameters regulating leaf senescence:
 ```{r}
-SpParams <- populateTraits(SpParams, as.data.frame(senescence), 
+SpParams <- populateTraits(SpParams, senescence[senescence$Accepted=="Y",], 
                            trait_mapping = c("Phsen" = "Phsen",
                                              "Tbsen" = "Tbsen",
                                              "Ssen" = "Ssen",

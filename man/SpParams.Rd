@@ -23,6 +23,8 @@ Data frame \code{SpParamsDefinition} has parameters in rows and columns 'Paramet
 Plant trait parameter sources are listed in the bibliography section. Details of the procedures used to obtain the species parameter tables can be found in the article 'Species parameterization for Spain' at https://emf-creaf.github.io/medfate/. 
 }
 \source{
+Asse, D., Randin, C. F., Bonhomme, M., Delestrade, A., & Chuine, I. (2020). Process-based models outcompete correlative models in projecting spring phenology of trees in a future warmer climate. Agricultural and Forest Meteorology, 285–286(January), 107931. https://doi.org/10.1016/j.agrformet.2020.107931
+
 Bartlett, Megan K, Christine Scoffoni, and Lawren Sack. 2012. The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis. Ecology Letters 15 (5): 393–405. https://doi.org/10.1111/j.1461-0248.2012.01751.x. 
 
 Choat, Brendan, Steven Jansen, Tim J Brodribb, \enc{Hervé}{Herve} Cochard, Sylvain Delzon, Radika Bhaskar, Sandra J Bucci, et al. 2012. Global convergence in the vulnerability of forests to drought. Nature 491 (7426): 752–55. https://doi.org/10.1038/nature11688.
