@@ -223,9 +223,9 @@
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">StandSummary</span></code></pre></div>
 <pre><code>##   Step LeafAreaIndex TreeDensityLive TreeBasalAreaLive ShrubCoverLive MaxHeight
 ## 1    0      1.972712        552.0000          25.03330           3.75  800.0000
-## 2    1      1.940444        546.3412          26.27031           3.75  827.8611
-## 3    2      1.892217        540.7403          27.45050           3.75  854.2001
-## 4    3      1.046097        162.8860          22.35054           3.75  879.3248</code></pre>
+## 2    1      1.940308        546.3412          26.27035           3.75  827.8619
+## 3    2      1.892217        540.7403          27.44458           3.75  854.0943
+## 4    3      1.046097        162.8860          22.35106           3.75  879.3336</code></pre>
 <p>where we can observe an increase in stand basal area and leaf area index during years 1 and 3, but a reduction during the second (drier) year. Species-level analogous statistics are shown using:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">SpeciesSummary</span></code></pre></div>
@@ -233,25 +233,25 @@
 ## 1     0     157    1.00643723        168.0000         18.604545           0.00
 ## 2     0     174    0.03965932          0.0000          0.000000           3.75
 ## 3     0     176    0.92661573        384.0000          6.428754           0.00
-## 4     1     157    1.00643723        166.2777         19.876716           0.00
+## 4     1     157    1.00643723        166.2777         19.876760           0.00
 ## 5     1     174    0.03965932          0.0000          0.000000           3.75
-## 6     1     176    0.89434743        380.0634          6.393594           0.00
-## 7     2     157    1.00643723        164.5731         21.122452           0.00
+## 6     1     176    0.89421162        380.0634          6.393594           0.00
+## 7     2     157    1.00643723        164.5731         21.116526           0.00
 ## 8     2     174    0.03965932          0.0000          0.000000           3.75
 ## 9     2     176    0.84612085        376.1672          6.328050           0.00
-## 10    3     157    1.00643723        162.8860         22.350537           0.00
+## 10    3     157    1.00643723        162.8860         22.351061           0.00
 ## 11    3     174    0.03965932          0.0000          0.000000           3.75
 ##    MaxHeight
 ## 1   800.0000
 ## 2    80.0000
 ## 3   660.0000
-## 4   827.8611
+## 4   827.8619
 ## 5    80.0000
 ## 6   660.6446
-## 7   854.2001
+## 7   854.0943
 ## 8    80.0000
 ## 9   660.6446
-## 10  879.3248
+## 10  879.3336
 ## 11   80.0000</code></pre>
 </div>
 <div id="treeshrub-tables" class="section level3">
@@ -263,20 +263,20 @@
 <pre><code>##   Step Year Cohort Species             Name        N      DBH   Height Z50  Z95
 ## 1    0   NA T1_157     157 Pinus halepensis 168.0000 37.55000 800.0000 750 3000
 ## 2    0   NA T2_176     176     Quercus ilex 384.0000 14.60000 660.0000 750 3000
-## 3    1 2001 T1_157     157 Pinus halepensis 166.2777 39.01309 827.8611 750 3000
+## 3    1 2001 T1_157     157 Pinus halepensis 166.2777 39.01313 827.8619 750 3000
 ## 4    1 2001 T2_176     176     Quercus ilex 380.0634 14.63523 660.6446 750 3000
-## 5    2 2002 T1_157     157 Pinus halepensis 164.5731 40.42479 854.2001 750 3000
+## 5    2 2002 T1_157     157 Pinus halepensis 164.5731 40.41912 854.0943 750 3000
 ## 6    2 2002 T2_176     176     Quercus ilex 376.1672 14.63523 660.6446 750 3000
-## 7    3 2003 T1_157     157 Pinus halepensis 162.8860 41.79816 879.3248 750 3000</code></pre>
+## 7    3 2003 T1_157     157 Pinus halepensis 162.8860 41.79865 879.3336 750 3000</code></pre>
 <p>The same can be shown for dead trees, where we see larger mortality rates during the second (drier) year:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">DeadTreeTable</span></code></pre></div>
 <pre><code>##   Step Year Cohort Species             Name          N      DBH   Height Z50
-## 1    1 2001 T1_157     157 Pinus halepensis   1.722253 39.01309 827.8611 750
+## 1    1 2001 T1_157     157 Pinus halepensis   1.722253 39.01313 827.8619 750
 ## 2    1 2001 T2_176     176     Quercus ilex   3.936579 14.63523 660.6446 750
-## 3    2 2002 T1_157     157 Pinus halepensis   1.704598 40.42479 854.2001 750
+## 3    2 2002 T1_157     157 Pinus halepensis   1.704598 40.41912 854.0943 750
 ## 4    2 2002 T2_176     176     Quercus ilex   3.896223 14.63523 660.6446 750
-## 5    3 2003 T1_157     157 Pinus halepensis   1.687123 41.79816 879.3248 750
+## 5    3 2003 T1_157     157 Pinus halepensis   1.687123 41.79865 879.3336 750
 ## 6    3 2003 T2_176     176     Quercus ilex 376.167197 14.63523 660.6446 750
 ##    Z95
 ## 1 3000

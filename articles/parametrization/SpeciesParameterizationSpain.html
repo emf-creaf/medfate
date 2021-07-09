@@ -989,8 +989,8 @@
 <p>We complemented the formed data bases with our own compilation of plant traits, including leaf phenology:</p>
 <div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fn_pheno</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/LeafPhenology/LeafPhenology.xlsx"</span><span class="op">)</span>
-<span class="va">budburst</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">fn_pheno</span>, sheet<span class="op">=</span><span class="fl">1</span><span class="op">)</span>
-<span class="va">senescence</span> <span class="op">&lt;-</span> <span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">fn_pheno</span>, sheet<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
+<span class="va">budburst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">fn_pheno</span>, sheet<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="va">senescence</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="fu">readxl</span><span class="fu">::</span><span class="fu"><a href="https://readxl.tidyverse.org/reference/read_excel.html">read_excel</a></span><span class="op">(</span><span class="va">fn_pheno</span>, sheet<span class="op">=</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>flammability traits:</p>
 <div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fn_flam</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"TraitDatabases/FuelAttributes/FuelAttributes.xlsx"</span><span class="op">)</span>
@@ -1382,54 +1382,73 @@
 <h4 class="hasAnchor">
 <a href="#budburst-and-senescence" class="anchor"></a>Budburst and senescence</h4>
 <p>Most parameters regulating leaf phenological phases (i.e. bud dormancy, budburst, senescence, bud formation, …) require calibration exercises using observed weather data and phenological records.</p>
-<p>We compiled a data base with published leaf budburst models <span class="citation">(Vitasse et al. 2011)</span>:</p>
+<p>We compiled a data base with published leaf budburst models <span class="citation">(Vitasse et al. 2011; Asse et al. 2020)</span>:</p>
 <div class="sourceCode" id="cb180"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">budburst</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 6
-##   Species             PhenologyType      t0gdd Tbgdd  Sgdd Ref                
-##   &lt;chr&gt;               &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;              
-## 1 Abies alba          oneflush-evergreen  72.9  1.08  455. Vitasse et al. 2011
-## 2 Acer pseudoplatanus winter-deciduous    82.6  3.22  199. Vitasse et al. 2011
-## 3 Fagus sylvatica     winter-deciduous    98.4  0     202. Vitasse et al. 2011
-## 4 Fraxinus excelsior  winter-deciduous    30.5  0     562. Vitasse et al. 2011
-## 5 Ilex aquifolium     oneflush-evergreen  79.7  0     539. Vitasse et al. 2011
-## 6 Quercus petraea     winter-deciduous    54.5  4.34  241. Vitasse et al. 2011</code></pre>
+<pre><code>##                Species      PhenologyType t0gdd Tbgdd  Sgdd   N Accepted
+## 1           Abies alba oneflush-evergreen  72.9  1.08 455.4  14        Y
+## 2  Acer pseudoplatanus   winter-deciduous  82.6  3.22 199.3  16        Y
+## 3       Betula pendula   winter-deciduous   1.0  4.90  72.0 146        Y
+## 4     Corylus avellana   winter-deciduous   1.0  7.12  21.0 128        Y
+## 5      Fagus sylvatica   winter-deciduous  98.4  0.00 201.9  30        Y
+## 6   Fraxinus excelsior   winter-deciduous  30.5  0.00 562.3  18        N
+## 7   Fraxinus excelsior   winter-deciduous   1.0  5.68 121.0 149        Y
+## 8      Ilex aquifolium oneflush-evergreen  79.7  0.00 539.4  18        Y
+## 9        Larix decidua   winter-deciduous   1.0  9.60   3.0 159        Y
+## 10         Picea abies oneflush-evergreen   1.0  2.96 290.0 112        Y
+## 11     Quercus petraea   winter-deciduous  54.5  4.34 240.7  42        Y
+##                    Ref
+## 1  Vitasse et al. 2011
+## 2  Vitasse et al. 2011
+## 3     Asse et al. 2020
+## 4     Asse et al. 2020
+## 5  Vitasse et al. 2011
+## 6  Vitasse et al. 2011
+## 7     Asse et al. 2020
+## 8  Vitasse et al. 2011
+## 9     Asse et al. 2020
+## 10    Asse et al. 2020
+## 11 Vitasse et al. 2011</code></pre>
 <p>and leaf senescence models <span class="citation">(Delpierre et al. 2009; Vitasse et al. 2011)</span>:</p>
 <div class="sourceCode" id="cb182"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">senescence</span></code></pre></div>
-<pre><code>## # A tibble: 5 x 7
-##   Species             Phsen Tbsen  xsen  ysen    Ssen Ref                  
-##   &lt;chr&gt;               &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;                
-## 1 Acer pseudoplatanus  11    10       1     0     1.2 Vitasse et al. 2011  
-## 2 Fagus sylvatica      14.5  32.2     1     2  1206   Vitasse et al. 2011  
-## 3 Quercus petraea      12.8  27.5     2     0 11913   Vitasse et al. 2011  
-## 4 Fagus sylvatica      12.5  25       2     2  5160   Delpierre et al. 2009
-## 5 Quercus petraea      12.5  28.5     2     2 10178   Delpierre et al. 2009</code></pre>
-<p>We use the leaf budburst model data base to replace the phenology type and leaf phenology parameters:</p>
+<pre><code>##               Species Phsen Tbsen xsen ysen    Ssen   N Accepted
+## 1 Acer pseudoplatanus  11.0  10.0    1    0     1.2  16        Y
+## 2     Fagus sylvatica  14.5  32.2    1    2  1206.0  30        N
+## 3     Fagus sylvatica  12.5  25.0    2    2  5160.0  79        Y
+## 4     Quercus petraea  12.5  28.5    2    2 10178.0 106        Y
+## 5     Quercus petraea  12.8  27.5    2    0 11913.0  42        N
+##                     Ref
+## 1   Vitasse et al. 2011
+## 2   Vitasse et al. 2011
+## 3 Delpierre et al. 2009
+## 4 Delpierre et al. 2009
+## 5   Vitasse et al. 2011</code></pre>
+<p>Note that some species are repeated. Since we cannot average model parameters, due to parameter correlation, in cases of more than one model by species we selected the one based on a larger sample size (table column <code>N</code>), and codified the result in a table column called <code>Accepted</code>. We use the leaf budburst model data base to replace the phenology type and leaf phenology parameters:</p>
 <div class="sourceCode" id="cb184"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">budburst</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">budburst</span><span class="op">[</span><span class="va">budburst</span><span class="op">$</span><span class="va">Accepted</span><span class="op">==</span><span class="st">"Y"</span>,<span class="op">]</span>, 
                            trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PhenologyType"</span> <span class="op">=</span> <span class="st">"PhenologyType"</span><span class="op">)</span>,
                            taxon_column <span class="op">=</span> <span class="st">"Species"</span>,
                            character_traits <span class="op">=</span> <span class="cn">TRUE</span>,
                            erase_previous <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<pre><code>## Mapping [PhenologyType -&gt; PhenologyType] species: 4 conspecific: 18 genus: 0 family: 0 order: 0 group: 0</code></pre>
-<pre><code>## 197 missing trait values (90 %) after populating with input data.</code></pre>
+<pre><code>## Mapping [PhenologyType -&gt; PhenologyType] species: 6 conspecific: 20 genus: 0 family: 0 order: 0 group: 0</code></pre>
+<pre><code>## 193 missing trait values (88.1 %) after populating with input data.</code></pre>
 <div class="sourceCode" id="cb187"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">budburst</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">budburst</span><span class="op">[</span><span class="va">budburst</span><span class="op">$</span><span class="va">Accepted</span><span class="op">==</span><span class="st">"Y"</span>,<span class="op">]</span>, 
                            trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"t0gdd"</span> <span class="op">=</span> <span class="st">"t0gdd"</span>,
                                              <span class="st">"Tbgdd"</span> <span class="op">=</span> <span class="st">"Tbgdd"</span>,
                                              <span class="st">"Sgdd"</span> <span class="op">=</span> <span class="st">"Sgdd"</span><span class="op">)</span>,
                            taxon_column <span class="op">=</span> <span class="st">"Species"</span>,
                            erase_previous <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<pre><code>## Mapping [t0gdd -&gt; t0gdd] species: 4 conspecific: 18 genus: 0 family: 0 order: 0 group: 0
-## 197 missing trait values (90 %) after populating with input data.</code></pre>
-<pre><code>## Mapping [Tbgdd -&gt; Tbgdd] species: 4 conspecific: 18 genus: 0 family: 0 order: 0 group: 0</code></pre>
-<pre><code>## 197 missing trait values (90 %) after populating with input data.</code></pre>
-<pre><code>## Mapping [Sgdd -&gt; Sgdd] species: 4 conspecific: 18 genus: 0 family: 0 order: 0 group: 0</code></pre>
-<pre><code>## 197 missing trait values (90 %) after populating with input data.</code></pre>
+<pre><code>## Mapping [t0gdd -&gt; t0gdd] species: 6 conspecific: 20 genus: 0 family: 0 order: 0 group: 0
+## 193 missing trait values (88.1 %) after populating with input data.</code></pre>
+<pre><code>## Mapping [Tbgdd -&gt; Tbgdd] species: 6 conspecific: 20 genus: 0 family: 0 order: 0 group: 0</code></pre>
+<pre><code>## 193 missing trait values (88.1 %) after populating with input data.</code></pre>
+<pre><code>## Mapping [Sgdd -&gt; Sgdd] species: 6 conspecific: 20 genus: 0 family: 0 order: 0 group: 0</code></pre>
+<pre><code>## 193 missing trait values (88.1 %) after populating with input data.</code></pre>
 <p>Similarly, we use the senescence model database to fill the parameters regulating leaf senescence:</p>
 <div class="sourceCode" id="cb193"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="va">senescence</span><span class="op">)</span>, 
+<code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">senescence</span><span class="op">[</span><span class="va">senescence</span><span class="op">$</span><span class="va">Accepted</span><span class="op">==</span><span class="st">"Y"</span>,<span class="op">]</span>, 
                            trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Phsen"</span> <span class="op">=</span> <span class="st">"Phsen"</span>,
                                              <span class="st">"Tbsen"</span> <span class="op">=</span> <span class="st">"Tbsen"</span>,
                                              <span class="st">"Ssen"</span> <span class="op">=</span> <span class="st">"Ssen"</span>,
@@ -2409,6 +2428,9 @@
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Asse2020" class="csl-entry">
+Asse, Daphné, Christophe F. Randin, Marc Bonhomme, Anne Delestrade, and Isabelle Chuine. 2020. <span>“<span class="nocase">Process-based models outcompete correlative models in projecting spring phenology of trees in a future warmer climate</span>.”</span> <em>Agricultural and Forest Meteorology</em> 285-286 (January): 107931. <a href="https://doi.org/10.1016/j.agrformet.2020.107931">https://doi.org/10.1016/j.agrformet.2020.107931</a>.
+</div>
 <div id="ref-Bartlett2012" class="csl-entry">
 Bartlett, Megan K, Christine Scoffoni, and Lawren Sack. 2012. <span>“<span class="nocase">The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis</span>.”</span> <em>Ecology Letters</em> 15 (5): 393–405. <a href="https://doi.org/10.1111/j.1461-0248.2012.01751.x">https://doi.org/10.1111/j.1461-0248.2012.01751.x</a>.
 </div>
