@@ -945,6 +945,16 @@ NumericVector leafDurationWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(leafDuration);
 }
+NumericVector t0gddWithImputation(IntegerVector SP, DataFrame SpParams) {
+  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
+  NumericVector t0gdd = speciesNumericParameter(SP, SpParams, "t0gdd");
+  for(int c=0;c<t0gdd.size();c++) {
+    if(NumericVector::is_na(t0gdd[c])) {
+      t0gdd[c] = 50.0; //Default
+    }
+  }
+  return(t0gdd);
+}
 NumericVector SgddWithImputation(IntegerVector SP, DataFrame SpParams) {
   CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
   NumericVector Sgdd = speciesNumericParameter(SP, SpParams, "Sgdd");
@@ -960,7 +970,7 @@ NumericVector TbgddWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector Tbgdd = speciesNumericParameter(SP, SpParams, "Tbgdd");
   for(int c=0;c<Tbgdd.size();c++) {
     if(NumericVector::is_na(Tbgdd[c])) {
-      Tbgdd[c] = 5.0; //Default
+      Tbgdd[c] = 0.0; //Default
     }
   }
   return(Tbgdd);
@@ -970,7 +980,7 @@ NumericVector SsenWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector Ssen = speciesNumericParameter(SP, SpParams, "Ssen");
   for(int c=0;c<Ssen.size();c++) {
     if(NumericVector::is_na(Ssen[c])) {//Delpierre et al 2009
-      Ssen[c] = 8268.0; //Default
+      Ssen[c] = 8268.0; //Default (broadleaved deciduous)
     }
   }
   return(Ssen);
@@ -980,7 +990,7 @@ NumericVector PhsenWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector Phsen = speciesNumericParameter(SP, SpParams, "Phsen");
   for(int c=0;c<Phsen.size();c++) {
     if(NumericVector::is_na(Phsen[c])) {//Delpierre et al 2009
-      Phsen[c] = 12.5; //Default
+      Phsen[c] = 12.5; //Default (broadleaved deciduous)
     }
   }
   return(Phsen);
@@ -990,10 +1000,30 @@ NumericVector TbsenWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector Tbsen = speciesNumericParameter(SP, SpParams, "Tbsen");
   for(int c=0;c<Tbsen.size();c++) {
     if(NumericVector::is_na(Tbsen[c])) {//Delpierre et al 2009
-      Tbsen[c] = 28.5; //Default
+      Tbsen[c] = 28.5; //Default (broadleaved deciduous)
     }
   }
   return(Tbsen);
+}
+NumericVector xsenWithImputation(IntegerVector SP, DataFrame SpParams) {
+  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
+  NumericVector xsen = speciesNumericParameter(SP, SpParams, "xsen");
+  for(int c=0;c<xsen.size();c++) {
+    if(NumericVector::is_na(xsen[c])) {//Delpierre et al 2009
+      xsen[c] = 2.0; //Default
+    }
+  }
+  return(xsen);
+}
+NumericVector ysenWithImputation(IntegerVector SP, DataFrame SpParams) {
+  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
+  NumericVector ysen = speciesNumericParameter(SP, SpParams, "ysen");
+  for(int c=0;c<ysen.size();c++) {
+    if(NumericVector::is_na(ysen[c])) {//Delpierre et al 2009
+      ysen[c] = 2.0; //Default
+    }
+  }
+  return(ysen);
 }
 
 
@@ -1163,11 +1193,14 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "VCroot_d") return(VCrootDWithImputation(SP, SpParams));
     else if(parName == "WoodC") return(WoodCWithImputation(SP, SpParams));
     else if(parName == "LeafDuration") return(leafDurationWithImputation(SP, SpParams));
+    else if(parName == "t0gdd") return(t0gddWithImputation(SP, SpParams));
     else if(parName == "Sgdd") return(SgddWithImputation(SP, SpParams));
     else if(parName == "Tbgdd") return(TbgddWithImputation(SP, SpParams));
     else if(parName == "Ssen") return(SsenWithImputation(SP, SpParams));
     else if(parName == "Phsen") return(PhsenWithImputation(SP, SpParams));
     else if(parName == "Tbsen") return(TbsenWithImputation(SP, SpParams));
+    else if(parName == "xsen") return(xsenWithImputation(SP, SpParams));
+    else if(parName == "ysen") return(ysenWithImputation(SP, SpParams));
     else if((parName == "a_fbt") | (parName == "b_fbt")| (parName == "c_fbt")| (parName == "d_fbt")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
     else if((parName == "a_cw") | (parName == "b_cw")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
     else if((parName == "a_cr") | (parName == "b_1cr")| (parName == "b_2cr")| (parName == "b_3cr")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));

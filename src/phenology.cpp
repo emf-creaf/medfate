@@ -52,11 +52,14 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
   
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
   CharacterVector phenoType = paramsPhenology["PhenologyType"];
+  NumericVector t0gdd = paramsPhenology["t0gdd"];
   NumericVector Sgdd = paramsPhenology["Sgdd"];
   NumericVector Tbgdd = paramsPhenology["Tbgdd"];
   NumericVector Ssen = paramsPhenology["Ssen"];
   NumericVector Phsen = paramsPhenology["Phsen"];
   NumericVector Tbsen = paramsPhenology["Tbsen"];
+  NumericVector xsen = paramsPhenology["xsen"];
+  NumericVector ysen = paramsPhenology["ysen"];
   
   //Plant input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
@@ -91,7 +94,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
           if(!leafDormancy[j]) { // Check temperature accumulation until dormancy occurs
             double rsen = 0.0;
             if(tmean-Tbsen[j]<0.0) {
-              rsen = pow(Tbsen[j]-tmean,2.0);
+              rsen = pow(Tbsen[j]-tmean, xsen[j])*pow(photoperiod/Phsen[j], ysen[j]);
             }
             sen[j] = sen[j] + rsen;
             leafSenescence[j] = leafSenescenceStatus(Ssen[j],sen[j]);
@@ -100,11 +103,11 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
           budFormation[j] = !leafDormancy[j]; //Buds can be formed (i.e target leaf area) until dormancy occurs
         }
         // Rcout << doy<< " "<< photoperiod<<" "<< rsen <<" "<< sen[j]<<" "<<  leafSenescence[j] << "\n";
-      } else if (doy<=200) { //Only increase in the first part of the year
+      } else if (doy<=200) { //Only increase in the first part of the year and if doy > t0gdd
         sen[j] = 0.0;
         budFormation[j] = false;
         leafSenescence[j] = false;
-        if(tmean-Tbgdd[j]>0.0) gdd[j] = gdd[j] + (tmean - Tbgdd[j]);
+        if((tmean-Tbgdd[j]>0.0) & (doy >= ((int) t0gdd[j]))) gdd[j] = gdd[j] + (tmean - Tbgdd[j]);
         phi[j] = leafDevelopmentStatus(Sgdd[j], gdd[j], unfoldingDD);
         leafUnfolding[j] = (phi[j]>0.0);
         leafDormancy[j] = (phi[j]==0.0);

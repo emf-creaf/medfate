@@ -6,6 +6,9 @@ output:
   rmarkdown::html_document:
     toc: TRUE
 bibliography: ../medfate.bib
+params:
+  complete_rebuild: FALSE
+  store_spparams: FALSE
 ---
 
 ## Introduction
@@ -270,8 +273,13 @@ SpParams <-initSpParams(IFN_species_data$IFNCODE, IFN_species_data$IFNNAME,
 ```
 Option `fill_taxonomic` tells function `initSpParams()` to use package **taxize** to find taxonomic classification of the species/genus entities. This provides very useful information for parameterization, but makes the process of initialization a bit slower.
 ```{r include = FALSE}
-# saveRDS(SpParams, "SpParamsSPAIN_init.rds")
-SpParams = readRDS("SpParamsSPAIN_init.rds")
+if(params$complete_rebuild) {
+  SpParams <-initSpParams(IFN_species_data$IFNCODE, IFN_species_data$IFNNAME,
+                        SpParamsDefinition,
+                        groups_df$group_codes, groups_df$group_names,
+                        fill_taxonomic = TRUE, verbose = FALSE)
+  saveRDS(SpParams, "SpParamsSPAIN_init.rds")
+} else {SpParams = readRDS("SpParamsSPAIN_init.rds")}
 ```
 The result of calling `initSpParams()` is a data frame with `nrow(SpParams)` rows corresponding to target entities and columns corresponding to the parameters defined in `SpParamsDefinition`. Most parameters are missing, obviously, but `initSpParams()` already filled taxonomic data:
 ```{r}
@@ -615,7 +623,14 @@ fmc_yebra <- openxlsx::read.xlsx(fn_yebra, sheet=2)
 ```
 
 
-We complemented the formed data bases with our own compilation of plant traits, including flammability traits:
+We complemented the formed data bases with our own compilation of plant traits, including leaf phenology:
+```{r}
+fn_pheno <- file.path(DB_path, "TraitDatabases/LeafPhenology/LeafPhenology.xlsx")
+budburst <- readxl::read_excel(fn_pheno, sheet=1)
+senescence <- readxl::read_excel(fn_pheno, sheet=2)
+```
+
+flammability traits:
 ```{r}
 fn_flam <- file.path(DB_path, "TraitDatabases/FuelAttributes/FuelAttributes.xlsx")
 flam <- readxl::read_excel(fn_flam, sheet=1)
@@ -953,7 +968,43 @@ summary(SpParams[SpParams$GrowthForm != "Shrub",c("Z95")])
 
 ### Leaf phenology
 
-Most parameters regulating leaf phenological phases (i.e. bud dormancy, budburst, senescence, bud formation, ...) require calibration exercises using observed weather data and phenological records. However, here we can map leaf duration from available data bases.
+#### Budburst and senescence
+
+Most parameters regulating leaf phenological phases (i.e. bud dormancy, budburst, senescence, bud formation, ...) require calibration exercises using observed weather data and phenological records. 
+
+We compiled a data base with published leaf budburst models [@Vitasse2011]:
+```{r}
+budburst
+```
+and leaf senescence models [@Delpierre2009; @Vitasse2011]:
+```{r}
+senescence
+```
+We use the leaf budburst model data base to replace the phenology type and leaf phenology parameters:
+```{r}
+SpParams <- populateTraits(SpParams, as.data.frame(budburst), 
+                           trait_mapping = c("PhenologyType" = "PhenologyType"),
+                           taxon_column = "Species",
+                           character_traits = TRUE,
+                           erase_previous = TRUE)
+SpParams <- populateTraits(SpParams, as.data.frame(budburst), 
+                           trait_mapping = c("t0gdd" = "t0gdd",
+                                             "Tbgdd" = "Tbgdd",
+                                             "Sgdd" = "Sgdd"),
+                           taxon_column = "Species",
+                           erase_previous = TRUE)
+```
+Similarly, we use the senescence model database to fill the parameters regulating leaf senescence:
+```{r}
+SpParams <- populateTraits(SpParams, as.data.frame(senescence), 
+                           trait_mapping = c("Phsen" = "Phsen",
+                                             "Tbsen" = "Tbsen",
+                                             "Ssen" = "Ssen",
+                                             "xsen" = "xsen",
+                                             "ysen" = "ysen"),
+                           taxon_column = "Species",
+                           erase_previous = TRUE)
+```
 
 #### Leaf duration
 Leaf lifespan is available from TRY for many species (TraitID 12). We load records for this trait, which is already standardized into month units:
@@ -1558,7 +1609,7 @@ To calculate the percentage of PAR reaching the ground we need forest plot data 
 forest_list = readRDS(file.path(IFN_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
 ```
 We then calculate percentage of PAR reaching the ground using `medfate` function `vprofile_PARExtinction()`:
-```{r, eval = FALSE}
+```{r, eval = params$complete_rebuild}
 par_groundIFN3 = rep(NA, length(forest_list))
 names(par_groundIFN3) = names(forest_list)
 for(i in 1:length(forest_list)) {
@@ -1570,12 +1621,13 @@ for(i in 1:length(forest_list)) {
   }
 }
 ```
-```{r eval = FALSE, include = FALSE}
-saveRDS(par_groundIFN3, "par_groundIFN3.rds")
-```
 
 ```{r, include = FALSE}
-par_groundIFN3 = readRDS("par_groundIFN3.rds")
+if(params$complete_rebuild) {
+  saveRDS(par_groundIFN3, "par_groundIFN3.rds")
+} else {
+  par_groundIFN3 = readRDS("par_groundIFN3.rds")
+}
 ```
 
 Some plots could have missing `par_groundIFN3` values, which could be the result of missing parameter values in `SpParams`:
@@ -1780,10 +1832,12 @@ summary(SpParams[,c("MinFPARRecr","MinTempRecr","MinMoistureRecr"), drop=FALSE])
 ```
 
 ```{r, include = FALSE}
-wb <- openxlsx::createWorkbook()
-openxlsx::addWorksheet(wb, "SpParamsMED")
-openxlsx::writeDataTable(wb, "SpParamsMED", SpParams)
-openxlsx::saveWorkbook(wb,"../../data-raw/SpParamsMED.xlsx", overwrite=TRUE)
+if(params$store_spparams) {
+  wb <- openxlsx::createWorkbook()
+  openxlsx::addWorksheet(wb, "SpParamsMED")
+  openxlsx::writeDataTable(wb, "SpParamsMED", SpParams)
+  openxlsx::saveWorkbook(wb,"../../data-raw/SpParamsMED.xlsx", overwrite=TRUE)
+}
 ```
 
 ## References

@@ -282,17 +282,22 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
   
   NumericVector cohSAV = cohortNumericParameterWithImputation(object, SpParams, "SAV", true);
   NumericVector cohHeatContent = cohortNumericParameterWithImputation(object, SpParams, "HeatContent", true);
+  NumericVector cohpDead = cohortNumericParameterWithImputation(object, SpParams, "pDead");
   
-  NumericVector cohParticleDensity = cohortNumericParameter(object, SpParams, "ParticleDensity");
+  NumericVector r635 = cohortNumericParameterWithImputation(object, SpParams, "r635", true);
+  NumericVector cohWoodDensity = cohortNumericParameterWithImputation(object, SpParams, "WoodDensity", true);
+  NumericVector cohLeafDensity = cohortNumericParameterWithImputation(object, SpParams, "LeafDensity", true);
+  NumericVector cohParticleDensity(cohWoodDensity.size(), NA_REAL);
+  for(int i=0;i<cohLoading.size();i++) {
+    double leaves_branches_ratio_weight = r635[i] - 1.0;
+    double leaves_branches_ratio_volume = leaves_branches_ratio_weight*(cohWoodDensity[i]/cohLeafDensity[i]);
+    double f_leaves_volume = 1.0/(leaves_branches_ratio_volume+1.0);
+    cohParticleDensity[i] = 1000.0*(cohLeafDensity[i]*(f_leaves_volume) + cohWoodDensity[i]*(1.0 - f_leaves_volume));
+  }
   NumericVector cohCR = cohortCrownRatio(object, SpParams, mode);
   NumericVector cohMinFMC = cohortNumericParameter(object, SpParams, "minFMC");
   NumericVector cohMaxFMC = cohortNumericParameter(object, SpParams, "maxFMC");
-  NumericVector cohpDead = cohortNumericParameter(object, SpParams, "pDead");
   CharacterVector leafLitterType = leafLitterFuelType(object, SpParams);
-  for(int i=0;i<cohLoading.size();i++) { //defaults
-    if(NumericVector::is_na(cohParticleDensity[i])) cohParticleDensity[i] = 400.0;
-    if(NumericVector::is_na(cohpDead[i])) cohpDead[i] = 0.05;
-  }
   //Canopy limits and loading  
   double canopyBaseHeight = liveStrat["canopyBaseHeight"];
   double canopyTopHeight = liveStrat["canopyTopHeight"];
@@ -371,7 +376,9 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
   NumericVector rhop(5,defaultParticleDensity); //Particle density (kg/m3)
   if(canopyLoading>0.0) rhop[0] = layerFuelAverageParameter(200.0, 10000.0, cohParticleDensity, cohLoading, cohHeight, cohCR);
   if(shrubLoading>0.0) rhop[1] = layerFuelAverageParameter(0.0, 200.0, cohParticleDensity, cohLoading, cohHeight, cohCR);
-
+  if(woodyLoading>0.0) rhop[3] = 1000.0*layerFuelAverageParameter(0.0, 200.0, cohWoodDensity, cohLoading, cohHeight, cohCR);
+  if(litterLoading>0.0) rhop[4] = 1000.0*layerFuelAverageParameter(0.0, 200.0, cohLeafDensity, cohLoading, cohHeight, cohCR);
+    
   NumericVector pDead(5,1.0); //Proportion of dead fuels
   if(canopyLoading>0.0) pDead[0] = layerFuelAverageParameter(200.0, 10000.0, cohpDead, cohLoading, cohHeight, cohCR);
   else pDead[0] = NA_REAL;

@@ -29,6 +29,8 @@ Choat, Brendan, Steven Jansen, Tim J Brodribb, \enc{Hervé}{Herve} Cochard, Sylv
 
 De \enc{Cáceres}{Caceres} M, Casals P, Gabriel E, Castro X (2019) Scaling-up individual-level allometric equations to predict stand-level fuel loading in Mediterranean shrublands. Ann For Sci 76:87 (doi:10.1007/s13595-019-0873-4).
 
+Delpierre, N., \enc{Dufrêne}{Dufrene}, E., Soudani, K., Ulrich, E., Cecchini, S., \enc{Boé}{Boe}, J., & \enc{François}{Francois}, C. (2009). Modelling interannual and spatial variability of leaf senescence for three deciduous tree species in France. Agricultural and Forest Meteorology, 149(6–7), 938–948. https://doi.org/10.1016/j.agrformet.2008.11.014
+
 DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. Dirección General de Conservación de la Naturaleza, Ministerio de Medio Ambiente, Madrid.
 
 Duursma, Remko A., Christopher J. Blackman, Rosana \enc{López}{Lopez}, Nicolas K. Martin-StPaul, \enc{Hervé}{Herve} Cochard, and Belinda E. Medlyn. 2018. On the minimum leaf conductance: its role in models of plant water use, and ecological and environmental controls. New Phytologist, no. September. https://doi.org/10.1111/nph.15395.
@@ -48,6 +50,8 @@ Pausas, Juli G., R. Brandon Pratt, Jon E. Keeley, Anna L. Jacobsen, Aaron R. Ram
 Sanchez‐Martinez, Pablo, Jordi Martinez‐Vilalta, Kyle G. Dexter, Ricardo A. Segovia, and Maurizio Mencuccini. 2020. Adaptation and coordinated evolution of plant hydraulic traits. Ecology Letters, August, ele.13584. https://doi.org/10.1111/ele.13584.
 
 \enc{Tavşanoǧlu}{Tavsanoglu}, \enc{Çaǧatay}{Cagatay}, and Juli G. Pausas. 2018. A functional trait database for Mediterranean Basin plants. Scientific Data 5: 1–18. https://doi.org/10.1038/sdata.2018.135.
+
+Vitasse, Y., \enc{François}{Francois}, C., Delpierre, N., \enc{Dufrêne}{Dufrene}, E., Kremer, A., Chuine, I., & Delzon, S. (2011). Assessing the effects of climate change on the phenology of European temperate trees. Agricultural and Forest Meteorology, 151(7), 969–980. https://doi.org/10.1016/j.agrformet.2011.03.003
 
 Yebra, Marta, Gianluca Scortechini, Abdulbaset Badi, María Eugenia Beget, Matthias M. Boer, Ross Bradstock, Emilio Chuvieco, et al. 2019. Globe-LFMC, a global plant water status database for vegetation ecophysiology and wildfire applications. Scientific Data 6 (1): 155. https://doi.org/10.1038/s41597-019-0164-9.
 

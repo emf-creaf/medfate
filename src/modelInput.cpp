@@ -22,11 +22,14 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
   int numCohorts = SP.size();
   
   NumericVector leafDuration  = speciesNumericParameterWithImputation(SP, SpParams, "LeafDuration", fillMissingSpParams);
+  NumericVector t0gdd  = speciesNumericParameterWithImputation(SP, SpParams, "t0gdd", fillMissingSpParams);
   NumericVector Sgdd  = speciesNumericParameterWithImputation(SP, SpParams, "Sgdd", fillMissingSpParams);
   NumericVector Tbgdd = speciesNumericParameterWithImputation(SP, SpParams, "Tbgdd", fillMissingSpParams);
   NumericVector Ssen = speciesNumericParameterWithImputation(SP, SpParams, "Ssen", fillMissingSpParams);
   NumericVector Phsen = speciesNumericParameterWithImputation(SP, SpParams, "Phsen", fillMissingSpParams);
   NumericVector Tbsen  = speciesNumericParameterWithImputation(SP, SpParams, "Tbsen", fillMissingSpParams);
+  NumericVector xsen  = speciesNumericParameterWithImputation(SP, SpParams, "xsen", fillMissingSpParams);
+  NumericVector ysen  = speciesNumericParameterWithImputation(SP, SpParams, "ysen", fillMissingSpParams);
   
   CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
   for(int j=0; j<numCohorts;j++) {
@@ -38,8 +41,8 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
   DataFrame paramsPhenologydf = DataFrame::create(
     _["PhenologyType"] = phenoType,
     _["LeafDuration"] = leafDuration,
-    _["Sgdd"] = Sgdd, _["Tbgdd"] = Tbgdd, 
-    _["Ssen"] = Ssen, _["Phsen"] = Phsen, _["Tbsen"] = Tbsen 
+    _["t0gdd"] = t0gdd,_["Sgdd"] = Sgdd, _["Tbgdd"] = Tbgdd, 
+    _["Ssen"] = Ssen, _["Phsen"] = Phsen, _["Tbsen"] = Tbsen, _["xsen"] = xsen, _["ysen"] = ysen 
   );
   paramsPhenologydf.attr("row.names") = above.attr("row.names");
   return(paramsPhenologydf);

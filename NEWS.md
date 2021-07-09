@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.3.2
+- Parameter 'ParticleDensity' eliminated, as it is now calculated from 'LeafDensity', 'WoodDensity' and 'r635'
+
 # Version 2.3.1
 - IMPORTANT: New species parameter tables
 - New control parameter 'fillMissingSpParams'
