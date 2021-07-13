@@ -17,6 +17,9 @@ articles:
 - title: Model parametrization
   contents:
     - starts_with("parametrization/SpeciesParameterization")
+- title: Model evaluation
+  contents:
+    - starts_with("evaluation/ModelEvaluation")
 - title: Model analysis
   contents:
     - starts_with("modelanalysis/Sensitivity")

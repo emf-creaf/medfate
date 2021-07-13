@@ -1,0 +1,75 @@
+---
+title: "Model evaluation results"
+author: "Miquel De Cáceres"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_document:
+    toc: TRUE
+---
+
+```{r setup, include=FALSE}
+params = list(wd='/home/miquel/OneDrive/Professional/Recerca/MedfateValidation/',
+              model='spwb',
+              conf='basic',
+              save_plots = FALSE)
+
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_knit$set(root.dir = params$wd)
+
+library(medfate)
+library(ggplot2)
+
+```
+
+# Evaluation by site
+
+## PRADES
+```{r}
+params$code = 'PRADES'
+site_data <- medfatereports::load_list(params$code)
+```
+
+```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")}
+```
+
+## FRAPUE
+```{r}
+params$code = 'FRAPUE'
+site_data <- medfatereports::load_list(params$code)
+```
+
+```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")}
+```
+
+## FONBLA
+```{r}
+params$code = 'FONBLA'
+site_data <- medfatereports::load_list(params$code)
+```
+
+```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")}
+```
+
+## ESPALTARM
+```{r}
+params$code = 'ESPALTARM'
+site_data <- medfatereports::load_list(params$code)
+```
+
+```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")}
+```
+
+## CAN BALASC
+```{r}
+params$code = 'CANBALASC'
+site_data <- medfatereports::load_list(params$code)
+```
+
+```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")}
+```
+
+
+
