@@ -38,6 +38,7 @@ reference:
   contents:
   - starts_with("SpParams")
   - modifySpParams
+  - trait_family_means
 
 - title: Forest structure
   desc:  Plant, species and forest attributes
