@@ -220,42 +220,37 @@
 </div><div class='output co'>#&gt; Simulating forest dynamics for year 2001 (1/2)
 #&gt;    (a) Growth/mortality
 #&gt;    (b) Recruitment
-#&gt;        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 35.2
+#&gt;        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 34.9
 #&gt;        Tree species with seed rain: 157,176 recruited: &lt;none&gt;
 #&gt;    (c) Summaries
 #&gt; Simulating forest dynamics for year 2002 (2/2)
 #&gt;    (a) Growth/mortality
 #&gt;    (b) Recruitment
-#&gt;        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.18   FPAR (%): 36.7
+#&gt;        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.18   FPAR (%): 34.6
 #&gt;        Tree species with seed rain: 157,176 recruited: &lt;none&gt;
 #&gt;    (c) Summaries</div><div class='input'>
 <span class='co'>#Stand-level summaries</span>
 <span class='va'>fd</span><span class='op'>$</span><span class='va'>StandSummary</span>
 </div><div class='output co'>#&gt;   Step LeafAreaIndex TreeDensityLive TreeBasalAreaLive ShrubCoverLive MaxHeight
 #&gt; 1    0      1.972712        552.0000          25.03330           3.75  800.0000
-#&gt; 2    1      1.942044        546.3412          26.27830           3.75  827.8777
-#&gt; 3    2      1.893859        503.0689          26.81892           3.75  854.1258</div><div class='input'>
+#&gt; 2    1      2.112178        546.3412          25.98407           3.75  818.5014
+#&gt; 3    2      2.181535        540.7403          26.70144           3.75  834.3618</div><div class='input'>
 <span class='co'>#Tree table by annual steps</span>
 <span class='va'>fd</span><span class='op'>$</span><span class='va'>TreeTable</span>
 </div><div class='output co'>#&gt;   Step Year Cohort Species             Name        N      DBH   Height Z50  Z95
 #&gt; 1    0   NA T1_157     157 Pinus halepensis 168.0000 37.55000 800.0000 750 3000
 #&gt; 2    0   NA T2_176     176     Quercus ilex 384.0000 14.60000 660.0000 750 3000
-#&gt; 3    1 2001 T1_157     157 Pinus halepensis 166.2777 39.01396 827.8777 750 3000
-#&gt; 4    1 2001 T2_176     176     Quercus ilex 380.0634 14.64335 660.7934 750 3000
-#&gt; 5    2 2002 T1_157     157 Pinus halepensis 164.5731 40.42079 854.1258 750 3000
-#&gt; 6    2 2002 T2_176     176     Quercus ilex 338.4957 14.64335 660.7934 750 3000</div><div class='input'>
+#&gt; 3    1 2001 T1_157     157 Pinus halepensis 166.2777 38.50626 818.5014 750 3000
+#&gt; 4    1 2001 T2_176     176     Quercus ilex 380.0634 14.89261 665.5907 750 3000
+#&gt; 5    2 2002 T1_157     157 Pinus halepensis 164.5731 39.32778 834.3618 750 3000
+#&gt; 6    2 2002 T2_176     176     Quercus ilex 376.1672 15.07025 669.0892 750 3000</div><div class='input'>
 <span class='co'>#Dead tree table by annual steps</span>
 <span class='va'>fd</span><span class='op'>$</span><span class='va'>DeadTreeTable</span>
-</div><div class='output co'>#&gt;   Step Year Cohort Species             Name         N      DBH   Height Z50
-#&gt; 1    1 2001 T1_157     157 Pinus halepensis  1.722253 39.01396 827.8777 750
-#&gt; 2    1 2001 T2_176     176     Quercus ilex  3.936579 14.64335 660.7934 750
-#&gt; 3    2 2002 T1_157     157 Pinus halepensis  1.704598 40.42079 854.1258 750
-#&gt; 4    2 2002 T2_176     176     Quercus ilex 41.567709 14.64335 660.7934 750
-#&gt;    Z95
-#&gt; 1 3000
-#&gt; 2 3000
-#&gt; 3 3000
-#&gt; 4 3000</div></pre>
+</div><div class='output co'>#&gt;   Step Year Cohort Species             Name        N      DBH   Height Z50  Z95
+#&gt; 1    1 2001 T1_157     157 Pinus halepensis 1.722253 38.50626 818.5014 750 3000
+#&gt; 2    1 2001 T2_176     176     Quercus ilex 3.936579 14.89261 665.5907 750 3000
+#&gt; 3    2 2002 T1_157     157 Pinus halepensis 1.704598 39.32778 834.3618 750 3000
+#&gt; 4    2 2002 T2_176     176     Quercus ilex 3.896223 15.07025 669.0892 750 3000</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
