@@ -980,13 +980,8 @@ and leaf senescence models [@Delpierre2009; @Vitasse2011]:
 ```{r}
 senescence
 ```
-Note that some species are repeated. Since we cannot average model parameters, due to parameter correlation, in cases of more than one model by species we selected the one based on a larger sample size (table column `N`), and codified the result in a table column called `Accepted`. We use the leaf budburst model data base to replace the phenology type and leaf phenology parameters:
+Note that some species are repeated. Since we cannot average model parameters, due to parameter correlation, in cases of more than one model by species we selected the one based on a larger sample size (table column `N`), and codified the result in a table column called `Accepted`. We use the leaf budburst model data base to populate leaf phenology parameters:
 ```{r}
-SpParams <- populateTraits(SpParams, budburst[budburst$Accepted=="Y",], 
-                           trait_mapping = c("PhenologyType" = "PhenologyType"),
-                           taxon_column = "Species",
-                           character_traits = TRUE,
-                           erase_previous = TRUE)
 SpParams <- populateTraits(SpParams, budburst[budburst$Accepted=="Y",], 
                            trait_mapping = c("t0gdd" = "t0gdd",
                                              "Tbgdd" = "Tbgdd",
