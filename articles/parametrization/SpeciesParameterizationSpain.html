@@ -88,7 +88,7 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>This vignette describes the procedures used to obtain the species parameter data table <code>SpParamsMED</code> included in package <strong>medfate</strong>. The taxon entities chosen are intended to cover most of the woody plant taxa in Spain, as they are reported in the Spanish National Forest Inventory surveys (<em>Inventario Forestal Nacional</em> or IFN).</p>
+<p>This vignette describes the procedures used to obtain the species parameter data table <code>SpParamsMED</code> included in package <strong>medfate</strong>. The taxon entities chosen are intended to cover most of the woody plant taxa in Spain, as they are reported in the Spanish National Forest Inventory surveys (<em>Inventario Forestal Nacional</em> or IFN). In addition, a list of <code>forest</code> objects is also created for each of three IFN surveys, where species codification follows <code>SpParamsMED</code>.</p>
 <p>The vignette is not self-contained, in the sense that it cannot be reproduced without access to data sets that are not included. Nevertheless, it is intended to serve as example of species parameterization for other regions.</p>
 <div id="required-packages" class="section level3">
 <h3 class="hasAnchor">
@@ -2165,18 +2165,17 @@
 <div id="initialize-forest-plot-lists-for-spain" class="section level2">
 <h2 class="hasAnchor">
 <a href="#initialize-forest-plot-lists-for-spain" class="anchor"></a>Initialize forest plot lists for Spain</h2>
+<p>If we have a species parameter table with taxonomic information, growth forms and species maximum rooting depths (<code>Z95</code>), we are ready to create lists of <code>forest</code> objects from forest plot data. Here we will use function <code><a href="https://rdrr.io/pkg/medfateutils/man/IFN2forest.html">IFN2forestlist()</a></code> from package <strong>medfateutils</strong>, which has been designed to parse data from the Spanish National Forest Inventory. In section <em>Parameters drawn from IFN data</em> we loaded shrub and tree data from the three forest inventory surveys: IFN2, IFN3 and IFN4. Here we use this information to create forest lists:</p>
 <div class="sourceCode" id="cb372"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">IFN2_forestlist</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/IFN2forest.html">IFN2forestlist</a></span><span class="op">(</span><span class="va">treeDataIFN2</span>, <span class="va">shrubDataIFN2</span>, <span class="va">SpParams</span>, 
                                  setDefaults <span class="op">=</span> <span class="cn">TRUE</span>, filterWrongRecords <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">IFN2_forestlist</span>, file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Some of the shrub/tree records may not be parsed if they have not been included in the species definition of <code>SpParams</code>. The number of plots parsed is:</p>
 <div class="sourceCode" id="cb373"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">IFN3_forestlist</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/IFN2forest.html">IFN2forestlist</a></span><span class="op">(</span><span class="va">treeDataIFN3</span>, <span class="va">shrubDataIFN3</span>, <span class="va">SpParams</span>, 
-                                 setDefaults <span class="op">=</span> <span class="cn">TRUE</span>, filterWrongRecords <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">IFN3_forestlist</span>, file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb374"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">IFN2_forestlist</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 84375</code></pre>
-<div class="sourceCode" id="cb376"><pre class="downlit sourceCode r">
+<p>And here is the first element as an example:</p>
+<div class="sourceCode" id="cb375"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">IFN2_forestlist</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></code></pre></div>
 <pre><code>## $ID
 ## [1] "100001"
@@ -2201,77 +2200,24 @@
 ## 
 ## attr(,"class")
 ## [1] "forest" "list"</code></pre>
+<p>We can repeat the same operation for IFN3:</p>
+<div class="sourceCode" id="cb377"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">IFN3_forestlist</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/IFN2forest.html">IFN2forestlist</a></span><span class="op">(</span><span class="va">treeDataIFN3</span>, <span class="va">shrubDataIFN3</span>, <span class="va">SpParams</span>, 
+                                 setDefaults <span class="op">=</span> <span class="cn">TRUE</span>, filterWrongRecords <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">IFN3_forestlist</span>, file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Again, some of the shrub/tree records may not be parsed if they have not been included in the species definition of <code>SpParams</code>. The number of plots parsed is now:</p>
 <div class="sourceCode" id="cb378"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">IFN3_forestlist</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 85909</code></pre>
+<p>Finally, we repeat the operation for IFN4:</p>
 <div class="sourceCode" id="cb380"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">IFN3_forestlist</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></code></pre></div>
-<pre><code>## $ID
-## [1] "100002"
-## 
-## $patchsize
-## [1] 10000
-## 
-## $treeData
-##   Species    N   DBH Height      Z50  Z95
-## 1     151   32 13.20    410 315.0946 1770
-## 2     151  127  7.85    400 315.0946 1770
-## 3     151 2292  5.00    350 315.0946 1770
-## 4     151  318  0.50     80 315.0946 1770
-## 5     151  318  1.50    150 315.0946 1770
-## 
-## $shrubData
-##   Species Cover Height       Z50  Z95
-## 1     106    15    120 191.27028  925
-## 2      40    10    120 100.36554  400
-## 3      45     5    100  47.19721  150
-## 4      84    25    150 346.14164 2000
-## 5      49     5    120  72.90751  264
-## 
-## $herbCover
-## [1] NA
-## 
-## $herbHeight
-## [1] NA
-## 
-## attr(,"class")
-## [1] "forest" "list"</code></pre>
-<div class="sourceCode" id="cb382"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">IFN4_forestlist</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/IFN2forest.html">IFN2forestlist</a></span><span class="op">(</span><span class="va">treeDataIFN4</span>, <span class="va">shrubDataIFN4</span>, <span class="va">SpParams</span>, 
                                  setDefaults <span class="op">=</span> <span class="cn">TRUE</span>, filterWrongRecords <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">IFN4_forestlist</span>, file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb383"><pre class="downlit sourceCode r">
+<p>The number of plots parsed is lower than the previous two, as IFN4 is not yet completed for all Spanish provinces:</p>
+<div class="sourceCode" id="cb381"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">IFN4_forestlist</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 37989</code></pre>
-<div class="sourceCode" id="cb385"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">IFN4_forestlist</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></code></pre></div>
-<pre><code>## $ID
-## [1] "100004"
-## 
-## $patchsize
-## [1] 10000
-## 
-## $treeData
-## [1] Species N       DBH     Height  Z50     Z95    
-## &lt;0 rows&gt; (or 0-length row.names)
-## 
-## $shrubData
-##   Species Cover Height       Z50  Z95
-## 1      30    30    100  80.44108  300
-## 2     106     2     50 191.27028  925
-## 3      45    15    180  47.19721  150
-## 4      84    80    170 346.14164 2000
-## 5     138     5     70 191.27028  925
-## 6      73     1    200 114.55000  475
-## 
-## $herbCover
-## [1] NA
-## 
-## $herbHeight
-## [1] NA
-## 
-## attr(,"class")
-## [1] "forest" "list"</code></pre>
 </div>
 <div id="recruitment-parameters" class="section level2">
 <h2 class="hasAnchor">
@@ -2293,7 +2239,7 @@
 <h4 class="hasAnchor">
 <a href="#mean-temperature-of-the-coldest-month-and-moisture-index" class="anchor"></a>Mean temperature of the coldest month and moisture index</h4>
 <p>Load yearly weather data (from Santander’s Group) between 1981 and 2015, for all IFN plots in Spain:</p>
-<div class="sourceCode" id="cb387"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb383"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pr_year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"IFNbioclimatic/Sources/pr_year.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">pet_year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"IFNbioclimatic/Sources/pet_year.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">tmin_year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">DB_path</span>, <span class="st">"IFNbioclimatic/Sources/tmin_year.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -2307,7 +2253,7 @@
 <code>pet_year</code> contains the annual potential evapotranspiration for each year and plot.</li>
 </ul>
 <p>We calculate interannual means for tmin and the annual moisture index, for the period 1995-2005 that includes IFN3 (around 2000):</p>
-<div class="sourceCode" id="cb388"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb384"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">yearStrings</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"1995-01-01"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"2005-01-01"</span><span class="op">)</span>, by<span class="op">=</span><span class="st">"year"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">pet_year</span><span class="op">@</span><span class="va">data</span><span class="op">[</span><span class="va">pet_year</span><span class="op">@</span><span class="va">data</span><span class="op">&lt;</span><span class="fl">100</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span>
 <span class="va">ppet_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowMeans</a></span><span class="op">(</span><span class="va">pr_year</span><span class="op">@</span><span class="va">data</span><span class="op">[</span>,<span class="va">yearStrings</span><span class="op">]</span><span class="op">/</span><span class="va">pet_year</span><span class="op">@</span><span class="va">data</span><span class="op">[</span>,<span class="va">yearStrings</span><span class="op">]</span>, 
@@ -2328,10 +2274,10 @@
 <h4 class="hasAnchor">
 <a href="#percentage-of-par-reaching-the-ground" class="anchor"></a>Percentage of PAR reaching the ground</h4>
 <p>To calculate the percentage of PAR reaching the ground we need forest plot data as well as suitable parameters for leaf area estimation and light extinction. Hence, this part of the parameterization process requires other parameters to be estimated first. In addition, we will make use of <strong>medfate</strong> functions to estimate PAR extinction, which require <code>forest</code> objects. Hence we need forest inventory data in the form of a list of <code>forest</code> objects (see function <code>IFN2forestlist</code> from package <strong>medfateutils</strong>). Assuming we have converted IFN3 data into this form, we load the list of <code>forest</code> objects corresponding to IFN3 plots in Spain:</p>
-<div class="sourceCode" id="cb390"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb386"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">forest_list</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>We then calculate percentage of PAR reaching the ground using <code>medfate</code> function <code><a href="../../reference/Vertical%20profiles.html">vprofile_PARExtinction()</a></code>:</p>
-<div class="sourceCode" id="cb391"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb387"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">par_groundIFN3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">forest_list</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">par_groundIFN3</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">forest_list</span><span class="op">)</span>
 <span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">forest_list</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
@@ -2343,20 +2289,20 @@
   <span class="op">}</span>
 <span class="op">}</span></code></pre></div>
 <p>Some plots could have missing <code>par_groundIFN3</code> values, which could be the result of missing parameter values in <code>SpParams</code>:</p>
-<div class="sourceCode" id="cb392"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb388"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">par_groundIFN3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## FALSE 
 ## 85909</code></pre>
 <p>Subset plots with PAR data:</p>
-<div class="sourceCode" id="cb394"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb390"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">par_groundIFN3</span> <span class="op">&lt;-</span> <span class="va">par_groundIFN3</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">par_groundIFN3</span><span class="op">)</span><span class="op">]</span></code></pre></div>
 </div>
 <div id="subset-of-plots-with-available-information" class="section level4">
 <h4 class="hasAnchor">
 <a href="#subset-of-plots-with-available-information" class="anchor"></a>Subset of plots with available information</h4>
 <p>Define vectors of plot IDs for which there is information about bioclimatic and light conditions:</p>
-<div class="sourceCode" id="cb395"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb391"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">plotBioclim</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/row.names.html">row.names</a></span><span class="op">(</span><span class="va">bioclimIFN34</span><span class="op">)</span>
 <span class="va">plotPAR</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html">names</a></span><span class="op">(</span><span class="va">par_groundIFN3</span><span class="op">)</span></code></pre></div>
 <p>Since we took Spain for bioclimatic limits, there are n = 81152 plots with bioclimatic information and n = 85909 plots with PAR information.</p>
@@ -2369,19 +2315,19 @@
 <h4 class="hasAnchor">
 <a href="#load-and-filter-ifn3-data" class="anchor"></a>Load and filter IFN3 data</h4>
 <p>We begin by loading IFN3 data tables (regeneration data, tree data and shrub data):</p>
-<div class="sourceCode" id="cb396"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb392"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">reg</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN3/Rdata/regDataIFN3_Spain.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">tree</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN3/Rdata/treeDataIFN3_Spain.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">shrub</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN3/Rdata/shrubDataIFN3_Spain.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>We filter the three datasets according to available plot bioclimatic information:</p>
-<div class="sourceCode" id="cb397"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb393"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">regFiltBioclim</span> <span class="op">&lt;-</span> <span class="va">reg</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">ID</span> <span class="op">%in%</span> <span class="va">plotBioclim</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">mutate</span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <pre><code>## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion</code></pre>
-<div class="sourceCode" id="cb399"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb395"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">treeFiltBioclim</span> <span class="op">&lt;-</span> <span class="va">tree</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">ID</span> <span class="op">%in%</span> <span class="va">plotBioclim</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">mutate</span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -2394,14 +2340,14 @@
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <p>We do the same for PAR information:</p>
-<div class="sourceCode" id="cb400"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb396"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">regFiltPAR</span> <span class="op">&lt;-</span> <span class="va">reg</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">ID</span> <span class="op">%in%</span> <span class="va">plotPAR</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">mutate</span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <pre><code>## Warning in mask$eval_all_mutate(quo): NAs introduced by coercion</code></pre>
-<div class="sourceCode" id="cb402"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb398"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">treeFiltPAR</span> <span class="op">&lt;-</span> <span class="va">tree</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">ID</span> <span class="op">%in%</span> <span class="va">plotPAR</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">mutate</span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -2418,16 +2364,16 @@
 <h4 class="hasAnchor">
 <a href="#target-species" class="anchor"></a>Target species</h4>
 <p>Determine the IFN species to be characterized, by finding unique species codes:</p>
-<div class="sourceCode" id="cb403"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb399"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">spUnique</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">regFiltBioclim</span><span class="op">$</span><span class="va">Species</span>, 
                           <span class="va">treeFiltBioclim</span><span class="op">$</span><span class="va">Species</span>, 
                           <span class="va">shrubFiltBioclim</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>There are 338 species to be characterized. Note that we used the full set of IFN species codes and not the entities in <code>SpParams</code>. This is because we want to characterize the bioclimatic limits of the original species.</p>
 <p>Translate IFN species codes to medfate species codes (some species are considered together in <code>medfate</code>):</p>
-<div class="sourceCode" id="cb404"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb400"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Species_medfate</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/translateIFNSpeciesCodes.html">translateIFNSpeciesCodes</a></span><span class="op">(</span><span class="va">spUnique</span>, <span class="va">SpParams</span><span class="op">$</span><span class="va">IFNcodes</span><span class="op">)</span></code></pre></div>
 <p>Some IFN species do not have counterparts in <code>SpParams</code>, as these were discarded when defining the set of target species:</p>
-<div class="sourceCode" id="cb405"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb401"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">Species_medfate</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## FALSE  TRUE 
@@ -2437,10 +2383,10 @@
 <h4 class="hasAnchor">
 <a href="#quantile-tables" class="anchor"></a>Quantile tables</h4>
 <p>Define quantile probabilities (1%, 5% and 10%):</p>
-<div class="sourceCode" id="cb407"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb403"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">probs</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span><span class="op">)</span></code></pre></div>
 <p>We now create quantile output tables, including a column <code>n</code> with the number of plots on which quantiles are based:</p>
-<div class="sourceCode" id="cb408"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb404"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">q_ppet</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Species <span class="op">=</span> <span class="va">spUnique</span>, 
                    Species_medfate <span class="op">=</span> <span class="va">Species_medfate</span>,
                    q1 <span class="op">=</span> <span class="cn">NA</span>,
@@ -2450,7 +2396,7 @@
 <span class="va">q_tmin</span><span class="op">&lt;-</span><span class="va">q_ppet</span>
 <span class="va">q_par</span> <span class="op">&lt;-</span> <span class="va">q_ppet</span></code></pre></div>
 <p>We fill quantile output for minimum temperature and moisture index. This is done by finding (for each species), the set of plots where the species is present (either as adult, regeneration or shrub) and subseting the bioclimatic information corresponding to this set of plots. Quantiles are estimated from this set, as long as it contains more than 1 plot. The number of plots in the set is also stored:</p>
-<div class="sourceCode" id="cb409"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb405"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">spUnique</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">sp</span> <span class="op">=</span> <span class="va">spUnique</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>
   <span class="va">ids_reg_bioclim</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">regFiltBioclim</span><span class="op">$</span><span class="va">ID</span><span class="op">[</span><span class="va">regFiltBioclim</span><span class="op">$</span><span class="va">Species</span><span class="op">==</span><span class="va">sp</span><span class="op">]</span><span class="op">)</span>
@@ -2483,7 +2429,7 @@
 ## 5       5              96 0.4252543 0.5574783 0.5911608   54
 ## 6       6             133 0.3132141 0.4302611 0.4747681  691</code></pre>
 <p>We now fill quantile output for PAR limits in a similar way. Here we focus on regeneration and shrub data tables only, because the adults in the plot may have recruited long ago, when light conditions in the ground where quite different:</p>
-<div class="sourceCode" id="cb412"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb408"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">spUnique</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">sp</span> <span class="op">=</span> <span class="va">spUnique</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>
   <span class="va">ids_reg_par</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">regFiltPAR</span><span class="op">$</span><span class="va">ID</span><span class="op">[</span><span class="va">regFiltPAR</span><span class="op">$</span><span class="va">Species</span><span class="op">==</span><span class="va">sp</span><span class="op">]</span><span class="op">)</span>
@@ -2509,7 +2455,7 @@
 <h3 class="hasAnchor">
 <a href="#fill-medfate-parameters" class="anchor"></a>Fill medfate parameters</h3>
 <p>For each species in medfate we find the corresponding IFN species in the quantile tables. If the relationship is univocal, 1% quantile value of the IFN species is stored. If there are more than one IFN species for the target medfate species, we keep the weighted average of 1% quantile values, using the number of plots as weights.</p>
-<div class="sourceCode" id="cb414"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb410"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">SPtarget</span> <span class="op">=</span> <span class="va">SpParams</span><span class="op">$</span><span class="va">SpIndex</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>
   <span class="co">#MinFPARRecr</span>
@@ -2561,7 +2507,7 @@
 
 ## Warning in n * q1: longer object length is not a multiple of shorter object
 ## length</code></pre>
-<div class="sourceCode" id="cb416"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb412"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"MinFPARRecr"</span>,<span class="st">"MinTempRecr"</span>,<span class="st">"MinMoistureRecr"</span><span class="op">)</span>, drop<span class="op">=</span><span class="cn">FALSE</span><span class="op">]</span><span class="op">)</span></code></pre></div>
 <pre><code>##   MinFPARRecr        MinTempRecr      MinMoistureRecr 
 ##  Min.   : 0.00000   Min.   :-5.5634   Min.   :0.1790  
