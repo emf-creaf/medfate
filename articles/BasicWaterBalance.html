@@ -76,7 +76,7 @@
       <h1 data-toc-skip>Basic water balance</h1>
                         <h4 class="author">Miquel De Caceres</h4>
             
-            <h4 class="date">2021-07-14</h4>
+            <h4 class="date">2021-07-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/master/vignettes/BasicWaterBalance.Rmd"><code>vignettes/BasicWaterBalance.Rmd</code></a></small>
       <div class="hidden name"><code>BasicWaterBalance.Rmd</code></div>
@@ -115,12 +115,12 @@
 ## 
 ## $treeData
 ##   Species   N   DBH Height Z50  Z95
-## 1     157 168 37.55    800 750 3000
-## 2     176 384 14.60    660 750 3000
+## 1     149 168 37.55    800 750 3000
+## 2     169 384 14.60    660 750 3000
 ## 
 ## $shrubData
 ##   Species Cover Height Z50  Z95
-## 1     174  3.75     80 300 1500
+## 1     166  3.75     80 300 1500
 ## 
 ## $herbCover
 ## [1] 10
@@ -225,9 +225,9 @@
 <code class="sourceCode R"><span class="va">sd1</span></code></pre></div>
 <pre><code>## $cohorts
 ##         SP              Name
-## T1_157 157  Pinus halepensis
-## T2_176 176      Quercus ilex
-## S1_174 174 Quercus coccifera
+## T1_149 149  Pinus halepensis
+## T2_169 169      Quercus ilex
+## S1_166 166 Quercus coccifera
 ## 
 ## $WaterBalance
 ##             PET            Rain            Snow         NetRain        Snowmelt 
@@ -250,13 +250,13 @@
 ## 
 ## $Plants
 ##               LAI AbsorbedSWRFraction Transpiration GrossPhotosynthesis
-## T1_157 1.00643723          0.27864285    0.63012543          2.27683706
-## T2_176 0.92661573          0.24911558    0.56335249          0.83134791
-## S1_174 0.03965932          0.00756893    0.01711646          0.04164607
+## T1_149 1.00643723          0.27864285    0.63012543          2.27683706
+## T2_169 0.92661573          0.24911558    0.56335249          0.83134791
+## S1_166 0.03965932          0.00756893    0.01711646          0.04164607
 ##           PlantPsi          DDS      StemPLC
-## T1_157 -0.03324984 1.449686e-06 4.582245e-07
-## T2_176 -0.03324984 9.421210e-07 9.421210e-07
-## S1_174 -0.03370783 6.436854e-07 7.904802e-08
+## T1_149 -0.03324984 1.449686e-06 4.582245e-07
+## T2_169 -0.03324984 9.421210e-07 9.421210e-07
+## S1_166 -0.03370783 6.436854e-07 7.904802e-08
 ## 
 ## attr(,"class")
 ## [1] "spwb_day" "list"</code></pre>
@@ -335,7 +335,7 @@
 <p>Element <code>Plants</code> is in turn a list with several dataframes with plant output variables, for example plant water potentials are in:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">Plants</span><span class="op">$</span><span class="va">PlantPsi</span><span class="op">)</span></code></pre></div>
-<pre><code>##                 T1_157      T2_176      S1_174
+<pre><code>##                 T1_149      T2_169      S1_166
 ## 2001-01-01 -0.03249324 -0.03249324 -0.03330650
 ## 2001-01-02 -0.03305830 -0.03305830 -0.03360539
 ## 2001-01-03 -0.03369993 -0.03369993 -0.03429369
@@ -425,7 +425,7 @@
 <p>Parameter <code>output</code> is used to indicate the element of the <code>spwb</code> object for which we desire summaries. Similarly, it is possible to calculate the average stress of plant cohorts by months:</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span><span class="op">)</span></code></pre></div>
-<pre><code>##                  T1_157       T2_176       S1_174
+<pre><code>##                  T1_149       T2_169       S1_166
 ## 2001-01-01 1.468709e-06 9.544836e-07 6.539347e-07
 ## 2001-02-01 4.246538e-06 2.759740e-06 1.447573e-06
 ## 2001-03-01 2.653684e-06 1.724576e-06 1.036851e-06
@@ -471,11 +471,11 @@
 <p>The package provides some functions to extract or transform specific outputs from soil plant water balance simulations. In particular, function <code><a href="../reference/spwb_stress.html">spwb_stress()</a></code> allows calculating several plant stress indices, such as the number of days with drought stress &gt; 0.5 or the maximum drought stress:</p>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/spwb_stress.html">spwb_stress</a></span><span class="op">(</span><span class="va">S</span>, index <span class="op">=</span> <span class="st">"NDD"</span>, freq <span class="op">=</span> <span class="st">"years"</span>, draw<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<pre><code>##            T1_157 T2_176 S1_174
+<pre><code>##            T1_149 T2_169 S1_166
 ## 2001-01-01      8      3      0</code></pre>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/spwb_stress.html">spwb_stress</a></span><span class="op">(</span><span class="va">S</span>, index <span class="op">=</span> <span class="st">"MDS"</span>, freq <span class="op">=</span> <span class="st">"years"</span>, draw<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<pre><code>##               T1_157    T2_176    S1_174
+<pre><code>##               T1_149    T2_169    S1_166
 ## 2001-01-01 0.7018867 0.5925645 0.2583035</code></pre>
 <p>As the general summary function, <code><a href="../reference/spwb_stress.html">spwb_stress()</a></code> allows calculating stress indices at several temporal scales. For example the water stress index (integral of water potential values) can be calculated and drawn for every month:</p>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">

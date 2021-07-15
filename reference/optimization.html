@@ -258,8 +258,12 @@
 <span class='co'>#Initialize input</span>
 <span class='va'>x1</span> <span class='op'>=</span> <span class='fu'><a href='modelInput.html'>forest2spwbInput</a></span><span class='op'>(</span><span class='va'>exampleforestMED</span>,<span class='va'>examplesoil1</span>, <span class='va'>SpParamsMED</span>, <span class='va'>control</span><span class='op'>)</span>
 
+<span class='co'># Cohort name for Pinus halepensis</span>
+<span class='va'>PH_coh</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"T1_"</span>, <span class='va'>SpParamsMED</span><span class='op'>$</span><span class='va'>SpIndex</span><span class='op'>[</span><span class='va'>SpParamsMED</span><span class='op'>$</span><span class='va'>Name</span><span class='op'>==</span><span class='st'>"Pinus halepensis"</span><span class='op'>]</span><span class='op'>)</span>
+<span class='va'>PH_coh</span> 
+</div><div class='output co'>#&gt; [1] "T1_149"</div><div class='input'>
 <span class='co'>#Parameter names of interest</span>
-<span class='va'>parNames</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"T1_157/Z50"</span>, <span class='st'>"T1_157/Z95"</span><span class='op'>)</span>
+<span class='va'>parNames</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>PH_coh</span>,<span class='st'>"/Z50"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>PH_coh</span>,<span class='st'>"/Z95"</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'>#Specify parameter matrix</span>
 <span class='va'>parMatrix</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>200</span>,<span class='fl'>300</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>500</span>,<span class='fl'>1000</span><span class='op'>)</span><span class='op'>)</span>
@@ -281,7 +285,7 @@
 #&gt; </div><div class='input'>              
 <span class='co'>#Load observed data (in this case the same simulation results with some added error)  </span>
 <span class='co'># Generate a prediction function for total transpiration over the simulated period</span>
-<span class='co'># as a function of parameters "Z50" and "Z95" for cohort "T1_157"</span>
+<span class='co'># as a function of parameters "Z50" and "Z95" for Pinus halepensis cohort </span>
 <span class='va'>of</span><span class='op'>&lt;-</span><span class='fu'>optimization_function</span><span class='op'>(</span>parNames <span class='op'>=</span> <span class='va'>parNames</span>,
                           x <span class='op'>=</span> <span class='va'>x1</span>,
                           meteo <span class='op'>=</span> <span class='va'>examplemeteo</span>, 
@@ -294,7 +298,7 @@
 </div><div class='output co'>#&gt; [1] 339.1359 339.8405</div><div class='input'>
 
 <span class='co'># Generate a loglikelihood function for soil water content</span>
-<span class='co'># as a function of parameters "Z50" and "Z95" for cohort "T1_157"</span>
+<span class='co'># as a function of parameters "Z50" and "Z95" for Pinus halepensis cohort </span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>exampleobs</span><span class='op'>)</span>
 <span class='va'>oef</span><span class='op'>&lt;-</span><span class='fu'>optimization_evaluation_function</span><span class='op'>(</span>parNames <span class='op'>=</span> <span class='va'>parNames</span>,
                 x <span class='op'>=</span> <span class='va'>x1</span>,
@@ -304,8 +308,8 @@
 
 <span class='co'># Loglikelihood for the values of the parameter matrix</span>
 <span class='fu'>oef</span><span class='op'>(</span><span class='va'>parMatrix</span><span class='op'>[</span><span class='fl'>1</span>, <span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] -1318.884</div><div class='input'><span class='fu'>oef</span><span class='op'>(</span><span class='va'>parMatrix</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] -1318.8835   484.2604</div><div class='input'>
+</div><div class='output co'>#&gt; [1] -1135.615</div><div class='input'><span class='fu'>oef</span><span class='op'>(</span><span class='va'>parMatrix</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] -1135.615   559.148</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
