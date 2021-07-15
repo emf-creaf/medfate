@@ -12,7 +12,7 @@ params:
 
 ## Introduction
 
-This vignette describes the procedures used to obtain the species parameter data table `SpParamsMED` included in package **medfate**. The taxon entities chosen are intended to cover most of the woody plant taxa in Spain, as they are reported in the Spanish National Forest Inventory surveys (*Inventario Forestal Nacional* or IFN). 
+This vignette describes the procedures used to obtain the species parameter data table `SpParamsMED` included in package **medfate**. The taxon entities chosen are intended to cover most of the woody plant taxa in Spain, as they are reported in the Spanish National Forest Inventory surveys (*Inventario Forestal Nacional* or IFN). In addition, a list of `forest` objects is also created for each of three IFN surveys, where species codification follows `SpParamsMED`.
 
 The vignette is not self-contained, in the sense that it cannot be reproduced without access to data sets that are not included. Nevertheless, it is intended to serve as example of species parameterization for other regions.
 
@@ -301,6 +301,7 @@ The result of calling `initSpParams()` is a data frame with `nrow(SpParams)` row
 ```{r}
 head(SpParams[,1:7])
 ```
+
 ## Parameters drawn from IFN data
 
 Some plant size parameters, such as maximum height or minimum/maximum values of the height-to-diameter ratio, can be derived from forest inventory data. In addition, it is important that medfate's parameter `GrowthForm` (either "Tree", "Tree/Shrub" or "Shrub") matches the treatment given in forest inventory surveys. Diameters are normally measured in "Tree" entities, whereas shrubs are often measured using cover indices, and some species may be recorded in either way. Thus, the `GrowthForm` parameter should also be derived from forest inventory.
@@ -1586,6 +1587,7 @@ summary(SpParams[,c("WoodC")])
 
 ## Initialize forest plot lists for Spain
 
+If we have a species parameter table with taxonomic information, growth forms and species maximum rooting depths (`Z95`), we are ready to create lists of `forest` objects from forest plot data. Here we will use function `IFN2forestlist()` from package **medfateutils**, which has been designed to parse data from the Spanish National Forest Inventory. In section *Parameters drawn from IFN data* we loaded shrub and tree data from the three forest inventory surveys: IFN2, IFN3 and IFN4. Here we use this information to create forest lists:
 
 ```{r eval = params$complete_rebuild}
 IFN2_forestlist = IFN2forestlist(treeDataIFN2, shrubDataIFN2, SpParams, 
@@ -1600,22 +1602,22 @@ if(params$complete_rebuild) {
   IFN2_forestlist = readRDS(paste0(IFN_path,"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"))
 }
 ```
+Some of the shrub/tree records may not be parsed if they have not been included in the species definition of `SpParams`. The number of plots parsed is:
+```{r}
+length(IFN2_forestlist)
+```
+And here is the first element as an example:
+```{r}
+IFN2_forestlist[[1]]
+```
 
+We can repeat the same operation for IFN3:
 ```{r eval = params$complete_rebuild}
 IFN3_forestlist = IFN2forestlist(treeDataIFN3, shrubDataIFN3, SpParams, 
                                  setDefaults = TRUE, filterWrongRecords = TRUE)
 saveRDS(IFN3_forestlist, file=paste0(IFN_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
 
 ```
-
-```{r}
-length(IFN2_forestlist)
-```
-
-```{r}
-IFN2_forestlist[[1]]
-```
-
 
 ```{r include = FALSE, echo = FALSE}
 if(params$complete_rebuild) {
@@ -1625,15 +1627,12 @@ if(params$complete_rebuild) {
 
 }
 ```
-
+Again, some of the shrub/tree records may not be parsed if they have not been included in the species definition of `SpParams`. The number of plots parsed is now:
 ```{r}
 length(IFN3_forestlist)
 ```
 
-```{r}
-IFN3_forestlist[[1]]
-```
-
+Finally, we repeat the operation for IFN4:
 ```{r eval = params$complete_rebuild}
 IFN4_forestlist = IFN2forestlist(treeDataIFN4, shrubDataIFN4, SpParams, 
                                  setDefaults = TRUE, filterWrongRecords = TRUE)
@@ -1648,13 +1647,9 @@ saveRDS(IFN4_forestlist, file=paste0(IFN_path,"Products/IFN4/Rdata/forestlist_IF
 
 }
 ```
-
+The number of plots parsed is lower than the previous two, as IFN4 is not yet completed for all Spanish provinces:
 ```{r}
 length(IFN4_forestlist)
-```
-
-```{r}
-IFN4_forestlist[[1]]
 ```
 
 
