@@ -740,7 +740,7 @@ NumericVector KmaxStemXylemWithImputation(IntegerVector SP, DataFrame SpParams) 
       if(Group[c]=="Angiosperm") {
         if((GrowthForm[c]=="Shrub") & ((phenoType[c] == "winter-deciduous") | (phenoType[c] == "winter-semideciduous"))) {
           Kmax_stemxylem[c] = 1.55; //Angiosperm deciduous shrub
-        } else if((GrowthForm[c]=="Tree" | GrowthForm[c]=="Tree/Shrub") & ((phenoType[c] == "winter-deciduous") | (phenoType[c] == "winter-semideciduous"))) {
+        } else if(((GrowthForm[c]=="Tree") | (GrowthForm[c]=="Tree/Shrub")) & ((phenoType[c] == "winter-deciduous") | (phenoType[c] == "winter-semideciduous"))) {
           Kmax_stemxylem[c] = 1.58; //Angiosperm winter-deciduous tree
         } else { 
           Kmax_stemxylem[c] = 2.43; //Angiosperm evergreen tree

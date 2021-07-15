@@ -40,11 +40,18 @@ Package **medfuels** is also needed because it includes allometric coefficients 
 remotes::install_github("spif-ctfc/medfuels")
 ```
 
-Once we have **medfate**, **medfateutils** and **medfuels**, we load them and other common packages that we will employ in this vignette:
+Finally, we need **IFNread** is also needed in this vignette to perform some operations on IFN data. As before, package **IFNread** is installed only from GitHub:
+
+```{r, eval = FALSE}
+remotes::install_github("emf-creaf/IFNread")
+```
+
+Once we have **medfate**, **medfateutils**,  **medfuels** and **IFNread**, we load them and other common packages that we will employ in this vignette:
 ```{r message=FALSE}
 library(medfate)
 library(medfateutils)
 library(medfuels)
+library(IFNread)
 library(tidyverse)
 library(openxlsx)
 ```
@@ -113,6 +120,13 @@ IFN_species_data <- bind_rows(IFN23_species_data,
                               IFN4_tree_species_data[newTrees,])
 IFN_species_data <- IFN_species_data[order(as.numeric(IFN_species_data$IFNCODE)),]
 ```
+
+Check uniqueness of codes:
+```{r}
+length(unique(IFN_species_data$IFNCODE)) == nrow(IFN_species_data)
+```
+
+
 The final table of species names and codes has `r nrow(IFN_species_data)` rows and looks like:
 ```{r}
 head(IFN_species_data)
@@ -143,10 +157,7 @@ codesOut <- c("19", # Otras coniferas
               "3400", #Prado en mosaico
               "3500", #Pastizal-Matorral en mosaico
               "103", #Otras papilionoideas altas
-              "104", #Otras papilionoideas bajas
-              "3104", #Genista (H.t.<1,5 m)
-              "141", #Hedera helix
-              "149" #Smilax aspera
+              "104" #Otras papilionoideas bajas
               )
 ```
 
@@ -161,35 +172,43 @@ so that we are left with `r nrow(IFN_species_data)` taxa.
 As mentioned above, simulations will normally require defining groups of entities to be treated together in **medfate**. In our case, we need to define some genus-level groups because the forest inventory records do not always have identifications at species-level resolution:
 ```{r}
 genus_level <- c("Acacia spp.:7/207/307",
-                 "Adenocarpus spp.:2103/3163",
+                 "Adenocarpus spp.:1163/2163/2103/3163/10103",
+                 "Anagyris spp.:175/1175",
                  "Atriplex spp.:133",
-                 "Artemisia spp.:126/159/1159",
+                 "Artemisia spp.:126/159/1159/3159",
                  "Asparagus spp.:138/1138/2138",
                  "Astragalus spp.:6104",
                  "Betula spp.:73/273/373",
-                 "Bupleurum spp.:124/1124/2124",
-                 "Calicotome spp.:2104/2105/9072",
+                 "Bupleurum spp.:124/1124/2124/4124",
+                 "Calicotome spp.:2104/2105/9072/3104",
+                 "Cedrus spp.: 17/217/317/917",
+                 "Corema spp.:172/1172",
                  "Chamaerops humilis:369/3690",
                  "Clematis spp.:132/1132/2132",
                  "Crataegus spp.:15/215/315/415/515",
                  "Coronilla spp.:152/1152/3152/5104",
                  "Cotoneaster spp.:118",
+                 "Cupressus spp.:36/236/336/436/936",
                  "Daphne spp.:110/1110/2110/3110",
                  "Dorycnium spp.:154/7104/1154",
-                 "Echium sp.:161",
+                 "Echium spp..:161",
+                 "Ephedra spp.:173/1173",
                  "Erinacea spp.:1104/1166",
                  "Eucalyptus spp.:60/61/62/63/64/264/364/464",
                  "Euphorbia spp.:162/1162/2162/3162",
-                 "Fraxinus spp.:55/255/355/455",
+                 "Fraxinus spp.:55/255/355/455/955",
+                 "Genista spp.:177/1177/155/1155/1255/1355/1455/1555/1755/1156/1655/2155/2156/3155/4155/6155/7155/8155/9075/9155/10155/11155/12155/13155/14155",
                  "Genistella spp.:9104",
+                 "Halimium spp.:117/1117/2117/3117/4117/5117/6117",
                  "Helianthemum spp.:142",
-                 "Helichrysum spp.:128/2128",
+                 "Helichrysum spp.:128/1128/2128",
                  "Larix spp.:35/235/335/435",
                  "Lavandula spp.:109/1109/2109/3109/4109",
                  "Lonicera spp.:144/1144/2144/3144/4144/5144/9012",
-                 "Halimium spp.:117/1117/4117/5117/6117",
                  "Ilex spp.:65/82/282",
-                 "Juglans spp.:75/275",
+                 "Juglans spp.:75/275/975",
+                 "Laurus spp.:94/294",
+                 "Maytenus spp.:158/1158",
                  "Morus spp.:399/499/599",
                  "Ononis spp.:156/8104",
                  "Osyris spp.:135/1135/2135",
@@ -198,38 +217,41 @@ genus_level <- c("Acacia spp.:7/207/307",
                  "Phlomis spp.:171/1171/2171",
                  "Phoenix spp.:69/269/469",
                  "Prunus spp.:95/295/395/495/595/1095/1195/2950/148",
-                 "Pyrus spp.:16/1165/2165",
-                 "Retama spp.:4103",
+                 "Pyrus spp.:16",
+                 "Retama spp.:4103/1165/2165",
                  "Rhamnus spp.:4/122/1122/2122/3122/4122/389/5122/6122",
-                 "Rhododendron spp.:108",
+                 "Rhododendron spp.:108/1108/2108",
                  "Ribes spp.:131/1131/2131",
                  "Rosa spp.:119",
                  "Rubus spp.:121/1121/2121/3121",
+                 "Ruscus spp.:130,1130",
                  "Salix spp.:57/257/357/457/557/657/757/857/858/957",
-                 "Sambucus spp.:97/197/297/2970",
+                 "Sambucus spp.:97/197/297/997/2970",
                  "Santolina spp.:127/1127/2127",
                  "Sorbus spp.:78/278/378/478/578/678/778",
                  "Spartium spp.:3103/9103",
                  "Spiraea spp.:134/1134",
                  "Tamarix spp.:53/253",
-                 "Teline spp.:165/9077/9078/9202",
+                 "Teline spp.:165/9077/9078/9202/9914",
                  "Teucrium spp.:179/1179",
                  "Tilia spp.:77/277/377",
                  "Thymelaea spp.:151",
                  "Thuja spp.:319",
-                 "Thymus spp.:129/1129",
-                 "Ulex spp.:157/1103/6103/3164",
-                 "Ulmus spp.:56/256/356/456",
+                 "Thymus spp.:129/1129/2129/3129/4129/5129",
+                 "Ulex spp.:157/176/1103/6103/1164/3164", #Merges Stauracanthus
+                 "Ulmus spp.:56/256/356/456/956",
                  "Vaccinium spp.:137/1137",
+                 "Vella spp.:170/1170",
                  "Viburnum spp.:115/1115/4115/3115/2115"
                  )
 ```
 Groups were manually defined as strings where ':' was used to separate the group name from the set of codes forming the group, which were separated using '/'. We also define groups of taxa at species level, where different synonyms are merged, different codes have been used for the same species, or to merge sub-specific records: 
 ```{r}
-assimilated_species<-c("Acer campestre:76/776",
+assimilated_species<-c("Acer campestre:76/776/976",
                        "Amelanchier ovalis:2/200",
                        "Buxus sempervirens:91/291/2910/9071/9100",
                        "Cistus albidus:101/3101",
+                       "Cistus psilosepalus:2111/11101",
                        "Cornus sanguinea:9/900",
                        "Cytisus fontanesii:9074",
                        "Cytisus scoparius:4104/1167/5103/8103",
@@ -239,10 +261,7 @@ assimilated_species<-c("Acer campestre:76/776",
                        "Erica arborea:83/102/1102",
                        "Euonymus europaeus:5/500",
                        "Frangula alnus:3/300",
-                       "Genista horrida:177", # Echinospartum horridum -> Genista horrida
-                       "Genista cinerea:8155/1355",
-                       "Genista scorpius:155/3155",
-                       "Juniperus communis:37/3700",
+                       "Juniperus communis:37/937/3700",
                        "Juniperus phoenicea:39/238/239/1139",
                        "Medicago arborea:145/9076",
                        "Myrtus communis:6/600",
@@ -251,7 +270,7 @@ assimilated_species<-c("Acer campestre:76/776",
                        "Quercus ilex:45/245",
                        "Quercus faginea:44/344",
                        "Quercus suber:46/646/746/846/946",
-                       "Salvia rosmarinus:114") # Rosmarinus officinalis -> Salvia rosmarinus
+                       "Salvia rosmarinus:114/1114") 
 ```
 
 We now build a data frame with group names and codes, by merging the information of these two groups of taxa. We also separate group names from the set of codes defining the group into columns of a data frame:
@@ -265,32 +284,29 @@ head(groups_df)
 ### Initialize species parameter table
 
 Once we have IFN species names and codes, as well as the definition of the IFN biological entities to merge, we can call function `initSpParams()` from package **medfateutils**. This function also takes the data frame `SpParamsDefinition` as argument, from which it takes the set of parameter names to be filled:
-```{r eval = FALSE}
+```{r eval = params$complete_rebuild}
 SpParams <-initSpParams(IFN_species_data$IFNCODE, IFN_species_data$IFNNAME,
                         SpParamsDefinition,
                         groups_df$group_codes, groups_df$group_names,
                         fill_taxonomic = TRUE, verbose = FALSE)
 ```
 Option `fill_taxonomic` tells function `initSpParams()` to use package **taxize** to find taxonomic classification of the species/genus entities. This provides very useful information for parameterization, but makes the process of initialization a bit slower.
-```{r include = FALSE}
+```{r include = FALSE, echo = FALSE}
 if(params$complete_rebuild) {
-  SpParams <-initSpParams(IFN_species_data$IFNCODE, IFN_species_data$IFNNAME,
-                        SpParamsDefinition,
-                        groups_df$group_codes, groups_df$group_names,
-                        fill_taxonomic = TRUE, verbose = FALSE)
   saveRDS(SpParams, "SpParamsSPAIN_init.rds")
-} else {SpParams = readRDS("SpParamsSPAIN_init.rds")}
+} else {
+  SpParams = readRDS("SpParamsSPAIN_init.rds")
+}
 ```
 The result of calling `initSpParams()` is a data frame with `nrow(SpParams)` rows corresponding to target entities and columns corresponding to the parameters defined in `SpParamsDefinition`. Most parameters are missing, obviously, but `initSpParams()` already filled taxonomic data:
 ```{r}
 head(SpParams[,1:7])
 ```
-
 ## Parameters drawn from IFN data
 
 Some plant size parameters, such as maximum height or minimum/maximum values of the height-to-diameter ratio, can be derived from forest inventory data. In addition, it is important that medfate's parameter `GrowthForm` (either "Tree", "Tree/Shrub" or "Shrub") matches the treatment given in forest inventory surveys. Diameters are normally measured in "Tree" entities, whereas shrubs are often measured using cover indices, and some species may be recorded in either way. Thus, the `GrowthForm` parameter should also be derived from forest inventory.
 
-### Load IFN data
+### Load IFN plot data
 
 We first load IFN tree and shrub data corresponding to the three surveys (tree data is in two different tables in the case of IFN2): 
 ```{r}
@@ -303,17 +319,25 @@ piesMayoresDataIFN2<-readRDS(paste0(IFN_path,"Products/IFN2/Rdata/piesMayoresDat
 piesMenoresDataIFN2<-readRDS(paste0(IFN_path,"Products/IFN2/Rdata/piesMenoresDataIFN2_Spain.rds"))
 piesMenoresDataIFN2$ID = as.character(piesMenoresDataIFN2$ID)
 piesMenoresDataIFN2$Species = as.character(piesMenoresDataIFN2$Species)
+treeDataIFN2 = rbind(piesMayoresDataIFN2, piesMenoresDataIFN2) # Add pies menores
 treeDataIFN3<-readRDS(paste0(IFN_path,"Products/IFN3/Rdata/treeDataIFN3_Spain.rds"))
+regDataIFN3 = readRDS(paste0(IFN_path,"Products/IFN3/Rdata/regDataIFN3_Spain.rds"))
+regTreeDataIFN3 = IFNread::extractRegTreeData(regDataIFN3, subsetVars=T)
+treeDataIFN3 = rbind(treeDataIFN3[,c("ID","Species","DBH","H","N")],
+                     regTreeDataIFN3[,c("ID","Species","DBH","H","N")])
 treeDataIFN4<-readRDS(paste0(IFN_path,"Products/IFN4/Rdata/treeDataIFN4_Spain.rds"))
 ```
+
+
+
+### Merge IFN data
 We merge the data sets into two tables, one for shrubs and the other for trees, taking only columns `ID` (plot identification), `Species` (code), `H` (height) and `DBH` (for trees).
 ```{r}
 shrubDataIFN <-bind_rows(shrubDataIFN2[,c("ID","Species", "H")],
                          shrubDataIFN3[,c("ID","Species", "H")],
                          shrubDataIFN4[,c("ID","Species", "H")])
 
-treeDataIFN <-bind_rows(piesMayoresDataIFN2[,c("ID","Species", "H", "DBH")],
-                        piesMenoresDataIFN2[,c("ID","Species", "H", "DBH")],
+treeDataIFN <-bind_rows(treeDataIFN2[,c("ID","Species", "H", "DBH")],
                         treeDataIFN3[,c("ID","Species", "H", "DBH")],
                         treeDataIFN4[,c("ID","Species", "H", "DBH")])
 ```
@@ -342,13 +366,18 @@ Some codes (particularly, those excluded above) may not be recognized according 
 missingGrowthFormSpecies = SpParams[is.na(SpParams$GrowthForm), c("Name")]
 print(missingGrowthFormSpecies)
 ```
-and manually set a tree the growth form for them:
+and manually set the growth form for them:
 ```{r}
-SpParams$GrowthForm[SpParams$Name %in% missingGrowthFormSpecies] = "Tree"
+missingTrees<-c( "Dracaena drago", "Pleiomeris canariensis", "Quercus lusitanica",
+                 "Sideroxylon mirmulans") 
+SpParams$GrowthForm[SpParams$Name %in% missingTrees] = "Tree"
+missingShrubs<-c( "Dittrichia viscosa", "Periploca laevigata", "Withania frutescens") 
+SpParams$GrowthForm[SpParams$Name %in% missingShrubs] = "Shrub"
+
 ```
 We can inspect how many species were deemed "Tree", "Shrub" or "Tree/Shrub".
 ```{r}
-table(SpParams$GrowthForm)
+table(SpParams$GrowthForm, useNA = "ifany")
 ```
 
 
@@ -421,6 +450,136 @@ SpParams$fHDmin[is.na(SpParams$fHDmin) & SpParams$GrowthForm != "Shrub"] = round
 The final distributions of `fHDmax` and `fHDmin` are:
 ```{r}
 summary(SpParams[SpParams$GrowthForm != "Shrub" ,c("fHDmax", "fHDmin")])
+```
+
+## Initialize forest plot lists for Spain
+
+
+```{r eval = params$complete_rebuild}
+IFN2_forestlist = IFN2forestlist(treeDataIFN2, shrubDataIFN2, SpParams, 
+                                 setDefaults = TRUE, filterWrongRecords = TRUE)
+saveRDS(IFN2_forestlist, file=paste0(IFN_path,"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"))
+```
+
+```{r include = FALSE, echo = FALSE}
+if(params$complete_rebuild) {
+  saveRDS(IFN2_forestlist, file=paste0(IFN_path,"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"))
+} else {
+  IFN2_forestlist = readRDS(paste0(IFN_path,"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"))
+}
+```
+
+```{r eval = params$complete_rebuild}
+IFN3_forestlist = IFN2forestlist(treeDataIFN3, shrubDataIFN3, SpParams, 
+                                 setDefaults = TRUE, filterWrongRecords = TRUE)
+saveRDS(IFN3_forestlist, file=paste0(IFN_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
+
+```
+
+```{r}
+length(IFN2_forestlist)
+```
+
+```{r}
+IFN2_forestlist[[1]]
+```
+
+
+```{r include = FALSE, echo = FALSE}
+if(params$complete_rebuild) {
+  saveRDS(IFN3_forestlist, file=paste0(IFN_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
+} else {
+    IFN3_forestlist = readRDS(paste0(IFN_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
+
+}
+```
+
+```{r}
+length(IFN3_forestlist)
+```
+
+```{r}
+IFN3_forestlist[[1]]
+```
+
+```{r eval = params$complete_rebuild}
+IFN4_forestlist = IFN2forestlist(treeDataIFN4, shrubDataIFN4, SpParams, 
+                                 setDefaults = TRUE, filterWrongRecords = TRUE)
+saveRDS(IFN4_forestlist, file=paste0(IFN_path,"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"))
+```
+
+```{r include = FALSE, echo = FALSE}
+if(params$complete_rebuild) {
+saveRDS(IFN4_forestlist, file=paste0(IFN_path,"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"))
+} else {
+    IFN4_forestlist = readRDS(paste0(IFN_path,"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"))
+
+}
+```
+
+```{r}
+length(IFN4_forestlist)
+```
+
+```{r}
+IFN4_forestlist[[1]]
+```
+
+
+
+```{r eval = params$complete_rebuild, include = FALSE}
+piesMayoresDataIFN2CAT = readRDS(file=paste0(IFN_path,"Products/IFN2/Rdata/piesMayoresDataIFN2_Catalunya.rds"))
+piesMenoresDataIFN2CAT = readRDS(file=paste0(IFN_path,"Products/IFN2/Rdata/piesMenoresDataIFN2_Catalunya.rds"))
+treeDataIFN2CAT = rbind(piesMayoresDataIFN2, piesMenoresDataIFN2) # Add pies menores
+shrubDataIFN2CAT = readRDS(file=paste0(IFN_path,"Products/IFN2/Rdata/shrubDataIFN2_Catalunya.rds"))
+IFN2_forestlist_CAT = IFN2forestlist(treeDataIFN2CAT, shrubDataIFN2CAT, SpParams)
+saveRDS(IFN2_forestlist_CAT, file=paste0(IFN_path,"Products/IFN2/Rdata/forestlist_IFN2_Catalunya.rds"))
+rm(IFN2_forestlist_CAT)
+rm(treeDataIFN2CAT)
+rm(shrubDataIFN2CAT)
+rm(piesMayoresDataIFN2CAT)
+rm(piesMenoresDataIFN2CAT)
+```
+
+```{r eval = params$complete_rebuild, include = FALSE}
+mc = read.table(paste0(IFN_path,"Sources/IFN3/ModelCombustible.txt"), sep="\t", header=T)
+mc  = mc[mc$IdClasse %in% c("A1","N","NN","A3C","A4","A4C","A6C"),]
+row.names(mc) = mc$IdParcela
+herbData = mc[,c("IdParcela","HerbaciFcc","HerbaciHm")]
+herbData$HerbaciHm = herbData$HerbaciHm*10
+names(herbData) = c("ID", "Cover", "Height")
+treeDataIFN3CAT = readRDS(file=paste0(IFN_path,"Products/IFN3/Rdata/treeDataIFN3_Catalunya.rds"))
+regDataIFN3CAT = readRDS(file=paste0(IFN_path,"Products/IFN3/Rdata/regDataIFN3_Catalunya.rds"))
+regTreeDataIFN3CAT = IFNread::extractRegTreeData(regDataIFN3CAT, subsetVars=T)
+treeDataIFN3CAT = rbind(treeDataIFN3CAT[,c("ID","Species","DBH","H","N")],
+                     regTreeDataIFN3CAT[,c("ID","Species","DBH","H","N")])
+shrubDataIFN3CAT = readRDS(file=paste0(IFN_path,"Products/IFN3/Rdata/shrubDataIFN3_Catalunya.rds"))
+IFN3_forestlist_CAT = IFN2forestlist(treeDataIFN3CAT, shrubDataIFN3CAT, SpParams, 
+                                 IFNherbData = herbData)
+saveRDS(IFN3_forestlist_CAT, file=paste0(IFN_path,"Products/IFN3/Rdata/forestlist_IFN3_Catalunya.rds"))
+rm(IFN3_forestlist_CAT)
+rm(treeDataIFN3CAT)
+rm(regDataIFN3CAT)
+rm(regTreeDataIFN3CAT)
+rm(shrubDataIFN3CAT)
+rm(herbData)
+rm(mc)
+```
+
+```{r eval = params$complete_rebuild, include = FALSE}
+treeDataIFN4CAT = readRDS(file=paste0(IFN_path,"Products/IFN4/Rdata/treeDataIFN4_Catalunya.rds"))
+regDataIFN4CAT = readRDS(file=paste0(IFN_path,"Products/IFN4/Rdata/regDataIFN4_Catalunya.rds"))
+regTreeDataIFN4CAT = IFNread::extractRegTreeData(regDataIFN4CAT, subsetVars=T)
+treeDataIFN4CAT = rbind(treeDataIFN4CAT[,c("ID","Species","DBH","H","N")],
+                     regTreeDataIFN4CAT[,c("ID","Species","DBH","H","N")])
+shrubDataIFN4CAT = readRDS(file=paste0(IFN_path,"Products/IFN4/Rdata/shrubDataIFN4_Catalunya.rds"))
+IFN4_forestlist_CAT = IFN2forestlist(treeDataIFN4CAT, shrubDataIFN4CAT, SpParams)
+saveRDS(IFN4_forestlist_CAT, file=paste0(IFN_path,"Products/IFN4/Rdata/forestlist_IFN4_Catalunya.rds"))
+rm(IFN4_forestlist_CAT)
+rm(treeDataIFN4CAT)
+rm(regDataIFN4CAT)
+rm(regTreeDataIFN4CAT)
+rm(shrubDataIFN4CAT)
 ```
 
 ## Allometric coefficients
@@ -542,10 +701,6 @@ We use the same function to populate the corresponding columns in `SpParams`:
 ```{r}
 SpParams <- populateTreeAllometries(SpParams, cr_models, "crownratio")
 SpParams <- populateTreeAllometries(SpParams, cw_models, "crownwidth")
-```
-
-```{r include = FALSE}
-if(params$store_spparams) saveRDS(SpParams, "SpParamsSPAIN_allom.rds")
 ```
 
 
@@ -1826,13 +1981,11 @@ for(i in 1:nrow(SpParams)) {
 summary(SpParams[,c("MinFPARRecr","MinTempRecr","MinMoistureRecr"), drop=FALSE])
 ```
 
-```{r, include = FALSE}
-if(params$store_spparams) {
+```{r eval = params$complete_rebuild, include = FALSE}
   wb <- openxlsx::createWorkbook()
   openxlsx::addWorksheet(wb, "SpParamsMED")
   openxlsx::writeDataTable(wb, "SpParamsMED", SpParams)
   openxlsx::saveWorkbook(wb,"../../data-raw/SpParamsMED.xlsx", overwrite=TRUE)
-}
 ```
 
 ## References
