@@ -5,6 +5,8 @@ date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: TRUE
+params:
+  complete_rebuild: FALSE
 ---
 
 ```{r setup, include=FALSE}
@@ -21,24 +23,29 @@ The aim of the exercises presented here are:
 2. To determine which model parameters are more influential to determine model fit to soil water content dynamics.
 3. To reduce the uncertainty in parameters determining fine root distribution, given an observed data set of soil water content dynamics.
 
-## Preparing model inputs
-
-As an example data set we will use here the same data sets provided to illustrate simulation functions in **medfate**. This data set consists of a forest with two tree species (*Pinus halepensis*/T1_157 and *Quercus ilex*/T2_176) and one shrub species (*Quercus coccifera*/S1_174 or Kermes oak). 
-
-We begin by loading the package and the example forest data:
+As an example data set we will use here the same data sets provided to illustrate simulation functions in **medfate**. We begin by loading the package and the example forest data:
 ```{r}
 library(medfate)
 data(exampleforestMED)
 exampleforestMED
 ```
-
-We also load the example weather data set and the default species parametrization:
+We also load the species parameter table and the example weather dataset:
 ```{r}
-data(examplemeteo)
 data(SpParamsMED)
+data(examplemeteo)
 ```
 
-We then initialize a soil with four layers (default values of texture, bulk density and rock content) and the species input parameters for simulation function `spwb()`:
+## Preparing model inputs
+We will focus on three species/cohorts of the example data set:
+```{r}
+PH_coh = paste0("T1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"])
+QI_coh = paste0("T2_", SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus ilex"])
+QC_coh = paste0("S1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus coccifera"])
+```
+The data set consists of a forest with two tree species (*Pinus halepensis*/`r PH_coh` and *Quercus ilex*/`r QI_coh`) and one shrub species (*Quercus coccifera*/`r QC_coh` or Kermes oak). 
+
+
+We first initialize a soil with four layers (default values of texture, bulk density and rock content) and the species input parameters for simulation function `spwb()`:
 
 ```{r}
 examplesoil1 = soil(defaultSoilParams(4))
@@ -77,10 +84,14 @@ In the following code we define a vector of parameter names (using naming rules 
 
 ```{r}
 #Parameter names of interest
-parNames = c("T1_157/LAI_live", "T2_176/LAI_live", "S1_174/LAI_live",
-             "T1_157/Z50", "T2_176/Z50", "S1_174/Z50",
-             "T1_157/Psi_Extract", "T2_176/Psi_Extract", "S1_174/Psi_Extract",
+parNames = c(paste0(PH_coh,"/LAI_live"), paste0(QI_coh,"/LAI_live"), paste0(QC_coh,"/LAI_live"),
+             paste0(PH_coh,"/Z50"), paste0(QI_coh,"/Z50"), paste0(QC_coh,"/Z50"),
+             paste0(PH_coh,"/Psi_Extract"), paste0(QI_coh,"/Psi_Extract"), paste0(QC_coh,"/Psi_Extract"),
              "rfc@1", "rfc@2")
+parNames
+```
+
+```{r}
 #Parameter minimum and maximum values
 parMin = c(0.1,0.1,0.1,
            100,100,100,
@@ -190,7 +201,7 @@ library(sensitivity)
 
 This package provides a suite of approaches to global sensitivity analysis. Among them, we will follow the *Elementary Effect Test* implemented in function `morris()`. We call this function to analyze sensitivity of total transpiration simulated by `spwb()` to input factors (500 runs are done, so be patient):
 
-```{r, eval = FALSE}
+```{r, eval = params$complete_rebuild}
 sa_transp <- morris(of_transp, parNames, r = 50, 
              design = list(type = "oat", levels = 10, grid.jump = 3), 
              binf = parMin, bsup = parMax, scale=TRUE, verbose=FALSE)
@@ -198,8 +209,11 @@ sa_transp <- morris(of_transp, parNames, r = 50,
 Apart from indicating the sampling design to sample the input factor space, the call to `morris()` includes the response model function (in our case `of_transp`), the parameter names and parameter value boundaries (i.e. `parMin` and `parMax`). 
 
 ```{r, eval = TRUE, echo=FALSE}
-# saveRDS(sa_transp, file="sa_transp.rds")
-sa_transp = readRDS("sa_transp.rds")
+if(params$complete_rebuild) {
+  saveRDS(sa_transp, file="sa_transp.rds")
+} else {
+  sa_transp = readRDS("sa_transp.rds")
+}
 ```
 
 ```{r}
@@ -213,15 +227,18 @@ plot(sa_transp, xlim=c(0,200))
 ```
 
 We can run the same sensitivity analysis but focusing on the input factors relevant for predicted plant drought stress (i.e. using `of_stress` as model output function):
-```{r, eval = FALSE}
+```{r, eval = params$complete_rebuild}
 sa_stress <- morris(of_stress, parNames, r = 50, 
              design = list(type = "oat", levels = 10, grid.jump = 3), 
              binf = parMin, bsup = parMax, scale=TRUE, verbose=FALSE)
 ```
 
 ```{r, eval = TRUE, echo=FALSE}
-# saveRDS(sa_stress, file="sa_stress.rds")
-sa_stress = readRDS("sa_stress.rds")
+if(params$complete_rebuild) {
+  saveRDS(sa_stress, file="sa_stress.rds")
+} else {
+  sa_stress = readRDS("sa_stress.rds")
+}
 ```
 
 ```{r}
@@ -236,15 +253,18 @@ plot(sa_stress, xlim=c(0,300))
 
 Finally, we can study the contribution of input factors to model performance in terms of soil water content dynamics (i.e. using `of_eval` as model output function):
 
-```{r, eval = FALSE}
+```{r, eval = params$complete_rebuild}
 sa_eval <- morris(of_eval, parNames, r = 50, 
              design = list(type = "oat", levels = 10, grid.jump = 3), 
              binf = parMin, bsup = parMax, scale=TRUE, verbose=FALSE)
 ```
 
 ```{r, eval = TRUE, echo=FALSE}
-# saveRDS(sa_eval, file="sa_eval.rds")
-sa_eval = readRDS("sa_eval.rds")
+if(params$complete_rebuild) {
+  saveRDS(sa_eval, file="sa_eval.rds")
+} else {
+  sa_eval = readRDS("sa_eval.rds")
+}
 ```
 
 ```{r}
@@ -267,7 +287,7 @@ To simplify our analysis and avoid problems of parameter identifiability, we foc
 
 ```{r}
 #Parameter names of interest
-parNames = c("T1_157/Z50", "T2_176/Z50", "S1_174/Z50")
+parNames = c(paste0(PH_coh,"/Z50"), paste0(QI_coh,"/Z50"), paste0(QC_coh,"/Z50"))
 #Parameter minimum and maximum values
 parMin = c(100,100,100)
 parMax = c(1000,1000,1000)
@@ -289,14 +309,17 @@ of_eval<-optimization_evaluation_function(parNames = parNames,
 
 Model calibration can be performed using a broad range of approaches. Many of them - including simulated annealing, genetic algorithms, gradient methods, etc. - focus on the maximization or minimization of the objective function. To illustrate this common approach, we will use function `optim` from package **stats**, which provides several optimization methods. In particular we will use "L-BFGS-B", which is the "BFGS" quasi-Newton method published by Broyden, Fletcher, Goldfarb and Shanno, modified by the inclusion of minimum and maximum boundaries. By default, function `optim` performs the minimization of the objective function (here `of_eval`), but we can specify a negative value for control parameter `fnscale` to turn the process into a maximization of maximum likelihood:
 
-```{r, eval = FALSE}
+```{r, eval = params$complete_rebuild}
 opt_cal = optim(parIni, of_eval, method = "L-BFGS-B",
                 control = list(fnscale = -1), verbose = FALSE)
 ```
 
 ```{r, eval = TRUE, echo=FALSE}
-# saveRDS(opt_cal, file="opt_cal.rds")
-opt_cal = readRDS("opt_cal.rds")
+if(params$complete_rebuild) {
+  saveRDS(opt_cal, file="opt_cal.rds")
+} else {
+  opt_cal = readRDS("opt_cal.rds")
+}
 ```
 
 The calibration result is the following:
@@ -326,7 +349,7 @@ mcmc_setup <- createBayesianSetup(likelihood = of_eval,
                                   names = parNames)
 ```
 Function `createBayesianSetup()` automatically creates the posterior and various convenience functions for the Markov Chain Monte Carlo (MCMC) samplers. The `runMCMC()` function is the main wrapper for all other implemented MCMC functions. Here we call it with three chains of 3000 iterations each.
-```{r, eval = FALSE}
+```{r, eval = params$complete_rebuild}
 mcmc_out <- runMCMC(
   bayesianSetup = mcmc_setup, 
   sampler = "DEzs",
@@ -334,8 +357,11 @@ mcmc_out <- runMCMC(
 ```
 By default `runMCMC()` uses parallel computation, but the calibration process is nevertheless rather slow.
 ```{r, eval = TRUE, echo=FALSE}
-# saveRDS(mcmc_out, file="mcmc_out.rds")
-mcmc_out = readRDS("mcmc_out.rds")
+if(params$complete_rebuild) {
+  saveRDS(mcmc_out, file="mcmc_out.rds")
+} else {
+  mcmc_out = readRDS("mcmc_out.rds")
+}
 ```
 A summary function is provided to inspect convergence results and correlation between parameters:
 ```{r}

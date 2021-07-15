@@ -58,8 +58,14 @@ control = defaultControl("Granier")
 #Initialize input
 x1 = forest2spwbInput(exampleforestMED,examplesoil1, SpParamsMED, control)
 
-# Modify Z50 and Z95 of cohort T1_157
-x1m <- modifyInputParams(x1, c("T1_157/Z50" = 200, "T1_157/Z95" = 2000))
+# Cohort name for Pinus halepensis
+PH_coh = paste0("T1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"])
+PH_coh 
+
+# Modify Z50 and Z95 of Pinus halepensis cohort 
+customParams <- c(200,2000)
+names(customParams) <- paste0(PH_coh,c("/Z50", "/Z95"))
+x1m <- modifyInputParams(x1, customParams)
 
 # Inspect original and modified objects 
 x1$below
@@ -78,7 +84,8 @@ x1s$soil
 
 # When modifying growth input objects dependencies increase
 x1 = forest2growthInput(exampleforestMED,examplesoil1, SpParamsMED, control)
-customParams = c("T1_157/Al2As" = 2000, "T1_157/LAI_live" = 2)
+customParams <- c(2000,2)
+names(customParams) <- paste0(PH_coh,c("/Al2As", "/LAI_live"))
 x1m <- modifyInputParams(x1, customParams)
 
 

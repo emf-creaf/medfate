@@ -13,12 +13,12 @@
    \describe{
 \item{\code{SWC}}{Soil moisture content (in m3/m3).}
 \item{\code{ETR}}{Total evapotranspiration (mm).}
-\item{\code{E_T1_157}}{Transpiration of Pinus halepensis cohort 'T1_157' (L/m2 of leaf area).}
-\item{\code{E_T2_176}}{Transpiration of Quercus ilex cohort 'T2_176' (L/m2 of leaf area).}
-\item{\code{FMC_T1_157}}{Fuel moisture content of Pinus halepensis cohort 'T1_157'  (in percent).}
-\item{\code{FMC_T2_176}}{Fuel moisture content of Quercus ilex cohort 'T2_176' (in percent).}
-\item{\code{BAI_T1_157}}{Basal area increment for Pinus halepensis cohort 'T1_157'  (in cm2).}
-\item{\code{BAI_T2_176}}{Basal area increment for Quercus ilex cohort 'T2_176' (in cm2).}
+\item{\code{E_T1_149}}{Transpiration of Pinus halepensis cohort 'T1_149' (L/m2 of leaf area).}
+\item{\code{E_T2_169}}{Transpiration of Quercus ilex cohort 'T2_169' (L/m2 of leaf area).}
+\item{\code{FMC_T1_149}}{Fuel moisture content of Pinus halepensis cohort 'T1_149'  (in percent).}
+\item{\code{FMC_T2_169}}{Fuel moisture content of Quercus ilex cohort 'T2_169' (in percent).}
+\item{\code{BAI_T1_149}}{Basal area increment for Pinus halepensis cohort 'T1_149'  (in cm2).}
+\item{\code{BAI_T2_169}}{Basal area increment for Quercus ilex cohort 'T2_169' (in cm2).}
   }
 }
 \source{

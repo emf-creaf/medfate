@@ -6,7 +6,14 @@ output:
   rmarkdown::html_document:
     df_print: paged
     toc: TRUE
+params:
+  complete_rebuild: FALSE
 ---
+```{r eval = params$complete_rebuild, include = FALSE}
+## If necessary, rebuild model evaluation
+source("/home/miquel/OneDrive/Professional/Recerca/MedfateValidation/main_script.R")
+```
+
 
 ```{r setup, include=FALSE}
 params = list(wd='/home/miquel/OneDrive/Professional/Recerca/MedfateValidation/',

@@ -103,8 +103,12 @@ control = defaultControl("Granier")
 #Initialize input
 x1 = forest2spwbInput(exampleforestMED,examplesoil1, SpParamsMED, control)
 
+# Cohort name for Pinus halepensis
+PH_coh = paste0("T1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"])
+PH_coh 
+
 #Parameter names of interest
-parNames = c("T1_157/Z50", "T1_157/Z95")
+parNames = c(paste0(PH_coh,"/Z50"), paste0(PH_coh,"/Z95"))
 
 #Specify parameter matrix
 parMatrix <- cbind(c(200,300), c(500,1000))
@@ -120,7 +124,7 @@ multiple_runs(parMatrix,
               
 #Load observed data (in this case the same simulation results with some added error)  
 # Generate a prediction function for total transpiration over the simulated period
-# as a function of parameters "Z50" and "Z95" for cohort "T1_157"
+# as a function of parameters "Z50" and "Z95" for Pinus halepensis cohort 
 of<-optimization_function(parNames = parNames,
                           x = x1,
                           meteo = examplemeteo, 
@@ -133,7 +137,7 @@ of(parMatrix)
 
 
 # Generate a loglikelihood function for soil water content
-# as a function of parameters "Z50" and "Z95" for cohort "T1_157"
+# as a function of parameters "Z50" and "Z95" for Pinus halepensis cohort 
 data(exampleobs)
 oef<-optimization_evaluation_function(parNames = parNames,
                 x = x1,
