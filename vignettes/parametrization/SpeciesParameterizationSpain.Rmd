@@ -1657,7 +1657,7 @@ length(IFN4_forestlist)
 ```{r eval = params$complete_rebuild, include = FALSE}
 piesMayoresDataIFN2CAT = readRDS(file=paste0(IFN_path,"Products/IFN2/Rdata/piesMayoresDataIFN2_Catalunya.rds"))
 piesMenoresDataIFN2CAT = readRDS(file=paste0(IFN_path,"Products/IFN2/Rdata/piesMenoresDataIFN2_Catalunya.rds"))
-treeDataIFN2CAT = rbind(piesMayoresDataIFN2, piesMenoresDataIFN2) # Add pies menores
+treeDataIFN2CAT = rbind(piesMayoresDataIFN2CAT, piesMenoresDataIFN2CAT) # Add pies menores
 shrubDataIFN2CAT = readRDS(file=paste0(IFN_path,"Products/IFN2/Rdata/shrubDataIFN2_Catalunya.rds"))
 IFN2_forestlist_CAT = IFN2forestlist(treeDataIFN2CAT, shrubDataIFN2CAT, SpParams)
 saveRDS(IFN2_forestlist_CAT, file=paste0(IFN_path,"Products/IFN2/Rdata/forestlist_IFN2_Catalunya.rds"))
