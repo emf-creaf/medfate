@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.3.3
+- Maximum relative sapwood growth rates effective
+
 # Version 2.3.2
 - Parameter 'ParticleDensity' eliminated, as it is now calculated from 'LeafDensity', 'WoodDensity' and 'r635'
 
