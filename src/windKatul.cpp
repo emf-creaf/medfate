@@ -159,7 +159,8 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
   double maxerr=9999.9;
   
   int cnt=0;
-  while(maxerr>0.1) {
+  int maxcnt = 100;
+  while((maxerr>0.1) & (cnt < maxcnt)) {
     // Viscocity (and derivative) Model
     for(int i=0;i<N;i++) {
       vt[i]=pow(Cu,1.0/4.0)*Lmix[i]*sqrt(std::abs(k[i])); 
@@ -295,7 +296,7 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
       }
     }
     cnt++;
-    if(cnt==100) stop("too many iterations");
+    if(cnt==maxcnt) warning("too many iterations in canopy turbulence model");
   }
   return(DataFrame::create(Named("z1") = zm,
                            Named("U1") = U,
