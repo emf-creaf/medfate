@@ -1,5 +1,10 @@
 
 .averageBySpecies<-function(OM, spnames) {
+  if(ncol(OM)>1) OM = t(apply(OM,1, tapply, spnames, mean, na.rm=T))
+  else colnames(OM) = spnames[1]
+  return(OM)
+}
+.sumBySpecies<-function(OM, spnames) {
   if(ncol(OM)>1) OM = t(apply(OM,1, tapply, spnames, sum, na.rm=T))
   else colnames(OM) = spnames[1]
   return(OM)
@@ -232,7 +237,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
   } 
   else if(type=="PlantLAI") {
     OM = PlantsLAI
-    if(bySpecies) OM = .averageBySpecies(OM, spnames)
+    if(bySpecies) OM = .sumBySpecies(OM, spnames)
     if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
@@ -291,14 +296,14 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
                       "PlantAbsorbedSWR","PlantNetLWR")) {
     subtype = substr(type,6,nchar(type))
     OM = Plants[[subtype]][,cohorts,drop=FALSE]
-    if(bySpecies) OM = .averageBySpecies(OM, spnames)
+    if(bySpecies) OM = .sumBySpecies(OM, spnames)
     if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantWaterBalance") {
     OM = Plants$PlantWaterBalance[,cohorts,drop=FALSE]
-    if(bySpecies) OM = .averageBySpecies(OM, spnames)
+    if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
     if(is.null(ylab)) ylab = expression(paste("Plant water balance   ",(L%.%m^{-2})))
     if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
@@ -318,7 +323,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
     OM = Plants$GrossPhotosynthesis/Plants$Transpiration
     OM[Plants$Transpiration==0] = 0
     OM = OM[,cohorts,drop=FALSE]
-    if(bySpecies) OM = .averageBySpecies(OM, spnames)
+    if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
     if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Plant daily WUE   ",(g*C%.%L^{-1})))
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
@@ -444,7 +449,7 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
                       "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport", "RootExudation",
                       "LeafPI0", "StemPI0")) {
       OM = PCB[[type]][,cohorts,drop=FALSE]
-      if(bySpecies) OM = .averageBySpecies(OM, spnames)
+      if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
       if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
       if(is.null(ylab)) ylab=.getYLab(type)
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
@@ -453,36 +458,41 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
                       "SapwoodBiomass", "LeafBiomass", "FineRootBiomass",
                       "LabileBiomass", "TotalLivingBiomass")) {
     OM = PlantStructure[[type]][,cohorts,drop=FALSE]
-    if(bySpecies) OM = .averageBySpecies(OM, spnames)
+    if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
     if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth")) {
       OM = PlantGrowth[[type]][,cohorts,drop=FALSE]
-      if(bySpecies) OM = .averageBySpecies(OM, spnames)
+      if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
       if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
       if(is.null(ylab)) ylab = .getYLab(type)
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="HuberValue") {
     OM = PlantStructure[["SapwoodArea"]][,cohorts,drop=FALSE] / PlantStructure[["LeafArea"]][,cohorts,drop=FALSE]
-    if(bySpecies) OM = .averageBySpecies(OM, spnames)
+    if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
     if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="RootAreaLeafArea") {
     OM = PlantStructure[["FineRootArea"]][,cohorts,drop=FALSE] / PlantStructure[["LeafArea"]][,cohorts,drop=FALSE]
-    if(bySpecies) OM = .averageBySpecies(OM, spnames)
+    if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
     if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
 }
 
-.averageSubdailyBySpecies<-function(OM, spnames) {
+.sumSubdailyBySpecies<-function(OM, spnames) {
   if(ncol(OM)>2) OM = cbind(OM[,1],t(apply(OM[,-1],1, tapply, spnames, sum, na.rm=T)))
+  else colnames(OM)[2] = spnames[1]
+  return(OM)
+}
+.averageSubdailyBySpecies<-function(OM, spnames) {
+  if(ncol(OM)>2) OM = cbind(OM[,1],t(apply(OM[,-1],1, tapply, spnames, mean, na.rm=T)))
   else colnames(OM)[2] = spnames[1]
   return(OM)
 }
