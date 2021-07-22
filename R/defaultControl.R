@@ -63,7 +63,7 @@ defaultControl<-function(transpirationMode = "Granier") {
                              sapwood = 1.47, 
                              fineroot = 1.30), #  g gluc · g dw -1
     maximumRelativeGrowthRates = list(leaf = 0.01, # m2 leaf ·cm-2 sapwood· day-1
-                                      sapwood = 0.02, # cm2 sapwood ·cm-2 sapwood· day-1
+                                      sapwood = 0.002, # cm2 sapwood ·cm-2 sapwood· day-1
                                       fineroot = 0.1), # g dw · g dw -1 · day -1
     mortalityMode = "density/deterministic",
     mortalityBaselineRate = 0.01,
