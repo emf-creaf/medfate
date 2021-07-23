@@ -15,15 +15,18 @@ Function \code{plot} produces temporal graphs of the results of the soil plant w
 \method{plot}{spwb}(x, type="PET_Precipitation", 
                     cohorts = NULL, bySpecies = FALSE,
                     dates = NULL, subdaily = FALSE,
-                    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)
+                    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,
+                    summary.freq = NULL, ...)
 \method{plot}{pwb}(x, type="PlantTranspiration", 
                    cohorts = NULL, bySpecies = FALSE,
                    dates = NULL, subdaily = FALSE,
-                   xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)
+                   xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
+                   summary.freq = NULL, ...)
 \method{plot}{growth}(x, type="PET_Precipitation", 
                       cohorts = NULL, bySpecies = FALSE, 
                       dates = NULL, subdaily = FALSE,
-                      xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)
+                      xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
+                      summary.freq = NULL, ...)
 \method{summary}{pwb}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
 \method{summary}{spwb}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
 \method{summary}{growth}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
@@ -39,7 +42,7 @@ Function \code{plot} produces temporal graphs of the results of the soil plant w
   \item{ylim}{Range of values for y.}
   \item{xlab}{x-axis label.}
   \item{ylab}{y-axis label.}
-  \item{freq}{Frequency of summary statistics (see \code{\link{cut.Date}}).}
+  \item{freq, summary.freq}{Frequency of summary statistics (see \code{\link{cut.Date}}).}
   \item{output}{The data table to be summarized. Accepted values are \code{"DailyBalance"}, \code{"PlantStress"}, \code{"PlantPsi"}, \code{"PlantTranspiration"}, \code{"PlantPhotosynthesis"}  and \code{"SoilWaterBalance"}, \code{"Temperature"} and \code{"EnergyBalance"}.}
   \item{FUN}{The function to summarize results (e.g., \code{sum}, \code{mean}, ...)}
   \item{...}{Additional parameters for function \code{plot} or \code{summary}.}
