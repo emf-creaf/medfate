@@ -387,6 +387,8 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   NumericVector RGRleafmax = speciesNumericParameter(SP, SpParams, "RGRleafmax");
   NumericVector RGRsapwoodmax = speciesNumericParameter(SP, SpParams, "RGRsapwoodmax");
   NumericVector RGRfinerootmax = speciesNumericParameter(SP, SpParams, "RGRfinerootmax");
+  NumericVector SRsapwood = speciesNumericParameter(SP, SpParams, "SRsapwood");
+  NumericVector SRfineroot = speciesNumericParameter(SP, SpParams, "SRfineroot");
   NumericVector fHDmin = speciesNumericParameter(SP, SpParams, "fHDmin");
   NumericVector fHDmax = speciesNumericParameter(SP, SpParams, "fHDmax");
   
@@ -399,6 +401,10 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   double RERleaf_default = respirationRates["leaf"];
   double RERsapwood_default = respirationRates["sapwood"];
   double RERfineroot_default = respirationRates["fineroot"];
+
+  List senescenceRates = control["senescenceRates"];
+  double SRsapwood_default = senescenceRates["sapwood"];
+  double SRfineroot_default = senescenceRates["fineroot"];
   
   if(fillMissingSpParams) {
     for(int c=0;c<numCohorts;c++){
@@ -408,6 +414,8 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
       if(NumericVector::is_na(RERleaf[c])) RERleaf[c] = RERleaf_default;
       if(NumericVector::is_na(RERsapwood[c])) RERsapwood[c] = RERsapwood_default;
       if(NumericVector::is_na(RERfineroot[c])) RERfineroot[c] = RERfineroot_default;
+      if(NumericVector::is_na(SRsapwood[c])) SRsapwood[c] = SRsapwood_default;
+      if(NumericVector::is_na(SRfineroot[c])) SRfineroot[c] = SRfineroot_default;
     }
   }
   
@@ -417,6 +425,8 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
                                                _["RGRleafmax"] = RGRleafmax,
                                                _["RGRsapwoodmax"] = RGRsapwoodmax,
                                                _["RGRfinerootmax"] = RGRfinerootmax,
+                                               _["SRsapwood"] = SRsapwood,
+                                               _["SRfineroot"] = SRfineroot,
                                                _["fHDmin"] = fHDmin,
                                                _["fHDmax"] = fHDmax,
                                                _["WoodC"] = WoodC);

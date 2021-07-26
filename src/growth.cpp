@@ -131,8 +131,6 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
   double equilibriumSapwoodTotalConc = equilibriumOsmoticConcentration["sapwood"];
   double minimumRelativeSugarForGrowth = control["minimumRelativeSugarForGrowth"];
-  List turnoverRates = control["turnoverRates"];
-  double dailySapwoodTurnoverProportion = turnoverRates["sapwood"];
   List constructionCosts = control["constructionCosts"];
   double leaf_CC = constructionCosts["leaf"];
   double sapwood_CC = constructionCosts["sapwood"];
@@ -215,6 +213,8 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   NumericVector RERfineroot = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERfineroot"]);
   NumericVector RGRleafmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRleafmax"]);
   NumericVector RGRsapwoodmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRsapwoodmax"]);
+  NumericVector SRsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["SRsapwood"]);
+
   //Phenology parameters
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
   CharacterVector phenoType = Rcpp::as<Rcpp::CharacterVector>(paramsPhenology["PhenologyType"]);
@@ -438,13 +438,13 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       }
       double deltaLAsenescence = LAexpanded*propLeafSenescence;
       //Define sapwood senescense
-      double propSAturnover = dailySapwoodTurnoverProportion/(1.0+15.0*exp(-0.01*H[j]));
-      double deltaSAturnover = propSAturnover*SA[j];
+      double propSASenescence = SRsapwood[j]/(1.0+15.0*exp(-0.01*H[j]));
+      double deltaSASenescence = propSASenescence*SA[j];
       
       //TRANSLOCATION (in mol gluc) of labile carbon
       double translocationSugarLeaf = propLeafSenescence*Volume_leaves[j]*sugarLeaf[j];
       double translocationStarchLeaf = propLeafSenescence*Volume_leaves[j]*starchLeaf[j];
-      double translocationSugarSapwood = propSAturnover*Volume_sapwood[j]*starchSapwood[j];
+      double translocationSugarSapwood = propSASenescence*Volume_sapwood[j]*starchSapwood[j];
       if(Volume_leaves[j]>0) {
         sugarLeaf[j] = ((sugarLeaf[j]*Volume_leaves[j]) - translocationSugarLeaf)/Volume_leaves[j]; 
         starchLeaf[j] = ((starchLeaf[j]*Volume_leaves[j]) - translocationStarchLeaf)/Volume_leaves[j]; 
@@ -476,7 +476,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       }
       LAdead += deltaLAsenescence;
       double SAprev = SA[j];
-      SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; 
+      SA[j] = SA[j] + deltaSAgrowth - deltaSASenescence; 
       //Recalculate storage concentrations
       double newVolumeSapwood = Volume_sapwood[j]*(SA[j]/SAprev);
       double newVolumeLeaves = Volume_leaves[j]*(LAexpanded/LAprev);
@@ -678,9 +678,6 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
   double equilibriumSapwoodTotalConc = equilibriumOsmoticConcentration["sapwood"];
   double minimumRelativeSugarForGrowth = control["minimumRelativeSugarForGrowth"];
-  List turnoverRates = control["turnoverRates"];
-  double dailySapwoodTurnoverProportion = turnoverRates["sapwood"];
-  double dailyFineRootTurnoverProportion = turnoverRates["fineroot"];
   List constructionCosts = control["constructionCosts"];
   double leaf_CC = constructionCosts["leaf"];
   double sapwood_CC = constructionCosts["sapwood"];
@@ -800,6 +797,9 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   NumericVector RGRleafmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRleafmax"]);
   NumericVector RGRsapwoodmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRsapwoodmax"]);
   NumericVector RGRfinerootmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRfinerootmax"]);
+  NumericVector SRsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["SRsapwood"]);
+  NumericVector SRfineroot = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["SRfineroot"]);
+  
   
   //Phenology parameters
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
@@ -1126,13 +1126,13 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       }
       double deltaLAsenescence = LAexpanded*propLeafSenescence;
       //SA senescence
-      double propSAturnover = dailySapwoodTurnoverProportion/(1.0+15.0*exp(-0.01*H[j]));
-      double deltaSAturnover = propSAturnover*SA[j];
+      double propSASenescence = SRsapwood[j]/(1.0+15.0*exp(-0.01*H[j]));
+      double deltaSASenescence = propSASenescence*SA[j];
 
       //TRANSLOCATION (in mol gluc) of labile carbon
       double translocationSugarLeaf = propLeafSenescence*Volume_leaves[j]*sugarLeaf[j];
       double translocationStarchLeaf = propLeafSenescence*Volume_leaves[j]*starchLeaf[j];
-      double translocationSugarSapwood = propSAturnover*Volume_sapwood[j]*starchSapwood[j];
+      double translocationSugarSapwood = propSASenescence*Volume_sapwood[j]*starchSapwood[j];
       if(Volume_leaves[j]>0) {
         sugarLeaf[j] = ((sugarLeaf[j]*Volume_leaves[j]) - translocationSugarLeaf)/Volume_leaves[j];
         starchLeaf[j] = ((starchLeaf[j]*Volume_leaves[j]) - translocationStarchLeaf)/Volume_leaves[j];
@@ -1144,8 +1144,8 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       NumericVector newFRB(numLayers,0.0);
       for(int s=0;s<numLayers;s++) {
         double initialFRB = fineRootBiomass[j]*V(j,s);
-        double dayTurnover = dailyFineRootTurnoverProportion*std::max(0.0,(Tsoil[s]-5.0)/20.0);
-        newFRB[s] = std::max(0.0,initialFRB*(1.0 - dayTurnover) + deltaFRBgrowth[s]);
+        double daySenescence = SRfineroot[j]*std::max(0.0,(Tsoil[s]-5.0)/20.0);
+        newFRB[s] = std::max(0.0,initialFRB*(1.0 - daySenescence) + deltaFRBgrowth[s]);
       }
       fineRootBiomass[j] = sum(newFRB);
       //Update vertical fine root distribution
@@ -1162,7 +1162,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       }
       LAdead += deltaLAsenescence;
       double SAprev = SA[j];
-      SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; 
+      SA[j] = SA[j] + deltaSAgrowth - deltaSASenescence; 
       //Recalculate storage concentrations
       double newVolumeSapwood = Volume_sapwood[j]*(SA[j]/SAprev);
       double newVolumeLeaves = Volume_leaves[j]*(LAexpanded/LAprev);

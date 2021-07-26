@@ -57,7 +57,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     respirationRates = list(leaf = 0.00260274, 
                             sapwood = 6.849315e-05, 
                             fineroot = 0.002054795), # g gluc · g dw -1 · day -1
-    turnoverRates = list(sapwood = 0.0001261398, # day-1 Equivalent to annual 4.5% 1-(1-0.045)^(1.0/365)
+    senescenceRates = list(sapwood = 0.0001261398, # day-1 Equivalent to annual 4.5% 1-(1-0.045)^(1.0/365)
                       fineroot = 0.001897231), #day-1 Equivalent to annual 50% 1-(1-0.5)^(1.0/365)
     constructionCosts = list(leaf = 1.5, 
                              sapwood = 1.47, 
