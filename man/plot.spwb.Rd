@@ -89,19 +89,30 @@ The following plots are currently available for \code{\link{spwb}} (most of them
   }
 The following are only available for \code{\link{growth}}:
  \itemize{
-    \item{\code{"PlantRespiration"}:}{ Plant cohort respiration.}
-    \item{\code{"PlantRespirationPerLeaf"}:}{ Plant cohort respiration per leaf area.}
-    \item{\code{"PlantRespirationPerIndividual"}:}{ Respiration per individual.}
-    \item{\code{"PlantCBalance"}:}{ Plant cohort carbon balance.}
-    \item{\code{"PlantCBalancePerLeaf"}:}{ Plant cohort carbon balance per leaf area.}
-    \item{\code{"PlantCBalancePerIndividual"}:}{ Carbon balance per individual.}
-    \item{\code{"PlantCstorageFast"}:}{ Amount of fast-dynamics carbon reserves.}
-    \item{\code{"PlantCstorageSlow"}:}{ Amount of slow-dynamics carbon reserves.}
-    \item{\code{"PlantSA"}:}{ Amount of sapwood area in an individual.}
-    \item{\code{"PlantSAgrowth"}:}{ Amount of newly-created sapwood area.}
-    \item{\code{"PlantRelativeSAgrowth"}:}{ Amount of newly-created sapwood area per sapwood area.}
-    \item{\code{"PlantLAIlive"}:}{ Plant cohort leaf area index of live leaves.}
-    \item{\code{"PlantLAIdead"}:}{ Plant cohort leaf area index of dead leaves.}
+    \item{\code{"GrossPhotosynthesis"}:}{ Gross photosynthesis rate per dry weight.}
+    \item{\code{"MaintenanceRespiration"}:}{ Maintenance respiration cost per dry weight.}
+    \item{\code{"CarbonBalance"}:}{ Carbon balance per dry weight.}
+    \item{\code{"SugarLeaf"}:}{ Sugar concentration in leaves.}
+    \item{\code{"StarchLeaf"}:}{ Starch concentration in leaves.}
+    \item{\code{"SugarSapwood"}:}{ Sugar concentration in sapwood.}
+    \item{\code{"StarchSapwood"}:}{ Starch concentration in sapwood.}
+    \item{\code{"SugarTransport"}:}{ Phloem sugar transport rate.}
+    \item{\code{"RootExudation"}:}{ Root exudation rate per dry weight.}
+    \item{\code{"LeafPI0"}:}{ Leaf osmotic concentration at full turgor.}
+    \item{\code{"StemPI0"}:}{ Sapwood osmotic concentration at full turgor.}
+    \item{\code{"SapwoodArea"}:}{ Sapwood area per individual.}
+    \item{\code{"LeafArea"}:}{ Leaf area per individual.}
+    \item{\code{"FineRootArea"}:}{ Fine root area per individual.}
+    \item{\code{"SapwoodBiomass"}:}{ Sapwood dry biomass per individual.}
+    \item{\code{"LeafBiomass"}:}{ Leaf dry biomass per individual.}
+    \item{\code{"FineRootBiomass"}:}{ Fine root dry biomass per individual.}
+    \item{\code{"LabileBiomass"}:}{ Labile C biomass per individual.}
+    \item{\code{"TotalLivingBiomass"}:}{ Total dry biomass per individual.}
+    \item{\code{"SAgrowth"}:}{ Sapwood area growth rate.}
+    \item{\code{"LAgrowth"}:}{ Leaf area growth rate.}
+    \item{\code{"FRAgrowth"}:}{ Fine root area growth rate.}
+    \item{\code{"HuberValue"}:}{ Ratio of leaf area to sapwood area.}
+    \item{\code{"RootAreaLeafArea"}:}{ Ratio of fine root area to leaf area.}
    }
 }
 \references{
