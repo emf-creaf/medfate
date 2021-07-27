@@ -27,15 +27,15 @@ exampleforestMED$treeData$Species[1] = SpParamsMED$SpIndex[SpParamsMED$Name=="Pi
 exampleforestMED$treeData$Species[2] = SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus ilex"]
 exampleforestMED$shrubData$Species[1] = SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus coccifera"]
 usethis::use_data(exampleforestMED, overwrite = T)
-
-PH_cohName = paste0("T1_",exampleforestMED$treeData$Species[1])
-QI_cohName = paste0("T2_",exampleforestMED$treeData$Species[2])
-QC_cohName = paste0("S1_",exampleforestMED$shrubData$Species[1])
+##Rebuild!
 
 ## Builds a fake observed data set from simulation results
 library(medfate)
 data(examplemeteo)
 data(exampleforestMED)
+PH_cohName = paste0("T1_",exampleforestMED$treeData$Species[1])
+QI_cohName = paste0("T2_",exampleforestMED$treeData$Species[2])
+QC_cohName = paste0("S1_",exampleforestMED$shrubData$Species[1])
 data(SpParamsMED)
 examplesoil1 = soil(defaultSoilParams(4))
 control = defaultControl("Granier")

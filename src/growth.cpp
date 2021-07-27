@@ -311,6 +311,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       double sapwoodSugarMass = sugarSapwood[j]*(Volume_sapwood[j]*glucoseMolarMass);
       double B_resp_leaves = LeafStructBiomass[j] + leafSugarMass;
       double B_resp_sapwood = SapwoodLivingStructBiomass[j] + sapwoodSugarMass;
+      // Rcout<<j<< " maintenance costs of leaf sugars: "<< (leafSugarMass/B_resp_leaves)<<" sapwood sugars: "<< (sapwoodSugarMass/B_resp_sapwood)<<"\n";
       double B_resp_fineroots = FineRootStructBiomass[j];
       double QR = qResp(tday);
       if(LAexpanded>0.0) leafRespDay = B_resp_leaves*RERleaf[j]*QR;

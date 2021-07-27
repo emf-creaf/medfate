@@ -6,6 +6,8 @@
 - Maximum relative sapwood growth rates effective
 - New option 'summary.freq' in plot.spwb and plot.growth
 - New species parameters (sapwood and fine root senescence rates)
+- Defaults for 'conduit2sapwood' from taxonomical family
+- IMPORTANT: New species parameter tables (including estimates for conduit2sapwood)
 
 # Version 2.3.2
 - Parameter 'ParticleDensity' eliminated, as it is now calculated from 'LeafDensity', 'WoodDensity' and 'r635'

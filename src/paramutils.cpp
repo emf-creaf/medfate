@@ -446,7 +446,20 @@ NumericVector rootLengthDensityWithImputation(IntegerVector SP, DataFrame SpPara
 NumericVector conduit2sapwoodWithImputation(IntegerVector SP, DataFrame SpParams) {
   CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
   NumericVector conduit2sapwood = speciesNumericParameter(SP, SpParams, "conduit2sapwood");
+  //Access internal data frame "trait_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_conduit2sapwood = TFM["conduit2sapwood"];
+  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
   for(int c=0;c<conduit2sapwood.size();c++) {
+    if(NumericVector::is_na(conduit2sapwood[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          conduit2sapwood[c] = fam_conduit2sapwood[i];
+        }
+      }
+    }
     if(NumericVector::is_na(conduit2sapwood[c])) {
       if(Group[c]=="Angiosperm") conduit2sapwood[c] = 0.70; //20-40% parenchyma in angiosperms.
       else conduit2sapwood[c] = 0.925; //5-10% parenchyma in gymnosperms (https://link.springer.com/chapter/10.1007/978-3-319-15783-2_8)
