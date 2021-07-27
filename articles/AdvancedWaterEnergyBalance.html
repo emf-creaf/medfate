@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.4</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@
       <h1 data-toc-skip>Advanced water and energy balance</h1>
                         <h4 class="author">Miquel De Caceres</h4>
             
-            <h4 class="date">2021-07-23</h4>
+            <h4 class="date">2021-07-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/master/vignettes/AdvancedWaterEnergyBalance.Rmd"><code>vignettes/AdvancedWaterEnergyBalance.Rmd</code></a></small>
       <div class="hidden name"><code>AdvancedWaterEnergyBalance.Rmd</code></div>
@@ -115,12 +115,12 @@
 ## 
 ## $treeData
 ##   Species   N   DBH Height Z50  Z95
-## 1     149 168 37.55    800 750 3000
-## 2     169 384 14.60    660 750 3000
+## 1     148 168 37.55    800 750 3000
+## 2     168 384 14.60    660 750 3000
 ## 
 ## $shrubData
 ##   Species Cover Height Z50  Z95
-## 1     166  3.75     80 300 1500
+## 1     165  3.75     80 300 1500
 ## 
 ## $herbCover
 ## [1] 10
@@ -177,9 +177,9 @@
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">cohorts</span></code></pre></div>
 <pre><code>##         SP              Name
-## T1_149 149  Pinus halepensis
-## T2_169 169      Quercus ilex
-## S1_166 166 Quercus coccifera</code></pre>
+## T1_148 148  Pinus halepensis
+## T2_168 168      Quercus ilex
+## S1_165 165 Quercus coccifera</code></pre>
 <p>Element <code>canopy</code> contains state variables within the canopy:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">canopy</span></code></pre></div>
@@ -217,91 +217,91 @@
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">above</span></code></pre></div>
 <pre><code>##          H        CR        N   LAI_live LAI_expanded LAI_dead
-## T1_149 800 0.6605196 168.0000 1.00643723   1.00643723        0
-## T2_169 660 0.6055642 384.0000 0.92661573   0.92661573        0
-## S1_166  80 0.8032817 749.4923 0.03965932   0.03965932        0</code></pre>
+## T1_148 800 0.6605196 168.0000 1.00643723   1.00643723        0
+## T2_168 660 0.6055642 384.0000 0.92661573   0.92661573        0
+## S1_165  80 0.8032817 749.4923 0.03965932   0.03965932        0</code></pre>
 <p>Belowground parameters can be seen in <code>below</code>:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">below</span></code></pre></div>
 <pre><code>##        Z50  Z95 fineRootBiomass coarseRootSoilVolume
-## T1_149 750 3000       7041.9790             15.00000
-## T2_169 750 3000       3201.6067             19.50000
-## S1_166 300 1500        164.5287              0.09375</code></pre>
+## T1_148 750 3000       7041.9790             15.00000
+## T2_168 750 3000       3201.6067             19.50000
+## S1_165 300 1500        164.5287              0.09375</code></pre>
 <p>and in <code>belowLayers</code>:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">belowLayers</span></code></pre></div>
 <pre><code>## $V
 ##                1         2
-## T1_149 0.1933638 0.8066362
-## T2_169 0.1933638 0.8066362
-## S1_166 0.5554389 0.4445611
+## T1_148 0.1933638 0.8066362
+## T2_168 0.1933638 0.8066362
+## S1_165 0.5554389 0.4445611
 ## 
 ## $L
 ##                1        2
-## T1_149 2325.6624 4162.854
-## T2_169 2609.6105 4606.209
-## S1_166  571.4173 1185.629
+## T1_148 2325.6624 4162.854
+## T2_168 2609.6105 4606.209
+## S1_165  571.4173 1185.629
 ## 
 ## $VGrhizo_kmax
 ##                1        2
-## T1_149  42285017 62895956
-## T2_169  51808686 79507938
-## S1_166 253152670 73383323
+## T1_148  42285017 62895956
+## T2_168  51808686 79507938
+## S1_165 253152670 73383323
 ## 
 ## $VCroot_kmax
 ##                1         2
-## T1_149 0.4050231 0.9439254
-## T2_169 1.2815989 3.0289117
-## S1_166 2.5460170 0.9821121
+## T1_148 0.4050231 0.9439254
+## T2_168 1.2815989 3.0289117
+## S1_165 2.5460170 0.9821121
 ## 
 ## $Wpool
 ##        1 2
-## T1_149 1 1
-## T2_169 1 1
-## S1_166 1 1
+## T1_148 1 1
+## T2_168 1 1
+## S1_165 1 1
 ## 
 ## $RhizoPsi
 ##        1 2
-## T1_149 0 0
-## T2_169 0 0
-## S1_166 0 0</code></pre>
+## T1_148 0 0
+## T2_168 0 0
+## S1_165 0 0</code></pre>
 <p>The <code>spwbInput</code>object also includes cohort parameter values for several kinds of traits. For example, plant anatomy parameters are described in <code>paramsAnatomy</code>:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsAnatomy</span></code></pre></div>
 <pre><code>##        Hmax Hmed    Al2As      SLA LeafWidth LeafDensity WoodDensity
-## T1_149 1900  850 1716.262 5.348269  0.700000   0.3237865   0.6064556
-## T2_169 1300  550 2481.709 6.817833  1.767436   0.5272863   0.8743066
-## S1_166  250   80 6180.357 5.027918  1.376108   0.3871262   0.1713280
+## T1_148 1900  850 1716.262 5.348269  0.700000   0.3237865   0.6064556
+## T2_168 1300  550 2481.709 6.817833  1.767436   0.5272863   0.8743066
+## S1_165  250   80 6180.357 5.027918  1.376108   0.3871262   0.1713280
 ##        FineRootDensity conduit2sapwood      SRL RLD     r635
-## T1_149       0.3237865           0.925 3172.572  10 1.964226
-## T2_169       0.5272863           0.700 4066.803  10 1.805872
-## S1_166       0.3871262           0.700 4066.803  10 2.289452</code></pre>
+## T1_148       0.3237865       0.9236406 3172.572  10 1.964226
+## T2_168       0.5272863       0.6238125 4066.803  10 1.805872
+## S1_165       0.3871262       0.6238125 4066.803  10 2.289452</code></pre>
 <p>Parameters related to plant transpiration and photosynthesis can be seen in <code>paramsTranspiration</code>:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsTranspiration</span></code></pre></div>
 <pre><code>##             Gswmin    Gswmax  Vmax298  Jmax298 Kmax_stemxylem Kmax_rootxylem
-## T1_149 0.002031250 0.1940833 62.81613 128.8272      0.1500000       0.600000
-## T2_169 0.006003126 0.2007222 39.24539 103.0690      0.7735834       3.094334
-## S1_166 0.010455247 0.2830167 62.96065 119.4442      0.2900000       1.160000
+## T1_148 0.002031250 0.1940833 62.81613 128.8272      0.1500000       0.600000
+## T2_168 0.006003126 0.2007222 39.24539 103.0690      0.7735834       3.094334
+## S1_165 0.010455247 0.2830167 62.96065 119.4442      0.2900000       1.160000
 ##        VCleaf_kmax VCleaf_c  VCleaf_d VCstem_kmax VCstem_c  VCstem_d
-## T1_149    7.166471 1.497782 -2.142745    1.028343 7.458883 -4.481392
-## T2_169    7.354306 1.331076 -1.777291    4.716717 2.558358 -5.103492
-## S1_166    9.579077 1.844224 -3.030130    3.117593 3.537784 -4.126512
+## T1_148    7.166471 1.497782 -2.142745    1.028343 7.458883 -4.481392
+## T2_168    7.354306 1.331076 -1.777291    4.716717 2.558358 -5.103492
+## S1_165    9.579077 1.844224 -3.030130    3.117593 3.537784 -4.126512
 ##        VCroot_kmax VCroot_c  VCroot_d VGrhizo_kmax Plant_kmax
-## T1_149    1.348948 1.916254 -3.240714    105180972  0.5395794
-## T2_169    4.310511 1.957824 -3.366992    131316623  1.7242042
-## S1_166    3.528129 1.760307 -2.797092    326535993  1.4112516</code></pre>
+## T1_148    1.348948 1.916254 -3.240714    105180972  0.5395794
+## T2_168    4.310511 1.957824 -3.366992    131316623  1.7242042
+## S1_165    3.528129 1.760307 -2.797092    326535993  1.4112516</code></pre>
 <p>Finally, parameters related to pressure-volume curves and water storage capacity of leaf and stem organs are in <code>paramsWaterStorage</code>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsWaterStorage</span></code></pre></div>
-<pre><code>##          LeafPI0   LeafEPS LeafAF     Vleaf    StemPI0   StemEPS StemAF
-## T1_149 -1.591429  8.918571 0.3525 0.4560549 -2.0028552 13.185187  0.925
-## T2_169 -1.483333 19.260000 0.1700 0.1829250 -3.1171155 41.465622  0.700
-## S1_166 -2.370000 17.230000 0.2400 0.3846097 -0.1927245  1.218936  0.700
+<pre><code>##          LeafPI0   LeafEPS LeafAF     Vleaf    StemPI0   StemEPS    StemAF
+## T1_148 -1.591429  8.918571 0.3525 0.4560549 -2.0028552 13.185187 0.9236406
+## T2_168 -1.483333 19.260000 0.1700 0.1829250 -3.1171155 41.465622 0.6238125
+## S1_165 -2.370000 17.230000 0.2400 0.3846097 -0.1927245  1.218936 0.6238125
 ##         Vsapwood
-## T1_149 2.8256658
-## T2_169 1.1495998
-## S1_166 0.1150416</code></pre>
+## T1_148 2.8256658
+## T2_168 1.1495998
+## S1_165 0.1150416</code></pre>
 <p>Finally, remember that one can play with plant-specific parameters for soil water balance (instead of using species-level values) by modifying manually the parameter values in this object.</p>
 </div>
 </div>
@@ -459,21 +459,21 @@
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sd1</span><span class="op">$</span><span class="va">Plants</span></code></pre></div>
 <pre><code>##               LAI Extraction Transpiration GrossPhotosynthesis
-## T1_149 1.00643723 0.25942064    0.25942064          2.07528657
-## T2_169 0.92661573 0.31348103    0.31348103          1.38992465
-## S1_166 0.03965932 0.01663162    0.01663162          0.06123801
+## T1_148 1.00643723 0.25942064    0.25942064          2.07528657
+## T2_168 0.92661573 0.31348103    0.31348103          1.38992465
+## S1_165 0.03965932 0.01663162    0.01663162          0.06123801
 ##        NetPhotosynthesis    RootPsi    StemPsi      StemPLC LeafPsiMin
-## T1_149        1.93248750 -0.4977087 -0.7991837 4.720222e-07 -1.2299352
-## T2_169        1.29836524 -0.2416643 -0.3366812 2.278513e-04 -0.5786835
-## S1_166        0.05553232 -0.3176123 -0.4767654 1.095076e-04 -0.7466040
+## T1_148        1.93248750 -0.4977087 -0.7991837 4.720222e-07 -1.2299352
+## T2_168        1.29836524 -0.2416643 -0.3366812 2.278513e-04 -0.5786835
+## S1_165        0.05553232 -0.3176123 -0.4767654 1.095076e-04 -0.7466040
 ##         LeafPsiMax      dEdP        DDS   StemRWC   LeafRWC StemSympRWC
-## T1_149 -0.04848757 0.3518063 0.03466548 0.9983421 0.9237990   0.9779010
-## T2_169 -0.05059580 1.1248855 0.03406221 0.9988808 0.9792477   0.9968011
-## S1_166 -0.06542421 0.9422049 0.01151417 0.9251709 0.9821248   0.7508251
+## T1_148 -0.04848757 0.3518063 0.03466548 0.9983121 0.9237990   0.9779010
+## T2_168 -0.05059580 1.1248855 0.03406221 0.9986545 0.9792477   0.9968011
+## S1_165 -0.06542421 0.9422049 0.01151417 0.9061952 0.9821248   0.7508251
 ##        LeafSympRWC  WaterBalance
-## T1_149   0.9527228  2.450297e-17
-## T2_169   0.9890906 -9.540979e-18
-## S1_166   0.9836975  5.556536e-19</code></pre>
+## T1_148   0.9527228  2.450297e-17
+## T2_168   0.9890906 -9.540979e-18
+## S1_165   0.9836975  5.556536e-19</code></pre>
 <p>While <code>Plants</code> contains one value per cohort and variable that summarizes the whole simulated day, information by disaggregated by time step can be accessed in <code>PlantsInst</code>. Moreover, we can use function <code><a href="../reference/plot.spwb_day.html">plot.spwb_day()</a></code> to draw plots of sub-daily variation per species of plant transpiration per ground area (L·m<span class="math inline">\(^{-2}\)</span>), transpiration per leaf area (also in L·m<span class="math inline">\(^{-2}\)</span>), plant net photosynthesis (in g C·m<span class="math inline">\(^{-2}\)</span>), and plant water potential (in MPa):</p>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"PlantTranspiration"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
@@ -495,23 +495,23 @@
 <div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sd1</span><span class="op">$</span><span class="va">SunlitLeaves</span></code></pre></div>
 <pre><code>##                LAI  Vmax298   Jmax298 LeafPsiMin  LeafPsiMax      GSWMin
-## T1_149 0.434534247 49.42817 101.37032 -1.6868505 -0.04848757 0.002051063
-## T2_169 0.283067367 30.15910  79.20595 -0.9826431 -0.04629099 0.006121761
-## S1_166 0.008054994 44.08017  83.62555 -1.6063974 -0.06542421 0.010497379
+## T1_148 0.434534247 49.42817 101.37032 -1.6868505 -0.04848757 0.002051063
+## T2_168 0.283067367 30.15910  79.20595 -0.9826431 -0.04629099 0.006121761
+## S1_165 0.008054994 44.08017  83.62555 -1.6063974 -0.06542421 0.010497379
 ##            GSWMax  TempMin  TempMax
-## T1_149 0.08125225 3.322541 14.80512
-## T2_169 0.07887225 3.068057 20.71198
-## S1_166 0.12101295 3.492115 20.80481</code></pre>
+## T1_148 0.08125225 3.322541 14.80512
+## T2_168 0.07887225 3.068057 20.71198
+## S1_165 0.12101295 3.492115 20.80481</code></pre>
 <div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sd1</span><span class="op">$</span><span class="va">ShadeLeaves</span></code></pre></div>
 <pre><code>##               LAI  Vmax298  Jmax298 LeafPsiMin  LeafPsiMax      GSWMin
-## T1_149 0.57190298 41.41563 84.93772 -0.9771766 -0.04848757 0.002037635
-## T2_169 0.64354836 27.07762 71.11315 -0.3911507 -0.05059580 0.006109172
-## S1_166 0.03160432 44.08017 83.62555 -0.5454198 -0.06542421 0.010497379
+## T1_148 0.57190298 41.41563 84.93772 -0.9771766 -0.04848757 0.002037635
+## T2_168 0.64354836 27.07762 71.11315 -0.3911507 -0.05059580 0.006109172
+## S1_165 0.03160432 44.08017 83.62555 -0.5454198 -0.06542421 0.010497379
 ##            GSWMax  TempMin  TempMax
-## T1_149 0.06385147 3.065392 11.02684
-## T2_169 0.06601539 2.975828 10.84967
-## S1_166 0.09701438 3.097101 10.77719</code></pre>
+## T1_148 0.06385147 3.065392 11.02684
+## T2_168 0.06601539 2.975828 10.84967
+## S1_165 0.09701438 3.097101 10.77719</code></pre>
 <p>Instantaneous values are also stored for sunlit and shade leaves. We can also use the <code>plot</code> function for objects of class <code>spwb_day</code> to draw instantaneous variations in temperature for sunlit and shade leaves:</p>
 <div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafTemperature"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -698,7 +698,7 @@
 <p>Elements <code>Plants</code> is itself a list with several elements that contain daily output results by plant cohorts, for example leaf minimum (midday) water potentials are:</p>
 <div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">Plants</span><span class="op">$</span><span class="va">LeafPsiMin</span><span class="op">)</span></code></pre></div>
-<pre><code>##                T1_149     T2_169     S1_166
+<pre><code>##                T1_148     T2_168     S1_165
 ## 2001-04-20 -0.6064335 -0.2505370 -0.4252339
 ## 2001-04-21 -0.5855836 -0.2093489 -0.4364805
 ## 2001-04-22 -0.7981248 -0.2982040 -0.5219960
@@ -740,7 +740,7 @@
 <p>Parameter <code>output</code> is used to indicate the element of the <code>spwb</code> object for which we desire summaries. Similarly, it is possible to calculate the average stress of plant cohorts by months:</p>
 <div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span><span class="op">)</span></code></pre></div>
-<pre><code>##                T1_149     T2_169     S1_166
+<pre><code>##                T1_148     T2_168     S1_165
 ## 2001-04-01 0.02901917 0.02751211 0.01001912
 ## 2001-05-01 0.04277728 0.04040150 0.01515990
 ## 2001-06-01 0.05870397 0.05643002 0.02227212</code></pre>

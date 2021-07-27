@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.4</span>
       </span>
     </div>
 
@@ -190,7 +190,7 @@
 <span class='co'># Cohort name for Pinus halepensis</span>
 <span class='va'>PH_coh</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"T1_"</span>, <span class='va'>SpParamsMED</span><span class='op'>$</span><span class='va'>SpIndex</span><span class='op'>[</span><span class='va'>SpParamsMED</span><span class='op'>$</span><span class='va'>Name</span><span class='op'>==</span><span class='st'>"Pinus halepensis"</span><span class='op'>]</span><span class='op'>)</span>
 <span class='va'>PH_coh</span> 
-</div><div class='output co'>#&gt; [1] "T1_149"</div><div class='input'>
+</div><div class='output co'>#&gt; [1] "T1_148"</div><div class='input'>
 <span class='co'># Modify Z50 and Z95 of Pinus halepensis cohort </span>
 <span class='va'>customParams</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>200</span>,<span class='fl'>2000</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>customParams</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>PH_coh</span>,<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"/Z50"</span>, <span class='st'>"/Z95"</span><span class='op'>)</span><span class='op'>)</span>
@@ -199,23 +199,23 @@
 <span class='co'># Inspect original and modified objects </span>
 <span class='va'>x1</span><span class='op'>$</span><span class='va'>below</span>
 </div><div class='output co'>#&gt;        Z50  Z95 coarseRootSoilVolume
-#&gt; T1_149 750 3000            16.359912
-#&gt; T2_169 750 3000            16.359912
-#&gt; S1_166 300 1500             7.473966</div><div class='input'><span class='va'>x1m</span><span class='op'>$</span><span class='va'>below</span>
+#&gt; T1_148 750 3000            16.359912
+#&gt; T2_168 750 3000            16.359912
+#&gt; S1_165 300 1500             7.473966</div><div class='input'><span class='va'>x1m</span><span class='op'>$</span><span class='va'>below</span>
 </div><div class='output co'>#&gt;        Z50  Z95 coarseRootSoilVolume
-#&gt; T1_149 200 2000             5.887882
-#&gt; T2_169 750 3000            16.359912
-#&gt; S1_166 300 1500             7.473966</div><div class='input'>
+#&gt; T1_148 200 2000             5.887882
+#&gt; T2_168 750 3000            16.359912
+#&gt; S1_165 300 1500             7.473966</div><div class='input'>
 <span class='co'># Inspect dependencies: fine root distribution across soil layers</span>
 <span class='va'>x1</span><span class='op'>$</span><span class='va'>belowLayers</span><span class='op'>$</span><span class='va'>V</span>
 </div><div class='output co'>#&gt;                1         2          3          4
-#&gt; T1_149 0.1288916 0.5376838 0.24791124 0.08551338
-#&gt; T2_169 0.1288916 0.5376838 0.24791124 0.08551338
-#&gt; S1_166 0.5044057 0.4037153 0.07011387 0.02176513</div><div class='input'><span class='va'>x1m</span><span class='op'>$</span><span class='va'>belowLayers</span><span class='op'>$</span><span class='va'>V</span>
+#&gt; T1_148 0.1288916 0.5376838 0.24791124 0.08551338
+#&gt; T2_168 0.1288916 0.5376838 0.24791124 0.08551338
+#&gt; S1_165 0.5044057 0.4037153 0.07011387 0.02176513</div><div class='input'><span class='va'>x1m</span><span class='op'>$</span><span class='va'>belowLayers</span><span class='op'>$</span><span class='va'>V</span>
 </div><div class='output co'>#&gt;                1         2          3          4
-#&gt; T1_149 0.6402830 0.2655064 0.06472163 0.02948895
-#&gt; T2_169 0.1288916 0.5376838 0.24791124 0.08551338
-#&gt; S1_166 0.5044057 0.4037153 0.07011387 0.02176513</div><div class='input'>
+#&gt; T1_148 0.6402830 0.2655064 0.06472163 0.02948895
+#&gt; T2_168 0.1288916 0.5376838 0.24791124 0.08551338
+#&gt; S1_165 0.5044057 0.4037153 0.07011387 0.02176513</div><div class='input'>
 <span class='co'># Modify rock fragment content and sand proportion of soil layer 1</span>
 <span class='va'>x1s</span> <span class='op'>&lt;-</span> <span class='fu'>modifyInputParams</span><span class='op'>(</span><span class='va'>x1</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"rfc@1"</span> <span class='op'>=</span> <span class='fl'>5</span>, <span class='st'>"sand@1"</span> <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span>
 

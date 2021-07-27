@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.4</span>
       </span>
     </div>
 
@@ -249,19 +249,30 @@
 <li><p><code>"CanopyEnergyBalance"</code>: Canopy energy balance components (only for <code>transpirationMode = "Sperry"</code>).</p></li>
 <li><p><code>"SoilEnergyBalance"</code>: Soil energy balance components (only for <code>transpirationMode = "Sperry"</code>).</p></li>
 </ul><p>The following are only available for <code><a href='growth.html'>growth</a></code>:</p><ul>
-<li><p><code>"PlantRespiration"</code>: Plant cohort respiration.</p></li>
-<li><p><code>"PlantRespirationPerLeaf"</code>: Plant cohort respiration per leaf area.</p></li>
-<li><p><code>"PlantRespirationPerIndividual"</code>: Respiration per individual.</p></li>
-<li><p><code>"PlantCBalance"</code>: Plant cohort carbon balance.</p></li>
-<li><p><code>"PlantCBalancePerLeaf"</code>: Plant cohort carbon balance per leaf area.</p></li>
-<li><p><code>"PlantCBalancePerIndividual"</code>: Carbon balance per individual.</p></li>
-<li><p><code>"PlantCstorageFast"</code>: Amount of fast-dynamics carbon reserves.</p></li>
-<li><p><code>"PlantCstorageSlow"</code>: Amount of slow-dynamics carbon reserves.</p></li>
-<li><p><code>"PlantSA"</code>: Amount of sapwood area in an individual.</p></li>
-<li><p><code>"PlantSAgrowth"</code>: Amount of newly-created sapwood area.</p></li>
-<li><p><code>"PlantRelativeSAgrowth"</code>: Amount of newly-created sapwood area per sapwood area.</p></li>
-<li><p><code>"PlantLAIlive"</code>: Plant cohort leaf area index of live leaves.</p></li>
-<li><p><code>"PlantLAIdead"</code>: Plant cohort leaf area index of dead leaves.</p></li>
+<li><p><code>"GrossPhotosynthesis"</code>: Gross photosynthesis rate per dry weight.</p></li>
+<li><p><code>"MaintenanceRespiration"</code>: Maintenance respiration cost per dry weight.</p></li>
+<li><p><code>"CarbonBalance"</code>: Carbon balance per dry weight.</p></li>
+<li><p><code>"SugarLeaf"</code>: Sugar concentration in leaves.</p></li>
+<li><p><code>"StarchLeaf"</code>: Starch concentration in leaves.</p></li>
+<li><p><code>"SugarSapwood"</code>: Sugar concentration in sapwood.</p></li>
+<li><p><code>"StarchSapwood"</code>: Starch concentration in sapwood.</p></li>
+<li><p><code>"SugarTransport"</code>: Phloem sugar transport rate.</p></li>
+<li><p><code>"RootExudation"</code>: Root exudation rate per dry weight.</p></li>
+<li><p><code>"LeafPI0"</code>: Leaf osmotic concentration at full turgor.</p></li>
+<li><p><code>"StemPI0"</code>: Sapwood osmotic concentration at full turgor.</p></li>
+<li><p><code>"SapwoodArea"</code>: Sapwood area per individual.</p></li>
+<li><p><code>"LeafArea"</code>: Leaf area per individual.</p></li>
+<li><p><code>"FineRootArea"</code>: Fine root area per individual.</p></li>
+<li><p><code>"SapwoodBiomass"</code>: Sapwood dry biomass per individual.</p></li>
+<li><p><code>"LeafBiomass"</code>: Leaf dry biomass per individual.</p></li>
+<li><p><code>"FineRootBiomass"</code>: Fine root dry biomass per individual.</p></li>
+<li><p><code>"LabileBiomass"</code>: Labile C biomass per individual.</p></li>
+<li><p><code>"TotalLivingBiomass"</code>: Total dry biomass per individual.</p></li>
+<li><p><code>"SAgrowth"</code>: Sapwood area growth rate.</p></li>
+<li><p><code>"LAgrowth"</code>: Leaf area growth rate.</p></li>
+<li><p><code>"FRAgrowth"</code>: Fine root area growth rate.</p></li>
+<li><p><code>"HuberValue"</code>: Ratio of leaf area to sapwood area.</p></li>
+<li><p><code>"RootAreaLeafArea"</code>: Ratio of fine root area to leaf area.</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.4</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@
       <h1 data-toc-skip>Sensitivity analysis and calibration</h1>
                         <h4 class="author">Miquel De Caceres</h4>
             
-            <h4 class="date">2021-07-23</h4>
+            <h4 class="date">2021-07-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/master/vignettes/modelanalysis/SensitivityCalibration.Rmd"><code>vignettes/modelanalysis/SensitivityCalibration.Rmd</code></a></small>
       <div class="hidden name"><code>SensitivityCalibration.Rmd</code></div>
@@ -107,12 +107,12 @@
 ## 
 ## $treeData
 ##   Species   N   DBH Height Z50  Z95
-## 1     149 168 37.55    800 750 3000
-## 2     169 384 14.60    660 750 3000
+## 1     148 168 37.55    800 750 3000
+## 2     168 384 14.60    660 750 3000
 ## 
 ## $shrubData
 ##   Species Cover Height Z50  Z95
-## 1     166  3.75     80 300 1500
+## 1     165  3.75     80 300 1500
 ## 
 ## $herbCover
 ## [1] 10
@@ -135,7 +135,7 @@
 <code class="sourceCode R"><span class="va">PH_coh</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"T1_"</span>, <span class="va">SpParamsMED</span><span class="op">$</span><span class="va">SpIndex</span><span class="op">[</span><span class="va">SpParamsMED</span><span class="op">$</span><span class="va">Name</span><span class="op">==</span><span class="st">"Pinus halepensis"</span><span class="op">]</span><span class="op">)</span>
 <span class="va">QI_coh</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"T2_"</span>, <span class="va">SpParamsMED</span><span class="op">$</span><span class="va">SpIndex</span><span class="op">[</span><span class="va">SpParamsMED</span><span class="op">$</span><span class="va">Name</span><span class="op">==</span><span class="st">"Quercus ilex"</span><span class="op">]</span><span class="op">)</span>
 <span class="va">QC_coh</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"S1_"</span>, <span class="va">SpParamsMED</span><span class="op">$</span><span class="va">SpIndex</span><span class="op">[</span><span class="va">SpParamsMED</span><span class="op">$</span><span class="va">Name</span><span class="op">==</span><span class="st">"Quercus coccifera"</span><span class="op">]</span><span class="op">)</span></code></pre></div>
-<p>The data set consists of a forest with two tree species (<em>Pinus halepensis</em>/T1_149 and <em>Quercus ilex</em>/T2_169) and one shrub species (<em>Quercus coccifera</em>/S1_166 or Kermes oak).</p>
+<p>The data set consists of a forest with two tree species (<em>Pinus halepensis</em>/T1_148 and <em>Quercus ilex</em>/T2_168) and one shrub species (<em>Quercus coccifera</em>/S1_165 or Kermes oak).</p>
 <p>We first initialize a soil with four layers (default values of texture, bulk density and rock content) and the species input parameters for simulation function <code><a href="../../reference/spwb.html">spwb()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">examplesoil1</span> <span class="op">=</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="../../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span>
@@ -198,9 +198,9 @@
              <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">PH_coh</span>,<span class="st">"/Psi_Extract"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">QI_coh</span>,<span class="st">"/Psi_Extract"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">QC_coh</span>,<span class="st">"/Psi_Extract"</span><span class="op">)</span>,
              <span class="st">"rfc@1"</span>, <span class="st">"rfc@2"</span><span class="op">)</span>
 <span class="va">parNames</span></code></pre></div>
-<pre><code>##  [1] "T1_149/LAI_live"    "T2_169/LAI_live"    "S1_166/LAI_live"   
-##  [4] "T1_149/Z50"         "T2_169/Z50"         "S1_166/Z50"        
-##  [7] "T1_149/Psi_Extract" "T2_169/Psi_Extract" "S1_166/Psi_Extract"
+<pre><code>##  [1] "T1_148/LAI_live"    "T2_168/LAI_live"    "S1_165/LAI_live"   
+##  [4] "T1_148/Z50"         "T2_168/Z50"         "S1_165/Z50"        
+##  [7] "T1_148/Psi_Extract" "T2_168/Psi_Extract" "S1_165/Psi_Extract"
 ## [10] "rfc@1"              "rfc@2"</code></pre>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#Parameter minimum and maximum values</span>
@@ -275,25 +275,25 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></code></pre></div>
-<pre><code>##                  SWC       ETR   E_T1_149   E_T2_169 FMC_T1_149 FMC_T2_169
-## 2001-01-01 0.3032755 2.4120583 0.15179214 0.16322334   125.4508   92.91054
-## 2001-01-02 0.3004351 2.6201792 0.27152096 0.38951281   124.9281   92.22630
-## 2001-01-03 0.3008675 0.3960251 0.15882884 0.28658829   126.0800   93.08088
-## 2001-01-04 0.2954130 2.1369777 0.07671635 0.01580801   125.0837   93.26917
-## 2001-01-05 0.3033818 2.2101962 0.29223752 0.33224151   126.4774   93.23290
-## 2001-01-06 0.2962787 2.9040208 0.19345481 0.27008009   125.6717   92.66481
-##              BAI_T1_149   BAI_T2_169
-## 2001-01-01 -0.003870063 -0.013739370
-## 2001-01-02 -0.070888390  0.015146767
-## 2001-01-03  0.029492962 -0.004224269
-## 2001-01-04 -0.012498973 -0.001300370
-## 2001-01-05  0.077999302  0.044299672
-## 2001-01-06  0.053200881 -0.009880832</code></pre>
+<pre><code>##                  SWC       ETR   E_T1_148  E_T2_168 FMC_T1_148 FMC_T2_168
+## 2001-01-01 0.3001287 2.4409958 0.14040726 0.2867583   125.8491   93.10475
+## 2001-01-02 0.3000114 2.6102419 0.29217165 0.3762063   125.5644   92.61989
+## 2001-01-03 0.3023795 0.4648954 0.31534536 0.1786759   125.6013   93.02088
+## 2001-01-04 0.2991337 1.8686566 0.09763404 0.1185630   125.8429   92.52835
+## 2001-01-05 0.3057656 2.1493794 0.28797506 0.2770579   126.2680   93.22046
+## 2001-01-06 0.3006195 2.8142448 0.26730768 0.1830351   125.7268   93.03643
+##              BAI_T1_148    BAI_T2_168
+## 2001-01-01  0.007332432 -2.384837e-03
+## 2001-01-02  0.000949254  4.707869e-04
+## 2001-01-03  0.004051434 -4.634923e-04
+## 2001-01-04 -0.006503419 -2.358076e-03
+## 2001-01-05  0.005889734 -4.071848e-05
+## 2001-01-06 -0.005281994  1.531461e-03</code></pre>
 <p>where soil water content dynamics is in column <code>SWC</code>. The model fit to observed data can be measured using the Nash-Sutcliffe coefficient, which we calculate for the initial run using function <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code>:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_metric</a></span><span class="op">(</span><span class="va">S1</span>, measuredData <span class="op">=</span> <span class="va">exampleobs</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, 
                   metric <span class="op">=</span> <span class="st">"NSE"</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] 0.9085282</code></pre>
+<pre><code>## [1] 0.8874568</code></pre>
 <p>A call to <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code> provides the coefficient given a model simulation result, but is not a model output function as we defined above. Analogously to the measures of total transpiration and average plant stress, we can use a function factory to define a model output function that takes input factors as inputs, runs the model and performs the evaluation:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">of_eval</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/optimization.html">optimization_evaluation_function</a></span><span class="op">(</span>parNames <span class="op">=</span> <span class="va">parNames</span>,
@@ -304,10 +304,10 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <p>Function <code>of_eval()</code> stores internally both the data needed for conducting simulations and the data needed for evaluating simulation results, so that we only need to provide values for the input factors:</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] 0.9045574</code></pre>
+<pre><code>## [1] 0.9003061</code></pre>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] -6.048151</code></pre>
+<pre><code>## [1] -6.777312</code></pre>
 </div>
 <div id="global-sensitivity-analyses" class="section level3">
 <h3 class="hasAnchor">
@@ -332,15 +332,15 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 ## 
 ## Model runs: 600 
 ##                            mu   mu.star     sigma
-## T1_149/LAI_live     41.695844 73.278532 95.755791
-## T2_169/LAI_live     56.422381 63.772985 87.592821
-## S1_166/LAI_live     49.369541 56.839362 74.554091
-## T1_149/Z50         -25.892782 37.321475 37.940898
-## T2_169/Z50         -20.612648 33.114674 36.078465
-## S1_166/Z50         -15.719339 17.455636 17.775487
-## T1_149/Psi_Extract -10.654719 10.654719  7.965592
-## T2_169/Psi_Extract  -9.126678  9.126678  6.805668
-## S1_166/Psi_Extract  -4.186104  4.186104  5.018818
+## T1_148/LAI_live     41.695844 73.278532 95.755791
+## T2_168/LAI_live     56.422381 63.772985 87.592821
+## S1_165/LAI_live     49.369541 56.839362 74.554091
+## T1_148/Z50         -25.892782 37.321475 37.940898
+## T2_168/Z50         -20.612648 33.114674 36.078465
+## S1_165/Z50         -15.719339 17.455636 17.775487
+## T1_148/Psi_Extract -10.654719 10.654719  7.965592
+## T2_168/Psi_Extract  -9.126678  9.126678  6.805668
+## S1_165/Psi_Extract  -4.186104  4.186104  5.018818
 ## rfc@1              -31.759491 31.759491 25.388151
 ## rfc@2              -39.013212 39.159474 22.491278</code></pre>
 <p><code>mu.star</code> values inform about the mean of elementary effects of each <span class="math inline">\(i\)</span> factor and can be used to rank all the input factors, whereas <code>sigma</code> inform about the degree of interaction of the <span class="math inline">\(i\)</span>-th factor with others. According to the result of this sensitivity analysis, leaf area index (<code>LAI_live</code>) parameters are the most relevant to determine total transpiration, much more than fine root distribution (<code>Z50</code>), the rock fragment content in the soil and the water potentials corresponding to whole-plant conductance reduction (i.e. <code>Psi_Extract</code>).</p>
@@ -360,15 +360,15 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 ## 
 ## Model runs: 600 
 ##                            mu   mu.star     sigma
-## T1_149/LAI_live     199.35556 199.35556 107.18034
-## T2_169/LAI_live     207.03137 207.03137 108.70857
-## S1_166/LAI_live     206.46076 206.46076  95.66235
-## T1_149/Z50           42.39128  44.95613  36.06455
-## T2_169/Z50           30.21549  40.92742  49.96018
-## S1_166/Z50           45.60078  55.86216  54.30222
-## T1_149/Psi_Extract -115.92175 115.92175  72.63048
-## T2_169/Psi_Extract -102.81834 102.81834  86.42349
-## S1_166/Psi_Extract  -81.60813  81.60813  66.47423
+## T1_148/LAI_live     199.35556 199.35556 107.18034
+## T2_168/LAI_live     207.03137 207.03137 108.70857
+## S1_165/LAI_live     206.46076 206.46076  95.66235
+## T1_148/Z50           42.39128  44.95613  36.06455
+## T2_168/Z50           30.21549  40.92742  49.96018
+## S1_165/Z50           45.60078  55.86216  54.30222
+## T1_148/Psi_Extract -115.92175 115.92175  72.63048
+## T2_168/Psi_Extract -102.81834 102.81834  86.42349
+## S1_165/Psi_Extract  -81.60813  81.60813  66.47423
 ## rfc@1                40.82863  40.82863  36.43407
 ## rfc@2                41.27562  41.27562  30.05439</code></pre>
 <p>Again, LAI values parameters are the most relevant, but closely followed by the water potentials corresponding to whole-plant conductance reduction (i.e. <code>Psi_Extract</code>), which appear as more relevant than parameters of fine root distribution (<code>Z50</code>) and rock fragment content (<code>rfc</code>).</p>
@@ -388,16 +388,16 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 ## 
 ## Model runs: 600 
 ##                            mu   mu.star     sigma
-## T1_149/LAI_live    -48.738889 49.996578 63.752367
-## T2_169/LAI_live    -54.706304 56.693262 56.233544
-## S1_166/LAI_live    -40.497359 40.497359 44.266406
-## T1_149/Z50          75.784869 75.784869 66.044139
-## T2_169/Z50          64.986834 64.986834 71.215032
-## S1_166/Z50          42.130098 42.130098 50.660611
-## T1_149/Psi_Extract   4.501870  4.501870  7.435819
-## T2_169/Psi_Extract   3.190102  3.190102  6.099087
-## S1_166/Psi_Extract   1.399348  1.399348  3.405454
-## rfc@1              -47.868722 47.868722 36.323304
+## T1_148/LAI_live    -52.887208 54.250359 68.908455
+## T2_168/LAI_live    -59.261226 61.408097 60.753790
+## S1_165/LAI_live    -43.873847 43.873847 47.805523
+## T1_148/Z50          82.228184 82.228184 71.314972
+## T2_168/Z50          70.517752 70.517752 76.977215
+## S1_165/Z50          45.681498 45.681498 54.744603
+## T1_148/Psi_Extract   4.893840  4.893840  8.069666
+## T2_168/Psi_Extract   3.468864  3.468864  6.618464
+## S1_165/Psi_Extract   1.522892  1.522892  3.705194
+## rfc@1              -51.932412 51.932412 39.179119
 ## rfc@2                0.000000  0.000000  0.000000</code></pre>
 <p>Contrary to the previous cases, the contribution of LAI parameters is similar to that of parameters of fine root distribution (<code>Z50</code>), which appear as more relevant than the water potentials corresponding to whole-plant conductance reduction (i.e. <code>Psi_Extract</code>).</p>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
@@ -439,14 +439,14 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">opt_cal</span><span class="op">)</span></code></pre></div>
 <pre><code>## $par
-## [1] 791.5644 787.6047 303.6847
+## [1] 802.0192 797.0539 304.6082
 ## 
 ## $value
-## [1] 1328.477
+## [1] 1342.41
 ## 
 ## $counts
 ## function gradient 
-##        8        8 
+##        9        9 
 ## 
 ## $convergence
 ## [1] 0
@@ -457,9 +457,9 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span> <span class="va">x1</span><span class="op">$</span><span class="va">below</span><span class="op">[</span>,<span class="st">"Z50"</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span>, <span class="va">opt_cal</span><span class="op">$</span><span class="va">par</span><span class="op">)</span></code></pre></div>
 <pre><code>##        Z50 opt_cal$par
-## T1_149 750    791.5644
-## T2_169 750    787.6047
-## S1_166 300    303.6847</code></pre>
+## T1_148 750    802.0192
+## T2_168 750    797.0539
+## S1_165 300    304.6082</code></pre>
 <p>This occurs because these default values were used to generate the ‘observed’ data in <code>exampleobs</code>, which contains a small amount of non-systematic error.</p>
 </div>
 <div id="bayesian-calibration" class="section level3">
@@ -491,25 +491,25 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 ## # MCMC sampler:  DEzs 
 ## # Nr. Chains:  27 
 ## # Iterations per chain:  334 
-## # Rejection rate:  0.82 
-## # Effective sample size:  482 
-## # Runtime:  993.558  sec. 
+## # Rejection rate:  0.823 
+## # Effective sample size:  465 
+## # Runtime:  1398.092  sec. 
 ##  
 ## # Parameters
 ##              psf     MAP    2.5%  median   97.5%
-## T1_149/Z50 1.081 677.096 601.876 788.791 978.575
-## T2_169/Z50 1.058 940.041 626.849 775.448 991.043
-## S1_166/Z50 1.061 968.419 133.415 535.865 967.972
+## T1_148/Z50 1.092 795.459 627.102 822.533 987.626
+## T2_168/Z50 1.103 772.777 625.988 759.137 990.445
+## S1_165/Z50 1.063 845.914 126.483 563.390 972.503
 ## 
-## ## DIC:  -2578.837 
+## ## DIC:  -2596.63 
 ## ## Convergence 
-##  Gelman Rubin multivariate psrf:  1.124 
+##  Gelman Rubin multivariate psrf:  1.127 
 ##  
 ## ## Correlations 
-##            T1_149/Z50 T2_169/Z50 S1_166/Z50
-## T1_149/Z50      1.000     -0.653     -0.141
-## T2_169/Z50     -0.653      1.000      0.005
-## S1_166/Z50     -0.141      0.005      1.000</code></pre>
+##            T1_148/Z50 T2_168/Z50 S1_165/Z50
+## T1_148/Z50      1.000     -0.627     -0.091
+## T2_168/Z50     -0.627      1.000     -0.060
+## S1_165/Z50     -0.091     -0.060      1.000</code></pre>
 <p>According to the Gelman-Rubin diagnostic, the convergence can be accepted because the multivariate potential scale reduction factor was ≤ 1.1. We can plot the Markov Chains and the posterior density distribution of parameters that they generate using:</p>
 <div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html">plot</a></span><span class="op">(</span><span class="va">mcmc_out</span><span class="op">)</span></code></pre></div>
@@ -552,7 +552,7 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 ## divisble by the number of chains.</code></pre>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">s</span><span class="op">)</span></code></pre></div>
-<pre><code>##      T1_149/Z50 T2_169/Z50 S1_166/Z50
+<pre><code>##      T1_148/Z50 T2_168/Z50 S1_165/Z50
 ## [1,]   435.8300   956.8087   850.6833
 ## [2,]   521.1817   427.1025   583.1277
 ## [3,]   487.6887   489.8914   760.1992
