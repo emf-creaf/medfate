@@ -320,12 +320,20 @@ piesMenoresDataIFN2<-readRDS(paste0(IFN_path,"Products/IFN2/Rdata/piesMenoresDat
 piesMenoresDataIFN2$ID = as.character(piesMenoresDataIFN2$ID)
 piesMenoresDataIFN2$Species = as.character(piesMenoresDataIFN2$Species)
 treeDataIFN2 = rbind(piesMayoresDataIFN2, piesMenoresDataIFN2) # Add pies menores
+
 treeDataIFN3<-readRDS(paste0(IFN_path,"Products/IFN3/Rdata/treeDataIFN3_Spain.rds"))
+treeDataIFN3 = treeDataIFN3[!(treeDataIFN3$OIF3 %in% c("888","999")),] # remove dead trees
 regDataIFN3 = readRDS(paste0(IFN_path,"Products/IFN3/Rdata/regDataIFN3_Spain.rds"))
 regTreeDataIFN3 = IFNread::extractRegTreeData(regDataIFN3, subsetVars=T)
 treeDataIFN3 = rbind(treeDataIFN3[,c("ID","Species","DBH","H","N")],
                      regTreeDataIFN3[,c("ID","Species","DBH","H","N")])
 treeDataIFN4<-readRDS(paste0(IFN_path,"Products/IFN4/Rdata/treeDataIFN4_Spain.rds"))
+treeDataIFN4 = treeDataIFN4[!(treeDataIFN4$OIF4 %in% c("888","999")),] # remove dead trees
+regDataIFN4 = readRDS(paste0(IFN_path,"Products/IFN4/Rdata/regDataIFN4_Spain.rds"))
+regTreeDataIFN4 = IFNread::extractRegTreeData(regDataIFN4, subsetVars=T)
+treeDataIFN4 = rbind(treeDataIFN4[,c("ID","Species","DBH","H","N")],
+                     regTreeDataIFN4[,c("ID","Species","DBH","H","N")])
+
 ```
 
 
@@ -1698,6 +1706,7 @@ herbData = mc[,c("IdParcela","HerbaciFcc","HerbaciHm")]
 herbData$HerbaciHm = herbData$HerbaciHm*10
 names(herbData) = c("ID", "Cover", "Height")
 treeDataIFN3CAT = readRDS(file=paste0(IFN_path,"Products/IFN3/Rdata/treeDataIFN3_Catalunya.rds"))
+treeDataIFN3CAT = treeDataIFN3CAT[!(treeDataIFN3CAT$OIF3 %in% c("888","999")),] # remove dead trees
 regDataIFN3CAT = readRDS(file=paste0(IFN_path,"Products/IFN3/Rdata/regDataIFN3_Catalunya.rds"))
 regTreeDataIFN3CAT = IFNread::extractRegTreeData(regDataIFN3CAT, subsetVars=T)
 treeDataIFN3CAT = rbind(treeDataIFN3CAT[,c("ID","Species","DBH","H","N")],
@@ -1717,6 +1726,7 @@ rm(mc)
 
 ```{r IFN4_CAT, eval = params$complete_rebuild, include = FALSE}
 treeDataIFN4CAT = readRDS(file=paste0(IFN_path,"Products/IFN4/Rdata/treeDataIFN4_Catalunya.rds"))
+treeDataIFN4CAT = treeDataIFN4CAT[!(treeDataIFN4CAT$OIF4 %in% c("888","999")),] # remove dead trees
 regDataIFN4CAT = readRDS(file=paste0(IFN_path,"Products/IFN4/Rdata/regDataIFN4_Catalunya.rds"))
 regTreeDataIFN4CAT = IFNread::extractRegTreeData(regDataIFN4CAT, subsetVars=T)
 treeDataIFN4CAT = rbind(treeDataIFN4CAT[,c("ID","Species","DBH","H","N")],
