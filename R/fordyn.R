@@ -48,12 +48,14 @@ fordyn<-function(forest, soil, SpParams,
                            "MaxHeight"= as.numeric(mh_sp))
   }
   summarizeStand<-function(step, cohSum, x) {
+    maxH = 0
+    if(nrow(x$above)>0) maxH = max(x$above$H, na.rm=TRUE)
     standSumYear = data.frame("Step" = step,
                               "LeafAreaIndex" = sum(cohSum$LeafAreaIndex, na.rm = TRUE),
                               "TreeDensityLive"= sum(cohSum$TreeDensityLive, na.rm = TRUE),
                               "TreeBasalAreaLive"= sum(cohSum$TreeBasalAreaLive, na.rm = TRUE),
                               "ShrubCoverLive"= sum(cohSum$ShrubCoverLive, na.rm=TRUE),
-                              "MaxHeight"= max(x$above$H, na.rm=TRUE))
+                              "MaxHeight"= maxH)
   }
   createTreeTable<-function(step, year, x) {
     isTree = !is.na(x$above$DBH)
@@ -215,7 +217,11 @@ fordyn<-function(forest, soil, SpParams,
     monthlyTemp = tapply(meteoYear$MeanTemperature, monthsYear, FUN="mean", na.rm=TRUE)
     minMonthTemp = min(monthlyTemp, na.rm=TRUE)
     moistureIndex = sum(meteoYear$Precipitation, na.rm=TRUE)/sum(meteoYear$PET, na.rm=TRUE)
-    PARperc = vprofile_PARExtinction(forest, SpParams, draw = FALSE)[1]
+    if((nrow(forest$treeData)>0) || (nrow(forest$shrubData)>0)) {
+      PARperc = vprofile_PARExtinction(forest, SpParams, draw = FALSE)[1]
+    } else {
+      PARperc = 100
+    } 
     if(verboseDyn) cat(paste0("       Coldest month mean temp. (Celsius): ", round(minMonthTemp,2), "   Moisture index: ", round(moistureIndex,2), "   FPAR (%): ", round(PARperc,1), "\n"))
     treeSpp = numeric(0)
     shrubSpp = numeric(0)
