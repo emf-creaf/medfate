@@ -33,9 +33,7 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     
     if(!("SWC" %in% names(measuredData))) stop(paste0("Column 'SWC' not found in measured data frame."))
     seld = rownames(measuredData) %in% d
-    # q_obs = quantile(measuredData$SWC[seld], p=c(0.05,0.95), na.rm=T)
-    q_obs = quantile(measuredData$SWC[seld], p=c(0.9), na.rm=T) # To avoid peaks over field capacity
-    # df$Observed[d %in% rownames(measuredData)] =(measuredData$SWC[seld]-q_obs[1])/(q_obs[2]-q_obs[1])
+    q_obs = quantile(measuredData$SWC[seld], p=c(0.90), na.rm=T) # To avoid peaks over field capacity
     df$Observed[d %in% rownames(measuredData)] = measuredData$SWC[seld]/q_obs[1]
     
   } 

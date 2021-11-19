@@ -44,7 +44,7 @@ evaluation_metric(out, measuredData, type="SWC", cohort=NULL,
 \details{
    Users should provide the appropriate columns in \code{measuredData}, depending on the type of output to be evaluated:
    \itemize{
-     \item{\code{"SWC" or "REW"}: A column named \code{"SWC"} should be present, containing soil moisture content in percent volume.}
+     \item{\code{"SWC" or "REW"}: A column named \code{"SWC"} should be present, containing soil moisture content in percent volume. When \code{type="REW"}, observed values are divided by the 90\% quantile, which is assumed to be the moisture content at field capacity.}
      \item{\code{"ETR"} or \code{"SE+TR"}: A column named \code{"ETR"} should be present, containing stand's evapotranspiration in mm/day (or mm/week, mm/month, etc, depending on the temporal resolution). If \code{type="ETR"} observed values will be compared against modelled evapotranspiration (i.e. sum of transpiration, soil evaporation and interception loss), whereas if \code{type= "SE+TR"} observed values will be compared against the sum of transpiration and soil evaporation only.}
      \item{\code{"E"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"E_"} and continuing with a cohort name (e.g. \code{"E_T1_68"}) with transpiration in L/m2/day on a leaf area basis (or L/m2/week, L/m2/month, etc, depending on the temporal resolution).}
      \item{\code{"FMC"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"FCM_"} and continuing with a cohort name (e.g. \code{"FMC_T1_68"}) with fuel moisture content as percent of dry weight.}

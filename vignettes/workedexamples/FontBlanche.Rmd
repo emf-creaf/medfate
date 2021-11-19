@@ -201,21 +201,20 @@ If we inspect its elements, we realize that there are several components:
 ```{r}
 names(fb_SWB)
 ```
-In particular, `WaterBalance` contains water balance components in form of a data frame with days in rows:
+For example, `WaterBalance` contains water balance components in form of a data frame with days in rows:
 ```{r}
 head(fb_SWB$WaterBalance)
 ```
-Elements `PlantLAI`, `PlantStress`, `PlantPsi`, `PlantTranspiration` and `PlantPhotosynthesis` contain daily values by plant cohorts, for example plant stress values are:
-```{r}
-head(fb_SWB$Plant$PlantStress)
-```
-
-In the following two subsections we learn how to inspect model output.
 
 
 ## Comparing results with observations
 
-Before examining the results of the model, it is important to compare its predictions against observed data, if available. Evapotranspiration and soil moisture content (0-30 cm layer) was measured at Font-Blanche during the study period of 2014 and this allows comparing the simulation results with observations. 
+Before examining the results of the model, it is important to compare its predictions against observed data, if available. The following observations are available from the experimental forest plot for year 2014:
+
+   + Stand total evapotranspiration estimated using an Eddy-covariance flux tower.
+   + Soil moisture content of the first 0-30 cm layer.
+   + Cohort transpiration estimates derived from sapflow measurements for Q. ilex and P. halepensis.
+   + Pre-dawn and midday leaf water potentials for Q. ilex and P. halepensis.
 
 We first load the measured data into the workspace and filter for the dates used in the simulation:
 ```{r}
@@ -224,16 +223,18 @@ fb_observed = fb_observed[fb_observed$Date %in% row.names(fb_meteo),]
 head(fb_observed)
 ```
 
-### Evapotranspiration
+### Stand evapotranspiration
 
 Package `medfate` contains several functions to assist the evaluation of model results. We can first compare the observed vs modelled total evapotranspiration. We can plot the two time series:
 ```{r fig=TRUE, fig.align="center", fig.width=8, fig.height = 4}
-evaluation_plot(fb_SWB, fb_observed, type = "ETR", plotType="dynamics")
+evaluation_plot(fb_SWB, fb_observed, type = "ETR", plotType="dynamics")+
+  theme(legend.position = c(0.8,0.85))
 ```
 
 It is easy to see that in rainy days the predicted evapotranspiration is much higher than that of the observed data. We repeat the comparison but excluding the intercepted water from modeled results:
 ```{r fig=TRUE, fig.align="center", fig.width=8, fig.height = 4}
-evaluation_plot(fb_SWB, fb_observed, type = "SE+TR", plotType="dynamics")
+evaluation_plot(fb_SWB, fb_observed, type = "SE+TR", plotType="dynamics")+
+  theme(legend.position = c(0.8,0.85))
 ```
 The relationship can be shown in a scatter plot:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
@@ -251,7 +252,7 @@ We can compare observed vs modelled soil moisture content in a similar way as we
 ```{r}
 evaluation_plot(fb_SWB, fb_observed, type = "SWC", plotType="dynamics")
 ```
-Surprisingly, the absolute scales of the modeled and measured SMC do not match, so we can use relative extractable water:
+Surprisingly, the absolute scales of the modeled and measured SMC do not match, so we can use relative extractable water, where in the case of observed data the function divides the observed values by the 95% quantile:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
 evaluation_plot(fb_SWB, fb_observed, type = "REW", plotType="dynamics")
 ```
@@ -268,7 +269,7 @@ evaluation_stats(fb_SWB, fb_observed, type = "REW")
 ```
 
 ## Drawing plots
-Package `medfate` provides a simple `plot` function for objects of class `spwb`. Here we will use this function to display the seasonal variation predicted by the model, as well as the variation at higher temporal resolution within different selected 3-day periods that we define here:
+Package `medfate` provides a simple `plot` function for objects of class `spwb`. Here we will use this function to display the seasonal variation predicted by the model, as well as the variation at higher temporal resolution within four different selected 3-day periods that we define here:
 ```{r}
 d1 = seq(as.Date("2014-03-01"), as.Date("2014-03-03"), by="day")
 d2 = seq(as.Date("2014-06-01"), as.Date("2014-06-03"), by="day")
