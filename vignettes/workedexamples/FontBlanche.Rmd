@@ -240,7 +240,7 @@ The relationship can be shown in a scatter plot:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
 evaluation_plot(fb_SWB, fb_observed, type = "SE+TR", plotType="scatter")
 ```
-Where we see a reasonably good relationship, but the model tends to underestimate total evapotranspiration for low values. We know that interception is missing from modelled ETR, but we cannot discard other sources of error. Function `evaluation_stats()` allows us to generate evaluation statistics:
+Where we see a reasonably good relationship, but the model tends to underestimate total evapotranspiration during seasons with low evaporative demand. Function `evaluation_stats()` allows us to generate evaluation statistics:
 
 ```{r}
 evaluation_stats(fb_SWB, fb_observed, type = "SE+TR")
@@ -268,7 +268,42 @@ or examine evaluation statistics:
 evaluation_stats(fb_SWB, fb_observed, type = "REW")
 ```
 
+### Plant transpiration
+
+```{r fig.width = 8, fig.height=7}
+g1<-evaluation_plot(fb_SWB, fb_observed, 
+                            cohort = "T2_148",
+                            type="E", plotType = "dynamics")+
+  theme(legend.position = c(0.85,0.83))
+g2<-evaluation_plot(fb_SWB, fb_observed, 
+                            cohort = "T3_168",
+                            type="E", plotType = "dynamics")+
+  theme(legend.position = c(0.85,0.83))
+plot_grid(g1, g2, ncol=1)
+```
+
+We can also inspect the evaluation statistics for both species:
+```{r}
+evaluation_stats(fb_SWB, fb_observed, cohort = "T2_148", type="E")
+evaluation_stats(fb_SWB, fb_observed, cohort = "T3_168", type="E")
+```
+
+### Leaf water potentials
+
+```{r fig.width = 8, fig.height=7}
+g1<-evaluation_plot(fb_SWB, fb_observed, 
+                            cohort = "T2_148",
+                            type="WP", plotType = "dynamics")+
+  theme(legend.position = c(0.85,0.83))
+g2<-evaluation_plot(fb_SWB, fb_observed, 
+                            cohort = "T3_168",
+                            type="WP", plotType = "dynamics")+
+  theme(legend.position = c(0.85,0.83))
+plot_grid(g1, g2, ncol=1)
+```
+
 ## Drawing plots
+
 Package `medfate` provides a simple `plot` function for objects of class `spwb`. Here we will use this function to display the seasonal variation predicted by the model, as well as the variation at higher temporal resolution within four different selected 3-day periods that we define here:
 ```{r}
 d1 = seq(as.Date("2014-03-01"), as.Date("2014-03-03"), by="day")
@@ -303,7 +338,7 @@ It is also useful to plot the dynamics of soil state variables by layer, such as
 ```{r, fig.width=8, fig.height = 4}
 plot(fb_SWB, type="SoilTheta")
 ```
-Note that the model predicts soil drought to occur earlier in the season for the first two layers (0-100 cm) whereas the other two layers dry much more slowly. At this point is important to mention that the water balance model we used does not incorporate hydraulic redistribution. We can also display the dynamics of the corresponding soil layer water potentials:
+Note that the model predicts soil drought to occur earlier in the season for the first three layers (0-200 cm) whereas the bottom layer dries out much more slowly. At this point is important to mention that the water balance model incorporates. We can also display the dynamics of the corresponding soil layer water potentials:
 ```{r, fig.width=8, fig.height = 4}
 plot(fb_SWB, type="SoilPsi")
 ```
