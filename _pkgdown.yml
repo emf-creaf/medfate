@@ -25,7 +25,7 @@ articles:
     - starts_with("modelanalysis/Sensitivity")
 - title: Worked examples
   contents:
-    - starts_with("workedexamples/Fontblanche")
+    - starts_with("workedexamples/FontBlanche")
 
     
 reference:
