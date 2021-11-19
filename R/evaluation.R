@@ -5,10 +5,10 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
   temporalResolution = match.arg(temporalResolution, c("day", "week", "month", "year"))
   if("spwbInput" %in% names(out)) {
     modelInput<-out[["spwbInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC"))
+    type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "WP", "FMC"))
   } else {
     modelInput<- out[["growthInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC", "BAI"))
+    type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "WP", "FMC", "BAI"))
   }
   if(type=="SWC") {
     sm = out$Soil
@@ -60,13 +60,20 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     df$Observed[d %in% rownames(measuredData)] = measuredData[[obscolumn]][rownames(measuredData) %in% d] 
   }
   else if(type=="ETR") {
-    ET1 = out$WaterBalance$SoilEvaporation+out$WaterBalance$Transpiration
     ET2 = out$WaterBalance$Evapotranspiration
     d = rownames(out$WaterBalance)
-    df = data.frame(Dates = as.Date(d), ETobs = NA, ET1 = ET1, ET2 = ET2)
+    df = data.frame(Dates = as.Date(d), Observed = NA, Modelled = ET2)
     
     if(!("ETR" %in% names(measuredData))) stop(paste0("Column 'ETR' not found in measured data frame."))
-    df$ETobs[d %in% rownames(measuredData)] = measuredData$ETR[rownames(measuredData) %in% d]
+    df$Observed[d %in% rownames(measuredData)] = measuredData$ETR[rownames(measuredData) %in% d]
+  }
+  else if(type=="SE+TR") {
+    ET1 = out$WaterBalance$SoilEvaporation+out$WaterBalance$Transpiration
+    d = rownames(out$WaterBalance)
+    df = data.frame(Dates = as.Date(d), Observed = NA, Modelled = ET1)
+    
+    if(!("ETR" %in% names(measuredData))) stop(paste0("Column 'ETR' not found in measured data frame."))
+    df$Observed[d %in% rownames(measuredData)] = measuredData$ETR[rownames(measuredData) %in% d]
   }
   else if(type=="WP"){
     wtMD = out$Plants$LeafPsiMin
@@ -187,10 +194,10 @@ evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL,
   # Check arguments
   if("spwbInput" %in% names(out)) {
     modelInput<-out[["spwbInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC"))
+    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "WP", "FMC"))
   } else {
     modelInput<- out[["growthInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC", "BAI"))
+    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "WP", "FMC", "BAI"))
   }
   
   df = evaluation_table(out = out, measuredData = measuredData, 
@@ -200,11 +207,8 @@ evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL,
   else if(type=="REW") eval_res = evalstats(df$Observed, df$Modelled)
   else if(type=="E") eval_res = evalstats(df$Observed, df$Modelled)
   else if(type=="FMC") eval_res = evalstats(df$Observed, df$Modelled)
-  else if(type=="ETR") {
-    eval_res = as.data.frame(rbind(evalstats(df$ETobs, df$ET1),
-                                   evalstats(df$ETobs, df$ET2)))
-    row.names(eval_res)<-c("Es+Tr", "Es+Tr+In")
-  }
+  else if(type=="ETR") eval_res = evalstats(df$Observed, df$Modelled)
+  else if(type=="SE+TR") eval_res = evalstats(df$Observed, df$Modelled)
   else if(type=="WP") {
     eval_res = as.data.frame(rbind(evalstats(df$PD_obs, df$PD_mod),
                                    evalstats(df$MD_obs, df$MD_mod)))
@@ -233,18 +237,22 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     if(!is.null(title)) g<-g+labs(title=title)
     return(g)
   }
-  dynamicsplot<-function(df, xlab="", ylab="", title=NULL, err = FALSE) {
+  dynamicsplot<-function(df, xlab="", ylab="", title=NULL, err = FALSE,
+                         str_obs = "Observed", str_mod = "Modelled") {
     g<-ggplot(df, aes_string(x="Dates"))
     if(err) {
       g <- g +          
-        geom_ribbon(aes_(ymin=~obs_lower, ymax=~obs_upper), col="gray", alpha= 0.5)
+        geom_ribbon(aes_(ymin=~obs_lower, ymax=~obs_upper), 
+                    col="gray", alpha= 0.5)
     }
     g<-g+       
       geom_path(aes_(y=~Observed, col="Observed"))+
       geom_path(aes_(y=~Modelled, col="Modelled"))+
       xlab(xlab)+
       ylab(ylab)+
-      scale_color_manual(name="", values=c("Observed"="black", "Modelled"= "red"))+
+      scale_color_manual(name="", 
+                         values=c("Observed"="black", "Modelled"= "red"),
+                         labels =c(str_obs, str_mod))+
       theme_bw()
     if(!is.null(title)) g<-g+labs(title=title)
     return(g)
@@ -254,10 +262,10 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
   plotType = match.arg(plotType, c("dynamics", "scatter"))
   if("spwbInput" %in% names(out)) {
     modelInput<-out[["spwbInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC"))
+    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "WP", "FMC"))
   } else {
     modelInput<- out[["growthInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC", "BAI"))
+    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "WP", "FMC", "BAI"))
   }
   
   df = evaluation_table(out = out, measuredData = measuredData, 
@@ -350,28 +358,19 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     }
   }
   else if(type=="ETR") {
-    ETobs = df$ETobs
     if(plotType=="dynamics") {
-      g<-ggplot(df, aes_string(x="Dates"))+
-        geom_path(aes_string(y="ETobs", col="Measured ETR"))+
-        geom_path(aes_string(y="ET1", col="Modelled Es+Tr"))+
-        geom_path(aes_string(y="ET2", col="Modelled Es+Tr+In"))+
-        xlab("")+
-        ylab("ETR (mm)")+
-        scale_color_manual(name="", values=c("Measured ETR"="red", 
-                                             "Modelled Es+Tr" = "black",
-                                             "Modelled Es+Tr+In"= "gray"))+
-        theme_bw()
+      g<-dynamicsplot(df, ylab = "ETR (mm)")
     } else {
-      g<-ggplot(df, aes_string(y = "ETobs"))+
-        geom_abline(intercept=0, slope=1, col="black")+
-        geom_point(aes_string(x = "ET1"), col="black", cex=0.5)+
-        geom_point(aes_string(x = "ET2"), col="gray", cex=0.5)+
-        geom_smooth(aes_string(x = "ET1"), method="lm", se = FALSE, col="black", linetype="dashed")+
-        geom_smooth(aes_string(x = "ET2"), method="lm", se = FALSE, col="gray", linetype="dashed")+
-        xlab("Modelled ETR (mm)")+
-        ylab("Measured ETR (mm)")+
-        theme_bw()
+      g<-scatterplot(df, xlab  = "Modelled ETR (mm)",
+                         ylab ="Measured ETR (mm)")
+    }
+  }
+  else if(type=="SE+TR") {
+    if(plotType=="dynamics") {
+      g<-dynamicsplot(df, ylab = "ETR or SE+TR (mm)", str_obs = "Observed (ETR)", str_mod = "Modelled (SE+TR)")
+    } else {
+      g<-scatterplot(df, xlab  = "Modelled SE+TR (mm)",
+                     ylab ="Measured ETR (mm)")
     }
   }
   else if(type=="WP"){

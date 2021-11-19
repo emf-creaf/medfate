@@ -4,6 +4,7 @@
 
 # Version 2.3.5
 - New example vignette 'FontBlanche'
+- Modification of evaluation functions to separate the evaluation of total evapotranspiration ('ETR') from the evaluation of soil evaporation + plant transpiration ('SE+TR')
 - Bug correction: sub-daily stomatal conductance plots
 
 # Version 2.3.4
