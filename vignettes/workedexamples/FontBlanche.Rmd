@@ -1,0 +1,332 @@
+---
+title: "Soil water balance at Font-Blanche"
+author: "Miquel De Caceres (CREAF), Nicolas Martin-StPaul (INRA)"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: yes
+params:
+  reload_fontblanche: FALSE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+### About this vignette
+
+This document describes how to run the soil water balance model on a forest plot at Font-Blanche (France), using the R function `spwb()` included in package `medfate`. The document indicates how to prepare the model inputs, use the model simulation function and inspect the outputs. The details of the water balance model design and formulation are given in a separate document that can be found on the website of the R package (http://emf-creaf.github.io/medfate) or in De Caceres et al. (2021). 
+
+```{r}
+library(medfate)
+```
+
+### About the Font-Blanche forest
+
+The Font-Blanche research forest, located in southeastern France (43º14′27″ N 5°40′45″ E, 420 m elevation), is composed of a top strata of *Pinus halepensis* (Aleppo pine) reaching about 12 m, a lower strata of *Quercus ilex* (holm oak), reaching about 6 m, and an understorey strata dominated by *Quercus coccifera*. It is spatially heterogeneous: not all trees in each strata are contiguous, so trees from the lower stratas are partially exposed to direct light. The forest grows on rocky and shallow soils that have a low retention capacity and are of Jurassic limestone origin. The climate is Mediterranean, with a water stress period in summer, cold or mild winters and most precipitation occurring between September and May. The experimental site, which is dedicated to study forest carbon and water cycles, has an enclosed area of 80×80 m (Simioni et al. 2013) but our specific plot is a quadrat of dimensions 25x25 m. 
+
+
+
+## Model inputs
+
+Any forest water balance model needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since the soil water balance in `medfate` differentiates between species,  **species-specific parameters** are also needed. Since FontBlance is one of the sites used for evaluating the model, we can use  a data list `fb` with all the necessary inputs:
+
+```{r initialization, eval = params$reload_fontblanche}
+fb <- medfatereports::load_list("FONBLA")
+```
+
+```{r include = FALSE, echo = FALSE}
+if(params$reload_fontblanche) {
+  saveRDS(fb, "fb_data.rds")
+}
+```
+
+```{r}
+fb = readRDS("fb_data.rds")
+names(fb)
+```
+
+### Soil
+We require information on the physical attributes of soil in FontBlanche, namely *soil depth*, *texture*, *bulk density* and *rock fragment content*. Soil information needs to be entered as a `data frame` with soil layers in rows and physical attributes in columns. The model accepts one to five soil layers with arbitrary widths. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via soilgrids.org (see function `soilgridsParams()`). In our case soil physical attributes are already defined in the data bundled for FontBlanche:
+```{r}
+spar <- fb$soilData
+print(spar)
+```
+The soil input for function `spwb()` is actually an object of class `soil` that is created using a function with the same name:
+```{r}
+fb_soil = soil(spar)
+```
+
+The `print()` function for objects `soil` provides a lot of information on soil physical properties and water capacity:
+```{r}
+print(fb_soil)
+```
+
+The soil object is also used to store the moisture degree of each soil layer. In particular, `W` contains the state variable that represents moisture content - the proportion of moisture **relative to field capacity** - which is by default initialized to 1 for each layer:
+```{r}
+fb_soil$W
+```
+
+
+### Species parameters
+
+Simulation models in `medfate` require a data frame with species parameter values. The package provides a default data set of parameter values for a number of Mediterranean species occurring in Spain (rows), resulting from bibliographic search, fit to empirical data or expert-based guesses:
+
+```{r}
+data("SpParamsMED")
+```
+However, sometimes one may wish to override species defaults with custom values. In the case of FontBlanche there is a table of preferred parameters:
+```{r}
+fb$customParams
+```
+We can use function `modifySpParams()` to replace the values of parameters for the desired traits, leaving the rest unaltered:
+```{r}
+SpParamsFB = modifySpParams(SpParamsMED, fb$customParams)
+SpParamsFB
+```
+Note that the function returns a subset of rows for the species mentioned in `customParams`. Not all parameters are needed for the soil water balance model. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (http://emf-creaf.github.io/medfate). 
+
+
+### Vegetation
+
+Models included in `medfate` were primarily designed to be ran on **forest inventory plots**. In this kind of data, the  vegetation of a sampled area is described in terms of woody plants (trees and shrubs) along with their size and species identity. Forest plots in `medfate` are assumed to be in a format that follows closely the Spanish forest inventory. Each forest plot is represented in an object of class `forest`, a list that contains several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` for shrubs:
+```{r}
+fb_forest = emptyforest()
+fb_forest
+```
+Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height. 
+In our case, we will for simplicity avoid shrubs and concentrate on the main three tree species in the Font-Blanche forest plot: *Phillyrea latifolia* (code 53), *Pinus halepensis* (Alepo pine, code 54), and *Quercus ilex* (holm oak; code 68). In order to run the model, one has to prepare a data table like this one, already prepared for Font-Blanche:
+```{r}
+fb$treeData
+```
+Trees have been grouped by species, so DBH and height values are means (in cm), and `N` indicates the number of trees in each category. Package `medfate` allows separating trees by size, but for simplicity we do not distinguish here between tree sizes within each species. Columns `Z50` and `Z95` indicate the depths (in mm) corresponding to cumulative 50% and 95% of fine roots, respectively. 
+
+In order to use this data, we need to replace the part corresponding to trees into the forest object that we created before:
+
+```{r}
+fb_forest$treeData = fb$treeData
+fb_forest
+```
+
+Because the forest plot format is rather specific, `medfate` also allows starting in an alternative way using two data frames, one with **aboveground** information (i.e. the leave area and size of plants) and the other with **belowground** information (i.e. root distribution). The aboveground data frame does not distinguish between trees and shrubs. It includes, for each plant cohort to be considered in rows, its *species identity*, *height*, *leaf area index* (LAI) and *crown ratio*. While users can build their input data themselves, we use function `forest2aboveground()` on the object `fb_forest` to show how should the data look like:
+```{r}
+fb_above = forest2aboveground(fb_forest, SpParamsFB)
+fb_above
+```
+Note that the call to `forest2aboveground()` included species parameters, because species-specific parameter values are needed to calculate leaf area from tree diameters or shrub cover using allometric relationships. Columns `N`, `DBH` and `Cover` are required for simulating growth, but not for soil water balance, which only requires columns `SP`, `H` (in cm), `CR` (i.e. the crown ratio), `LAI_live`, `LAI_expanded` and `LAI_dead`. Here plant cohorts are given unique codes that tell us whether they correspond to trees or shrubs. In practice, the user only needs to worry to calculate the values for `LAI_live`. `LAI_live` and `LAI_expanded` can contain the same LAI values, and `LAI_dead` is normally zero. 
+
+We see that at Font-Blanche holm oaks (code 68) represent most of the total leaf area. On the other hand, pines are taller than oaks. `medfate` assumes that leaf distribution follows a truncated normal curve between the crown base height and the total height. This can be easily inspected using function `vprofile_leafAreaDensity()`:
+
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+vprofile_leafAreaDensity(fb_forest, SpParamsFB, byCohorts = T, bySpecies = T)
+```
+
+Regarding **belowground** information, the usuer should supply a matrix describing for each plant cohort, the proportion of fine roots in each soil layer. As before, we use function `forest2belowground()` on the object `fb_forest` to show how should the data look like:
+```{r}
+fb_below = forest2belowground(fb_forest, fb_soil)
+fb_below
+```
+In our case, these proportions were implicitly specified in parameters `Z50` and `Z95`. In fact, these values describe a continuous distribution of fine roots along depth, which can be displayed using function `vprofile_rootDistribution()`:
+
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+vprofile_rootDistribution(fb_forest, SpParamsFB, bySpecies = T)
+```
+
+Note that in Font-Blanche we set that the root system of Aleppo pines (*Pinus halepensis*) would be more superficial than that of the other two species. Moreover, holm oak trees are the ones who extend their roots down to deepest soil layers.
+
+
+### Meteorology
+
+Water balance simulations of function `spwb()` require **daily weather** inputs. The weather variables that are required depend on the complexity of the soil water balance model we are using. In the simplest case, only **mean temperature**, **precipitation** and **potential evapo-transpiration (PET)** is required, but the more complex simulation model also requires radiation, wind speed, min/max temparature and relative humitidy. Here we already have a data frame with the daily meteorology measured at Font-Blanche for year 2014: 
+```{r}
+fb_meteo = fb$meteoData
+head(fb_meteo)
+```
+Simulation models in `medfate` have been designed to work along with data generated from package `meteoland` (De Caceres et al. 2018), which specifies conventions for variable names and units. The user is strongly recommended to resort to this package to obtain suitable weather input for soil water balance simulations (see http://emf-creaf.github.io/meteoland).
+
+
+### Simulation control
+
+Apart from data inputs, the behavior of simulation models can be controlled using a set of **global parameters**. The default global parameter values are obtained using function `defaultControl()`:
+
+```{r}
+fb_control = defaultControl()
+fb_control$transpirationMode = "Sperry"
+fb_control$cochard = T
+fb_control$capacitance = T
+fb_control$subdailyResults = T
+```
+Most of these parameters should normally be left to their default value. However, there are three that deserve some explanation here: 
+
+ 1. Console output can be turned off by setting `verbose = FALSE`. 
+ 2. The soil water retention curves can be switched between Saxton's and Van Genuchten's using parameter `soilFunctions`. 
+ 3. The complexity of the soil water balance calculations will be very different if we set `transpirationMode = "Sperry"`. Most of the other options apply in the case of complex soil water balance only. 
+ 
+### Water balance input object
+
+A last step is needed before calling simulation functions. It consists in the compilation of all aboveground and belowground parameters and the specification of additional parameter values for each plant cohort, such as their light extinction coefficient or their response to drought. If one has a `forest` object, the `spwbInput` object can be generated in directly from it, avoiding the need to explicitly build `fb_above` and `fb_below` data frames:
+
+```{r}
+fb_x = forest2spwbInput(fb_forest, fb_soil, SpParamsFB, fb_control)
+```
+
+Different species parameter variables will be drawn from `SpParamsMED` depending on the value of `transpirationMode`. For the simple water balance model, relatively few parameters are needed. All the input information for forest data and species parameter values can be inspected by printing the input object. 
+
+It is important to remember that, unlike normal objects in R, any water balance simulation will modify the `spwbInput` object. Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next.
+
+Finally, note that one can play with plant-specific parameters for soil water balance (instead of using species-level values) by using function `modifyCohortParams()`:
+
+```{r}
+fb_x <- modifyCohortParams(fb_x, fb$customParams, verbose = FALSE)
+```
+We recommend using `modifyCohortParams()` instead of manually modifying values in the `spwbInput` object because some parameters are related, so that modifying a given parameter value should affect others. These dependencies are taken into account automatically in `modifyCohortParams()`.
+
+
+## Soil water balance
+
+Function `spwb()` requires three main objects as input: 
+
+ + A `spwbInput` object with forest parameters (`fb_x` in our case).
+ + A `soil` object with soil parameters (`fb_soil` in our case).
+ + A data frame with daily meteorology for the study period (`fb_meteo` in our case).
+
+Now we are ready to call function `spwb()`:
+```{r}
+fb_SWB = spwb(fb_x, fb_meteo, elevation = 420, latitude = 43.24083)
+```
+
+Console output provides the water balance totals for the period considered, which may span several years. The output of function `spwb()` is an object of class with the same name, actually a list:
+```{r}
+class(fb_SWB)
+```
+If we inspect its elements, we realize that there are several components:
+```{r}
+names(fb_SWB)
+```
+In particular, element `spwbInput` contains a copy of the input parameters that were used to run the model. `WaterBalance` contains water balance components in form of a data frame with days in rows:
+```{r}
+head(fb_SWB$WaterBalance)
+```
+Elements `PlantLAI`, `PlantStress`, `PlantPsi`, `PlantTranspiration` and `PlantPhotosynthesis` contain daily values by plant cohorts, for example plant stress values are:
+```{r}
+head(fb_SWB$Plant$PlantStress)
+```
+
+In the following two subsections we learn how to inspect model output.
+
+### Plotting results
+
+Package `medfate` provides a simple `plot` function for objects of class `spwb`. For example, it can be used to show the meteorological input:
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+plot(fb_SWB, type = "PET_Precipitation")
+```
+It is apparent the climatic drought period between april and august 2014. This should have an impact on soil moisture and plant stress.
+
+If we are interested in forest hydrology, we can plot the amount of water that the model predicts to leave the forest via surface runoff or drainage to lower water comparments. 
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+plot(fb_SWB, type = "Export")
+```
+As expected, water exported from the forest plot was only relevant for the autumn and winter periods. Note also that the model predicts some runoff during convective storms during autumn, whereas winter events occur when the soil is already full, so that most exported water is assumed to be lost via deep drainage.
+
+It is also useful to plot the dynamics of soil state variables by layer, such as the percentage of moisture in relation to field capacity (i.e. variable `W`):
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+plot(fb_SWB, type="SoilTheta")
+```
+Note that the model predicts soil drought to occur earlier in the season for the first two layers (0-100 cm) whereas the other two layers dry much more slowly. At this point is important to mention that the water balance model we used does not incorporate hydraulic redistribution. We can also display the dynamics of the corresponding soil layer water potentials:
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+plot(fb_SWB, type="SoilPsi")
+```
+
+Additionally, it can also be used to draw plant variables, such as plant transpiration per leaf area:
+
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+par(mar=c(5,5,1,1))
+plot(fb_SWB, type="TranspirationPerLeaf")
+```
+
+Where we can observe how edaphic drought translates into a reduction of plant transpiration. At the same time, some species transpire more than others due to their vertical position within the canopy. In the model, reduction of (whole-plant) plant transpiration is what used to define drought stress, which depends on the species identity:
+
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+plot(fb_SWB, type="PlantStress")
+```
+
+
+### Generating output summaries
+While the water balance model simulates daily steps, users will normally be interested in outputs at larger time scales. The package provides a `summary` for objects of class `spwb`. This function can be used to summarize the model's output at different temporal steps (i.e. weekly, monthly or annual). For example, to obtain the average soil moisture and water potentials by months one can use:
+
+```{r}
+summary(fb_SWB, freq="months",FUN=sum, output="WaterBalance")
+```
+
+Parameter `output` is used to indicate the element of the `spwb` object for which we desire summaries. Similarly, it is possible to calculate the average stress of the three tree species by months:
+```{r}
+summary(fb_SWB, freq="months",FUN=mean, output="PlantStress", bySpecies = TRUE)
+```
+In this case, the `summary` function aggregates the output by species using LAI values as weights. However, another function called `spwb_stress()` allows calculating other drought indices, for example the **number of days with drought stress**:
+```{r}
+spwb_stress(fb_SWB, freq="months", bySpecies = TRUE)
+```
+Where we see that Aleppo pine has a longer season of drought stress, marked by its closure of stomata.
+
+### Comparing results with observations
+
+Evapotranspiration and soil moisture content (0-30 cm layer) was measured at Font-Blanche during the study period of 2014 and this allows comparing the simulation results with observations. We first load the measured data into the workspace and filter for the dates used in the simulation:
+```{r}
+fb_observed = fb$measuredData
+fb_observed = fb_observed[fb_observed$Date %in% row.names(fb_meteo),]
+head(fb_observed)
+```
+
+We can now compare the observed vs modelled evapotranspiration. For this comparison we do not include intercepted water, so we compare measured evapo transpiration with modelled transpiration plus soil evaporation: 
+```{r}
+fb_ET = fb_SWB$WaterBalance$SoilEvaporation + fb_SWB$WaterBalance$Transpiration
+```
+The relationship can be shown in a scatter plot:
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+plot(fb_ET, fb_observed$ETR, xlab="modelled ETR (mm)", ylab="measured ETR (mm)")
+abline(a=0, b=1, col="red")
+```
+Where we see a reasonably good relationship, but the model tends to underestimate total transpiration. We know that interception is missing from modelled ETR, but we cannot discard other sources of error. Instead of using a scatter plot, we can display the dynamics of the two series together:
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+plot(as.Date(rownames(fb_meteo)), fb_ET, type="l", ylim=c(0,3),
+     xlab = "", ylab="ETR (mm)")
+lines(as.Date(fb_observed$Date), fb_observed$ETR, col="red")
+legend("topright", legend = c("modelled", "observed"), col=c("black","red"), lty=1, bty="n")
+```
+
+To compare observed vs modelled soil moisture dynamics we need to scale moisture content from `W` (the proportion of moisture with respect to field capacity):
+```{r}
+fb_W1 = fb_SWB$Soil$W.1 * soil_thetaFC(fb_soil)[1]
+```
+
+Like with evapotranspiration, the relationship can be shown in a scatter plot:
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+plot(fb_W1, fb_observed$SWC, xlab=" modelled SMC", ylab="measured SMC")
+```
+
+Surprisingly, the scales of the modelled and measured SMC do not match. We can also compare the soil moisture dynamics of the two series:
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+plot(as.Date(rownames(fb_meteo)), fb_W1, type="l", ylim=c(0.1,0.8),
+     xlab = "", ylab="SMC")
+lines(as.Date(fb_observed$Date), fb_observed$SWC, col="red")
+legend("top", legend = c("modelled", "observed"), col=c("black","red"), lty=1, bty="n")
+```
+Again, it is obvious the two series do not have the same maximum and minimum values. This occurs for several reasons (calibration of moisture sensors, different assumed textures, ...), but can be overcome if we standardize the two series:
+
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+plot(as.Date(rownames(fb_meteo)), scale(fb_W1), type="l", ylim=c(-2, 2),
+     xlab ="", ylab="Scaled SMC")
+lines(as.Date(fb_observed$Date), scale(fb_observed$SWC), col="red")
+legend("top", legend = c("modelled", "observed"), col=c("black","red"), lty=1, bty="n")
+```
+
+
+## Bibliography
+
++ De Caceres M, Martin-StPaul N, Turco M, et al (2018) Estimating daily meteorological data and downscaling climate models over landscapes. Environ Model Softw 108:186–196. doi: 10.1016/j.envsoft.2018.08.003
+
++ De Caceres M, Martinez-Vilalta J, Coll L, et al (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agric For Meteorol 213:77–90. doi: 10.1016/j.agrformet.2015.06.012
+
++ Simioni G, Durand-gillmann M, Huc R, et al (2013) Asymmetric competition increases leaf inclination effect on light absorption in mixed canopies. Ann For Sci 70:123–131. doi: 10.1007/s13595-012-0246-8
+

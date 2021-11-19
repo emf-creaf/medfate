@@ -23,6 +23,10 @@ articles:
 - title: Model analysis
   contents:
     - starts_with("modelanalysis/Sensitivity")
+- title: Worked examples
+  contents:
+    - starts_with("workedexamples/Fontblanche")
+
     
 reference:
 - title: Forest definition
