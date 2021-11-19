@@ -147,7 +147,7 @@
     </tr>
     <tr>
       <th>type</th>
-      <td><p>A string with the kind of model output to be evaluated. Accepted values are <code>"SWC"</code> (soil moisture content), <code>"REW"</code> relative extractable water, <code>"ETR"</code> (total evapotranspiration), <code>"E"</code> (transpiration per leaf area), <code>"FMC"</code> (fuel moisture content), <code>"WP"</code> (plant water potentials) and <code>"BAI"</code> (basal area increment).</p></td>
+      <td><p>A string with the kind of model output to be evaluated. Accepted values are <code>"SWC"</code> (soil moisture content), <code>"REW"</code> relative extractable water, <code>"ETR"</code> (total evapotranspiration), <code>"SE+TR"</code> (modelled soil evaporation + transpiration against observed total evapotranspiration), <code>"E"</code> (transpiration per leaf area), <code>"FMC"</code> (fuel moisture content), <code>"WP"</code> (plant water potentials) and <code>"BAI"</code> (basal area increment).</p></td>
     </tr>
     <tr>
       <th>cohort</th>
@@ -180,8 +180,8 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Users should provide the appropriate columns in <code>measuredData</code>, depending on the type of output to be evaluated:</p><ul>
-<li><p><code>"SWC" or "REW"</code>: A column named <code>"SWC"</code> should be present, containing soil moisture content in percent volume.</p></li>
-<li><p><code>"ETR"</code>: A column named <code>"ETR"</code> should be present, containing stand's evapotranspiration in mm/day (or mm/week, mm/month, etc, depending on the temporal resolution). Observed values will be compared against modelled evapotranspiration (i.e. sum of transpiration, soil evaporation and interception loss) as well as against the sum of transpiration and soil evaporation only.</p></li>
+<li><p><code>"SWC" or "REW"</code>: A column named <code>"SWC"</code> should be present, containing soil moisture content in percent volume. When <code>type="REW"</code>, observed values are divided by the 90% quantile, which is assumed to be the moisture content at field capacity.</p></li>
+<li><p><code>"ETR"</code> or <code>"SE+TR"</code>: A column named <code>"ETR"</code> should be present, containing stand's evapotranspiration in mm/day (or mm/week, mm/month, etc, depending on the temporal resolution). If <code>type="ETR"</code> observed values will be compared against modelled evapotranspiration (i.e. sum of transpiration, soil evaporation and interception loss), whereas if <code>type= "SE+TR"</code> observed values will be compared against the sum of transpiration and soil evaporation only.</p></li>
 <li><p><code>"E"</code>: For each plant cohort whose transpiration is to be evaluated, a column starting with <code>"E_"</code> and continuing with a cohort name (e.g. <code>"E_T1_68"</code>) with transpiration in L/m2/day on a leaf area basis (or L/m2/week, L/m2/month, etc, depending on the temporal resolution).</p></li>
 <li><p><code>"FMC"</code>: For each plant cohort whose transpiration is to be evaluated, a column starting with <code>"FCM_"</code> and continuing with a cohort name (e.g. <code>"FMC_T1_68"</code>) with fuel moisture content as percent of dry weight.</p></li>
 <li><p><code>"WP"</code>: For each plant cohort whose transpiration is to be evaluated, two columns, one starting with <code>"PD_"</code> (for pre-dawn) and the other with <code>"MD_"</code> (for midday), and continuing with a cohort name (e.g. <code>"PD_T1_68"</code>). They should contain leaf water potential values in MPa. These are compared against sunlit water potentials.</p></li>
