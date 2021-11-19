@@ -11,16 +11,15 @@ params:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(cowplot)
+library(medfate)
 ```
 
 ## Introduction
 ### About this vignette
 
-This document describes how to run the soil water balance model on a forest plot at Font-Blanche (France), using the R function `spwb()` included in package `medfate`. The document indicates how to prepare the model inputs, use the model simulation function and inspect the outputs. The details of the water balance model design and formulation are given in a separate document that can be found on the website of the R package (http://emf-creaf.github.io/medfate) or in De Caceres et al. (2021). 
-
-```{r}
-library(medfate)
-```
+This document describes how to run the soil water balance model on a forest plot at Font-Blanche (France), using the R function `spwb()` included in package `medfate`. The document indicates how to prepare the model inputs, use the model simulation function and inspect the outputs. 
 
 ### About the Font-Blanche forest
 
@@ -185,6 +184,8 @@ We recommend using `modifyCohortParams()` instead of manually modifying values i
 
 ## Soil water balance
 
+### Running the model
+
 Function `spwb()` requires three main objects as input: 
 
  + A `spwbInput` object with forest parameters (`fb_x` in our case).
@@ -215,59 +216,6 @@ head(fb_SWB$Plant$PlantStress)
 
 In the following two subsections we learn how to inspect model output.
 
-### Plotting results
-
-Package `medfate` provides a simple `plot` function for objects of class `spwb`. For example, it can be used to show the meteorological input:
-```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
-plot(fb_SWB, type = "PET_Precipitation")
-```
-It is apparent the climatic drought period between april and august 2014. This should have an impact on soil moisture and plant stress.
-
-If we are interested in forest hydrology, we can plot the amount of water that the model predicts to leave the forest via surface runoff or drainage to lower water comparments. 
-```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
-plot(fb_SWB, type = "Export")
-```
-As expected, water exported from the forest plot was only relevant for the autumn and winter periods. Note also that the model predicts some runoff during convective storms during autumn, whereas winter events occur when the soil is already full, so that most exported water is assumed to be lost via deep drainage.
-
-It is also useful to plot the dynamics of soil state variables by layer, such as the percentage of moisture in relation to field capacity (i.e. variable `W`):
-```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
-plot(fb_SWB, type="SoilTheta")
-```
-Note that the model predicts soil drought to occur earlier in the season for the first two layers (0-100 cm) whereas the other two layers dry much more slowly. At this point is important to mention that the water balance model we used does not incorporate hydraulic redistribution. We can also display the dynamics of the corresponding soil layer water potentials:
-```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
-plot(fb_SWB, type="SoilPsi")
-```
-
-Additionally, it can also be used to draw plant variables, such as plant transpiration per leaf area:
-
-```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
-par(mar=c(5,5,1,1))
-plot(fb_SWB, type="TranspirationPerLeaf")
-```
-
-Where we can observe how edaphic drought translates into a reduction of plant transpiration. At the same time, some species transpire more than others due to their vertical position within the canopy. In the model, reduction of (whole-plant) plant transpiration is what used to define drought stress, which depends on the species identity:
-
-```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
-plot(fb_SWB, type="PlantStress")
-```
-
-
-### Generating output summaries
-While the water balance model simulates daily steps, users will normally be interested in outputs at larger time scales. The package provides a `summary` for objects of class `spwb`. This function can be used to summarize the model's output at different temporal steps (i.e. weekly, monthly or annual). For example, to obtain the average soil moisture and water potentials by months one can use:
-
-```{r}
-summary(fb_SWB, freq="months",FUN=sum, output="WaterBalance")
-```
-
-Parameter `output` is used to indicate the element of the `spwb` object for which we desire summaries. Similarly, it is possible to calculate the average stress of the three tree species by months:
-```{r}
-summary(fb_SWB, freq="months",FUN=mean, output="PlantStress", bySpecies = TRUE)
-```
-In this case, the `summary` function aggregates the output by species using LAI values as weights. However, another function called `spwb_stress()` allows calculating other drought indices, for example the **number of days with drought stress**:
-```{r}
-spwb_stress(fb_SWB, freq="months", bySpecies = TRUE)
-```
-Where we see that Aleppo pine has a longer season of drought stress, marked by its closure of stomata.
 
 ### Comparing results with observations
 
@@ -321,6 +269,160 @@ lines(as.Date(fb_observed$Date), scale(fb_observed$SWC), col="red")
 legend("top", legend = c("modelled", "observed"), col=c("black","red"), lty=1, bty="n")
 ```
 
+## Drawing plots
+Package `medfate` provides a simple `plot` function for objects of class `spwb`. Here we will use this function to display the seasonal variation predicted by the model, as well as the variation at higher temporal resolution within different selected 3-day periods that we define here:
+```{r}
+d1 = seq(as.Date("2014-03-01"), as.Date("2014-03-03"), by="day")
+d2 = seq(as.Date("2014-06-01"), as.Date("2014-06-03"), by="day")
+d3 = seq(as.Date("2014-08-01"), as.Date("2014-08-03"), by="day")
+d4 = seq(as.Date("2014-10-01"), as.Date("2014-10-03"), by="day")
+```
+
+### Meteorological input and input/output water flows
+Function `plot()` can be used to show the meteorological input:
+```{r, fig=TRUE, fig.width=8, fig.height = 4}
+plot(fb_SWB, type = "PET_Precipitation")
+```
+It is apparent the climatic drought period between april and august 2014. This should have an impact on soil moisture and plant stress.
+
+If we are interested in forest hydrology, we can plot the amount of water that the model predicts to leave the forest via surface runoff or drainage to lower water compartments. 
+```{r, fig=TRUE, fig.width=8, fig.height = 4}
+plot(fb_SWB, type = "Export")
+```
+As expected, water exported from the forest plot was only relevant for the autumn and winter periods. Note also that the model predicts some runoff during convective storms during autumn, whereas winter events occur when the soil is already full, so that most exported water is assumed to be lost via deep drainage. One can also display the evapotranspiration flows, which we do in the following plot that also combines the two previous:
+
+```{r fig.width = 8, fig.height=7}
+g1<-plot(fb_SWB)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = "none")
+g2<-plot(fb_SWB, "Evapotranspiration")+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.13,0.73))
+g3<-plot(fb_SWB, "Export")+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.35,0.60))
+plot_grid(g1,g2, g3, ncol=1, rel_heights = c(0.4,1,0.6))
+```
+
+### Soil moisture dynamics and hydraulic redistribution
+
+It is also useful to plot the dynamics of soil state variables by layer, such as the percentage of moisture in relation to field capacity (i.e. variable `W`):
+```{r, fig.width=8, fig.height = 4}
+plot(fb_SWB, type="SoilTheta")
+```
+Note that the model predicts soil drought to occur earlier in the season for the first two layers (0-100 cm) whereas the other two layers dry much more slowly. At this point is important to mention that the water balance model we used does not incorporate hydraulic redistribution. We can also display the dynamics of the corresponding soil layer water potentials:
+```{r, fig.width=8, fig.height = 4}
+plot(fb_SWB, type="SoilPsi")
+```
+or draw a composite plot including absolute soil water volume: 
+
+```{r fig.width = 8, fig.height=7}
+g1<-plot(fb_SWB)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = "none")
+g2<-plot(fb_SWB, "SoilVol")+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.08,0.65))
+g3<-plot(fb_SWB, "SoilPsi")+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.08,0.5))
+plot_grid(g1, g2,  g3, rel_heights = c(0.4,0.8,0.8), ncol=1)
+```
+
+
+### Root water uptake and hydraulic redistribution
+
+The following composite plot shows the daily root water uptake (or release) from different soil layers, and the daily amount of water entering soil layers due to hydraulic redistribution:
+
+```{r fig.width = 8, fig.height=7}
+g1<-plot(fb_SWB, "SoilPsi")+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = "none")+ylab("Soil wp (MPa)")
+g2<-plot(fb_SWB, "PlantExtraction")+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.08,0.68))
+g3<-plot(fb_SWB, "HydraulicRedistribution")+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.08,0.5))
+plot_grid(g1, g2,  g3, rel_heights = c(0.4,0.8,0.8), ncol=1)
+```
+
+If we create a composite plot including subdaily water uptake/release patterns, we can further understand the redistribution flows created by the model during different periods:
+
+```{r fig.width = 8, fig.height=5.6}
+g0<-plot(fb_SWB, "PlantExtraction")+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.08,0.68))
+g1<-plot(fb_SWB, "PlantExtraction", subdaily = T, dates = d1)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylim(c(-0.05,0.13))
+g2<-plot(fb_SWB, "PlantExtraction", subdaily = T, dates = d2)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylab("")+ylim(c(-0.05,0.13))
+g3<-plot(fb_SWB, "PlantExtraction", subdaily = T, dates = d3)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylab("")+ylim(c(-0.05,0.13))
+g4<-plot(fb_SWB, "PlantExtraction", subdaily = T, dates = d4)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylab("")+ylim(c(-0.05,0.13))
+plot_grid(g0,plot_grid(g1, g2, g3, g4, ncol=4),ncol=1)
+```
+
+
+### Plant transpiration
+We can use function `plot()` to display the seasonal dynamics of cohort-level variables, such as plant transpiration per leaf area:
+
+```{r, fig.width=8, fig.height = 4}
+par(mar=c(5,5,1,1))
+plot(fb_SWB, type="TranspirationPerLeaf")
+```
+Where we can observe that some species transpire more than others due to their vertical position within the canopy. 
+
+```{r fig.width = 8, fig.height=7}
+g1<-plot(fb_SWB)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = "none")
+g2<-plot(fb_SWB, "TranspirationPerLeaf", bySpecies = T)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.1,0.75))
+g21<-plot(fb_SWB, "LeafTranspiration", subdaily = T, dates = d1)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylim(c(0,0.32))
+g22<-plot(fb_SWB, "LeafTranspiration", subdaily = T, dates = d2)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylab("")+ylim(c(0,0.32))
+g23<-plot(fb_SWB, "LeafTranspiration", subdaily = T, dates = d3)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylab("")+ylim(c(0,0.32))
+g24<-plot(fb_SWB, "LeafTranspiration", subdaily = T, dates = d4)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylab("")+ylim(c(0,0.32))
+plot_grid(g1, g2,  
+          plot_grid(g21,g22,g23,g24, ncol=4), 
+          ncol=1, rel_heights = c(0.4,0.8,0.8))
+```
+
+### Plant stress
+In the model, reduction of (whole-plant) plant transpiration is what used to define drought stress, which depends on the species identity:
+
+```{r, fig.width=8, fig.height = 4}
+plot(fb_SWB, type="PlantStress", bySpecies = T)
+```
+
+To examine the impact of drought on plants, one can inspect the whole-plant conductance (from which the stress index is derived) or the stem percent loss of conductance derived from embolism, as we do in the following composite plot:
+
+```{r fig.width = 8, fig.height=7, warning=F}
+g1<-plot(fb_SWB)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = "none")
+g2<-plot(fb_SWB, "SoilPlantConductance", bySpecies = T)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+
+  ylab(expression(paste("Soil-plant conductance ",(mmol%.%m^{-2}%.%s^{-1}))))+
+  theme(legend.position = "none")
+g3<-plot(fb_SWB, "StemPLC", bySpecies = T)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.2,0.75))
+plot_grid(g1, g2,g3,                          
+          ncol=1, rel_heights = c(0.4,0.8,0.8))
+```
+### Leaf water potentials
+```{r fig.width = 8, fig.height=7, warning=F}
+g1<-plot(fb_SWB)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = "none")
+g2<-plot(fb_SWB, "LeafPsiRange", bySpecies = T)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.1,0.25)) + ylab("Leaf water potential (MPa)")
+g21<-plot(fb_SWB, "LeafPsi", subdaily = T, dates = d1)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylim(c(-7,0))
+g22<-plot(fb_SWB, "LeafPsi", subdaily = T, dates = d2)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylab("")+ylim(c(-7,0))
+g23<-plot(fb_SWB, "LeafPsi", subdaily = T, dates = d3)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylab("")+ylim(c(-7,0))
+g24<-plot(fb_SWB, "LeafPsi", subdaily = T, dates = d4)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylab("")+ylim(c(-7,0))
+plot_grid(g1, g2,                          
+          plot_grid(g21,g22,g23,g24, ncol=4), 
+          ncol=1, rel_heights = c(0.4,0.8,0.8))
+```
+
+### Stomatal conductance
+```{r fig.width = 8, fig.height=7}
+g1<-plot(fb_SWB)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = "none")
+g2<-plot(fb_SWB, "GSWMax_SL", bySpecies = T)+scale_x_date(date_breaks = "1 month", date_labels = "%m")+theme(legend.position = c(0.5,0.74))+ylab("Sunlit leaf stomatal conductance")+ylim(c(0,0.3))
+g21<-plot(fb_SWB, "LeafStomatalConductance", subdaily = T, dates = d1)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylim(c(0,0.2))
+g22<-plot(fb_SWB, "LeafStomatalConductance", subdaily = T, dates = d2)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylab("")+ylim(c(0,0.2))
+g23<-plot(fb_SWB, "LeafStomatalConductance", subdaily = T, dates = d3)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylab("")+ylim(c(0,0.2))
+g24<-plot(fb_SWB, "LeafStomatalConductance", subdaily = T, dates = d4)+scale_x_datetime(date_breaks = "1 day",  date_labels = "%m/%d")+theme(legend.position = "none")+ylab("")+ylim(c(0,0.2))
+plot_grid(g1, g2,
+          plot_grid(g21,g22,g23,g24, ncol=4),
+          ncol=1, rel_heights = c(0.4,0.8,0.8))
+```
+
+## Generating output summaries
+
+While the water balance model operates at daily and sub-daily steps, users will normally be interested in outputs at larger time scales. The package provides a `summary` for objects of class `spwb`. This function can be used to summarize the model's output at different temporal steps (i.e. weekly, monthly or annual). For example, to obtain the average soil moisture and water potentials by months one can use:
+
+```{r}
+summary(fb_SWB, freq="months",FUN=sum, output="WaterBalance")
+```
+
+Parameter `output` is used to indicate the element of the `spwb` object for which we desire summaries. Similarly, it is possible to calculate the average stress of the three tree species by months:
+```{r}
+summary(fb_SWB, freq="months",FUN=mean, output="PlantStress", bySpecies = TRUE)
+```
+In this case, the `summary` function aggregates the output by species using LAI values as weights. However, another function called `spwb_stress()` allows calculating other drought indices, for example the **number of days with drought stress**:
+```{r}
+spwb_stress(fb_SWB, freq="months", bySpecies = TRUE)
+```
+Where we see that Aleppo pine has a longer season of drought stress, marked by its closure of stomata.
 
 ## Bibliography
 

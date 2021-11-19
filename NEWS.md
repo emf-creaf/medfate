@@ -2,6 +2,10 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.3.5
+- New example vignette 'FontBlanche'
+- Bug correction: sub-daily stomatal conductance plots
+
 # Version 2.3.4
 - Maximum relative sapwood growth rates effective
 - New option 'summary.freq' in plot.spwb and plot.growth
