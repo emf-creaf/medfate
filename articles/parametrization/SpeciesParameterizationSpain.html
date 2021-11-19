@@ -70,13 +70,13 @@
 
       
 
-      </header><script src="SpeciesParameterizationSpain_files/header-attrs-2.9/header-attrs.js"></script><div class="row">
+      </header><script src="SpeciesParameterizationSpain_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Species parameterization for Spain</h1>
                         <h4 class="author">Miquel De Cáceres</h4>
             
-            <h4 class="date">2021-07-28</h4>
+            <h4 class="date">2021-11-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/master/vignettes/parametrization/SpeciesParameterizationSpain.Rmd"><code>vignettes/parametrization/SpeciesParameterizationSpain.Rmd</code></a></small>
       <div class="hidden name"><code>SpeciesParameterizationSpain.Rmd</code></div>
@@ -429,12 +429,19 @@
 <span class="va">piesMenoresDataIFN2</span><span class="op">$</span><span class="va">ID</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">piesMenoresDataIFN2</span><span class="op">$</span><span class="va">ID</span><span class="op">)</span>
 <span class="va">piesMenoresDataIFN2</span><span class="op">$</span><span class="va">Species</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">piesMenoresDataIFN2</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span>
 <span class="va">treeDataIFN2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">piesMayoresDataIFN2</span>, <span class="va">piesMenoresDataIFN2</span><span class="op">)</span> <span class="co"># Add pies menores</span>
+
 <span class="va">treeDataIFN3</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN3/Rdata/treeDataIFN3_Spain.rds"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">treeDataIFN3</span> <span class="op">=</span> <span class="va">treeDataIFN3</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">treeDataIFN3</span><span class="op">$</span><span class="va">OIF3</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"888"</span>,<span class="st">"999"</span><span class="op">)</span><span class="op">)</span>,<span class="op">]</span> <span class="co"># remove dead trees</span>
 <span class="va">regDataIFN3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN3/Rdata/regDataIFN3_Spain.rds"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">regTreeDataIFN3</span> <span class="op">=</span> <span class="fu">IFNread</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IFNread/man/readRegenera.html">extractRegTreeData</a></span><span class="op">(</span><span class="va">regDataIFN3</span>, subsetVars<span class="op">=</span><span class="cn">T</span><span class="op">)</span>
 <span class="va">treeDataIFN3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">treeDataIFN3</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ID"</span>,<span class="st">"Species"</span>,<span class="st">"DBH"</span>,<span class="st">"H"</span>,<span class="st">"N"</span><span class="op">)</span><span class="op">]</span>,
                      <span class="va">regTreeDataIFN3</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ID"</span>,<span class="st">"Species"</span>,<span class="st">"DBH"</span>,<span class="st">"H"</span>,<span class="st">"N"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
-<span class="va">treeDataIFN4</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN4/Rdata/treeDataIFN4_Spain.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="va">treeDataIFN4</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN4/Rdata/treeDataIFN4_Spain.rds"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">treeDataIFN4</span> <span class="op">=</span> <span class="va">treeDataIFN4</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="va">treeDataIFN4</span><span class="op">$</span><span class="va">OIF4</span> <span class="op">%in%</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"888"</span>,<span class="st">"999"</span><span class="op">)</span><span class="op">)</span>,<span class="op">]</span> <span class="co"># remove dead trees</span>
+<span class="va">regDataIFN4</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN4/Rdata/regDataIFN4_Spain.rds"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">regTreeDataIFN4</span> <span class="op">=</span> <span class="fu">IFNread</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IFNread/man/readRegenera.html">extractRegTreeData</a></span><span class="op">(</span><span class="va">regDataIFN4</span>, subsetVars<span class="op">=</span><span class="cn">T</span><span class="op">)</span>
+<span class="va">treeDataIFN4</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">treeDataIFN4</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ID"</span>,<span class="st">"Species"</span>,<span class="st">"DBH"</span>,<span class="st">"H"</span>,<span class="st">"N"</span><span class="op">)</span><span class="op">]</span>,
+                     <span class="va">regTreeDataIFN4</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ID"</span>,<span class="st">"Species"</span>,<span class="st">"DBH"</span>,<span class="st">"H"</span>,<span class="st">"N"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="merge-ifn-data" class="section level3">
 <h3 class="hasAnchor">
@@ -466,8 +473,8 @@
 <code class="sourceCode R"><span class="va">SpParams</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateSpParamsFromInventory.html">populateGrowthForm</a></span><span class="op">(</span><span class="va">SpParams</span>, 
                               <span class="va">tree_codes</span>, <span class="va">shrub_codes</span>,
                               fill_fromGenus <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<pre><code>##  Tree: 71 shrub: 106 tree/shrub: 27 not found: 15</code></pre>
-<pre><code>##  Tree input codes not in SpParams: 99,90,29,59,89,19,49,492,977,40,20,350</code></pre>
+<pre><code>##  Tree: 72 shrub: 106 tree/shrub: 27 not found: 14</code></pre>
+<pre><code>##  Tree input codes not in SpParams: 99,90,29,59,89,19,49,492,977,40,20,350,195</code></pre>
 <pre><code>##  Shrub input codes not in SpParams: 103,104,224,222,192,100,99,10,199,229,402,302,0,3124,2152,6161,3106,1013,1100,502,1148,1015,1315,1010,3105,2149,405,1536,9262,9264,4156,9284,9282,2164,400,8010,8005,8007,1709,1706,1704,1707,1710,1708,2509,2507,2502,2506,2505,9006</code></pre>
 <pre><code>## Species 'Cistus creticus' assigned growth form 'Shrub'</code></pre>
 <pre><code>## Species 'Cistus libanotis' assigned growth form 'Shrub'</code></pre>
@@ -482,8 +489,8 @@
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">missingGrowthFormSpecies</span> <span class="op">=</span> <span class="va">SpParams</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">GrowthForm</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Name"</span><span class="op">)</span><span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">missingGrowthFormSpecies</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "Dittrichia viscosa"     "Periploca laevigata"    "Pleiomeris canariensis"
-## [4] "Quercus lusitanica"     "Sideroxylon mirmulans"  "Withania frutescens"</code></pre>
+<pre><code>## [1] "Dittrichia viscosa"    "Periploca laevigata"   "Quercus lusitanica"   
+## [4] "Sideroxylon mirmulans" "Withania frutescens"</code></pre>
 <p>and manually set the growth form for them:</p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">missingTrees</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span> <span class="st">"Dracaena drago"</span>, <span class="st">"Pleiomeris canariensis"</span>, <span class="st">"Quercus lusitanica"</span>,
@@ -509,25 +516,25 @@
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateSpParamsFromInventory.html">populateHeightParams</a></span><span class="op">(</span><span class="va">SpParams</span>,
                                  <span class="va">species_codes</span>, <span class="va">height_values</span><span class="op">)</span></code></pre></div>
-<pre><code>## 162390 species/height missing values removed from input.</code></pre>
-<pre><code>## 17512 zero height values removed from input.</code></pre>
+<pre><code>## 135217 species/height missing values removed from input.</code></pre>
+<pre><code>## 109 zero height values removed from input.</code></pre>
 <pre><code>## Warning in translateIFNSpeciesCodes(species_codes, SpParams$IFNcodes): NAs
 ## introduced by coercion</code></pre>
-<pre><code>## 15 missing Hmed/Hmax values (out of 219) after populating with input data.</code></pre>
+<pre><code>## 14 missing Hmed/Hmax values (out of 219) after populating with input data.</code></pre>
 <p>By default, maximum height is defined as the 99% quantile of the height distribution, whereas median height corresponds to the 50% quantile.</p>
 <p>Parameters <code>Hmax</code> and <code>Hmed</code> are strict, meaning that medfate does not have inbuilt imputation procedures for them, so we must complete their columns in the parameter table. We can inspect the missing values for each growth form:</p>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">Hmax</span><span class="op">)</span>, <span class="va">SpParams</span><span class="op">$</span><span class="va">GrowthForm</span><span class="op">)</span></code></pre></div>
 <pre><code>##        
 ##         Shrub Tree Tree/Shrub
-##   FALSE   106   71         27
-##   TRUE     12    3          0</code></pre>
+##   FALSE   106   72         27
+##   TRUE     12    2          0</code></pre>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">Hmed</span><span class="op">)</span>, <span class="va">SpParams</span><span class="op">$</span><span class="va">GrowthForm</span><span class="op">)</span></code></pre></div>
 <pre><code>##        
 ##         Shrub Tree Tree/Shrub
-##   FALSE   106   71         27
-##   TRUE     12    3          0</code></pre>
+##   FALSE   106   72         27
+##   TRUE     12    2          0</code></pre>
 <p>and then use the species with known values for each growth from to impute species averages:</p>
 <div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">SpParams</span><span class="op">$</span><span class="va">Hmax</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">Hmax</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">SpParams</span><span class="op">$</span><span class="va">GrowthForm</span> <span class="op">!=</span> <span class="st">"Shrub"</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">Hmax</span><span class="op">[</span><span class="va">SpParams</span><span class="op">$</span><span class="va">GrowthForm</span> <span class="op">!=</span> <span class="st">"Shrub"</span><span class="op">]</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
@@ -544,11 +551,11 @@
 ## 
 ## $Tree
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##      80    1464    2110    2126    2640    3750 
+##      80    1354    2060    2089    2630    3750 
 ## 
 ## $`Tree/Shrub`
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##     170     500     950    1201    1785    4120</code></pre>
+##     170     500     950    1184    1760    4100</code></pre>
 <p>and that of <code>Hmed</code> (cm) by growth form is:</p>
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/tapply.html">tapply</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">Hmed</span>, <span class="va">SpParams</span><span class="op">$</span><span class="va">GrowthForm</span>, <span class="va">summary</span><span class="op">)</span></code></pre></div>
@@ -558,11 +565,11 @@
 ## 
 ## $Tree
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    80.0   600.0   887.5   958.8  1240.0  2150.0 
+##    80.0   512.5   790.0   878.0  1200.0  2120.0 
 ## 
 ## $`Tree/Shrub`
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    80.0   105.0   150.0   408.9   585.0  1900.0</code></pre>
+##    80.0   100.0   150.0   359.4   550.0  1850.0</code></pre>
 </div>
 <div id="diameterheight-ratio" class="section level3">
 <h3 class="hasAnchor">
@@ -578,25 +585,25 @@
                                              <span class="va">tree_species_codes</span>, 
                                              <span class="va">tree_height_values</span>,
                                              <span class="va">tree_diameter_values</span><span class="op">)</span></code></pre></div>
-<pre><code>## 162374 species/height/diameter missing values removed from input.</code></pre>
-<pre><code>## 17482 zero height/diameter values removed from input.</code></pre>
+<pre><code>## 135201 species/height/diameter missing values removed from input.</code></pre>
+<pre><code>## 79 zero height/diameter values removed from input.</code></pre>
 <pre><code>## Warning in translateIFNSpeciesCodes(species_codes, SpParams$IFNcodes): NAs
 ## introduced by coercion</code></pre>
-<pre><code>## 3 missing fHDmin/fHDmax values (out of 101 tree species) after populating with input data.</code></pre>
+<pre><code>## 2 missing fHDmin/fHDmax values (out of 101 tree species) after populating with input data.</code></pre>
 <p>This function fills parameters <code>fHDmin</code> and <code>fHDmax</code>, corresponding to the minimum and maximum values of the height-to-diameter ratio. The 5% and 95% quantile values are used for these parameters, respectively, by default.</p>
 <p>Missing values may occur after imputation:</p>
 <div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">fHDmin</span><span class="op">)</span>, <span class="va">SpParams</span><span class="op">$</span><span class="va">GrowthForm</span><span class="op">)</span></code></pre></div>
 <pre><code>##        
 ##         Shrub Tree Tree/Shrub
-##   FALSE     0   71         27
-##   TRUE    118    3          0</code></pre>
+##   FALSE     0   72         27
+##   TRUE    118    2          0</code></pre>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">fHDmax</span><span class="op">)</span>, <span class="va">SpParams</span><span class="op">$</span><span class="va">GrowthForm</span><span class="op">)</span></code></pre></div>
 <pre><code>##        
 ##         Shrub Tree Tree/Shrub
-##   FALSE     0   71         27
-##   TRUE    118    3          0</code></pre>
+##   FALSE     0   72         27
+##   TRUE    118    2          0</code></pre>
 <p>Since <code>fHDmin</code> and <code>fHDmax</code> are strict parameters, we use shrub and tree averages to fill the remaining cases:</p>
 <div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">SpParams</span><span class="op">$</span><span class="va">fHDmax</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">fHDmax</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">SpParams</span><span class="op">$</span><span class="va">GrowthForm</span> <span class="op">!=</span> <span class="st">"Shrub"</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">$</span><span class="va">fHDmax</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
@@ -604,13 +611,13 @@
 <p>The final distributions of <code>fHDmax</code> and <code>fHDmin</code> are:</p>
 <div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">[</span><span class="va">SpParams</span><span class="op">$</span><span class="va">GrowthForm</span> <span class="op">!=</span> <span class="st">"Shrub"</span> ,<span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"fHDmax"</span>, <span class="st">"fHDmin"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></code></pre></div>
-<pre><code>##      fHDmax          fHDmin      
-##  Min.   : 38.0   Min.   :  7.00  
-##  1st Qu.:112.0   1st Qu.: 25.00  
-##  Median :160.0   Median : 34.00  
-##  Mean   :136.8   Mean   : 36.71  
-##  3rd Qu.:160.0   3rd Qu.: 40.00  
-##  Max.   :160.0   Max.   :160.00</code></pre>
+<pre><code>##      fHDmax        fHDmin      
+##  Min.   : 38   Min.   :  7.00  
+##  1st Qu.:127   1st Qu.: 26.00  
+##  Median :160   Median : 36.00  
+##  Mean   :142   Mean   : 38.78  
+##  3rd Qu.:160   3rd Qu.: 42.00  
+##  Max.   :160   Max.   :160.00</code></pre>
 </div>
 </div>
 <div id="allometric-coefficients" class="section level2">
@@ -2231,7 +2238,7 @@
 <p>Again, some of the shrub/tree records may not be parsed if they have not been included in the species definition of <code>SpParams</code>. The number of plots parsed is now:</p>
 <div class="sourceCode" id="cb384"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">IFN3_forestlist</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] 85909</code></pre>
+<pre><code>## [1] 85858</code></pre>
 <p>Finally, we repeat the operation for IFN4:</p>
 <div class="sourceCode" id="cb386"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">IFN4_forestlist</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/IFN2forest.html">IFN2forestlist</a></span><span class="op">(</span><span class="va">treeDataIFN4</span>, <span class="va">shrubDataIFN4</span>, <span class="va">SpParams</span>, 
@@ -2240,7 +2247,7 @@
 <p>The number of plots parsed is lower than the previous two, as IFN4 is not yet completed for all Spanish provinces:</p>
 <div class="sourceCode" id="cb387"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">IFN4_forestlist</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] 37989</code></pre>
+<pre><code>## [1] 43050</code></pre>
 </div>
 <div id="recruitment-parameters" class="section level2">
 <h2 class="hasAnchor">
