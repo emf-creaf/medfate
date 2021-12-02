@@ -1762,6 +1762,9 @@ List transpirationGranier(List x, DataFrame meteo, int day,
   NumericVector PET = meteo["PET"];
   double pet = PET[day-1];
   double tday = MeanTemperature[day-1];
-  return(transpirationGranier(x, tday, pet, modifyInput));
+  NumericVector meteovec = NumericVector::create(
+    Named("tday") = tday, 
+    Named("pet") = pet);
+  return(transpirationGranier(x, meteovec, modifyInput));
 } 
 
