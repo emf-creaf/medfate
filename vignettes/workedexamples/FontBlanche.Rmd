@@ -470,10 +470,10 @@ In this case, the `summary` function aggregates the output by species using LAI 
 
 ## Bibliography
 
-+ De Caceres M, Martin-StPaul N, Turco M, et al (2018) Estimating daily meteorological data and downscaling climate models over landscapes. Environ Model Softw 108:186–196. doi: 10.1016/j.envsoft.2018.08.003
++ De Caceres M, Martin-StPaul N, Turco M, et al (2018) Estimating daily meteorological data and downscaling climate models over landscapes. Environ Model Softw 108:186–196. https://doi.org/10.1016/j.envsoft.2018.08.003
 
-+ De Caceres M, Martinez-Vilalta J, Coll L, et al (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agric For Meteorol 213:77–90. doi: 10.1016/j.agrformet.2015.06.012
++ De Caceres M, Martinez-Vilalta J, Coll L, et al (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agric For Meteorol 213:77–90. https://doi.org/10.1016/j.agrformet.2015.06.012
 
-+ Simioni G, Durand-gillmann M, Huc R, et al (2013) Asymmetric competition increases leaf inclination effect on light absorption in mixed canopies. Ann For Sci 70:123–131. doi: 10.1007/s13595-012-0246-8
++ Simioni G, Durand-gillmann M, Huc R, et al (2013) Asymmetric competition increases leaf inclination effect on light absorption in mixed canopies. Ann For Sci 70:123–131. https://doi.org/10.1007/s13595-012-0246-8
 
 + Moreno, M., Simioni, G., Cailleret, M., Ruffault, J., Badel, E., Carrière, S., Davi, H., Gavinet, J., Huc, R., Limousin, J.-M., Marloie, O., Martin, L., Rodríguez-Calcerrada, J., Vennetier, M., Martin-StPaul, N., 2021. Consistently lower sap velocity and growth over nine years of rainfall exclusion in a Mediterranean mixed pine-oak forest. Agric. For. Meteorol. 308–309, 108472. https://doi.org/10.1016/j.agrformet.2021.108472
