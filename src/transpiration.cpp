@@ -139,11 +139,9 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, d
 }
 
 
-List transpirationSperry(List x, double tmin, double tmax, 
-                         double tminPrev, double tmaxPrev, double tminNext, 
-                         double rhmin, double rhmax, double rad, double wind, 
+List transpirationSperry(List x, NumericVector meteovec, 
                   double latitude, double elevation, double slope, double aspect, 
-                  double solarConstant, double delta, double prec,
+                  double solarConstant, double delta,
                   double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
                   bool verbose = false, int stepFunctions = NA_INTEGER, 
                   bool modifyInput = true) {
@@ -173,6 +171,21 @@ List transpirationSperry(List x, double tmin, double tmax,
   bool multiLayerBalance = control["multiLayerBalance"];
   double defaultWindSpeed = control["defaultWindSpeed"];
   double nonSugarConcentration = control["nonSugarConcentration"];
+  
+  //Meteo input
+  double tmin = meteovec["tmin"];
+  double tmax = meteovec["tmax"];
+  double tminPrev = meteovec["tminPrev"];
+  double tmaxPrev = meteovec["tmaxPrev"];
+  double tminNext = meteovec["tminNext"];
+  double prec = meteovec["prec"];
+  double rhmin = meteovec["rhmin"];
+  double rhmax = meteovec["rhmax"];
+  double rad = meteovec["rad"];
+  double wind = meteovec["wind"];
+  double Catm = meteovec["Catm"];
+  //If daily Catm is missing, take parameter control value instead
+  if(NumericVector::is_na(Catm)) Catm = control["Catm"];
   
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -210,6 +223,9 @@ List transpirationSperry(List x, double tmin, double tmax,
   NumericVector VPair = canopyParams["VPair"];
   NumericVector Cair = canopyParams["Cair"];
   int ncanlayers = Tair.size(); //Number of canopy layers
+  for(int l=0;l<ncanlayers;l++) { //If canopy layers have missing values, then initialize with Catm
+    if(NumericVector::is_na(Cair[l])) Cair[l] = Catm;
+  }
   
   //Root distribution input
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
@@ -293,8 +309,7 @@ List transpirationSperry(List x, double tmin, double tmax,
   //Atmospheric pressure
   double Patm = meteoland::utils_atmosphericPressure(elevation);
   
-  double Catm = control["Catm"];
-  
+ 
   //Daily average water vapor pressure at the atmosphere (kPa)
   double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin,rhmax);
   //If canopy VP is missing or not multilayer initiate it to vpatm
@@ -1495,6 +1510,8 @@ List transpirationSperry(List x, DataFrame meteo, int day,
   CharacterVector dateStrings = meteo.attr("row.names");
   NumericVector WindSpeed(Precipitation.length(), NA_REAL);
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
+  NumericVector CO2(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("CO2")) CO2 = meteo["CO2"];
   std::string c = as<std::string>(dateStrings[day-1]);
   double prec = Precipitation[day-1];
   double rad = Radiation[day-1];
@@ -1511,20 +1528,33 @@ List transpirationSperry(List x, DataFrame meteo, int day,
   double rhmax = MaxRelativeHumidity[day-1];
   double rhmin = MinRelativeHumidity[day-1];
   double wind = WindSpeed[day-1];
+  double Catm = CO2[day-1];
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
   double delta = meteoland::radiation_solarDeclination(J);
   double solarConstant = meteoland::radiation_solarConstant(J);
 
-  return(transpirationSperry(x, tmin, tmax, tminPrev, tmaxPrev, tminNext, rhmin, rhmax, rad, wind, 
+  NumericVector meteovec = NumericVector::create(
+    Named("tmin") = tmin, 
+    Named("tmax") = tmax,
+    Named("tminPrev") = tminPrev, 
+    Named("tmaxPrev") = tmaxPrev, 
+    Named("tminNext") = tminNext, 
+    Named("prec") = prec,
+    Named("rhmin") = rhmin, 
+    Named("rhmax") = rhmax, 
+    Named("rad") = rad, 
+    Named("wind") = wind, 
+    Named("Catm") = Catm);
+  return(transpirationSperry(x, meteovec,
                      latitude, elevation, slope, aspect,
-                     solarConstant, delta, prec,
+                     solarConstant, delta,
                      canopyEvaporation, snowMelt, soilEvaporation,
                      false, stepFunctions, 
                      modifyInput));
 } 
 
 
-List transpirationGranier(List x, double tday, double pet, 
+List transpirationGranier(List x, NumericVector meteovec,  
                           bool modifyInput = true) {
   //Control parameters
   List control = x["control"];
@@ -1536,6 +1566,10 @@ List transpirationGranier(List x, double tday, double pet,
   //Soil water at field capacity
   List soil = x["soil"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
+  
+  //Meteo input
+  double tday = meteovec["tday"];
+  double pet = meteovec["pet"];
   
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);

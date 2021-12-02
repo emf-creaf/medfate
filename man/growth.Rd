@@ -28,6 +28,7 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
      \item{\code{Precipitation}: Precipitation (in mm).}
      \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
      \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
+     \item{\code{CO2}: Atmospheric (abovecanopy) CO2 concentration (in ppm). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
     }
   }
   \item{latitude}{Latitude (in degrees). Required when \code{x$TranspirationMode = "Sperry"}.}

@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.3.6
+- CO2 made an daily input weather variable, in addition to the default control parameter 'Catm'
+
 # Version 2.3.5
 - New example vignette 'FontBlanche'
 - Modification of evaluation functions to separate the evaluation of total evapotranspiration ('ETR') from the evaluation of soil evaporation + plant transpiration ('SE+TR')

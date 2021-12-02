@@ -29,7 +29,7 @@ The Font-Blanche research forest, located in southeastern France (43º14′27″
 
 ## Model inputs
 
-Any forest water balance model needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since the soil water balance in `medfate` differentiates between species,  **species-specific parameters** are also needed. Since FontBlance is one of the sites used for evaluating the model, we can use  a data list `fb` with all the necessary inputs:
+Any forest water balance model needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since the soil water balance in `medfate` differentiates between species,  **species-specific parameters** are also needed. Since FontBlanche is one of the sites used for evaluating the model, and much of the data can be found in Moreno et al. (2021). We can use a data list `fb` with all the necessary inputs:
 
 ```{r initialization, eval = params$reload_fontblanche}
 fb <- medfatereports::load_list("FONBLA")
@@ -476,3 +476,4 @@ In this case, the `summary` function aggregates the output by species using LAI 
 
 + Simioni G, Durand-gillmann M, Huc R, et al (2013) Asymmetric competition increases leaf inclination effect on light absorption in mixed canopies. Ann For Sci 70:123–131. doi: 10.1007/s13595-012-0246-8
 
++ Moreno, M., Simioni, G., Cailleret, M., Ruffault, J., Badel, E., Carrière, S., Davi, H., Gavinet, J., Huc, R., Limousin, J.-M., Marloie, O., Martin, L., Rodríguez-Calcerrada, J., Vennetier, M., Martin-StPaul, N., 2021. Consistently lower sap velocity and growth over nine years of rainfall exclusion in a Mediterranean mixed pine-oak forest. Agric. For. Meteorol. 308–309, 108472. https://doi.org/10.1016/j.agrformet.2021.108472

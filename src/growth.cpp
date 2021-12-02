@@ -103,13 +103,15 @@ double qResp(double Tmean) {
 // }
 
 
-List growthDay1(List x, double tday, double pet, double prec, double er, double runon=0.0, 
-              double rad = NA_REAL, double elevation = NA_REAL, bool verbose = false) {
+List growthDay1(List x, NumericVector meteovec, 
+                double elevation = NA_REAL, 
+                double runon=0.0, bool verbose = false) {
   
   
   //Soil-plant water balance
-  List spwbOut = spwbDay1(x, tday, pet, prec, er,runon,
-                          rad, elevation, verbose);
+  List spwbOut = spwbDay1(x, meteovec, 
+                          elevation, 
+                          runon, verbose);
   
   //Control params
   List control = x["control"];  
@@ -143,6 +145,9 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   
   //Soil
 
+  //Weather
+  double tday = meteovec["tday"];
+  
   //Aboveground parameters  
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector DBH = above["DBH"];
@@ -635,18 +640,16 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
 
 
 
-List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPrev, double tminNext, 
-                double rhmin, double rhmax, double rad, double wind, 
+List growthDay2(List x, NumericVector meteovec, 
                 double latitude, double elevation, double slope, double aspect,
                 double solarConstant, double delta, 
-                double prec, double pet, double er, double runon=0.0, bool verbose = false) {
+                double runon=0.0, bool verbose = false) {
   
   //1. Soil-plant water balance
-  List spwbOut = spwbDay2(x, tmin, tmax, tminPrev, tmaxPrev, tminNext,
-                          rhmin, rhmax, rad, wind, 
+  List spwbOut = spwbDay2(x, meteovec, 
                           latitude, elevation, slope, aspect,
                           solarConstant, delta, 
-                          prec, pet, er, runon, verbose);
+                          runon, verbose);
   
 
   //2. Retrieve state
@@ -654,6 +657,17 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   //Control params
   List control = x["control"];  
 
+  //Meteo input
+  double tmin = meteovec["tmin"];
+  double tmax = meteovec["tmax"];
+  double tminPrev = meteovec["tminPrev"];
+  double tmaxPrev = meteovec["tmaxPrev"];
+  double tminNext = meteovec["tminNext"];
+  double rhmin = meteovec["rhmin"];
+  double rhmax = meteovec["rhmax"];
+  double rad = meteovec["rad"];
+  double wind = meteovec["wind"];
+  double Catm = meteovec["Catm"];
   
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
   
@@ -1430,6 +1444,7 @@ List growthDay(List x, CharacterVector date, double tmin, double tmax, double rh
   bool modifyInput = control["modifyInput"];
   bool leafPhenology = control["leafPhenology"];
   String transpirationMode = control["transpirationMode"];
+  double Catm = control["Catm"];
   
   //Will not modify input x 
   if(!modifyInput) {
@@ -1446,7 +1461,6 @@ List growthDay(List x, CharacterVector date, double tmin, double tmax, double rh
   double slorad = slope * (M_PI/180.0);
   double photoperiod = meteoland::radiation_daylength(latrad, 0.0, 0.0, delta);
   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
-  
   //Derive doy from date  
   int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
   int doy = J - J0101+1;
@@ -1462,11 +1476,34 @@ List growthDay(List x, CharacterVector date, double tmin, double tmax, double rh
   double er = erFactor(doy, pet, prec);
   List s;
   if(transpirationMode=="Granier") {
-    s = growthDay1(x, tday, pet, prec, er, runon, rad, elevation, verbose);
+    NumericVector meteovec = NumericVector::create(
+      Named("tday") = tday, 
+      Named("prec") = prec,
+      Named("rad") = rad, 
+      Named("pet") = pet,
+      Named("er") = er);
+    s = growthDay1(x, meteovec, 
+                   elevation, 
+                   runon, verbose);
   } else {
-    s = growthDay2(x, tmin, tmax, tmin, tmax, tmin, rhmin, rhmax, rad, wind, 
+    NumericVector meteovec = NumericVector::create(
+      Named("tmin") = tmin, 
+      Named("tmax") = tmax,
+      Named("tminPrev") = tmin, 
+      Named("tmaxPrev") = tmax, 
+      Named("tminNext") = tmin, 
+      Named("prec") = prec,
+      Named("rhmin") = rhmin, 
+      Named("rhmax") = rhmax, 
+      Named("rad") = rad, 
+      Named("wind") = wind, 
+      Named("Catm") = Catm,
+      Named("pet") = pet,
+      Named("er") = er);
+    s = growthDay2(x, meteovec, 
                  latitude, elevation, slope, aspect,
-                 solarConstant, delta, prec, pet, er, runon, verbose);
+                 solarConstant, delta, 
+                 runon, verbose);
   }
   // Rcout<<"hola4\n";
   return(s);
@@ -1607,6 +1644,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   NumericVector WindSpeed(numDays, NA_REAL);
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
   NumericVector PET = NumericVector(numDays,0.0);
+  NumericVector CO2(Precipitation.length(), NA_REAL);
   if(transpirationMode=="Granier") {
     if(!meteo.containsElementNamed("PET")) stop("Please include variable 'PET' in weather input.");
     PET = meteo["PET"];
@@ -1626,6 +1664,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
     if(!meteo.containsElementNamed("Radiation")) stop("Please include variable 'Radiation' in weather input.");
     Radiation = meteo["Radiation"];
+    if(meteo.containsElementNamed("CO2")) CO2 = meteo["CO2"];
   }
   CharacterVector dateStrings = meteo.attr("row.names");
   
@@ -1788,9 +1827,15 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
 
     //2. Water balance and photosynthesis
     if(transpirationMode=="Granier") {
-      double er = erFactor(DOY[i], PET[i], Precipitation[i]);
-      s = growthDay1(x, MeanTemperature[i], PET[i], Precipitation[i], er, 0.0, 
-                     Radiation[i], elevation, false); //No Runon in simulations for a single cell
+      NumericVector meteovec = NumericVector::create(
+        Named("tday") = MeanTemperature[i], 
+        Named("prec") = Precipitation[i],
+        Named("rad") = Radiation[i], 
+        Named("pet") = PET[i],
+        Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
+      s = growthDay1(x, meteovec,  
+                     elevation, 
+                     0.0, false); //No Runon in simulations for a single cell
     } else if(transpirationMode=="Sperry") {
       std::string c = as<std::string>(dateStrings[i]);
       int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
@@ -1814,13 +1859,27 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
       double rhmin = MinRelativeHumidity[i];
       double rhmax = MaxRelativeHumidity[i];
       double rad = Radiation[i];
+      double Catm = CO2[i];
+      if(NumericVector::is_na(Catm)) Catm = control["Catm"];
       PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
-      double er = erFactor(DOY[i], PET[i], Precipitation[i]);
-      s = growthDay2(x, tmin, tmax, tminPrev, tmaxPrev, tminNext,
-                   rhmin, rhmax, rad, wind, 
+      NumericVector meteovec = NumericVector::create(
+        Named("tmin") = tmin, 
+        Named("tmax") = tmax,
+        Named("tminPrev") = tminPrev, 
+        Named("tmaxPrev") = tmaxPrev, 
+        Named("tminNext") = tminNext, 
+        Named("prec") = Precipitation[i],
+        Named("rhmin") = rhmin, 
+        Named("rhmax") = rhmax, 
+        Named("rad") = rad, 
+        Named("wind") = wind, 
+        Named("Catm") = Catm,
+        Named("pet") = PET[i],
+        Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
+      s = growthDay2(x, meteovec, 
                    latitude, elevation, slope, aspect,
-                   solarConstant, delta, Precipitation[i], PET[i], 
-                   er, 0.0, verbose);
+                   solarConstant, delta, 
+                   0.0, verbose);
 
       fillEnergyBalanceTemperatureDailyOutput(DEB,DT,DLT,s,i, multiLayerBalance);
     }    

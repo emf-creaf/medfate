@@ -658,7 +658,7 @@ DataFrame paramsCanopy(DataFrame above, List control) {
                                              _["zmid"] = zmid,
                                              _["zup"] = zup,
                                              _["Tair"] = NumericVector(nz, NA_REAL),
-                                             _["Cair"] = NumericVector(nz, control["Catm"]),
+                                             _["Cair"] = NumericVector(nz, NA_REAL),
                                              _["VPair"] = NumericVector(nz, NA_REAL));
   return(paramsCanopy);
 }
