@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.6</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@
       <h1 data-toc-skip>Soil water balance at Font-Blanche</h1>
                         <h4 class="author">Miquel De Caceres (CREAF), Nicolas Martin-StPaul (INRA)</h4>
             
-            <h4 class="date">2021-11-19</h4>
+            <h4 class="date">2021-12-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/master/vignettes/workedexamples/FontBlanche.Rmd"><code>vignettes/workedexamples/FontBlanche.Rmd</code></a></small>
       <div class="hidden name"><code>FontBlanche.Rmd</code></div>
@@ -102,7 +102,7 @@
 <div id="model-inputs" class="section level2">
 <h2 class="hasAnchor">
 <a href="#model-inputs" class="anchor"></a>Model inputs</h2>
-<p>Any forest water balance model needs information on <strong>climate</strong>, <strong>vegetation</strong> and <strong>soils</strong> of the forest stand to be simulated. Moreover, since the soil water balance in <code>medfate</code> differentiates between species, <strong>species-specific parameters</strong> are also needed. Since FontBlance is one of the sites used for evaluating the model, we can use a data list <code>fb</code> with all the necessary inputs:</p>
+<p>Any forest water balance model needs information on <strong>climate</strong>, <strong>vegetation</strong> and <strong>soils</strong> of the forest stand to be simulated. Moreover, since the soil water balance in <code>medfate</code> differentiates between species, <strong>species-specific parameters</strong> are also needed. Since FontBlanche is one of the sites used for evaluating the model, and much of the data can be found in Moreno et al. (2021). We can use a data list <code>fb</code> with all the necessary inputs:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fb</span> <span class="op">&lt;-</span> <span class="fu">medfatereports</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/medfatereports/man/load_forest.html">load_list</a></span><span class="op">(</span><span class="st">"FONBLA"</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -830,6 +830,7 @@
 <li><p>De Caceres M, Martin-StPaul N, Turco M, et al (2018) Estimating daily meteorological data and downscaling climate models over landscapes. Environ Model Softw 108:186–196. doi: 10.1016/j.envsoft.2018.08.003</p></li>
 <li><p>De Caceres M, Martinez-Vilalta J, Coll L, et al (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agric For Meteorol 213:77–90. doi: 10.1016/j.agrformet.2015.06.012</p></li>
 <li><p>Simioni G, Durand-gillmann M, Huc R, et al (2013) Asymmetric competition increases leaf inclination effect on light absorption in mixed canopies. Ann For Sci 70:123–131. doi: 10.1007/s13595-012-0246-8</p></li>
+<li><p>Moreno, M., Simioni, G., Cailleret, M., Ruffault, J., Badel, E., Carrière, S., Davi, H., Gavinet, J., Huc, R., Limousin, J.-M., Marloie, O., Martin, L., Rodríguez-Calcerrada, J., Vennetier, M., Martin-StPaul, N., 2021. Consistently lower sap velocity and growth over nine years of rainfall exclusion in a Mediterranean mixed pine-oak forest. Agric. For. Meteorol. 308–309, 108472. <a href="https://doi.org/10.1016/j.agrformet.2021.108472" class="uri">https://doi.org/10.1016/j.agrformet.2021.108472</a></p></li>
 </ul>
 </div>
   </div>

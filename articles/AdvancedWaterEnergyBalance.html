@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.6</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@
       <h1 data-toc-skip>Advanced water and energy balance</h1>
                         <h4 class="author">Miquel De Caceres</h4>
             
-            <h4 class="date">2021-11-19</h4>
+            <h4 class="date">2021-12-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/master/vignettes/AdvancedWaterEnergyBalance.Rmd"><code>vignettes/AdvancedWaterEnergyBalance.Rmd</code></a></small>
       <div class="hidden name"><code>AdvancedWaterEnergyBalance.Rmd</code></div>
@@ -184,34 +184,34 @@
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">canopy</span></code></pre></div>
 <pre><code>##    zlow zmid  zup Tair Cair VPair
-## 1     0   50  100   NA  386    NA
-## 2   100  150  200   NA  386    NA
-## 3   200  250  300   NA  386    NA
-## 4   300  350  400   NA  386    NA
-## 5   400  450  500   NA  386    NA
-## 6   500  550  600   NA  386    NA
-## 7   600  650  700   NA  386    NA
-## 8   700  750  800   NA  386    NA
-## 9   800  850  900   NA  386    NA
-## 10  900  950 1000   NA  386    NA
-## 11 1000 1050 1100   NA  386    NA
-## 12 1100 1150 1200   NA  386    NA
-## 13 1200 1250 1300   NA  386    NA
-## 14 1300 1350 1400   NA  386    NA
-## 15 1400 1450 1500   NA  386    NA
-## 16 1500 1550 1600   NA  386    NA
-## 17 1600 1650 1700   NA  386    NA
-## 18 1700 1750 1800   NA  386    NA
-## 19 1800 1850 1900   NA  386    NA
-## 20 1900 1950 2000   NA  386    NA
-## 21 2000 2050 2100   NA  386    NA
-## 22 2100 2150 2200   NA  386    NA
-## 23 2200 2250 2300   NA  386    NA
-## 24 2300 2350 2400   NA  386    NA
-## 25 2400 2450 2500   NA  386    NA
-## 26 2500 2550 2600   NA  386    NA
-## 27 2600 2650 2700   NA  386    NA
-## 28 2700 2750 2800   NA  386    NA</code></pre>
+## 1     0   50  100   NA   NA    NA
+## 2   100  150  200   NA   NA    NA
+## 3   200  250  300   NA   NA    NA
+## 4   300  350  400   NA   NA    NA
+## 5   400  450  500   NA   NA    NA
+## 6   500  550  600   NA   NA    NA
+## 7   600  650  700   NA   NA    NA
+## 8   700  750  800   NA   NA    NA
+## 9   800  850  900   NA   NA    NA
+## 10  900  950 1000   NA   NA    NA
+## 11 1000 1050 1100   NA   NA    NA
+## 12 1100 1150 1200   NA   NA    NA
+## 13 1200 1250 1300   NA   NA    NA
+## 14 1300 1350 1400   NA   NA    NA
+## 15 1400 1450 1500   NA   NA    NA
+## 16 1500 1550 1600   NA   NA    NA
+## 17 1600 1650 1700   NA   NA    NA
+## 18 1700 1750 1800   NA   NA    NA
+## 19 1800 1850 1900   NA   NA    NA
+## 20 1900 1950 2000   NA   NA    NA
+## 21 2000 2050 2100   NA   NA    NA
+## 22 2100 2150 2200   NA   NA    NA
+## 23 2200 2250 2300   NA   NA    NA
+## 24 2300 2350 2400   NA   NA    NA
+## 25 2400 2450 2500   NA   NA    NA
+## 26 2500 2550 2600   NA   NA    NA
+## 27 2600 2650 2700   NA   NA    NA
+## 28 2700 2750 2800   NA   NA    NA</code></pre>
 <p>Canopy temperature, water vapour pressure and <span class="math inline">\(CO_2\)</span> concentration are state variables needed for canopy energy balance. If the canopy energy balance assumes a single canopy layer, the same values will be assumed through the canopy. Variation of within-canopy state variables is modelled if a multi-canopy energy balance is used (see control parameter <code>multiLayerBalance</code>).</p>
 <p>As you may already known, element <code>above</code> contains the aboveground structure data that we already know:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
