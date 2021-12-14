@@ -4,6 +4,7 @@
 
 # Version 2.3.6
 - CO2 made an daily input weather variable, in addition to the default control parameter 'Catm'
+- Function 'shinyplot' added to create interactive graphics
 
 # Version 2.3.5
 - New example vignette 'FontBlanche'

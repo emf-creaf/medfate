@@ -1,5 +1,6 @@
 import(meteoland)
 import(ggplot2)
+import(shiny)
 importFrom("stats", "aggregate","filter","uniroot", "median",
            "cor","quantile", "dnorm", "Gamma", "glm", "predict",
            "rpois")
