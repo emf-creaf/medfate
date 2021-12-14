@@ -13,7 +13,7 @@ shinyplot<-function(out) {
     plot_main_choices = c(plot_main_choices, "Energy balance")
   }
   if(type_out=="growth") {
-    plot_main_choices = c(plot_main_choices, "Carbon balance")
+    plot_main_choices = c(plot_main_choices, "Carbon balance", "Growth")
   }
   wb_plot_choices = c("PET & Precipitation" = "PET_Precipitation",
                       "PET and Net rain" = "PET_NetRain",
@@ -44,7 +44,11 @@ shinyplot<-function(out) {
                            "Midday leaf water potential" = "LeafPsi",
                            "Midday upper stem water potential" = "StemPsi",
                            "Midday root crown water potential" = "RootPsi",
-                           "Water use efficiency" = "PlantWUE"
+                           "Water use efficiency" = "PlantWUE",
+                           "Absorbed short-wave radiation" = "PlantAbsorbedSWR",
+                           "Absorbed short-wave radiation per leaf" = "AbsorbedSWRPerLeaf",
+                           "Net long-wave radiation" = "PlantNetLWR",
+                           "Net long-wave radiation per leaf" = "NetLWRPerLeaf"
                            )
   }
   carbon_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
@@ -53,7 +57,25 @@ shinyplot<-function(out) {
                           "Leaf sugar concentration" = "SugarLeaf",
                           "Leaf starch concentration" = "StarchLeaf",
                           "Sapwood sugar concentration" = "SugarSapwood",
-                          "Sapwood starch concentration" = "StarchSapwood")
+                          "Sapwood starch concentration" = "StarchSapwood",
+                          "Sugar transport" = "SugarTransport",
+                          "Root exudation" = "RootExudation",
+                          "Leaf osmotic potential at full turgor" = "LeafPI0",
+                          "Stem osmotic potential at full turgor" = "StemPI0")
+  
+  growth_plot_choices = c("Leaf area" = "LeafArea",
+                          "Sapwood area" = "SapwoodArea",
+                          "Fine root area" = "FineRootArea",
+                          "Leaf biomass per individual" = "LeafBiomass",
+                          "Sapwood biomass per individual" = "SapwoodBiomass",
+                          "Fine root biomass per individual" = "FineRootBiomass",
+                          "Labile carbon biomass per individual" = "LabileBiomass",
+                          "Total dry biomass per individual" = "TotalLivingBiomass",
+                          "Sapwood area growth" = "SAgrowth",
+                          "Leaf area growth" = "LAgrowth",
+                          "Fine root area growth" = "FRAgrowth",
+                          "Sapwood area / Leaf area" = "HuberValue",
+                          "Fine root area / Leaf area" = "RootAreaLeafArea")
   
   energy_plot_choices = c("Above-canopy air temperature" = "AirTemperature",
                           "Within-canopy air temperature" = "CanopyTemperature",
@@ -127,6 +149,7 @@ shinyplot<-function(out) {
       else if(main_plot=="Plants") sub_choices = plant_plot_choices
       else if(main_plot=="Carbon balance") sub_choices = carbon_plot_choices
       else if(main_plot=="Energy balance") sub_choices = energy_plot_choices
+      else if(main_plot=="Growth") sub_choices = growth_plot_choices
       else sub_choices = soil_plot_choices
       updateSelectInput(session, "plot_type",
                         choices = sub_choices)
