@@ -334,6 +334,11 @@ plot(S, type="PlantTranspiration", bySpecies = TRUE)
 plot(S, type="LeafPsiMin", bySpecies = TRUE)
 ```
 
+Alternatively, one can interactively create plots using function `shinyplot`, e.g.:
+```{r, eval = FALSE}
+shinyplot(S)
+```
+
 While the simulation model uses daily steps, users may be interested in outputs at larger time scales. The package provides a `summary` for objects of class `spwb`. This function can be used to summarize the model's output at different temporal steps (i.e. weekly, annual, ...). For example, to obtain the average soil moisture and water potentials by months one can use:
 
 ```{r}

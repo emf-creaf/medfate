@@ -163,3 +163,9 @@ The corresponding daily growth rates can also be displayed:
 plot(G1, "LAgrowth", bySpecies = T)
 plot(G1, "SAgrowth", bySpecies = T)
 ```
+
+
+Finally, recall that one can interactively create plots using function `shinyplot`, e.g.:
+```{r, eval = FALSE}
+shinyplot(G1)
+```

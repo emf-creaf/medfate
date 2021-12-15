@@ -18,6 +18,7 @@ Function \code{summary} summarizes the model's output in different temporal step
   \item{freq}{Frequency of summary statistics (see \code{\link{cut.Date}}).}
   \item{output}{The data table to be summarized. Accepted values are \code{"DailyBalance"}, \code{"PlantStress"}, \code{"PlantPsi"}, \code{"PlantTranspiration"}, \code{"PlantPhotosynthesis"}  and \code{"SoilWaterBalance"}, \code{"Temperature"} and \code{"EnergyBalance"}.}
   \item{FUN}{The function to summarize results (e.g., \code{sum}, \code{mean}, ...)}
+  \item{bySpecies}{Allows aggregating output by species before calculating summaries (only has an effect with some values of \code{output}). Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
   \item{...}{Additional parameters for function \code{summary}.}
 }
 \author{

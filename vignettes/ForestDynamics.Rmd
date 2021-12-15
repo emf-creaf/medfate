@@ -92,7 +92,7 @@ It is worth noting that, while `fordyn()` calls function `growth()` internally f
 
 ## Inspecting model outputs
 
-### Stand, species and cohort summaries
+### Stand, species and cohort summaries and plots
 
 Among other outputs, function `fordyn()` calculates standard summary statistics that describe the structural and compositional state of the forest at each time step. For example, we can access stand-level statistics using:
 
@@ -103,6 +103,12 @@ fd$StandSummary
 where we can observe an increase in stand basal area and leaf area index during years 1 and 3, but a reduction during the second (drier) year. Species-level analogous statistics are shown using:
 ```{r}
 fd$SpeciesSummary
+```
+
+Package `medfate` provides a simple `plot` function for objects of class `fordyn`. For example, we can show the interannual variation in stand-level basal area using:
+
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 3.5}
+plot(fd, type = "StandBasalArea")
 ```
 
 ### Tree/shrub tables
@@ -134,3 +140,9 @@ plot(fd$GrowthResults[[1]], "SapwoodArea", bySpecies = T)
 plot(fd$GrowthResults[[2]], "SapwoodArea", bySpecies = T)
 plot(fd$GrowthResults[[3]], "SapwoodArea", bySpecies = T)
 ```
+
+Finally, we can create interactive plots for particular steps using function `shinyplot`, e.g.:
+```{r, eval = FALSE}
+shinyplot(fd$GrowthResults[[1]])
+```
+
