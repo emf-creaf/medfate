@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Drought stress indices — spwb_stress • medfate</title>
+<title>Shiny app with interactive plots — shinyplot • medfate</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Drought stress indices — spwb_stress" />
-<meta property="og:description" content="Allows calculating annual-based or monthly-based drought stress indices from spwb objects." />
+<meta property="og:title" content="Shiny app with interactive plots — shinyplot" />
+<meta property="og:description" content="Creates a shiny app with interactive plots for simulation results and evaluation" />
 
 
 
@@ -114,66 +114,78 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Drought stress indices</h1>
+    <h1>Shiny app with interactive plots</h1>
     
-    <div class="hidden name"><code>spwb_stress.Rd</code></div>
+    <div class="hidden name"><code>shinyplot.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Allows calculating annual-based or monthly-based drought stress indices from <code><a href='spwb.html'>spwb</a></code> objects.</p>
+    <p>Creates a shiny app with interactive plots for simulation results and evaluation</p>
     </div>
 
-    <pre class="usage"><span class='fu'>spwb_stress</span><span class='op'>(</span><span class='va'>x</span>, index <span class='op'>=</span> <span class='st'>"NDD"</span>, freq <span class='op'>=</span> <span class='st'>"years"</span>, bySpecies <span class='op'>=</span> <span class='cn'>FALSE</span>, draw <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>shinyplot</span><span class='op'>(</span><span class='va'>out</span>, measuredData <span class='op'>=</span> <span class='cn'>NULL</span>, SpParams <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>An object of class <code>spwb</code>.</p></td>
+      <th>out</th>
+      <td><p>An object of class <code><a href='spwb.html'>spwb</a></code> or <code><a href='growth.html'>growth</a></code></p></td>
     </tr>
     <tr>
-      <th>index</th>
-      <td><p>A string with the index to be calculated, either <code>"DI"</code>, <code>"NDD"</code>, <code>"ADS"</code>, <code>"MDS"</code> or <code>"WSI"</code> (see details).</p></td>
+      <th>measuredData</th>
+      <td><p>A data frame with observed/measured values (see <code><a href='evaluation.html'>evaluation_plot</a></code>).</p></td>
     </tr>
     <tr>
-      <th>freq</th>
-      <td><p>Frequency of stress statistics (see <code><a href='https://rdrr.io/r/base/cut.POSIXt.html'>cut.Date</a></code>). Normally, either <code>"years"</code> or <code>"months"</code> for yearly-based or monthly-based indices.</p></td>
-    </tr>
-    <tr>
-      <th>bySpecies</th>
-      <td><p>Allows aggregating output by species.</p></td>
-    </tr>
-    <tr>
-      <th>draw</th>
-      <td><p>A boolean flag to indicate that a plot should be returned.</p></td>
+      <th>SpParams</th>
+      <td><p>A data frame with species parameters (see <code><a href='SpParams.html'>SpParamsMED</a></code>).</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The currently available drought stress indices are:</p><ul>
-<li><p><code>"ADS"</code>: Average of daily drought stress values for the period considered.</p></li>
-<li><p><code>"MDS"</code>: Maximum daily drought stress during the period considered.</p></li>
-<li><p><code>"DI"</code>: Drought intensity, as defined in De Cáceres et al. (2015).</p></li>
-<li><p><code>"NDD"</code>: Number of drought days, as defined in De Cáceres et al. (2015).</p></li>
-<li><p><code>"WSI"</code>: Water stress integral, as defined in Myers (1988).</p></li>
-</ul>
-
+    <p>Only run this function in interactive mode. When <code>measuredData</code> is not <code>NULL</code>, an additional panel is shown for evaluation plots.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame with periods (e.g., years or months) in rows and plant cohorts (or species) in columns. Values are the calculated stress index. If <code>draw=TRUE</code> a ggplot is returned instead.</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>De Cáceres M, Martínez-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (doi:10.1016/j.agrformet.2015.06.012).</p>
-<p>Myers BJ (1988) Water stress integral - a link between short-term stress and long-term growth. Tree Physiology 4: 315–323 (doi: 10.1093/treephys/4.4.315)</p>
+    <p>An object that represents the shiny app</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Miquel De Cáceres Ainsa, CREAF</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='spwb.html'>spwb</a></code>, <code><a href='plot.spwb.html'>summary.spwb</a></code></p></div>
+    <div class='dont-index'><p><code><a href='plot.spwb.html'>plot.spwb</a></code>, <code><a href='evaluation.html'>evaluation_plot</a></code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'>## Only run this example in interactive R sessions</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'>#Load example daily meteorological data</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>examplemeteo</span><span class='op'>)</span>
+
+<span class='co'>#Load example plot plant data</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>exampleforestMED</span><span class='op'>)</span>
+
+<span class='co'>#Default species parameterization</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>SpParamsMED</span><span class='op'>)</span>
+
+<span class='co'>#Initialize soil with default soil params (4 layers)</span>
+<span class='va'>examplesoil1</span> <span class='op'>=</span> <span class='fu'><a href='soil.html'>soil</a></span><span class='op'>(</span><span class='fu'><a href='defaultSoilParams.html'>defaultSoilParams</a></span><span class='op'>(</span><span class='fl'>4</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='co'>#Initialize control parameters</span>
+<span class='va'>control</span> <span class='op'>=</span> <span class='fu'><a href='defaultControl.html'>defaultControl</a></span><span class='op'>(</span><span class='st'>"Granier"</span><span class='op'>)</span>
+
+<span class='co'>#Initialize input</span>
+<span class='va'>x1</span> <span class='op'>=</span> <span class='fu'><a href='modelInput.html'>forest2spwbInput</a></span><span class='op'>(</span><span class='va'>exampleforestMED</span>,<span class='va'>examplesoil1</span>, <span class='va'>SpParamsMED</span>, <span class='va'>control</span><span class='op'>)</span>
+
+<span class='co'>#Call simulation function</span>
+<span class='va'>S1</span><span class='op'>&lt;-</span><span class='fu'><a href='spwb.html'>spwb</a></span><span class='op'>(</span><span class='va'>x1</span>, <span class='va'>examplemeteo</span>, latitude <span class='op'>=</span> <span class='fl'>41.82592</span>, elevation <span class='op'>=</span> <span class='fl'>100</span><span class='op'>)</span>
+
+<span class='co'>#Load observed data (in this case the same simulation results with some added error)  </span>
+<span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>exampleobs</span><span class='op'>)</span>
+
+<span class='co'>#Call interactive plot shiny app</span>
+<span class='fu'>shinyplot</span><span class='op'>(</span><span class='va'>S1</span>, <span class='va'>exampleobs</span>, <span class='va'>SpParamsMED</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
