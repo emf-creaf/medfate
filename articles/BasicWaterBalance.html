@@ -389,12 +389,15 @@
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"PlantStress"</span><span class="op">)</span></code></pre></div>
 <p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-23-4.png" width="672" style="display: block; margin: auto;"></p>
+<p>Finally, one can interactively create plots using function <code>shinyplot</code>, e.g.:</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/shinyplot.html">shinyplot</a></span><span class="op">(</span><span class="va">S</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="general-summaries" class="section level3">
 <h3 class="hasAnchor">
 <a href="#general-summaries" class="anchor"></a>General summaries</h3>
 <p>While the simulation model uses daily steps, users will normally be interested in outputs at larger time scales. The package provides a <code>summary</code> for objects of class <code>spwb</code>. This function can be used to summarize the model’s output at different temporal steps (i.e. weekly, annual, …). For example, to obtain the average soil moisture and water potentials by months one can use:</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"Soil"</span><span class="op">)</span></code></pre></div>
 <pre><code>##                  W.1       W.2     ML.1      ML.2    MLTot       WTD        SWE
 ## 2001-01-01 0.9913015 0.9980352 67.66950 116.57658 184.2461  997.7262 1.68796802
@@ -423,7 +426,7 @@
 ## 2001-11-01 0.11075329  0.4467669 -0.03890918 -0.23349606
 ## 2001-12-01 0.10358719  0.4183059 -0.04696503 -0.05545887</code></pre>
 <p>Parameter <code>output</code> is used to indicate the element of the <code>spwb</code> object for which we desire summaries. Similarly, it is possible to calculate the average stress of plant cohorts by months:</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span><span class="op">)</span></code></pre></div>
 <pre><code>##                  T1_148       T2_168       S1_165
 ## 2001-01-01 1.468709e-06 9.544836e-07 6.539347e-07
@@ -439,7 +442,7 @@
 ## 2001-11-01 1.003865e-03 6.526789e-04 2.364025e-04
 ## 2001-12-01 6.345690e-06 4.123938e-06 2.270343e-06</code></pre>
 <p>The <code>summary</code> function can be also used to aggregate the output by species. In this case, the values of plant cohorts belonging to the same species will be averaged using LAI values as weights. For example, we may average the daily drought stress across cohorts of the same species (here there is only one cohort by species, so this does not modify the output):</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"day"</span>, output<span class="op">=</span><span class="st">"PlantStress"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##            Pinus halepensis Quercus coccifera Quercus ilex
 ## 2001-01-01     1.352957e-06      6.209666e-07 8.792590e-07
@@ -449,7 +452,7 @@
 ## 2001-01-05     1.431697e-06      6.394604e-07 9.304306e-07
 ## 2001-01-06     1.168876e-06      5.777313e-07 7.596287e-07</code></pre>
 <p>Or we can combine the aggregation by species with a temporal aggregation (here monthly averages):</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"month"</span>, FUN <span class="op">=</span> <span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <pre><code>##            Pinus halepensis Quercus coccifera Quercus ilex
 ## 2001-01-01     1.468709e-06      6.539347e-07 9.544836e-07
@@ -469,20 +472,20 @@
 <h3 class="hasAnchor">
 <a href="#specific-output-functions" class="anchor"></a>Specific output functions</h3>
 <p>The package provides some functions to extract or transform specific outputs from soil plant water balance simulations. In particular, function <code><a href="../reference/spwb_stress.html">spwb_stress()</a></code> allows calculating several plant stress indices, such as the number of days with drought stress &gt; 0.5 or the maximum drought stress:</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/spwb_stress.html">spwb_stress</a></span><span class="op">(</span><span class="va">S</span>, index <span class="op">=</span> <span class="st">"NDD"</span>, freq <span class="op">=</span> <span class="st">"years"</span>, draw<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <pre><code>##            T1_148 T2_168 S1_165
 ## 2001-01-01      8      3      0</code></pre>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/spwb_stress.html">spwb_stress</a></span><span class="op">(</span><span class="va">S</span>, index <span class="op">=</span> <span class="st">"MDS"</span>, freq <span class="op">=</span> <span class="st">"years"</span>, draw<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <pre><code>##               T1_148    T2_168    S1_165
 ## 2001-01-01 0.7018867 0.5925645 0.2583035</code></pre>
 <p>As the general summary function, <code><a href="../reference/spwb_stress.html">spwb_stress()</a></code> allows calculating stress indices at several temporal scales. For example the water stress index (integral of water potential values) can be calculated and drawn for every month:</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/spwb_stress.html">spwb_stress</a></span><span class="op">(</span><span class="va">S</span>, index <span class="op">=</span> <span class="st">"WSI"</span>, freq <span class="op">=</span> <span class="st">"months"</span>, draw<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>Another specific summary function is <code><a href="../reference/spwb_waterUseEfficiency.html">spwb_waterUseEfficiency()</a></code>. This is most useful with advanced water and energy balance modeling, but for simple water balance it calculates the ratio between photosynthesis and transpiration at the desired scale. In this case it is equal to the value of the input species parameter <code>WUE</code>:</p>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/spwb_stress.html">spwb_stress</a></span><span class="op">(</span><span class="va">S</span>, index <span class="op">=</span> <span class="st">"WSI"</span>, freq <span class="op">=</span> <span class="st">"months"</span>, draw<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;"></p>
+<p>Another specific summary function is <code><a href="../reference/spwb_waterUseEfficiency.html">spwb_waterUseEfficiency()</a></code>. This is most useful with advanced water and energy balance modeling, but for simple water balance it calculates the ratio between photosynthesis and transpiration at the desired scale. In this case it is equal to the value of the input species parameter <code>WUE</code>:</p>
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/spwb_waterUseEfficiency.html">spwb_waterUseEfficiency</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"Stand Ag/E"</span>, freq <span class="op">=</span> <span class="st">"months"</span>, draw<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <pre><code>## 2001-01-01 2001-02-01 2001-03-01 2001-04-01 2001-05-01 2001-06-01 2001-07-01 
 ##   2.601888   2.601888   2.601888   2.601883   2.601860   2.570343   2.583841 

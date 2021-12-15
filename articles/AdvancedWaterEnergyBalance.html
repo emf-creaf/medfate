@@ -722,8 +722,11 @@
 <div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"LeafPsiMin"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-46-4.png" width="672" style="display: block; margin: auto;"></p>
-<p>While the simulation model uses daily steps, users may be interested in outputs at larger time scales. The package provides a <code>summary</code> for objects of class <code>spwb</code>. This function can be used to summarize the model’s output at different temporal steps (i.e. weekly, annual, …). For example, to obtain the average soil moisture and water potentials by months one can use:</p>
+<p>Alternatively, one can interactively create plots using function <code>shinyplot</code>, e.g.:</p>
 <div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/shinyplot.html">shinyplot</a></span><span class="op">(</span><span class="va">S</span><span class="op">)</span></code></pre></div>
+<p>While the simulation model uses daily steps, users may be interested in outputs at larger time scales. The package provides a <code>summary</code> for objects of class <code>spwb</code>. This function can be used to summarize the model’s output at different temporal steps (i.e. weekly, annual, …). For example, to obtain the average soil moisture and water potentials by months one can use:</p>
+<div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"Soil"</span><span class="op">)</span></code></pre></div>
 <pre><code>##                  W.1       W.2     ML.1      ML.2    MLTot       WTD      SWE
 ## 2001-04-01 0.9844236 0.9951190 63.16140 116.08359 179.2450  997.5961 1.611044
@@ -738,14 +741,14 @@
 ## 2001-05-01 -0.04297083
 ## 2001-06-01 -0.08457711</code></pre>
 <p>Parameter <code>output</code> is used to indicate the element of the <code>spwb</code> object for which we desire summaries. Similarly, it is possible to calculate the average stress of plant cohorts by months:</p>
-<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span><span class="op">)</span></code></pre></div>
 <pre><code>##                T1_148     T2_168     S1_165
 ## 2001-04-01 0.02901917 0.02751211 0.01001912
 ## 2001-05-01 0.04277728 0.04040150 0.01515990
 ## 2001-06-01 0.05870397 0.05643002 0.02227212</code></pre>
 <p>The <code>summary</code> function can be also used to aggregate the output by species. In this case, the values of plant cohorts belonging to the same species will be averaged using LAI values as weights. For example, we may average the daily drought stress across cohorts of the same species (here there is only one cohort by species, so this does not modify the output):</p>
-<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb104"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"day"</span>, output<span class="op">=</span><span class="st">"PlantStress"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>##            Pinus halepensis Quercus coccifera Quercus ilex
 ## 2001-04-20       0.01531745       0.006168423   0.01578876
@@ -755,7 +758,7 @@
 ## 2001-04-24       0.03111000       0.009776324   0.02844583
 ## 2001-04-25       0.04569488       0.015521868   0.04124936</code></pre>
 <p>Or we can combine the aggregation by species with a temporal aggregation (here monthly averages):</p>
-<div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb106"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"month"</span>, FUN <span class="op">=</span> <span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <pre><code>##            Pinus halepensis Quercus coccifera Quercus ilex
 ## 2001-04-01       0.02901917        0.01001912   0.02751211
