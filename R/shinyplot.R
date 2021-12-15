@@ -1,11 +1,17 @@
 
-shinyplot<-function(out) {
+shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   type_out = class(out)[1] #growth or spwb
   dates_out = as.Date(names(out$subdaily))
   if(type_out=="spwb") {
     transpirationMode = out$spwbInput$control$transpirationMode
+    cohorts_out = row.names(out$spwbInput$cohorts)
+    cohorts_sp_out = paste0(row.names(out$spwbInput$cohorts), 
+                            " (",out$spwbInput$cohorts$Name, ")")
   } else {
     transpirationMode = out$growthInput$control$transpirationMode
+    cohorts_out = row.names(out$growthInput$cohorts)
+    cohorts_sp_out = paste0(row.names(out$growthInput$cohorts), 
+                            " (",out$growthInput$cohorts$Name, ")")
   }
   
   plot_main_choices = c("Water balance", "Soil", "Plants")
@@ -84,61 +90,121 @@ shinyplot<-function(out) {
                           "Soil energy balance components" = "SoilEnergyBalance")
   
   # Define UI for application that draws a histogram
-  ui <- fluidPage(
-    
-    # Application title
-    titlePanel("Interactive result plots"),
-    
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-      sidebarPanel(
-        selectInput(
-          inputId = "plot_main_type",
-          label = "Plot category", 
-          choices = plot_main_choices,
-          selected = c("Water balance")
-        ),
-        selectInput(
-          inputId = "plot_type",
-          label = "Plot type", 
-          choices = wb_plot_choices,
-          selected = wb_plot_choices[1]
-        ),
-        sliderInput(
-          inputId = "date_range",
-          label = "Date range",
-          value = c(dates_out[1],dates_out[length(dates_out)]),
-          min = dates_out[1],
-          max = dates_out[length(dates_out)]
-        ),
-        selectInput(
-          inputId = "summary_type",
-          label = "Temporal aggregation", 
-          choices = c("None" = "day", 
-                      "By weeks" = "week", 
-                      "By months" = "month", 
-                      "By seasons" = "quarter", 
-                      "By years" = "year"),
-          selected = c("None")
-        ),
-        # checkboxInput(
-        #   inputId = "subdaily_check",
-        #   label = "Subdaily",
-        #   value = FALSE
-        # ),
-        checkboxInput(
-          inputId = "byspecies_check",
-          label = "By species",
-          value = FALSE
-        )
-      ),
-      
-      # Show a plot of the generated distribution
-      mainPanel(
-        plotOutput("medfate_plot")
-      )
-    )
+  results <- tabPanel("Results",
+                      # Sidebar with a slider input for number of bins 
+                      sidebarLayout(
+                        sidebarPanel(
+                          selectInput(
+                            inputId = "plot_main_type",
+                            label = "Plot category", 
+                            choices = plot_main_choices,
+                            selected = c("Water balance")
+                          ),
+                          selectInput(
+                            inputId = "plot_type",
+                            label = "Plot type", 
+                            choices = wb_plot_choices,
+                            selected = wb_plot_choices[1]
+                          ),
+                          sliderInput(
+                            inputId = "date_range",
+                            label = "Date range",
+                            value = c(dates_out[1],dates_out[length(dates_out)]),
+                            min = dates_out[1],
+                            max = dates_out[length(dates_out)]
+                          ),
+                          selectInput(
+                            inputId = "summary_type",
+                            label = "Temporal aggregation", 
+                            choices = c("None" = "day", 
+                                        "By weeks" = "week", 
+                                        "By months" = "month", 
+                                        "By seasons" = "quarter", 
+                                        "By years" = "year"),
+                            selected = c("None")
+                          ),
+                          # checkboxInput(
+                          #   inputId = "subdaily_check",
+                          #   label = "Subdaily",
+                          #   value = FALSE
+                          # ),
+                          checkboxInput(
+                            inputId = "byspecies_check",
+                            label = "By species",
+                            value = FALSE
+                          )
+                        ),
+                        
+                        # Show a plot of the generated distribution
+                        mainPanel(
+                          plotOutput("results_plot")
+                        )
+                      )
   )
+  eval_choices = c()
+  if(!is.null(measuredData)) {
+    if("SWC" %in% names(measuredData)) eval_choices[["Soil water content"]] = "SWC"
+    if("REW" %in% names(measuredData)) eval_choices[["Relative soil water content"]] = "REW"
+    if("ETR" %in% names(measuredData)) eval_choices[["Total evapotranspiration"]] = "ETR"
+    if("SE+TR" %in% names(measuredData)) eval_choices[["Total ET against modelled SE+TR"]] = "SE+TR"
+    if(any(paste0("E_", cohorts_out) %in% names(measuredData))) {
+      eval_choices[["Transpiration per leaf area"]] = "E"
+    }
+    if(any(paste0("FMC_", cohorts_out) %in% names(measuredData))) {
+      eval_choices[["Fuel moisture content"]] = "FMC"
+    }
+    if(any(c(paste0("PD_", cohorts_out) %in% names(measuredData),
+             paste0("MD_", cohorts_out) %in% names(measuredData)))) {
+      eval_choices[["Leaf water potential"]] = "WP"
+    }
+    if(type_out=="growth" && any(paste0("BAI_", cohorts_out) %in% names(measuredData))) {
+      eval_choices[["Basal area increment"]] = "BAI"
+    }
+  }
+  evaluation <- tabPanel("Evaluation",
+                         sidebarLayout(
+                           sidebarPanel(
+                             selectInput(
+                               inputId = "eval_type",
+                               label = "Evaluation type", 
+                               choices = eval_choices,
+                               selected = eval_choices[1]
+                             ),
+                             selectInput(
+                               inputId = "eval_cohort",
+                               label = "Plant cohort",
+                               choices = c()
+                             ),
+                             selectInput(
+                               inputId = "eval_summary_type",
+                               label = "Temporal aggregation", 
+                               choices = c("By days" = "day", 
+                                           "By weeks" = "week", 
+                                           "By months" = "month", 
+                                           "By years" = "year"),
+                               selected = c("None")
+                             )
+                           ),
+                           mainPanel(
+                             tabsetPanel(
+                               tabPanel("Dynamic",
+                                        plotOutput("dynamic_eval_plot")
+                               ),
+                               tabPanel("Scatter",
+                                        plotOutput("scatter_eval_plot")
+                               ), 
+                               tabPanel("Stats",
+                                        verbatimTextOutput("eval_stats")
+                               )
+                             )
+                           )
+                         ),
+  )
+  if(is.null(measuredData)) {
+    ui <- navbarPage("Interactive plots", results)
+  } else {
+    ui <- navbarPage("Interactive plots", results, evaluation)
+  }
   
   # Define server logic required to draw a histogram
   server <- function(input, output, session) {
@@ -154,7 +220,7 @@ shinyplot<-function(out) {
       updateSelectInput(session, "plot_type",
                         choices = sub_choices)
     })
-    output$medfate_plot <- renderPlot({
+    output$results_plot <- renderPlot({
       date_lim = input$date_range
       date_range = dates_out[dates_out >= date_lim[1] & dates_out <= date_lim[2]]
       plot(out, type = input$plot_type, dates = date_range,
@@ -162,6 +228,47 @@ shinyplot<-function(out) {
            # subdaily = input$subdaily_check,
            bySpecies = input$byspecies_check)
     })
+    if(!is.null(measuredData)) {
+      observe({
+        eval_plot <- input$eval_type
+        sub_choices <- NULL
+        if(eval_plot %in% c("E", "BAI", "FMC")) {
+          sel = paste0(eval_plot,"_", cohorts_out) %in% names(measuredData)
+          sub_choices = cohorts_out[sel]
+          names(sub_choices) = cohorts_sp_out[sel]
+        }
+        else if(eval_plot == "WP") {
+          sel = paste0("MD_", cohorts_out) %in% names(measuredData) | paste0("PD_", cohorts_out) %in% names(measuredData)
+          sub_choices = cohorts_out[sel]
+          names(sub_choices) = cohorts_sp_out[sel]
+        }
+        updateSelectInput(session, "eval_cohort",
+                          choices = sub_choices)
+      })
+      output$dynamic_eval_plot <- renderPlot(
+        evaluation_plot(out, measuredData, 
+                        type = input$eval_type,
+                        temporalResolution = input$eval_summary_type,
+                        cohort = input$eval_cohort,
+                        SpParams = SpParams,
+                        plotType = "dynamic")
+      )
+      output$scatter_eval_plot <- renderPlot(
+        evaluation_plot(out, measuredData, 
+                        type = input$eval_type,
+                        temporalResolution = input$eval_summary_type,
+                        cohort = input$eval_cohort,
+                        SpParams = SpParams,
+                        plotType = "scatter")
+      )
+      output$eval_stats <- renderPrint({
+        evaluation_stats(out, measuredData, 
+                         type = input$eval_type,
+                         temporalResolution = input$eval_summary_type,
+                         cohort = input$eval_cohort,
+                         SpParams = SpParams)
+      })
+    }
   }
   
   # Run the application 

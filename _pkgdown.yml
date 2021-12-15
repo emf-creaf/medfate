@@ -98,6 +98,7 @@ reference:
   - starts_with("plot.spwb")
   - starts_with("plot.growth")
   - starts_with("extractSubdaily")
+  - shinyplot
 
 - title: Model analysis
   desc:  Evaluation and optimization

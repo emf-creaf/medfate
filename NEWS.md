@@ -2,7 +2,7 @@
  NEWS for R Package "medfate"
 -------------------------------
 
-# Version 2.3.6
+# Version 2.3.7
 - CO2 made an daily input weather variable, in addition to the default control parameter 'Catm'
 - Function 'shinyplot' added to create interactive graphics
 
