@@ -4,6 +4,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   dates_out = as.Date(names(out$subdaily))
   if(type_out=="spwb") {
     transpirationMode = out$spwbInput$control$transpirationMode
+    subdaily_out = out$spwbInput$control$subdailyResults
     cohorts_out = row.names(out$spwbInput$cohorts)
     cohorts_sp_out = paste0(row.names(out$spwbInput$cohorts), 
                             " (",out$spwbInput$cohorts$Name, ")")
@@ -12,7 +13,10 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
     cohorts_out = row.names(out$growthInput$cohorts)
     cohorts_sp_out = paste0(row.names(out$growthInput$cohorts), 
                             " (",out$growthInput$cohorts$Name, ")")
+    subdaily_out = out$growthInput$control$subdailyResults
   }
+  cohort_choices = cohorts_out
+  names(cohort_choices) = cohorts_sp_out
   
   plot_main_choices = c("Water balance", "Soil", "Plants")
   if(transpirationMode=="Sperry") {
@@ -38,6 +42,8 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                           "Hydraulic redistribution" = "HydraulicRedistribution"
                           )
   }
+  subdaily_soil_plot_choices = c("Plant extraction from soil" = "PlantExtraction")
+  
   plant_plot_choices = c("LAI" = "PlantLAI",
                          "Stress" = "PlantStress",
                          "Transpiration" = "PlantTranspiration",
@@ -46,17 +52,40 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                          "Gross photosynthesis per leaf" = "GrossPhotosynthesisPerLeaf")
   if(transpirationMode=="Sperry") {
     plant_plot_choices <-c(plant_plot_choices,
+                           "Water use efficiency" = "PlantWUE",
                            "Soil-plant conductance" = "SoilPlantConductance",
-                           "Midday leaf water potential" = "LeafPsi",
+                           "Minimum leaf water potential" = "LeafPsiMin",
+                           "Maximum leaf water potential" = "LeafPsiMax",
+                           "Leaf water potential range" = "LeafPsiRange",
                            "Midday upper stem water potential" = "StemPsi",
                            "Midday root crown water potential" = "RootPsi",
-                           "Water use efficiency" = "PlantWUE",
+                           "Stem PLC" = "StemPLC",
+                           "Stem relative water content" = "StemRWC",
+                           "Leaf relative water content" = "LeafRWC",
+                           "Plant water balance" = "PlantWaterBalance",
                            "Absorbed short-wave radiation" = "PlantAbsorbedSWR",
                            "Absorbed short-wave radiation per leaf" = "AbsorbedSWRPerLeaf",
                            "Net long-wave radiation" = "PlantNetLWR",
                            "Net long-wave radiation per leaf" = "NetLWRPerLeaf"
                            )
   }
+  subdaily_plant_plot_choices = c("Plant transpiration" = "PlantTranspiration",
+                                  "Plant water balance" = "PlantWaterBalance",
+                                  "Plant gross photosynthesis" = "PlantGrossPhotosynthesis",
+                                  "Plant net photosynthesis" = "PlantNetPhotosynthesis",
+                                  "Soil-plant conductance" = "SoilPlantConductance",
+                                  "Leaf water potential" = "LeafPsi",
+                                  "Root crown water potential" = "RootPsi",
+                                  "Upper stem water potential" = "StemPsi",
+                                  "Stem relative water content" = "StemRWC",
+                                  "Leaf relative water content" = "LeafRWC",
+                                  "Absorbed short-wave radiation" = "PlantAbsorbedSWR",
+                                  "Leaf absorbed SWR" = "LeafAbsorbedSWR",
+                                  "Leaf net LWR" = "LeafNetLWR",
+                                  "Leaf transpiration" = "LeafTranspiration",
+                                  "Leaf gross photosynthesis" = "LeafGrossPhotosynthesis",
+                                  "Leaf net photosynthesis" = "LeafNetPhotosynthesis"
+                                  )
   carbon_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
                           "Maintenance respiration per dry" = "MaintenanceRespiration",
                           "Carbon balance per dry" = "CarbonBalance",
@@ -82,56 +111,70 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                           "Fine root area growth" = "FRAgrowth",
                           "Sapwood area / Leaf area" = "HuberValue",
                           "Fine root area / Leaf area" = "RootAreaLeafArea")
-  
+  subdaily_carbon_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis")
   energy_plot_choices = c("Above-canopy air temperature" = "AirTemperature",
                           "Within-canopy air temperature" = "CanopyTemperature",
                           "Soil surface temperature" = "SoilTemperature",
                           "Canopy energy balance components" = "CanopyEnergyBalance",
                           "Soil energy balance components" = "SoilEnergyBalance")
-  
+  subdaily_energy_plot_choices = c("Air/canopy/soil temperature" ="Temperature")
   # Define UI for application that draws a histogram
   results <- tabPanel("Results",
                       # Sidebar with a slider input for number of bins 
                       sidebarLayout(
                         sidebarPanel(
-                          selectInput(
-                            inputId = "plot_main_type",
-                            label = "Plot category", 
-                            choices = plot_main_choices,
-                            selected = c("Water balance")
-                          ),
-                          selectInput(
-                            inputId = "plot_type",
-                            label = "Plot type", 
-                            choices = wb_plot_choices,
-                            selected = wb_plot_choices[1]
-                          ),
-                          sliderInput(
-                            inputId = "date_range",
-                            label = "Date range",
-                            value = c(dates_out[1],dates_out[length(dates_out)]),
-                            min = dates_out[1],
-                            max = dates_out[length(dates_out)]
-                          ),
-                          selectInput(
-                            inputId = "summary_type",
-                            label = "Temporal aggregation", 
-                            choices = c("None" = "day", 
-                                        "By weeks" = "week", 
-                                        "By months" = "month", 
-                                        "By seasons" = "quarter", 
-                                        "By years" = "year"),
-                            selected = c("None")
-                          ),
-                          # checkboxInput(
-                          #   inputId = "subdaily_check",
-                          #   label = "Subdaily",
-                          #   value = FALSE
-                          # ),
-                          checkboxInput(
-                            inputId = "byspecies_check",
-                            label = "By species",
-                            value = FALSE
+                          tabsetPanel(
+                            tabPanel("Plot type & period",
+                                checkboxInput(
+                                    inputId = "subdaily_check",
+                                    label = "Subdaily plots",
+                                    value = FALSE
+                                ),                          
+                                selectInput(
+                                    inputId = "plot_main_type",
+                                    label = "Plot category", 
+                                    choices = plot_main_choices,
+                                    selected = c("Water balance")
+                                ),
+                                selectInput(
+                                    inputId = "plot_type",
+                                    label = "Plot type", 
+                                    choices = wb_plot_choices,
+                                    selected = wb_plot_choices[1]
+                                ),
+                                sliderInput(
+                                  inputId = "date_range",
+                                  label = "Date range",
+                                  value = c(dates_out[1],dates_out[length(dates_out)]),
+                                  min = dates_out[1],
+                                  max = dates_out[length(dates_out)]
+                                )
+                            ),
+                            tabPanel("Options",
+                                     selectInput(
+                                       inputId = "cohort_selection",
+                                       label = "Plant cohorts",
+                                       choices = cohort_choices,
+                                       selected = cohort_choices,
+                                       multiple = TRUE,
+                                       selectize = FALSE
+                                     ),
+                                     selectInput(
+                                       inputId = "summary_type",
+                                       label = "Temporal aggregation", 
+                                       choices = c("None" = "day", 
+                                                   "By weeks" = "week", 
+                                                   "By months" = "month", 
+                                                   "By seasons" = "quarter", 
+                                                   "By years" = "year"),
+                                       selected = c("None")
+                                     ),
+                                     checkboxInput(
+                                       inputId = "byspecies_check",
+                                       label = "Aggregation by species",
+                                       value = FALSE
+                                     )
+                            )
                           )
                         ),
                         
@@ -143,10 +186,14 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   )
   eval_choices = c()
   if(!is.null(measuredData)) {
-    if("SWC" %in% names(measuredData)) eval_choices[["Soil water content"]] = "SWC"
-    if("REW" %in% names(measuredData)) eval_choices[["Relative soil water content"]] = "REW"
-    if("ETR" %in% names(measuredData)) eval_choices[["Total evapotranspiration"]] = "ETR"
-    if("SE+TR" %in% names(measuredData)) eval_choices[["Total ET against modelled SE+TR"]] = "SE+TR"
+    if("SWC" %in% names(measuredData)) {
+      eval_choices[["Soil water content"]] = "SWC"
+      eval_choices[["Relative soil water content"]] = "REW"
+    } 
+    if("ETR" %in% names(measuredData)) {
+      eval_choices[["Total evapotranspiration"]] = "ETR"
+      eval_choices[["Total ET against modelled SE+TR"]] = "SE+TR"
+    }
     if(any(paste0("E_", cohorts_out) %in% names(measuredData))) {
       eval_choices[["Transpiration per leaf area"]] = "E"
     }
@@ -208,7 +255,16 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   
   # Define server logic required to draw a histogram
   server <- function(input, output, session) {
-    
+    observe({
+      if(input$subdaily_check && subdaily_out)  {
+        sel <- plot_main_choices %in% c("Plants", "Carbon balance", "Soil", "Energy balance")
+        updateSelectInput(session, "plot_main_type",
+                          choices = plot_main_choices[sel])
+      } else {
+        updateSelectInput(session, "plot_main_type",
+                          choices = plot_main_choices)
+      }
+    })
     observe({
       main_plot <- input$plot_main_type
       if(main_plot=="Water balance") sub_choices = wb_plot_choices
@@ -217,6 +273,13 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
       else if(main_plot=="Energy balance") sub_choices = energy_plot_choices
       else if(main_plot=="Growth") sub_choices = growth_plot_choices
       else sub_choices = soil_plot_choices
+
+      if(input$subdaily_check && subdaily_out) {
+        if(main_plot=="Plants") sub_choices = subdaily_plant_plot_choices
+        else if(main_plot=="Carbon balance")  sub_choices = subdaily_carbon_plot_choices
+        else if(main_plot=="Energy balance") sub_choices = subdaily_energy_plot_choices
+        else sub_choices = subdaily_soil_plot_choices
+      }
       updateSelectInput(session, "plot_type",
                         choices = sub_choices)
     })
@@ -225,7 +288,8 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
       date_range = dates_out[dates_out >= date_lim[1] & dates_out <= date_lim[2]]
       plot(out, type = input$plot_type, dates = date_range,
            summary.freq = input$summary_type, 
-           # subdaily = input$subdaily_check,
+           subdaily = input$subdaily_check,
+           cohorts = (cohort_choices %in% input$cohort_selection),
            bySpecies = input$byspecies_check)
     })
     if(!is.null(measuredData)) {
