@@ -4,7 +4,8 @@
 
 # Version 2.3.7
 - CO2 made an daily input weather variable, in addition to the default control parameter 'Catm'
-- Function 'shinyplot' added to create interactive graphics
+- New function 'shinyplot' to create interactive graphics
+- New function 'plot.fordyn' to display annual (step) summaries of forest dynamics
 
 # Version 2.3.5
 - New example vignette 'FontBlanche'

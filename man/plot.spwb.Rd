@@ -3,13 +3,14 @@
 \alias{plot.spwb}
 \alias{plot.pwb}
 \alias{plot.growth}
+\alias{plot.fordyn}
 \alias{summary.pwb}
 \alias{summary.spwb}
 \alias{summary.growth}
 
 \title{Displays simulation results}
 \description{
-Function \code{plot} produces temporal graphs of the results of the soil plant water balance model (see \code{\link{spwb}}), plant water balance model (see \code{\link{pwb}}) or the forest growth model (see \code{\link{growth}}), whereas function \code{summary} summarizes the model's output in different temporal steps (i.e. weekly, annual, ...).
+Function \code{plot} produces temporal graphs of the results of the soil plant water balance model (see \code{\link{spwb}}), plant water balance model (see \code{\link{pwb}}), the forest growth model (see \code{\link{growth}}) or the forest dynamics model (see \code{\link{fordyn}}), whereas function \code{summary} summarizes the model's output in different temporal steps (i.e. weekly, annual, ...).
 }
 \usage{
 \method{plot}{spwb}(x, type="PET_Precipitation", 
@@ -27,12 +28,14 @@ Function \code{plot} produces temporal graphs of the results of the soil plant w
                       dates = NULL, subdaily = FALSE,
                       xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
                       summary.freq = NULL, ...)
+\method{plot}{fordyn}(x, type="StandBasalArea",
+                      ylim=NULL, xlab=NULL, ylab=NULL, ...)
 \method{summary}{pwb}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
 \method{summary}{spwb}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
 \method{summary}{growth}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
 }
 \arguments{
-  \item{x, object}{An object of class \code{spwb}.}
+  \item{x, object}{An object of class \code{spwb}, \code{pwb}, \code{growth} or \code{fordyn}.}
   \item{type}{The information to be plotted (see details)}
   \item{cohorts}{An integer, boolean or character vector to select the plant cohorts to be plotted.}
   \item{bySpecies}{Allows aggregating output by species, before calculating summaries or drawing plots (only has an effect with some values of \code{type}). Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
@@ -114,9 +117,18 @@ The following are only available for \code{\link{growth}}:
     \item{\code{"HuberValue"}:}{ Ratio of leaf area to sapwood area.}
     \item{\code{"RootAreaLeafArea"}:}{ Ratio of fine root area to leaf area.}
    }
-}
-\references{
-De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (doi:10.1016/j.agrformet.2015.06.012).
+ The following are only available for \code{\link{fordyn}}:
+ \itemize{
+    \item{\code{"StandBasalArea"}:}{Stand basal area of living trees.}
+    \item{\code{"StandLAI"}:}{Stand leaf area index.}
+    \item{\code{"StandDensity"}:}{Stand density of living trees.}
+    \item{\code{"SpeciesBasalArea"}:}{Basal area of living trees by species.}
+    \item{\code{"SpeciesLAI"}:}{Leaf area index by species.}
+    \item{\code{"SpeciesDensity"}:}{Density of living trees by species.}
+    \item{\code{"CohortBasalArea"}:}{Basal area of living trees by plant cohort.}
+    \item{\code{"CohortLAI"}:}{Leaf area index by plant cohort.}
+    \item{\code{"CohortDensity"}:}{Density of living trees by plant cohort.}
+   }
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
