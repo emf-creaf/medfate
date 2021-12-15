@@ -96,8 +96,7 @@ reference:
   - spwb_sensitivity
   - spwb_waterUseEfficiency
   - starts_with("plot.spwb")
-  - starts_with("plot.growth")
-  - starts_with("plot.fordyn")
+  - starts_with("summary.spwb")
   - starts_with("extractSubdaily")
   - shinyplot
 

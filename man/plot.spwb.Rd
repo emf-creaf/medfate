@@ -4,13 +4,10 @@
 \alias{plot.pwb}
 \alias{plot.growth}
 \alias{plot.fordyn}
-\alias{summary.pwb}
-\alias{summary.spwb}
-\alias{summary.growth}
 
-\title{Displays simulation results}
+\title{Plots simulation results}
 \description{
-Function \code{plot} produces temporal graphs of the results of the soil plant water balance model (see \code{\link{spwb}}), plant water balance model (see \code{\link{pwb}}), the forest growth model (see \code{\link{growth}}) or the forest dynamics model (see \code{\link{fordyn}}), whereas function \code{summary} summarizes the model's output in different temporal steps (i.e. weekly, annual, ...).
+Function \code{plot} produces temporal graphs of the results of the soil plant water balance model (see \code{\link{spwb}}), plant water balance model (see \code{\link{pwb}}), the forest growth model (see \code{\link{growth}}) or the forest dynamics model (see \code{\link{fordyn}}).
 }
 \usage{
 \method{plot}{spwb}(x, type="PET_Precipitation", 
@@ -30,12 +27,9 @@ Function \code{plot} produces temporal graphs of the results of the soil plant w
                       summary.freq = NULL, ...)
 \method{plot}{fordyn}(x, type="StandBasalArea",
                       ylim=NULL, xlab=NULL, ylab=NULL, ...)
-\method{summary}{pwb}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
-\method{summary}{spwb}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
-\method{summary}{growth}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
 }
 \arguments{
-  \item{x, object}{An object of class \code{spwb}, \code{pwb}, \code{growth} or \code{fordyn}.}
+  \item{x}{An object of class \code{spwb}, \code{pwb}, \code{growth} or \code{fordyn}.}
   \item{type}{The information to be plotted (see details)}
   \item{cohorts}{An integer, boolean or character vector to select the plant cohorts to be plotted.}
   \item{bySpecies}{Allows aggregating output by species, before calculating summaries or drawing plots (only has an effect with some values of \code{type}). Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
@@ -45,10 +39,8 @@ Function \code{plot} produces temporal graphs of the results of the soil plant w
   \item{ylim}{Range of values for y.}
   \item{xlab}{x-axis label.}
   \item{ylab}{y-axis label.}
-  \item{freq, summary.freq}{Frequency of summary statistics (see \code{\link{cut.Date}}).}
-  \item{output}{The data table to be summarized. Accepted values are \code{"DailyBalance"}, \code{"PlantStress"}, \code{"PlantPsi"}, \code{"PlantTranspiration"}, \code{"PlantPhotosynthesis"}  and \code{"SoilWaterBalance"}, \code{"Temperature"} and \code{"EnergyBalance"}.}
-  \item{FUN}{The function to summarize results (e.g., \code{sum}, \code{mean}, ...)}
-  \item{...}{Additional parameters for function \code{plot} or \code{summary}.}
+  \item{summary.freq}{Frequency of summary statistics (see \code{\link{cut.Date}}).}
+  \item{...}{Additional parameters for function \code{plot} (not used).}
 }
 \details{
 The following plots are currently available for \code{\link{spwb}} (most of them also for \code{\link{pwb}}):
@@ -160,8 +152,5 @@ S1<-spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
         
 #Plot results
 plot(S1)
-
-#Monthly summary (averages) of soil status
-summary(S1, freq="months",FUN=mean, output="Soil")
 
 }
