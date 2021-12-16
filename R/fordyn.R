@@ -1,6 +1,7 @@
 fordyn<-function(forest, soil, SpParams,
-                   meteo, control,
-                   latitude , elevation = NA, slope = NA, aspect = NA) {
+                 meteo, control,
+                 latitude , elevation = NA, slope = NA, aspect = NA,
+                 management_function = NULL, management_args = NULL) {
   
   # Modify control parameters
   verboseDyn = control$verbose
@@ -70,7 +71,7 @@ fordyn<-function(forest, soil, SpParams,
                    Height = x$above$H[range],
                    Z50 = x$below$Z50[range],
                    Z95 = x$below$Z95[range])
-    if(control$removeDeadCohorts) tt = tt[tt$N>control$minimumCohortDensity,, drop=FALSE]
+    if(control$removeEmptyCohorts) tt = tt[tt$N>control$minimumCohortDensity,, drop=FALSE]
     return(tt)
   }
   createDeadTreeTable<-function(step, year, x) {
@@ -104,7 +105,7 @@ fordyn<-function(forest, soil, SpParams,
                    Height = x$above$H[range],
                    Z50 = x$below$Z50[range],
                    Z95 = x$below$Z95[range])
-    if(control$removeDeadCohorts) st = st[st$N>control$minimumCohortDensity,, drop = FALSE]
+    if(control$removeEmptyCohorts) st = st[st$N>control$minimumCohortDensity,, drop = FALSE]
     return(st)
   }
   createDeadShrubTable<-function(step, year, x) {
@@ -172,43 +173,54 @@ fordyn<-function(forest, soil, SpParams,
       forest$shrubData$Height  = xo$above$H[!isTree]
     }
     
-    # 2.3 Remove dead cohorts if required
-    deadTrees = rep(FALSE, nrow(forest$treeData))
-    deadShrubs = rep(FALSE, nrow(forest$shrubData))
-    if(control$removeDeadCohorts) {
-      deadTrees = (forest$treeData$N < control$minimumCohortDensity)
-      if(control$shrubDynamics) deadShrubs = (forest$shrubData$Cover < control$minimumCohortDensity)
+    # 2.3 Call management function if required
+    if(!is.null(management_function)) {
+      res = do.call(management_function, c(list(forest), management_args))
+      cut_forest <- res$cut_forest
+      planted_forest <- res$planted_forest
+      # Store new management arguments (may have changed)
+      management_args <- res$management_args
+    } else {
+      plant_forest = emptyforest()
     }
-    deadCohorts = c(deadTrees, deadShrubs)
-    if(sum(deadCohorts)>0) {
-      if(verboseDyn) cat(paste0("   (-) Removing dead cohorts: ", paste(row.names(xo$above)[deadCohorts], collapse=","),"\n"))
-      forest$treeData = forest$treeData[!deadTrees,, drop=FALSE] 
-      forest$shrubData = forest$shrubData[!deadShrubs,, drop=FALSE] 
+    
+    # 2.3 Remove empty cohorts if required
+    emptyTrees = rep(FALSE, nrow(forest$treeData))
+    emptyShrubs = rep(FALSE, nrow(forest$shrubData))
+    if(control$removeEmptyCohorts) {
+      emptyTrees = (forest$treeData$N < control$minimumCohortDensity)
+      if(control$shrubDynamics) emptyShrubs = (forest$shrubData$Cover < control$minimumCohortDensity)
+    }
+    emptyCohorts = c(emptyTrees, emptyShrubs)
+    if(sum(emptyCohorts)>0) {
+      if(verboseDyn) cat(paste0("   (-) Removing empty cohorts: ", paste(row.names(xo$above)[emptyCohorts], collapse=","),"\n"))
+      forest$treeData = forest$treeData[!emptyTrees,, drop=FALSE] 
+      forest$shrubData = forest$shrubData[!emptyShrubs,, drop=FALSE] 
       # Remove from growth input object
-      xo$cohorts = xo$cohorts[!deadCohorts, , drop=FALSE] 
-      xo$above = xo$above[!deadCohorts, , drop=FALSE] 
-      xo$below = xo$below[!deadCohorts, , drop=FALSE] 
-      xo$belowLayers$V = xo$belowLayers$V[!deadCohorts, , drop=FALSE] 
-      xo$belowLayers$L = xo$belowLayers$L[!deadCohorts, , drop=FALSE] 
+      xo$cohorts = xo$cohorts[!emptyCohorts, , drop=FALSE] 
+      xo$above = xo$above[!emptyCohorts, , drop=FALSE] 
+      xo$below = xo$below[!emptyCohorts, , drop=FALSE] 
+      xo$belowLayers$V = xo$belowLayers$V[!emptyCohorts, , drop=FALSE] 
+      xo$belowLayers$L = xo$belowLayers$L[!emptyCohorts, , drop=FALSE] 
       if(control$transpirationMode=="Sperry") {
-        xo$belowLayers$VGrhizo_kmax = xo$belowLayers$VGrhizo_kmax[!deadCohorts, , drop=FALSE]
-        xo$belowLayers$VCroot_kmax = xo$belowLayers$VCroot_kmax[!deadCohorts, , drop=FALSE]
-        xo$belowLayers$RhizoPsi = xo$belowLayers$RhizoPsi[!deadCohorts, , drop=FALSE]
+        xo$belowLayers$VGrhizo_kmax = xo$belowLayers$VGrhizo_kmax[!emptyCohorts, , drop=FALSE]
+        xo$belowLayers$VCroot_kmax = xo$belowLayers$VCroot_kmax[!emptyCohorts, , drop=FALSE]
+        xo$belowLayers$RhizoPsi = xo$belowLayers$RhizoPsi[!emptyCohorts, , drop=FALSE]
       }
-      xo$belowLayers$Wpool = xo$belowLayers$Wpool[!deadCohorts, , drop=FALSE]
-      xo$paramsPhenology = xo$paramsPhenology[!deadCohorts,, drop=FALSE]
-      xo$paramsAnatomy = xo$paramsAnatomy[!deadCohorts,, drop=FALSE]
-      xo$paramsInterception = xo$paramsInterception[!deadCohorts,, drop=FALSE]
-      xo$paramsTranspiration = xo$paramsTranspiration[!deadCohorts,, drop=FALSE]
-      xo$paramsWaterStorage = xo$paramsWaterStorage[!deadCohorts,, drop=FALSE]
-      xo$paramsGrowth = xo$paramsGrowth[!deadCohorts,, drop=FALSE]
-      xo$paramsAllometries = xo$paramsAllometries[!deadCohorts,, drop=FALSE]
-      xo$internalPhenology = xo$internalPhenology[!deadCohorts,, drop=FALSE]
-      xo$internalWater = xo$internalWater[!deadCohorts,, drop=FALSE]
-      xo$internalCarbon = xo$internalCarbon[!deadCohorts,, drop=FALSE]
-      xo$internalAllocation = xo$internalAllocation[!deadCohorts,, drop=FALSE]
-      xo$internalMortality = xo$internalMortality[!deadCohorts,, drop=FALSE]
-      xo$internalRings = xo$internalRings[!deadCohorts]
+      xo$belowLayers$Wpool = xo$belowLayers$Wpool[!emptyCohorts, , drop=FALSE]
+      xo$paramsPhenology = xo$paramsPhenology[!emptyCohorts,, drop=FALSE]
+      xo$paramsAnatomy = xo$paramsAnatomy[!emptyCohorts,, drop=FALSE]
+      xo$paramsInterception = xo$paramsInterception[!emptyCohorts,, drop=FALSE]
+      xo$paramsTranspiration = xo$paramsTranspiration[!emptyCohorts,, drop=FALSE]
+      xo$paramsWaterStorage = xo$paramsWaterStorage[!emptyCohorts,, drop=FALSE]
+      xo$paramsGrowth = xo$paramsGrowth[!emptyCohorts,, drop=FALSE]
+      xo$paramsAllometries = xo$paramsAllometries[!emptyCohorts,, drop=FALSE]
+      xo$internalPhenology = xo$internalPhenology[!emptyCohorts,, drop=FALSE]
+      xo$internalWater = xo$internalWater[!emptyCohorts,, drop=FALSE]
+      xo$internalCarbon = xo$internalCarbon[!emptyCohorts,, drop=FALSE]
+      xo$internalAllocation = xo$internalAllocation[!emptyCohorts,, drop=FALSE]
+      xo$internalMortality = xo$internalMortality[!emptyCohorts,, drop=FALSE]
+      xo$internalRings = xo$internalRings[!emptyCohorts]
     }
 
     
@@ -305,6 +317,10 @@ fordyn<-function(forest, soil, SpParams,
     }
     
     # 4.1 Generate above-ground data
+    planted_above = forest2aboveground(planted_forest, SpParams, NA, "MED")
+    row.names(planted_forest) = plant_ID(planted_forest, treeOffset, shrubOffset)
+    treeOffset = treeOffset + nrow(planted_forest$treeData)
+    shrubOffset = shrubOffset + nrow(planted_forest$shrubData)
     recr_above = forest2aboveground(recr_forest, SpParams, NA, "MED")
     row.names(recr_above) = plant_ID(recr_forest, treeOffset, shrubOffset)
     treeOffset = treeOffset + nrow(recr_forest$treeData)
@@ -320,21 +336,25 @@ fordyn<-function(forest, soil, SpParams,
 
     # 4.2 Merge above-ground data (first trees)
     above_all = rbind(forest_above[!is.na(forest_above$DBH),, drop = FALSE], 
+                      planted_above[!is.na(planted_above$DBH),, drop = FALSE],
                       recr_above[!is.na(recr_above$DBH),, drop = FALSE],
-                      forest_above[is.na(forest_above$DBH),, drop = FALSE], 
+                      forest_above[is.na(forest_above$DBH),, drop = FALSE],
+                      planted_above[is.na(planted_above$DBH),, drop = FALSE],
                       recr_above[is.na(recr_above$DBH),, drop = FALSE])
     
     # 4.3 Logical vector for replacement
     repl_vec <- c(rep(TRUE, nrow(forest$treeData)),
+                  rep(FALSE, nrow(planted_forest$treeData)),
                   rep(FALSE, nrow(recr_forest$treeData)),
                   rep(control$shrubDynamics, nrow(forest$shrubData)),
+                  rep(FALSE, nrow(planted_forest$shrubData)),
                   rep(FALSE, nrow(recr_forest$shrubData)))
     sel_vec = c(rep(TRUE, nrow(forest$treeData)),
                 rep(control$shrubDynamics, nrow(forest$shrubData)))
     
     # 4.4 Merge cohorts in forest object
-    forest$treeData = rbind(forest$treeData, recr_forest$treeData)
-    forest$shrubData = rbind(forest$shrubData, recr_forest$shrubData)
+    forest$treeData = rbind(forest$treeData, planted_forest$treeData, recr_forest$treeData)
+    forest$shrubData = rbind(forest$shrubData, planted_forest$shrubData, recr_forest$shrubData)
     
     
     # 4.5 Prepare growth input for next year

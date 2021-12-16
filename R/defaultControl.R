@@ -72,7 +72,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     
     #dynamics
     recruitmentMode = "deterministic",
-    removeDeadCohorts=TRUE,
+    removeEmptyCohorts=TRUE,
     minimumCohortDensity = 1,
     seedRain = NULL,
     seedProductionTreeHeight = 300,
@@ -94,7 +94,6 @@ defaultControl<-function(transpirationMode = "Granier") {
     #For forest dynamics
 #     freqZopt = 20,
 #     sap2tree=TRUE,
-#     removeDeadCohorts=TRUE,
 #     initRadius = 5000,
 #     setDefaults = TRUE,
 #     diamClasses = c(0,0.5,0.75,1.0,1.5,2.0,3.0,4.0,5.0,7.5,10.0, seq(15,200, by=5)),

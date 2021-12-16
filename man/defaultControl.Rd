@@ -99,7 +99,7 @@ A list, with the following options (default values in parentheses):
 \bold{Forest dynamics}:
 \itemize{
    \item{\code{ recruitmentMode [= "deterministic"]}: String describing how recruitment is applied. Current accepted values are "deterministic" or "stochastic".}
-   \item{\code{ removeDeadCohorts [= TRUE]}: Boolean flag to indicate the removal of cohorts whose density is too low.}
+   \item{\code{ removeEmptyCohorts [= TRUE]}: Boolean flag to indicate the removal of cohorts whose density is too low.}
    \item{\code{ minimumCohortDensity [= 1]}: Threshold of density resulting in cohort removal.}
    \item{\code{ seedRain [= NULL]}: Vector of species codes whose seed rain is to be simulated. If \code{NULL} the species identity of seed rain is taken from species currently present in the forest stand and with minimum size (see below).}
    \item{\code{ seedProductionTreeHeight [= 300]}: Default minimum tree height for producing seeds (when species parameter \code{SeedProductionHeight} is missing).}
