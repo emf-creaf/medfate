@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{defaultManagementFunction}
 \alias{defaultManagementFunction}
 \alias{defaultManagementArguments}
@@ -38,4 +39,3 @@ Jose-Ramon Gonzalez Olabarria, CTFC
 \seealso{
 \code{\link{fordyn}}
 }
-
