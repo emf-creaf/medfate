@@ -3,11 +3,12 @@
 \alias{fordyn}
 \title{Forest dynamics}
 \description{
-Function \code{fordyn} implements a forest dynamics model that simulates growth, mortality and recruitment for plant cohorts in a given forest stand during a period specified in the input climatic data. 
+Function \code{fordyn} implements a forest dynamics model that simulates growth, mortality, recruitment and (optionally) management actions in a given forest stand during a period specified in the input climatic data. 
 }
 \usage{
 fordyn(forest, soil, SpParams, meteo, control,
-       latitude , elevation = NA, slope = NA, aspect = NA) 
+       latitude , elevation = NA, slope = NA, aspect = NA,
+       management_function = NULL, management_args = NULL) 
 }
 \arguments{
   \item{forest}{An object of class \code{\link{forest}}.}
@@ -17,14 +18,17 @@ fordyn(forest, soil, SpParams, meteo, control,
   \item{control}{A list with default control parameters (see \code{\link{defaultControl}}).}
   \item{latitude}{Latitude (in degrees). Required when \code{x$TranspirationMode = "Sperry"}.}
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when \code{x$TranspirationMode = "Sperry"}. Elevation is also required for 'Granier' if snowpack dynamics are simulated.}
+  \item{management_function}{A function that implements forest management actions (see details).}
+  \item{management_args}{A list of additional arguments to be passed to the \code{management_function}.}
 }
 \details{
   Function \code{fordyn} simulates forest dynamics for annual time steps, building on other simulation functions. For each simulated year, the function performs the following steps:
   \enumerate{
-  \item{Calls function \code{\link{growth}} to simulate daily water/carbon balance, growth and mortality processes.}
-  \item{Simulate recruitment (for species present in the stand).}
+  \item{Calls function \code{\link{growth}} to simulate daily water/carbon balance, growth and mortality processes and update the forest object.}
+  \item{If required, calls function \code{management_function}, using as parameters the forest object and \code{management_args}, which may result in a density reduction for existing plant cohorts and/or a set of new planted cohorts.}
+  \item{Simulate natural recruitment (for species present in the stand).}
   \item{Prepares the input of function \code{\link{growth}} for the next annual time step.}
-  \item{Store forest status and summaries.}
+  \item{Store forest status, management arguments, and summaries.}
   }
 }
 \value{
@@ -35,10 +39,13 @@ fordyn(forest, soil, SpParams, meteo, control,
  \item{\code{"CohortSummary"}: A data frame with cohort-level summaries (leaf area index, tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
  \item{\code{"TreeTable"}: A data frame with tree-cohort data (species, density, diameter, height, etc.) at the beginning of the simulation (if any) and after each simulated year.}
  \item{\code{"DeadTreeTable"}: A data frame with dead tree-cohort data (species, density, diameter, height, etc.) at the beginning of the simulation and after each simulated year.}
+ \item{\code{"CutTreeTable"}: A data frame with cut tree data (species, density, diameter, height, etc.) after each simulated year.}
  \item{\code{"ShrubTable"}: A data frame with shrub-cohort data (species, density, cover, height, etc.) at the beginning of the simulation and after each simulated year.}
  \item{\code{"DeadShrubTable"}: A data frame with dead shrub-cohort data (species, density, cover, height, etc.) at the beginning of the simulation (if any) and after each simulated year.}
+ \item{\code{"CutShrubTable"}: A data frame with cut shrub data (species, density, cover, height, etc.) after each simulated year.}
  \item{\code{"ForestStructures"}: A list with the \code{\link{forest}} object of the stand at the beginning of the simulation and after each simulated year.}
  \item{\code{"GrowthResults"}: A list with the results of calling function \code{\link{growth}} for each simulated year.}
+ \item{\code{"ManagementArgs"}: A list of management arguments to be used in future simulations of the stand.}
   }
 }
 \author{

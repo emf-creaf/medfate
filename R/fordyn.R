@@ -21,127 +21,24 @@ fordyn<-function(forest, soil, SpParams,
   forestStructures[[1]] = forest
 
 
-  summarizeCohorts<-function(step, x) {
-    isTree = !is.na(x$above$DBH)
-    cohortSummary = data.frame("Step" = rep(step, nrow(x$cohorts)),
-                               "Species" = x$cohorts$SP,
-                               "Name" = x$cohorts$Name,
-                               "Cohort" = row.names(x$cohorts),
-                               "LeafAreaIndex" = x$above$LAI_live,
-                               "TreeDensityLive" = x$above$N,
-                               "TreeBasalAreaLive"= x$above$N*pi*(x$above$DBH/200)^2,
-                               "ShrubCoverLive"= x$above$Cover)
-    cohortSummary$TreeDensityLive[!isTree] = NA
-    return(cohortSummary)
-  }
-  summarizeSpecies<-function(step, cohSum, x) {
-    lai_sp = tapply(cohSum$LeafAreaIndex, cohSum$Species, sum, na.rm=TRUE)
-    nl_sp = tapply(cohSum$TreeDensityLive, cohSum$Species, sum, na.rm=TRUE)
-    bal_sp = tapply(cohSum$TreeBasalAreaLive, cohSum$Species, sum, na.rm=TRUE)
-    shl_sp = tapply(cohSum$ShrubCoverLive, cohSum$Species, sum, na.rm=TRUE)
-    mh_sp = tapply(x$above$H, x$above$SP, max, na.rm=TRUE)
-    spSumYear <-data.frame("Step" = rep(step, length(lai_sp)),
-                           "Species" = as.numeric(names(lai_sp)),
-                           "LeafAreaIndex" = as.numeric(lai_sp),
-                           "TreeDensityLive"= as.numeric(nl_sp),
-                           "TreeBasalAreaLive"= as.numeric(bal_sp),
-                           "ShrubCoverLive"= as.numeric(shl_sp),
-                           "MaxHeight"= as.numeric(mh_sp))
-  }
-  summarizeStand<-function(step, cohSum, x) {
-    maxH = 0
-    if(nrow(x$above)>0) maxH = max(x$above$H, na.rm=TRUE)
-    standSumYear = data.frame("Step" = step,
-                              "LeafAreaIndex" = sum(cohSum$LeafAreaIndex, na.rm = TRUE),
-                              "TreeDensityLive"= sum(cohSum$TreeDensityLive, na.rm = TRUE),
-                              "TreeBasalAreaLive"= sum(cohSum$TreeBasalAreaLive, na.rm = TRUE),
-                              "ShrubCoverLive"= sum(cohSum$ShrubCoverLive, na.rm=TRUE),
-                              "MaxHeight"= maxH)
-  }
-  createTreeTable<-function(step, year, x) {
-    isTree = !is.na(x$above$DBH)
-    range = 1:sum(isTree)
-    tt<-data.frame(Step = rep(step, length(range)), 
-                   Year = rep(year, length(range)),
-                   Cohort = row.names(x$cohorts)[range],
-                   Species = x$above$SP[range],
-                   Name = x$cohorts$Name[range],
-                   N = x$above$N[range],
-                   DBH = x$above$DBH[range],
-                   Height = x$above$H[range],
-                   Z50 = x$below$Z50[range],
-                   Z95 = x$below$Z95[range])
-    if(control$removeEmptyCohorts) tt = tt[tt$N>control$minimumCohortDensity,, drop=FALSE]
-    return(tt)
-  }
-  createDeadTreeTable<-function(step, year, x) {
-    isTree = !is.na(x$above$DBH)
-    range = 1:sum(isTree)
-    dtt<-data.frame(Step = rep(step, length(range)), 
-                    Year = rep(year, length(range)),
-                   Cohort = row.names(x$cohorts)[range],
-                   Species = x$above$SP[range],
-                   Name = x$cohorts$Name[range],
-                   N = x$internalMortality$N_dead[range],
-                   DBH = x$above$DBH[range],
-                   Height = x$above$H[range],
-                   Z50 = x$below$Z50[range],
-                   Z95 = x$below$Z95[range])
-    dtt = dtt[dtt$N>0,, drop = FALSE]
-    return(dtt)
-  }
-  createShrubTable<-function(step, year, x) {
-    isShrub = !is.na(x$above$Cover)
-    nt = sum(!isShrub)
-    numCohorts = length(isShrub)
-    range = numeric(0)
-    if(numCohorts>nt) range = (nt+1):numCohorts
-    st<-data.frame(Step = rep(step, length(range)), 
-                   Year = rep(year, length(range)),
-                   Cohort = row.names(x$cohorts)[range],
-                   Species = x$above$SP[range],
-                   Name = x$cohorts$Name[range],
-                   Cover = x$above$Cover[range],
-                   Height = x$above$H[range],
-                   Z50 = x$below$Z50[range],
-                   Z95 = x$below$Z95[range])
-    if(control$removeEmptyCohorts) st = st[st$N>control$minimumCohortDensity,, drop = FALSE]
-    return(st)
-  }
-  createDeadShrubTable<-function(step, year, x) {
-    isShrub = !is.na(x$above$Cover)
-    nt = sum(!isShrub)
-    numCohorts = length(isShrub)
-    range = numeric(0)
-    if(numCohorts>nt) range = (nt+1):numCohorts
-    dst<-data.frame(Step = rep(step, length(range)), 
-                    Year = rep(year, length(range)),
-                    Cohort = row.names(x$cohorts)[range],
-                    Species = x$above$SP[range],
-                    Name = x$cohorts$Name[range],
-                    Cover = x$internalMortality$Cover_dead[range],
-                    Height = x$above$H[range],
-                    Z50 = x$below$Z50[range],
-                    Z95 = x$below$Z95[range])
-    dst = dst[dst$Cover>0,,drop=FALSE]
-    return(dst)
-  }
-  
+
   #Initialization
   treeOffset = nrow(forest$treeData)
   shrubOffset = nrow(forest$shrubData)
   xi = forest2growthInput(forest, soil, SpParams, control)
   
   #initial summaries
-  cohortSummary <-summarizeCohorts(0, xi)
-  speciesSummary<-summarizeSpecies(0,cohortSummary, xi)
-  standSummary<-summarizeStand(0,cohortSummary, xi)
+  cohortSummary <-.summarizeCohorts(0, xi)
+  speciesSummary<-.summarizeSpecies(0,cohortSummary, xi)
+  standSummary<-.summarizeStand(0,cohortSummary, xi)
 
   #initial tree/shrub tables
-  treeTable = createTreeTable(0, NA, xi)
-  shrubTable = createShrubTable(0, NA, xi)
-  deadTreeTable = createDeadTreeTable(0, NA, xi)
-  deadShrubTable = createDeadShrubTable(0, NA, xi)
+  treeTable = .createTreeTable(0, NA, xi)
+  shrubTable = .createShrubTable(0, NA, xi)
+  deadTreeTable = .createDeadTreeTable(0, NA, xi)
+  deadShrubTable = .createDeadShrubTable(0, NA, xi)
+  cutTreeTable = treeTable[numeric(),,drop = FALSE]
+  cutShrubTable = shrubTable[numeric(),,drop = FALSE]
   
   #Simulations
   for(iYear in 1:nYears) {
@@ -160,8 +57,8 @@ fordyn<-function(forest, soil, SpParams,
     xo = Gi$growthInput
     
     # 2.2 Update dead tree/shrub tables
-    deadTreeTable = rbind(deadTreeTable, createDeadTreeTable(iYear, year, xo))
-    deadShrubTable = rbind(deadShrubTable, createDeadShrubTable(iYear, year, xo))
+    deadTreeTable = rbind(deadTreeTable, .createDeadTreeTable(iYear, year, xo))
+    deadShrubTable = rbind(deadShrubTable, .createDeadShrubTable(iYear, year, xo))
     
     # 2.2 Update forest structural variables
     isTree = is.na(xo$above$Cover)
@@ -181,7 +78,8 @@ fordyn<-function(forest, soil, SpParams,
       # Store new management arguments (may have changed)
       management_args <- res$management_args
     } else {
-      plant_forest = emptyforest()
+      cut_forest = emptyforest()
+      planted_forest = emptyforest()
     }
     
     # 2.3 Remove empty cohorts if required
@@ -318,7 +216,7 @@ fordyn<-function(forest, soil, SpParams,
     
     # 4.1 Generate above-ground data
     planted_above = forest2aboveground(planted_forest, SpParams, NA, "MED")
-    row.names(planted_forest) = plant_ID(planted_forest, treeOffset, shrubOffset)
+    row.names(planted_above) = plant_ID(planted_forest, treeOffset, shrubOffset)
     treeOffset = treeOffset + nrow(planted_forest$treeData)
     shrubOffset = shrubOffset + nrow(planted_forest$shrubData)
     recr_above = forest2aboveground(recr_forest, SpParams, NA, "MED")
@@ -394,14 +292,14 @@ fordyn<-function(forest, soil, SpParams,
     forestStructures[[iYear+1]] = forest
     
     # 5.2 Process summaries (after recruitment)
-    cohSumYear = summarizeCohorts(iYear, xi)
-    speciesSummary = rbind(speciesSummary,  summarizeSpecies(iYear,cohSumYear, xi))
-    standSummary = rbind(standSummary,  summarizeStand(iYear,cohSumYear, xi))
+    cohSumYear = .summarizeCohorts(iYear, xi)
+    speciesSummary = rbind(speciesSummary,  .summarizeSpecies(iYear,cohSumYear, xi))
+    standSummary = rbind(standSummary,  .summarizeStand(iYear,cohSumYear, xi))
     cohortSummary = rbind(cohortSummary, cohSumYear)
     
     # 5.3 Update tree/shrub tables (after recruitment)
-    treeTable = rbind(treeTable, createTreeTable(iYear, year, xi))
-    shrubTable = rbind(shrubTable, createShrubTable(iYear, year, xi))
+    treeTable = rbind(treeTable, .createTreeTable(iYear, year, xi))
+    shrubTable = rbind(shrubTable, .createShrubTable(iYear, year, xi))
     
   }
   res = list(
@@ -410,10 +308,13 @@ fordyn<-function(forest, soil, SpParams,
     "CohortSummary" = cohortSummary,
     "TreeTable" = treeTable,
     "DeadTreeTable" = deadTreeTable,
+    "CutTreeTable" = cutTreeTable,
     "ShrubTable" = shrubTable,
     "DeadShrubTable" = deadShrubTable,
+    "CutShrubTable" = cutShrubTable,
     "ForestStructures" = forestStructures,
-    "GrowthResults" = growthResults)
+    "GrowthResults" = growthResults,
+    "ManagementArgs" = management_args)
   class(res)<-c("fordyn", "list")
   return(res)
 }
