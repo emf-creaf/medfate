@@ -24,7 +24,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \examples{
 ## Only run this example in interactive R sessions
-if (interactive()) {
+\dontrun{
 #Load example daily meteorological data
 data(examplemeteo)
 
