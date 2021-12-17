@@ -11,7 +11,6 @@ Function \code{defaultManagementFunction} implements management actions for 'reg
 defaultManagementFunction(x, args, verbose = FALSE)
 defaultManagementArguments()
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{An object of class \code{\link{forest}}}
   \item{args}{A list of arguments regulating management actions, e.g. the list returned by \code{defaultManagementArguments}}
