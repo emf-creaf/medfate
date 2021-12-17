@@ -76,6 +76,7 @@ reference:
   contents:
   - spwbInput
   - starts_with("defaultControl")
+  - starts_with("defaultManagement")
   - starts_with("resetInputs")
 
 - title: Simulation

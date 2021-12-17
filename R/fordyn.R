@@ -72,8 +72,8 @@ fordyn<-function(forest, soil, SpParams,
     
     # 2.3 Call management function if required
     if(!is.null(management_function)) {
-      if(verboseDyn) cat(paste0("/management\n"))
       res = do.call(management_function, list(x = forest, args= management_args, verbose = FALSE))
+      if(verboseDyn) cat(paste0(" & management(", res$action,")\n"))
       # Update forest and xo objects
       forest$treeData$N <- pmax(0,forest$treeData$N - res$N_tree_cut)
       xo$above$N[isTree] <- forest$treeData$N

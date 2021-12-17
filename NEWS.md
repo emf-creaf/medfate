@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.3.8
+- Forest management enabled in function 'fordyn' and default management actions defined in 'defaultManagementFunction' and 'defaultManagementArguments'
+
 # Version 2.3.7
 - CO2 made an daily input weather variable, in addition to the default control parameter 'Catm'
 - New function 'shinyplot' to create interactive graphics

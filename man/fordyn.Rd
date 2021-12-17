@@ -30,6 +30,23 @@ fordyn(forest, soil, SpParams, meteo, control,
   \item{Prepares the input of function \code{\link{growth}} for the next annual time step.}
   \item{Store forest status, management arguments, and summaries.}
   }
+  
+  To enable forest management, the user needs to provide a function that implements it, which is passed to \code{fordyn} via its argument \code{management_function}. Such function should have  the following arguments:
+  \itemize{
+   \item{\code{"x"}: the \code{\link{forest}} object representing the stand to be managed.}
+    \item{\code{"args"}: a list of parameters regulating the behavior of the management function.} 
+     \item{\code{"verbose"}: a logical flag to enable console output during the execution of the management function.}
+   }
+   and return a list with the following elements:
+  \itemize{
+     \item{\code{"action"}: A string identifying the action performed (e.g. "thinning").}
+     \item{\code{"N_tree_cut"}: A vector with the density of trees removed.}
+     \item{\code{"Cover_shrub_cut"}: A vector with the cover of shrubs removed.} 
+     \item{\code{"planted_forest"}: An object of class \code{\link{forest}} with the new plant cohorts resulting from tree/shrub planting.}
+     \item{\code{"management_args"}: A list of management arguments to be used in the next call to the management function.}
+   }
+   
+   An example of management function is provided in \code{\link{defaultManagementFunction}}.
 }
 \value{
   A list of class 'fordyn' with the following elements:
@@ -52,7 +69,7 @@ fordyn(forest, soil, SpParams, meteo, control,
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
-\code{\link{growth}}, \code{\link{plot.growth}}
+\code{\link{growth}}, \code{\link{plot.growth}}, \code{\link{defaultManagementFunction}}
 }
 \examples{
 #Load example daily meteorological data
