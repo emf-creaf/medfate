@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.3.7</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -55,7 +51,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/emf-creaf/medfate/">
+  <a href="https://github.com/emf-creaf/medfate/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -72,14 +68,14 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="medfate---mediterranean-forest-simulation" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#medfate---mediterranean-forest-simulation" class="anchor"></a>medfate - Mediterranean Forest Simulation</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="medfate---mediterranean-forest-simulation">medfate - Mediterranean Forest Simulation<a class="anchor" aria-label="anchor" href="#medfate---mediterranean-forest-simulation"></a>
+</h1></div>
 <!-- badges: start -->
 
-<div id="introduction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>Package <strong>medfate</strong> is designed to assist forest scientists to simulate forest functioning and dynamics, using cohort-based description of forest stands. The package provides functions to simulate the following processes:</p>
 <ul>
 <li>Soil water balance (De Cáceres et al. 2015)</li>
@@ -89,43 +85,43 @@
 </ul>
 <p>The models are parameterized for species of the Mediterranean region (particularly for Catalonia, NE Spain), but forests with different composition could be modelled with different parameter sets.</p>
 </div>
-<div id="package-installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#package-installation" class="anchor"></a>Package installation</h2>
-<p>Package <strong>medfate</strong> can be found at <a href="https://CRAN.R-project.org/package=medfate">CRAN</a>, where it is updated every few months. Users can also download and install the latest stable versions GitHub as follows (required package <code>devtools</code> should be installed/updated first):</p>
+<div class="section level2">
+<h2 id="package-installation">Package installation<a class="anchor" aria-label="anchor" href="#package-installation"></a>
+</h2>
+<p>Package <strong>medfate</strong> can be found at <a href="https://CRAN.R-project.org/package=medfate" class="external-link">CRAN</a>, where it is updated every few months. Users can also download and install the latest stable versions GitHub as follows (required package <code>devtools</code> should be installed/updated first):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"emf-creaf/medfate"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"emf-creaf/medfate"</span><span class="op">)</span></code></pre></div>
 <p>Additionally, users can have help to run package functions directly as package vignettes, by forcing their inclusion in installation:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"emf-creaf/medfate"</span>, 
-                         build_opts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"--no-resave-data"</span>, <span class="st">"--no-manual"</span><span class="op">)</span>,
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"emf-creaf/medfate"</span>, 
+                         build_opts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"--no-resave-data"</span>, <span class="st">"--no-manual"</span><span class="op">)</span>,
                          build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="documentation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#documentation" class="anchor"></a>Documentation</h2>
+<div class="section level2">
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+</h2>
 <ul>
 <li><p>The package includes a number of <em>vignettes</em> that illustrate how to run simulation models in <strong>medfate</strong>.</p></li>
-<li><p>Additional articles can be found at the package <a href="https://emf-creaf.github.io/medfate/">website</a>.</p></li>
-<li><p>Complete documentation of the models included in the package can be found in <a href="https://emf-creaf.github.io/medfatebook/index.html">medfate’s reference book</a>.</p></li>
+<li><p>Additional articles can be found at the package <a href="https://emf-creaf.github.io/medfate/" class="external-link">website</a>.</p></li>
+<li><p>Complete documentation of the models included in the package can be found in <a href="https://emf-creaf.github.io/medfatebook/index.html" class="external-link">medfate’s reference book</a>.</p></li>
 </ul>
 </div>
-<div id="companion-r-packages" class="section level2">
-<h2 class="hasAnchor">
-<a href="#companion-r-packages" class="anchor"></a>Companion R packages</h2>
+<div class="section level2">
+<h2 id="companion-r-packages">Companion R packages<a class="anchor" aria-label="anchor" href="#companion-r-packages"></a>
+</h2>
 <p>During the development of <strong>medfate</strong> some functions have been originally placed there and then moved to more specialized packages which no evolve together with <strong>medfate</strong>:</p>
 <ul>
-<li>Package <a href="https://github.com/emf-creaf/meteoland"><strong>meteoland</strong></a> allows generating daily weather input for simulation models in <strong>medfate</strong>.</li>
-<li>Package <a href="https://github.com/emf-creaf/medfateland"><strong>medfateland</strong></a> extends <strong>medfate</strong> by allowing simulations to be performed in a spatially explicit context.</li>
-<li>Package <a href="https://github.com/emf-creaf/medfateutils"><strong>medfateutils</strong></a> provides functions to help initializing vegetation, soil and species parameter inputs for <strong>medfate</strong> simulation functions.</li>
+<li>Package <a href="https://github.com/emf-creaf/meteoland" class="external-link"><strong>meteoland</strong></a> allows generating daily weather input for simulation models in <strong>medfate</strong>.</li>
+<li>Package <a href="https://github.com/emf-creaf/medfateland" class="external-link"><strong>medfateland</strong></a> extends <strong>medfate</strong> by allowing simulations to be performed in a spatially explicit context.</li>
+<li>Package <a href="https://github.com/emf-creaf/medfateutils" class="external-link"><strong>medfateutils</strong></a> provides functions to help initializing vegetation, soil and species parameter inputs for <strong>medfate</strong> simulation functions.</li>
 </ul>
 </div>
-<div id="references" class="section level2">
-<h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h2>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <ul>
-<li><p>De Cáceres M, Martínez-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (<a href="https://doi.org/10.1016/j.agrformet.2015.06.012" class="uri">https://doi.org/10.1016/j.agrformet.2015.06.012</a>).</p></li>
-<li><p>De Cáceres M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, Martínez-Vilalta J (2021) Unravelling the effect of species mixing on water use and drought stress in holm oak forests: a modelling approach. Agricultural and Forest Meteorology 296 (<a href="https://doi.org/10.1016/j.agrformet.2020.108233" class="uri">https://doi.org/10.1016/j.agrformet.2020.108233</a>).</p></li>
+<li><p>De Cáceres M, Martínez-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (<a href="https://doi.org/10.1016/j.agrformet.2015.06.012" class="external-link uri">https://doi.org/10.1016/j.agrformet.2015.06.012</a>).</p></li>
+<li><p>De Cáceres M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, Martínez-Vilalta J (2021) Unravelling the effect of species mixing on water use and drought stress in holm oak forests: a modelling approach. Agricultural and Forest Meteorology 296 (<a href="https://doi.org/10.1016/j.agrformet.2020.108233" class="external-link uri">https://doi.org/10.1016/j.agrformet.2020.108233</a>).</p></li>
 </ul>
 </div>
 </div>
@@ -133,65 +129,68 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=medfate">https://​cloud.r-project.org/​package=medfate</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/emf-creaf/medfate/">https://​github.com/​emf-creaf/​medfate/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/emf-creaf/medfate/issues">https://​github.com/​emf-creaf/​medfate/​issues</a>
-</li>
-<li>Reference book at <br><a href="https://emf-creaf.github.io/medfatebook/index.html">https://​emf-creaf.github.io/​medfatebook/​index.html</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=medfate" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/emf-creaf/medfate/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/emf-creaf/medfate/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://emf-creaf.github.io/medfatebook/index.html" class="external-link">Reference book</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>GPL (&gt;= 2)</li>
 </ul>
 </div>
+
 <div class="community">
-<h2>Community</h2>
+<h2 data-toc-skip>Community</h2>
 <ul class="list-unstyled">
 <li><a href="CONTRIBUTING.html">Contributing guide</a></li>
 </ul>
 </div>
+
 <div class="citation">
-<h2>Citation</h2>
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li><a href="authors.html">Citing medfate</a></li>
+<li><a href="authors.html#citation">Citing medfate</a></li>
 </ul>
 </div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Miquel De Cáceres <br><small class="roles"> Author, maintainer </small>  </li>
 <li>Shengli Huang <br><small class="roles"> Author </small>  </li>
 <li>Víctor Granda <br><small class="roles"> Author </small>  </li>
 <li>Antoine Cabon <br><small class="roles"> Author </small>  </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://cran.r-project.org/package=medfate"><img src="http://www.r-pkg.org/badges/version/medfate" alt="CRAN_Status_Badge"></a></li>
-<li><a href="https://cran.rstudio.com/web/packages/medfate/index.html"><img src="https://cranlogs.r-pkg.org/badges/medfate"></a></li>
-<li><a href="https://github.com/emf-creaf/medfate/actions"><img src="https://github.com/emf-creaf/medfate/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://cran.r-project.org/package=medfate" class="external-link"><img src="http://www.r-pkg.org/badges/version/medfate" alt="CRAN_Status_Badge"></a></li>
+<li><a href="https://cran.rstudio.com/web/packages/medfate/index.html" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/medfate"></a></li>
+<li><a href="https://github.com/emf-creaf/medfate/actions" class="external-link"><img src="https://github.com/emf-creaf/medfate/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
-</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Miquel De Cáceres, Shengli Huang, Víctor Granda, Antoine Cabon.</p>
+  <p></p>
+<p>Developed by Miquel De Cáceres, Shengli Huang, Víctor Granda, Antoine Cabon.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -199,6 +198,8 @@
 
   
 
+
+  
 
   </body>
 </html>
