@@ -17,7 +17,7 @@ Functions to calculate stand attributes of a \code{\link{forest}} object.
 \usage{
 stand_basalArea(x)
 stand_dominantTreeHeight(x)
-stand_dominantDiameterHeight(x)
+stand_dominantTreeDiameter(x)
 stand_hartBeckingIndex(x)
 stand_foliarBiomass(x, SpParams, gdd = NA, mode = "MED")
 stand_fuel(x, SpParams, gdd = NA, includeDead = TRUE, mode = "MED")
