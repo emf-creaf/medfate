@@ -47,7 +47,7 @@ fordyn<-function(forest, soil, SpParams,
     meteoYear = meteo[years==year,]
     monthsYear = months[years==year]
     # 1.1 Calls growth model
-    if(verboseDyn) cat(paste0("   (a) Growth/mortality\n"))
+    if(verboseDyn) cat(paste0("   (a) Growth/mortality"))
     Gi = growth(xi, meteoYear, latitude = latitude, elevation = elevation, slope = slope, aspect = aspect)
     
     # 1.2 Store growth results
@@ -72,17 +72,26 @@ fordyn<-function(forest, soil, SpParams,
     
     # 2.3 Call management function if required
     if(!is.null(management_function)) {
-      res = do.call(management_function, c(list(forest), management_args))
-      cut_forest <- res$cut_forest
+      if(verboseDyn) cat(paste0("/management\n"))
+      res = do.call(management_function, list(x = forest, args= management_args, verbose = FALSE))
+      # Update forest and xo objects
+      forest$treeData$N <- pmax(0,forest$treeData$N - res$N_tree_cut)
+      xo$above$N[isTree] <- forest$treeData$N
+      forest$shrubData$Cover <- pmax(0,forest$shrubData$Cover - res$Cover_shrub_cut)
+      xo$above$Cover[!isTree] <- forest$shrubData$Cover
+      # Update cut tables
+      cutTreeTable = rbind(cutTreeTable, .createCutTreeTable(iYear, year, xo, res$N_tree_cut))
+      cutShrubTable = rbind(cutShrubTable, .createCutShrubTable(iYear, year, xo, res$Cover_shrub_cut))
+      # Retrieve plantation information
       planted_forest <- res$planted_forest
       # Store new management arguments (may have changed)
       management_args <- res$management_args
     } else {
-      cut_forest = emptyforest()
+      if(verboseDyn) cat(paste0("\n"))
       planted_forest = emptyforest()
     }
     
-    # 2.3 Remove empty cohorts if required
+    # 2.4 Remove empty cohorts if required
     emptyTrees = rep(FALSE, nrow(forest$treeData))
     emptyShrubs = rep(FALSE, nrow(forest$shrubData))
     if(control$removeEmptyCohorts) {

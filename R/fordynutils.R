@@ -48,7 +48,7 @@
                  Height = x$above$H[range],
                  Z50 = x$below$Z50[range],
                  Z95 = x$below$Z95[range])
-  if(control$removeEmptyCohorts) tt = tt[tt$N>control$minimumCohortDensity,, drop=FALSE]
+  tt = tt[tt$N>0,, drop=FALSE]
   return(tt)
 }
 .createDeadTreeTable<-function(step, year, x) {
@@ -67,6 +67,21 @@
   dtt = dtt[dtt$N>0,, drop = FALSE]
   return(dtt)
 }
+.createCutTreeTable<-function(step, year, x, N_cut) {
+  range = 1:length(N_cut)
+  tt<-data.frame(Step = rep(step, length(N_cut)), 
+                 Year = rep(year, length(N_cut)),
+                 Cohort = row.names(x$cohorts)[range],
+                 Species = x$above$SP[range],
+                 Name = x$cohorts$Name[range],
+                 N = N_cut,
+                 DBH = x$above$DBH[range],
+                 Height = x$above$H[range],
+                 Z50 = x$below$Z50[range],
+                 Z95 = x$below$Z95[range])
+  tt = tt[tt$N>0,, drop=FALSE]
+  return(tt)
+}
 .createShrubTable<-function(step, year, x) {
   isShrub = !is.na(x$above$Cover)
   nt = sum(!isShrub)
@@ -82,7 +97,7 @@
                  Height = x$above$H[range],
                  Z50 = x$below$Z50[range],
                  Z95 = x$below$Z95[range])
-  if(control$removeEmptyCohorts) st = st[st$N>control$minimumCohortDensity,, drop = FALSE]
+  st = st[st$Cover>0,, drop = FALSE]
   return(st)
 }
 .createDeadShrubTable<-function(step, year, x) {
@@ -102,4 +117,22 @@
                   Z95 = x$below$Z95[range])
   dst = dst[dst$Cover>0,,drop=FALSE]
   return(dst)
+}
+.createCutShrubTable<-function(step, year, x, Cover_cut) {
+  isShrub = !is.na(x$above$Cover)
+  nt = sum(!isShrub)
+  numCohorts = length(isShrub)
+  range = numeric(0)
+  if(numCohorts>nt) range = (nt+1):numCohorts
+  st<-data.frame(Step = rep(step, length(range)), 
+                 Year = rep(year, length(range)),
+                 Cohort = row.names(x$cohorts)[range],
+                 Species = x$above$SP[range],
+                 Name = x$cohorts$Name[range],
+                 Cover = Cover_cut,
+                 Height = x$above$H[range],
+                 Z50 = x$below$Z50[range],
+                 Z95 = x$below$Z95[range])
+  st = st[st$Cover>0,, drop = FALSE]
+  return(st)
 }
