@@ -78,7 +78,7 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
         }
         BA2remove = BA2remove/2
         #Remove remaining as below/above
-        o = order(treeData$DBH, decreasing = (args$thinning=="above-intermediate"))
+        o = order(x$treeData$DBH, decreasing = (args$thinning=="above-intermediate"))
         cohort = 1
         while(BA2remove > 0) {
           r = (x$treeData$DBH[o[cohort]]/200)
@@ -95,7 +95,7 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
         }
       }
       else if (args$thinning=="intermediate") { #Cut trees from all diameters (keep current distribution)
-        sec = pi*(treeData$DBH/200)^2
+        sec = pi*(x$treeData$DBH/200)^2
         propN  = x$treeData$N/sum(x$treeData$N)
         while(BA2remove > 0) {
           if(sum(sec*propN)> BA2remove) { # Correct to avoid cutting above existences
@@ -195,14 +195,10 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
     action = paste0(action, " + planting")
     if(verbose) cat(paste0(", planting"))
     planted_forest = emptyforest(ntree=1)
-    planted_forest$treeData$Species[1] = plantingSpecies
-    planted_forest$treeData$DBH[1] = plantingDBH
-    planted_forest$treeData$Height[1] = plantingHeight
-    planted_forest$treeData$N[1] = plantingDensity
-    planted_forest$treeData$Z50[1] = species_parameter(plantingSpecies, SpParamsMED,"RecrZ50")
-    planted_forest$treeData$Z95[1] = species_parameter(plantingSpecies, SpParamsMED,"RecrZ95")
-    if(is.na(planted_forest$treeData$Z50[1])) planted_forest$treeData$Z50[1] = 250
-    if(is.na(planted_forest$treeData$Z95[1])) planted_forest$treeData$Z95[1] = 500
+    planted_forest$treeData$Species[1] = args$plantingSpecies
+    planted_forest$treeData$DBH[1] = args$plantingDBH
+    planted_forest$treeData$Height[1] = args$plantingHeight
+    planted_forest$treeData$N[1] = args$plantingDensity
   }
   # Return
   return(list(action = action,

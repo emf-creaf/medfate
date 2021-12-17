@@ -84,6 +84,13 @@ fordyn<-function(forest, soil, SpParams,
       cutShrubTable = rbind(cutShrubTable, .createCutShrubTable(iYear, year, xo, res$Cover_shrub_cut))
       # Retrieve plantation information
       planted_forest <- res$planted_forest
+      for(i in 1:nrow(planted_forest$treeData)) {
+        planted_forest$treeData$Z50[i] = species_parameter(planted_forest$treeData$Species[i], SpParams,"RecrZ50")
+        planted_forest$treeData$Z95[i] = species_parameter(planted_forest$treeData$Species[i], SpParams,"RecrZ95")
+        if(is.na(planted_forest$treeData$Z50[i])) planted_forest$treeData$Z50[i] = 250
+        if(is.na(planted_forest$treeData$Z95[i])) planted_forest$treeData$Z95[i] = 500
+      }
+      
       # Store new management arguments (may have changed)
       management_args <- res$management_args
     } else {
