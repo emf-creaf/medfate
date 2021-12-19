@@ -7,6 +7,7 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
   Cover_shrub_cut = rep(0, nshrub)
   planted_forest = emptyforest()
   
+  Ntotal = sum(x$treeData$N, na.rm=TRUE)
   BAtotal = stand_basalArea(x)
   meanDBH = sum(x$treeData$N * x$treeData$DBH, na.rm=TRUE)/sum(x$treeData$N, na.rm=TRUE)
   
@@ -32,15 +33,22 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
   
   if(action=="thinning") {
     thin = FALSE
-    if(!is.na(args$thinningBA)) {
-      if(verbose) cat(paste0("  BA: ", round(BAtotal,1), " threshold ", round(args$thinningBA)))
-      if(BAtotal > args$thinningBA) thin = TRUE
+    if(args$thinningMetric=="BA") {
+      if(verbose) cat(paste0("  Basal area: ", round(BAtotal,1), " threshold ", round(args$thinningThreshold)))
+      if(BAtotal > args$thinningThreshold) thin = TRUE
     }
-    else if(!is.na(args$thinningHB)) {
+    else if(args$thinningMetric=="N") {
+      if(verbose) cat(paste0("  Density: ", round(Ntotal,1), " threshold ", round(args$thinningThreshold)))
+      if(Ntotal > args$thinningThreshold) thin = TRUE
+    }
+    else if(args$thinningMetric=="HB") {
       HB = stand_hartBeckingIndex(x)
       if(is.na(HB)) stop("NA Hart-becking index")
-      if(verbose) cat(paste0("  HB: ", round(HB,1), " threshold ", round(args$thinningHB)))
-      if(HB < args$thinningHB) thin = TRUE
+      if(verbose) cat(paste0("  Hart-Becking: ", round(HB,1), " threshold ", round(args$thinningThreshold)))
+      if(HB < args$thinningThreshold) thin = TRUE
+    }
+    else {
+      stop(paste0("Non-recognized thinning metric '", args$thinningMetric,"'.\n"))
     }
     if(thin) {
       BA2remove = BAtotal*(args$thinningPerc/100)
@@ -211,18 +219,18 @@ defaultManagementArguments<-function(){
   return(list(
     type = "irregular",
     thinning = "below", 
-    thinningBA = 20, 
-    thinningHB = NA, 
+    thinningMetric = "BA", 
+    thinningThreshold = 20,
     thinningPerc = 30,
     finalMeanDBH = 20, 
     finalPerc = "40-60-100",
+    finalPreviousStage = 0,
+    finalYearsBetweenCuts = 10,
+    finalYearsToCut = NA,
     plantingSpecies = NA,  
     plantingDBH = 5, 
     plantingHeight = 5, 
     plantingDensity = 200,
-    finalPreviousStage = 0,
-    finalYearsBetweenCuts = 10,
-    finalYearsToCut = NA,
     understoryMaximumCover = 3
   ))
 }

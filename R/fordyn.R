@@ -84,11 +84,21 @@ fordyn<-function(forest, soil, SpParams,
       cutShrubTable = rbind(cutShrubTable, .createCutShrubTable(iYear, year, xo, res$Cover_shrub_cut))
       # Retrieve plantation information
       planted_forest <- res$planted_forest
-      for(i in 1:nrow(planted_forest$treeData)) {
-        planted_forest$treeData$Z50[i] = species_parameter(planted_forest$treeData$Species[i], SpParams,"RecrZ50")
-        planted_forest$treeData$Z95[i] = species_parameter(planted_forest$treeData$Species[i], SpParams,"RecrZ95")
-        if(is.na(planted_forest$treeData$Z50[i])) planted_forest$treeData$Z50[i] = 250
-        if(is.na(planted_forest$treeData$Z95[i])) planted_forest$treeData$Z95[i] = 500
+      if(nrow(planted_forest$treeData)>0) {
+        for(i in 1:nrow(planted_forest$treeData)) {
+          planted_forest$treeData$Z50[i] = species_parameter(planted_forest$treeData$Species[i], SpParams,"RecrZ50")
+          planted_forest$treeData$Z95[i] = species_parameter(planted_forest$treeData$Species[i], SpParams,"RecrZ95")
+          if(is.na(planted_forest$treeData$Z50[i])) planted_forest$treeData$Z50[i] = 250
+          if(is.na(planted_forest$treeData$Z95[i])) planted_forest$treeData$Z95[i] = 500
+        }
+      }
+      if(nrow(planted_forest$shrubData)>0) {
+        for(i in 1:nrow(planted_forest$shrubData)) {
+          planted_forest$shrubData$Z50[i] = species_parameter(planted_forest$shrubData$Species[i], SpParams,"RecrZ50")
+          planted_forest$shrubData$Z95[i] = species_parameter(planted_forest$shrubData$Species[i], SpParams,"RecrZ95")
+          if(is.na(planted_forest$shrubData$Z50[i])) planted_forest$shrubData$Z50[i] = 100
+          if(is.na(planted_forest$shrubData$Z95[i])) planted_forest$shrubData$Z95[i] = 300
+        }
       }
       
       # Store new management arguments (may have changed)
@@ -97,7 +107,6 @@ fordyn<-function(forest, soil, SpParams,
       if(verboseDyn) cat(paste0("\n"))
       planted_forest = emptyforest()
     }
-    
     # 2.4 Remove empty cohorts if required
     emptyTrees = rep(FALSE, nrow(forest$treeData))
     emptyShrubs = rep(FALSE, nrow(forest$shrubData))

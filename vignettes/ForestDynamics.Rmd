@@ -141,8 +141,28 @@ plot(fd$GrowthResults[[2]], "SapwoodArea", bySpecies = T)
 plot(fd$GrowthResults[[3]], "SapwoodArea", bySpecies = T)
 ```
 
-Finally, we can create interactive plots for particular steps using function `shinyplot`, e.g.:
+Finally, we can create interactive plots for particular steps using function `shinyplot()`, e.g.:
 ```{r, eval = FALSE}
 shinyplot(fd$GrowthResults[[1]])
 ```
 
+## Forest dynamics including management
+The package allows including forest management in simulations of forest dynamics. This is done in a very flexible manner, in the sense that `fordyn()` allows the user to supply an arbitrary function implementing a desired management strategy for the stand whose dynamics are to be simulated. The package includes, however, an in-built default function called `defaultManagementFunction()` along with a flexible parameterization, a list with defaults provided by function `defaultManagementArguments()`. 
+
+Here we provide an example of simulations including forest management:
+
+```{r}
+# Default arguments
+args <- defaultManagementArguments()
+# Here one can modify defaults before calling fordyn()
+#
+# Simulation
+fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, meteo_01_03, control, 
+           latitude = 41.82592, elevation = 100,
+           management_function = defaultManagementFunction,
+           management_args = args)
+```
+When management is included in simulations, two additional tables are produced, corresponding to the trees and shrubs that were cut, e.g.:
+```{r}
+fd$CutTreeTable
+```

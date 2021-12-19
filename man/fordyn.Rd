@@ -62,7 +62,7 @@ fordyn(forest, soil, SpParams, meteo, control,
  \item{\code{"CutShrubTable"}: A data frame with cut shrub data (species, density, cover, height, etc.) after each simulated year.}
  \item{\code{"ForestStructures"}: A list with the \code{\link{forest}} object of the stand at the beginning of the simulation and after each simulated year.}
  \item{\code{"GrowthResults"}: A list with the results of calling function \code{\link{growth}} for each simulated year.}
- \item{\code{"ManagementArgs"}: A list of management arguments to be used in future simulations of the stand.}
+ \item{\code{"ManagementArgs"}: A list of management arguments to be used in another call to \code{fordyn}.}
   }
 }
 \author{

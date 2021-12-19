@@ -44,7 +44,7 @@ Changes in leaf area and plant growth are key to evaluate the influence of clima
 
 ### Forest dynamics
 
-Changes in forest structure and composition result from the interplay of demographic processes: growth, mortality and recruitment. Since version 2.2.0, the package includes function `fordyn()`, which allows simulating these processes at yearly time steps on a given forest stand. Function `fordyn()` builds on the previous two simulation functions and incorporates recruitment to the set of simulated processes. An example of simulation with `fordyn()` is provided in vignette '*Forest dynamics*'. 
+Changes in forest structure and composition result from the interplay of demographic processes (growth, mortality and recruitment) and may include forest management. Since version 2.2.0, the package includes function `fordyn()`, which allows simulating these processes at yearly time steps on a given forest stand. Function `fordyn()` builds on the previous two simulation functions and incorporates recruitment to the set of simulated processes. An example of simulation with `fordyn()` is provided in vignette '*Forest dynamics*'. 
 
 ## Sub-model functions
 
