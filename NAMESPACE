@@ -24,7 +24,7 @@ S3method(summary, pwb)
 S3method(summary, spwb)
 S3method(summary, growth)
 S3method(summary, forest)
-
+S3method(summary, fordyn)
 
 S3method(print, summary.forest)
 S3method(print, soil)

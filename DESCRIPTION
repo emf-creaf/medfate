@@ -2,13 +2,14 @@ Package: medfate
 Type: Package
 Title: Mediterranean Forest Simulation
 Version: 2.3.8
-Date: 2021-12-19
+Date: 2021-12-20
 Authors@R: c(
 	person('Miquel', 'De Cáceres', role=c('aut','cre'),
 	email='miquelcaceres@gmail.com'),
 	person('Shengli', 'Huang', role='aut'),
 	person('Víctor', 'Granda', role='aut'),
 	person('Antoine', 'Cabon', role='aut'),
+	person('Aitor', 'Améztegui', role='ctb'),
 	person('Jordi', 'Martínez-Vilalta', role='ctb'),
 	person('Maurizio', 'Mencuccini', role='ctb'),
 	person('Nicolas', 'Martin-StPaul', role='ctb'))
