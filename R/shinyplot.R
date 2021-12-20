@@ -1,28 +1,41 @@
 
 shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   type_out = class(out)[1] #growth or spwb
-  dates_out = as.Date(names(out$subdaily))
   if(type_out=="spwb") {
     transpirationMode = out$spwbInput$control$transpirationMode
     subdaily_out = out$spwbInput$control$subdailyResults
     cohorts_out = row.names(out$spwbInput$cohorts)
     cohorts_sp_out = paste0(row.names(out$spwbInput$cohorts), 
                             " (",out$spwbInput$cohorts$Name, ")")
-  } else {
+    dates_out = as.Date(names(out$subdaily))
+  } else if(type_out=="growth") {
     transpirationMode = out$growthInput$control$transpirationMode
     cohorts_out = row.names(out$growthInput$cohorts)
     cohorts_sp_out = paste0(row.names(out$growthInput$cohorts), 
                             " (",out$growthInput$cohorts$Name, ")")
     subdaily_out = out$growthInput$control$subdailyResults
+    dates_out = as.Date(names(out$subdaily))
+  } else { # fordyn
+    out_1 = out$GrowthResults[[1]]
+    transpirationMode = out_1$growthInput$control$transpirationMode
+    cohorts_out = row.names(out_1$growthInput$cohorts)
+    cohorts_sp_out = paste0(row.names(out_1$growthInput$cohorts), 
+                            " (",out_1$growthInput$cohorts$Name, ")")
+    subdaily_out = FALSE
+    dates_out = NULL
+    for(i in 1:length(out$GrowthResults)) {
+      if(is.null(dates_out)) dates_out = as.Date(names(out$GrowthResults[[i]]$subdaily))
+      else dates_out = c(dates_out, as.Date(names(out$GrowthResults[[i]]$subdaily)))
+    }
   }
   cohort_choices = cohorts_out
   names(cohort_choices) = cohorts_sp_out
   
-  plot_main_choices = c("Water balance", "Soil", "Plants")
+  plot_main_choices = c("Water balance", "Soil", "Stand", "Plants")
   if(transpirationMode=="Sperry") {
     plot_main_choices = c(plot_main_choices, "Energy balance")
   }
-  if(type_out=="growth") {
+  if(type_out %in% c("growth", "fordyn")) {
     plot_main_choices = c(plot_main_choices, "Carbon balance", "Growth")
   }
   wb_plot_choices = c("PET & Precipitation" = "PET_Precipitation",
@@ -44,6 +57,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   }
   subdaily_soil_plot_choices = c("Plant extraction from soil" = "PlantExtraction")
   
+  stand_plot_choices = c("LAI" = "LAI")
   plant_plot_choices = c("LAI" = "PlantLAI",
                          "Stress" = "PlantStress",
                          "Transpiration" = "PlantTranspiration",
@@ -268,6 +282,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
     observe({
       main_plot <- input$plot_main_type
       if(main_plot=="Water balance") sub_choices = wb_plot_choices
+      else if(main_plot=="Stand") sub_choices = stand_plot_choices
       else if(main_plot=="Plants") sub_choices = plant_plot_choices
       else if(main_plot=="Carbon balance") sub_choices = carbon_plot_choices
       else if(main_plot=="Energy balance") sub_choices = energy_plot_choices

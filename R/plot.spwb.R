@@ -28,35 +28,16 @@
   }
   return(as.matrix(df))
 }
-plot.spwb<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = FALSE,
-                    dates = NULL, subdaily = FALSE, 
-                    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
-                    summary.freq = NULL, ...) {
-  
-  if(subdaily) return(.plotsubdaily(x,type, cohorts, bySpecies, dates, 
-                                    xlim, ylim, xlab, ylab))
-  
-  if(("spwb" %in% class(x)) || ("pwb" %in% class(x))) {
-    input = x$spwbInput
-  } else {
-    input = x$growthInput
-  }
-  
-  WaterBalance = x$WaterBalance
-  Soil = x$Soil
-  Stand = x$Stand
-  Plants = x$Plants
-  
-  nlayers = length(input$soil$W)
-  
-  transpMode = input$control$transpirationMode
 
-  TYPES = .getDailySPWBPlotTypes(transpMode)  
 
-  type = match.arg(type,TYPES)  
-  if(is.null(xlab)) xlab = ""
+.plot_wb<-function(WaterBalance, Soil, input_soil, type,  
+                   dates = NULL, 
+                   xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
+                   summary.freq = NULL, ...) {
+  WaterBalance = as.data.frame(WaterBalance)
+  Soil = as.data.frame(Soil)
+  nlayers = length(input_soil$W)
   if(type=="PET_Precipitation") {
-    if(is.null(ylab)) ylab = expression(L%.%m^{-2})
     if(is.null(ylab)) ylab = expression(L%.%m^{-2}) 
     df = data.frame(row.names=row.names(WaterBalance))
     df[["PET"]] = WaterBalance$PET
@@ -103,6 +84,24 @@ plot.spwb<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = FAL
       theme_bw()
     return(g)
   } 
+  else if(type=="Evapotranspiration") {
+    if(is.null(ylab)) ylab = expression(L%.%m^{-2})
+    df = data.frame(row.names=row.names(WaterBalance))
+    df[["Total evapotranspiration"]] = WaterBalance$Evapotranspiration
+    df[["Interception evaporation"]] = WaterBalance$Interception
+    df[["Plant transpiration"]] = WaterBalance$Transpiration
+    df[["Bare soil evaporation"]] = WaterBalance$SoilEvaporation
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(!is.null(summary.freq)) {
+      date.factor = cut(as.Date(row.names(df)), breaks=summary.freq)
+      df = data.frame(row.names = as.Date(as.character(levels(date.factor))),
+                      "Total evapotranspiration" = tapply(df[["Total evapotranspiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
+                      "Interception evaporation" = tapply(df[["Interception evaporation"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
+                      "Plant transpiration" = tapply(df[["Plant transpiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
+                      "Bare soil evaporation" = tapply(df[["Bare soil evaporation"]],INDEX=date.factor, FUN=sum, na.rm=TRUE))
+    }
+    return(.multiple_dynamics(as.matrix(df), ylab=ylab, xlab=xlab, ylim = ylim))
+  } 
   else if(type=="Snow") {
     if(is.null(ylab)) ylab = expression(L%.%m^{-2})  
     df = data.frame(row.names=row.names(WaterBalance))
@@ -124,24 +123,6 @@ plot.spwb<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = FAL
       ylab(ylab)+xlab(xlab)+
       theme_bw()
     return(g)
-  } 
-  else if(type=="Evapotranspiration") {
-    if(is.null(ylab)) ylab = expression(L%.%m^{-2})
-    df = data.frame(row.names=row.names(WaterBalance))
-    df[["Total evapotranspiration"]] = WaterBalance$Evapotranspiration
-    df[["Interception evaporation"]] = WaterBalance$Interception
-    df[["Plant transpiration"]] = WaterBalance$Transpiration
-    df[["Bare soil evaporation"]] = WaterBalance$SoilEvaporation
-    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
-    if(!is.null(summary.freq)) {
-      date.factor = cut(as.Date(row.names(df)), breaks=summary.freq)
-      df = data.frame(row.names = as.Date(as.character(levels(date.factor))),
-                      "Total evapotranspiration" = tapply(df[["Total evapotranspiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
-                      "Interception evaporation" = tapply(df[["Interception evaporation"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
-                      "Plant transpiration" = tapply(df[["Plant transpiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
-                      "Bare soil evaporation" = tapply(df[["Bare soil evaporation"]],INDEX=date.factor, FUN=sum, na.rm=TRUE))
-    }
-    return(.multiple_dynamics(as.matrix(df), ylab=ylab, xlab=xlab, ylim = ylim))
   } 
   else if(type=="WTD") {
     if(is.null(ylab)) ylab = expression(paste("Water table depth  (mm)"))
@@ -188,6 +169,96 @@ plot.spwb<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = FAL
     return(.multiple_dynamics(as.matrix(MLM), ylab = ylab, ylim = ylim,
                               xlab=xlab, labels = c("Total", paste("Layer", 1:nlayers))))
   } 
+}
+.plot_soil<-function(Soil, input_soil, input_control, type,  
+                     dates = NULL, 
+                     xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
+                     summary.freq = NULL, ...) {
+  Soil = as.data.frame(Soil)
+  nlayers = length(input_soil$W)
+  if(type=="SoilPsi") {
+    PsiM = Soil[,paste("psi",1:nlayers,sep=".")]
+    if(is.null(ylab)) ylab = "Soil water potential (MPa)"    
+    if(!is.null(dates)) PsiM = PsiM[row.names(PsiM) %in% as.character(dates),]
+    if(!is.null(summary.freq)) PsiM = .temporalSummary(PsiM, summary.freq, mean, na.rm=TRUE)
+    return(.multiple_dynamics(as.matrix(PsiM),  xlab = xlab, ylab = ylab, ylim = ylim,
+                              labels = paste("Layer", 1:nlayers)))
+  } 
+  else if(type=="SoilTheta") {
+    WM = Soil[,paste("W",1:nlayers,sep=".")]
+    if(!is.null(dates)) WM = WM[row.names(WM) %in% as.character(dates),]
+    theta_FC = soil_thetaFC(input_soil, model = control$soilFunctions)
+    WM = 100*sweep(WM, 2,theta_FC, "*")
+    if(!is.null(summary.freq)) WM = .temporalSummary(WM, summary.freq, mean, na.rm=TRUE)
+    if(is.null(ylab)) ylab = "Soil moisture (% volume)"
+    return(.multiple_dynamics(as.matrix(WM),  xlab = xlab, ylab = ylab, ylim = ylim,
+                              labels = paste("Layer", 1:nlayers)))
+  } 
+  else if(type=="SoilRWC") {
+    WM = Soil[,paste("W",1:nlayers,sep=".")]
+    if(!is.null(dates)) WM = WM[row.names(WM) %in% as.character(dates),]
+    if(!is.null(summary.freq)) WM = .temporalSummary(WM, summary.freq, mean, na.rm=TRUE)
+    if(is.null(ylab)) ylab = "Soil moisture (% field capacity)"
+    return(.multiple_dynamics(as.matrix(WM),  xlab = xlab, ylab = ylab, ylim = ylim,
+                              labels = paste("Layer", 1:nlayers)))
+  } 
+  else if(type=="PlantExtraction") {
+    extrBal = Soil[,paste("PlantExt",1:nlayers,sep=".")]
+    if(!is.null(dates)) extrBal = extrBal[row.names(extrBal) %in% as.character(dates),]
+    if(is.null(ylab)) ylab = "Extraction from soil layer (mm)"    
+    if(!is.null(summary.freq)) extrBal = .temporalSummary(extrBal, summary.freq, sum, na.rm=TRUE)
+    g<-.multiple_dynamics(as.matrix(extrBal),  xlab = xlab, ylab = ylab, ylim = ylim,
+                          labels = paste("Layer", 1:nlayers))
+    g<-g+geom_abline(slope=0, intercept=0, col="gray")
+    return(g)
+  } 
+  else if(type=="HydraulicRedistribution") {
+    hydrIn = Soil[,paste("HydraulicInput",1:nlayers,sep=".")]
+    if(!is.null(dates)) hydrIn = hydrIn[row.names(hydrIn) %in% as.character(dates),]
+    if(is.null(ylab)) ylab = "Hydraulic input (mm)"    
+    if(!is.null(summary.freq)) hydrIn = .temporalSummary(hydrIn, summary.freq, sum, na.rm=TRUE)
+    return(.multiple_dynamics(as.matrix(hydrIn),  xlab = xlab, ylab = ylab, ylim = ylim,
+                              labels = paste("Layer", 1:nlayers)))
+  } 
+}
+.plot_stand<-function(Stand, type,  
+                      dates = NULL, 
+                      xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
+                      summary.freq = NULL, ...) {
+  Stand = as.data.frame(Stand)
+  if(type=="LAI") {
+    if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
+    df = Stand[,c("LAI", "LAIexpanded", "LAIdead")]
+    names(df)<-c("Total (live+dead)", "Live unfolded","Dead standing")
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
+    return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
+  } 
+}
+plot.spwb<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = FALSE,
+                    dates = NULL, subdaily = FALSE, 
+                    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
+                    summary.freq = NULL, ...) {
+  
+  if(subdaily) return(.plotsubdaily(x,type, cohorts, bySpecies, dates, 
+                                    xlim, ylim, xlab, ylab))
+  
+  if(("spwb" %in% class(x)) || ("pwb" %in% class(x))) {
+    input = x$spwbInput
+  } else {
+    input = x$growthInput
+  }
+  TYPES = .getDailySPWBPlotTypes(input$control$transpirationMode)  
+
+  type = match.arg(type,TYPES)  
+  if(is.null(xlab)) xlab = ""
+  if(type %in% c("PET_Precipitation", "PET_NetRain", "Evapotranspiration", "Snow",
+                 "WTD", "Export", "SoilVol")) {
+    return(.plot_wb(WaterBalance = x$WaterBalance, Soil = x$Soil, input_soil = input$soil, 
+                    type = type, dates = dates, 
+                    xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                    summary.freq = summary.freq, ...))
+  } 
   else {
     plot.pwb(x, type=type, cohorts = cohorts, bySpecies = bySpecies,
              dates = dates, xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
@@ -228,58 +299,18 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
   type = match.arg(type,TYPES)  
   if(is.null(xlab)) xlab = ""  
   
-  if(type=="SoilPsi") {
-    PsiM = Soil[,paste("psi",1:nlayers,sep=".")]
-    if(is.null(ylab)) ylab = "Soil water potential (MPa)"    
-    if(!is.null(dates)) PsiM = PsiM[row.names(PsiM) %in% as.character(dates),]
-    if(!is.null(summary.freq)) PsiM = .temporalSummary(PsiM, summary.freq, mean, na.rm=TRUE)
-    return(.multiple_dynamics(as.matrix(PsiM),  xlab = xlab, ylab = ylab, ylim = ylim,
-                              labels = paste("Layer", 1:nlayers)))
-  } 
-  else if(type=="SoilTheta") {
-    WM = Soil[,paste("W",1:nlayers,sep=".")]
-    if(!is.null(dates)) WM = WM[row.names(WM) %in% as.character(dates),]
-    theta_FC = soil_thetaFC(input$soil, model = input$control$soilFunctions)
-    WM = 100*sweep(WM, 2,theta_FC, "*")
-    if(!is.null(summary.freq)) WM = .temporalSummary(WM, summary.freq, mean, na.rm=TRUE)
-    if(is.null(ylab)) ylab = "Soil moisture (% volume)"
-    return(.multiple_dynamics(as.matrix(WM),  xlab = xlab, ylab = ylab, ylim = ylim,
-                              labels = paste("Layer", 1:nlayers)))
-  } 
-  else if(type=="SoilRWC") {
-    WM = Soil[,paste("W",1:nlayers,sep=".")]
-    if(!is.null(dates)) WM = WM[row.names(WM) %in% as.character(dates),]
-    if(!is.null(summary.freq)) WM = .temporalSummary(WM, summary.freq, mean, na.rm=TRUE)
-    if(is.null(ylab)) ylab = "Soil moisture (% field capacity)"
-    return(.multiple_dynamics(as.matrix(WM),  xlab = xlab, ylab = ylab, ylim = ylim,
-                              labels = paste("Layer", 1:nlayers)))
-  } 
+  if(type %in% c("SoilPsi", "SoilTheta", "SoilRWC", "PlantExtraction", "HydraulicRedistribution")) {
+    return(.plot_soil(Soil = x$Soil, input_soil = input$soil, input_control = input$control,
+                    type = type, dates = dates, 
+                    xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                    summary.freq = summary.freq, ...))
+  }
   else if(type=="LAI") {
-    if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
-    df = Stand[,c("LAI", "LAIexpanded", "LAIdead")]
-    names(df)<-c("Total (live+dead)", "Live unfolded","Dead standing")
-    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
-    if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
-    return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="PlantExtraction") {
-    extrBal = Soil[,paste("PlantExt",1:nlayers,sep=".")]
-    if(!is.null(dates)) extrBal = extrBal[row.names(extrBal) %in% as.character(dates),]
-    if(is.null(ylab)) ylab = "Extraction from soil layer (mm)"    
-    if(!is.null(summary.freq)) extrBal = .temporalSummary(extrBal, summary.freq, sum, na.rm=TRUE)
-    g<-.multiple_dynamics(as.matrix(extrBal),  xlab = xlab, ylab = ylab, ylim = ylim,
-                              labels = paste("Layer", 1:nlayers))
-    g<-g+geom_abline(slope=0, intercept=0, col="gray")
-    return(g)
-  } 
-  else if(type=="HydraulicRedistribution") {
-    hydrIn = Soil[,paste("HydraulicInput",1:nlayers,sep=".")]
-    if(!is.null(dates)) hydrIn = hydrIn[row.names(hydrIn) %in% as.character(dates),]
-    if(is.null(ylab)) ylab = "Hydraulic input (mm)"    
-    if(!is.null(summary.freq)) hydrIn = .temporalSummary(hydrIn, summary.freq, sum, na.rm=TRUE)
-    return(.multiple_dynamics(as.matrix(hydrIn),  xlab = xlab, ylab = ylab, ylim = ylim,
-                              labels = paste("Layer", 1:nlayers)))
-  } 
+    return(.plot_stand(Stand = x$Stand,
+                      type = type, dates = dates, 
+                      xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                      summary.freq = summary.freq, ...))
+  }
   else if(type=="PlantLAI") {
     OM = PlantsLAI
     if(bySpecies) OM = .sumBySpecies(OM, spnames)
@@ -521,47 +552,87 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
                       "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport", "RootExudation",
                       "LeafPI0", "StemPI0")) {
       OM = PCB[[type]][,cohorts,drop=FALSE]
-      if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
-      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-      if(!is.null(summary.freq)) OM = .temporalSummary(OM, summary.freq, mean, na.rm=TRUE)
-      if(is.null(ylab)) ylab=.getYLab(type)
-      return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type %in% c("SapwoodArea", "LeafArea", "FineRootArea", 
                       "SapwoodBiomass", "LeafBiomass", "FineRootBiomass",
                       "LabileBiomass", "TotalLivingBiomass")) {
     OM = PlantStructure[[type]][,cohorts,drop=FALSE]
-    if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
-    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(!is.null(summary.freq)) OM = .temporalSummary(OM, summary.freq, mean, na.rm=TRUE)
-    if(is.null(ylab)) ylab = .getYLab(type)
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth")) {
-      OM = PlantGrowth[[type]][,cohorts,drop=FALSE]
-      if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
-      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-      if(!is.null(summary.freq)) OM = .temporalSummary(OM, summary.freq, mean, na.rm=TRUE)
-      if(is.null(ylab)) ylab = .getYLab(type)
-      return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
+    OM = PlantGrowth[[type]][,cohorts,drop=FALSE]
   } 
   else if(type=="HuberValue") {
     OM = PlantStructure[["SapwoodArea"]][,cohorts,drop=FALSE] / PlantStructure[["LeafArea"]][,cohorts,drop=FALSE]
-    if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
-    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(!is.null(summary.freq)) OM = .temporalSummary(OM, summary.freq, mean, na.rm=TRUE)
-    if(is.null(ylab)) ylab = .getYLab(type)
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="RootAreaLeafArea") {
     OM = PlantStructure[["FineRootArea"]][,cohorts,drop=FALSE] / PlantStructure[["LeafArea"]][,cohorts,drop=FALSE]
-    if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
-    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(!is.null(summary.freq)) OM = .temporalSummary(OM, summary.freq, mean, na.rm=TRUE)
-    if(is.null(ylab)) ylab = .getYLab(type)
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
+  if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
+  if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
+  if(!is.null(summary.freq)) OM = .temporalSummary(OM, summary.freq, mean, na.rm=TRUE)
+  if(is.null(ylab)) ylab=.getYLab(type)
+  return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
 }
+plot.fordyn<-function(x, type="StandBasalArea", 
+                      dates = NULL, 
+                      xlim = NULL, ylim=NULL, xlab = NULL, ylab=NULL, 
+                      summary.freq = NULL,...) {
+  
+  if(type %in% c("PET_Precipitation", "PET_NetRain", "Evapotranspiration" ,"Snow",
+                 "WTD", "Export", "SoilVol")) {
+    input_soil = x$GrowthResults[[1]]$growthInput$soil
+     WaterBalance = summary(x, freq = "days", output = "WaterBalance")
+     Soil = summary(x, freq = "days", output = "Soil")
+     return(.plot_wb(WaterBalance = WaterBalance, Soil = Soil, input_soil = input_soil,
+                     type=type, dates = dates, ylim = ylim, xlab = xlab, ylab = ylab,
+                     summary.freq = summary.freq,...))
+  }
+  else if(type %in% c("SoilPsi", "SoilTheta", "SoilRWC", "PlantExtraction", "HydraulicRedistribution")) {
+    input_control = x$GrowthResults[[1]]$growthInput$control
+    input_soil = x$GrowthResults[[1]]$growthInput$soil
+    Soil = summary(x, freq = "days", output = "Soil")
+    return(.plot_soil(Soil = Soil, input_soil = input_soil, input_control = input_control,
+                    type=type, dates = dates, 
+                    xlim = xlim, ylim = ylim, xlab = xlab, ylab = ylab,
+                    summary.freq = summary.freq, ...))
+  }
+  else if(type=="LAI") {
+    Stand = summary(x, freq = "days", output = "Stand")
+    return(.plot_stand(Stand = Stand,
+                       type = type, dates = dates, 
+                       xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab,
+                       summary.freq = summary.freq,...))
+  }
+  TYPES =   c("StandBasalArea", "StandLAI", "StandDensity",
+              "SpeciesBasalArea", "SpeciesLAI", "SpeciesDensity",
+              "CohortBasalArea", "CohortLAI", "CohortDensity")
+  type = match.arg(type,TYPES)  
+  i_type = which(TYPES %in% type)
+  
+  vars = rep(c("TreeBasalAreaLive", "LeafAreaIndex", "TreeDensityLive"),3)
+  tables = c(rep("StandSummary",3),rep("SpeciesSummary",3),rep("CohortSummary",3))
+  
+  if(is.null(ylab)) ylab = .getYLab(type)
+  if(is.null(xlab)) xlab = "Step"
+  
+  out = x[[tables[i_type]]]
+  df = data.frame(Step = out[["Step"]], 
+                  y = out[[vars[i_type]]])
+  if(tables[i_type]=="SpeciesSummary") df$group = as.character(out[["Species"]])
+  else if(tables[i_type]=="CohortSummary") df$group = as.character(out[["Cohort"]])
+  df = df[!is.na(df$y),]
+  g<-ggplot(df, aes_string(x="Step", y="y"))
+  if("group" %in% names(df)) {
+    g <- g+ geom_line(aes_string(col="group"))+
+      scale_color_discrete(name="")
+  } else {
+    g <- g+ geom_line()
+  }
+  if(!is.null(ylim)) g <- g+ylim(ylim)
+  g<-g+theme_bw()+ylab(ylab)+xlab(xlab)
+  return(g)
+}
+
 
 .sumSubdailyBySpecies<-function(OM, spnames) {
   if(ncol(OM)>2) OM = cbind(OM[,1],t(apply(OM[,-1],1, tapply, spnames, sum, na.rm=T)))
