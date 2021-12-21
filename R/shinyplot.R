@@ -140,7 +140,14 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                             "Fine root area / Leaf area" = "RootAreaLeafArea"
     )
   }
-  subdaily_carbon_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis")
+  subdaily_carbon_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
+                                   "Maintenance respiration per dry" = "MaintenanceRespiration",
+                                   "Carbon balance per dry" = "CarbonBalance",
+                                   "Leaf sugar concentration" = "SugarLeaf",
+                                   "Leaf starch concentration" = "StarchLeaf",
+                                   "Sapwood sugar concentration" = "SugarSapwood",
+                                   "Sapwood starch concentration" = "StarchSapwood",
+                                   "Sugar transport" = "SugarTransport")
   energy_plot_choices = c("Above-canopy air temperature" = "AirTemperature",
                           "Within-canopy air temperature" = "CanopyTemperature",
                           "Soil surface temperature" = "SoilTemperature",

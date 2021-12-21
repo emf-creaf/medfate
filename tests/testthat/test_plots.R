@@ -154,3 +154,22 @@ test_that("Can produce all advanced growth plots",{
   expect_s3_class(plot(G2, "FRAgrowth"), "ggplot")
   expect_s3_class(plot(G2, "RootAreaLeafArea"), "ggplot")
 })
+
+test_that("Can produce all advanced subdaily growth plots",{
+  examplesoil2 = soil(defaultSoilParams(4))
+  control = defaultControl("Sperry")
+  control$verbose = FALSE
+  control$subdailyResults = TRUE
+  x2 = forest2growthInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+  G2<-growth(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
+  
+  expect_s3_class(plot(G2, "GrossPhotosynthesis", subdaily = TRUE), "ggplot")
+  expect_s3_class(plot(G2, "MaintenanceRespiration", subdaily = TRUE), "ggplot")
+  expect_s3_class(plot(G2, "GrowthCosts", subdaily = TRUE), "ggplot")
+  expect_s3_class(plot(G2, "CarbonBalance", subdaily = TRUE), "ggplot")
+  expect_s3_class(plot(G2, "SugarTransport", subdaily = TRUE), "ggplot")
+  expect_s3_class(plot(G2, "SugarLeaf", subdaily = TRUE), "ggplot")
+  expect_s3_class(plot(G2, "SugarSapwood", subdaily = TRUE), "ggplot")
+  expect_s3_class(plot(G2, "StarchLeaf", subdaily = TRUE), "ggplot")
+  expect_s3_class(plot(G2, "StarchSapwood", subdaily = TRUE), "ggplot")
+})
