@@ -66,6 +66,7 @@ The following plots are currently available for \code{\link{spwb}} (most of them
     \item{\code{"PlantPsi"}:}{ Plant cohort water potential (only for \code{transpirationMode = "Granier"}).}
     \item{\code{"LeafPsiMin"}:}{ Midday leaf water potential (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"LeafPsiMax"}:}{ Pre-dawn leaf water potential (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"LeafPsiRange"}:}{ Range of leaf water potential (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"StemPsi"}:}{ Midday (upper) stem water potential (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"RootPsi"}:}{ Midday root crown water potential (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration.}

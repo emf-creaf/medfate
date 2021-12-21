@@ -1,25 +1,17 @@
 library(medfate)
 
-#Load example daily meteorological data
 data(examplemeteo)
-
 data(exampleforestMED)
 data(SpParamsMED)
-examplesoil = soil(defaultSoilParams(2))
-control = defaultControl("Granier")
-control$verbose = FALSE
-x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-S1<-spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
-
-examplesoil2 = soil(defaultSoilParams(4))
-control = defaultControl("Sperry")
-control$verbose = FALSE
-x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
 d = 100:110
-S2<-spwb(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
-
 
 test_that("Can produce all basic plots",{
+  examplesoil = soil(defaultSoilParams(2))
+  control = defaultControl("Granier")
+  control$verbose = FALSE
+  x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+  S1<-spwb(x, examplemeteo[d,], latitude = 41.82592, elevation = 100)
+  
   expect_s3_class(plot(S1, "PET_Precipitation"), "ggplot")
   expect_s3_class(plot(S1, "PET_NetRain"), "ggplot")
   expect_s3_class(plot(S1, "Snow"), "ggplot")
@@ -36,12 +28,34 @@ test_that("Can produce all basic plots",{
   expect_s3_class(plot(S1, "PlantPsi"), "ggplot")
   expect_s3_class(plot(S1, "PlantTranspiration"), "ggplot")
   expect_s3_class(plot(S1, "TranspirationPerLeaf"), "ggplot")
+  expect_s3_class(plot(S1, "PlantGrossPhotosynthesis"), "ggplot")
+  expect_s3_class(plot(S1, "GrossPhotosynthesisPerLeaf"), "ggplot")
 })
 
 test_that("Can produce all advanced plots",{
+  examplesoil2 = soil(defaultSoilParams(4))
+  control = defaultControl("Sperry")
+  control$verbose = FALSE
+  x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+  S2<-spwb(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
+  
   expect_s3_class(plot(S2, "HydraulicRedistribution"), "ggplot")
   expect_s3_class(plot(S2, "SoilPlantConductance"), "ggplot")
   expect_s3_class(plot(S2, "LeafPsiMin"), "ggplot")
+  expect_s3_class(plot(S2, "LeafPsiMax"), "ggplot")
+  expect_s3_class(plot(S2, "LeafPsiRange"), "ggplot")
   expect_s3_class(plot(S2, "StemPsi"), "ggplot")
   expect_s3_class(plot(S2, "RootPsi"), "ggplot")
+  expect_s3_class(plot(S2, "PlantNetPhotosynthesis"), "ggplot")
+  expect_s3_class(plot(S2, "NetPhotosynthesisPerLeaf"), "ggplot")
+  expect_s3_class(plot(S2, "PlantWUE"), "ggplot")
+  expect_s3_class(plot(S2, "PlantAbsorbedSWR"), "ggplot")
+  expect_s3_class(plot(S2, "AbsorbedSWRPerLeaf"), "ggplot")
+  expect_s3_class(plot(S2, "PlantNetLWR"), "ggplot")
+  expect_s3_class(plot(S2, "NetLWRPerLeaf"), "ggplot")
+  expect_s3_class(plot(S2, "AirTemperature"), "ggplot")
+  expect_s3_class(plot(S2, "CanopyTemperature"), "ggplot")
+  expect_s3_class(plot(S2, "SoilTemperature"), "ggplot")
+  expect_s3_class(plot(S2, "CanopyEnergyBalance"), "ggplot")
+  expect_s3_class(plot(S2, "SoilEnergyBalance"), "ggplot")
 })
