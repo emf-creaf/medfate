@@ -29,7 +29,7 @@ fordyn<-function(forest, soil, SpParams,
   
   #initial summaries
   cohortSummary <-.summarizeCohorts(0, xi)
-  speciesSummary<-.summarizeSpecies(0,cohortSummary, xi)
+  speciesSummary<-.summarizeSpecies(0,cohortSummary, xi, SpParams)
   standSummary<-.summarizeStand(0,cohortSummary, xi)
 
   #initial tree/shrub tables
@@ -318,7 +318,7 @@ fordyn<-function(forest, soil, SpParams,
     
     # 5.2 Process summaries (after recruitment)
     cohSumYear = .summarizeCohorts(iYear, xi)
-    speciesSummary = rbind(speciesSummary,  .summarizeSpecies(iYear,cohSumYear, xi))
+    speciesSummary = rbind(speciesSummary,  .summarizeSpecies(iYear,cohSumYear, xi, SpParams))
     standSummary = rbind(standSummary,  .summarizeStand(iYear,cohSumYear, xi))
     cohortSummary = rbind(cohortSummary, cohSumYear)
     

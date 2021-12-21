@@ -375,8 +375,10 @@ plot.fordyn<-function(x, type="StandBasalArea",
   out = x[[tables[i_type]]]
   df = data.frame(Step = out[["Step"]], 
                   y = out[[vars[i_type]]])
-  if(tables[i_type]=="SpeciesSummary") df$group = as.character(out[["Species"]])
-  else if(tables[i_type]=="CohortSummary") df$group = as.character(out[["Cohort"]])
+  if(tables[i_type]=="SpeciesSummary") df$group = as.character(out[["Name"]])
+  else if(tables[i_type]=="CohortSummary") {
+    df$group = paste0(as.character(out[["Cohort"]]), " (", as.character(out[["Name"]]),")")
+  }
   df = df[!is.na(df$y),]
   g<-ggplot(df, aes_string(x="Step", y="y"))
   if("group" %in% names(df)) {

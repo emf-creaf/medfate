@@ -11,14 +11,15 @@
   cohortSummary$TreeDensityLive[!isTree] = NA
   return(cohortSummary)
 }
-.summarizeSpecies<-function(step, cohSum, x) {
+.summarizeSpecies<-function(step, cohSum, x, SpParams) {
   lai_sp = tapply(cohSum$LeafAreaIndex, cohSum$Species, sum, na.rm=TRUE)
   nl_sp = tapply(cohSum$TreeDensityLive, cohSum$Species, sum, na.rm=TRUE)
   bal_sp = tapply(cohSum$TreeBasalAreaLive, cohSum$Species, sum, na.rm=TRUE)
   shl_sp = tapply(cohSum$ShrubCoverLive, cohSum$Species, sum, na.rm=TRUE)
   mh_sp = tapply(x$above$H, x$above$SP, max, na.rm=TRUE)
   spSumYear <-data.frame("Step" = rep(step, length(lai_sp)),
-                         "Species" = as.numeric(names(lai_sp)),
+                         "Species" = as.integer(names(lai_sp)),
+                         "Name" = species_characterParameter(as.integer(names(lai_sp)), SpParams, "Name"),
                          "LeafAreaIndex" = as.numeric(lai_sp),
                          "TreeDensityLive"= as.numeric(nl_sp),
                          "TreeBasalAreaLive"= as.numeric(bal_sp),
