@@ -124,8 +124,8 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
       OM2 = .averageByLAISpecies(OM2, PlantsLAI, spnames)
     } 
     if(!is.null(dates)) {
-      OM1 = OM1[row.names(OM1) %in% as.character(dates),]
-      OM2 = OM2[row.names(OM2) %in% as.character(dates),]
+      OM1 = OM1[row.names(OM1) %in% as.character(dates),,drop = FALSE]
+      OM2 = OM2[row.names(OM2) %in% as.character(dates),,drop = FALSE]
     }
     if(!is.null(summary.freq)) {
       OM1 = .temporalSummary(OM1, summary.freq, mean, na.rm=TRUE)
@@ -295,8 +295,8 @@ plot.fordyn<-function(x, type="StandBasalArea",
         OM2 = .averageByLAISpecies(OM2, PlantsLAI, spnames)
       } 
       if(!is.null(dates)) {
-        OM1 = OM1[row.names(OM1) %in% as.character(dates),]
-        OM2 = OM2[row.names(OM2) %in% as.character(dates),]
+        OM1 = OM1[row.names(OM1) %in% as.character(dates),,drop = FALSE]
+        OM2 = OM2[row.names(OM2) %in% as.character(dates),,drop = FALSE]
       }
       if(!is.null(summary.freq)) {
         OM1 = .temporalSummary(OM1, summary.freq, mean, na.rm=TRUE)

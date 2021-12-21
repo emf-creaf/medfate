@@ -84,6 +84,7 @@
   else if(type=="PlantAbsorbedSWR") ylab = expression(paste("Plant absorbed SWR ",(MJ%.%m^{-2}%.%d^{-1})))
   else if(type=="PlantNetLWR") ylab = expression(paste("Plant net LWR ",(MJ%.%m^{-2}%.%d^{-1})))
   else if(type=="PlantWaterBalance") ylab = expression(paste("Plant water balance   ",(L%.%m^{-2})))
+  else if(type=="PlantLAI") ylab = expression(paste("Leaf area index ",(m^{-2}%.%m^{-2})))
   else if(type=="TranspirationPerLeaf") ylab = expression(paste("Transpiration per leaf area ",(L%.%m^{-2}%.%d^{-1})))
   else if(type=="PhotosynthesisPerLeaf") ylab = expression(paste("Photosynthesis per leaf area ",(g*C%.%m^{-2}%.%d^{-1})))
   else if(type=="GrossPhotosynthesisPerLeaf") ylab = expression(paste("Gross photosynthesis per leaf area ",(g*C%.%m^{-2}%.%d^{-1})))
@@ -331,14 +332,14 @@
   if(type=="SoilPsi") {
     PsiM = Soil[,paste("psi",1:nlayers,sep=".")]
     if(is.null(ylab)) ylab = "Soil water potential (MPa)"    
-    if(!is.null(dates)) PsiM = PsiM[row.names(PsiM) %in% as.character(dates),]
+    if(!is.null(dates)) PsiM = PsiM[row.names(PsiM) %in% as.character(dates),,drop = FALSE]
     if(!is.null(summary.freq)) PsiM = .temporalSummary(PsiM, summary.freq, mean, na.rm=TRUE)
     return(.multiple_dynamics(as.matrix(PsiM),  xlab = xlab, ylab = ylab, ylim = ylim,
                               labels = paste("Layer", 1:nlayers)))
   } 
   else if(type=="SoilTheta") {
     WM = Soil[,paste("W",1:nlayers,sep=".")]
-    if(!is.null(dates)) WM = WM[row.names(WM) %in% as.character(dates),]
+    if(!is.null(dates)) WM = WM[row.names(WM) %in% as.character(dates),,drop = FALSE]
     theta_FC = soil_thetaFC(input_soil, model = input_control$soilFunctions)
     WM = 100*sweep(WM, 2,theta_FC, "*")
     if(!is.null(summary.freq)) WM = .temporalSummary(WM, summary.freq, mean, na.rm=TRUE)
@@ -348,7 +349,7 @@
   } 
   else if(type=="SoilRWC") {
     WM = Soil[,paste("W",1:nlayers,sep=".")]
-    if(!is.null(dates)) WM = WM[row.names(WM) %in% as.character(dates),]
+    if(!is.null(dates)) WM = WM[row.names(WM) %in% as.character(dates),,drop = FALSE]
     if(!is.null(summary.freq)) WM = .temporalSummary(WM, summary.freq, mean, na.rm=TRUE)
     if(is.null(ylab)) ylab = "Soil moisture (% field capacity)"
     return(.multiple_dynamics(as.matrix(WM),  xlab = xlab, ylab = ylab, ylim = ylim,
@@ -356,7 +357,7 @@
   } 
   else if(type=="PlantExtraction") {
     extrBal = Soil[,paste("PlantExt",1:nlayers,sep=".")]
-    if(!is.null(dates)) extrBal = extrBal[row.names(extrBal) %in% as.character(dates),]
+    if(!is.null(dates)) extrBal = extrBal[row.names(extrBal) %in% as.character(dates),,drop = FALSE]
     if(is.null(ylab)) ylab = "Extraction from soil layer (mm)"    
     if(!is.null(summary.freq)) extrBal = .temporalSummary(extrBal, summary.freq, sum, na.rm=TRUE)
     g<-.multiple_dynamics(as.matrix(extrBal),  xlab = xlab, ylab = ylab, ylim = ylim,
@@ -366,7 +367,7 @@
   } 
   else if(type=="HydraulicRedistribution") {
     hydrIn = Soil[,paste("HydraulicInput",1:nlayers,sep=".")]
-    if(!is.null(dates)) hydrIn = hydrIn[row.names(hydrIn) %in% as.character(dates),]
+    if(!is.null(dates)) hydrIn = hydrIn[row.names(hydrIn) %in% as.character(dates),,drop = FALSE]
     if(is.null(ylab)) ylab = "Hydraulic input (mm)"    
     if(!is.null(summary.freq)) hydrIn = .temporalSummary(hydrIn, summary.freq, sum, na.rm=TRUE)
     return(.multiple_dynamics(as.matrix(hydrIn),  xlab = xlab, ylab = ylab, ylim = ylim,
@@ -382,7 +383,7 @@
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
     df = Stand[,c("LAI", "LAIexpanded", "LAIdead")]
     names(df)<-c("Total (live+dead)", "Live unfolded","Dead standing")
-    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
     if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
     return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
   } 
@@ -394,7 +395,7 @@
                          summary.freq = NULL, ...) {
   OM = as.data.frame(OM)
   if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
-  if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
+  if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),,drop =FALSE]
   if(!is.null(summary.freq)) OM = .temporalSummary(OM, summary.freq, mean, na.rm=TRUE)
   if(is.null(ylab)) ylab = .getYLab(type)
   return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
@@ -406,7 +407,7 @@
                              summary.freq = NULL, ...) {
   OM = as.data.frame(OM)
   if(bySpecies) OM = .sumBySpecies(OM, spnames)
-  if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
+  if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),, drop = FALSE]
   if(!is.null(summary.freq)) OM = .temporalSummary(OM, summary.freq, mean, na.rm=TRUE)
   if(is.null(ylab)) ylab = .getYLab(type)
   return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
@@ -422,7 +423,7 @@
     df[["Above-canopy"]] = Temperature$Tatm_mean
     df[["Inside-canopy"]] = Temperature$Tcan_mean
     df[["Soil"]] = Temperature$Tsoil_mean
-    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
     if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
   }
@@ -437,8 +438,8 @@
     df2[["Inside-canopy"]] = Temperature$Tcan_max
     df2[["Soil"]] = Temperature$Tsoil_max
     if(!is.null(dates)) {
-      df1 = df1[row.names(df1) %in% as.character(dates),]
-      df2 = df2[row.names(df2) %in% as.character(dates),]
+      df1 = df1[row.names(df1) %in% as.character(dates),,drop = FALSE]
+      df2 = df2[row.names(df2) %in% as.character(dates),,drop = FALSE]
     }
     if(!is.null(summary.freq)) {
       df1 = .temporalSummary(df1, summary.freq, mean, na.rm=TRUE)
@@ -452,7 +453,7 @@
     df[["Mean"]] = Temperature$Tatm_mean
     df[["Minimum"]] = Temperature$Tatm_min
     df[["Maximum"]] = Temperature$Tatm_max
-    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
     if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
   } 
@@ -462,7 +463,7 @@
     df[["Mean"]] = Temperature$Tcan_mean
     df[["Minimum"]] = Temperature$Tcan_min
     df[["Maximum"]] = Temperature$Tcan_max
-    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
     if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
   } 
@@ -472,7 +473,7 @@
     df[["Mean"]] = Temperature$Tsoil_mean
     df[["Minimum"]] = Temperature$Tsoil_min
     df[["Maximum"]] = Temperature$Tsoil_max
-    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
     if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
   } 
@@ -491,7 +492,7 @@
     df[["Latent heat"]] = -EnergyBalance$LEcan
     df[["Convection can./atm."]] = -EnergyBalance$Hcan
     df[["Convection soil/can."]] = -EnergyBalance$Hcansoil
-    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
     if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
     g<-.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim)
     return(g)
@@ -504,7 +505,7 @@
     df[["Net LWR"]] = EnergyBalance$LWRsoil
     df[["Convection soil/can."]] = EnergyBalance$Hcansoil
     df[["Latent heat"]] = -EnergyBalance$LEsoil
-    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
     if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
     g<-.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim)
     return(g)
