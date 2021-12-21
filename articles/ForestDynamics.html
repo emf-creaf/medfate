@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.3.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.3.8</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Forest dynamics</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2021-12-17</h4>
+            <h4 data-toc-skip class="date">2021-12-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/ForestDynamics.Rmd" class="external-link"><code>vignettes/ForestDynamics.Rmd</code></a></small>
       <div class="hidden name"><code>ForestDynamics.Rmd</code></div>
@@ -172,37 +172,47 @@
 <div class="section level2">
 <h2 id="executing-the-forest-dynamics-model">Executing the forest dynamics model<a class="anchor" aria-label="anchor" href="#executing-the-forest-dynamics-model"></a>
 </h2>
-<p>In this vignette we will fake a three-year weather input by repeating the example weather data frame three times, while reducing precipitation of the second year to the half.</p>
+<p>In this vignette we will fake a three-year weather input by repeating the example weather data frame four times, while reducing precipitation of the second and fourth years to the half.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">meteo2001</span> <span class="op">=</span> <span class="va">examplemeteo</span>
 <span class="va">meteo2002</span> <span class="op">=</span> <span class="va">examplemeteo</span>
-<span class="va">meteo2002</span><span class="op">$</span><span class="va">Precipitation</span> <span class="op">=</span> <span class="va">meteo2002</span><span class="op">$</span><span class="va">Precipitation</span><span class="op">/</span><span class="fl">2</span>
 <span class="va">meteo2003</span> <span class="op">=</span> <span class="va">examplemeteo</span>
+<span class="va">meteo2004</span> <span class="op">=</span> <span class="va">examplemeteo</span><span class="op">[</span><span class="op">]</span>
+<span class="va">meteo2002</span><span class="op">$</span><span class="va">Precipitation</span> <span class="op">=</span> <span class="va">meteo2002</span><span class="op">$</span><span class="va">Precipitation</span><span class="op">/</span><span class="fl">2</span>
+<span class="va">meteo2004</span><span class="op">$</span><span class="va">Precipitation</span> <span class="op">=</span> <span class="va">meteo2004</span><span class="op">$</span><span class="va">Precipitation</span><span class="op">/</span><span class="fl">2</span>
 <span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="va">meteo2002</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2002-01-01"</span><span class="op">)</span>, 
                            <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2002-12-31"</span><span class="op">)</span>, by<span class="op">=</span><span class="st">"day"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="va">meteo2003</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2003-01-01"</span><span class="op">)</span>, 
                            <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2003-12-31"</span><span class="op">)</span>, by<span class="op">=</span><span class="st">"day"</span><span class="op">)</span>
-<span class="va">meteo_01_03</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">meteo2001</span>, <span class="va">meteo2002</span>, <span class="va">meteo2003</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="va">meteo2004</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2004-01-01"</span><span class="op">)</span>, 
+                           <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2004-12-30"</span><span class="op">)</span>, by<span class="op">=</span><span class="st">"day"</span><span class="op">)</span>
+<span class="va">meteo_01_04</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">meteo2001</span>, <span class="va">meteo2002</span>, <span class="va">meteo2003</span>, <span class="va">meteo2004</span><span class="op">)</span></code></pre></div>
 <p>Now we run the forest dynamics model using all inputs (note that no intermediate input object is needed, as in <code><a href="../reference/spwb.html">spwb()</a></code> or <code><a href="../reference/growth.html">growth()</a></code>):</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fd</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/fordyn.html">fordyn</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">meteo_01_03</span>, <span class="va">control</span>, 
+<code class="sourceCode R"><span class="va">fd</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/fordyn.html">fordyn</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">meteo_01_04</span>, <span class="va">control</span>, 
            latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Simulating forest dynamics for year 2001 (1/3)</span>
+<pre><code><span class="co">## Simulating forest dynamics for year 2001 (1/4)</span>
 <span class="co">##    (a) Growth/mortality</span>
 <span class="co">##    (b) Recruitment</span>
 <span class="co">##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 35.7</span>
 <span class="co">##        Tree species with seed rain: 148,168 recruited: &lt;none&gt;</span>
 <span class="co">##    (c) Summaries</span>
-<span class="co">## Simulating forest dynamics for year 2002 (2/3)</span>
+<span class="co">## Simulating forest dynamics for year 2002 (2/4)</span>
 <span class="co">##    (a) Growth/mortality</span>
 <span class="co">##    (b) Recruitment</span>
 <span class="co">##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.18   FPAR (%): 36</span>
 <span class="co">##        Tree species with seed rain: 148,168 recruited: &lt;none&gt;</span>
 <span class="co">##    (c) Summaries</span>
-<span class="co">## Simulating forest dynamics for year 2003 (3/3)</span>
+<span class="co">## Simulating forest dynamics for year 2003 (3/4)</span>
 <span class="co">##    (a) Growth/mortality</span>
 <span class="co">##    (b) Recruitment</span>
 <span class="co">##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 35.9</span>
+<span class="co">##        Tree species with seed rain: 148,168 recruited: &lt;none&gt;</span>
+<span class="co">##    (c) Summaries</span>
+<span class="co">## Simulating forest dynamics for year 2004 (4/4)</span>
+<span class="co">##    (a) Growth/mortality</span>
+<span class="co">##    (b) Recruitment</span>
+<span class="co">##        Coldest month mean temp. (Celsius): -0.22   Moisture index: 0.18   FPAR (%): 36</span>
 <span class="co">##        Tree species with seed rain: 148,168 recruited: &lt;none&gt;</span>
 <span class="co">##    (c) Summaries</span></code></pre>
 <p>It is worth noting that, while <code><a href="../reference/fordyn.html">fordyn()</a></code> calls function <code><a href="../reference/growth.html">growth()</a></code> internally for each simulated year, the <code>verbose</code> option of the control parameters only affects function <code><a href="../reference/fordyn.html">fordyn()</a></code> (i.e. all console output from <code><a href="../reference/growth.html">growth()</a></code> is hidden). Recruitment and summaries are done only once a year at the level of function <code><a href="../reference/fordyn.html">fordyn()</a></code>.</p>
@@ -220,36 +230,43 @@
 <span class="co">## 1    0      1.972712        552.0000          25.03330           3.75  800.0000</span>
 <span class="co">## 2    1      1.920101        546.3412          24.94302           3.75  802.1067</span>
 <span class="co">## 3    2      1.824461        540.7403          24.69822           3.75  802.2443</span>
-<span class="co">## 4    3      1.784226        535.1969          24.75506           3.75  806.1676</span></code></pre>
+<span class="co">## 4    3      1.784226        535.1969          24.75506           3.75  806.1676</span>
+<span class="co">## 5    4      1.733334        529.7104          24.70963           3.75  808.7973</span></code></pre>
 <p>where we can observe an increase in stand basal area and leaf area index during years 1 and 3, but a reduction during the second (drier) year. Species-level analogous statistics are shown using:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">SpeciesSummary</span></code></pre></div>
-<pre><code><span class="co">##    Step Species LeafAreaIndex TreeDensityLive TreeBasalAreaLive ShrubCoverLive</span>
-<span class="co">## 1     0     148    1.00643723        168.0000         18.604545           0.00</span>
-<span class="co">## 2     0     165    0.03965932          0.0000          0.000000           3.75</span>
-<span class="co">## 3     0     168    0.92661573        384.0000          6.428754           0.00</span>
-<span class="co">## 4     1     148    0.97901457        166.2777         18.515438           0.00</span>
-<span class="co">## 5     1     165    0.03965932          0.0000          0.000000           3.75</span>
-<span class="co">## 6     1     168    0.90142670        380.0634          6.427579           0.00</span>
-<span class="co">## 7     2     148    0.92912044        164.5731         18.332285           0.00</span>
-<span class="co">## 8     2     165    0.03965932          0.0000          0.000000           3.75</span>
-<span class="co">## 9     2     168    0.85568134        376.1672          6.365931           0.00</span>
-<span class="co">## 10    3     148    0.90759897        162.8860         18.333646           0.00</span>
-<span class="co">## 11    3     165    0.03965932          0.0000          0.000000           3.75</span>
-<span class="co">## 12    3     168    0.83696796        372.3109          6.421411           0.00</span>
-<span class="co">##    MaxHeight</span>
-<span class="co">## 1   800.0000</span>
-<span class="co">## 2    80.0000</span>
-<span class="co">## 3   660.0000</span>
-<span class="co">## 4   802.1067</span>
-<span class="co">## 5    80.0000</span>
-<span class="co">## 6   662.5325</span>
-<span class="co">## 7   802.2443</span>
-<span class="co">## 8    80.0000</span>
-<span class="co">## 9   662.6937</span>
-<span class="co">## 10  806.1676</span>
-<span class="co">## 11   80.0000</span>
-<span class="co">## 12  667.2288</span></code></pre>
+<pre><code><span class="co">##    Step Species              Name LeafAreaIndex TreeDensityLive</span>
+<span class="co">## 1     0     148  Pinus halepensis    1.00643723        168.0000</span>
+<span class="co">## 2     0     165 Quercus coccifera    0.03965932          0.0000</span>
+<span class="co">## 3     0     168      Quercus ilex    0.92661573        384.0000</span>
+<span class="co">## 4     1     148  Pinus halepensis    0.97901457        166.2777</span>
+<span class="co">## 5     1     165 Quercus coccifera    0.03965932          0.0000</span>
+<span class="co">## 6     1     168      Quercus ilex    0.90142670        380.0634</span>
+<span class="co">## 7     2     148  Pinus halepensis    0.92912044        164.5731</span>
+<span class="co">## 8     2     165 Quercus coccifera    0.03965932          0.0000</span>
+<span class="co">## 9     2     168      Quercus ilex    0.85568134        376.1672</span>
+<span class="co">## 10    3     148  Pinus halepensis    0.90759897        162.8860</span>
+<span class="co">## 11    3     165 Quercus coccifera    0.03965932          0.0000</span>
+<span class="co">## 12    3     168      Quercus ilex    0.83696796        372.3109</span>
+<span class="co">## 13    4     148  Pinus halepensis    0.88096935        161.2162</span>
+<span class="co">## 14    4     165 Quercus coccifera    0.03965932          0.0000</span>
+<span class="co">## 15    4     168      Quercus ilex    0.81270525        368.4942</span>
+<span class="co">##    TreeBasalAreaLive ShrubCoverLive MaxHeight</span>
+<span class="co">## 1          18.604545           0.00  800.0000</span>
+<span class="co">## 2           0.000000           3.75   80.0000</span>
+<span class="co">## 3           6.428754           0.00  660.0000</span>
+<span class="co">## 4          18.515438           0.00  802.1067</span>
+<span class="co">## 5           0.000000           3.75   80.0000</span>
+<span class="co">## 6           6.427579           0.00  662.5325</span>
+<span class="co">## 7          18.332285           0.00  802.2443</span>
+<span class="co">## 8           0.000000           3.75   80.0000</span>
+<span class="co">## 9           6.365931           0.00  662.6937</span>
+<span class="co">## 10         18.333646           0.00  806.1676</span>
+<span class="co">## 11          0.000000           3.75   80.0000</span>
+<span class="co">## 12          6.421411           0.00  667.2288</span>
+<span class="co">## 13         18.272879           0.00  808.7973</span>
+<span class="co">## 14          0.000000           3.75   80.0000</span>
+<span class="co">## 15          6.436756           0.00  670.2053</span></code></pre>
 <p>Package <code>medfate</code> provides a simple <code>plot</code> function for objects of class <code>fordyn</code>. For example, we can show the interannual variation in stand-level basal area using:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, type <span class="op">=</span> <span class="st">"StandBasalArea"</span><span class="op">)</span></code></pre></div>
@@ -261,15 +278,28 @@
 <p>Another useful output of <code><a href="../reference/fordyn.html">fordyn()</a></code> are tables in long format with cohort structural information (i.e. DBH, height, density, etc) for each time step:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">TreeTable</span></code></pre></div>
-<pre><code><span class="co">##   Step Year Cohort Species             Name        N      DBH   Height Z50  Z95</span>
-<span class="co">## 1    0   NA T1_148     148 Pinus halepensis 168.0000 37.55000 800.0000 750 3000</span>
-<span class="co">## 2    0   NA T2_168     168     Quercus ilex 384.0000 14.60000 660.0000 750 3000</span>
-<span class="co">## 3    1 2001 T1_148     148 Pinus halepensis 166.2777 37.65347 802.1067 750 3000</span>
-<span class="co">## 4    1 2001 T2_168     168     Quercus ilex 380.0634 14.67408 662.5325 750 3000</span>
-<span class="co">## 5    2 2002 T1_148     148 Pinus halepensis 164.5731 37.66031 802.2443 750 3000</span>
-<span class="co">## 6    2 2002 T2_168     168     Quercus ilex 376.1672 14.67897 662.6937 750 3000</span>
-<span class="co">## 7    3 2003 T1_148     148 Pinus halepensis 162.8860 37.85625 806.1676 750 3000</span>
-<span class="co">## 8    3 2003 T2_168     168     Quercus ilex 372.3109 14.81895 667.2288 750 3000</span></code></pre>
+<pre><code><span class="co">##    Step Year Cohort Species             Name        N      DBH   Height Z50</span>
+<span class="co">## 1     0   NA T1_148     148 Pinus halepensis 168.0000 37.55000 800.0000 750</span>
+<span class="co">## 2     0   NA T2_168     168     Quercus ilex 384.0000 14.60000 660.0000 750</span>
+<span class="co">## 3     1 2001 T1_148     148 Pinus halepensis 166.2777 37.65347 802.1067 750</span>
+<span class="co">## 4     1 2001 T2_168     168     Quercus ilex 380.0634 14.67408 662.5325 750</span>
+<span class="co">## 5     2 2002 T1_148     148 Pinus halepensis 164.5731 37.66031 802.2443 750</span>
+<span class="co">## 6     2 2002 T2_168     168     Quercus ilex 376.1672 14.67897 662.6937 750</span>
+<span class="co">## 7     3 2003 T1_148     148 Pinus halepensis 162.8860 37.85625 806.1676 750</span>
+<span class="co">## 8     3 2003 T2_168     168     Quercus ilex 372.3109 14.81895 667.2288 750</span>
+<span class="co">## 9     4 2004 T1_148     148 Pinus halepensis 161.2162 37.98868 808.7973 750</span>
+<span class="co">## 10    4 2004 T2_168     168     Quercus ilex 368.4942 14.91328 670.2053 750</span>
+<span class="co">##     Z95</span>
+<span class="co">## 1  3000</span>
+<span class="co">## 2  3000</span>
+<span class="co">## 3  3000</span>
+<span class="co">## 4  3000</span>
+<span class="co">## 5  3000</span>
+<span class="co">## 6  3000</span>
+<span class="co">## 7  3000</span>
+<span class="co">## 8  3000</span>
+<span class="co">## 9  3000</span>
+<span class="co">## 10 3000</span></code></pre>
 <p>The same can be shown for dead trees, where we see larger mortality rates during the second (drier) year:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">DeadTreeTable</span></code></pre></div>
@@ -279,7 +309,9 @@
 <span class="co">## 3    2 2002 T1_148     148 Pinus halepensis 1.704598 37.66031 802.2443 750 3000</span>
 <span class="co">## 4    2 2002 T2_168     168     Quercus ilex 3.896223 14.67897 662.6937 750 3000</span>
 <span class="co">## 5    3 2003 T1_148     148 Pinus halepensis 1.687123 37.85625 806.1676 750 3000</span>
-<span class="co">## 6    3 2003 T2_168     168     Quercus ilex 3.856281 14.81895 667.2288 750 3000</span></code></pre>
+<span class="co">## 6    3 2003 T2_168     168     Quercus ilex 3.856281 14.81895 667.2288 750 3000</span>
+<span class="co">## 7    4 2004 T1_148     148 Pinus halepensis 1.669828 37.98868 808.7973 750 3000</span>
+<span class="co">## 8    4 2004 T2_168     168     Quercus ilex 3.816749 14.91328 670.2053 750 3000</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="accessing-the-output-from-function-growth">Accessing the output from function growth()<a class="anchor" aria-label="anchor" href="#accessing-the-output-from-function-growth"></a>
@@ -303,10 +335,60 @@
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span><span class="op">$</span><span class="va">GrowthResults</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>, <span class="st">"SapwoodArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestDynamics_files/figure-html/unnamed-chunk-15-3.png" width="672"></p>
-<p>Finally, we can create interactive plots for particular steps using function <code>shinyplot</code>, e.g.:</p>
+<p>Finally, we can create interactive plots for particular steps using function <code><a href="../reference/shinyplot.html">shinyplot()</a></code>, e.g.:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/shinyplot.html">shinyplot</a></span><span class="op">(</span><span class="va">fd</span><span class="op">$</span><span class="va">GrowthResults</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></code></pre></div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="forest-dynamics-including-management">Forest dynamics including management<a class="anchor" aria-label="anchor" href="#forest-dynamics-including-management"></a>
+</h2>
+<p>The package allows including forest management in simulations of forest dynamics. This is done in a very flexible manner, in the sense that <code><a href="../reference/fordyn.html">fordyn()</a></code> allows the user to supply an arbitrary function implementing a desired management strategy for the stand whose dynamics are to be simulated. The package includes, however, an in-built default function called <code><a href="../reference/defaultManagementFunction.html">defaultManagementFunction()</a></code> along with a flexible parameterization, a list with defaults provided by function <code><a href="../reference/defaultManagementFunction.html">defaultManagementArguments()</a></code>.</p>
+<p>Here we provide an example of simulations including forest management:</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Default arguments</span>
+<span class="va">args</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/defaultManagementFunction.html">defaultManagementArguments</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co"># Here one can modify defaults before calling fordyn()</span>
+<span class="co">#</span>
+<span class="co"># Simulation</span>
+<span class="va">fd</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/fordyn.html">fordyn</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">meteo_01_04</span>, <span class="va">control</span>, 
+           latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>,
+           management_function <span class="op">=</span> <span class="va">defaultManagementFunction</span>,
+           management_args <span class="op">=</span> <span class="va">args</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Simulating forest dynamics for year 2001 (1/4)</span>
+<span class="co">##    (a) Growth/mortality &amp; management(thinning)</span>
+<span class="co">##    (-) Removing empty cohorts: T2_168</span>
+<span class="co">##    (b) Recruitment</span>
+<span class="co">##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 60.9</span>
+<span class="co">##        Tree species with seed rain: 148 recruited: &lt;none&gt;</span>
+<span class="co">##    (c) Summaries</span>
+<span class="co">## Simulating forest dynamics for year 2002 (2/4)</span>
+<span class="co">##    (a) Growth/mortality &amp; management(none)</span>
+<span class="co">##    (b) Recruitment</span>
+<span class="co">##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.18   FPAR (%): 61</span>
+<span class="co">##        Tree species with seed rain: 148 recruited: &lt;none&gt;</span>
+<span class="co">##    (c) Summaries</span>
+<span class="co">## Simulating forest dynamics for year 2003 (3/4)</span>
+<span class="co">##    (a) Growth/mortality &amp; management(none)</span>
+<span class="co">##    (b) Recruitment</span>
+<span class="co">##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 61.1</span>
+<span class="co">##        Tree species with seed rain: 148 recruited: &lt;none&gt;</span>
+<span class="co">##    (c) Summaries</span>
+<span class="co">## Simulating forest dynamics for year 2004 (4/4)</span>
+<span class="co">##    (a) Growth/mortality &amp; management(none)</span>
+<span class="co">##    (b) Recruitment</span>
+<span class="co">##        Coldest month mean temp. (Celsius): -0.22   Moisture index: 0.18   FPAR (%): 61.2</span>
+<span class="co">##        Tree species with seed rain: 148 recruited: &lt;none&gt;</span>
+<span class="co">##    (c) Summaries</span></code></pre>
+<p>When management is included in simulations, two additional tables are produced, corresponding to the trees and shrubs that were cut, e.g.:</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">CutTreeTable</span></code></pre></div>
+<pre><code><span class="co">##   Step Year Cohort Species             Name          N      DBH   Height Z50</span>
+<span class="co">## 1    1 2001 T1_148     148 Pinus halepensis   9.477352 37.65347 802.1067 750</span>
+<span class="co">## 2    1 2001 T2_168     168     Quercus ilex 380.063421 14.67408 662.5325 750</span>
+<span class="co">##    Z95</span>
+<span class="co">## 1 3000</span>
+<span class="co">## 2 3000</span></code></pre>
 </div>
   </div>
 
