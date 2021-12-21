@@ -5,6 +5,7 @@
 # Version 2.3.8
 - Forest management enabled in function 'fordyn' and default management actions defined in 'defaultManagementFunction' and 'defaultManagementArguments'
 - Summary functions revised, including new function 'summary.fordyn'
+- Collating intra-annual 'fordyn' results for plotting
 
 # Version 2.3.7
 - CO2 made an daily input weather variable, in addition to the default control parameter 'Catm'

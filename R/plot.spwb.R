@@ -82,7 +82,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
   else if(type %in% c("SoilPlantConductance","PlantPsi", "LeafPsiMin",
                       "LeafPsiMax", "StemPsi", "RootPsi", "PlantStress",
                       "PlantWaterBalance")) {
-    if(type=="SoilPlantConductance") OM = Plants[["dEdP"]][,cohorts,drop=FALSE]
+    if(type=="SoilPlantConductance") OM = x$Plants[["dEdP"]][,cohorts,drop=FALSE]
     else OM = x$Plants[[type]][,cohorts,drop=FALSE]
     return(.plot_plant_om(OM, PlantsLAI, spnames,
                    type, bySpecies = bySpecies, dates = dates, 

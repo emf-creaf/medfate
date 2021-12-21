@@ -339,7 +339,7 @@
   else if(type=="SoilTheta") {
     WM = Soil[,paste("W",1:nlayers,sep=".")]
     if(!is.null(dates)) WM = WM[row.names(WM) %in% as.character(dates),]
-    theta_FC = soil_thetaFC(input_soil, model = control$soilFunctions)
+    theta_FC = soil_thetaFC(input_soil, model = input_control$soilFunctions)
     WM = 100*sweep(WM, 2,theta_FC, "*")
     if(!is.null(summary.freq)) WM = .temporalSummary(WM, summary.freq, mean, na.rm=TRUE)
     if(is.null(ylab)) ylab = "Soil moisture (% volume)"
