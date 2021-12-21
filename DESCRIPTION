@@ -19,10 +19,14 @@ URL: https://emf-creaf.github.io/medfate/
 LazyLoad: yes
 Depends: R (>= 3.5.0)
 Imports: ggplot2, meteoland (>= 0.8.1), Rcpp (>= 1.0.6), shiny
-Suggests: knitr, rmarkdown
+Suggests: 
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
 LinkingTo: Rcpp, meteoland
 Encoding: UTF-8
 NeedsCompilation: yes
 VignetteBuilder: utils, knitr
 RoxygenNote: 6.1.1
 BugReports: https://github.com/emf-creaf/medfate/issues
+Config/testthat/edition: 3

@@ -64,7 +64,8 @@ The following plots are currently available for \code{\link{spwb}} (most of them
     \item{\code{"SoilPlantConductance"}:}{Average instantaneous overall soil plant conductance (calculated as the derivative of the supply function).}
     \item{\code{"PlantStress"}:}{ Plant cohort average daily drought stress.}
     \item{\code{"PlantPsi"}:}{ Plant cohort water potential (only for \code{transpirationMode = "Granier"}).}
-    \item{\code{"LeafPsi"}:}{ Midday leaf water potential (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"LeafPsiMin"}:}{ Midday leaf water potential (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"LeafPsiMax"}:}{ Pre-dawn leaf water potential (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"StemPsi"}:}{ Midday (upper) stem water potential (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"RootPsi"}:}{ Midday root crown water potential (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration.}
