@@ -26,7 +26,9 @@ Function \code{plot} produces temporal graphs of the results of the soil plant w
                       xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
                       summary.freq = NULL, ...)
 \method{plot}{fordyn}(x, type="StandBasalArea",
-                      ylim=NULL, xlab=NULL, ylab=NULL, ...)
+                      cohorts = NULL, bySpecies = FALSE, dates = NULL, 
+                      xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
+                      summary.freq = NULL, ...)
 }
 \arguments{
   \item{x}{An object of class \code{spwb}, \code{pwb}, \code{growth} or \code{fordyn}.}
@@ -82,7 +84,7 @@ The following plots are currently available for \code{\link{spwb}} (most of them
     \item{\code{"CanopyEnergyBalance"}:}{ Canopy energy balance components (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components (only for \code{transpirationMode = "Sperry"}).}
   }
-The following are only available for \code{\link{growth}}:
+In addition to the former, the following plots are only available for objects \code{\link{growth}} or \code{\link{fordyn}}:
  \itemize{
     \item{\code{"GrossPhotosynthesis"}:}{ Gross photosynthesis rate per dry weight.}
     \item{\code{"MaintenanceRespiration"}:}{ Maintenance respiration cost per dry weight.}
@@ -109,7 +111,7 @@ The following are only available for \code{\link{growth}}:
     \item{\code{"HuberValue"}:}{ Ratio of leaf area to sapwood area.}
     \item{\code{"RootAreaLeafArea"}:}{ Ratio of fine root area to leaf area.}
    }
- The following are only available for \code{\link{fordyn}}:
+ The following plots are only available for \code{\link{fordyn}} simulation results:
  \itemize{
     \item{\code{"StandBasalArea"}:}{Stand basal area of living trees.}
     \item{\code{"StandLAI"}:}{Stand leaf area index.}
