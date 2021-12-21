@@ -69,23 +69,27 @@ Here we will run simulations of forest dynamics using the basic water balance mo
 
 ## Executing the forest dynamics model
 
-In this vignette we will fake a three-year weather input by repeating the example weather data frame three times, while reducing precipitation of the second year to the half.
+In this vignette we will fake a three-year weather input by repeating the example weather data frame four times, while reducing precipitation of the second and fourth years to the half.
 ```{r}
 meteo2001 = examplemeteo
 meteo2002 = examplemeteo
-meteo2002$Precipitation = meteo2002$Precipitation/2
 meteo2003 = examplemeteo
+meteo2004 = examplemeteo[]
+meteo2002$Precipitation = meteo2002$Precipitation/2
+meteo2004$Precipitation = meteo2004$Precipitation/2
 row.names(meteo2002) = seq(as.Date("2002-01-01"), 
                            as.Date("2002-12-31"), by="day")
 row.names(meteo2003) = seq(as.Date("2003-01-01"), 
                            as.Date("2003-12-31"), by="day")
-meteo_01_03 = rbind(meteo2001, meteo2002, meteo2003)
+row.names(meteo2004) = seq(as.Date("2004-01-01"), 
+                           as.Date("2004-12-30"), by="day")
+meteo_01_04 = rbind(meteo2001, meteo2002, meteo2003, meteo2004)
 ```
 
 
 Now we run the forest dynamics model using all inputs (note that no intermediate input object is needed, as in `spwb()` or  `growth()`):
 ```{r}
-fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, meteo_01_03, control, 
+fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, meteo_01_04, control, 
            latitude = 41.82592, elevation = 100)
 ```
 It is worth noting that, while `fordyn()` calls function `growth()` internally for each simulated year, the `verbose` option of the control parameters only affects function `fordyn()` (i.e. all console output from `growth()` is hidden). Recruitment and summaries are done only once a year at the level of function `fordyn()`.
@@ -157,7 +161,7 @@ args <- defaultManagementArguments()
 # Here one can modify defaults before calling fordyn()
 #
 # Simulation
-fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, meteo_01_03, control, 
+fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, meteo_01_04, control, 
            latitude = 41.82592, elevation = 100,
            management_function = defaultManagementFunction,
            management_args = args)

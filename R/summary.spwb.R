@@ -78,10 +78,30 @@ summary.fordyn<-function(object, freq="years", output="WaterBalance", FUN=sum, b
   out<-NULL
   for(i in 1:length(object$GrowthResults)) {
     out_i <- .summarysim(object = object$GrowthResults[[i]], 
-                     freq = freq, output = output, FUN = FUN, bySpecies = bySpecies, ...)
+                     freq = freq, output = output, FUN = FUN, bySpecies = bySpecies,
+                     )
     if(is.null(out)) out = out_i
     else {
-      out<-rbind(out, out_i)
+      cno <- colnames(out)
+      cno_i <- colnames(out_i)
+      if(length(cno)==length(cno_i) && sum(cno==cno_i)==length(cno)) {
+        out<-rbind(out, out_i)
+      } else {
+        cn_all = unique(c(cno, cno_i))
+        cn_old = cno[which(!(cno %in% cno_i))]
+        cn_new = cno_i[which(!(cno_i %in% cno))]
+        if(length(cn_new)>0) {
+          out <- as.data.frame(out)
+          for(n in cn_new) out[[n]] = NA
+          out <- as.matrix(out[,cn_all])
+        }
+        if(length(cn_old)>0) {
+          out_i <- as.data.frame(out_i)
+          for(n in cn_old) out_i[[n]] = NA
+          out_i <- as.matrix(out_i[,cn_all])
+        }
+        out<-rbind(out, out_i)
+      }
     }
   }
   return(out)

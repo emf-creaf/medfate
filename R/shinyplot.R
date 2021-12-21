@@ -19,8 +19,16 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
     out_1 = out$GrowthResults[[1]]
     transpirationMode = out_1$growthInput$control$transpirationMode
     cohorts_out = row.names(out_1$growthInput$cohorts)
-    cohorts_sp_out = paste0(row.names(out_1$growthInput$cohorts), 
-                            " (",out_1$growthInput$cohorts$Name, ")")
+    sp_out = out_1$growthInput$cohorts$Name
+    if(length(out$GrowthResults)>1) {
+      for(i in 2:length(out$GrowthResults)) {
+        out_i = out$GrowthResults[[i]]
+        cohorts_out = unique(c(cohorts_out, row.names(out_i$growthInput$cohorts)))
+        sp_out = unique(c(sp_out, out_i$growthInput$cohorts$Name))
+      }
+    }
+    cohorts_sp_out = paste0(cohorts_out, 
+                            " (",sp_out, ")")
     subdaily_out = FALSE
     dates_out = NULL
     for(i in 1:length(out$GrowthResults)) {
