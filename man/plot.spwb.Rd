@@ -128,7 +128,8 @@ In addition to the former, the following plots are only available for objects \c
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
- \code{\link{spwb}}
+ \code{\link{spwb}}, \code{\link{pwb}}, \code{\link{growth}}, \code{\link{fordyn}}, \code{\link{summary.spwb}}
+
 }
 \examples{
 #Load example daily meteorological data

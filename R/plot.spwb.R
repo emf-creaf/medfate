@@ -293,12 +293,12 @@ plot.fordyn<-function(x, type="StandBasalArea",
   TYPES_FORDYN_UNIQUE =   c("StandBasalArea", "StandLAI", "StandDensity",
               "SpeciesBasalArea", "SpeciesLAI", "SpeciesDensity",
               "CohortBasalArea", "CohortLAI", "CohortDensity")
-  type = match.arg(type,c(TYPES_GROWTH, TYPES_FORDYN))  
+  type = match.arg(type,c(TYPES_GROWTH, TYPES_FORDYN_UNIQUE))  
   
   if(type %in% TYPES_GROWTH) {
     
-    PlantsLAI = summary(x, freq = "days", output = "Plants$LAI")
     if(is.null(cohorts))  cohorts = row.names(x$GrowthResults[[1]]$growthInput$cohorts)
+    PlantsLAI = summary(x, freq = "days", output = "Plants$LAI")[,cohorts,drop=FALSE]
     spnames = as.character(x$GrowthResults[[1]]$growthInput$cohorts[cohorts,"Name"])
     input_soil = x$GrowthResults[[1]]$growthInput$soil
     
@@ -325,6 +325,36 @@ plot.fordyn<-function(x, type="StandBasalArea",
                          xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab,
                          summary.freq = summary.freq,...))
     }
+    else if(type %in% c("PlantLAI","PlantTranspiration","PlantNetPhotosynthesis", "PlantGrossPhotosynthesis",
+                        "PlantAbsorbedSWR","PlantNetLWR")) {
+      subtype = substr(type,6,nchar(type))
+      OM = summary(x, freq = "days", output = paste0("Plants$",subtype))[,cohorts,drop=FALSE]
+      return(.plot_plant_om_sum(OM, spnames,
+                                type, bySpecies = bySpecies, dates = dates, 
+                                xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                                summary.freq = summary.freq, ...))
+    } 
+    else if(type %in% c("SoilPlantConductance","PlantPsi", "LeafPsiMin",
+                        "LeafPsiMax", "StemPsi", "RootPsi", "PlantStress",
+                        "PlantWaterBalance")) {
+      if(type=="SoilPlantConductance") OM = summary(x, freq = "days", output = Plants$dEdP)[,cohorts,drop=FALSE]
+      else OM = summary(x, freq = "days", output = paste0("Plants$",type))[,cohorts,drop=FALSE]
+      return(.plot_plant_om(OM, PlantsLAI, spnames,
+                            type, bySpecies = bySpecies, dates = dates, 
+                            xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                            summary.freq = summary.freq, ...))
+    } 
+    else if(type %in% c("TranspirationPerLeaf","GrossPhotosynthesisPerLeaf", "NetPhotosynthesisPerLeaf",
+                        "AbsorbedSWRPerLeaf", "NetLWRPerLeaf")) {
+      subtype = substr(type, 1, nchar(type)-7)
+      OM = summary(x, freq = "days", output = paste0("Plants$",subtype))[,cohorts,drop=FALSE]
+      OM = OM/PlantsLAI
+      OM[PlantsLAI==0] = NA
+      return(.plot_plant_om(OM, PlantsLAI, spnames,
+                            type, bySpecies = bySpecies, dates = dates, 
+                            xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                            summary.freq = summary.freq, ...))
+    } 
     else if(type %in% TYPES_GROWTH_UNIQUE) {
       if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration",  "GrowthCosts", 
                      "CarbonBalance", 
@@ -344,6 +374,11 @@ plot.fordyn<-function(x, type="StandBasalArea",
         SA = summary(x, freq = "days", output = "PlantStructure$SapwoodArea")[,cohorts,drop=FALSE]
         LA = summary(x, freq = "days", output = "PlantStructure$LeafArea")[,cohorts,drop=FALSE]
         OM = SA/LA
+      } 
+      else if(type %in% c("RootAreaLeafArea")) {
+        FRA = summary(x, freq = "days", output = "PlantStructure$FineRootArea")[,cohorts,drop=FALSE]
+        LA = summary(x, freq = "days", output = "PlantStructure$LeafArea")[,cohorts,drop=FALSE]
+        OM = FRA/LA
       } 
       return(.plot_plant_om(OM, PlantsLAI, spnames,
                             type, bySpecies = bySpecies, dates = dates, 

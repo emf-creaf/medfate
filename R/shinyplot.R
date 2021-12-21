@@ -114,7 +114,6 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   
   growth_plot_choices = c("Leaf area" = "LeafArea",
                           "Sapwood area" = "SapwoodArea",
-                          "Fine root area" = "FineRootArea",
                           "Leaf biomass per individual" = "LeafBiomass",
                           "Sapwood biomass per individual" = "SapwoodBiomass",
                           "Fine root biomass per individual" = "FineRootBiomass",
@@ -122,9 +121,14 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                           "Total dry biomass per individual" = "TotalLivingBiomass",
                           "Sapwood area growth" = "SAgrowth",
                           "Leaf area growth" = "LAgrowth",
-                          "Fine root area growth" = "FRAgrowth",
-                          "Sapwood area / Leaf area" = "HuberValue",
-                          "Fine root area / Leaf area" = "RootAreaLeafArea")
+                          "Sapwood area / Leaf area" = "HuberValue")
+  if(transpirationMode=="Sperry") {
+    growth_plot_choices <-c(growth_plot_choices,
+                            "Fine root area" = "FineRootArea",
+                            "Fine root area growth" = "FRAgrowth",
+                            "Fine root area / Leaf area" = "RootAreaLeafArea"
+    )
+  }
   subdaily_carbon_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis")
   energy_plot_choices = c("Above-canopy air temperature" = "AirTemperature",
                           "Within-canopy air temperature" = "CanopyTemperature",

@@ -49,14 +49,18 @@
   return(TYPES)
 }
 .getUniqueDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){
-  TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "CarbonBalance",
+  if(transpirationMode=="Granier") {
+    TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "CarbonBalance",
             "SugarTransport", "LeafPI0", "StemPI0",
             "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport", "RootExudation",
-            "SapwoodArea", "LeafArea", "FineRootArea",
+            "SapwoodArea", "LeafArea", 
             "SapwoodBiomass", "LeafBiomass", "FineRootBiomass",
             "LabileBiomass", "TotalLivingBiomass",
-            "SAgrowth", "LAgrowth", "FRAgrowth",
-            "HuberValue", "RootAreaLeafArea")
+            "SAgrowth", "LAgrowth", 
+            "HuberValue")
+  } else {
+    TYPES = c(TYPES, "FRAgrowth", "FineRootArea","RootAreaLeafArea")
+  }
   return(TYPES)
 }
 .getDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){

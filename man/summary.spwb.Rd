@@ -26,8 +26,11 @@ Function \code{summary} summarizes the model's output in different temporal step
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
+\note{
+When applied to \code{\link{fordyn}} objects, the summary function can be used to gather the results of different yearly steps into a single table while keeping a daily resolution (i.e. using \code{freq = "days"}.
+}
 \seealso{
- \code{\link{spwb}}
+ \code{\link{spwb}}, \code{\link{pwb}}, \code{\link{growth}}, \code{\link{fordyn}}, \code{\link{plot.spwb}}
 }
 \examples{
 #Load example daily meteorological data
