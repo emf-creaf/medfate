@@ -142,93 +142,19 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
                           xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                           summary.freq = summary.freq, ...))
   } 
-  else if(type=="Temperature") {
-    if(is.null(ylab)) ylab = "Temperature (Celsius)"
-    df = data.frame(row.names=row.names(x$Temperature))
-    df[["Above-canopy"]] = x$Temperature$Tatm_mean
-    df[["Inside-canopy"]] = x$Temperature$Tcan_mean
-    df[["Soil"]] = x$Temperature$Tsoil_mean
-    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
-    if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
-    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
+  else if(type %in% c("Temperature","TemperatureRange", "AirTemperature",
+                      "CanopyTemperature", "SoilTemperature")) {
+    return(.plot_temperature(x$Temperature, type,  
+                                dates = dates, 
+                                xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                                summary.freq = summary.freq, ...))
   }
-  else if(type=="TemperatureRange") {
-    if(is.null(ylab)) ylab = "Temperature (Celsius)"
-    df1 = data.frame(row.names=row.names(x$Temperature))
-    df1[["Above-canopy"]] = x$Temperature$Tatm_min
-    df1[["Inside-canopy"]] = x$Temperature$Tcan_min
-    df1[["Soil"]] = x$Temperature$Tsoil_min
-    df2 = data.frame(row.names=row.names(x$Temperature))
-    df2[["Above-canopy"]] = x$Temperature$Tatm_max
-    df2[["Inside-canopy"]] = x$Temperature$Tcan_max
-    df2[["Soil"]] = x$Temperature$Tsoil_max
-    if(!is.null(dates)) {
-      df1 = df1[row.names(df1) %in% as.character(dates),]
-      df2 = df2[row.names(df2) %in% as.character(dates),]
-    }
-    if(!is.null(summary.freq)) {
-      df1 = .temporalSummary(df1, summary.freq, mean, na.rm=TRUE)
-      df2 = .temporalSummary(df2, summary.freq, mean, na.rm=TRUE)
-    }
-    return(.multiple_dynamics_range(as.matrix(df1),  as.matrix(df2), xlab = xlab, ylab=ylab, ylim = ylim))
-  }
-  else if(type=="AirTemperature") {
-    if(is.null(ylab)) ylab = "Above-canopy temperature (Celsius)"
-    df = data.frame(row.names=row.names(x$Temperature))
-    df[["Mean"]] = x$Temperature$Tatm_mean
-    df[["Minimum"]] = x$Temperature$Tatm_min
-    df[["Maximum"]] = x$Temperature$Tatm_max
-    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
-    if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
-    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
+  else if(type %in% c("CanopyEnergyBalance", "SoilEnergyBalance")) {
+    return(.plot_energybalance(x$EnergyBalance, type,  
+                               dates = dates, 
+                               xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                               summary.freq = summary.freq, ...))
   } 
-  else if(type=="CanopyTemperature") {
-    if(is.null(ylab)) ylab = "Canopy temperature (Celsius)"
-    df = data.frame(row.names=row.names(x$Temperature))
-    df[["Mean"]] = x$Temperature$Tcan_mean
-    df[["Minimum"]] = x$Temperature$Tcan_min
-    df[["Maximum"]] = x$Temperature$Tcan_max
-    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
-    if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
-    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
-  } 
-  else if(type=="SoilTemperature") {
-    if(is.null(ylab)) ylab = "Soil temperature (Celsius)"
-    df = data.frame(row.names=row.names(x$Temperature))
-    df[["Mean"]] = x$Temperature$Tsoil_mean
-    df[["Minimum"]] = x$Temperature$Tsoil_min
-    df[["Maximum"]] = x$Temperature$Tsoil_max
-    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
-    if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
-    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
-  } 
-  else if(type=="CanopyEnergyBalance") {
-    if(is.null(ylab)) ylab = expression(MJ%.%m^{-2})    
-    df = data.frame(row.names=row.names(x$EnergyBalance))
-    df[["Balance"]] = x$EnergyBalance$Ebalcan
-    df[["SWR abs."]] = x$EnergyBalance$SWRcan 
-    df[["Net LWR"]] = x$EnergyBalance$LWRcan
-    df[["Latent heat"]] = -x$EnergyBalance$LEcan
-    df[["Convection can./atm."]] = -x$EnergyBalance$Hcan
-    df[["Convection soil/can."]] = -x$EnergyBalance$Hcansoil
-    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
-    if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
-    g<-.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim)
-    return(g)
-  } 
-  else if(type=="SoilEnergyBalance") {
-    if(is.null(ylab)) ylab = expression(MJ%.%m^{-2})    
-    df = data.frame(row.names=row.names(x$EnergyBalance))
-    df[["Balance"]] = x$EnergyBalance$Ebalsoil
-    df[["SWR abs."]] = x$EnergyBalance$SWRsoil
-    df[["Net LWR"]] = x$EnergyBalance$LWRsoil
-    df[["Convection soil/can."]] = x$EnergyBalance$Hcansoil
-    df[["Latent heat"]] = -x$EnergyBalance$LEsoil
-    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
-    if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
-    g<-.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim)
-    return(g)
-  }
 }
 plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = FALSE, 
                       dates = NULL, subdaily = FALSE, 
@@ -253,8 +179,8 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
   PlantsLAI = x$Plants$LAI[,cohorts, drop=FALSE]
   
   if(type %in% TYPES_SWB) {
-    plot.spwb(x,type, cohorts, bySpecies, dates, subdaily, xlim, ylim, xlab, ylab, 
-              summary.freq, ...)
+    return(plot.spwb(x,type, cohorts, bySpecies, dates, subdaily, xlim, ylim, xlab, ylab, 
+              summary.freq, ...))
   } 
   else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration",  "GrowthCosts", 
                       "CarbonBalance", 
@@ -325,6 +251,13 @@ plot.fordyn<-function(x, type="StandBasalArea",
                          xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab,
                          summary.freq = summary.freq,...))
     }
+    else if(type %in% c("StemPLC", "StemRWC", "LeafRWC", "StemSympRWC", "LeafSympRWC")) {
+      OM = summary(x, freq = "days", output = paste0("Plants$",type))[,cohorts,drop=FALSE]*100
+      return(.plot_plant_om(OM, PlantsLAI, spnames,
+                            type, bySpecies = bySpecies, dates = dates, 
+                            xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                            summary.freq = summary.freq, ...))
+    } 
     else if(type %in% c("PlantLAI","PlantTranspiration","PlantNetPhotosynthesis", "PlantGrossPhotosynthesis",
                         "PlantAbsorbedSWR","PlantNetLWR")) {
       subtype = substr(type,6,nchar(type))
@@ -334,16 +267,43 @@ plot.fordyn<-function(x, type="StandBasalArea",
                                 xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                                 summary.freq = summary.freq, ...))
     } 
+    else if(type=="PlantWUE") {
+      GP = summary(x, freq = "days", output = "Plants$GrossPhotosynthesis")[,cohorts,drop=FALSE]
+      E = summary(x, freq = "days", output = "Plants$Transpiration")[,cohorts,drop=FALSE]
+      OM = GP/E
+      OM[E==0] = 0
+      return(.plot_plant_om(OM, PlantsLAI, spnames,
+                            type, bySpecies = bySpecies, dates = dates, 
+                            xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                            summary.freq = summary.freq, ...))
+    } 
     else if(type %in% c("SoilPlantConductance","PlantPsi", "LeafPsiMin",
                         "LeafPsiMax", "StemPsi", "RootPsi", "PlantStress",
                         "PlantWaterBalance")) {
-      if(type=="SoilPlantConductance") OM = summary(x, freq = "days", output = Plants$dEdP)[,cohorts,drop=FALSE]
+      if(type=="SoilPlantConductance") OM = summary(x, freq = "days", output = "Plants$dEdP")[,cohorts,drop=FALSE]
       else OM = summary(x, freq = "days", output = paste0("Plants$",type))[,cohorts,drop=FALSE]
       return(.plot_plant_om(OM, PlantsLAI, spnames,
                             type, bySpecies = bySpecies, dates = dates, 
                             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                             summary.freq = summary.freq, ...))
     } 
+    else if(type == "LeafPsiRange") {
+      OM1 = summary(x, freq = "days", output = "Plants$LeafPsiMax")[,cohorts,drop=FALSE]
+      OM2 = summary(x, freq = "days", output = "Plants$LeafPsiMin")[,cohorts,drop=FALSE]
+      if(bySpecies) {
+        OM1 = .averageByLAISpecies(OM1, PlantsLAI, spnames)
+        OM2 = .averageByLAISpecies(OM2, PlantsLAI, spnames)
+      } 
+      if(!is.null(dates)) {
+        OM1 = OM1[row.names(OM1) %in% as.character(dates),]
+        OM2 = OM2[row.names(OM2) %in% as.character(dates),]
+      }
+      if(!is.null(summary.freq)) {
+        OM1 = .temporalSummary(OM1, summary.freq, mean, na.rm=TRUE)
+        OM2 = .temporalSummary(OM2, summary.freq, mean, na.rm=TRUE)
+      }
+      return(.multiple_dynamics_range(as.matrix(OM1), as.matrix(OM2),  xlab = xlab, ylab = ylab, ylim = ylim))
+    }
     else if(type %in% c("TranspirationPerLeaf","GrossPhotosynthesisPerLeaf", "NetPhotosynthesisPerLeaf",
                         "AbsorbedSWRPerLeaf", "NetLWRPerLeaf")) {
       subtype = substr(type, 1, nchar(type)-7)
@@ -354,6 +314,21 @@ plot.fordyn<-function(x, type="StandBasalArea",
                             type, bySpecies = bySpecies, dates = dates, 
                             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                             summary.freq = summary.freq, ...))
+    } 
+    else if(type %in% c("Temperature","TemperatureRange", "AirTemperature",
+                        "CanopyTemperature", "SoilTemperature")) {
+      OM = summary(x, freq = "days", output = "Temperature")
+      return(.plot_temperature(OM, type,  
+                               dates = dates, 
+                               xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                               summary.freq = summary.freq, ...))
+    }
+    else if(type %in% c("CanopyEnergyBalance", "SoilEnergyBalance")) {
+      OM = summary(x, freq = "days", output = "EnergyBalance")
+      return(.plot_energybalance(OM, type,  
+                                 dates = dates, 
+                                 xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                                 summary.freq = summary.freq, ...))
     } 
     else if(type %in% TYPES_GROWTH_UNIQUE) {
       if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration",  "GrowthCosts", 

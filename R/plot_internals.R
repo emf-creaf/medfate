@@ -49,8 +49,7 @@
   return(TYPES)
 }
 .getUniqueDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){
-  if(transpirationMode=="Granier") {
-    TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "CarbonBalance",
+  TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "CarbonBalance",
             "SugarTransport", "LeafPI0", "StemPI0",
             "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport", "RootExudation",
             "SapwoodArea", "LeafArea", 
@@ -58,7 +57,7 @@
             "LabileBiomass", "TotalLivingBiomass",
             "SAgrowth", "LAgrowth", 
             "HuberValue")
-  } else {
+  if(transpirationMode=="Sperry") {
     TYPES = c(TYPES, "FRAgrowth", "FineRootArea","RootAreaLeafArea")
   }
   return(TYPES)
@@ -81,6 +80,7 @@
   else if(type=="PlantPhotosynthesis") ylab = expression(paste("Plant photosynthesis ",(g*C%.%m^{-2}%.%d^{-1})))
   else if(type=="PlantGrossPhotosynthesis") ylab = expression(paste("Plant gross photosynthesis ",(g*C%.%m^{-2}%.%d^{-1})))
   else if(type=="PlantNetPhotosynthesis") ylab = expression(paste("Plant net photosynthesis ",(g*C%.%m^{-2}%.%d^{-1})))
+  else if(type=="PlantWUE") ylab = expression(paste("Plant water use efficiency ",(g*C%.%L^{-1})))
   else if(type=="PlantAbsorbedSWR") ylab = expression(paste("Plant absorbed SWR ",(MJ%.%m^{-2}%.%d^{-1})))
   else if(type=="PlantNetLWR") ylab = expression(paste("Plant net LWR ",(MJ%.%m^{-2}%.%d^{-1})))
   else if(type=="PlantWaterBalance") ylab = expression(paste("Plant water balance   ",(L%.%m^{-2})))
@@ -410,6 +410,105 @@
   if(!is.null(summary.freq)) OM = .temporalSummary(OM, summary.freq, mean, na.rm=TRUE)
   if(is.null(ylab)) ylab = .getYLab(type)
   return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
+}
+.plot_temperature<-function(Temperature, type,  
+                      dates = NULL, 
+                      xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
+                      summary.freq = NULL, ...) {
+  Temperature = as.data.frame(Temperature)
+  if(type=="Temperature") {
+    if(is.null(ylab)) ylab = "Temperature (Celsius)"
+    df = data.frame(row.names=row.names(Temperature))
+    df[["Above-canopy"]] = Temperature$Tatm_mean
+    df[["Inside-canopy"]] = Temperature$Tcan_mean
+    df[["Soil"]] = Temperature$Tsoil_mean
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
+    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
+  }
+  else if(type=="TemperatureRange") {
+    if(is.null(ylab)) ylab = "Temperature (Celsius)"
+    df1 = data.frame(row.names=row.names(Temperature))
+    df1[["Above-canopy"]] = Temperature$Tatm_min
+    df1[["Inside-canopy"]] = Temperature$Tcan_min
+    df1[["Soil"]] = Temperature$Tsoil_min
+    df2 = data.frame(row.names=row.names(Temperature))
+    df2[["Above-canopy"]] = Temperature$Tatm_max
+    df2[["Inside-canopy"]] = Temperature$Tcan_max
+    df2[["Soil"]] = Temperature$Tsoil_max
+    if(!is.null(dates)) {
+      df1 = df1[row.names(df1) %in% as.character(dates),]
+      df2 = df2[row.names(df2) %in% as.character(dates),]
+    }
+    if(!is.null(summary.freq)) {
+      df1 = .temporalSummary(df1, summary.freq, mean, na.rm=TRUE)
+      df2 = .temporalSummary(df2, summary.freq, mean, na.rm=TRUE)
+    }
+    return(.multiple_dynamics_range(as.matrix(df1),  as.matrix(df2), xlab = xlab, ylab=ylab, ylim = ylim))
+  }
+  else if(type=="AirTemperature") {
+    if(is.null(ylab)) ylab = "Above-canopy temperature (Celsius)"
+    df = data.frame(row.names=row.names(Temperature))
+    df[["Mean"]] = Temperature$Tatm_mean
+    df[["Minimum"]] = Temperature$Tatm_min
+    df[["Maximum"]] = Temperature$Tatm_max
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
+    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
+  } 
+  else if(type=="CanopyTemperature") {
+    if(is.null(ylab)) ylab = "Canopy temperature (Celsius)"
+    df = data.frame(row.names=row.names(Temperature))
+    df[["Mean"]] = Temperature$Tcan_mean
+    df[["Minimum"]] = Temperature$Tcan_min
+    df[["Maximum"]] = Temperature$Tcan_max
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
+    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
+  } 
+  else if(type=="SoilTemperature") {
+    if(is.null(ylab)) ylab = "Soil temperature (Celsius)"
+    df = data.frame(row.names=row.names(Temperature))
+    df[["Mean"]] = Temperature$Tsoil_mean
+    df[["Minimum"]] = Temperature$Tsoil_min
+    df[["Maximum"]] = Temperature$Tsoil_max
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
+    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
+  } 
+}
+.plot_energybalance<-function(EnergyBalance, type,  
+                            dates = NULL, 
+                            xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
+                            summary.freq = NULL, ...) {
+  EnergyBalance = as.data.frame(EnergyBalance)
+  if(type=="CanopyEnergyBalance") {
+    if(is.null(ylab)) ylab = expression(MJ%.%m^{-2})    
+    df = data.frame(row.names=row.names(EnergyBalance))
+    df[["Balance"]] = EnergyBalance$Ebalcan
+    df[["SWR abs."]] = EnergyBalance$SWRcan 
+    df[["Net LWR"]] = EnergyBalance$LWRcan
+    df[["Latent heat"]] = -EnergyBalance$LEcan
+    df[["Convection can./atm."]] = -EnergyBalance$Hcan
+    df[["Convection soil/can."]] = -EnergyBalance$Hcansoil
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
+    g<-.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim)
+    return(g)
+  } 
+  else if(type=="SoilEnergyBalance") {
+    if(is.null(ylab)) ylab = expression(MJ%.%m^{-2})    
+    df = data.frame(row.names=row.names(EnergyBalance))
+    df[["Balance"]] = EnergyBalance$Ebalsoil
+    df[["SWR abs."]] = EnergyBalance$SWRsoil
+    df[["Net LWR"]] = EnergyBalance$LWRsoil
+    df[["Convection soil/can."]] = EnergyBalance$Hcansoil
+    df[["Latent heat"]] = -EnergyBalance$LEsoil
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
+    g<-.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim)
+    return(g)
+  }
 }
 
 .sumSubdailyBySpecies<-function(OM, spnames) {

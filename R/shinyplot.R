@@ -38,6 +38,9 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   if(type_out %in% c("growth", "fordyn")) {
     plot_main_choices = c(plot_main_choices, "Carbon balance", "Growth")
   }
+  if(type_out=="fordyn") {
+    plot_main_choices = c(plot_main_choices, "Forest dynamics")
+  }
   wb_plot_choices = c("PET & Precipitation" = "PET_Precipitation",
                       "PET and Net rain" = "PET_NetRain",
                       "Snow" = "Snow",
@@ -136,6 +139,16 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                           "Canopy energy balance components" = "CanopyEnergyBalance",
                           "Soil energy balance components" = "SoilEnergyBalance")
   subdaily_energy_plot_choices = c("Air/canopy/soil temperature" ="Temperature")
+  
+  forest_dynamics_plot_choices = c("Stand basal area" = "StandBasalArea", 
+                                   "Stand leaf area index" = "StandLAI", 
+                                   "Stand density of trees" = "StandDensity",
+                                   "Basal area of trees by species" = "SpeciesBasalArea", 
+                                   "Leaf area index by species" = "SpeciesLAI", 
+                                   "Density of trees by species" = "SpeciesDensity",
+                                   "Basal area of trees by cohort" = "CohortBasalArea", 
+                                   "Leaf area index by cohort" = "CohortLAI", 
+                                   "Density of trees by cohort" = "CohortDensity")
   # Define UI for application that draws a histogram
   results <- tabPanel("Results",
                       # Sidebar with a slider input for number of bins 
@@ -291,6 +304,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
       else if(main_plot=="Carbon balance") sub_choices = carbon_plot_choices
       else if(main_plot=="Energy balance") sub_choices = energy_plot_choices
       else if(main_plot=="Growth") sub_choices = growth_plot_choices
+      else if(main_plot=="Forest dynamics") sub_choices = forest_dynamics_plot_choices
       else sub_choices = soil_plot_choices
 
       if(input$subdaily_check && subdaily_out) {
