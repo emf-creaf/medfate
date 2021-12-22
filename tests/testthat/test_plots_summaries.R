@@ -3,7 +3,7 @@ library(medfate)
 data(examplemeteo)
 data(exampleforestMED)
 data(SpParamsMED)
-d = 100:110
+d = 100:105
 
 test_that("Can produce all basic spwb plots and summaries",{
   examplesoil = soil(defaultSoilParams(2))
@@ -103,6 +103,18 @@ test_that("Can produce all advanced spwb plots and summaries",{
   expect_type(summary(S2, output = "StemSympRWC"), "double")
   expect_type(summary(S2, output = "StemPsi"), "double")
   expect_type(summary(S2, output = "RootPsi"), "double")
+  expect_type(summary(S2, output = "SunlitLeaves$LeafPsiMin"), "double")
+  expect_type(summary(S2, output = "ShadeLeaves$LeafPsiMin"), "double")
+  expect_type(summary(S2, output = "SunlitLeaves$LeafPsiMax"), "double")
+  expect_type(summary(S2, output = "ShadeLeaves$LeafPsiMax"), "double")
+  expect_type(summary(S2, output = "SunlitLeaves$TempMin"), "double")
+  expect_type(summary(S2, output = "ShadeLeaves$TempMin"), "double")
+  expect_type(summary(S2, output = "SunlitLeaves$TempMax"), "double")
+  expect_type(summary(S2, output = "ShadeLeaves$TempMax"), "double")
+  expect_type(summary(S2, output = "SunlitLeaves$GSWMin"), "double")
+  expect_type(summary(S2, output = "ShadeLeaves$GSWMin"), "double")
+  expect_type(summary(S2, output = "SunlitLeaves$GSWMax"), "double")
+  expect_type(summary(S2, output = "ShadeLeaves$GSWMax"), "double")
 })
 
 test_that("Can produce all advanced subdaily spwb plots",{
@@ -141,7 +153,7 @@ test_that("Can produce all advanced subdaily spwb plots",{
   expect_s3_class(plot(S2, "PlantWaterBalance", subdaily = TRUE), "ggplot")
 })
 
-test_that("Can produce all basic growth plots",{
+test_that("Can produce all basic growth plots and summaries",{
   examplesoil = soil(defaultSoilParams(2))
   control = defaultControl("Granier")
   control$verbose = FALSE
@@ -171,17 +183,42 @@ test_that("Can produce all basic growth plots",{
   expect_s3_class(plot(G1, "SAgrowth"), "ggplot")
   expect_s3_class(plot(G1, "LAgrowth"), "ggplot")
   expect_s3_class(plot(G1, "HuberValue"), "ggplot")
+  expect_type(summary(G1, output = "PlantCarbonBalance$GrossPhotosynthesis"), "double")
+  expect_type(summary(G1, output = "MaintenanceRespiration"), "double")
+  expect_type(summary(G1, output = "GrowthCosts"), "double")
+  expect_type(summary(G1, output = "RootExudation"), "double")
+  expect_type(summary(G1, output = "CarbonBalance"), "double")
+  expect_type(summary(G1, output = "SugarLeaf"), "double")
+  expect_type(summary(G1, output = "StarchLeaf"), "double")
+  expect_type(summary(G1, output = "SugarSapwood"), "double")
+  expect_type(summary(G1, output = "StarchSapwood"), "double")
+  expect_type(summary(G1, output = "SugarTransport"), "double")
+  expect_type(summary(G1, output = "LeafPI0"), "double")
+  expect_type(summary(G1, output = "StemPI0"), "double")
+  expect_type(summary(G1, output = "LeafArea"), "double")
+  expect_type(summary(G1, output = "SapwoodArea"), "double")
+  expect_type(summary(G1, output = "LeafBiomass"), "double")
+  expect_type(summary(G1, output = "SapwoodBiomass"), "double")
+  expect_type(summary(G1, output = "FineRootBiomass"), "double")
+  expect_type(summary(G1, output = "LabileBiomass"), "double")
+  expect_type(summary(G1, output = "TotalLivingBiomass"), "double")
+  expect_type(summary(G1, output = "LAgrowth"), "double")
+  expect_type(summary(G1, output = "SAgrowth"), "double")
 })
 
-test_that("Can produce all advanced growth plots",{
+test_that("Can produce all advanced growth plots and summaries",{
   examplesoil2 = soil(defaultSoilParams(4))
   control = defaultControl("Sperry")
   control$verbose = FALSE
   x2 = forest2growthInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+  expect_s3_class(x2, "growthInput")
   G2<-growth(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
+  expect_s3_class(G2, "growth")
   expect_s3_class(plot(G2, "FineRootArea"), "ggplot")
   expect_s3_class(plot(G2, "FRAgrowth"), "ggplot")
   expect_s3_class(plot(G2, "RootAreaLeafArea"), "ggplot")
+  expect_type(summary(G2, output = "FineRootArea"), "double")
+  expect_type(summary(G2, output = "FRAgrowth"), "double")
 })
 
 test_that("Can produce all advanced subdaily growth plots",{
@@ -190,7 +227,9 @@ test_that("Can produce all advanced subdaily growth plots",{
   control$verbose = FALSE
   control$subdailyResults = TRUE
   x2 = forest2growthInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+  expect_s3_class(x2, "growthInput")
   G2<-growth(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
+  expect_s3_class(G2, "growth")
   
   expect_s3_class(plot(G2, "GrossPhotosynthesis", subdaily = TRUE), "ggplot")
   expect_s3_class(plot(G2, "MaintenanceRespiration", subdaily = TRUE), "ggplot")
