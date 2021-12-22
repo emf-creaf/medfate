@@ -1092,6 +1092,9 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
   NumericVector PET(numDays, NA_REAL);
   NumericVector CO2(Precipitation.length(), NA_REAL);
+  IntegerVector DOY, JulianDay;
+  NumericVector Photoperiod;
+  bool doy_input = false, photoperiod_input = false, julianday_input = false;
   if(transpirationMode=="Granier") {
     if(!meteo.containsElementNamed("PET")) stop("Please include variable 'PET' in weather input.");
     PET = meteo["PET"];
@@ -1111,12 +1114,38 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
     MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
     if(!meteo.containsElementNamed("Radiation")) stop("Please include variable 'Radiation' in weather input.");
     Radiation = meteo["Radiation"];
-    if(meteo.containsElementNamed("CO2")) CO2 = meteo["CO2"];
+    if(meteo.containsElementNamed("CO2")) {
+      CO2 = meteo["CO2"];
+      if(verbose) {
+        Rcout<<"CO2 taken from input column 'CO2'\n";
+      }
+    }
+    if(meteo.containsElementNamed("DOY")) {
+      DOY = meteo["DOY"];
+      doy_input = true;
+      if(verbose) {
+        Rcout<<"DOY taken from input column 'DOY'\n";
+      }
+    }
+    if(meteo.containsElementNamed("Photoperiod")) {
+      Photoperiod = meteo["Photoperiod"];
+      photoperiod_input = true;
+      if(verbose) {
+        Rcout<<"Photoperiod taken from input column 'Photoperiod'\n";
+      }
+    }
+    if(meteo.containsElementNamed("JulianDay")) {
+      JulianDay = meteo["JulianDay"];
+      julianday_input = true;
+      if(verbose) {
+        Rcout<<"Julian day taken from input column 'JulianDay'\n";
+      }
+    }
   }
   CharacterVector dateStrings = meteo.attr("row.names");
   
-  IntegerVector DOY = date2doy(dateStrings);
-  NumericVector Photoperiod = date2photoperiod(dateStrings, latrad);
+  if(!doy_input) DOY = date2doy(dateStrings);
+  if(!photoperiod_input) Photoperiod = date2photoperiod(dateStrings, latrad);
   
 
   //Canopy scalars
@@ -1207,8 +1236,13 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
                      0.0, verbose); //No Runon in simulations for a single cell
       } else if(transpirationMode=="Sperry") {
         int ntimesteps = control["ndailysteps"];
-        std::string c = as<std::string>(dateStrings[i]);
-        int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+        //Julian day from either input column or date
+        int J = NA_INTEGER;
+        if(julianday_input) J = JulianDay[i];
+        if(IntegerVector::is_na(J)){
+          std::string c = as<std::string>(dateStrings[i]);
+          J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
+        }
         double delta = meteoland::radiation_solarDeclination(J);
         double solarConstant = meteoland::radiation_solarConstant(J);
         if(NumericVector::is_na(aspect)) aspect = 0.0;
@@ -1365,7 +1399,9 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   NumericVector MeanTemperature = meteo["MeanTemperature"];
   NumericVector WindSpeed(numDays, NA_REAL);
   NumericVector CO2(Precipitation.length(), NA_REAL);
-  
+  IntegerVector DOY, JulianDay;
+  NumericVector Photoperiod;
+  bool doy_input = false, photoperiod_input = false, julianday_input = false;
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
   NumericVector PET = NumericVector(numDays,0.0);
   if(transpirationMode=="Granier") {
@@ -1383,7 +1419,33 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
     if(!meteo.containsElementNamed("Radiation")) stop("Please include variable 'Radiation' in weather input.");
     Radiation = meteo["Radiation"];
-    if(meteo.containsElementNamed("CO2")) CO2 = meteo["CO2"];
+    if(meteo.containsElementNamed("CO2")) {
+      CO2 = meteo["CO2"];
+      if(verbose) {
+        Rcout<<"CO2 taken from input column 'CO2'\n";
+      }
+    }
+    if(meteo.containsElementNamed("DOY")) {
+      DOY = meteo["DOY"];
+      doy_input = true;
+      if(verbose) {
+        Rcout<<"DOY taken from input column 'DOY'\n";
+      }
+    }
+    if(meteo.containsElementNamed("Photoperiod")) {
+      Photoperiod = meteo["Photoperiod"];
+      photoperiod_input = true;
+      if(verbose) {
+        Rcout<<"Photoperiod taken from input column 'Photoperiod'\n";
+      }
+    }
+    if(meteo.containsElementNamed("JulianDay")) {
+      JulianDay = meteo["JulianDay"];
+      julianday_input = true;
+      if(verbose) {
+        Rcout<<"Julian day taken from input column 'JulianDay'\n";
+      }
+    }
   }
   
   if(canopyEvaporation.length()==0) {
@@ -1397,8 +1459,8 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   }
   CharacterVector dateStrings = meteo.attr("row.names");
   
-  IntegerVector DOY = date2doy(dateStrings);
-  NumericVector Photoperiod = date2photoperiod(dateStrings, latrad);
+  if(!doy_input) DOY = date2doy(dateStrings);
+  if(!photoperiod_input) Photoperiod = date2photoperiod(dateStrings, latrad);
   
   
   //Canopy scalars
@@ -1497,8 +1559,14 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       s = transpirationGranier(x, meteovec, 
                                true);
     } else if(transpirationMode=="Sperry") {
-      std::string c = as<std::string>(dateStrings[i]);
-      int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+      //Julian day from either input column or date
+      int J;
+      if(julianday_input) J = JulianDay[i];
+      else {
+        std::string c = as<std::string>(dateStrings[i]);
+        J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
+      }
+      
       double delta = meteoland::radiation_solarDeclination(J);
       double solarConstant = meteoland::radiation_solarConstant(J);
       double tmin = MinTemperature[i];

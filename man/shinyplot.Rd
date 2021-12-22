@@ -10,7 +10,7 @@ Creates a shiny app with interactive plots for simulation results and evaluation
 shinyplot(out, measuredData = NULL, SpParams = NULL)
 }
 \arguments{
-  \item{out}{An object of class \code{\link{spwb}}, \code{\link{growth}}} or \code{\link{fordyn}}}
+  \item{out}{An object of class \code{\link{spwb}}, \code{\link{growth}} or \code{\link{fordyn}}}
   \item{measuredData}{A data frame with observed/measured values (see \code{\link{evaluation_plot}}).}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
 }
