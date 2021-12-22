@@ -2,7 +2,8 @@
   dates = as.Date(rownames(object$WaterBalance))
   ndaysTotal = length(dates)
   date.factor = cut(dates, breaks=freq)
-  input = object$spwbInput
+  if("spwbInput" %in% names(object)) input = object$spwbInput
+  else input = object$growthInput
   object_names = names(object)
   output_vec = strsplit(output, "\\$")[[1]]
   if(!(output_vec[1] %in% object_names)) {
@@ -39,7 +40,7 @@
   } 
   else {
     OM = object[[output_vec[1]]][[output_vec[2]]]
-    if(bySpecies) {
+    if(bySpecies && ncol(OM)>0) {
       lai1 = t(apply(object$Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
       m1 = t(apply(object$Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
       OM = m1/lai1
@@ -50,15 +51,19 @@
   
   #Perform summary at the desired temporal scale
   M <- apply(OM,2,tapply, INDEX=date.factor, FUN)
-  
-  if(is.vector(M)) {
+  if(length(M)==0) {
+    l <- levels(date.factor)
+    M <- matrix(nrow = length(l), ncol=0)
+    rownames(M) <- l
+  } else if(is.vector(M)) {
     M = t(as.matrix(M))
     rownames(M) <- levels(date.factor)
   }
   # if(sum(is.na(M[nrow(M), drop=FALSE]))==ncol(M)) M = M[-nrow(M), drop=FALSE] #Remove empty row
   ncases = table(date.factor)
-  M = M[ncases>0, ,drop = FALSE]
-  
+  if(length(M)>0) {
+    M = M[ncases>0, ,drop = FALSE]
+  }
   return(M)
 }
 
