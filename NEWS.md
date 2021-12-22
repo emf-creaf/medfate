@@ -6,7 +6,7 @@
 - Forest management enabled in function 'fordyn' and default management actions defined in 'defaultManagementFunction' and 'defaultManagementArguments'
 - Summary functions revised, including new function 'summary.fordyn'
 - Collating intra-annual 'fordyn' results for plotting.
-- DOY, Photoperiod and JulianDay can be taken from weather input in functions 'spwb' and 'pwb'. 
+- DOY, Photoperiod and JulianDay can be taken from weather input in functions 'spwb', 'pwb' and 'growth'. 
 
 # Version 2.3.7
 - CO2 made an daily input weather variable, in addition to the default control parameter 'Catm'
