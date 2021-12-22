@@ -5,13 +5,14 @@ data(exampleforestMED)
 data(SpParamsMED)
 d = 100:110
 
-test_that("Can produce all basic spwb plots",{
+test_that("Can produce all basic spwb plots and summaries",{
   examplesoil = soil(defaultSoilParams(2))
   control = defaultControl("Granier")
   control$verbose = FALSE
-  x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-  S1<-spwb(x, examplemeteo[d,], latitude = 41.82592, elevation = 100)
-  
+  x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+  expect_s3_class(x1, "spwbInput")
+  S1<-spwb(x1, examplemeteo[d,], latitude = 41.82592, elevation = 100)
+  expect_s3_class(S1, "spwb")
   expect_s3_class(plot(S1, "PET_Precipitation"), "ggplot")
   expect_s3_class(plot(S1, "PET_NetRain"), "ggplot")
   expect_s3_class(plot(S1, "Snow"), "ggplot")
@@ -32,15 +33,26 @@ test_that("Can produce all basic spwb plots",{
   expect_s3_class(plot(S1, "TranspirationPerLeaf"), "ggplot")
   expect_s3_class(plot(S1, "PlantGrossPhotosynthesis"), "ggplot")
   expect_s3_class(plot(S1, "GrossPhotosynthesisPerLeaf"), "ggplot")
+  expect_type(summary(S1, output = "WaterBalance"), "double")
+  expect_type(summary(S1, output = "Soil"), "double")
+  expect_type(summary(S1, output = "Stand"), "double")
+  expect_type(summary(S1, output = "Plants$LAI"), "double")
+  expect_type(summary(S1, output = "AbsorbedSWRFraction"), "double")
+  expect_type(summary(S1, output = "Transpiration"), "double")
+  expect_type(summary(S1, output = "GrossPhotosynthesis"), "double")
+  expect_type(summary(S1, output = "PlantPsi"), "double")
+  expect_type(summary(S1, output = "StemPLC"), "double")
+  expect_type(summary(S1, output = "PlantStress"), "double")
 })
 
-test_that("Can produce all advanced spwb plots",{
+test_that("Can produce all advanced spwb plots and summaries",{
   examplesoil2 = soil(defaultSoilParams(4))
   control = defaultControl("Sperry")
   control$verbose = FALSE
   x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+  expect_s3_class(x2, "spwbInput")
   S2<-spwb(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
-  
+  expect_s3_class(S2, "spwb")
   expect_s3_class(plot(S2, "HydraulicRedistribution"), "ggplot")
   expect_s3_class(plot(S2, "SoilPlantConductance"), "ggplot")
   expect_s3_class(plot(S2, "LeafPsiMin"), "ggplot")
@@ -78,6 +90,19 @@ test_that("Can produce all advanced spwb plots",{
   expect_s3_class(plot(S2, "SoilTemperature"), "ggplot")
   expect_s3_class(plot(S2, "CanopyEnergyBalance"), "ggplot")
   expect_s3_class(plot(S2, "SoilEnergyBalance"), "ggplot")
+  expect_type(summary(S2, output = "AbsorbedSWR"), "double")
+  expect_type(summary(S2, output = "NetLWR"), "double")
+  expect_type(summary(S2, output = "NetPhotosynthesis"), "double")
+  expect_type(summary(S2, output = "dEdP"), "double")
+  expect_type(summary(S2, output = "PlantWaterBalance"), "double")
+  expect_type(summary(S2, output = "LeafPsiMin"), "double")
+  expect_type(summary(S2, output = "LeafPsiMax"), "double")
+  expect_type(summary(S2, output = "LeafRWC"), "double")
+  expect_type(summary(S2, output = "StemRWC"), "double")
+  expect_type(summary(S2, output = "LeafSympRWC"), "double")
+  expect_type(summary(S2, output = "StemSympRWC"), "double")
+  expect_type(summary(S2, output = "StemPsi"), "double")
+  expect_type(summary(S2, output = "RootPsi"), "double")
 })
 
 test_that("Can produce all advanced subdaily spwb plots",{
@@ -86,7 +111,9 @@ test_that("Can produce all advanced subdaily spwb plots",{
   control$verbose = FALSE
   control$subdailyResults = TRUE
   x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+  expect_s3_class(x2, "spwbInput")
   S2<-spwb(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
+  expect_s3_class(S2, "spwb")
   
   expect_s3_class(plot(S2, "LeafPsi", subdaily = TRUE), "ggplot")
   expect_s3_class(plot(S2, "LeafPsiAverage", subdaily = TRUE), "ggplot")
@@ -118,8 +145,10 @@ test_that("Can produce all basic growth plots",{
   examplesoil = soil(defaultSoilParams(2))
   control = defaultControl("Granier")
   control$verbose = FALSE
-  x = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
-  G1<-growth(x, examplemeteo[d,], latitude = 41.82592, elevation = 100)
+  x1 = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+  expect_s3_class(x1, "growthInput")
+  G1<-growth(x1, examplemeteo[d,], latitude = 41.82592, elevation = 100)
+  expect_s3_class(G1, "growth")
   
   expect_s3_class(plot(G1, "GrossPhotosynthesis"), "ggplot")
   expect_s3_class(plot(G1, "MaintenanceRespiration"), "ggplot")
