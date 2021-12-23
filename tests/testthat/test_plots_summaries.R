@@ -43,6 +43,8 @@ test_that("Can produce all basic spwb plots and summaries",{
   expect_type(summary(S1, output = "PlantPsi"), "double")
   expect_type(summary(S1, output = "StemPLC"), "double")
   expect_type(summary(S1, output = "PlantStress"), "double")
+  expect_type(droughtStress(S1, index = "ADS", draw=FALSE), "double")
+  expect_type(waterUseEfficiency(S1, draw=FALSE), "double")
 })
 
 test_that("Can produce all advanced spwb plots and summaries",{
@@ -115,6 +117,8 @@ test_that("Can produce all advanced spwb plots and summaries",{
   expect_type(summary(S2, output = "ShadeLeaves$GSWMin"), "double")
   expect_type(summary(S2, output = "SunlitLeaves$GSWMax"), "double")
   expect_type(summary(S2, output = "ShadeLeaves$GSWMax"), "double")
+  expect_type(droughtStress(S2, index = "ADS", draw=FALSE), "double")
+  expect_type(waterUseEfficiency(S2, draw=FALSE), "double")
 })
 
 test_that("Can produce all advanced subdaily spwb plots",{
@@ -204,6 +208,9 @@ test_that("Can produce all basic growth plots and summaries",{
   expect_type(summary(G1, output = "TotalLivingBiomass"), "double")
   expect_type(summary(G1, output = "LAgrowth"), "double")
   expect_type(summary(G1, output = "SAgrowth"), "double")
+  expect_type(droughtStress(G1, index = "ADS", draw=FALSE), "double")
+  expect_type(waterUseEfficiency(G1, draw=FALSE), "double")
+  
 })
 
 test_that("Can produce all advanced growth plots and summaries",{
@@ -219,6 +226,9 @@ test_that("Can produce all advanced growth plots and summaries",{
   expect_s3_class(plot(G2, "RootAreaLeafArea"), "ggplot")
   expect_type(summary(G2, output = "FineRootArea"), "double")
   expect_type(summary(G2, output = "FRAgrowth"), "double")
+  expect_type(droughtStress(G2, index = "ADS", draw=FALSE), "double")
+  expect_type(waterUseEfficiency(G2, draw=FALSE), "double")
+  
 })
 
 test_that("Can produce all advanced subdaily growth plots",{

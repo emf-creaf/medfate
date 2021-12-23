@@ -123,7 +123,7 @@ Another prediction function can focus on plant drought stress. We define a funct
 sf_stress<-function(x) {
   lai <- x$spwbInput$above$LAI_live
   lai_p <- lai/sum(lai)
-  stress <- spwb_stress(x, index="WSI", draw = F)
+  stress <- droughtStress(x, index="WSI", draw = F)
   mean(sweep(stress,2, lai_p, "*"), na.rm=T)
 }
 sf_stress(S1)

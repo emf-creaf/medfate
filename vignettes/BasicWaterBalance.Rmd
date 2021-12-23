@@ -210,19 +210,19 @@ summary(S, freq="month", FUN = mean, output="PlantStress", bySpecies = TRUE)
 ```
 
 ### Specific output functions
-The package provides some functions to extract or transform specific outputs from soil plant water balance simulations. In particular, function `spwb_stress()` allows calculating several plant stress indices, such as the number of days with drought stress > 0.5 or the maximum drought stress:
+The package provides some functions to extract or transform specific outputs from soil plant water balance simulations. In particular, function `droughtStress()` allows calculating several plant stress indices, such as the number of days with drought stress > 0.5 or the maximum drought stress:
 
 ```{r}
-spwb_stress(S, index = "NDD", freq = "years", draw=FALSE)
-spwb_stress(S, index = "MDS", freq = "years", draw=FALSE)
+droughtStress(S, index = "NDD", freq = "years", draw=FALSE)
+droughtStress(S, index = "MDS", freq = "years", draw=FALSE)
 ```
-As the general summary function, `spwb_stress()` allows calculating stress indices at several temporal scales. For example the water stress index (integral of water potential values) can be calculated and drawn for every month:
+As the general summary function, `droughtStress()` allows calculating stress indices at several temporal scales. For example the water stress index (integral of water potential values) can be calculated and drawn for every month:
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 4}
-spwb_stress(S, index = "WSI", freq = "months", draw=TRUE)
+droughtStress(S, index = "WSI", freq = "months", draw=TRUE)
 ```
 
-Another specific summary function is `spwb_waterUseEfficiency()`. This is most useful with advanced water and energy balance modeling, but for simple water balance it calculates the ratio between photosynthesis and transpiration at the desired scale. In this case it is equal to the value of the input species parameter `WUE`:
+Another specific summary function is `waterUseEfficiency()`. This is most useful with advanced water and energy balance modeling, but for simple water balance it calculates the ratio between photosynthesis and transpiration at the desired scale. In this case it is equal to the value of the input species parameter `WUE`:
 
 ```{r}
-spwb_waterUseEfficiency(S, type = "Stand Ag/E", freq = "months", draw=FALSE)
+waterUseEfficiency(S, type = "Stand Ag/E", freq = "months", draw=FALSE)
 ```

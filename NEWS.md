@@ -2,9 +2,13 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+
+# Version 2.4.0
+- Summary functions revised, including new function 'summary.fordyn'
+- Functions 'spwb_stress' and 'spwb_waterUseEfficiency' renamed to 'droughtStress' and 'waterUseEfficiency', respectively, since they can be used for several simulation function outputs.
+
 # Version 2.3.8
 - Forest management enabled in function 'fordyn' and default management actions defined in 'defaultManagementFunction' and 'defaultManagementArguments'
-- Summary functions revised, including new function 'summary.fordyn'
 - Collating intra-annual 'fordyn' results for plotting.
 - DOY, Photoperiod and JulianDay can be taken from weather input in functions 'spwb', 'pwb' and 'growth'. 
 
@@ -229,7 +233,7 @@
 - New function 'maximumTranspirationRatioPlot'
 - Output of min/max water potential for sunlit and shade leaves.
 - New function 'soil_waterRetentionPlot'
-- New function 'spwb_waterUseEfficiency'
+- New function 'waterUseEfficiency'
 - Default Van Genuchten PTF set to 'Toth'
 - New functions 'modifySpParams' and 'modifyCohortParams'.
 - New function 'hydrology_interceptionPlot'

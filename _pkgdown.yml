@@ -93,9 +93,8 @@ reference:
   desc:  Summaries, plots and other post-processing functions
   contents:
   - spwb_resistances
-  - spwb_stress
-  - spwb_sensitivity
-  - spwb_waterUseEfficiency
+  - droughtStress
+  - waterUseEfficiency
   - starts_with("plot.spwb")
   - starts_with("summary.spwb")
   - starts_with("extractSubdaily")
@@ -108,6 +107,7 @@ reference:
   - starts_with("spwb_ldr")
   - starts_with("evaluation_")
   - starts_with("optimization_")
+  - spwb_sensitivity
   
 - title: Phenology
   desc:  Leaf phenology processes
