@@ -76,6 +76,9 @@
     <loc>/reference/defaultSoilParams.html</loc>
   </url>
   <url>
+    <loc>/reference/droughtStress.html</loc>
+  </url>
+  <url>
     <loc>/reference/evaluation.html</loc>
   </url>
   <url>
@@ -166,6 +169,9 @@
     <loc>/reference/resetInputs.html</loc>
   </url>
   <url>
+    <loc>/reference/resistances.html</loc>
+  </url>
+  <url>
     <loc>/reference/root.html</loc>
   </url>
   <url>
@@ -196,16 +202,7 @@
     <loc>/reference/spwb_ldrOptimization.html</loc>
   </url>
   <url>
-    <loc>/reference/spwb_resistances.html</loc>
-  </url>
-  <url>
     <loc>/reference/spwb_sensitivity.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spwb_stress.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spwb_waterUseEfficiency.html</loc>
   </url>
   <url>
     <loc>/reference/stand_values.html</loc>
@@ -221,6 +218,9 @@
   </url>
   <url>
     <loc>/reference/transp_stomatalregulation.html</loc>
+  </url>
+  <url>
+    <loc>/reference/waterUseEfficiency.html</loc>
   </url>
   <url>
     <loc>/reference/wind.html</loc>

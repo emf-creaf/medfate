@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.3.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.4.0</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Basic water balance</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2021-12-21</h4>
+            <h4 data-toc-skip class="date">2021-12-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/BasicWaterBalance.Rmd" class="external-link"><code>vignettes/BasicWaterBalance.Rmd</code></a></small>
       <div class="hidden name"><code>BasicWaterBalance.Rmd</code></div>
@@ -467,26 +467,35 @@
 <div class="section level3">
 <h3 id="specific-output-functions">Specific output functions<a class="anchor" aria-label="anchor" href="#specific-output-functions"></a>
 </h3>
-<p>The package provides some functions to extract or transform specific outputs from soil plant water balance simulations. In particular, function <code><a href="../reference/spwb_stress.html">spwb_stress()</a></code> allows calculating several plant stress indices, such as the number of days with drought stress &gt; 0.5 or the maximum drought stress:</p>
+<p>The package provides some functions to extract or transform specific outputs from soil plant water balance simulations. In particular, function <code><a href="../reference/droughtStress.html">droughtStress()</a></code> allows calculating several plant stress indices, such as the number of days with drought stress &gt; 0.5 or the maximum drought stress:</p>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/spwb_stress.html">spwb_stress</a></span><span class="op">(</span><span class="va">S</span>, index <span class="op">=</span> <span class="st">"NDD"</span>, freq <span class="op">=</span> <span class="st">"years"</span>, draw<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/droughtStress.html">droughtStress</a></span><span class="op">(</span><span class="va">S</span>, index <span class="op">=</span> <span class="st">"NDD"</span>, freq <span class="op">=</span> <span class="st">"years"</span>, draw<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##            T1_148 T2_168 S1_165</span>
 <span class="co">## 2001-01-01      8      3      0</span></code></pre>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/spwb_stress.html">spwb_stress</a></span><span class="op">(</span><span class="va">S</span>, index <span class="op">=</span> <span class="st">"MDS"</span>, freq <span class="op">=</span> <span class="st">"years"</span>, draw<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/droughtStress.html">droughtStress</a></span><span class="op">(</span><span class="va">S</span>, index <span class="op">=</span> <span class="st">"MDS"</span>, freq <span class="op">=</span> <span class="st">"years"</span>, draw<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##               T1_148    T2_168    S1_165</span>
 <span class="co">## 2001-01-01 0.7018867 0.5925645 0.2583035</span></code></pre>
-<p>As the general summary function, <code><a href="../reference/spwb_stress.html">spwb_stress()</a></code> allows calculating stress indices at several temporal scales. For example the water stress index (integral of water potential values) can be calculated and drawn for every month:</p>
+<p>As the general summary function, <code><a href="../reference/droughtStress.html">droughtStress()</a></code> allows calculating stress indices at several temporal scales. For example the water stress index (integral of water potential values) can be calculated and drawn for every month:</p>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/spwb_stress.html">spwb_stress</a></span><span class="op">(</span><span class="va">S</span>, index <span class="op">=</span> <span class="st">"WSI"</span>, freq <span class="op">=</span> <span class="st">"months"</span>, draw<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/droughtStress.html">droughtStress</a></span><span class="op">(</span><span class="va">S</span>, index <span class="op">=</span> <span class="st">"WSI"</span>, freq <span class="op">=</span> <span class="st">"months"</span>, draw<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>Another specific summary function is <code><a href="../reference/spwb_waterUseEfficiency.html">spwb_waterUseEfficiency()</a></code>. This is most useful with advanced water and energy balance modeling, but for simple water balance it calculates the ratio between photosynthesis and transpiration at the desired scale. In this case it is equal to the value of the input species parameter <code>WUE</code>:</p>
+<p>Another specific summary function is <code><a href="../reference/waterUseEfficiency.html">waterUseEfficiency()</a></code>. This is most useful with advanced water and energy balance modeling, but for simple water balance it calculates the ratio between photosynthesis and transpiration at the desired scale. In this case it is equal to the value of the input species parameter <code>WUE</code>:</p>
 <div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/spwb_waterUseEfficiency.html">spwb_waterUseEfficiency</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"Stand Ag/E"</span>, freq <span class="op">=</span> <span class="st">"months"</span>, draw<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## 2001-01-01 2001-02-01 2001-03-01 2001-04-01 2001-05-01 2001-06-01 2001-07-01 </span>
-<span class="co">##   2.601888   2.601888   2.601888   2.601883   2.601860   2.570343   2.583841 </span>
-<span class="co">## 2001-08-01 2001-09-01 2001-10-01 2001-11-01 2001-12-01 </span>
-<span class="co">##   2.601350   2.601320   2.600268   2.601696   2.601887</span></code></pre>
+<code class="sourceCode R"><span class="fu"><a href="../reference/waterUseEfficiency.html">waterUseEfficiency</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"Stand Ag/E"</span>, freq <span class="op">=</span> <span class="st">"months"</span>, draw<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##            Stand Ag/E</span>
+<span class="co">## 2001-01-01   2.601888</span>
+<span class="co">## 2001-02-01   2.601888</span>
+<span class="co">## 2001-03-01   2.601888</span>
+<span class="co">## 2001-04-01   2.601883</span>
+<span class="co">## 2001-05-01   2.601860</span>
+<span class="co">## 2001-06-01   2.570343</span>
+<span class="co">## 2001-07-01   2.583841</span>
+<span class="co">## 2001-08-01   2.601350</span>
+<span class="co">## 2001-09-01   2.601320</span>
+<span class="co">## 2001-10-01   2.600268</span>
+<span class="co">## 2001-11-01   2.601696</span>
+<span class="co">## 2001-12-01   2.601887</span></code></pre>
 </div>
 </div>
   </div>
