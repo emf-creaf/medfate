@@ -5,7 +5,7 @@
 
 # Version 2.4.0
 - Summary functions revised, including new function 'summary.fordyn'
-- Functions 'spwb_stress' and 'spwb_waterUseEfficiency' renamed to 'droughtStress' and 'waterUseEfficiency', respectively, since they can be used for several simulation function outputs.
+- Functions 'spwb_stress', 'spwb_resistances' and 'spwb_waterUseEfficiency' renamed to 'droughtStress', 'resistances' and 'waterUseEfficiency', respectively, since they can now be applied to the output of several simulation function.
 
 # Version 2.3.8
 - Forest management enabled in function 'fordyn' and default management actions defined in 'defaultManagementFunction' and 'defaultManagementArguments'

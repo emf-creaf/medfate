@@ -1,5 +1,5 @@
-\name{spwb_resistances}
-\alias{spwb_resistances}
+\name{resistances}
+\alias{resistances}
 \title{
 Soil-plant resistances
 }
@@ -7,12 +7,12 @@ Soil-plant resistances
 Calculates and draws rhizosphere, root, stem and leaf resistances for simulation time steps
 }
 \usage{
-spwb_resistances(x, cohort = 1, relative = FALSE, draw = FALSE, 
-                 cumulative = FALSE, xlab = NULL, ylab = NULL)
+resistances(x, cohort, relative = FALSE, draw = FALSE, 
+            cumulative = FALSE, xlab = NULL, ylab = NULL)
 }
 \arguments{
-  \item{x}{An object of class \code{spwb}. The function only works with the result of simulations with \code{transpirationMode = "Sperry"}.}
-  \item{cohort}{An integer index indicating the cohort for which resistances are desired (by default the first cohort).}
+  \item{x}{An object of class \code{\link{spwb}}, \code{\link{pwb}}, \code{\link{growth}} or \code{\link{fordyn}}. The function only works with the result of simulations with \code{transpirationMode = "Sperry"}.}
+  \item{cohort}{An string indicating the cohort for which resistances are desired.}
   \item{relative}{A boolean flag to indicate that relative percentages are desired as output}
   \item{draw}{A boolean flag to indicate that a plot should be drawn.}
   \item{cumulative}{A flag to indicate that drawn series should be cumulative.}
@@ -29,5 +29,5 @@ A data frame with dates in rows and resistance segments in columns (Rhizosphere,
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
- \code{\link{spwb}}, \code{\link{plot.spwb}}
+ \code{\link{waterUseEfficiency}}, \code{\link{droughtStress}}
 }

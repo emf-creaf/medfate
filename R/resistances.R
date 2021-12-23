@@ -1,16 +1,22 @@
-spwb_resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE, 
-                           cumulative = FALSE, xlab = NULL, ylab=NULL) {
-  
-  if(x$spwbInput$control$transpirationMode!="Sperry") {
+.resistances_sim<-function(x, cohort, relative = FALSE) {
+  if(inherits(x, c("spwb","pwb"))) {
+    input = x$spwbInput  
+  } else {
+    input = x$growthInput
+  }
+  if(input$control$transpirationMode!="Sperry") {
     stop("Resistances can only be calculated when transpirationMode = 'Sperry'.")
   }
-    
-  VCroot_kmax = x$spwbInput$belowLayers$VCroot_kmax
-  VGrhizo_kmax = x$spwbInput$belowLayers$VGrhizo_kmax
-  VG_nc = x$spwbInput$soil$VG_n
-  VG_alphac = x$spwbInput$soil$VG_alpha
+  cn = row.names(input$cohorts)
+  if(!(cohort %in% cn)) stop("'cohort' must be a string identifying a cohort name")
+  i_coh = which(cn==cohort)
   
-  paramsTranspiration = x$spwbInput$paramsTranspiration
+  VCroot_kmax = input$belowLayers$VCroot_kmax
+  VGrhizo_kmax = input$belowLayers$VGrhizo_kmax
+  VG_nc = input$soil$VG_n
+  VG_alphac = input$soil$VG_alpha
+  
+  paramsTranspiration = input$paramsTranspiration
   VCroot_c = paramsTranspiration$VCroot_c
   VCroot_d = paramsTranspiration$VCroot_d
   VCstem_kmax = paramsTranspiration$VCstem_kmax
@@ -39,16 +45,33 @@ spwb_resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE,
   colnames(resmat) = c("Rhizosphere", "Root", "Stem", "Leaf")
   for(j in 1:nsteps) {
     rrow  = hydraulics_soilPlantResistances(psiSoil = psiSoil[j,],
-                                            psiRhizo = RhizoPsi[[cohort]][j,],
-                                            psiStem = StemPsi[j,cohort],
-                                            PLCstem = StemPLC[j,cohort],
-                                            psiLeaf = LeafPsi[j,cohort],
-                                            VGrhizo_kmax[cohort,],VG_nc,VG_alphac,
-                                            VCroot_kmax[cohort,], VCroot_c[cohort],VCroot_d[cohort],
-                                            VCstem_kmax[cohort], VCstem_c[cohort],VCstem_d[cohort], 
-                                            VCleaf_kmax[cohort], VCleaf_c[cohort],VCleaf_d[cohort])
+                                            psiRhizo = RhizoPsi[[i_coh]][j,],
+                                            psiStem = StemPsi[j,i_coh],
+                                            PLCstem = StemPLC[j,i_coh],
+                                            psiLeaf = LeafPsi[j,i_coh],
+                                            VGrhizo_kmax[i_coh,],VG_nc,VG_alphac,
+                                            VCroot_kmax[i_coh,], VCroot_c[i_coh],VCroot_d[i_coh],
+                                            VCstem_kmax[i_coh], VCstem_c[i_coh],VCstem_d[i_coh], 
+                                            VCleaf_kmax[i_coh], VCleaf_c[i_coh],VCleaf_d[i_coh])
     if(relative) resmat[j,] = 100*rrow/sum(rrow)
     else resmat[j,] = rrow
+  }
+  return(resmat)
+}
+resistances<-function(x, cohort, relative = FALSE, draw = FALSE, 
+                      cumulative = FALSE, xlab = NULL, ylab=NULL) {
+  
+  if(!inherits(x, c("spwb","pwb","growth", "fordyn"))) {
+    stop("'x' should be of class 'spwb', 'pwb', 'growth' or 'fordyn'")
+  }
+  if(inherits(x, c("spwb","pwb", "growth"))) {
+    resmat = .resistances_sim(x = x, cohort = cohort, relative = relative)
+  } else {
+    vec<-vector("list", length(x$GrowthResults))
+    for(i in 1:length(x$GrowthResults)) {
+      vec[[i]] <- .resistances_sim(x = x$GrowthResults[[i]], cohort = cohort, relative = relative)
+    }
+    resmat = .mergeVectorOfMatrices(vec)
   }
   if(draw) {
     if(is.null(ylab)) ylab = ifelse(relative, "Relative resistances (%)", "Resistances")

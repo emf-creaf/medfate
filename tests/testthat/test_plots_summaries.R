@@ -53,6 +53,7 @@ test_that("Can produce all advanced spwb plots and summaries",{
   control = defaultControl("Sperry")
   control$verbose = FALSE
   x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+  coh_1 = row.names(x2$cohorts)[1]
   expect_s3_class(x2, "spwbInput")
   S2<-spwb(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
   expect_s3_class(S2, "spwb")
@@ -121,6 +122,7 @@ test_that("Can produce all advanced spwb plots and summaries",{
   expect_type(droughtStress(S2, index = "ADS", draw=FALSE), "double")
   expect_type(waterUseEfficiency(S2, "Plant An/E", draw=FALSE), "double")
   expect_type(waterUseEfficiency(S2, "Stand An/E", draw=FALSE), "double")
+  expect_type(resistances(S2, cohort = coh_1, draw=FALSE), "double")
 })
 
 test_that("Can produce all advanced subdaily spwb plots",{
@@ -224,6 +226,7 @@ test_that("Can produce all advanced growth plots and summaries",{
   control = defaultControl("Sperry")
   control$verbose = FALSE
   x2 = forest2growthInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+  coh_1 = row.names(x2$cohorts)[1]
   expect_s3_class(x2, "growthInput")
   G2<-growth(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
   expect_s3_class(G2, "growth")
@@ -235,6 +238,7 @@ test_that("Can produce all advanced growth plots and summaries",{
   expect_type(droughtStress(G2, index = "ADS", draw=FALSE), "double")
   expect_type(waterUseEfficiency(G2, "Plant An/E", draw=FALSE), "double")
   expect_type(waterUseEfficiency(G2, "Stand An/E", draw=FALSE), "double")  
+  expect_type(resistances(G2, cohort = coh_1, draw=FALSE), "double")
 })
 
 test_that("Can produce all advanced subdaily growth plots",{
