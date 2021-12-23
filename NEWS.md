@@ -4,12 +4,12 @@
 
 
 # Version 2.4.0
-- Summary functions revised, including new function 'summary.fordyn'
 - Functions 'spwb_stress', 'spwb_resistances' and 'spwb_waterUseEfficiency' renamed to 'droughtStress', 'resistances' and 'waterUseEfficiency', respectively, since they can now be applied to the output of several simulation function.
 
 # Version 2.3.8
-- Forest management enabled in function 'fordyn' and default management actions defined in 'defaultManagementFunction' and 'defaultManagementArguments'
+- Summary functions revised, including new function 'summary.fordyn'
 - Collating intra-annual 'fordyn' results for plotting.
+- Forest management enabled in function 'fordyn' and default management actions defined in 'defaultManagementFunction' and 'defaultManagementArguments'
 - DOY, Photoperiod and JulianDay can be taken from weather input in functions 'spwb', 'pwb' and 'growth'. 
 
 # Version 2.3.7
