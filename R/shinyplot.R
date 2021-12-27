@@ -1,6 +1,7 @@
 
 shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
-  type_out = class(out)[1] #growth or spwb
+  if(!inherits(out, c("growth", "spwb", "fordyn"))) stop("Wrong class for 'out'. Should either be 'spwb', 'growth' or 'fordyn'.")
+  type_out = class(out)[1] #growth, spwb, fordyn
   if(type_out=="spwb") {
     transpirationMode = out$spwbInput$control$transpirationMode
     subdaily_out = out$spwbInput$control$subdailyResults
