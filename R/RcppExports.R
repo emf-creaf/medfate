@@ -69,8 +69,8 @@ carbon_sapwoodStarchCapacity <- function(SA, H, L, V, woodDensity, conduit2sapwo
     .Call(`_medfate_sapwoodStarchCapacity`, SA, H, L, V, woodDensity, conduit2sapwood)
 }
 
-carbon_carbonCompartments <- function(x, units = "kg_m2") {
-    .Call(`_medfate_carbonCompartments`, x, units)
+carbon_carbonCompartments <- function(x, biomassUnits = "kg_m2") {
+    .Call(`_medfate_carbonCompartments`, x, biomassUnits)
 }
 
 .criticalFirelineIntensity <- function(CBH, M) {

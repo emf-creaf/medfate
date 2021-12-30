@@ -194,9 +194,9 @@ double sapwoodStarchCapacity(double SA, double H, NumericVector L, NumericVector
 }
 
 // [[Rcpp::export("carbon_carbonCompartments")]]
-DataFrame carbonCompartments(List x, String units = "kg_m2") {
+DataFrame carbonCompartments(List x, String biomassUnits = "kg_m2") {
   
-  if((units!="kg_m2") & (units !="g_ind")) stop("Wrong units");
+  if((biomassUnits!="kg_m2") & (biomassUnits !="g_ind")) stop("Wrong biomass units");
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
@@ -204,19 +204,13 @@ DataFrame carbonCompartments(List x, String units = "kg_m2") {
   
   //Aboveground parameters  
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  NumericVector DBH = above["DBH"];
-  NumericVector Cover = above["Cover"];
   NumericVector H = above["H"];
   NumericVector N = above["N"];
-  NumericVector CR = above["CR"];
-  NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
-  NumericVector LAI_dead = above["LAI_dead"];
   NumericVector SA = above["SA"];
   
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
-  NumericVector fineRootBiomass(numCohorts,NA_REAL);
-  if(belowdf.containsElementNamed("fineRootBiomass")) fineRootBiomass = clone(Rcpp::as<Rcpp::NumericVector>(belowdf["fineRootBiomass"]));
+  NumericVector fineRootBiomass = clone(Rcpp::as<Rcpp::NumericVector>(belowdf["fineRootBiomass"]));
   List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
   NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["V"]);
   NumericMatrix L = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["L"]);
@@ -239,40 +233,58 @@ DataFrame carbonCompartments(List x, String units = "kg_m2") {
   NumericVector Volume_leaves(numCohorts,0.0);
   NumericVector Volume_sapwood(numCohorts,0.0);
   
-  NumericVector LeafStructBiomass(numCohorts,0.0);
-  NumericVector SapwoodStructBiomass(numCohorts,0.0);
-  NumericVector LabileBiomass(numCohorts, 0.0);
-  NumericVector TotalBiomass(numCohorts, 0.0);
-  NumericVector TotalBiomass_kgm2(numCohorts, 0.0);
+  NumericVector leafStructBiomass(numCohorts,0.0);
+  NumericVector sapwoodStructLivingBiomass(numCohorts,0.0);
+  NumericVector sapwoodStructBiomass(numCohorts,0.0);
+  NumericVector labileBiomass(numCohorts, 0.0);
+  NumericVector totalLivingBiomass(numCohorts, 0.0);
+  NumericVector totalBiomass(numCohorts, 0.0);
+  NumericVector Starch_max_leaves(numCohorts,0.0);
+  NumericVector Starch_max_sapwood(numCohorts,0.0);
   
   for(int j=0;j<numCohorts;j++){
-    LeafStructBiomass[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
-    SapwoodStructBiomass[j] = sapwoodStructuralBiomass(SA[j], H[j], L(j,_),V(j,_), WoodDensity[j]);
+    
+    leafStructBiomass[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
+    sapwoodStructBiomass[j] = sapwoodStructuralBiomass(SA[j], H[j], L(j,_),V(j,_), WoodDensity[j]);
+    sapwoodStructLivingBiomass[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], L(j,_),V(j,_), WoodDensity[j], conduit2sapwood[j]);
     Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
     Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j], L(j,_),V(j,_),WoodDensity[j], conduit2sapwood[j]);
+    Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
+    Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j], 0.2)/Volume_sapwood[j];
+    if(Volume_leaves[j]==0.0) Starch_max_leaves[j] = 0.0;
+    if(Volume_sapwood[j]==0.0) Starch_max_sapwood[j] = 0.0;
+    
     double labileMassLeaf = (sugarLeaf[j]+starchLeaf[j])*(glucoseMolarMass*Volume_leaves[j]);
     double labileMassSapwood = (sugarSapwood[j]+starchSapwood[j])*(glucoseMolarMass*Volume_sapwood[j]);
-    if(NumericVector::is_na(fineRootBiomass[j]))  fineRootBiomass[j] = LeafStructBiomass[j]/2.0; //If missing
-    LabileBiomass[j] = labileMassSapwood+labileMassLeaf;
-    TotalBiomass[j] = LeafStructBiomass[j] + SapwoodStructBiomass[j] + fineRootBiomass[j]+ LabileBiomass[j];
+    labileBiomass[j] = labileMassSapwood+labileMassLeaf;
+    totalLivingBiomass[j] = leafStructBiomass[j] + sapwoodStructLivingBiomass[j] + fineRootBiomass[j]+ labileBiomass[j];
+    totalBiomass[j] = leafStructBiomass[j] + sapwoodStructBiomass[j] + fineRootBiomass[j]+ labileBiomass[j];
   }
-  if(units=="kg_m2") {
+  if(biomassUnits=="kg_m2") {
     for(int j=0;j<numCohorts;j++){
       double f = N[j]/(10000.0*1000.0);
-      LeafStructBiomass[j] = LeafStructBiomass[j]*f;
-      SapwoodStructBiomass[j] = SapwoodStructBiomass[j]*f;
+      leafStructBiomass[j] = leafStructBiomass[j]*f;
+      sapwoodStructBiomass[j] = sapwoodStructBiomass[j]*f;
+      sapwoodStructLivingBiomass[j] = sapwoodStructLivingBiomass[j]*f;
       fineRootBiomass[j] = fineRootBiomass[j]*f;
-      LabileBiomass[j] = LabileBiomass[j]*f;
-      TotalBiomass[j] = TotalBiomass[j]*f;
+      labileBiomass[j] = labileBiomass[j]*f;
+      totalLivingBiomass[j] = totalLivingBiomass[j]*f;
+      totalBiomass[j] = totalBiomass[j]*f;
     }
   }
   
   DataFrame df = DataFrame::create(
-    _["LeafStructBiomass"] = LeafStructBiomass,
-    _["SapwoodStructBiomass"] = SapwoodStructBiomass,
+    _["LeafStorageVolume"] = Volume_leaves,
+    _["SapwoodStorageVolume"] = Volume_sapwood,
+    _["LeafStarchCapacity"] = Starch_max_leaves,
+    _["SapwoodStarchCapacity"] = Starch_max_sapwood,
+    _["LeafStructuralBiomass"] = leafStructBiomass,
+    _["SapwoodStructuralBiomass"] = sapwoodStructBiomass,
+    _["SapwoodLivingStructuralBiomass"] = sapwoodStructLivingBiomass,
     _["FineRootBiomass"] = fineRootBiomass,
-    _["LabileBiomass"] = LabileBiomass,
-    _["TotalBiomass"] = TotalBiomass
+    _["LabileBiomass"] = labileBiomass,
+    _["TotalLivingBiomass"] = totalLivingBiomass,
+    _["TotalBiomass"] = totalBiomass
   );
   df.attr("row.names") = above.attr("row.names");
   return(df);

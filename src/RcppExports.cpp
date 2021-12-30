@@ -247,14 +247,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // carbonCompartments
-DataFrame carbonCompartments(List x, String units);
-RcppExport SEXP _medfate_carbonCompartments(SEXP xSEXP, SEXP unitsSEXP) {
+DataFrame carbonCompartments(List x, String biomassUnits);
+RcppExport SEXP _medfate_carbonCompartments(SEXP xSEXP, SEXP biomassUnitsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< String >::type units(unitsSEXP);
-    rcpp_result_gen = Rcpp::wrap(carbonCompartments(x, units));
+    Rcpp::traits::input_parameter< String >::type biomassUnits(biomassUnitsSEXP);
+    rcpp_result_gen = Rcpp::wrap(carbonCompartments(x, biomassUnits));
     return rcpp_result_gen;
 END_RCPP
 }

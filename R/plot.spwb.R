@@ -183,14 +183,14 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
               summary.freq, ...))
   } 
   else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration",  "GrowthCosts", 
-                      "CarbonBalance", 
+                      "LabileCarbonBalance", 
                       "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport", "RootExudation",
                       "LeafPI0", "StemPI0")) {
-      OM = x$PlantCarbonBalance[[type]][,cohorts,drop=FALSE]
+      OM = x$LabileCarbonBalance[[type]][,cohorts,drop=FALSE]
   } 
   else if(type %in% c("SapwoodArea", "LeafArea", "FineRootArea", 
-                      "SapwoodBiomass", "LeafBiomass", "FineRootBiomass",
-                      "LabileBiomass", "TotalLivingBiomass")) {
+                      "SapwoodStructuralBiomass", "LeafStructuralBiomass", "FineRootBiomass",
+                      "LabileBiomass", "TotalBiomass")) {
     OM = x$PlantStructure[[type]][,cohorts,drop=FALSE]
   } 
   else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth")) {
@@ -332,14 +332,14 @@ plot.fordyn<-function(x, type="StandBasalArea",
     } 
     else if(type %in% TYPES_GROWTH_UNIQUE) {
       if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration",  "GrowthCosts", 
-                     "CarbonBalance", 
+                     "LabileCarbonBalance", 
                      "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport", "RootExudation",
                      "LeafPI0", "StemPI0")) {
-        OM = summary(x, freq = "days", output = paste0("PlantCarbonBalance$",type))[,cohorts,drop=FALSE]
+        OM = summary(x, freq = "days", output = paste0("LabileCarbonBalance$",type))[,cohorts,drop=FALSE]
       } 
       else if(type %in% c("SapwoodArea", "LeafArea", "FineRootArea", 
-                          "SapwoodBiomass", "LeafBiomass", "FineRootBiomass",
-                          "LabileBiomass", "TotalLivingBiomass")) {
+                          "SapwoodStructuralBiomass", "LeafStructuralBiomass", "FineRootBiomass",
+                          "LabileBiomass", "TotalBiomass")) {
         OM = summary(x, freq = "days", output = paste0("PlantStructure$",type))[,cohorts,drop=FALSE]
       } 
       else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth")) {

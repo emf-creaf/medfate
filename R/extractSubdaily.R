@@ -5,7 +5,7 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
   plantTypes = c("E","Ag","An","dEdP","RootPsi",
                 "StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC","PWB")
   PWBTYPES = c("Temperature", "ExtractionInst", plantTypes, sunlitTypes, shadeTypes)
-  CBTYPES = c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "CarbonBalance",
+  CBTYPES = c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "LabileCarbonBalance",
               "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport")
   GROWTHTYPES = c(CBTYPES, PWBTYPES)
   if(is.null(dates)) dates = as.Date(names(x$subdaily))
@@ -92,11 +92,11 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
     }
     colnames(m) = c("datetime", row.names(input$above))
   } else if(output %in% CBTYPES) {
-    ori1 = x$subdaily[[as.character(dates[1])]]$PlantCBInst[[output]]
+    ori1 = x$subdaily[[as.character(dates[1])]]$LabileCarbonBalanceInst[[output]]
     ncols = nrow(ori1)
     m<-data.frame(matrix(nrow = numDates*numSteps, ncol = ncols+1))
     for(i in 1:numDates) {
-      ori = x$subdaily[[as.character(dates[i])]]$PlantCBInst[[output]]
+      ori = x$subdaily[[as.character(dates[i])]]$LabileCarbonBalanceInst[[output]]
       m[((i-1)*numSteps+1):(i*numSteps), 2:(ncols+1)] = t(ori) 
     }
     colnames(m) = c("datetime", row.names(ori1))

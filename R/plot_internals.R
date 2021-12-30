@@ -49,12 +49,12 @@
   return(TYPES)
 }
 .getUniqueDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){
-  TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "CarbonBalance",
+  TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "LabileCarbonBalance",
             "SugarTransport", "LeafPI0", "StemPI0",
             "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport", "RootExudation",
             "SapwoodArea", "LeafArea", 
-            "SapwoodBiomass", "LeafBiomass", "FineRootBiomass",
-            "LabileBiomass", "TotalLivingBiomass",
+            "SapwoodStructuralBiomass", "LeafStructuralBiomass", "FineRootBiomass",
+            "LabileBiomass", "TotalBiomass",
             "SAgrowth", "LAgrowth", 
             "HuberValue")
   if(transpirationMode=="Sperry") {
@@ -68,7 +68,7 @@
   return(TYPES)
 }
 .getSubdailyGROWTHPlotTypes<-function(){
-  TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "CarbonBalance",
+  TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "LabileCarbonBalance",
             "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport",
             .getSubdailySPWBPlotTypes())
   return(TYPES)
@@ -93,7 +93,7 @@
   else if(type=="GrossPhotosynthesis") ylab=expression(paste("Gross photosynthesis ", (gGluc%.%gdry^{-1}%.%d^{-1})))
   else if(type=="MaintenanceRespiration") ylab=expression(paste("Maintenance respiration ", (gGluc%.%gdry^{-1}%.%d^{-1})))
   else if(type=="GrowthCosts") ylab=expression(paste("Growth costs ", (gGluc%.%gdry^{-1}%.%d^{-1})))
-  else if(type=="CarbonBalance") ylab=expression(paste("Carbon balance ", (gGluc%.%gdry^{-1}%.%d^{-1})))
+  else if(type=="LabileCarbonBalance") ylab=expression(paste("Labile carbon balance ", (gGluc%.%gdry^{-1}%.%d^{-1})))
   else if(type=="SugarLeaf") ylab=expression(paste("Leaf sugar concentration  ", (mol%.%L^{-1})))
   else if(type=="StarchLeaf") ylab=expression(paste("Leaf starch concentration  ", (mol%.%L^{-1})))
   else if(type=="SugarSapwood") ylab=expression(paste("Sapwood sugar concentration  ", (mol%.%L^{-1})))
@@ -103,11 +103,11 @@
   else if(type=="SapwoodArea")  ylab = expression(paste("Sapwood area  ",(cm^2)))
   else if(type=="LeafArea")  ylab = expression(paste("Leaf area  ",(m^2)))
   else if(type=="FineRootArea")  ylab = expression(paste("Fine root area  ",(m^2)))
-  else if(type=="SapwoodBiomass")  ylab = expression(paste("Sapwood biomass  ", (gdry%.%ind^{-1})))
-  else if(type=="LeafBiomass")  ylab = expression(paste("Leaf biomass  ", (gdry%.%ind^{-1})))
+  else if(type=="SapwoodStructuralBiomass")  ylab = expression(paste("Sapwood structural biomass  ", (gdry%.%ind^{-1})))
+  else if(type=="LeafStructuralBiomass")  ylab = expression(paste("Leaf structural biomass  ", (gdry%.%ind^{-1})))
   else if(type=="FineRootBiomass")  ylab = expression(paste("Fine root biomass  ", (gdry%.%ind^{-1})))
   else if(type=="LabileBiomass")  ylab = expression(paste("Labile C biomass  ", (gdry%.%ind^{-1})))
-  else if(type=="TotalLivingBiomass")  ylab = expression(paste("Total living biomass  ", (gdry%.%ind^{-1})))
+  else if(type=="TotalBiomass")  ylab = expression(paste("Total biomass  ", (gdry%.%ind^{-1})))
   else if(type=="HuberValue")  ylab = expression(paste("Huber value  ",(cm^2 %.% m^{-2})))
   else if(type=="RootAreaLeafArea")  ylab = expression(paste("Root area / Leaf area  ",(m^2 %.% m^{-2})))
   else if(type=="SAgrowth") ylab = expression(paste("Sapwood area growth rate ",(cm^2 %.% cm^{-2} %.% d^{-1})))
@@ -648,7 +648,7 @@
     if(is.null(ylab)) ylab=expression(paste("iWUE  ", (mu%.%mol%.%mol^{-1})))
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
-  else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "CarbonBalance",
+  else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "LabileCarbonBalance",
                       "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport")) {
     m = extractSubdaily(x, type, dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)

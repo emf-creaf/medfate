@@ -50,13 +50,13 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
   \item{\code{"Stand"}: A data frame where different stand-level variables (see \code{\link{spwb}}).}
   \item{\code{"Plants"}: A list of daily results for plant cohorts (see \code{\link{spwb}}).}
   \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: A list with daily results for sunlit and shade leaves (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
-  \item{\code{"PlantCarbonBalance"}: A list of daily carbon balance results for plant cohorts, with elements:}
+  \item{\code{"LabileCarbonBalance"}: A list of daily labile carbon balance results for plant cohorts, with elements:}
     \itemize{
         \item{\code{"GrossPhotosynthesis"}: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).}
         \item{\code{"MaintentanceRespiration"}: Daily maintenance respiration per dry weight of living biomass (g gluc · g dry-1).}
         \item{\code{"GrowthCosts"}: Daily growth costs per dry weight of living biomass (g gluc · g dry-1).}
         \item{\code{"RootExudation"}: Root exudation per dry weight of living biomass (g gluc · g dry-1).}    
-        \item{\code{"CarbonBalance"}: Daily plant carbon balance (photosynthesis - maintenance respiration - growth costs - root exudation) per dry weight of living biomass (g gluc · g dry-1).}
+        \item{\code{"LabileCarbonBalance"}: Daily labile carbon balance (photosynthesis - maintenance respiration - growth costs - root exudation) per dry weight of living biomass (g gluc · g dry-1).}
         \item{\code{"SugarLeaf"}: Sugar concentration (mol·l-1) in leaves.}
         \item{\code{"StarchLeaf"}: Starch concentration (mol·l-1) in leaves.}
         \item{\code{"SugarSapwood"}: Sugar concentration (mol·l-1) in sapwood.}
@@ -70,11 +70,11 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
         \item{\code{"LeafArea"}: Daily amount of leaf area (in m2) for an average individual of each plant cohort.}
         \item{\code{"SapwoodArea"}: Daily amount of sapwood area (in cm2) for an average individual of each plant cohort.}
         \item{\code{"FineRootArea"}: Daily amount of fine root area (in m2) for an average individual of each plant cohort (only for \code{transpirationMode = "Sperry"}).}
-        \item{\code{"SapwoodBiomass"}: Daily amount of sapwood biomass (in g dry) for an average individual of each plant cohort.}
-        \item{\code{"LeafBiomass"}: Daily amount of leaf biomass (in g dry) for an average individual of each plant cohort.}
+        \item{\code{"SapwoodStructuralBiomass"}: Daily amount of sapwood biomass (in g dry) for an average individual of each plant cohort.}
+        \item{\code{"LeafStructuralBiomass"}: Daily amount of leaf biomass (in g dry) for an average individual of each plant cohort.}
         \item{\code{"FineRootBiomass"}: Daily amount of fine root biomass (in g dry) for an average individual of each plant cohort.}
         \item{\code{"LabileBiomass"}: Daily amount of labile C biomass, i.e. starch and sugars (in g dry) for an average individual of each plant cohort.}
-        \item{\code{"TotalLivingBiomass"}: Daily amount of total living biomass, i.e. excluding heartwood, (in g dry) for an average individual of each plant cohort.}
+        \item{\code{"TotalBiomass"}: Daily amount of total biomass, excluding heartwood, (in g dry) for an average individual of each plant cohort.}
     }
   \item{\code{"PlantGrowth"}: A list of daily growth results for plant cohorts, with elements:}
     \itemize{

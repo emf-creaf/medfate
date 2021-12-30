@@ -134,9 +134,9 @@ Then we can draw the respiration costs (maintenance and growth) in the same unit
 plot(G1, "MaintenanceRespiration", bySpecies = T)
 plot(G1, "GrowthCosts", bySpecies = T)
 ```
-Finally we can display the daily negative or positive balance of the plant, which determines changes in plant carbon pools:
+Finally we can display the daily negative or positive balance of the plant storage, which determines changes in plant carbon pools:
 ```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
-plot(G1, "CarbonBalance", bySpecies = T)
+plot(G1, "LabileCarbonBalance", bySpecies = T)
 ```
 
 ### Carbon storage

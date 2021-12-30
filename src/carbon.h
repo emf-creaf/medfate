@@ -37,4 +37,4 @@ double sugarStarchDynamicsLeaf(double sugarConc, double starchConc, double eqSug
 double sugarStarchDynamicsStem(double sugarConc, double starchConc, double eqSugarConc);
 double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double eqSugarConc);
 
-// NumericVector carbonCompartments(double SA, double LAI, double H, double Z, double N, double SLA, double WoodDensity, double WoodC);
+DataFrame carbonCompartments(List x, String biomassUnits = "kg_m2");

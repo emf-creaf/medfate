@@ -109,7 +109,7 @@ In addition to the former, the following plots are available for objects \code{\
  \itemize{
     \item{\code{"GrossPhotosynthesis"}:}{ Gross photosynthesis rate per dry weight.}
     \item{\code{"MaintenanceRespiration"}:}{ Maintenance respiration cost per dry weight.}
-    \item{\code{"CarbonBalance"}:}{ Carbon balance per dry weight.}
+    \item{\code{"LabileCarbonBalance"}:}{ Labile carbon balance per dry weight.}
     \item{\code{"SugarLeaf"}:}{ Sugar concentration in leaves.}
     \item{\code{"StarchLeaf"}:}{ Starch concentration in leaves.}
     \item{\code{"SugarSapwood"}:}{ Sugar concentration in sapwood.}
@@ -121,11 +121,11 @@ In addition to the former, the following plots are available for objects \code{\
     \item{\code{"SapwoodArea"}:}{ Sapwood area per individual.}
     \item{\code{"LeafArea"}:}{ Leaf area per individual.}
     \item{\code{"FineRootArea"}:}{ Fine root area per individual (only for \code{transpirationMode = "Sperry"}).}
-    \item{\code{"SapwoodBiomass"}:}{ Sapwood dry biomass per individual.}
-    \item{\code{"LeafBiomass"}:}{ Leaf dry biomass per individual.}
+    \item{\code{"SapwoodStructuralBiomass"}:}{ Sapwood structural dry biomass per individual.}
+    \item{\code{"LeafStructuralBiomass"}:}{ Leaf structural dry biomass per individual.}
     \item{\code{"FineRootBiomass"}:}{ Fine root dry biomass per individual.}
     \item{\code{"LabileBiomass"}:}{ Labile C biomass per individual.}
-    \item{\code{"TotalLivingBiomass"}:}{ Total dry biomass per individual.}
+    \item{\code{"TotalBiomass"}:}{ Total dry biomass per individual, excluding heartwood.}
     \item{\code{"SAgrowth"}:}{ Sapwood area growth rate.}
     \item{\code{"LAgrowth"}:}{ Leaf area growth rate.}
     \item{\code{"FRAgrowth"}:}{ Fine root area growth rate (only for \code{transpirationMode = "Sperry"}).}

@@ -114,7 +114,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                                   )
   carbon_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
                           "Maintenance respiration per dry" = "MaintenanceRespiration",
-                          "Carbon balance per dry" = "CarbonBalance",
+                          "Labile carbon balance per dry" = "LabileCarbonBalance",
                           "Leaf sugar concentration" = "SugarLeaf",
                           "Leaf starch concentration" = "StarchLeaf",
                           "Sapwood sugar concentration" = "SugarSapwood",
@@ -126,11 +126,11 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   
   growth_plot_choices = c("Leaf area" = "LeafArea",
                           "Sapwood area" = "SapwoodArea",
-                          "Leaf biomass per individual" = "LeafBiomass",
-                          "Sapwood biomass per individual" = "SapwoodBiomass",
+                          "Leaf structural biomass per individual" = "LeafStructuralBiomass",
+                          "Sapwood structural biomass per individual" = "SapwoodStructuralBiomass",
                           "Fine root biomass per individual" = "FineRootBiomass",
                           "Labile carbon biomass per individual" = "LabileBiomass",
-                          "Total dry biomass per individual" = "TotalLivingBiomass",
+                          "Total dry biomass per individual" = "TotalBiomass",
                           "Sapwood area growth" = "SAgrowth",
                           "Leaf area growth" = "LAgrowth",
                           "Sapwood area / Leaf area" = "HuberValue")
@@ -143,7 +143,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   }
   subdaily_carbon_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
                                    "Maintenance respiration per dry" = "MaintenanceRespiration",
-                                   "Carbon balance per dry" = "CarbonBalance",
+                                   "Labile carbon balance per dry" = "LabileCarbonBalance",
                                    "Leaf sugar concentration" = "SugarLeaf",
                                    "Leaf starch concentration" = "StarchLeaf",
                                    "Sapwood sugar concentration" = "SugarSapwood",
