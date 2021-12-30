@@ -26,6 +26,7 @@ carbon_sugarConcentration(osmoticWP, temp, nonSugarConc)
 carbon_osmoticWaterPotential(sugarConc, temp, nonSugarConc)
 carbon_relativeSapViscosity(sugarConc, temp)
 carbon_sugarStarchDynamicsLeaf(sugarConc, starchConc, eqSugarConc)
+carbon_sugarStarchDynamicsStem(sugarConc, starchConc, eqSugarConc)
 }
 \arguments{
   \item{LAI}{Leaf area index.}
@@ -48,8 +49,16 @@ carbon_sugarStarchDynamicsLeaf(sugarConc, starchConc, eqSugarConc)
 \value{
 Values returned for each function are:
 \itemize{
-\item{\code{carbon_leafStarchCapacity}: Capacity of storing starch in the leaf compartment (mol glucose).}
-\item{\code{carbon_sapwoodStarchCapacity}: Capacity of storing starch in the sapwood compartment (mol glucose).}
+\item{\code{carbon_leafStarchCapacity}: Capacity of storing starch in the leaf compartment (mol gluc/ind.).}
+\item{\code{carbon_leafStructuralBiomass}: Leaf structural biomass (g dry/ind.)}
+\item{\code{carbon_sapwoodStarchCapacity}: Capacity of storing starch in the sapwood compartment (mol gluc/ind.).}
+\item{\code{carbon_sapwoodStructuralBiomass}: Sapwood structural biomass (g dry/ind.)}
+\item{\code{carbon_sapwoodStructuralLivingBiomass}: Living sapwood (parenchyma) structural biomass (g dry/ind.)}
+\item{\code{carbon_sugarConcentration}: Sugar concentration (mol gluc/l)}
+\item{\code{carbon_osmoticWaterPotential}: Osmotic component of water potential (MPa)}
+\item{\code{carbon_relativeSapViscosity}: Relative viscosity of sapwood with respect to pure water.}
+\item{\code{carbon_sugarStarchDynamicsLeaf}: Rate of conversion from sugar to starch in leaf (mol gluc/l/s).}
+\item{\code{carbon_sugarStarchDynamicsStem}: Rate of conversion from sugar to starch in leaf (mol gluc/l/s).}
 }
 }
 \author{

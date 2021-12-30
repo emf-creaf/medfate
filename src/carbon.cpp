@@ -159,9 +159,9 @@ double sapwoodStorageVolume(double SA, double H, NumericVector L, NumericVector 
 }
 
 /**
- * sapwood structural biomass in g dw
+ * sapwood structural biomass in g dw / ind
  * 
- *  SA - cm2
+ *  SA - cm2·ind-1
  *  H - cm
  *  Z - mm
  *  woodDensity - g/cm3
