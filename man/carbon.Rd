@@ -10,6 +10,7 @@
 \alias{carbon_osmoticWaterPotential}
 \alias{carbon_sugarStarchDynamicsLeaf}
 \alias{carbon_sugarStarchDynamicsStem}
+\alias{carbon_carbonCompartments}
 \title{
 Carbon-related functions
 }
@@ -27,6 +28,7 @@ carbon_osmoticWaterPotential(sugarConc, temp, nonSugarConc)
 carbon_relativeSapViscosity(sugarConc, temp)
 carbon_sugarStarchDynamicsLeaf(sugarConc, starchConc, eqSugarConc)
 carbon_sugarStarchDynamicsStem(sugarConc, starchConc, eqSugarConc)
+carbon_carbonCompartments(x, units = "kg_m2")
 }
 \arguments{
   \item{LAI}{Leaf area index.}
@@ -45,6 +47,8 @@ carbon_sugarStarchDynamicsStem(sugarConc, starchConc, eqSugarConc)
   \item{sugarConc}{Concentration of soluble sugars (mol/l).}
   \item{starchConc}{Concentration of starch (mol/l)}
   \item{eqSugarConc}{Equilibrium concentration of soluble sugars (mol/l).}
+  \item{x}{An object of class \code{\link{growthInput}}.}
+  \item{units}{A string for output units, either "g_ind" (g per individual) or "kg_m2" (kg per square meter).}
 }
 \value{
 Values returned for each function are:
@@ -59,6 +63,8 @@ Values returned for each function are:
 \item{\code{carbon_relativeSapViscosity}: Relative viscosity of sapwood with respect to pure water.}
 \item{\code{carbon_sugarStarchDynamicsLeaf}: Rate of conversion from sugar to starch in leaf (mol gluc/l/s).}
 \item{\code{carbon_sugarStarchDynamicsStem}: Rate of conversion from sugar to starch in leaf (mol gluc/l/s).}
+\item{\code{carbon_carbonCompartments}: A data frame with the size of compartments for each plant cohort, in the specified units.}
+
 }
 }
 \author{
