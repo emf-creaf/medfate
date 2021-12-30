@@ -268,14 +268,15 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   DataFrame belowdf;
   
   if(transpirationMode == "Granier") {
-    NumericVector SLA = paramsAnatomydf["SLA"];
+    NumericVector SLA(numCohorts, NA_REAL); 
+    if(paramsAnatomydf.containsElementNamed("SLA")) SLA = paramsAnatomydf["SLA"];
     NumericVector CRSV(numCohorts);
-    NumericVector FRB(numCohorts);
+    NumericVector FRB(numCohorts, NA_REAL);
     for(int c=0;c<numCohorts;c++){
       L(c,_) = coarseRootLengths(V(c,_), dVec, 0.5); //Arbitrary ratio (to revise some day)
       CRSV[c] = coarseRootSoilVolume(V(c,_), dVec, 0.5);
       //Assume fine root biomass is half leaf structural biomass
-      FRB[c] = leafStructuralBiomass(LAI_live[c], N[c], SLA[c]);
+      if(!NumericVector::is_na(SLA[c])) FRB[c] = leafStructuralBiomass(LAI_live[c], N[c], SLA[c]);
     }
     if(plantWaterPools) {
       belowdf = DataFrame::create(_["Z50"] = Z50,

@@ -194,7 +194,7 @@ double sapwoodStarchCapacity(double SA, double H, NumericVector L, NumericVector
 }
 
 // [[Rcpp::export("carbon_carbonCompartments")]]
-DataFrame carbonCompartments(List x, String biomassUnits = "kg_m2") {
+DataFrame carbonCompartments(List x, String biomassUnits = "g_m2") {
   
   if((biomassUnits!="kg_m2") & (biomassUnits !="g_ind")) stop("Wrong biomass units");
   //Cohort info
@@ -262,7 +262,7 @@ DataFrame carbonCompartments(List x, String biomassUnits = "kg_m2") {
   }
   if(biomassUnits=="kg_m2") {
     for(int j=0;j<numCohorts;j++){
-      double f = N[j]/(10000.0*1000.0);
+      double f = N[j]/(10000.0);
       leafStructBiomass[j] = leafStructBiomass[j]*f;
       sapwoodStructBiomass[j] = sapwoodStructBiomass[j]*f;
       sapwoodStructLivingBiomass[j] = sapwoodStructLivingBiomass[j]*f;

@@ -57,6 +57,9 @@
   else if(length(output_vec)==2) {
     if(!(output_vec[2] %in% names(object[[output_vec[1]]]))) stop(paste0("Unrecognized output string: '", output ,"'\n"))
   }
+  else if(length(output_vec)==1 && output_vec[1]=="LabileCarbonBalance") {
+    output_vec = rep(output_vec, 2)
+  }
   
   if(output_vec[1] %in% c("Soil", "Stand", "Temperature", 
                           "WaterBalance", "EnergyBalance")) {

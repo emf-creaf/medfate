@@ -469,10 +469,10 @@ List growthDay1(List x, NumericVector meteovec,
 
       //Biomass balance at the individual level (g_ind)
       double ind_biomass_balance = LabileBiomassChange[j] + GrowthBiomassIncrement[j] - SenescenceBiomassLoss[j];
-      //Transform biomass changes to stand-level (from g_ind to kg_m2)
-      LabileBiomassChange[j] = LabileBiomassChange[j] * N[j]/(10000.0*1000.0);
-      GrowthBiomassIncrement[j] = GrowthBiomassIncrement[j] * N[j]/(10000.0*1000.0);
-      SenescenceBiomassLoss[j] = SenescenceBiomassLoss[j] * N[j]/(10000.0*1000.0);
+      //Transform biomass changes to stand-level (from g dw_ind to g dw_m2)
+      LabileBiomassChange[j] = LabileBiomassChange[j] * N[j]/(10000.0);
+      GrowthBiomassIncrement[j] = GrowthBiomassIncrement[j] * N[j]/(10000.0);
+      SenescenceBiomassLoss[j] = SenescenceBiomassLoss[j] * N[j]/(10000.0);
 
       //MORTALITY Death by carbon starvation or dessication
       double Ndead_day = 0.0;
@@ -516,8 +516,8 @@ List growthDay1(List x, NumericVector meteovec,
         // Update density and increase the number of dead plants
         Ndead_day = std::min(Ndead_day, N[j]);
         double Cdead_day = Cover[j]*(Ndead_day/N[j]);
-        //Biomass loss as the decrease in density multiplied by the total biomass after including individual biomass changes (kg/m2)
-        MortalityBiomassLoss[j] = Ndead_day*(ind_biomass_balance+TotalBiomass[j])/(10000.0*1000.0);
+        //Biomass loss as the decrease in density multiplied by the total biomass after including individual biomass changes (g/m2)
+        MortalityBiomassLoss[j] = Ndead_day*(ind_biomass_balance+TotalBiomass[j])/(10000.0);
         N[j] = N[j] - Ndead_day;
         N_dead[j] = N_dead[j] + Ndead_day;
         if(isShrub) {
@@ -1176,10 +1176,10 @@ List growthDay2(List x, NumericVector meteovec,
       
       //BIOMASS BALANCE AT THE INDIVIDUAL LEVEL (g/ind)
       double ind_biomass_balance = LabileBiomassChange[j] + GrowthBiomassIncrement[j] - SenescenceBiomassLoss[j];
-      //Transform biomass changes to stand-level (from g_ind to kg_m2)
-      LabileBiomassChange[j] = LabileBiomassChange[j] * N[j]/(10000.0*1000.0);
-      GrowthBiomassIncrement[j] = GrowthBiomassIncrement[j] * N[j]/(10000.0*1000.0);
-      SenescenceBiomassLoss[j] = SenescenceBiomassLoss[j] * N[j]/(10000.0*1000.0);
+      //Transform biomass changes to stand-level (from g dw_ind to g dw_m2)
+      LabileBiomassChange[j] = LabileBiomassChange[j] * N[j]/(10000.0);
+      GrowthBiomassIncrement[j] = GrowthBiomassIncrement[j] * N[j]/(10000.0);
+      SenescenceBiomassLoss[j] = SenescenceBiomassLoss[j] * N[j]/(10000.0);
       
       //MORTALITY Death by carbon starvation or dessication
       double Ndead_day = 0.0;
@@ -1227,7 +1227,7 @@ List growthDay2(List x, NumericVector meteovec,
         Ndead_day = std::min(Ndead_day, N[j]);
         double Cdead_day = Cover[j]*(Ndead_day/N[j]);
         //Biomass loss as the decrease in density multiplied by the total biomass after including individual biomass changes (kg/m2)
-        MortalityBiomassLoss[j] = Ndead_day*(ind_biomass_balance+TotalBiomass[j])/(10000.0*1000.0);
+        MortalityBiomassLoss[j] = Ndead_day*(ind_biomass_balance+TotalBiomass[j])/(10000.0);
         N[j] = N[j] - Ndead_day;
         N_dead[j] = N_dead[j] + Ndead_day;
         if(isShrub) {

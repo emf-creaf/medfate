@@ -52,6 +52,8 @@
   TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "LabileCarbonBalance",
             "SugarTransport", "LeafPI0", "StemPI0",
             "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport", "RootExudation",
+            "GrowthBiomassIncrement","SenescenceBiomassLoss","LabileBiomassChange",
+            "MortalityBiomassLoss","PlantBiomassBalance",
             "SapwoodArea", "LeafArea", 
             "SapwoodStructuralBiomass", "LeafStructuralBiomass", "FineRootBiomass",
             "LabileBiomass", "TotalBiomass",
@@ -100,6 +102,11 @@
   else if(type=="StarchSapwood") ylab=expression(paste("Sapwood starch concentration  ", (mol%.%L^{-1})))
   else if(type=="SugarTransport") ylab=expression(paste("Floem sugar transport rate ", (mmol%.%s^{-1})))
   else if(type=="RootExudation") ylab=expression(paste("Root exudation ", (gGluc%.%gdry^{-1})))
+  else if(type=="GrowthBiomassIncrement") ylab=expression(paste("Growth biomass increment ", (g%.%m^{-2})))
+  else if(type=="SenescenceBiomassLoss") ylab=expression(paste("Senescence biomass loss ", (g%.%m^{-2})))
+  else if(type=="LabileBiomassChange") ylab=expression(paste("Labile biomass change ", (g%.%m^{-2})))
+  else if(type=="MortalityBiomassLoss") ylab=expression(paste("Mortality biomass loss ", (g%.%m^{-2})))
+  else if(type=="PlantBiomassBalance") ylab=expression(paste("Plant biomass balance ", (g%.%m^{-2})))
   else if(type=="SapwoodArea")  ylab = expression(paste("Sapwood area  ",(cm^2)))
   else if(type=="LeafArea")  ylab = expression(paste("Leaf area  ",(m^2)))
   else if(type=="FineRootArea")  ylab = expression(paste("Fine root area  ",(m^2)))

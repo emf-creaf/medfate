@@ -5,6 +5,7 @@
 
 # Version 2.4.0
 - Functions 'spwb_stress', 'spwb_resistances' and 'spwb_waterUseEfficiency' renamed to 'droughtStress', 'resistances' and 'waterUseEfficiency', respectively, since they can now be applied to the output of several simulation function.
+- Plant biomass balance in growth
 
 # Version 2.3.8
 - Summary functions revised, including new function 'summary.fordyn'

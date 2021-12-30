@@ -65,6 +65,14 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
         \item{\code{"LeafPI0"}: Osmotic potential at full turgor of symplastic leaf tissue (MPa).}
         \item{\code{"StemPI0"}: Osmotic potential at full turgor of symplastic stem tissue (MPa).}
       }
+  \item{\code{"PlantBiomassBalance"}: A list of daily plant biomass balance results for plant cohorts, with elements:}
+    \itemize{
+        \item{\code{"GrowthBiomassIncrement"}: Daily growth biomass increment (g dry · m-2).}
+        \item{\code{"SenescenceBiomassLoss"}: Daily maintenance respiration per dry weight of living biomass (g dry · m-2).}
+        \item{\code{"LabileBiomassChange"}: Daily growth costs per dry weight of living biomass (g dry · m-2).}
+        \item{\code{"MortalityBiomassLoss"}: Root exudation per dry weight of living biomass (g dry · m-2).}    
+        \item{\code{"PlantBiomassBalance"}: Daily plant biomass balance (labile change + growth - senescence - mortality) per `dry weight of living biomass (g dry · m-2).}
+      }
   \item{\code{"PlantStructure"}: A list of daily area and biomass values for compartments of plant cohorts, with elements:}
     \itemize{
         \item{\code{"LeafArea"}: Daily amount of leaf area (in m2) for an average individual of each plant cohort.}

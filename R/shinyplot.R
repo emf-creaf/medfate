@@ -45,7 +45,11 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
     plot_main_choices = c(plot_main_choices, "Energy balance")
   }
   if(type_out %in% c("growth", "fordyn")) {
-    plot_main_choices = c(plot_main_choices, "Carbon balance", "Growth")
+    plot_main_choices = c(plot_main_choices, 
+                          "Labile carbon balance",
+                          "Plant biomass balance",
+                          "Plant structure",
+                          "Plant growth")
   }
   if(type_out=="fordyn") {
     plot_main_choices = c(plot_main_choices, "Forest dynamics")
@@ -112,7 +116,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                                   "Leaf gross photosynthesis" = "LeafGrossPhotosynthesis",
                                   "Leaf net photosynthesis" = "LeafNetPhotosynthesis"
                                   )
-  carbon_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
+  labile_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
                           "Maintenance respiration per dry" = "MaintenanceRespiration",
                           "Labile carbon balance per dry" = "LabileCarbonBalance",
                           "Leaf sugar concentration" = "SugarLeaf",
@@ -124,24 +128,30 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                           "Leaf osmotic potential at full turgor" = "LeafPI0",
                           "Stem osmotic potential at full turgor" = "StemPI0")
   
-  growth_plot_choices = c("Leaf area" = "LeafArea",
+  plant_balance_plot_choices = c("Growth biomass increment (g/m2)" = "GrowthBiomassIncrement",
+                                 "Senescence biomass loss (g/m2)" = "SenescenceBiomassLoss",
+                                 "Labile biomass change (g/m2)" = "LabileBiomassChange",
+                                 "Mortality biomass loss (g/m2)" = "MortalityBiomassLoss",
+                                 "Plant biomass balance (g/m2)" = "PlantBiomassBalance")
+  plant_structure_plot_choices = c("Leaf area" = "LeafArea",
                           "Sapwood area" = "SapwoodArea",
                           "Leaf structural biomass per individual" = "LeafStructuralBiomass",
                           "Sapwood structural biomass per individual" = "SapwoodStructuralBiomass",
                           "Fine root biomass per individual" = "FineRootBiomass",
                           "Labile carbon biomass per individual" = "LabileBiomass",
                           "Total dry biomass per individual" = "TotalBiomass",
-                          "Sapwood area growth" = "SAgrowth",
-                          "Leaf area growth" = "LAgrowth",
                           "Sapwood area / Leaf area" = "HuberValue")
+  
+  plant_growth_plot_choices = c("Sapwood area growth" = "SAgrowth",
+                                "Leaf area growth" = "LAgrowth")
   if(transpirationMode=="Sperry") {
-    growth_plot_choices <-c(growth_plot_choices,
-                            "Fine root area" = "FineRootArea",
-                            "Fine root area growth" = "FRAgrowth",
-                            "Fine root area / Leaf area" = "RootAreaLeafArea"
-    )
+    plant_growth_plot_choices <-c(plant_growth_plot_choices,
+                                  "Fine root area growth" = "FRAgrowth")
+    plant_structure_plot_choices <-c(plant_structure_plot_choices,
+                                  "Fine root area" = "FineRootArea",
+                                  "Fine root area / Leaf area" = "RootAreaLeafArea")
   }
-  subdaily_carbon_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
+  subdaily_labile_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
                                    "Maintenance respiration per dry" = "MaintenanceRespiration",
                                    "Labile carbon balance per dry" = "LabileCarbonBalance",
                                    "Leaf sugar concentration" = "SugarLeaf",
@@ -317,15 +327,17 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
       if(main_plot=="Water balance") sub_choices = wb_plot_choices
       else if(main_plot=="Stand") sub_choices = stand_plot_choices
       else if(main_plot=="Plants") sub_choices = plant_plot_choices
-      else if(main_plot=="Carbon balance") sub_choices = carbon_plot_choices
+      else if(main_plot=="Labile carbon balance") sub_choices = labile_plot_choices
+      else if(main_plot=="Plant biomass balance") sub_choices = plant_balance_plot_choices
       else if(main_plot=="Energy balance") sub_choices = energy_plot_choices
-      else if(main_plot=="Growth") sub_choices = growth_plot_choices
+      else if(main_plot=="Plant structure") sub_choices = plant_structure_plot_choices
+      else if(main_plot=="Plant growth") sub_choices = growth_plot_choices
       else if(main_plot=="Forest dynamics") sub_choices = forest_dynamics_plot_choices
       else sub_choices = soil_plot_choices
 
       if(input$subdaily_check && subdaily_out) {
         if(main_plot=="Plants") sub_choices = subdaily_plant_plot_choices
-        else if(main_plot=="Carbon balance")  sub_choices = subdaily_carbon_plot_choices
+        else if(main_plot=="Labile carbon balance")  sub_choices = subdaily_labile_plot_choices
         else if(main_plot=="Energy balance") sub_choices = subdaily_energy_plot_choices
         else sub_choices = subdaily_soil_plot_choices
       }
