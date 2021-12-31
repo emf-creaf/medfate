@@ -1840,6 +1840,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
         std::string c = as<std::string>(dateStrings[i]);
         Rcout<<"\n [Year "<< c.substr(0, 4)<< "]: ";
         DataFrame ccIni_m2 = carbonCompartments(x, "g_m2");
+        cohortBiomassBalanceSum = 0.0;
         initialCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccIni_m2["TotalBiomass"]));
       } 
       else if(i%10 == 0) Rcout<<".";//<<i;
@@ -1996,17 +1997,17 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
       double finalCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccFin_m2["TotalBiomass"]));
       if(verbose) {
         Rcout<<"\n";
+        Rcout<<" Initial Cohort biomass (g/m2): "<<initialCohortBiomass<<"\n";
+        Rcout<<" Final Cohort biomass (g/m2): "<<finalCohortBiomass<<"\n";
         Rcout<<" Cohort biomass change (g/m2): " << finalCohortBiomass - initialCohortBiomass <<" balance: " << cohortBiomassBalanceSum<<"\n";
       }
-      initialCohortBiomass = finalCohortBiomass;
-      cohortBiomassBalanceSum = 0.0;
     }
     
     //5 Update structural variables
     if(((i<(numDays-1)) && (DOY[i+1]==1)) || (i==(numDays-1))) { 
       
       //Dead structure before applying growth
-      if(verbose) Rcout<<" Update structural variables";
+      if(verbose) Rcout<<" Update structural variables\n";
       iyear++;
       
       NumericVector DBH = above["DBH"];
@@ -2138,12 +2139,12 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     Named("LeafPI0") = LeafPI0,
     Named("StemPI0") = StemPI0
   );
-  List plantBiomassBalance = List::create(_["StructuralBiomassBalance"] = StructuralBiomassBalance,
-                                          _["LabileBiomassBalance"] = LabileBiomassBalance,
-                                          _["PlantBiomassBalance"] = PlantBiomassBalance,
-                                          _["MortalityBiomassLoss"] = MortalityBiomassLoss,
-                                          _["CohortBiomassBalance"] = CohortBiomassBalance);
-
+  List biomassBalance = List::create(_["StructuralBiomassBalance"] = StructuralBiomassBalance,
+                                     _["LabileBiomassBalance"] = LabileBiomassBalance,
+                                     _["PlantBiomassBalance"] = PlantBiomassBalance,
+                                     _["MortalityBiomassLoss"] = MortalityBiomassLoss,
+                                     _["CohortBiomassBalance"] = CohortBiomassBalance);
+  
   List plantGrowth, plantStructure;
   
   List l;
@@ -2165,7 +2166,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                      Named("Stand")=Stand,
                      Named("Plants") = plantDWOL,
                      Named("LabileCarbonBalance") = labileCarbonBalance,
-                     Named("PlantBiomassBalance") = plantBiomassBalance,
+                     Named("BiomassBalance") = biomassBalance,
                      Named("PlantStructure") = plantStructure,
                      Named("PlantGrowth") = plantGrowth,
                      Named("subdaily") =  subdailyRes);
@@ -2195,7 +2196,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                    Named("SunlitLeaves") = sunlitDO,
                    Named("ShadeLeaves") = shadeDO,
                    Named("LabileCarbonBalance") = labileCarbonBalance,
-                   Named("PlantBiomassBalance") = plantBiomassBalance,
+                   Named("BiomassBalance") = biomassBalance,
                    Named("PlantStructure") = plantStructure,
                    Named("PlantGrowth") = plantGrowth,
                    Named("subdaily") =  subdailyRes);

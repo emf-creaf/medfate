@@ -47,7 +47,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   if(type_out %in% c("growth", "fordyn")) {
     plot_main_choices = c(plot_main_choices, 
                           "Labile carbon balance",
-                          "Plant biomass balance",
+                          "Biomass balance",
                           "Plant structure",
                           "Plant growth")
   }
