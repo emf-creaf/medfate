@@ -100,11 +100,11 @@
 <li><p><code>"Stand"</code>: A data frame where different stand-level variables (see <code><a href="spwb.html">spwb</a></code>).</p></li>
 <li><p><code>"Plants"</code>: A list of daily results for plant cohorts (see <code><a href="spwb.html">spwb</a></code>).</p></li>
 <li><p><code>"SunlitLeaves"</code> and <code>"ShadeLeaves"</code>: A list with daily results for sunlit and shade leaves (only for <code>transpirationMode = "Sperry"</code>; see <code><a href="spwb.html">spwb</a></code>).</p></li>
-<li><p><code>"PlantCarbonBalance"</code>: A list of daily carbon balance results for plant cohorts, with elements:</p><ul><li><p><code>"GrossPhotosynthesis"</code>: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).</p></li>
+<li><p><code>"LabileCarbonBalance"</code>: A list of daily labile carbon balance results for plant cohorts, with elements:</p><ul><li><p><code>"GrossPhotosynthesis"</code>: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).</p></li>
 <li><p><code>"MaintentanceRespiration"</code>: Daily maintenance respiration per dry weight of living biomass (g gluc · g dry-1).</p></li>
 <li><p><code>"GrowthCosts"</code>: Daily growth costs per dry weight of living biomass (g gluc · g dry-1).</p></li>
 <li><p><code>"RootExudation"</code>: Root exudation per dry weight of living biomass (g gluc · g dry-1).</p></li>
-<li><p><code>"CarbonBalance"</code>: Daily plant carbon balance (photosynthesis - maintenance respiration - growth costs - root exudation) per dry weight of living biomass (g gluc · g dry-1).</p></li>
+<li><p><code>"LabileCarbonBalance"</code>: Daily labile carbon balance (photosynthesis - maintenance respiration - growth costs - root exudation) per dry weight of living biomass (g gluc · g dry-1).</p></li>
 <li><p><code>"SugarLeaf"</code>: Sugar concentration (mol·l-1) in leaves.</p></li>
 <li><p><code>"StarchLeaf"</code>: Starch concentration (mol·l-1) in leaves.</p></li>
 <li><p><code>"SugarSapwood"</code>: Sugar concentration (mol·l-1) in sapwood.</p></li>
@@ -113,14 +113,20 @@
 <li><p><code>"LeafPI0"</code>: Osmotic potential at full turgor of symplastic leaf tissue (MPa).</p></li>
 <li><p><code>"StemPI0"</code>: Osmotic potential at full turgor of symplastic stem tissue (MPa).</p></li>
 </ul></li>
+<li><p><code>"BiomassBalance"</code>: A list of daily plant biomass balance results for plant cohorts, with elements:</p><ul><li><p><code>"StructuralBiomassBalance"</code>: Daily structural biomass balance (g dry · ind-2).</p></li>
+<li><p><code>"LabileBiomassBalance"</code>: Daily labile biomass balance (g dry · ind-2).</p></li>
+<li><p><code>"PlantBiomassBalance"</code>: Daily plant biomass balance, i.e. labile change + structural change (g dry · ind-2).</p></li>
+<li><p><code>"MortalityBiomassLoss"</code>: Biomass loss due to mortality (g dry · m-2).</p></li>
+<li><p><code>"CohortBiomassBalance"</code>: Daily cohort biomass balance (including mortality) (g dry · m-2).</p></li>
+</ul></li>
 <li><p><code>"PlantStructure"</code>: A list of daily area and biomass values for compartments of plant cohorts, with elements:</p><ul><li><p><code>"LeafArea"</code>: Daily amount of leaf area (in m2) for an average individual of each plant cohort.</p></li>
 <li><p><code>"SapwoodArea"</code>: Daily amount of sapwood area (in cm2) for an average individual of each plant cohort.</p></li>
 <li><p><code>"FineRootArea"</code>: Daily amount of fine root area (in m2) for an average individual of each plant cohort (only for <code>transpirationMode = "Sperry"</code>).</p></li>
-<li><p><code>"SapwoodBiomass"</code>: Daily amount of sapwood biomass (in g dry) for an average individual of each plant cohort.</p></li>
-<li><p><code>"LeafBiomass"</code>: Daily amount of leaf biomass (in g dry) for an average individual of each plant cohort.</p></li>
+<li><p><code>"SapwoodStructuralBiomass"</code>: Daily amount of sapwood biomass (in g dry) for an average individual of each plant cohort.</p></li>
+<li><p><code>"LeafStructuralBiomass"</code>: Daily amount of leaf biomass (in g dry) for an average individual of each plant cohort.</p></li>
 <li><p><code>"FineRootBiomass"</code>: Daily amount of fine root biomass (in g dry) for an average individual of each plant cohort.</p></li>
 <li><p><code>"LabileBiomass"</code>: Daily amount of labile C biomass, i.e. starch and sugars (in g dry) for an average individual of each plant cohort.</p></li>
-<li><p><code>"TotalLivingBiomass"</code>: Daily amount of total living biomass, i.e. excluding heartwood, (in g dry) for an average individual of each plant cohort.</p></li>
+<li><p><code>"TotalBiomass"</code>: Daily amount of total biomass, excluding heartwood, (in g dry) for an average individual of each plant cohort.</p></li>
 </ul></li>
 <li><p><code>"PlantGrowth"</code>: A list of daily growth results for plant cohorts, with elements:</p><ul><li><p><code>"LAgrowth"</code>: Leaf area growth relative to sapwood area (in m2·cm-2·day-1) for an average individual of each plant cohort.</p></li>
 <li><p><code>"SAgrowth"</code>: Sapwood area relative growth rate (in cm2·cm-2·day-1) for an average individual of each plant cohort.</p></li>
@@ -165,8 +171,15 @@
 <span class="r-in"><span class="va">G1</span><span class="op">&lt;-</span><span class="fu">growth</span><span class="op">(</span><span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 291.257</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Year 2001:.................................... [update structural variables] done.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]: ....................................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Initial Cohort biomass (g/m2): 7612.69</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Final Cohort biomass (g/m2): 8577.81</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Cohort biomass change (g/m2): 965.124 balance: 965.124</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Update structural variables</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 271.399</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -19.8579</span>

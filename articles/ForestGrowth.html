@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Forest growth</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2021-12-23</h4>
+            <h4 data-toc-skip class="date">2021-12-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/ForestGrowth.Rmd" class="external-link"><code>vignettes/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -208,10 +208,10 @@
 <p>Belowground parameters can be seen in <code>below</code> and include root distribution as well as maximum root and rhizosphere conductances by soil layer:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">below</span></code></pre></div>
-<pre><code><span class="co">##        Z50  Z95 coarseRootSoilVolume</span>
-<span class="co">## T1_148 750 3000            0.6815696</span>
-<span class="co">## T2_168 750 3000            0.6815696</span>
-<span class="co">## S1_165 300 1500            0.4242041</span></code></pre>
+<pre><code><span class="co">##        Z50  Z95 fineRootBiomass coarseRootSoilVolume</span>
+<span class="co">## T1_148 750 3000      11201.1900            0.6815696</span>
+<span class="co">## T2_168 750 3000       3539.3386            0.6815696</span>
+<span class="co">## S1_165 300 1500        105.2422            0.4242041</span></code></pre>
 <p>Parameters related to plant growth can be seen in <code>paramsGrowth</code> and <code>paramsAllometries</code>:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsGrowth</span></code></pre></div>
@@ -250,8 +250,15 @@
 <code class="sourceCode R"><span class="va">G1</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## Initial soil water content (mm): 185.069</span>
 <span class="co">## Initial snowpack content (mm): 0</span>
-<span class="co">## Performing daily simulations </span>
-<span class="co">##  Year 2001:.................................... [update structural variables] done.</span>
+<span class="co">## Performing daily simulations</span>
+<span class="co">## </span>
+<span class="co">##  [Year 2001]: ....................................</span>
+<span class="co">##  Initial Cohort biomass (g/m2): 6526.22</span>
+<span class="co">##  Final Cohort biomass (g/m2): 7468.97</span>
+<span class="co">##  Cohort biomass change (g/m2): 942.745 balance: 942.745</span>
+<span class="co">##  Update structural variables</span>
+<span class="co">## </span>
+<span class="co">## </span>
 <span class="co">## Final soil water content (mm): 166.178</span>
 <span class="co">## Final snowpack content (mm): 0</span>
 <span class="co">## Change in soil water content (mm): -18.891</span>
@@ -282,9 +289,9 @@
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-17-1.png" width="672"></p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"GrowthCosts"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
-<p><img src="ForestGrowth_files/figure-html/unnamed-chunk-17-2.png" width="672"> Finally we can display the daily negative or positive balance of the plant, which determines changes in plant carbon pools:</p>
+<p><img src="ForestGrowth_files/figure-html/unnamed-chunk-17-2.png" width="672"> Finally we can display the daily negative or positive balance of the plant storage, which determines changes in plant carbon pools:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"CarbonBalance"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"LabileCarbonBalance"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
 </div>
 <div class="section level3">
