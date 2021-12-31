@@ -1076,6 +1076,8 @@ List growthDay2(List x, NumericVector meteovec,
         
         // Rcout<<j<<" LeafTLP "<< turgorLossPoint(LeafPI0[j], LeafEPS[j])<< " Leaf PI "<< osmoticWaterPotential(sugarLeaf[j], tday)<< " Conc "<< sugarLeaf[j]<< " TLPconc"<< tlpConcLeaf<<"\n";
       }
+      double leafBiomassIncrement = deltaLAgrowth*(1000.0/SLA[j]);
+      double finerootBiomassIncrement = sum(deltaFRBgrowth);
       
 
       //SENESCENCE
@@ -1115,6 +1117,8 @@ List growthDay2(List x, NumericVector meteovec,
         double daySenescence = SRfineroot[j]*std::max(0.0,(Tsoil[s]-5.0)/20.0);
         deltaFRBsenescence[s] = fineRootBiomass[j]*V(j,s)*daySenescence;
       }
+      double senescenceLeafLoss = deltaLAsenescence*(1000.0/SLA[j]);
+      double senescenceFinerootLoss = sum(deltaFRBsenescence);
       
       
       //TRANSLOCATION (in mol gluc) of labile carbon
@@ -1130,6 +1134,7 @@ List growthDay2(List x, NumericVector meteovec,
 
       
       //UPDATE LEAF AREA, SAPWOOD AREA, FINE ROOT BIOMASS/DISTRIBUTION AND CONCENTRATION IN LABILE POOLS
+      double initialSapwoodBiomass = sapwoodStructuralBiomass(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j]);
       double LAprev = LAexpanded;
       LAexpanded +=deltaLAgrowth - deltaLAsenescence;
       if(LAexpanded < 0.0) {
@@ -1176,7 +1181,7 @@ List growthDay2(List x, NumericVector meteovec,
         CRSV[j] = coarseRootSoilVolumeFromConductance(Kmax_stemxylem[j], VCroot_kmaxVEC[j], Al2As[j],
                                                       V(j,_), dVec, rfc);
         //Update coarse root length and root maximum conductance
-        L(j,_) = coarseRootLengthsFromVolume(CRSV[j], V(j,_), dVec, rfc); 
+        L(j,_) = coarseRootLengthsFromVolume(CRSV[j], V(j,_), dVec, rfc);
         NumericVector xp = rootxylemConductanceProportions(L(j,_), V(j,_));
         VCroot_kmax(j,_) = VCroot_kmaxVEC[j]*xp;
         //Update Plant_kmax
@@ -1206,15 +1211,11 @@ List growthDay2(List x, NumericVector meteovec,
       
       
       //PLANT BIOMASS balance (g_ind)
-      double leafBiomassIncrement = deltaLAgrowth*(1000.0/SLA[j]);
-      double sapwoodBiomassIncrement = sapwoodStructuralBiomass(deltaSAgrowth, H[j], L(j,_), V(j,_),WoodDensity[j]);
-      double finerootBiomassIncrement = sum(deltaFRBgrowth);
-      double growthBiomassIncrement = (leafBiomassIncrement + sapwoodBiomassIncrement + finerootBiomassIncrement);
-      double senescenceLeafLoss = deltaLAsenescence*(1000.0/SLA[j]);
-      double senescenceSapwoodLoss = sapwoodStructuralBiomass(deltaSASenescence, H[j], L(j,_),V(j,_),WoodDensity[j]);
-      double senescenceFinerootLoss = sum(deltaFRBsenescence);
-      double senescenceBiomassLoss = (senescenceSapwoodLoss + senescenceLeafLoss + senescenceFinerootLoss);
-      StructuralBiomassBalance[j] = growthBiomassIncrement - senescenceBiomassLoss;
+      double finalSapwoodBiomass = sapwoodStructuralBiomass(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j]);
+      double sapwoodBiomassBalance = finalSapwoodBiomass - initialSapwoodBiomass;
+      double leafBiomassBalance = leafBiomassIncrement - senescenceLeafLoss;
+      double finerootBiomassBalance = finerootBiomassIncrement - senescenceFinerootLoss;
+      StructuralBiomassBalance[j] = leafBiomassBalance + sapwoodBiomassBalance + finerootBiomassBalance;
       LabileBiomassBalance[j] = LabileCarbonBalance[j]*TotalLivingBiomass[j];
       PlantBiomassBalance[j] = LabileBiomassBalance[j] + StructuralBiomassBalance[j];
       

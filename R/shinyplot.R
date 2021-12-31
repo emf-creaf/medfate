@@ -328,7 +328,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
       else if(main_plot=="Stand") sub_choices = stand_plot_choices
       else if(main_plot=="Plants") sub_choices = plant_plot_choices
       else if(main_plot=="Labile carbon balance") sub_choices = labile_plot_choices
-      else if(main_plot=="Plant biomass balance") sub_choices = plant_balance_plot_choices
+      else if(main_plot=="Biomass balance") sub_choices = plant_balance_plot_choices
       else if(main_plot=="Energy balance") sub_choices = energy_plot_choices
       else if(main_plot=="Plant structure") sub_choices = plant_structure_plot_choices
       else if(main_plot=="Plant growth") sub_choices = plant_growth_plot_choices
