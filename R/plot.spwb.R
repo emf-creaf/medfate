@@ -188,9 +188,9 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
                       "LeafPI0", "StemPI0")) {
       OM = x$LabileCarbonBalance[[type]][,cohorts,drop=FALSE]
   } 
-  else if(type %in% c("GrowthBiomassIncrement","SenescenceBiomassLoss","LabileBiomassChange",
-                      "MortalityBiomassLoss","PlantBiomassBalance")) {
-    OM = x$PlantBiomassBalance[[type]][,cohorts,drop=FALSE]
+  else if(type %in% c("StructuralBiomassBalance","LabileBiomassBalance", "PlantBiomassBalance",
+                      "MortalityBiomassLoss","CohortBiomassBalance")) {
+    OM = x$BiomassBalance[[type]][,cohorts,drop=FALSE]
   }
   else if(type %in% c("SapwoodArea", "LeafArea", "FineRootArea", 
                       "SapwoodStructuralBiomass", "LeafStructuralBiomass", "FineRootBiomass",

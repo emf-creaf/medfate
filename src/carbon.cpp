@@ -196,7 +196,7 @@ double sapwoodStarchCapacity(double SA, double H, NumericVector L, NumericVector
 // [[Rcpp::export("carbon_carbonCompartments")]]
 DataFrame carbonCompartments(List x, String biomassUnits = "g_m2") {
   
-  if((biomassUnits!="kg_m2") & (biomassUnits !="g_ind")) stop("Wrong biomass units");
+  if((biomassUnits!="g_m2") & (biomassUnits !="g_ind")) stop("Wrong biomass units");
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
@@ -237,8 +237,6 @@ DataFrame carbonCompartments(List x, String biomassUnits = "g_m2") {
   NumericVector sapwoodStructLivingBiomass(numCohorts,0.0);
   NumericVector sapwoodStructBiomass(numCohorts,0.0);
   NumericVector labileBiomass(numCohorts, 0.0);
-  NumericVector totalLivingBiomass(numCohorts, 0.0);
-  NumericVector totalBiomass(numCohorts, 0.0);
   NumericVector Starch_max_leaves(numCohorts,0.0);
   NumericVector Starch_max_sapwood(numCohorts,0.0);
   
@@ -257,10 +255,8 @@ DataFrame carbonCompartments(List x, String biomassUnits = "g_m2") {
     double labileMassLeaf = (sugarLeaf[j]+starchLeaf[j])*(glucoseMolarMass*Volume_leaves[j]);
     double labileMassSapwood = (sugarSapwood[j]+starchSapwood[j])*(glucoseMolarMass*Volume_sapwood[j]);
     labileBiomass[j] = labileMassSapwood+labileMassLeaf;
-    totalLivingBiomass[j] = leafStructBiomass[j] + sapwoodStructLivingBiomass[j] + fineRootBiomass[j]+ labileBiomass[j];
-    totalBiomass[j] = leafStructBiomass[j] + sapwoodStructBiomass[j] + fineRootBiomass[j]+ labileBiomass[j];
   }
-  if(biomassUnits=="kg_m2") {
+  if(biomassUnits=="g_m2") {
     for(int j=0;j<numCohorts;j++){
       double f = N[j]/(10000.0);
       leafStructBiomass[j] = leafStructBiomass[j]*f;
@@ -268,11 +264,8 @@ DataFrame carbonCompartments(List x, String biomassUnits = "g_m2") {
       sapwoodStructLivingBiomass[j] = sapwoodStructLivingBiomass[j]*f;
       fineRootBiomass[j] = fineRootBiomass[j]*f;
       labileBiomass[j] = labileBiomass[j]*f;
-      totalLivingBiomass[j] = totalLivingBiomass[j]*f;
-      totalBiomass[j] = totalBiomass[j]*f;
     }
   }
-  
   DataFrame df = DataFrame::create(
     _["LeafStorageVolume"] = Volume_leaves,
     _["SapwoodStorageVolume"] = Volume_sapwood,
@@ -282,9 +275,10 @@ DataFrame carbonCompartments(List x, String biomassUnits = "g_m2") {
     _["SapwoodStructuralBiomass"] = sapwoodStructBiomass,
     _["SapwoodLivingStructuralBiomass"] = sapwoodStructLivingBiomass,
     _["FineRootBiomass"] = fineRootBiomass,
+    _["StructuralBiomass"] = leafStructBiomass + sapwoodStructBiomass + fineRootBiomass,
     _["LabileBiomass"] = labileBiomass,
-    _["TotalLivingBiomass"] = totalLivingBiomass,
-    _["TotalBiomass"] = totalBiomass
+    _["TotalLivingBiomass"] = leafStructBiomass + sapwoodStructLivingBiomass + fineRootBiomass + labileBiomass,
+    _["TotalBiomass"] = leafStructBiomass + sapwoodStructBiomass + fineRootBiomass + labileBiomass
   );
   df.attr("row.names") = above.attr("row.names");
   return(df);

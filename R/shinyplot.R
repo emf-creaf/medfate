@@ -128,11 +128,11 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                           "Leaf osmotic potential at full turgor" = "LeafPI0",
                           "Stem osmotic potential at full turgor" = "StemPI0")
   
-  plant_balance_plot_choices = c("Growth biomass increment (g/m2)" = "GrowthBiomassIncrement",
-                                 "Senescence biomass loss (g/m2)" = "SenescenceBiomassLoss",
-                                 "Labile biomass change (g/m2)" = "LabileBiomassChange",
+  plant_balance_plot_choices = c("Structural biomass balance (g/ind)" = "StructuralBiomassBalance",
+                                 "Labile biomass balance (g/ind)" = "LabileBiomassBalance",
+                                 "Plant biomass balance (g/ind)" = "PlantBiomassBalance",
                                  "Mortality biomass loss (g/m2)" = "MortalityBiomassLoss",
-                                 "Plant biomass balance (g/m2)" = "PlantBiomassBalance")
+                                 "Cohort biomass balance (g/m2)" = "CohortBiomassBalance")
   plant_structure_plot_choices = c("Leaf area" = "LeafArea",
                           "Sapwood area" = "SapwoodArea",
                           "Leaf structural biomass per individual" = "LeafStructuralBiomass",
