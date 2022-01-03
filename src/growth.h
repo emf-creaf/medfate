@@ -5,9 +5,6 @@
 #endif
 using namespace Rcpp;
 
-NumericVector carbonCompartments(double SA, double LAI, double H, double Z, 
-                                 double N, double SLA, double WoodDens, double WoodC);
-
 List growthDay(List x, CharacterVector date, double tmin, double tmax, 
                double rhmin, double rhmax, double rad, double wind, 
                double latitude, double elevation, double slope, double aspect,  

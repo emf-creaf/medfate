@@ -37,4 +37,4 @@ double sugarStarchDynamicsLeaf(double sugarConc, double starchConc, double eqSug
 double sugarStarchDynamicsStem(double sugarConc, double starchConc, double eqSugarConc);
 double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double eqSugarConc);
 
-DataFrame carbonCompartments(List x, String biomassUnits = "kg_m2");
+DataFrame carbonCompartments(List x, String biomassUnits = "g_m2");

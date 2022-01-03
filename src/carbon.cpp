@@ -232,7 +232,8 @@ DataFrame carbonCompartments(List x, String biomassUnits = "g_m2") {
   //Storage volume and maximum starch capacity for leaves and sapwood  
   NumericVector Volume_leaves(numCohorts,0.0);
   NumericVector Volume_sapwood(numCohorts,0.0);
-  
+  NumericVector LeafStarchCapacity(numCohorts,0.0);
+  NumericVector SapwoodStarchCapacity(numCohorts,0.0);
   NumericVector leafStructBiomass(numCohorts,0.0);
   NumericVector sapwoodStructLivingBiomass(numCohorts,0.0);
   NumericVector sapwoodStructBiomass(numCohorts,0.0);
@@ -247,8 +248,10 @@ DataFrame carbonCompartments(List x, String biomassUnits = "g_m2") {
     sapwoodStructLivingBiomass[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], L(j,_),V(j,_), WoodDensity[j], conduit2sapwood[j]);
     Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
     Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j], L(j,_),V(j,_),WoodDensity[j], conduit2sapwood[j]);
-    Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j])/Volume_leaves[j];
-    Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j], conduit2sapwood[j])/Volume_sapwood[j];
+    LeafStarchCapacity[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
+    SapwoodStarchCapacity[j] =  sapwoodStarchCapacity(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j], conduit2sapwood[j]);
+    Starch_max_leaves[j] = LeafStarchCapacity[j]/Volume_leaves[j];
+    Starch_max_sapwood[j] = SapwoodStarchCapacity[j]/Volume_sapwood[j];
     if(Volume_leaves[j]==0.0) Starch_max_leaves[j] = 0.0;
     if(Volume_sapwood[j]==0.0) Starch_max_sapwood[j] = 0.0;
     
@@ -269,8 +272,10 @@ DataFrame carbonCompartments(List x, String biomassUnits = "g_m2") {
   DataFrame df = DataFrame::create(
     _["LeafStorageVolume"] = Volume_leaves,
     _["SapwoodStorageVolume"] = Volume_sapwood,
-    _["LeafStarchCapacity"] = Starch_max_leaves,
-    _["SapwoodStarchCapacity"] = Starch_max_sapwood,
+    _["LeafStarchMaximumConcentration"] = Starch_max_leaves,
+    _["SapwoodStarchMaximumConcentration"] = Starch_max_sapwood,
+    _["LeafStarchCapacity"] = LeafStarchCapacity,
+    _["SapwoodStarchCapacity"] = SapwoodStarchCapacity,
     _["LeafStructuralBiomass"] = leafStructBiomass,
     _["SapwoodStructuralBiomass"] = sapwoodStructBiomass,
     _["SapwoodLivingStructuralBiomass"] = sapwoodStructLivingBiomass,
