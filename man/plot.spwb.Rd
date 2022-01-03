@@ -109,13 +109,13 @@ In addition to the former, the following plots are available for objects \code{\
  \itemize{
     \item{\code{"GrossPhotosynthesis"}:}{ Gross photosynthesis rate per dry weight.}
     \item{\code{"MaintenanceRespiration"}:}{ Maintenance respiration cost per dry weight.}
+    \item{\code{"RootExudation"}:}{ Root exudation rate per dry weight.}
     \item{\code{"LabileCarbonBalance"}:}{ Labile carbon balance per dry weight.}
     \item{\code{"SugarLeaf"}:}{ Sugar concentration in leaves.}
     \item{\code{"StarchLeaf"}:}{ Starch concentration in leaves.}
     \item{\code{"SugarSapwood"}:}{ Sugar concentration in sapwood.}
     \item{\code{"StarchSapwood"}:}{ Starch concentration in sapwood.}
     \item{\code{"SugarTransport"}:}{ Phloem sugar transport rate.}
-    \item{\code{"RootExudation"}:}{ Root exudation rate per dry weight.}
     \item{\code{"LeafPI0"}:}{ Leaf osmotic concentration at full turgor.}
     \item{\code{"StemPI0"}:}{ Sapwood osmotic concentration at full turgor.}
     \item{\code{"StructuralBiomassBalance"}:}{ Daily structural biomass balance (g dry · ind-2).}

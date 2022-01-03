@@ -5,7 +5,7 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
   plantTypes = c("E","Ag","An","dEdP","RootPsi",
                 "StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC","PWB")
   PWBTYPES = c("Temperature", "ExtractionInst", plantTypes, sunlitTypes, shadeTypes)
-  CBTYPES = c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "LabileCarbonBalance",
+  CBTYPES = c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "RootExudation", "LabileCarbonBalance",
               "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport")
   GROWTHTYPES = c(CBTYPES, PWBTYPES)
   if(is.null(dates)) dates = as.Date(names(x$subdaily))
@@ -18,6 +18,7 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
     output = match.arg(output, GROWTHTYPES)
   }
   
+  numCohorts = nrow(input$above)
   numDates = length(dates)
   numSteps = input$control$ndailysteps
   h = 0 + (0:(numSteps-1))*(24/numSteps)
@@ -28,7 +29,6 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
   times = paste(hours,minutes,seconds, sep=":")
   
   if(output %in% plantTypes) {
-    numCohorts = nrow(x$spwbInput$above)
     m<-data.frame(matrix(nrow = numDates*numSteps, ncol = numCohorts+1))
     for(i in 1:numDates) {
       ori = x$subdaily[[as.character(dates[i])]]$PlantsInst[[output]]
@@ -55,7 +55,6 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
     colnames(m) = c("datetime", rownames(ori1))
   } else if(output %in% sunlitTypes) {
     leafType = strsplit(output,"[$]")[[1]][2]
-    numCohorts = nrow(input$above)
     m<-data.frame(matrix(nrow = numDates*numSteps, ncol = numCohorts+1))
     for(i in 1:numDates) {
       if(leafType=="E") {
@@ -74,7 +73,6 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
     colnames(m) = c("datetime", row.names(input$above))
   } else if(output %in% shadeTypes) {
     leafType = strsplit(output,"[$]")[[1]][2]
-    numCohorts = nrow(input$above)
     m<-data.frame(matrix(nrow = numDates*numSteps, ncol = numCohorts+1))
     for(i in 1:numDates) {
       if(leafType=="E") {

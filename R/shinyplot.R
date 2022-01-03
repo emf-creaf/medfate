@@ -109,7 +109,6 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                                   "Upper stem water potential" = "StemPsi",
                                   "Stem relative water content" = "StemRWC",
                                   "Leaf relative water content" = "LeafRWC",
-                                  "Absorbed short-wave radiation" = "PlantAbsorbedSWR",
                                   "Leaf absorbed SWR" = "LeafAbsorbedSWR",
                                   "Leaf net LWR" = "LeafNetLWR",
                                   "Leaf transpiration" = "LeafTranspiration",
@@ -154,6 +153,8 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   }
   subdaily_labile_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
                                    "Maintenance respiration per dry" = "MaintenanceRespiration",
+                                   "Growth costs per dry" = "GrowthCosts",
+                                   "Root exudation per dry" = "RootExudation",
                                    "Labile carbon balance per dry" = "LabileCarbonBalance",
                                    "Leaf sugar concentration" = "SugarLeaf",
                                    "Leaf starch concentration" = "StarchLeaf",
@@ -315,7 +316,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   server <- function(input, output, session) {
     observe({
       if(input$subdaily_check && subdaily_out)  {
-        sel <- plot_main_choices %in% c("Plants", "Carbon balance", "Soil", "Energy balance")
+        sel <- plot_main_choices %in% c("Plants", "Labile carbon balance", "Soil", "Energy balance")
         updateSelectInput(session, "plot_main_type",
                           choices = plot_main_choices[sel])
       } else {

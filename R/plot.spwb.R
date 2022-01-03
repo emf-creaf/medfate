@@ -341,6 +341,10 @@ plot.fordyn<-function(x, type="StandBasalArea",
                      "LeafPI0", "StemPI0")) {
         OM = summary(x, freq = "days", output = paste0("LabileCarbonBalance$",type))[,cohorts,drop=FALSE]
       } 
+      else if(type %in% c("StructuralBiomassBalance", "LabileBiomassBalance", "PlantBiomassBalance", 
+                          "MortalityBiomassLoss", "CohortBiomassBalance")) {
+        OM = summary(x, freq = "days", output = paste0("BiomassBalance$",type))[,cohorts,drop=FALSE]
+      } 
       else if(type %in% c("SapwoodArea", "LeafArea", "FineRootArea", 
                           "SapwoodStructuralBiomass", "LeafStructuralBiomass", "FineRootBiomass",
                           "LabileBiomass", "TotalBiomass")) {

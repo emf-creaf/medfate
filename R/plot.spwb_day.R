@@ -4,11 +4,10 @@ plot.growth_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   PWB_TYPES = .getSubdailySPWBPlotTypes()
   type = match.arg(type,GROWTH_TYPES)
   if(type %in% PWB_TYPES) {
-    plot.pwb_day(x, type, bySpecies, xlim, ylim, xlab, ylab,...)
-  }
-  LCBInst = x$LabileCarbonBalanceInst
-  if(type=="SugarLeaf") {
-    OM = LCBInst$SugarLeaf
+    return(plot.pwb_day(x, type, bySpecies, xlim, ylim, xlab, ylab,...))
+  } else {
+    LCBInst = x$LabileCarbonBalanceInst
+    OM = LCBInst[[type]]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }

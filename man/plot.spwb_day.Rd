@@ -1,8 +1,8 @@
 \encoding{UTF-8}
 \name{plot.spwb_day}
-\alias{plot.growth_day}
 \alias{plot.spwb_day}
 \alias{plot.pwb_day}
+\alias{plot.growth_day}
 \title{Plots simulation results for one day}
 \description{
 Functions to plot the subdaily simulation results of \code{\link{spwb_day}}, \code{\link{growth_day}} or the transpiration calculations of \code{\link{transp_transpirationSperry}}.
@@ -27,7 +27,7 @@ Functions to plot the subdaily simulation results of \code{\link{spwb_day}}, \co
 
 }
 \details{
-The following plots are currently available for \code{spwb_day} and \code{pwb_day}:
+The following plots are available for \code{spwb_day} and \code{pwb_day}:
   \itemize{
     \item{\code{"LeafPsi"}:}{Leaf water potential (for shade and sunlit leaves).}
     \item{\code{"LeafPsiAverage"}:}{Average leaf water potential.}
@@ -63,7 +63,18 @@ The following plots are currently available for \code{spwb_day} and \code{pwb_da
     \item{\code{"PlantWaterBalance"}:}{ Difference between water extraction from the soil and transpired water per ground area.}
     \item{\code{"WaterBalancePerLeaf"}:}{ Difference between water extraction from the soil and transpired water per leaf area.}
    }
-
+And the following plots are additionally available for \code{growth_day}:
+  \itemize{
+    \item{\code{"GrossPhotosynthesis"}:}{ Gross photosynthesis rate per dry weight.}
+    \item{\code{"MaintenanceRespiration"}:}{ Maintenance respiration cost per dry weight.}
+    \item{\code{"RootExudation"}:}{ Root exudation rate per dry weight.}
+    \item{\code{"LabileCarbonBalance"}:}{ Labile carbon balance per dry weight.}
+    \item{\code{"SugarLeaf"}:}{ Sugar concentration in leaves.}
+    \item{\code{"StarchLeaf"}:}{ Starch concentration in leaves.}
+    \item{\code{"SugarSapwood"}:}{ Sugar concentration in sapwood.}
+    \item{\code{"StarchSapwood"}:}{ Starch concentration in sapwood.}
+    \item{\code{"SugarTransport"}:}{ Phloem sugar transport rate.}
+  }
 }
 \note{
 Only for soil plant water balance simulations using \code{transpirationMode = "Sperry"}. This function can be used to display subdaily dynamics of corresponding to single days on \code{\link{spwb}} runs, if control option \code{subdailyResults} is set to \code{TRUE}. See also option \code{subdaily} in \code{\link{plot.spwb}}.

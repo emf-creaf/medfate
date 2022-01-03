@@ -70,7 +70,7 @@
   return(TYPES)
 }
 .getSubdailyGROWTHPlotTypes<-function(){
-  TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "LabileCarbonBalance",
+  TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "RootExudation","LabileCarbonBalance",
             "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport",
             .getSubdailySPWBPlotTypes())
   return(TYPES)
@@ -655,7 +655,7 @@
     if(is.null(ylab)) ylab=expression(paste("iWUE  ", (mu%.%mol%.%mol^{-1})))
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
-  else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "LabileCarbonBalance",
+  else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "RootExudation" , "LabileCarbonBalance",
                       "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport")) {
     m = extractSubdaily(x, type, dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)

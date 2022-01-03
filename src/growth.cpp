@@ -1354,6 +1354,7 @@ List growthDay2(List x, NumericVector meteovec,
   PlantSugarSapwoodInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
   PlantStarchSapwoodInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
   PlantSugarTransportInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
+  RootExudationInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
   List labileCBInst = List::create(
     _["GrossPhotosynthesis"] = GrossPhotosynthesisInst,
     _["MaintenanceRespiration"] = MaintenanceRespirationInst,
