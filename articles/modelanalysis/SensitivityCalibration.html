@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Sensitivity analysis and calibration</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2021-12-31</h4>
+            <h4 data-toc-skip class="date">2022-01-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/modelanalysis/SensitivityCalibration.Rmd" class="external-link"><code>vignettes/modelanalysis/SensitivityCalibration.Rmd</code></a></small>
       <div class="hidden name"><code>SensitivityCalibration.Rmd</code></div>
@@ -143,18 +143,18 @@
 <span class="co">## Initial snowpack content (mm): 0</span>
 <span class="co">## Performing daily simulations </span>
 <span class="co">##  Year 2001:....................................done.</span>
-<span class="co">## Final soil water content (mm): 256.647</span>
+<span class="co">## Final soil water content (mm): 260.683</span>
 <span class="co">## Final snowpack content (mm): 0</span>
-<span class="co">## Change in soil water content (mm): -34.6099</span>
-<span class="co">## Soil water balance result (mm): -34.6099</span>
+<span class="co">## Change in soil water content (mm): -30.5737</span>
+<span class="co">## Soil water balance result (mm): -30.5737</span>
 <span class="co">## Change in snowpack water content (mm): 0</span>
-<span class="co">## Snowpack water balance result (mm): 0</span>
+<span class="co">## Snowpack water balance result (mm): 7.10543e-15</span>
 <span class="co">## Water balance components:</span>
 <span class="co">##   Precipitation (mm) 513</span>
 <span class="co">##   Rain (mm) 462 Snow (mm) 51</span>
-<span class="co">##   Interception (mm) 100 Net rainfall (mm) 362</span>
-<span class="co">##   Infiltration (mm) 404 Runoff (mm) 9 Deep drainage (mm) 63</span>
-<span class="co">##   Soil evaporation (mm) 43 Transpiration (mm) 333</span></code></pre>
+<span class="co">##   Interception (mm) 98 Net rainfall (mm) 364</span>
+<span class="co">##   Infiltration (mm) 406 Runoff (mm) 9 Deep drainage (mm) 64</span>
+<span class="co">##   Soil evaporation (mm) 43 Transpiration (mm) 329</span></code></pre>
 <p>Function <code><a href="../../reference/spwb.html">spwb()</a></code> will be implicitly called multiple times in the sensitivity analyses and calibration analyses that we will illustrate below.</p>
 </div>
 <div class="section level2">
@@ -176,7 +176,7 @@
 <p>Here we will mostly interested in ranking parameters according to different objectives. We will take as input factors three plant traits (leaf area index, fine root distribution and the water potential corresponding to a reduction in plant conductance) in the three plant cohorts (species), and two soil factors (the rock fragment content of soil layer 1 and 2). In total, eleven model parameters will be studied. The following shows the initial values for plant trait parameters:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x1</span><span class="op">$</span><span class="va">above</span><span class="op">$</span><span class="va">LAI_live</span></code></pre></div>
-<pre><code><span class="co">## [1] 1.00643723 0.92661573 0.03965932</span></code></pre>
+<pre><code><span class="co">## [1] 0.96734365 0.93111690 0.03928201</span></code></pre>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x1</span><span class="op">$</span><span class="va">below</span><span class="op">$</span><span class="va">Z50</span></code></pre></div>
 <pre><code><span class="co">## [1] 750 750 300</span></code></pre>
@@ -223,7 +223,7 @@
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sf_transp</span><span class="op">&lt;-</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">Transpiration</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span>
 <span class="fu">sf_transp</span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 332.9297</span></code></pre>
+<pre><code><span class="co">## [1] 329.3606</span></code></pre>
 <p>Another prediction function can focus on plant drought stress. We define a function that, given a simulation result, calculates the average drought stress of plants (measured using the water stress index) over the simulated period:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sf_stress</span><span class="op">&lt;-</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
@@ -233,7 +233,7 @@
   <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sweep.html" class="external-link">sweep</a></span><span class="op">(</span><span class="va">stress</span>,<span class="fl">2</span>, <span class="va">lai_p</span>, <span class="st">"*"</span><span class="op">)</span>, na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span>
 <span class="op">}</span>
 <span class="fu">sf_stress</span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 55.95149</span></code></pre>
+<pre><code><span class="co">## [1] 48.83696</span></code></pre>
 <p>Sensitivity analysis requires model output functions whose parameters are the input factors to be studied. <span class="math display">\[\begin{equation}
 y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 \end{equation}\]</span> where <span class="math inline">\(y\)</span> is the output, <span class="math inline">\(g\)</span> is the output function and <span class="math inline">\(\mathbf{x} = \{x_1, x_2, \dots, x_n\}\)</span> is the vector of parameter input factors. Functions <code>of_transp</code> and <code>of_stress</code> take simulation results as input, not values of input factors. Instead, we need to define functions that take soil and plant trait values as input, run the soil plant water balance model and return the desired prediction or performance statistic. These functions can be generated using the function factory <code><a href="../../reference/optimization.html">optimization_function()</a></code>. The following code defines one of such functions focusing on total transpiration:</p>
@@ -249,7 +249,7 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <pre><code><span class="co">## [1] 55.93924</span></code></pre>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_transp</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 273.8744</span></code></pre>
+<pre><code><span class="co">## [1] 277.7697</span></code></pre>
 <p>It is important to understand the steps that are done when we call <code>of_transp()</code>:</p>
 <ol style="list-style-type: decimal">
 <li>The function <code>of_transp()</code> calls <code><a href="../../reference/spwb.html">spwb()</a></code> using all the parameters specified in its construction (i.e. in the call to the function factory), except for the input factors indicated in <code>parNames</code>, which are specified as input at the time of calling <code>of_transp()</code>.</li>
@@ -263,33 +263,33 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
                                  latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>,
                                  summary_function <span class="op">=</span> <span class="va">sf_stress</span><span class="op">)</span>
 <span class="fu">of_stress</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 1.186881</span></code></pre>
+<pre><code><span class="co">## [1] 0.8359313</span></code></pre>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_stress</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 118.5082</span></code></pre>
+<pre><code><span class="co">## [1] 122.8481</span></code></pre>
 <p>As mentioned above, another kind of output function can be the evaluation of model performance. Here we will assume that performance in terms of predictability of soil water content is desired; and use a data set of ‘observed’ values (actually simulated values with gaussian error) as reference:</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##                  SWC       ETR   E_T1_148  E_T2_168 FMC_T1_148 FMC_T2_168</span>
-<span class="co">## 2001-01-01 0.3001287 2.4409958 0.14040726 0.2867583   125.8491   93.10475</span>
-<span class="co">## 2001-01-02 0.3000114 2.6102419 0.29217165 0.3762063   125.5644   92.61989</span>
-<span class="co">## 2001-01-03 0.3023795 0.4648954 0.31534536 0.1786759   125.6013   93.02088</span>
-<span class="co">## 2001-01-04 0.2991337 1.8686566 0.09763404 0.1185630   125.8429   92.52835</span>
-<span class="co">## 2001-01-05 0.3057656 2.1493794 0.28797506 0.2770579   126.2680   93.22046</span>
-<span class="co">## 2001-01-06 0.3006195 2.8142448 0.26730768 0.1830351   125.7268   93.03643</span>
+<pre><code><span class="co">##                  SWC       ETR  E_T1_148  E_T2_168 FMC_T1_148 FMC_T2_168</span>
+<span class="co">## 2001-01-01 0.3050679 2.4246078 0.1812395 0.1550403   125.1599   92.74113</span>
+<span class="co">## 2001-01-02 0.3009718 2.3636359 0.3697146 0.2993662   125.7916   93.33293</span>
+<span class="co">## 2001-01-03 0.3006070 0.5704773 0.2725478 0.3353301   126.4249   93.08241</span>
+<span class="co">## 2001-01-04 0.3046499 1.9828479 0.0776677 0.1825556   126.9492   93.14510</span>
+<span class="co">## 2001-01-05 0.3020621 2.2635585 0.3498398 0.2408503   125.4595   93.18273</span>
+<span class="co">## 2001-01-06 0.3057368 2.7842478 0.2507703 0.2661803   126.0743   92.93839</span>
 <span class="co">##              BAI_T1_148    BAI_T2_168</span>
-<span class="co">## 2001-01-01  0.007332432 -2.384837e-03</span>
-<span class="co">## 2001-01-02  0.000949254  4.707869e-04</span>
-<span class="co">## 2001-01-03  0.004051434 -4.634923e-04</span>
-<span class="co">## 2001-01-04 -0.006503419 -2.358076e-03</span>
-<span class="co">## 2001-01-05  0.005889734 -4.071848e-05</span>
-<span class="co">## 2001-01-06 -0.005281994  1.531461e-03</span></code></pre>
+<span class="co">## 2001-01-01  0.004774430 -0.0006472257</span>
+<span class="co">## 2001-01-02 -0.006317729  0.0008551534</span>
+<span class="co">## 2001-01-03 -0.005354615 -0.0009369536</span>
+<span class="co">## 2001-01-04 -0.006874188  0.0003163094</span>
+<span class="co">## 2001-01-05 -0.002327924  0.0010625082</span>
+<span class="co">## 2001-01-06  0.005172044 -0.0009123389</span></code></pre>
 <p>where soil water content dynamics is in column <code>SWC</code>. The model fit to observed data can be measured using the Nash-Sutcliffe coefficient, which we calculate for the initial run using function <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code>:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_metric</a></span><span class="op">(</span><span class="va">S1</span>, measuredData <span class="op">=</span> <span class="va">exampleobs</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, 
                   metric <span class="op">=</span> <span class="st">"NSE"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.8874568</span></code></pre>
+<pre><code><span class="co">## [1] 0.9003758</span></code></pre>
 <p>A call to <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code> provides the coefficient given a model simulation result, but is not a model output function as we defined above. Analogously to the measures of total transpiration and average plant stress, we can use a function factory to define a model output function that takes input factors as inputs, runs the model and performs the evaluation:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">of_eval</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/optimization.html">optimization_evaluation_function</a></span><span class="op">(</span>parNames <span class="op">=</span> <span class="va">parNames</span>,
@@ -300,10 +300,10 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <p>Function <code>of_eval()</code> stores internally both the data needed for conducting simulations and the data needed for evaluating simulation results, so that we only need to provide values for the input factors:</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.9003061</span></code></pre>
+<pre><code><span class="co">## [1] 0.9218423</span></code></pre>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] -6.777312</span></code></pre>
+<pre><code><span class="co">## [1] -6.765445</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="global-sensitivity-analyses">Global sensitivity analyses<a class="anchor" aria-label="anchor" href="#global-sensitivity-analyses"></a>

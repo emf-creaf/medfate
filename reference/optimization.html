@@ -182,13 +182,13 @@ Function <code>optimization_evaluation_multicohort_function</code> returns a fun
 <span class="r-in"><span class="fu">multiple_runs</span><span class="op">(</span><span class="va">parMatrix</span>, </span>
 <span class="r-in">              <span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">42</span>, elevation <span class="op">=</span> <span class="fl">100</span>,</span>
 <span class="r-in">              summary_function <span class="op">=</span> <span class="va">sf</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1. Parameter values = [200, 500] f = 339.135934304705</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2. Parameter values = [300, 1000] f = 339.840547785392</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1. Parameter values = [200, 500] f = 333.978280811548</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2. Parameter values = [300, 1000] f = 334.412557186684</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 339.1359</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 333.9783</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 339.8405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 334.4126</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in">              </span>
 <span class="r-in"><span class="co">#Load observed data (in this case the same simulation results with some added error)  </span></span>
@@ -202,9 +202,9 @@ Function <code>optimization_evaluation_multicohort_function</code> returns a fun
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Evaluate for the values of the parameter matrix</span></span>
 <span class="r-in"><span class="fu">of</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 339.1359</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 333.9783</span>
 <span class="r-in"><span class="fu">of</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 339.1359 339.8405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 333.9783 334.4126</span>
 <span class="r-in"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Generate a loglikelihood function for soil water content</span></span>
@@ -218,9 +218,9 @@ Function <code>optimization_evaluation_multicohort_function</code> returns a fun
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Loglikelihood for the values of the parameter matrix</span></span>
 <span class="r-in"><span class="fu">oef</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -1381.815</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -1102.116</span>
 <span class="r-in"><span class="fu">oef</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -1381.8154   477.0306</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -1102.1158   565.7765</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
