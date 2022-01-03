@@ -66,7 +66,7 @@ defaultControl<-function(transpirationMode = "Granier") {
                                       sapwood = 0.005, # cm2 sapwood ·cm-2 sapwood· day-1
                                       fineroot = 0.1), # g dw · g dw -1 · day -1
     mortalityMode = "density/deterministic",
-    mortalityBaselineRate = 0.01,
+    mortalityBaselineRate = 0.005,
     mortalityRelativeSugarThreshold = 0.3,
     mortalityRWCThreshold = 0.3,
     

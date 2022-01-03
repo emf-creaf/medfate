@@ -68,27 +68,21 @@ Here we will run simulations of forest dynamics using the basic water balance mo
 
 ## Executing the forest dynamics model
 
-In this vignette we will fake a three-year weather input by repeating the example weather data frame four times, while reducing precipitation of the second and fourth years to the half.
+In this vignette we will fake a eight-year weather input by repeating the example weather data frame eight times, while reducing precipitation of every two years by 60\%.
 ```{r}
-meteo2001 = examplemeteo
-meteo2002 = examplemeteo
-meteo2003 = examplemeteo
-meteo2004 = examplemeteo[]
-meteo2002$Precipitation = meteo2002$Precipitation/2
-meteo2004$Precipitation = meteo2004$Precipitation/2
-row.names(meteo2002) = seq(as.Date("2002-01-01"), 
-                           as.Date("2002-12-31"), by="day")
-row.names(meteo2003) = seq(as.Date("2003-01-01"), 
-                           as.Date("2003-12-31"), by="day")
-row.names(meteo2004) = seq(as.Date("2004-01-01"), 
-                           as.Date("2004-12-30"), by="day")
-meteo_01_04 = rbind(meteo2001, meteo2002, meteo2003, meteo2004)
+meteowet = examplemeteo
+meteodry = examplemeteo
+meteodry$Precipitation = meteowet$Precipitation*0.6
+meteo_01_08 = rbind(meteowet, meteodry, meteowet, meteodry,
+                    meteowet, meteodry, meteowet, meteodry)
+row.names(meteo_01_08) = seq(as.Date("2001-01-01"), 
+                             as.Date("2008-12-29"), by="day")
 ```
 
 
 Now we run the forest dynamics model using all inputs (note that no intermediate input object is needed, as in `spwb()` or  `growth()`):
 ```{r}
-fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, meteo_01_04, control, 
+fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, meteo_01_08, control, 
            latitude = 41.82592, elevation = 100)
 ```
 It is worth noting that, while `fordyn()` calls function `growth()` internally for each simulated year, the `verbose` option of the control parameters only affects function `fordyn()` (i.e. all console output from `growth()` is hidden). Recruitment and summaries are done only once a year at the level of function `fordyn()`.
@@ -136,13 +130,12 @@ plot(fd$GrowthResults[[1]], "LeafArea", bySpecies = T)
 plot(fd$GrowthResults[[2]], "LeafArea", bySpecies = T)
 plot(fd$GrowthResults[[3]], "LeafArea", bySpecies = T)
 ```
-where we see that the second (drier) year, resulted in a decrease in leaf area, due to the sink limitation caused by drought, and the third (normal) year lead to a recovery of leaf area. Note also the sink limitation to sapwood area (hence diameter) growth during the second year:
+where we see that the second (drier) year, resulted in a decrease in leaf area per individual, due to the sink limitation to leaf area growth caused by drought. Instead of examining year by year, it is possible to plot the whole series of results by passing a `fordyn` object to the `plot()` function:
 
 ```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
-plot(fd$GrowthResults[[1]], "SapwoodArea", bySpecies = T)
-plot(fd$GrowthResults[[2]], "SapwoodArea", bySpecies = T)
-plot(fd$GrowthResults[[3]], "SapwoodArea", bySpecies = T)
+plot(fd, "LeafArea")
 ```
+where we can see the leaf area drop of the second year along with the progressive recovery of the following years. 
 
 Finally, we can create interactive plots for particular steps using function `shinyplot()`, e.g.:
 ```{r, eval = FALSE}
@@ -160,7 +153,7 @@ args <- defaultManagementArguments()
 # Here one can modify defaults before calling fordyn()
 #
 # Simulation
-fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, meteo_01_04, control, 
+fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, meteo_01_08, control, 
            latitude = 41.82592, elevation = 100,
            management_function = defaultManagementFunction,
            management_args = args)
