@@ -247,8 +247,8 @@ DataFrame carbonCompartments(List x, String biomassUnits = "g_m2") {
     sapwoodStructLivingBiomass[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], L(j,_),V(j,_), WoodDensity[j], conduit2sapwood[j]);
     Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
     Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j], L(j,_),V(j,_),WoodDensity[j], conduit2sapwood[j]);
-    Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
-    Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j], 0.2)/Volume_sapwood[j];
+    Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j])/Volume_leaves[j];
+    Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j], conduit2sapwood[j])/Volume_sapwood[j];
     if(Volume_leaves[j]==0.0) Starch_max_leaves[j] = 0.0;
     if(Volume_sapwood[j]==0.0) Starch_max_sapwood[j] = 0.0;
     

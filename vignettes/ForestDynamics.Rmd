@@ -24,7 +24,6 @@ This document describes how to run the forest dynamics model of `medfate`. This 
 ## Preparing model inputs
 Any forest dynamics model needs information on climate, vegetation and soils of the forest stand to be simulated. Moreover, since models in `medfate` differentiate between species, information on species-specific model parameters is also needed. In this subsection we explain the different steps to prepare the data needed to run function `fordyn()`.
 
-## Preparing model inputs
 Model inputs are explained in greater detail in vignette '*Simulation inputs*'. Here we only review the different steps required to run function `fordyn()`.
 
 ### Soil, vegetation, meteorology and species data

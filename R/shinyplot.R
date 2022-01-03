@@ -118,6 +118,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                                   )
   labile_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
                           "Maintenance respiration per dry" = "MaintenanceRespiration",
+                          "Growth costs per dry" = "GrowthCosts",
                           "Labile carbon balance per dry" = "LabileCarbonBalance",
                           "Leaf sugar concentration" = "SugarLeaf",
                           "Leaf starch concentration" = "StarchLeaf",

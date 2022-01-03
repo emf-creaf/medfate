@@ -1014,7 +1014,7 @@ List growthDay2(List x, NumericVector meteovec,
         GrowthCostsInst(j,s) += (growthCostLAStep + growthCostSAStep + growthCostFRBStep)/TotalLivingBiomass[j];
         GrowthCosts[j] +=GrowthCostsInst(j,s); //growth cost in g gluc · gdry-1
 
-        //PHLOEM TRANSPORT AND SUGAR-STARCH DYNAMICS (INCLUDING EXUDATION and PARTIAL MASS BALANCE)
+        //PHLOEM TRANSPORT AND SUGAR-STARCH DYNAMICS (INCLUDING PARTIAL MASS BALANCE)
         //sugar mass balance
         double leafSugarMassDeltaStep = leafAgStepG - leafRespStep;
         double sapwoodSugarMassDeltaStep = - finerootRespStep - sapwoodRespStep;
@@ -1025,29 +1025,23 @@ List growthDay2(List x, NumericVector meteovec,
         for(int t=0;t<3600;t++) {
           sugarSapwood[j] += sapwoodSugarMassDeltaStep/cts;
           starchSapwood[j] += sapwoodStarchMassDeltaStep/cts;
-          double conversionSapwood = sugarStarchDynamicsStem(sugarSapwood[j]/StemSympRWCInst(j,s), starchSapwood[j]/StemSympRWCInst(j,s), equilibriumSapwoodSugarConc);
-          // double conversionSapwood = sugarStarchDynamicsStem(sugarSapwood[j], starchSapwood[j], equilibriumSapwoodSugarConc);
-          // Rcout<<" coh:"<<j<< " s:"<<s<< " Lsugar: "<< sugarLeaf[j] << " Lstarch: "<< sugarSapwood[j]<<" starch formation: "<<conversionLeaf<< "\n";
-          double starchSapwoodIncrease = conversionSapwood*StemSympRWCInst(j,s);
-          //Divert to root exudation if starch is over maximum capacity
-          if(starchSapwoodIncrease > Starch_max_sapwood[j] - starchSapwood[j]) {
-            RootExudationInst(j,s) += ((starchSapwood[j] + starchSapwoodIncrease - Starch_max_sapwood[j])*(Volume_sapwood[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
-            starchSapwoodIncrease = Starch_max_sapwood[j] - starchSapwood[j];
-          }
+          // double conversionSapwood = sugarStarchDynamicsStem(sugarSapwood[j]/StemSympRWCInst(j,s), starchSapwood[j]/StemSympRWCInst(j,s), equilibriumSapwoodSugarConc);
+          double conversionSapwood = sugarStarchDynamicsStem(sugarSapwood[j], starchSapwood[j], equilibriumSapwoodSugarConc);
+          // if(j==2) Rcout<<" coh:"<<j<< " s:"<<s<< " Lsugar: "<< sugarSapwood[j] << " Lstarch: "<< starchSapwood[j]<<" starch formation: "<<conversionSapwood<< "\n";
+          // double starchSapwoodIncrease = conversionSapwood*StemSympRWCInst(j,s);
+          double starchSapwoodIncrease = conversionSapwood;
+          
           starchSapwood[j] += starchSapwoodIncrease;
           
           if(LAexpanded>0.0) {
             sugarLeaf[j] += leafSugarMassDeltaStep/ctl;
-            double ft = phloemFlow(LeafSympPsiInst(j,s), StemSympPsiInst(j,s), sugarLeaf[j]/LeafSympRWCInst(j,s), sugarSapwood[j]/StemSympRWCInst(j,s), Tcan[s], k_phloem, nonSugarConcentration)*LAlive; //flow as mol glucose per s
+            double ft = phloemFlow(LeafSympPsiInst(j,s), StemSympPsiInst(j,s), sugarLeaf[j], sugarSapwood[j], Tcan[s], k_phloem, nonSugarConcentration)*LAlive; //flow as mol glucose per s
+            // double ft = phloemFlow(LeafSympPsiInst(j,s), StemSympPsiInst(j,s), sugarLeaf[j]/LeafSympRWCInst(j,s), sugarSapwood[j]/StemSympRWCInst(j,s), Tcan[s], k_phloem, nonSugarConcentration)*LAlive; //flow as mol glucose per s
             // sugar-starch dynamics
-            double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j]/LeafSympRWCInst(j,s), starchLeaf[j]/LeafSympRWCInst(j,s), equilibriumLeafSugarConc);
-            // double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j], starchLeaf[j], equilibriumLeafSugarConc);
-            double starchLeafIncrease = conversionLeaf*LeafSympRWCInst(j,s);
-            //Divert to root exudation if starch is over maximum capacity
-            if(starchLeafIncrease > Starch_max_leaves[j] - starchLeaf[j]) {
-              RootExudationInst(j,s) += ((starchLeaf[j] + starchLeafIncrease - Starch_max_leaves[j])*(Volume_leaves[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
-              starchLeafIncrease = Starch_max_leaves[j] - starchLeaf[j];
-            }
+            // double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j]/LeafSympRWCInst(j,s), starchLeaf[j]/LeafSympRWCInst(j,s), equilibriumLeafSugarConc);
+            double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j], starchLeaf[j], equilibriumLeafSugarConc);
+            // double starchLeafIncrease = conversionLeaf*LeafSympRWCInst(j,s);
+            double starchLeafIncrease = conversionLeaf;
             starchLeaf[j]  += starchLeafIncrease;
             // Rcout<<" coh:"<<j<< " s:"<<s<< " Ssugar: "<< sugarSapwood[j] << " Sstarch: "<< starchSapwood[j]<<" starch formation: "<<conversionSapwood<< "\n";
             //Apply phloem transport (mol gluc) to sugar concentrations (mol gluc· l-1)
@@ -1058,7 +1052,25 @@ List growthDay2(List x, NumericVector meteovec,
             sugarSapwood[j] += (- starchSapwoodIncrease);
           }
         }
-
+        //Divert to root exudation if starch is over maximum capacity
+        if(starchLeaf[j] > Starch_max_leaves[j]) {
+          RootExudationInst(j,s) += ((starchLeaf[j] - Starch_max_leaves[j])*(Volume_leaves[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
+          starchLeaf[j] = Starch_max_leaves[j];
+        }
+        //Divert to root exudation if starch is over maximum capacity
+        if(starchSapwood[j] > Starch_max_sapwood[j]) {
+          RootExudationInst(j,s) += ((starchSapwood[j] - Starch_max_sapwood[j])*(Volume_sapwood[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
+          starchSapwood[j] = Starch_max_sapwood[j];
+        }
+        
+        // if(starchSapwoodIncrease > Starch_max_sapwood[j] - starchSapwood[j]) {
+        //   RootExudationInst(j,s) += ((starchSapwood[j] + starchSapwoodIncrease - Starch_max_sapwood[j])*(Volume_sapwood[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
+        //   starchSapwoodIncrease = Starch_max_sapwood[j] - starchSapwood[j];
+        // }
+        // if(starchLeafIncrease > Starch_max_leaves[j] - starchLeaf[j]) {
+        //   RootExudationInst(j,s) += ((starchLeaf[j] + starchLeafIncrease - Starch_max_leaves[j])*(Volume_leaves[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
+        //   starchLeafIncrease = Starch_max_leaves[j] - starchLeaf[j];
+        // }
         //Add instantaneous root exudation to daily root exudation
         RootExudation[j] += RootExudationInst(j,s);
         

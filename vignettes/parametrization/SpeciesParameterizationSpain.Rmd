@@ -223,7 +223,7 @@ genus_level <- c("Acacia spp.:7/207/307",
                  "Ribes spp.:131/1131/2131",
                  "Rosa spp.:119",
                  "Rubus spp.:121/1121/2121/3121",
-                 "Ruscus spp.:130,1130",
+                 "Ruscus spp.:130/1130",
                  "Salix spp.:57/257/357/457/557/657/757/857/858/957",
                  "Sambucus spp.:97/197/297/997/2970",
                  "Santolina spp.:127/1127/2127",
@@ -820,6 +820,7 @@ table(SpParams$LeafShape, useNA = "ifany")
 Parameter `LeafSize` of **medfate** is categorical, and describes the size of leaves as "Small", "Medium" or "Large". TRY includes a trait called "Leaf area", that contains leaf area in mm2. We load TRY leaf area data using: 
 ```{r leaf_size}
 TRY_leaf_area  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_3110.rds"))
+TRY_leaf_area <- TRY_leaf_area[TRY_leaf_area$ErrorRisk < 4,]
 ```
 and classify TRY leaf area values into th`e three leaf size categories:
 ```{r}
@@ -970,7 +971,7 @@ TRY_Z95 <-TRY_Z95[TRY_Z95$OriglName %in% c("Max Rooting Depth (m)",
                                            "Rooting depth (m)",
                                            "Rooting depth_max",
                                            "RootDepth"),]
-TRY_Z95 <- TRY_Z95[, c("AccSpeciesName", "StdValue")]
+TRY_Z95 <- TRY_Z95[TRY_Z95$ErrorRisk < 4, c("AccSpeciesName", "StdValue")]
 names(TRY_Z95) <- c("Species", "Z95")
 ```
 Rooting depth values are also available from BROT2 [@Tavsanoglu2018] (some of these records are also in TRY). As before, we assume values to correspond to parameter `Z95`.
@@ -1046,7 +1047,7 @@ SpParams <- populateTraits(SpParams, senescence[senescence$Accepted=="Y",],
 Leaf lifespan is available from TRY for many species (TraitID 12). We load records for this trait, which is already standardized into month units:
 ```{r leaf_duration}
 TRY_LeafDuration  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_12.rds"))
-TRY_LeafDuration <- TRY_LeafDuration[, c("AccSpeciesName", "StdValue")]
+TRY_LeafDuration <- TRY_LeafDuration[TRY_LeafDuration$ErrorRisk<4, c("AccSpeciesName", "StdValue")]
 names(TRY_LeafDuration) <- c("Species", "LeafDuration")
 ```
 Leaf lifespan is also available from BROT2 [@Tavsanoglu2018], also in number of months:
@@ -1078,7 +1079,7 @@ In this subsection we map several plant anatomy traits into model parameters. Al
 Specific leaf area ($SLA$), in mm2/mg or m2/kg, is available from several databases. We load records from TRY (TraitID = 3117), which are already standardized:
 ```{r SLA}
 TRY_SLA <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_3117.rds"))
-TRY_SLA <- TRY_SLA[, c("AccSpeciesName", "StdValue")]
+TRY_SLA <- TRY_SLA[TRY_SLA$ErrorRisk<4, c("AccSpeciesName", "StdValue")]
 names(TRY_SLA) <- c("Species", "SLA")
 ```
 We also select SLA records from BROT2 [@Tavsanoglu2018], already in the same units as TRY.
@@ -1107,6 +1108,7 @@ summary(SpParams[,c("SLA")])
 Leaf density (leaf dry mass per leaf volume, in $g \cdot cm^{-3}$) is available in TRY (TraitID = 48). Since we do not have other data sources we directly use this data set to populate parameter `LeafDensity` ($LD$):
 ```{r leaf_density}
 TRY_LeafDensity  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_48.rds"))
+TRY_LeafDensity<- TRY_LeafDensity[TRY_LeafDensity$ErrorRisk < 4,, drop= FALSE] 
 SpParams <- populateTraits(SpParams, TRY_LeafDensity, 
                            trait_mapping = c("LeafDensity" = "StdValue"),
                            taxon_column = "AccSpeciesName")
@@ -1116,10 +1118,10 @@ The distribution of parameter values is:
 summary(SpParams[,c("LeafDensity")])
 ```
 #### Wood density
-Wood density (stem dry mass per leaf volume, in $g \cdot cm^{-3}$) is available in TRY (TraitID = 4):
+Wood density (stem dry mass per fresh stem volume, in $g \cdot cm^{-3}$) is available in TRY (TraitID = 4):
 ```{r wood_density}
 TRY_WoodDensity  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_4.rds"))
-TRY_WoodDensity <- TRY_WoodDensity[, c("AccSpeciesName", "StdValue")]
+TRY_WoodDensity <- TRY_WoodDensity[TRY_WoodDensity$ErrorRisk<4, c("AccSpeciesName", "StdValue")]
 names(TRY_WoodDensity) <- c("Species", "WoodDensity")
 ```
 
@@ -1204,7 +1206,7 @@ TRY_Al2As$StdValue[TRY_Al2As$OriglName=="Sapwood: leaf area ratio"]<-10000/as.nu
 TRY_Al2As$StdValue[TRY_Al2As$OriglName=="The ratio of leaf area attached per unit sapwood cross-section area (m2 cm-2)"]<-10000*as.numeric(TRY_Al2As$OrigValueStr[TRY_Al2As$OriglName=="The ratio of leaf area attached per unit sapwood cross-section area (m2 cm-2)"])
 TRY_Al2As$StdValue[TRY_Al2As$OriglName=="values at base of living crown, m2/cm2"]<-10000*as.numeric(TRY_Al2As$OrigValueStr[TRY_Al2As$OriglName=="values at base of living crown, m2/cm2"])
 TRY_Al2As$StdValue[TRY_Al2As$OriglName=="values at breast height, m2/cm2"]<-10000*as.numeric(TRY_Al2As$OrigValueStr[TRY_Al2As$OriglName=="values at breast height, m2/cm2"])
-TRY_Al2As <- TRY_Al2As[, c("AccSpeciesName", "StdValue")]
+TRY_Al2As <- TRY_Al2As[TRY_Al2As$ErrorRisk <4, c("AccSpeciesName", "StdValue")]
 names(TRY_Al2As) <- c("Species", "Al2As")
 ```
 We use a summary of the data to check the range of values and median ones, which should make sense according to our knowledge of this variable:
@@ -1249,7 +1251,7 @@ summary(SpParams[,c("conduit2sapwood")])
 Leaf width ($LW$ in cm) records can be obtained from TRY (TraitID = 145), so we directly use this data source to populate the trait without transformation:
 ```{r leaf_width}
 TRY_LW <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_145.rds"))
-SpParams <- populateTraits(SpParams, TRY_LW,
+SpParams <- populateTraits(SpParams, TRY_LW[TRY_LW$ErrorRisk<4,],
                            trait_mapping = c("LeafWidth" = "StdValue"),
                            taxon_column = "AccSpeciesName")
 ```
@@ -1263,7 +1265,7 @@ summary(SpParams[,c("LeafWidth")])
 Finally, specific fine root length ($SRL$) is the fine root length per fine root dry mass and can also be retrieved from TRY (TraitID = 614):
 ```{r SRL}
 TRY_SRL  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_614.rds"))
-SpParams <- populateTraits(SpParams, TRY_SRL, 
+SpParams <- populateTraits(SpParams, TRY_SRL[TRY_SRL$ErrorRisk<4,], 
                            trait_mapping = c("SRL" = "StdValue"),
                            taxon_column = "AccSpeciesName")
 
@@ -1323,7 +1325,7 @@ names(bartlett)[names(bartlett)=="ε.(MPa)"] = "LeafEPS"
 we then load TRY data for $\pi_{0,leaf}$ (TraitID = 188):
 ```{r}
 TRY_LeafPI0  <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_188.rds"))
-TRY_LeafPI0 <- TRY_LeafPI0[, c("AccSpeciesName", "StdValue")]
+TRY_LeafPI0 <- TRY_LeafPI0[TRY_LeafPI0$ErrorRisk<4, c("AccSpeciesName", "StdValue")]
 names(TRY_LeafPI0) <- c("Species", "LeafPI0")
 TRY_LeafPI0$LeafPI0 <- -1*TRY_LeafPI0$LeafPI0 
 ```
@@ -1331,7 +1333,7 @@ and TRY data for $\epsilon_{leaf}$ (TraitID = 190):
 ```{r}
 TRY_LeafEPS  <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_190.rds"))
 TRY_LeafEPS$StdValue <- as.numeric(TRY_LeafEPS$OrigValueStr) 
-TRY_LeafEPS <- TRY_LeafEPS[, c("AccSpeciesName", "StdValue")]
+TRY_LeafEPS <- TRY_LeafEPS[, c("AccSpeciesName", "StdValue"), drop = FALSE]
 names(TRY_LeafEPS) <- c("Species", "LeafEPS")
 ```
 We then fill $\pi_{0,leaf}$ with the TRY and @Bartlett2012 data sources merged:
@@ -1386,7 +1388,7 @@ The lignin content per dry mass of leaves is included in TRY (TraitID = 87) with
 ```{r lignin}
 TRY_Lignin  <-readRDS(file.path(DB_path, "TraitDatabases/TRY/TRY_traits/TRY_87.rds"))
 
-SpParams <- populateTraits(SpParams, TRY_Lignin, 
+SpParams <- populateTraits(SpParams, TRY_Lignin[TRY_Lignin$ErrorRisk<4,], 
                            trait_mapping = c("LigninPercent" = "StdValue"),
                            scalar_functions = c("LigninPercent" = function(x){x/10}), #mg/g to % 
                            taxon_column = "AccSpeciesName")
@@ -1468,7 +1470,7 @@ summary(SpParams[,c("Psi_Critic")])
 Water use efficiency  ($WUE$) is the leaf transpiration rate per photosynthesis rate. We can draw values of the water use efficiency from TRY (TraitID = 134), after filtering out extreme values:
 ```{r WUE}
 TRY_WUE  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_134.rds"))
-TRY_WUE <- TRY_WUE %>% filter(StdValue < 40)
+TRY_WUE <- TRY_WUE %>% filter(StdValue < 40, ErrorRisk <4)
 SpParams <- populateTraits(SpParams, TRY_WUE, 
                            trait_mapping = c("WUE" = "StdValue"),
                            taxon_column = "AccSpeciesName")
@@ -1566,7 +1568,7 @@ summary(SpParams[,c("VCstem_c", "VCstem_d")])
 Photosynthetic capacity in Sperry's model is primarily determined by the $Vmax$ and $Jmax$ coefficients of the well-known Farquhar's photosynthesis model. However, **medfate** allows estimating these coefficients from $SLA$ and the nitrogen concentration in leaves, $N_{area}$. Hence it is useful to draw this latter parameter from trait databases. Here we first extract nitrogen concentration per leaf area values from TRY (TraitID = 50):
 ```{r photosynthetic_capacity}
 TRY_Narea <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_50.rds"))
-TRY_Narea <- TRY_Narea[, c("AccSpeciesName", "StdValue")]
+TRY_Narea <- TRY_Narea[TRY_Narea$ErrorRisk<4, c("AccSpeciesName", "StdValue")]
 names(TRY_Narea) <- c("Species", "Narea")
 ```
 We then merge them with available data from HydraTRY [@Mencuccini2019;@SanchezMartinez2020] and call the population function:
@@ -1581,14 +1583,14 @@ SpParams <- populateTraits(SpParams, Narea_data,
 TRY also offers $V_{max}$ values (TraitID = 186), which we take as estimates for **medfate**'s $V_{max298}$ the maximum Rubisco carboxilation rate at 25 degrees Celsius: 
 ```{r}
 TRY_Vmax298  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_186.rds"))
-SpParams <- populateTraits(SpParams, TRY_Vmax298, 
+SpParams <- populateTraits(SpParams, TRY_Vmax298[TRY_Vmax298$ErrorRisk<4, ], 
                            trait_mapping = c("Vmax298" = "StdValue"),
                            taxon_column = "AccSpeciesName")
 ```
 The same happens with TRY's $J_{max}$ values (TraitID = 269), which we take as estimates for **medfate**'s $J_{max298}$ the maximum electron transport rate at 25 degrees Celsius: 
 ```{r}
 TRY_Jmax298  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_269.rds"))
-SpParams <- populateTraits(SpParams, TRY_Jmax298, 
+SpParams <- populateTraits(SpParams, TRY_Jmax298[TRY_Jmax298$ErrorRisk<4, ], 
                            trait_mapping = c("Jmax298" = "StdValue"),
                            taxon_column = "AccSpeciesName")
 ```
@@ -1605,7 +1607,7 @@ Carbon balance and growth simulations require many parameters that are hard to m
 Stem carbon content per stem dry mass is given by TRY (TraitID = 407) and can be easily mapped, after transforming units from mg/g to g/g: 
 ```{r WoodC}
 TRY_WoodC <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_407.rds"))
-SpParams <- populateTraits(SpParams, TRY_WoodC, 
+SpParams <- populateTraits(SpParams, TRY_WoodC[TRY_WoodC$ErrorRisk<4,], 
                            trait_mapping = c("WoodC" = "StdValue"),
                            scalar_functions = c("WoodC" = function(x){x/1000}), 
                            taxon_column = "AccSpeciesName")
