@@ -155,13 +155,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simulating forest dynamics for year 2001 (1/2)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    (a) Growth/mortality</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    (b) Recruitment</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 36.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 36</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Tree species with seed rain: 148,168 recruited: &lt;none&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    (c) Summaries</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Simulating forest dynamics for year 2002 (2/2)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    (a) Growth/mortality</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    (b) Recruitment</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.18   FPAR (%): 36.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.18   FPAR (%): 36</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Tree species with seed rain: 148,168 recruited: &lt;none&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    (c) Summaries</span>
 <span class="r-in"></span>
@@ -169,26 +169,31 @@
 <span class="r-in"><span class="va">fd</span><span class="op">$</span><span class="va">StandSummary</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Step LeafAreaIndex TreeDensityLive TreeBasalAreaLive ShrubCoverLive MaxHeight</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    0      1.937743        552.0000          25.03330           3.75  800.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1      1.911151        546.3412          25.09816           3.75  804.4009</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    2      1.832945        540.7403          24.97119           3.75  806.1752</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1      1.918234        549.1704          25.22588           3.75  804.3730</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    2      1.848565        546.3553          25.22523           3.75  806.1103</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Tree table by annual steps</span></span>
 <span class="r-in"><span class="va">fd</span><span class="op">$</span><span class="va">TreeTable</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Step Year Cohort Species             Name        N      DBH   Height Z50  Z95</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    0   NA T1_148     148 Pinus halepensis 168.0000 37.55000 800.0000 750 3000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    0   NA T2_168     168     Quercus ilex 384.0000 14.60000 660.0000 750 3000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    1 2001 T1_148     148 Pinus halepensis 166.2777 37.76723 804.4009 750 3000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    1 2001 T2_168     168     Quercus ilex 380.0634 14.72319 664.1851 750 3000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    2 2002 T1_148     148 Pinus halepensis 164.5731 37.85580 806.1752 750 3000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    2 2002 T2_168     168     Quercus ilex 376.1672 14.77338 665.8359 750 3000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    1 2001 T1_148     148 Pinus halepensis 167.1388 37.76570 804.3730 750 3000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    1 2001 T2_168     168     Quercus ilex 382.0316 14.72235 664.1660 750 3000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    2 2002 T1_148     148 Pinus halepensis 166.2821 37.85226 806.1103 750 3000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    2 2002 T2_168     168     Quercus ilex 380.0733 14.77140 665.7893 750 3000</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Dead tree table by annual steps</span></span>
 <span class="r-in"><span class="va">fd</span><span class="op">$</span><span class="va">DeadTreeTable</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Step Year Cohort Species             Name        N      DBH   Height Z50  Z95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    1 2001 T1_148     148 Pinus halepensis 1.722253 37.76723 804.4009 750 3000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1 2001 T2_168     168     Quercus ilex 3.936579 14.72319 664.1851 750 3000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    2 2002 T1_148     148 Pinus halepensis 1.704598 37.85580 806.1752 750 3000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    2 2002 T2_168     168     Quercus ilex 3.896223 14.77338 665.8359 750 3000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Step Year Cohort Species             Name         N      DBH   Height Z50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    1 2001 T1_148     148 Pinus halepensis 0.8611814 37.76570 804.3730 750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1 2001 T2_168     168     Quercus ilex 1.9684147 14.72235 664.1660 750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    2 2002 T1_148     148 Pinus halepensis 0.8567669 37.85226 806.1103 750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    2 2002 T2_168     168     Quercus ilex 1.9583245 14.77140 665.7893 750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Z95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 3000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 3000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 3000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 3000</span>
 </code></pre></div>
     </div>
   </div>
