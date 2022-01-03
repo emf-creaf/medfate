@@ -1,6 +1,96 @@
+.shinyplot_day<-function(out){
+  if(inherits(out, c("spwb_day", "pwb_day"))) {
+    transpirationMode = out$spwbInput$control$transpirationMode
+    cohorts_out = row.names(out$spwbInput$cohorts)
+    cohorts_sp_out = paste0(row.names(out$spwbInput$cohorts), 
+                            " (",out$spwbInput$cohorts$Name, ")")
+  } else {
+    transpirationMode = out$growthInput$control$transpirationMode
+    cohorts_out = row.names(out$spwbInput$cohorts)
+    cohorts_sp_out = paste0(row.names(out$spwbInput$cohorts), 
+                            " (",out$spwbInput$cohorts$Name, ")")
+  }
+  plot_main_choices = c("Soil", "Plants", "Energy balance")
+  if(inherits(out, c("growth_day"))) {
+    plot_main_choices = c(plot_main_choices, 
+                          "Labile carbon balance")
+  }
+  subdaily_soil_plot_choices = c("Plant extraction from soil" = "PlantExtraction")
+  subdaily_plant_plot_choices = c("Plant transpiration" = "PlantTranspiration",
+                                  "Plant water balance" = "PlantWaterBalance",
+                                  "Plant gross photosynthesis" = "PlantGrossPhotosynthesis",
+                                  "Plant net photosynthesis" = "PlantNetPhotosynthesis",
+                                  "Soil-plant conductance" = "SoilPlantConductance",
+                                  "Leaf water potential" = "LeafPsi",
+                                  "Root crown water potential" = "RootPsi",
+                                  "Upper stem water potential" = "StemPsi",
+                                  "Stem relative water content" = "StemRWC",
+                                  "Leaf relative water content" = "LeafRWC",
+                                  "Leaf absorbed SWR" = "LeafAbsorbedSWR",
+                                  "Leaf net LWR" = "LeafNetLWR",
+                                  "Leaf transpiration" = "LeafTranspiration",
+                                  "Leaf gross photosynthesis" = "LeafGrossPhotosynthesis",
+                                  "Leaf net photosynthesis" = "LeafNetPhotosynthesis")
+  subdaily_energy_plot_choices = c("Air/canopy/soil temperature" ="Temperature")
+  subdaily_labile_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
+                                   "Maintenance respiration per dry" = "MaintenanceRespiration",
+                                   "Growth costs per dry" = "GrowthCosts",
+                                   "Root exudation per dry" = "RootExudation",
+                                   "Labile carbon balance per dry" = "LabileCarbonBalance",
+                                   "Leaf sugar concentration" = "SugarLeaf",
+                                   "Leaf starch concentration" = "StarchLeaf",
+                                   "Sapwood sugar concentration" = "SugarSapwood",
+                                   "Sapwood starch concentration" = "StarchSapwood",
+                                   "Sugar transport" = "SugarTransport")
+  
+  ui <- fluidPage(
+    sidebarLayout(
+      sidebarPanel(
+        selectInput(
+          inputId = "plot_main_type",
+          label = "Category",
+          choices = plot_main_choices,
+          selected = plot_main_choices[1]
+        ),
+        selectInput(
+          inputId = "plot_var",
+          label = "Variable", 
+          choices = subdaily_soil_plot_choices,
+          selected = subdaily_soil_plot_choices[1]
+        ),
+        checkboxInput(
+          inputId = "byspecies_check",
+          label = "Aggregation by species",
+          value = FALSE
+        )
+      ),
+      mainPanel(
+        plotOutput("spatial_plot")
+      )
+    )
+  )
+  server <- function(input, output, session) {
+    observe({
+      main_plot <- input$plot_main_type
+      if(main_plot=="Soil") sub_choices = subdaily_soil_plot_choices
+      else if(main_plot=="Plants") sub_choices = subdaily_plant_plot_choices
+      else if(main_plot=="Energy balance") sub_choices = subdaily_energy_plot_choices
+      else if(main_plot=="Labile carbon balance") sub_choices = subdaily_labile_plot_choices
+      updateSelectInput(session, "plot_var",
+                        choices = sub_choices)
+    })
+    output$spatial_plot <- renderPlot({
+      plot(out, type = input$plot_var, bySpecies = input$byspecies_check)
+    })
+  }
+  
+  shinyApp(ui = ui, server = server)
+}
+
 
 shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
-  if(!inherits(out, c("growth", "spwb", "fordyn"))) stop("Wrong class for 'out'. Should either be 'spwb', 'growth' or 'fordyn'.")
+  if(inherits(out, c("spwb_day", "pwb_day", "growth_day"))) return(.shinyplot_day(out))
+  if(!inherits(out, c("growth", "pwb" , "spwb", "fordyn"))) stop("Wrong class for 'out'. Should either be 'spwb', 'growth' or 'fordyn'.")
   type_out = class(out)[1] #growth, spwb, fordyn
   if(type_out=="spwb") {
     transpirationMode = out$spwbInput$control$transpirationMode
@@ -401,3 +491,4 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   # Run the application 
   shinyApp(ui = ui, server = server)
 }
+
