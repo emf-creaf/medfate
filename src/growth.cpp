@@ -1323,7 +1323,7 @@ List growthDay2(List x, NumericVector meteovec,
       starchSapwood[j] = ((starchSapwood[j]*Volume_sapwood[j]) + translocationSugarLeaf + translocationStarchLeaf + translocationSugarSapwood)/Volume_sapwood[j];
 
       
-      //UPDATE LEAF AREA, SAPWOOD AREA, FINE ROOT BIOMASS/DISTRIBUTION AND CONCENTRATION IN LABILE POOLS
+      //UPDATE LEAF AREA, SAPWOOD AREA, FINE ROOT BIOMASS/DISTRIBUTION
       double initialSapwoodBiomass = sapwoodStructuralBiomass(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j]);
       double LAprev = LAexpanded;
       LAexpanded +=deltaLAgrowth[j] - deltaLAsenescence;
