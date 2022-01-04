@@ -103,7 +103,7 @@ double qResp(double Tmean) {
 //   return(std::max(0.0,(exp(k*conc)-exp(k*threshold))/(1.0-exp(k*threshold))));
 // }
 
-DataFrame initBiomassBalance(DataFrame ccIni, DataFrame above) {
+DataFrame initPlantBiomassBalance(DataFrame ccIni, DataFrame above) {
 
   NumericVector Nprev = above["N"];
   int numCohorts = Nprev.length();
@@ -119,7 +119,7 @@ DataFrame initBiomassBalance(DataFrame ccIni, DataFrame above) {
   NumericVector LabileBiomassBalance(numCohorts,0.0), StructuralBiomassBalance(numCohorts,0.0), PlantBiomassBalance(numCohorts,0.0), MortalityBiomassLoss(numCohorts,0.0), CohortBiomassBalance(numCohorts,0.0);
   NumericVector StructuralBiomassChange(numCohorts,0.0), LabileBiomassChange(numCohorts,0.0), PlantBiomassChange(numCohorts,0.0), CohortBiomassChange(numCohorts,0.0);
   
-  DataFrame biomassBalance = DataFrame::create(_["InitialDensity"] = clone(Nprev),
+  DataFrame plantBiomassBalance = DataFrame::create(_["InitialDensity"] = clone(Nprev),
                                                _["InitialSapwoodBiomass"] = SapwoodBiomass,
                                                _["InitialStructuralBiomass"] = StructuralBiomass,
                                                _["StructuralBiomassBalance"] = StructuralBiomassBalance,
@@ -135,12 +135,12 @@ DataFrame initBiomassBalance(DataFrame ccIni, DataFrame above) {
                                                _["InitialCohortBiomass"] = CohortBiomass,
                                                _["CohortBiomassBalance"] = CohortBiomassBalance,
                                                _["CohortBiomassChange"] = CohortBiomassChange);
-  biomassBalance.attr("row.names") = above.attr("row.names");
-  return(biomassBalance);  
+  plantBiomassBalance.attr("row.names") = above.attr("row.names");
+  return(plantBiomassBalance);  
 }
 
 
-void closeBiomassBalance(DataFrame biomassBalance, List x,
+void closePlantBiomassBalance(DataFrame plantBiomassBalance, List x,
                          NumericVector LabileCarbonBalance,
                          NumericVector LeafBiomassBalance,
                          NumericVector FineRootBiomassBalance) {
@@ -156,27 +156,27 @@ void closeBiomassBalance(DataFrame biomassBalance, List x,
   NumericVector labileFinalBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccFin["LabileBiomass"]);
   NumericVector structuralFinalBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccFin["StructuralBiomass"]);
 
-  NumericVector Nprev = Rcpp::as<Rcpp::NumericVector>(biomassBalance["InitialDensity"]);
+  NumericVector Nprev = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialDensity"]);
   
-  NumericVector InitialSapwoodBiomass = Rcpp::as<Rcpp::NumericVector>(biomassBalance["InitialSapwoodBiomass"]);
-  NumericVector StructuralBiomassBalance = Rcpp::as<Rcpp::NumericVector>(biomassBalance["StructuralBiomassBalance"]);
-  NumericVector InitialStructuralBiomass = Rcpp::as<Rcpp::NumericVector>(biomassBalance["InitialStructuralBiomass"]);
-  NumericVector StructuralBiomassChange = Rcpp::as<Rcpp::NumericVector>(biomassBalance["StructuralBiomassChange"]);
+  NumericVector InitialSapwoodBiomass = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialSapwoodBiomass"]);
+  NumericVector StructuralBiomassBalance = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["StructuralBiomassBalance"]);
+  NumericVector InitialStructuralBiomass = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialStructuralBiomass"]);
+  NumericVector StructuralBiomassChange = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["StructuralBiomassChange"]);
   
-  NumericVector LabileBiomassBalance = Rcpp::as<Rcpp::NumericVector>(biomassBalance["LabileBiomassBalance"]);
-  NumericVector InitialLabileBiomass = Rcpp::as<Rcpp::NumericVector>(biomassBalance["InitialLabileBiomass"]);
-  NumericVector LabileBiomassChange = Rcpp::as<Rcpp::NumericVector>(biomassBalance["LabileBiomassChange"]);
+  NumericVector LabileBiomassBalance = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["LabileBiomassBalance"]);
+  NumericVector InitialLabileBiomass = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialLabileBiomass"]);
+  NumericVector LabileBiomassChange = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["LabileBiomassChange"]);
 
-  NumericVector PlantBiomassBalance = Rcpp::as<Rcpp::NumericVector>(biomassBalance["PlantBiomassBalance"]);
-  NumericVector InitialPlantBiomass = Rcpp::as<Rcpp::NumericVector>(biomassBalance["InitialPlantBiomass"]);
-  NumericVector InitialLivingPlantBiomass = Rcpp::as<Rcpp::NumericVector>(biomassBalance["InitialLivingPlantBiomass"]);
-  NumericVector PlantBiomassChange = Rcpp::as<Rcpp::NumericVector>(biomassBalance["PlantBiomassChange"]);
+  NumericVector PlantBiomassBalance = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["PlantBiomassBalance"]);
+  NumericVector InitialPlantBiomass = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialPlantBiomass"]);
+  NumericVector InitialLivingPlantBiomass = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialLivingPlantBiomass"]);
+  NumericVector PlantBiomassChange = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["PlantBiomassChange"]);
 
-  NumericVector MortalityBiomassLoss = Rcpp::as<Rcpp::NumericVector>(biomassBalance["MortalityBiomassLoss"]);
+  NumericVector MortalityBiomassLoss = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["MortalityBiomassLoss"]);
   
-  NumericVector CohortBiomassBalance = Rcpp::as<Rcpp::NumericVector>(biomassBalance["CohortBiomassBalance"]);
-  NumericVector InitialCohortBiomass = Rcpp::as<Rcpp::NumericVector>(biomassBalance["InitialCohortBiomass"]);
-  NumericVector CohortBiomassChange = Rcpp::as<Rcpp::NumericVector>(biomassBalance["CohortBiomassChange"]);
+  NumericVector CohortBiomassBalance = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["CohortBiomassBalance"]);
+  NumericVector InitialCohortBiomass = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["InitialCohortBiomass"]);
+  NumericVector CohortBiomassChange = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["CohortBiomassChange"]);
   
   //PLANT BIOMASS balance (g_ind)
   for(int j; j<numCohorts;j++) {
@@ -202,6 +202,16 @@ void closeBiomassBalance(DataFrame biomassBalance, List x,
     CohortBiomassBalance[j] = PlantBiomassBalance[j] - MortalityBiomassLoss[j];
     CohortBiomassChange[j] = cohortFinalBiomass_m2[j] - InitialCohortBiomass[j];
   }
+}
+
+NumericVector standLevelBiomassBalance(DataFrame biomassBalance) {
+  return(NumericVector::create(
+      _["StructuralBalance"] = sum(Rcpp::as<Rcpp::NumericVector>(biomassBalance["StructuralBiomassBalance"])),
+      _["LabileBalance"] = sum(Rcpp::as<Rcpp::NumericVector>(biomassBalance["LabileBiomassBalance"])),
+      _["PlantBalance"] = sum(Rcpp::as<Rcpp::NumericVector>(biomassBalance["PlantBiomassBalance"])),
+      _["MortalityLoss"] = sum(Rcpp::as<Rcpp::NumericVector>(biomassBalance["MortalityBiomassLoss"])),
+      _["CohortBalance"] = sum(Rcpp::as<Rcpp::NumericVector>(biomassBalance["CohortBiomassBalance"]))
+  ));
 }
 
 void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
@@ -466,7 +476,7 @@ List growthDay1(List x, NumericVector meteovec,
   //Initial Biomass balance
   NumericVector LeafBiomassBalance(numCohorts,0.0), FineRootBiomassBalance(numCohorts,0.0);
   DataFrame ccIni = carbonCompartments(x, "g_ind");
-  DataFrame biomassBalance = initBiomassBalance(ccIni, above);
+  DataFrame plantBiomassBalance = initPlantBiomassBalance(ccIni, above);
   NumericVector Volume_leaves = Rcpp::as<Rcpp::NumericVector>(ccIni["LeafStorageVolume"]);
   NumericVector Volume_sapwood = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodStorageVolume"]);
   NumericVector Starch_max_leaves = Rcpp::as<Rcpp::NumericVector>(ccIni["LeafStarchMaximumConcentration"]);
@@ -754,7 +764,7 @@ List growthDay1(List x, NumericVector meteovec,
   }
   
   //CLOSE BIOMASS BALANCE
-  closeBiomassBalance(biomassBalance, x,
+  closePlantBiomassBalance(plantBiomassBalance, x,
                       LabileCarbonBalance, LeafBiomassBalance, FineRootBiomassBalance);
   
   //Update pool proportions??
@@ -797,7 +807,7 @@ List growthDay1(List x, NumericVector meteovec,
                         _["Stand"] = spwbOut["Stand"], 
                         _["Plants"] = spwbOut["Plants"],
                         _["LabileCarbonBalance"] = labileCarbonBalance,
-                        _["PlantBiomassBalance"] = biomassBalance,
+                        _["PlantBiomassBalance"] = plantBiomassBalance,
                         _["PlantStructure"] = plantStructure,
                         _["PlantGrowth"] = plantGrowth);
   l.attr("class") = CharacterVector::create("growth_day","list");
@@ -1054,7 +1064,7 @@ List growthDay2(List x, NumericVector meteovec,
   //Initial Biomass balance
   NumericVector LeafBiomassBalance(numCohorts,0.0), FineRootBiomassBalance(numCohorts,0.0);
   DataFrame ccIni = carbonCompartments(x, "g_ind");
-  DataFrame biomassBalance = initBiomassBalance(ccIni, above);
+  DataFrame plantBiomassBalance = initPlantBiomassBalance(ccIni, above);
   NumericVector Volume_leaves = Rcpp::as<Rcpp::NumericVector>(ccIni["LeafStorageVolume"]);
   NumericVector Volume_sapwood = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodStorageVolume"]);
   NumericVector Starch_max_leaves = Rcpp::as<Rcpp::NumericVector>(ccIni["LeafStarchMaximumConcentration"]);
@@ -1500,7 +1510,7 @@ List growthDay2(List x, NumericVector meteovec,
   }
   
   //CLOSE BIOMASS BALANCE
-  closeBiomassBalance(biomassBalance, x, 
+  closePlantBiomassBalance(plantBiomassBalance, x, 
                       LabileCarbonBalance, LeafBiomassBalance, FineRootBiomassBalance);
   
   
@@ -1551,7 +1561,6 @@ List growthDay2(List x, NumericVector meteovec,
                                    _["LeafPI0"] = clone(LeafPI0));
   labileCarbonBalance.attr("row.names") = above.attr("row.names");
   
-
   //Final Biomass compartments
   DataFrame plantStructure = DataFrame::create(
     _["LeafArea"] = LeafArea,
@@ -1574,7 +1583,7 @@ List growthDay2(List x, NumericVector meteovec,
                         _["Stand"] = spwbOut["Stand"], 
                         _["Plants"] = spwbOut["Plants"],
                         _["LabileCarbonBalance"] = labileCarbonBalance,
-                        _["PlantBiomassBalance"] = biomassBalance,
+                        _["PlantBiomassBalance"] = plantBiomassBalance,
                         _["PlantStructure"] = plantStructure,                        
                         _["PlantGrowth"] = plantGrowth,
                         _["RhizoPsi"] = spwbOut["RhizoPsi"],
@@ -1922,6 +1931,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   NumericMatrix PlantBiomassBalance(numDays, numCohorts);
   NumericMatrix MortalityBiomassLoss(numDays, numCohorts);
   NumericMatrix CohortBiomassBalance(numDays, numCohorts);
+  NumericMatrix StandBiomassBalance(numDays, 5);
   
   //Water balance output variables
   DataFrame DWB = defineWaterBalanceDailyOutput(meteo, PET, transpirationMode);
@@ -2099,7 +2109,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     PlantBiomassBalance(i,_) = Rcpp::as<Rcpp::NumericVector>(bb["PlantBiomassBalance"]);
     MortalityBiomassLoss(i,_) = Rcpp::as<Rcpp::NumericVector>(bb["MortalityBiomassLoss"]);
     CohortBiomassBalance(i,_) = Rcpp::as<Rcpp::NumericVector>(bb["CohortBiomassBalance"]);
-    
+    StandBiomassBalance(i,_) = standLevelBiomassBalance(bb);
     cohortBiomassBalanceSum += sum(CohortBiomassBalance(i,_));
 
     LAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LAgrowth"]);
@@ -2126,9 +2136,14 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   DataFrame ccFin_m2 = carbonCompartments(x, "g_m2");
   double finalCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccFin_m2["TotalBiomass"]));
   if(verbose) {
-    Rcout<<"Final plant cohort biomass (g/m2): "<<finalCohortBiomass<<"\n";
-    Rcout<<"Change in plant cohort biomass (g/m2): " << finalCohortBiomass - initialCohortBiomass <<"\n";
-    Rcout<<"Plant cohort biomass balance result (g/m2): " <<  cohortBiomassBalanceSum<<"\n";
+    Rcout<<"Final plant biomass (g/m2): "<<finalCohortBiomass<<"\n";
+    Rcout<<"Change in plant biomass (g/m2): " << finalCohortBiomass - initialCohortBiomass <<"\n";
+    Rcout<<"Plant biomass balance result (g/m2): " <<  cohortBiomassBalanceSum<<"\n";
+    Rcout<<"Plant biomass balance components:\n";
+    
+    Rcout<<"  Structural balance (g/m2) "  <<round(sum(StandBiomassBalance(_,0)))<<" Labile balance (g/m2) "  <<round(sum(StandBiomassBalance(_,1))) <<"\n";
+    Rcout<<"  Plant individual balance (g/m2) "  <<round(sum(StandBiomassBalance(_,2)))<<" Mortality loss (g/m2) "  <<round(sum(StandBiomassBalance(_,3))) <<"\n";
+    
     printWaterBalanceResult(DWB, plantDWOL, soil, soilFunctions,
                             initialContent, initialSnowContent,
                             transpirationMode);
@@ -2160,6 +2175,9 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   PlantBiomassBalance.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
   MortalityBiomassLoss.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
   CohortBiomassBalance.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
+
+  StandBiomassBalance.attr("dimnames") = List::create(meteo.attr("row.names"), 
+                           CharacterVector::create("StructuralBalance", "LabileBalance", "PlantBalance", "MortalityLoss", "CohortBalance"));
   
   subdailyRes.attr("names") = meteo.attr("row.names") ;
   
@@ -2206,6 +2224,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                      Named("topography") = topo,
                      Named("growthInput") = growthInput,
                      Named("WaterBalance")=DWB, 
+                     Named("BiomassBalance") = StandBiomassBalance,
                      Named("Soil")=SWB,
                      Named("Stand")=Stand,
                      Named("Plants") = plantDWOL,
@@ -2228,6 +2247,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                    Named("growthInput") = growthInput,
                    Named("WaterBalance")=DWB, 
                    Named("EnergyBalance") = DEB,
+                   Named("BiomassBalance") = StandBiomassBalance,
                    Named("Temperature") = DT,
                    Named("TemperatureLayers") = NA_REAL,
                    Named("Soil")=SWB,

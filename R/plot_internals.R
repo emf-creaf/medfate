@@ -49,7 +49,7 @@
   return(TYPES)
 }
 .getUniqueDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){
-  TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "LabileCarbonBalance",
+  TYPES = c("BiomassBalance","GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "LabileCarbonBalance",
             "SugarTransport", "LeafPI0", "StemPI0",
             "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport", "RootExudation",
             "StructuralBiomassBalance","LabileBiomassBalance", "PlantBiomassBalance",
@@ -511,7 +511,18 @@
     return(g)
   }
 }
-
+.plot_biomass<-function(BiomassBalance, type,  
+                      dates = NULL, 
+                      xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
+                      summary.freq = NULL, ...) {
+  df<-as.data.frame(BiomassBalance)
+  names(df)<-c("Structural balance", "Labile balance","Plant individual balance", "Mortality loss",
+               "Cohort balance")
+  if(is.null(ylab))  ylab = expression(g%.%m^{-2})    
+  if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
+  if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
+  return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
+}
 .sumSubdailyBySpecies<-function(OM, spnames) {
   if(ncol(OM)>2) OM = cbind(OM[,1],t(apply(OM[,-1],1, tapply, spnames, sum, na.rm=T)))
   else colnames(OM)[2] = spnames[1]

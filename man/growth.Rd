@@ -45,6 +45,7 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
   \item{\code{"growthInput"}: A copy of the object \code{x} of class \code{\link{growthInput}} given as input.}
   \item{\code{"WaterBalance"}: A data frame where different water balance variables (see \code{\link{spwb}}).}
   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
+  \item{\code{"BiomassBalance"}: A data frame with the daily values of biomass balance components.}
   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
   \item{\code{"Soil"}: A data frame where different soil variables  (see \code{\link{spwb}}).}
   \item{\code{"Stand"}: A data frame where different stand-level variables (see \code{\link{spwb}}).}

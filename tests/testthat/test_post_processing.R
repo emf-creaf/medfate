@@ -246,6 +246,7 @@ test_that("Can produce all basic growth plots and summaries",{
   G1<-growth(x1, examplemeteo[d,], latitude = 41.82592, elevation = 100)
   expect_s3_class(G1, "growth")
   
+  expect_s3_class(plot(G1, "BiomassBalance"), "ggplot")
   expect_s3_class(plot(G1, "GrossPhotosynthesis"), "ggplot")
   expect_s3_class(plot(G1, "MaintenanceRespiration"), "ggplot")
   expect_s3_class(plot(G1, "LabileCarbonBalance"), "ggplot")

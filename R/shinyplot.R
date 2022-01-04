@@ -131,6 +131,14 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   names(cohort_choices) = cohorts_sp_out
   
   plot_main_choices = c("Water balance", "Soil", "Stand", "Plants")
+  stand_plot_choices = c("LAI" = "LAI")
+  plant_plot_choices = c("LAI" = "PlantLAI",
+                         "Stress" = "PlantStress",
+                         "Transpiration" = "PlantTranspiration",
+                         "Transpiration per leaf" = "TranspirationPerLeaf",
+                         "Gross photosynthesis" = "PlantGrossPhotosynthesis",
+                         "Gross photosynthesis per leaf" = "GrossPhotosynthesisPerLeaf")
+
   if(transpirationMode=="Sperry") {
     plot_main_choices = c(plot_main_choices, "Energy balance")
   }
@@ -140,6 +148,8 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                           "Biomass balance",
                           "Plant structure",
                           "Plant growth")
+    stand_plot_choices = c(stand_plot_choices,
+                           "Biomass balance" = "BiomassBalance")
   }
   if(type_out=="fordyn") {
     plot_main_choices = c(plot_main_choices, "Forest dynamics")
@@ -163,13 +173,6 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   }
   subdaily_soil_plot_choices = c("Plant extraction from soil" = "PlantExtraction")
   
-  stand_plot_choices = c("LAI" = "LAI")
-  plant_plot_choices = c("LAI" = "PlantLAI",
-                         "Stress" = "PlantStress",
-                         "Transpiration" = "PlantTranspiration",
-                         "Transpiration per leaf" = "TranspirationPerLeaf",
-                         "Gross photosynthesis" = "PlantGrossPhotosynthesis",
-                         "Gross photosynthesis per leaf" = "GrossPhotosynthesisPerLeaf")
   if(transpirationMode=="Sperry") {
     plant_plot_choices <-c(plant_plot_choices,
                            "Water use efficiency" = "PlantWUE",
