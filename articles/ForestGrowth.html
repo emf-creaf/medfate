@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Forest growth</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-01-03</h4>
+            <h4 data-toc-skip class="date">2022-01-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/ForestGrowth.Rmd" class="external-link"><code>vignettes/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -248,17 +248,19 @@
 <p>In this vignette we will use one year of example meteorological data with the following precipitation and temperature seasonal trends:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">G1</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Initial soil water content (mm): 185.069</span>
+<pre><code><span class="co">## Initial plant cohort biomass (g/m2): 7827.46</span>
+<span class="co">## Initial soil water content (mm): 185.069</span>
 <span class="co">## Initial snowpack content (mm): 0</span>
 <span class="co">## Performing daily simulations</span>
 <span class="co">## </span>
 <span class="co">##  [Year 2001]: ....................................</span>
-<span class="co">##  Initial Cohort biomass (g/m2): 7827.46</span>
-<span class="co">##  Final Cohort biomass (g/m2): 7826.03</span>
-<span class="co">##  Cohort biomass change (g/m2): -1.43412 balance: -1.43412</span>
-<span class="co">##  Update structural variables</span>
 <span class="co">## </span>
-<span class="co">## </span>
+<span class="co">## Final plant biomass (g/m2): 7878.85</span>
+<span class="co">## Change in plant biomass (g/m2): 51.3847</span>
+<span class="co">## Plant biomass balance result (g/m2): 51.3847</span>
+<span class="co">## Plant biomass balance components:</span>
+<span class="co">##   Structural balance (g/m2) -22 Labile balance (g/m2) 114</span>
+<span class="co">##   Plant individual balance (g/m2) 91 Mortality loss (g/m2) 40</span>
 <span class="co">## Final soil water content (mm): 166.255</span>
 <span class="co">## Final snowpack content (mm): 0</span>
 <span class="co">## Change in soil water content (mm): -18.814</span>
