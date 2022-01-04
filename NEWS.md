@@ -6,6 +6,7 @@
 # Version 2.4.0
 - Functions 'spwb_stress', 'spwb_resistances' and 'spwb_waterUseEfficiency' renamed to 'droughtStress', 'resistances' and 'waterUseEfficiency', respectively, since they can now be applied to the output of several simulation function.
 - Plant biomass balance in growth
+- Bug correction in shrub structural update. Shrub dynamics default set to TRUE
 - IMPORTANT: New species parameter table
 
 # Version 2.3.8
