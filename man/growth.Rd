@@ -65,11 +65,11 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
         \item{\code{"LeafPI0"}: Osmotic potential at full turgor of symplastic leaf tissue (MPa).}
         \item{\code{"StemPI0"}: Osmotic potential at full turgor of symplastic stem tissue (MPa).}
       }
-  \item{\code{"BiomassBalance"}: A list of daily plant biomass balance results for plant cohorts, with elements:}
+  \item{\code{"PlantBiomassBalance"}: A list of daily plant biomass balance results for plant cohorts, with elements:}
     \itemize{
-        \item{\code{"StructuralBiomassBalance"}: Daily structural biomass balance (g dry · ind-2).}
-        \item{\code{"LabileBiomassBalance"}: Daily labile biomass balance (g dry · ind-2).}
-        \item{\code{"PlantBiomassBalance"}: Daily plant biomass balance, i.e. labile change + structural change (g dry · ind-2).}
+        \item{\code{"StructuralBiomassBalance"}: Daily structural biomass balance (g dry · m-2).}
+        \item{\code{"LabileBiomassBalance"}: Daily labile biomass balance (g dry · m-2).}
+        \item{\code{"PlantBiomassBalance"}: Daily plant biomass balance, i.e. labile change + structural change (g dry · m-2).}
         \item{\code{"MortalityBiomassLoss"}: Biomass loss due to mortality (g dry · m-2).}    
         \item{\code{"CohortBiomassBalance"}: Daily cohort biomass balance (including mortality) (g dry · m-2).}
       }

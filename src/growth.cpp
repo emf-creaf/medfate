@@ -181,19 +181,25 @@ void closeBiomassBalance(DataFrame biomassBalance, List x,
   //PLANT BIOMASS balance (g_ind)
   for(int j; j<numCohorts;j++) {
     double sapwoodBiomassBalance = finalSapwoodBiomass_ind[j] - InitialSapwoodBiomass[j];
-    StructuralBiomassBalance[j] = LeafBiomassBalance[j] + sapwoodBiomassBalance + FineRootBiomassBalance[j];
     StructuralBiomassChange[j] = structuralFinalBiomass_ind[j] - InitialStructuralBiomass[j];
     LabileBiomassChange[j] = labileFinalBiomass_ind[j] - InitialLabileBiomass[j];
     PlantBiomassChange[j] = plantFinalBiomass_ind[j] - InitialPlantBiomass[j];
     
+    StructuralBiomassBalance[j] = LeafBiomassBalance[j] + sapwoodBiomassBalance + FineRootBiomassBalance[j];
     LabileBiomassBalance[j] = LabileCarbonBalance[j]*InitialLivingPlantBiomass[j];
+    
     PlantBiomassBalance[j] = LabileBiomassBalance[j] + StructuralBiomassBalance[j];
     
     //Biomass loss as the decrease in density multiplied by the total biomass after including individual biomass changes (g/m2)
     MortalityBiomassLoss[j] = (Nprev[j] - Nfinal[j])*(InitialPlantBiomass[j]+PlantBiomassBalance[j])/(10000.0);
     
+    //Change units to g/m2    
+    StructuralBiomassBalance[j] = StructuralBiomassBalance[j]*(Nprev[j]/10000.0);
+    LabileBiomassBalance[j] = LabileBiomassBalance[j]*(Nprev[j]/10000.0);
+    PlantBiomassBalance[j] = PlantBiomassBalance[j]*(Nprev[j]/10000.0);
+    
     //COHORT BIOMASS balance (g/m2) 
-    CohortBiomassBalance[j] = PlantBiomassBalance[j]*(Nprev[j]/10000.0) - MortalityBiomassLoss[j];
+    CohortBiomassBalance[j] = PlantBiomassBalance[j] - MortalityBiomassLoss[j];
     CohortBiomassChange[j] = cohortFinalBiomass_m2[j] - InitialCohortBiomass[j];
   }
 }
@@ -646,18 +652,6 @@ List growthDay1(List x, NumericVector meteovec,
       //Decrease PLC due to new SA growth
       if(cavitationRefill=="growth") StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth[j]/SA[j]));
       
-      //RECALCULATE storage concentrations (SA and LA may have changed)
-      double newVolumeSapwood = sapwoodStorageVolume(SA[j], H[j], L(j,_),V(j,_),WoodDensity[j], conduit2sapwood[j]);
-      double newVolumeLeaves = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
-      if(newVolumeLeaves > 0.0) {
-        sugarLeaf[j] = sugarLeaf[j]*(Volume_leaves[j]/newVolumeLeaves);
-        starchLeaf[j] = starchLeaf[j]*(Volume_leaves[j]/newVolumeLeaves); 
-      } else {
-        sugarLeaf[j] = 0.0;
-        starchLeaf[j] = 0.0;
-      }
-      sugarSapwood[j] = sugarSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood);
-      starchSapwood[j] = starchSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood); 
       
       
       //LEAF/FINE ROOT BIOMASS balance (g_ind)
@@ -728,20 +722,36 @@ List growthDay1(List x, NumericVector meteovec,
       }
       
       //Output variables
-      PlantSugarLeaf[j] = sugarLeaf[j];
-      PlantStarchLeaf[j] = starchLeaf[j];
-      PlantSugarSapwood[j] = sugarSapwood[j];
-      PlantStarchSapwood[j] = starchSapwood[j];
       SapwoodArea[j] = SA[j];
       SAgrowth[j] += deltaSAgrowth[j]/SAprev; //Store sapwood area growth rate (cm2/cm2)
       LAgrowth[j] += deltaLAgrowth[j]/SAprev;//Store Leaf area growth rate in relation to sapwood area (m2/cm2)
       LeafArea[j] = LAexpanded;
-
     }
   }
   
   //UPDATE STRUCTURAL VARIABLES
   updateStructuralVariables(x, deltaSAgrowth);
+  
+  //RECALCULATE storage concentrations (SA, LA and H may have changed)
+  for(int j=0;j<numCohorts;j++){
+    double newVolumeSapwood = sapwoodStorageVolume(SA[j], H[j], L(j,_),V(j,_),WoodDensity[j], conduit2sapwood[j]);
+    double newVolumeLeaves = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
+    if(newVolumeLeaves > 0.0) {
+      sugarLeaf[j] = sugarLeaf[j]*(Volume_leaves[j]/newVolumeLeaves);
+      starchLeaf[j] = starchLeaf[j]*(Volume_leaves[j]/newVolumeLeaves); 
+    } else {
+      sugarLeaf[j] = 0.0;
+      starchLeaf[j] = 0.0;
+    }
+    sugarSapwood[j] = sugarSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood);
+    starchSapwood[j] = starchSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood); 
+    
+    //OUTPUT VARIABLES
+    PlantSugarLeaf[j] = sugarLeaf[j];
+    PlantStarchLeaf[j] = starchLeaf[j];
+    PlantSugarSapwood[j] = sugarSapwood[j];
+    PlantStarchSapwood[j] = starchSapwood[j];
+  }
   
   //CLOSE BIOMASS BALANCE
   closeBiomassBalance(biomassBalance, x,
@@ -787,7 +797,7 @@ List growthDay1(List x, NumericVector meteovec,
                         _["Stand"] = spwbOut["Stand"], 
                         _["Plants"] = spwbOut["Plants"],
                         _["LabileCarbonBalance"] = labileCarbonBalance,
-                        _["BiomassBalance"] = biomassBalance,
+                        _["PlantBiomassBalance"] = biomassBalance,
                         _["PlantStructure"] = plantStructure,
                         _["PlantGrowth"] = plantGrowth);
   l.attr("class") = CharacterVector::create("growth_day","list");
@@ -1366,19 +1376,6 @@ List growthDay2(List x, NumericVector meteovec,
       //Decrease PLC due to new SA growth
       if(cavitationRefill=="growth") StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth[j]/SA[j]));
       
-      //RECALCULATE storage concentrations (SA, LA, L and V may have changed)
-      double newVolumeSapwood = sapwoodStorageVolume(SA[j], H[j], L(j,_),V(j,_),WoodDensity[j], conduit2sapwood[j]);
-      double newVolumeLeaves = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
-      if(newVolumeLeaves>0.0) {
-        sugarLeaf[j] = sugarLeaf[j]*(Volume_leaves[j]/newVolumeLeaves);
-        starchLeaf[j] = starchLeaf[j]*(Volume_leaves[j]/newVolumeLeaves); 
-      } else {
-        sugarLeaf[j] = 0.0;
-        starchLeaf[j] = 0.0;
-      }
-      sugarSapwood[j] = sugarSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood);
-      starchSapwood[j] = starchSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood); 
-      
       
       //LEAF/FINE ROOT BIOMASS balance (g_ind)
       LeafBiomassBalance[j] = leafBiomassIncrement - senescenceLeafLoss;
@@ -1469,10 +1466,6 @@ List growthDay2(List x, NumericVector meteovec,
       
       
       //OUTPUT VARIABLES
-      PlantSugarLeaf[j] = sugarLeaf[j];
-      PlantStarchLeaf[j] = starchLeaf[j];
-      PlantSugarSapwood[j] = sugarSapwood[j];
-      PlantStarchSapwood[j] = starchSapwood[j];
       SapwoodArea[j] = SA[j];
       LeafArea[j] = LAexpanded;
       FineRootArea[j] = fineRootBiomass[j]*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4;
@@ -1484,6 +1477,27 @@ List growthDay2(List x, NumericVector meteovec,
   }
   //UPDATE STRUCTURAL VARIABLES
   updateStructuralVariables(x, deltaSAgrowth);
+  
+  //RECALCULATE storage concentrations (SA, LA and H may have changed)
+  for(int j=0;j<numCohorts;j++){
+    double newVolumeSapwood = sapwoodStorageVolume(SA[j], H[j], L(j,_),V(j,_),WoodDensity[j], conduit2sapwood[j]);
+    double newVolumeLeaves = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
+    if(newVolumeLeaves > 0.0) {
+      sugarLeaf[j] = sugarLeaf[j]*(Volume_leaves[j]/newVolumeLeaves);
+      starchLeaf[j] = starchLeaf[j]*(Volume_leaves[j]/newVolumeLeaves); 
+    } else {
+      sugarLeaf[j] = 0.0;
+      starchLeaf[j] = 0.0;
+    }
+    sugarSapwood[j] = sugarSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood);
+    starchSapwood[j] = starchSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood); 
+    
+    //OUTPUT VARIABLES
+    PlantSugarLeaf[j] = sugarLeaf[j];
+    PlantStarchLeaf[j] = starchLeaf[j];
+    PlantSugarSapwood[j] = sugarSapwood[j];
+    PlantStarchSapwood[j] = starchSapwood[j];
+  }
   
   //CLOSE BIOMASS BALANCE
   closeBiomassBalance(biomassBalance, x, 
@@ -1560,7 +1574,7 @@ List growthDay2(List x, NumericVector meteovec,
                         _["Stand"] = spwbOut["Stand"], 
                         _["Plants"] = spwbOut["Plants"],
                         _["LabileCarbonBalance"] = labileCarbonBalance,
-                        _["BiomassBalance"] = biomassBalance,
+                        _["PlantBiomassBalance"] = biomassBalance,
                         _["PlantStructure"] = plantStructure,                        
                         _["PlantGrowth"] = plantGrowth,
                         _["RhizoPsi"] = spwbOut["RhizoPsi"],
@@ -2054,7 +2068,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     List db = s["WaterBalance"];
     List Plants = s["Plants"];
     DataFrame cb = Rcpp::as<Rcpp::DataFrame>(s["LabileCarbonBalance"]);
-    DataFrame bb = Rcpp::as<Rcpp::DataFrame>(s["BiomassBalance"]);
+    DataFrame bb = Rcpp::as<Rcpp::DataFrame>(s["PlantBiomassBalance"]);
     DataFrame pg = Rcpp::as<Rcpp::DataFrame>(s["PlantGrowth"]);
     DataFrame ps = Rcpp::as<Rcpp::DataFrame>(s["PlantStructure"]);
     
@@ -2085,8 +2099,9 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     PlantBiomassBalance(i,_) = Rcpp::as<Rcpp::NumericVector>(bb["PlantBiomassBalance"]);
     MortalityBiomassLoss(i,_) = Rcpp::as<Rcpp::NumericVector>(bb["MortalityBiomassLoss"]);
     CohortBiomassBalance(i,_) = Rcpp::as<Rcpp::NumericVector>(bb["CohortBiomassBalance"]);
-    cohortBiomassBalanceSum += sum(CohortBiomassBalance(i,_));
     
+    cohortBiomassBalanceSum += sum(CohortBiomassBalance(i,_));
+
     LAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LAgrowth"]);
     SAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["SAgrowth"]);
     if(transpirationMode=="Sperry") {
@@ -2172,7 +2187,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     Named("LeafPI0") = LeafPI0,
     Named("StemPI0") = StemPI0
   );
-  List biomassBalance = List::create(_["StructuralBiomassBalance"] = StructuralBiomassBalance,
+  List plantBiomassBalance = List::create(_["StructuralBiomassBalance"] = StructuralBiomassBalance,
                                      _["LabileBiomassBalance"] = LabileBiomassBalance,
                                      _["PlantBiomassBalance"] = PlantBiomassBalance,
                                      _["MortalityBiomassLoss"] = MortalityBiomassLoss,
@@ -2195,7 +2210,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                      Named("Stand")=Stand,
                      Named("Plants") = plantDWOL,
                      Named("LabileCarbonBalance") = labileCarbonBalance,
-                     Named("BiomassBalance") = biomassBalance,
+                     Named("PlantBiomassBalance") = plantBiomassBalance,
                      Named("PlantStructure") = plantStructure,
                      Named("PlantGrowth") = plantGrowth,
                      Named("subdaily") =  subdailyRes);
@@ -2221,7 +2236,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                    Named("SunlitLeaves") = sunlitDO,
                    Named("ShadeLeaves") = shadeDO,
                    Named("LabileCarbonBalance") = labileCarbonBalance,
-                   Named("BiomassBalance") = biomassBalance,
+                   Named("PlantBiomassBalance") = plantBiomassBalance,
                    Named("PlantStructure") = plantStructure,
                    Named("PlantGrowth") = plantGrowth,
                    Named("subdaily") =  subdailyRes);
