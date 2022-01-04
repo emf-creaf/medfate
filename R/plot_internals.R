@@ -54,9 +54,7 @@
             "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport", "RootExudation",
             "StructuralBiomassBalance","LabileBiomassBalance", "PlantBiomassBalance",
             "MortalityBiomassLoss","CohortBiomassBalance",
-            "SapwoodArea", "LeafArea", 
-            "SapwoodStructuralBiomass", "LeafStructuralBiomass", "FineRootBiomass",
-            "LabileBiomass", "TotalBiomass",
+            "SapwoodArea", "LeafArea", "FineRootBiomass",
             "SAgrowth", "LAgrowth", 
             "HuberValue")
   if(transpirationMode=="Sperry") {
@@ -110,11 +108,7 @@
   else if(type=="SapwoodArea")  ylab = expression(paste("Sapwood area  ",(cm^2)))
   else if(type=="LeafArea")  ylab = expression(paste("Leaf area  ",(m^2)))
   else if(type=="FineRootArea")  ylab = expression(paste("Fine root area  ",(m^2)))
-  else if(type=="SapwoodStructuralBiomass")  ylab = expression(paste("Sapwood structural biomass  ", (gdry%.%ind^{-1})))
-  else if(type=="LeafStructuralBiomass")  ylab = expression(paste("Leaf structural biomass  ", (gdry%.%ind^{-1})))
   else if(type=="FineRootBiomass")  ylab = expression(paste("Fine root biomass  ", (gdry%.%ind^{-1})))
-  else if(type=="LabileBiomass")  ylab = expression(paste("Labile C biomass  ", (gdry%.%ind^{-1})))
-  else if(type=="TotalBiomass")  ylab = expression(paste("Total biomass  ", (gdry%.%ind^{-1})))
   else if(type=="HuberValue")  ylab = expression(paste("Huber value  ",(cm^2 %.% m^{-2})))
   else if(type=="RootAreaLeafArea")  ylab = expression(paste("Root area / Leaf area  ",(m^2 %.% m^{-2})))
   else if(type=="SAgrowth") ylab = expression(paste("Sapwood area growth rate ",(cm^2 %.% cm^{-2} %.% d^{-1})))

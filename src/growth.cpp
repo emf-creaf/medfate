@@ -103,7 +103,194 @@ double qResp(double Tmean) {
 //   return(std::max(0.0,(exp(k*conc)-exp(k*threshold))/(1.0-exp(k*threshold))));
 // }
 
+DataFrame initBiomassBalance(DataFrame ccIni, DataFrame above) {
 
+  NumericVector Nprev = above["N"];
+  int numCohorts = Nprev.length();
+  
+  //Initial Biomass compartments
+  NumericVector SapwoodBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodStructuralBiomass"]);
+  NumericVector TotalBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalBiomass"]);
+  NumericVector TotalLivingBiomass= Rcpp::as<Rcpp::NumericVector>(ccIni["TotalLivingBiomass"]);
+  NumericVector CohortBiomass = TotalBiomass*(Nprev/10000.0);
+  NumericVector LabileBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["LabileBiomass"]);
+  NumericVector StructuralBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["StructuralBiomass"]);
+  
+  NumericVector LabileBiomassBalance(numCohorts,0.0), StructuralBiomassBalance(numCohorts,0.0), PlantBiomassBalance(numCohorts,0.0), MortalityBiomassLoss(numCohorts,0.0), CohortBiomassBalance(numCohorts,0.0);
+  NumericVector StructuralBiomassChange(numCohorts,0.0), LabileBiomassChange(numCohorts,0.0), PlantBiomassChange(numCohorts,0.0), CohortBiomassChange(numCohorts,0.0);
+  
+  DataFrame biomassBalance = DataFrame::create(_["InitialDensity"] = clone(Nprev),
+                                               _["InitialSapwoodBiomass"] = SapwoodBiomass,
+                                               _["InitialStructuralBiomass"] = StructuralBiomass,
+                                               _["StructuralBiomassBalance"] = StructuralBiomassBalance,
+                                               _["StructuralBiomassChange"] = StructuralBiomassChange,
+                                               _["InitialLabileBiomass"] = LabileBiomass,
+                                               _["LabileBiomassBalance"] = LabileBiomassBalance,
+                                               _["LabileBiomassChange"] = LabileBiomassChange,
+                                               _["InitialLivingPlantBiomass"] = TotalLivingBiomass,
+                                               _["InitialPlantBiomass"] = TotalBiomass,
+                                               _["PlantBiomassBalance"] = PlantBiomassBalance,
+                                               _["PlantBiomassChange"] = PlantBiomassChange,
+                                               _["MortalityBiomassLoss"] = MortalityBiomassLoss,
+                                               _["InitialCohortBiomass"] = CohortBiomass,
+                                               _["CohortBiomassBalance"] = CohortBiomassBalance,
+                                               _["CohortBiomassChange"] = CohortBiomassChange);
+  biomassBalance.attr("row.names") = above.attr("row.names");
+  return(biomassBalance);  
+}
+
+
+void closeBiomassBalance(DataFrame biomassBalance, List x,
+                         NumericVector LabileCarbonBalance,
+                         NumericVector LeafBiomassBalance,
+                         NumericVector FineRootBiomassBalance) {
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  NumericVector Nfinal = above["N"];
+  int numCohorts = Nfinal.length();
+  
+  DataFrame ccFin = carbonCompartments(x, "g_ind");
+  
+  NumericVector finalSapwoodBiomass_ind= Rcpp::as<Rcpp::NumericVector>(ccFin["SapwoodStructuralBiomass"]);
+  NumericVector plantFinalBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccFin["TotalBiomass"]);
+  NumericVector cohortFinalBiomass_m2 = Rcpp::as<Rcpp::NumericVector>(ccFin["TotalBiomass"])*(Nfinal/10000.0);
+  NumericVector labileFinalBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccFin["LabileBiomass"]);
+  NumericVector structuralFinalBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccFin["StructuralBiomass"]);
+
+  NumericVector Nprev = Rcpp::as<Rcpp::NumericVector>(biomassBalance["InitialDensity"]);
+  
+  NumericVector InitialSapwoodBiomass = Rcpp::as<Rcpp::NumericVector>(biomassBalance["InitialSapwoodBiomass"]);
+  NumericVector StructuralBiomassBalance = Rcpp::as<Rcpp::NumericVector>(biomassBalance["StructuralBiomassBalance"]);
+  NumericVector InitialStructuralBiomass = Rcpp::as<Rcpp::NumericVector>(biomassBalance["InitialStructuralBiomass"]);
+  NumericVector StructuralBiomassChange = Rcpp::as<Rcpp::NumericVector>(biomassBalance["StructuralBiomassChange"]);
+  
+  NumericVector LabileBiomassBalance = Rcpp::as<Rcpp::NumericVector>(biomassBalance["LabileBiomassBalance"]);
+  NumericVector InitialLabileBiomass = Rcpp::as<Rcpp::NumericVector>(biomassBalance["InitialLabileBiomass"]);
+  NumericVector LabileBiomassChange = Rcpp::as<Rcpp::NumericVector>(biomassBalance["LabileBiomassChange"]);
+
+  NumericVector PlantBiomassBalance = Rcpp::as<Rcpp::NumericVector>(biomassBalance["PlantBiomassBalance"]);
+  NumericVector InitialPlantBiomass = Rcpp::as<Rcpp::NumericVector>(biomassBalance["InitialPlantBiomass"]);
+  NumericVector InitialLivingPlantBiomass = Rcpp::as<Rcpp::NumericVector>(biomassBalance["InitialLivingPlantBiomass"]);
+  NumericVector PlantBiomassChange = Rcpp::as<Rcpp::NumericVector>(biomassBalance["PlantBiomassChange"]);
+
+  NumericVector MortalityBiomassLoss = Rcpp::as<Rcpp::NumericVector>(biomassBalance["MortalityBiomassLoss"]);
+  
+  NumericVector CohortBiomassBalance = Rcpp::as<Rcpp::NumericVector>(biomassBalance["CohortBiomassBalance"]);
+  NumericVector InitialCohortBiomass = Rcpp::as<Rcpp::NumericVector>(biomassBalance["InitialCohortBiomass"]);
+  NumericVector CohortBiomassChange = Rcpp::as<Rcpp::NumericVector>(biomassBalance["CohortBiomassChange"]);
+  
+  //PLANT BIOMASS balance (g_ind)
+  for(int j; j<numCohorts;j++) {
+    double sapwoodBiomassBalance = finalSapwoodBiomass_ind[j] - InitialSapwoodBiomass[j];
+    StructuralBiomassBalance[j] = LeafBiomassBalance[j] + sapwoodBiomassBalance + FineRootBiomassBalance[j];
+    StructuralBiomassChange[j] = structuralFinalBiomass_ind[j] - InitialStructuralBiomass[j];
+    LabileBiomassChange[j] = labileFinalBiomass_ind[j] - InitialLabileBiomass[j];
+    PlantBiomassChange[j] = plantFinalBiomass_ind[j] - InitialPlantBiomass[j];
+    
+    LabileBiomassBalance[j] = LabileCarbonBalance[j]*InitialLivingPlantBiomass[j];
+    PlantBiomassBalance[j] = LabileBiomassBalance[j] + StructuralBiomassBalance[j];
+    
+    //Biomass loss as the decrease in density multiplied by the total biomass after including individual biomass changes (g/m2)
+    MortalityBiomassLoss[j] = (Nprev[j] - Nfinal[j])*(InitialPlantBiomass[j]+PlantBiomassBalance[j])/(10000.0);
+    
+    //COHORT BIOMASS balance (g/m2) 
+    CohortBiomassBalance[j] = PlantBiomassBalance[j]*(Nprev[j]/10000.0) - MortalityBiomassLoss[j];
+    CohortBiomassChange[j] = cohortFinalBiomass_m2[j] - InitialCohortBiomass[j];
+  }
+}
+
+void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
+  
+  //Control params
+  List control = x["control"];  
+  bool shrubDynamics = control["shrubDynamics"];
+  
+  //Cohort info
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
+  int numCohorts = SP.size();
+  
+  //Aboveground parameters  
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  NumericVector DBH = above["DBH"];
+  NumericVector Cover = above["Cover"];
+  NumericVector H = above["H"];
+  NumericVector N = above["N"];
+  NumericVector CR = above["CR"];
+  NumericVector LAI_live = above["LAI_live"];
+  NumericVector LAI_expanded = above["LAI_expanded"];
+  NumericVector LAI_dead = above["LAI_dead"];
+  NumericVector SA = above["SA"];
+  
+  //Allometric parameters
+  DataFrame paramsAllometries = Rcpp::as<Rcpp::DataFrame>(x["paramsAllometries"]);
+  NumericVector Aash  = paramsAllometries["Aash"];
+  NumericVector Bash  = paramsAllometries["Bash"];
+  NumericVector Absh  = paramsAllometries["Absh"];
+  NumericVector Bbsh  = paramsAllometries["Bbsh"];
+  NumericVector Acw  = paramsAllometries["Acw"];
+  NumericVector Bcw  = paramsAllometries["Bcw"];
+  NumericVector Acr  = paramsAllometries["Acr"];
+  NumericVector B1cr  = paramsAllometries["B1cr"];
+  NumericVector B2cr  = paramsAllometries["B2cr"];
+  NumericVector B3cr  = paramsAllometries["B3cr"];
+  NumericVector C1cr  = paramsAllometries["C1cr"];
+  NumericVector C2cr  = paramsAllometries["C2cr"];
+  
+  //Allometric parameters
+  DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
+  NumericVector fHDmin= paramsGrowth["fHDmin"];
+  NumericVector fHDmax= paramsGrowth["fHDmax"];
+  
+  //Inteception parameters
+  DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
+  NumericVector kPAR = paramsInterception["kPAR"];
+  
+  //Anatomy parameters
+  DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+  NumericVector Hmax  = paramsAnatomy["Hmax"];
+  NumericVector SLA = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["SLA"]);
+  NumericVector r635  = paramsAnatomy["r635"];
+  
+  DataFrame internalAllocation = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
+  NumericVector leafAreaTarget = internalAllocation["leafAreaTarget"];
+  
+  NumericVector deltaDBH(numCohorts, 0.0);
+  for(int j=0;j<numCohorts; j++) {
+    if(!NumericVector::is_na(DBH[j])) {
+      deltaDBH[j] = 2.0*sqrt(pow(DBH[j]/2.0,2.0)+(deltaSAgrowth[j]/M_PI)) - DBH[j];
+      DBH[j] = DBH[j] + deltaDBH[j];
+    }
+  }
+  NumericVector L = parcohortC(H, LAI_live, LAI_dead, kPAR, CR);
+  for(int j=0;j<numCohorts; j++) {
+    if(!NumericVector::is_na(DBH[j]) && N[j]>0.0) {
+      double fHmod = std::max(0.0,std::min(1.0,(1.0-((H[j]-137.0)/(Hmax[j]-137.0)))));
+      double fHD = (fHDmin[j]*(L[j]/100.0) + fHDmax[j]*(1.0-(L[j]/100.0)))*fHmod;
+      H[j] = H[j] + fHD*deltaDBH[j];
+    }
+  }
+  NumericVector crNew = treeCrownRatioMED(N, DBH, H, Acw, Bcw, Acr, B1cr, B2cr, B3cr, C1cr, C2cr);
+  for(int j=0;j<numCohorts; j++) {
+    if(!NumericVector::is_na(DBH[j]) && N[j]>0.0) {
+      CR[j] = crNew[j];
+    }
+  }
+  
+  //Shrub variables
+  if(shrubDynamics) {
+    for(int j=0;j<numCohorts; j++) {
+      if(NumericVector::is_na(DBH[j]) && N[j]>0.0) {
+        double Wleaves = leafAreaTarget[j]/SLA[j];  //Calculates the biomass (kg dry weight) of leaves
+        double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates crown phytovolume (in m3)
+        H[j] = pow(1e6*PV/Aash[j], 1.0/Bash[j]); //Updates shrub height
+        if(H[j]> Hmax[j]) { //Limit height (and update the former variables)
+          H[j] = Hmax[j];
+        }
+        Cover[j] = (N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); //Updates shrub cover
+      }
+    }
+  }
+}
 List growthDay1(List x, NumericVector meteovec, 
                 double elevation = NA_REAL, 
                 double runon=0.0, bool verbose = false) {
@@ -259,8 +446,10 @@ List growthDay1(List x, NumericVector meteovec,
   NumericVector LAgrowth(numCohorts,0.0);
   NumericVector GrossPhotosynthesis(numCohorts,0.0);
   NumericVector RootExudation(numCohorts,0.0);
-  NumericVector LabileBiomassBalance(numCohorts,0.0), StructuralBiomassBalance(numCohorts,0.0), PlantBiomassBalance(numCohorts,0.0), MortalityBiomassLoss(numCohorts,0.0), CohortBiomassBalance(numCohorts,0.0);
 
+  NumericVector deltaLAgrowth(numCohorts,0.0);
+  NumericVector deltaSAgrowth(numCohorts,0.0);
+  
   double equilibriumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConcentration;
   double equilibriumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConcentration;
   double minimumSugarForGrowth = equilibriumSapwoodSugarConc*minimumRelativeSugarForGrowth;
@@ -268,22 +457,19 @@ List growthDay1(List x, NumericVector meteovec,
     
   double rleafcellmax = relative_expansion_rate(0.0 ,30.0, -2.0,0.5,0.05,5.0);
   
-  //Initial Biomass compartments
+  //Initial Biomass balance
+  NumericVector LeafBiomassBalance(numCohorts,0.0), FineRootBiomassBalance(numCohorts,0.0);
   DataFrame ccIni = carbonCompartments(x, "g_ind");
+  DataFrame biomassBalance = initBiomassBalance(ccIni, above);
   NumericVector Volume_leaves = Rcpp::as<Rcpp::NumericVector>(ccIni["LeafStorageVolume"]);
   NumericVector Volume_sapwood = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodStorageVolume"]);
   NumericVector Starch_max_leaves = Rcpp::as<Rcpp::NumericVector>(ccIni["LeafStarchMaximumConcentration"]);
   NumericVector Starch_max_sapwood = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodStarchMaximumConcentration"]);
   NumericVector LeafStructBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["LeafStructuralBiomass"]);
   NumericVector SapwoodLivingStructBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodLivingStructuralBiomass"]);
-  NumericVector SapwoodStructBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodStructuralBiomass"]);
   NumericVector TotalLivingBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalLivingBiomass"]);
   NumericVector TotalBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalBiomass"]);
-  NumericVector plantInitialBiomass_ind = TotalBiomass;
-  NumericVector cohortInitialBiomass_m2 = TotalBiomass*(N/10000.0);
-  NumericVector labileInitialBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccIni["LabileBiomass"]);
-  NumericVector structuralInitialBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccIni["StructuralBiomass"]);
-  
+
   //3. Carbon balance and growth
   for(int j=0;j<numCohorts;j++){
     if(N[j] > 0.0) {
@@ -324,8 +510,6 @@ List growthDay1(List x, NumericVector meteovec,
       //GROWTH
       double growthCostLA = 0.0;
       double growthCostSA = 0.0;
-      double deltaLAgrowth = 0.0;
-      double deltaSAgrowth = 0.0;
       List ring = ringList[j];
       grow_ring(ring, PlantPsi[j] ,tday, 10.0);
       double rleafcell = std::min(rleafcellmax, relative_expansion_rate(PlantPsi[j] ,tday, LeafPI0[j],0.5,0.05,5.0));
@@ -336,12 +520,13 @@ List growthDay1(List x, NumericVector meteovec,
         if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
         double deltaLAavailable = 0.0;
         deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
-        deltaLAgrowth = std::min(deltaLAsink, deltaLAavailable);
-        growthCostLA = deltaLAgrowth*costPerLA;
+        deltaLAgrowth[j] = std::min(deltaLAsink, deltaLAavailable);
+        growthCostLA = deltaLAgrowth[j]*costPerLA;
       }
-      double leafBiomassGrowth = deltaLAgrowth*(1000.0/SLA[j]);
+      double leafBiomassIncrement = deltaLAgrowth[j]*(1000.0/SLA[j]);
       
       //Assumes increment biomass of fine roots is half leaf biomass increment
+      double finerootBiomassIncrement = leafBiomassIncrement/2.0;
       double growthCostFR = (growthCostLA/2.0)*(fineroot_CC/leaf_CC);   
         
       if(LAexpanded>0.0) {
@@ -357,12 +542,13 @@ List growthDay1(List x, NumericVector meteovec,
         if(sugarSapwood[j] > minimumSugarForGrowth) {
           deltaSAavailable = (starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA;
         }
-        deltaSAgrowth = std::min(deltaSAsink, deltaSAavailable);
+        deltaSAgrowth[j] = std::min(deltaSAsink, deltaSAavailable);
         // Rcout<< SAring.size()<<" " <<j<< " "<< PlantPsi[j]<< " "<< LeafPI0[j]<<" dSAring "<<deltaSAring<< " dSAsink "<< deltaSAsink<<" dSAgrowth "<< deltaSAgrowth<<" rgrcellfile"<< rgrcellfile<<"\n";
-        growthCostSA = deltaSAgrowth*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
+        growthCostSA = deltaSAgrowth[j]*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
       }
       
       GrowthCosts[j] +=(growthCostLA + growthCostSA + growthCostFR)/TotalLivingBiomass[j]; //growth cost in g gluc · gdry-1
+      
       
       //PARTIAL CARBON BALANCE
       double leafSugarMassDelta = leafAgG - leafRespDay;
@@ -410,6 +596,7 @@ List growthDay1(List x, NumericVector meteovec,
       }
       double deltaLAsenescence = std::min(LAexpanded, LAexpanded*propLeafSenescence);
       double senescenceLeafLoss = deltaLAsenescence*(1000.0/SLA[j]);
+      double senescenceFinerootLoss = (senescenceLeafLoss/2.0);
       
       //Define sapwood senescense
       double propSASenescence = SRsapwood[j]/(1.0+15.0*exp(-0.01*H[j]));
@@ -443,13 +630,13 @@ List growthDay1(List x, NumericVector meteovec,
         
       //UPDATE LEAF AREA, SAPWOOD AREA, FINE ROOT BIOMASS AND CONCENTRATION IN LABILE POOLS
       double LAprev = LAexpanded;
-      LAexpanded += deltaLAgrowth - deltaLAsenescence;
+      LAexpanded += deltaLAgrowth[j] - deltaLAsenescence;
       LAdead += deltaLAsenescence;
       LAI_dead[j] = LAdead*N[j]/10000.0;
       LAI_expanded[j] = LAexpanded*N[j]/10000.0;
       double SAprev = SA[j];
-      SA[j] = SA[j] + deltaSAgrowth - deltaSASenescence; 
-      fineRootBiomass[j] = fineRootBiomass[j] + (leafBiomassGrowth/2.0) - (senescenceLeafLoss/2.0);
+      SA[j] = SA[j] + deltaSAgrowth[j] - deltaSASenescence; 
+      fineRootBiomass[j] = fineRootBiomass[j] + finerootBiomassIncrement - senescenceFinerootLoss;
       
       //UPDATE DERIVED QUANTITIES (individual level)      
       //Update Huber value
@@ -457,7 +644,7 @@ List growthDay1(List x, NumericVector meteovec,
         Al2As[j] = (LAlive)/(SA[j]/10000.0);
       }
       //Decrease PLC due to new SA growth
-      if(cavitationRefill=="growth") StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth/SA[j]));
+      if(cavitationRefill=="growth") StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth[j]/SA[j]));
       
       //RECALCULATE storage concentrations (SA and LA may have changed)
       double newVolumeSapwood = sapwoodStorageVolume(SA[j], H[j], L(j,_),V(j,_),WoodDensity[j], conduit2sapwood[j]);
@@ -472,17 +659,10 @@ List growthDay1(List x, NumericVector meteovec,
       sugarSapwood[j] = sugarSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood);
       starchSapwood[j] = starchSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood); 
       
-      //BIOMASS balance at the individual level (g_ind)
-      double leafBiomassIncrement = leafBiomassGrowth;
-      double sapwoodBiomassIncrement = sapwoodStructuralBiomass(deltaSAgrowth, H[j], L(j,_),V(j,_),WoodDensity[j]);
-      double finerootBiomassIncrement = leafBiomassGrowth/2.0;
-      double growthBiomassIncrement = (leafBiomassIncrement + sapwoodBiomassIncrement + finerootBiomassIncrement);
-      double senescenceSapwoodLoss = sapwoodStructuralBiomass(deltaSASenescence, H[j], L(j,_), V(j,_),WoodDensity[j]);
-      double senescenceFinerootLoss = senescenceLeafLoss/2.0;
-      double senescenceBiomassLoss = (senescenceSapwoodLoss + senescenceLeafLoss + senescenceFinerootLoss);
-      StructuralBiomassBalance[j] = growthBiomassIncrement - senescenceBiomassLoss;
-      LabileBiomassBalance[j] = LabileCarbonBalance[j]*TotalLivingBiomass[j];
-      PlantBiomassBalance[j] = LabileBiomassBalance[j] + StructuralBiomassBalance[j];
+      
+      //LEAF/FINE ROOT BIOMASS balance (g_ind)
+      LeafBiomassBalance[j] = leafBiomassIncrement - senescenceLeafLoss;
+      FineRootBiomassBalance[j] = finerootBiomassIncrement - senescenceFinerootLoss;
       
       //MORTALITY Death by carbon starvation or dessication
       double Nprev = N[j]; //Store initial density (for biomass balance)
@@ -527,8 +707,6 @@ List growthDay1(List x, NumericVector meteovec,
         // Update density and increase the number of dead plants
         Ndead_day = std::min(Ndead_day, N[j]);
         double Cdead_day = Cover[j]*(Ndead_day/N[j]);
-        //Biomass loss as the decrease in density multiplied by the total biomass after including individual biomass changes (g/m2)
-        MortalityBiomassLoss[j] = Ndead_day*(PlantBiomassBalance[j]+TotalBiomass[j])/(10000.0);
         N[j] = N[j] - Ndead_day;
         N_dead[j] = N_dead[j] + Ndead_day;
         if(isShrub) {
@@ -540,9 +718,6 @@ List growthDay1(List x, NumericVector meteovec,
         LAI_dead[j] = LAI_dead[j] + LAI_change;
         LAI_expanded[j] = LAI_expanded[j] - LAI_change;
       }
-      
-      //COHORT BIOMASS balance (g/m2) 
-      CohortBiomassBalance[j] = PlantBiomassBalance[j]*(Nprev/10000.0) - MortalityBiomassLoss[j];
       
 
       //UPDATE TARGETS
@@ -558,12 +733,20 @@ List growthDay1(List x, NumericVector meteovec,
       PlantSugarSapwood[j] = sugarSapwood[j];
       PlantStarchSapwood[j] = starchSapwood[j];
       SapwoodArea[j] = SA[j];
-      SAgrowth[j] += deltaSAgrowth/SAprev; //Store sapwood area growth rate (cm2/cm2)
-      LAgrowth[j] += deltaLAgrowth/SAprev;//Store Leaf area growth rate in relation to sapwood area (m2/cm2)
+      SAgrowth[j] += deltaSAgrowth[j]/SAprev; //Store sapwood area growth rate (cm2/cm2)
+      LAgrowth[j] += deltaLAgrowth[j]/SAprev;//Store Leaf area growth rate in relation to sapwood area (m2/cm2)
       LeafArea[j] = LAexpanded;
 
     }
   }
+  
+  //UPDATE STRUCTURAL VARIABLES
+  updateStructuralVariables(x, deltaSAgrowth);
+  
+  //CLOSE BIOMASS BALANCE
+  closeBiomassBalance(biomassBalance, x,
+                      LabileCarbonBalance, LeafBiomassBalance, FineRootBiomassBalance);
+  
   //Update pool proportions??
   if(plantWaterPools) {
     NumericVector poolProportions = Rcpp::as<Rcpp::NumericVector>(belowdf["poolProportions"]);
@@ -586,32 +769,11 @@ List growthDay1(List x, NumericVector meteovec,
   
 
   //Final Biomass compartments
-  DataFrame ccFin = carbonCompartments(x, "g_ind");
   DataFrame plantStructure = DataFrame::create(
     _["LeafArea"] = LeafArea,
     _["SapwoodArea"] = SapwoodArea,
-    _["LeafStructuralBiomass"] = Rcpp::as<Rcpp::NumericVector>(ccFin["LeafStructuralBiomass"]),
-    _["SapwoodStructuralBiomass"] = Rcpp::as<Rcpp::NumericVector>(ccFin["SapwoodStructuralBiomass"]),
-    _["FineRootBiomass"] = clone(fineRootBiomass),
-    _["LabileBiomass"] = Rcpp::as<Rcpp::NumericVector>(ccFin["LabileBiomass"]),
-    _["TotalBiomass"] = Rcpp::as<Rcpp::NumericVector>(ccFin["TotalBiomass"])
+    _["FineRootBiomass"] = clone(fineRootBiomass)
   );
-  NumericVector plantFinalBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccFin["TotalBiomass"]);
-  NumericVector cohortFinalBiomass_m2 = Rcpp::as<Rcpp::NumericVector>(ccFin["TotalBiomass"])*(N/10000.0);
-  NumericVector labileFinalBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccFin["LabileBiomass"]);
-  NumericVector structuralFinalBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccFin["StructuralBiomass"]);
-  
-  DataFrame biomassBalance = DataFrame::create(_["StructuralBiomassBalance"] = StructuralBiomassBalance,
-                                               _["StructuralBiomassChange"] = structuralFinalBiomass_ind - structuralInitialBiomass_ind,
-                                               _["LabileBiomassBalance"] = LabileBiomassBalance,
-                                               _["LabileBiomassChange"] = labileFinalBiomass_ind - labileInitialBiomass_ind,
-                                               _["PlantBiomassBalance"] = PlantBiomassBalance,
-                                               _["PlantBiomassChange"] = plantFinalBiomass_ind - plantInitialBiomass_ind,
-                                               _["MortalityBiomassLoss"] = MortalityBiomassLoss,
-                                               _["CohortBiomassBalance"] = CohortBiomassBalance,
-                                               _["CohortBiomassChange"] = cohortFinalBiomass_m2 - cohortInitialBiomass_m2);
-  biomassBalance.attr("row.names") = above.attr("row.names");
-  
   
   DataFrame plantGrowth = DataFrame::create(
     _["SAgrowth"] = SAgrowth,
@@ -868,8 +1030,9 @@ List growthDay2(List x, NumericVector meteovec,
   NumericVector SAgrowth(numCohorts,0.0), LAgrowth(numCohorts,0.0), FRAgrowth(numCohorts,0.0);
   NumericVector GrossPhotosynthesis(numCohorts,0.0);
   NumericVector RootExudation(numCohorts,0.0);
-  NumericVector LabileBiomassBalance(numCohorts,0.0), StructuralBiomassBalance(numCohorts,0.0), PlantBiomassBalance(numCohorts,0.0), MortalityBiomassLoss(numCohorts,0.0), CohortBiomassBalance(numCohorts,0.0);
-  
+
+  NumericVector deltaLAgrowth(numCohorts,0.0);
+  NumericVector deltaSAgrowth(numCohorts,0.0);
   
   double equilibriumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConcentration;
   double equilibriumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConcentration;
@@ -878,21 +1041,18 @@ List growthDay2(List x, NumericVector meteovec,
   
   double rleafcellmax = relative_expansion_rate(0.0,30.0, -2.0,0.5,0.05,5.0);
 
-  //Initial Biomass compartments
+  //Initial Biomass balance
+  NumericVector LeafBiomassBalance(numCohorts,0.0), FineRootBiomassBalance(numCohorts,0.0);
   DataFrame ccIni = carbonCompartments(x, "g_ind");
+  DataFrame biomassBalance = initBiomassBalance(ccIni, above);
   NumericVector Volume_leaves = Rcpp::as<Rcpp::NumericVector>(ccIni["LeafStorageVolume"]);
   NumericVector Volume_sapwood = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodStorageVolume"]);
   NumericVector Starch_max_leaves = Rcpp::as<Rcpp::NumericVector>(ccIni["LeafStarchMaximumConcentration"]);
   NumericVector Starch_max_sapwood = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodStarchMaximumConcentration"]);
   NumericVector LeafStructBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["LeafStructuralBiomass"]);
   NumericVector SapwoodLivingStructBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodLivingStructuralBiomass"]);
-  NumericVector SapwoodStructBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodStructuralBiomass"]);
   NumericVector TotalLivingBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalLivingBiomass"]);
   NumericVector TotalBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalBiomass"]);
-  NumericVector plantInitialBiomass_ind = TotalBiomass;
-  NumericVector cohortInitialBiomass_m2 = TotalBiomass*(N/10000.0);
-  NumericVector labileInitialBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccIni["LabileBiomass"]);
-  NumericVector structuralInitialBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccIni["StructuralBiomass"]);
   
   //3. Carbon balance, growth and senescence by cohort
   for(int j=0;j<numCohorts;j++){
@@ -904,8 +1064,6 @@ List growthDay2(List x, NumericVector meteovec,
       
       double costPerLA = 1000.0*leaf_CC/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
       double costPerSA = sapwood_CC*sapwoodStructuralBiomass(1.0, H[j], L(j,_),V(j,_),WoodDensity[j]); // Construction cost in g gluc · cm-2 of sapwood area
-      double deltaLAgrowth = 0.0;
-      double deltaSAgrowth = 0.0;
       NumericVector deltaFRBgrowth(numLayers, 0.0);
         
 
@@ -974,7 +1132,7 @@ List growthDay2(List x, NumericVector meteovec,
           double deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
           double deltaLAgrowthStep = std::min(deltaLAsink, deltaLAavailable);
           growthCostLAStep += deltaLAgrowthStep*costPerLA;
-          deltaLAgrowth += deltaLAgrowthStep;
+          deltaLAgrowth[j] += deltaLAgrowthStep;
         }
         //fine root growth
         if(fineRootBiomass[j] < fineRootBiomassTarget[j]) {
@@ -1009,7 +1167,7 @@ List growthDay2(List x, NumericVector meteovec,
             stop("negative growth!"); 
           }
           growthCostSAStep += deltaSAgrowthStep*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
-          deltaSAgrowth  +=deltaSAgrowthStep;
+          deltaSAgrowth[j]  +=deltaSAgrowthStep;
         }
         GrowthCostsInst(j,s) += (growthCostLAStep + growthCostSAStep + growthCostFRBStep)/TotalLivingBiomass[j];
         GrowthCosts[j] +=GrowthCostsInst(j,s); //growth cost in g gluc · gdry-1
@@ -1088,7 +1246,7 @@ List growthDay2(List x, NumericVector meteovec,
         
         // Rcout<<j<<" LeafTLP "<< turgorLossPoint(LeafPI0[j], LeafEPS[j])<< " Leaf PI "<< osmoticWaterPotential(sugarLeaf[j], tday)<< " Conc "<< sugarLeaf[j]<< " TLPconc"<< tlpConcLeaf<<"\n";
       }
-      double leafBiomassIncrement = deltaLAgrowth*(1000.0/SLA[j]);
+      double leafBiomassIncrement = deltaLAgrowth[j]*(1000.0/SLA[j]);
       double finerootBiomassIncrement = sum(deltaFRBgrowth);
       
 
@@ -1148,7 +1306,7 @@ List growthDay2(List x, NumericVector meteovec,
       //UPDATE LEAF AREA, SAPWOOD AREA, FINE ROOT BIOMASS/DISTRIBUTION AND CONCENTRATION IN LABILE POOLS
       double initialSapwoodBiomass = sapwoodStructuralBiomass(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j]);
       double LAprev = LAexpanded;
-      LAexpanded +=deltaLAgrowth - deltaLAsenescence;
+      LAexpanded +=deltaLAgrowth[j] - deltaLAsenescence;
       if(LAexpanded < 0.0) {
         deltaLAsenescence -= LAexpanded;
         LAexpanded = 0.0;
@@ -1157,7 +1315,7 @@ List growthDay2(List x, NumericVector meteovec,
       LAI_dead[j] = LAdead*N[j]/10000.0;
       LAI_expanded[j] = LAexpanded*N[j]/10000.0;
       double SAprev = SA[j];
-      SA[j] = SA[j] + deltaSAgrowth - deltaSASenescence; 
+      SA[j] = SA[j] + deltaSAgrowth[j] - deltaSASenescence; 
       NumericVector newFRB(numLayers,0.0);
       for(int s=0;s<numLayers;s++) {
         newFRB[s] = fineRootBiomass[j]*V(j,s) + deltaFRBgrowth[s] - deltaFRBsenescence[s];
@@ -1206,7 +1364,7 @@ List growthDay2(List x, NumericVector meteovec,
         else NSPL[j] = 1.0;
       }
       //Decrease PLC due to new SA growth
-      if(cavitationRefill=="growth") StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth/SA[j]));
+      if(cavitationRefill=="growth") StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth[j]/SA[j]));
       
       //RECALCULATE storage concentrations (SA, LA, L and V may have changed)
       double newVolumeSapwood = sapwoodStorageVolume(SA[j], H[j], L(j,_),V(j,_),WoodDensity[j], conduit2sapwood[j]);
@@ -1222,15 +1380,10 @@ List growthDay2(List x, NumericVector meteovec,
       starchSapwood[j] = starchSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood); 
       
       
-      //PLANT BIOMASS balance (g_ind)
-      double finalSapwoodBiomass = sapwoodStructuralBiomass(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j]);
-      double sapwoodBiomassBalance = finalSapwoodBiomass - initialSapwoodBiomass;
-      double leafBiomassBalance = leafBiomassIncrement - senescenceLeafLoss;
-      double finerootBiomassBalance = finerootBiomassIncrement - senescenceFinerootLoss;
-      StructuralBiomassBalance[j] = leafBiomassBalance + sapwoodBiomassBalance + finerootBiomassBalance;
-      LabileBiomassBalance[j] = LabileCarbonBalance[j]*TotalLivingBiomass[j];
-      PlantBiomassBalance[j] = LabileBiomassBalance[j] + StructuralBiomassBalance[j];
-      
+      //LEAF/FINE ROOT BIOMASS balance (g_ind)
+      LeafBiomassBalance[j] = leafBiomassIncrement - senescenceLeafLoss;
+      FineRootBiomassBalance[j] = finerootBiomassIncrement - senescenceFinerootLoss;
+
       //MORTALITY Death by carbon starvation or dessication
       double Nprev = N[j]; //Store initial density (for biomass balance)
       double Ndead_day = 0.0;
@@ -1276,8 +1429,6 @@ List growthDay2(List x, NumericVector meteovec,
         // Update density and increase the number of dead plants
         Ndead_day = std::min(Ndead_day, N[j]);
         double Cdead_day = Cover[j]*(Ndead_day/N[j]);
-        //Biomass loss (g_m2) as the decrease in density multiplied by the total biomass after including individual biomass changes (kg/m2)
-        MortalityBiomassLoss[j] = Ndead_day*(PlantBiomassBalance[j]+TotalBiomass[j])/(10000.0);
         N[j] = N[j] - Ndead_day;
         N_dead[j] = N_dead[j] + Ndead_day;
         if(isShrub) {
@@ -1290,10 +1441,6 @@ List growthDay2(List x, NumericVector meteovec,
         LAI_expanded[j] = LAI_expanded[j] - LAI_change;
       }
 
-            
-      //COHORT BIOMASS balance (g/m2) 
-      CohortBiomassBalance[j] = PlantBiomassBalance[j]*(Nprev/10000.0) - MortalityBiomassLoss[j];
-      
 
       //UPDATE TARGETS
       //Set leaf area target if bud formation is allowed
@@ -1329,12 +1476,20 @@ List growthDay2(List x, NumericVector meteovec,
       SapwoodArea[j] = SA[j];
       LeafArea[j] = LAexpanded;
       FineRootArea[j] = fineRootBiomass[j]*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4;
-      LAgrowth[j] += deltaLAgrowth/SAprev;//Store Leaf area growth rate in relation to sapwood area (m2·cm-2·d-1)
-      SAgrowth[j] += deltaSAgrowth/SAprev; //Store sapwood area growth rate (cm2·cm-2·d-1)
+      LAgrowth[j] += deltaLAgrowth[j]/SAprev;//Store Leaf area growth rate in relation to sapwood area (m2·cm-2·d-1)
+      SAgrowth[j] += deltaSAgrowth[j]/SAprev; //Store sapwood area growth rate (cm2·cm-2·d-1)
       FRAgrowth[j] = sum(deltaFRBgrowth)*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4/SA[j];//Store fine root area growth rate (m2·cm-2·d-1)
 
     }
   }
+  //UPDATE STRUCTURAL VARIABLES
+  updateStructuralVariables(x, deltaSAgrowth);
+  
+  //CLOSE BIOMASS BALANCE
+  closeBiomassBalance(biomassBalance, x, 
+                      LabileCarbonBalance, LeafBiomassBalance, FineRootBiomassBalance);
+  
+  
   //Update pool proportions??
   if(plantWaterPools) {
     NumericVector poolProportions = Rcpp::as<Rcpp::NumericVector>(belowdf["poolProportions"]);
@@ -1384,33 +1539,13 @@ List growthDay2(List x, NumericVector meteovec,
   
 
   //Final Biomass compartments
-  DataFrame ccFin = carbonCompartments(x, "g_ind");
   DataFrame plantStructure = DataFrame::create(
     _["LeafArea"] = LeafArea,
     _["SapwoodArea"] = SapwoodArea,
     _["FineRootArea"] = FineRootArea,
-    _["LeafStructuralBiomass"] = Rcpp::as<Rcpp::NumericVector>(ccFin["LeafStructuralBiomass"]),
-    _["SapwoodStructuralBiomass"] = Rcpp::as<Rcpp::NumericVector>(ccFin["SapwoodStructuralBiomass"]),
-    _["FineRootBiomass"] = clone(fineRootBiomass),
-    _["LabileBiomass"] = Rcpp::as<Rcpp::NumericVector>(ccFin["LabileBiomass"]),
-    _["TotalBiomass"] = Rcpp::as<Rcpp::NumericVector>(ccFin["TotalBiomass"])
+    _["FineRootBiomass"] = clone(fineRootBiomass)
   );
-  NumericVector plantFinalBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccFin["TotalBiomass"]);
-  NumericVector cohortFinalBiomass_m2 = Rcpp::as<Rcpp::NumericVector>(ccFin["TotalBiomass"])*(N/10000.0);
-  NumericVector labileFinalBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccFin["LabileBiomass"]);
-  NumericVector structuralFinalBiomass_ind = Rcpp::as<Rcpp::NumericVector>(ccFin["StructuralBiomass"]);
-  
-  DataFrame biomassBalance = DataFrame::create(_["StructuralBiomassBalance"] = StructuralBiomassBalance,
-                                               _["StructuralBiomassChange"] = structuralFinalBiomass_ind - structuralInitialBiomass_ind,
-                                               _["LabileBiomassBalance"] = LabileBiomassBalance,
-                                               _["LabileBiomassChange"] = labileFinalBiomass_ind - labileInitialBiomass_ind,
-                                               _["PlantBiomassBalance"] = PlantBiomassBalance,
-                                               _["PlantBiomassChange"] = plantFinalBiomass_ind - plantInitialBiomass_ind,
-                                               _["MortalityBiomassLoss"] = MortalityBiomassLoss,
-                                               _["CohortBiomassBalance"] = CohortBiomassBalance,
-                                               _["CohortBiomassChange"] = cohortFinalBiomass_m2 - cohortInitialBiomass_m2);
-  biomassBalance.attr("row.names") = above.attr("row.names");
-  
+
   DataFrame plantGrowth = DataFrame::create(
     _["SAgrowth"] = SAgrowth,
     _["LAgrowth"] = LAgrowth,
@@ -1722,17 +1857,11 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   NumericVector Z95 = Rcpp::as<Rcpp::NumericVector>(below["Z95"]);
 
-  //Internal state variables
-  DataFrame internalWater = Rcpp::as<Rcpp::List>(x["internalWater"]);
-  DataFrame internalCarbon = Rcpp::as<Rcpp::List>(x["internalCarbon"]);
-  
 
   //Base parameters
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
   NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(paramsPhenology["Sgdd"]);
   
-  DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
-  NumericVector kPAR = paramsInterception["kPAR"];
   
   // Rcout<<"3";
 
@@ -1740,35 +1869,6 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   //Soil input
   NumericVector Water_FC = waterFC(soil, soilFunctions);
 
-  //Anatomy parameters
-  DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
-  NumericVector Hmax  = paramsAnatomy["Hmax"];
-  NumericVector SLA = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["SLA"]);
-  NumericVector r635  = paramsAnatomy["r635"];
-  
-  // NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
-  // NumericVector WoodDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDensity"]);
-
-  
-  //Allometric parameters
-  DataFrame paramsAllometries = Rcpp::as<Rcpp::DataFrame>(x["paramsAllometries"]);
-  NumericVector Aash  = paramsAllometries["Aash"];
-  NumericVector Bash  = paramsAllometries["Bash"];
-  NumericVector Absh  = paramsAllometries["Absh"];
-  NumericVector Bbsh  = paramsAllometries["Bbsh"];
-  NumericVector Acw  = paramsAllometries["Acw"];
-  NumericVector Bcw  = paramsAllometries["Bcw"];
-  NumericVector Acr  = paramsAllometries["Acr"];
-  NumericVector B1cr  = paramsAllometries["B1cr"];
-  NumericVector B2cr  = paramsAllometries["B2cr"];
-  NumericVector B3cr  = paramsAllometries["B3cr"];
-  NumericVector C1cr  = paramsAllometries["C1cr"];
-  NumericVector C2cr  = paramsAllometries["C2cr"];
-  
-  //Allometric parameters
-  DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
-  NumericVector fHDmin= paramsGrowth["fHDmin"];
-  NumericVector fHDmax= paramsGrowth["fHDmax"];
   
   
   
@@ -1793,8 +1893,6 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   NumericMatrix SapwoodArea(numDays, numCohorts);
   NumericMatrix LeafArea(numDays, numCohorts);
   NumericMatrix FineRootArea(numDays, numCohorts);
-  NumericMatrix SapwoodStructBiomass(numDays, numCohorts);
-  NumericMatrix LeafStructBiomass(numDays, numCohorts);
   NumericMatrix FineRootBiomass(numDays, numCohorts);
   NumericMatrix LabileBiomass(numDays, numCohorts);
   NumericMatrix TotalBiomass(numDays, numCohorts);
@@ -1803,7 +1901,6 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   NumericMatrix FRAgrowth(numDays, numCohorts);
   NumericMatrix GrossPhotosynthesis(numDays, numCohorts);
   NumericMatrix PlantLAIexpanded(numDays, numCohorts), PlantLAIdead(numDays, numCohorts), PlantLAIlive(numDays, numCohorts);
-  NumericVector SAgrowthcum(numCohorts, 0.0);
   NumericMatrix StemPI0(numDays, numCohorts), LeafPI0(numDays, numCohorts);
   NumericMatrix RootExudation(numDays, numCohorts);
   NumericMatrix StructuralBiomassBalance(numDays, numCohorts);
@@ -1837,13 +1934,16 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
 
   NumericVector initialContent = water(soil, soilFunctions);
   double initialSnowContent = soil["SWE"];
+  DataFrame ccIni_m2 = carbonCompartments(x, "g_m2");
+  double cohortBiomassBalanceSum = 0.0;
+  double initialCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccIni_m2["TotalBiomass"]));
+  
   if(verbose) {
+    Rcout<<"Initial plant cohort biomass (g/m2): "<<initialCohortBiomass<<"\n";
     Rcout<<"Initial soil water content (mm): "<< sum(initialContent)<<"\n";
     Rcout<<"Initial snowpack content (mm): "<< initialSnowContent<<"\n";
   }
   
-  double cohortBiomassBalanceSum = 0.0;
-  double initialCohortBiomass = 0.0;
   
   if(verbose) Rcout << "Performing daily simulations\n";
   List s;
@@ -1853,9 +1953,6 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
       if(DOY[i]==1 || i==0) {
         std::string c = as<std::string>(dateStrings[i]);
         Rcout<<"\n [Year "<< c.substr(0, 4)<< "]: ";
-        DataFrame ccIni_m2 = carbonCompartments(x, "g_m2");
-        cohortBiomassBalanceSum = 0.0;
-        initialCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccIni_m2["TotalBiomass"]));
       } 
       else if(i%10 == 0) Rcout<<".";//<<i;
     } 
@@ -1978,14 +2075,10 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     
     SapwoodArea(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["SapwoodArea"]);
     LeafArea(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["LeafArea"]);
-    SapwoodStructBiomass(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["SapwoodStructuralBiomass"]);
-    LeafStructBiomass(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["LeafStructuralBiomass"]);
     FineRootBiomass(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["FineRootBiomass"]);
     if(transpirationMode=="Sperry") {
       FineRootArea(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["FineRootArea"]);
     }
-    LabileBiomass(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["LabileBiomass"]);
-    TotalBiomass(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["TotalBiomass"]);
 
     StructuralBiomassBalance(i,_) = Rcpp::as<Rcpp::NumericVector>(bb["StructuralBiomassBalance"]);
     LabileBiomassBalance(i,_) = Rcpp::as<Rcpp::NumericVector>(bb["LabileBiomassBalance"]);
@@ -2000,88 +2093,12 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
       FRAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["FRAgrowth"]);
     }
       
-    for(int j=0;j<numCohorts;j++){
-      SAgrowthcum[j] += SAgrowth(i,j)*SapwoodArea(i,j); //Store cumulative SA growth (for structural variable update)
-    }
-    
-    //4 Display carbon balance 
-    if((i == (numDays-1)) || (DOY[i+1]==1)) { 
-      // Check biomass balance
-      DataFrame ccFin_m2 = carbonCompartments(x, "g_m2");
-      double finalCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccFin_m2["TotalBiomass"]));
-      if(verbose) {
-        Rcout<<"\n";
-        Rcout<<" Initial Cohort biomass (g/m2): "<<initialCohortBiomass<<"\n";
-        Rcout<<" Final Cohort biomass (g/m2): "<<finalCohortBiomass<<"\n";
-        Rcout<<" Cohort biomass change (g/m2): " << finalCohortBiomass - initialCohortBiomass <<" balance: " << cohortBiomassBalanceSum<<"\n";
-      }
-    }
-    
+
     //5 Update structural variables
     if(((i<(numDays-1)) && (DOY[i+1]==1)) || (i==(numDays-1))) { 
-      
-      //Dead structure before applying growth
-      if(verbose) Rcout<<" Update structural variables\n";
-      iyear++;
-      
-      NumericVector DBH = above["DBH"];
-      NumericVector Cover = above["Cover"];
-      NumericVector H = above["H"];
-      NumericVector N = above["N"];
-      NumericVector CR = above["CR"];
-      NumericVector LAI_live = above["LAI_live"];
-      NumericVector LAI_expanded = above["LAI_expanded"];
-      NumericVector LAI_dead = above["LAI_dead"];
-      NumericVector SA = above["SA"];
-
-      DataFrame internalAllocation = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
-      NumericVector allocationTarget = internalAllocation["allocationTarget"];
-      NumericVector leafAreaTarget = internalAllocation["leafAreaTarget"];
-      
-      NumericVector deltaDBH(numCohorts, 0.0);
-      for(int j=0;j<numCohorts; j++) {
-        if(!NumericVector::is_na(DBH[j])) {
-          deltaDBH[j] = 2.0*sqrt(pow(DBH[j]/2.0,2.0)+(SAgrowthcum[j]/M_PI)) - DBH[j];
-          DBH[j] = DBH[j] + deltaDBH[j];
-        } 
-        SAgrowthcum[j] = 0.0; //Reset cumulative growth
-      }
-
-      NumericVector L = parcohortC(H, LAI_live, LAI_dead, kPAR, CR);
-      for(int j=0;j<numCohorts; j++) {
-        if(!NumericVector::is_na(DBH[j]) && N[j]>0.0) {
-          double fHmod = std::max(0.0,std::min(1.0,(1.0-((H[j]-137.0)/(Hmax[j]-137.0)))));
-          double fHD = (fHDmin[j]*(L[j]/100.0) + fHDmax[j]*(1.0-(L[j]/100.0)))*fHmod;
-          // Rcout << fHmod<<" "<< fHD<<" "<< L[j]<<"\n";
-          H[j] = H[j] + fHD*deltaDBH[j];
-        }
-      }
-      NumericVector crNew = treeCrownRatioMED(N, DBH, H, Acw, Bcw, Acr, B1cr, B2cr, B3cr, C1cr, C2cr);
-      for(int j=0;j<numCohorts; j++) {
-        if(!NumericVector::is_na(DBH[j]) && N[j]>0.0) {
-          CR[j] = crNew[j];
-        }
-      }
-
-      //Shrub variables
-      if(shrubDynamics) {
-        for(int j=0;j<numCohorts; j++) {
-          if(NumericVector::is_na(DBH[j]) && N[j]>0.0) {
-            double Wleaves = leafAreaTarget[j]/SLA[j];  //Calculates the biomass (kg dry weight) of leaves
-            double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates crown phytovolume (in m3)
-            H[j] = pow(1e6*PV/Aash[j], 1.0/Bash[j]); //Updates shrub height
-            if(H[j]> Hmax[j]) { //Limit height (and update the former variables)
-              H[j] = Hmax[j];
-            }
-            Cover[j] = (N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); //Updates shrub cover
-          }
-        }
-      }
-      
       //reset ring structures
       List ringList = x["internalRings"];
       for(int j=0;j<numCohorts; j++) ringList[j] = initialize_ring();
-    
     }
 
     if(subdailyResults) {
@@ -2090,7 +2107,13 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   }
   if(verbose) Rcout << "\n\n";
   
+  // Check biomass balance
+  DataFrame ccFin_m2 = carbonCompartments(x, "g_m2");
+  double finalCohortBiomass = sum(Rcpp::as<Rcpp::NumericVector>(ccFin_m2["TotalBiomass"]));
   if(verbose) {
+    Rcout<<"Final plant cohort biomass (g/m2): "<<finalCohortBiomass<<"\n";
+    Rcout<<"Change in plant cohort biomass (g/m2): " << finalCohortBiomass - initialCohortBiomass <<"\n";
+    Rcout<<"Plant cohort biomass balance result (g/m2): " <<  cohortBiomassBalanceSum<<"\n";
     printWaterBalanceResult(DWB, plantDWOL, soil, soilFunctions,
                             initialContent, initialSnowContent,
                             transpirationMode);
@@ -2110,11 +2133,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   SapwoodArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   LeafArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   FineRootArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  SapwoodStructBiomass.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  LeafStructBiomass.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   FineRootBiomass.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
-  LabileBiomass.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  TotalBiomass.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   LAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   SAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   FRAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
@@ -2165,11 +2184,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   if(transpirationMode=="Granier") {
     plantStructure = List::create(Named("LeafArea") = LeafArea,
                                   Named("SapwoodArea")=SapwoodArea,
-                                  Named("LeafStructuralBiomass") = LeafStructBiomass,
-                                  Named("SapwoodStructuralBiomass")=SapwoodStructBiomass,
-                                  Named("FineRootBiomass")=FineRootBiomass,
-                                  Named("LabileBiomass") = LabileBiomass,
-                                  Named("TotalBiomass") = TotalBiomass);
+                                  Named("FineRootBiomass")=FineRootBiomass);
     plantGrowth = List::create(Named("LAgrowth") = LAgrowth,
                                Named("SAgrowth") = SAgrowth);
     l = List::create(Named("latitude") = latitude,
@@ -2189,11 +2204,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     plantStructure = List::create(Named("LeafArea") = LeafArea,
                                   Named("SapwoodArea")=SapwoodArea,
                                   Named("FineRootArea") = FineRootArea,
-                                  Named("LeafStructuralBiomass")=LeafStructBiomass,
-                                  Named("SapwoodStructuralBiomass")=SapwoodStructBiomass,
-                                  Named("FineRootBiomass") = FineRootBiomass,
-                                  Named("LabileBiomass") = LabileBiomass,
-                                  Named("TotalBiomass") = TotalBiomass);
+                                  Named("FineRootBiomass") = FineRootBiomass);
     plantGrowth = List::create(Named("LAgrowth") = LAgrowth,
                                Named("SAgrowth") = SAgrowth,
                                Named("FRAgrowth") = FRAgrowth);

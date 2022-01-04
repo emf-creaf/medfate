@@ -225,11 +225,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                                  "Cohort biomass balance (g/m2)" = "CohortBiomassBalance")
   plant_structure_plot_choices = c("Leaf area" = "LeafArea",
                           "Sapwood area" = "SapwoodArea",
-                          "Leaf structural biomass per individual" = "LeafStructuralBiomass",
-                          "Sapwood structural biomass per individual" = "SapwoodStructuralBiomass",
                           "Fine root biomass per individual" = "FineRootBiomass",
-                          "Labile carbon biomass per individual" = "LabileBiomass",
-                          "Total dry biomass per individual" = "TotalBiomass",
                           "Sapwood area / Leaf area" = "HuberValue")
   
   plant_growth_plot_choices = c("Sapwood area growth" = "SAgrowth",

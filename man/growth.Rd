@@ -78,11 +78,7 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
         \item{\code{"LeafArea"}: Daily amount of leaf area (in m2) for an average individual of each plant cohort.}
         \item{\code{"SapwoodArea"}: Daily amount of sapwood area (in cm2) for an average individual of each plant cohort.}
         \item{\code{"FineRootArea"}: Daily amount of fine root area (in m2) for an average individual of each plant cohort (only for \code{transpirationMode = "Sperry"}).}
-        \item{\code{"SapwoodStructuralBiomass"}: Daily amount of sapwood biomass (in g dry) for an average individual of each plant cohort.}
-        \item{\code{"LeafStructuralBiomass"}: Daily amount of leaf biomass (in g dry) for an average individual of each plant cohort.}
         \item{\code{"FineRootBiomass"}: Daily amount of fine root biomass (in g dry) for an average individual of each plant cohort.}
-        \item{\code{"LabileBiomass"}: Daily amount of labile C biomass, i.e. starch and sugars (in g dry) for an average individual of each plant cohort.}
-        \item{\code{"TotalBiomass"}: Daily amount of total biomass, excluding heartwood, (in g dry) for an average individual of each plant cohort.}
     }
   \item{\code{"PlantGrowth"}: A list of daily growth results for plant cohorts, with elements:}
     \itemize{
