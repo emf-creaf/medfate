@@ -1187,14 +1187,14 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
     Rcout<<"Initial snowpack content (mm): "<< initialSnowContent<<"\n";
   }
 
-  if(verbose) Rcout << "Performing daily simulations ";
+  if(verbose) Rcout << "Performing daily simulations\n";
   NumericVector Eplanttot(numDays,0.0);
   List s;
   for(int i=0;i<numDays;i++) {
       if(verbose) {
         if(DOY[i]==1 || i==0) {
           std::string c = as<std::string>(dateStrings[i]);
-          Rcout<<"\n Year "<< c.substr(0, 4)<< ":";
+          Rcout<<"\n [Year "<< c.substr(0, 4)<< "]:";
         } 
         else if(i%10 == 0) Rcout<<".";//<<i;
       } 
@@ -1307,7 +1307,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
         subdailyRes[i] = clone(s);
       }
   }
-  if(verbose) Rcout << "done.\n";
+  if(verbose) Rcout << "\n\n";
   
   if(verbose) {
     printWaterBalanceResult(DWB, plantDWOL, soil, soilFunctions,
