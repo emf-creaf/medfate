@@ -302,6 +302,7 @@
   else if(type=="PlantWUE") ylab = expression(paste("Plant water use efficiency ",(g*C%.%L^{-1})))
   else if(type=="PlantAbsorbedSWR") ylab = expression(paste("Plant absorbed SWR ",(MJ%.%m^{-2}%.%d^{-1})))
   else if(type=="PlantNetLWR") ylab = expression(paste("Plant net LWR ",(MJ%.%m^{-2}%.%d^{-1})))
+  else if(type=="PlantExtraction") ylab = expression(paste("Extraction from soil layers   ",(L%.%m^{-2})))
   else if(type=="PlantWaterBalance") ylab = expression(paste("Plant water balance   ",(L%.%m^{-2})))
   else if(type=="WaterBalancePerLeaf") ylab = expression(paste("Water balance per leaf area ",(L%.%m^{-2})))
   else if(type=="PlantLAI") ylab = expression(paste("Leaf area index ",(m^{-2}%.%m^{-2})))
@@ -346,16 +347,22 @@
   else if(type=="LeafSympPsi") ylab = "Leaf symplastic water potential (MPa)"
   else if(type=="PlantPsi") ylab = "Plant water potential (MPa)"
   else if(type=="PlantStress") ylab = "Drought stress [0-1]"
-  else if(type=="StemPsi") ylab = "Midday stem water potential (MPa)"
-  else if(type=="RootPsi") ylab = "Midday root crown water potential (MPa)"
+  else if(type=="StemPsi") ylab = "Stem water potential (MPa)"
+  else if(type=="RootPsi") ylab = "Root crown water potential (MPa)"
   else if(type=="LeafPsiAverage") ylab = "Average leaf water potential (MPa)"
-  else if(type=="SoilPlantConductance") ylab = expression(paste("Average soil-plant conductance ",(mmol%.%m^{-2}%.%s^{-1})))
+  else if(type=="LeafPsi") ylab = "Leaf water potential (MPa)"
+  else if(type=="SoilPlantConductance") ylab = expression(paste("Soil-plant conductance ",(mmol%.%m^{-2}%.%s^{-1})))
   else if(type=="LeafPsiMin") ylab = "Minimum (midday) leaf water potential (MPa)"
   else if(type=="LeafPsiMax") ylab = "Maximum (predawn) leaf water potential (MPa)"
   else if(type=="LeafPsiMin_SL") ylab = "Minimum (midday) sunlit leaf water potential (MPa)"
   else if(type=="LeafPsiMax_SL") ylab = "Maximum (predawn) sunlit leaf water potential (MPa)"
   else if(type=="LeafPsiMin_SH") ylab = "Minimum (midday) shade leaf water potential (MPa)"
   else if(type=="LeafPsiMax_SH") ylab = "Maximum (predawn) shade leaf water potential (MPa)"
+  else if(type=="LeafStomatalConductance") ylab = expression(paste("Stomatal conductance ", (mol%.%m^{-2}%.%s^{-1})))
+  else if(type=="LeafCi") ylab = expression(paste("Intercellular CO2 concentration  ", (ppm)))
+  else if(type=="LeafVPD") ylab = "Leaf vapour pressure deficit (kPa)"
+  else if(type=="LeafTemperature") ylab ="Leaf temperature (degrees C)"
+  else if(type=="LeafIntrinsicWUE") ylab = expression(paste("iWUE  ", (mu%.%mol%.%mol^{-1})))
   else if(type=="GSWMin_SH") ylab = expression(paste("Minimum shade leaf stomatal conductance ",(mol%.%m^{-2}%.%s^{-1})))
   else if(type=="GSWMax_SH") ylab = expression(paste("Maximum shade leaf stomatal conductance ",(mol%.%m^{-2}%.%s^{-1})))
   else if(type=="GSWMin_SL") ylab = expression(paste("Minimum sunlit leaf stomatal conductance ",(mol%.%m^{-2}%.%s^{-1})))
@@ -582,7 +589,7 @@
   else if(type=="PlantExtraction") {
     extrBal = Soil[,paste("PlantExt",1:nlayers,sep=".")]
     if(!is.null(dates)) extrBal = extrBal[row.names(extrBal) %in% as.character(dates),,drop = FALSE]
-    if(is.null(ylab)) ylab = "Extraction from soil layer (mm)"    
+    if(is.null(ylab)) ylab = .getYLab(type)
     if(!is.null(summary.freq)) extrBal = .temporalSummary(extrBal, summary.freq, sum, na.rm=TRUE)
     g<-.multiple_dynamics(as.matrix(extrBal),  xlab = xlab, ylab = ylab, ylim = ylim,
                           labels = paste("Layer", 1:nlayers))
@@ -828,7 +835,7 @@
   } 
   else if(type=="SoilPlantConductance") {
     m = extractSubdaily(x, "dEdP", dates)[,c("datetime", cohorts), drop=FALSE]
-    if(is.null(ylab)) ylab = expression(paste("Soil-plant conductance ",(mmol%.%m^{-2}%.%s^{-1})))
+    if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="Temperature") {
@@ -840,13 +847,13 @@
   } 
   else if(type=="PlantExtraction") {
     m = extractSubdaily(x, "ExtractionInst", dates)
-    if(is.null(ylab)) ylab = expression(paste("Extraction from soil layers ",(L%.%m^{-2})))
+    if(is.null(ylab)) ylab =.getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafPsi") {
     mSu = extractSubdaily(x, "SunlitLeaves$Psi", dates)[,c("datetime", cohorts), drop=FALSE]
     mSh = extractSubdaily(x, "ShadeLeaves$Psi", dates)[,c("datetime", cohorts), drop=FALSE]
-    if(is.null(ylab)) ylab=expression(paste("Leaf water potential ", (MPa)))
+    if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafAbsorbedSWR") {
@@ -882,31 +889,31 @@
   else if(type=="LeafStomatalConductance") {
     mSu = extractSubdaily(x, "SunlitLeaves$Gsw", dates)[,c("datetime", cohorts), drop=FALSE]
     mSh = extractSubdaily(x, "ShadeLeaves$Gsw", dates)[,c("datetime", cohorts), drop=FALSE]
-    if(is.null(ylab)) ylab=expression(paste("Stomatal conductance ", (mol%.%m^{-2}%.%s^{-1})))
+    if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafTemperature") {
     mSu = extractSubdaily(x, "SunlitLeaves$Temp", dates)[,c("datetime", cohorts), drop=FALSE]
     mSh = extractSubdaily(x, "ShadeLeaves$Temp", dates)[,c("datetime", cohorts), drop=FALSE]
-    if(is.null(ylab)) ylab="Leaf temperature (degrees C)"
+    if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafVPD") {
     mSu = extractSubdaily(x, "SunlitLeaves$VPD", dates)[,c("datetime", cohorts), drop=FALSE]
     mSh = extractSubdaily(x, "ShadeLeaves$VPD", dates)[,c("datetime", cohorts), drop=FALSE]
-    if(is.null(ylab)) ylab="Leaf vapour pressure deficit (kPa)"
+    if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafCi") {
     mSu = extractSubdaily(x, "SunlitLeaves$Ci", dates)[,c("datetime", cohorts), drop=FALSE]
     mSh = extractSubdaily(x, "ShadeLeaves$Ci", dates)[,c("datetime", cohorts), drop=FALSE]
-    if(is.null(ylab)) ylab=expression(paste("Intercellular CO2 concentration  ", (ppm)))
+    if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafIntrinsicWUE") {
     mSu = extractSubdaily(x, "SunlitLeaves$iWUE", dates)[,c("datetime", cohorts), drop=FALSE]
     mSh = extractSubdaily(x, "ShadeLeaves$iWUE", dates)[,c("datetime", cohorts), drop=FALSE]
-    if(is.null(ylab)) ylab=expression(paste("iWUE  ", (mu%.%mol%.%mol^{-1})))
+    if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "RootExudation" , "LabileCarbonBalance",
