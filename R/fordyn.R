@@ -26,11 +26,6 @@ fordyn<-function(forest, soil, SpParams,
   treeOffset = nrow(forest$treeData)
   shrubOffset = nrow(forest$shrubData)
   xi = forest2growthInput(forest, soil, SpParams, control)
-  
-  #initial summaries
-  cohortSummary <-.summarizeCohorts(0, xi)
-  speciesSummary<-.summarizeSpecies(0,cohortSummary, xi, SpParams)
-  standSummary<-.summarizeStand(0,cohortSummary, xi)
 
   #initial tree/shrub tables
   treeTable = .createTreeTable(0, NA, xi)
@@ -39,6 +34,15 @@ fordyn<-function(forest, soil, SpParams,
   deadShrubTable = .createDeadShrubTable(0, NA, xi)
   cutTreeTable = treeTable[numeric(),,drop = FALSE]
   cutShrubTable = shrubTable[numeric(),,drop = FALSE]
+  
+  #initial summaries
+  cohortSummary <-.summarizeCohorts(0, 
+                                    treeTable, shrubTable,
+                                    deadTreeTable, deadShrubTable,
+                                    cutTreeTable, cutShrubTable)
+  speciesSummary<-.summarizeSpecies(0,cohortSummary, xi, SpParams)
+  standSummary<-.summarizeStand(0,cohortSummary, xi)
+
   
   #Simulations
   for(iYear in 1:nYears) {
@@ -57,8 +61,8 @@ fordyn<-function(forest, soil, SpParams,
     xo = Gi$growthInput
     
     # 2.2 Update dead tree/shrub tables
-    deadTreeTable = rbind(deadTreeTable, .createDeadTreeTable(iYear, year, xo))
-    deadShrubTable = rbind(deadShrubTable, .createDeadShrubTable(iYear, year, xo))
+    deadTreeTableYear = .createDeadTreeTable(iYear, year, xo)
+    deadShrubTableYear = .createDeadShrubTable(iYear, year, xo)
     
     # 2.2 Update forest structural variables
     isTree = is.na(xo$above$Cover)
@@ -71,17 +75,19 @@ fordyn<-function(forest, soil, SpParams,
     }
     
     # 2.3 Call management function if required
+    cutTreeTableYear = NULL
+    cutShrubTableYear = NULL
     if(!is.null(management_function)) {
       res = do.call(management_function, list(x = forest, args= management_args, verbose = FALSE))
-      if(verboseDyn) cat(paste0(" & management(", res$action,")\n"))
+      if(verboseDyn) cat(paste0(" & management [", res$action,"]\n"))
       # Update forest and xo objects
       forest$treeData$N <- pmax(0,forest$treeData$N - res$N_tree_cut)
       xo$above$N[isTree] <- forest$treeData$N
       forest$shrubData$Cover <- pmax(0,forest$shrubData$Cover - res$Cover_shrub_cut)
       xo$above$Cover[!isTree] <- forest$shrubData$Cover
       # Update cut tables
-      cutTreeTable = rbind(cutTreeTable, .createCutTreeTable(iYear, year, xo, res$N_tree_cut))
-      cutShrubTable = rbind(cutShrubTable, .createCutShrubTable(iYear, year, xo, res$Cover_shrub_cut))
+      cutTreeTableYear = .createCutTreeTable(iYear, year, xo, res$N_tree_cut)
+      cutShrubTableYear = .createCutShrubTable(iYear, year, xo, res$Cover_shrub_cut)
       # Retrieve plantation information
       planted_forest <- res$planted_forest
       if(nrow(planted_forest$treeData)>0) {
@@ -317,14 +323,23 @@ fordyn<-function(forest, soil, SpParams,
     forestStructures[[iYear+1]] = forest
     
     # 5.2 Process summaries (after recruitment)
-    cohSumYear = .summarizeCohorts(iYear, xi)
+    treeTableYear = .createTreeTable(iYear, year, xi)
+    shrubTableYear = .createShrubTable(iYear, year, xi)
+    cohSumYear = .summarizeCohorts(iYear,
+                                   treeTableYear, shrubTableYear,
+                                   deadTreeTableYear, deadShrubTableYear,
+                                   cutTreeTableYear, cutShrubTableYear)
     speciesSummary = rbind(speciesSummary,  .summarizeSpecies(iYear,cohSumYear, xi, SpParams))
     standSummary = rbind(standSummary,  .summarizeStand(iYear,cohSumYear, xi))
     cohortSummary = rbind(cohortSummary, cohSumYear)
     
     # 5.3 Update tree/shrub tables (after recruitment)
-    treeTable = rbind(treeTable, .createTreeTable(iYear, year, xi))
-    shrubTable = rbind(shrubTable, .createShrubTable(iYear, year, xi))
+    treeTable = rbind(treeTable, treeTableYear)
+    shrubTable = rbind(shrubTable, shrubTableYear)
+    deadTreeTable = rbind(deadTreeTable, deadTreeTableYear)
+    deadShrubTable = rbind(deadShrubTable, deadShrubTableYear)
+    if(!is.null(cutTreeTableYear)) cutTreeTable = rbind(cutTreeTable, cutTreeTableYear)
+    if(!is.null(cutShrubTableYear)) cutShrubTable = rbind(cutShrubTable, cutShrubTableYear)
     
   }
   res = list(

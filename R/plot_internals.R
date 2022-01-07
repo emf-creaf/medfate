@@ -200,13 +200,10 @@
 
 .getUniqueFORDYNPlotTypes<-function(transpirationMode = "Granier"){
   return(c("Stand basal area" = "StandBasalArea", 
-           "Stand leaf area index" = "StandLAI", 
            "Stand density of trees" = "StandDensity",
            "Basal area of trees by species" = "SpeciesBasalArea", 
-           "Leaf area index by species" = "SpeciesLAI", 
            "Density of trees by species" = "SpeciesDensity",
            "Basal area of trees by cohort" = "CohortBasalArea", 
-           "Leaf area index by cohort" = "CohortLAI", 
            "Density of trees by cohort" = "CohortDensity"))
 }
 

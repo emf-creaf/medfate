@@ -1,41 +1,123 @@
-.summarizeCohorts<-function(step, x) {
-  isTree = !is.na(x$above$DBH)
-  cohortSummary = data.frame("Step" = rep(step, nrow(x$cohorts)),
-                             "Species" = x$cohorts$SP,
-                             "Name" = x$cohorts$Name,
-                             "Cohort" = row.names(x$cohorts),
-                             "LeafAreaIndex" = x$above$LAI_live,
-                             "TreeDensityLive" = x$above$N,
-                             "TreeBasalAreaLive"= x$above$N*pi*(x$above$DBH/200)^2,
-                             "ShrubCoverLive"= x$above$Cover)
+.summarizeCohorts<-function(step, 
+                            treeTableYear, shrubTableYear,
+                            deadTreeTableYear, deadShrubTableYear,
+                            cutTreeTableYear, cutShrubTableYear) {
+  treecohnames = unique(c(treeTableYear$Cohort,deadTreeTableYear$Cohort))
+  if(!is.null(cutTreeTableYear)) treecohnames = unique(c(treecohnames, cutTreeTableYear$Cohort))
+  shrubcohnames = unique(c(shrubTableYear$Cohort,deadShrubTableYear$Cohort))
+  if(!is.null(cutShrubTableYear)) shrubcohnames = unique(c(shrubcohnames, cutShrubTableYear$Cohort))
+  cohnames = c(treecohnames, shrubcohnames)
+  isTree = c(rep(TRUE, length(treecohnames)), rep(FALSE, length(shrubcohnames)))
+  cohortSummary = data.frame("Step" = rep(step, length(cohnames)),
+                             "Species" = NA,
+                             "Name" = NA,
+                             "Cohort" = cohnames,
+                             "TreeDensityLive" = 0,
+                             "TreeBasalAreaLive"= 0,
+                             "ShrubCoverLive"= 0,
+                             "BasalAreaDead" = 0,
+                             "ShrubCoverDead" = 0,
+                             "BasalAreaCut" = 0,
+                             "ShrubCoverCut" = 0)
+  cohortSummary$ShrubCoverLive[isTree] = NA
+  cohortSummary$ShrubCoverDead[isTree] = NA
+  cohortSummary$ShrubCoverCut[isTree] = NA
   cohortSummary$TreeDensityLive[!isTree] = NA
+  cohortSummary$TreeBasalAreaLive[!isTree] = NA
+  cohortSummary$BasalAreaDead[!isTree] = NA
+  cohortSummary$BasalAreaCut[!isTree] = NA
+  
+  ba_live = .treeBasalArea(treeTableYear$N, treeTableYear$DBH)
+  for(i in 1:nrow(treeTableYear)) {
+    icoh = which(cohortSummary$Cohort==treeTableYear$Cohort[i])
+    cohortSummary$Cohort[icoh] = treeTableYear$Cohort[i]
+    cohortSummary$Species[icoh] = treeTableYear$Species[i]
+    cohortSummary$Name[icoh] = treeTableYear$Name[i]
+    cohortSummary$TreeDensityLive[icoh] = treeTableYear$N[i]
+    cohortSummary$TreeBasalAreaLive[icoh] = ba_live[i]
+  }
+  for(i in 1:nrow(shrubTableYear)) {
+    icoh = which(cohortSummary$Cohort==shrubTableYear$Cohort[i])
+    cohortSummary$Cohort[icoh] = shrubTableYear$Cohort[i]
+    cohortSummary$Species[icoh] = shrubTableYear$Species[i]
+    cohortSummary$Name[icoh] = shrubTableYear$Name[i]
+    cohortSummary$ShrubCoverLive[icoh] = shrubTableYear$Cover[i]
+  }
+  ba_dead = .treeBasalArea(deadTreeTableYear$N, deadTreeTableYear$DBH)
+  for(i in 1:nrow(deadTreeTableYear)) {
+    icoh = which(cohortSummary$Cohort==deadTreeTableYear$Cohort[i])
+    cohortSummary$Cohort[icoh] = deadTreeTableYear$Cohort[i]
+    cohortSummary$Species[icoh] = deadTreeTableYear$Species[i]
+    cohortSummary$Name[icoh] = deadTreeTableYear$Name[i]
+    cohortSummary$BasalAreaDead[icoh] = ba_dead[i]
+  }
+  for(i in 1:nrow(deadShrubTableYear)) {
+    icoh = which(cohortSummary$Cohort==deadShrubTableYear$Cohort[i])
+    cohortSummary$Cohort[icoh] = deadShrubTableYear$Cohort[i]
+    cohortSummary$Species[icoh] = deadShrubTableYear$Species[i]
+    cohortSummary$Name[icoh] = deadShrubTableYear$Name[i]
+    cohortSummary$ShrubCoverDead[icoh] = deadShrubTableYear$Cover[i]
+  }
+  if(!is.null(cutTreeTableYear)) {
+    ba_cut = .treeBasalArea(cutTreeTableYear$N, cutTreeTableYear$DBH)
+    for(i in 1:nrow(cutTreeTableYear)) {
+      icoh = which(cohortSummary$Cohort==cutTreeTableYear$Cohort[i])
+      cohortSummary$Cohort[icoh] = cutTreeTableYear$Cohort[i]
+      cohortSummary$Species[icoh] = cutTreeTableYear$Species[i]
+      cohortSummary$Name[icoh] = cutTreeTableYear$Name[i]
+      cohortSummary$BasalAreaCut[icoh] = ba_cut[i]
+    }
+  }
+  if(!is.null(cutShrubTableYear)) {
+    for(i in 1:nrow(cutShrubTableYear)) {
+      icoh = which(cohortSummary$Cohort==cutShrubTableYear$Cohort[i])
+      cohortSummary$Cohort[icoh] = cutShrubTableYear$Cohort[i]
+      cohortSummary$Species[icoh] = cutShrubTableYear$Species[i]
+      cohortSummary$Name[icoh] = cutShrubTableYear$Name[i]
+      cohortSummary$ShrubCoverCut[icoh] = cutShrubTableYear$Cover[i]
+    }
+  }
   return(cohortSummary)
 }
 .summarizeSpecies<-function(step, cohSum, x, SpParams) {
-  lai_sp = tapply(cohSum$LeafAreaIndex, cohSum$Species, sum, na.rm=TRUE)
   nl_sp = tapply(cohSum$TreeDensityLive, cohSum$Species, sum, na.rm=TRUE)
   bal_sp = tapply(cohSum$TreeBasalAreaLive, cohSum$Species, sum, na.rm=TRUE)
+  bad_sp = tapply(cohSum$BasalAreaDead, cohSum$Species, sum, na.rm=TRUE)
+  bac_sp = tapply(cohSum$BasalAreaCut, cohSum$Species, sum, na.rm=TRUE)
   shl_sp = tapply(cohSum$ShrubCoverLive, cohSum$Species, sum, na.rm=TRUE)
-  mh_sp = tapply(x$above$H, x$above$SP, max, na.rm=TRUE)
-  spSumYear <-data.frame("Step" = rep(step, length(lai_sp)),
-                         "Species" = as.integer(names(lai_sp)),
-                         "Name" = species_characterParameter(as.integer(names(lai_sp)), SpParams, "Name"),
-                         "LeafAreaIndex" = as.numeric(lai_sp),
+  shd_sp = tapply(cohSum$ShrubCoverDead, cohSum$Species, sum, na.rm=TRUE)
+  shc_sp = tapply(cohSum$ShrubCoverCut, cohSum$Species, sum, na.rm=TRUE)
+  spSumYear <-data.frame("Step" = rep(step, length(nl_sp)),
+                         "Species" = as.integer(names(nl_sp)),
+                         "Name" = species_characterParameter(as.integer(names(nl_sp)), SpParams, "Name"),
                          "TreeDensityLive"= as.numeric(nl_sp),
                          "TreeBasalAreaLive"= as.numeric(bal_sp),
                          "ShrubCoverLive"= as.numeric(shl_sp),
-                         "MaxHeight"= as.numeric(mh_sp))
+                         "BasalAreaDead" = as.numeric(bad_sp),
+                         "ShrubCoverDead" = as.numeric(shd_sp),
+                         "BasalAreaCut" = as.numeric(bac_sp),
+                         "ShrubCoverCut" = as.numeric(shc_sp))
 }
 .summarizeStand<-function(step, cohSum, x) {
-  maxH = 0
-  if(nrow(x$above)>0) maxH = max(x$above$H, na.rm=TRUE)
+  isTree = !is.na(x$above$DBH)
+  HB = .hartBeckingIndex(x$above$N[isTree], x$above$H[isTree])
+  domH = .dominantTreeHeight(x$above$N[isTree], x$above$H[isTree])
+  domDBH = .dominantTreeDiameter(x$above$N[isTree], x$above$DBH[isTree])
+  qmDBH = .quadraticMeanTreeDiameter(x$above$N[isTree], x$above$DBH[isTree])
   standSumYear = data.frame("Step" = step,
-                            "LeafAreaIndex" = sum(cohSum$LeafAreaIndex, na.rm = TRUE),
                             "TreeDensityLive"= sum(cohSum$TreeDensityLive, na.rm = TRUE),
                             "TreeBasalAreaLive"= sum(cohSum$TreeBasalAreaLive, na.rm = TRUE),
+                            "DominantTreeHeight"= domH,
+                            "DominantTreeDiameter"= domDBH,
+                            "QuadraticMeanTreeDiameter"= qmDBH,
+                            "HartBeckingIndex"= HB,
                             "ShrubCoverLive"= sum(cohSum$ShrubCoverLive, na.rm=TRUE),
-                            "MaxHeight"= maxH)
+                            "BasalAreaDead" = sum(cohSum$BasalAreaDead, na.rm=TRUE),
+                            "ShrubCoverDead" = sum(cohSum$ShrubCoverDead, na.rm=TRUE),
+                            "BasalAreaCut" = sum(cohSum$BasalAreaCut, na.rm=TRUE),
+                            "ShrubCoverCut" = sum(cohSum$ShrubCoverCut, na.rm=TRUE))
 }
+
 .createTreeTable<-function(step, year, x) {
   isTree = !is.na(x$above$DBH)
   range = 1:sum(isTree)

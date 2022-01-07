@@ -383,8 +383,8 @@ plot.fordyn<-function(x, type="StandBasalArea",
   ## FORDYN PLOT
   i_type = which(TYPES_FORDYN_UNIQUE %in% type)
   
-  vars = rep(c("TreeBasalAreaLive", "LeafAreaIndex", "TreeDensityLive"),3)
-  tables = c(rep("StandSummary",3),rep("SpeciesSummary",3),rep("CohortSummary",3))
+  vars = rep(c("TreeBasalAreaLive", "TreeDensityLive"),3)
+  tables = c(rep("StandSummary",2),rep("SpeciesSummary",2),rep("CohortSummary",2))
   
   if(is.null(ylab)) ylab = .getYLab(type)
   if(is.null(xlab)) xlab = "Step"

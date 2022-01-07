@@ -139,13 +139,10 @@ In addition to the former, the following plots are available for objects \code{\
  Finally, the following plots are only available for \code{\link{fordyn}} simulation results:
  \itemize{
     \item{\code{"StandBasalArea"}: Stand basal area of living trees.}
-    \item{\code{"StandLAI"}: Stand leaf area index.}
     \item{\code{"StandDensity"}: Stand density of living trees.}
     \item{\code{"SpeciesBasalArea"}: Basal area of living trees by species.}
-    \item{\code{"SpeciesLAI"}: Leaf area index by species.}
     \item{\code{"SpeciesDensity"}: Density of living trees by species.}
     \item{\code{"CohortBasalArea"}: Basal area of living trees by plant cohort.}
-    \item{\code{"CohortLAI"}: Leaf area index by plant cohort.}
     \item{\code{"CohortDensity"}: Density of living trees by plant cohort.}
    }
 }

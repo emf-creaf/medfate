@@ -1,6 +1,9 @@
-stand_dominantTreeHeight<-function(x) {
-  h = x$treeData$Height
-  n = x$treeData$N
+.quadraticMeanTreeDiameter<-function(n, dbh){
+  ba = sum(.treeBasalArea(n, dbh))
+  return(2.0*sqrt(10000*ba/(pi*sum(n))))
+}
+
+.dominantTreeHeight<-function(n, h) {
   o <-order(h, decreasing=TRUE)
   h = h[o]
   n = n[o]
@@ -11,9 +14,8 @@ stand_dominantTreeHeight<-function(x) {
   }
   return(sum(h*n)/sum(n))
 }
-stand_dominantTreeDiameter<-function(x) {
-  dbh = x$treeData$DBH
-  n = x$treeData$N
+
+.dominantTreeDiameter<-function(n, dbh) {
   o <-order(dbh, decreasing=TRUE)
   dbh = dbh[o]
   n = n[o]
@@ -24,7 +26,19 @@ stand_dominantTreeDiameter<-function(x) {
   }
   return(sum(dbh*n)/sum(n))
 }
+.hartBeckingIndex<-function(n,h) {
+  return((10000/.dominantTreeHeight(n,h))*sqrt(10000/sum(n)))
+}
+
+stand_dominantTreeDiameter<-function(x) {
+  return(.dominantTreeDiameter(n = x$treeData$N, dbh = x$treeData$DBH))
+}
+stand_dominantTreeHeight<-function(x) {
+  return(.dominantTreeHeight(n = x$treeData$N, h = x$treeData$Height))
+}
 stand_hartBeckingIndex<-function(x) {
-  n = x$treeData$N
-  return((10000/stand_dominantTreeHeight(x))*sqrt(10000/sum(n)))
+  return(.hartBeckingIndex(n = x$treeData$N, h = x$treeData$Height))
+}
+stand_quadraticMeanTreeDiameter<-function(x) {
+  return(.quadraticMeanTreeDiameter(n = x$treeData$N, dbh = x$treeData$DBH))
 }
