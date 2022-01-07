@@ -78,18 +78,18 @@
   TYPES = character(0)
   if(transpirationMode=="Sperry") {
     TYPES = c(TYPES,
-              "TempMin_SL", 
-              "TempMin_SH", 
-              "TempMax_SL",
-              "TempMax_SH",
-              "GSWMin_SL", 
-              "GSWMin_SH", 
-              "GSWMax_SL", 
-              "GSWMax_SH",
-              "LeafPsiMin_SL", 
-              "LeafPsiMax_SL", 
-              "LeafPsiMin_SH", 
-              "LeafPsiMax_SH")
+              "Minimum leaf temperature (sunlit)" ="TempMin_SL", 
+              "Minimum leaf temperature (shade)" = "TempMin_SH", 
+              "Maximum leaf temperature (sunlit)" ="TempMax_SL",
+              "Maximum leaf temperature (shade)" ="TempMax_SH",
+              "Minimum stomatal conductance (sunlit)" ="GSWMin_SL", 
+              "Minimum stomatal conductance (shade)" ="GSWMin_SH", 
+              "Maximum stomatal conductance (sunlit)" ="GSWMax_SL", 
+              "Maximum stomatal conductance (shade)" ="GSWMax_SH",
+              "Minimum leaf water potential (sunlit)" ="LeafPsiMin_SL", 
+              "Minimum leaf water potential (shade)" ="LeafPsiMin_SH", 
+              "Maximum leaf water potential (sunlit)" ="LeafPsiMax_SL", 
+              "Maximum leaf water potential (shade)" ="LeafPsiMax_SH")
   }
   return(TYPES)
 }
