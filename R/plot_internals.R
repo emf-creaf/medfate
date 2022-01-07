@@ -785,7 +785,8 @@
   } 
   else if(type=="TranspirationPerLeaf") {
     m = extractSubdaily(x, "E", dates)[,c("datetime", cohorts), drop=FALSE]
-    m[,-1] = m[,-1, drop = FALSE]/x$Plants$LAI
+    lai = extractSubdaily(x, "PlantLAI", dates)[,c("datetime", cohorts), drop=FALSE]
+    m[,-1] = m[,-1, drop = FALSE]/lai[,-1,drop=FALSE]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -796,7 +797,8 @@
   } 
   else if(type=="GrossPhotosynthesisPerLeaf") {
     m = extractSubdaily(x, "Ag", dates)[,c("datetime", cohorts), drop=FALSE]
-    m[,-1] = m[,-1, drop = FALSE]/x$Plants$LAI
+    lai = extractSubdaily(x, "PlantLAI", dates)[,c("datetime", cohorts), drop=FALSE]
+    m[,-1] = m[,-1, drop = FALSE]/lai[,-1,drop=FALSE]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -807,7 +809,8 @@
   } 
   else if(type=="NetPhotosynthesisPerLeaf") {
     m = extractSubdaily(x, "An", dates)[,c("datetime", cohorts), drop=FALSE]
-    m[,-1] = m[,-1, drop = FALSE]/x$Plants$LAI
+    lai = extractSubdaily(x, "PlantLAI", dates)[,c("datetime", cohorts), drop=FALSE]
+    m[,-1] = m[,-1, drop = FALSE]/lai[,-1,drop=FALSE]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -845,6 +848,30 @@
     if(is.null(ylab)) ylab = "Temperature (Celsius)"
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
+  else if(type=="CanopyEnergyBalance") {
+    if(is.null(ylab)) ylab = expression(W%.%m^{-2})
+    ceb = extractSubdaily(x, "CanopyEnergyBalance", dates)
+    seb = extractSubdaily(x, "SoilEnergyBalance", dates)
+    df = data.frame(datetime=ceb$datetime)
+    df[["Balance"]] = ceb$Ebalcan
+    df[["SWR abs."]] = ceb$SWRcan 
+    df[["LWR net"]] = ceb$LWRcan
+    df[["Latent heat"]] = -ceb$LEcan
+    df[["Convection can./atm."]] = -ceb$Hcan
+    df[["Convection soil/can."]] = -seb$Hcansoil
+    return(.multiple_dynamics_subdaily(df,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="SoilEnergyBalance") {
+    if(is.null(ylab)) ylab = expression(W%.%m^{-2})    
+    seb = extractSubdaily(x, "SoilEnergyBalance", dates)
+    df = data.frame(datetime=seb$datetime)
+    df[["Balance"]] = seb$Ebalsoil
+    df[["SWR abs."]] = seb$SWRsoil
+    df[["LWR net"]] = seb$LWRsoil
+    df[["Convection soil/can."]] = seb$Hcansoil
+    df[["Latent heat"]] = -seb$LEsoil
+    return(.multiple_dynamics_subdaily(df,  xlab = xlab, ylab = ylab, ylim = ylim))
+  }
   else if(type=="PlantExtraction") {
     m = extractSubdaily(x, "ExtractionInst", dates)
     if(is.null(ylab)) ylab =.getYLab(type)

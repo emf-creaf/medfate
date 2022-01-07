@@ -6,7 +6,8 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
                 "StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC",
                 "LeafSympPsi", "StemSympPsi","PWB",
                 "StemPLC")
-  PWBTYPES = c("Temperature", "ExtractionInst", plantTypes, sunlitTypes, shadeTypes)
+  PWBTYPES = c("PlantLAI","Temperature", "CanopyEnergyBalance", "SoilEnergyBalance",
+               "ExtractionInst", plantTypes, sunlitTypes, shadeTypes)
   CBTYPES = c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "RootExudation", "LabileCarbonBalance",
               "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport")
   GROWTHTYPES = c(CBTYPES, PWBTYPES)
@@ -37,12 +38,21 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
       m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori) 
     }
     colnames(m) = c("datetime", row.names(input$above))
-  } else if(output=="Temperature") {
-    ori1 = x$subdaily[[as.character(dates[1])]]$EnergyBalance$Temperature
+  } else if(output=="PlantLAI") {
+    ori1 = x$subdaily[[as.character(dates[1])]]$Plants$LAI
+    nc = length(ori1)
+    m<-data.frame(matrix(nrow = numDates*numSteps, ncol = nc+1))
+    for(i in 1:numDates) {
+      ori = x$subdaily[[as.character(dates[i])]]$Plants$LAI
+      m[((i-1)*numSteps+1):(i*numSteps), 2:(nc+1)] = matrix(ori, nrow = numSteps, ncol = nc, byrow = TRUE) 
+    }
+    colnames(m) = c("datetime", row.names(input$above))
+  } else if(output %in% c("Temperature", "CanopyEnergyBalance", "SoilEnergyBalance")) {
+    ori1 = x$subdaily[[as.character(dates[1])]]$EnergyBalance[[output]]
     ncols = ncol(ori1)
     m<-data.frame(matrix(nrow = numDates*numSteps, ncol = ncols+1))
     for(i in 1:numDates) {
-      ori = x$subdaily[[as.character(dates[i])]]$EnergyBalance$Temperature
+      ori = x$subdaily[[as.character(dates[i])]]$EnergyBalance[[output]]
       m[((i-1)*numSteps+1):(i*numSteps), 2:(ncols+1)] = ori 
     }
     colnames(m) = c("datetime", colnames(ori1))
