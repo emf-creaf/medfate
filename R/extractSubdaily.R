@@ -3,7 +3,9 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
   sunlitTypes = paste("SunlitLeaves",leafTypes, sep="$")
   shadeTypes = paste("ShadeLeaves",leafTypes, sep="$")
   plantTypes = c("E","Ag","An","dEdP","RootPsi",
-                "StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC","PWB")
+                "StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC",
+                "LeafSympPsi", "StemSympPsi","PWB",
+                "StemPLC")
   PWBTYPES = c("Temperature", "ExtractionInst", plantTypes, sunlitTypes, shadeTypes)
   CBTYPES = c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "RootExudation", "LabileCarbonBalance",
               "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport")

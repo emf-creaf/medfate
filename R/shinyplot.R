@@ -282,7 +282,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   server <- function(input, output, session) {
     observe({
       if(input$subdaily_check && subdaily_out)  {
-        sel <- plot_main_choices %in% c("Plants", "Labile carbon balance", "Soil", "Energy balance")
+        sel <- plot_main_choices %in% c("Plants", "Sunlit/Shade","Labile carbon balance", "Soil", "Energy balance")
         updateSelectInput(session, "plot_main_type",
                           choices = plot_main_choices[sel])
       } else {

@@ -46,7 +46,6 @@ The following plots are available for \code{spwb_day} and \code{pwb_day}:
     \item{\code{"GrossPhotosynthesisPerLeaf"}:}{ Plant cohort gross photosynthesis per leaf area.}
     \item{\code{"PlantNetPhotosynthesis"}:}{ Plant cohort net photosynthesis per ground area.}
     \item{\code{"NetPhotosynthesisPerLeaf"}:}{ Plant cohort net photosynthesis per leaf area.}
-    \item{\code{"PlantAbsorbedSWR"}:}{ Absorbed short wave radiation per ground area  (differentiates sunlit and shade leaves).}
     \item{\code{"LeafTranspiration"}:}{ Instantaneous transpiration per leaf area (differentiates sunlit and shade leaves).}
     \item{\code{"LeafGrossPhotosynthesis"}:}{ Instantaneous gross photosynthesis per leaf area (differentiates sunlit and shade leaves).}
     \item{\code{"LeafNetPhotosynthesis"}:}{ Instantaneous net photosynthesis per leaf area (differentiates sunlit and shade leaves).}
