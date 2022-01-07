@@ -199,7 +199,7 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
     OM = x$PlantBiomassBalance[[type]][,cohorts,drop=FALSE]
   }
   else if(type %in% c("SapwoodArea", "LeafArea", "FineRootArea", 
-                      "FineRootBiomass")) {
+                      "FineRootBiomass", "DBH", "Height")) {
     OM = x$PlantStructure[[type]][,cohorts,drop=FALSE]
   } 
   else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth")) {
@@ -225,9 +225,8 @@ plot.fordyn<-function(x, type="StandBasalArea",
   input_control = x$GrowthResults[[1]]$growthInput$control
   TYPES_GROWTH = .getDailyGROWTHPlotTypes(input_control$transpirationMode)
   TYPES_GROWTH_UNIQUE = .getUniqueDailyGROWTHPlotTypes(input_control$transpirationMode)
-  TYPES_FORDYN_UNIQUE =   c("StandBasalArea", "StandLAI", "StandDensity",
-              "SpeciesBasalArea", "SpeciesLAI", "SpeciesDensity",
-              "CohortBasalArea", "CohortLAI", "CohortDensity")
+  TYPES_FORDYN_UNIQUE = .getUniqueFORDYNPlotTypes(input_control$transpirationMode)  
+  
   type = match.arg(type,c(TYPES_GROWTH, TYPES_FORDYN_UNIQUE))  
   
   if(type %in% TYPES_GROWTH) {
@@ -357,7 +356,7 @@ plot.fordyn<-function(x, type="StandBasalArea",
                           "MortalityBiomassLoss", "CohortBiomassBalance")) {
         OM = summary(x, freq = "days", output = paste0("PlantBiomassBalance$",type))[,cohorts,drop=FALSE]
       } 
-      else if(type %in% c("SapwoodArea", "LeafArea", "FineRootArea", "FineRootBiomass")) {
+      else if(type %in% c("SapwoodArea", "LeafArea", "FineRootArea", "FineRootBiomass", "DBH", "Height")) {
         OM = summary(x, freq = "days", output = paste0("PlantStructure$",type))[,cohorts,drop=FALSE]
       } 
       else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth")) {

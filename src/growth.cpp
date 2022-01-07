@@ -793,7 +793,9 @@ List growthDay1(List x, NumericVector meteovec,
   DataFrame plantStructure = DataFrame::create(
     _["LeafArea"] = LeafArea,
     _["SapwoodArea"] = SapwoodArea,
-    _["FineRootBiomass"] = clone(fineRootBiomass)
+    _["FineRootBiomass"] = clone(fineRootBiomass),
+    _["DBH"] = clone(DBH),
+    _["Height"] = clone(H)
   );
   
   DataFrame plantGrowth = DataFrame::create(
@@ -1567,7 +1569,9 @@ List growthDay2(List x, NumericVector meteovec,
     _["LeafArea"] = LeafArea,
     _["SapwoodArea"] = SapwoodArea,
     _["FineRootArea"] = FineRootArea,
-    _["FineRootBiomass"] = clone(fineRootBiomass)
+    _["FineRootBiomass"] = clone(fineRootBiomass),
+    _["DBH"] = clone(DBH),
+    _["Height"] = clone(H)
   );
 
   DataFrame plantGrowth = DataFrame::create(
@@ -1918,6 +1922,8 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   NumericMatrix LeafArea(numDays, numCohorts);
   NumericMatrix FineRootArea(numDays, numCohorts);
   NumericMatrix FineRootBiomass(numDays, numCohorts);
+  NumericMatrix DBH(numDays, numCohorts);
+  NumericMatrix Height(numDays, numCohorts);
   NumericMatrix LabileBiomass(numDays, numCohorts);
   NumericMatrix TotalBiomass(numDays, numCohorts);
   NumericMatrix SAgrowth(numDays, numCohorts);
@@ -2104,7 +2110,9 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     if(transpirationMode=="Sperry") {
       FineRootArea(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["FineRootArea"]);
     }
-
+    DBH(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["DBH"]);
+    Height(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["Height"]);
+    
     StructuralBiomassBalance(i,_) = Rcpp::as<Rcpp::NumericVector>(bb["StructuralBiomassBalance"]);
     LabileBiomassBalance(i,_) = Rcpp::as<Rcpp::NumericVector>(bb["LabileBiomassBalance"]);
     PlantBiomassBalance(i,_) = Rcpp::as<Rcpp::NumericVector>(bb["PlantBiomassBalance"]);
@@ -2165,6 +2173,8 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   LeafArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   FineRootArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   FineRootBiomass.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
+  DBH.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
+  Height.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
   LAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   SAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   FRAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
@@ -2218,7 +2228,9 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   if(transpirationMode=="Granier") {
     plantStructure = List::create(Named("LeafArea") = LeafArea,
                                   Named("SapwoodArea")=SapwoodArea,
-                                  Named("FineRootBiomass")=FineRootBiomass);
+                                  Named("FineRootBiomass")=FineRootBiomass,
+                                  Named("DBH") = DBH,
+                                  Named("Height") = Height);
     plantGrowth = List::create(Named("LAgrowth") = LAgrowth,
                                Named("SAgrowth") = SAgrowth);
     l = List::create(Named("latitude") = latitude,
@@ -2239,7 +2251,9 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     plantStructure = List::create(Named("LeafArea") = LeafArea,
                                   Named("SapwoodArea")=SapwoodArea,
                                   Named("FineRootArea") = FineRootArea,
-                                  Named("FineRootBiomass") = FineRootBiomass);
+                                  Named("FineRootBiomass") = FineRootBiomass,
+                                  Named("DBH") = DBH,
+                                  Named("Height") = Height);
     plantGrowth = List::create(Named("LAgrowth") = LAgrowth,
                                Named("SAgrowth") = SAgrowth,
                                Named("FRAgrowth") = FRAgrowth);

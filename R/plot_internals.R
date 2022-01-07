@@ -1,78 +1,292 @@
-.getDailyPWBPlotTypes<-function(transpirationMode = "Granier") {
-  if(transpirationMode=="Granier") {
-    TYPES = c("SoilPsi","SoilTheta", "SoilRWC", "LAI",
-              "PlantExtraction","PlantLAI", 
-              "PlantStress", "PlantPsi","StemPLC",
-              "PlantGrossPhotosynthesis", "PlantTranspiration",
-              "GrossPhotosynthesisPerLeaf","TranspirationPerLeaf")
-  } else {
-    TYPES = c("SoilPsi","SoilTheta", "SoilRWC", "LAI",
-              "PlantExtraction","HydraulicRedistribution",
-              "PlantLAI",
-              "SoilPlantConductance","PlantStress", 
-              "PlantNetPhotosynthesis", "PlantGrossPhotosynthesis", "PlantTranspiration","PlantWUE",
-              "NetPhotosynthesisPerLeaf","GrossPhotosynthesisPerLeaf","TranspirationPerLeaf",
-              "TempMin_SL", "TempMin_SH", "TempMax_SL","TempMax_SH",
-              "GSWMin_SL", "GSWMin_SH", "GSWMax_SL", "GSWMax_SH", "LeafPsiRange",
-              "LeafPsiMin", "LeafPsiMax", "LeafPsiMin_SL", "LeafPsiMax_SL", "LeafPsiMin_SH", "LeafPsiMax_SH",
-              "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", "StemSympRWC", "LeafSympRWC", 
-              "PlantWaterBalance",
-              "PlantAbsorbedSWR", "AbsorbedSWRPerLeaf",
-              "PlantNetLWR", "NetLWRPerLeaf",
-              "Temperature","TemperatureRange", "AirTemperature","SoilTemperature", "CanopyTemperature",
-              "CanopyEnergyBalance", "SoilEnergyBalance")
+.getWaterBalancePlotTypes<-function() {
+  TYPES = c("PET & Precipitation" = "PET_Precipitation",
+            "PET and Net rain" = "PET_NetRain",
+            "Snow" = "Snow",
+            "Water exported" = "Export",
+            "Evapotranspiration" = "Evapotranspiration")
+  return(TYPES)
+}
+.getSoilPlotTypes<-function(model = "pwb", transpirationMode = "Granier") {
+  TYPES = c(
+    "Soil water potential" = "SoilPsi",
+    "Soil relative water content" = "SoilRWC",
+    "Soil moisture (m3/m3) content" = "SoilTheta")
+  if(model!="pwb") {
+    TYPES = c(TYPES, 
+              "Soil volume (mm) content" = "SoilVol",
+              "Water table depth" = "WTD")
+  }
+  TYPES = c(TYPES, 
+            "Plant extraction from soil"= "PlantExtraction")
+  if(transpirationMode=="Sperry") {
+    TYPES = c(TYPES, 
+              "Hydraulic redistribution" = "HydraulicRedistribution")
   }
   return(TYPES)
 }
+.getStandPlotTypes<-function(model = "pwb") {
+  TYPES = c("Stand LAI"="LAI")
+  if(model=="growth") {
+    TYPES = c(TYPES, 
+              "Biomass balance" = "BiomassBalance")
+  }
+  return(TYPES)
+}
+.getPlantPlotTypes<-function(transpirationMode = "Granier") {
+  TYPES = c("Plant LAI" = "PlantLAI",
+            "Transpiration" = "PlantTranspiration",
+            "Transpiration per leaf" = "TranspirationPerLeaf",
+            "Gross photosynthesis" = "PlantGrossPhotosynthesis",
+            "Gross photosynthesis per leaf" = "GrossPhotosynthesisPerLeaf")
+  if(transpirationMode == "Sperry") {
+    TYPES <-c(TYPES,
+              "Net photosynthesis" = "PlantNetPhotosynthesis",
+              "Net photosynthesis per leaf" = "NetPhotosynthesisPerLeaf",
+              "Water use efficiency" = "PlantWUE",
+              "Absorbed short-wave radiation" = "PlantAbsorbedSWR",
+              "Absorbed short-wave radiation per leaf" = "AbsorbedSWRPerLeaf",
+              "Net long-wave radiation" = "PlantNetLWR",
+              "Net long-wave radiation per leaf" = "NetLWRPerLeaf")
+  }            
+
+  if(transpirationMode == "Sperry") {
+    TYPES <-c(TYPES,
+              "Minimum leaf water potential" = "LeafPsiMin",
+              "Maximum leaf water potential" = "LeafPsiMax",
+              "Leaf water potential range" = "LeafPsiRange",
+              "Midday upper stem water potential" = "StemPsi",
+              "Midday root crown water potential" = "RootPsi",
+              "Stem relative water content" = "StemRWC",
+              "Leaf relative water content" = "LeafRWC",
+              "Stem symplastic relative water content" = "StemSympRWC",
+              "Leaf symplastic relative water content" = "LeafSympRWC")
+  } else {
+    TYPES <-c(TYPES,
+              "Plant water potential" = "PlantPsi")
+  }
+  if(transpirationMode == "Sperry") {
+    TYPES <-c(TYPES,
+              "Plant water balance" = "PlantWaterBalance",
+              "Soil-plant conductance" = "SoilPlantConductance")
+  }
+  TYPES <-c(TYPES,
+            "Plant stress" = "PlantStress",
+            "Stem PLC" = "StemPLC")
+  return(TYPES)
+}
+.getSunlitShadePlotTypes<-function(transpirationMode = "Granier"){
+  TYPES = character(0)
+  if(transpirationMode=="Sperry") {
+    TYPES = c(TYPES,
+              "TempMin_SL", 
+              "TempMin_SH", 
+              "TempMax_SL",
+              "TempMax_SH",
+              "GSWMin_SL", 
+              "GSWMin_SH", 
+              "GSWMax_SL", 
+              "GSWMax_SH",
+              "LeafPsiMin_SL", 
+              "LeafPsiMax_SL", 
+              "LeafPsiMin_SH", 
+              "LeafPsiMax_SH")
+  }
+  return(TYPES)
+}
+.getEnergyPlotTypes<-function(transpirationMode = "Granier") {
+  TYPES = character(0)
+  if(transpirationMode=="Sperry") {
+    TYPES = c(TYPES,
+              "Temperature" = "Temperature",
+              "Temperature range" = "TemperatureRange",
+              "Above-canopy air temperature" = "AirTemperature",
+              "Within-canopy air temperature" = "CanopyTemperature",
+              "Soil surface temperature" = "SoilTemperature",
+              "Canopy energy balance components" = "CanopyEnergyBalance",
+              "Soil energy balance components" = "SoilEnergyBalance")
+  }
+  return(TYPES)
+}
+.getStructuralGROWTHPlotTypes<-function(transpirationMode = "Granier"){
+  TYPES = c("Sapwood area" ="SapwoodArea",
+            "Leaf area" = "LeafArea", 
+            "Fine root biomass per individual" = "FineRootBiomass")
+  if(transpirationMode=="Sperry") {
+    TYPES = c(TYPES, 
+              "Fine root area" ="FineRootArea")
+  }
+  TYPES = c(TYPES,             
+            "Diameter at breast height" = "DBH",
+            "Plant height" =  "Height", 
+            "Sapwood area / Leaf area" ="HuberValue")
+  if(transpirationMode=="Sperry") {
+    TYPES = c(TYPES, 
+              "Fine root area / Leaf area" ="RootAreaLeafArea")
+  }
+  return(TYPES)
+}
+.getGrowthGROWTHPlotTypes<-function(transpirationMode = "Granier"){
+  TYPES = c("Sapwood area growth rate" ="SAgrowth",
+            "Leaf area growth rate" = "LAgrowth")
+  if(transpirationMode=="Sperry") {
+    TYPES = c(TYPES, 
+              "Fine root area growth rate" ="FRAgrowth")
+  }
+  return(TYPES)
+}
+.getCohortBiomassBalanceGROWTHPlotTypes<-function(transpirationMode = "Granier"){
+  return(c("Structural biomass balance (g/ind)" = "StructuralBiomassBalance",
+           "Labile biomass balance (g/ind)" = "LabileBiomassBalance",
+           "Plant biomass balance (g/ind)" = "PlantBiomassBalance",
+           "Mortality biomass loss (g/m2)" = "MortalityBiomassLoss",
+           "Cohort biomass balance (g/m2)" = "CohortBiomassBalance"))
+}
+.getLabileGROWTHPlotTypes<-function(transpirationMode = "Granier") {
+  TYPES= c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
+           "Maintenance respiration per dry" = "MaintenanceRespiration",
+           "Growth costs per dry" = "GrowthCosts",
+           "Labile carbon balance per dry" = "LabileCarbonBalance",
+           "Leaf sugar concentration" = "SugarLeaf",
+           "Leaf starch concentration" = "StarchLeaf",
+           "Sapwood sugar concentration" = "SugarSapwood",
+           "Sapwood starch concentration" = "StarchSapwood",
+           "Sugar transport" = "SugarTransport",
+           "Root exudation" = "RootExudation")
+  if(transpirationMode=="Sperry") {
+    TYPES = c(TYPES,
+              "Leaf osmotic potential at full turgor" = "LeafPI0",
+              "Stem osmotic potential at full turgor" = "StemPI0")
+  }
+  return(TYPES)
+}
+
+.getDailyPWBPlotTypes<-function(transpirationMode = "Granier") {
+  TYPES = c(.getSoilPlotTypes("pwb", transpirationMode),
+            .getStandPlotTypes("pwb"),
+            .getPlantPlotTypes(transpirationMode),
+            .getSunlitShadePlotTypes(transpirationMode),
+            .getEnergyPlotTypes(transpirationMode))
+  return(TYPES)
+}
+
 .getDailySPWBPlotTypes<-function(transpirationMode = "Granier") {
-  TYPES = c(.getDailyPWBPlotTypes(transpirationMode),
-            "PET_Precipitation","PET_NetRain","Snow","Evapotranspiration",
-            "SoilVol", 
-            "Export", "WTD")
+  TYPES = c(.getWaterBalancePlotTypes(),
+            .getSoilPlotTypes("spwb", transpirationMode),
+            .getStandPlotTypes("spwb"),
+            .getPlantPlotTypes(transpirationMode),
+            .getSunlitShadePlotTypes(transpirationMode),
+            .getEnergyPlotTypes(transpirationMode))
+  return(TYPES)
+}
+
+.getUniqueDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){
+  TYPES = c("BiomassBalance",
+            .getLabileGROWTHPlotTypes(transpirationMode),
+            .getCohortBiomassBalanceGROWTHPlotTypes(transpirationMode),
+            .getStructuralGROWTHPlotTypes(transpirationMode),
+            .getGrowthGROWTHPlotTypes(transpirationMode))
+  return(TYPES)
+}
+.getDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){
+  TYPES = c(.getWaterBalancePlotTypes(),
+            .getSoilPlotTypes("growth", transpirationMode),
+            .getStandPlotTypes("growth"),
+            .getPlantPlotTypes(transpirationMode),
+            .getSunlitShadePlotTypes(transpirationMode),
+            .getEnergyPlotTypes(transpirationMode),
+            .getUniqueDailyGROWTHPlotTypes(transpirationMode))
+  return(TYPES)
+}
+
+.getUniqueFORDYNPlotTypes<-function(transpirationMode = "Granier"){
+  return(c("Stand basal area" = "StandBasalArea", 
+           "Stand leaf area index" = "StandLAI", 
+           "Stand density of trees" = "StandDensity",
+           "Basal area of trees by species" = "SpeciesBasalArea", 
+           "Leaf area index by species" = "SpeciesLAI", 
+           "Density of trees by species" = "SpeciesDensity",
+           "Basal area of trees by cohort" = "CohortBasalArea", 
+           "Leaf area index by cohort" = "CohortLAI", 
+           "Density of trees by cohort" = "CohortDensity"))
+}
+
+.getSubdailySoilPlotTypes<-function(){
+  return(c("Plant extraction from soil" = "PlantExtraction"))
+}
+.getSubdailyPlantPlotTypes<-function(){
+  TYPES = c("Average leaf water potential" = "LeafPsiAverage",
+            "Root crown water potential" = "RootPsi", 
+            "Upper stem water potential" = "StemPsi", 
+            "Leaf symplastic water potential" = "LeafSympPsi", 
+            "Stem symplastic water potential" = "StemSympPsi",
+            "Stem percent conductance loss" = "StemPLC",
+            "Stem relative water content" = "StemRWC", 
+            "Leaf relative water content" = "LeafRWC",
+            "Stem symplastic relative water content" = "StemSympRWC", 
+            "Leaf symplastic relative water content" = "LeafSympRWC",
+            "Soil-plant conductance" = "SoilPlantConductance",
+            "Plant transpiration" = "PlantTranspiration", 
+            "Transpiration per leaf area" = "TranspirationPerLeaf",
+            "Plant gross photosynthesis" = "PlantGrossPhotosynthesis",
+            "Gross photosynthesis per leaf area" = "GrossPhotosynthesisPerLeaf",
+            "Plant net photosynthesis" = "PlantNetPhotosynthesis",
+            "Net photosynthesis per leaf area" = "NetPhotosynthesisPerLeaf", 
+            "Plant absorbed SWR" = "PlantAbsorbedSWR",
+            "Plant water balance" = "PlantWaterBalance", 
+            "Water balance per leaf area"= "WaterBalancePerLeaf")
+  return(TYPES)
+}
+.getSubdailySunlitShadePlotTypes<-function(){
+  TYPES = c("Leaf water potential" = "LeafPsi",
+            "Leaf transpiration" = "LeafTranspiration",
+            "Leaf gross photosynthesis" = "LeafGrossPhotosynthesis", 
+            "Leaf net photosynthesis" = "LeafNetPhotosynthesis",
+            "Leaf absorbed SWR" = "LeafAbsorbedSWR",
+            "Leaf net LWR" = "LeafNetLWR",
+            "Leaf internal CO2" = "LeafCi", 
+            "Leaf intrinsic WUE" = "LeafIntrinsicWUE",
+            "Leaf vapour pressure deficit" = "LeafVPD",
+            "Leaf stomatal conductance" = "LeafStomatalConductance", 
+            "Leaf temperature" = "LeafTemperature")
+  return(TYPES)
+}
+.getSubdailyEnergyBalancePlotTypes<-function(){
+  TYPES = c("Air/canopy/soil temperature" ="Temperature",
+            "CanopyEnergyBalance",
+            "SoilEnergyBalance")
+  return(TYPES)
+}
+.getSubdailyLabilePlotTypes<-function(){
+  TYPES = c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
+            "Maintenance respiration per dry" = "MaintenanceRespiration",
+            "Growth costs per dry" = "GrowthCosts",
+            "Root exudation per dry" = "RootExudation",
+            "Labile carbon balance per dry" = "LabileCarbonBalance",
+            "Leaf sugar concentration" = "SugarLeaf",
+            "Leaf starch concentration" = "StarchLeaf",
+            "Sapwood sugar concentration" = "SugarSapwood",
+            "Sapwood starch concentration" = "StarchSapwood",
+            "Sugar transport" = "SugarTransport")
   return(TYPES)
 }
 
 .getSubdailySPWBPlotTypes<-function(){
-  TYPES = c("LeafPsi","LeafPsiAverage","RootPsi", "StemPsi", 
-            "LeafSympPsi", "StemSympPsi",
-            "StemPLC","StemRWC", "LeafRWC","StemSympRWC", "LeafSympRWC",
-            "SoilPlantConductance",
-            "PlantExtraction","PlantTranspiration", "TranspirationPerLeaf",
-            "PlantGrossPhotosynthesis","GrossPhotosynthesisPerLeaf","PlantNetPhotosynthesis","NetPhotosynthesisPerLeaf", 
-            "PlantAbsorbedSWR",
-            "LeafTranspiration","LeafNetPhotosynthesis", "LeafGrossPhotosynthesis", 
-            "LeafAbsorbedSWR","LeafNetLWR",
-            "LeafCi", "LeafIntrinsicWUE",
-            "LeafVPD","LeafStomatalConductance", "LeafTemperature",
-            "Temperature","CanopyEnergyBalance", "SoilEnergyBalance", 
-            "PlantWaterBalance", "WaterBalancePerLeaf")
-  return(TYPES)
-}
-.getUniqueDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){
-  TYPES = c("BiomassBalance","GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "LabileCarbonBalance",
-            "SugarTransport", "LeafPI0", "StemPI0",
-            "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport", "RootExudation",
-            "StructuralBiomassBalance","LabileBiomassBalance", "PlantBiomassBalance",
-            "MortalityBiomassLoss","CohortBiomassBalance",
-            "SapwoodArea", "LeafArea", "FineRootBiomass",
-            "SAgrowth", "LAgrowth", 
-            "HuberValue")
-  if(transpirationMode=="Sperry") {
-    TYPES = c(TYPES, "FRAgrowth", "FineRootArea","RootAreaLeafArea")
-  }
-  return(TYPES)
-}
-.getDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){
-  TYPES = c(.getUniqueDailyGROWTHPlotTypes(transpirationMode),
-            .getDailySPWBPlotTypes(transpirationMode))
+  TYPES = c(.getSubdailySoilPlotTypes(),
+            .getSubdailyPlantPlotTypes(),
+            .getSubdailySunlitShadePlotTypes(),
+            .getSubdailyEnergyBalancePlotTypes())
   return(TYPES)
 }
 .getSubdailyGROWTHPlotTypes<-function(){
-  TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "RootExudation","LabileCarbonBalance",
-            "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport",
-            .getSubdailySPWBPlotTypes())
+  TYPES = c(.getSubdailySoilPlotTypes(),
+            .getSubdailyPlantPlotTypes(),
+            .getSubdailySunlitShadePlotTypes(),
+            .getSubdailyEnergyBalancePlotTypes(),
+            .getSubdailyLabilePlotTypes())
   return(TYPES)
 }
+
+
 .getYLab<-function(type) {
   ylab="Unknown"
   if(type=="PlantTranspiration") ylab = expression(paste("Plant transpiration ",(L%.%m^{-2}%.%d^{-1})))
@@ -109,6 +323,8 @@
   else if(type=="LeafArea")  ylab = expression(paste("Leaf area  ",(m^2)))
   else if(type=="FineRootArea")  ylab = expression(paste("Fine root area  ",(m^2)))
   else if(type=="FineRootBiomass")  ylab = expression(paste("Fine root biomass  ", (gdry%.%ind^{-1})))
+  else if(type=="DBH")  ylab = expression(paste("Diameter at breast height  ", (cm)))
+  else if(type=="Height")  ylab = expression(paste("Plant height  ", (cm)))
   else if(type=="HuberValue")  ylab = expression(paste("Huber value  ",(cm^2 %.% m^{-2})))
   else if(type=="RootAreaLeafArea")  ylab = expression(paste("Root area / Leaf area  ",(m^2 %.% m^{-2})))
   else if(type=="SAgrowth") ylab = expression(paste("Sapwood area growth rate ",(cm^2 %.% cm^{-2} %.% d^{-1})))

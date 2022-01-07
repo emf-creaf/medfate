@@ -69,82 +69,84 @@ The following plots are currently available for \code{\link{spwb}} (most of them
   }
   The following plots are available for \code{\link{spwb}} and \code{\link{pwb}} \emph{only if} \code{transpirationMode = "Sperry"}:
   \itemize{
-    \item{\code{"HydraulicRedistribution"}:}{Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network.}
-    \item{\code{"SoilPlantConductance"}:}{Average instantaneous overall soil plant conductance (calculated as the derivative of the supply function).}
-    \item{\code{"LeafPsiMin"}:}{ Midday leaf water potential.}
-    \item{\code{"LeafPsiMax"}:}{ Pre-dawn leaf water potential.}
-    \item{\code{"LeafPsiRange"}:}{ Range of leaf water potential.}
-    \item{\code{"LeafPsiMin_SL"}:}{Minimum water potential of sunlit leaves.}
-    \item{\code{"LeafPsiMax_SL"}:}{Maximum water potential of sunlit leaves.}
-    \item{\code{"LeafPsiMin_SH"}:}{Minimum water potential of shade leaves.}
-    \item{\code{"LeafPsiMax_SH"}:}{Maximum water potential of shade leaves.}
-    \item{\code{"TempMin_SL"}:}{Minimum temperature of sunlit leaves.}
-    \item{\code{"TempMax_SL"}:}{Maximum temperature of sunlit leaves.}
-    \item{\code{"TempMin_SH"}:}{Minimum temperature of shade leaves.}
-    \item{\code{"TempMax_SH"}:}{Maximum temperature of shade leaves.}
-    \item{\code{"GSWMin_SL"}:}{Minimum stomatal conductance of sunlit leaves.}
-    \item{\code{"GSWMax_SL"}:}{Maximum stomatal conductance of sunlit leaves.}
-    \item{\code{"GSWMin_SH"}:}{Minimum stomatal conductance of shade leaves.}
-    \item{\code{"GSWMax_SH"}:}{Maximum stomatal conductance of shade leaves.}
-    \item{\code{"StemPsi"}:}{ Midday (upper) stem water potential.}
-    \item{\code{"RootPsi"}:}{ Midday root crown water potential.}
-    \item{\code{"StemRWC"}:}{ Average daily stem relative water content.}
-    \item{\code{"LeafRWC"}:}{ Average daily leaf relative water content.}
-    \item{\code{"StemSympRWC"}:}{ Average daily symplastic stem relative water content.}
-    \item{\code{"LeafSympRWC"}:}{ Average daily symplastic leaf relative water content.}
-    \item{\code{"PlantNetPhotosynthesis"}:}{ Plant cohort net photosynthesis.}
-    \item{\code{"NetPhotosynthesisPerLeaf"}:}{ Plant cohort net photosynthesis per leaf area.}
-    \item{\code{"PlantWUE"}:}{ Plant cohort daily water use efficiency.}
-    \item{\code{"PlantAbsorbedSWR"}:}{ Plant cohort absorbed short wave radiation.}
-    \item{\code{"AbsorbedSWRPerLeaf"}:}{ Plant cohort absorbed short wave radiation per leaf area.}
-    \item{\code{"PlantNetLWR"}:}{ Plant cohort net long wave radiation.}
-    \item{\code{"NetLWRPerLeaf"}:}{ Plant cohort net long wave radiation per leaf area.}
-    \item{\code{"AirTemperature"}:}{ Minimum/maximum/mean daily temperatures above canopy.}
-    \item{\code{"CanopyTemperature"}:}{ Minimum/maximum/mean daily temperatures inside canopy.}
-    \item{\code{"SoilTemperature"}:}{ Minimum/maximum/mean daily temperatures inside the first soil layer.}
-    \item{\code{"CanopyEnergyBalance"}:}{ Canopy energy balance components.}
-    \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components.}
+    \item{\code{"HydraulicRedistribution"}: Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network.}
+    \item{\code{"SoilPlantConductance"}: Average instantaneous overall soil plant conductance (calculated as the derivative of the supply function).}
+    \item{\code{"LeafPsiMin"}:  Midday leaf water potential.}
+    \item{\code{"LeafPsiMax"}:  Pre-dawn leaf water potential.}
+    \item{\code{"LeafPsiRange"}:  Range of leaf water potential.}
+    \item{\code{"LeafPsiMin_SL"}: Minimum water potential of sunlit leaves.}
+    \item{\code{"LeafPsiMax_SL"}: Maximum water potential of sunlit leaves.}
+    \item{\code{"LeafPsiMin_SH"}: Minimum water potential of shade leaves.}
+    \item{\code{"LeafPsiMax_SH"}: Maximum water potential of shade leaves.}
+    \item{\code{"TempMin_SL"}: Minimum temperature of sunlit leaves.}
+    \item{\code{"TempMax_SL"}: Maximum temperature of sunlit leaves.}
+    \item{\code{"TempMin_SH"}: Minimum temperature of shade leaves.}
+    \item{\code{"TempMax_SH"}: Maximum temperature of shade leaves.}
+    \item{\code{"GSWMin_SL"}: Minimum stomatal conductance of sunlit leaves.}
+    \item{\code{"GSWMax_SL"}: Maximum stomatal conductance of sunlit leaves.}
+    \item{\code{"GSWMin_SH"}: Minimum stomatal conductance of shade leaves.}
+    \item{\code{"GSWMax_SH"}: Maximum stomatal conductance of shade leaves.}
+    \item{\code{"StemPsi"}:  Midday (upper) stem water potential.}
+    \item{\code{"RootPsi"}:  Midday root crown water potential.}
+    \item{\code{"StemRWC"}:  Average daily stem relative water content.}
+    \item{\code{"LeafRWC"}:  Average daily leaf relative water content.}
+    \item{\code{"StemSympRWC"}:  Average daily symplastic stem relative water content.}
+    \item{\code{"LeafSympRWC"}:  Average daily symplastic leaf relative water content.}
+    \item{\code{"PlantNetPhotosynthesis"}:  Plant cohort net photosynthesis.}
+    \item{\code{"NetPhotosynthesisPerLeaf"}:  Plant cohort net photosynthesis per leaf area.}
+    \item{\code{"PlantWUE"}:  Plant cohort daily water use efficiency.}
+    \item{\code{"PlantAbsorbedSWR"}:  Plant cohort absorbed short wave radiation.}
+    \item{\code{"AbsorbedSWRPerLeaf"}:  Plant cohort absorbed short wave radiation per leaf area.}
+    \item{\code{"PlantNetLWR"}:  Plant cohort net long wave radiation.}
+    \item{\code{"NetLWRPerLeaf"}:  Plant cohort net long wave radiation per leaf area.}
+    \item{\code{"AirTemperature"}:  Minimum/maximum/mean daily temperatures above canopy.}
+    \item{\code{"CanopyTemperature"}:  Minimum/maximum/mean daily temperatures inside canopy.}
+    \item{\code{"SoilTemperature"}:  Minimum/maximum/mean daily temperatures inside the first soil layer.}
+    \item{\code{"CanopyEnergyBalance"}:  Canopy energy balance components.}
+    \item{\code{"SoilEnergyBalance"}:  Soil energy balance components.}
   }
 In addition to the former, the following plots are available for objects \code{\link{growth}} or \code{\link{fordyn}}:
  \itemize{
-    \item{\code{"BiomassBalance"}:}{ Stand-level biomass balance components.}
-    \item{\code{"GrossPhotosynthesis"}:}{ Gross photosynthesis rate per dry weight.}
-    \item{\code{"MaintenanceRespiration"}:}{ Maintenance respiration cost per dry weight.}
-    \item{\code{"RootExudation"}:}{ Root exudation rate per dry weight.}
-    \item{\code{"LabileCarbonBalance"}:}{ Labile carbon balance per dry weight.}
-    \item{\code{"SugarLeaf"}:}{ Sugar concentration in leaves.}
-    \item{\code{"StarchLeaf"}:}{ Starch concentration in leaves.}
-    \item{\code{"SugarSapwood"}:}{ Sugar concentration in sapwood.}
-    \item{\code{"StarchSapwood"}:}{ Starch concentration in sapwood.}
-    \item{\code{"SugarTransport"}:}{ Phloem sugar transport rate.}
-    \item{\code{"LeafPI0"}:}{ Leaf osmotic concentration at full turgor.}
-    \item{\code{"StemPI0"}:}{ Sapwood osmotic concentration at full turgor.}
-    \item{\code{"StructuralBiomassBalance"}:}{ Daily structural biomass balance (g dry · ind-2).}
-    \item{\code{"LabileBiomassBalance"}:}{ Daily labile biomass balance (g dry · ind-2).}
-    \item{\code{"PlantBiomassBalance"}:}{ Daily plant biomass balance, i.e. labile change + structural change (g dry · ind-2).}
-    \item{\code{"MortalityBiomassLoss"}:}{ Biomass loss due to mortality (g dry · m-2).}    
-    \item{\code{"PlantBiomassBalance"}:}{ Daily cohort biomass balance (including mortality) (g dry · m-2).}
-    \item{\code{"SapwoodArea"}:}{ Sapwood area per individual.}
-    \item{\code{"LeafArea"}:}{ Leaf area per individual.}
-    \item{\code{"FineRootArea"}:}{ Fine root area per individual (only for \code{transpirationMode = "Sperry"}).}
-    \item{\code{"FineRootBiomass"}:}{ Fine root dry biomass per individual.}
-    \item{\code{"SAgrowth"}:}{ Sapwood area growth rate.}
-    \item{\code{"LAgrowth"}:}{ Leaf area growth rate.}
-    \item{\code{"FRAgrowth"}:}{ Fine root area growth rate (only for \code{transpirationMode = "Sperry"}).}
-    \item{\code{"HuberValue"}:}{ Ratio of leaf area to sapwood area.}
-    \item{\code{"RootAreaLeafArea"}:}{ Ratio of fine root area to leaf area (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"BiomassBalance"}:  Stand-level biomass balance components.}
+    \item{\code{"GrossPhotosynthesis"}:  Gross photosynthesis rate per dry weight.}
+    \item{\code{"MaintenanceRespiration"}:  Maintenance respiration cost per dry weight.}
+    \item{\code{"RootExudation"}:  Root exudation rate per dry weight.}
+    \item{\code{"LabileCarbonBalance"}:  Labile carbon balance per dry weight.}
+    \item{\code{"SugarLeaf"}:  Sugar concentration in leaves.}
+    \item{\code{"StarchLeaf"}:  Starch concentration in leaves.}
+    \item{\code{"SugarSapwood"}:  Sugar concentration in sapwood.}
+    \item{\code{"StarchSapwood"}:  Starch concentration in sapwood.}
+    \item{\code{"SugarTransport"}:  Phloem sugar transport rate.}
+    \item{\code{"LeafPI0"}:  Leaf osmotic concentration at full turgor.}
+    \item{\code{"StemPI0"}:  Sapwood osmotic concentration at full turgor.}
+    \item{\code{"StructuralBiomassBalance"}:  Daily structural biomass balance (g dry · ind-2).}
+    \item{\code{"LabileBiomassBalance"}:  Daily labile biomass balance (g dry · ind-2).}
+    \item{\code{"PlantBiomassBalance"}:  Daily plant biomass balance, i.e. labile change + structural change (g dry · ind-2).}
+    \item{\code{"MortalityBiomassLoss"}:  Biomass loss due to mortality (g dry · m-2).}    
+    \item{\code{"PlantBiomassBalance"}:  Daily cohort biomass balance (including mortality) (g dry · m-2).}
+    \item{\code{"SapwoodArea"}:  Sapwood area per individual.}
+    \item{\code{"LeafArea"}:  Leaf area per individual.}
+    \item{\code{"FineRootArea"}: Fine root area per individual (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"FineRootBiomass"}: Fine root dry biomass per individual.}
+    \item{\code{"DBH"}: Diameter at breast height (in cm) for an average individual of each plant cohort.}
+    \item{\code{"Height"}: Height (in cm) for an average individual of each plant cohort.}
+    \item{\code{"SAgrowth"}:  Sapwood area growth rate.}
+    \item{\code{"LAgrowth"}:  Leaf area growth rate.}
+    \item{\code{"FRAgrowth"}:  Fine root area growth rate (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"HuberValue"}:  Ratio of leaf area to sapwood area.}
+    \item{\code{"RootAreaLeafArea"}:  Ratio of fine root area to leaf area (only for \code{transpirationMode = "Sperry"}).}
    }
  Finally, the following plots are only available for \code{\link{fordyn}} simulation results:
  \itemize{
-    \item{\code{"StandBasalArea"}:}{Stand basal area of living trees.}
-    \item{\code{"StandLAI"}:}{Stand leaf area index.}
-    \item{\code{"StandDensity"}:}{Stand density of living trees.}
-    \item{\code{"SpeciesBasalArea"}:}{Basal area of living trees by species.}
-    \item{\code{"SpeciesLAI"}:}{Leaf area index by species.}
-    \item{\code{"SpeciesDensity"}:}{Density of living trees by species.}
-    \item{\code{"CohortBasalArea"}:}{Basal area of living trees by plant cohort.}
-    \item{\code{"CohortLAI"}:}{Leaf area index by plant cohort.}
-    \item{\code{"CohortDensity"}:}{Density of living trees by plant cohort.}
+    \item{\code{"StandBasalArea"}: Stand basal area of living trees.}
+    \item{\code{"StandLAI"}: Stand leaf area index.}
+    \item{\code{"StandDensity"}: Stand density of living trees.}
+    \item{\code{"SpeciesBasalArea"}: Basal area of living trees by species.}
+    \item{\code{"SpeciesLAI"}: Leaf area index by species.}
+    \item{\code{"SpeciesDensity"}: Density of living trees by species.}
+    \item{\code{"CohortBasalArea"}: Basal area of living trees by plant cohort.}
+    \item{\code{"CohortLAI"}: Leaf area index by plant cohort.}
+    \item{\code{"CohortDensity"}: Density of living trees by plant cohort.}
    }
 }
 \author{

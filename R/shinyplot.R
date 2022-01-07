@@ -10,38 +10,16 @@
     cohorts_sp_out = paste0(row.names(out$spwbInput$cohorts), 
                             " (",out$spwbInput$cohorts$Name, ")")
   }
-  plot_main_choices = c("Soil", "Plants", "Energy balance")
+  plot_main_choices = c("Soil", "Plants", "Sunlit/Shade", "Energy balance")
   if(inherits(out, c("growth_day"))) {
     plot_main_choices = c(plot_main_choices, 
                           "Labile carbon balance")
   }
-  subdaily_soil_plot_choices = c("Plant extraction from soil" = "PlantExtraction")
-  subdaily_plant_plot_choices = c("Plant transpiration" = "PlantTranspiration",
-                                  "Plant water balance" = "PlantWaterBalance",
-                                  "Plant gross photosynthesis" = "PlantGrossPhotosynthesis",
-                                  "Plant net photosynthesis" = "PlantNetPhotosynthesis",
-                                  "Soil-plant conductance" = "SoilPlantConductance",
-                                  "Leaf water potential" = "LeafPsi",
-                                  "Root crown water potential" = "RootPsi",
-                                  "Upper stem water potential" = "StemPsi",
-                                  "Stem relative water content" = "StemRWC",
-                                  "Leaf relative water content" = "LeafRWC",
-                                  "Leaf absorbed SWR" = "LeafAbsorbedSWR",
-                                  "Leaf net LWR" = "LeafNetLWR",
-                                  "Leaf transpiration" = "LeafTranspiration",
-                                  "Leaf gross photosynthesis" = "LeafGrossPhotosynthesis",
-                                  "Leaf net photosynthesis" = "LeafNetPhotosynthesis")
-  subdaily_energy_plot_choices = c("Air/canopy/soil temperature" ="Temperature")
-  subdaily_labile_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
-                                   "Maintenance respiration per dry" = "MaintenanceRespiration",
-                                   "Growth costs per dry" = "GrowthCosts",
-                                   "Root exudation per dry" = "RootExudation",
-                                   "Labile carbon balance per dry" = "LabileCarbonBalance",
-                                   "Leaf sugar concentration" = "SugarLeaf",
-                                   "Leaf starch concentration" = "StarchLeaf",
-                                   "Sapwood sugar concentration" = "SugarSapwood",
-                                   "Sapwood starch concentration" = "StarchSapwood",
-                                   "Sugar transport" = "SugarTransport")
+  subdaily_soil_plot_choices = .getSubdailySoilPlotTypes()
+  subdaily_plant_plot_choices = .getSubdailyPlantPlotTypes()
+  subdaily_sunlitshade_plot_choices = .getSubdailySunlitShadePlotTypes()
+  subdaily_energy_plot_choices = .getSubdailyEnergyBalancePlotTypes()
+  subdaily_labile_plot_choices = .getSubdailyLabilePlotTypes()
   
   ui <- fluidPage(
     sidebarLayout(
@@ -74,6 +52,7 @@
       main_plot <- input$plot_main_type
       if(main_plot=="Soil") sub_choices = subdaily_soil_plot_choices
       else if(main_plot=="Plants") sub_choices = subdaily_plant_plot_choices
+      else if(main_plot=="Sunlit/Shade") sub_choices = subdaily_sunlitshade_plot_choices
       else if(main_plot=="Energy balance") sub_choices = subdaily_energy_plot_choices
       else if(main_plot=="Labile carbon balance") sub_choices = subdaily_labile_plot_choices
       updateSelectInput(session, "plot_var",
@@ -130,17 +109,21 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   cohort_choices = cohorts_out
   names(cohort_choices) = cohorts_sp_out
   
+  wb_plot_choices = .getWaterBalancePlotTypes()
+  stand_plot_choices = .getStandPlotTypes(type_out)
+  soil_plot_choices = .getSoilPlotTypes(type_out, transpirationMode) 
+  plant_plot_choices = .getPlantPlotTypes(transpirationMode)
+  sunlitshade_plot_choices = .getSunlitShadePlotTypes(transpirationMode)
+  energy_plot_choices = .getEnergyPlotTypes(transpirationMode)
+  labile_plot_choices = .getLabileGROWTHPlotTypes(transpirationMode)
+  plant_balance_plot_choices = .getCohortBiomassBalanceGROWTHPlotTypes(transpirationMode)
+  plant_structure_plot_choices = .getStructuralGROWTHPlotTypes(transpirationMode)
+  plant_growth_plot_choices = .getGrowthGROWTHPlotTypes(transpirationMode)
+  forest_dynamics_plot_choices = .getUniqueFORDYNPlotTypes(transpirationMode)
+  
   plot_main_choices = c("Water balance", "Soil", "Stand", "Plants")
-  stand_plot_choices = c("LAI" = "LAI")
-  plant_plot_choices = c("LAI" = "PlantLAI",
-                         "Stress" = "PlantStress",
-                         "Transpiration" = "PlantTranspiration",
-                         "Transpiration per leaf" = "TranspirationPerLeaf",
-                         "Gross photosynthesis" = "PlantGrossPhotosynthesis",
-                         "Gross photosynthesis per leaf" = "GrossPhotosynthesisPerLeaf")
-
   if(transpirationMode=="Sperry") {
-    plot_main_choices = c(plot_main_choices, "Energy balance")
+    plot_main_choices = c(plot_main_choices,"Sunlit/Shade", "Energy balance")
   }
   if(type_out %in% c("growth", "fordyn")) {
     plot_main_choices = c(plot_main_choices, 
@@ -148,124 +131,18 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                           "Biomass balance",
                           "Plant structure",
                           "Plant growth")
-    stand_plot_choices = c(stand_plot_choices,
-                           "Biomass balance" = "BiomassBalance")
   }
   if(type_out=="fordyn") {
     plot_main_choices = c(plot_main_choices, "Forest dynamics")
   }
-  wb_plot_choices = c("PET & Precipitation" = "PET_Precipitation",
-                      "PET and Net rain" = "PET_NetRain",
-                      "Snow" = "Snow",
-                      "Water exported" = "Export",
-                      "Evapotranspiration" = "Evapotranspiration")
-  soil_plot_choices = c(
-    "Soil water potential" = "SoilPsi",
-    "Soil relative water content" = "SoilRWC",
-    "Soil moisture (m3/m3) content" = "SoilTheta",
-    "Soil volume (mm) content" = "SoilVol",
-    "Water table depth" = "WTD",
-    "Plant extraction from soil"= "PlantExtraction")
-  if(transpirationMode=="Sperry") {
-    soil_plot_choices <-c(soil_plot_choices,
-                          "Hydraulic redistribution" = "HydraulicRedistribution"
-                          )
-  }
-  subdaily_soil_plot_choices = c("Plant extraction from soil" = "PlantExtraction")
   
-  if(transpirationMode=="Sperry") {
-    plant_plot_choices <-c(plant_plot_choices,
-                           "Water use efficiency" = "PlantWUE",
-                           "Soil-plant conductance" = "SoilPlantConductance",
-                           "Minimum leaf water potential" = "LeafPsiMin",
-                           "Maximum leaf water potential" = "LeafPsiMax",
-                           "Leaf water potential range" = "LeafPsiRange",
-                           "Midday upper stem water potential" = "StemPsi",
-                           "Midday root crown water potential" = "RootPsi",
-                           "Stem PLC" = "StemPLC",
-                           "Stem relative water content" = "StemRWC",
-                           "Leaf relative water content" = "LeafRWC",
-                           "Plant water balance" = "PlantWaterBalance",
-                           "Absorbed short-wave radiation" = "PlantAbsorbedSWR",
-                           "Absorbed short-wave radiation per leaf" = "AbsorbedSWRPerLeaf",
-                           "Net long-wave radiation" = "PlantNetLWR",
-                           "Net long-wave radiation per leaf" = "NetLWRPerLeaf"
-                           )
-  }
-  subdaily_plant_plot_choices = c("Plant transpiration" = "PlantTranspiration",
-                                  "Plant water balance" = "PlantWaterBalance",
-                                  "Plant gross photosynthesis" = "PlantGrossPhotosynthesis",
-                                  "Plant net photosynthesis" = "PlantNetPhotosynthesis",
-                                  "Soil-plant conductance" = "SoilPlantConductance",
-                                  "Leaf water potential" = "LeafPsi",
-                                  "Root crown water potential" = "RootPsi",
-                                  "Upper stem water potential" = "StemPsi",
-                                  "Stem relative water content" = "StemRWC",
-                                  "Leaf relative water content" = "LeafRWC",
-                                  "Leaf absorbed SWR" = "LeafAbsorbedSWR",
-                                  "Leaf net LWR" = "LeafNetLWR",
-                                  "Leaf transpiration" = "LeafTranspiration",
-                                  "Leaf gross photosynthesis" = "LeafGrossPhotosynthesis",
-                                  "Leaf net photosynthesis" = "LeafNetPhotosynthesis"
-                                  )
-  labile_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
-                          "Maintenance respiration per dry" = "MaintenanceRespiration",
-                          "Growth costs per dry" = "GrowthCosts",
-                          "Labile carbon balance per dry" = "LabileCarbonBalance",
-                          "Leaf sugar concentration" = "SugarLeaf",
-                          "Leaf starch concentration" = "StarchLeaf",
-                          "Sapwood sugar concentration" = "SugarSapwood",
-                          "Sapwood starch concentration" = "StarchSapwood",
-                          "Sugar transport" = "SugarTransport",
-                          "Root exudation" = "RootExudation",
-                          "Leaf osmotic potential at full turgor" = "LeafPI0",
-                          "Stem osmotic potential at full turgor" = "StemPI0")
+  subdaily_soil_plot_choices = .getSubdailySoilPlotTypes()
+  subdaily_plant_plot_choices = .getSubdailyPlantPlotTypes()
+  subdaily_sunlitshade_plot_choices = .getSubdailySunlitShadePlotTypes()
+  subdaily_labile_plot_choices = .getSubdailyLabilePlotTypes()
+  subdaily_energy_plot_choices = .getSubdailyEnergyBalancePlotTypes()
   
-  plant_balance_plot_choices = c("Structural biomass balance (g/ind)" = "StructuralBiomassBalance",
-                                 "Labile biomass balance (g/ind)" = "LabileBiomassBalance",
-                                 "Plant biomass balance (g/ind)" = "PlantBiomassBalance",
-                                 "Mortality biomass loss (g/m2)" = "MortalityBiomassLoss",
-                                 "Cohort biomass balance (g/m2)" = "CohortBiomassBalance")
-  plant_structure_plot_choices = c("Leaf area" = "LeafArea",
-                          "Sapwood area" = "SapwoodArea",
-                          "Fine root biomass per individual" = "FineRootBiomass",
-                          "Sapwood area / Leaf area" = "HuberValue")
   
-  plant_growth_plot_choices = c("Sapwood area growth" = "SAgrowth",
-                                "Leaf area growth" = "LAgrowth")
-  if(transpirationMode=="Sperry") {
-    plant_growth_plot_choices <-c(plant_growth_plot_choices,
-                                  "Fine root area growth" = "FRAgrowth")
-    plant_structure_plot_choices <-c(plant_structure_plot_choices,
-                                  "Fine root area" = "FineRootArea",
-                                  "Fine root area / Leaf area" = "RootAreaLeafArea")
-  }
-  subdaily_labile_plot_choices = c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
-                                   "Maintenance respiration per dry" = "MaintenanceRespiration",
-                                   "Growth costs per dry" = "GrowthCosts",
-                                   "Root exudation per dry" = "RootExudation",
-                                   "Labile carbon balance per dry" = "LabileCarbonBalance",
-                                   "Leaf sugar concentration" = "SugarLeaf",
-                                   "Leaf starch concentration" = "StarchLeaf",
-                                   "Sapwood sugar concentration" = "SugarSapwood",
-                                   "Sapwood starch concentration" = "StarchSapwood",
-                                   "Sugar transport" = "SugarTransport")
-  energy_plot_choices = c("Above-canopy air temperature" = "AirTemperature",
-                          "Within-canopy air temperature" = "CanopyTemperature",
-                          "Soil surface temperature" = "SoilTemperature",
-                          "Canopy energy balance components" = "CanopyEnergyBalance",
-                          "Soil energy balance components" = "SoilEnergyBalance")
-  subdaily_energy_plot_choices = c("Air/canopy/soil temperature" ="Temperature")
-  
-  forest_dynamics_plot_choices = c("Stand basal area" = "StandBasalArea", 
-                                   "Stand leaf area index" = "StandLAI", 
-                                   "Stand density of trees" = "StandDensity",
-                                   "Basal area of trees by species" = "SpeciesBasalArea", 
-                                   "Leaf area index by species" = "SpeciesLAI", 
-                                   "Density of trees by species" = "SpeciesDensity",
-                                   "Basal area of trees by cohort" = "CohortBasalArea", 
-                                   "Leaf area index by cohort" = "CohortLAI", 
-                                   "Density of trees by cohort" = "CohortDensity")
   # Define UI for application that draws a histogram
   results <- tabPanel("Results",
                       # Sidebar with a slider input for number of bins 
@@ -418,6 +295,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
       if(main_plot=="Water balance") sub_choices = wb_plot_choices
       else if(main_plot=="Stand") sub_choices = stand_plot_choices
       else if(main_plot=="Plants") sub_choices = plant_plot_choices
+      else if(main_plot=="Sunlit/Shade") sub_choices = sunlitshade_plot_choices
       else if(main_plot=="Labile carbon balance") sub_choices = labile_plot_choices
       else if(main_plot=="Biomass balance") sub_choices = plant_balance_plot_choices
       else if(main_plot=="Energy balance") sub_choices = energy_plot_choices
@@ -428,6 +306,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
 
       if(input$subdaily_check && subdaily_out) {
         if(main_plot=="Plants") sub_choices = subdaily_plant_plot_choices
+        else if(main_plot=="Sunlit/Shade") sub_choices = subdaily_sunlitshade_plot_choices
         else if(main_plot=="Labile carbon balance")  sub_choices = subdaily_labile_plot_choices
         else if(main_plot=="Energy balance") sub_choices = subdaily_energy_plot_choices
         else sub_choices = subdaily_soil_plot_choices

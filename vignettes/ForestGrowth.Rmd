@@ -165,6 +165,11 @@ plot(G1, "SAgrowth", bySpecies = T)
 ```
 
 
+We can also display the resulting dynamics in diameter at breast height (DBH):
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(G1, "DBH", bySpecies = T)
+```
+
 Finally, recall that one can interactively create plots using function `shinyplot`, e.g.:
 ```{r, eval = FALSE}
 shinyplot(G1)
