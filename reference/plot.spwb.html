@@ -129,76 +129,78 @@
 <li><p><code>"TranspirationPerLeaf"</code>: Plant cohort transpiration per leaf area.</p></li>
 <li><p><code>"PlantGrossPhotosynthesis"</code>: Plant cohort photosynthesis.</p></li>
 <li><p><code>"GrossPhotosynthesisPerLeaf"</code>: Plant cohort photosynthesis per leaf area.</p></li>
-</ul><p>The following plots are available for <code><a href="spwb.html">spwb</a></code> and <code><a href="spwb.html">pwb</a></code> <em>only if</em> <code>transpirationMode = "Sperry"</code>:</p><ul><li><p><code>"HydraulicRedistribution"</code>:Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network.</p></li>
-<li><p><code>"SoilPlantConductance"</code>:Average instantaneous overall soil plant conductance (calculated as the derivative of the supply function).</p></li>
-<li><p><code>"LeafPsiMin"</code>: Midday leaf water potential.</p></li>
-<li><p><code>"LeafPsiMax"</code>: Pre-dawn leaf water potential.</p></li>
-<li><p><code>"LeafPsiRange"</code>: Range of leaf water potential.</p></li>
-<li><p><code>"LeafPsiMin_SL"</code>:Minimum water potential of sunlit leaves.</p></li>
-<li><p><code>"LeafPsiMax_SL"</code>:Maximum water potential of sunlit leaves.</p></li>
-<li><p><code>"LeafPsiMin_SH"</code>:Minimum water potential of shade leaves.</p></li>
-<li><p><code>"LeafPsiMax_SH"</code>:Maximum water potential of shade leaves.</p></li>
-<li><p><code>"TempMin_SL"</code>:Minimum temperature of sunlit leaves.</p></li>
-<li><p><code>"TempMax_SL"</code>:Maximum temperature of sunlit leaves.</p></li>
-<li><p><code>"TempMin_SH"</code>:Minimum temperature of shade leaves.</p></li>
-<li><p><code>"TempMax_SH"</code>:Maximum temperature of shade leaves.</p></li>
-<li><p><code>"GSWMin_SL"</code>:Minimum stomatal conductance of sunlit leaves.</p></li>
-<li><p><code>"GSWMax_SL"</code>:Maximum stomatal conductance of sunlit leaves.</p></li>
-<li><p><code>"GSWMin_SH"</code>:Minimum stomatal conductance of shade leaves.</p></li>
-<li><p><code>"GSWMax_SH"</code>:Maximum stomatal conductance of shade leaves.</p></li>
-<li><p><code>"StemPsi"</code>: Midday (upper) stem water potential.</p></li>
-<li><p><code>"RootPsi"</code>: Midday root crown water potential.</p></li>
-<li><p><code>"StemRWC"</code>: Average daily stem relative water content.</p></li>
-<li><p><code>"LeafRWC"</code>: Average daily leaf relative water content.</p></li>
-<li><p><code>"StemSympRWC"</code>: Average daily symplastic stem relative water content.</p></li>
-<li><p><code>"LeafSympRWC"</code>: Average daily symplastic leaf relative water content.</p></li>
-<li><p><code>"PlantNetPhotosynthesis"</code>: Plant cohort net photosynthesis.</p></li>
-<li><p><code>"NetPhotosynthesisPerLeaf"</code>: Plant cohort net photosynthesis per leaf area.</p></li>
-<li><p><code>"PlantWUE"</code>: Plant cohort daily water use efficiency.</p></li>
-<li><p><code>"PlantAbsorbedSWR"</code>: Plant cohort absorbed short wave radiation.</p></li>
-<li><p><code>"AbsorbedSWRPerLeaf"</code>: Plant cohort absorbed short wave radiation per leaf area.</p></li>
-<li><p><code>"PlantNetLWR"</code>: Plant cohort net long wave radiation.</p></li>
-<li><p><code>"NetLWRPerLeaf"</code>: Plant cohort net long wave radiation per leaf area.</p></li>
-<li><p><code>"AirTemperature"</code>: Minimum/maximum/mean daily temperatures above canopy.</p></li>
-<li><p><code>"CanopyTemperature"</code>: Minimum/maximum/mean daily temperatures inside canopy.</p></li>
-<li><p><code>"SoilTemperature"</code>: Minimum/maximum/mean daily temperatures inside the first soil layer.</p></li>
-<li><p><code>"CanopyEnergyBalance"</code>: Canopy energy balance components.</p></li>
-<li><p><code>"SoilEnergyBalance"</code>: Soil energy balance components.</p></li>
-</ul><p>In addition to the former, the following plots are available for objects <code><a href="growth.html">growth</a></code> or <code><a href="fordyn.html">fordyn</a></code>:</p><ul><li><p><code>"BiomassBalance"</code>: Stand-level biomass balance components.</p></li>
-<li><p><code>"GrossPhotosynthesis"</code>: Gross photosynthesis rate per dry weight.</p></li>
-<li><p><code>"MaintenanceRespiration"</code>: Maintenance respiration cost per dry weight.</p></li>
-<li><p><code>"RootExudation"</code>: Root exudation rate per dry weight.</p></li>
-<li><p><code>"LabileCarbonBalance"</code>: Labile carbon balance per dry weight.</p></li>
-<li><p><code>"SugarLeaf"</code>: Sugar concentration in leaves.</p></li>
-<li><p><code>"StarchLeaf"</code>: Starch concentration in leaves.</p></li>
-<li><p><code>"SugarSapwood"</code>: Sugar concentration in sapwood.</p></li>
-<li><p><code>"StarchSapwood"</code>: Starch concentration in sapwood.</p></li>
-<li><p><code>"SugarTransport"</code>: Phloem sugar transport rate.</p></li>
-<li><p><code>"LeafPI0"</code>: Leaf osmotic concentration at full turgor.</p></li>
-<li><p><code>"StemPI0"</code>: Sapwood osmotic concentration at full turgor.</p></li>
-<li><p><code>"StructuralBiomassBalance"</code>: Daily structural biomass balance (g dry · ind-2).</p></li>
-<li><p><code>"LabileBiomassBalance"</code>: Daily labile biomass balance (g dry · ind-2).</p></li>
-<li><p><code>"PlantBiomassBalance"</code>: Daily plant biomass balance, i.e. labile change + structural change (g dry · ind-2).</p></li>
-<li><p><code>"MortalityBiomassLoss"</code>: Biomass loss due to mortality (g dry · m-2).</p></li>
-<li><p><code>"PlantBiomassBalance"</code>: Daily cohort biomass balance (including mortality) (g dry · m-2).</p></li>
-<li><p><code>"SapwoodArea"</code>: Sapwood area per individual.</p></li>
-<li><p><code>"LeafArea"</code>: Leaf area per individual.</p></li>
+</ul><p>The following plots are available for <code><a href="spwb.html">spwb</a></code> and <code><a href="spwb.html">pwb</a></code> <em>only if</em> <code>transpirationMode = "Sperry"</code>:</p><ul><li><p><code>"HydraulicRedistribution"</code>: Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network.</p></li>
+<li><p><code>"SoilPlantConductance"</code>: Average instantaneous overall soil plant conductance (calculated as the derivative of the supply function).</p></li>
+<li><p><code>"LeafPsiMin"</code>:  Midday leaf water potential.</p></li>
+<li><p><code>"LeafPsiMax"</code>:  Pre-dawn leaf water potential.</p></li>
+<li><p><code>"LeafPsiRange"</code>:  Range of leaf water potential.</p></li>
+<li><p><code>"LeafPsiMin_SL"</code>: Minimum water potential of sunlit leaves.</p></li>
+<li><p><code>"LeafPsiMax_SL"</code>: Maximum water potential of sunlit leaves.</p></li>
+<li><p><code>"LeafPsiMin_SH"</code>: Minimum water potential of shade leaves.</p></li>
+<li><p><code>"LeafPsiMax_SH"</code>: Maximum water potential of shade leaves.</p></li>
+<li><p><code>"TempMin_SL"</code>: Minimum temperature of sunlit leaves.</p></li>
+<li><p><code>"TempMax_SL"</code>: Maximum temperature of sunlit leaves.</p></li>
+<li><p><code>"TempMin_SH"</code>: Minimum temperature of shade leaves.</p></li>
+<li><p><code>"TempMax_SH"</code>: Maximum temperature of shade leaves.</p></li>
+<li><p><code>"GSWMin_SL"</code>: Minimum stomatal conductance of sunlit leaves.</p></li>
+<li><p><code>"GSWMax_SL"</code>: Maximum stomatal conductance of sunlit leaves.</p></li>
+<li><p><code>"GSWMin_SH"</code>: Minimum stomatal conductance of shade leaves.</p></li>
+<li><p><code>"GSWMax_SH"</code>: Maximum stomatal conductance of shade leaves.</p></li>
+<li><p><code>"StemPsi"</code>:  Midday (upper) stem water potential.</p></li>
+<li><p><code>"RootPsi"</code>:  Midday root crown water potential.</p></li>
+<li><p><code>"StemRWC"</code>:  Average daily stem relative water content.</p></li>
+<li><p><code>"LeafRWC"</code>:  Average daily leaf relative water content.</p></li>
+<li><p><code>"StemSympRWC"</code>:  Average daily symplastic stem relative water content.</p></li>
+<li><p><code>"LeafSympRWC"</code>:  Average daily symplastic leaf relative water content.</p></li>
+<li><p><code>"PlantNetPhotosynthesis"</code>:  Plant cohort net photosynthesis.</p></li>
+<li><p><code>"NetPhotosynthesisPerLeaf"</code>:  Plant cohort net photosynthesis per leaf area.</p></li>
+<li><p><code>"PlantWUE"</code>:  Plant cohort daily water use efficiency.</p></li>
+<li><p><code>"PlantAbsorbedSWR"</code>:  Plant cohort absorbed short wave radiation.</p></li>
+<li><p><code>"AbsorbedSWRPerLeaf"</code>:  Plant cohort absorbed short wave radiation per leaf area.</p></li>
+<li><p><code>"PlantNetLWR"</code>:  Plant cohort net long wave radiation.</p></li>
+<li><p><code>"NetLWRPerLeaf"</code>:  Plant cohort net long wave radiation per leaf area.</p></li>
+<li><p><code>"AirTemperature"</code>:  Minimum/maximum/mean daily temperatures above canopy.</p></li>
+<li><p><code>"CanopyTemperature"</code>:  Minimum/maximum/mean daily temperatures inside canopy.</p></li>
+<li><p><code>"SoilTemperature"</code>:  Minimum/maximum/mean daily temperatures inside the first soil layer.</p></li>
+<li><p><code>"CanopyEnergyBalance"</code>:  Canopy energy balance components.</p></li>
+<li><p><code>"SoilEnergyBalance"</code>:  Soil energy balance components.</p></li>
+</ul><p>In addition to the former, the following plots are available for objects <code><a href="growth.html">growth</a></code> or <code><a href="fordyn.html">fordyn</a></code>:</p><ul><li><p><code>"BiomassBalance"</code>:  Stand-level biomass balance components.</p></li>
+<li><p><code>"GrossPhotosynthesis"</code>:  Gross photosynthesis rate per dry weight.</p></li>
+<li><p><code>"MaintenanceRespiration"</code>:  Maintenance respiration cost per dry weight.</p></li>
+<li><p><code>"RootExudation"</code>:  Root exudation rate per dry weight.</p></li>
+<li><p><code>"LabileCarbonBalance"</code>:  Labile carbon balance per dry weight.</p></li>
+<li><p><code>"SugarLeaf"</code>:  Sugar concentration in leaves.</p></li>
+<li><p><code>"StarchLeaf"</code>:  Starch concentration in leaves.</p></li>
+<li><p><code>"SugarSapwood"</code>:  Sugar concentration in sapwood.</p></li>
+<li><p><code>"StarchSapwood"</code>:  Starch concentration in sapwood.</p></li>
+<li><p><code>"SugarTransport"</code>:  Phloem sugar transport rate.</p></li>
+<li><p><code>"LeafPI0"</code>:  Leaf osmotic concentration at full turgor.</p></li>
+<li><p><code>"StemPI0"</code>:  Sapwood osmotic concentration at full turgor.</p></li>
+<li><p><code>"StructuralBiomassBalance"</code>:  Daily structural biomass balance (g dry · ind-2).</p></li>
+<li><p><code>"LabileBiomassBalance"</code>:  Daily labile biomass balance (g dry · ind-2).</p></li>
+<li><p><code>"PlantBiomassBalance"</code>:  Daily plant biomass balance, i.e. labile change + structural change (g dry · ind-2).</p></li>
+<li><p><code>"MortalityBiomassLoss"</code>:  Biomass loss due to mortality (g dry · m-2).</p></li>
+<li><p><code>"PlantBiomassBalance"</code>:  Daily cohort biomass balance (including mortality) (g dry · m-2).</p></li>
+<li><p><code>"SapwoodArea"</code>:  Sapwood area per individual.</p></li>
+<li><p><code>"LeafArea"</code>:  Leaf area per individual.</p></li>
 <li><p><code>"FineRootArea"</code>: Fine root area per individual (only for <code>transpirationMode = "Sperry"</code>).</p></li>
 <li><p><code>"FineRootBiomass"</code>: Fine root dry biomass per individual.</p></li>
-<li><p><code>"SAgrowth"</code>: Sapwood area growth rate.</p></li>
-<li><p><code>"LAgrowth"</code>: Leaf area growth rate.</p></li>
-<li><p><code>"FRAgrowth"</code>: Fine root area growth rate (only for <code>transpirationMode = "Sperry"</code>).</p></li>
-<li><p><code>"HuberValue"</code>: Ratio of leaf area to sapwood area.</p></li>
-<li><p><code>"RootAreaLeafArea"</code>: Ratio of fine root area to leaf area (only for <code>transpirationMode = "Sperry"</code>).</p></li>
-</ul><p>Finally, the following plots are only available for <code><a href="fordyn.html">fordyn</a></code> simulation results:</p><ul><li><p><code>"StandBasalArea"</code>:Stand basal area of living trees.</p></li>
-<li><p><code>"StandLAI"</code>:Stand leaf area index.</p></li>
-<li><p><code>"StandDensity"</code>:Stand density of living trees.</p></li>
-<li><p><code>"SpeciesBasalArea"</code>:Basal area of living trees by species.</p></li>
-<li><p><code>"SpeciesLAI"</code>:Leaf area index by species.</p></li>
-<li><p><code>"SpeciesDensity"</code>:Density of living trees by species.</p></li>
-<li><p><code>"CohortBasalArea"</code>:Basal area of living trees by plant cohort.</p></li>
-<li><p><code>"CohortLAI"</code>:Leaf area index by plant cohort.</p></li>
-<li><p><code>"CohortDensity"</code>:Density of living trees by plant cohort.</p></li>
+<li><p><code>"DBH"</code>: Diameter at breast height (in cm) for an average individual of each plant cohort.</p></li>
+<li><p><code>"Height"</code>: Height (in cm) for an average individual of each plant cohort.</p></li>
+<li><p><code>"SAgrowth"</code>:  Sapwood area growth rate.</p></li>
+<li><p><code>"LAgrowth"</code>:  Leaf area growth rate.</p></li>
+<li><p><code>"FRAgrowth"</code>:  Fine root area growth rate (only for <code>transpirationMode = "Sperry"</code>).</p></li>
+<li><p><code>"HuberValue"</code>:  Ratio of leaf area to sapwood area.</p></li>
+<li><p><code>"RootAreaLeafArea"</code>:  Ratio of fine root area to leaf area (only for <code>transpirationMode = "Sperry"</code>).</p></li>
+</ul><p>Finally, the following plots are only available for <code><a href="fordyn.html">fordyn</a></code> simulation results:</p><ul><li><p><code>"StandBasalArea"</code>: Stand basal area of living trees.</p></li>
+<li><p><code>"StandLAI"</code>: Stand leaf area index.</p></li>
+<li><p><code>"StandDensity"</code>: Stand density of living trees.</p></li>
+<li><p><code>"SpeciesBasalArea"</code>: Basal area of living trees by species.</p></li>
+<li><p><code>"SpeciesLAI"</code>: Leaf area index by species.</p></li>
+<li><p><code>"SpeciesDensity"</code>: Density of living trees by species.</p></li>
+<li><p><code>"CohortBasalArea"</code>: Basal area of living trees by plant cohort.</p></li>
+<li><p><code>"CohortLAI"</code>: Leaf area index by plant cohort.</p></li>
+<li><p><code>"CohortDensity"</code>: Density of living trees by plant cohort.</p></li>
 </ul></div>
     <div id="author">
     <h2>Author</h2>
