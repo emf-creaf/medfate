@@ -3,6 +3,7 @@
 \alias{stand_basalArea}
 \alias{stand_dominantTreeDiameter}
 \alias{stand_dominantTreeHeight}
+\alias{stand_quadraticMeanTreeDiameter}
 \alias{stand_hartBeckingIndex}
 \alias{stand_foliarBiomass}
 \alias{stand_fuel}
@@ -18,6 +19,7 @@ Functions to calculate stand attributes of a \code{\link{forest}} object.
 stand_basalArea(x)
 stand_dominantTreeHeight(x)
 stand_dominantTreeDiameter(x)
+stand_quadraticMeanTreeDiameter(x)
 stand_hartBeckingIndex(x)
 stand_foliarBiomass(x, SpParams, gdd = NA, mode = "MED")
 stand_fuel(x, SpParams, gdd = NA, includeDead = TRUE, mode = "MED")
@@ -35,6 +37,7 @@ stand_phytovolume(x, SpParams)
 \itemize{
 \item{\code{stand_basalArea}: Stand basal area (m2/ha).}
 \item{\code{stand_dominantTreeDiameter}: Dominant tree diameter, i.e the average diameter of the 100 widest trees (in cm).}
+\item{\code{stand_quadraticMeanTreeDiameter}: Quadratic mean tree diameter, i.e. the diameter value corresponding to the current basal area and density.}
 \item{\code{stand_dominantTreeHeight}: Dominant tree height, i.e the average height of the 100 tallest trees (in cm).}
 \item{\code{stand_hartBeckingIndex}: Hart becking index.}
 \item{\code{stand_foliarBiomass}: Standing biomass of leaves (in kg/m2).}
