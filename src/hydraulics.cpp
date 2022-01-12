@@ -60,10 +60,6 @@ double averagePsi(NumericVector psi, NumericVector v, double c, double d) {
 
 // [[Rcpp::export("hydraulics_xylemConductance")]]
 double xylemConductance(double psi, double kxylemmax, double c, double d) {
-  // if(psi>0.0) {
-  //   Rcout<< psi<<"\n";
-  //   stop("psi has to be negative"); 
-  // } else 
   if(psi>=0.0) return(kxylemmax);
   return(kxylemmax*exp(-pow(psi/d,c)));
 }
@@ -145,7 +141,7 @@ double Egammainv(double Eg, double kxylemmax, double c, double d, double psiCav 
 double EXylem(double psiPlant, double psiUpstream, 
               double kxylemmax, double c, double d, 
               bool allowNegativeFlux = true, double psiCav = 0.0) {
-  if((psiPlant > psiUpstream) & !allowNegativeFlux) ::Rf_error("Downstream potential larger (less negative) than upstream potential");
+  if((psiPlant > psiUpstream) & !allowNegativeFlux) throw std::range_error("Downstream potential larger (less negative) than upstream potential");
   return(Egamma(psiPlant, kxylemmax, c, d, psiCav)-Egamma(psiUpstream, kxylemmax, c,d, psiCav));
 }
 
@@ -348,7 +344,7 @@ double ludcmp(NumericMatrix a, int n, IntegerVector indx) {
     for(i=0;i<n;i++) {
       big = 0.0;
       for(j=0;j<n;j++) if((temp=std::abs(a(i,j)))>big) big=temp;
-      if(big==0.0) ::Rf_error("Singular matrix in routine ludcmp");
+      if(big==0.0) throw std::range_error("Singular matrix in routine ludcmp");
       vv[i] = 1.0/big; //Save the scaling
     }
     //Loop over columns of Crout's method

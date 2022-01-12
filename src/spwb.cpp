@@ -1186,11 +1186,12 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
     Rcout<<"Initial soil water content (mm): "<< sum(initialContent)<<"\n";
     Rcout<<"Initial snowpack content (mm): "<< initialSnowContent<<"\n";
   }
-
+  
+  bool error_occurence = false;
   if(verbose) Rcout << "Performing daily simulations\n";
   NumericVector Eplanttot(numDays,0.0);
   List s;
-  for(int i=0;i<numDays;i++) {
+  for(int i=0;(i<numDays) & (!error_occurence);i++) {
       if(verbose) {
         if(DOY[i]==1 || i==0) {
           std::string c = as<std::string>(dateStrings[i]);
@@ -1231,9 +1232,14 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
           Named("rad") = Radiation[i], 
           Named("pet") = PET[i],
           Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
-        s = spwbDay1(x, meteovec, 
-                     elevation, 
-                     0.0, verbose); //No Runon in simulations for a single cell
+        try{
+          s = spwbDay1(x, meteovec, 
+                       elevation, 
+                       0.0, verbose); //No Runon in simulations for a single cell
+        } catch(std::exception& ex) {
+          Rcerr<< "c++ error: "<< ex.what() <<"\n";
+          error_occurence = true;
+        }
       } else if(transpirationMode=="Sperry") {
         int ntimesteps = control["ndailysteps"];
         //Julian day from either input column or date
@@ -1279,10 +1285,15 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
           Named("Catm") = Catm,
           Named("pet") = PET[i],
           Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
-        s = spwbDay2(x, meteovec, 
-                     latitude, elevation, slope, aspect,
-                     solarConstant, delta, 
-                     0.0, verbose);
+          try{
+            s = spwbDay2(x, meteovec, 
+                         latitude, elevation, slope, aspect,
+                         solarConstant, delta, 
+                         0.0, verbose); 
+          } catch(std::exception& ex) {
+            Rcerr<< "c++ error: "<< ex.what() <<"\n";
+            error_occurence = true;
+          }
         
         fillEnergyBalanceTemperatureDailyOutput(DEB,DT,DLT, s,i, multiLayerBalance);
       }
@@ -1313,6 +1324,9 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
     printWaterBalanceResult(DWB, plantDWOL, soil, soilFunctions,
                             initialContent, initialSnowContent,
                             transpirationMode);
+    if(error_occurence) {
+      Rcout<< " ERROR: Calculations stopped because of numerical error: Revise parameters\n";
+    }
   }
 
 
@@ -1506,7 +1520,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   NumericVector EplantCohTot(numCohorts, 0.0);
 
   
-
+  bool error_occurence = false;
   if(verbose) Rcout << "Performing daily simulations ";
   NumericVector Eplanttot(numDays,0.0);
   List s;
@@ -1556,8 +1570,13 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       NumericVector meteovec = NumericVector::create(
         Named("tday") = MeanTemperature[i], 
         Named("pet") = PET[i]);
-      s = transpirationGranier(x, meteovec, 
-                               true);
+      try{
+        s = transpirationGranier(x, meteovec, 
+                                 true);
+      } catch(std::exception& ex) {
+        Rcerr<< "c++ error: "<< ex.what() <<"\n";
+        error_occurence = true;
+      }
     } else if(transpirationMode=="Sperry") {
       //Julian day from either input column or date
       int J;
@@ -1596,12 +1615,17 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
         Named("rad") = rad, 
         Named("wind") = wind, 
         Named("Catm") = Catm);
-      s = transpirationSperry(x, meteovec, 
-                              latitude, elevation, slope, aspect,
-                              solarConstant, delta,
-                              canopyEvaporation[i], snowMelt[i], soilEvaporation[i],
-                              verbose, NA_INTEGER, 
-                              true);
+      try{
+        s = transpirationSperry(x, meteovec, 
+                                latitude, elevation, slope, aspect,
+                                solarConstant, delta,
+                                canopyEvaporation[i], snowMelt[i], soilEvaporation[i],
+                                verbose, NA_INTEGER, 
+                                true);
+      } catch(std::exception& ex) {
+        Rcerr<< "c++ error: "<< ex.what() <<"\n";
+        error_occurence = true;
+      }
       fillEnergyBalanceTemperatureDailyOutput(DEB,DT,DLT,s,i, multiLayerBalance);
     }
     
@@ -1653,6 +1677,9 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       Rcout<<" Hydraulic redistribution (mm) " << round(sum(HydraulicRedistribution)) <<"\n";
     } else {
       Rcout <<"\n";
+    }
+    if(error_occurence) {
+      Rcout<< " ERROR: Calculations stopped because of numerical error: Revise parameters\n";
     }
   }
 

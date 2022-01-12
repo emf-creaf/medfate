@@ -1975,7 +1975,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     Rcout<<"Initial snowpack content (mm): "<< initialSnowContent<<"\n";
   }
   
-  
+  bool error_occurence = false;
   if(verbose) Rcout << "Performing daily simulations\n";
   List s;
   int iyear = 0;
@@ -2011,9 +2011,14 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
         Named("rad") = Radiation[i], 
         Named("pet") = PET[i],
         Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
-      s = growthDay1(x, meteovec,  
-                     elevation, 
-                     0.0, false); //No Runon in simulations for a single cell
+      try{
+        s = growthDay1(x, meteovec,  
+                       elevation, 
+                       0.0, false); //No Runon in simulations for a single cell
+      } catch(std::exception& ex) {
+        Rcerr<< "c++ error: "<< ex.what() <<"\n";
+        error_occurence = true;
+      }
     } else if(transpirationMode=="Sperry") {
       //Julian day from either input column or date
       int J = NA_INTEGER;
@@ -2059,11 +2064,15 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
         Named("Catm") = Catm,
         Named("pet") = PET[i],
         Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
-      s = growthDay2(x, meteovec, 
-                   latitude, elevation, slope, aspect,
-                   solarConstant, delta, 
-                   0.0, verbose);
-
+      try{
+        s = growthDay2(x, meteovec, 
+                       latitude, elevation, slope, aspect,
+                       solarConstant, delta, 
+                       0.0, verbose);
+      } catch(std::exception& ex) {
+        Rcerr<< "c++ error: "<< ex.what() <<"\n";
+        error_occurence = true;
+      }
       fillEnergyBalanceTemperatureDailyOutput(DEB,DT,DLT,s,i, multiLayerBalance);
     }    
     
@@ -2156,6 +2165,10 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     printWaterBalanceResult(DWB, plantDWOL, soil, soilFunctions,
                             initialContent, initialSnowContent,
                             transpirationMode);
+    
+    if(error_occurence) {
+      Rcout<< " ERROR: Calculations stopped because of numerical error: Revise parameters\n";
+    }
   }
   
   
