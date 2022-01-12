@@ -6,9 +6,9 @@
                             " (",out$spwbInput$cohorts$Name, ")")
   } else {
     transpirationMode = out$growthInput$control$transpirationMode
-    cohorts_out = row.names(out$spwbInput$cohorts)
-    cohorts_sp_out = paste0(row.names(out$spwbInput$cohorts), 
-                            " (",out$spwbInput$cohorts$Name, ")")
+    cohorts_out = row.names(out$growthInput$cohorts)
+    cohorts_sp_out = paste0(row.names(out$growthInput$cohorts), 
+                            " (",out$growthInput$cohorts$Name, ")")
   }
   plot_main_choices = c("Soil", "Plants", "Sunlit/Shade", "Energy balance")
   if(inherits(out, c("growth_day"))) {
@@ -93,8 +93,13 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
     if(length(out$GrowthResults)>1) {
       for(i in 2:length(out$GrowthResults)) {
         out_i = out$GrowthResults[[i]]
-        cohorts_out = unique(c(cohorts_out, row.names(out_i$growthInput$cohorts)))
-        sp_out = unique(c(sp_out, out_i$growthInput$cohorts$Name))
+        cn = row.names(out_i$growthInput$cohorts)
+        for(j in 1:length(cn)) {
+          if(!(cn[j] %in% cohorts_out)) {
+            cohorts_out = c(cohorts_out, cn[j])
+            sp_out = c(sp_out, out_i$growthInput$cohorts$Name[j])
+          }
+        }
       }
     }
     cohorts_sp_out = paste0(cohorts_out, 
@@ -192,7 +197,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                                                    "By months" = "month", 
                                                    "By seasons" = "quarter", 
                                                    "By years" = "year"),
-                                       selected = c("None")
+                                       selected = ifelse(type_out=="fordyn","year","None")
                                      ),
                                      checkboxInput(
                                        inputId = "byspecies_check",
