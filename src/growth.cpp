@@ -296,7 +296,7 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
   if(shrubDynamics) {
     for(int j=0;j<numCohorts; j++) {
       if(NumericVector::is_na(DBH[j]) && N[j]>0.0) {
-        double Wleaves = leafAreaTarget[j]/SLA[j];  //Calculates the biomass (kg dry weight) of leaves
+        double Wleaves = leafArea(LAI_expanded[j], N[j])/SLA[j];  //Calculates the biomass (kg dry weight) of leaves
         double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates phytovolume (in m3/ind)
         H[j] = pow(1e6*PV/Aash[j], 1.0/(1.0+Bash[j])); //Updates shrub height
         // Rcout<< Wleaves << " " << PV << " " << H[j]<<"\n";
