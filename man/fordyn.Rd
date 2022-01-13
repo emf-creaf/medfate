@@ -11,7 +11,7 @@ fordyn(forest, soil, SpParams, meteo, control,
        management_function = NULL, management_args = NULL) 
 }
 \arguments{
-  \item{forest}{An object of class \code{\link{forest}}.}
+  \item{forest}{An object of class \code{\link{forest}}. Alternatively, the output of a previous run, if continuing a previous simulation.}
   \item{soil}{An object of class \code{\link{soil}}.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsDefinition}}).}
   \item{meteo}{A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}).}
@@ -63,6 +63,8 @@ fordyn(forest, soil, SpParams, meteo, control,
  \item{\code{"ForestStructures"}: A list with the \code{\link{forest}} object of the stand at the beginning of the simulation and after each simulated year.}
  \item{\code{"GrowthResults"}: A list with the results of calling function \code{\link{growth}} for each simulated year.}
  \item{\code{"ManagementArgs"}: A list of management arguments to be used in another call to \code{fordyn}.}
+ \item{\code{"NextInputObject"}: An object of class \code{growthInput} to be used in a subsequent simulation.}
+ \item{\code{"NextForestObject"}: An object of class \code{forest} to be used in a subsequent simulation.}
   }
 }
 \author{

@@ -139,14 +139,19 @@ fordyn<-function(forest, soil, SpParams,
   names(growthResults) = paste0("Step_", 1:nYears)
   forestStructures = vector("list", nYears+1)
   names(forestStructures) = c("Initial", paste0("Step_", 1:nYears))
-  forestStructures[[1]] = forest
-
-
-
+  
+  
   #Initialization
+  if(inherits(forest, "fordyn")) {
+    if(verboseDyn) cat(paste0("Initialisation from previous run\n"))
+    xi = forest$NextInputObject
+    forest = forest$NextForestObject
+  } else {
+    xi = forest2growthInput(forest, soil, SpParams, control)
+  }
+  forestStructures[[1]] = forest
   treeOffset = nrow(forest$treeData)
   shrubOffset = nrow(forest$shrubData)
-  xi = forest2growthInput(forest, soil, SpParams, control)
 
   #initial tree/shrub tables
   treeTable = .createTreeTable(0, NA, xi)
@@ -391,7 +396,9 @@ fordyn<-function(forest, soil, SpParams,
     "CutShrubTable" = cutShrubTable,
     "ForestStructures" = forestStructures,
     "GrowthResults" = growthResults,
-    "ManagementArgs" = management_args)
+    "ManagementArgs" = management_args,
+    "NextInputObject" = xi,
+    "NextForestObject" = forest)
   class(res)<-c("fordyn", "list")
   return(res)
 }
