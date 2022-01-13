@@ -13,7 +13,7 @@ fordyn(forest, soil, SpParams, meteo, control,
 \arguments{
   \item{forest}{An object of class \code{\link{forest}}.}
   \item{soil}{An object of class \code{\link{soil}}.}
-  \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsMED}}).}
+  \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsDefinition}}).}
   \item{meteo}{A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}).}
   \item{control}{A list with default control parameters (see \code{\link{defaultControl}}).}
   \item{latitude}{Latitude (in degrees). Required when \code{x$TranspirationMode = "Sperry"}.}
@@ -26,7 +26,7 @@ fordyn(forest, soil, SpParams, meteo, control,
   \enumerate{
   \item{Calls function \code{\link{growth}} to simulate daily water/carbon balance, growth and mortality processes and update the forest object.}
   \item{If required, calls function \code{management_function}, using as parameters the forest object and \code{management_args}, which may result in a density reduction for existing plant cohorts and/or a set of new planted cohorts.}
-  \item{Simulate natural recruitment (for species present in the stand).}
+  \item{Simulate natural recruitment (for species present in the stand or given in a seed rain input).}
   \item{Prepares the input of function \code{\link{growth}} for the next annual time step.}
   \item{Store forest status, management arguments, and summaries.}
   }
@@ -69,7 +69,7 @@ fordyn(forest, soil, SpParams, meteo, control,
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
-\code{\link{growth}}, \code{\link{plot.growth}}, \code{\link{defaultManagementFunction}}
+\code{\link{growth}}, \code{\link{recruitment}}, \code{\link{plot.growth}}, \code{\link{defaultManagementFunction}}
 }
 \examples{
 #Load example daily meteorological data

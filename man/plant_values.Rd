@@ -12,6 +12,7 @@
 \alias{plant_foliarBiomass}
 \alias{plant_fuel}
 \alias{plant_height}
+\alias{plant_individualArea}
 \alias{plant_ID}
 \alias{plant_parameter}
 \alias{plant_LAI}
@@ -42,6 +43,7 @@ plant_fuel(x, SpParams, gdd = NA, includeDead = TRUE, mode = "MED")
 plant_height(x)
 plant_ID(x, treeOffset = 0, shrubOffset = 0)
 plant_LAI(x, SpParams, gdd = NA, mode = "MED")
+plant_individualArea(x, SpParams, mode = "MED")
 plant_parameter(x, SpParams, parName, fillMissing = TRUE)
 plant_phytovolume(x, SpParams)
 plant_species(x)
@@ -77,6 +79,7 @@ A vector with values for each plant of the input \code{\link{forest}} object:
 \item{\code{plant_height}: Total height (in cm).}
 \item{\code{plant_ID}: Cohort coding for simulation functions (concatenation of 'T' (Trees) or 'S' (Shrub), cohort index and species index).}
 \item{\code{plant_LAI}: Leaf area index (m2/m2).}
+\item{\code{plant_individualArea}: Area (m2) occupied by a shrub individual.}
 \item{\code{plant_parameter}: The parameter values of each plant, as numeric.}
 \item{\code{plant_phytovolume}: Shrub phytovolume (m3/m2).}
 \item{\code{plant_species}: Species identity integer (indices start with 0).}

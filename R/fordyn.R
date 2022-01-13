@@ -88,16 +88,17 @@ recruitment<-function(forest, SpParams, control,
   nshrub = length(shrub_recr_selection)
   ind_area = plant_individualArea(recr_forest, SpParams)
   shr_area = ind_area[(ntree+1):(ntree+nshrub)]
+  recr_step_N = 10
   while(sum(tree_recr_selection)>0 || sum(shrub_recr_selection)>0) {
     ini_N = plant_density(recr_forest, SpParams)
     # print(ini_N)
     if(sum(tree_recr_selection)>0) {
       ini_N_trees = ini_N[1:ntree]
-      recr_forest$treeData$N[tree_recr_selection] = ini_N_trees[tree_recr_selection] + 5 
+      recr_forest$treeData$N[tree_recr_selection] = ini_N_trees[tree_recr_selection] + recr_step_N 
     }
     if(sum(shrub_recr_selection)>0) {
       ini_N_shrubs = ini_N[(ntree+1):(ntree+nshrub)]
-      cover_new = pmin(shrub_maxCover, (ini_N_shrubs+5)*shr_area/100)
+      cover_new = pmin(shrub_maxCover, (ini_N_shrubs+recr_step_N)*shr_area/100)
       recr_forest$shrubData$Cover[shrub_recr_selection] = cover_new[shrub_recr_selection]
     }
     # Recalculate light and recruitment selection
