@@ -353,7 +353,6 @@ fordyn<-function(forest, soil, SpParams,
     xi$internalAllocation[repl_vec,] <- xo$internalAllocation[sel_vec,, drop=FALSE]
     xi$internalRings[repl_vec] <- xo$internalRings[sel_vec]
 
-    if(verboseDyn) cat(paste0(", (c) Summaries\n"))
     
     # 5.1 Store current forest state (after recruitment)
     forestStructures[[iYear+1]] = forest
@@ -377,6 +376,7 @@ fordyn<-function(forest, soil, SpParams,
     if(!is.null(cutTreeTableYear)) cutTreeTable = rbind(cutTreeTable, cutTreeTableYear)
     if(!is.null(cutShrubTableYear)) cutShrubTable = rbind(cutShrubTable, cutShrubTableYear)
     
+    if(verboseDyn) cat(paste0("\n"))
   }
   res = list(
     "StandSummary" = standSummary,
