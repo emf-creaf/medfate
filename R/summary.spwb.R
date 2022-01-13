@@ -15,13 +15,13 @@
         if(length(cn_new)>0) {
           out <- as.data.frame(out)
           for(n in cn_new) out[[n]] = NA
-          out <- as.matrix(out[,cn_all])
         }
         if(length(cn_old)>0) {
           out_i <- as.data.frame(out_i)
           for(n in cn_old) out_i[[n]] = NA
-          out_i <- as.matrix(out_i[,cn_all])
         }
+        out <- as.matrix(out[,cn_all, drop= FALSE])
+        out_i <- as.matrix(out_i[,cn_all, drop= FALSE])
         out<-rbind(out, out_i)
       }
     }
