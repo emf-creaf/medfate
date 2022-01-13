@@ -280,6 +280,39 @@ NumericVector shrubIndividualAreaUS(NumericVector H, NumericVector SingleShrubCr
 }
 
 /*
+ * Area for a single individual (m2, only shrubs)
+ */
+// [[Rcpp::export("plant_individualArea")]]
+NumericVector individualArea(List x, DataFrame SpParams, String mode = "MED"){
+  DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
+  DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
+  int ntree = treeData.nrows();
+  int nshrub = shrubData.nrows();
+  NumericVector treeN = treeData["N"];
+  IntegerVector shrubSP = shrubData["Species"];
+  NumericVector shrubHeight = shrubData["Height"];
+  int numCohorts  = ntree+nshrub;
+  NumericVector indArea(numCohorts, NA_REAL);
+  NumericVector shrubArea;
+  if(mode=="MED") {
+    NumericVector shrubCover = shrubData["Cover"];
+    shrubArea = shrubIndividualAreaMED(shrubSP,shrubCover, shrubHeight, SpParams); 
+    for(int i=0;i<nshrub;i++) {
+      indArea[ntree+i] = shrubArea[i];
+    }
+  }
+  else if(mode=="US") {
+    NumericVector SingleShrubCrownArea = shrubData["SingleShrubCrownArea"];  //This is a newly added sentence to read "SingleShrubCrownArea"
+    shrubArea = shrubIndividualAreaUS(shrubHeight, SingleShrubCrownArea);
+    for(int i=0;i<nshrub;i++) {
+      indArea[ntree+i] = shrubArea[i];  //RVS output unit is stems number per Acre (note an acre=4000 m2. In medfate input file, I have converted to stems number per ha. note 1 ha=10000 m2
+    }
+  }
+  indArea.attr("names") = cohortIDs(x);
+  return(indArea);
+}
+
+/*
  * Cohort density in ind/ha
  */
 // [[Rcpp::export("plant_density")]]

@@ -117,6 +117,10 @@ stand_basalArea <- function(x) {
     .Call(`_medfate_standBasalArea`, x)
 }
 
+plant_individualArea <- function(x, SpParams, mode = "MED") {
+    .Call(`_medfate_individualArea`, x, SpParams, mode)
+}
+
 plant_density <- function(x, SpParams, mode = "MED") {
     .Call(`_medfate_cohortDensity`, x, SpParams, mode)
 }

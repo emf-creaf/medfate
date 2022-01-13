@@ -111,7 +111,7 @@ A list, with the following options (default values in parentheses):
    \item{\code{ recrTreeDensity [= 100]}: Default density (ind·ha-1) for recruited trees  (when species parameter \code{RecrTreeDensity} is missing).}
    \item{\code{ recrTreeHeight [= 100]}: Default height (cm) for recruited trees  (when species parameter \code{RecrTreeHeight} is missing).}
    \item{\code{ recrShrubCover [= 1]}: Default cover (\%) for recruited shrubs  (when species parameter \code{RecrShrubCover} is missing).}
-   \item{\code{ recrShrubHeight [= 100]}: Default height (cm) for recruited shrubs  (when species parameter \code{RecrShrubHeight} is missing).}
+   \item{\code{ recrShrubHeight [= 25]}: Default height (cm) for recruited shrubs  (when species parameter \code{RecrShrubHeight} is missing).}
    \item{\code{ recrTreeZ50 [= 100]}: Default value for Z50 (mm) in recruited trees  (when species parameter \code{RecrZ50} is missing).}
    \item{\code{ recrShrubZ50 [= 50]}: Default value for Z50 (mm) in recruited shrubs  (when species parameter \code{RecrZ50} is missing).}
    \item{\code{ recrTreeZ95 [= 1000]}: Default value for Z95 (mm) in recruited trees  (when species parameter \code{RecrZ50} is missing).}
