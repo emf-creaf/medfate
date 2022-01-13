@@ -72,6 +72,7 @@
 <span class="fu">plant_height</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
 <span class="fu">plant_ID</span><span class="op">(</span><span class="va">x</span>, treeOffset <span class="op">=</span> <span class="fl">0</span>, shrubOffset <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
 <span class="fu">plant_LAI</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span>
+<span class="fu">plant_individualArea</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span>
 <span class="fu">plant_parameter</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, <span class="va">parName</span>, fillMissing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu">plant_phytovolume</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span>
 <span class="fu">plant_species</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
@@ -118,6 +119,7 @@
 <li><p><code>plant_height</code>: Total height (in cm).</p></li>
 <li><p><code>plant_ID</code>: Cohort coding for simulation functions (concatenation of 'T' (Trees) or 'S' (Shrub), cohort index and species index).</p></li>
 <li><p><code>plant_LAI</code>: Leaf area index (m2/m2).</p></li>
+<li><p><code>plant_individualArea</code>: Area (m2) occupied by a shrub individual.</p></li>
 <li><p><code>plant_parameter</code>: The parameter values of each plant, as numeric.</p></li>
 <li><p><code>plant_phytovolume</code>: Shrub phytovolume (m3/m2).</p></li>
 <li><p><code>plant_species</code>: Species identity integer (indices start with 0).</p></li>

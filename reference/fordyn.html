@@ -68,7 +68,7 @@
 <dt>soil</dt>
 <dd><p>An object of class <code><a href="soil.html">soil</a></code>.</p></dd>
 <dt>SpParams</dt>
-<dd><p>A data frame with species parameters (see <code><a href="SpParams.html">SpParamsMED</a></code> and <code><a href="SpParams.html">SpParamsMED</a></code>).</p></dd>
+<dd><p>A data frame with species parameters (see <code><a href="SpParams.html">SpParamsMED</a></code> and <code><a href="SpParams.html">SpParamsDefinition</a></code>).</p></dd>
 <dt>meteo</dt>
 <dd><p>A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see <code><a href="https://rdrr.io/r/base/Dates.html" class="external-link">Date</a></code>).</p></dd>
 <dt>control</dt>
@@ -86,7 +86,7 @@
     <h2>Details</h2>
     <p>Function <code>fordyn</code> simulates forest dynamics for annual time steps, building on other simulation functions. For each simulated year, the function performs the following steps:</p><ol><li><p>Calls function <code><a href="growth.html">growth</a></code> to simulate daily water/carbon balance, growth and mortality processes and update the forest object.</p></li>
 <li><p>If required, calls function <code>management_function</code>, using as parameters the forest object and <code>management_args</code>, which may result in a density reduction for existing plant cohorts and/or a set of new planted cohorts.</p></li>
-<li><p>Simulate natural recruitment (for species present in the stand).</p></li>
+<li><p>Simulate natural recruitment (for species present in the stand or given in a seed rain input).</p></li>
 <li><p>Prepares the input of function <code><a href="growth.html">growth</a></code> for the next annual time step.</p></li>
 <li><p>Store forest status, management arguments, and summaries.</p></li>
 </ol><p>To enable forest management, the user needs to provide a function that implements it, which is passed to <code>fordyn</code> via its argument <code>management_function</code>. Such function should have  the following arguments:</p><ul><li><p><code>"x"</code>: the <code><a href="forest.html">forest</a></code> object representing the stand to be managed.</p></li>
@@ -120,7 +120,7 @@
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="growth.html">growth</a></code>, <code><a href="plot.spwb.html">plot.growth</a></code>, <code><a href="defaultManagementFunction.html">defaultManagementFunction</a></code></p></div>
+    <div class="dont-index"><p><code><a href="growth.html">growth</a></code>, <code><a href="recruitment.html">recruitment</a></code>, <code><a href="plot.spwb.html">plot.growth</a></code>, <code><a href="defaultManagementFunction.html">defaultManagementFunction</a></code></p></div>
     </div>
 
     <div id="ref-examples">
@@ -152,20 +152,8 @@
 <span class="r-in"><span class="va">fd</span><span class="op">&lt;-</span><span class="fu">fordyn</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil</span>, </span>
 <span class="r-in">           <span class="va">SpParamsMED</span>, <span class="va">meteo_01_02</span>, <span class="va">control</span>,</span>
 <span class="r-in">           latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Simulating forest dynamics for year 2001 (1/2)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    (a) Growth/mortality</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    (b) Recruitment</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 36.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Tree species with seed rain: 148,168 recruited: &lt;none&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    (c) Summaries</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Simulating forest dynamics for year 2002 (2/2)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    (a) Growth/mortality</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    (b) Recruitment</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.18   FPAR (%): 36.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Tree species with seed rain: 148,168 recruited: &lt;none&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    (c) Summaries</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simulating year 2001 (1/2):  (a) Growth/mortality, (b) Recruitment</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simulating year 2002 (2/2):  (a) Growth/mortality, (b) Recruitment</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Stand-level summaries</span></span>
 <span class="r-in"><span class="va">fd</span><span class="op">$</span><span class="va">StandSummary</span></span>

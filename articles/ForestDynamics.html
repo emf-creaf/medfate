@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Forest dynamics</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-01-07</h4>
+            <h4 data-toc-skip class="date">2022-01-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/ForestDynamics.Rmd" class="external-link"><code>vignettes/ForestDynamics.Rmd</code></a></small>
       <div class="hidden name"><code>ForestDynamics.Rmd</code></div>
@@ -181,62 +181,14 @@
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/fordyn.html">fordyn</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">meteo_01_08</span>, <span class="va">control</span>, 
            latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Simulating forest dynamics for year 2001 (1/8)</span>
-<span class="co">##    (a) Growth/mortality</span>
-<span class="co">##    (b) Recruitment</span>
-<span class="co">##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 36</span>
-<span class="co">##        Tree species with seed rain: 148,168 recruited: &lt;none&gt;</span>
-<span class="co">##        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="co">##    (c) Summaries</span>
-<span class="co">## Simulating forest dynamics for year 2002 (2/8)</span>
-<span class="co">##    (a) Growth/mortality</span>
-<span class="co">##    (b) Recruitment</span>
-<span class="co">##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.22   FPAR (%): 36.1</span>
-<span class="co">##        Tree species with seed rain: 148,168 recruited: &lt;none&gt;</span>
-<span class="co">##        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="co">##    (c) Summaries</span>
-<span class="co">## Simulating forest dynamics for year 2003 (3/8)</span>
-<span class="co">##    (a) Growth/mortality</span>
-<span class="co">##    (b) Recruitment</span>
-<span class="co">##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 35.3</span>
-<span class="co">##        Tree species with seed rain: 148,168 recruited: &lt;none&gt;</span>
-<span class="co">##        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="co">##    (c) Summaries</span>
-<span class="co">## Simulating forest dynamics for year 2004 (4/8)</span>
-<span class="co">##    (a) Growth/mortality</span>
-<span class="co">##    (b) Recruitment</span>
-<span class="co">##        Coldest month mean temp. (Celsius): -0.09   Moisture index: 0.22   FPAR (%): 35.1</span>
-<span class="co">##        Tree species with seed rain: 148,168 recruited: &lt;none&gt;</span>
-<span class="co">##        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="co">##    (c) Summaries</span>
-<span class="co">## Simulating forest dynamics for year 2005 (5/8)</span>
-<span class="co">##    (a) Growth/mortality</span>
-<span class="co">##    (b) Recruitment</span>
-<span class="co">##        Coldest month mean temp. (Celsius): -0.09   Moisture index: 0.36   FPAR (%): 34.9</span>
-<span class="co">##        Tree species with seed rain: 148,168 recruited: &lt;none&gt;</span>
-<span class="co">##        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="co">##    (c) Summaries</span>
-<span class="co">## Simulating forest dynamics for year 2006 (6/8)</span>
-<span class="co">##    (a) Growth/mortality</span>
-<span class="co">##    (b) Recruitment</span>
-<span class="co">##        Coldest month mean temp. (Celsius): -0.09   Moisture index: 0.22   FPAR (%): 34.8</span>
-<span class="co">##        Tree species with seed rain: 148,168 recruited: &lt;none&gt;</span>
-<span class="co">##        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="co">##    (c) Summaries</span>
-<span class="co">## Simulating forest dynamics for year 2007 (7/8)</span>
-<span class="co">##    (a) Growth/mortality</span>
-<span class="co">##    (b) Recruitment</span>
-<span class="co">##        Coldest month mean temp. (Celsius): -0.09   Moisture index: 0.36   FPAR (%): 34.5</span>
-<span class="co">##        Tree species with seed rain: 148,168 recruited: &lt;none&gt;</span>
-<span class="co">##        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="co">##    (c) Summaries</span>
-<span class="co">## Simulating forest dynamics for year 2008 (8/8)</span>
-<span class="co">##    (a) Growth/mortality</span>
-<span class="co">##    (b) Recruitment</span>
-<span class="co">##        Coldest month mean temp. (Celsius): -0.45   Moisture index: 0.22   FPAR (%): 34.5</span>
-<span class="co">##        Tree species with seed rain: 148,168 recruited: &lt;none&gt;</span>
-<span class="co">##        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="co">##    (c) Summaries</span></code></pre>
+<pre><code><span class="co">## Simulating year 2001 (1/8):  (a) Growth/mortality, (b) Recruitment</span>
+<span class="co">## Simulating year 2002 (2/8):  (a) Growth/mortality, (b) Recruitment</span>
+<span class="co">## Simulating year 2003 (3/8):  (a) Growth/mortality, (b) Recruitment</span>
+<span class="co">## Simulating year 2004 (4/8):  (a) Growth/mortality, (b) Recruitment</span>
+<span class="co">## Simulating year 2005 (5/8):  (a) Growth/mortality, (b) Recruitment</span>
+<span class="co">## Simulating year 2006 (6/8):  (a) Growth/mortality, (b) Recruitment</span>
+<span class="co">## Simulating year 2007 (7/8):  (a) Growth/mortality, (b) Recruitment</span>
+<span class="co">## Simulating year 2008 (8/8):  (a) Growth/mortality, (b) Recruitment</span></code></pre>
 <p>It is worth noting that, while <code><a href="../reference/fordyn.html">fordyn()</a></code> calls function <code><a href="../reference/growth.html">growth()</a></code> internally for each simulated year, the <code>verbose</code> option of the control parameters only affects function <code><a href="../reference/fordyn.html">fordyn()</a></code> (i.e. all console output from <code><a href="../reference/growth.html">growth()</a></code> is hidden). Recruitment and summaries are done only once a year at the level of function <code><a href="../reference/fordyn.html">fordyn()</a></code>.</p>
 </div>
 <div class="section level2">
@@ -339,7 +291,7 @@
 <span class="co">## 27       0.000000    0.03610068     0.00000000            0             0</span></code></pre>
 <p>Package <code>medfate</code> provides a simple <code>plot</code> function for objects of class <code>fordyn</code>. For example, we can show the interannual variation in stand-level basal area using:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, type <span class="op">=</span> <span class="st">"StandBasalArea"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, type <span class="op">=</span> <span class="st">"StandBasalArea"</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestDynamics_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -429,16 +381,16 @@
 </h3>
 <p>Since function <code><a href="../reference/fordyn.html">fordyn()</a></code> makes internal calls to function <code><a href="../reference/growth.html">growth()</a></code>, it stores the result in a vector called <code>GrowthResults</code>, which we can use to inspect intra-annual patterns of desired variables. For example, the following shows the leaf area for individuals of the three cohorts during the three consecutive years:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span><span class="op">$</span><span class="va">GrowthResults</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="st">"LeafArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span><span class="op">$</span><span class="va">GrowthResults</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="st">"LeafArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestDynamics_files/figure-html/unnamed-chunk-14-1.png" width="672"></p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span><span class="op">$</span><span class="va">GrowthResults</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="st">"LeafArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span><span class="op">$</span><span class="va">GrowthResults</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="st">"LeafArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestDynamics_files/figure-html/unnamed-chunk-14-2.png" width="672"></p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span><span class="op">$</span><span class="va">GrowthResults</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>, <span class="st">"LeafArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
-<p><img src="ForestDynamics_files/figure-html/unnamed-chunk-14-3.png" width="672"> where we see that the second (drier) year, resulted in a decrease in leaf area per individual, due to the sink limitation to leaf area growth caused by drought. Instead of examining year by year, it is possible to plot the whole series of results by passing a <code>fordyn</code> object to the <code><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot()</a></code> function:</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span><span class="op">$</span><span class="va">GrowthResults</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>, <span class="st">"LeafArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<p><img src="ForestDynamics_files/figure-html/unnamed-chunk-14-3.png" width="672"> where we see that the second (drier) year, resulted in a decrease in leaf area per individual, due to the sink limitation to leaf area growth caused by drought. Instead of examining year by year, it is possible to plot the whole series of results by passing a <code>fordyn</code> object to the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> function:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, <span class="st">"LeafArea"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, <span class="st">"LeafArea"</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestDynamics_files/figure-html/unnamed-chunk-15-1.png" width="672"> where we can see the leaf area drop of the second year along with the progressive recovery of the following years.</p>
 <p>Finally, we can create interactive plots for particular steps using function <code><a href="../reference/shinyplot.html">shinyplot()</a></code>, e.g.:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
@@ -460,63 +412,14 @@
            latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>,
            management_function <span class="op">=</span> <span class="va">defaultManagementFunction</span>,
            management_args <span class="op">=</span> <span class="va">args</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Simulating forest dynamics for year 2001 (1/8)</span>
-<span class="co">##    (a) Growth/mortality &amp; management [thinning]</span>
-<span class="co">##    (-) Removing empty cohorts: T2_168</span>
-<span class="co">##    (b) Recruitment</span>
-<span class="co">##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 61.7</span>
-<span class="co">##        Tree species with seed rain: 148 recruited: &lt;none&gt;</span>
-<span class="co">##        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="co">##    (c) Summaries</span>
-<span class="co">## Simulating forest dynamics for year 2002 (2/8)</span>
-<span class="co">##    (a) Growth/mortality &amp; management [none]</span>
-<span class="co">##    (b) Recruitment</span>
-<span class="co">##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.22   FPAR (%): 61.3</span>
-<span class="co">##        Tree species with seed rain: 148 recruited: &lt;none&gt;</span>
-<span class="co">##        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="co">##    (c) Summaries</span>
-<span class="co">## Simulating forest dynamics for year 2003 (3/8)</span>
-<span class="co">##    (a) Growth/mortality &amp; management [none]</span>
-<span class="co">##    (b) Recruitment</span>
-<span class="co">##        Coldest month mean temp. (Celsius): 0.05   Moisture index: 0.36   FPAR (%): 60.8</span>
-<span class="co">##        Tree species with seed rain: 148 recruited: &lt;none&gt;</span>
-<span class="co">##        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="co">##    (c) Summaries</span>
-<span class="co">## Simulating forest dynamics for year 2004 (4/8)</span>
-<span class="co">##    (a) Growth/mortality &amp; management [none]</span>
-<span class="co">##    (b) Recruitment</span>
-<span class="co">##        Coldest month mean temp. (Celsius): -0.09   Moisture index: 0.22   FPAR (%): 60.4</span>
-<span class="co">##        Tree species with seed rain: 148 recruited: &lt;none&gt;</span>
-<span class="co">##        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="co">##    (c) Summaries</span>
-<span class="co">## Simulating forest dynamics for year 2005 (5/8)</span>
-<span class="co">##    (a) Growth/mortality &amp; management [none]</span>
-<span class="co">##    (b) Recruitment</span>
-<span class="co">##        Coldest month mean temp. (Celsius): -0.09   Moisture index: 0.36   FPAR (%): 59.9</span>
-<span class="co">##        Tree species with seed rain: 148 recruited: &lt;none&gt;</span>
-<span class="co">##        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="co">##    (c) Summaries</span>
-<span class="co">## Simulating forest dynamics for year 2006 (6/8)</span>
-<span class="co">##    (a) Growth/mortality &amp; management [thinning]</span>
-<span class="co">##    (b) Recruitment</span>
-<span class="co">##        Coldest month mean temp. (Celsius): -0.09   Moisture index: 0.22   FPAR (%): 67.7</span>
-<span class="co">##        Tree species with seed rain: 148 recruited: &lt;none&gt;</span>
-<span class="co">##        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="co">##    (c) Summaries</span>
-<span class="co">## Simulating forest dynamics for year 2007 (7/8)</span>
-<span class="co">##    (a) Growth/mortality &amp; management [none]</span>
-<span class="co">##    (b) Recruitment</span>
-<span class="co">##        Coldest month mean temp. (Celsius): -0.09   Moisture index: 0.36   FPAR (%): 66.7</span>
-<span class="co">##        Tree species with seed rain: 148 recruited: &lt;none&gt;</span>
-<span class="co">##        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="co">##    (c) Summaries</span>
-<span class="co">## Simulating forest dynamics for year 2008 (8/8)</span>
-<span class="co">##    (a) Growth/mortality &amp; management [none]</span>
-<span class="co">##    (b) Recruitment</span>
-<span class="co">##        Coldest month mean temp. (Celsius): -0.45   Moisture index: 0.22   FPAR (%): 66.2</span>
-<span class="co">##        Tree species with seed rain: 148 recruited: &lt;none&gt;</span>
-<span class="co">##        Shrub species with seed rain: 165 recruited: &lt;none&gt;</span>
-<span class="co">##    (c) Summaries</span></code></pre>
+<pre><code><span class="co">## Simulating year 2001 (1/8):  (a) Growth/mortality &amp; management [thinning], (-) Removing empty cohorts: T2_168, (b) Recruitment</span>
+<span class="co">## Simulating year 2002 (2/8):  (a) Growth/mortality &amp; management [none], (b) Recruitment</span>
+<span class="co">## Simulating year 2003 (3/8):  (a) Growth/mortality &amp; management [none], (b) Recruitment</span>
+<span class="co">## Simulating year 2004 (4/8):  (a) Growth/mortality &amp; management [none], (b) Recruitment</span>
+<span class="co">## Simulating year 2005 (5/8):  (a) Growth/mortality &amp; management [none], (b) Recruitment</span>
+<span class="co">## Simulating year 2006 (6/8):  (a) Growth/mortality &amp; management [thinning], (b) Recruitment</span>
+<span class="co">## Simulating year 2007 (7/8):  (a) Growth/mortality &amp; management [none], (b) Recruitment</span>
+<span class="co">## Simulating year 2008 (8/8):  (a) Growth/mortality &amp; management [none], (b) Recruitment</span></code></pre>
 <p>When management is included in simulations, two additional tables are produced, corresponding to the trees and shrubs that were cut, e.g.:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">CutTreeTable</span></code></pre></div>
