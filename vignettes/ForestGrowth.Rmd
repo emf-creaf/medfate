@@ -29,7 +29,7 @@ Model inputs are explained in greater detail in vignette '*Simulation inputs*'. 
 Soil information needs to be entered as a `data frame` with soil layers in rows and physical attributes in columns. Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
 
 ```{r}
-spar = defaultSoilParams(2)
+spar = defaultSoilParams(4)
 ```
 
 The soil input for water balance simulation is actually a list of class `soil` that is created using a function with the same name:
@@ -140,14 +140,8 @@ plot(G1, "LabileCarbonBalance", bySpecies = T)
 ```
 
 ### Carbon storage
-Carbon assimilation and respiration rates define the dynamics of stored carbon, which in medfate is divided into two organs (leaves and sapwood) and two chemical compounds (soluble sugars and starch):
+Carbon assimilation and respiration rates define the dynamics of stored carbon, which in medfate is divided into two organs (leaves and sapwood) and two chemical compounds (soluble sugars and starch). The most important storage compartment is sapwood starch, whose dynamics can be shown using:
 ```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
-plot(G1, "SugarLeaf", bySpecies = T)
-plot(G1, "StarchLeaf", bySpecies = T)
-```
-
-```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
-plot(G1, "SugarSapwood", bySpecies = T)
 plot(G1, "StarchSapwood", bySpecies = T)
 ```
 

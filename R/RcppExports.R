@@ -777,6 +777,10 @@ soil_saturatedConductivitySX <- function(clay, sand, om = NA_real_, mmol = TRUE)
     .Call(`_medfate_saturatedConductivitySaxton`, clay, sand, om, mmol)
 }
 
+soil_unsaturatedConductivitySX <- function(theta, clay, sand, om = NA_real_, mmol = TRUE) {
+    .Call(`_medfate_unsaturatedConductivitySaxton`, theta, clay, sand, om, mmol)
+}
+
 soil_thetaSATSX <- function(clay, sand, om = NA_real_) {
     .Call(`_medfate_thetaSATSaxton`, clay, sand, om)
 }

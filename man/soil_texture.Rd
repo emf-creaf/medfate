@@ -3,6 +3,7 @@
 \alias{soil_psi2thetaSX}
 \alias{soil_psi2thetaVG}
 \alias{soil_psi}
+\alias{soil_conductivity}
 \alias{soil_theta2psiSX}
 \alias{soil_theta2psiVG}
 \alias{soil_thetaFC}

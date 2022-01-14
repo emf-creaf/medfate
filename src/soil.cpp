@@ -61,7 +61,7 @@ double saturatedConductivitySaxton(double clay, double sand, double om = NA_REAL
   if(mmol) Ksat = Ksat*cmdTOmmolm2sMPa;
   return(Ksat);
 }
-
+// [[Rcpp::export("soil_unsaturatedConductivitySX")]]
 double unsaturatedConductivitySaxton(double theta, double clay, double sand, double om = NA_REAL, bool mmol = true) {
   double Kunsat = NA_REAL;
   //If organic matter is missing use Saxton et al (1986)

@@ -31,7 +31,7 @@ Model inputs are explained in greater detail in vignette '*Simulation inputs*'. 
 Soil information needs to be entered as a `data frame` with soil layers in rows and physical attributes in columns. Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
 
 ```{r}
-spar = defaultSoilParams(2)
+spar = defaultSoilParams(4)
 ```
 
 The soil input for water balance simulation is actually a list of class `soil` that is created using a function with the same name:

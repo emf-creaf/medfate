@@ -3246,6 +3246,44 @@ RcppExport SEXP _medfate_saturatedConductivitySaxton(SEXP claySEXP, SEXP sandSEX
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// unsaturatedConductivitySaxton
+double unsaturatedConductivitySaxton(double theta, double clay, double sand, double om, bool mmol);
+static SEXP _medfate_unsaturatedConductivitySaxton_try(SEXP thetaSEXP, SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP, SEXP mmolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< double >::type clay(claySEXP);
+    Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
+    Rcpp::traits::input_parameter< double >::type om(omSEXP);
+    Rcpp::traits::input_parameter< bool >::type mmol(mmolSEXP);
+    rcpp_result_gen = Rcpp::wrap(unsaturatedConductivitySaxton(theta, clay, sand, om, mmol));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_unsaturatedConductivitySaxton(SEXP thetaSEXP, SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP, SEXP mmolSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_unsaturatedConductivitySaxton_try(thetaSEXP, claySEXP, sandSEXP, omSEXP, mmolSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
 // thetaSATSaxton
 double thetaSATSaxton(double clay, double sand, double om);
 static SEXP _medfate_thetaSATSaxton_try(SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP) {
@@ -4677,6 +4715,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("NumericVector(*hydrology_soilWaterInputs)(List,String,double,double,double,double,double,double,double,double,double,bool,bool)");
         signatures.insert("NumericVector(*hydrology_soilInfiltrationPercolation)(List,String,double,bool,bool)");
         signatures.insert("double(*soil_saturatedConductivitySX)(double,double,double,bool)");
+        signatures.insert("double(*soil_unsaturatedConductivitySX)(double,double,double,double,bool)");
         signatures.insert("double(*soil_thetaSATSX)(double,double,double)");
         signatures.insert("double(*soil_theta2psiSX)(double,double,double,double)");
         signatures.insert("double(*soil_psi2thetaSX)(double,double,double,double)");
@@ -4726,6 +4765,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_hydrology_soilWaterInputs", (DL_FUNC)_medfate_soilWaterInputs_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology_soilInfiltrationPercolation", (DL_FUNC)_medfate_soilInfiltrationPercolation_try);
     R_RegisterCCallable("medfate", "_medfate_soil_saturatedConductivitySX", (DL_FUNC)_medfate_saturatedConductivitySaxton_try);
+    R_RegisterCCallable("medfate", "_medfate_soil_unsaturatedConductivitySX", (DL_FUNC)_medfate_unsaturatedConductivitySaxton_try);
     R_RegisterCCallable("medfate", "_medfate_soil_thetaSATSX", (DL_FUNC)_medfate_thetaSATSaxton_try);
     R_RegisterCCallable("medfate", "_medfate_soil_theta2psiSX", (DL_FUNC)_medfate_theta2psiSaxton_try);
     R_RegisterCCallable("medfate", "_medfate_soil_psi2thetaSX", (DL_FUNC)_medfate_psi2thetaSaxton_try);
@@ -4955,6 +4995,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_coarseRootSoilVolume", (DL_FUNC) &_medfate_coarseRootSoilVolume, 3},
     {"_medfate_horizontalProportions", (DL_FUNC) &_medfate_horizontalProportions, 6},
     {"_medfate_saturatedConductivitySaxton", (DL_FUNC) &_medfate_saturatedConductivitySaxton, 4},
+    {"_medfate_unsaturatedConductivitySaxton", (DL_FUNC) &_medfate_unsaturatedConductivitySaxton, 5},
     {"_medfate_thetaSATSaxton", (DL_FUNC) &_medfate_thetaSATSaxton, 3},
     {"_medfate_theta2psiSaxton", (DL_FUNC) &_medfate_theta2psiSaxton, 4},
     {"_medfate_psi2thetaSaxton", (DL_FUNC) &_medfate_psi2thetaSaxton, 4},
