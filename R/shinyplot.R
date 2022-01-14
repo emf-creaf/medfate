@@ -1,3 +1,4 @@
+
 .shinyplot_day<-function(out){
   if(inherits(out, c("spwb_day", "pwb_day"))) {
     transpirationMode = out$spwbInput$control$transpirationMode
@@ -66,8 +67,7 @@
   shinyApp(ui = ui, server = server)
 }
 
-
-shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
+.shinyplot_sim<-function(out, measuredData = NULL, SpParams = NULL) {
   if(inherits(out, c("spwb_day", "pwb_day", "growth_day"))) return(.shinyplot_day(out))
   if(!inherits(out, c("growth", "pwb" , "spwb", "fordyn"))) stop("Wrong class for 'out'. Should either be 'spwb', 'growth' or 'fordyn'.")
   type_out = class(out)[1] #growth, spwb, fordyn
@@ -155,30 +155,30 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
                         sidebarPanel(
                           tabsetPanel(
                             tabPanel("Plot type & period",
-                                checkboxInput(
-                                    inputId = "subdaily_check",
-                                    label = "Subdaily plots",
-                                    value = FALSE
-                                ),                          
-                                selectInput(
-                                    inputId = "plot_main_type",
-                                    label = "Plot category", 
-                                    choices = plot_main_choices,
-                                    selected = c("Water balance")
-                                ),
-                                selectInput(
-                                    inputId = "plot_type",
-                                    label = "Plot type", 
-                                    choices = wb_plot_choices,
-                                    selected = wb_plot_choices[1]
-                                ),
-                                sliderInput(
-                                  inputId = "date_range",
-                                  label = "Date range",
-                                  value = c(dates_out[1],dates_out[length(dates_out)]),
-                                  min = dates_out[1],
-                                  max = dates_out[length(dates_out)]
-                                )
+                                     checkboxInput(
+                                       inputId = "subdaily_check",
+                                       label = "Subdaily plots",
+                                       value = FALSE
+                                     ),                          
+                                     selectInput(
+                                       inputId = "plot_main_type",
+                                       label = "Plot category", 
+                                       choices = plot_main_choices,
+                                       selected = c("Water balance")
+                                     ),
+                                     selectInput(
+                                       inputId = "plot_type",
+                                       label = "Plot type", 
+                                       choices = wb_plot_choices,
+                                       selected = wb_plot_choices[1]
+                                     ),
+                                     sliderInput(
+                                       inputId = "date_range",
+                                       label = "Date range",
+                                       value = c(dates_out[1],dates_out[length(dates_out)]),
+                                       min = dates_out[1],
+                                       max = dates_out[length(dates_out)]
+                                     )
                             ),
                             tabPanel("Options",
                                      selectInput(
@@ -308,7 +308,7 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
       else if(main_plot=="Plant growth") sub_choices = plant_growth_plot_choices
       else if(main_plot=="Forest dynamics") sub_choices = forest_dynamics_plot_choices
       else sub_choices = soil_plot_choices
-
+      
       if(input$subdaily_check && subdaily_out) {
         if(main_plot=="Plants") sub_choices = subdaily_plant_plot_choices
         else if(main_plot=="Sunlit/Shade") sub_choices = subdaily_sunlitshade_plot_choices
@@ -374,4 +374,30 @@ shinyplot<-function(out, measuredData = NULL, SpParams = NULL) {
   # Run the application 
   shinyApp(ui = ui, server = server)
 }
+
+shinyplot.growth<-function(x, measuredData = NULL, SpParams = NULL, ...) {
+  .shinyplot_sim(x, measuredData = measuredData, SpParams = SpParams)
+}
+shinyplot.spwb<-function(x, measuredData = NULL, SpParams = NULL, ...) {
+  .shinyplot_sim(x, measuredData = measuredData, SpParams = SpParams)
+}
+shinyplot.pwb<-function(x, measuredData = NULL, SpParams = NULL, ...) {
+  .shinyplot_sim(x, measuredData = measuredData, SpParams = SpParams)
+}
+shinyplot.fordyn<-function(x, measuredData = NULL, SpParams = NULL, ...) {
+  .shinyplot_sim(x, measuredData = measuredData, SpParams = SpParams)
+}
+shinyplot.growth_day<-function(x, ...) {
+  .shinyplot_day(x)
+}
+shinyplot.spwb_day<-function(x, ...) {
+  .shinyplot_day(x)
+}
+shinyplot.pwb_day<-function(x, ...) {
+  .shinyplot_day(x)
+}
+shinyplot<-function(x, ...) {
+  UseMethod("shinyplot", x)
+}
+
 

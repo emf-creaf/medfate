@@ -51,6 +51,8 @@ reference:
   - starts_with("plant_")
   - starts_with("species_")
   - starts_with("vprofile_")
+  - starts_with("plot.forest")
+  - starts_with("shinyplot.forest")
 
 - title: Roots
   desc:  Belowground structure
@@ -98,7 +100,7 @@ reference:
   - starts_with("plot.spwb")
   - starts_with("summary.spwb")
   - starts_with("extractSubdaily")
-  - shinyplot
+  - starts_with("shinyplot.spwb")
 
 - title: Model analysis
   desc:  Evaluation and optimization

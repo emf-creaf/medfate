@@ -1,5 +1,11 @@
 \name{shinyplot}
 \alias{shinyplot}
+\alias{shinyplot.spwb}
+\alias{shinyplot.pwb}
+\alias{shinyplot.growth}
+\alias{shinyplot.spwb_day}
+\alias{shinyplot.pwb_day}
+\alias{shinyplot.growth_day}
 \title{
 Shiny app with interactive plots
 }
@@ -7,12 +13,19 @@ Shiny app with interactive plots
 Creates a shiny app with interactive plots for simulation results and evaluation
 }
 \usage{
-shinyplot(out, measuredData = NULL, SpParams = NULL)
+\method{shinyplot}{spwb}(x, measuredData = NULL, SpParams = NULL, ...)
+\method{shinyplot}{pwb}(x, measuredData = NULL, SpParams = NULL, ...)
+\method{shinyplot}{growth}(x, measuredData = NULL, SpParams = NULL, ...)
+\method{shinyplot}{fordyn}(x, measuredData = NULL, SpParams = NULL, ...)
+\method{shinyplot}{spwb_day}(x, ...)
+\method{shinyplot}{pwb_day}(x, ...)
+\method{shinyplot}{growth_day}(x, ...)
 }
 \arguments{
-  \item{out}{An object of class \code{\link{spwb}}, \code{\link{growth}} or \code{\link{fordyn}} (also accepts objects of class \code{\link{spwb_day}} and \code{\link{growth_day}}).}
+  \item{x}{An object of the right class.}
   \item{measuredData}{A data frame with observed/measured values (see \code{\link{evaluation_plot}}).}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
+  \item{...}{Additional parameters.}
 }
 \details{Only run this function in interactive mode. When \code{measuredData} is not \code{NULL}, an additional panel is shown for evaluation plots.}
 \value{An object that represents the shiny app}

@@ -58,7 +58,7 @@ vprofile_windExtinction(x, SpParams, u = 1, windMeasurementHeight = 200,
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
-\code{\link{forest}}, \code{\link{wind_canopyTurbulence}}
+\code{\link{forest}}, \code{\link{plot.forest}}, \code{\link{wind_canopyTurbulence}}
 }
 \examples{
 #Default species parameterization
