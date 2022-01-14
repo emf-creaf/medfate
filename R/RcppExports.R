@@ -869,6 +869,10 @@ soil_psi <- function(soil, model = "SX") {
     .Call(`_medfate_psi`, soil, model)
 }
 
+soil_conductivity <- function(soil) {
+    .Call(`_medfate_conductivity`, soil)
+}
+
 soil_waterTableDepth <- function(soil, model = "SX") {
     .Call(`_medfate_waterTableDepth`, soil, model)
 }

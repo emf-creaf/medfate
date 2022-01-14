@@ -779,6 +779,27 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
+    inline NumericVector soil_conductivity(List soil) {
+        typedef SEXP(*Ptr_soil_conductivity)(SEXP);
+        static Ptr_soil_conductivity p_soil_conductivity = NULL;
+        if (p_soil_conductivity == NULL) {
+            validateSignature("NumericVector(*soil_conductivity)(List)");
+            p_soil_conductivity = (Ptr_soil_conductivity)R_GetCCallable("medfate", "_medfate_soil_conductivity");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_soil_conductivity(Shield<SEXP>(Rcpp::wrap(soil)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<NumericVector >(rcpp_result_gen);
+    }
+
     inline double soil_waterTableDepth(List soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_waterTableDepth)(SEXP,SEXP);
         static Ptr_soil_waterTableDepth p_soil_waterTableDepth = NULL;

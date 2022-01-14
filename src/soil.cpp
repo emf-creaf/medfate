@@ -52,13 +52,45 @@ double saturatedConductivitySaxton(double clay, double sand, double om = NA_REAL
     double theta1500t = -0.024*sand + 0.487*clay+0.006*om + 0.005*(sand*om) - 0.013*(clay*om) + 0.068*(sand*clay) + 0.031;
     double theta1500 = theta1500t + (0.14*theta1500t - 0.02);
     double B = 3.816712/(log(theta33)-log(theta1500)); //3.816712 = log(1500) - log(33)
-    Ksat = 1930.0*pow(theta_sat - theta33, 3.0 - 2.0/B);
+    double lambda = 1.0/B;
+    Ksat = 1930.0*pow(theta_sat - theta33, 3.0 - lambda);
     //mm/h to cm/day
     Ksat = Ksat*0.1*24.0;
   }
   //cm/day to mmolH20·m-1·s-1·MPa-1
   if(mmol) Ksat = Ksat*cmdTOmmolm2sMPa;
   return(Ksat);
+}
+
+double unsaturatedConductivitySaxton(double theta, double clay, double sand, double om = NA_REAL, bool mmol = true) {
+  double Kunsat = NA_REAL;
+  //If organic matter is missing use Saxton et al (1986)
+  //Otherwise use Saxton & Rawls (2006)
+  if(NumericVector::is_na(om)) {
+    Kunsat = 2.778e-6*exp(12.012+-7.55e-2*sand+(-3.8950 + 3.671e-2*sand - 0.1103*clay + 8.7546e-4*pow(clay,2.0))/theta);
+    //m/s to cm/day
+    Kunsat = Kunsat*100.0*86400.0;
+  } else {
+    sand = sand/100.0;
+    clay = clay/100.0;
+    //om = om/100.0; //OM should be in percentage in Saxton's 2006
+    double theta33t = (-0.251*sand) + (0.195*clay) + (0.011*om) + (0.006*(sand*om)) - (0.027*(clay*om)) + (0.452*(sand*clay)) + 0.299;
+    double theta33 = theta33t + (1.283*pow(theta33t,2.0) - 0.374 * theta33t - 0.015);
+    double theta_S33t = (0.278*sand) + (0.034*clay)+ (0.022*om) - (0.018*(sand*om)) - (0.027*(clay*om)) - (0.584*(sand*clay)) + 0.078;
+    double theta_S33 = theta_S33t + (0.636*theta_S33t-0.107);
+    double theta_sat = theta33+theta_S33 - (0.097*sand) + 0.043;
+    double theta1500t = -0.024*sand + 0.487*clay+0.006*om + 0.005*(sand*om) - 0.013*(clay*om) + 0.068*(sand*clay) + 0.031;
+    double theta1500 = theta1500t + (0.14*theta1500t - 0.02);
+    double B = 3.816712/(log(theta33)-log(theta1500)); //3.816712 = log(1500) - log(33)
+    double lambda = 1.0/B;
+    double Ksat = 1930.0*pow(theta_sat - theta33, 3.0 - lambda);
+    Kunsat = Ksat*pow(theta/theta_sat, 3.0 + (2.0/lambda));
+    //mm/h to cm/day
+    Kunsat = Kunsat*0.1*24.0;
+  }
+  //cm/day to mmolH20·m-1·s-1·MPa-1
+  if(mmol) Kunsat = Kunsat*cmdTOmmolm2sMPa;
+  return(Kunsat);
 }
 /**
  *  Returns water content (% volume) at saturation according to Saxton's pedotransfer model
@@ -214,6 +246,7 @@ double theta2psiVanGenuchten(double n, double alpha, double theta_res, double th
   if(psi < -40.0) psi = -40.0;
   return(psi);
 }
+
 
 
 
@@ -698,6 +731,19 @@ NumericVector psi(List soil, String model="SX") {
   return(psi);
 }
 
+// [[Rcpp::export("soil_conductivity")]]
+NumericVector conductivity(List soil) {
+  NumericVector Theta = theta(soil, "SX");
+  int nlayers = Theta.size();
+  NumericVector Kunsat(nlayers);
+  NumericVector clay =soil["clay"];
+  NumericVector sand = soil["sand"];
+  NumericVector om = soil["om"];
+  for(int l=0;l<nlayers;l++) {
+    Kunsat[l] = unsaturatedConductivitySaxton(Theta[l], clay[l], sand[l], om[l]);
+  }
+  return(Kunsat);
+}
 
 // [[Rcpp::export("soil_waterTableDepth")]]
 double waterTableDepth(List soil, String model = "SX") {

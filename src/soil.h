@@ -21,6 +21,8 @@ NumericVector thetaWP(List soil, String model = "SX");
 NumericVector water(List soil, String model="SX");
 NumericVector theta(List soil, String model="SX");
 NumericVector psi(List soil, String model="SX");
+NumericVector conductivity(List soil);
+
 double waterTableDepth(List soil, String model = "SX");
 
 NumericVector thermalConductivity(List soil, String model = "SX");

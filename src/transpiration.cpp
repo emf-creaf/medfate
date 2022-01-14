@@ -1665,6 +1665,7 @@ List transpirationGranier(List x, NumericVector meteovec,
   NumericVector Eplant(numCohorts, 0.0), Agplant(numCohorts, 0.0);
   NumericVector DDS(numCohorts, 0.0);
   NumericVector Kl, epc, Vl;
+  NumericVector Kunsat = conductivity(soil);
   double WeibullShape=3.0;
   for(int c=0;c<numCohorts;c++) {
     if(plantWaterPools) { 
@@ -1674,24 +1675,33 @@ List transpirationGranier(List x, NumericVector meteovec,
       //Update soil water potential from pool moisture
       psiSoil = psi(soil_c,soilFunctions); 
     }
+    NumericVector LSc(nlayers);
+    NumericVector Klc(nlayers);
+    NumericVector Kunlc(nlayers);
     for(int l=0;l<nlayers;l++) {
-      double Klc = Psi2K(psiSoil[l], Psi_Extract[c], WeibullShape);
-      //Limit Kl due to previous cavitation
+      Klc[l] = Psi2K(psiSoil[l], Psi_Extract[c], WeibullShape);
+      //Limit Mean Kl due to previous cavitation
       if(cavitationRefill!="total") {
-        Klc = std::min(Klc, 1.0-StemPLC[c]); 
+        Klc[l] = std::min(Klc[l], 1.0-StemPLC[c]); 
       }
-      double epc = std::max(TmaxCoh[c]*Klc*V(c,l),0.0);
+      LSc[l] = Klc[l];
+      if(Klc[l]<pRootDisc[c]) { 
+        RootPsi(c,l) = K2Psi(pRootDisc[c],Psi_Extract[c],WeibullShape);
+        LSc[l] = pRootDisc[c]; //So that layer stress does not go below pRootDisc
+        Klc[l] = 0.0; // Prevents drawing water from layer
+      }
+      Kunlc[l] = Kunsat[l]*V(c,l);
+    }
+    double sumKunlc = sum(Kunlc);
+
+    for(int l=0;l<nlayers;l++) {
+      double epc = std::max(TmaxCoh[c]*Klc[l]*(Kunlc[l]/sumKunlc),0.0);
       RootPsi(c,l) = psiSoil[l]; //Set initial guess of root potential to soil values
       //If relative conductance is smaller than the value for root disconnection
       //Set root potential to minimum value before disconnection and transpiration from that layer to zero
-      if(Klc<pRootDisc[c]) { 
-        RootPsi(c,l) = K2Psi(pRootDisc[c],Psi_Extract[c],WeibullShape);
-        Klc = pRootDisc[c]; //So that layer stress does not go below pRootDisc
-        epc = 0.0; //Set transpiration from layer to zero
-      }
       EplantCoh(c,l) = epc;
       Eplant[c] = Eplant[c] + epc;
-      DDS[c] = DDS[c] + Phe[c]*(V(c,l)*(1.0 - Klc)); //Add stress from the current layer
+      DDS[c] = DDS[c] + Phe[c]*(V(c,l)*(1.0 - LSc[l])); //Add stress from the current layer
     }
   }
 

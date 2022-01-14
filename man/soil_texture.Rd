@@ -17,6 +17,7 @@
 \alias{soil_waterSAT}
 \alias{soil_USDAType}
 \alias{soil_saturatedConductivitySX}
+\alias{soil_unsaturatedConductivitySX}
 \alias{soil_vanGenuchtenParamsCarsel}
 \alias{soil_vanGenuchtenParamsToth}
 \alias{soil_waterTableDepth}
@@ -32,11 +33,13 @@ soil_psi2thetaVG(n, alpha, theta_res, theta_sat, psi)
 soil_theta2psiSX(clay, sand, theta, om = NA)
 soil_theta2psiVG(n, alpha, theta_res, theta_sat, theta)
 soil_saturatedConductivitySX(clay, sand, om = NA, mmol = TRUE)
+soil_unsaturatedConductivitySX(theta, clay, sand, om = NA, mmol = TRUE)
 soil_USDAType(clay, sand)
 soil_vanGenuchtenParamsCarsel(soilType)
 soil_vanGenuchtenParamsToth(clay, sand, om, bd, topsoil)
 soil_psi(soil, model="SX")
 soil_theta(soil, model="SX")
+soil_conductivity(soil)
 soil_water(soil, model="SX")
 soil_waterFC(soil, model="SX")
 soil_waterWP(soil, model="SX")
@@ -78,12 +81,14 @@ soil_retentionCurvePlot(soil, model="SX", layer = 1,
 \item{\code{soil_psi2thetaSX()} and \code{soil_theta2psiSX()} calculate water potentials (MPa) and water contents (theta) using texture data the formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available.}
 \item{\code{soil_psi2thetaVG()} and \code{soil_theta2psiVG()} to the same calculations as before, but using the Van Genuchten - Mualem equations (\enc{Wösten}{Wosten} & van Genuchten 1988). }
 \item{\code{soil_saturatedConductivitySX()} returns the saturated conductivity of the soil (in cm/day or mmol/m/s/MPa), estimated from formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available.}
+\item{\code{soil_unsaturatedConductivitySX()} returns the unsaturated conductivity of the soil (in cm/day or mmol/m/s/MPa), estimated from formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available.}
 \item{\code{soil_USDAType()} returns the USDA type (a string) for a given texture.}
 \item{\code{soil_vanGenuchtenParamsCarsel()} gives parameters for van Genuchten-Mualem equations (alpha, n, theta_res and theta_sat, where alpha is in MPa-1) for a given texture type (Leij et al. 1996) }
 \item{\code{soil_vanGenuchtenParamsToth()} gives parameters for van Genuchten-Mualem equations (alpha, n, theta_res and theta_sat, where alpha is in MPa-1) for a given texture, organic matter and bulk density (Toth et al. 2015).}
 \item{\code{soil_psi()} returns the water potential (MPa) of each soil layer, according to its water retention model.}
 \item{\code{soil_theta()} returns the moisture content (as percent of soil volume) of each soil layer, according to its water retention model.}
 \item{\code{soil_water()} returns the water volume (mm) of each soil layer, according to its water retention model.}
+\item{\code{soil_conductivity()} returns the conductivity of each soil layer (mmol/m/s/MPa), according the Saxton model.}
 \item{\code{soil_waterExtractable()} returns the water volume (mm) extractable from the soil according to its water retention curves and up to a given soil water potential.}
 \item{\code{soil_waterFC()} and \code{soil_thetaFC()} calculate the water volume (in mm) and moisture content (as percent of soil volume) of each soil layer at field capacity, respectively.}
 \item{\code{soil_waterWP()} and \code{soil_thetaWP()} calculate the water volume (in mm) and moisture content (as percent of soil volume) of each soil layer at wilting point (-1.5 MPa), respectively. }
