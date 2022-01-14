@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.0</span>
       </span>
     </div>
 
@@ -61,11 +61,13 @@
 <span class="fu">soil_theta2psiSX</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, <span class="va">theta</span>, om <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>
 <span class="fu">soil_theta2psiVG</span><span class="op">(</span><span class="va">n</span>, <span class="va">alpha</span>, <span class="va">theta_res</span>, <span class="va">theta_sat</span>, <span class="va">theta</span><span class="op">)</span>
 <span class="fu">soil_saturatedConductivitySX</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, om <span class="op">=</span> <span class="cn">NA</span>, mmol <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu">soil_unsaturatedConductivitySX</span><span class="op">(</span><span class="va">theta</span>, <span class="va">clay</span>, <span class="va">sand</span>, om <span class="op">=</span> <span class="cn">NA</span>, mmol <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu">soil_USDAType</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span><span class="op">)</span>
 <span class="fu">soil_vanGenuchtenParamsCarsel</span><span class="op">(</span><span class="va">soilType</span><span class="op">)</span>
 <span class="fu">soil_vanGenuchtenParamsToth</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, <span class="va">om</span>, <span class="va">bd</span>, <span class="va">topsoil</span><span class="op">)</span>
 <span class="fu">soil_psi</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span>
 <span class="fu">soil_theta</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span>
+<span class="fu">soil_conductivity</span><span class="op">(</span><span class="va">soil</span><span class="op">)</span>
 <span class="fu">soil_water</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span>
 <span class="fu">soil_waterFC</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span>
 <span class="fu">soil_waterWP</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span>
@@ -129,12 +131,14 @@
 <ul><li><p><code>soil_psi2thetaSX()</code> and <code>soil_theta2psiSX()</code> calculate water potentials (MPa) and water contents (theta) using texture data the formulae of Saxton et al. (1986) or Saxton &amp; Rawls (2006) depending on whether organic matter is available.</p></li>
 <li><p><code>soil_psi2thetaVG()</code> and <code>soil_theta2psiVG()</code> to the same calculations as before, but using the Van Genuchten - Mualem equations (Wösten &amp; van Genuchten 1988).</p></li>
 <li><p><code>soil_saturatedConductivitySX()</code> returns the saturated conductivity of the soil (in cm/day or mmol/m/s/MPa), estimated from formulae of Saxton et al. (1986) or Saxton &amp; Rawls (2006) depending on whether organic matter is available.</p></li>
+<li><p><code>soil_unsaturatedConductivitySX()</code> returns the unsaturated conductivity of the soil (in cm/day or mmol/m/s/MPa), estimated from formulae of Saxton et al. (1986) or Saxton &amp; Rawls (2006) depending on whether organic matter is available.</p></li>
 <li><p><code>soil_USDAType()</code> returns the USDA type (a string) for a given texture.</p></li>
 <li><p><code>soil_vanGenuchtenParamsCarsel()</code> gives parameters for van Genuchten-Mualem equations (alpha, n, theta_res and theta_sat, where alpha is in MPa-1) for a given texture type (Leij et al. 1996)</p></li>
 <li><p><code>soil_vanGenuchtenParamsToth()</code> gives parameters for van Genuchten-Mualem equations (alpha, n, theta_res and theta_sat, where alpha is in MPa-1) for a given texture, organic matter and bulk density (Toth et al. 2015).</p></li>
 <li><p><code>soil_psi()</code> returns the water potential (MPa) of each soil layer, according to its water retention model.</p></li>
 <li><p><code>soil_theta()</code> returns the moisture content (as percent of soil volume) of each soil layer, according to its water retention model.</p></li>
 <li><p><code>soil_water()</code> returns the water volume (mm) of each soil layer, according to its water retention model.</p></li>
+<li><p><code>soil_conductivity()</code> returns the conductivity of each soil layer (mmol/m/s/MPa), according the Saxton model.</p></li>
 <li><p><code>soil_waterExtractable()</code> returns the water volume (mm) extractable from the soil according to its water retention curves and up to a given soil water potential.</p></li>
 <li><p><code>soil_waterFC()</code> and <code>soil_thetaFC()</code> calculate the water volume (in mm) and moisture content (as percent of soil volume) of each soil layer at field capacity, respectively.</p></li>
 <li><p><code>soil_waterWP()</code> and <code>soil_thetaWP()</code> calculate the water volume (in mm) and moisture content (as percent of soil volume) of each soil layer at wilting point (-1.5 MPa), respectively.</p></li>
