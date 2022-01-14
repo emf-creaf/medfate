@@ -1693,9 +1693,9 @@ List transpirationGranier(List x, NumericVector meteovec,
       Kunlc[l] = Kunsat[l]*V(c,l);
     }
     double sumKunlc = sum(Kunlc);
-
+    double Klcmean = sum(Klc*V(c,_));
     for(int l=0;l<nlayers;l++) {
-      double epc = std::max(TmaxCoh[c]*Klc[l]*(Kunlc[l]/sumKunlc),0.0);
+      double epc = std::max(TmaxCoh[c]*Klcmean*(Kunlc[l]/sumKunlc),0.0);
       RootPsi(c,l) = psiSoil[l]; //Set initial guess of root potential to soil values
       //If relative conductance is smaller than the value for root disconnection
       //Set root potential to minimum value before disconnection and transpiration from that layer to zero
