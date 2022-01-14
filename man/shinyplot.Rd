@@ -3,6 +3,7 @@
 \alias{shinyplot.spwb}
 \alias{shinyplot.pwb}
 \alias{shinyplot.growth}
+\alias{shinyplot.fordyn}
 \alias{shinyplot.spwb_day}
 \alias{shinyplot.pwb_day}
 \alias{shinyplot.growth_day}

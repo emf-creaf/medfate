@@ -1,5 +1,6 @@
 \name{plot.forest}
 \alias{plot.forest}
+\alias{shinyplot.forest}
 \title{
 Plot forest attributes
 }
@@ -9,7 +10,7 @@ Convenient wrappers for vertical forest profiles (see \code{\link{vprofile_leafA
 \usage{
 \method{plot}{forest}(x, SpParams, type = "LeafAreaDensity", 
                       byCohorts = FALSE, bySpecies = FALSE, ...)
-\method{shinyplot}{forest}(x, SpParams)
+\method{shinyplot}{forest}(x, SpParams, ...)
 }
 \arguments{
   \item{x}{An object of class \code{\link{forest}}.}
