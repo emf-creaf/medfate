@@ -1679,6 +1679,7 @@ List transpirationGranier(List x, NumericVector meteovec,
     NumericVector Klc(nlayers);
     NumericVector Kunlc(nlayers);
     for(int l=0;l<nlayers;l++) {
+      RootPsi(c,l) = psiSoil[l]; //Set initial guess of root potential to soil values
       Klc[l] = Psi2K(psiSoil[l], Psi_Extract[c], WeibullShape);
       //Limit Mean Kl due to previous cavitation
       if(cavitationRefill!="total") {
@@ -1690,19 +1691,19 @@ List transpirationGranier(List x, NumericVector meteovec,
         LSc[l] = pRootDisc[c]; //So that layer stress does not go below pRootDisc
         Klc[l] = 0.0; // Prevents drawing water from layer
       }
-      Kunlc[l] = Kunsat[l]*V(c,l);
+      Kunlc[l] = pow(Kunsat[l],0.5)*V(c,l);
     }
     double sumKunlc = sum(Kunlc);
     double Klcmean = sum(Klc*V(c,_));
+    double LScmean = sum(LSc*V(c,_));
     for(int l=0;l<nlayers;l++) {
       double epc = std::max(TmaxCoh[c]*Klcmean*(Kunlc[l]/sumKunlc),0.0);
-      RootPsi(c,l) = psiSoil[l]; //Set initial guess of root potential to soil values
       //If relative conductance is smaller than the value for root disconnection
       //Set root potential to minimum value before disconnection and transpiration from that layer to zero
       EplantCoh(c,l) = epc;
       Eplant[c] = Eplant[c] + epc;
-      DDS[c] = DDS[c] + Phe[c]*(V(c,l)*(1.0 - LSc[l])); //Add stress from the current layer
     }
+    DDS[c] = Phe[c]*(1.0 - LScmean); 
   }
 
   for(int c=0;c<numCohorts;c++) {
