@@ -154,7 +154,7 @@
                       sidebarLayout(
                         sidebarPanel(
                           tabsetPanel(
-                            tabPanel("Plot type & period",
+                            tabPanel("Plot selection",
                                      checkboxInput(
                                        inputId = "subdaily_check",
                                        label = "Subdaily plots",
@@ -178,16 +178,6 @@
                                        value = c(dates_out[1],dates_out[length(dates_out)]),
                                        min = dates_out[1],
                                        max = dates_out[length(dates_out)]
-                                     )
-                            ),
-                            tabPanel("Options",
-                                     selectInput(
-                                       inputId = "cohort_selection",
-                                       label = "Plant cohorts",
-                                       choices = cohort_choices,
-                                       selected = cohort_choices,
-                                       multiple = TRUE,
-                                       selectize = FALSE
                                      ),
                                      selectInput(
                                        inputId = "summary_type",
@@ -198,6 +188,16 @@
                                                    "By seasons" = "quarter", 
                                                    "By years" = "year"),
                                        selected = ifelse(type_out=="fordyn","year","None")
+                                     )
+                            ),
+                            tabPanel("Plants",
+                                     selectInput(
+                                       inputId = "cohort_selection",
+                                       label = "Plant cohorts",
+                                       choices = cohort_choices,
+                                       selected = cohort_choices,
+                                       multiple = TRUE,
+                                       selectize = FALSE
                                      ),
                                      checkboxInput(
                                        inputId = "byspecies_check",
