@@ -19,6 +19,17 @@ defaultManagementArguments()
 }
 \details{
 This function implements silvicultural actions following either 'regular' or 'irregular' management models. Irregular models are implemented by executing thinning operations only, whereas regular models include a set of final cuts. Thinning occurs anytime a stand-level metric (e.g. basal area) crosses a given threshold, and different kinds of thinning operations are allowed. Final cuts start whenever mean DBH exceeds a given threshold, and may include different cuts separated a number of years. Planting is only allowed under regular management models, and is applied after the last final cut. Understory clearings are assumed to occur anytime there is an intervention on trees, an only a residual shrub cover is left.
+
+\emph{Thinning types}:
+\itemize{
+\item{\code{above}: Extract largest trees (according to DBH) until thinning objective is met.}
+\item{\code{below}: Extract smallest trees (according to DBH) until thinning objective is met.}
+\item{\code{systematic}: Extract equally from all size classes until thinning objective is met.}
+\item{\code{above-systematic}: Extract half the objective as systematic thinning and the other hald as above thinning.}
+\item{\code{below-systematic}: Extract half the objective as systematic thinning and the other hald as below thinning.}
+\item{\code{free string}: A string specifying the proportion of tree cuts from size classes, with size classes separated by "/" and each one composed of a number specifying the upper limit and a number indicating its proportion, separated by "-" (e.g. "10-50/40-30/60-20").}
+}
+
 }
 \value{
 Function \code{defaultManagementFunction} returns a list with the following items:
@@ -32,7 +43,7 @@ Function \code{defaultManagementFunction} returns a list with the following item
 Function \code{defaultManagementArguments} returns a list with default arguments:
  \itemize{
      \item{\code{"type"}: Management model, either 'regular' or 'irregular'.}
-     \item{\code{"thinning"}: Kind of thinning to be applied in irregular models or in regular models before the final cuts. Options are 'below', 'above', 'intermediate', 'below-intermediate', 'above-intermediate' or a string with the proportion of cuts to be applied to different diameter sizes.}
+     \item{\code{"thinning"}: Kind of thinning to be applied in irregular models or in regular models before the final cuts. Options are 'below', 'above', 'systematic', 'below-systematic', 'above-systematic' or a string with the proportion of cuts to be applied to different diameter sizes (see details).}
      \item{\code{"thinningMetric"}: The stand-level metric used to decide whether thinning is applied, either 'BA' (basal area), 'N' (density) or 'HB' (Hart-Becking index).} 
      \item{\code{"thinningThreshold"}: The threshold value of the stand-level metric causing the thinning decision.}
      \item{\code{"thinningPerc"}: Percentage of stand's basal area to be removed in thinning operations.}
@@ -50,6 +61,8 @@ Function \code{defaultManagementArguments} returns a list with default arguments
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+
+Aitor \enc{Améztegui}{Caceres}, UdL
 
 Jose-Ramon Gonzalez Olabarria, CTFC
 }

@@ -72,8 +72,8 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
           cohort = cohort + 1
         }
       }
-      else if (args$thinning%in% c("below-intermediate", "above-intermediate")) { #Cut half of target BA from below/above and the other half using trees from all diameters (keep current distribution)
-        # Remove half as intermediate
+      else if (args$thinning%in% c("below-systematic", "above-systematic")) { #Cut half of target BA from below/above and the other half using trees from all diameters (keep current distribution)
+        # Remove half as systematic
         sec = pi*(x$treeData$DBH/200)^2
         propN  = x$treeData$N/sum(x$treeData$N)
         HalfBA2remove = BA2remove/2
@@ -86,7 +86,7 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
         }
         BA2remove = BA2remove/2
         #Remove remaining as below/above
-        o = order(x$treeData$DBH, decreasing = (args$thinning=="above-intermediate"))
+        o = order(x$treeData$DBH, decreasing = (args$thinning=="above-systematic"))
         cohort = 1
         while(BA2remove > 0) {
           r = (x$treeData$DBH[o[cohort]]/200)
@@ -102,7 +102,7 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
           cohort = cohort + 1
         }
       }
-      else if (args$thinning=="intermediate") { #Cut trees from all diameters (keep current distribution)
+      else if (args$thinning=="systematic") { #Cut trees from all diameters (keep current distribution)
         sec = pi*(x$treeData$DBH/200)^2
         propN  = x$treeData$N/sum(x$treeData$N)
         while(BA2remove > 0) {
