@@ -70,12 +70,11 @@ summary.forest<-function(object, SpParams, mode = "MED", detailed = FALSE, ...) 
   return(s)
 }
 print.summary.forest<-function(x, digits=getOption("digits"),...) {
-  cat("Forest summary:\n\n")
-  cat(paste("  Tree density (ind/ha):", x["N"],"\n"))
-  cat(paste("  BA (m2/ha):", round(x["BA"],digits),"\n"))
-  cat(paste("  Shrub crown phytovolume (m3/m2):", round(x["Phytovolume"],digits),"\n"))
-  cat(paste("  LAI (m2/m2) total:", round(x["LAI"], digits)," trees:", round(x["LAI_trees"], digits),
+  cat(paste("Tree density (ind/ha):", x["N"],"\n"))
+  cat(paste("BA (m2/ha):", round(x["BA"],digits),"\n"))
+  cat(paste("Shrub crown phytovolume (m3/m2):", round(x["Phytovolume"],digits),"\n"))
+  cat(paste("LAI (m2/m2) total:", round(x["LAI"], digits)," trees:", round(x["LAI_trees"], digits),
             " shrubs:", round(x["LAI_shrubs"], digits),"\n"))
-  cat(paste("  Live fine fuel (kg/m2) total:", round(x["Fuel"], digits)," trees:", round(x["Fuel_trees"], digits),
+  cat(paste("Live fine fuel (kg/m2) total:", round(x["Fuel"], digits)," trees:", round(x["Fuel_trees"], digits),
             " shrubs:", round(x["Fuel_shrubs"], digits),"\n"))
 }

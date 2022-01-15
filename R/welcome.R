@@ -1,5 +1,5 @@
 .onAttach <- function(lib, pkg)  {
-  packageStartupMessage("This is medfate [ver. ",
+  packageStartupMessage("Package 'medfate' [ver. ",
                         utils::packageDescription("medfate",
                                                   fields="Version"),"]",
                         appendLF = TRUE)

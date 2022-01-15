@@ -41,7 +41,9 @@ shinyplot.forest<-function(x, SpParams, ...){
       mainPanel(
         plotOutput("forest_plot")
       )
-    )
+    ),
+    h4("Summary"),
+    verbatimTextOutput("summary")
   )
   server <- function(input, output, session) {
     output$forest_plot <- renderPlot({
@@ -49,6 +51,9 @@ shinyplot.forest<-function(x, SpParams, ...){
            type = input$plot_main_type, 
            byCohorts = input$bycohort_check,
            bySpecies = input$byspecies_check)
+    })
+    output$summary <- renderPrint({
+      summary(x, SpParams)
     })
   }
   
