@@ -96,8 +96,7 @@ Among other outputs, function `fordyn()` calculates standard summary statistics 
 ```{r}
 fd$StandSummary
 ```
-
-where we can observe an increase in stand basal area and leaf area index during years 1 and 3, but a reduction during the second (drier) year. Species-level analogous statistics are shown using:
+Species-level analogous statistics are shown using:
 ```{r}
 fd$SpeciesSummary
 ```
@@ -116,21 +115,19 @@ Another useful output of `fordyn()` are tables in long format with cohort struct
 fd$TreeTable
 ```
 
-The same can be shown for dead trees, where we see larger mortality rates during the second (drier) year:
+The same can be shown for dead trees:
 ```{r}
 fd$DeadTreeTable
 ```
 
 ### Accessing the output from function growth()
 
-Since function `fordyn()` makes internal calls to function `growth()`, it stores the result in a vector called `GrowthResults`, which we can use to inspect intra-annual patterns of desired variables. For example, the following shows the leaf area for individuals of the three cohorts during the three consecutive years:
+Since function `fordyn()` makes internal calls to function `growth()`, it stores the result in a vector called `GrowthResults`, which we can use to inspect intra-annual patterns of desired variables. For example, the following shows the leaf area for individuals of the three cohorts during the second year:
 
 ```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
-plot(fd$GrowthResults[[1]], "LeafArea", bySpecies = T)
 plot(fd$GrowthResults[[2]], "LeafArea", bySpecies = T)
-plot(fd$GrowthResults[[3]], "LeafArea", bySpecies = T)
 ```
-where we see that the second (drier) year, resulted in a decrease in leaf area per individual, due to the sink limitation to leaf area growth caused by drought. Instead of examining year by year, it is possible to plot the whole series of results by passing a `fordyn` object to the `plot()` function:
+Instead of examining year by year, it is possible to plot the whole series of results by passing a `fordyn` object to the `plot()` function:
 
 ```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
 plot(fd, "LeafArea")

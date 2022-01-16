@@ -98,7 +98,7 @@ A list, with the following options (default values in parentheses):
 }
 \bold{Forest dynamics}:
 \itemize{
-   \item{\code{allowRecruitment (=FALSE)}: Boolean flag to indicate that recruitment is allowed.}
+   \item{\code{allowRecruitment (=TRUE)}: Boolean flag to indicate that recruitment is allowed.}
    \item{\code{ recruitmentMode [= "deterministic"]}: String describing how recruitment is applied. Current accepted values are "deterministic" or "stochastic".}
    \item{\code{ removeEmptyCohorts [= TRUE]}: Boolean flag to indicate the removal of cohorts whose density is too low.}
    \item{\code{ minimumCohortDensity [= 1]}: Threshold of density resulting in cohort removal.}

@@ -71,7 +71,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     mortalityRWCThreshold = 0.3,
     
     #dynamics
-    allowRecruitment = FALSE,
+    allowRecruitment = TRUE,
     recruitmentMode = "deterministic",
     removeEmptyCohorts=TRUE,
     minimumCohortDensity = 1,

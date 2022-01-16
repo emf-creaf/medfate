@@ -247,7 +247,6 @@ fordyn<-function(forest, soil, SpParams,
     }
     emptyCohorts = c(emptyTrees, emptyShrubs)
     if(sum(emptyCohorts)>0) {
-      if(verboseDyn) cat(paste0(", (-) Removing empty cohorts: ", paste(row.names(xo$above)[emptyCohorts], collapse=",")))
       forest$treeData = forest$treeData[!emptyTrees,, drop=FALSE] 
       forest$shrubData = forest$shrubData[!emptyShrubs,, drop=FALSE] 
       # Remove from growth input object
