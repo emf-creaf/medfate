@@ -63,7 +63,7 @@ emptyforest(ID="", patchsize=10000, ntree = 0, nshrub = 0)
   Function \code{summary.forest} can be used to summarize a \code{forest} object in the console. Function \code{emptyforest} creates an empty \code{forest} object.
 }
 \value{
-  Function \code{summary.forest} returns a list with the basal area and LAI of the forest, either expressed as totals or divided among life stages and species. Function \code{emptyforest} returns an empty \code{forest} object.
+  Function \code{summary.forest} returns a list with several structural attributes, such as the basal area and LAI of the forest. Function \code{emptyforest} returns an empty \code{forest} object.
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF

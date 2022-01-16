@@ -57,7 +57,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
                     xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                     summary.freq = summary.freq, ...))
   }
-  else if(type=="LAI") {
+  else if(type %in% c("LAI", "GroundIrradiance")) {
     return(.plot_stand(Stand = x$Stand,
                       type = type, dates = dates, 
                       xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
@@ -252,7 +252,7 @@ plot.fordyn<-function(x, type="StandBasalArea",
                         xlim = xlim, ylim = ylim, xlab = xlab, ylab = ylab,
                         summary.freq = summary.freq, ...))
     }
-    else if(type=="LAI") {
+    else if(type %in% c("LAI", "GroundIrradiance")) {
       Stand = summary(x, freq = "days", output = "Stand")
       return(.plot_stand(Stand = Stand,
                          type = type, dates = dates, 

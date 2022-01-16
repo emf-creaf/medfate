@@ -73,8 +73,9 @@ List spwbDay1(List x, NumericVector meteovec,
     LAIcellexpanded +=LAIphe[c];
     Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
   }
-  double LgroundPAR = exp((-1.0)*s);
-  double LgroundSWR = exp((-1.0)*s/1.35);
+  //Percentage of irradiance reaching the ground
+  double LgroundPAR = 100.0*exp((-1.0)*s);
+  double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
   
   //Snow pack dynamics and hydrology input
   NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, prec, er, tday, rad, elevation,

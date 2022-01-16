@@ -541,12 +541,12 @@ hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInpu
     .Call(`_medfate_parcohort`, SP, H, CR, LAI, SpParams)
 }
 
-.parheight <- function(heights, SP, H, CR, LAI, SpParams) {
-    .Call(`_medfate_parheight`, heights, SP, H, CR, LAI, SpParams)
+.parheight <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_parheight`, z, x, SpParams, gdd, mode)
 }
 
-.swrheight <- function(heights, SP, H, CR, LAI, SpParams) {
-    .Call(`_medfate_swrheight`, heights, SP, H, CR, LAI, SpParams)
+.swrheight <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_swrheight`, z, x, SpParams, gdd, mode)
 }
 
 .parExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {

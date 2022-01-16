@@ -38,7 +38,7 @@ NumericVector soilEvaporation(List soil, String soilFunctions, double pet, doubl
   NumericVector EsoilVec(nlayers,0.0);
   double swe = soil["SWE"]; //snow pack
   if(swe == 0.0) {
-    double PETsoil = pet*LgroundSWR;
+    double PETsoil = pet*(LgroundSWR/100.0);
     double Gsoil = soil["Gsoil"];
     double Ksoil = soil["Ksoil"];
     double Esoil = soilEvaporationAmount((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
@@ -113,7 +113,7 @@ double snowMelt(double tday, double rad, double LgroundSWR, double elevation) {
   if(NumericVector::is_na(elevation)) stop("Missing elevation data for snow melt!");
   double rho = meteoland::utils_airDensity(tday, meteoland::utils_atmosphericPressure(elevation));
   double ten = (86400.0*tday*rho*1013.86*1e-6/100.0); //ten can be negative if temperature is below zero
-  double ren = (rad*LgroundSWR)*(0.1); //90% albedo of snow
+  double ren = (rad*(LgroundSWR/100.0))*(0.1); //90% albedo of snow
   double melt = std::max(0.0,(ren+ten)/0.33355); //Do not allow negative melting values
   return(melt);
 }
@@ -150,7 +150,7 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, double prec, doub
   //Hydrologic input
   double NetRain = 0.0, Interception = 0.0;
   if(rain>0.0)  {
-    Interception = interceptionGashDay(rain,Cm,LgroundPAR,er);
+    Interception = interceptionGashDay(rain,Cm,LgroundPAR/100.0,er);
     NetRain = rain - Interception; 
   }
   if(modifySoil) {

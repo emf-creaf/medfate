@@ -1638,7 +1638,7 @@ List transpirationGranier(List x, NumericVector meteovec,
   }
   
   NumericVector CohASWRF = cohortAbsorbedSWRFraction(z, LAIphe,  LAIdead, H, CR, kPAR);
-
+  
   
   //Apply fractions to potential evapotranspiration
   //Maximum canopy transpiration

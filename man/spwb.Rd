@@ -89,8 +89,8 @@ pwb(x, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
           \item{\code{"LAIexpanded"}: LAI of the stand of leaves actually unfolded (in m2/m2).}
           \item{\code{"LAIdead"}: LAI of the stand corresponding to dead leaves (in m2/m2).}
           \item{\code{"Cm"}: Water retention capacity of the canopy (in mm) (accounting for leaf phenology).}
-          \item{\code{"LgroundPAR"}: The proportion of PAR that reaches the ground (accounting for leaf phenology).}
-          \item{\code{"LgroundSWR"}: The proportion of SWR that reaches the ground (accounting for leaf phenology).}
+          \item{\code{"LgroundPAR"}: The percentage of PAR that reaches the ground (accounting for leaf phenology).}
+          \item{\code{"LgroundSWR"}: The percentage of SWR that reaches the ground (accounting for leaf phenology).}
       }
       \item{\code{"Plants"}: A list of daily results for plant cohorts (see below).}
       \item{\code{"subdaily"}: A list of objects of class \code{\link{spwb_day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}

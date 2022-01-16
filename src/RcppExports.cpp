@@ -2346,34 +2346,32 @@ BEGIN_RCPP
 END_RCPP
 }
 // parheight
-NumericVector parheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams);
-RcppExport SEXP _medfate_parheight(SEXP heightsSEXP, SEXP SPSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP LAISEXP, SEXP SpParamsSEXP) {
+NumericVector parheight(NumericVector z, List x, DataFrame SpParams, double gdd, String mode);
+RcppExport SEXP _medfate_parheight(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type heights(heightsSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type SP(SPSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type H(HSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type CR(CRSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type LAI(LAISEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(parheight(heights, SP, H, CR, LAI, SpParams));
+    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(parheight(z, x, SpParams, gdd, mode));
     return rcpp_result_gen;
 END_RCPP
 }
 // swrheight
-NumericVector swrheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams);
-RcppExport SEXP _medfate_swrheight(SEXP heightsSEXP, SEXP SPSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP LAISEXP, SEXP SpParamsSEXP) {
+NumericVector swrheight(NumericVector z, List x, DataFrame SpParams, double gdd, String mode);
+RcppExport SEXP _medfate_swrheight(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type heights(heightsSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type SP(SPSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type H(HSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type CR(CRSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type LAI(LAISEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(swrheight(heights, SP, H, CR, LAI, SpParams));
+    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(swrheight(z, x, SpParams, gdd, mode));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4936,8 +4934,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_invincgam", (DL_FUNC) &_medfate_invincgam, 3},
     {"_medfate_gammds", (DL_FUNC) &_medfate_gammds, 2},
     {"_medfate_parcohort", (DL_FUNC) &_medfate_parcohort, 5},
-    {"_medfate_parheight", (DL_FUNC) &_medfate_parheight, 6},
-    {"_medfate_swrheight", (DL_FUNC) &_medfate_swrheight, 6},
+    {"_medfate_parheight", (DL_FUNC) &_medfate_parheight, 5},
+    {"_medfate_swrheight", (DL_FUNC) &_medfate_swrheight, 5},
     {"_medfate_parExtinctionProfile", (DL_FUNC) &_medfate_parExtinctionProfile, 5},
     {"_medfate_swrExtinctionProfile", (DL_FUNC) &_medfate_swrExtinctionProfile, 5},
     {"_medfate_cohortAbsorbedSWRFraction", (DL_FUNC) &_medfate_cohortAbsorbedSWRFraction, 4},

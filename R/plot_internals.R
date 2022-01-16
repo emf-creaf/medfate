@@ -25,7 +25,8 @@
   return(TYPES)
 }
 .getStandPlotTypes<-function(model = "pwb") {
-  TYPES = c("Stand LAI"="LAI")
+  TYPES = c("Stand LAI"="LAI",
+            "Ground-level irradiance" = "GroundIrradiance")
   if(model=="growth") {
     TYPES = c(TYPES, 
               "Biomass balance" = "BiomassBalance")
@@ -625,6 +626,14 @@
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
     df = Stand[,c("LAI", "LAIexpanded", "LAIdead")]
     names(df)<-c("Total (live+dead)", "Live unfolded","Dead standing")
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
+    if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
+    return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="GroundIrradiance") {
+    if(is.null(ylab)) ylab = expression(paste("Ground-level irradiance (%) "))
+    df = Stand[,c("LgroundPAR", "LgroundSWR")]
+    names(df)<-c("Photosynthetically-active radiation","Short-wave radiation")
     if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
     if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
     return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))

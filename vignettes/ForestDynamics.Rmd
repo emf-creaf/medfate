@@ -68,13 +68,10 @@ Here we will run simulations of forest dynamics using the basic water balance mo
 
 ## Executing the forest dynamics model
 
-In this vignette we will fake a eight-year weather input by repeating the example weather data frame eight times, while reducing precipitation of every two years by 60\%.
+In this vignette we will fake a eight-year weather input by repeating the example weather data frame eight times.
 ```{r}
-meteowet = examplemeteo
-meteodry = examplemeteo
-meteodry$Precipitation = meteowet$Precipitation*0.6
-meteo_01_08 = rbind(meteowet, meteodry, meteowet, meteodry,
-                    meteowet, meteodry, meteowet, meteodry)
+meteo_01_08 = rbind(examplemeteo, examplemeteo, examplemeteo, examplemeteo,
+                    examplemeteo, examplemeteo, examplemeteo, examplemeteo)
 row.names(meteo_01_08) = seq(as.Date("2001-01-01"), 
                              as.Date("2008-12-29"), by="day")
 ```

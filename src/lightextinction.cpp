@@ -37,7 +37,6 @@ NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, Num
   return(parcohortC(H,LAI,LAI_dead,kPAR,CR));
 }
 
-// [[Rcpp::export(".parheight")]]
 NumericVector parheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
   int n = SP.size();
   NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true);  
@@ -47,7 +46,6 @@ NumericVector parheight(NumericVector heights, IntegerVector SP, NumericVector H
   return(AL);
 }
 
-// [[Rcpp::export(".swrheight")]]
 NumericVector swrheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
   int n = SP.size();
   NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true);  
@@ -60,6 +58,28 @@ NumericVector swrheight(NumericVector heights, IntegerVector SP, NumericVector H
   for(int i=0; i<heights.size();i++) AL[i] = availableLight(heights[i], H,LAI, LAI_dead, kSWR,CR);
   return(AL);
 }
+
+// [[Rcpp::export(".parheight")]]
+NumericVector parheight(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL,
+                                   String mode = "MED") {
+  DataFrame above = forest2aboveground(x, SpParams, gdd, mode);
+  IntegerVector SP = above["SP"];
+  NumericVector H = above["H"];
+  NumericVector LAI = above["LAI_expanded"];
+  NumericVector CR = above["CR"];
+  return(parheight(z, SP, H, CR, LAI, SpParams));
+}
+// [[Rcpp::export(".swrheight")]]
+NumericVector swrheight(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL,
+                        String mode = "MED") {
+  DataFrame above = forest2aboveground(x, SpParams, gdd, mode);
+  IntegerVector SP = above["SP"];
+  NumericVector H = above["H"];
+  NumericVector LAI = above["LAI_expanded"];
+  NumericVector CR = above["CR"];
+  return(swrheight(z, SP, H, CR, LAI, SpParams));
+}
+
 
 // [[Rcpp::export(".parExtinctionProfile")]]
 NumericVector parExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL,
@@ -160,7 +180,7 @@ NumericVector cohortAbsorbedSWRFraction(NumericVector z, List x, DataFrame SpPar
   int nlayer = LAIme.nrow();
   int ncoh = LAIme.ncol();
   for(int i=0;i<nlayer;i++) for(int j=0;j<ncoh;j++) LAImd(i,j)=0.0; 
-  NumericVector kPAR = cohortNumericParameter(x, SpParams, "kPAR");
+  NumericVector kPAR = cohortNumericParameterWithImputation(x, SpParams, "kPAR");
   NumericVector kSWR(kPAR.size());
   for(int i=0;i<kPAR.size();i++) kSWR[i] = kPAR[i]/1.35;
   NumericVector caswrf = cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR);

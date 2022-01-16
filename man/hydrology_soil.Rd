@@ -29,7 +29,7 @@ hydrology_snowMelt(tday, rad, LgroundSWR, elevation)
   \item{soil}{An object of class \code{\link{soil}}.}
   \item{soilFunctions}{Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).}
   \item{pet}{Potential evapotranspiration for a given day (mm)}
-  \item{LgroundSWR}{Proportion of short-wave radiation (SWR) reaching the ground.}
+  \item{LgroundSWR}{Percentage of short-wave radiation (SWR) reaching the ground.}
   \item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
   \item{tday}{Average day temperature (ºC).}
   \item{rad}{Solar radiation (in MJ/m2/day).}

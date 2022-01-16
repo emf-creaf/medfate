@@ -138,7 +138,7 @@
                           "Plant growth")
   }
   if(type_out=="fordyn") {
-    plot_main_choices = c(plot_main_choices, "Forest dynamics")
+    plot_main_choices = c(plot_main_choices, "Forest structure & composition")
   }
   
   subdaily_soil_plot_choices = .getSubdailySoilPlotTypes()
@@ -164,7 +164,7 @@
                                        inputId = "plot_main_type",
                                        label = "Plot category", 
                                        choices = plot_main_choices,
-                                       selected = ifelse(type_out=="fordyn","Forest dynamics","Water balance")
+                                       selected = ifelse(type_out=="fordyn","Forest structure & composition","Water balance")
                                      ),
                                      selectInput(
                                        inputId = "plot_type",
@@ -306,7 +306,7 @@
       else if(main_plot=="Energy balance") sub_choices = energy_plot_choices
       else if(main_plot=="Plant structure") sub_choices = plant_structure_plot_choices
       else if(main_plot=="Plant growth") sub_choices = plant_growth_plot_choices
-      else if(main_plot=="Forest dynamics") sub_choices = forest_dynamics_plot_choices
+      else if(main_plot=="Forest structure & composition") sub_choices = forest_dynamics_plot_choices
       else sub_choices = soil_plot_choices
       
       if(input$subdaily_check && subdaily_out) {

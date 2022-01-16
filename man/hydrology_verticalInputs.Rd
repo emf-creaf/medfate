@@ -21,8 +21,8 @@ hydrology_soilInfiltrationPercolation(soil, soilFunctions, waterInput,
   \item{rad}{Solar radiation (in MJ/m2/day).}
   \item{elevation}{Altitude above sea level (m).}
   \item{Cm}{Canopy water storage capacity.}
-  \item{LgroundPAR}{Proportion of photosynthetically-acvive radiation (PAR) reaching the ground.}
-  \item{LgroundSWR}{Proportion of short-wave radiation (SWR) reaching the ground.}
+  \item{LgroundPAR}{Percentage of photosynthetically-acvive radiation (PAR) reaching the ground.}
+  \item{LgroundSWR}{Percentage of short-wave radiation (SWR) reaching the ground.}
   \item{runon}{Surface water amount running on the target area from upslope (in mm).}
   \item{snowpack}{Boolean flag to indicate the simulation of snow accumulation and melting.}
   \item{rockyLayerDrainage}{Boolean flag to indicate the simulation of drainage from rocky layers (> 95\% of rocks).}
