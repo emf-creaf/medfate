@@ -279,12 +279,16 @@ fordyn<-function(forest, soil, SpParams,
 
     
     # 3. Simulate species recruitment
-    if(verboseDyn) cat(paste0(", (b) Recruitment"))
-    monthlyTemp = tapply(meteoYear$MeanTemperature, monthsYear, FUN="mean", na.rm=TRUE)
-    minMonthTemp = min(monthlyTemp, na.rm=TRUE)
-    moistureIndex = sum(meteoYear$Precipitation, na.rm=TRUE)/sum(meteoYear$PET, na.rm=TRUE)
-    # if(verboseDyn) cat(paste0("       Coldest month mean temp. (Celsius): ", round(minMonthTemp,2), "   Moisture index: ", round(moistureIndex,2), "   FPAR (%): ", round(PARperc,1), "\n"))
-    recr_forest = recruitment(forest, SpParams, control, minMonthTemp, moistureIndex)
+    if(control$allowRecruitment) {
+      if(verboseDyn) cat(paste0(", (b) Recruitment"))
+      monthlyTemp = tapply(meteoYear$MeanTemperature, monthsYear, FUN="mean", na.rm=TRUE)
+      minMonthTemp = min(monthlyTemp, na.rm=TRUE)
+      moistureIndex = sum(meteoYear$Precipitation, na.rm=TRUE)/sum(meteoYear$PET, na.rm=TRUE)
+      # if(verboseDyn) cat(paste0("       Coldest month mean temp. (Celsius): ", round(minMonthTemp,2), "   Moisture index: ", round(moistureIndex,2), "   FPAR (%): ", round(PARperc,1), "\n"))
+      recr_forest = recruitment(forest, SpParams, control, minMonthTemp, moistureIndex)
+    } else {
+      recr_forest = emptyforest()
+    }
 
     
     # 4.1 Generate above-ground data

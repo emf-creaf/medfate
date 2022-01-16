@@ -80,13 +80,13 @@
   return(cohortSummary)
 }
 .summarizeSpecies<-function(step, cohSum, x, SpParams) {
-  nl_sp = tapply(cohSum$TreeDensityLive, cohSum$Species, sum, na.rm=TRUE)
-  bal_sp = tapply(cohSum$TreeBasalAreaLive, cohSum$Species, sum, na.rm=TRUE)
-  bad_sp = tapply(cohSum$BasalAreaDead, cohSum$Species, sum, na.rm=TRUE)
-  bac_sp = tapply(cohSum$BasalAreaCut, cohSum$Species, sum, na.rm=TRUE)
-  shl_sp = tapply(cohSum$ShrubCoverLive, cohSum$Species, sum, na.rm=TRUE)
-  shd_sp = tapply(cohSum$ShrubCoverDead, cohSum$Species, sum, na.rm=TRUE)
-  shc_sp = tapply(cohSum$ShrubCoverCut, cohSum$Species, sum, na.rm=TRUE)
+  nl_sp = tapply(cohSum$TreeDensityLive, cohSum$Species, sum, na.rm=FALSE)
+  bal_sp = tapply(cohSum$TreeBasalAreaLive, cohSum$Species, sum, na.rm=FALSE)
+  bad_sp = tapply(cohSum$BasalAreaDead, cohSum$Species, sum, na.rm=FALSE)
+  bac_sp = tapply(cohSum$BasalAreaCut, cohSum$Species, sum, na.rm=FALSE)
+  shl_sp = tapply(cohSum$ShrubCoverLive, cohSum$Species, sum, na.rm=FALSE)
+  shd_sp = tapply(cohSum$ShrubCoverDead, cohSum$Species, sum, na.rm=FALSE)
+  shc_sp = tapply(cohSum$ShrubCoverCut, cohSum$Species, sum, na.rm=FALSE)
   spSumYear <-data.frame("Step" = rep(step, length(nl_sp)),
                          "Species" = as.integer(names(nl_sp)),
                          "Name" = species_characterParameter(as.integer(names(nl_sp)), SpParams, "Name"),
