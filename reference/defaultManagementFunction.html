@@ -72,7 +72,13 @@
     <div id="details">
     <h2>Details</h2>
     <p>This function implements silvicultural actions following either 'regular' or 'irregular' management models. Irregular models are implemented by executing thinning operations only, whereas regular models include a set of final cuts. Thinning occurs anytime a stand-level metric (e.g. basal area) crosses a given threshold, and different kinds of thinning operations are allowed. Final cuts start whenever mean DBH exceeds a given threshold, and may include different cuts separated a number of years. Planting is only allowed under regular management models, and is applied after the last final cut. Understory clearings are assumed to occur anytime there is an intervention on trees, an only a residual shrub cover is left.</p>
-    </div>
+<p><em>Thinning types</em>:</p><ul><li><p><code>above</code>: Extract largest trees (according to DBH) until thinning objective is met.</p></li>
+<li><p><code>below</code>: Extract smallest trees (according to DBH) until thinning objective is met.</p></li>
+<li><p><code>systematic</code>: Extract equally from all size classes until thinning objective is met.</p></li>
+<li><p><code>above-systematic</code>: Extract half the objective as systematic thinning and the other hald as above thinning.</p></li>
+<li><p><code>below-systematic</code>: Extract half the objective as systematic thinning and the other hald as below thinning.</p></li>
+<li><p><code>free string</code>: A string specifying the proportion of tree cuts from size classes, with size classes separated by "/" and each one composed of a number specifying the upper limit and a number indicating its proportion, separated by "-" (e.g. "10-50/40-30/60-20").</p></li>
+</ul></div>
     <div id="value">
     <h2>Value</h2>
     <p>Function <code>defaultManagementFunction</code> returns a list with the following items:</p><ul><li><p><code>"action"</code>: A string identifying the action performed (e.g. "thinning").</p></li>
@@ -81,7 +87,7 @@
 <li><p><code>"planted_forest"</code>: An object of class <code><a href="forest.html">forest</a></code> with the new plant cohorts resulting from tree/shrub planting.</p></li>
 <li><p><code>"management_args"</code>: A list of management arguments to be used in the next call to the management function.</p></li>
 </ul><p>Function <code>defaultManagementArguments</code> returns a list with default arguments:</p><ul><li><p><code>"type"</code>: Management model, either 'regular' or 'irregular'.</p></li>
-<li><p><code>"thinning"</code>: Kind of thinning to be applied in irregular models or in regular models before the final cuts. Options are 'below', 'above', 'intermediate', 'below-intermediate', 'above-intermediate' or a string with the proportion of cuts to be applied to different diameter sizes.</p></li>
+<li><p><code>"thinning"</code>: Kind of thinning to be applied in irregular models or in regular models before the final cuts. Options are 'below', 'above', 'systematic', 'below-systematic', 'above-systematic' or a string with the proportion of cuts to be applied to different diameter sizes (see details).</p></li>
 <li><p><code>"thinningMetric"</code>: The stand-level metric used to decide whether thinning is applied, either 'BA' (basal area), 'N' (density) or 'HB' (Hart-Becking index).</p></li>
 <li><p><code>"thinningThreshold"</code>: The threshold value of the stand-level metric causing the thinning decision.</p></li>
 <li><p><code>"thinningPerc"</code>: Percentage of stand's basal area to be removed in thinning operations.</p></li>
@@ -99,6 +105,7 @@
     <div id="author">
     <h2>Author</h2>
     <p>Miquel De Cáceres Ainsa, CREAF</p>
+<p>Aitor Améztegui, UdL</p>
 <p>Jose-Ramon Gonzalez Olabarria, CTFC</p>
     </div>
     <div id="see-also">
