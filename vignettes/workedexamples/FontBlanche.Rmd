@@ -6,7 +6,7 @@ output:
   html_document:
     toc: yes
 params:
-  reload_fontblanche: TRUE
+  reload_fontblanche: FALSE
 ---
 
 ```{r setup, include=FALSE}
