@@ -2360,6 +2360,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// PARground
+NumericVector PARground(List x, DataFrame SpParams, double gdd, String mode);
+RcppExport SEXP _medfate_PARground(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(PARground(x, SpParams, gdd, mode));
+    return rcpp_result_gen;
+END_RCPP
+}
 // swrheight
 NumericVector swrheight(NumericVector z, List x, DataFrame SpParams, double gdd, String mode);
 RcppExport SEXP _medfate_swrheight(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
@@ -2372,6 +2386,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
     Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
     rcpp_result_gen = Rcpp::wrap(swrheight(z, x, SpParams, gdd, mode));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SWRground
+NumericVector SWRground(List x, DataFrame SpParams, double gdd, String mode);
+RcppExport SEXP _medfate_SWRground(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(SWRground(x, SpParams, gdd, mode));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4935,7 +4963,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_gammds", (DL_FUNC) &_medfate_gammds, 2},
     {"_medfate_parcohort", (DL_FUNC) &_medfate_parcohort, 5},
     {"_medfate_parheight", (DL_FUNC) &_medfate_parheight, 5},
+    {"_medfate_PARground", (DL_FUNC) &_medfate_PARground, 4},
     {"_medfate_swrheight", (DL_FUNC) &_medfate_swrheight, 5},
+    {"_medfate_SWRground", (DL_FUNC) &_medfate_SWRground, 4},
     {"_medfate_parExtinctionProfile", (DL_FUNC) &_medfate_parExtinctionProfile, 5},
     {"_medfate_swrExtinctionProfile", (DL_FUNC) &_medfate_swrExtinctionProfile, 5},
     {"_medfate_cohortAbsorbedSWRFraction", (DL_FUNC) &_medfate_cohortAbsorbedSWRFraction, 4},

@@ -66,8 +66,8 @@ summary.forest<-function(object, SpParams, mode = "MED", detailed = FALSE, ...) 
         summaryLAI(object,SpParams),
         summaryFuel(object,SpParams))
   s["Phytovolume"] = sum(plant_phytovolume(object, SpParams),na.rm=TRUE)
-  s["PARground"] = .parheight(0,object, SpParams)
-  s["SWRground"] = .swrheight(0,object, SpParams)
+  s["PARground"] = light_PARground(object, SpParams)
+  s["SWRground"] = light_SWRground(object, SpParams)
   class(s)<-c("summary.forest","list")
   return(s)
 }

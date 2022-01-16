@@ -105,7 +105,7 @@ recruitment<-function(forest, SpParams, control,
     forest_plus = forest
     forest_plus$treeData = rbind(forest$treeData, recr_forest$treeData)
     forest_plus$shrubData = rbind(forest$shrubData, recr_forest$shrubData)
-    PARperc = .parheight(0, forest_plus, SpParams)
+    PARperc = light_PARground(forest_plus, SpParams)
     tree_recr_selection = tree_recr_selection & (PARperc > tree_minFPAR) & (recr_forest$treeData$N < tree_maxN)
     shrub_recr_selection = shrub_recr_selection & (PARperc > shrub_minFPAR) & (recr_forest$shrubData$Cover < shrub_maxCover)
   }

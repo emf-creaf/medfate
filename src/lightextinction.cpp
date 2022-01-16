@@ -69,6 +69,11 @@ NumericVector parheight(NumericVector z, List x, DataFrame SpParams, double gdd 
   NumericVector CR = above["CR"];
   return(parheight(z, SP, H, CR, LAI, SpParams));
 }
+// [[Rcpp::export("light_PARground")]]
+NumericVector PARground(List x, DataFrame SpParams, double gdd = NA_REAL,
+                        String mode = "MED") {
+  return(parheight(NumericVector::create(0.0), x, SpParams, gdd, mode));
+}
 // [[Rcpp::export(".swrheight")]]
 NumericVector swrheight(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL,
                         String mode = "MED") {
@@ -78,6 +83,11 @@ NumericVector swrheight(NumericVector z, List x, DataFrame SpParams, double gdd 
   NumericVector LAI = above["LAI_expanded"];
   NumericVector CR = above["CR"];
   return(swrheight(z, SP, H, CR, LAI, SpParams));
+}
+// [[Rcpp::export("light_SWRground")]]
+NumericVector SWRground(List x, DataFrame SpParams, double gdd = NA_REAL,
+                        String mode = "MED") {
+  return(swrheight(NumericVector::create(0.0), x, SpParams, gdd, mode));
 }
 
 

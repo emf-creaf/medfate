@@ -7,6 +7,8 @@
 \alias{light_instantaneousLightExtinctionAbsortion}
 \alias{light_cohortAbsorbedSWRFraction}
 \alias{light_longwaveRadiationSHAW}
+\alias{light_PARground}
+\alias{light_SWRground}
 \title{Radiation transfer functions}
 \description{
 Functions \code{light_layerIrradianceFraction} and \code{light_layerIrradianceFractionBottomUp} calculate the fraction of above-canopy irradiance (and the soil irradiance, respectively) reaching each vegetation layer. Function \code{light_layerSunlitFraction} calculates the proportion of sunlit leaves in each vegetation layer. Function \code{light_cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorved by cohort and vegetation layers, while differentiating between sunlit and shade leaves.
@@ -27,6 +29,8 @@ light_instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
 light_longwaveRadiationSHAW(LAIme, LAImd, LAImx, 
                             LWRatm, Tsoil, Tair, trunkExtinctionFraction = 0.1)
 light_cohortAbsorbedSWRFraction(z, x, SpParams, gdd = NA)
+light_PARground(x, SpParams, gdd = NA)
+light_SWRground(x, SpParams, gdd = NA)
 }
 \arguments{
   \item{LAIme}{A numeric matrix of live expanded LAI values per vegetation layer (row) and cohort (column).}
