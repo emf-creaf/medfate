@@ -6,7 +6,7 @@ output:
   html_document:
     toc: yes
 params:
-  reload_fontblanche: FALSE
+  reload_fontblanche: TRUE
 ---
 
 ```{r setup, include=FALSE}
@@ -142,7 +142,7 @@ Water balance simulations of function `spwb()` require **daily weather** inputs.
 fb_meteo = fb$meteoData
 head(fb_meteo)
 ```
-Simulation models in `medfate` have been designed to work along with data generated from package `meteoland` (De Caceres et al. 2018), which specifies conventions for variable names and units. The user is strongly recommended to resort to this package to obtain suitable weather input for soil water balance simulations (see http://emf-creaf.github.io/meteoland).
+Simulation models in `medfate` have been designed to work along with data generated from package `meteoland` (De Cáceres et al. 2018), which specifies conventions for variable names and units. The user is strongly recommended to resort to this package to obtain suitable weather input for soil water balance simulations (see http://emf-creaf.github.io/meteoland).
 
 
 ### Simulation control
