@@ -164,13 +164,13 @@
                                        inputId = "plot_main_type",
                                        label = "Plot category", 
                                        choices = plot_main_choices,
-                                       selected = c("Water balance")
+                                       selected = ifelse(type_out=="fordyn","Forest dynamics","Water balance")
                                      ),
                                      selectInput(
                                        inputId = "plot_type",
                                        label = "Plot type", 
-                                       choices = wb_plot_choices,
-                                       selected = wb_plot_choices[1]
+                                       choices = ifelse(type_out=="fordyn",forest_dynamics_plot_choices,wb_plot_choices),
+                                       selected = ifelse(type_out=="fordyn",forest_dynamics_plot_choices[i],wb_plot_choices[1])
                                      ),
                                      sliderInput(
                                        inputId = "date_range",

@@ -105,6 +105,10 @@
   domDBH = .dominantTreeDiameter(x$above$N[isTree], x$above$DBH[isTree])
   qmDBH = .quadraticMeanTreeDiameter(x$above$N[isTree], x$above$DBH[isTree])
   standSumYear = data.frame("Step" = step,
+                            "NumTreeSpecies" = length(unique(x$above$SP[isTree])),
+                            "NumTreeCohorts" = sum(isTree),
+                            "NumShrubSpecies" = length(unique(x$above$SP[!isTree])),
+                            "NumShrubCohorts" = sum(!isTree),
                             "TreeDensityLive"= sum(cohSum$TreeDensityLive, na.rm = TRUE),
                             "TreeBasalAreaLive"= sum(cohSum$TreeBasalAreaLive, na.rm = TRUE),
                             "DominantTreeHeight"= domH,

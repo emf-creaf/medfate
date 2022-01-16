@@ -199,12 +199,19 @@
 }
 
 .getUniqueFORDYNPlotTypes<-function(transpirationMode = "Granier"){
-  return(c("Stand basal area" = "StandBasalArea", 
-           "Stand density of trees" = "StandDensity",
+  return(c("Number of tree species" = "NumTreeSpecies",
+           "Number of shrub species" = "NumShrubSpecies",
+           "Number of tree cohorts" = "NumTreeCohorts",
+           "Number of shrub cohorts" = "NumShrubCohorts",
+           "Stand basal area" = "StandBasalArea", 
            "Basal area of trees by species" = "SpeciesBasalArea", 
-           "Density of trees by species" = "SpeciesDensity",
            "Basal area of trees by cohort" = "CohortBasalArea", 
-           "Density of trees by cohort" = "CohortDensity"))
+           "Stand density of trees" = "StandDensity",
+           "Density of trees by species" = "SpeciesDensity",
+           "Density of trees by cohort" = "CohortDensity",
+           "Stand shrub cover" = "StandShrubCover",
+           "Shrub cover by species" = "SpeciesShrubCover",
+           "Shrub cover by cohort" = "CohortShrubCover"))
 }
 
 .getSubdailySoilPlotTypes<-function(){
@@ -368,15 +375,22 @@
   else if(type=="TempMax_SH") ylab = expression(paste("Maximum shade leaf temperature (Celsius)"))
   else if(type=="TempMin_SL") ylab = expression(paste("Minimum sunlit leaf temperature (Celsius)"))
   else if(type=="TempMax_SL") ylab = expression(paste("Maximum sunlit leaf temperature (Celsius)"))
+  else if(type=="NumTreeSpecies") ylab = expression(paste("Number of tree species"))
+  else if(type=="NumShrubSpecies") ylab = expression(paste("Number of shrub species"))
+  else if(type=="NumTreeCohorts") ylab = expression(paste("Number of tree cohorts"))
+  else if(type=="NumShrubCohorts") ylab = expression(paste("Number of shrub cohorts"))
   else if(type=="StandBasalArea") ylab = expression(paste("Stand basal area ",(m^{-2}%.%ha^{-1})))
   else if(type=="StandLAI") ylab = expression(paste("Stand leaf area index ",(m^{-2}%.%m^{-2})))
   else if(type=="StandDensity") ylab = expression(paste("Stand tree density ",(ind%.%ha^{-1})))
+  else if(type=="StandShrubCover") ylab = expression(paste("Stand shrub cover (%)"))
   else if(type=="SpeciesBasalArea") ylab = expression(paste("Species basal area ",(m^{-2}%.%ha^{-1})))
   else if(type=="SpeciesLAI") ylab = expression(paste("Species leaf area index ",(m^{-2}%.%m^{-2})))
   else if(type=="SpeciesDensity") ylab = expression(paste("Species tree density ",(ind%.%ha^{-1})))
+  else if(type=="SpeciesShrubCover") ylab = expression(paste("Shrub cover by species (%)"))
   else if(type=="CohortBasalArea") ylab = expression(paste("Cohort basal area ",(m^{-2}%.%ha^{-1})))
   else if(type=="CohortLAI") ylab = expression(paste("Cohort leaf area index ",(m^{-2}%.%m^{-2})))
   else if(type=="CohortDensity") ylab = expression(paste("Cohort tree density ",(ind%.%ha^{-1})))
+  else if(type=="CohortShrubCover") ylab = expression(paste("Shrub cover by cohort (%)"))
   return(ylab)
 }
 

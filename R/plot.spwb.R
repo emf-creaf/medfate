@@ -381,19 +381,54 @@ plot.fordyn<-function(x, type="StandBasalArea",
 
 
   ## FORDYN PLOT
-  i_type = which(TYPES_FORDYN_UNIQUE %in% type)
-  
-  vars = rep(c("TreeBasalAreaLive", "TreeDensityLive"),3)
-  tables = c(rep("StandSummary",2),rep("SpeciesSummary",2),rep("CohortSummary",2))
-  
+
   if(is.null(ylab)) ylab = .getYLab(type)
   if(is.null(xlab)) xlab = "Step"
+
+  if(type %in% c("NumTreeSpecies", "NumTreeCohorts", "NumShrubSpecies", "NumShrubCohorts"))  {
+    out = x$StandSummary
+    var = type
+  }
+  else if(type == "StandDensity")  {
+    out = x$StandSummary
+    var = "TreeDensityLive"
+  }
+  else if(type == "StandBasalArea")  {
+    out = x$StandSummary
+    var = "TreeBasalAreaLive"
+  }
+  else if(type == "StandShrubCover")  {
+    out = x$StandSummary
+    var = "ShrubCoverLive"
+  }
+  else if(type == "SpeciesDensity")  {
+    out = x$SpeciesSummary
+    var = "TreeDensityLive"
+  }
+  else if(type == "SpeciesBasalArea")  {
+    out = x$SpeciesSummary
+    var = "TreeBasalAreaLive"
+  } 
+  else if(type == "SpeciesShrubCover")  {
+    out = x$SpeciesSummary
+    var = "ShrubCoverLive"
+  } 
+  else if(type == "CohortDensity")  {
+    out = x$CohortSummary
+    var = "TreeDensityLive"
+  }
+  else if(type == "CohortBasalArea")  {
+    out = x$CohortSummary
+    var = "TreeBasalAreaLive"
+  }
+  else if(type == "CohortShrubCover")  {
+    out = x$CohortSummary
+    var = "ShrubCoverLive"
+  }
   
-  out = x[[tables[i_type]]]
-  df = data.frame(Step = out[["Step"]], 
-                  y = out[[vars[i_type]]])
-  if(tables[i_type]=="SpeciesSummary") df$group = as.character(out[["Name"]])
-  else if(tables[i_type]=="CohortSummary") {
+  df = data.frame(Step = out[["Step"]], y = out[[var]])
+  if(type %in% c("SpeciesDensity", "SpeciesBasalArea", "SpeciesShrubCover")) df$group = as.character(out[["Name"]])
+  else if(type %in% c("CohortBasalArea", "CohortDensity", "CohortShrubCover")) {
     df$group = paste0(as.character(out[["Cohort"]]), " (", as.character(out[["Name"]]),")")
   }
   df = df[!is.na(df$y),]
