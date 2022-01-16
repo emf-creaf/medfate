@@ -2311,7 +2311,10 @@
 <span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">forest_list</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">f</span> <span class="op">=</span> <span class="va">forest_list</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>
   <span class="kw">if</span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">f</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span><span class="op">&gt;</span><span class="fl">0</span><span class="op">)</span> <span class="op">||</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">f</span><span class="op">$</span><span class="va">shrubData</span><span class="op">)</span><span class="op">&gt;</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
-    <span class="va">par_groundIFN3</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="../../reference/VerticalProfiles.html">vprofile_PARExtinction</a></span><span class="op">(</span><span class="va">f</span>, <span class="va">SpParams</span>, draw <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>
+      <span class="co"># remove small trees and shrubs</span>
+    <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">f</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span><span class="op">&gt;</span><span class="fl">0</span><span class="op">)</span> <span class="va">f</span><span class="op">$</span><span class="va">treeData</span> <span class="op">=</span> <span class="va">f</span><span class="op">$</span><span class="va">treeData</span><span class="op">[</span><span class="va">f</span><span class="op">$</span><span class="va">treeData</span><span class="op">$</span><span class="va">DBH</span><span class="op">&gt;</span><span class="fl">5</span>,, drop<span class="op">=</span><span class="cn">FALSE</span><span class="op">]</span>
+    <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">f</span><span class="op">$</span><span class="va">shrubData</span><span class="op">)</span><span class="op">&gt;</span><span class="fl">0</span><span class="op">)</span> <span class="va">f</span><span class="op">$</span><span class="va">shrubData</span> <span class="op">=</span> <span class="va">f</span><span class="op">$</span><span class="va">shrubData</span><span class="op">[</span><span class="va">f</span><span class="op">$</span><span class="va">shrubData</span><span class="op">$</span><span class="va">Height</span><span class="op">&gt;</span><span class="fl">50</span>,, drop<span class="op">=</span><span class="cn">FALSE</span><span class="op">]</span>
+    <span class="va">par_groundIFN3</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="../../reference/light.html">light_PARground</a></span><span class="op">(</span><span class="va">f</span>, <span class="va">SpParams</span><span class="op">)</span>
   <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
     <span class="va">par_groundIFN3</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fl">100</span>
   <span class="op">}</span>
@@ -2469,13 +2472,13 @@
   <span class="op">}</span>
 <span class="op">}</span></code></pre></div>
 <p>The resulting quantile table is:</p>
-<pre><code><span class="co">##   Species Species_medfate         q1        q5       q10    n</span>
-<span class="co">## 1       1             106 0.26024811 0.3721125 0.5119431    8</span>
-<span class="co">## 2       2              12 0.54431024 1.9304370 3.3318336 3785</span>
-<span class="co">## 3       3              99 0.02094449 0.1628209 0.4236272 2079</span>
-<span class="co">## 4       4             177 0.34247625 1.4554256 2.6532618 5681</span>
-<span class="co">## 5       5              95 0.01167938 0.1595457 0.2945055   95</span>
-<span class="co">## 6       6             132 0.77995285 3.6355239 6.2615702  707</span></code></pre>
+<pre><code><span class="co">##   Species Species_medfate         q1        q5        q10    n</span>
+<span class="co">## 1       1             106 0.30678651 0.4687634  0.6712345    8</span>
+<span class="co">## 2       2              12 4.02817802 9.4184453 14.7129241 3785</span>
+<span class="co">## 3       3              99 0.08862862 0.6803608  1.4192495 2079</span>
+<span class="co">## 4       4             177 1.18292143 5.4948951  9.5757817 5681</span>
+<span class="co">## 5       5              95 0.38357872 0.6858321  1.3319851   95</span>
+<span class="co">## 6       6             132 2.42395201 8.5078167 12.2133510  707</span></code></pre>
 <p>Store quantile tables:</p>
 </div>
 </div>
@@ -2537,14 +2540,14 @@
 <span class="co">## length</span></code></pre>
 <div class="sourceCode" id="cb416"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"MinFPARRecr"</span>,<span class="st">"MinTempRecr"</span>,<span class="st">"MinMoistureRecr"</span><span class="op">)</span>, drop<span class="op">=</span><span class="cn">FALSE</span><span class="op">]</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##   MinFPARRecr        MinTempRecr      MinMoistureRecr </span>
-<span class="co">##  Min.   : 0.00000   Min.   :-5.5634   Min.   :0.1790  </span>
-<span class="co">##  1st Qu.: 0.04204   1st Qu.:-0.4701   1st Qu.:0.2816  </span>
-<span class="co">##  Median : 0.28345   Median : 0.7369   Median :0.3545  </span>
-<span class="co">##  Mean   : 1.18883   Mean   : 1.1311   Mean   :0.3920  </span>
-<span class="co">##  3rd Qu.: 1.08772   3rd Qu.: 2.4577   3rd Qu.:0.4686  </span>
-<span class="co">##  Max.   :24.48519   Max.   : 9.9475   Max.   :1.0951  </span>
-<span class="co">##  NA's   :42         NA's   :44        NA's   :44</span></code></pre>
+<pre><code><span class="co">##   MinFPARRecr      MinTempRecr      MinMoistureRecr </span>
+<span class="co">##  Min.   : 0.000   Min.   :-5.5634   Min.   :0.1790  </span>
+<span class="co">##  1st Qu.: 0.260   1st Qu.:-0.4701   1st Qu.:0.2816  </span>
+<span class="co">##  Median : 1.223   Median : 0.7369   Median :0.3545  </span>
+<span class="co">##  Mean   : 3.374   Mean   : 1.1311   Mean   :0.3920  </span>
+<span class="co">##  3rd Qu.: 4.412   3rd Qu.: 2.4577   3rd Qu.:0.4686  </span>
+<span class="co">##  Max.   :45.636   Max.   : 9.9475   Max.   :1.0951  </span>
+<span class="co">##  NA's   :42       NA's   :44        NA's   :44</span></code></pre>
 </div>
 </div>
 <div class="section level2 unnumbered">

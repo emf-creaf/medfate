@@ -159,18 +159,22 @@
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Stand-level summaries</span></span>
 <span class="r-in"><span class="va">fd</span><span class="op">$</span><span class="va">StandSummary</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Step NumTreeSpecies NumTreeCohorts NumShrubSpecies NumShrubCohorts TreeDensityLive TreeBasalAreaLive</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    0              2              2               1               1        552.0000          25.03330</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1              2              2               1               1        549.1704          25.54670</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    2              2              2               1               1        546.3553          25.54435</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   DominantTreeHeight DominantTreeDiameter QuadraticMeanTreeDiameter HartBeckingIndex ShrubCoverLive</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1           800.0000             37.55000                  24.02949         53.20353       3.750000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2           808.7168             37.98007                  24.33710         52.76549       2.740709</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3           810.4563             38.06610                  24.39860         52.78771       2.756730</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   BasalAreaDead ShrubCoverDead BasalAreaCut ShrubCoverCut</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     0.0000000     0.00000000            0             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     0.1316292     0.01365765            0             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     0.1316170     0.01411853            0             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Step NumTreeSpecies NumTreeCohorts NumShrubSpecies NumShrubCohorts</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    0              2              2               1               1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1              2              2               1               1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    2              2              2               1               1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   TreeDensityLive TreeBasalAreaLive DominantTreeHeight DominantTreeDiameter</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        552.0000          25.03330           800.0000             37.55000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        549.1704          25.54670           808.7168             37.98007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        546.3553          25.54435           810.4563             38.06610</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   QuadraticMeanTreeDiameter HartBeckingIndex ShrubCoverLive BasalAreaDead</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                  24.02949         53.20353       3.750000     0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                  24.33710         52.76549       2.740709     0.1316292</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                  24.39860         52.78771       2.756730     0.1316170</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ShrubCoverDead BasalAreaCut ShrubCoverCut</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     0.00000000            0             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     0.01365765            0             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     0.01411853            0             0</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Tree table by annual steps</span></span>
 <span class="r-in"><span class="va">fd</span><span class="op">$</span><span class="va">TreeTable</span></span>
@@ -184,11 +188,16 @@
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Dead tree table by annual steps</span></span>
 <span class="r-in"><span class="va">fd</span><span class="op">$</span><span class="va">DeadTreeTable</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Step Year Cohort Species             Name         N      DBH   Height Z50  Z95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    1 2001 T1_148     148 Pinus halepensis 0.8611814 37.98007 808.7168 400 2000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1 2001 T2_168     168     Quercus ilex 1.9684147 14.84372 668.3329 400 2000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    2 2002 T1_148     148 Pinus halepensis 0.8567669 38.06610 810.4563 400 2000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    2 2002 T2_168     168     Quercus ilex 1.9583245 14.89235 669.9957 400 2000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Step Year Cohort Species             Name         N      DBH   Height Z50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    1 2001 T1_148     148 Pinus halepensis 0.8611814 37.98007 808.7168 400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1 2001 T2_168     168     Quercus ilex 1.9684147 14.84372 668.3329 400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    2 2002 T1_148     148 Pinus halepensis 0.8567669 38.06610 810.4563 400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    2 2002 T2_168     168     Quercus ilex 1.9583245 14.89235 669.9957 400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Z95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 2000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 2000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 2000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 2000</span>
 </code></pre></div>
     </div>
   </div>

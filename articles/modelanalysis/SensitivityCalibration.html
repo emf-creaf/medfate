@@ -275,25 +275,25 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##                  SWC       ETR   E_T1_148   E_T2_168 FMC_T1_148 FMC_T2_168</span>
-<span class="co">## 2001-01-01 0.3061318 2.4087670 0.03782675 0.25749103   125.6980   93.05242</span>
-<span class="co">## 2001-01-02 0.3171342 2.3972541 0.27767468 0.26322921   125.8038   93.02367</span>
-<span class="co">## 2001-01-03 0.3017768 0.7666495 0.18640239 0.24028329   125.7398   93.02148</span>
-<span class="co">## 2001-01-04 0.2993090 2.2046651 0.09763273 0.06383569   125.7652   93.04667</span>
-<span class="co">## 2001-01-05 0.3049983 1.9739324 0.34288410 0.22275342   125.8378   92.98319</span>
-<span class="co">## 2001-01-06 0.3064317 2.6255502 0.23661609 0.32980688   125.8131   93.01906</span>
-<span class="co">##              BAI_T1_148    BAI_T2_168</span>
-<span class="co">## 2001-01-01 -0.018236163 -0.0032479967</span>
-<span class="co">## 2001-01-02  0.015844989 -0.0034429976</span>
-<span class="co">## 2001-01-03  0.008178423  0.0007813965</span>
-<span class="co">## 2001-01-04  0.003059900  0.0117603755</span>
-<span class="co">## 2001-01-05  0.028633775 -0.0022195101</span>
-<span class="co">## 2001-01-06 -0.039467942 -0.0108713813</span></code></pre>
+<pre><code><span class="co">##                  SWC       ETR  E_T1_148  E_T2_168 FMC_T1_148 FMC_T2_168</span>
+<span class="co">## 2001-01-01 0.2954147 2.3644885 0.1284625 0.1794749   125.6817   93.01509</span>
+<span class="co">## 2001-01-02 0.3050882 2.3998136 0.4237133 0.1925936   125.7080   92.99761</span>
+<span class="co">## 2001-01-03 0.2985565 0.4235169 0.1786305 0.2337440   125.8485   93.00609</span>
+<span class="co">## 2001-01-04 0.2985085 2.1743784 0.1867094 0.1932836   125.7535   93.04532</span>
+<span class="co">## 2001-01-05 0.2961007 2.1070869 0.3551908 0.2490211   125.8215   93.01896</span>
+<span class="co">## 2001-01-06 0.3071376 2.5730965 0.1752959 0.2462638   125.7187   93.04644</span>
+<span class="co">##             BAI_T1_148    BAI_T2_168</span>
+<span class="co">## 2001-01-01  0.04041532  0.0003595873</span>
+<span class="co">## 2001-01-02 -0.02983286 -0.0018557093</span>
+<span class="co">## 2001-01-03  0.04650011  0.0012492123</span>
+<span class="co">## 2001-01-04 -0.01007174 -0.0060665821</span>
+<span class="co">## 2001-01-05  0.01163397 -0.0028512133</span>
+<span class="co">## 2001-01-06  0.02589552 -0.0060154993</span></code></pre>
 <p>where soil water content dynamics is in column <code>SWC</code>. The model fit to observed data can be measured using the Nash-Sutcliffe coefficient, which we calculate for the initial run using function <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code>:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_metric</a></span><span class="op">(</span><span class="va">S1</span>, measuredData <span class="op">=</span> <span class="va">exampleobs</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, 
                   metric <span class="op">=</span> <span class="st">"NSE"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.7261801</span></code></pre>
+<pre><code><span class="co">## [1] 0.9003763</span></code></pre>
 <p>A call to <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code> provides the coefficient given a model simulation result, but is not a model output function as we defined above. Analogously to the measures of total transpiration and average plant stress, we can use a function factory to define a model output function that takes input factors as inputs, runs the model and performs the evaluation:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">of_eval</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/optimization.html">optimization_evaluation_function</a></span><span class="op">(</span>parNames <span class="op">=</span> <span class="va">parNames</span>,
@@ -304,10 +304,10 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <p>Function <code>of_eval()</code> stores internally both the data needed for conducting simulations and the data needed for evaluating simulation results, so that we only need to provide values for the input factors:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.2648598</span></code></pre>
+<pre><code><span class="co">## [1] 0.1131923</span></code></pre>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] -6.083116</span></code></pre>
+<pre><code><span class="co">## [1] -3.797022</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="global-sensitivity-analyses">Global sensitivity analyses<a class="anchor" aria-label="anchor" href="#global-sensitivity-analyses"></a>

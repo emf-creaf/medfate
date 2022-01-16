@@ -235,32 +235,45 @@
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Monthly summary (averages) of soil water balance</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S1</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"Soil"</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  W.1       W.2       W.3       W.4     ML.1      ML.2     ML.3     ML.4    MLTot      WTD</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 0.9891491 0.9960873 0.9984397 1.0107293 67.52257 116.34905 75.72975 30.66476 290.2661 3964.240</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 0.9527628 0.9626049 0.9800821 0.9844787 65.03873 112.43810 74.33737 29.86834 281.6825 4000.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 0.9607136 0.9745166 0.9890380 0.9997193 65.58147 113.82946 75.01665 30.33072 284.7583 3978.897</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 0.9055822 0.8974768 0.9448345 0.9542300 61.81802 104.83074 71.66391 28.95061 267.2633 4000.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 0.9093545 0.9040557 0.9041486 0.9132822 62.07553 105.59919 68.57795 27.70829 263.9610 4000.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 0.7273382 0.7446821 0.8054334 0.8189090 49.65050  86.98339 61.09059 24.84508 222.5696 4000.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 0.8936196 0.8054233 0.7173847 0.7217505 61.00141  94.07833 54.41227 21.89736 231.3894 4000.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 0.8961000 0.8513919 0.7173644 0.7145195 61.17073  99.44774 54.41073 21.67798 236.7072 4000.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 0.9018815 0.8644843 0.7185283 0.7100897 61.56540 100.97702 54.49900 21.54358 238.5850 4000.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 0.9271570 0.8744552 0.7189056 0.7068089 63.29079 102.14168 54.52762 21.44404 241.4041 4000.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 0.9462113 0.9435715 0.8355046 0.7961598 64.59150 110.21488 63.37143 24.15488 262.3327 3998.331</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 0.9160133 0.9445494 0.9768876 0.9822240 62.53008 110.32910 74.09507 29.79993 276.7542 4000.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   SWE PlantExt.1 PlantExt.2  PlantExt.3  PlantExt.4       psi.1       psi.2       psi.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 1.68350931  0.1228058  0.1649104 0.038238076 0.014227049 -0.03505615 -0.03375066 -0.03329712</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 0.28233380  0.2471381  0.3394547 0.091572314 0.031441331 -0.04313700 -0.04083125 -0.03682797</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 0.01762496  0.2521786  0.3584351 0.093094822 0.033623737 -0.04065785 -0.03778237 -0.03487927</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 0.58931434  0.3531859  0.3924425 0.143579039 0.051707732 -0.05581518 -0.05836629 -0.04464688</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 0.00000000  0.4119839  0.5207653 0.130255447 0.047590786 -0.05810844 -0.05733942 -0.05577046</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 0.00000000  0.4137910  0.6578859 0.366635961 0.144778986 -0.17963725 -0.16207509 -0.10674038</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 0.00000000  0.8613212  0.4056662 0.049936794 0.019399658 -0.07062477 -0.11869514 -0.17814972</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 0.00000000  0.7452718  0.5781403 0.020299907 0.006470205 -0.06067191 -0.07636177 -0.17791505</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 0.00000000  0.5657665  0.4755904 0.014230955 0.004076469 -0.05755973 -0.07053840 -0.17646080</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 0.00000000  0.4376282  0.3108925 0.009103652 0.002474972 -0.04983481 -0.06819614 -0.17591866</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 2.67673914  0.2269531  0.2844569 0.029218441 0.008410277 -0.04465583 -0.04535028 -0.10971481</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 0.00000000  0.1533061  0.2548811 0.078269083 0.027066736 -0.05261828 -0.04484861 -0.03740244</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                  W.1       W.2       W.3       W.4     ML.1      ML.2     ML.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 0.9891491 0.9960873 0.9984397 1.0107293 67.52257 116.34905 75.72975</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 0.9527628 0.9626049 0.9800821 0.9844787 65.03873 112.43810 74.33737</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 0.9607136 0.9745166 0.9890380 0.9997193 65.58147 113.82946 75.01665</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 0.9055822 0.8974768 0.9448345 0.9542300 61.81802 104.83074 71.66391</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 0.9093545 0.9040557 0.9041486 0.9132822 62.07553 105.59919 68.57795</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 0.7273382 0.7446821 0.8054334 0.8189090 49.65050  86.98339 61.09059</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 0.8936196 0.8054233 0.7173847 0.7217505 61.00141  94.07833 54.41227</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 0.8961000 0.8513919 0.7173644 0.7145195 61.17073  99.44774 54.41073</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 0.9018815 0.8644843 0.7185283 0.7100897 61.56540 100.97702 54.49900</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 0.9271570 0.8744552 0.7189056 0.7068089 63.29079 102.14168 54.52762</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 0.9462113 0.9435715 0.8355046 0.7961598 64.59150 110.21488 63.37143</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 0.9160133 0.9445494 0.9768876 0.9822240 62.53008 110.32910 74.09507</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                ML.4    MLTot      WTD        SWE PlantExt.1 PlantExt.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 30.66476 290.2661 3964.240 1.68350931  0.1228058  0.1649104</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 29.86834 281.6825 4000.000 0.28233380  0.2471381  0.3394547</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 30.33072 284.7583 3978.897 0.01762496  0.2521786  0.3584351</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 28.95061 267.2633 4000.000 0.58931434  0.3531859  0.3924425</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 27.70829 263.9610 4000.000 0.00000000  0.4119839  0.5207653</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 24.84508 222.5696 4000.000 0.00000000  0.4137910  0.6578859</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 21.89736 231.3894 4000.000 0.00000000  0.8613212  0.4056662</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 21.67798 236.7072 4000.000 0.00000000  0.7452718  0.5781403</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 21.54358 238.5850 4000.000 0.00000000  0.5657665  0.4755904</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 21.44404 241.4041 4000.000 0.00000000  0.4376282  0.3108925</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 24.15488 262.3327 3998.331 2.67673914  0.2269531  0.2844569</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 29.79993 276.7542 4000.000 0.00000000  0.1533061  0.2548811</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             PlantExt.3  PlantExt.4       psi.1       psi.2       psi.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 0.038238076 0.014227049 -0.03505615 -0.03375066 -0.03329712</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 0.091572314 0.031441331 -0.04313700 -0.04083125 -0.03682797</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 0.093094822 0.033623737 -0.04065785 -0.03778237 -0.03487927</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 0.143579039 0.051707732 -0.05581518 -0.05836629 -0.04464688</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 0.130255447 0.047590786 -0.05810844 -0.05733942 -0.05577046</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 0.366635961 0.144778986 -0.17963725 -0.16207509 -0.10674038</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 0.049936794 0.019399658 -0.07062477 -0.11869514 -0.17814972</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 0.020299907 0.006470205 -0.06067191 -0.07636177 -0.17791505</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 0.014230955 0.004076469 -0.05755973 -0.07053840 -0.17646080</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 0.009103652 0.002474972 -0.04983481 -0.06819614 -0.17591866</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 0.029218441 0.008410277 -0.04465583 -0.04535028 -0.10971481</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 0.078269083 0.027066736 -0.05261828 -0.04484861 -0.03740244</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                  psi.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 -0.03142191</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 -0.03596164</span>
