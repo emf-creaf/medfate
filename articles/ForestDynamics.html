@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Forest dynamics</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-01-16</h4>
+            <h4 data-toc-skip class="date">2022-01-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/ForestDynamics.Rmd" class="external-link"><code>vignettes/ForestDynamics.Rmd</code></a></small>
       <div class="hidden name"><code>ForestDynamics.Rmd</code></div>
@@ -240,34 +240,34 @@
 <p>Species-level analogous statistics are shown using:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">SpeciesSummary</span></code></pre></div>
-<pre><code><span class="co">##    Step Species              Name TreeDensityLive TreeBasalAreaLive</span>
-<span class="co">## 1     0     148  Pinus halepensis        168.0000         18.604547</span>
-<span class="co">## 2     0     165 Quercus coccifera              NA                NA</span>
-<span class="co">## 3     0     168      Quercus ilex        384.0000          6.428755</span>
-<span class="co">## 4     1     148  Pinus halepensis        167.1388         18.935586</span>
-<span class="co">## 5     1     165 Quercus coccifera              NA                NA</span>
-<span class="co">## 6     1     168      Quercus ilex        382.0316          6.611113</span>
-<span class="co">## 7     2     148  Pinus halepensis        166.2821         19.267480</span>
-<span class="co">## 8     2     165 Quercus coccifera              NA                NA</span>
-<span class="co">## 9     2     168      Quercus ilex        380.0733          6.793964</span>
-<span class="co">## 10    3     148  Pinus halepensis        165.4297         19.594895</span>
-<span class="co">## 11    3     165 Quercus coccifera              NA                NA</span>
-<span class="co">## 12    3     168      Quercus ilex        378.1250          6.974600</span>
-<span class="co">## 13    4     148  Pinus halepensis        164.5794         19.916561</span>
-<span class="co">## 14    4     165 Quercus coccifera              NA                NA</span>
-<span class="co">## 15    4     168      Quercus ilex        376.1814          7.152410</span>
-<span class="co">## 16    5     148  Pinus halepensis        163.7357         20.229533</span>
-<span class="co">## 17    5     165 Quercus coccifera              NA                NA</span>
-<span class="co">## 18    5     168      Quercus ilex        374.2530          7.325809</span>
-<span class="co">## 19    6     148  Pinus halepensis        162.8964         20.538221</span>
-<span class="co">## 20    6     165 Quercus coccifera              NA                NA</span>
-<span class="co">## 21    6     168      Quercus ilex        372.3346          7.497061</span>
-<span class="co">## 22    7     148  Pinus halepensis        162.0614         20.842434</span>
-<span class="co">## 23    7     165 Quercus coccifera              NA                NA</span>
-<span class="co">## 24    7     168      Quercus ilex        370.4260          7.666061</span>
-<span class="co">## 25    8     148  Pinus halepensis        161.2329         21.143210</span>
-<span class="co">## 26    8     165 Quercus coccifera              NA                NA</span>
-<span class="co">## 27    8     168      Quercus ilex        368.5323          7.833288</span>
+<pre><code><span class="co">##    Step Species              Name NumCohorts TreeDensityLive TreeBasalAreaLive</span>
+<span class="co">## 1     0     148  Pinus halepensis          1        168.0000         18.604547</span>
+<span class="co">## 2     0     165 Quercus coccifera          1              NA                NA</span>
+<span class="co">## 3     0     168      Quercus ilex          1        384.0000          6.428755</span>
+<span class="co">## 4     1     148  Pinus halepensis          1        167.1388         18.935586</span>
+<span class="co">## 5     1     165 Quercus coccifera          1              NA                NA</span>
+<span class="co">## 6     1     168      Quercus ilex          1        382.0316          6.611113</span>
+<span class="co">## 7     2     148  Pinus halepensis          1        166.2821         19.267480</span>
+<span class="co">## 8     2     165 Quercus coccifera          1              NA                NA</span>
+<span class="co">## 9     2     168      Quercus ilex          1        380.0733          6.793964</span>
+<span class="co">## 10    3     148  Pinus halepensis          1        165.4297         19.594895</span>
+<span class="co">## 11    3     165 Quercus coccifera          1              NA                NA</span>
+<span class="co">## 12    3     168      Quercus ilex          1        378.1250          6.974600</span>
+<span class="co">## 13    4     148  Pinus halepensis          1        164.5794         19.916561</span>
+<span class="co">## 14    4     165 Quercus coccifera          1              NA                NA</span>
+<span class="co">## 15    4     168      Quercus ilex          1        376.1814          7.152410</span>
+<span class="co">## 16    5     148  Pinus halepensis          1        163.7357         20.229533</span>
+<span class="co">## 17    5     165 Quercus coccifera          1              NA                NA</span>
+<span class="co">## 18    5     168      Quercus ilex          1        374.2530          7.325809</span>
+<span class="co">## 19    6     148  Pinus halepensis          1        162.8964         20.538221</span>
+<span class="co">## 20    6     165 Quercus coccifera          1              NA                NA</span>
+<span class="co">## 21    6     168      Quercus ilex          1        372.3346          7.497061</span>
+<span class="co">## 22    7     148  Pinus halepensis          1        162.0614         20.842434</span>
+<span class="co">## 23    7     165 Quercus coccifera          1              NA                NA</span>
+<span class="co">## 24    7     168      Quercus ilex          1        370.4260          7.666061</span>
+<span class="co">## 25    8     148  Pinus halepensis          1        161.2329         21.143210</span>
+<span class="co">## 26    8     165 Quercus coccifera          1              NA                NA</span>
+<span class="co">## 27    8     168      Quercus ilex          1        368.5323          7.833288</span>
 <span class="co">##    ShrubCoverLive BasalAreaDead ShrubCoverDead BasalAreaCut ShrubCoverCut</span>
 <span class="co">## 1              NA    0.00000000             NA            0            NA</span>
 <span class="co">## 2        3.750000            NA     0.00000000           NA             0</span>
