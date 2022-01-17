@@ -202,8 +202,8 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
                       "FineRootBiomass", "DBH", "Height")) {
     OM = x$PlantStructure[[type]][,cohorts,drop=FALSE]
   } 
-  else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth")) {
-    OM = x$PlantGrowth[[type]][,cohorts,drop=FALSE]
+  else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth", "StarvationRate", "DessicationRate", "MortalityRate")) {
+    OM = x$GrowthMortality[[type]][,cohorts,drop=FALSE]
   } 
   else if(type=="HuberValue") {
     OM = x$PlantStructure[["SapwoodArea"]][,cohorts,drop=FALSE] / x$PlantStructure[["LeafArea"]][,cohorts,drop=FALSE]
@@ -359,8 +359,8 @@ plot.fordyn<-function(x, type="StandBasalArea",
       else if(type %in% c("SapwoodArea", "LeafArea", "FineRootArea", "FineRootBiomass", "DBH", "Height")) {
         OM = summary(x, freq = "days", output = paste0("PlantStructure$",type))[,cohorts,drop=FALSE]
       } 
-      else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth")) {
-        OM = summary(x, freq = "days", output = paste0("PlantGrowth$",type))[,cohorts,drop=FALSE]
+      else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth", "StarvationRate", "MortalityRate", "DessicationRate")) {
+        OM = summary(x, freq = "days", output = paste0("GrowthMortality$",type))[,cohorts,drop=FALSE]
       } 
       else if(type %in% c("HuberValue")) {
         SA = summary(x, freq = "days", output = "PlantStructure$SapwoodArea")[,cohorts,drop=FALSE]
@@ -401,6 +401,10 @@ plot.fordyn<-function(x, type="StandBasalArea",
     out = x$StandSummary
     var = "ShrubCoverLive"
   }
+  else if(type %in% c("DominantTreeHeight", "DominantTreeDiameter", "QuadraticMeanTreeDiameter", "HartBeckingIndex")) {
+    out = x$StandSummary
+    var = type
+  }
   else if(type == "SpeciesDensity")  {
     out = x$SpeciesSummary
     var = "TreeDensityLive"
@@ -412,6 +416,10 @@ plot.fordyn<-function(x, type="StandBasalArea",
   else if(type == "SpeciesShrubCover")  {
     out = x$SpeciesSummary
     var = "ShrubCoverLive"
+  } 
+  else if(type == "NumCohortsSpecies")  {
+    out = x$SpeciesSummary
+    var = "NumCohorts"
   } 
   else if(type == "CohortDensity")  {
     out = x$CohortSummary
@@ -427,7 +435,7 @@ plot.fordyn<-function(x, type="StandBasalArea",
   }
   
   df = data.frame(Step = out[["Step"]], y = out[[var]])
-  if(type %in% c("SpeciesDensity", "SpeciesBasalArea", "SpeciesShrubCover")) df$group = as.character(out[["Name"]])
+  if(type %in% c("SpeciesDensity", "SpeciesBasalArea", "SpeciesShrubCover", "NumCohortsSpecies")) df$group = as.character(out[["Name"]])
   else if(type %in% c("CohortBasalArea", "CohortDensity", "CohortShrubCover")) {
     df$group = paste0(as.character(out[["Cohort"]]), " (", as.character(out[["Name"]]),")")
   }

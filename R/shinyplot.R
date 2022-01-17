@@ -123,7 +123,7 @@
   labile_plot_choices = .getLabileGROWTHPlotTypes(transpirationMode)
   plant_balance_plot_choices = .getCohortBiomassBalanceGROWTHPlotTypes(transpirationMode)
   plant_structure_plot_choices = .getStructuralGROWTHPlotTypes(transpirationMode)
-  plant_growth_plot_choices = .getGrowthGROWTHPlotTypes(transpirationMode)
+  plant_growthmortality_plot_choices = .getGrowthMortalityGROWTHPlotTypes(transpirationMode)
   forest_dynamics_plot_choices = .getUniqueFORDYNPlotTypes(transpirationMode)
   
   plot_main_choices = c("Water balance", "Soil", "Stand", "Plants")
@@ -135,7 +135,7 @@
                           "Labile carbon balance",
                           "Biomass balance",
                           "Plant structure",
-                          "Plant growth")
+                          "Growth & mortality")
   }
   if(type_out=="fordyn") {
     plot_main_choices = c(plot_main_choices, "Forest structure & composition")
@@ -164,13 +164,13 @@
                                        inputId = "plot_main_type",
                                        label = "Plot category", 
                                        choices = plot_main_choices,
-                                       selected = ifelse(type_out=="fordyn","Forest structure & composition","Water balance")
+                                       selected = "Water balance"
                                      ),
                                      selectInput(
                                        inputId = "plot_type",
                                        label = "Plot type", 
-                                       choices = ifelse(type_out=="fordyn",forest_dynamics_plot_choices,wb_plot_choices),
-                                       selected = ifelse(type_out=="fordyn",forest_dynamics_plot_choices[i],wb_plot_choices[1])
+                                       choices = wb_plot_choices,
+                                       selected = wb_plot_choices[1]
                                      ),
                                      sliderInput(
                                        inputId = "date_range",
@@ -305,7 +305,7 @@
       else if(main_plot=="Biomass balance") sub_choices = plant_balance_plot_choices
       else if(main_plot=="Energy balance") sub_choices = energy_plot_choices
       else if(main_plot=="Plant structure") sub_choices = plant_structure_plot_choices
-      else if(main_plot=="Plant growth") sub_choices = plant_growth_plot_choices
+      else if(main_plot=="Growth & mortality") sub_choices = plant_growthmortality_plot_choices
       else if(main_plot=="Forest structure & composition") sub_choices = forest_dynamics_plot_choices
       else sub_choices = soil_plot_choices
       

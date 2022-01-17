@@ -126,13 +126,17 @@
   }
   return(TYPES)
 }
-.getGrowthGROWTHPlotTypes<-function(transpirationMode = "Granier"){
+.getGrowthMortalityGROWTHPlotTypes<-function(transpirationMode = "Granier"){
   TYPES = c("Sapwood area growth rate" ="SAgrowth",
             "Leaf area growth rate" = "LAgrowth")
   if(transpirationMode=="Sperry") {
     TYPES = c(TYPES, 
               "Fine root area growth rate" ="FRAgrowth")
   }
+  TYPES = c(TYPES,
+            "Starvation mortality rate" = "StarvationRate", 
+            "Dessication mortality rate" = "DessicationRate", 
+            "Mortality rate" = "MortalityRate")
   return(TYPES)
 }
 .getCohortBiomassBalanceGROWTHPlotTypes<-function(transpirationMode = "Granier"){
@@ -185,7 +189,7 @@
             .getLabileGROWTHPlotTypes(transpirationMode),
             .getCohortBiomassBalanceGROWTHPlotTypes(transpirationMode),
             .getStructuralGROWTHPlotTypes(transpirationMode),
-            .getGrowthGROWTHPlotTypes(transpirationMode))
+            .getGrowthMortalityGROWTHPlotTypes(transpirationMode))
   return(TYPES)
 }
 .getDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){
@@ -200,11 +204,11 @@
 }
 
 .getUniqueFORDYNPlotTypes<-function(transpirationMode = "Granier"){
-  return(c("Number of tree species" = "NumTreeSpecies",
-           "Number of shrub species" = "NumShrubSpecies",
-           "Number of tree cohorts" = "NumTreeCohorts",
-           "Number of shrub cohorts" = "NumShrubCohorts",
-           "Stand basal area" = "StandBasalArea", 
+  return(c("Stand basal area" = "StandBasalArea", 
+           "Dominant tree height" = "DominantTreeHeight",
+           "Dominant tree diameter" = "DominantTreeDiameter",
+           "Quadratic mean tree diameter" = "QuadraticMeanTreeDiameter",
+           "Hart-Becking index" = "HartBeckingIndex",
            "Basal area of trees by species" = "SpeciesBasalArea", 
            "Basal area of trees by cohort" = "CohortBasalArea", 
            "Stand density of trees" = "StandDensity",
@@ -212,7 +216,12 @@
            "Density of trees by cohort" = "CohortDensity",
            "Stand shrub cover" = "StandShrubCover",
            "Shrub cover by species" = "SpeciesShrubCover",
-           "Shrub cover by cohort" = "CohortShrubCover"))
+           "Shrub cover by cohort" = "CohortShrubCover",
+           "Number of tree species" = "NumTreeSpecies",
+           "Number of shrub species" = "NumShrubSpecies",
+           "Number of tree cohorts" = "NumTreeCohorts",
+           "Number of shrub cohorts" = "NumShrubCohorts",
+           "Number of cohorts by species" = "NumCohortsSpecies"))
 }
 
 .getSubdailySoilPlotTypes<-function(){
@@ -341,6 +350,9 @@
   else if(type=="SAgrowth") ylab = expression(paste("Sapwood area growth rate ",(cm^2 %.% cm^{-2} %.% d^{-1})))
   else if(type=="LAgrowth") ylab = expression(paste("Leaf area growth rate ",(m^2 %.% cm^{-2} %.% d^{-1})))
   else if(type=="FRAgrowth") ylab = expression(paste("Fine root area growth rate ",(m^2 %.% cm^{-2} %.% d^{-1})))
+  else if(type=="DessicationRate") ylab = expression(paste("Dessication mortality rate ",(ind %.% d^{-1})))
+  else if(type=="StarvationRate") ylab = expression(paste("Starvation mortality rate ",(ind %.% d^{-1})))
+  else if(type=="MortalityRate") ylab = expression(paste("Mortality rate ",(ind %.% d^{-1})))
   else if(type=="LeafPI0")  ylab = expression(paste("Leaf osmotic potential at full turgor  ",(MPa)))
   else if(type=="StemPI0")  ylab = expression(paste("Stem osmotic potential at full turgor  ",(MPa)))
   else if(type=="StemPLC") ylab = "Percent loss conductance in stem [%]"
@@ -380,7 +392,12 @@
   else if(type=="NumShrubSpecies") ylab = expression(paste("Number of shrub species"))
   else if(type=="NumTreeCohorts") ylab = expression(paste("Number of tree cohorts"))
   else if(type=="NumShrubCohorts") ylab = expression(paste("Number of shrub cohorts"))
+  else if(type=="NumCohortsSpecies") ylab = expression(paste("Number of cohorts by species"))
   else if(type=="StandBasalArea") ylab = expression(paste("Stand basal area ",(m^{-2}%.%ha^{-1})))
+  else if(type=="DominantTreeHeight") ylab = expression(paste("Dominant tree height ",(cm)))
+  else if(type=="DominantTreeDiameter") ylab = expression(paste("Dominant tree diameter ",(cm)))
+  else if(type=="QuadraticMeanTreeDiameter") ylab = expression(paste("Quadratic mean tree diameter ",(cm)))
+  else if(type=="HartBeckingIndex") ylab = expression(paste("Hart-becking index "))
   else if(type=="StandLAI") ylab = expression(paste("Stand leaf area index ",(m^{-2}%.%m^{-2})))
   else if(type=="StandDensity") ylab = expression(paste("Stand tree density ",(ind%.%ha^{-1})))
   else if(type=="StandShrubCover") ylab = expression(paste("Stand shrub cover (%)"))

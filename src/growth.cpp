@@ -20,16 +20,10 @@ using namespace Rcpp;
 const double Q10_resp = 2.0;
 
 // [[Rcpp::export("mortality_dailyProbability")]]
-double dailyMortalityProbability(double mortalityBaselineRate, 
-                                 double stressValue, double stressThreshold, 
-                                 bool allowStress = true,
+double dailyMortalityProbability(double stressValue, double stressThreshold,
                                  double minValue = 0.0, double slope = 1.0) {
-  double P_day = 1.0 - exp(log(1.0 - mortalityBaselineRate)/356.0);
-  if(allowStress) {
-    double P_stress = (1.0-exp(slope*(stressValue - stressThreshold)))/(1.0-exp(slope*(minValue-stressThreshold)));
-    P_day = std::max(P_day, P_stress);
-  }
-  return(P_day);
+  double P_stress = (1.0-exp(slope*(stressValue - stressThreshold)))/(1.0-exp(slope*(minValue-stressThreshold)));
+  return(std::max(0.0,P_stress));
 }
 
 /**
@@ -303,7 +297,7 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
         if(H[j]> Hmax[j]) { //Limit height (and update the former variables)
           H[j] = Hmax[j];
         }
-        Cover[j] = (N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); //Updates shrub cover
+        Cover[j] = std::min(100.0, N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); //Updates shrub cover
       }
     }
   }
@@ -459,8 +453,7 @@ List growthDay1(List x, NumericVector meteovec,
   NumericVector PlantSugarTransport(numCohorts,0.0), PlantSugarLeaf(numCohorts,0.0), PlantStarchLeaf(numCohorts,0.0);
   NumericVector PlantSugarSapwood(numCohorts,0.0), PlantStarchSapwood(numCohorts,0.0);
   NumericVector SapwoodArea(numCohorts,0.0), LeafArea(numCohorts,0.0);
-  NumericVector SAgrowth(numCohorts,0.0);
-  NumericVector LAgrowth(numCohorts,0.0);
+  NumericVector SAgrowth(numCohorts,0.0), LAgrowth(numCohorts,0.0), starvationRate(numCohorts,0.0), dessicationRate(numCohorts,0.0), mortalityRate(numCohorts,0.0);
   NumericVector GrossPhotosynthesis(numCohorts,0.0);
   NumericVector RootExudation(numCohorts,0.0);
 
@@ -487,6 +480,8 @@ List growthDay1(List x, NumericVector meteovec,
   NumericVector TotalLivingBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalLivingBiomass"]);
   NumericVector TotalBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalBiomass"]);
 
+  double basalMortalityRate = 1.0 - exp(log(1.0 - mortalityBaselineRate)/356.0);
+  
   //3. Carbon balance and growth
   for(int j=0;j<numCohorts;j++){
     if(N[j] > 0.0) {
@@ -686,26 +681,24 @@ List growthDay1(List x, NumericVector meteovec,
             if(verbose) Rcout<<" [Cohort "<< j<<" died from dessication] ";
           }
         } else {
-          double P_starv = dailyMortalityProbability(mortalityBaselineRate, sugarSapwood[j], 
-                                                     mortalitySugarThreshold, allowStarvation,
-                                                     0.0, 2.0);
-          double P_dess = dailyMortalityProbability(mortalityBaselineRate, stemSympRWC, 
-                                                    mortalityRWCThreshold, allowDessication,
-                                                    0.0, 2.0);
-          double P_day = std::max(P_dess, P_starv);
+
+          if(allowStarvation) starvationRate[j] = dailyMortalityProbability(sugarSapwood[j], mortalitySugarThreshold, 0.0, 2.0);
+          if(allowDessication) dessicationRate[j] = dailyMortalityProbability(stemSympRWC, mortalityRWCThreshold, 0.0, 2.0);
+          mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));
+          
           if(mortalityMode =="density/deterministic") {
-            Ndead_day = N[j]*P_day;
+            Ndead_day = N[j]*mortalityRate[j];
           } else if(mortalityMode =="whole-cohort/stochastic") {
-            if(R::runif(0.0,1.0) < P_day) {
+            if(R::runif(0.0,1.0) < mortalityRate[j]) {
               Ndead_day = N[j];
-              if(P_dess>P_starv) {
+              if(dessicationRate[j]>starvationRate[j]) {
                 Rcout<<" [Cohort "<< j<<" died from dessication] ";
               } else {
                 Rcout<<" [Cohort "<< j<<" died from starvation] ";
               }
             }
           } else if(mortalityMode == "density/stochastic") {
-            Ndead_day = R::rbinom(round(N[j]), P_day);
+            Ndead_day = R::rbinom(round(N[j]), mortalityRate[j]);
             // Rcout<< j<< " "<< P_day<< " "<< N[j]<< " "<< Ndead_day<< " "<< R::rbinom(750, 2.82309e-05)<< "\n";
           }
         }
@@ -798,11 +791,14 @@ List growthDay1(List x, NumericVector meteovec,
     _["Height"] = clone(H)
   );
   
-  DataFrame plantGrowth = DataFrame::create(
+  DataFrame growthMortality = DataFrame::create(
     _["SAgrowth"] = SAgrowth,
-    _["LAgrowth"] = LAgrowth
+    _["LAgrowth"] = LAgrowth,
+    _["StarvationRate"] = starvationRate,
+    _["DessicationRate"] = dessicationRate,
+    _["MortalityRate"] = mortalityRate
   );
-  plantGrowth.attr("row.names") = above.attr("row.names");
+  growthMortality.attr("row.names") = above.attr("row.names");
   
   List l = List::create(_["cohorts"] = clone(cohorts),
                         _["WaterBalance"] = spwbOut["WaterBalance"], 
@@ -812,7 +808,7 @@ List growthDay1(List x, NumericVector meteovec,
                         _["LabileCarbonBalance"] = labileCarbonBalance,
                         _["PlantBiomassBalance"] = plantBiomassBalance,
                         _["PlantStructure"] = plantStructure,
-                        _["PlantGrowth"] = plantGrowth);
+                        _["GrowthMortality"] = growthMortality);
   l.attr("class") = CharacterVector::create("growth_day","list");
   return(l);
 }
@@ -1050,7 +1046,7 @@ List growthDay2(List x, NumericVector meteovec,
   NumericVector PlantSugarTransport(numCohorts,0.0), PlantSugarLeaf(numCohorts,0.0), PlantStarchLeaf(numCohorts,0.0);
   NumericVector PlantSugarSapwood(numCohorts,0.0), PlantStarchSapwood(numCohorts,0.0);
   NumericVector SapwoodArea(numCohorts,0.0), LeafArea(numCohorts,0.0), FineRootArea(numCohorts, 0.0);
-  NumericVector SAgrowth(numCohorts,0.0), LAgrowth(numCohorts,0.0), FRAgrowth(numCohorts,0.0);
+  NumericVector SAgrowth(numCohorts,0.0), LAgrowth(numCohorts,0.0), FRAgrowth(numCohorts,0.0), starvationRate(numCohorts,0.0), dessicationRate(numCohorts,0.0), mortalityRate(numCohorts,0.0);
   NumericVector GrossPhotosynthesis(numCohorts,0.0);
   NumericVector RootExudation(numCohorts,0.0);
 
@@ -1076,6 +1072,8 @@ List growthDay2(List x, NumericVector meteovec,
   NumericVector SapwoodLivingStructBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["SapwoodLivingStructuralBiomass"]);
   NumericVector TotalLivingBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalLivingBiomass"]);
   NumericVector TotalBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalBiomass"]);
+  
+  double basalMortalityRate = 1.0 - exp(log(1.0 - mortalityBaselineRate)/356.0);
   
   //3. Carbon balance, growth and senescence by cohort
   for(int j=0;j<numCohorts;j++){
@@ -1410,19 +1408,17 @@ List growthDay2(List x, NumericVector meteovec,
             if(verbose) Rcout<<" [Cohort "<< j<<" died from dessication] ";
           }
         } else {
-          double P_starv = dailyMortalityProbability(mortalityBaselineRate, sugarSapwood[j], 
-                                                     mortalitySugarThreshold, allowStarvation,
-                                                     0.0, 2.0);
-          double P_dess = dailyMortalityProbability(mortalityBaselineRate, StemSympRWC[j], 
-                                                    mortalityRWCThreshold, allowDessication,
-                                                    0.0, 2.0);
-          double P_day = std::max(P_dess, P_starv);
+          
+          if(allowStarvation) starvationRate[j] = dailyMortalityProbability(sugarSapwood[j], mortalitySugarThreshold, 0.0, 2.0);
+          if(allowDessication) dessicationRate[j] = dailyMortalityProbability(StemSympRWC[j], mortalityRWCThreshold, 0.0, 2.0);
+          mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));
+          
           if(mortalityMode =="density/deterministic") {
-            Ndead_day = N[j]*P_day;
+            Ndead_day = N[j]*mortalityRate[j];
           } else if(mortalityMode =="whole-cohort/stochastic") {
-            if(R::runif(0.0,1.0) < P_day) {
+            if(R::runif(0.0,1.0) < mortalityRate[j]) {
               Ndead_day = N[j];
-              if(P_dess>P_starv) {
+              if(dessicationRate[j]>starvationRate[j]) {
                 Rcout<<" [Cohort "<< j<<" died from dessication] ";
               } else {
                 Rcout<<" [Cohort "<< j<<" died from starvation] ";
@@ -1431,7 +1427,7 @@ List growthDay2(List x, NumericVector meteovec,
           } else if(mortalityMode =="density/stochastic") {
             // NumericVector nv = Rcpp::runif(round(N[j]), 0.0,1.0);
             // for(int k=0;k<nv.size();k++) if(nv[k]< P_day) Ndead_day += 1.0;
-            Ndead_day = R::rbinom(round(N[j]), P_day);
+            Ndead_day = R::rbinom(round(N[j]), mortalityRate[j]);
             // Rcout<< j<< " "<< P_day<< " "<< N[j]<< " "<< Ndead_day<< " "<< R::rbinom(750, 2.82309e-05) << "\n";
           }
           // if(Ndead_day>0.0) Rcout<< j<< " "<< P_day<< " "<< Ndead_day<< "\n";
@@ -1574,12 +1570,15 @@ List growthDay2(List x, NumericVector meteovec,
     _["Height"] = clone(H)
   );
 
-  DataFrame plantGrowth = DataFrame::create(
+  DataFrame growthMortality = DataFrame::create(
     _["SAgrowth"] = SAgrowth,
     _["LAgrowth"] = LAgrowth,
-    _["FRAgrowth"] = FRAgrowth
+    _["FRAgrowth"] = FRAgrowth,
+    _["StarvationRate"] = starvationRate,
+    _["DessicationRate"] = dessicationRate,
+    _["MortalityRate"] = mortalityRate
   );
-  plantGrowth.attr("row.names") = above.attr("row.names");
+  growthMortality.attr("row.names") = above.attr("row.names");
   
   List l = List::create(_["cohorts"] = clone(cohorts),
                         _["WaterBalance"] = spwbOut["WaterBalance"], 
@@ -1590,7 +1589,7 @@ List growthDay2(List x, NumericVector meteovec,
                         _["LabileCarbonBalance"] = labileCarbonBalance,
                         _["PlantBiomassBalance"] = plantBiomassBalance,
                         _["PlantStructure"] = plantStructure,                        
-                        _["PlantGrowth"] = plantGrowth,
+                        _["GrowthMortality"] = growthMortality,
                         _["RhizoPsi"] = spwbOut["RhizoPsi"],
                         _["SunlitLeaves"] = spwbOut["SunlitLeaves"],
                         _["ShadeLeaves"] = spwbOut["ShadeLeaves"],
@@ -1926,9 +1925,8 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   NumericMatrix Height(numDays, numCohorts);
   NumericMatrix LabileBiomass(numDays, numCohorts);
   NumericMatrix TotalBiomass(numDays, numCohorts);
-  NumericMatrix SAgrowth(numDays, numCohorts);
-  NumericMatrix LAgrowth(numDays, numCohorts);
-  NumericMatrix FRAgrowth(numDays, numCohorts);
+  NumericMatrix SAgrowth(numDays, numCohorts), LAgrowth(numDays, numCohorts), FRAgrowth(numDays, numCohorts);
+  NumericMatrix starvationRate(numDays, numCohorts), dessicationRate(numDays, numCohorts), mortalityRate(numDays, numCohorts);
   NumericMatrix GrossPhotosynthesis(numDays, numCohorts);
   NumericMatrix PlantLAIexpanded(numDays, numCohorts), PlantLAIdead(numDays, numCohorts), PlantLAIlive(numDays, numCohorts);
   NumericMatrix StemPI0(numDays, numCohorts), LeafPI0(numDays, numCohorts);
@@ -2095,8 +2093,8 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     List Plants = s["Plants"];
     DataFrame cb = Rcpp::as<Rcpp::DataFrame>(s["LabileCarbonBalance"]);
     DataFrame bb = Rcpp::as<Rcpp::DataFrame>(s["PlantBiomassBalance"]);
-    DataFrame pg = Rcpp::as<Rcpp::DataFrame>(s["PlantGrowth"]);
     DataFrame ps = Rcpp::as<Rcpp::DataFrame>(s["PlantStructure"]);
+    DataFrame gm = Rcpp::as<Rcpp::DataFrame>(s["GrowthMortality"]);
     
     
     //4. Assemble output
@@ -2130,12 +2128,15 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     StandBiomassBalance(i,_) = standLevelBiomassBalance(bb);
     cohortBiomassBalanceSum += sum(CohortBiomassBalance(i,_));
 
-    LAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LAgrowth"]);
-    SAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["SAgrowth"]);
+    LAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(gm["LAgrowth"]);
+    SAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(gm["SAgrowth"]);
     if(transpirationMode=="Sperry") {
-      FRAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["FRAgrowth"]);
+      FRAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(gm["FRAgrowth"]);
     }
-      
+    starvationRate(i,_) = Rcpp::as<Rcpp::NumericVector>(gm["StarvationRate"]);
+    dessicationRate(i,_) = Rcpp::as<Rcpp::NumericVector>(gm["DessicationRate"]);
+    mortalityRate(i,_) = Rcpp::as<Rcpp::NumericVector>(gm["MortalityRate"]);
+    
 
     //5 Update structural variables
     if(((i<(numDays-1)) && (DOY[i+1]==1)) || (i==(numDays-1))) { 
@@ -2191,6 +2192,9 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   LAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   SAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   FRAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
+  dessicationRate.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  mortalityRate.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  starvationRate.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
   StemPI0.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names"));
   LeafPI0.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names"));
   RootExudation.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
@@ -2235,7 +2239,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                                      _["MortalityBiomassLoss"] = MortalityBiomassLoss,
                                      _["CohortBiomassBalance"] = CohortBiomassBalance);
   
-  List plantGrowth, plantStructure;
+  List growthMortality, plantStructure;
   
   List l;
   if(transpirationMode=="Granier") {
@@ -2244,8 +2248,11 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                                   Named("FineRootBiomass")=FineRootBiomass,
                                   Named("DBH") = DBH,
                                   Named("Height") = Height);
-    plantGrowth = List::create(Named("LAgrowth") = LAgrowth,
-                               Named("SAgrowth") = SAgrowth);
+    growthMortality = List::create(Named("LAgrowth") = LAgrowth,
+                                   Named("SAgrowth") = SAgrowth,
+                                   Named("StarvationRate") = starvationRate,
+                                   Named("DessicationRate") = dessicationRate,
+                                   Named("MortalityRate") = mortalityRate);
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
                      Named("growthInput") = growthInput,
@@ -2257,7 +2264,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                      Named("LabileCarbonBalance") = labileCarbonBalance,
                      Named("PlantBiomassBalance") = plantBiomassBalance,
                      Named("PlantStructure") = plantStructure,
-                     Named("PlantGrowth") = plantGrowth,
+                     Named("GrowthMortality") = growthMortality,
                      Named("subdaily") =  subdailyRes);
     
   } else {
@@ -2267,9 +2274,12 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                                   Named("FineRootBiomass") = FineRootBiomass,
                                   Named("DBH") = DBH,
                                   Named("Height") = Height);
-    plantGrowth = List::create(Named("LAgrowth") = LAgrowth,
-                               Named("SAgrowth") = SAgrowth,
-                               Named("FRAgrowth") = FRAgrowth);
+    growthMortality = List::create(Named("LAgrowth") = LAgrowth,
+                                   Named("SAgrowth") = SAgrowth,
+                                   Named("FRAgrowth") = FRAgrowth,
+                                   Named("StarvationRate") = starvationRate,
+                                   Named("DessicationRate") = dessicationRate,
+                                   Named("MortalityRate") = mortalityRate);
     l = List::create(Named("latitude") = latitude,
                    Named("topography") = topo,
                    Named("growthInput") = growthInput,
@@ -2286,7 +2296,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                    Named("LabileCarbonBalance") = labileCarbonBalance,
                    Named("PlantBiomassBalance") = plantBiomassBalance,
                    Named("PlantStructure") = plantStructure,
-                   Named("PlantGrowth") = plantGrowth,
+                   Named("GrowthMortality") = growthMortality,
                    Named("subdaily") =  subdailyRes);
     if(multiLayerBalance) l["TemperatureLayers"] = DLT;
   }

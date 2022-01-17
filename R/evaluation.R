@@ -129,7 +129,7 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     df$Observed[d %in% rownames(measuredData)] = measuredData[[obscolumn]][rownames(measuredData) %in% d] 
   }
   else if(type=="BAI") {
-    SAg = out$PlantGrowth$SAgrowth
+    SAg = out$GrowthMortality$SAgrowth
     SA = out$PlantStructure$SapwoodArea
     d = rownames(SAg)
     spnames = modelInput$cohorts$Name

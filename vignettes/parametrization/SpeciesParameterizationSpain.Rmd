@@ -1793,7 +1793,10 @@ names(par_groundIFN3) = names(forest_list)
 for(i in 1:length(forest_list)) {
   f = forest_list[[i]]
   if((nrow(f$treeData)>0) || (nrow(f$shrubData)>0)) {
-    par_groundIFN3[[i]] = vprofile_PARExtinction(f, SpParams, draw = FALSE)[1]
+      # remove small trees and shrubs
+    if(nrow(f$treeData)>0) f$treeData = f$treeData[f$treeData$DBH>5,, drop=FALSE]
+    if(nrow(f$shrubData)>0) f$shrubData = f$shrubData[f$shrubData$Height>50,, drop=FALSE]
+    par_groundIFN3[[i]] = light_PARground(f, SpParams)
   } else {
     par_groundIFN3[[i]] = 100
   }

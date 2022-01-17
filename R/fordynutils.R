@@ -90,6 +90,7 @@
   spSumYear <-data.frame("Step" = rep(step, length(nl_sp)),
                          "Species" = as.integer(names(nl_sp)),
                          "Name" = species_characterParameter(as.integer(names(nl_sp)), SpParams, "Name"),
+                         "NumCohorts" = as.numeric(table(cohSum$Species)),
                          "TreeDensityLive"= as.numeric(nl_sp),
                          "TreeBasalAreaLive"= as.numeric(bal_sp),
                          "ShrubCoverLive"= as.numeric(shl_sp),

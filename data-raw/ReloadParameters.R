@@ -48,8 +48,8 @@ exampleobs = data.frame(SWC = S1$Soil$W.1*(soil_thetaFC(examplesoil1)[1]),
              E_QI = S1$Plants$Transpiration[,QI_cohName]/x1$above[QI_cohName,"LAI_expanded"],
              FMC_PH= fmc[,PH_cohName],
              FMC_QI = fmc[,QI_cohName],
-             BAI_PH = S1$PlantStructure$SapwoodArea[,PH_cohName]*S1$PlantGrowth$SAgrowth[,PH_cohName],
-             BAI_QI = S1$PlantStructure$SapwoodArea[,QI_cohName]*S1$PlantGrowth$SAgrowth[,QI_cohName])
+             BAI_PH = S1$PlantStructure$SapwoodArea[,PH_cohName]*S1$GrowthMortality$SAgrowth[,PH_cohName],
+             BAI_QI = S1$PlantStructure$SapwoodArea[,QI_cohName]*S1$GrowthMortality$SAgrowth[,QI_cohName])
 #Add normal error
 exampleobs$SWC = exampleobs$SWC + rnorm(nrow(exampleobs), mean = 0, sd = sd(exampleobs$SWC)/4)
 exampleobs$ETR = exampleobs$ETR + rnorm(nrow(exampleobs), mean = 0, sd = sd(exampleobs$ETR)/4)
