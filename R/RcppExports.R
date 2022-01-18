@@ -541,6 +541,10 @@ hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInpu
     .Call(`_medfate_parcohort`, SP, H, CR, LAI, SpParams)
 }
 
+light_PARcohort <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_PARcohort`, x, SpParams, gdd, mode)
+}
+
 .parheight <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_parheight`, z, x, SpParams, gdd, mode)
 }

@@ -2343,6 +2343,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// PARcohort
+NumericVector PARcohort(List x, DataFrame SpParams, double gdd, String mode);
+RcppExport SEXP _medfate_PARcohort(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(PARcohort(x, SpParams, gdd, mode));
+    return rcpp_result_gen;
+END_RCPP
+}
 // parheight
 NumericVector parheight(NumericVector z, List x, DataFrame SpParams, double gdd, String mode);
 RcppExport SEXP _medfate_parheight(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
@@ -4960,6 +4974,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_invincgam", (DL_FUNC) &_medfate_invincgam, 3},
     {"_medfate_gammds", (DL_FUNC) &_medfate_gammds, 2},
     {"_medfate_parcohort", (DL_FUNC) &_medfate_parcohort, 5},
+    {"_medfate_PARcohort", (DL_FUNC) &_medfate_PARcohort, 4},
     {"_medfate_parheight", (DL_FUNC) &_medfate_parheight, 5},
     {"_medfate_PARground", (DL_FUNC) &_medfate_PARground, 4},
     {"_medfate_swrheight", (DL_FUNC) &_medfate_swrheight, 5},

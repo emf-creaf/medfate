@@ -37,6 +37,18 @@ NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, Num
   return(parcohortC(H,LAI,LAI_dead,kPAR,CR));
 }
 
+// [[Rcpp::export("light_PARcohort")]]
+NumericVector PARcohort(List x, DataFrame SpParams, double gdd = NA_REAL,
+                        String mode = "MED") {
+  DataFrame above = forest2aboveground(x, SpParams, gdd, mode);
+  IntegerVector SP = above["SP"];
+  NumericVector H = above["H"];
+  NumericVector LAI = above["LAI_expanded"];
+  NumericVector CR = above["CR"];
+  NumericVector pc = parcohort(SP, H, CR, LAI, SpParams);
+  pc.attr("names") = cohortIDs(x);
+  return(pc);
+}
 NumericVector parheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
   int n = SP.size();
   NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true);  
