@@ -9,6 +9,7 @@
 \alias{light_longwaveRadiationSHAW}
 \alias{light_PARground}
 \alias{light_SWRground}
+\alias{light_PARcohort}
 \title{Radiation transfer functions}
 \description{
 Functions \code{light_layerIrradianceFraction} and \code{light_layerIrradianceFractionBottomUp} calculate the fraction of above-canopy irradiance (and the soil irradiance, respectively) reaching each vegetation layer. Function \code{light_layerSunlitFraction} calculates the proportion of sunlit leaves in each vegetation layer. Function \code{light_cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorved by cohort and vegetation layers, while differentiating between sunlit and shade leaves.
@@ -29,8 +30,9 @@ light_instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
 light_longwaveRadiationSHAW(LAIme, LAImd, LAImx, 
                             LWRatm, Tsoil, Tair, trunkExtinctionFraction = 0.1)
 light_cohortAbsorbedSWRFraction(z, x, SpParams, gdd = NA)
-light_PARground(x, SpParams, gdd = NA)
-light_SWRground(x, SpParams, gdd = NA)
+light_PARground(x, SpParams, gdd = NA, mode = "MED")
+light_SWRground(x, SpParams, gdd = NA, mode = "MED")
+light_PARcohort(x, SpParams, gdd = NA, mode = "MED")
 }
 \arguments{
   \item{LAIme}{A numeric matrix of live expanded LAI values per vegetation layer (row) and cohort (column).}
@@ -59,6 +61,7 @@ light_SWRground(x, SpParams, gdd = NA)
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
   \item{z}{A numeric vector with height values.}
   \item{gdd}{Growth degree days.}
+  \item{mode}{Calculation mode, either "MED" or "US".}
 }
 \details{
 Functions for short-wave radiation are adapted from Anten & Bastiaans (2016), whereas long-wave radiation balance follows Flerchinger et al. (2009). Vegetation layers are assumed to be ordered from bottom to top.

@@ -1637,6 +1637,7 @@ List transpirationGranier(List x, NumericVector meteovec,
     zmid[i-1] = (verticalLayerSize/2.0) + verticalLayerSize*((double) (i-1));
   }
   
+  NumericVector PARcohort = parcohortC(H, LAIphe,  LAIdead, kPAR, CR);
   NumericVector CohASWRF = cohortAbsorbedSWRFraction(z, LAIphe,  LAIdead, H, CR, kPAR);
   
   
@@ -1713,7 +1714,8 @@ List transpirationGranier(List x, NumericVector meteovec,
     } else {
       StemPLC[c] = 1.0 - Psi2K(PlantPsi[c],Psi_Critic[c],WeibullShape);
     }
-    Agplant[c] = WUE[c]*Eplant[c];
+    Agplant[c] = WUE[c]*Eplant[c]*std::min(1.0, 0.2144*pow(PARcohort[c],0.34242));
+    // Rcout<< c<< " "<< WUE[c] << " "<< Eplant[c] << " " << PARcohort[c]<< " " << Agplant[c]<<"\n"; 
   }
   
   
