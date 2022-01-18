@@ -1714,7 +1714,7 @@ List transpirationGranier(List x, NumericVector meteovec,
     } else {
       StemPLC[c] = 1.0 - Psi2K(PlantPsi[c],Psi_Critic[c],WeibullShape);
     }
-    Agplant[c] = WUE[c]*Eplant[c]*std::min(1.0, 0.2144*pow(PARcohort[c],0.34242));
+    Agplant[c] = WUE[c]*Eplant[c]*std::min(1.0, pow(PARcohort[c]/100.0,0.2812));
     // Rcout<< c<< " "<< WUE[c] << " "<< Eplant[c] << " " << PARcohort[c]<< " " << Agplant[c]<<"\n"; 
   }
   
