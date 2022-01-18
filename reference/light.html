@@ -71,8 +71,9 @@
 <span class="fu">light_longwaveRadiationSHAW</span><span class="op">(</span><span class="va">LAIme</span>, <span class="va">LAImd</span>, <span class="va">LAImx</span>, 
                             <span class="va">LWRatm</span>, <span class="va">Tsoil</span>, <span class="va">Tair</span>, trunkExtinctionFraction <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>
 <span class="fu">light_cohortAbsorbedSWRFraction</span><span class="op">(</span><span class="va">z</span>, <span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>
-<span class="fu">light_PARground</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>
-<span class="fu">light_SWRground</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></code></pre></div>
+<span class="fu">light_PARground</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span>
+<span class="fu">light_SWRground</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span>
+<span class="fu">light_PARcohort</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -129,6 +130,8 @@
 <dd><p>A numeric vector with height values.</p></dd>
 <dt>gdd</dt>
 <dd><p>Growth degree days.</p></dd>
+<dt>mode</dt>
+<dd><p>Calculation mode, either "MED" or "US".</p></dd>
 </dl></div>
     <div id="details">
     <h2>Details</h2>

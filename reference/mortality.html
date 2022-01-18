@@ -56,22 +56,16 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mortality_dailyProbability</span><span class="op">(</span><span class="va">mortalityBaselineRate</span>, 
-                           <span class="va">stressValue</span>, <span class="va">stressThreshold</span>, 
-                           allowStress <span class="op">=</span> <span class="cn">TRUE</span>,
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mortality_dailyProbability</span><span class="op">(</span><span class="va">stressValue</span>, <span class="va">stressThreshold</span>, 
                            minValue <span class="op">=</span> <span class="fl">0.0</span>, slope <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>mortalityBaselineRate</dt>
-<dd><p>Baseline mortality rate at the annual scale.</p></dd>
-<dt>stressValue</dt>
+    <dl><dt>stressValue</dt>
 <dd><p>Current value of the stress variable (lower values indicate stronger stress).</p></dd>
 <dt>stressThreshold</dt>
 <dd><p>Threshold to indicate that lower values increase mortality likelihood.</p></dd>
-<dt>allowStress</dt>
-<dd><p>A boolean function to activate stress effects.</p></dd>
 <dt>minValue</dt>
 <dd><p>Minimum value of the stress variable (i.e. maximum stress), corresponding to probability of mortality equal to 1.</p></dd>
 <dt>slope</dt>
