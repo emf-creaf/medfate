@@ -24,17 +24,17 @@ namespace medfate {
         }
     }
 
-    inline double mortality_dailyProbability(double stressValue, double stressThreshold, double minValue = 0.0, double slope = 1.0) {
-        typedef SEXP(*Ptr_mortality_dailyProbability)(SEXP,SEXP,SEXP,SEXP);
+    inline double mortality_dailyProbability(double basalMortalityRate, double stressValue, double stressThreshold, double minValue = 0.0, double exponent = 10.0) {
+        typedef SEXP(*Ptr_mortality_dailyProbability)(SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_mortality_dailyProbability p_mortality_dailyProbability = NULL;
         if (p_mortality_dailyProbability == NULL) {
-            validateSignature("double(*mortality_dailyProbability)(double,double,double,double)");
+            validateSignature("double(*mortality_dailyProbability)(double,double,double,double,double)");
             p_mortality_dailyProbability = (Ptr_mortality_dailyProbability)R_GetCCallable("medfate", "_medfate_mortality_dailyProbability");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_mortality_dailyProbability(Shield<SEXP>(Rcpp::wrap(stressValue)), Shield<SEXP>(Rcpp::wrap(stressThreshold)), Shield<SEXP>(Rcpp::wrap(minValue)), Shield<SEXP>(Rcpp::wrap(slope)));
+            rcpp_result_gen = p_mortality_dailyProbability(Shield<SEXP>(Rcpp::wrap(basalMortalityRate)), Shield<SEXP>(Rcpp::wrap(stressValue)), Shield<SEXP>(Rcpp::wrap(stressThreshold)), Shield<SEXP>(Rcpp::wrap(minValue)), Shield<SEXP>(Rcpp::wrap(exponent)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

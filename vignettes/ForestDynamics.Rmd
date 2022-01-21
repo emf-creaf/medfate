@@ -68,18 +68,19 @@ Here we will run simulations of forest dynamics using the basic water balance mo
 
 ## Executing the forest dynamics model
 
-In this vignette we will fake a eight-year weather input by repeating the example weather data frame eight times.
+In this vignette we will fake a ten-year weather input by repeating the example weather data frame ten times.
 ```{r}
-meteo_01_08 = rbind(examplemeteo, examplemeteo, examplemeteo, examplemeteo,
-                    examplemeteo, examplemeteo, examplemeteo, examplemeteo)
-row.names(meteo_01_08) = seq(as.Date("2001-01-01"), 
-                             as.Date("2008-12-29"), by="day")
+meteo = rbind(examplemeteo, examplemeteo, examplemeteo, examplemeteo,
+                    examplemeteo, examplemeteo, examplemeteo, examplemeteo,
+                    examplemeteo, examplemeteo)
+row.names(meteo) = seq(as.Date("2001-01-01"), 
+                             as.Date("2010-12-29"), by="day")
 ```
 
 
 Now we run the forest dynamics model using all inputs (note that no intermediate input object is needed, as in `spwb()` or  `growth()`):
 ```{r}
-fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, meteo_01_08, control, 
+fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, meteo, control, 
            latitude = 41.82592, elevation = 100)
 ```
 It is worth noting that, while `fordyn()` calls function `growth()` internally for each simulated year, the `verbose` option of the control parameters only affects function `fordyn()` (i.e. all console output from `growth()` is hidden). Recruitment and summaries are done only once a year at the level of function `fordyn()`.
@@ -147,7 +148,7 @@ args <- defaultManagementArguments()
 # Here one can modify defaults before calling fordyn()
 #
 # Simulation
-fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, meteo_01_08, control, 
+fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, meteo, control, 
            latitude = 41.82592, elevation = 100,
            management_function = defaultManagementFunction,
            management_args = args)

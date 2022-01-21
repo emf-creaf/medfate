@@ -20,10 +20,17 @@ using namespace Rcpp;
 const double Q10_resp = 2.0;
 
 // [[Rcpp::export("mortality_dailyProbability")]]
-double dailyMortalityProbability(double stressValue, double stressThreshold,
-                                 double minValue = 0.0, double slope = 1.0) {
-  double P_stress = (1.0-exp(slope*(stressValue - stressThreshold)))/(1.0-exp(slope*(minValue-stressThreshold)));
-  return(std::max(0.0,P_stress));
+double dailyMortalityProbability(double basalMortalityRate, double stressValue, double stressThreshold,
+                                 double minValue = 0.0, double exponent=10.0) {
+  double P_stress = basalMortalityRate;
+  if(stressValue < stressThreshold) {
+    double a = (1.0-basalMortalityRate)/pow(stressThreshold - minValue,exponent);
+    P_stress += a*pow(stressThreshold-stressValue,exponent); 
+  }
+  if(stressValue < minValue) {
+    P_stress = 1.0;
+  }
+  return(std::min(1.0,P_stress));
 }
 
 /**
@@ -682,8 +689,8 @@ List growthDay1(List x, NumericVector meteovec,
           }
         } else {
 
-          if(allowStarvation) starvationRate[j] = dailyMortalityProbability(sugarSapwood[j], mortalitySugarThreshold, 0.0, 2.0);
-          if(allowDessication) dessicationRate[j] = dailyMortalityProbability(stemSympRWC, mortalityRWCThreshold, 0.0, 2.0);
+          if(allowStarvation) starvationRate[j] = dailyMortalityProbability(basalMortalityRate, sugarSapwood[j], mortalitySugarThreshold, 0.0);
+          if(allowDessication) dessicationRate[j] = dailyMortalityProbability(basalMortalityRate, stemSympRWC, mortalityRWCThreshold, 0.0);
           mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));
           
           if(mortalityMode =="density/deterministic") {
@@ -1409,8 +1416,8 @@ List growthDay2(List x, NumericVector meteovec,
           }
         } else {
           
-          if(allowStarvation) starvationRate[j] = dailyMortalityProbability(sugarSapwood[j], mortalitySugarThreshold, 0.0, 2.0);
-          if(allowDessication) dessicationRate[j] = dailyMortalityProbability(StemSympRWC[j], mortalityRWCThreshold, 0.0, 2.0);
+          if(allowStarvation) starvationRate[j] = dailyMortalityProbability(basalMortalityRate, sugarSapwood[j], mortalitySugarThreshold, 0.0);
+          if(allowDessication) dessicationRate[j] = dailyMortalityProbability(basalMortalityRate, StemSympRWC[j], mortalityRWCThreshold, 0.0);
           mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));
           
           if(mortalityMode =="density/deterministic") {
