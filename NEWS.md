@@ -4,8 +4,8 @@
 
 # Version 2.5.0
 - spwb model with Granier transpiration now extracts water from soil layer according to unsaturated conductivity.
-- shinyplot generic function
-- Update parameters fHDmin and fHDmax
+- shinyplot generic function.
+- Update parameters fHDmin and fHDmax.
 
 # Version 2.4.0
 - Functions 'spwb_stress', 'spwb_resistances' and 'spwb_waterUseEfficiency' renamed to 'droughtStress', 'resistances' and 'waterUseEfficiency', respectively, since they can now be applied to the output of several simulation function.
