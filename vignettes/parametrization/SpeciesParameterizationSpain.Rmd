@@ -437,10 +437,14 @@ tree_diameter_values <- treeDataIFN$DBH
 ```
 and then call function `populateTreeDiameterHeightParams()` from package **medfateutils**:
 ```{r}
+sel <- (tree_diameter_values >1 & tree_diameter_values<7.5 
+        & tree_height_values >130 & tree_height_values < 2000)
+sel[is.na(sel)] = FALSE
 SpParams <- populateTreeDiameterHeightParams(SpParams,
-                                             tree_species_codes, 
-                                             tree_height_values,
-                                             tree_diameter_values)
+                                             tree_species_codes[sel], 
+                                             tree_height_values[sel],
+                                             tree_diameter_values[sel], 
+                                             quantile_fHDmax = 0.99)
 ```
 This function fills parameters `fHDmin` and `fHDmax`, corresponding to the minimum and maximum values of the height-to-diameter ratio. The 5\% and 95\% quantile values are used for these parameters, respectively, by default. 
 
