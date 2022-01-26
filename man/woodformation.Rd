@@ -12,7 +12,7 @@ Functions to initialize and expand a ring of tracheids to simulate secondary gro
 woodformation_initRing()
 woodformation_growRing(ring, psi, Tc,
                        Nc=8.85, phi0=0.13, pi0=-0.8, CRD0=8.3,
-                       Y_P=0.05, Y_T=8.0, h=0.043*1.8, s=1.8)
+                       Y_P=0.05, Y_T=5.0, h=0.043*1.8, s=1.8)
 woodformation_relativeExpansionRate(psi, Tc, pi, phi, Y_P, Y_T)
 }
 \arguments{
