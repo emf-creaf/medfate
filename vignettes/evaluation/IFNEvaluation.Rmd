@@ -4,8 +4,8 @@ author: "Miquel De Cáceres"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_document:
+    df_print: paged
     toc: TRUE
-    toc_depth: 3
 ---
 
 ```{r setup, include=FALSE}
@@ -411,9 +411,10 @@ bai_error_map(mapdata_bac)
 
 ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
 for(i in 1:length(target_spp)) {
+  
   sp = target_spp[i]
   name = names(target_spp)[i]
-  res <- knitr::knit_child('IFNEvaluation_child.Rmd', quiet = TRUE)
+  res <- knitr::knit_child('_IFNEvaluation_child.Rmd', quiet = TRUE)
   cat(res, sep = '\n')
 }
 ```

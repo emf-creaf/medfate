@@ -1,8 +1,4 @@
-
-
-
-
-###  `r name`
+### `r name`
 
 ```{r, echo = FALSE}
 dfbaiSP = dfbai[dfbai$SP==sp,]
