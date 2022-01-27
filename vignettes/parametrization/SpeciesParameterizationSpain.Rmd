@@ -83,7 +83,7 @@ The following sections describe different steps that we used to obtain the speci
 Befores starting, we define file paths (in my computer) to access source data for parameter filling. Source data includes forest inventory (i.e. IFN) data as well as plant trait and allometric data bases:
 ```{r paths}
 IFN_path = "/home/miquel/OneDrive/Datasets/IFN/"
-DB_path = "/home/miquel/OneDrive/Professional/Recerca/MedfateSpeciesParametrization/"
+DB_path = "/home/miquel/OneDrive/Professional/MedfateWorks/MedfateSpeciesParametrization/"
 ```
 
 ## Initialize species parameter table for IFN
