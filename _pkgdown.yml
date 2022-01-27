@@ -19,7 +19,8 @@ articles:
     - starts_with("parametrization/SpeciesParameterization")
 - title: Model evaluation
   contents:
-    - starts_with("evaluation/ModelEvaluation")
+    - starts_with("evaluation/StandLevelEvaluation")
+    - starts_with("evaluation/IFNEvaluation")
 - title: Model analysis
   contents:
     - starts_with("modelanalysis/Sensitivity")

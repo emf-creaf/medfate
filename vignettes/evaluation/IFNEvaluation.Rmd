@@ -1,0 +1,421 @@
+---
+title: "Evaluation of forest dynamics with IFN data"
+author: "Miquel De Cáceres"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_document:
+    toc: TRUE
+    toc_depth: 3
+---
+
+```{r setup, include=FALSE}
+library(kableExtra)
+library(sf)
+library(knitr)
+library(ggplot2)
+library(cowplot)
+library(tidyverse)
+```
+
+```{r, echo = FALSE}
+plot_scatter_dbh<-function(dfdbh, points = TRUE){
+g1<-ggplot(dfdbh, aes(x = pred, y= obs))
+if(points) g1 <- g1 +  geom_point(size=0.3, col="dark gray", alpha = 0.3)
+g1 <- g1 +  geom_abline(intercept = 0, slope = 1, col ="black")+
+  xlab("Predicted diameter increment (cm/yr)")+
+  ylab("Observed diameter increment (cm/yr)")+
+  xlim(c(0,1.5))+ ylim(c(0,1.5))+
+  theme_bw()
+g2<-ggplot(dfdbh, aes(x = DBH3, y= error))
+if(points) g2 <- g2 +  geom_point(size=0.3, col="dark gray", alpha = 0.3)
+g2 <- g2 +  geom_abline(intercept = 0, slope = 0, col ="black")+
+  geom_smooth(method="gam", formula = y ~ s(x, bs = "cs"), col="red")+
+  xlab("Initial diameter (cm)")+
+  ylab("Error diameter increment (cm/yr)")+
+  ylim(c(-1.5,1.5))+xlim(c(0,50))+
+  theme_bw()
+  plot_grid(g1, g2, nrow=1)
+}
+
+plot_scatter_bai<-function(dfbai, quantity = "basal area increment", xylim = c(0,20), errorlim = c(-20,20)) {
+g3<-ggplot(dfbai, aes(x = pred, y= obs))+
+  geom_point(size=0.3, col="dark gray", alpha = 0.3)+
+  geom_abline(intercept = 0, slope = 1, col ="black")+
+  xlab(paste0("Predicted ", quantity," (m2/ha)"))+
+  ylab(paste0("Observed ", quantity," (m2/ha)"))+
+  xlim(xylim)+ ylim(xylim)+
+  theme_bw()
+g4<-ggplot(dfbai, aes(x = ini, y= error))+
+  geom_point(size=0.3, col="dark gray", alpha = 0.3)+
+  geom_abline(intercept = 0, slope = 0, col ="black")+
+  geom_smooth(method=NULL, formula = y ~ x, col="red")+
+  xlab("Initial basal area (m2/ha)")+
+  ylab(paste0("Error ", quantity," (m2/ha)"))+
+  xlim(c(0,30))+ylim(errorlim)+
+  theme_bw()
+  plot_grid(g3, g4, nrow=1)
+}
+
+plot_cov_clim_dbh<-function(dfdbh, points = TRUE){
+  dfdbh$PPET[dfdbh$PPET>2] = 2
+  df = bind_rows(data.frame(MAT = dfdbh$MAT, PPET = dfdbh$PPET, PAR = dfdbh$light, value = dfdbh$obs, type="Observed"),
+                 data.frame(MAT = dfdbh$MAT, PPET = dfdbh$PPET, PAR = dfdbh$light, value = dfdbh$pred, type="Predicted"))
+  g1<-ggplot(df, aes(x = PPET, y=value))
+  if(points) g1 <- g1 + geom_point(aes(col = type), size=0.3, alpha = 0.3)
+  g1 <- g1 + geom_smooth(aes(col = type), method="gam", formula = y ~ s(x, bs = "cs"))+
+    ylab("Annual diameter increment (cm/yr)")+ ylim(c(0,1.5))+
+    xlab("Moisture index (P/PET)")+
+    scale_color_discrete("")+
+    theme_bw()+
+    theme(legend.position = c(0.75,0.85), legend.background = element_blank())
+  g2<-ggplot(dfdbh, aes(x = PPET, y=error))
+  if(points) g2 <- g2 + geom_point(col = "dark gray", size=0.3, alpha = 0.3)
+  g2 <- g2 + geom_smooth(aes(x = PPET, y=error), formula = y ~ s(x, bs = "cs"), method="gam", col= "red")+
+    geom_abline(intercept = 0, slope = 0, col ="black")+
+    ylab("Annual diameter increment error (cm)")+ylim(c(-1.5,1.5))+
+    xlab("Moisture index (P/PET)")+
+    theme_bw()
+  g3<-ggplot(df, aes(x = MAT, y=value))
+  if(points) g3 <- g3 + geom_point(aes(col = type), size=0.3, alpha = 0.3)
+  g3 <- g3 + geom_smooth(aes(col = type), method="gam", formula = y ~ s(x, bs = "cs"))+
+    ylab("Annual diameter increment (cm/yr)")+ylim(c(0,1.5))+
+    xlab("Mean annual temperature (ºC)")+
+    scale_color_discrete("")+
+    theme_bw()+
+    theme(legend.position = c(0.75,0.85), legend.background = element_blank())
+  g4<-ggplot(dfdbh, aes(x = MAT, y=error))
+  if(points) g4 <- g4 + geom_point(col= "dark gray", size=0.3, alpha = 0.3)
+  g4 <- g4 + geom_smooth(formula = y ~ s(x, bs = "cs"), method="gam", col= "red")+
+    geom_abline(intercept = 0, slope = 0, col ="black")+
+    ylab("Annual diameter increment error (cm)")+ylim(c(-1.5,1.5))+
+    xlab("Mean annual temperature (ºC)")+
+    theme_bw()
+  g5<-ggplot(df, aes(x = PAR, y=value))
+  if(points) g5 <- g5 + geom_point(aes(col = type), size=0.3, alpha = 0.3)
+  g5 <- g5 + geom_smooth(aes(col = type), method="gam", formula = y ~ s(x, bs = "cs"))+
+    ylab("Annual diameter increment (cm/yr)")+ylim(c(0,1.5))+
+    xlab("Available PAR (%)")+
+    scale_color_discrete("")+
+    theme_bw()+
+    theme(legend.position = c(0.75,0.85), legend.background = element_blank())
+  g6<-ggplot(dfdbh, aes(x = light, y=error))
+  if(points) g6 <- g6 + geom_point(col= "dark gray", size=0.3, alpha = 0.3)
+  g6 <- g6 + geom_smooth(formula = y ~ s(x, bs = "cs"), method="gam", col= "red")+
+    geom_abline(intercept = 0, slope = 0, col ="black")+
+    ylab("Annual diameter increment error (cm)")+ylim(c(-1.5,1.5))+
+    xlab("Available PAR (%)")+
+    theme_bw()
+  plot_grid(g1, g2, g3, g4, g5,g6, nrow=3)
+}
+
+plot_cov_clim_bai<-function(dfbai, quantity = "Basal area increment", ylim = c(0,20), errorlim = c(-20,20)){
+  dfbai$PPET[dfbai$PPET>2] = 2
+  df = bind_rows(data.frame(MAT = dfbai$MAT, PPET = dfbai$PPET, value = dfbai$obs, type="Observed"),
+                 data.frame(MAT = dfbai$MAT, PPET = dfbai$PPET, value = dfbai$pred, type="Predicted"))
+  g1<-ggplot(df)+
+    geom_point(aes(x = PPET, y=value, col = type), size=0.3, alpha = 0.3)+
+    geom_smooth(aes(x = PPET, y=value, col = type), method="loess", formula = y ~ x)+
+    ylab(paste0(quantity," (m2/ha)"))+ ylim(ylim)+
+    xlab("Moisture index (P/PET)")+
+    scale_color_discrete("")+
+    theme_bw()+
+    theme(legend.position = c(0.75,0.85), legend.background = element_blank())
+  g2<-ggplot(dfbai)+
+    geom_point(aes(x = PPET, y=error), col= "dark gray", size=0.3, alpha = 0.3)+
+    geom_smooth(aes(x = PPET, y=error), method="loess", formula = y ~ x, col= "red")+
+    geom_abline(intercept = 0, slope = 0, col ="black")+
+    ylab(paste0(quantity," error (m2/ha)"))+ylim(errorlim)+
+    xlab("Moisture index (P/PET)")+
+    theme_bw()
+  g3<-ggplot(df)+
+    geom_point(aes(x = MAT, y=value, col = type), size=0.3, alpha = 0.3)+
+    geom_smooth(aes(x = MAT, y=value, col = type), method="loess", formula = y ~ x)+
+    ylab(paste0(quantity," (m2/ha)"))+ ylim(ylim)+
+    xlab("Mean annual temperature (ºC)")+
+    scale_color_discrete("")+theme_bw()+
+    theme(legend.position = c(0.75,0.85), legend.background = element_blank())
+    
+  g4<-ggplot(dfbai)+
+    geom_point(aes(x = MAT, y=error), col= "dark gray", size=0.3, alpha = 0.3)+
+    geom_smooth(aes(x = MAT, y=error), method="loess", formula = y ~ x, col= "red")+
+    geom_abline(intercept = 0, slope = 0, col ="black")+
+    ylab(paste0(quantity," error (m2/ha)"))+ ylim(errorlim)+
+    xlab("Mean annual temperature (ºC)")+
+    theme_bw()
+  plot_grid(g1, g2, g3, g4, nrow=2)
+}
+
+bai_error_map <-function(data_bai){
+  map_upper = 10
+  map_lower = -10
+  data_bai = data_bai[!is.na(data_bai$error),]
+  data_bai$error[data_bai$error > map_upper] = map_upper
+  data_bai$error[data_bai$error < map_lower] = map_lower
+  ggplot(data_bai)+
+    geom_sf(aes(col=error), size=0.5)+
+    scale_color_gradient2("m2/ha",low="blue", mid="yellow", high="red")+
+    theme_bw()+
+    theme(panel.grid = element_blank())
+}
+```
+
+## Data processing
+
+```{r, echo = FALSE}
+eval_res <- readRDS("~/OneDrive/Professional/MedfateWorks/IFNevaluation/Rdata/IFNeval_results.rds")
+
+SpParams = eval_res$SpParams
+target_spp = eval_res$target_spp
+target_IDs = eval_res$target_IDs
+
+dfdbh = eval_res$dfdbh
+dfh = eval_res$dfh
+dfbadead = eval_res$dfbadead
+dfbai = eval_res$dfbai
+dfbai_all = eval_res$dfbai_all
+mapdata = eval_res$mapdata
+medfate_ver = eval_res$package.version
+```
+
+
+We processed **`r length(target_IDs)`** repeated plots (A1 between IFN3 and IFN4) dominated by the target species (> 80% basal area corresponding to the target species) and without signs of management (cut trees).
+
+Package version was **`r medfate_ver`**
+
+Simulations were conducted between 2000/2001 (IFN3) and 2014/2016 (IFN4) depending on the target plot. Target species and key parameters values used in simulations:
+
+```{r, echo = FALSE}
+
+df = SpParams[SpParams$SpIndex %in% target_spp, c("Name", "Tmax_LAI", "Tmax_LAIsq", "WUE","Al2As","SLA", "RGRsapwoodmax", "SRsapwood", "fHDmin", "fHDmax")]
+row.names(df) = NULL
+df %>%
+  kbl() %>%
+  kable_styling()
+```
+
+
+
+
+## Growth of surviving trees
+
+Comparison of growth of trees that survived in both observed and simulated data.
+
+### Annual diameter increment (cm/yr)
+
+Predictive capacity table:
+
+
+```{r, echo = FALSE}
+res_sp <- dfdbh %>% group_by(Name) %>%
+  summarize(n = n(),
+            Obs = mean(obs, na.rm=TRUE),
+            Pred = mean(pred, na.rm=TRUE),
+            Bias = mean(error, na.rm=TRUE),
+            Biasrel = 100*Bias/Obs,
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/Obs,
+            R2 = cor(obs,pred)^2)
+res_all <- dfdbh %>%
+  summarize(Name = "All", 
+            n = n(),
+            Obs = mean(obs, na.rm=TRUE),
+            Pred = mean(pred, na.rm=TRUE),
+            Bias = mean(error, na.rm=TRUE),
+            Biasrel = 100*Bias/Obs,
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/Obs,
+            R2 = cor(obs,pred)^2)
+
+bind_rows(res_all,res_sp) %>%
+  kbl() %>%
+  kable_styling()
+```
+
+Predictive capacity plot:
+
+```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
+plot_scatter_dbh(dfdbh, points = TRUE)
+```
+
+Relationship between diameter increase and climatic variables (MAT, P/PET and available PAR):
+
+```{r, echo = FALSE, fig.width=8, fig.height=12, warning=FALSE, message=FALSE}
+plot_cov_clim_dbh(dfdbh, points = TRUE)
+```
+
+
+### Annual height increment (cm/yr)
+
+
+Predictive capacity table:
+
+```{r, echo = FALSE}
+res_sp <- dfh %>% group_by(Name) %>%
+  summarize(n = n(),
+            Obs = mean(obs, na.rm=TRUE),
+            Pred = mean(pred, na.rm=TRUE),
+            Bias = mean(error, na.rm=TRUE),
+            Biasrel = 100*Bias/Obs,
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/Obs,
+            R2 = cor(obs,pred)^2)
+res_all <- dfh %>%
+  summarize(Name = "All",
+            n = n(),
+            Obs = mean(obs, na.rm=TRUE),
+            Pred = mean(pred, na.rm=TRUE),
+            Bias = mean(error, na.rm=TRUE),
+            Biasrel = 100*Bias/Obs,
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/Obs,
+            R2 = cor(obs,pred)^2)
+bind_rows(res_all,res_sp) %>%
+  kbl() %>%
+  kable_styling()
+```
+
+
+### Stand-level basal area increment (m2/ha)
+
+This comparison does not take into account changes in density. In other words, densities from IFN3 are used to calculate stand-level basal area of surviving trees. It is meant to evaluate the effect of diameter increment of surviving trees in terms of stand basal area increments.
+
+
+Predictive capacity table:
+```{r, echo = FALSE}
+dfbai %>% group_by(Name) %>%
+  summarize(n = n(),
+            Obs = mean(obs, na.rm=TRUE),
+            Pred = mean(pred, na.rm=TRUE),
+            Bias = mean(error, na.rm=TRUE),
+            Biasrel = 100*Bias/Obs,
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/Obs,
+            R2 = cor(obs,pred)^2) %>%
+  kbl() %>%
+  kable_styling()
+```
+
+Predictive capacity plot:
+
+```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
+plot_scatter_bai(dfbai[dfbai$Name=="0-All",])
+```
+
+Relationship between basal area increase and climatic variables (MAT and P/PET):
+
+```{r, echo = FALSE, fig.width=8, fig.height=8, warning=FALSE, message=FALSE}
+plot_cov_clim_bai(dfbai[dfbai$Name=="0-All",])
+```
+
+
+Spatial error distribution:
+
+```{r, echo = FALSE, fig.width=7, fig.height=7}
+map_data_bai = mapdata
+map_data_bai$error = dfbai$error[dfbai$Name=="0-All"]
+bai_error_map(map_data_bai)
+```
+
+
+## Mortality (m2/ha)
+
+Reduction of basal area due to trees (DBH > 5) that died during the IFN3-IFN4 period against model's mortality prediction.
+
+
+Predictive capacity table:
+
+```{r, echo = FALSE, warning=FALSE}
+dfbadead %>% group_by(Name) %>%
+  summarize(n = n(),
+            Obs = mean(obs, na.rm=TRUE),
+            Pred = mean(pred, na.rm=TRUE),
+            Bias = mean(error, na.rm=TRUE),
+            Biasrel = 100*Bias/Obs,
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/Obs,
+            R2 = cor(obs,pred)^2) %>%
+  kbl() %>%
+  kable_styling()
+```
+
+Predictive capacity plot:
+
+```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message = FALSE}
+plot_scatter_bai(dfbadead[dfbadead$Name=="0-All", ], 
+                 quantity = "dead basal area", xylim = c(0,10), errorlim = c(-10,10)) 
+```
+
+Relationship between dead basal area and climatic variables (MAT and P/PET):
+
+```{r, echo = FALSE, fig.width=8, fig.height=8, warning=FALSE, message=FALSE}
+plot_cov_clim_bai(dfbadead[dfbadead$Name=="0-All",], 
+                  quantity = "Dead basal area", ylim = c(0,10), errorlim = c(-10,10))
+```
+
+Spatial distribution of errors:
+
+```{r, echo = FALSE, fig.width=7, fig.height=7}
+mapdata_badead = mapdata
+mapdata_badead$error = dfbadead$error[dfbadead$Name=="0-All"]
+bai_error_map(mapdata_badead)
+```
+
+## Overall stand-level basal area change (m2/ha)
+
+This includes growth of surviving trees, mortality reductions and ingrowth (increase in trees with DBH>5) due to sapling growth (in the observed data, this includes also incorporation of trees into large diameter classes due to sampling design).
+
+
+
+Predictive capacity table:
+
+```{r, echo = FALSE}
+dfbai_all %>% group_by(Name) %>%
+  summarize(n = n(),
+            Obs = mean(obs, na.rm=TRUE),
+            Pred = mean(pred, na.rm=TRUE),
+            Bias = mean(error, na.rm=TRUE),
+            Biasrel = 100*Bias/Obs,
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/Obs,
+            R2 = cor(obs,pred)^2) %>%
+  kbl() %>%
+  kable_styling()
+```
+
+
+Predictive capacity plot:
+
+```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message = FALSE}
+plot_scatter_bai(dfbai_all[dfbai_all$Name=="0-All", ], 
+                 quantity = "basal area change", xylim = c(-5,20), errorlim = c(-20,20)) 
+```
+
+Relationship between overall basal area change and climatic variables (MAT and P/PET):
+
+```{r, echo = FALSE, fig.width=8, fig.height=8, warning=FALSE, message=FALSE}
+plot_cov_clim_bai(dfbai_all[dfbai_all$Name=="0-All",], 
+                  quantity = "Basal area change", ylim = c(-5,20), errorlim = c(-20,20))
+```
+
+
+Spatial distribution of errors:
+
+```{r, echo = FALSE, fig.width=7, fig.height=7, warning=FALSE, message=FALSE}
+
+mapdata_bac = mapdata
+mapdata_bac$error = dfbai_all$error[dfbai_all$Name=="0-All"]
+bai_error_map(mapdata_bac)
+```
+
+## Detailed growth evaluation by species
+
+```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
+for(i in 1:length(target_spp)) {
+  sp = target_spp[i]
+  name = names(target_spp)[i]
+  res <- knitr::knit_child('IFNEvaluation_child.Rmd', quiet = TRUE)
+  cat(res, sep = '\n')
+}
+```
+
+

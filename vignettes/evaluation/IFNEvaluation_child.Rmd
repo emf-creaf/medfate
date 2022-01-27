@@ -1,0 +1,40 @@
+
+
+
+
+###  `r name`
+
+```{r, echo = FALSE}
+dfbaiSP = dfbai[dfbai$SP==sp,]
+dfdbhSP = dfdbh[dfdbh$SP==sp,]
+```
+
+Prediction ability for **diameter increase** of surviving trees:
+
+```{r, echo = FALSE, fig.width=8, fig.height = 4, warning=FALSE, message=FALSE}
+plot_scatter_dbh(dfdbhSP, points = TRUE)
+```
+
+Relationship between **diameter increase** and climatic variables (MAT, P/PET and available PAR):
+```{r, echo = FALSE, fig.width=8, fig.height = 12, warning=FALSE, message=FALSE}
+plot_cov_clim_dbh(dfdbhSP, points = TRUE)
+```
+
+Prediction ability for **stand-level basal area increase** of surviving trees:
+
+```{r, echo = FALSE, fig.width=8, fig.height = 4, warning=FALSE, message=FALSE}
+plot_scatter_bai(dfbaiSP)
+```
+
+Relationship between **basal area increase** and climatic variables (MAT and P/PET):
+```{r, echo = FALSE, fig.width=8, fig.height = 8, warning=FALSE, message=FALSE}
+plot_cov_clim_bai(dfbaiSP)
+```
+
+Spatial distribution of errors in **basal area increase**: 
+```{r, echo = FALSE, fig.height=7, fig.width=7}
+mapdata_sp = mapdata
+mapdata_sp$error = NA
+mapdata_sp[dfbai$ID[dfbai$Name==name], "error"] = dfbai$error[dfbai$Name==name]
+bai_error_map(mapdata_sp)
+```
