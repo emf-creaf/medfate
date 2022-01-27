@@ -84,19 +84,421 @@
 <div class="section level2">
 <h2 id="evaluation-summaries">Evaluation summaries<a class="anchor" aria-label="anchor" href="#evaluation-summaries"></a>
 </h2>
-<pre><code><span class="co">## Error in file(file, "rt"): cannot open the connection</span></code></pre>
 <div class="section level3">
 <h3 id="soil-moisture">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture"></a>
 </h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">PRADES</td>
+<td align="right">363</td>
+<td align="right">0.0285796</td>
+<td align="right">0.1114218</td>
+<td align="right">0.8651014</td>
+<td align="right">0.7357426</td>
+<td align="right">0.5271516</td>
+</tr>
+<tr class="even">
+<td align="left">FRAPUE</td>
+<td align="right">1012</td>
+<td align="right">0.0319281</td>
+<td align="right">0.0730916</td>
+<td align="right">0.8965430</td>
+<td align="right">0.7623425</td>
+<td align="right">0.5828890</td>
+</tr>
+<tr class="odd">
+<td align="left">FONBLA</td>
+<td align="right">364</td>
+<td align="right">0.0499826</td>
+<td align="right">0.0914015</td>
+<td align="right">0.9082332</td>
+<td align="right">0.7780348</td>
+<td align="right">0.5620277</td>
+</tr>
+<tr class="even">
+<td align="left">ESPALTARM</td>
+<td align="right">1013</td>
+<td align="right">0.2562337</td>
+<td align="right">0.2933959</td>
+<td align="right">0.8014115</td>
+<td align="right">0.1434711</td>
+<td align="right">0.0681150</td>
+</tr>
+<tr class="odd">
+<td align="left">CANBALASC</td>
+<td align="right">676</td>
+<td align="right">-0.0515052</td>
+<td align="right">0.1818191</td>
+<td align="right">0.6523635</td>
+<td align="right">-0.0438059</td>
+<td align="right">-0.1748597</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level3">
 <h3 id="plant-transpiration">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration"></a>
 </h3>
+<table class="table">
+<thead><tr class="header">
+<th align="left">plot</th>
+<th align="left">cohort</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">PRADES</td>
+<td align="left">T1_153</td>
+<td align="right">362</td>
+<td align="right">-1.747710e-02</td>
+<td align="right">6.459270e-02</td>
+<td align="right">0.9201003</td>
+<td align="right">0.8377747</td>
+<td align="right">0.6431006</td>
+</tr>
+<tr class="even">
+<td align="left">PRADES</td>
+<td align="left">T2_168</td>
+<td align="right">253</td>
+<td align="right">9.532570e-02</td>
+<td align="right">1.437433e-01</td>
+<td align="right">0.9071008</td>
+<td align="right">-0.2785755</td>
+<td align="right">0.1174085</td>
+</tr>
+<tr class="odd">
+<td align="left">FRAPUE</td>
+<td align="left">T1_168</td>
+<td align="right">1087</td>
+<td align="right">1.045153e-01</td>
+<td align="right">1.830160e-01</td>
+<td align="right">0.7576569</td>
+<td align="right">-0.3556139</td>
+<td align="right">-0.0096307</td>
+</tr>
+<tr class="even">
+<td align="left">FRAPUE</td>
+<td align="left">S1_28</td>
+<td align="right">0</td>
+<td align="right">NaN</td>
+<td align="right">NaN</td>
+<td align="right">NA</td>
+<td align="right">NaN</td>
+<td align="right">NaN</td>
+</tr>
+<tr class="odd">
+<td align="left">FONBLA</td>
+<td align="left">T2_148</td>
+<td align="right">300</td>
+<td align="right">7.298980e-02</td>
+<td align="right">1.014011e-01</td>
+<td align="right">0.7346453</td>
+<td align="right">-0.3812032</td>
+<td align="right">-0.0247108</td>
+</tr>
+<tr class="even">
+<td align="left">FONBLA</td>
+<td align="left">T3_168</td>
+<td align="right">309</td>
+<td align="right">1.229695e-01</td>
+<td align="right">1.618531e-01</td>
+<td align="right">0.7344373</td>
+<td align="right">-0.4389067</td>
+<td align="right">-0.1026711</td>
+</tr>
+<tr class="odd">
+<td align="left">ESPALTARM</td>
+<td align="left">T1_149</td>
+<td align="right">924</td>
+<td align="right">-5.060305e+04</td>
+<td align="right">5.060305e+04</td>
+<td align="right">0.6414860</td>
+<td align="right">-1.0085129</td>
+<td align="right">-0.2119481</td>
+</tr>
+<tr class="even">
+<td align="left">ESPALTARM</td>
+<td align="left">T2_166</td>
+<td align="right">805</td>
+<td align="right">-3.539341e+04</td>
+<td align="right">3.539341e+04</td>
+<td align="right">0.8390404</td>
+<td align="right">-2.1428434</td>
+<td align="right">-0.7402734</td>
+</tr>
+<tr class="odd">
+<td align="left">ESPALTARM</td>
+<td align="left">T3_168</td>
+<td align="right">943</td>
+<td align="right">-5.504363e+04</td>
+<td align="right">5.504363e+04</td>
+<td align="right">0.7367170</td>
+<td align="right">-1.4866557</td>
+<td align="right">-0.4947114</td>
+</tr>
+<tr class="even">
+<td align="left">CANBALASC</td>
+<td align="left">T1_19</td>
+<td align="right">644</td>
+<td align="right">-1.558352e-01</td>
+<td align="right">1.620024e-01</td>
+<td align="right">0.7670125</td>
+<td align="right">-0.2835459</td>
+<td align="right">-0.1492803</td>
+</tr>
+<tr class="odd">
+<td align="left">CANBALASC</td>
+<td align="left">T2_148</td>
+<td align="right">611</td>
+<td align="right">-3.428100e-03</td>
+<td align="right">1.249079e-01</td>
+<td align="right">0.6880012</td>
+<td align="right">0.0886324</td>
+<td align="right">0.0667833</td>
+</tr>
+<tr class="even">
+<td align="left">CANBALASC</td>
+<td align="left">T3_171</td>
+<td align="right">644</td>
+<td align="right">-7.416770e-02</td>
+<td align="right">1.262311e-01</td>
+<td align="right">0.8218117</td>
+<td align="right">0.5125947</td>
+<td align="right">0.3102735</td>
+</tr>
+<tr class="odd">
+<td align="left">CANBALASC</td>
+<td align="left">T4_168</td>
+<td align="right">679</td>
+<td align="right">-1.873540e-02</td>
+<td align="right">2.249258e-01</td>
+<td align="right">0.7081924</td>
+<td align="right">-0.5627026</td>
+<td align="right">-0.2116491</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level3">
 <h3 id="leaf-water-potentials">Leaf water potentials<a class="anchor" aria-label="anchor" href="#leaf-water-potentials"></a>
 </h3>
-<pre><code><span class="co">## Error in if (control$transpirationMode == "Sperry") {: argument is of length zero</span></code></pre>
+<table class="table">
+<colgroup>
+<col width="10%">
+<col width="7%">
+<col width="20%">
+<col width="3%">
+<col width="11%">
+<col width="10%">
+<col width="10%">
+<col width="12%">
+<col width="11%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">plot</th>
+<th align="left">cohort</th>
+<th align="left">WP</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">PRADES</td>
+<td align="left">T1_153</td>
+<td align="left">Midday potentials</td>
+<td align="right">4</td>
+<td align="right">-1.5585865</td>
+<td align="right">1.5585865</td>
+<td align="right">0.6136588</td>
+<td align="right">-47.8135026</td>
+<td align="right">-6.6980434</td>
+</tr>
+<tr class="even">
+<td align="left">PRADES</td>
+<td align="left">T2_168</td>
+<td align="left">Midday potentials</td>
+<td align="right">4</td>
+<td align="right">-1.3611550</td>
+<td align="right">1.3611550</td>
+<td align="right">0.7735155</td>
+<td align="right">-0.8510339</td>
+<td align="right">-0.3388900</td>
+</tr>
+<tr class="odd">
+<td align="left">FRAPUE</td>
+<td align="left">T1_168</td>
+<td align="left">Midday potentials</td>
+<td align="right">28</td>
+<td align="right">-0.0336000</td>
+<td align="right">0.6124224</td>
+<td align="right">0.6495117</td>
+<td align="right">0.0954815</td>
+<td align="right">-0.0258179</td>
+</tr>
+<tr class="even">
+<td align="left">FONBLA</td>
+<td align="left">T2_148</td>
+<td align="left">Midday potentials</td>
+<td align="right">3</td>
+<td align="right">-0.9047667</td>
+<td align="right">0.9047667</td>
+<td align="right">0.9998316</td>
+<td align="right">-16.8676885</td>
+<td align="right">-3.8373667</td>
+</tr>
+<tr class="odd">
+<td align="left">FONBLA</td>
+<td align="left">T3_168</td>
+<td align="left">Midday potentials</td>
+<td align="right">3</td>
+<td align="right">-1.0668068</td>
+<td align="right">1.0668068</td>
+<td align="right">0.9771855</td>
+<td align="right">-7.1046324</td>
+<td align="right">-2.2956273</td>
+</tr>
+<tr class="even">
+<td align="left">ESPALTARM</td>
+<td align="left">T1_149</td>
+<td align="left">Midday potentials</td>
+<td align="right">6</td>
+<td align="right">-0.3505679</td>
+<td align="right">0.4616373</td>
+<td align="right">0.9549671</td>
+<td align="right">-2.2736200</td>
+<td align="right">-0.5517220</td>
+</tr>
+<tr class="odd">
+<td align="left">ESPALTARM</td>
+<td align="left">T2_166</td>
+<td align="left">Midday potentials</td>
+<td align="right">6</td>
+<td align="right">0.2449074</td>
+<td align="right">0.7099993</td>
+<td align="right">0.0578332</td>
+<td align="right">-4.6854312</td>
+<td align="right">-1.3278667</td>
+</tr>
+<tr class="even">
+<td align="left">ESPALTARM</td>
+<td align="left">T3_168</td>
+<td align="left">Midday potentials</td>
+<td align="right">6</td>
+<td align="right">-0.5725661</td>
+<td align="right">0.5725661</td>
+<td align="right">0.7344555</td>
+<td align="right">-0.6121162</td>
+<td align="right">-0.6372026</td>
+</tr>
+<tr class="odd">
+<td align="left">PRADES</td>
+<td align="left">T1_153</td>
+<td align="left">Predawn potentials</td>
+<td align="right">4</td>
+<td align="right">-1.2116260</td>
+<td align="right">1.2116260</td>
+<td align="right">0.9649752</td>
+<td align="right">-8.5542388</td>
+<td align="right">-2.1394358</td>
+</tr>
+<tr class="even">
+<td align="left">PRADES</td>
+<td align="left">T2_168</td>
+<td align="left">Predawn potentials</td>
+<td align="right">4</td>
+<td align="right">-1.3389766</td>
+<td align="right">1.4806431</td>
+<td align="right">0.8238377</td>
+<td align="right">-0.8454943</td>
+<td align="right">-0.3476252</td>
+</tr>
+<tr class="odd">
+<td align="left">FRAPUE</td>
+<td align="left">T1_168</td>
+<td align="left">Predawn potentials</td>
+<td align="right">28</td>
+<td align="right">-0.4627979</td>
+<td align="right">0.6817336</td>
+<td align="right">0.7962466</td>
+<td align="right">0.3738182</td>
+<td align="right">0.2830514</td>
+</tr>
+<tr class="even">
+<td align="left">FONBLA</td>
+<td align="left">T2_148</td>
+<td align="left">Predawn potentials</td>
+<td align="right">3</td>
+<td align="right">-0.8482226</td>
+<td align="right">0.8482226</td>
+<td align="right">0.9999012</td>
+<td align="right">-3.5096247</td>
+<td align="right">-1.3856261</td>
+</tr>
+<tr class="odd">
+<td align="left">FONBLA</td>
+<td align="left">T3_168</td>
+<td align="left">Predawn potentials</td>
+<td align="right">3</td>
+<td align="right">-1.4036340</td>
+<td align="right">1.4036340</td>
+<td align="right">0.9981114</td>
+<td align="right">-7.0495326</td>
+<td align="right">-2.1713905</td>
+</tr>
+<tr class="even">
+<td align="left">ESPALTARM</td>
+<td align="left">T1_149</td>
+<td align="left">Predawn potentials</td>
+<td align="right">6</td>
+<td align="right">0.1247702</td>
+<td align="right">0.4461671</td>
+<td align="right">0.9507365</td>
+<td align="right">0.1696283</td>
+<td align="right">0.0523884</td>
+</tr>
+<tr class="odd">
+<td align="left">ESPALTARM</td>
+<td align="left">T2_166</td>
+<td align="left">Predawn potentials</td>
+<td align="right">6</td>
+<td align="right">-0.3295723</td>
+<td align="right">0.5924445</td>
+<td align="right">0.6860722</td>
+<td align="right">-1.6143034</td>
+<td align="right">-0.8659669</td>
+</tr>
+<tr class="even">
+<td align="left">ESPALTARM</td>
+<td align="left">T3_168</td>
+<td align="left">Predawn potentials</td>
+<td align="right">6</td>
+<td align="right">-0.0441872</td>
+<td align="right">0.5378905</td>
+<td align="right">0.7411492</td>
+<td align="right">0.4671240</td>
+<td align="right">0.1682106</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="section level2">
@@ -105,92 +507,594 @@
 <div class="section level3">
 <h3 id="prades">PRADES<a class="anchor" aria-label="anchor" href="#prades"></a>
 </h3>
-<pre><code><span class="co">## Error in file(file, "rt"): cannot open the connection</span></code></pre>
-<pre><code><span class="co">## Error in file.path(out_path, paste0("simulation_input.rds")): object 'out_path' not found</span></code></pre>
-<pre><code><span class="co">## Error in file.path(out_path, paste0("simulation_result.rds")): object 'out_path' not found</span></code></pre>
 <div class="section level4">
 <h4 id="soil-moisture-1">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-1"></a>
 </h4>
+<table class="table">
+<thead><tr class="header">
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="right">363</td>
+<td align="right">0.0285796</td>
+<td align="right">0.1114218</td>
+<td align="right">0.8651014</td>
+<td align="right">0.7357426</td>
+<td align="right">0.5271516</td>
+</tr></tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-21-1.png" width="768"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-22-1.png" width="768"></p>
 </div>
 <div class="section level4">
 <h4 id="plant-transpiration-1">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-1"></a>
 </h4>
+<table class="table">
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T1_153</td>
+<td align="right">362</td>
+<td align="right">-0.0174771</td>
+<td align="right">0.0645927</td>
+<td align="right">0.9201003</td>
+<td align="right">0.8377747</td>
+<td align="right">0.6431006</td>
+</tr>
+<tr class="even">
+<td align="left">T2_168</td>
+<td align="right">253</td>
+<td align="right">0.0953257</td>
+<td align="right">0.1437433</td>
+<td align="right">0.9071008</td>
+<td align="right">-0.2785755</td>
+<td align="right">0.1174085</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-24-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-24-2.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-24-3.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-24-4.png" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="leaf-water-potentials-1">Leaf water potentials<a class="anchor" aria-label="anchor" href="#leaf-water-potentials-1"></a>
 </h4>
+<table class="table">
+<thead><tr class="header">
+<th align="left">cohort</th>
+<th align="left">WP</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T1_153</td>
+<td align="left">Midday potentials</td>
+<td align="right">4</td>
+<td align="right">-1.558587</td>
+<td align="right">1.558587</td>
+<td align="right">0.6136588</td>
+<td align="right">-47.8135026</td>
+<td align="right">-6.6980434</td>
+</tr>
+<tr class="even">
+<td align="left">T2_168</td>
+<td align="left">Midday potentials</td>
+<td align="right">4</td>
+<td align="right">-1.361155</td>
+<td align="right">1.361155</td>
+<td align="right">0.7735155</td>
+<td align="right">-0.8510339</td>
+<td align="right">-0.3388900</td>
+</tr>
+<tr class="odd">
+<td align="left">T1_153</td>
+<td align="left">Predawn potentials</td>
+<td align="right">4</td>
+<td align="right">-1.211626</td>
+<td align="right">1.211626</td>
+<td align="right">0.9649752</td>
+<td align="right">-8.5542388</td>
+<td align="right">-2.1394358</td>
+</tr>
+<tr class="even">
+<td align="left">T2_168</td>
+<td align="left">Predawn potentials</td>
+<td align="right">4</td>
+<td align="right">-1.338977</td>
+<td align="right">1.480643</td>
+<td align="right">0.8238377</td>
+<td align="right">-0.8454943</td>
+<td align="right">-0.3476252</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-26-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-26-2.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-26-3.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-26-4.png" width="700"></p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="frapue">FRAPUE<a class="anchor" aria-label="anchor" href="#frapue"></a>
 </h3>
-<pre><code><span class="co">## Error in file(file, "rt"): cannot open the connection</span></code></pre>
-<pre><code><span class="co">## Error in file.path(out_path, paste0("simulation_input.rds")): object 'out_path' not found</span></code></pre>
-<pre><code><span class="co">## Error in file.path(out_path, paste0("simulation_result.rds")): object 'out_path' not found</span></code></pre>
 <div class="section level4">
 <h4 id="soil-moisture-2">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-2"></a>
 </h4>
+<table class="table">
+<thead><tr class="header">
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="right">1012</td>
+<td align="right">0.0319281</td>
+<td align="right">0.0730916</td>
+<td align="right">0.896543</td>
+<td align="right">0.7623425</td>
+<td align="right">0.582889</td>
+</tr></tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-30-1.png" width="768"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-31-1.png" width="768"></p>
 </div>
 <div class="section level4">
 <h4 id="plant-transpiration-2">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-2"></a>
 </h4>
+<table class="table">
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T1_168</td>
+<td align="right">1087</td>
+<td align="right">0.1045153</td>
+<td align="right">0.183016</td>
+<td align="right">0.7576569</td>
+<td align="right">-0.3556139</td>
+<td align="right">-0.0096307</td>
+</tr>
+<tr class="even">
+<td align="left">S1_28</td>
+<td align="right">0</td>
+<td align="right">NaN</td>
+<td align="right">NaN</td>
+<td align="right">NA</td>
+<td align="right">NaN</td>
+<td align="right">NaN</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-33-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-33-2.png" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="leaf-water-potentials-2">Leaf water potentials<a class="anchor" aria-label="anchor" href="#leaf-water-potentials-2"></a>
 </h4>
+<table class="table">
+<thead><tr class="header">
+<th align="left">cohort</th>
+<th align="left">WP</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T1_168</td>
+<td align="left">Midday potentials</td>
+<td align="right">28</td>
+<td align="right">-0.0336000</td>
+<td align="right">0.6124224</td>
+<td align="right">0.6495117</td>
+<td align="right">0.0954815</td>
+<td align="right">-0.0258179</td>
+</tr>
+<tr class="even">
+<td align="left">T1_168</td>
+<td align="left">Predawn potentials</td>
+<td align="right">28</td>
+<td align="right">-0.4627979</td>
+<td align="right">0.6817336</td>
+<td align="right">0.7962466</td>
+<td align="right">0.3738182</td>
+<td align="right">0.2830514</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-35-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-35-2.png" width="700"></p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="fonbla">FONBLA<a class="anchor" aria-label="anchor" href="#fonbla"></a>
 </h3>
-<pre><code><span class="co">## Error in file(file, "rt"): cannot open the connection</span></code></pre>
-<pre><code><span class="co">## Error in file.path(out_path, paste0("simulation_input.rds")): object 'out_path' not found</span></code></pre>
-<pre><code><span class="co">## Error in file.path(out_path, paste0("simulation_result.rds")): object 'out_path' not found</span></code></pre>
 <div class="section level4">
 <h4 id="soil-moisture-3">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-3"></a>
 </h4>
+<table class="table">
+<thead><tr class="header">
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="right">364</td>
+<td align="right">0.0499826</td>
+<td align="right">0.0914015</td>
+<td align="right">0.9082332</td>
+<td align="right">0.7780348</td>
+<td align="right">0.5620277</td>
+</tr></tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-39-1.png" width="768"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-40-1.png" width="768"></p>
 </div>
 <div class="section level4">
 <h4 id="plant-transpiration-3">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-3"></a>
 </h4>
+<table class="table">
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T2_148</td>
+<td align="right">300</td>
+<td align="right">0.0729898</td>
+<td align="right">0.1014011</td>
+<td align="right">0.7346453</td>
+<td align="right">-0.3812032</td>
+<td align="right">-0.0247108</td>
+</tr>
+<tr class="even">
+<td align="left">T3_168</td>
+<td align="right">309</td>
+<td align="right">0.1229695</td>
+<td align="right">0.1618531</td>
+<td align="right">0.7344373</td>
+<td align="right">-0.4389067</td>
+<td align="right">-0.1026711</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-42-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-42-2.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-42-3.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-42-4.png" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="leaf-water-potentials-3">Leaf water potentials<a class="anchor" aria-label="anchor" href="#leaf-water-potentials-3"></a>
 </h4>
+<table class="table">
+<thead><tr class="header">
+<th align="left">cohort</th>
+<th align="left">WP</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T2_148</td>
+<td align="left">Midday potentials</td>
+<td align="right">3</td>
+<td align="right">-0.9047667</td>
+<td align="right">0.9047667</td>
+<td align="right">0.9998316</td>
+<td align="right">-16.867688</td>
+<td align="right">-3.837367</td>
+</tr>
+<tr class="even">
+<td align="left">T3_168</td>
+<td align="left">Midday potentials</td>
+<td align="right">3</td>
+<td align="right">-1.0668068</td>
+<td align="right">1.0668068</td>
+<td align="right">0.9771855</td>
+<td align="right">-7.104632</td>
+<td align="right">-2.295627</td>
+</tr>
+<tr class="odd">
+<td align="left">T2_148</td>
+<td align="left">Predawn potentials</td>
+<td align="right">3</td>
+<td align="right">-0.8482226</td>
+<td align="right">0.8482226</td>
+<td align="right">0.9999012</td>
+<td align="right">-3.509625</td>
+<td align="right">-1.385626</td>
+</tr>
+<tr class="even">
+<td align="left">T3_168</td>
+<td align="left">Predawn potentials</td>
+<td align="right">3</td>
+<td align="right">-1.4036340</td>
+<td align="right">1.4036340</td>
+<td align="right">0.9981114</td>
+<td align="right">-7.049533</td>
+<td align="right">-2.171390</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-44-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-44-2.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-44-3.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-44-4.png" width="700"></p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="espaltarm">ESPALTARM<a class="anchor" aria-label="anchor" href="#espaltarm"></a>
 </h3>
-<pre><code><span class="co">## Error in file(file, "rt"): cannot open the connection</span></code></pre>
-<pre><code><span class="co">## Error in file.path(out_path, paste0("simulation_input.rds")): object 'out_path' not found</span></code></pre>
-<pre><code><span class="co">## Error in file.path(out_path, paste0("simulation_result.rds")): object 'out_path' not found</span></code></pre>
 <div class="section level4">
 <h4 id="soil-moisture-4">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-4"></a>
 </h4>
+<table class="table">
+<thead><tr class="header">
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="right">1013</td>
+<td align="right">0.2562337</td>
+<td align="right">0.2933959</td>
+<td align="right">0.8014115</td>
+<td align="right">0.1434711</td>
+<td align="right">0.068115</td>
+</tr></tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-48-1.png" width="768"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-49-1.png" width="768"></p>
 </div>
 <div class="section level4">
 <h4 id="plant-transpiration-4">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-4"></a>
 </h4>
+<table class="table">
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T1_149</td>
+<td align="right">924</td>
+<td align="right">-50603.05</td>
+<td align="right">50603.05</td>
+<td align="right">0.6414860</td>
+<td align="right">-1.008513</td>
+<td align="right">-0.2119481</td>
+</tr>
+<tr class="even">
+<td align="left">T2_166</td>
+<td align="right">805</td>
+<td align="right">-35393.41</td>
+<td align="right">35393.41</td>
+<td align="right">0.8390404</td>
+<td align="right">-2.142843</td>
+<td align="right">-0.7402734</td>
+</tr>
+<tr class="odd">
+<td align="left">T3_168</td>
+<td align="right">943</td>
+<td align="right">-55043.63</td>
+<td align="right">55043.63</td>
+<td align="right">0.7367170</td>
+<td align="right">-1.486656</td>
+<td align="right">-0.4947114</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-51-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-51-2.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-51-3.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-51-4.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-51-5.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-51-6.png" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="leaf-water-potentials-4">Leaf water potentials<a class="anchor" aria-label="anchor" href="#leaf-water-potentials-4"></a>
 </h4>
+<table class="table">
+<colgroup>
+<col width="8%">
+<col width="23%">
+<col width="3%">
+<col width="13%">
+<col width="12%">
+<col width="12%">
+<col width="13%">
+<col width="13%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">cohort</th>
+<th align="left">WP</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T1_149</td>
+<td align="left">Midday potentials</td>
+<td align="right">6</td>
+<td align="right">-0.3505679</td>
+<td align="right">0.4616373</td>
+<td align="right">0.9549671</td>
+<td align="right">-2.2736200</td>
+<td align="right">-0.5517220</td>
+</tr>
+<tr class="even">
+<td align="left">T2_166</td>
+<td align="left">Midday potentials</td>
+<td align="right">6</td>
+<td align="right">0.2449074</td>
+<td align="right">0.7099993</td>
+<td align="right">0.0578332</td>
+<td align="right">-4.6854312</td>
+<td align="right">-1.3278667</td>
+</tr>
+<tr class="odd">
+<td align="left">T3_168</td>
+<td align="left">Midday potentials</td>
+<td align="right">6</td>
+<td align="right">-0.5725661</td>
+<td align="right">0.5725661</td>
+<td align="right">0.7344555</td>
+<td align="right">-0.6121162</td>
+<td align="right">-0.6372026</td>
+</tr>
+<tr class="even">
+<td align="left">T1_149</td>
+<td align="left">Predawn potentials</td>
+<td align="right">6</td>
+<td align="right">0.1247702</td>
+<td align="right">0.4461671</td>
+<td align="right">0.9507365</td>
+<td align="right">0.1696283</td>
+<td align="right">0.0523884</td>
+</tr>
+<tr class="odd">
+<td align="left">T2_166</td>
+<td align="left">Predawn potentials</td>
+<td align="right">6</td>
+<td align="right">-0.3295723</td>
+<td align="right">0.5924445</td>
+<td align="right">0.6860722</td>
+<td align="right">-1.6143034</td>
+<td align="right">-0.8659669</td>
+</tr>
+<tr class="even">
+<td align="left">T3_168</td>
+<td align="left">Predawn potentials</td>
+<td align="right">6</td>
+<td align="right">-0.0441872</td>
+<td align="right">0.5378905</td>
+<td align="right">0.7411492</td>
+<td align="right">0.4671240</td>
+<td align="right">0.1682106</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-53-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-53-2.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-53-3.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-53-4.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-53-5.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-53-6.png" width="700"></p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="can-balasc">CAN BALASC<a class="anchor" aria-label="anchor" href="#can-balasc"></a>
 </h3>
-<pre><code><span class="co">## Error in file(file, "rt"): cannot open the connection</span></code></pre>
-<pre><code><span class="co">## Error in file.path(out_path, paste0("simulation_input.rds")): object 'out_path' not found</span></code></pre>
-<pre><code><span class="co">## Error in file.path(out_path, paste0("simulation_result.rds")): object 'out_path' not found</span></code></pre>
 <div class="section level4">
 <h4 id="soil-moisture-5">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-5"></a>
 </h4>
+<table class="table">
+<thead><tr class="header">
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="right">676</td>
+<td align="right">-0.0515052</td>
+<td align="right">0.1818191</td>
+<td align="right">0.6523635</td>
+<td align="right">-0.0438059</td>
+<td align="right">-0.1748597</td>
+</tr></tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-57-1.png" width="768"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-58-1.png" width="768"></p>
 </div>
 <div class="section level4">
 <h4 id="plant-transpiration-5">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-5"></a>
 </h4>
+<table class="table">
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">MAE</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSEabs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T1_19</td>
+<td align="right">644</td>
+<td align="right">-0.1558352</td>
+<td align="right">0.1620024</td>
+<td align="right">0.7670125</td>
+<td align="right">-0.2835459</td>
+<td align="right">-0.1492803</td>
+</tr>
+<tr class="even">
+<td align="left">T2_148</td>
+<td align="right">611</td>
+<td align="right">-0.0034281</td>
+<td align="right">0.1249079</td>
+<td align="right">0.6880012</td>
+<td align="right">0.0886324</td>
+<td align="right">0.0667833</td>
+</tr>
+<tr class="odd">
+<td align="left">T3_171</td>
+<td align="right">644</td>
+<td align="right">-0.0741677</td>
+<td align="right">0.1262311</td>
+<td align="right">0.8218117</td>
+<td align="right">0.5125947</td>
+<td align="right">0.3102735</td>
+</tr>
+<tr class="even">
+<td align="left">T4_168</td>
+<td align="right">679</td>
+<td align="right">-0.0187354</td>
+<td align="right">0.2249258</td>
+<td align="right">0.7081924</td>
+<td align="right">-0.5627026</td>
+<td align="right">-0.2116491</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-60-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-60-2.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-60-3.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-60-4.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-60-5.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-60-6.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-60-7.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-60-8.png" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="leaf-water-potentials-5">Leaf water potentials<a class="anchor" aria-label="anchor" href="#leaf-water-potentials-5"></a>
