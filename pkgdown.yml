@@ -8,9 +8,10 @@ articles:
   ForestGrowth: ForestGrowth.html
   PackageOverview: PackageOverview.html
   PreparingInputs: PreparingInputs.html
-  ModelEvaluation: evaluation/ModelEvaluation.html
+  IFNEvaluation: evaluation/IFNEvaluation.html
+  StandLevelEvaluation: evaluation/StandLevelEvaluation.html
   SensitivityCalibration: modelanalysis/SensitivityCalibration.html
   SpeciesParameterizationSpain: parametrization/SpeciesParameterizationSpain.html
   FontBlanche: workedexamples/FontBlanche.html
-last_built: 2022-01-26T12:36Z
+last_built: 2022-01-27T17:47Z
 
