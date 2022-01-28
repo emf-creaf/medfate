@@ -1603,12 +1603,16 @@ List transpirationGranier(List x, NumericVector meteovec,
   NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
   NumericVector Psi_Critic = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Critic"]);
   NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
+  NumericVector WUE_decay(numCohorts, 0.2812);
   NumericVector pRootDisc = Rcpp::as<Rcpp::NumericVector>(paramsTransp["pRootDisc"]);
   NumericVector Tmax_LAI(numCohorts, 0.134);
   NumericVector Tmax_LAIsq(numCohorts, -0.006);
   if(paramsTransp.containsElementNamed("Tmax_LAI")) {
     Tmax_LAI = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Tmax_LAI"]);
     Tmax_LAIsq = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Tmax_LAIsq"]);
+  }
+  if(paramsTransp.containsElementNamed("WUE_decay")) {
+    WUE_decay = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_decay"]);
   }
   //Communication vectors
   //Comunication with outside
@@ -1714,7 +1718,7 @@ List transpirationGranier(List x, NumericVector meteovec,
     } else {
       StemPLC[c] = 1.0 - Psi2K(PlantPsi[c],Psi_Critic[c],WeibullShape);
     }
-    Agplant[c] = WUE[c]*Eplant[c]*std::min(1.0, pow(PARcohort[c]/100.0,0.2812));
+    Agplant[c] = WUE[c]*Eplant[c]*std::min(1.0, pow(PARcohort[c]/100.0,WUE_decay[c]));
     // Rcout<< c<< " "<< WUE[c] << " "<< Eplant[c] << " " << PARcohort[c]<< " " << Agplant[c]<<"\n"; 
   }
   

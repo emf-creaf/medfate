@@ -633,6 +633,15 @@ NumericVector WUEWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(WUE);
 }
+NumericVector WUEDecayWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector WUE_decay = speciesNumericParameter(SP, SpParams, "WUE_decay");
+  for(int c=0;c<WUE_decay.size();c++) {
+    if(NumericVector::is_na(WUE_decay[c])) {
+      WUE_decay[c] = 0.2812; //default value
+    }
+  }
+  return(WUE_decay);
+}
 NumericVector psi50Imputation(NumericVector psi50, IntegerVector SP, DataFrame SpParams) {
   CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
   CharacterVector GrowthForm = speciesCharacterParameter(SP, SpParams, "GrowthForm");
@@ -1188,6 +1197,7 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "Tmax_LAI") return(TmaxLAIWithImputation(SP, SpParams));
     else if(parName == "Tmax_LAIsq") return(TmaxLAIsqWithImputation(SP, SpParams));
     else if(parName == "WUE") return(WUEWithImputation(SP, SpParams));
+    else if(parName == "WUE_decay") return(WUEDecayWithImputation(SP, SpParams));
     else if(parName == "Psi_Critic") return(psiCriticWithImputation(SP, SpParams));
     else if(parName == "Psi_Extract") return(psiExtractWithImputation(SP, SpParams));
     else if(parName == "Kmax_stemxylem") return(KmaxStemXylemWithImputation(SP, SpParams));
