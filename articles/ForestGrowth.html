@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Forest growth</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-01-27</h4>
+            <h4 data-toc-skip class="date">2022-01-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/ForestGrowth.Rmd" class="external-link"><code>vignettes/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -201,10 +201,10 @@
 <p>Elements starting with <code>params*</code> contain cohort-specific model parameters. Aboveground parameters related to plant transpiration can be seen in <code>paramsTransp</code>:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsTransp</span></code></pre></div>
-<pre><code><span class="co">##        Tmax_LAI Tmax_LAIsq Psi_Extract Psi_Critic      WUE pRootDisc</span>
-<span class="co">## T1_148    0.134     -0.006   -2.600000  -3.816852 3.613308         0</span>
-<span class="co">## T2_168    0.134     -0.006   -3.001667  -3.001667 1.475715         0</span>
-<span class="co">## S1_165    0.134     -0.006   -3.455000  -6.950920 2.433101         0</span></code></pre>
+<pre><code><span class="co">##        Tmax_LAI Tmax_LAIsq Psi_Extract Psi_Critic      WUE WUE_decay pRootDisc</span>
+<span class="co">## T1_148    0.134     -0.006   -2.600000  -3.816852 3.613308    0.2812         0</span>
+<span class="co">## T2_168    0.134     -0.006   -3.001667  -3.001667 1.475715    0.2812         0</span>
+<span class="co">## S1_165    0.134     -0.006   -3.455000  -6.950920 2.433101    0.2812         0</span></code></pre>
 <p>Belowground parameters can be seen in <code>below</code> and include root distribution as well as maximum root and rhizosphere conductances by soil layer:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">below</span></code></pre></div>
@@ -255,24 +255,24 @@
 <span class="co">## </span>
 <span class="co">##  [Year 2001]: ....................................</span>
 <span class="co">## </span>
-<span class="co">## Final plant biomass (g/m2): 9005.89</span>
-<span class="co">## Change in plant biomass (g/m2): 176.669</span>
-<span class="co">## Plant biomass balance result (g/m2): 176.669</span>
+<span class="co">## Final plant biomass (g/m2): 9012.18</span>
+<span class="co">## Change in plant biomass (g/m2): 182.961</span>
+<span class="co">## Plant biomass balance result (g/m2): 182.961</span>
 <span class="co">## Plant biomass balance components:</span>
-<span class="co">##   Structural balance (g/m2) 259 Labile balance (g/m2) -36</span>
-<span class="co">##   Plant individual balance (g/m2) 222 Mortality loss (g/m2) 46</span>
-<span class="co">## Final soil water content (mm): 269.49</span>
+<span class="co">##   Structural balance (g/m2) 261 Labile balance (g/m2) -32</span>
+<span class="co">##   Plant individual balance (g/m2) 229 Mortality loss (g/m2) 46</span>
+<span class="co">## Final soil water content (mm): 269.402</span>
 <span class="co">## Final snowpack content (mm): 0</span>
-<span class="co">## Change in soil water content (mm): -21.7668</span>
-<span class="co">## Soil water balance result (mm): -21.7668</span>
+<span class="co">## Change in soil water content (mm): -21.8543</span>
+<span class="co">## Soil water balance result (mm): -21.8543</span>
 <span class="co">## Change in snowpack water content (mm): 0</span>
-<span class="co">## Snowpack water balance result (mm): 7.10543e-15</span>
+<span class="co">## Snowpack water balance result (mm): -7.10543e-15</span>
 <span class="co">## Water balance components:</span>
 <span class="co">##   Precipitation (mm) 513</span>
 <span class="co">##   Rain (mm) 462 Snow (mm) 51</span>
 <span class="co">##   Interception (mm) 97 Net rainfall (mm) 365</span>
-<span class="co">##   Infiltration (mm) 407 Runoff (mm) 9 Deep drainage (mm) 78</span>
-<span class="co">##   Soil evaporation (mm) 28 Transpiration (mm) 323</span></code></pre>
+<span class="co">##   Infiltration (mm) 407 Runoff (mm) 9 Deep drainage (mm) 77</span>
+<span class="co">##   Soil evaporation (mm) 28 Transpiration (mm) 324</span></code></pre>
 <p>While water/carbon balances and growth of leaf/sapwood/root tissues is performed on a daily basis, structural variables are only updated once a year, here coinciding with the end of the simulation.</p>
 </div>
 <div class="section level2">
