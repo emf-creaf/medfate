@@ -17,6 +17,7 @@ articles:
 - title: Model parametrization
   contents:
     - starts_with("parametrization/SpeciesParameterization")
+    - starts_with("parametrization/Metamodelling")
 - title: Model evaluation
   contents:
     - starts_with("evaluation/StandLevelEvaluation")
