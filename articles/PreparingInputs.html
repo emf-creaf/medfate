@@ -95,7 +95,7 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpParamsMED"</span><span class="op">)</span></code></pre></div>
 <p>A large number of parameters (columns) can be found in <code>SpParamsMED</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##   [1] "Name"                 "IFNcodes"             "SpIndex"             </span>
 <span class="co">##   [4] "Genus"                "Order"                "Family"              </span>
 <span class="co">##   [7] "Group"                "GrowthForm"           "LifeForm"            </span>
@@ -867,7 +867,7 @@
 <span class="co">## </span>
 <span class="co">## attr(,"class")</span>
 <span class="co">## [1] "forest" "list"</span></code></pre>
-<p>Trees are expected to be primarily described in terms of species, diameter (DBH; cm) and height (cm), whereas shrubs are described in terms of species, percent cover (%) and mean height (cm). Root distribution has to be specified for both growth forms, in terms of the depths (mm) corresponding to 50% and 95% of cumulative fine root distribution. Functions are provided to map variables in user data frames into tables <code>treeData</code> and <code>shrubData</code> (see function <code>forest_mapWoodyTables()</code>).</p>
+<p>Trees are expected to be primarily described in terms of species, diameter (DBH; cm) and height (cm), whereas shrubs are described in terms of species, percent cover (%) and mean height (cm). Root distribution has to be specified for both growth forms, in terms of the depths (mm) corresponding to 50% and 95% of cumulative fine root distribution. Functions are provided to map variables in user data frames into tables <code>treeData</code> and <code>shrubData</code> (see function <code><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapWoodyTables()</a></code>).</p>
 </div>
 <div class="section level3">
 <h3 id="aboveground-and-belowground-data">Aboveground and belowground data<a class="anchor" aria-label="anchor" href="#aboveground-and-belowground-data"></a>
@@ -911,7 +911,7 @@
 <pre><code><span class="co">##   widths clay sand om  bd rfc</span>
 <span class="co">## 1    300   25   25 NA 1.5  25</span>
 <span class="co">## 2    700   25   25 NA 1.5  45</span></code></pre>
-<p>where <code>widths</code> are soil layer widths in mm; <code>clay</code> and <code>sand</code> are the percentage of clay and sand, in percent of dry weight, <code>om</code> stands for organic matter, <code>bd</code> is bulk density (in <span class="math inline">\(g \cdot cm^{-3}\)</span>) and <code>rfc</code> the percentage of rock fragments. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via SoilGrids.org (see function <code>soilgridsParams()</code> in package <a href="https://github.com/emf-creaf/medfateutils" class="external-link">medfateutils</a>).</p>
+<p>where <code>widths</code> are soil layer widths in mm; <code>clay</code> and <code>sand</code> are the percentage of clay and sand, in percent of dry weight, <code>om</code> stands for organic matter, <code>bd</code> is bulk density (in <span class="math inline">\(g \cdot cm^{-3}\)</span>) and <code>rfc</code> the percentage of rock fragments. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via SoilGrids.org (see function <code><a href="https://rdrr.io/pkg/medfateutils/man/soilgridsParams.html" class="external-link">soilgridsParams()</a></code> in package <a href="https://github.com/emf-creaf/medfateutils" class="external-link">medfateutils</a>).</p>
 </div>
 <div class="section level3">
 <h3 id="soil-input-object">Soil input object<a class="anchor" aria-label="anchor" href="#soil-input-object"></a>
@@ -923,7 +923,7 @@
 <pre><code><span class="co">## [1] "function"</span></code></pre>
 <p>In addition to the physical soil description, this object contains soil parameters needed for soil water balance simulations:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "SoilDepth"    "W"            "SWE"          "Temp"         "Ksoil"       </span>
 <span class="co">##  [6] "Gsoil"        "dVec"         "sand"         "clay"         "om"          </span>
 <span class="co">## [11] "VG_alpha"     "VG_n"         "VG_theta_res" "VG_theta_sat" "Ksat"        </span>
@@ -1037,7 +1037,7 @@
 <p>Apart from data inputs, the behaviour of simulation models can be controlled using a set of global parameters. The default parameterization is obtained using function <code><a href="../reference/defaultControl.html">defaultControl()</a></code>:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">control</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">control</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "modifyInput"                         "fillMissingSpParams"                </span>
 <span class="co">##  [3] "verbose"                             "subdailyResults"                    </span>
 <span class="co">##  [5] "transpirationMode"                   "soilFunctions"                      </span>

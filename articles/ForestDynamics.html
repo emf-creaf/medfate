@@ -321,7 +321,7 @@
 <span class="co">## 33             NA    0.04225562             NA            0            NA</span></code></pre>
 <p>Package <code>medfate</code> provides a simple <code>plot</code> function for objects of class <code>fordyn</code>. For example, we can show the interannual variation in stand-level basal area using:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, type <span class="op">=</span> <span class="st">"StandBasalArea"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, type <span class="op">=</span> <span class="st">"StandBasalArea"</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestDynamics_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -427,10 +427,10 @@
 </h3>
 <p>Since function <code><a href="../reference/fordyn.html">fordyn()</a></code> makes internal calls to function <code><a href="../reference/growth.html">growth()</a></code>, it stores the result in a vector called <code>GrowthResults</code>, which we can use to inspect intra-annual patterns of desired variables. For example, the following shows the leaf area for individuals of the three cohorts during the second year:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span><span class="op">$</span><span class="va">GrowthResults</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="st">"LeafArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
-<p><img src="ForestDynamics_files/figure-html/unnamed-chunk-14-1.png" width="672"> Instead of examining year by year, it is possible to plot the whole series of results by passing a <code>fordyn</code> object to the <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> function:</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span><span class="op">$</span><span class="va">GrowthResults</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="st">"LeafArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<p><img src="ForestDynamics_files/figure-html/unnamed-chunk-14-1.png" width="672"> Instead of examining year by year, it is possible to plot the whole series of results by passing a <code>fordyn</code> object to the <code><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot()</a></code> function:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, <span class="st">"LeafArea"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, <span class="st">"LeafArea"</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestDynamics_files/figure-html/unnamed-chunk-15-1.png" width="672"> where we can see the leaf area drop of the second year along with the progressive recovery of the following years.</p>
 <p>Finally, we can create interactive plots for particular steps using function <code><a href="../reference/shinyplot.html">shinyplot()</a></code>, e.g.:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
