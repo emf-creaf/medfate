@@ -1,0 +1,229 @@
+---
+title: "Meta-modelling exercise"
+author: "Miquel De Cáceres"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_document:
+    toc: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(kableExtra)
+library(knitr)
+library(ggplot2)
+library(cowplot)
+library(readxl)
+library(tidyverse)
+library(medfate)
+library(nlme)
+```
+
+## Abstract
+
+This document presents metamodeling exercises between Sperry and Granier's versions of medfate.
+
+## Goals
+
+Make transpiration (E) and gross photosynthesis (Ag) estimates produced by the basic water balance model similar to those predicted by the advanced model which, given its greater process detail and physical basis, is assumed to provide better E and Ag estimates when provided appropriate functional traits are supplied. 
+
+Assuming there are no water limitations, the following parameters are used to determine E and Ag in the basic model, which cannot easily be parameterized from available trait data (see https://emf-creaf.github.io/medfatebook/index.html):
+
+ + Tmax_LAI and Tmax_LAIsp, parameters determining maximum transpiration from LAI
+ + WUE, which represents the daily WUE (g C of gross assimilation / l transpired) under conditions of maximum light and no water stress.
+ + Exponent of the function specifying the decrease in relative WUE with position within the canopy.
+ 
+## Data
+
+ * IFN data 
+ * Weather data from interpolation using meteoland (year 2000).
+ * Soil data from soil grids (could be replaced with local samples).
+
+```{r, echo = FALSE}
+customParamsSpecies = read_xlsx("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Data/SpParamsCUSTOM.xlsx", sheet = "SpParamsCUSTOM")
+customParamsSpecies[, c("Name", "VCleaf_kmax", "Kmax_stemxylem", "Vmax298", "Jmax298")] %>%
+  kbl() %>%
+  kable_styling()
+```
+
+## Simulations
+
+
+The Granier and Sperry version of medfate ware run on all 90 forest plots (the advanced model crashed for a few cases) using weather corresponding to year 2000.
+
+We loaded the forest plot data and, for each plot with results, assemble the PAR corresponding to each cohort, the transpiration obtained by each model and the WUEg resulting from the simulation with Sperry's model.
+```{r, echo = FALSE}
+df = readRDS("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Rdata/metamodelling_results.rds")
+target_spp = sort(unique(as.numeric(df$SP)))
+```
+
+
+## Transpiration ratio
+
+We wanted to determine if there were systematic differences in E between the two models. Such differences should be species-specific. Even if the basic model has a single linear equation (from Granier) to estimate Tmax from LAI, the advanced model estimates E from a complex calculation involving several species-specific functional traits. The ratio between E estimates from the two models could be used to scale the estimates of Granier's equation (or in other words, to scale its parameters). 
+
+
+```{r, echo = FALSE, fig = TRUE, message=FALSE}
+ggplot(df, aes(x = PAR, y = E_ratio))+
+  geom_point(aes(col = Name), size=0.3, alpha = 0.3)+
+  geom_smooth(method = "loess", aes(group = Name, col = Name))+
+  ylab("E (advanced) / E (basic)")+xlab("PAR (%)")+
+  theme_bw()
+```
+
+It is evident that there are differences in the average ratio across species, with highest ratios for P. halepensis and F. sylvatica and lowest ones for Quercus pubescens and Q. ilex. 
+
+We can find the species average ratios and multiply the default Granier coefficients (Tmax_LAI and Tmax_LAIsq).
+```{r, echo = FALSE}
+TR_sp <- df %>% 
+  group_by(Name) %>%
+  summarize(n = n(),
+            E_ratio_mean = mean(E_ratio, na.rm=TRUE),
+            E_ratio_sd = sd(E_ratio, na.rm=TRUE),
+            E_ratio_se = E_ratio_sd/sqrt(n),
+            Tmax_LAI = 0.134*E_ratio_mean,
+            Tmax_LAIsq = -0.006*E_ratio_mean)
+TR_sp %>%
+  kbl() %>%
+  kable_styling()
+```
+
+## Water use efficiency
+### Relative WUE
+
+WUE values depend on the species and plot environmental factors, as well as on the position of the plant within the canopy. We first estimate the maximum PAR and WUE for each species in each plot, and find the relative WUE as the ratio between WUE and its maximum.
+```{r, echo = FALSE}
+df = df[!is.na(df$WUEg),]
+df = df %>% 
+  group_by(SP, PL) %>% 
+  mutate(WUEg_max = max(WUEg), PAR_max = max(PAR), WUEg_rel = 100*WUEg/WUEg_max) 
+```
+
+### Model fitting of the relative WUE reduction
+
+We want to build a model of the relative WUE as a function of available PAR, so that we can reduce species-level maximum WUE values for cohorts in the shadow. To fit the model we need good estimates of relative WUE, which implies that the maximum WUE values make sense. With this aim, we focus on those records corresponding to plots/species where at least 85% of PAR was available for at least one cohort of the species in the plot.
+```{r, echo = FALSE}
+df2 = df[df$PAR_max >90,]
+```
+Using this selection, we first draw the relationship between PAR and WUEg:
+```{r, echo = FALSE}
+g1<-ggplot(df2, aes(x = PAR, y = WUEg))+
+  geom_point(aes(col = Name), size=0.3)+
+  xlab("% PAR")+ ylab("WUE (g C/L H20)")+
+  theme(legend.position = "none")+
+  theme_bw()
+g1
+```
+
+where we see that the relationship is species-specific. WUE is known to decrease for parts of the canopy receiving less light (e.g. Medrano et al. 2012). We can now plot relative WUE in relationship to PAR:
+
+```{r, echo = FALSE}
+ggplot(df2, aes(x = PAR, y = WUEg_rel))+
+  geom_point(aes(col = Name), size = 0.3)+
+  xlab("% PAR")+ ylab("% WUEg/WUEg_max")+
+  theme_bw()
+```
+
+Even though light extinction is not the same in all species, here it seems reasonable to fit a single function for all species. We thus fit a non-linear model where relative WUE is a power function of PAR:
+```{r, echo = FALSE}
+b = rep(NA, length(target_spp))
+Pred = numeric(0)
+WUEg_max_pred = numeric(0)
+for(i in 1:length(target_spp)) {
+  df_i = df[df$SP==target_spp[i],]
+  df2_i = df2[df2$SP==target_spp[i],]
+  m_i = nls(WUEg_rel ~ 100*(PAR/100)^b, data = df2_i, start=c(b=0.3))
+  b[i]<-summary(m_i)$coefficients[1]
+  Pred = c(Pred, predict(m_i))
+  WUEg_max_pred = c(WUEg_max_pred, df_i$WUEg/pmin(1,(df_i$PAR/100)^b[i]))
+}
+df2$Pred = Pred
+df$WUEg_max_pred = WUEg_max_pred
+```
+
+
+We now draw again the previous plot with the fitted relationship, i.e. relative WUEg as a function of PAR:
+```{r, echo = FALSE}
+g2<-ggplot(df2, aes(x = PAR, y = WUEg_rel))+
+  geom_point(aes(col = Name), size = 0.3, alpha = 0.3)+
+  geom_line(aes(x=PAR, y=Pred, col = Name))+
+  ylim(c(0,100))+ xlim(c(0,100))+
+  ylab("% WUEg/WUEg_max")+
+  xlab("% PAR")+
+  theme_bw()
+g2
+```
+
+
+### Maximum WUE per species
+We can now go back to the original data frame, and use the fitted model to estimate the maximum WUE that would be expected if PAR was 100% for any given plant cohort.
+
+The mean values of WUEg_max for each species can be used as estimates for parameter WUE in medfate. We create a data frame with these as well as mean observed values, and 
+standard deviation and standard error:
+```{r, echo = FALSE}
+WUE_sp <- df %>% 
+  mutate(PAR50 = as.numeric(PAR>50)) %>%
+  group_by(SP, Name) %>%
+  summarize(nWUE = n(), 
+            PAR_max_obs = mean(PAR_max),
+            WUEg_max_obs = mean(WUEg_max), 
+            WUE = mean(WUEg_max_pred), 
+            WUEg_max_sd = sd(WUEg_max_pred)) %>%
+  mutate(WUEg_max_se = WUEg_max_sd/sqrt(nWUE)) 
+
+WUE_sp %>%
+  kbl() %>%
+  kable_styling()
+```
+
+## Metamodelling parameters
+
+```{r, echo = FALSE}
+df_par = readRDS("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Rdata/metamodelling_params.rds")
+
+df_par %>%
+  kbl() %>%
+  kable_styling()
+```
+
+## Evaluate similarity in E and An estimates
+
+
+```{r, echo = FALSE}
+ggplot(df, aes(x=E_granier, y = E_sperry))+
+  geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
+  geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
+  ylim(c(0,500))+ xlim(c(0,500))+
+  theme_bw()
+```
+
+
+```{r, echo = FALSE}
+ggplot(df, aes(x=E_granier_meta, y = E_sperry))+
+  geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
+  geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
+  ylim(c(0,500))+ xlim(c(0,500))+
+  theme_bw()
+```
+
+```{r, echo = FALSE}
+ggplot(df, aes(x=Ag_granier, y = Ag_sperry))+
+  geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
+  geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
+  ylim(c(0,1500))+ xlim(c(0,1500))+
+  theme_bw()
+```
+
+```{r, echo = FALSE}
+ggplot(df, aes(x=Ag_granier_meta, y = Ag_sperry))+
+  geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
+  geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
+  ylim(c(0,1500))+ xlim(c(0,1500))+
+  theme_bw()
+```
+
+
+
+## References
+
+Medrano, H., A. Pou, M. Tomás, S. Martorell, J. Gulias, J. Flexas, and J. M. Escalona. 2012. Average daily light interception determines leaf water use efficiency among different canopy locations in grapevine. Agricultural Water Management 114:4–10.
