@@ -73,7 +73,7 @@
       <h1 data-toc-skip>Meta-modelling exercise</h1>
                         <h4 data-toc-skip class="author">Miquel De Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-01-31</h4>
+            <h4 data-toc-skip class="date">2022-02-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/Metamodelling.Rmd" class="external-link"><code>vignettes/parametrization/Metamodelling.Rmd</code></a></small>
       <div class="hidden name"><code>Metamodelling.Rmd</code></div>
@@ -112,6 +112,12 @@
 Name
 </th>
 <th style="text-align:right;">
+SLA
+</th>
+<th style="text-align:right;">
+Al2As
+</th>
+<th style="text-align:right;">
 VCleaf_kmax
 </th>
 <th style="text-align:right;">
@@ -128,6 +134,12 @@ Jmax298
 <tr>
 <td style="text-align:left;">
 Abies alba
+</td>
+<td style="text-align:right;">
+7.768174
+</td>
+<td style="text-align:right;">
+7194.245
 </td>
 <td style="text-align:right;">
 6
@@ -147,6 +159,12 @@ Abies alba
 Fagus sylvatica
 </td>
 <td style="text-align:right;">
+18.320000
+</td>
+<td style="text-align:right;">
+2076.120
+</td>
+<td style="text-align:right;">
 8
 </td>
 <td style="text-align:right;">
@@ -164,21 +182,33 @@ Fagus sylvatica
 Pinus halepensis
 </td>
 <td style="text-align:right;">
+5.140523
+</td>
+<td style="text-align:right;">
+1317.523
+</td>
+<td style="text-align:right;">
 4
 </td>
 <td style="text-align:right;">
 0.1500000
 </td>
 <td style="text-align:right;">
-72.01363
+72.19617
 </td>
 <td style="text-align:right;">
-123.9027
+124.1687
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
 Pinus nigra
+</td>
+<td style="text-align:right;">
+4.569508
+</td>
+<td style="text-align:right;">
+1272.265
 </td>
 <td style="text-align:right;">
 5
@@ -187,10 +217,10 @@ Pinus nigra
 0.4100000
 </td>
 <td style="text-align:right;">
-68.54462
+68.50296
 </td>
 <td style="text-align:right;">
-118.8283
+118.7671
 </td>
 </tr>
 <tr>
@@ -198,10 +228,16 @@ Pinus nigra
 Pinus pinea
 </td>
 <td style="text-align:right;">
+4.207291
+</td>
+<td style="text-align:right;">
+1615.509
+</td>
+<td style="text-align:right;">
 5
 </td>
 <td style="text-align:right;">
-0.3500000
+0.2500000
 </td>
 <td style="text-align:right;">
 72.42173
@@ -213,6 +249,12 @@ Pinus pinea
 <tr>
 <td style="text-align:left;">
 Pinus sylvestris
+</td>
+<td style="text-align:right;">
+4.897943
+</td>
+<td style="text-align:right;">
+1598.180
 </td>
 <td style="text-align:right;">
 5
@@ -232,6 +274,12 @@ Pinus sylvestris
 Pinus uncinata
 </td>
 <td style="text-align:right;">
+3.804390
+</td>
+<td style="text-align:right;">
+1608.774
+</td>
+<td style="text-align:right;">
 5
 </td>
 <td style="text-align:right;">
@@ -247,6 +295,12 @@ Pinus uncinata
 <tr>
 <td style="text-align:left;">
 Quercus pubescens
+</td>
+<td style="text-align:right;">
+11.800000
+</td>
+<td style="text-align:right;">
+6031.582
 </td>
 <td style="text-align:right;">
 6
@@ -266,6 +320,12 @@ Quercus pubescens
 Quercus ilex
 </td>
 <td style="text-align:right;">
+6.340000
+</td>
+<td style="text-align:right;">
+3908.823
+</td>
+<td style="text-align:right;">
 4
 </td>
 <td style="text-align:right;">
@@ -283,6 +343,12 @@ Quercus ilex
 Quercus faginea
 </td>
 <td style="text-align:right;">
+8.328895
+</td>
+<td style="text-align:right;">
+4189.325
+</td>
+<td style="text-align:right;">
 6
 </td>
 <td style="text-align:right;">
@@ -298,6 +364,12 @@ Quercus faginea
 <tr>
 <td style="text-align:left;">
 Quercus suber
+</td>
+<td style="text-align:right;">
+8.656130
+</td>
+<td style="text-align:right;">
+4189.325
 </td>
 <td style="text-align:right;">
 4
@@ -337,6 +409,9 @@ Name
 n
 </th>
 <th style="text-align:right;">
+kplant
+</th>
+<th style="text-align:right;">
 E_ratio_mean
 </th>
 <th style="text-align:right;">
@@ -359,6 +434,9 @@ Abies alba
 </td>
 <td style="text-align:right;">
 1780
+</td>
+<td style="text-align:right;">
+0.2805085
 </td>
 <td style="text-align:right;">
 0.5496171
@@ -384,6 +462,9 @@ Fagus sylvatica
 1769
 </td>
 <td style="text-align:right;">
+0.9630081
+</td>
+<td style="text-align:right;">
 1.0035804
 </td>
 <td style="text-align:right;">
@@ -407,19 +488,22 @@ Pinus halepensis
 1102
 </td>
 <td style="text-align:right;">
-1.6550982
+0.6185928
 </td>
 <td style="text-align:right;">
-0.3107266
+1.3251070
 </td>
 <td style="text-align:right;">
-0.0093603
+0.2526109
 </td>
 <td style="text-align:right;">
-0.2217832
+0.0076096
 </td>
 <td style="text-align:right;">
--0.0099306
+0.1775643
+</td>
+<td style="text-align:right;">
+-0.0079506
 </td>
 </tr>
 <tr>
@@ -430,19 +514,22 @@ Pinus nigra
 1523
 </td>
 <td style="text-align:right;">
-1.3936421
+1.2624309
 </td>
 <td style="text-align:right;">
-0.3132592
+1.2544666
 </td>
 <td style="text-align:right;">
-0.0080270
+0.2830440
 </td>
 <td style="text-align:right;">
-0.1867480
+0.0072528
 </td>
 <td style="text-align:right;">
--0.0083619
+0.1680985
+</td>
+<td style="text-align:right;">
+-0.0075268
 </td>
 </tr>
 <tr>
@@ -451,6 +538,9 @@ Pinus pinea
 </td>
 <td style="text-align:right;">
 1314
+</td>
+<td style="text-align:right;">
+0.9754934
 </td>
 <td style="text-align:right;">
 2.0261107
@@ -476,6 +566,9 @@ Pinus sylvestris
 1765
 </td>
 <td style="text-align:right;">
+1.1783006
+</td>
+<td style="text-align:right;">
 1.2996779
 </td>
 <td style="text-align:right;">
@@ -497,6 +590,9 @@ Pinus uncinata
 </td>
 <td style="text-align:right;">
 1730
+</td>
+<td style="text-align:right;">
+1.4366275
 </td>
 <td style="text-align:right;">
 1.3201635
@@ -522,6 +618,9 @@ Quercus faginea
 668
 </td>
 <td style="text-align:right;">
+1.0944696
+</td>
+<td style="text-align:right;">
 1.1782881
 </td>
 <td style="text-align:right;">
@@ -543,6 +642,9 @@ Quercus ilex
 </td>
 <td style="text-align:right;">
 1559
+</td>
+<td style="text-align:right;">
+0.7399350
 </td>
 <td style="text-align:right;">
 0.7920657
@@ -568,6 +670,9 @@ Quercus pubescens
 1132
 </td>
 <td style="text-align:right;">
+0.7972673
+</td>
+<td style="text-align:right;">
 1.0658610
 </td>
 <td style="text-align:right;">
@@ -589,6 +694,9 @@ Quercus suber
 </td>
 <td style="text-align:right;">
 1444
+</td>
+<td style="text-align:right;">
+0.6037066
 </td>
 <td style="text-align:right;">
 1.0290614
@@ -626,7 +734,7 @@ Quercus suber
 <p><img src="Metamodelling_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p>Even though light extinction is not the same in all species, here it seems reasonable to fit a single function for all species. We thus fit a non-linear model where relative WUE is a power function of PAR:</p>
 <p>We now draw again the previous plot with the fitted relationship, i.e. relative WUEg as a function of PAR:</p>
-<pre><code><span class="co">## Warning: Removed 27 rows containing missing values (geom_point).</span></code></pre>
+<pre><code><span class="co">## Warning: Removed 32 rows containing missing values (geom_point).</span></code></pre>
 <p><img src="Metamodelling_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 </div>
 <div class="section level3">
@@ -704,16 +812,16 @@ Pinus halepensis
 97.30311
 </td>
 <td style="text-align:right;">
-5.042992
+5.949960
 </td>
 <td style="text-align:right;">
-5.051536
+5.961922
 </td>
 <td style="text-align:right;">
-0.3750983
+0.4890604
 </td>
 <td style="text-align:right;">
-0.0112994
+0.0147323
 </td>
 </tr>
 <tr>
@@ -730,16 +838,16 @@ Pinus nigra
 80.96258
 </td>
 <td style="text-align:right;">
-5.073152
+5.483808
 </td>
 <td style="text-align:right;">
-5.384322
+5.851518
 </td>
 <td style="text-align:right;">
-0.6285878
+0.7165980
 </td>
 <td style="text-align:right;">
-0.0161070
+0.0183622
 </td>
 </tr>
 <tr>
@@ -1027,16 +1135,16 @@ Fagus sylvatica
 Pinus halepensis
 </td>
 <td style="text-align:right;">
-0.2217832
+0.1775643
 </td>
 <td style="text-align:right;">
--0.0099306
+-0.0079506
 </td>
 <td style="text-align:right;">
-5.051536
+5.961922
 </td>
 <td style="text-align:right;">
-0.6349536
+0.6873787
 </td>
 </tr>
 <tr>
@@ -1047,16 +1155,16 @@ Pinus halepensis
 Pinus nigra
 </td>
 <td style="text-align:right;">
-0.1867480
+0.1680985
 </td>
 <td style="text-align:right;">
--0.0083619
+-0.0075268
 </td>
 <td style="text-align:right;">
-5.384322
+5.851518
 </td>
 <td style="text-align:right;">
-0.2877511
+0.3069001
 </td>
 </tr>
 <tr>
@@ -1205,13 +1313,13 @@ Quercus suber
 <div class="section level2">
 <h2 id="evaluate-similarity-in-e-and-an-estimates">Evaluate similarity in E and An estimates<a class="anchor" aria-label="anchor" href="#evaluate-similarity-in-e-and-an-estimates"></a>
 </h2>
-<pre><code><span class="co">## Warning: Removed 50 rows containing missing values (geom_point).</span></code></pre>
+<pre><code><span class="co">## Warning: Removed 52 rows containing missing values (geom_point).</span></code></pre>
 <p><img src="Metamodelling_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
-<pre><code><span class="co">## Warning: Removed 89 rows containing missing values (geom_point).</span></code></pre>
+<pre><code><span class="co">## Warning: Removed 75 rows containing missing values (geom_point).</span></code></pre>
 <p><img src="Metamodelling_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
-<pre><code><span class="co">## Warning: Removed 56 rows containing missing values (geom_point).</span></code></pre>
+<pre><code><span class="co">## Warning: Removed 57 rows containing missing values (geom_point).</span></code></pre>
 <p><img src="Metamodelling_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
-<pre><code><span class="co">## Warning: Removed 669 rows containing missing values (geom_point).</span></code></pre>
+<pre><code><span class="co">## Warning: Removed 657 rows containing missing values (geom_point).</span></code></pre>
 <p><img src="Metamodelling_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
 </div>
 <div class="section level2">
