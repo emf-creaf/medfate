@@ -684,13 +684,21 @@ the ratio of leaf dry mass to fine fuel dry mass:
 fn_ffr <- file.path(DB_path, "TraitDatabases/FineFuelRatio/FineFuelRatio.xlsx")
 ffr <- readxl::read_excel(fn_ffr, sheet=1)
 ```
-and minimum/maximum fuel moisture contents:
+minimum/maximum fuel moisture contents:
 ```{r}
 fn_fmc <- file.path(DB_path, "TraitDatabases/FMC/FMC.xlsx")
 fmc_field <- readxl::read_excel(fn_fmc, sheet=1)
 fmc_bib <- readxl::read_excel(fn_fmc, sheet=2)
 ```
-
+and construction costs:
+```{r}
+fn_lcc <- file.path(DB_path, "TraitDatabases/ConstructionCosts/LeafConstructionCosts.xlsx")
+lcc_data <- readxl::read_excel(fn_lcc, sheet=1)
+fn_scc <- file.path(DB_path, "TraitDatabases/ConstructionCosts/SapwoodConstructionCosts.xlsx")
+scc_data <- readxl::read_excel(fn_scc, sheet=1)
+fn_fcc <- file.path(DB_path, "TraitDatabases/ConstructionCosts/FineRootConstructionCosts.xlsx")
+fcc_data <- readxl::read_excel(fn_fcc, sheet=1)
+```
 
 ### Plant/leaf classification
 
@@ -1620,6 +1628,25 @@ The distribution of parameter values is:
 ```{r}
 summary(SpParams[,c("WoodC")])
 ```
+
+
+#### Construction costs
+```{r CCleaf}
+ SpParams <- populateTraits(SpParams, as.data.frame(lcc_data), 
+                            trait_mapping = c("CCleaf" = "CC (g glu g−1)"),
+                            taxon_column = "Species")
+ SpParams <- populateTraits(SpParams, as.data.frame(scc_data), 
+                            trait_mapping = c("CCsapwood" = "CC (g glu g−1)"),
+                            taxon_column = "Species")
+ SpParams <- populateTraits(SpParams, as.data.frame(fcc_data), 
+                            trait_mapping = c("CCfineroot" = "CC (g glu g−1)"),
+                            taxon_column = "Species")
+```
+The distribution of parameter values is:
+```{r}
+summary(SpParams[,c("CCleaf", "CCsapwood", "CCfineroot")])
+```
+
 
 ## Initialize forest plot lists for Spain
 
