@@ -7,7 +7,8 @@ output:
     toc: TRUE
 bibliography: ../medfate.bib
 params:
-  complete_rebuild: FALSE
+  spparams_rebuild: FALSE
+  IFN_rebuild: FALSE
 ---
 
 ## Introduction
@@ -283,7 +284,7 @@ head(groups_df)
 ### Initialize species parameter table
 
 Once we have IFN species names and codes, as well as the definition of the IFN biological entities to merge, we can call function `initSpParams()` from package **medfateutils**. This function also takes the data frame `SpParamsDefinition` as argument, from which it takes the set of parameter names to be filled:
-```{r initialization, eval = params$complete_rebuild}
+```{r initialization, eval = params$spparams_rebuild}
 SpParams <-initSpParams(IFN_species_data$IFNCODE, IFN_species_data$IFNNAME,
                         SpParamsDefinition,
                         groups_df$group_codes, groups_df$group_names,
@@ -291,7 +292,7 @@ SpParams <-initSpParams(IFN_species_data$IFNCODE, IFN_species_data$IFNNAME,
 ```
 Option `fill_taxonomic` tells function `initSpParams()` to use package **taxize** to find taxonomic classification of the species/genus entities. This provides very useful information for parameterization, but makes the process of initialization a bit slower.
 ```{r include = FALSE, echo = FALSE}
-if(params$complete_rebuild) {
+if(params$spparams_rebuild) {
   saveRDS(SpParams, "SpParamsSPAIN_init.rds")
 } else {
   SpParams = readRDS("SpParamsSPAIN_init.rds")
@@ -1631,6 +1632,7 @@ summary(SpParams[,c("WoodC")])
 
 
 #### Construction costs
+Tissue construction costs are parsed from our own trait compilation from different sources:
 ```{r CCleaf}
  SpParams <- populateTraits(SpParams, as.data.frame(lcc_data), 
                             trait_mapping = c("CCleaf" = "CC (g glu g−1)"),
@@ -1652,14 +1654,14 @@ summary(SpParams[,c("CCleaf", "CCsapwood", "CCfineroot")])
 
 If we have a species parameter table with taxonomic information, growth forms and species maximum rooting depths (`Z95`), we are ready to create lists of `forest` objects from forest plot data. Here we will use function `IFN2forestlist()` from package **medfateutils**, which has been designed to parse data from the Spanish National Forest Inventory. In section *Parameters drawn from IFN data* we loaded shrub and tree data from the three forest inventory surveys: IFN2, IFN3 and IFN4. Here we use this information to create forest lists:
 
-```{r IFN2_spain, eval = params$complete_rebuild}
+```{r IFN2_spain, eval = params$IFN_rebuild}
 IFN2_forestlist = IFN2forestlist(treeDataIFN2, shrubDataIFN2, SpParams, 
                                  setDefaults = TRUE, filterWrongRecords = TRUE)
 saveRDS(IFN2_forestlist, file=paste0(IFN_path,"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"))
 ```
 
 ```{r include = FALSE, echo = FALSE}
-if(params$complete_rebuild) {
+if(params$IFN_rebuild) {
   saveRDS(IFN2_forestlist, file=paste0(IFN_path,"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"))
 } else {
   IFN2_forestlist = readRDS(paste0(IFN_path,"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"))
@@ -1675,7 +1677,7 @@ IFN2_forestlist[[1]]
 ```
 
 We can repeat the same operation for IFN3:
-```{r IFN3_Spain, eval = params$complete_rebuild}
+```{r IFN3_Spain, eval = params$IFN_rebuild}
 IFN3_forestlist = IFN2forestlist(treeDataIFN3, shrubDataIFN3, SpParams, 
                                  setDefaults = TRUE, filterWrongRecords = TRUE)
 saveRDS(IFN3_forestlist, file=paste0(IFN_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
@@ -1683,7 +1685,7 @@ saveRDS(IFN3_forestlist, file=paste0(IFN_path,"Products/IFN3/Rdata/forestlist_IF
 ```
 
 ```{r include = FALSE, echo = FALSE}
-if(params$complete_rebuild) {
+if(params$IFN_rebuild) {
   saveRDS(IFN3_forestlist, file=paste0(IFN_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
 } else {
     IFN3_forestlist = readRDS(paste0(IFN_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
@@ -1696,14 +1698,14 @@ length(IFN3_forestlist)
 ```
 
 Finally, we repeat the operation for IFN4:
-```{r IFN4_Spain, eval = params$complete_rebuild}
+```{r IFN4_Spain, eval = params$IFN_rebuild}
 IFN4_forestlist = IFN2forestlist(treeDataIFN4, shrubDataIFN4, SpParams, 
                                  setDefaults = TRUE, filterWrongRecords = TRUE)
 saveRDS(IFN4_forestlist, file=paste0(IFN_path,"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"))
 ```
 
 ```{r include = FALSE, echo = FALSE}
-if(params$complete_rebuild) {
+if(params$IFN_rebuild) {
 saveRDS(IFN4_forestlist, file=paste0(IFN_path,"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"))
 } else {
     IFN4_forestlist = readRDS(paste0(IFN_path,"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"))
@@ -1717,7 +1719,7 @@ length(IFN4_forestlist)
 
 
 
-```{r IFN2_CAT, eval = params$complete_rebuild, include = FALSE}
+```{r IFN2_CAT, eval = params$IFN_rebuild, include = FALSE}
 piesMayoresDataIFN2CAT = readRDS(file=paste0(IFN_path,"Products/IFN2/Rdata/piesMayoresDataIFN2_Catalunya.rds"))
 piesMenoresDataIFN2CAT = readRDS(file=paste0(IFN_path,"Products/IFN2/Rdata/piesMenoresDataIFN2_Catalunya.rds"))
 treeDataIFN2CAT = rbind(piesMayoresDataIFN2CAT, piesMenoresDataIFN2CAT) # Add pies menores
@@ -1731,7 +1733,7 @@ rm(piesMayoresDataIFN2CAT)
 rm(piesMenoresDataIFN2CAT)
 ```
 
-```{r IFN3_CAT, eval = params$complete_rebuild, include = FALSE}
+```{r IFN3_CAT, eval = params$IFN_rebuild, include = FALSE}
 mc = read.table(paste0(IFN_path,"Sources/IFN3/ModelCombustible.txt"), sep="\t", header=T)
 mc  = mc[mc$IdClasse %in% c("A1","N","NN","A3C","A4","A4C","A6C"),]
 row.names(mc) = mc$IdParcela
@@ -1757,7 +1759,7 @@ rm(herbData)
 rm(mc)
 ```
 
-```{r IFN4_CAT, eval = params$complete_rebuild, include = FALSE}
+```{r IFN4_CAT, eval = params$IFN_rebuild, include = FALSE}
 treeDataIFN4CAT = readRDS(file=paste0(IFN_path,"Products/IFN4/Rdata/treeDataIFN4_Catalunya.rds"))
 treeDataIFN4CAT = treeDataIFN4CAT[!(treeDataIFN4CAT$OIF4 %in% c("888","999")),] # remove dead trees
 regDataIFN4CAT = readRDS(file=paste0(IFN_path,"Products/IFN4/Rdata/regDataIFN4_Catalunya.rds"))
@@ -1818,7 +1820,7 @@ To calculate the percentage of PAR reaching the ground we need forest plot data 
 forest_list = readRDS(file.path(IFN_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
 ```
 We then calculate percentage of PAR reaching the ground using `medfate` function `vprofile_PARExtinction()`:
-```{r, eval = params$complete_rebuild}
+```{r, eval = params$spparams_rebuild}
 par_groundIFN3 = rep(NA, length(forest_list))
 names(par_groundIFN3) = names(forest_list)
 for(i in 1:length(forest_list)) {
@@ -1835,7 +1837,7 @@ for(i in 1:length(forest_list)) {
 ```
 
 ```{r, include = FALSE}
-if(params$complete_rebuild) {
+if(params$spparams_rebuild) {
   saveRDS(par_groundIFN3, "par_groundIFN3.rds")
 } else {
   par_groundIFN3 = readRDS("par_groundIFN3.rds")
@@ -2043,7 +2045,7 @@ for(i in 1:nrow(SpParams)) {
 summary(SpParams[,c("MinFPARRecr","MinTempRecr","MinMoistureRecr"), drop=FALSE])
 ```
 
-```{r save_SpParams, eval = params$complete_rebuild, include = FALSE}
+```{r save_SpParams, eval = params$spparams_rebuild, include = FALSE}
   wb <- openxlsx::createWorkbook()
   openxlsx::addWorksheet(wb, "SpParamsMED")
   openxlsx::writeDataTable(wb, "SpParamsMED", SpParams)

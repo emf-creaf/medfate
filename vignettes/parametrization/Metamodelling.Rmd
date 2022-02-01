@@ -194,7 +194,7 @@ df_par %>%
 ggplot(df, aes(x=E_granier, y = E_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
-  ylim(c(0,500))+ xlim(c(0,500))+
+  ylim(c(0,350))+ xlim(c(0,350))+
   theme_bw()
 ```
 
@@ -203,7 +203,7 @@ ggplot(df, aes(x=E_granier, y = E_sperry))+
 ggplot(df, aes(x=E_granier_meta, y = E_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
-  ylim(c(0,500))+ xlim(c(0,500))+
+  ylim(c(0,350))+ xlim(c(0,350))+
   theme_bw()
 ```
 
