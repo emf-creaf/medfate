@@ -339,10 +339,6 @@ List growthDay1(List x, NumericVector meteovec,
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
   double equilibriumSapwoodTotalConc = equilibriumOsmoticConcentration["sapwood"];
   double minimumRelativeSugarForGrowth = control["minimumRelativeSugarForGrowth"];
-  List constructionCosts = control["constructionCosts"];
-  double leaf_CC = constructionCosts["leaf"];
-  double sapwood_CC = constructionCosts["sapwood"];
-  double fineroot_CC = constructionCosts["fineroot"];
 
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -423,6 +419,9 @@ List growthDay1(List x, NumericVector meteovec,
   NumericVector RERleaf = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERleaf"]);
   NumericVector RERsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERsapwood"]);
   NumericVector RERfineroot = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERfineroot"]);
+  NumericVector CCleaf = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["CCleaf"]);
+  NumericVector CCsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["CCsapwood"]);
+  NumericVector CCfineroot = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["CCfineroot"]);
   NumericVector RGRleafmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRleafmax"]);
   NumericVector RGRsapwoodmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRsapwoodmax"]);
   NumericVector SRsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["SRsapwood"]);
@@ -492,8 +491,8 @@ List growthDay1(List x, NumericVector meteovec,
   //3. Carbon balance and growth
   for(int j=0;j<numCohorts;j++){
     if(N[j] > 0.0) {
-      double costPerLA = 1000.0*leaf_CC/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
-      double costPerSA = sapwood_CC*sapwoodStructuralBiomass(1.0, H[j], L(j,_),V(j,_),WoodDensity[j]); // Construction cost in g gluc · cm-2 of sapwood area
+      double costPerLA = 1000.0*CCleaf[j]/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
+      double costPerSA = CCsapwood[j]*sapwoodStructuralBiomass(1.0, H[j], L(j,_),V(j,_),WoodDensity[j]); // Construction cost in g gluc · cm-2 of sapwood area
       
       double LAexpanded = leafArea(LAI_expanded[j], N[j]);
       double LAlive = leafArea(LAI_live[j], N[j]);
@@ -546,7 +545,7 @@ List growthDay1(List x, NumericVector meteovec,
       
       //Assumes increment biomass of fine roots is half leaf biomass increment
       double finerootBiomassIncrement = leafBiomassIncrement/2.0;
-      double growthCostFR = (growthCostLA/2.0)*(fineroot_CC/leaf_CC);   
+      double growthCostFR = (growthCostLA/2.0)*(CCfineroot[j]/CCleaf[j]);   
         
       if(LAexpanded>0.0) {
         NumericVector SAring = ring["SA"];
@@ -876,10 +875,6 @@ List growthDay2(List x, NumericVector meteovec,
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
   double equilibriumSapwoodTotalConc = equilibriumOsmoticConcentration["sapwood"];
   double minimumRelativeSugarForGrowth = control["minimumRelativeSugarForGrowth"];
-  List constructionCosts = control["constructionCosts"];
-  double leaf_CC = constructionCosts["leaf"];
-  double sapwood_CC = constructionCosts["sapwood"];
-  double fineroot_CC = constructionCosts["fineroot"];
 
   //Soil params
   List soil  = x["soil"];
@@ -992,6 +987,9 @@ List growthDay2(List x, NumericVector meteovec,
   NumericVector RERleaf = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERleaf"]);
   NumericVector RERsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERsapwood"]);
   NumericVector RERfineroot = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERfineroot"]);
+  NumericVector CCleaf = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["CCleaf"]);
+  NumericVector CCsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["CCsapwood"]);
+  NumericVector CCfineroot = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["CCfineroot"]);
   NumericVector RGRleafmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRleafmax"]);
   NumericVector RGRsapwoodmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRsapwoodmax"]);
   NumericVector RGRfinerootmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRfinerootmax"]);
@@ -1090,8 +1088,8 @@ List growthDay2(List x, NumericVector meteovec,
       double LAdead = leafArea(LAI_dead[j], N[j]);
 
       
-      double costPerLA = 1000.0*leaf_CC/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
-      double costPerSA = sapwood_CC*sapwoodStructuralBiomass(1.0, H[j], L(j,_),V(j,_),WoodDensity[j]); // Construction cost in g gluc · cm-2 of sapwood area
+      double costPerLA = 1000.0*CCleaf[j]/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
+      double costPerSA = CCsapwood[j]*sapwoodStructuralBiomass(1.0, H[j], L(j,_),V(j,_),WoodDensity[j]); // Construction cost in g gluc · cm-2 of sapwood area
       NumericVector deltaFRBgrowth(numLayers, 0.0);
         
 
@@ -1168,9 +1166,9 @@ List growthDay2(List x, NumericVector meteovec,
             double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
             double deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[s]/rleafcellmax);
             if(!sinkLimitation) deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
-            double deltaFRBavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/fineroot_CC);
+            double deltaFRBavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/CCfineroot[j]);
             double deltaFRBgrowthStep = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
-            growthCostFRBStep += deltaFRBgrowthStep*fineroot_CC;
+            growthCostFRBStep += deltaFRBgrowthStep*CCfineroot[j];
             deltaFRBgrowth[s] += deltaFRBgrowthStep;
           }
         }

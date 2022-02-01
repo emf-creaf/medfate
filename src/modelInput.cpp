@@ -394,6 +394,9 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   NumericVector RERleaf = speciesNumericParameter(SP, SpParams, "RERleaf");
   NumericVector RERsapwood = speciesNumericParameter(SP, SpParams, "RERsapwood");
   NumericVector RERfineroot = speciesNumericParameter(SP, SpParams, "RERfineroot");
+  NumericVector CCleaf = speciesNumericParameter(SP, SpParams, "CCleaf");
+  NumericVector CCsapwood = speciesNumericParameter(SP, SpParams, "CCsapwood");
+  NumericVector CCfineroot = speciesNumericParameter(SP, SpParams, "CCfineroot");
   NumericVector RGRleafmax = speciesNumericParameter(SP, SpParams, "RGRleafmax");
   NumericVector RGRsapwoodmax = speciesNumericParameter(SP, SpParams, "RGRsapwoodmax");
   NumericVector RGRfinerootmax = speciesNumericParameter(SP, SpParams, "RGRfinerootmax");
@@ -407,6 +410,12 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   double RGRsapwoodmax_default = maximumRelativeGrowthRates["sapwood"];
   double RGRfinerootmax_default = maximumRelativeGrowthRates["fineroot"];
   
+  
+  List constructionCosts = control["constructionCosts"];
+  double CCleaf_default = constructionCosts["leaf"];
+  double CCsapwood_default = constructionCosts["sapwood"];
+  double CCfineroot_default = constructionCosts["fineroot"];
+  
   List respirationRates = control["respirationRates"];
   double RERleaf_default = respirationRates["leaf"];
   double RERsapwood_default = respirationRates["sapwood"];
@@ -418,6 +427,9 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   
   if(fillMissingSpParams) {
     for(int c=0;c<numCohorts;c++){
+      if(NumericVector::is_na(CCleaf[c])) CCleaf[c] = CCleaf_default;
+      if(NumericVector::is_na(CCsapwood[c])) CCsapwood[c] = CCsapwood_default;
+      if(NumericVector::is_na(CCfineroot[c])) CCfineroot[c] = CCfineroot_default;
       if(NumericVector::is_na(RGRleafmax[c])) RGRleafmax[c] = RGRleafmax_default;
       if(NumericVector::is_na(RGRsapwoodmax[c])) RGRsapwoodmax[c] = RGRsapwoodmax_default;
       if(NumericVector::is_na(RGRfinerootmax[c])) RGRfinerootmax[c] = RGRfinerootmax_default;
@@ -432,6 +444,9 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   DataFrame paramsGrowthdf = DataFrame::create(_["RERleaf"] = RERleaf,
                                                _["RERsapwood"] = RERsapwood,
                                                _["RERfineroot"] = RERfineroot,
+                                               _["CCleaf"] = CCleaf,
+                                               _["CCsapwood"] = CCsapwood,
+                                               _["CCfineroot"] = CCfineroot,
                                                _["RGRleafmax"] = RGRleafmax,
                                                _["RGRsapwoodmax"] = RGRsapwoodmax,
                                                _["RGRfinerootmax"] = RGRfinerootmax,

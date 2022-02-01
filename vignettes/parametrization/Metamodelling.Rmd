@@ -41,7 +41,7 @@ Assuming there are no water limitations, the following parameters are used to de
 
 ```{r, echo = FALSE}
 customParamsSpecies = read_xlsx("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Data/SpParamsCUSTOM.xlsx", sheet = "SpParamsCUSTOM")
-customParamsSpecies[, c("Name", "VCleaf_kmax", "Kmax_stemxylem", "Vmax298", "Jmax298")] %>%
+customParamsSpecies[, c("Name","SLA","Al2As", "VCleaf_kmax", "Kmax_stemxylem", "Vmax298", "Jmax298")] %>%
   kbl() %>%
   kable_styling()
 ```
@@ -78,6 +78,7 @@ We can find the species average ratios and multiply the default Granier coeffici
 TR_sp <- df %>% 
   group_by(Name) %>%
   summarize(n = n(),
+            kplant = mean(kplant, na.rm=TRUE),
             E_ratio_mean = mean(E_ratio, na.rm=TRUE),
             E_ratio_sd = sd(E_ratio, na.rm=TRUE),
             E_ratio_se = E_ratio_sd/sqrt(n),
