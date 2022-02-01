@@ -19,19 +19,15 @@ library(medfate)
 library(nlme)
 ```
 
-## Abstract
+## Introduction
 
-This document presents metamodeling exercises between Sperry and Granier's versions of medfate.
-
-## Goals
-
-Make transpiration (E) and gross photosynthesis (Ag) estimates produced by the basic water balance model similar to those predicted by the advanced model which, given its greater process detail and physical basis, is assumed to provide better E and Ag estimates when provided appropriate functional traits are supplied. 
+This document presents a metamodeling exercise between basic (Granier's) and advanced (Sperry's) versions of the soil plant water balance model. The goal is to make transpiration (E) and gross photosynthesis (Ag) estimates produced by the basic water balance model as similar as possible to those predicted by the advanced model which, given its greater process detail and physical basis, is assumed to provide better E and Ag estimates when provided appropriate functional traits are supplied. 
 
 Assuming there are no water limitations, the following parameters are used to determine E and Ag in the basic model, which cannot easily be parameterized from available trait data (see https://emf-creaf.github.io/medfatebook/index.html):
 
- + Tmax_LAI and Tmax_LAIsp, parameters determining maximum transpiration from LAI
- + WUE, which represents the daily WUE (g C of gross assimilation / l transpired) under conditions of maximum light and no water stress.
- + Exponent of the function specifying the decrease in relative WUE with position within the canopy.
+ + `Tmax_LAI` and `Tmax_LAIsp`, which determine the ratio of maximum transpiration over potential evapotranspiration for a given LAI. An empirical function with these parameters was derived by Granier (1999), but without distinguishing between species. A metamodelling exercise should allow deriving species-specific values for these parameters.
+ + `WUE`, which represents the daily water use efficiency (g C of gross assimilation / l transpired) under conditions of high light and no water stress. Such estimate of WUE is not easily available for many species in trait databases, but we can derive it from metamodelling if Farquhar's photosynthetic parameters `Vmax298` and `Jmax298` are known.
+ + `WUE_decay`, which is the exponent of the function specifying the decrease in relative WUE for lower positions within the canopy, due to the decrease of available light. Again, this rate of decay should depend on the species, according to its degree of shade tolerance, and will be influenced by parameters regulating plant hydraulics, photosynthesis and light extinction.
  
 ## Data
 
