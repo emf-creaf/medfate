@@ -7,6 +7,8 @@
   } else {
     transpMode = x$growthInput$control$transpirationMode
   }
+  if("spwbInput" %in% names(x)) input = x$spwbInput
+  else input = x$growthInput
   
   ndd<-function(dds) { # De Caceres et al (2015)
     return(sum(dds>0.5))
@@ -39,7 +41,7 @@
   }
   if(bySpecies) {
     cohlai = apply(x$Plants$LAI,2,max, na.rm=T)
-    cohsp = as.character(x$spwbInput$cohorts$Name)
+    cohsp = as.character(input$cohorts$Name)
     lai1 = tapply(cohlai, cohsp, sum, na.rm=T)
     m1 = t(apply(sweep(M,2,cohlai,"*"),1,tapply, cohsp, sum, na.rm=T))
     if(length(lai1)==1) {
