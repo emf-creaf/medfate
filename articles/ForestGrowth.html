@@ -215,14 +215,18 @@
 <p>Parameters related to plant growth can be seen in <code>paramsGrowth</code> and <code>paramsAllometries</code>:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsGrowth</span></code></pre></div>
-<pre><code><span class="co">##           RERleaf   RERsapwood RERfineroot RGRleafmax RGRsapwoodmax</span>
-<span class="co">## T1_148 0.00260274 6.849315e-05 0.002054795       0.03         0.005</span>
-<span class="co">## T2_168 0.00260274 6.849315e-05 0.002054795       0.03         0.005</span>
-<span class="co">## S1_165 0.00260274 6.849315e-05 0.002054795       0.03         0.005</span>
-<span class="co">##        RGRfinerootmax    SRsapwood  SRfineroot fHDmin fHDmax     WoodC</span>
-<span class="co">## T1_148            0.1 0.0001261398 0.001897231     40    130 0.4979943</span>
-<span class="co">## T2_168            0.1 0.0001261398 0.001897231     40    100 0.4740096</span>
-<span class="co">## S1_165            0.1 0.0001261398 0.001897231     NA     NA 0.4750094</span></code></pre>
+<pre><code><span class="co">##           RERleaf   RERsapwood RERfineroot CCleaf CCsapwood CCfineroot</span>
+<span class="co">## T1_148 0.00260274 6.849315e-05 0.002054795    1.5      1.47        1.3</span>
+<span class="co">## T2_168 0.00260274 6.849315e-05 0.002054795    1.5      1.47        1.3</span>
+<span class="co">## S1_165 0.00260274 6.849315e-05 0.002054795    1.5      1.47        1.3</span>
+<span class="co">##        RGRleafmax RGRsapwoodmax RGRfinerootmax    SRsapwood  SRfineroot fHDmin</span>
+<span class="co">## T1_148       0.03         0.005            0.1 0.0001261398 0.001897231     40</span>
+<span class="co">## T2_168       0.03         0.005            0.1 0.0001261398 0.001897231     40</span>
+<span class="co">## S1_165       0.03         0.005            0.1 0.0001261398 0.001897231     NA</span>
+<span class="co">##        fHDmax     WoodC</span>
+<span class="co">## T1_148    130 0.4979943</span>
+<span class="co">## T2_168    100 0.4740096</span>
+<span class="co">## S1_165     NA 0.4750094</span></code></pre>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsAllometries</span></code></pre></div>
 <pre><code><span class="co">##             Aash     Bash      Absh      Bbsh     Acr   B1cr     B2cr</span>

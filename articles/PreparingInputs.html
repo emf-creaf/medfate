@@ -128,12 +128,13 @@
 <span class="co">##  [88] "Kmax_rootxylem"       "VCroot_c"             "VCroot_d"            </span>
 <span class="co">##  [91] "Narea"                "Vmax298"              "Jmax298"             </span>
 <span class="co">##  [94] "WoodC"                "RERleaf"              "RERsapwood"          </span>
-<span class="co">##  [97] "RERfineroot"          "RGRleafmax"           "RGRsapwoodmax"       </span>
-<span class="co">## [100] "RGRfinerootmax"       "SRsapwood"            "SRfineroot"          </span>
-<span class="co">## [103] "SeedProductionHeight" "RecrTreeDBH"          "RecrTreeHeight"      </span>
-<span class="co">## [106] "RecrShrubHeight"      "RecrTreeDensity"      "RecrShrubCover"      </span>
-<span class="co">## [109] "RecrZ50"              "RecrZ95"              "MinTempRecr"         </span>
-<span class="co">## [112] "MinMoistureRecr"      "MinFPARRecr"</span></code></pre>
+<span class="co">##  [97] "RERfineroot"          "CCleaf"               "CCsapwood"           </span>
+<span class="co">## [100] "CCfineroot"           "RGRleafmax"           "RGRsapwoodmax"       </span>
+<span class="co">## [103] "RGRfinerootmax"       "SRsapwood"            "SRfineroot"          </span>
+<span class="co">## [106] "SeedProductionHeight" "RecrTreeDBH"          "RecrTreeHeight"      </span>
+<span class="co">## [109] "RecrShrubHeight"      "RecrTreeDensity"      "RecrShrubCover"      </span>
+<span class="co">## [112] "RecrZ50"              "RecrZ95"              "MinTempRecr"         </span>
+<span class="co">## [115] "MinMoistureRecr"      "MinFPARRecr"</span></code></pre>
 <p>Not all parameters are needed for all models. The user can find parameter definitions in <code>SpParamsDefinition</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpParamsDefinition"</span><span class="op">)</span>
@@ -735,96 +736,114 @@
 <td align="left">g gluc · g dry-1 · day-1</td>
 </tr>
 <tr class="even">
+<td align="left">CCleaf</td>
+<td align="left">Leaf construction costs</td>
+<td align="left">Numeric</td>
+<td align="left">g gluc · g dry-1</td>
+</tr>
+<tr class="odd">
+<td align="left">CCsapwood</td>
+<td align="left">Sapwood construction costs</td>
+<td align="left">Numeric</td>
+<td align="left">g gluc · g dry-1</td>
+</tr>
+<tr class="even">
+<td align="left">CCfineroot</td>
+<td align="left">Fine root construction costs</td>
+<td align="left">Numeric</td>
+<td align="left">g gluc · g dry-1</td>
+</tr>
+<tr class="odd">
 <td align="left">RGRleafmax</td>
 <td align="left">Maximum leaf relative growth rate</td>
 <td align="left">Numeric</td>
 <td align="left">m2/cm2/day</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RGRsapwoodmax</td>
 <td align="left">Maximum sapwood relative growth rate (in basal area or sapwood area)</td>
 <td align="left">Numeric</td>
 <td align="left">cm2/cm2/day</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RGRfinerootmax</td>
 <td align="left">Maximum fineroot relative growth rate</td>
 <td align="left">Numeric</td>
 <td align="left">g dry/g dry/day</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">SRsapwood</td>
 <td align="left">Sapwood daily senescence rate</td>
 <td align="left">Numeric</td>
 <td align="left">Day-1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SRfineroot</td>
 <td align="left">Fine root daily senescence rate</td>
 <td align="left">Numeric</td>
 <td align="left">Day-1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">SeedProductionHeight</td>
 <td align="left">Minimum height for seed production</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrTreeDBH</td>
 <td align="left">Recruitment tree dbh</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrTreeHeight</td>
 <td align="left">Recruitment tree height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrShrubHeight</td>
 <td align="left">Recruitment shrub height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrTreeDensity</td>
 <td align="left">Recruitment tree density</td>
 <td align="left">Numeric</td>
 <td align="left">ind/ha</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrShrubCover</td>
 <td align="left">Recruitment shrub cover</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrZ50</td>
 <td align="left">Recruitment depth corresponding to 50% of fine roots</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrZ95</td>
 <td align="left">Recruitment depth corresponding to 95% of fine roots</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">MinTempRecr</td>
 <td align="left">Minimum average temperature of the coldest month for successful recruitment</td>
 <td align="left">Numeric</td>
 <td align="left">ºC</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">MinMoistureRecr</td>
 <td align="left">Minimum value of the moisture index (annual precipitation over annual PET) for successful recruitment</td>
 <td align="left">Numeric</td>
 <td align="left">unitless</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">MinFPARRecr</td>
 <td align="left">Minimum percentage of PAR at the ground level for successful recruitment</td>
 <td align="left">Numeric</td>
