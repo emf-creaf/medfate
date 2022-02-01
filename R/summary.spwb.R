@@ -53,37 +53,38 @@
     if(!found) {
       stop(paste0("Unrecognized output string: '", output ,"'\n"))
     }
-  }
-  else if(length(output_vec)==2) {
+  } else if(length(output_vec)==2) {
     if(!(output_vec[2] %in% names(object[[output_vec[1]]]))) stop(paste0("Unrecognized output string: '", output ,"'\n"))
-  }
-  else if(length(output_vec)==1 && output_vec[1]=="LabileCarbonBalance") {
+  } else if(length(output_vec)==1 && output_vec[1]=="LabileCarbonBalance") {
     output_vec = rep(output_vec, 2)
   }
   
   if(output_vec[1] %in% c("Soil", "Stand", "Temperature", 
                           "WaterBalance", "EnergyBalance", "BiomassBalance")) {
     OM = object[[output_vec[1]]]
-  }
-  else if(output_vec[1]=="Plants" && output_vec[2]=="LAI") {
+  } else if(output_vec[1]=="Plants" && output_vec[2]=="LAI") {
     OM = object$Plants$LAI
     if(bySpecies) {
-      OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
+      OM = t(apply(OM,1, tapply, as.factor(input$cohorts$Name), sum, na.rm=T))
+      if(nrow(OM)==1) rownames(OM) = levels(as.factor(input$cohorts$Name))
     } 
-  } 
-  else {
+  } else {
     OM = object[[output_vec[1]]][[output_vec[2]]]
     if(bySpecies && ncol(OM)>0) {
-      lai1 = t(apply(object$Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(object$Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
+      lai1 = t(apply(object$Plants$LAI,1, tapply, as.factor(input$cohorts$Name), sum, na.rm=T))
+      if(nrow(lai1)==1) rownames(lai1) = levels(as.factor(input$cohorts$Name))
+      m1 = t(apply(object$Plants$LAI * OM,1, tapply, as.factor(input$cohorts$Name), sum, na.rm=T))
+      if(nrow(m1)==1) rownames(m1) = levels(as.factor(input$cohorts$Name))
       OM = m1/lai1
       OM[lai1==0] = NA
-    } 
+    } else if(bySpecies) {
+      colnames(OM) = levels(as.factor(input$cohorts$Name))
+    }
   }
   if(ncol(OM)==length(date.factor) && nrow(OM)==1) OM = t(OM)
   
   #Perform summary at the desired temporal scale
-  M <- apply(OM,2,tapply, INDEX=date.factor, FUN)
+  M <- apply(OM,2,tapply, INDEX=date.factor, FUN, na.rm=T)
   if(length(M)==0) {
     l <- levels(date.factor)
     M <- matrix(nrow = length(l), ncol=0)
