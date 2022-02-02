@@ -67,7 +67,7 @@ defaultControl<-function(transpirationMode = "Granier") {
                                       fineroot = 0.1), # g dw · g dw -1 · day -1
     mortalityMode = "density/deterministic",
     mortalityBaselineRate = 0.0,
-    mortalityRelativeStarchThreshold = 0.3,
+    mortalityRelativeSugarThreshold = 0.3,
     mortalityRWCThreshold = 0.3,
     
     #dynamics

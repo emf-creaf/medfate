@@ -93,7 +93,7 @@ A list, with the following options (default values in parentheses):
    \item{\code{maximumRelativeGrowthRates [=   c(leaf = 0.03, sapwood = 0.005, fineroot = 0.1)]}: Default maximum relative growth rates for leaves (m2 leaf ·cm-2 sapwood· day-1), sapwood (cm2 sapwood ·cm-2 sapwood· day-1) and fine roots (g dw · g dw -1 · day -1) when not specified via SpParams (\code{RGRleafmax}, \code{RGRsapwoodmax} and \code{RGRfinerootmax}).}
    \item{\code{mortalityMode [= "density/deterministic"]}: String describing how mortality is applied. Current accepted values are combinations of "cohort" vs "density" (for whole-cohort mortality vs reduction of stem density) and "deterministic" vs. "stochastic".}
    \item{\code{mortalityBaselineRate [= 0.0]}: Deterministic proportion or probability specifying the baseline reduction of cohort's density occurring in a year (for \code{mortalityMode = "density/deterministic" or "density/stochastic").}}
-   \item{\code{mortalityRelativeStarchThreshold [= 0.3]}: Threshold of stem starch concentration, in relation to the starch concentration where stop occurs, resulting in an increased mortality rate/probability whenever levels are below.}
+   \item{\code{mortalityRelativeSugarThreshold [= 0.3]}: Threshold of stem sugar concentration, in relation to the equilibrium sugar concentration, resulting in an increased mortality rate/probability whenever levels are below.}
    \item{\code{mortalityRWCThreshold [= 0.3]}: Threshold of stem relative water content resulting in increased mortality rate/probability whenever levels are below.}
 }
 \bold{Forest dynamics}:

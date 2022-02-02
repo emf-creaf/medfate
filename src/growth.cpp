@@ -325,7 +325,7 @@ List growthDay1(List x, NumericVector meteovec,
   String soilFunctions = control["soilFunctions"];
   String mortalityMode = control["mortalityMode"];
   double mortalityBaselineRate = control["mortalityBaselineRate"];
-  double mortalityRelativeStarchThreshold= control["mortalityRelativeStarchThreshold"];
+  double mortalityRelativeSugarThreshold= control["mortalityRelativeSugarThreshold"];
   double mortalityRWCThreshold= control["mortalityRWCThreshold"];
   bool allowDessication = control["allowDessication"];
   bool allowStarvation = control["allowStarvation"];
@@ -478,7 +478,8 @@ List growthDay1(List x, NumericVector meteovec,
   
   double equilibriumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConcentration;
   double equilibriumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConcentration;
-    
+  double mortalitySugarThreshold = equilibriumSapwoodSugarConc*mortalityRelativeSugarThreshold;
+
   double rleafcellmax = relative_expansion_rate(0.0 ,30.0, -2.0,0.5,0.05,5.0);
   
   //Initial Biomass balance
@@ -508,8 +509,7 @@ List growthDay1(List x, NumericVector meteovec,
       double LAdead = leafArea(LAI_dead[j], N[j]);
 
       double minimumStarchForGrowth = Starch_max_sapwood[j]*minimumRelativeStarchForGrowth;
-      double mortalityStarchThreshold = minimumStarchForGrowth*mortalityRelativeStarchThreshold;
-      
+
       double leafRespDay = 0.0;
 
       //MAINTENANCE RESPIRATION
@@ -582,7 +582,7 @@ List growthDay1(List x, NumericVector meteovec,
         double deltaSAsink = (SA[j]*RGRsapwoodmax[j]*rgrcellfile); 
         if(!sinkLimitation) deltaSAsink = SA[j]*RGRsapwoodmax[j]; //Deactivates temperature and turgor limitation
         double deltaSAavailable = 0.0;
-        if(starchSapwood[j] > minimumStarchForGrowth) {
+        if(starchSapwood[j] - minimumStarchForGrowth) {
           deltaSAavailable = (starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA;
         }
         deltaSAgrowth[j] = std::min(deltaSAsink, deltaSAavailable);
@@ -718,7 +718,7 @@ List growthDay1(List x, NumericVector meteovec,
       double stemSympRWC = symplasticRelativeWaterContent(PlantPsi[j], StemPI0[j], StemEPS[j]);
       if(dynamicCohort) {
         if(mortalityMode=="whole-cohort/deterministic") {
-          if((starchSapwood[j]<mortalityStarchThreshold) & allowStarvation) {
+          if((sugarSapwood[j]<mortalitySugarThreshold) & allowStarvation) {
             Ndead_day = N[j];
             if(verbose) Rcout<<" [Cohort "<< j<<" died from starvation] ";
           } else if( (stemSympRWC < mortalityRWCThreshold) & allowDessication) {
@@ -727,7 +727,7 @@ List growthDay1(List x, NumericVector meteovec,
           }
         } else {
 
-          if(allowStarvation) starvationRate[j] = dailyMortalityProbability(basalMortalityRate, starchSapwood[j], mortalityStarchThreshold, 0.0);
+          if(allowStarvation) starvationRate[j] = dailyMortalityProbability(basalMortalityRate, sugarSapwood[j], mortalitySugarThreshold, 0.0);
           if(allowDessication) dessicationRate[j] = dailyMortalityProbability(basalMortalityRate, stemSympRWC, mortalityRWCThreshold, 0.0);
           mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));
           
@@ -902,7 +902,7 @@ List growthDay2(List x, NumericVector meteovec,
   
   String mortalityMode = control["mortalityMode"];
   double mortalityBaselineRate = control["mortalityBaselineRate"];
-  double mortalityRelativeStarchThreshold= control["mortalityRelativeStarchThreshold"];
+  double mortalityRelativeSugarThreshold= control["mortalityRelativeSugarThreshold"];
   double mortalityRWCThreshold= control["mortalityRWCThreshold"];
   
   bool allowDessication = control["allowDessication"];
@@ -1107,7 +1107,8 @@ List growthDay2(List x, NumericVector meteovec,
   
   double equilibriumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConcentration;
   double equilibriumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConcentration;
-  
+  double mortalitySugarThreshold = equilibriumSapwoodSugarConc*mortalityRelativeSugarThreshold;
+
   double rleafcellmax = relative_expansion_rate(0.0,30.0, -2.0,0.5,0.05,5.0);
 
   //Initial Biomass balance
@@ -1133,9 +1134,7 @@ List growthDay2(List x, NumericVector meteovec,
       double LAdead = leafArea(LAI_dead[j], N[j]);
       
       double minimumStarchForGrowth = Starch_max_sapwood[j]*minimumRelativeStarchForGrowth;
-      double mortalityStarchThreshold = minimumStarchForGrowth*mortalityRelativeStarchThreshold;
-      
-      
+
       double costPerLA = 1000.0*CCleaf[j]/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
       double costPerSA = CCsapwood[j]*sapwoodStructuralBiomass(1.0, H[j], L(j,_),V(j,_),WoodDensity[j]); // Construction cost in g gluc · cm-2 of sapwood area
       NumericVector deltaFRBgrowth(numLayers, 0.0);
@@ -1453,7 +1452,7 @@ List growthDay2(List x, NumericVector meteovec,
       if((!shrubDynamics) & isShrub) dynamicCohort = false;
       if(dynamicCohort) {
         if(mortalityMode=="whole-cohort/deterministic") {
-          if((starchSapwood[j]<mortalityStarchThreshold) & allowStarvation) {
+          if((sugarSapwood[j]<mortalitySugarThreshold) & allowStarvation) {
             Ndead_day = N[j];
             if(verbose) Rcout<<" [Cohort "<< j<<" died from starvation] ";
           } else if( (StemSympRWC[j] < mortalityRWCThreshold) & allowDessication) {
@@ -1462,7 +1461,7 @@ List growthDay2(List x, NumericVector meteovec,
           }
         } else {
           
-          if(allowStarvation) starvationRate[j] = dailyMortalityProbability(basalMortalityRate, starchSapwood[j], mortalityStarchThreshold, 0.0);
+          if(allowStarvation) starvationRate[j] = dailyMortalityProbability(basalMortalityRate, sugarSapwood[j], mortalitySugarThreshold, 0.0);
           if(allowDessication) dessicationRate[j] = dailyMortalityProbability(basalMortalityRate, StemSympRWC[j], mortalityRWCThreshold, 0.0);
           mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));
           

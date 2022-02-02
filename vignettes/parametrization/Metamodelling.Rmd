@@ -42,46 +42,17 @@ customParamsSpecies[, c("Name","SLA","Al2As", "VCleaf_kmax", "Kmax_stemxylem", "
   kable_styling()
 ```
 
-```{r, echo = FALSE}
-df = readRDS("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Rdata/metamodelling_results.rds")
-target_spp = sort(unique(as.numeric(df$SP)))
-```
-
-
-```{r, echo = FALSE}
-data(SpParamsMED)
-pardf = data.frame(Name = species_characterParameter(target_spp, SpParamsMED, "Name"),
-                   SRL = species_parameter(target_spp, SpParamsMED, "SRL"),
-                   FineRootDensity = species_parameter(target_spp, SpParamsMED, "FineRootDensity"),
-                   RLD = species_parameter(target_spp, SpParamsMED, "RLD"))
-for(i in 1:length(target_spp)) pardf$SRSA[i] = root_specificRootSurfaceArea(pardf$SRL[i], pardf$FineRootDensity[i])
-pardf %>%
-  kbl() %>%
-  kable_styling()
-```
 ## Simulations
 
 
 The Granier and Sperry version of medfate ware run on all 90 forest plots (the advanced model crashed for a few cases) using weather corresponding to year 2000.
 
 We loaded the forest plot data and, for each plot with results, assemble the PAR corresponding to each cohort, the transpiration obtained by each model and the WUEg resulting from the simulation with Sperry's model.
-
-
-```{r, echo = FALSE, fig = TRUE, message=FALSE}
-ggplot(df, aes(x = PAR, y = kplant))+
-  geom_point(aes(col = Name), size=0.3, alpha = 0.3)+
-  geom_smooth(method = "loess", aes(group = Name, col = Name))+
-  ylab("k (plant)")+xlab("PAR (%)")+
-  theme_bw()
+```{r, echo = FALSE}
+df = readRDS("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Rdata/metamodelling_results.rds")
+target_spp = sort(unique(as.numeric(df$SP)))
 ```
 
-```{r, echo = FALSE, fig = TRUE, message=FALSE}
-ggplot(df, aes(x = PAR, y = Ar2Al))+
-  geom_point(aes(col = Name), size=0.3, alpha = 0.3)+
-  geom_smooth(method = "loess", aes(group = Name, col = Name))+
-  ylab("Fine root area / Leaf area")+xlab("PAR (%)")+
-  theme_bw()
-```
 
 ## Transpiration ratio
 

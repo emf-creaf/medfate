@@ -43,13 +43,13 @@
     TYPES <-c(TYPES,
               "Net photosynthesis" = "PlantNetPhotosynthesis",
               "Net photosynthesis per leaf" = "NetPhotosynthesisPerLeaf",
+              "Water use efficiency" = "PlantWUE",
               "Absorbed short-wave radiation" = "PlantAbsorbedSWR",
               "Absorbed short-wave radiation per leaf" = "AbsorbedSWRPerLeaf",
               "Net long-wave radiation" = "PlantNetLWR",
               "Net long-wave radiation per leaf" = "NetLWRPerLeaf")
   }            
-  TYPES <-c(TYPES,              
-            "Water use efficiency" = "PlantWUE")
+
   if(transpirationMode == "Sperry") {
     TYPES <-c(TYPES,
               "Minimum leaf water potential" = "LeafPsiMin",
