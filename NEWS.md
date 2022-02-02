@@ -8,7 +8,8 @@
 - Update parameters fHDmin and fHDmax.
 - New vignette 'IFNEvaluation'
 - New parameter 'WUE_decay' for reduction of relative WUE in Granier's model
-- Tissue construction costs are now species-specific parameters
+- Tissue construction costs are now species-specific parameters.
+- Fine root growth and senescence made equal between Granier and Sperry models, inducing a new parameter 'Ar2Al' for Granier's model.
 
 # Version 2.4.0
 - Functions 'spwb_stress', 'spwb_resistances' and 'spwb_waterUseEfficiency' renamed to 'droughtStress', 'resistances' and 'waterUseEfficiency', respectively, since they can now be applied to the output of several simulation function.

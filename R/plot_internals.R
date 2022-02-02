@@ -111,19 +111,13 @@
 .getStructuralGROWTHPlotTypes<-function(transpirationMode = "Granier"){
   TYPES = c("Sapwood area" ="SapwoodArea",
             "Leaf area" = "LeafArea", 
-            "Fine root biomass per individual" = "FineRootBiomass")
-  if(transpirationMode=="Sperry") {
-    TYPES = c(TYPES, 
-              "Fine root area" ="FineRootArea")
-  }
+            "Fine root biomass per individual" = "FineRootBiomass",
+            "Fine root area" ="FineRootArea")
   TYPES = c(TYPES,             
             "Diameter at breast height" = "DBH",
             "Plant height" =  "Height", 
-            "Sapwood area / Leaf area" ="HuberValue")
-  if(transpirationMode=="Sperry") {
-    TYPES = c(TYPES, 
-              "Fine root area / Leaf area" ="RootAreaLeafArea")
-  }
+            "Sapwood area / Leaf area" ="HuberValue",
+            "Fine root area / Leaf area" ="RootAreaLeafArea")
   return(TYPES)
 }
 .getGrowthMortalityGROWTHPlotTypes<-function(transpirationMode = "Granier"){

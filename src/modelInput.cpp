@@ -74,13 +74,14 @@ DataFrame paramsInterception(DataFrame above, DataFrame SpParams, List control) 
 }
 
 
-DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpParams) {
+DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpParams, String transpirationMode) {
   IntegerVector SP = above["SP"];
 
   NumericVector Hmax = speciesNumericParameter(SP, SpParams, "Hmax");
   NumericVector Hmed = speciesNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
   
   NumericVector Al2As = speciesNumericParameterWithImputation(SP, SpParams, "Al2As", fillMissingSpParams);
+  NumericVector Ar2Al = speciesNumericParameterWithImputation(SP, SpParams, "Ar2Al", fillMissingSpParams);
   NumericVector SLA = speciesNumericParameterWithImputation(SP, SpParams, "SLA", fillMissingSpParams);
   NumericVector r635 = speciesNumericParameterWithImputation(SP, SpParams, "r635", fillMissingSpParams);
   NumericVector leafwidth = speciesNumericParameterWithImputation(SP, SpParams, "LeafWidth", fillMissingSpParams);
@@ -91,14 +92,24 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
   NumericVector RLD = speciesNumericParameterWithImputation(SP, SpParams, "RLD", fillMissingSpParams);  
   NumericVector conduit2sapwood = speciesNumericParameterWithImputation(SP, SpParams, "conduit2sapwood", fillMissingSpParams);
 
-  DataFrame paramsAnatomydf = DataFrame::create(
-    _["Hmax"] = Hmax,_["Hmed"] = Hmed,
-    _["Al2As"] = Al2As, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
-    _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = LeafDensity, 
-    _["conduit2sapwood"] = conduit2sapwood,
-    _["SRL"] = SRL, _["RLD"] = RLD,  
-    _["r635"] = r635
-  );
+  DataFrame paramsAnatomydf;
+  if(transpirationMode=="Sperry") {
+    paramsAnatomydf = DataFrame::create(
+      _["Hmax"] = Hmax,_["Hmed"] = Hmed,
+      _["Al2As"] = Al2As, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
+      _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = LeafDensity, 
+      _["conduit2sapwood"] = conduit2sapwood,
+      _["SRL"] = SRL, _["RLD"] = RLD,  
+      _["r635"] = r635);
+  } else {
+    paramsAnatomydf = DataFrame::create(
+      _["Hmax"] = Hmax,_["Hmed"] = Hmed,
+      _["Al2As"] = Al2As, _["Ar2Al"] = Ar2Al, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
+      _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = LeafDensity, 
+      _["conduit2sapwood"] = conduit2sapwood,
+      _["SRL"] = SRL, _["RLD"] = RLD,  
+      _["r635"] = r635);
+  }
   paramsAnatomydf.attr("row.names") = above.attr("row.names");
   return(paramsAnatomydf);
 }
@@ -271,15 +282,20 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   DataFrame belowdf;
   
   if(transpirationMode == "Granier") {
-    NumericVector SLA(numCohorts, NA_REAL); 
-    if(paramsAnatomydf.containsElementNamed("SLA")) SLA = paramsAnatomydf["SLA"];
+    NumericVector Ar2Al = paramsAnatomydf["Ar2Al"];
+    NumericVector FineRootDensity = paramsAnatomydf["FineRootDensity"];
+    NumericVector SRL = paramsAnatomydf["SRL"];
+    NumericVector RLD = paramsAnatomydf["RLD"];
+    
     NumericVector CRSV(numCohorts);
     NumericVector FRB(numCohorts, NA_REAL);
     for(int c=0;c<numCohorts;c++){
       L(c,_) = coarseRootLengths(V(c,_), dVec, 0.5); //Arbitrary ratio (to revise some day)
       CRSV[c] = coarseRootSoilVolume(V(c,_), dVec, 0.5);
       //Assume fine root biomass is half leaf structural biomass
-      if(!NumericVector::is_na(SLA[c])) FRB[c] = leafStructuralBiomass(LAI_live[c], N[c], SLA[c]);
+      double LA = leafArea(LAI_live[c], N[c]); //m2 leaf area per individual
+      double fineRootArea = Ar2Al[c]*LA;//fine root area in m2
+      FRB[c] = fineRootArea/(specificRootSurfaceArea(SRL[c], FineRootDensity[c])*1e-4);
     }
     if(plantWaterPools) {
       belowdf = DataFrame::create(_["Z50"] = Z50,
@@ -600,22 +616,22 @@ DataFrame internalAllocationDataFrame(DataFrame above,
   NumericVector leafAreaTarget(numCohorts,0.0);
   NumericVector fineRootBiomassTarget(numCohorts, 0.0);
   
+  
   String transpirationMode = control["transpirationMode"];
   NumericVector SA = above["SA"];
   NumericVector Al2As = paramsAnatomydf["Al2As"];
+  NumericVector fineRootBiomass = belowdf["fineRootBiomass"];
   DataFrame df;
   if(transpirationMode=="Granier") {
     for(int c=0;c<numCohorts;c++){
       leafAreaTarget[c] = Al2As[c]*(SA[c]/10000.0);
       allocationTarget[c] = Al2As[c];
+      fineRootBiomassTarget[c] = fineRootBiomass[c];
     }
-    df = DataFrame::create(Named("allocationTarget") = allocationTarget,
-                           Named("leafAreaTarget") = leafAreaTarget);
   } else {
     String allocationStrategy = control["allocationStrategy"];
     NumericVector Plant_kmax = paramsTranspirationdf["Plant_kmax"];
     NumericVector VGrhizo_kmax = paramsTranspirationdf["VGrhizo_kmax"];
-    NumericVector fineRootBiomass = belowdf["fineRootBiomass"];
     // NumericVector longtermStorage(numCohorts,0.0);
     for(int c=0;c<numCohorts;c++){
       leafAreaTarget[c] = Al2As[c]*(SA[c]/10000.0);
@@ -626,11 +642,10 @@ DataFrame internalAllocationDataFrame(DataFrame above,
       }
       fineRootBiomassTarget[c] = fineRootBiomass[c];
     }
-    
-    df = DataFrame::create(Named("allocationTarget") = allocationTarget,
-                           Named("leafAreaTarget") = leafAreaTarget,
-                           Named("fineRootBiomassTarget") = fineRootBiomassTarget);
   }
+  df = DataFrame::create(Named("allocationTarget") = allocationTarget,
+                         Named("leafAreaTarget") = leafAreaTarget,
+                         Named("fineRootBiomassTarget") = fineRootBiomassTarget);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }  
@@ -728,13 +743,12 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
                                          _["LAI_dead"] = LAI_dead);
   plantsdf.attr("row.names") = above.attr("row.names");
   
-  DataFrame paramsAnatomydf;
+  DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams, fillMissingSpParams, transpirationMode);
+  
   DataFrame paramsTranspirationdf;
   if(transpirationMode=="Granier") {
-    paramsAnatomydf = DataFrame::create();
     paramsTranspirationdf = paramsTranspirationGranier(above,SpParams, fillMissingSpParams);
   } else {
-    paramsAnatomydf = paramsAnatomy(above, SpParams, fillMissingSpParams);
     paramsTranspirationdf = paramsTranspirationSperry(above, soil, SpParams, paramsAnatomydf, control);
   }
 
@@ -817,7 +831,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   
   
-  DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams, fillMissingSpParams);
+  DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams, fillMissingSpParams, transpirationMode);
   NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
   NumericVector SLA = paramsAnatomydf["SLA"];
   NumericVector Al2As = paramsAnatomydf["Al2As"];
