@@ -74,7 +74,10 @@ We can find the species average ratios and multiply the default Granier coeffici
 TR_sp <- df %>% 
   group_by(Name) %>%
   summarize(n = n(),
-            kplant = mean(kplant, na.rm=TRUE),
+            kplant_mean = mean(kplant, na.rm=TRUE),
+            kplant_sd = sd(kplant, na.rm=TRUE),
+            Ar2Al_mean = mean(Ar2Al, na.rm=TRUE),
+            Ar2Al_se = sd(Ar2Al, na.rm=TRUE),
             E_ratio_mean = mean(E_ratio, na.rm=TRUE),
             E_ratio_sd = sd(E_ratio, na.rm=TRUE),
             E_ratio_se = E_ratio_sd/sqrt(n),

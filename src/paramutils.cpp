@@ -338,7 +338,7 @@ NumericVector Ar2AlWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector Ar2Al = speciesNumericParameter(SP, SpParams, "Ar2Al");
   for(int c=0;c<Ar2Al.size();c++) {
     if(NumericVector::is_na(Ar2Al[c])) {
-      Ar2Al[c] = 5.0;
+      Ar2Al[c] = 1.0;
     }
   }
   return(Ar2Al);
