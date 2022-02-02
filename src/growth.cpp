@@ -582,7 +582,7 @@ List growthDay1(List x, NumericVector meteovec,
         double deltaSAsink = (SA[j]*RGRsapwoodmax[j]*rgrcellfile); 
         if(!sinkLimitation) deltaSAsink = SA[j]*RGRsapwoodmax[j]; //Deactivates temperature and turgor limitation
         double deltaSAavailable = 0.0;
-        if(starchSapwood[j] - minimumStarchForGrowth) {
+        if(starchSapwood[j] > minimumStarchForGrowth) {
           deltaSAavailable = (starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA;
         }
         deltaSAgrowth[j] = std::min(deltaSAsink, deltaSAavailable);
