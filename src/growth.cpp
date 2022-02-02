@@ -553,7 +553,7 @@ List growthDay1(List x, NumericVector meteovec,
         double deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]*(rleafcell/rleafcellmax));
         if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
         double deltaLAavailable = 0.0;
-        deltaLAavailable = std::max(0.0,((starchSapwood[j] - minimumStarchForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
+        deltaLAavailable = std::max(0.0, starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j])/costPerLA);
         deltaLAgrowth[j] = std::min(deltaLAsink, deltaLAavailable);
         growthCostLA = deltaLAgrowth[j]*costPerLA;
       }
@@ -1202,7 +1202,7 @@ List growthDay2(List x, NumericVector meteovec,
           double deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]*(rleafcell/rleafcellmax));
           if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
           //Grow at expense of stem sugar
-          double deltaLAavailable = std::max(0.0,((starchSapwood[j] - minimumStarchForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
+          double deltaLAavailable = std::max(0.0, starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j])/costPerLA);
           double deltaLAgrowthStep = std::min(deltaLAsink, deltaLAavailable);
           growthCostLAStep += deltaLAgrowthStep*costPerLA;
           deltaLAgrowth[j] += deltaLAgrowthStep;
