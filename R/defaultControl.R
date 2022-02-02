@@ -52,7 +52,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     phloemConductanceFactor = 0.2, # phloem conductance per leaf area basis (l*m-2*MPa-1*s-1)
     nonSugarConcentration = 0.25, # mol · l-1
     equilibriumOsmoticConcentration = list(leaf = 0.8, sapwood = 0.6),  # (Paljakka et al. 2017)
-    minimumRelativeSugarForGrowth = 0.5,
+    minimumRelativeStarchForGrowth = 0.25,
     constructionCosts = list(leaf = 1.5, 
                              sapwood = 1.47, 
                              fineroot = 1.30), #  g gluc · g dw -1

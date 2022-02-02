@@ -339,7 +339,7 @@ List growthDay1(List x, NumericVector meteovec,
   List equilibriumOsmoticConcentration  = control["equilibriumOsmoticConcentration"];
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
   double equilibriumSapwoodTotalConc = equilibriumOsmoticConcentration["sapwood"];
-  double minimumRelativeSugarForGrowth = control["minimumRelativeSugarForGrowth"];
+  double minimumRelativeStarchForGrowth = control["minimumRelativeStarchForGrowth"];
 
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -478,7 +478,6 @@ List growthDay1(List x, NumericVector meteovec,
   
   double equilibriumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConcentration;
   double equilibriumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConcentration;
-  double minimumSugarForGrowth = equilibriumSapwoodSugarConc*minimumRelativeSugarForGrowth;
   double mortalitySugarThreshold = equilibriumSapwoodSugarConc*mortalityRelativeSugarThreshold;
     
   double rleafcellmax = relative_expansion_rate(0.0 ,30.0, -2.0,0.5,0.05,5.0);
@@ -509,6 +508,8 @@ List growthDay1(List x, NumericVector meteovec,
       double LAlive = leafArea(LAI_live[j], N[j]);
       double LAdead = leafArea(LAI_dead[j], N[j]);
 
+      double minimumStarchForGrowth = Starch_max_sapwood[j]*minimumRelativeStarchForGrowth;
+      
       double leafRespDay = 0.0;
 
       //MAINTENANCE RESPIRATION
@@ -552,7 +553,7 @@ List growthDay1(List x, NumericVector meteovec,
         double deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]*(rleafcell/rleafcellmax));
         if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
         double deltaLAavailable = 0.0;
-        deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
+        deltaLAavailable = std::max(0.0,((starchSapwood[j] - minimumStarchForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
         deltaLAgrowth[j] = std::min(deltaLAsink, deltaLAavailable);
         growthCostLA = deltaLAgrowth[j]*costPerLA;
       }
@@ -564,7 +565,7 @@ List growthDay1(List x, NumericVector meteovec,
           double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
           double deltaFRBsink = (V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[s]/rleafcellmax);
           if(!sinkLimitation) deltaFRBsink = (V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
-          double deltaFRBavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/CCfineroot[j]);
+          double deltaFRBavailable = std::max(0.0,((starchSapwood[j] - minimumStarchForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/CCfineroot[j]);
           deltaFRBgrowth[s] = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
           growthCostFRB += deltaFRBgrowth[s]*CCfineroot[j];
         }
@@ -581,7 +582,7 @@ List growthDay1(List x, NumericVector meteovec,
         double deltaSAsink = (SA[j]*RGRsapwoodmax[j]*rgrcellfile); 
         if(!sinkLimitation) deltaSAsink = SA[j]*RGRsapwoodmax[j]; //Deactivates temperature and turgor limitation
         double deltaSAavailable = 0.0;
-        if(sugarSapwood[j] > minimumSugarForGrowth) {
+        if(starchSapwood[j] > minimumStarchForGrowth) {
           deltaSAavailable = (starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA;
         }
         deltaSAgrowth[j] = std::min(deltaSAsink, deltaSAavailable);
@@ -920,7 +921,7 @@ List growthDay2(List x, NumericVector meteovec,
   List equilibriumOsmoticConcentration  = control["equilibriumOsmoticConcentration"];
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
   double equilibriumSapwoodTotalConc = equilibriumOsmoticConcentration["sapwood"];
-  double minimumRelativeSugarForGrowth = control["minimumRelativeSugarForGrowth"];
+  double minimumRelativeStarchForGrowth = control["minimumRelativeStarchForGrowth"];
 
   //Soil params
   List soil  = x["soil"];
@@ -1106,7 +1107,6 @@ List growthDay2(List x, NumericVector meteovec,
   
   double equilibriumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConcentration;
   double equilibriumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConcentration;
-  double minimumSugarForGrowth = equilibriumSapwoodSugarConc*minimumRelativeSugarForGrowth;
   double mortalitySugarThreshold = equilibriumSapwoodSugarConc*mortalityRelativeSugarThreshold;
   
   double rleafcellmax = relative_expansion_rate(0.0,30.0, -2.0,0.5,0.05,5.0);
@@ -1132,7 +1132,9 @@ List growthDay2(List x, NumericVector meteovec,
       double LAexpanded = leafArea(LAI_expanded[j], N[j]);
       double LAlive = leafArea(LAI_live[j], N[j]);
       double LAdead = leafArea(LAI_dead[j], N[j]);
-
+      
+      double minimumStarchForGrowth = Starch_max_sapwood[j]*minimumRelativeStarchForGrowth;
+      
       
       double costPerLA = 1000.0*CCleaf[j]/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
       double costPerSA = CCsapwood[j]*sapwoodStructuralBiomass(1.0, H[j], L(j,_),V(j,_),WoodDensity[j]); // Construction cost in g gluc · cm-2 of sapwood area
@@ -1201,7 +1203,7 @@ List growthDay2(List x, NumericVector meteovec,
           double deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]*(rleafcell/rleafcellmax));
           if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
           //Grow at expense of stem sugar
-          double deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
+          double deltaLAavailable = std::max(0.0,((starchSapwood[j] - minimumStarchForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
           double deltaLAgrowthStep = std::min(deltaLAsink, deltaLAavailable);
           growthCostLAStep += deltaLAgrowthStep*costPerLA;
           deltaLAgrowth[j] += deltaLAgrowthStep;
@@ -1212,7 +1214,7 @@ List growthDay2(List x, NumericVector meteovec,
             double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
             double deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[s]/rleafcellmax);
             if(!sinkLimitation) deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
-            double deltaFRBavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/CCfineroot[j]);
+            double deltaFRBavailable = std::max(0.0,((starchSapwood[j] - minimumStarchForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/CCfineroot[j]);
             double deltaFRBgrowthStep = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
             growthCostFRBStep += deltaFRBgrowthStep*CCfineroot[j];
             deltaFRBgrowth[s] += deltaFRBgrowthStep;
@@ -1230,7 +1232,7 @@ List growthDay2(List x, NumericVector meteovec,
           double deltaSAsink = (SA[j]*RGRsapwoodmax[j]*rgrcellfile)/((double) numSteps); 
           if(!sinkLimitation) deltaSAsink = SA[j]*RGRsapwoodmax[j]/((double) numSteps); //Deactivates temperature and turgor limitation
           double deltaSAavailable = 0.0;
-          if(sugarSapwood[j] > minimumSugarForGrowth) {
+          if(starchSapwood[j] > minimumStarchForGrowth) {
             deltaSAavailable = std::max(0.0, starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j])/costPerSA);
           }
           double deltaSAgrowthStep = std::min(deltaSAsink, deltaSAavailable);
