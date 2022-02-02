@@ -122,11 +122,8 @@
 }
 .getGrowthMortalityGROWTHPlotTypes<-function(transpirationMode = "Granier"){
   TYPES = c("Sapwood area growth rate" ="SAgrowth",
-            "Leaf area growth rate" = "LAgrowth")
-  if(transpirationMode=="Sperry") {
-    TYPES = c(TYPES, 
-              "Fine root area growth rate" ="FRAgrowth")
-  }
+            "Leaf area growth rate" = "LAgrowth",
+            "Fine root area growth rate" ="FRAgrowth")
   TYPES = c(TYPES,
             "Starvation mortality rate" = "StarvationRate", 
             "Dessication mortality rate" = "DessicationRate", 
