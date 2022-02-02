@@ -508,7 +508,7 @@ List growthDay1(List x, NumericVector meteovec,
       double LAlive = leafArea(LAI_live[j], N[j]);
       double LAdead = leafArea(LAI_dead[j], N[j]);
 
-      double minimumStarchForGrowth = Starch_max_sapwood[j]*minimumRelativeStarchForGrowth;
+      double minimumStarchForSecondaryGrowth = Starch_max_sapwood[j]*minimumRelativeStarchForGrowth;
 
       double leafRespDay = 0.0;
 
@@ -565,7 +565,7 @@ List growthDay1(List x, NumericVector meteovec,
           double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
           double deltaFRBsink = (V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[s]/rleafcellmax);
           if(!sinkLimitation) deltaFRBsink = (V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
-          double deltaFRBavailable = std::max(0.0,((starchSapwood[j] - minimumStarchForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/CCfineroot[j]);
+          double deltaFRBavailable = std::max(0.0,starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j])/CCfineroot[j]);
           deltaFRBgrowth[s] = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
           growthCostFRB += deltaFRBgrowth[s]*CCfineroot[j];
         }
@@ -581,10 +581,7 @@ List growthDay1(List x, NumericVector meteovec,
         double rgrcellfile = (deltaSAring/10.0)/cellfileareamaxincrease;
         double deltaSAsink = (SA[j]*RGRsapwoodmax[j]*rgrcellfile); 
         if(!sinkLimitation) deltaSAsink = SA[j]*RGRsapwoodmax[j]; //Deactivates temperature and turgor limitation
-        double deltaSAavailable = 0.0;
-        if(starchSapwood[j] > minimumStarchForGrowth) {
-          deltaSAavailable = (starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA;
-        }
+        double deltaSAavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForSecondaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerSA);
         deltaSAgrowth[j] = std::min(deltaSAsink, deltaSAavailable);
         // Rcout<< SAring.size()<<" " <<j<< " "<< PlantPsi[j]<< " "<< LeafPI0[j]<<" dSAring "<<deltaSAring<< " dSAsink "<< deltaSAsink<<" dSAgrowth "<< deltaSAgrowth<<" rgrcellfile"<< rgrcellfile<<"\n";
         growthCostSA = deltaSAgrowth[j]*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
@@ -1133,7 +1130,7 @@ List growthDay2(List x, NumericVector meteovec,
       double LAlive = leafArea(LAI_live[j], N[j]);
       double LAdead = leafArea(LAI_dead[j], N[j]);
       
-      double minimumStarchForGrowth = Starch_max_sapwood[j]*minimumRelativeStarchForGrowth;
+      double minimumStarchForSecondaryGrowth = Starch_max_sapwood[j]*minimumRelativeStarchForGrowth;
 
       double costPerLA = 1000.0*CCleaf[j]/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
       double costPerSA = CCsapwood[j]*sapwoodStructuralBiomass(1.0, H[j], L(j,_),V(j,_),WoodDensity[j]); // Construction cost in g gluc · cm-2 of sapwood area
@@ -1213,7 +1210,7 @@ List growthDay2(List x, NumericVector meteovec,
             double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
             double deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[s]/rleafcellmax);
             if(!sinkLimitation) deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
-            double deltaFRBavailable = std::max(0.0,((starchSapwood[j] - minimumStarchForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/CCfineroot[j]);
+            double deltaFRBavailable = std::max(0.0, starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j])/CCfineroot[j]);
             double deltaFRBgrowthStep = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
             growthCostFRBStep += deltaFRBgrowthStep*CCfineroot[j];
             deltaFRBgrowth[s] += deltaFRBgrowthStep;
@@ -1230,10 +1227,7 @@ List growthDay2(List x, NumericVector meteovec,
           double rgrcellfile = (deltaSAring/10.0)/cellfileareamaxincrease;
           double deltaSAsink = (SA[j]*RGRsapwoodmax[j]*rgrcellfile)/((double) numSteps); 
           if(!sinkLimitation) deltaSAsink = SA[j]*RGRsapwoodmax[j]/((double) numSteps); //Deactivates temperature and turgor limitation
-          double deltaSAavailable = 0.0;
-          if(starchSapwood[j] > minimumStarchForGrowth) {
-            deltaSAavailable = std::max(0.0, starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j])/costPerSA);
-          }
+          double deltaSAavailable = std::max(0.0, (starchSapwood[j] - minimumStarchForSecondaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerSA);
           double deltaSAgrowthStep = std::min(deltaSAsink, deltaSAavailable);
           if(deltaSAgrowthStep<0.0) {
             Rcout<<deltaSAsink<<" "<< deltaSAavailable<< " "<< starchSapwood[j]<<"\n";
