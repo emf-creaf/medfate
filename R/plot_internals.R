@@ -27,7 +27,7 @@
 .getStandPlotTypes<-function(model = "pwb") {
   TYPES = c("Stand LAI"="LAI",
             "Ground-level irradiance" = "GroundIrradiance")
-  if(model=="growth") {
+  if(model %in% c("growth", "fordyn")) {
     TYPES = c(TYPES, 
               "Biomass balance" = "BiomassBalance")
   }
@@ -177,7 +177,7 @@
 }
 
 .getUniqueDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){
-  TYPES = c("BiomassBalance",
+  TYPES = c("Biomass balance" = "BiomassBalance",
             .getLabileGROWTHPlotTypes(transpirationMode),
             .getCohortBiomassBalanceGROWTHPlotTypes(transpirationMode),
             .getStructuralGROWTHPlotTypes(transpirationMode),
