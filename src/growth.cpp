@@ -401,7 +401,6 @@ List growthDay1(List x, NumericVector meteovec,
   LogicalVector budFormation = internalPhenology["budFormation"];
   LogicalVector leafSenescence = internalPhenology["leafSenescence"];
   
-  List stand = spwbOut["Stand"];
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(spwbOut["Plants"]);
   NumericVector Ag = Plants["GrossPhotosynthesis"];
 
@@ -497,6 +496,7 @@ List growthDay1(List x, NumericVector meteovec,
 
   double basalMortalityRate = 1.0 - exp(log(1.0 - mortalityBaselineRate)/356.0);
   
+
   //3. Carbon balance and growth
   for(int j=0;j<numCohorts;j++){
     if(N[j] > 0.0) {
@@ -525,13 +525,14 @@ List growthDay1(List x, NumericVector meteovec,
       double sapwoodResp = B_resp_sapwood*RERsapwood[j]*QR;
       double finerootResp = B_resp_fineroots*RERfineroot[j]*QR;
       MaintenanceRespiration[j] += (leafRespDay+sapwoodResp+finerootResp)/TotalLivingBiomass[j]; 
-      
+        
       //PHOTOSYNTHESIS
       double leafAgG = 0.0;
       if(LAexpanded>0.0) {
+
         //gross fotosynthesis
-        double leafAgC = Ag[j]/(N[j]/10000.0); //Translate g C · m-2 · h-1 to g C · h-1
-        leafAgG = leafAgC*(glucoseMolarMass/(carbonMolarMass*6.0)); // from g C· h-1 to g gluc · h-1
+        double leafAgC = Ag[j]/(N[j]/10000.0); //Translate g C · m-2 to g C ·ind-1
+        leafAgG = leafAgC*(glucoseMolarMass/(carbonMolarMass*6.0)); // from g C·ind-1 to g gluc · ind-1
         
         //Update output values
         GrossPhotosynthesis[j] = leafAgG/TotalLivingBiomass[j]; //Ag in g gluc · gdry-1 
@@ -993,7 +994,6 @@ List growthDay2(List x, NumericVector meteovec,
   LogicalVector budFormation = internalPhenology["budFormation"];
   LogicalVector leafSenescence = internalPhenology["leafSenescence"];
   
-  List stand = spwbOut["Stand"];
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(spwbOut["Plants"]);
   List PlantsInst = spwbOut["PlantsInst"];
   
