@@ -34,12 +34,15 @@
   df = data.frame("Y" = as.vector(x), 
                   "Date" = as.Date(rownames(x)),
                   "Cohort" = gl(length(colnames(x)), nrow(x), labels=labels))
-  g<-ggplot(df, aes_string(x="Date", y="Y"))+
-    geom_line(aes_string(col="Cohort", linetype = "Cohort"))+
-    scale_color_discrete(name="")+
-    scale_linetype_discrete(name="")+
-    theme_bw()+
-    xlab(xlab)
+  g<-ggplot(df, aes_string(x="Date", y="Y"))
+  if(length(labels)<=10) {
+    g<- g + geom_line(aes_string(col="Cohort", linetype = "Cohort"))+
+      scale_color_discrete(name="")+
+      scale_linetype_discrete(name="")
+  } else {
+    g<- g + geom_line(aes_string(group="Cohort"))
+  }
+  g<-g+theme_bw()+xlab(xlab)
   if(!is.null(ylim)) g <- g+ylim(ylim)
   if(!is.null(ylab)) g <- g+ylab(ylab)
   return(g)

@@ -467,7 +467,7 @@ List growthDay1(List x, NumericVector meteovec,
   NumericVector GrowthCosts(numCohorts,0.0);
   NumericVector PlantSugarTransport(numCohorts,0.0), PlantSugarLeaf(numCohorts,0.0), PlantStarchLeaf(numCohorts,0.0);
   NumericVector PlantSugarSapwood(numCohorts,0.0), PlantStarchSapwood(numCohorts,0.0);
-  NumericVector SapwoodArea(numCohorts,0.0), LeafArea(numCohorts,0.0), FineRootArea(numCohorts, 0.0);
+  NumericVector SapwoodArea(numCohorts,0.0), LeafArea(numCohorts,0.0), FineRootArea(numCohorts, 0.0), HuberValue(numCohorts, 0.0), RootAreaLeafArea(numCohorts, 0.0);
   NumericVector SAgrowth(numCohorts,0.0), LAgrowth(numCohorts,0.0), FRAgrowth(numCohorts,0.0), starvationRate(numCohorts,0.0), dessicationRate(numCohorts,0.0), mortalityRate(numCohorts,0.0);
   NumericVector GrossPhotosynthesis(numCohorts,0.0);
   NumericVector RootExudation(numCohorts,0.0);
@@ -778,6 +778,8 @@ List growthDay1(List x, NumericVector meteovec,
       SAgrowth[j] += deltaSAgrowth[j]/SAprev; //Store sapwood area growth rate (cm2/cm2)
       LAgrowth[j] += deltaLAgrowth[j]/SAprev;//Store Leaf area growth rate in relation to sapwood area (m2/cm2)
       LeafArea[j] = LAexpanded;
+      HuberValue[j] = SA[j]/leafAreaTarget[j]; 
+      RootAreaLeafArea[j] = FineRootArea[j]/leafAreaTarget[j]; 
       FRAgrowth[j] = sum(deltaFRBgrowth)*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4/SA[j];//Store fine root area growth rate (m2·cm-2·d-1)
     }
   }
@@ -836,6 +838,8 @@ List growthDay1(List x, NumericVector meteovec,
     _["LeafArea"] = LeafArea,
     _["SapwoodArea"] = SapwoodArea,
     _["FineRootArea"] = FineRootArea,
+    _["HuberValue"] = HuberValue,
+    _["RootAreaLeafArea"] = RootAreaLeafArea,
     _["FineRootBiomass"] = clone(fineRootBiomass),
     _["DBH"] = clone(DBH),
     _["Height"] = clone(H)
@@ -1094,7 +1098,7 @@ List growthDay2(List x, NumericVector meteovec,
   NumericVector GrowthCosts(numCohorts,0.0);
   NumericVector PlantSugarTransport(numCohorts,0.0), PlantSugarLeaf(numCohorts,0.0), PlantStarchLeaf(numCohorts,0.0);
   NumericVector PlantSugarSapwood(numCohorts,0.0), PlantStarchSapwood(numCohorts,0.0);
-  NumericVector SapwoodArea(numCohorts,0.0), LeafArea(numCohorts,0.0), FineRootArea(numCohorts, 0.0);
+  NumericVector SapwoodArea(numCohorts,0.0), LeafArea(numCohorts,0.0), FineRootArea(numCohorts, 0.0), HuberValue(numCohorts, 0.0), RootAreaLeafArea(numCohorts, 0.0);
   NumericVector SAgrowth(numCohorts,0.0), LAgrowth(numCohorts,0.0), FRAgrowth(numCohorts,0.0), starvationRate(numCohorts,0.0), dessicationRate(numCohorts,0.0), mortalityRate(numCohorts,0.0);
   NumericVector GrossPhotosynthesis(numCohorts,0.0);
   NumericVector RootExudation(numCohorts,0.0);
@@ -1524,6 +1528,8 @@ List growthDay2(List x, NumericVector meteovec,
       SapwoodArea[j] = SA[j];
       LeafArea[j] = LAexpanded;
       FineRootArea[j] = fineRootBiomass[j]*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4;
+      HuberValue[j] = SA[j]/leafAreaTarget[j]; 
+      RootAreaLeafArea[j] = FineRootArea[j]/leafAreaTarget[j]; 
       LAgrowth[j] += deltaLAgrowth[j]/SAprev;//Store Leaf area growth rate in relation to sapwood area (m2·cm-2·d-1)
       SAgrowth[j] += deltaSAgrowth[j]/SAprev; //Store sapwood area growth rate (cm2·cm-2·d-1)
       FRAgrowth[j] = sum(deltaFRBgrowth)*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4/SA[j];//Store fine root area growth rate (m2·cm-2·d-1)
@@ -1611,6 +1617,8 @@ List growthDay2(List x, NumericVector meteovec,
     _["LeafArea"] = LeafArea,
     _["SapwoodArea"] = SapwoodArea,
     _["FineRootArea"] = FineRootArea,
+    _["HuberValue"] = HuberValue,
+    _["RootAreaLeafArea"] = RootAreaLeafArea,
     _["FineRootBiomass"] = clone(fineRootBiomass),
     _["DBH"] = clone(DBH),
     _["Height"] = clone(H)
@@ -1967,6 +1975,8 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   NumericMatrix LeafArea(numDays, numCohorts);
   NumericMatrix FineRootArea(numDays, numCohorts);
   NumericMatrix FineRootBiomass(numDays, numCohorts);
+  NumericMatrix HuberValue(numDays, numCohorts);
+  NumericMatrix RootAreaLeafArea(numDays, numCohorts);
   NumericMatrix DBH(numDays, numCohorts);
   NumericMatrix Height(numDays, numCohorts);
   NumericMatrix LabileBiomass(numDays, numCohorts);
@@ -2161,6 +2171,8 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     LeafArea(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["LeafArea"]);
     FineRootBiomass(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["FineRootBiomass"]);
     FineRootArea(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["FineRootArea"]);
+    HuberValue(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["HuberValue"]);
+    RootAreaLeafArea(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["RootAreaLeafArea"]);
     DBH(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["DBH"]);
     Height(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["Height"]);
     
@@ -2229,6 +2241,8 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   SapwoodArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   LeafArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   FineRootArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  HuberValue.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  RootAreaLeafArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   FineRootBiomass.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
   DBH.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
   Height.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
@@ -2288,6 +2302,8 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   plantStructure = List::create(Named("LeafArea") = LeafArea,
                                 Named("SapwoodArea")=SapwoodArea,
                                 Named("FineRootArea") = FineRootArea,
+                                Named("HuberValue") = HuberValue,
+                                Named("RootAreaLeafArea") = RootAreaLeafArea,
                                 Named("FineRootBiomass") = FineRootBiomass,
                                 Named("DBH") = DBH,
                                 Named("Height") = Height);

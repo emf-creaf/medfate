@@ -199,17 +199,11 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
     OM = x$PlantBiomassBalance[[type]][,cohorts,drop=FALSE]
   }
   else if(type %in% c("SapwoodArea", "LeafArea", "FineRootArea", 
-                      "FineRootBiomass", "DBH", "Height")) {
+                      "FineRootBiomass", "DBH", "Height", "HuberValue", "RootAreaLeafArea")) {
     OM = x$PlantStructure[[type]][,cohorts,drop=FALSE]
   } 
   else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth", "StarvationRate", "DessicationRate", "MortalityRate")) {
     OM = x$GrowthMortality[[type]][,cohorts,drop=FALSE]
-  } 
-  else if(type=="HuberValue") {
-    OM = x$PlantStructure[["SapwoodArea"]][,cohorts,drop=FALSE] / x$PlantStructure[["LeafArea"]][,cohorts,drop=FALSE]
-  } 
-  else if(type=="RootAreaLeafArea") {
-    OM = x$PlantStructure[["FineRootArea"]][,cohorts,drop=FALSE] / x$PlantStructure[["LeafArea"]][,cohorts,drop=FALSE]
   } 
   return(.plot_plant_om(OM, PlantsLAI, spnames,
                         type, bySpecies = bySpecies, dates = dates, 

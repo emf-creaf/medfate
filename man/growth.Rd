@@ -79,6 +79,8 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
         \item{\code{"LeafArea"}: Daily amount of leaf area (in m2) for an average individual of each plant cohort.}
         \item{\code{"SapwoodArea"}: Daily amount of sapwood area (in cm2) for an average individual of each plant cohort.}
         \item{\code{"FineRootArea"}: Daily amount of fine root area (in m2) for an average individual of each plant cohort.}
+        \item{\code{"HuberValue"}: The ratio of sapwood area to (target) leaf area (in cm2/m2).}
+        \item{\code{"RootAreaLeafArea"}: The ratio of fine root area to (target) leaf area (in m2/m2).}
         \item{\code{"FineRootBiomass"}: Daily amount of fine root biomass (in g dry) for an average individual of each plant cohort.}
         \item{\code{"DBH"}: Diameter at breast height (in cm) for an average individual of each plant cohort.}
         \item{\code{"Height"}: Height (in cm) for an average individual of each plant cohort.}
