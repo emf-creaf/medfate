@@ -407,9 +407,11 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
 
   NumericVector WoodC = speciesNumericParameterWithImputation(SP, SpParams, "WoodC", fillMissingSpParams);
   
-  NumericVector RERleaf = speciesNumericParameter(SP, SpParams, "RERleaf");
-  NumericVector RERsapwood = speciesNumericParameter(SP, SpParams, "RERsapwood");
-  NumericVector RERfineroot = speciesNumericParameter(SP, SpParams, "RERfineroot");
+  NumericVector RERleaf = speciesNumericParameterWithImputation(SP, SpParams, "RERleaf");
+  NumericVector RERsapwood = speciesNumericParameterWithImputation(SP, SpParams, "RERsapwood");
+  NumericVector RERfineroot = speciesNumericParameterWithImputation(SP, SpParams, "RERfineroot");
+  
+  
   NumericVector CCleaf = speciesNumericParameter(SP, SpParams, "CCleaf");
   NumericVector CCsapwood = speciesNumericParameter(SP, SpParams, "CCsapwood");
   NumericVector CCfineroot = speciesNumericParameter(SP, SpParams, "CCfineroot");

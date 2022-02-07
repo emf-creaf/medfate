@@ -808,35 +808,76 @@ NumericVector VCleafkmaxWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(VCleaf_kmax);
 }
-NumericVector NareaWithImputation(IntegerVector SP, DataFrame SpParams){
-  NumericVector Narea = speciesNumericParameter(SP, SpParams, "Narea");
+NumericVector NleafWithImputation(IntegerVector SP, DataFrame SpParams){
+  NumericVector Nleaf = speciesNumericParameter(SP, SpParams, "Nleaf");
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
-  NumericVector fam_Narea = TFM["Narea"];
+  NumericVector fam_Nleaf = TFM["Nleaf"];
   CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
-  for(int c=0;c<Narea.size();c++) {
-    if(NumericVector::is_na(Narea[c])) {
+  for(int c=0;c<Nleaf.size();c++) {
+    if(NumericVector::is_na(Nleaf[c])) {
       for(int i=0;i<fams.size();i++) {
         if(fams[i]==family[c]) {
-          Narea[c] = fam_Narea[i];
+          Nleaf[c] = fam_Nleaf[i];
         }
       }
     }
-    if(NumericVector::is_na(Narea[c])) Narea[c] = 1.885577;
+    if(NumericVector::is_na(Nleaf[c])) Nleaf[c] = 20.088;
   }
-  return(Narea);
+  return(Nleaf);
 }
+NumericVector NsapwoodWithImputation(IntegerVector SP, DataFrame SpParams){
+  NumericVector Nsapwood = speciesNumericParameter(SP, SpParams, "Nsapwood");
+  //Access internal data frame "trait_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_Nsapwood = TFM["Nsapwood"];
+  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  for(int c=0;c<Nsapwood.size();c++) {
+    if(NumericVector::is_na(Nsapwood[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          Nsapwood[c] = fam_Nsapwood[i];
+        }
+      }
+    }
+    if(NumericVector::is_na(Nsapwood[c])) Nsapwood[c] = 3.9791;
+  }
+  return(Nsapwood);
+}
+NumericVector NfinerootWithImputation(IntegerVector SP, DataFrame SpParams){
+  NumericVector Nfineroot = speciesNumericParameter(SP, SpParams, "Nfineroot");
+  //Access internal data frame "trait_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_Nfineroot = TFM["Nfineroot"];
+  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  for(int c=0;c<Nfineroot.size();c++) {
+    if(NumericVector::is_na(Nfineroot[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          Nfineroot[c] = fam_Nfineroot[i];
+        }
+      }
+    }
+    if(NumericVector::is_na(Nfineroot[c])) Nfineroot[c] = 12.207;
+  }
+  return(Nfineroot);
+}
+
 NumericVector Vmax298WithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector SLA = specificLeafAreaWithImputation(SP, SpParams);
-  NumericVector Narea = NareaWithImputation(SP, SpParams);
+  NumericVector Nleaf = NleafWithImputation(SP, SpParams);
   NumericVector Vmax298 = speciesNumericParameter(SP, SpParams, "Vmax298");
   for(int c=0;c<Vmax298.size();c++) {
     if(NumericVector::is_na(Vmax298[c]))  {
-      if(!NumericVector::is_na(SLA[c]) & !NumericVector::is_na(Narea[c]))  {
+      if(!NumericVector::is_na(SLA[c]) & !NumericVector::is_na(Nleaf[c]))  {
         //Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173
-        double lnN = log(Narea[c]);
+        double lnN = log(Nleaf[c]/SLA[c]); // Narea (g · m-2) = Nmass/SLA = (mgN/gdry)*(1 gN/1000 mg N)*(1000 g dry/ 1 kg dry)* (kg dry / m2 )
         double lnSLA = log(SLA[c]/1000.0); //SLA in m2*g-1
         Vmax298[c] = exp(1.993 + 2.555*lnN - 0.372*lnSLA + 0.422*lnN*lnSLA);
       } else {
@@ -943,6 +984,46 @@ NumericVector VCrootCWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(VCroot_c);
 }
+NumericVector LeafRespirationRateWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector RERleaf = speciesNumericParameter(SP, SpParams, "RERleaf");
+  NumericVector Nleaf = NleafWithImputation(SP, SpParams);
+  for(int c=0;c<RERleaf.size();c++) {
+    if(NumericVector::is_na(RERleaf[c])) {
+      //Reich, P. B., M. G. Tjoelker, K. S. Pregitzer, I. J. Wright, J. Oleksyn, and J. L. Machado. 2008. Scaling of respiration to nitrogen in leaves, stems and roots of higher land plants. Ecology Letters 11:793–801.
+      double Nleaf_mmol_g = Nleaf[c]/14.0;
+      double RER_nmolCO2_g_s = exp(0.691 + 1.639*log(Nleaf_mmol_g)); //nmol CO2·g-1·s-1
+      RERleaf[c] = (24.0*3600.0)*(RER_nmolCO2_g_s/6.0)*(1e-9)*180.156; // nmol CO2·g-1·s-1 to g gluc·g-1·d-1
+    }
+  }
+  return(RERleaf);
+}
+NumericVector SapwoodRespirationRateWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector RERsapwood = speciesNumericParameter(SP, SpParams, "RERsapwood");
+  NumericVector Nsapwood = NsapwoodWithImputation(SP, SpParams);
+  for(int c=0;c<RERsapwood.size();c++) {
+    if(NumericVector::is_na(RERsapwood[c])) {
+      //Reich, P. B., M. G. Tjoelker, K. S. Pregitzer, I. J. Wright, J. Oleksyn, and J. L. Machado. 2008. Scaling of respiration to nitrogen in leaves, stems and roots of higher land plants. Ecology Letters 11:793–801.
+      double Nsapwood_mmol_g = Nsapwood[c]/14.0;
+      double RER_nmolCO2_g_s = exp(1.024 + 1.344*log(Nsapwood_mmol_g)); //nmol CO2·g-1·s-1
+      RERsapwood[c] = 24.0*3600.0*(RER_nmolCO2_g_s/6.0)*(1e-9)*180.156; // nmol CO2·g-1·s-1 to g gluc·g-1·d-1
+    }
+  }
+  return(RERsapwood);
+}
+NumericVector FinerootRespirationRateWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector RERfineroot = speciesNumericParameter(SP, SpParams, "RERfineroot");
+  NumericVector Nfineroot = NsapwoodWithImputation(SP, SpParams);
+  for(int c=0;c<RERfineroot.size();c++) {
+    if(NumericVector::is_na(RERfineroot[c])) {
+      //Reich, P. B., M. G. Tjoelker, K. S. Pregitzer, I. J. Wright, J. Oleksyn, and J. L. Machado. 2008. Scaling of respiration to nitrogen in leaves, stems and roots of higher land plants. Ecology Letters 11:793–801.
+      double Nfineroot_mmol_g = Nfineroot[c]/14.0;
+      double RER_nmolCO2_g_s = exp(0.980 + 1.352*log(Nfineroot_mmol_g)); //nmol CO2·g-1·s-1
+      RERfineroot[c] = 24.0*3600.0*(RER_nmolCO2_g_s/6.0)*(1e-9)*180.156; // nmol CO2·g-1·s-1 to g gluc·g-1·d-1
+    }
+  }
+  return(RERfineroot);
+}
+
 NumericVector WoodCWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector WoodC = speciesNumericParameter(SP, SpParams, "WoodC");
   //Access internal data frame "trait_family_means"
@@ -1215,7 +1296,12 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "VCleaf_kmax") return(VCleafkmaxWithImputation(SP, SpParams));
     else if(parName == "Gswmax") return(GswmaxWithImputation(SP, SpParams));
     else if(parName == "Gswmin") return(GswminWithImputation(SP, SpParams));
-    else if(parName == "Narea") return(NareaWithImputation(SP, SpParams));
+    else if(parName == "Nleaf") return(NleafWithImputation(SP, SpParams));
+    else if(parName == "Nsapwood") return(NsapwoodWithImputation(SP, SpParams));
+    else if(parName == "Nfineroot") return(NfinerootWithImputation(SP, SpParams));
+    else if(parName == "RERleaf") return(LeafRespirationRateWithImputation(SP, SpParams));
+    else if(parName == "RERsapwood") return(SapwoodRespirationRateWithImputation(SP, SpParams));
+    else if(parName == "RERfineroot") return(FinerootRespirationRateWithImputation(SP, SpParams));
     else if(parName == "Vmax298") return(Vmax298WithImputation(SP, SpParams));
     else if(parName == "Jmax298") return(Jmax298WithImputation(SP, SpParams));
     else if(parName == "VCstem_c") return(VCstemCWithImputation(SP, SpParams));

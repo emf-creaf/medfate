@@ -17,8 +17,6 @@
 #include <meteoland.h>
 using namespace Rcpp;
 
-const double Q10_resp = 2.0;
-
 // [[Rcpp::export("mortality_dailyProbability")]]
 double dailyMortalityProbability(double basalMortalityRate, double stressValue, double stressThreshold,
                                  double minValue = 0.0, double exponent=10.0) {
@@ -87,6 +85,8 @@ double phloemFlow(double psiUpstream, double psiDownstream,
 // }
 
 double qResp(double Tmean) {
+  // Tjoelker, M. G., J. Oleksyn, and P. B. Reich. 2001. Modelling respiration of vegetation: Evidence for a general temperature-dependent Q10. Global Change Biology 7:223–230.
+  double Q10_resp = 3.22 - 0.046 * Tmean; 
   return(pow(Q10_resp,(Tmean-20.0)/10.0));
 }
 

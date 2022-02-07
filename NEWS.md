@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.6.0
+- Nitrogen content for leaves, sapwood and fine roots added. 'Nleaf' replaces 'Narea' as the latter can be calculated from 'Nleaf' using 'SLA'.
+
 # Version 2.5.0
 - spwb model with Granier transpiration now extracts water from soil layer according to unsaturated conductivity.
 - shinyplot generic function.

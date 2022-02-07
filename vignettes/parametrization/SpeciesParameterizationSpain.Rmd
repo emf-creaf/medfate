@@ -7,7 +7,7 @@ output:
     toc: TRUE
 bibliography: ../medfate.bib
 params:
-  spparams_rebuild: FALSE
+  spparams_rebuild: TRUE
   IFN_rebuild: FALSE
 ---
 
@@ -887,7 +887,8 @@ SpParams$LeafSize[SpParams$Name %in% c("Apollonias barbujana",
                                        "Dracaena drago", "Heberdenia bahamensis",
                                        "Picconia excelsa", "Pleiomeris canariensis",
                                        "Visnea mocanera")] = "Large"
-SpParams$LeafSize[SpParams$Name %in% c("Anagyris spp.","Coriaria myrtifolia", "Securinega tinctoria",
+SpParams$LeafSize[SpParams$Name %in% c("Anagyris spp.","Coriaria myrtifolia", 
+                                       "Gleditsia triacanthos", "Securinega tinctoria",
                                        "Kleinia neriifolia", "Rhododendron spp.",
                                        "Sophora japonica")] = "Medium"
 SpParams$LeafSize[SpParams$Name %in% c("Adenocarpus spp.", 
@@ -898,7 +899,7 @@ SpParams$LeafSize[SpParams$Name %in% c("Adenocarpus spp.",
                                        "Daboecia cantabrica",
                                        "Erinacea spp.", "Genistella spp.",
                                        "Paliurus spina-christi", "Pseudotsuga menziesii",
-                                       "Spartium spp.", "Teline spp.", "Vella spp.",
+                                       "Spartium spp.", "Teline spp.",  "Thuja spp.", "Vella spp.",
                                        "Zizyphus lotus")] = "Small"
 ```
 
@@ -959,7 +960,7 @@ SpParams[is.na(SpParams$PhenologyType), c("Name", "PhenologyType")]
 ```
 And since leaf phenology type is a strict parameter, we need to manually fill missing values :
 ```{r}
-SpParams$PhenologyType[SpParams$Name %in% c("Vella spp.", "Genistella spp.")] = "winter-deciduous"
+SpParams$PhenologyType[SpParams$Name %in% c("Vella spp.", "Genistella spp.", "Securinega tinctoria")] = "winter-deciduous"
 SpParams$PhenologyType[SpParams$Name %in% c("Pleiomeris canariensis")] = "oneflush-evergreen"
 ```
 The final number of taxa for each phenology type in the species parameter table are:
@@ -1486,9 +1487,10 @@ TRY_WUE  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_134.rds"
 TRY_WUE <- TRY_WUE %>% filter(StdValue < 40, ErrorRisk <4)
 SpParams <- populateTraits(SpParams, TRY_WUE, 
                            trait_mapping = c("WUE" = "StdValue"),
-                           taxon_column = "AccSpeciesName")
+                           taxon_column = "AccSpeciesName",
+                           summary_function = "max")
 ```
-The distribution of parameter values is:
+In this case we took the maximum value for each species, to better fit the model parameter definition. Note, in addition, that TRY data corresponds to **net** photosynthesis over transpiration, whereas the model parameter is defined as **gross** photosynthesis over transpiration, which means that a correction should be applied. The distribution of parameter values is:
 ```{r}
 summary(SpParams[,c("WUE")])
 ```
@@ -1578,22 +1580,8 @@ summary(SpParams[,c("VCstem_c", "VCstem_d")])
 
 
 #### Photosynthetic capacity
-Photosynthetic capacity in Sperry's model is primarily determined by the $Vmax$ and $Jmax$ coefficients of the well-known Farquhar's photosynthesis model. However, **medfate** allows estimating these coefficients from $SLA$ and the nitrogen concentration in leaves, $N_{area}$. Hence it is useful to draw this latter parameter from trait databases. Here we first extract nitrogen concentration per leaf area values from TRY (TraitID = 50):
-```{r photosynthetic_capacity}
-TRY_Narea <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_50.rds"))
-TRY_Narea <- TRY_Narea[TRY_Narea$ErrorRisk<4, c("AccSpeciesName", "StdValue")]
-names(TRY_Narea) <- c("Species", "Narea")
-```
-We then merge them with available data from HydraTRY [@Mencuccini2019;@SanchezMartinez2020] and call the population function:
-```{r}
-Narea_data <-rbind(hydratry[,c("Species", "Narea")],
-                   TRY_Narea)
-SpParams <- populateTraits(SpParams, Narea_data, 
-                           trait_mapping = c("Narea" = "Narea"),
-                           taxon_column = "Species")
-```
 
-TRY also offers $V_{max}$ values (TraitID = 186), which we take as estimates for **medfate**'s $V_{max298}$ the maximum Rubisco carboxilation rate at 25 degrees Celsius: 
+TRY offers $V_{max}$ values (TraitID = 186), which we take as estimates for **medfate**'s $V_{max298}$ the maximum Rubisco carboxilation rate at 25 degrees Celsius: 
 ```{r}
 TRY_Vmax298  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_186.rds"))
 SpParams <- populateTraits(SpParams, TRY_Vmax298[TRY_Vmax298$ErrorRisk<4, ], 
@@ -1608,14 +1596,44 @@ SpParams <- populateTraits(SpParams, TRY_Jmax298[TRY_Jmax298$ErrorRisk<4, ],
                            taxon_column = "AccSpeciesName")
 ```
 
-The statistical distributions of the three parameters is summarized below:
+The statistical distributions of the two parameters is summarized below:
 ```{r}
-summary(SpParams[,c("Narea", "Vmax298", "Jmax298")])
+summary(SpParams[,c("Vmax298", "Jmax298")])
 ```
 
 ### Carbon balance and growth
 Carbon balance and growth simulations require many parameters that are hard to measure experimentally and, hence, need to be estimated via calibration or expert-based guesses. Here we map only one parameter describing the amount of carbon per dry wood tissue.
 
+#### Nitrogen content of tissues
+Baseline maintenance respiration rates for each tissue (leaf, sapwood and fine roots) are species-specific parameters in the model. However, **medfate** allows estimating these coefficients from nitrogen concentration. Hence it is useful to draw this latter parameter from trait databases. Here we first extract nitrogen concentration per leaf mass values from TRY (TraitID = 14):
+```{r photosynthetic_capacity}
+TRY_Nleaf <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_14.rds"))
+TRY_Nleaf <- TRY_Nleaf[TRY_Nleaf$ErrorRisk<4, c("AccSpeciesName", "StdValue")]
+```
+We now call the population function:
+```{r}
+SpParams <- populateTraits(SpParams, TRY_Nleaf, 
+                           trait_mapping = c("Nleaf" = "StdValue"),
+                           taxon_column = "AccSpeciesName")
+```
+And we do the same for sapwood and fine roots (TraitIDs = 1229 and 475, respectively):
+```{r photosynthetic_capacity}
+TRY_Nsapwood <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_1229.rds"))
+TRY_Nfineroot <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_475.rds"))
+TRY_Nsapwood <- TRY_Nsapwood[TRY_Nsapwood$ErrorRisk<4, c("AccSpeciesName", "StdValue")]
+TRY_Nfineroot <- TRY_Nfineroot[TRY_Nfineroot$ErrorRisk<4, c("AccSpeciesName", "StdValue")]
+SpParams <- populateTraits(SpParams, TRY_Nsapwood, 
+                           trait_mapping = c("Nsapwood" = "StdValue"),
+                           taxon_column = "AccSpeciesName")
+SpParams <- populateTraits(SpParams, TRY_Nfineroot, 
+                           trait_mapping = c("Nfineroot" = "StdValue"),
+                           taxon_column = "AccSpeciesName")
+```
+
+The statistical distributions of the three parameters is summarized below:
+```{r}
+summary(SpParams[,c("Nleaf", "Nsapwood" ,"Nfineroot")])
+```
 #### Wood carbon content
 Stem carbon content per stem dry mass is given by TRY (TraitID = 407) and can be easily mapped, after transforming units from mg/g to g/g: 
 ```{r WoodC}
