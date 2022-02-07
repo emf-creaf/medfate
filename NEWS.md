@@ -4,6 +4,7 @@
 
 # Version 2.6.0
 - Nitrogen content for leaves, sapwood and fine roots added. 'Nleaf' replaces 'Narea' as the latter can be calculated from 'Nleaf' using 'SLA'.
+- Maintenance respiration rates based on N concentration of tissues
 
 # Version 2.5.0
 - spwb model with Granier transpiration now extracts water from soil layer according to unsaturated conductivity.
