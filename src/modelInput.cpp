@@ -434,11 +434,6 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   double CCsapwood_default = constructionCosts["sapwood"];
   double CCfineroot_default = constructionCosts["fineroot"];
   
-  List respirationRates = control["respirationRates"];
-  double RERleaf_default = respirationRates["leaf"];
-  double RERsapwood_default = respirationRates["sapwood"];
-  double RERfineroot_default = respirationRates["fineroot"];
-
   List senescenceRates = control["senescenceRates"];
   double SRsapwood_default = senescenceRates["sapwood"];
   double SRfineroot_default = senescenceRates["fineroot"];
@@ -451,9 +446,6 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
       if(NumericVector::is_na(RGRleafmax[c])) RGRleafmax[c] = RGRleafmax_default;
       if(NumericVector::is_na(RGRsapwoodmax[c])) RGRsapwoodmax[c] = RGRsapwoodmax_default;
       if(NumericVector::is_na(RGRfinerootmax[c])) RGRfinerootmax[c] = RGRfinerootmax_default;
-      if(NumericVector::is_na(RERleaf[c])) RERleaf[c] = RERleaf_default;
-      if(NumericVector::is_na(RERsapwood[c])) RERsapwood[c] = RERsapwood_default;
-      if(NumericVector::is_na(RERfineroot[c])) RERfineroot[c] = RERfineroot_default;
       if(NumericVector::is_na(SRsapwood[c])) SRsapwood[c] = SRsapwood_default;
       if(NumericVector::is_na(SRfineroot[c])) SRfineroot[c] = SRfineroot_default;
     }
