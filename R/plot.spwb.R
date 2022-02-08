@@ -198,8 +198,9 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
                       "MortalityBiomassLoss","CohortBiomassBalance")) {
     OM = x$PlantBiomassBalance[[type]][,cohorts,drop=FALSE]
   }
-  else if(type %in% c("SapwoodArea", "LeafArea", "FineRootArea", 
-                      "FineRootBiomass", "DBH", "Height", "HuberValue", "RootAreaLeafArea")) {
+  else if(type %in% c("SapwoodBiomass", "LeafBiomass", "FineRootBiomass", 
+                      "SapwoodArea", "LeafArea", "FineRootArea", 
+                      "DBH", "Height", "HuberValue", "RootAreaLeafArea")) {
     OM = x$PlantStructure[[type]][,cohorts,drop=FALSE]
   } 
   else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth", "StarvationRate", "DessicationRate", "MortalityRate")) {
@@ -350,7 +351,7 @@ plot.fordyn<-function(x, type="StandBasalArea",
                           "MortalityBiomassLoss", "CohortBiomassBalance")) {
         OM = summary(x, freq = "days", output = paste0("PlantBiomassBalance$",type))[,cohorts,drop=FALSE]
       } 
-      else if(type %in% c("SapwoodArea", "LeafArea", "FineRootArea", "FineRootBiomass", "DBH", "Height")) {
+      else if(type %in% c("LeafBiomass", "SapwoodBiomass", "FineRootBiomass", "SapwoodArea", "LeafArea", "FineRootArea","DBH", "Height")) {
         OM = summary(x, freq = "days", output = paste0("PlantStructure$",type))[,cohorts,drop=FALSE]
       } 
       else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth", "StarvationRate", "MortalityRate", "DessicationRate")) {

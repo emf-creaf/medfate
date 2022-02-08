@@ -467,7 +467,7 @@ List growthDay1(List x, NumericVector meteovec,
   NumericVector GrowthCosts(numCohorts,0.0);
   NumericVector PlantSugarTransport(numCohorts,0.0), PlantSugarLeaf(numCohorts,0.0), PlantStarchLeaf(numCohorts,0.0);
   NumericVector PlantSugarSapwood(numCohorts,0.0), PlantStarchSapwood(numCohorts,0.0);
-  NumericVector SapwoodArea(numCohorts,0.0), LeafArea(numCohorts,0.0), FineRootArea(numCohorts, 0.0), HuberValue(numCohorts, 0.0), RootAreaLeafArea(numCohorts, 0.0);
+  NumericVector LeafBiomass(numCohorts,0.0), SapwoodBiomass(numCohorts, 0.0), SapwoodArea(numCohorts,0.0), LeafArea(numCohorts,0.0), FineRootArea(numCohorts, 0.0), HuberValue(numCohorts, 0.0), RootAreaLeafArea(numCohorts, 0.0);
   NumericVector SAgrowth(numCohorts,0.0), LAgrowth(numCohorts,0.0), FRAgrowth(numCohorts,0.0), starvationRate(numCohorts,0.0), dessicationRate(numCohorts,0.0), mortalityRate(numCohorts,0.0);
   NumericVector GrossPhotosynthesis(numCohorts,0.0);
   NumericVector RootExudation(numCohorts,0.0);
@@ -775,6 +775,8 @@ List growthDay1(List x, NumericVector meteovec,
       //Output variables
       SapwoodArea[j] = SA[j];
       FineRootArea[j] = fineRootBiomass[j]*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4;
+      SapwoodBiomass[j] = sapwoodStructuralBiomass(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j]);
+      LeafBiomass[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
       SAgrowth[j] += deltaSAgrowth[j]/SAprev; //Store sapwood area growth rate (cm2/cm2)
       LAgrowth[j] += deltaLAgrowth[j]/SAprev;//Store Leaf area growth rate in relation to sapwood area (m2/cm2)
       LeafArea[j] = LAexpanded;
@@ -835,12 +837,14 @@ List growthDay1(List x, NumericVector meteovec,
 
   //Final Biomass compartments
   DataFrame plantStructure = DataFrame::create(
+    _["LeafBiomass"] = LeafBiomass,
+    _["SapwoodBiomass"] = SapwoodBiomass,
+    _["FineRootBiomass"] = clone(fineRootBiomass),
     _["LeafArea"] = LeafArea,
     _["SapwoodArea"] = SapwoodArea,
     _["FineRootArea"] = FineRootArea,
     _["HuberValue"] = HuberValue,
     _["RootAreaLeafArea"] = RootAreaLeafArea,
-    _["FineRootBiomass"] = clone(fineRootBiomass),
     _["DBH"] = clone(DBH),
     _["Height"] = clone(H)
   );
@@ -1098,7 +1102,7 @@ List growthDay2(List x, NumericVector meteovec,
   NumericVector GrowthCosts(numCohorts,0.0);
   NumericVector PlantSugarTransport(numCohorts,0.0), PlantSugarLeaf(numCohorts,0.0), PlantStarchLeaf(numCohorts,0.0);
   NumericVector PlantSugarSapwood(numCohorts,0.0), PlantStarchSapwood(numCohorts,0.0);
-  NumericVector SapwoodArea(numCohorts,0.0), LeafArea(numCohorts,0.0), FineRootArea(numCohorts, 0.0), HuberValue(numCohorts, 0.0), RootAreaLeafArea(numCohorts, 0.0);
+  NumericVector LeafBiomass(numCohorts,0.0), SapwoodBiomass(numCohorts, 0.0), SapwoodArea(numCohorts,0.0), LeafArea(numCohorts,0.0), FineRootArea(numCohorts, 0.0), HuberValue(numCohorts, 0.0), RootAreaLeafArea(numCohorts, 0.0);
   NumericVector SAgrowth(numCohorts,0.0), LAgrowth(numCohorts,0.0), FRAgrowth(numCohorts,0.0), starvationRate(numCohorts,0.0), dessicationRate(numCohorts,0.0), mortalityRate(numCohorts,0.0);
   NumericVector GrossPhotosynthesis(numCohorts,0.0);
   NumericVector RootExudation(numCohorts,0.0);
@@ -1527,6 +1531,8 @@ List growthDay2(List x, NumericVector meteovec,
       //OUTPUT VARIABLES
       SapwoodArea[j] = SA[j];
       LeafArea[j] = LAexpanded;
+      SapwoodBiomass[j] = sapwoodStructuralBiomass(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j]);
+      LeafBiomass[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
       FineRootArea[j] = fineRootBiomass[j]*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4;
       HuberValue[j] = SA[j]/leafAreaTarget[j]; 
       RootAreaLeafArea[j] = FineRootArea[j]/leafAreaTarget[j]; 
@@ -1614,12 +1620,14 @@ List growthDay2(List x, NumericVector meteovec,
   
   //Final Biomass compartments
   DataFrame plantStructure = DataFrame::create(
+    _["LeafBiomass"] = LeafBiomass,
+    _["SapwoodBiomass"] = SapwoodBiomass,
+    _["FineRootBiomass"] = clone(fineRootBiomass),
     _["LeafArea"] = LeafArea,
     _["SapwoodArea"] = SapwoodArea,
     _["FineRootArea"] = FineRootArea,
     _["HuberValue"] = HuberValue,
     _["RootAreaLeafArea"] = RootAreaLeafArea,
-    _["FineRootBiomass"] = clone(fineRootBiomass),
     _["DBH"] = clone(DBH),
     _["Height"] = clone(H)
   );
@@ -1971,6 +1979,8 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   NumericMatrix PlantSugarSapwood(numDays, numCohorts);
   NumericMatrix PlantStarchSapwood(numDays, numCohorts);
   NumericMatrix PlantSugarTransport(numDays, numCohorts);
+  NumericMatrix SapwoodBiomass(numDays, numCohorts);
+  NumericMatrix LeafBiomass(numDays, numCohorts);
   NumericMatrix SapwoodArea(numDays, numCohorts);
   NumericMatrix LeafArea(numDays, numCohorts);
   NumericMatrix FineRootArea(numDays, numCohorts);
@@ -2167,9 +2177,11 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     LeafPI0(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["LeafPI0"]); 
     RootExudation(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["RootExudation"]);
     
+    SapwoodBiomass(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["SapwoodBiomass"]);
+    LeafBiomass(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["LeafBiomass"]);
+    FineRootBiomass(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["FineRootBiomass"]);
     SapwoodArea(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["SapwoodArea"]);
     LeafArea(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["LeafArea"]);
-    FineRootBiomass(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["FineRootBiomass"]);
     FineRootArea(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["FineRootArea"]);
     HuberValue(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["HuberValue"]);
     RootAreaLeafArea(i,_) = Rcpp::as<Rcpp::NumericVector>(ps["RootAreaLeafArea"]);
@@ -2238,9 +2250,11 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   PlantSugarSapwood.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantStarchSapwood.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantSugarTransport.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  SapwoodBiomass.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  LeafBiomass.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  FineRootArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   SapwoodArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   LeafArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  FineRootArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   HuberValue.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   RootAreaLeafArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   FineRootBiomass.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
@@ -2299,12 +2313,14 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   List growthMortality, plantStructure;
   
   List l;
-  plantStructure = List::create(Named("LeafArea") = LeafArea,
+  plantStructure = List::create(Named("LeafBiomass")=LeafBiomass,
+                                Named("SapwoodBiomass") = SapwoodBiomass,
+                                Named("FineRootBiomass") = FineRootBiomass,
+                                Named("LeafArea") = LeafArea,
                                 Named("SapwoodArea")=SapwoodArea,
                                 Named("FineRootArea") = FineRootArea,
                                 Named("HuberValue") = HuberValue,
                                 Named("RootAreaLeafArea") = RootAreaLeafArea,
-                                Named("FineRootBiomass") = FineRootBiomass,
                                 Named("DBH") = DBH,
                                 Named("Height") = Height);
   growthMortality = List::create(Named("LAgrowth") = LAgrowth,

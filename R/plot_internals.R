@@ -109,9 +109,11 @@
   return(TYPES)
 }
 .getStructuralGROWTHPlotTypes<-function(transpirationMode = "Granier"){
-  TYPES = c("Sapwood area" ="SapwoodArea",
-            "Leaf area" = "LeafArea", 
+  TYPES = c("Leaf biomass per individual" = "LeafBiomass",
+            "Sapwood biomass per individual" = "SapwoodBiomass",
             "Fine root biomass per individual" = "FineRootBiomass",
+            "Sapwood area" ="SapwoodArea",
+            "Leaf area" = "LeafArea", 
             "Fine root area" ="FineRootArea")
   TYPES = c(TYPES,             
             "Diameter at breast height" = "DBH",
@@ -334,6 +336,8 @@
   else if(type=="SapwoodArea")  ylab = expression(paste("Sapwood area  ",(cm^2)))
   else if(type=="LeafArea")  ylab = expression(paste("Leaf area  ",(m^2)))
   else if(type=="FineRootArea")  ylab = expression(paste("Fine root area  ",(m^2)))
+  else if(type=="LeafBiomass")  ylab = expression(paste("Leaf structural biomass  ", (gdry%.%ind^{-1})))
+  else if(type=="SapwoodBiomass")  ylab = expression(paste("Sapwood structural biomass  ", (gdry%.%ind^{-1})))
   else if(type=="FineRootBiomass")  ylab = expression(paste("Fine root biomass  ", (gdry%.%ind^{-1})))
   else if(type=="DBH")  ylab = expression(paste("Diameter at breast height  ", (cm)))
   else if(type=="Height")  ylab = expression(paste("Plant height  ", (cm)))
