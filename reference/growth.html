@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
       </span>
     </div>
 
@@ -120,16 +120,20 @@
 <li><p><code>"MortalityBiomassLoss"</code>: Biomass loss due to mortality (g dry · m-2).</p></li>
 <li><p><code>"CohortBiomassBalance"</code>: Daily cohort biomass balance (including mortality) (g dry · m-2).</p></li>
 </ul></li>
-<li><p><code>"PlantStructure"</code>: A list of daily area and biomass values for compartments of plant cohorts, with elements:</p><ul><li><p><code>"LeafArea"</code>: Daily amount of leaf area (in m2) for an average individual of each plant cohort.</p></li>
-<li><p><code>"SapwoodArea"</code>: Daily amount of sapwood area (in cm2) for an average individual of each plant cohort.</p></li>
-<li><p><code>"FineRootArea"</code>: Daily amount of fine root area (in m2) for an average individual of each plant cohort (only for <code>transpirationMode = "Sperry"</code>).</p></li>
+<li><p><code>"PlantStructure"</code>: A list of daily area and biomass values for compartments of plant cohorts, with elements:</p><ul><li><p><code>"LeafBiomass"</code>: Daily amount of leaf structural biomass (in g dry) for an average individual of each plant cohort.</p></li>
+<li><p><code>"SapwoodBiomass"</code>: Daily amount of sapwood structural biomass (in g dry) for an average individual of each plant cohort.</p></li>
 <li><p><code>"FineRootBiomass"</code>: Daily amount of fine root biomass (in g dry) for an average individual of each plant cohort.</p></li>
+<li><p><code>"LeafArea"</code>: Daily amount of leaf area (in m2) for an average individual of each plant cohort.</p></li>
+<li><p><code>"SapwoodArea"</code>: Daily amount of sapwood area (in cm2) for an average individual of each plant cohort.</p></li>
+<li><p><code>"FineRootArea"</code>: Daily amount of fine root area (in m2) for an average individual of each plant cohort.</p></li>
+<li><p><code>"HuberValue"</code>: The ratio of sapwood area to (target) leaf area (in cm2/m2).</p></li>
+<li><p><code>"RootAreaLeafArea"</code>: The ratio of fine root area to (target) leaf area (in m2/m2).</p></li>
 <li><p><code>"DBH"</code>: Diameter at breast height (in cm) for an average individual of each plant cohort.</p></li>
 <li><p><code>"Height"</code>: Height (in cm) for an average individual of each plant cohort.</p></li>
 </ul></li>
 <li><p><code>"GrowthMortality"</code>: A list of daily growth and mortality rates for plant cohorts, with elements:</p><ul><li><p><code>"LAgrowth"</code>: Leaf area growth relative to sapwood area (in m2·cm-2·day-1) for an average individual of each plant cohort.</p></li>
 <li><p><code>"SAgrowth"</code>: Sapwood area relative growth rate (in cm2·cm-2·day-1) for an average individual of each plant cohort.</p></li>
-<li><p><code>"FRAgrowth"</code>: Fine root area growth relative to sapwood area (in m2·cm-2·day-1) for an average individual of each plant cohort (only for <code>transpirationMode = "Sperry"</code>).</p></li>
+<li><p><code>"FRAgrowth"</code>: Fine root area growth relative to sapwood area (in m2·cm-2·day-1) for an average individual of each plant cohort.</p></li>
 <li><p><code>"StarvationRate"</code>: Daily mortality rate from starvation (ind/d-1).</p></li>
 <li><p><code>"DessicationRate"</code>: Daily mortality rate from dessication (ind/d-1).</p></li>
 <li><p><code>"MortalityRate"</code>: Daily mortality rate (any cause) (ind/d-1).</p></li>
@@ -171,31 +175,31 @@
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Call simulation function</span></span>
 <span class="r-in"><span class="va">G1</span><span class="op">&lt;-</span><span class="fu">growth</span><span class="op">(</span><span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant cohort biomass (g/m2): 8829.22</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant cohort biomass (g/m2): 8554.49</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 291.257</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial snowpack content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]: ....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant biomass (g/m2): 9012.18</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant biomass (g/m2): 182.961</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance result (g/m2): 182.961</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant biomass (g/m2): 8674.02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant biomass (g/m2): 119.533</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance result (g/m2): 119.533</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance components:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Structural balance (g/m2) 261 Labile balance (g/m2) -32</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant individual balance (g/m2) 229 Mortality loss (g/m2) 46</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 269.402</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Structural balance (g/m2) 266 Labile balance (g/m2) -146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant individual balance (g/m2) 120 Mortality loss (g/m2) 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 269.256</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -21.8543</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -21.8543</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -22.0007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -22.0007</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 97 Net rainfall (mm) 365</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 407 Runoff (mm) 9 Deep drainage (mm) 77</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 28 Transpiration (mm) 324</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 407 Runoff (mm) 9 Deep drainage (mm) 76</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 28 Transpiration (mm) 325</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
 <span class="r-in"><span class="co">#Switch to 'Sperry' transpiration mode</span></span>

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Sensitivity analysis and calibration</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-02-01</h4>
+            <h4 data-toc-skip class="date">2022-02-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/modelanalysis/SensitivityCalibration.Rmd" class="external-link"><code>vignettes/modelanalysis/SensitivityCalibration.Rmd</code></a></small>
       <div class="hidden name"><code>SensitivityCalibration.Rmd</code></div>
@@ -93,7 +93,7 @@
 <p>As an example data set we will use here the same data sets provided to illustrate simulation functions in <strong>medfate</strong>. We begin by loading the package and the example forest data:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/" class="external-link">medfate</a></span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Package 'medfate' [ver. 2.5.0]</span></code></pre>
+<pre><code><span class="co">## Package 'medfate' [ver. 2.6.0]</span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span>
 <span class="va">exampleforestMED</span></code></pre></div>
@@ -275,25 +275,25 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##                  SWC       ETR  E_T1_148  E_T2_168 FMC_T1_148 FMC_T2_168</span>
-<span class="co">## 2001-01-01 0.2954147 2.3644885 0.1284625 0.1794749   125.6817   93.01509</span>
-<span class="co">## 2001-01-02 0.3050882 2.3998136 0.4237133 0.1925936   125.7080   92.99761</span>
-<span class="co">## 2001-01-03 0.2985565 0.4235169 0.1786305 0.2337440   125.8485   93.00609</span>
-<span class="co">## 2001-01-04 0.2985085 2.1743784 0.1867094 0.1932836   125.7535   93.04532</span>
-<span class="co">## 2001-01-05 0.2961007 2.1070869 0.3551908 0.2490211   125.8215   93.01896</span>
-<span class="co">## 2001-01-06 0.3071376 2.5730965 0.1752959 0.2462638   125.7187   93.04644</span>
-<span class="co">##             BAI_T1_148    BAI_T2_168</span>
-<span class="co">## 2001-01-01  0.04041532  0.0003595873</span>
-<span class="co">## 2001-01-02 -0.02983286 -0.0018557093</span>
-<span class="co">## 2001-01-03  0.04650011  0.0012492123</span>
-<span class="co">## 2001-01-04 -0.01007174 -0.0060665821</span>
-<span class="co">## 2001-01-05  0.01163397 -0.0028512133</span>
-<span class="co">## 2001-01-06  0.02589552 -0.0060154993</span></code></pre>
+<pre><code><span class="co">##                  SWC       ETR   E_T1_148   E_T2_168 FMC_T1_148 FMC_T2_168</span>
+<span class="co">## 2001-01-01 0.2994907 2.4021328 0.20557604 0.15625832   125.7974   93.08011</span>
+<span class="co">## 2001-01-02 0.2964286 2.4392336 0.29241446 0.21101657   125.7150   93.02984</span>
+<span class="co">## 2001-01-03 0.3100110 0.4761217 0.21991828 0.22501447   125.8453   92.98312</span>
+<span class="co">## 2001-01-04 0.2870939 2.2012198 0.09526183 0.09066472   125.7431   93.02448</span>
+<span class="co">## 2001-01-05 0.2992419 2.1158805 0.27888984 0.28897605   125.8305   93.02372</span>
+<span class="co">## 2001-01-06 0.3061376 2.7518768 0.21940988 0.29704702   125.7044   93.02442</span>
+<span class="co">##              BAI_T1_148    BAI_T2_168</span>
+<span class="co">## 2001-01-01  0.002983884  0.0138367793</span>
+<span class="co">## 2001-01-02  0.045798625  0.0014352504</span>
+<span class="co">## 2001-01-03  0.035767419  0.0006489233</span>
+<span class="co">## 2001-01-04 -0.005288308 -0.0055843463</span>
+<span class="co">## 2001-01-05 -0.011125856 -0.0018824819</span>
+<span class="co">## 2001-01-06  0.028257562 -0.0021069645</span></code></pre>
 <p>where soil water content dynamics is in column <code>SWC</code>. The model fit to observed data can be measured using the Nash-Sutcliffe coefficient, which we calculate for the initial run using function <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code>:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_metric</a></span><span class="op">(</span><span class="va">S1</span>, measuredData <span class="op">=</span> <span class="va">exampleobs</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, 
                   metric <span class="op">=</span> <span class="st">"NSE"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.8986185</span></code></pre>
+<pre><code><span class="co">## [1] 0.9013859</span></code></pre>
 <p>A call to <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code> provides the coefficient given a model simulation result, but is not a model output function as we defined above. Analogously to the measures of total transpiration and average plant stress, we can use a function factory to define a model output function that takes input factors as inputs, runs the model and performs the evaluation:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">of_eval</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/optimization.html">optimization_evaluation_function</a></span><span class="op">(</span>parNames <span class="op">=</span> <span class="va">parNames</span>,
@@ -304,10 +304,10 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <p>Function <code>of_eval()</code> stores internally both the data needed for conducting simulations and the data needed for evaluating simulation results, so that we only need to provide values for the input factors:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.1130985</span></code></pre>
+<pre><code><span class="co">## [1] 0.09451645</span></code></pre>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] -3.57153</span></code></pre>
+<pre><code><span class="co">## [1] -3.68663</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="global-sensitivity-analyses">Global sensitivity analyses<a class="anchor" aria-label="anchor" href="#global-sensitivity-analyses"></a>
@@ -331,18 +331,18 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <span class="co">## morris(model = of_transp, factors = parNames, r = 50, design = list(type = "oat",     levels = 10, grid.jump = 3), binf = parMin, bsup = parMax,     scale = TRUE, verbose = FALSE)</span>
 <span class="co">## </span>
 <span class="co">## Model runs: 600 </span>
-<span class="co">##                            mu   mu.star     sigma</span>
-<span class="co">## T1_148/LAI_live     41.695844 73.278532 95.755791</span>
-<span class="co">## T2_168/LAI_live     56.422381 63.772985 87.592821</span>
-<span class="co">## S1_165/LAI_live     49.369541 56.839362 74.554091</span>
-<span class="co">## T1_148/Z50         -25.892782 37.321475 37.940898</span>
-<span class="co">## T2_168/Z50         -20.612648 33.114674 36.078465</span>
-<span class="co">## S1_165/Z50         -15.719339 17.455636 17.775487</span>
-<span class="co">## T1_148/Psi_Extract -10.654719 10.654719  7.965592</span>
-<span class="co">## T2_168/Psi_Extract  -9.126678  9.126678  6.805668</span>
-<span class="co">## S1_165/Psi_Extract  -4.186104  4.186104  5.018818</span>
-<span class="co">## rfc@1              -31.759491 31.759491 25.388151</span>
-<span class="co">## rfc@2              -39.013212 39.159474 22.491278</span></code></pre>
+<span class="co">##                            mu   mu.star      sigma</span>
+<span class="co">## T1_148/LAI_live     50.829076 79.832962 112.868987</span>
+<span class="co">## T2_168/LAI_live     63.243091 68.758315  98.931618</span>
+<span class="co">## S1_165/LAI_live     56.833979 61.800754  91.319716</span>
+<span class="co">## T1_148/Z50         -11.745909 11.914896  11.074792</span>
+<span class="co">## T2_168/Z50          -9.442321  9.549825   9.170773</span>
+<span class="co">## S1_165/Z50          -7.040856  7.051992   6.301526</span>
+<span class="co">## T1_148/Psi_Extract -16.201894 16.201894  17.523112</span>
+<span class="co">## T2_168/Psi_Extract -10.056832 10.056832   9.714750</span>
+<span class="co">## S1_165/Psi_Extract  -5.988059  5.988059   9.455983</span>
+<span class="co">## rfc@1              -46.395748 46.395748  32.316223</span>
+<span class="co">## rfc@2              -41.052635 41.052635  26.159824</span></code></pre>
 <p><code>mu.star</code> values inform about the mean of elementary effects of each <span class="math inline">\(i\)</span> factor and can be used to rank all the input factors, whereas <code>sigma</code> inform about the degree of interaction of the <span class="math inline">\(i\)</span>-th factor with others. According to the result of this sensitivity analysis, leaf area index (<code>LAI_live</code>) parameters are the most relevant to determine total transpiration, much more than fine root distribution (<code>Z50</code>), the rock fragment content in the soil and the water potentials corresponding to whole-plant conductance reduction (i.e. <code>Psi_Extract</code>).</p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sa_transp</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">200</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -359,18 +359,18 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <span class="co">## morris(model = of_stress, factors = parNames, r = 50, design = list(type = "oat",     levels = 10, grid.jump = 3), binf = parMin, bsup = parMax,     scale = TRUE, verbose = FALSE)</span>
 <span class="co">## </span>
 <span class="co">## Model runs: 600 </span>
-<span class="co">##                            mu   mu.star     sigma</span>
-<span class="co">## T1_148/LAI_live     199.35556 199.35556 107.18034</span>
-<span class="co">## T2_168/LAI_live     207.03137 207.03137 108.70857</span>
-<span class="co">## S1_165/LAI_live     206.46076 206.46076  95.66235</span>
-<span class="co">## T1_148/Z50           42.39128  44.95613  36.06455</span>
-<span class="co">## T2_168/Z50           30.21549  40.92742  49.96018</span>
-<span class="co">## S1_165/Z50           45.60078  55.86216  54.30222</span>
-<span class="co">## T1_148/Psi_Extract -115.92175 115.92175  72.63048</span>
-<span class="co">## T2_168/Psi_Extract -102.81834 102.81834  86.42349</span>
-<span class="co">## S1_165/Psi_Extract  -81.60813  81.60813  66.47423</span>
-<span class="co">## rfc@1                40.82863  40.82863  36.43407</span>
-<span class="co">## rfc@2                41.27562  41.27562  30.05439</span></code></pre>
+<span class="co">##                           mu   mu.star     sigma</span>
+<span class="co">## T1_148/LAI_live    225.89588 225.89588 129.09020</span>
+<span class="co">## T2_168/LAI_live    216.31383 216.31383 109.71751</span>
+<span class="co">## S1_165/LAI_live    233.76884 233.76884 140.62240</span>
+<span class="co">## T1_148/Z50          10.96244  12.37808  10.98998</span>
+<span class="co">## T2_168/Z50          11.70175  13.88523  13.32834</span>
+<span class="co">## S1_165/Z50          22.99397  23.11424  21.40108</span>
+<span class="co">## T1_148/Psi_Extract -99.41223  99.41223  75.46183</span>
+<span class="co">## T2_168/Psi_Extract -80.31127  80.31127  80.11473</span>
+<span class="co">## S1_165/Psi_Extract -62.56730  62.56730  58.19206</span>
+<span class="co">## rfc@1               65.91166  65.91166  45.43817</span>
+<span class="co">## rfc@2               61.87250  61.87250  35.81615</span></code></pre>
 <p>Again, LAI values parameters are the most relevant, but closely followed by the water potentials corresponding to whole-plant conductance reduction (i.e. <code>Psi_Extract</code>), which appear as more relevant than parameters of fine root distribution (<code>Z50</code>) and rock fragment content (<code>rfc</code>).</p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sa_stress</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">300</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -387,18 +387,18 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <span class="co">## morris(model = of_eval, factors = parNames, r = 50, design = list(type = "oat",     levels = 10, grid.jump = 3), binf = parMin, bsup = parMax,     scale = TRUE, verbose = FALSE)</span>
 <span class="co">## </span>
 <span class="co">## Model runs: 600 </span>
-<span class="co">##                            mu   mu.star     sigma</span>
-<span class="co">## T1_148/LAI_live    -52.887208 54.250359 68.908455</span>
-<span class="co">## T2_168/LAI_live    -59.261226 61.408097 60.753790</span>
-<span class="co">## S1_165/LAI_live    -43.873847 43.873847 47.805523</span>
-<span class="co">## T1_148/Z50          82.228184 82.228184 71.314972</span>
-<span class="co">## T2_168/Z50          70.517752 70.517752 76.977215</span>
-<span class="co">## S1_165/Z50          45.681498 45.681498 54.744603</span>
-<span class="co">## T1_148/Psi_Extract   4.893840  4.893840  8.069666</span>
-<span class="co">## T2_168/Psi_Extract   3.468864  3.468864  6.618464</span>
-<span class="co">## S1_165/Psi_Extract   1.522892  1.522892  3.705194</span>
-<span class="co">## rfc@1              -51.932412 51.932412 39.179119</span>
-<span class="co">## rfc@2                0.000000  0.000000  0.000000</span></code></pre>
+<span class="co">##                            mu   mu.star    sigma</span>
+<span class="co">## T1_148/LAI_live    -20.415317 20.415317 8.693146</span>
+<span class="co">## T2_168/LAI_live    -14.129525 14.175864 8.310757</span>
+<span class="co">## S1_165/LAI_live    -14.902113 14.902113 8.044931</span>
+<span class="co">## T1_148/Z50           6.114112  6.114112 3.531141</span>
+<span class="co">## T2_168/Z50           5.243244  5.262361 3.746704</span>
+<span class="co">## S1_165/Z50           5.733140  5.733140 4.235319</span>
+<span class="co">## T1_148/Psi_Extract   3.572731  3.572732 3.355263</span>
+<span class="co">## T2_168/Psi_Extract   3.103834  3.103834 3.868307</span>
+<span class="co">## S1_165/Psi_Extract   1.541192  1.716016 2.881116</span>
+<span class="co">## rfc@1               -4.838862  4.862951 3.588397</span>
+<span class="co">## rfc@2               -2.253109  2.637420 2.551170</span></code></pre>
 <p>Contrary to the previous cases, the contribution of LAI parameters is similar to that of parameters of fine root distribution (<code>Z50</code>), which appear as more relevant than the water potentials corresponding to whole-plant conductance reduction (i.e. <code>Psi_Extract</code>).</p>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sa_eval</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">100</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -439,14 +439,14 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">opt_cal</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## $par</span>
-<span class="co">## [1] 802.0192 797.0539 304.6082</span>
+<span class="co">## [1] 639.1744 345.3344 233.4386</span>
 <span class="co">## </span>
 <span class="co">## $value</span>
-<span class="co">## [1] 1342.41</span>
+<span class="co">## [1] 1046.756</span>
 <span class="co">## </span>
 <span class="co">## $counts</span>
 <span class="co">## function gradient </span>
-<span class="co">##        9        9 </span>
+<span class="co">##       92       92 </span>
 <span class="co">## </span>
 <span class="co">## $convergence</span>
 <span class="co">## [1] 0</span>
@@ -457,9 +457,9 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span> <span class="va">x1</span><span class="op">$</span><span class="va">below</span><span class="op">[</span>,<span class="st">"Z50"</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span>, <span class="va">opt_cal</span><span class="op">$</span><span class="va">par</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##        Z50 opt_cal$par</span>
-<span class="co">## T1_148 400    802.0192</span>
-<span class="co">## T2_168 400    797.0539</span>
-<span class="co">## S1_165 300    304.6082</span></code></pre>
+<span class="co">## T1_148 400    639.1744</span>
+<span class="co">## T2_168 400    345.3344</span>
+<span class="co">## S1_165 300    233.4386</span></code></pre>
 <p>This occurs because these default values were used to generate the ‘observed’ data in <code>exampleobs</code>, which contains a small amount of non-systematic error.</p>
 </div>
 <div class="section level3">
@@ -491,25 +491,25 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <span class="co">## # MCMC sampler:  DEzs </span>
 <span class="co">## # Nr. Chains:  27 </span>
 <span class="co">## # Iterations per chain:  334 </span>
-<span class="co">## # Rejection rate:  0.823 </span>
-<span class="co">## # Effective sample size:  465 </span>
-<span class="co">## # Runtime:  1398.092  sec. </span>
+<span class="co">## # Rejection rate:  0.793 </span>
+<span class="co">## # Effective sample size:  522 </span>
+<span class="co">## # Runtime:  1142.072  sec. </span>
 <span class="co">##  </span>
 <span class="co">## # Parameters</span>
 <span class="co">##              psf     MAP    2.5%  median   97.5%</span>
-<span class="co">## T1_148/Z50 1.092 795.459 627.102 822.533 987.626</span>
-<span class="co">## T2_168/Z50 1.103 772.777 625.988 759.137 990.445</span>
-<span class="co">## S1_165/Z50 1.063 845.914 126.483 563.390 972.503</span>
+<span class="co">## T1_148/Z50 1.053 334.123 196.255 479.093 884.439</span>
+<span class="co">## T2_168/Z50 1.065 621.840 188.406 469.613 931.107</span>
+<span class="co">## S1_165/Z50 1.055 845.132 120.874 564.248 980.415</span>
 <span class="co">## </span>
-<span class="co">## ## DIC:  -3144.46 </span>
+<span class="co">## ## DIC:  -2090.676 </span>
 <span class="co">## ## Convergence </span>
-<span class="co">##  Gelman Rubin multivariate psrf:  1.127 </span>
+<span class="co">##  Gelman Rubin multivariate psrf:  1.12 </span>
 <span class="co">##  </span>
 <span class="co">## ## Correlations </span>
 <span class="co">##            T1_148/Z50 T2_168/Z50 S1_165/Z50</span>
-<span class="co">## T1_148/Z50      1.000     -0.627     -0.091</span>
-<span class="co">## T2_168/Z50     -0.627      1.000     -0.060</span>
-<span class="co">## S1_165/Z50     -0.091     -0.060      1.000</span></code></pre>
+<span class="co">## T1_148/Z50      1.000     -0.917     -0.106</span>
+<span class="co">## T2_168/Z50     -0.917      1.000      0.024</span>
+<span class="co">## S1_165/Z50     -0.106      0.024      1.000</span></code></pre>
 <p>According to the Gelman-Rubin diagnostic, the convergence can be accepted because the multivariate potential scale reduction factor was ≤ 1.1. We can plot the Markov Chains and the posterior density distribution of parameters that they generate using:</p>
 <div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mcmc_out</span><span class="op">)</span></code></pre></div>

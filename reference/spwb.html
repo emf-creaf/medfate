@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
       </span>
     </div>
 
@@ -140,6 +140,7 @@
 <li><p><code>"Plants"</code>: A list of daily results for plant cohorts (see below).</p></li>
 <li><p><code>"subdaily"</code>: A list of objects of class <code><a href="spwb_day.html">spwb_day</a></code>, one per day simulated (only if required in <code>control</code> parameters, see <code><a href="defaultControl.html">defaultControl</a></code>).</p></li>
 </ul><p>When <code>transpirationMode = "Granier"</code>, element <code>"Plants"</code> is a list with the following subelements:</p><ul><li><p><code>"LAI"</code>: A data frame with the daily leaf area index for each plant cohort.</p></li>
+<li><p><code>"LAIlive"</code>: A data frame with the daily leaf area index for each plant cohort, assuming all leaves are unfolded (in m2/m2).</p></li>
 <li><p><code>"AbsorbedSWRFraction"</code>: A data frame with the fraction of SWR absorbed by each plant cohort.</p></li>
 <li><p><code>"Transpiration"</code>: A data frame with the amount of daily transpiration (in mm) for each plant cohort.</p></li>
 <li><p><code>"GrossPhotosynthesis"</code>: A data frame with the amount of daily gross photosynthesis (in g C·m-2) for each plant cohort.</p></li>
@@ -230,7 +231,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 25 Transpiration (mm) 334</span>
 <span class="r-in">        </span>
 <span class="r-in"><span class="co">#Plot results</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></span>
 <span class="r-plt img"><img src="spwb-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Monthly summary (averages) of soil water balance</span></span>

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Basic water balance</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-02-01</h4>
+            <h4 data-toc-skip class="date">2022-02-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/BasicWaterBalance.Rmd" class="external-link"><code>vignettes/BasicWaterBalance.Rmd</code></a></small>
       <div class="hidden name"><code>BasicWaterBalance.Rmd</code></div>
@@ -179,8 +179,9 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "control"             "soil"                "canopy"             </span>
 <span class="co">##  [4] "cohorts"             "above"               "below"              </span>
-<span class="co">##  [7] "belowLayers"         "paramsPhenology"     "paramsInterception" </span>
-<span class="co">## [10] "paramsTranspiration" "internalPhenology"   "internalWater"</span></code></pre>
+<span class="co">##  [7] "belowLayers"         "paramsPhenology"     "paramsAnatomy"      </span>
+<span class="co">## [10] "paramsInterception"  "paramsTranspiration" "internalPhenology"  </span>
+<span class="co">## [13] "internalWater"</span></code></pre>
 <p>Note that (since <strong>ver 2.0</strong>) the water balance input object contains an element <code>soil</code> with the soil input.</p>
 <p>It is important to remember that, unlike normal objects in R, any water balance simulation will modify the <code>spwbInput</code> object. For example, the state of the soil at the end of the simulated process (i.e. <code>W</code>) will be stored. Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next. In the case of soil water balance, these modifications are small, for example concerning <code>LAI_expanded</code>, but in the case of growth simulations the object is used to store the status of vegetation during and at the end of simulations.</p>
 <p>Finally, note that users can set cohort-specific parameters for soil water balance (instead of using species-level values) by modifying manually the parameter values in this object. Since some parameters may be coordinated by design, however, it is better to use specific package functions for this purpose.</p>
@@ -247,14 +248,14 @@
 <span class="co">##   47.065820 </span>
 <span class="co">## </span>
 <span class="co">## $Plants</span>
-<span class="co">##               LAI AbsorbedSWRFraction Transpiration GrossPhotosynthesis</span>
-<span class="co">## T1_148 0.96734365          0.37392621    0.58940268          2.07485470</span>
-<span class="co">## T2_168 0.93111690          0.35605260    0.56122963          0.74271218</span>
-<span class="co">## S1_165 0.03928201          0.02572208    0.04054456          0.07452385</span>
-<span class="co">##           PlantPsi          DDS      StemPLC</span>
-<span class="co">## T1_148 -0.03348382 1.480506e-06 4.679661e-07</span>
-<span class="co">## T2_168 -0.03348382 9.621501e-07 9.621501e-07</span>
-<span class="co">## S1_165 -0.03364403 6.400374e-07 7.860002e-08</span>
+<span class="co">##               LAI    LAIlive AbsorbedSWRFraction Transpiration</span>
+<span class="co">## T1_148 0.96734365 0.96734365          0.37392621    0.58940268</span>
+<span class="co">## T2_168 0.93111690 0.93111690          0.35605260    0.56122963</span>
+<span class="co">## S1_165 0.03928201 0.03928201          0.02572208    0.04054456</span>
+<span class="co">##        GrossPhotosynthesis    PlantPsi          DDS      StemPLC</span>
+<span class="co">## T1_148           2.2107139 -0.03348382 1.480506e-06 4.679661e-07</span>
+<span class="co">## T2_168           0.8661025 -0.03348382 9.621501e-07 9.621501e-07</span>
+<span class="co">## S1_165           0.1007609 -0.03364403 6.400374e-07 7.860002e-08</span>
 <span class="co">## </span>
 <span class="co">## attr(,"class")</span>
 <span class="co">## [1] "spwb_day" "list"</span></code></pre>
@@ -306,8 +307,9 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">spwbInput</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "control"             "soil"                "canopy"             </span>
 <span class="co">##  [4] "cohorts"             "above"               "below"              </span>
-<span class="co">##  [7] "belowLayers"         "paramsPhenology"     "paramsInterception" </span>
-<span class="co">## [10] "paramsTranspiration" "internalPhenology"   "internalWater"</span></code></pre>
+<span class="co">##  [7] "belowLayers"         "paramsPhenology"     "paramsAnatomy"      </span>
+<span class="co">## [10] "paramsInterception"  "paramsTranspiration" "internalPhenology"  </span>
+<span class="co">## [13] "internalWater"</span></code></pre>
 <p>As before, <code>WaterBalance</code> contains water balance components, but in this case in form of a data frame with days in rows:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">)</span></code></pre></div>
@@ -352,42 +354,42 @@
 </h3>
 <p>Package <code>medfate</code> provides a simple <code>plot</code> function for objects of class <code>spwb</code>. It can be used to show meteorological inputs, snow dynamics, and different components of the water balance:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"PET_Precipitation"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"PET_Precipitation"</span><span class="op">)</span></code></pre></div>
 <p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-20-1.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"Snow"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"Snow"</span><span class="op">)</span></code></pre></div>
 <p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-20-2.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"Export"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"Export"</span><span class="op">)</span></code></pre></div>
 <p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-20-3.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"Evapotranspiration"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"Evapotranspiration"</span><span class="op">)</span></code></pre></div>
 <p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-21-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Function <code>plot</code> is also allows displaying soil moisture dynamics by layer, which can be done in four different ways (the first two only imply a change in axis units):</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"SoilTheta"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"SoilTheta"</span><span class="op">)</span></code></pre></div>
 <p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-22-1.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"SoilRWC"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"SoilRWC"</span><span class="op">)</span></code></pre></div>
 <p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-22-2.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"SoilPsi"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"SoilPsi"</span><span class="op">)</span></code></pre></div>
 <p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-22-3.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"SoilVol"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"SoilVol"</span><span class="op">)</span></code></pre></div>
 <p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-22-4.png" width="672" style="display: block; margin: auto;"></p>
 <p>Finally, the same function can also be used to draw the dynamics of plant variables by cohorts, such as transpiration, gross photosynthesis, water potential or drought stress:</p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"Transpiration"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"Transpiration"</span><span class="op">)</span></code></pre></div>
 <p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-23-1.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"GrossPhotosynthesis"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"GrossPhotosynthesis"</span><span class="op">)</span></code></pre></div>
 <p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-23-2.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"PlantPsi"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"PlantPsi"</span><span class="op">)</span></code></pre></div>
 <p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-23-3.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"PlantStress"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"PlantStress"</span><span class="op">)</span></code></pre></div>
 <p><img src="BasicWaterBalance_files/figure-html/unnamed-chunk-23-4.png" width="672" style="display: block; margin: auto;"></p>
 <p>Finally, one can interactively create plots using function <code>shinyplot</code>, e.g.:</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
@@ -514,18 +516,18 @@
 <div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/waterUseEfficiency.html">waterUseEfficiency</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"Stand Ag/E"</span>, freq <span class="op">=</span> <span class="st">"months"</span>, draw<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##            Stand Ag/E</span>
-<span class="co">## 2001-01-01   2.427927</span>
-<span class="co">## 2001-02-01   2.427927</span>
-<span class="co">## 2001-03-01   2.427927</span>
-<span class="co">## 2001-04-01   2.427926</span>
-<span class="co">## 2001-05-01   2.427926</span>
-<span class="co">## 2001-06-01   2.427887</span>
-<span class="co">## 2001-07-01   2.427902</span>
-<span class="co">## 2001-08-01   2.427919</span>
-<span class="co">## 2001-09-01   2.427919</span>
-<span class="co">## 2001-10-01   2.427919</span>
-<span class="co">## 2001-11-01   2.427923</span>
-<span class="co">## 2001-12-01   2.427927</span></code></pre>
+<span class="co">## 2001-01-01   2.667595</span>
+<span class="co">## 2001-02-01   2.667595</span>
+<span class="co">## 2001-03-01   2.667595</span>
+<span class="co">## 2001-04-01   2.667594</span>
+<span class="co">## 2001-05-01   2.667593</span>
+<span class="co">## 2001-06-01   2.667556</span>
+<span class="co">## 2001-07-01   2.667571</span>
+<span class="co">## 2001-08-01   2.667587</span>
+<span class="co">## 2001-09-01   2.667587</span>
+<span class="co">## 2001-10-01   2.667587</span>
+<span class="co">## 2001-11-01   2.667591</span>
+<span class="co">## 2001-12-01   2.667594</span></code></pre>
 </div>
 </div>
   </div>

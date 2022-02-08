@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Preparing inputs</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-02-01</h4>
+            <h4 data-toc-skip class="date">2022-02-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/PreparingInputs.Rmd" class="external-link"><code>vignettes/PreparingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>PreparingInputs.Rmd</code></div>
@@ -114,27 +114,28 @@
 <span class="co">##  [46] "ysen"                 "SLA"                  "LeafDensity"         </span>
 <span class="co">##  [49] "WoodDensity"          "FineRootDensity"      "conduit2sapwood"     </span>
 <span class="co">##  [52] "r635"                 "pDead"                "Al2As"               </span>
-<span class="co">##  [55] "LeafWidth"            "SRL"                  "RLD"                 </span>
-<span class="co">##  [58] "maxFMC"               "minFMC"               "LeafPI0"             </span>
-<span class="co">##  [61] "LeafEPS"              "LeafAF"               "StemPI0"             </span>
-<span class="co">##  [64] "StemEPS"              "StemAF"               "SAV"                 </span>
-<span class="co">##  [67] "HeatContent"          "LigninPercent"        "gammaSWR"            </span>
-<span class="co">##  [70] "alphaSWR"             "kPAR"                 "g"                   </span>
-<span class="co">##  [73] "Tmax_LAI"             "Tmax_LAIsq"           "Psi_Extract"         </span>
-<span class="co">##  [76] "Psi_Critic"           "WUE"                  "WUE_decay"           </span>
-<span class="co">##  [79] "pRootDisc"            "Gswmin"               "Gswmax"              </span>
-<span class="co">##  [82] "VCleaf_kmax"          "VCleaf_c"             "VCleaf_d"            </span>
-<span class="co">##  [85] "Kmax_stemxylem"       "VCstem_c"             "VCstem_d"            </span>
-<span class="co">##  [88] "Kmax_rootxylem"       "VCroot_c"             "VCroot_d"            </span>
-<span class="co">##  [91] "Narea"                "Vmax298"              "Jmax298"             </span>
-<span class="co">##  [94] "WoodC"                "RERleaf"              "RERsapwood"          </span>
-<span class="co">##  [97] "RERfineroot"          "CCleaf"               "CCsapwood"           </span>
-<span class="co">## [100] "CCfineroot"           "RGRleafmax"           "RGRsapwoodmax"       </span>
-<span class="co">## [103] "RGRfinerootmax"       "SRsapwood"            "SRfineroot"          </span>
-<span class="co">## [106] "SeedProductionHeight" "RecrTreeDBH"          "RecrTreeHeight"      </span>
-<span class="co">## [109] "RecrShrubHeight"      "RecrTreeDensity"      "RecrShrubCover"      </span>
-<span class="co">## [112] "RecrZ50"              "RecrZ95"              "MinTempRecr"         </span>
-<span class="co">## [115] "MinMoistureRecr"      "MinFPARRecr"</span></code></pre>
+<span class="co">##  [55] "Ar2Al"                "LeafWidth"            "SRL"                 </span>
+<span class="co">##  [58] "RLD"                  "maxFMC"               "minFMC"              </span>
+<span class="co">##  [61] "LeafPI0"              "LeafEPS"              "LeafAF"              </span>
+<span class="co">##  [64] "StemPI0"              "StemEPS"              "StemAF"              </span>
+<span class="co">##  [67] "SAV"                  "HeatContent"          "LigninPercent"       </span>
+<span class="co">##  [70] "gammaSWR"             "alphaSWR"             "kPAR"                </span>
+<span class="co">##  [73] "g"                    "Tmax_LAI"             "Tmax_LAIsq"          </span>
+<span class="co">##  [76] "Psi_Extract"          "Psi_Critic"           "WUE"                 </span>
+<span class="co">##  [79] "WUE_decay"            "pRootDisc"            "Gswmin"              </span>
+<span class="co">##  [82] "Gswmax"               "VCleaf_kmax"          "VCleaf_c"            </span>
+<span class="co">##  [85] "VCleaf_d"             "Kmax_stemxylem"       "VCstem_c"            </span>
+<span class="co">##  [88] "VCstem_d"             "Kmax_rootxylem"       "VCroot_c"            </span>
+<span class="co">##  [91] "VCroot_d"             "Vmax298"              "Jmax298"             </span>
+<span class="co">##  [94] "Nleaf"                "Nsapwood"             "Nfineroot"           </span>
+<span class="co">##  [97] "WoodC"                "RERleaf"              "RERsapwood"          </span>
+<span class="co">## [100] "RERfineroot"          "CCleaf"               "CCsapwood"           </span>
+<span class="co">## [103] "CCfineroot"           "RGRleafmax"           "RGRsapwoodmax"       </span>
+<span class="co">## [106] "RGRfinerootmax"       "SRsapwood"            "SRfineroot"          </span>
+<span class="co">## [109] "SeedProductionHeight" "RecrTreeDBH"          "RecrTreeHeight"      </span>
+<span class="co">## [112] "RecrShrubHeight"      "RecrTreeDensity"      "RecrShrubCover"      </span>
+<span class="co">## [115] "RecrZ50"              "RecrZ95"              "MinTempRecr"         </span>
+<span class="co">## [118] "MinMoistureRecr"      "MinFPARRecr"</span></code></pre>
 <p>Not all parameters are needed for all models. The user can find parameter definitions in <code>SpParamsDefinition</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpParamsDefinition"</span><span class="op">)</span>
@@ -478,226 +479,226 @@
 <td align="left">m2·m-2</td>
 </tr>
 <tr class="odd">
+<td align="left">Ar2Al</td>
+<td align="left">Root area to leaf area ratio</td>
+<td align="left">Numeric</td>
+<td align="left">m2·m-2</td>
+</tr>
+<tr class="even">
 <td align="left">LeafWidth</td>
 <td align="left">Leaf width</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SRL</td>
 <td align="left">Specific root length</td>
 <td align="left">Numeric</td>
 <td align="left">cm/g</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RLD</td>
 <td align="left">Fine root length density (density of root length per soil volume)</td>
 <td align="left">Numeric</td>
 <td align="left">cm/cm3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">maxFMC</td>
 <td align="left">Maximum fuel moisture (in percent of dry weight)</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">minFMC</td>
 <td align="left">Minimum fuel moisture (in percent of dry weight)</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">LeafPI0</td>
 <td align="left">Osmotic potential at full turgor of leaves</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LeafEPS</td>
 <td align="left">Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of leaves</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">LeafAF</td>
 <td align="left">Apoplastic fraction (proportion of water outside the living cells) in leaves</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">StemPI0</td>
 <td align="left">Osmotic potential at full turgor of symplastic xylem tissue</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">StemEPS</td>
 <td align="left">Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of symplastic xylem tissue</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">StemAF</td>
 <td align="left">Apoplastic fraction (proportion of water outside the living cells) in stem xylem</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SAV</td>
 <td align="left">Surface-area-to-volume ratio of the small fuel (1h) fraction (leaves and branches &lt; 6.35mm)</td>
 <td align="left">Numeric</td>
 <td align="left">m2/m3</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">HeatContent</td>
 <td align="left">High fuel heat content</td>
 <td align="left">Numeric</td>
 <td align="left">kJ/kg</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">LigninPercent</td>
 <td align="left">Percent of lignin+cutin over dry weight in leaves</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">gammaSWR</td>
 <td align="left">Reflectance (albedo) coefficient for SWR (gammaPAR is 0.8*gammaSWR)</td>
 <td align="left">Numeric</td>
 <td align="left">unitless</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">alphaSWR</td>
 <td align="left">Absorbance coefficient for SWR (alphaPAR is alphaSWR*1.35)</td>
 <td align="left">Numeric</td>
 <td align="left">unitless</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">kPAR</td>
 <td align="left">Light extinction coeficient for PAR (extinction coefficient for SWR is kPAR/1.35)</td>
 <td align="left">Numeric</td>
 <td align="left">unitless</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">g</td>
 <td align="left">Canopy water storage capacity per LAI unit</td>
 <td align="left">Numeric</td>
 <td align="left">mm/LAI</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Tmax_LAI</td>
 <td align="left">Empirical coefficient relating LAI with the ratio of maximum transpiration over potential evapotranspiration.</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Tmax_LAIsq</td>
 <td align="left">Empirical coefficient relating squared LAI with the ratio of maximum transpiration over potential evapotranspiration.</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Psi_Extract</td>
 <td align="left">Water potential corresponding to stomatal closure (aprox.)</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Psi_Critic</td>
 <td align="left">Water potential corresponding to 50% of stem cavitation (~ 50% PLC)</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">WUE</td>
 <td align="left">Water use efficiency (gross photosynthesis over transpiration)</td>
 <td align="left">Numeric</td>
 <td align="left">g C · mm H2O-1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">WUE_decay</td>
 <td align="left">Exponent for relative WUE decay depending on % PAR</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">pRootDisc</td>
 <td align="left">Relative root conductance leading to hydraulic disconnection from a soil layer</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Gswmin</td>
 <td align="left">Minimum stomatal conductance to water vapour</td>
 <td align="left">Numeric</td>
 <td align="left">mol H2O·s-1·m-2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Gswmax</td>
 <td align="left">Maximum stomatal conductance to water vapour</td>
 <td align="left">Numeric</td>
 <td align="left">mol H2O·s-1·m-2</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCleaf_kmax</td>
 <td align="left">Maximum leaf hydraulic conductance</td>
 <td align="left">Numeric</td>
 <td align="left">mmol H2O·s-1·m-2·MPa-1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCleaf_c</td>
 <td align="left">Parameter c of the leaf vulnerability curve</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCleaf_d</td>
 <td align="left">Parameter d of the leaf vulnerability curve</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Kmax_stemxylem</td>
 <td align="left">Maximum sapwood-specific hydraulic conductivity of stem xylem</td>
 <td align="left">Numeric</td>
 <td align="left">kg H2O·s-1·m-1·MPa-1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCstem_c</td>
 <td align="left">Parameter c of the stem xylem vulnerability curve</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCstem_d</td>
 <td align="left">Parameter d of the stem xylem vulnerability curve</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Kmax_rootxylem</td>
 <td align="left">Maximum sapwood-specific hydraulic conductivity of root xylem</td>
 <td align="left">Numeric</td>
 <td align="left">kg H2O·s-1·m-1·MPa-1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">VCroot_c</td>
 <td align="left">Parameter c of the root xylem vulnerability curve</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">VCroot_d</td>
 <td align="left">Parameter d of the root xylem vulnerability curve</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
-</tr>
-<tr class="odd">
-<td align="left">Narea</td>
-<td align="left">Nitrogen mass per leaf area</td>
-<td align="left">Numeric</td>
-<td align="left">g N·m-2</td>
 </tr>
 <tr class="even">
 <td align="left">Vmax298</td>
@@ -712,138 +713,156 @@
 <td align="left">mmol electrons·s-1·m-2</td>
 </tr>
 <tr class="even">
+<td align="left">Nleaf</td>
+<td align="left">Nitrogen mass per leaf dry mass</td>
+<td align="left">Numeric</td>
+<td align="left">mg N / g dry</td>
+</tr>
+<tr class="odd">
+<td align="left">Nsapwood</td>
+<td align="left">Nitrogen mass per sapwood dry mass</td>
+<td align="left">Numeric</td>
+<td align="left">mg N / g dry</td>
+</tr>
+<tr class="even">
+<td align="left">Nfineroot</td>
+<td align="left">Nitrogen mass per fine root dry mass</td>
+<td align="left">Numeric</td>
+<td align="left">mg N / g dry</td>
+</tr>
+<tr class="odd">
 <td align="left">WoodC</td>
-<td align="left">Wood carbon content per dry weight</td>
+<td align="left">Wood carbon content per dry mass</td>
 <td align="left">Numeric</td>
 <td align="left">g C / g dry</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RERleaf</td>
 <td align="left">Maintenance respiration rates for leaves.</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc · g dry-1 · day-1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RERsapwood</td>
 <td align="left">Maintenance respiration rates for living cells of sapwood.</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc · g dry-1 · day-1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RERfineroot</td>
 <td align="left">Maintenance respiration rates for fine roots.</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc · g dry-1 · day-1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">CCleaf</td>
 <td align="left">Leaf construction costs</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc · g dry-1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">CCsapwood</td>
 <td align="left">Sapwood construction costs</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc · g dry-1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">CCfineroot</td>
 <td align="left">Fine root construction costs</td>
 <td align="left">Numeric</td>
 <td align="left">g gluc · g dry-1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RGRleafmax</td>
 <td align="left">Maximum leaf relative growth rate</td>
 <td align="left">Numeric</td>
 <td align="left">m2/cm2/day</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RGRsapwoodmax</td>
 <td align="left">Maximum sapwood relative growth rate (in basal area or sapwood area)</td>
 <td align="left">Numeric</td>
 <td align="left">cm2/cm2/day</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RGRfinerootmax</td>
 <td align="left">Maximum fineroot relative growth rate</td>
 <td align="left">Numeric</td>
 <td align="left">g dry/g dry/day</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SRsapwood</td>
 <td align="left">Sapwood daily senescence rate</td>
 <td align="left">Numeric</td>
 <td align="left">Day-1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">SRfineroot</td>
 <td align="left">Fine root daily senescence rate</td>
 <td align="left">Numeric</td>
 <td align="left">Day-1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SeedProductionHeight</td>
 <td align="left">Minimum height for seed production</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrTreeDBH</td>
 <td align="left">Recruitment tree dbh</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrTreeHeight</td>
 <td align="left">Recruitment tree height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrShrubHeight</td>
 <td align="left">Recruitment shrub height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrTreeDensity</td>
 <td align="left">Recruitment tree density</td>
 <td align="left">Numeric</td>
 <td align="left">ind/ha</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrShrubCover</td>
 <td align="left">Recruitment shrub cover</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrZ50</td>
 <td align="left">Recruitment depth corresponding to 50% of fine roots</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrZ95</td>
 <td align="left">Recruitment depth corresponding to 95% of fine roots</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">MinTempRecr</td>
 <td align="left">Minimum average temperature of the coldest month for successful recruitment</td>
 <td align="left">Numeric</td>
 <td align="left">ºC</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">MinMoistureRecr</td>
 <td align="left">Minimum value of the moisture index (annual precipitation over annual PET) for successful recruitment</td>
 <td align="left">Numeric</td>
 <td align="left">unitless</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">MinFPARRecr</td>
 <td align="left">Minimum percentage of PAR at the ground level for successful recruitment</td>
 <td align="left">Numeric</td>
@@ -1079,21 +1098,20 @@
 <span class="co">## [39] "sinkLimitation"                      "shrubDynamics"                      </span>
 <span class="co">## [41] "allocationStrategy"                  "nonStomatalPhotosynthesisLimitation"</span>
 <span class="co">## [43] "phloemConductanceFactor"             "nonSugarConcentration"              </span>
-<span class="co">## [45] "equilibriumOsmoticConcentration"     "minimumRelativeSugarForGrowth"      </span>
-<span class="co">## [47] "constructionCosts"                   "respirationRates"                   </span>
-<span class="co">## [49] "senescenceRates"                     "maximumRelativeGrowthRates"         </span>
-<span class="co">## [51] "mortalityMode"                       "mortalityBaselineRate"              </span>
-<span class="co">## [53] "mortalityRelativeSugarThreshold"     "mortalityRWCThreshold"              </span>
-<span class="co">## [55] "allowRecruitment"                    "recruitmentMode"                    </span>
-<span class="co">## [57] "removeEmptyCohorts"                  "minimumCohortDensity"               </span>
-<span class="co">## [59] "seedRain"                            "seedProductionTreeHeight"           </span>
-<span class="co">## [61] "seedProductionShrubHeight"           "minTempRecr"                        </span>
-<span class="co">## [63] "minMoistureRecr"                     "minFPARRecr"                        </span>
-<span class="co">## [65] "recrTreeDBH"                         "recrTreeDensity"                    </span>
-<span class="co">## [67] "recrTreeHeight"                      "recrShrubCover"                     </span>
-<span class="co">## [69] "recrShrubHeight"                     "recrTreeZ50"                        </span>
-<span class="co">## [71] "recrShrubZ50"                        "recrTreeZ95"                        </span>
-<span class="co">## [73] "recrShrubZ95"</span></code></pre>
+<span class="co">## [45] "equilibriumOsmoticConcentration"     "minimumRelativeStarchForGrowth"     </span>
+<span class="co">## [47] "constructionCosts"                   "senescenceRates"                    </span>
+<span class="co">## [49] "maximumRelativeGrowthRates"          "mortalityMode"                      </span>
+<span class="co">## [51] "mortalityBaselineRate"               "mortalityRelativeSugarThreshold"    </span>
+<span class="co">## [53] "mortalityRWCThreshold"               "allowRecruitment"                   </span>
+<span class="co">## [55] "recruitmentMode"                     "removeEmptyCohorts"                 </span>
+<span class="co">## [57] "minimumCohortDensity"                "seedRain"                           </span>
+<span class="co">## [59] "seedProductionTreeHeight"            "seedProductionShrubHeight"          </span>
+<span class="co">## [61] "minTempRecr"                         "minMoistureRecr"                    </span>
+<span class="co">## [63] "minFPARRecr"                         "recrTreeDBH"                        </span>
+<span class="co">## [65] "recrTreeDensity"                     "recrTreeHeight"                     </span>
+<span class="co">## [67] "recrShrubCover"                      "recrShrubHeight"                    </span>
+<span class="co">## [69] "recrTreeZ50"                         "recrShrubZ50"                       </span>
+<span class="co">## [71] "recrTreeZ95"                         "recrShrubZ95"</span></code></pre>
 <p>These parameters should normally be left to their default value under their effect on simulations is fully understood.</p>
 </div>
 <div class="section level2">

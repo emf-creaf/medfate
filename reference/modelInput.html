@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
       </span>
     </div>
 
@@ -121,10 +121,11 @@
 <li><p><code>Phsen</code>: Photoperiod corresponding to start counting senescence degree-days.</p></li>
 <li><p><code>Tbsen</code>: Base temperature for the calculation of degree days to leaf senescence.</p></li>
 </ul></li>
-<li><p><code>paramsAnatomy</code>: A data frame with plant anatomy parameters for each cohort (only if <code>control$transpirationMode = "Sperry"</code>):
+<li><p><code>paramsAnatomy</code>: A data frame with plant anatomy parameters for each cohort:
      </p><ul><li><p><code>Hmax</code>: Maximum plant height (cm).</p></li>
 <li><p><code>Hmed</code>: Median plant height (cm).</p></li>
 <li><p><code>Al2As</code>: Leaf area to sapwood area ratio (in m2·m-2).</p></li>
+<li><p><code>Ar2Al</code>: Fine root area to leaf area ratio (in m2·m-2).</p></li>
 <li><p><code>SLA</code>: Specific leaf area (mm2/mg = m2/kg).</p></li>
 <li><p><code>LeafWidth</code>: Leaf width (in cm).</p></li>
 <li><p><code>LeafDensity</code>: Density of leaf tissue (dry weight over volume).</p></li>
@@ -180,10 +181,20 @@
 <li><p><code>SA</code>: Live sapwood area per individual (cm2/ind).</p></li>
 </ul></li>
 <li><p><code>paramsGrowth</code>: A data frame with growth parameters for each cohort:
-     </p><ul><li><p><code>WoodC</code>: Wood carbon content per dry weight (g C /g dry).</p></li>
-<li><p><code>RGRsapwoodmax</code>: Maximum relative growth rate (in basal area or sapwood area) (in cm2·cm-2).</p></li>
+     </p><ul><li><p><code>RERleaf</code>: Maintenance respiration rates (at 20ºC) for leaves (in g gluc·g dry-1·day-1).</p></li>
+<li><p><code>RERsapwood</code>: Maintenance respiration rates (at 20ºC) for sapwood (in g gluc·g dry-1·day-1).</p></li>
+<li><p><code>RERfineroot</code>: Maintenance respiration rates (at 20ºC) for fine roots (in g gluc·g dry-1·day-1).</p></li>
+<li><p><code>CCleaf</code>: Leaf construction costs (in g gluc·g dry-1).</p></li>
+<li><p><code>CCsapwood</code>: Sapwood construction costs (in g gluc·g dry-1).</p></li>
+<li><p><code>CCfineroot</code>: Fine root construction costs (in g gluc·g dry-1).</p></li>
+<li><p><code>RGRleafmax</code>: Maximum leaf relative growth rate (in m2·cm-2·day-1).</p></li>
+<li><p><code>RGRsapwoodmax</code>: Maximum sapwood relative growth rate (in cm2·cm-2·day-1).</p></li>
+<li><p><code>RGRfinerootmax</code>: Maximum fine root relative growth rate (in g dry·g dry-1·day-1).</p></li>
+<li><p><code>SRsapwood</code>: Sapwood daily senescence rate (in day-1).</p></li>
+<li><p><code>SRfineroot</code>: Fine root daily senescence rate (in day-1).</p></li>
 <li><p><code>fHDmin</code>: Minimum value of the height-to-diameter ratio (dimensionless).</p></li>
 <li><p><code>fHDmax</code>: Maximum value of the height-to-diameter ratio (dimensionless).</p></li>
+<li><p><code>WoodC</code>: Wood carbon content per dry weight (g C /g dry).</p></li>
 </ul></li>
 <li><p><code>paramsAllometry</code>: A data frame with allometric parameters for each cohort:
      </p><ul><li><p><code>Aash</code>: Regression coefficient relating the square of shrub height with shrub area.</p></li>
@@ -387,8 +398,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$minimumRelativeSugarForGrowth</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$minimumRelativeStarchForGrowth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.25</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$constructionCosts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$constructionCosts$leaf</span>
@@ -399,17 +410,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$constructionCosts$fineroot</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$respirationRates</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$respirationRates$leaf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.00260274</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$respirationRates$sapwood</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6.849315e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$respirationRates$fineroot</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.002054795</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$senescenceRates</span>
@@ -435,7 +435,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "density/deterministic"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mortalityBaselineRate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mortalityRelativeSugarThreshold</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3</span>
@@ -558,9 +558,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 fineRootBiomass coarseRootSoilVolume</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 400 2000              NA             9.997093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 400 2000              NA             9.997093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 300 1500              NA             7.473966</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 400 2000      1574.98321             9.997093</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 400 2000       773.49163             9.997093</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 300 1500        14.42518             7.473966</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$V</span>
@@ -592,6 +592,16 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $paramsAnatomy</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Hmax Hmed    Al2As Ar2Al      SLA LeafWidth LeafDensity WoodDensity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 1900  850 1317.523     1 5.140523  0.700000   0.2982842   0.6077950</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 1300  500 2512.563     1 6.850951  1.767436   0.5200298   0.9013662</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  250   80 4189.325     1 4.980084  1.376108   0.3871262   0.4389106</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        FineRootDensity conduit2sapwood      SRL RLD     r635</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148       0.2982842       0.9236406 3172.572  10 1.964226</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168       0.5200298       0.6238125 4066.803  10 1.805872</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165       0.3871262       0.6238125 4066.803  10 2.289452</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsInterception</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        kPAR   g</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.50 1.0</span>
@@ -600,9 +610,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsTranspiration</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Tmax_LAI Tmax_LAIsq Psi_Extract Psi_Critic      WUE WUE_decay pRootDisc</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    0.134     -0.006   -2.600000  -3.816852 3.613308    0.2812         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    0.134     -0.006   -3.001667  -3.001667 1.475715    0.2812         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    0.134     -0.006   -3.455000  -6.950920 2.433101    0.2812         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    0.134     -0.006   -2.600000  -3.816852 3.849903    0.2812         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    0.134     -0.006   -3.001667  -3.001667 1.720883    0.2812         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    0.134     -0.006   -3.455000  -6.950920 3.289704    0.2812         0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalPhenology</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi</span>
@@ -774,8 +784,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$minimumRelativeSugarForGrowth</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$minimumRelativeStarchForGrowth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.25</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$constructionCosts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$constructionCosts$leaf</span>
@@ -786,17 +796,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$constructionCosts$fineroot</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$respirationRates</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$respirationRates$leaf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.00260274</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$respirationRates$sapwood</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6.849315e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$respirationRates$fineroot</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.002054795</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$senescenceRates</span>
@@ -822,7 +821,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "density/deterministic"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mortalityBaselineRate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mortalityRelativeSugarThreshold</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3</span>
@@ -945,9 +944,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 fineRootBiomass coarseRootSoilVolume</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 400 2000              NA             9.997093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 400 2000              NA             9.997093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 300 1500              NA             7.473966</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 400 2000      1574.98321             9.997093</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 400 2000       773.49163             9.997093</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 300 1500        14.42518             7.473966</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$V</span>
@@ -979,6 +978,16 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $paramsAnatomy</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Hmax Hmed    Al2As Ar2Al      SLA LeafWidth LeafDensity WoodDensity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 1900  850 1317.523     1 5.140523  0.700000   0.2982842   0.6077950</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 1300  500 2512.563     1 6.850951  1.767436   0.5200298   0.9013662</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  250   80 4189.325     1 4.980084  1.376108   0.3871262   0.4389106</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        FineRootDensity conduit2sapwood      SRL RLD     r635</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148       0.2982842       0.9236406 3172.572  10 1.964226</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168       0.5200298       0.6238125 4066.803  10 1.805872</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165       0.3871262       0.6238125 4066.803  10 2.289452</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsInterception</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        kPAR   g</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.50 1.0</span>
@@ -987,9 +996,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsTranspiration</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Tmax_LAI Tmax_LAIsq Psi_Extract Psi_Critic      WUE WUE_decay pRootDisc</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    0.134     -0.006   -2.600000  -3.816852 3.613308    0.2812         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    0.134     -0.006   -3.001667  -3.001667 1.475715    0.2812         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    0.134     -0.006   -3.455000  -6.950920 2.433101    0.2812         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    0.134     -0.006   -2.600000  -3.816852 3.849903    0.2812         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    0.134     -0.006   -3.001667  -3.001667 1.720883    0.2812         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    0.134     -0.006   -3.455000  -6.950920 3.289704    0.2812         0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalPhenology</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi</span>
@@ -1162,8 +1171,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$minimumRelativeSugarForGrowth</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$minimumRelativeStarchForGrowth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.25</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$constructionCosts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$constructionCosts$leaf</span>
@@ -1174,17 +1183,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$constructionCosts$fineroot</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$respirationRates</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$respirationRates$leaf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.00260274</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$respirationRates$sapwood</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6.849315e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$respirationRates$fineroot</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.002054795</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$senescenceRates</span>
@@ -1210,7 +1208,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "density/deterministic"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mortalityBaselineRate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mortalityRelativeSugarThreshold</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3</span>

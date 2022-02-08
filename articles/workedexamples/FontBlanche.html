@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Soil water balance at Font-Blanche</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres (CREAF), Nicolas Martin-StPaul (INRA)</h4>
             
-            <h4 data-toc-skip class="date">2022-02-01</h4>
+            <h4 data-toc-skip class="date">2022-02-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/workedexamples/FontBlanche.Rmd" class="external-link"><code>vignettes/workedexamples/FontBlanche.Rmd</code></a></small>
       <div class="hidden name"><code>FontBlanche.Rmd</code></div>
@@ -212,10 +212,10 @@
 <span class="co">## 143    NA    NA    NA    NA   NA   NA 6.881886   0.5327417   0.7050000</span>
 <span class="co">## 149    NA    NA    NA    NA   NA   NA 5.140523   0.2982842   0.6077950</span>
 <span class="co">## 169  4.34 10178  12.5  28.5    2    2 6.850951   0.5200298   0.9013662</span>
-<span class="co">##     FineRootDensity conduit2sapwood     r635    pDead    Al2As LeafWidth</span>
-<span class="co">## 143              NA              NA 1.917579 0.119768 1698.950  1.200000</span>
-<span class="co">## 149              NA       0.9236406 1.964226 0.000500  631.000  0.700000</span>
-<span class="co">## 169              NA       0.6238125 1.805872 0.000260 1540.671  1.767436</span>
+<span class="co">##     FineRootDensity conduit2sapwood     r635    pDead    Al2As Ar2Al LeafWidth</span>
+<span class="co">## 143              NA              NA 1.917579 0.119768 1698.950    NA  1.200000</span>
+<span class="co">## 149              NA       0.9236406 1.964226 0.000500  631.000    NA  0.700000</span>
+<span class="co">## 169              NA       0.6238125 1.805872 0.000260 1540.671    NA  1.767436</span>
 <span class="co">##          SRL RLD    maxFMC   minFMC   LeafPI0   LeafEPS LeafAF StemPI0 StemEPS</span>
 <span class="co">## 143       NA  NA 108.24724 56.53442        NA        NA     NA      NA      NA</span>
 <span class="co">## 149 3172.572  NA 126.03063 86.22550 -1.591429  8.918571 0.3525      NA      NA</span>
@@ -226,32 +226,36 @@
 <span class="co">## 169     NA 4050       19300      28.97492       NA       NA   NA 0.8       NA</span>
 <span class="co">##     Tmax_LAIsq Psi_Extract Psi_Critic      WUE WUE_decay pRootDisc      Gswmin</span>
 <span class="co">## 143         NA   -3.090000  -6.489351       NA        NA        NA          NA</span>
-<span class="co">## 149         NA   -2.600000  -3.816852 3.613308        NA        NA 0.002031250</span>
-<span class="co">## 169         NA   -3.001667  -3.001667 1.475715        NA        NA 0.006003126</span>
+<span class="co">## 149         NA   -2.600000  -3.816852 3.849903        NA        NA 0.002031250</span>
+<span class="co">## 169         NA   -3.001667  -3.001667 1.720883        NA        NA 0.006003126</span>
 <span class="co">##        Gswmax VCleaf_kmax VCleaf_c VCleaf_d Kmax_stemxylem VCstem_c  VCstem_d</span>
 <span class="co">## 143        NA        3.00       NA       NA      0.4083769 2.619333 -7.533736</span>
 <span class="co">## 149 0.1940833        4.00       NA       NA      0.1500000 7.458883 -4.481392</span>
 <span class="co">## 169 0.2007222        2.63     5.41    -4.18      0.4000000 2.558358 -5.103492</span>
-<span class="co">##     Kmax_rootxylem VCroot_c VCroot_d    Narea  Vmax298  Jmax298     WoodC</span>
-<span class="co">## 143             NA       NA       NA 1.849868 65.23250 146.2701        NA</span>
-<span class="co">## 149             NA       NA       NA 2.676833 62.81754 128.9875 0.4979943</span>
-<span class="co">## 169             NA       NA       NA 2.311956 41.01518 103.0690 0.4740096</span>
-<span class="co">##     RERleaf RERsapwood RERfineroot CCleaf CCsapwood CCfineroot RGRleafmax</span>
-<span class="co">## 143      NA         NA          NA     NA        NA         NA         NA</span>
-<span class="co">## 149      NA         NA          NA     NA        NA         NA         NA</span>
-<span class="co">## 169      NA         NA          NA     NA        NA         NA         NA</span>
-<span class="co">##     RGRsapwoodmax RGRfinerootmax SRsapwood SRfineroot SeedProductionHeight</span>
-<span class="co">## 143            NA             NA        NA         NA                   NA</span>
-<span class="co">## 149            NA             NA        NA         NA                   NA</span>
-<span class="co">## 169            NA             NA        NA         NA                   NA</span>
-<span class="co">##     RecrTreeDBH RecrTreeHeight RecrShrubHeight RecrTreeDensity RecrShrubCover</span>
-<span class="co">## 143          NA             NA              NA              NA             NA</span>
-<span class="co">## 149          NA             NA              NA              NA             NA</span>
-<span class="co">## 169          NA             NA              NA              NA             NA</span>
-<span class="co">##     RecrZ50 RecrZ95 MinTempRecr MinMoistureRecr MinFPARRecr</span>
-<span class="co">## 143      NA      NA    1.231819       0.3464240   0.5076498</span>
-<span class="co">## 149      NA      NA    2.035703       0.2022525   6.2887361</span>
-<span class="co">## 169      NA      NA    0.405868       0.2860409   1.5786236</span></code></pre>
+<span class="co">##     Kmax_rootxylem VCroot_c VCroot_d  Vmax298  Jmax298    Nleaf  Nsapwood</span>
+<span class="co">## 143             NA       NA       NA 65.23250 146.2701 16.13427 2.7800000</span>
+<span class="co">## 149             NA       NA       NA 62.81754 128.9875 11.94581 0.9681191</span>
+<span class="co">## 169             NA       NA       NA 41.01518 103.0690 14.18765 5.6615000</span>
+<span class="co">##     Nfineroot     WoodC RERleaf RERsapwood RERfineroot CCleaf CCsapwood</span>
+<span class="co">## 143        NA        NA      NA         NA          NA 1.6300        NA</span>
+<span class="co">## 149  9.608245 0.4979943      NA         NA          NA 1.5905      1.47</span>
+<span class="co">## 169 12.039073 0.4740096      NA         NA          NA 1.4300        NA</span>
+<span class="co">##     CCfineroot RGRleafmax RGRsapwoodmax RGRfinerootmax SRsapwood SRfineroot</span>
+<span class="co">## 143         NA         NA            NA             NA        NA         NA</span>
+<span class="co">## 149        1.3         NA            NA             NA        NA         NA</span>
+<span class="co">## 169         NA         NA            NA             NA        NA         NA</span>
+<span class="co">##     SeedProductionHeight RecrTreeDBH RecrTreeHeight RecrShrubHeight</span>
+<span class="co">## 143                   NA          NA             NA              NA</span>
+<span class="co">## 149                   NA          NA             NA              NA</span>
+<span class="co">## 169                   NA          NA             NA              NA</span>
+<span class="co">##     RecrTreeDensity RecrShrubCover RecrZ50 RecrZ95 MinTempRecr MinMoistureRecr</span>
+<span class="co">## 143              NA             NA      NA      NA    1.231819       0.3464240</span>
+<span class="co">## 149              NA             NA      NA      NA    2.035703       0.2022525</span>
+<span class="co">## 169              NA             NA      NA      NA    0.405868       0.2860409</span>
+<span class="co">##     MinFPARRecr</span>
+<span class="co">## 143   0.5076498</span>
+<span class="co">## 149   6.2887361</span>
+<span class="co">## 169   1.5786236</span></code></pre>
 <p>Note that the function returns a subset of rows for the species mentioned in <code>customParams</code>. Not all parameters are needed for the soil water balance model. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (<a href="http://emf-creaf.github.io/medfate" class="external-link uri">http://emf-creaf.github.io/medfate</a>).</p>
 </div>
 <div class="section level3">

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
       </span>
     </div>
 
@@ -72,223 +72,259 @@
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">medfate</span><span class="fu">:::</span><span class="va">trait_family_means</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    LeafDensity WoodDensity   LeafPI0   LeafEPS    LeafAF</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Acanthaceae         0.31359059  0.56758803 -3.395000 23.230000 0.1270000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Achariaceae         0.25524948  0.59247961        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Acoraceae           0.10000000          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Actinidiaceae       0.44861072  0.40923199        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Adoxaceae           0.40799269  0.51384234 -1.560000 12.790000        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aextoxicaceae               NA  0.56666667        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aizoaceae           0.05526858          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Akaniaceae                  NA  0.55478250        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Alismataceae        0.19142078          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Alstroemeriaceae            NA          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Altingiaceae        0.68339710  0.60109480        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Amaranthaceae       0.21187621  0.59891031 -2.250000        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Amaryllidaceae      0.12367381          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Amborellaceae               NA          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Amphorogynaceae             NA          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Anacampserotaceae   0.02500475          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Anacardiaceae       0.45624702  0.57106817 -1.700000 12.760000        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ancistrocladaceae           NA          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Anisophylleaceae            NA  0.67347799        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Annonaceae          0.37651502  0.56259675 -2.160000 23.710000        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aphloiaceae         0.46270602  0.62052000        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Apiaceae            0.27609204  0.20604993        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Apocynaceae         0.29798311  0.56790984 -2.390000 20.940000        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aptandraceae        0.33184918  0.70767562        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aquifoliaceae       0.48216313  0.55793939 -2.300000 20.700000 0.4000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Araceae             0.15917916          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Araliaceae          0.28116351  0.40982320 -1.528503 11.231462 0.4065000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Araucariaceae       0.34479018  0.46414559        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Arecaceae           0.41472385  0.59090347 -3.400000 73.400000 0.2000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aristolochiaceae    0.26814343  0.26000000        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Asparagaceae        0.21607312  0.42542584        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Asphodelaceae       0.40325275  0.39519900        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aspleniaceae        0.23694373          NA -1.240000 35.300000        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Asteraceae          0.25025214  0.44342039 -1.471389 14.491429 0.2435000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Asteropeiaceae              NA  0.84169641        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Atherospermataceae  0.24513566  0.47676207 -1.340000  8.380000        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Athyriaceae         0.22706154          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Austrobaileyaceae   0.26209917          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Balanopaceae                NA  0.73489760        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Balsaminaceae       0.40450133  0.09108341        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Begoniaceae         0.10939929          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Berberidaceae       0.35994527  0.68526616        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Betulaceae          0.44493906  0.53788183 -1.201884  5.498667        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bignoniaceae        0.34563784  0.62506774 -1.990000 17.610000 0.1770000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bixaceae            0.44000000  0.35463573        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Blechnaceae         0.22361115          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bonnetiaceae        0.27978289  0.84000000        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Boraginaceae        0.28483641  0.45253642 -1.140000        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Brassicaceae        0.24137149  0.39095103 -1.485000  7.710000 0.2320000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bromeliaceae        0.15934340          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Brunelliaceae               NA  0.31125000        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bruniaceae                  NA  0.56365000        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Burseraceae         0.43321183  0.51975514 -1.435000 14.980000        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Buxaceae            0.27062945  0.70292030        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cactaceae           0.20564854  0.61875000        NA  8.700000        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calophyllaceae      0.39682160  0.60678553        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calycanthaceae      0.33567851  0.65005500        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calyceraceae        0.16893665          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Campanulaceae       0.23880328  0.67766295        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Canellaceae                 NA  0.68082545        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cannabaceae         0.40555174  0.54869223 -1.580000  5.180000        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cannaceae                   NA          NA        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Capparaceae         0.36252813  0.63512564 -2.840000 14.750000 0.1723333</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Caprifoliaceae      0.32823425  0.43347916        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cardiopteridaceae           NA  0.61757948        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Caricaceae          0.21453541  0.19103921        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Caryocaraceae       0.46085582  0.67581652 -1.710000 11.340000        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Caryophyllaceae     0.29864198  0.32634381        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Casuarinaceae       0.50739895  0.82376618        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Celastraceae        0.41742039  0.64146387 -2.600000 19.060000        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Centroplacaceae             NA  0.65500000        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       Gswmax       Gswmin       Narea     WoodC Kmax_stemxylem</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Acanthaceae        0.2500000           NA  1.52359901 0.4242167             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Achariaceae               NA           NA  1.72887846        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Acoraceae                 NA           NA          NA        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Actinidiaceae             NA           NA  1.34845869        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Adoxaceae                 NA           NA  1.21864401        NA     4.05355750</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aextoxicaceae             NA           NA  1.27323648        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aizoaceae                 NA           NA          NA        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Akaniaceae                NA           NA          NA        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Alismataceae              NA           NA  1.73301226        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Alstroemeriaceae          NA           NA  2.47380000        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Altingiaceae       0.5000000           NA  0.95592334 0.4435000     0.50500000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Amaranthaceae      0.0750000           NA  2.37451130 0.4154472     0.08190000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Amaryllidaceae            NA 1.804000e-02  1.83883420 0.4508400             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Amborellaceae             NA           NA          NA        NA     0.54000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Amphorogynaceae           NA           NA  1.58472456        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Anacampserotaceae         NA           NA          NA        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Anacardiaceae      0.3148333 1.222994e-02  1.94736953 0.4566867     4.07720162</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ancistrocladaceae         NA           NA  0.08628395        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Anisophylleaceae          NA           NA          NA        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Annonaceae                NA           NA  1.63339662 0.4726000     5.27066667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aphloiaceae               NA           NA          NA        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Apiaceae                  NA 1.587302e-03  1.92894126 0.4374312     0.51500000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Apocynaceae               NA           NA  1.72454178 0.4924750     2.56516667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aptandraceae              NA           NA  1.90689008        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aquifoliaceae      0.2600000 5.740000e-04  1.52957276 0.4317500     0.22557572</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Araceae                   NA           NA  1.03570140        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Araliaceae                NA 3.902458e-04  1.53457119 0.4540667     1.68090114</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Araucariaceae             NA 1.878580e-03  2.74761196        NA     0.73225000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Arecaceae                 NA 4.500000e-04  1.59176336 0.4556000             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aristolochiaceae          NA 3.589556e-03  1.23375321        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Asparagaceae              NA           NA  1.85161314 0.4631000             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Asphodelaceae             NA           NA  3.30552890        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aspleniaceae              NA 8.200000e-03  1.21331333        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Asteraceae         0.1275000 1.052882e-02  1.65579844 0.4365142     0.49865714</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Asteropeiaceae            NA           NA          NA        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Atherospermataceae        NA           NA  1.77630822        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Athyriaceae               NA           NA  1.21836904        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Austrobaileyaceae         NA           NA          NA        NA     2.30000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Balanopaceae              NA           NA          NA        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Balsaminaceae             NA 1.265730e-02  0.72395054        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Begoniaceae               NA           NA  0.85842000        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Berberidaceae             NA 1.650000e-03  1.42858611        NA     0.08733333</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Betulaceae         0.3965000 2.973057e-03  1.33151572 0.4721962     2.87333740</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bignoniaceae              NA           NA  1.94172003 0.4618077     2.10149000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bixaceae                  NA           NA  1.60716298        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Blechnaceae               NA           NA  1.01470163        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bonnetiaceae              NA           NA          NA        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Boraginaceae              NA 5.740212e-03  1.29599181 0.4153500             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Brassicaceae              NA 1.066000e-02  1.76141359 0.4268611             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bromeliaceae              NA           NA  1.54925814        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Brunelliaceae             NA           NA  2.37454346        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bruniaceae                NA           NA          NA        NA     0.25150000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Burseraceae               NA           NA  1.54976941 0.4516289     3.40500000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Buxaceae                  NA           NA  4.21163486        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cactaceae                 NA 2.433862e-05 17.58494099        NA     1.86880952</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calophyllaceae     0.1350000           NA  1.48246658 0.4663000     0.89828571</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calycanthaceae            NA           NA  0.84472534        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calyceraceae              NA           NA          NA        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Campanulaceae             NA           NA  1.68582166 0.4498475             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Canellaceae               NA           NA          NA        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cannabaceae        0.3300000           NA  1.94823496 0.4683583     4.33961052</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cannaceae                 NA           NA  0.92648775        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Capparaceae               NA           NA  4.45229986        NA     0.55726667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Caprifoliaceae            NA           NA  1.13656877 0.4475552     0.25210100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cardiopteridaceae         NA           NA  3.20932215        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Caricaceae                NA           NA  1.16511468        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Caryocaraceae             NA           NA  1.51507526        NA     1.75872727</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Caryophyllaceae           NA 1.851852e-03  1.34387670 0.4163613             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Casuarinaceae             NA           NA  4.01268806 0.4200000     1.89540479</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Celastraceae              NA           NA  1.75243918 0.4900000             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Centroplacaceae           NA           NA  1.49156102        NA             NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                          WUE        P50       Al2As conduit2sapwood</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Acanthaceae               NA         NA  3070.43202       0.6300000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Achariaceae         3.662630         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Acoraceae                 NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Actinidiaceae             NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Adoxaceae           2.807424 -3.0384833  4889.57295              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aextoxicaceae             NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aizoaceae                 NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Akaniaceae                NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Alismataceae              NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Alstroemeriaceae          NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Altingiaceae              NA -2.0370147  5129.90090       0.8226667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Amaranthaceae      19.004079 -2.4252402   973.13500              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Amaryllidaceae     11.450560         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Amborellaceae             NA -3.0000000  4255.31915              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Amphorogynaceae           NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Anacampserotaceae         NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Anacardiaceae      15.042810 -2.6535235 17392.13509       0.7155889</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ancistrocladaceae         NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Anisophylleaceae          NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Annonaceae                NA -2.5276068 10266.65654       0.5685000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aphloiaceae               NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Apiaceae            2.515830 -5.7000000    81.22547              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Apocynaceae        28.924811 -2.4864334 19766.80134       0.7112500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aptandraceae              NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aquifoliaceae             NA -3.6437782  5890.90789       0.6528500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Araceae                   NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Araliaceae                NA -1.6530859  3591.08704       0.7785000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Araucariaceae             NA -2.6183226  3846.15385       0.9375000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Arecaceae           3.558320 -1.8100000  9428.35821              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aristolochiaceae          NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Asparagaceae       14.254229 -1.6960000          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Asphodelaceae             NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Aspleniaceae              NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Asteraceae          2.726027 -3.2565860  2423.12470       0.7219423</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Asteropeiaceae            NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Atherospermataceae        NA -3.0063333  2435.95630       0.7560000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Athyriaceae               NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Austrobaileyaceae         NA -0.4990000 15384.61538              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Balanopaceae              NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Balsaminaceae       1.818998         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Begoniaceae               NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Berberidaceae       3.436421 -4.5000000   570.09407              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Betulaceae                NA -2.1017591  7591.16581       0.8444000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bignoniaceae              NA -0.8616667 12439.80827       0.6360476</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bixaceae                  NA         NA 12274.01424              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Blechnaceae               NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bonnetiaceae              NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Boraginaceae        2.519816 -3.5677066          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Brassicaceae        2.881295         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bromeliaceae              NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Brunelliaceae             NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Bruniaceae                NA -3.3883558          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Burseraceae         4.390857 -1.3054970 12432.79483       0.8204286</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Buxaceae                  NA -8.0000000          NA       0.8330000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cactaceae                 NA -1.2875000  2555.33971       0.3636905</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calophyllaceae            NA -1.5400000  2662.69155       0.7335000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calycanthaceae            NA -1.2808475          NA       0.6535500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Calyceraceae              NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Campanulaceae       2.804326         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Canellaceae               NA -0.2320000          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cannabaceae        31.385044 -1.5325304 29402.79875       0.7598125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cannaceae                 NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Capparaceae               NA -2.3615234 26604.55487       0.7005000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Caprifoliaceae      3.439840 -5.5144833  7568.54261              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cardiopteridaceae         NA         NA 11764.70588              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Caricaceae         27.909979         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Caryocaraceae             NA -1.6766667  5579.67761              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Caryophyllaceae           NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Casuarinaceae             NA -2.1750000  3647.15784              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Celastraceae        2.418337 -3.4679167  8199.20056              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Centroplacaceae           NA         NA          NA              NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 291 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    LeafDensity WoodDensity   LeafPI0   LeafEPS LeafAF    Gswmax</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Acanthaceae         0.31359059  0.56758803 -3.395000 23.230000 0.1270 0.2500000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Achariaceae         0.25524948  0.59247961        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Acoraceae           0.10000000          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Actinidiaceae       0.44861072  0.40923199        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Adoxaceae           0.40799269  0.51384234 -1.560000 12.790000     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aextoxicaceae               NA  0.56666667        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aizoaceae           0.05526858          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Akaniaceae                  NA  0.55478250        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Alismataceae        0.19142078          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Alstroemeriaceae            NA          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Altingiaceae        0.68339710  0.60109480        NA        NA     NA 0.5000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Amaranthaceae       0.21187621  0.59891031 -2.250000        NA     NA 0.0750000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Amaryllidaceae      0.12367381          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Amborellaceae               NA          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Amphorogynaceae             NA  0.60974000        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Anacampserotaceae   0.02500475          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Anacardiaceae       0.45624702  0.57106817 -1.700000 12.760000     NA 0.3148333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Anisophylleaceae            NA  0.67347799        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Annonaceae          0.37651502  0.56259675 -2.160000 23.710000     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aphloiaceae         0.46270602  0.62052000        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Apiaceae            0.28055342  0.15098836        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Apocynaceae         0.29798311  0.56790984 -2.390000 20.940000     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aptandraceae        0.33184918  0.70767562        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aquifoliaceae       0.48216313  0.55793939 -2.300000 20.700000 0.4000 0.2600000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Araceae             0.15917916          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Araliaceae          0.28116351  0.41507448 -1.528503 11.231462 0.4065        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Araucariaceae       0.34479018  0.46414559        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Arecaceae           0.41472385  0.59090347 -3.400000 73.400000 0.2000        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aristolochiaceae    0.26814343  0.26000000        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Asparagaceae        0.21607312  0.42542584        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Asphodelaceae       0.40325275  0.39519900        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aspleniaceae        0.23694373          NA -1.240000 35.300000     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Asteraceae          0.25025214  0.44342039 -1.471389 14.491429 0.2435 0.1275000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Asteropeiaceae              NA  0.75548618        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Atherospermataceae  0.24513566  0.47676207 -1.340000  8.380000     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Athyriaceae         0.22706154          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aulacomniaceae              NA          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Austrobaileyaceae   0.26209917          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Balanopaceae                NA  0.73489760        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Balsaminaceae       0.40450133  0.09108341        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Begoniaceae         0.10939929          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Berberidaceae       0.35994527  0.68526616        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Betulaceae          0.44493906  0.53788183 -1.201884  5.498667     NA 0.3965000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bignoniaceae        0.34461106  0.62506774 -1.990000 17.610000 0.1770        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bixaceae            0.44000000  0.35463573        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Blechnaceae         0.22361115          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bonnetiaceae        0.27978289  0.84000000        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Boraginaceae        0.28483641  0.45253642 -1.140000        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Brassicaceae        0.24137149  0.39095103 -1.485000  7.710000 0.2320        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bromeliaceae        0.15934340          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Brunelliaceae               NA  0.31125000        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bruniaceae                  NA  0.56365000        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Burseraceae         0.43321183  0.51975514 -1.435000 14.980000     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Butomaceae                  NA          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Buxaceae            0.27062945  0.70292030        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cabombaceae                 NA          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cactaceae           0.20564854  0.61875000        NA  8.700000     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calophyllaceae      0.39682160  0.60678553        NA        NA     NA 0.1350000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calycanthaceae      0.33567851  0.65005500        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calyceraceae        0.16893665          NA        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Campanulaceae       0.23880328  0.67766295        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Canellaceae                 NA  0.68082545        NA        NA     NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                          Gswmin     Nleaf  Nsapwood Nfineroot     WoodC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Acanthaceae                  NA 27.122403        NA  5.580000 0.4242167</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Achariaceae                  NA 22.162815        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Acoraceae                    NA 18.000000        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Actinidiaceae                NA 20.183321        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Adoxaceae                    NA 20.439735        NA 11.013750        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aextoxicaceae                NA  9.621429        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aizoaceae                    NA 14.800000        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Akaniaceae                   NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Alismataceae                 NA 27.287834        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Alstroemeriaceae             NA 20.014375        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Altingiaceae                 NA 15.934294        NA  7.550000 0.4435000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Amaranthaceae                NA 24.488182        NA 12.411441 0.4189176</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Amaryllidaceae     1.804000e-02 29.057091        NA 11.440000 0.4508400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Amborellaceae                NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Amphorogynaceae              NA 25.236766        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Anacampserotaceae            NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Anacardiaceae      1.222994e-02 17.906247        NA 10.539736 0.4566867</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Anisophylleaceae             NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Annonaceae                   NA 23.528495        NA 23.830391 0.4726000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aphloiaceae                  NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Apiaceae           1.587302e-03 24.267326        NA 10.787434 0.4413076</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Apocynaceae                  NA 21.871073        NA 16.845574 0.4924750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aptandraceae                 NA 28.435524        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aquifoliaceae      5.740000e-04 14.471632        NA 14.324450 0.4580000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Araceae                      NA 21.957940        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Araliaceae         3.902458e-04 18.262158        NA 20.500000 0.4540667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Araucariaceae      1.878580e-03 11.647458        NA 13.000000        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Arecaceae          4.500000e-04 18.363663        NA 13.216667 0.4556000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aristolochiaceae   3.589556e-03 31.726525        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Asparagaceae                 NA 23.961878        NA        NA 0.4631000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Asphodelaceae                NA 12.009650        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aspleniaceae       8.200000e-03 28.260000        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Asteraceae         1.052882e-02 21.974744        NA 10.170307 0.4371519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Asteropeiaceae               NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Atherospermataceae           NA 17.869722        NA 23.200000        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Athyriaceae                  NA 26.901037        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aulacomniaceae               NA  8.000000        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Austrobaileyaceae            NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Balanopaceae                 NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Balsaminaceae      1.265730e-02 32.122977        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Begoniaceae                  NA 34.200000        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Berberidaceae      1.650000e-03 20.510037        NA 21.087500        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Betulaceae         2.973057e-03 24.459193 16.357256 14.491831 0.4721962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bignoniaceae                 NA 23.545324  6.575973 19.915047 0.4618077</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bixaceae                     NA 25.531043        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Blechnaceae                  NA 11.872377        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bonnetiaceae                 NA  9.800000        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Boraginaceae       5.740212e-03 23.132595        NA        NA 0.4153500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Brassicaceae       1.066000e-02 33.888909        NA 18.501306 0.4272792</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bromeliaceae                 NA  9.175618        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Brunelliaceae                NA 21.006960        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bruniaceae                   NA  7.781667        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Burseraceae                  NA 19.006440        NA 10.964427 0.4548544</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Butomaceae                   NA 42.600000        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Buxaceae                     NA 22.691830        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cabombaceae                  NA 19.500000        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cactaceae          2.433862e-05 19.923915        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calophyllaceae               NA 12.820646        NA        NA 0.4663000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calycanthaceae               NA 17.400000        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calyceraceae                 NA 43.000000        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Campanulaceae                NA 27.204986        NA  5.721013 0.4498475</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Canellaceae                  NA        NA        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    Kmax_stemxylem       WUE        P50       Al2As</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Acanthaceae                    NA        NA         NA  3070.43202</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Achariaceae                    NA  3.662630         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Acoraceae                      NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Actinidiaceae                  NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Adoxaceae              4.05355750  3.117284 -3.0384833  4889.57295</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aextoxicaceae                  NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aizoaceae                      NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Akaniaceae                     NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Alismataceae                   NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Alstroemeriaceae               NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Altingiaceae           0.50500000        NA -2.0370147  5129.90090</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Amaranthaceae          0.08190000 28.856717 -2.4252402   973.13500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Amaryllidaceae                 NA 24.140939         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Amborellaceae          0.54000000        NA -3.0000000  4255.31915</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Amphorogynaceae                NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Anacampserotaceae              NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Anacardiaceae          4.07720162 15.074736 -2.6535235 17392.13509</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Anisophylleaceae               NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Annonaceae             5.27066667        NA -2.5276068 10266.65654</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aphloiaceae                    NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Apiaceae               0.51500000  3.099757 -5.7000000    81.22547</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Apocynaceae            2.56516667 29.952870 -2.4864334 19766.80134</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aptandraceae                   NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aquifoliaceae          0.22557572        NA -3.6437782  5890.90789</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Araceae                        NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Araliaceae             1.68090114        NA -1.6530859  3591.08704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Araucariaceae          0.73225000        NA -2.6183226  3846.15385</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Arecaceae                      NA  3.962648 -1.8100000  9428.35821</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aristolochiaceae               NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Asparagaceae                   NA 21.356961 -1.6960000          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Asphodelaceae                  NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aspleniaceae                   NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Asteraceae             0.49865714  3.896510 -3.2565860  2423.12470</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Asteropeiaceae                 NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Atherospermataceae             NA        NA -3.0063333  2435.95630</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Athyriaceae                    NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aulacomniaceae                 NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Austrobaileyaceae      2.30000000        NA -0.4990000 15384.61538</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Balanopaceae                   NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Balsaminaceae                  NA  2.842391         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Begoniaceae                    NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Berberidaceae          0.08733333  4.039735 -4.5000000   570.09407</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Betulaceae             2.87333740        NA -2.1017591  7591.16581</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bignoniaceae           2.10149000        NA -0.8616667 12439.80827</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bixaceae                       NA        NA         NA 12274.01424</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Blechnaceae                    NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bonnetiaceae                   NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Boraginaceae                   NA  2.819216 -3.5677066          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Brassicaceae                   NA  3.632075         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bromeliaceae                   NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Brunelliaceae                  NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bruniaceae             0.25150000        NA -3.3883558          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Burseraceae            3.40500000  4.390857 -1.3054970 12432.79483</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Butomaceae                     NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Buxaceae                       NA        NA -8.0000000          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cabombaceae                    NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cactaceae              1.86880952        NA -1.2875000  2555.33971</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calophyllaceae         0.89828571        NA -1.5400000  2662.69155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calycanthaceae                 NA        NA -1.2808475          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calyceraceae                   NA        NA         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Campanulaceae                  NA  4.790244         NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Canellaceae                    NA        NA -0.2320000          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    conduit2sapwood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Acanthaceae              0.6300000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Achariaceae                     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Acoraceae                       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Actinidiaceae                   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Adoxaceae                       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aextoxicaceae                   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aizoaceae                       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Akaniaceae                      NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Alismataceae                    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Alstroemeriaceae                NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Altingiaceae             0.8226667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Amaranthaceae                   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Amaryllidaceae                  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Amborellaceae                   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Amphorogynaceae                 NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Anacampserotaceae               NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Anacardiaceae            0.7155889</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Anisophylleaceae                NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Annonaceae               0.5685000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aphloiaceae                     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Apiaceae                        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Apocynaceae              0.7112500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aptandraceae                    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aquifoliaceae            0.6528500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Araceae                         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Araliaceae               0.7785000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Araucariaceae            0.9375000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Arecaceae                       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aristolochiaceae                NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Asparagaceae                    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Asphodelaceae                   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aspleniaceae                    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Asteraceae               0.7219423</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Asteropeiaceae                  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Atherospermataceae       0.7560000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Athyriaceae                     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Aulacomniaceae                  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Austrobaileyaceae               NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Balanopaceae                    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Balsaminaceae                   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Begoniaceae                     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Berberidaceae                   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Betulaceae               0.8444000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bignoniaceae             0.6360476</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bixaceae                        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Blechnaceae                     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bonnetiaceae                    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Boraginaceae                    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Brassicaceae                    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bromeliaceae                    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Brunelliaceae                   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Bruniaceae                      NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Burseraceae              0.8204286</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Butomaceae                      NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Buxaceae                 0.8330000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cabombaceae                     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cactaceae                0.3636905</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calophyllaceae           0.7335000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calycanthaceae           0.6535500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Calyceraceae                    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Campanulaceae                   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Canellaceae                     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 320 rows ]</span>
 </code></pre></div>
     </div>
   </div>
