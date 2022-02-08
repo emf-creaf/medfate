@@ -99,6 +99,7 @@ pwb(x, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
  When \code{transpirationMode = "Granier"}, element \code{"Plants"} is a list with the following subelements:
  \itemize{
      \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
+     \item{\code{"LAIlive"}: A data frame with the daily leaf area index for each plant cohort, assuming all leaves are unfolded (in m2/m2).}
      \item{\code{"AbsorbedSWRFraction"}: A data frame with the fraction of SWR absorbed by each plant cohort. }
      \item{\code{"Transpiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort.}
      \item{\code{"GrossPhotosynthesis"}: A data frame with the amount of daily gross photosynthesis (in g C·m-2) for each plant cohort. }

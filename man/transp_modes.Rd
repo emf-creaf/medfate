@@ -51,6 +51,7 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
   \item{\code{"Plants"}: A data frame of results for each plant cohort. When using \code{transp_transpirationGranier}, element \code{"Plants"} includes:
     \itemize{
       \item{\code{"LAI"}: Leaf area index of the plant cohort.}
+      \item{\code{"LAIlive"}: Leaf area index of the plant cohort, assuming all leaves are unfolded.}
       \item{\code{"AbsorbedSWRFraction"}: Fraction of SWR absorbed by each cohort.}
       \item{\code{"Transpiration"}: Transpirated water (in mm) corresponding to each cohort.}
       \item{\code{"GrossPhotosynthesis"}: Gross photosynthesis (in gC/m2) corresponding to each cohort.}
@@ -60,6 +61,7 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
     When using \code{transp_transpirationSperry}, element \code{"Plants"} includes:
     \itemize{
       \item{\code{"LAI"}: Leaf area index of the plant cohort.}
+      \item{\code{"LAIlive"}: Leaf area index of the plant cohort, assuming all leaves are unfolded.}
       \item{\code{"Extraction"}: Water extracted from the soil (in mm) for each cohort.}
       \item{\code{"Transpiration"}: Transpirated water (in mm) corresponding to each cohort.}
       \item{\code{"GrossPhotosynthesis"}: Gross photosynthesis (in gC/m2) corresponding to each cohort.}
