@@ -134,9 +134,9 @@
   return(TYPES)
 }
 .getCohortBiomassBalanceGROWTHPlotTypes<-function(transpirationMode = "Granier"){
-  return(c("Structural biomass balance (g/ind)" = "StructuralBiomassBalance",
-           "Labile biomass balance (g/ind)" = "LabileBiomassBalance",
-           "Plant biomass balance (g/ind)" = "PlantBiomassBalance",
+  return(c("Structural biomass balance (g/m2)" = "StructuralBiomassBalance",
+           "Labile biomass balance (g/m2)" = "LabileBiomassBalance",
+           "Plant biomass balance (g/m2)" = "PlantBiomassBalance",
            "Mortality biomass loss (g/m2)" = "MortalityBiomassLoss",
            "Cohort biomass balance (g/m2)" = "CohortBiomassBalance"))
 }
@@ -418,10 +418,10 @@
   else colnames(OM) = spnames[1]
   return(OM)
 }
-.averageByLAISpecies<-function(OM, PlantsLAI, spnames) {
+.averageByLAISpecies<-function(OM, PlantsLAIlive, spnames) {
   if(ncol(OM)>1) {
-    lai1 = t(apply(PlantsLAI,1, tapply, spnames, sum))
-    m1 = t(apply(PlantsLAI * OM,1, tapply, spnames, sum))
+    lai1 = t(apply(PlantsLAIlive,1, tapply, spnames, sum))
+    m1 = t(apply(PlantsLAIlive * OM,1, tapply, spnames, sum))
     OM = m1/lai1
     OM[lai1==0] = NA
   }
@@ -652,13 +652,13 @@
     return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
   } 
 }
-.plot_plant_om<-function(OM, PlantsLAI, spnames,
+.plot_plant_om<-function(OM, PlantsLAIlive, spnames,
                          type,  bySpecies = FALSE,
                          dates = NULL, 
                          xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
                          summary.freq = NULL, ...) {
   OM = as.data.frame(OM)
-  if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
+  if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAIlive, spnames)
   if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),,drop =FALSE]
   if(!is.null(summary.freq)) OM = .temporalSummary(OM, summary.freq, mean, na.rm=TRUE)
   if(is.null(ylab)) ylab = .getYLab(type)

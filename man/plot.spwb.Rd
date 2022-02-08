@@ -34,7 +34,7 @@ Function \code{plot} produces temporal graphs of the results of the soil plant w
   \item{x}{An object of class \code{spwb}, \code{pwb}, \code{growth} or \code{fordyn}.}
   \item{type}{The information to be plotted (see details)}
   \item{cohorts}{An integer, boolean or character vector to select the plant cohorts to be plotted. If \code{cohorts = "T"} (resp. \code{cohorts = "S"}) then all tree (resp. shrub) cohorts will be displayed.}
-  \item{bySpecies}{Allows aggregating output by species, before drawing plots (only has an effect with some values of \code{type}). Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
+  \item{bySpecies}{Allows aggregating output by species, before drawing plots (only has an effect with some values of \code{type}). Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential), where LAI values are those of \code{LAIlive}.}
   \item{dates}{A Date vector with a subset of dates to be plotted.}
   \item{subdaily}{Whether subdaily results should be shown, only for simulations using \code{transpirationMode = "Sperry"} and having set \code{subdailyResults = TRUE} in the simulation control object. If \code{subdaily = TRUE}, then the valid strings for \code{type} are listed in \code{\link{plot.spwb_day}}.}
   \item{xlim}{Range of values for x.}

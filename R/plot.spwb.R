@@ -55,6 +55,8 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
   }
 
   spnames = as.character(input$cohorts[cohorts,"Name"])
+  
+  PlantsLAIlive = x$Plants$LAIlive[,cohorts, drop=FALSE]
   PlantsLAI = x$Plants$LAI[,cohorts, drop=FALSE]
   
   TYPES = .getDailyPWBPlotTypes(transpMode)
@@ -75,7 +77,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
   }
   else if(type %in% c("StemPLC", "StemRWC", "LeafRWC", "StemSympRWC", "LeafSympRWC")) {
     OM = x$Plants[[type]][,cohorts,drop=FALSE]*100
-    return(.plot_plant_om(OM, PlantsLAI, spnames,
+    return(.plot_plant_om(OM, PlantsLAIlive, spnames,
                    type, bySpecies = bySpecies, dates = dates, 
                    xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                    summary.freq = summary.freq, ...))
@@ -94,7 +96,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
                       "PlantWaterBalance")) {
     if(type=="SoilPlantConductance") OM = x$Plants[["dEdP"]][,cohorts,drop=FALSE]
     else OM = x$Plants[[type]][,cohorts,drop=FALSE]
-    return(.plot_plant_om(OM, PlantsLAI, spnames,
+    return(.plot_plant_om(OM, PlantsLAIlive, spnames,
                    type, bySpecies = bySpecies, dates = dates, 
                    xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                    summary.freq = summary.freq, ...))
@@ -102,7 +104,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
   else if(type %in% c("LeafPsiMin_SL", "LeafPsiMax_SL", "GSWMin_SL", "GSWMax_SL", "TempMin_SL", "TempMax_SL")) {
     subType = strsplit(type,"_")[[1]][1]
     OM = x$SunlitLeaves[[subType]][,cohorts,drop=FALSE]
-    return(.plot_plant_om(OM, PlantsLAI, spnames,
+    return(.plot_plant_om(OM, PlantsLAIlive, spnames,
                    type, bySpecies = bySpecies, dates = dates, 
                    xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                    summary.freq = summary.freq, ...))
@@ -110,7 +112,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
   else if(type %in% c("LeafPsiMin_SH", "LeafPsiMax_SH", "GSWMin_SH", "GSWMax_SH", "TempMin_SH", "TempMax_SH")) {
     subType = strsplit(type,"_")[[1]][1]
     OM = x$ShadeLeaves[[subType]][,cohorts,drop=FALSE]
-    return(.plot_plant_om(OM, PlantsLAI, spnames,
+    return(.plot_plant_om(OM, PlantsLAIlive, spnames,
                    type, bySpecies = bySpecies, dates = dates, 
                    xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                    summary.freq = summary.freq, ...))
@@ -121,7 +123,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
     df = x$Plants[[subtype]][,cohorts,drop=FALSE]
     df = df/PlantsLAI
     df[PlantsLAI==0] = NA
-    return(.plot_plant_om(df, PlantsLAI, spnames,
+    return(.plot_plant_om(df, PlantsLAIlive, spnames,
                    type, bySpecies = bySpecies, dates = dates, 
                    xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                    summary.freq = summary.freq, ...))
@@ -130,8 +132,8 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
     OM1 = x$Plants$LeafPsiMax[,cohorts,drop=FALSE]
     OM2 = x$Plants$LeafPsiMin[,cohorts,drop=FALSE]
     if(bySpecies) {
-      OM1 = .averageByLAISpecies(OM1, PlantsLAI, spnames)
-      OM2 = .averageByLAISpecies(OM2, PlantsLAI, spnames)
+      OM1 = .averageByLAISpecies(OM1, PlantsLAIlive, spnames)
+      OM2 = .averageByLAISpecies(OM2, PlantsLAIlive, spnames)
     } 
     if(!is.null(dates)) {
       OM1 = OM1[row.names(OM1) %in% as.character(dates),,drop = FALSE]
@@ -147,7 +149,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
     OM = x$Plants$GrossPhotosynthesis/x$Plants$Transpiration
     OM[x$Plants$Transpiration==0] = 0
     OM = OM[,cohorts,drop=FALSE]
-    return(.plot_plant_om(OM, PlantsLAI, spnames,
+    return(.plot_plant_om(OM, PlantsLAIlive, spnames,
                           type, bySpecies = bySpecies, dates = dates, 
                           xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                           summary.freq = summary.freq, ...))
@@ -196,6 +198,7 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
   }
 
   spnames = as.character(input$cohorts[cohorts,"Name"])
+  PlantsLAIlive = x$Plants$LAIlive[,cohorts, drop=FALSE]
   PlantsLAI = x$Plants$LAI[,cohorts, drop=FALSE]
   
   if(type %in% TYPES_SWB) {
@@ -226,7 +229,7 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
   else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth", "StarvationRate", "DessicationRate", "MortalityRate")) {
     OM = x$GrowthMortality[[type]][,cohorts,drop=FALSE]
   } 
-  return(.plot_plant_om(OM, PlantsLAI, spnames,
+  return(.plot_plant_om(OM, PlantsLAIlive, spnames,
                         type, bySpecies = bySpecies, dates = dates, 
                         xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                         summary.freq = summary.freq, ...))
@@ -247,7 +250,7 @@ plot.fordyn<-function(x, type="StandBasalArea",
   if(type %in% TYPES_GROWTH) {
     
     if(is.null(cohorts))  cohorts = row.names(x$GrowthResults[[1]]$growthInput$cohorts)
-    PlantsLAI = summary(x, freq = "days", output = "Plants$LAI")[,cohorts,drop=FALSE]
+    PlantsLAIlive = summary(x, freq = "days", output = "Plants$LAIlive")[,cohorts,drop=FALSE]
     spnames = as.character(x$GrowthResults[[1]]$growthInput$cohorts[cohorts,"Name"])
     input_soil = x$GrowthResults[[1]]$growthInput$soil
     
@@ -276,7 +279,7 @@ plot.fordyn<-function(x, type="StandBasalArea",
     }
     else if(type %in% c("StemPLC", "StemRWC", "LeafRWC", "StemSympRWC", "LeafSympRWC")) {
       OM = summary(x, freq = "days", output = paste0("Plants$",type))[,cohorts,drop=FALSE]*100
-      return(.plot_plant_om(OM, PlantsLAI, spnames,
+      return(.plot_plant_om(OM, PlantsLAIlive, spnames,
                             type, bySpecies = bySpecies, dates = dates, 
                             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                             summary.freq = summary.freq, ...))
@@ -295,7 +298,7 @@ plot.fordyn<-function(x, type="StandBasalArea",
       E = summary(x, freq = "days", output = "Plants$Transpiration")[,cohorts,drop=FALSE]
       OM = GP/E
       OM[E==0] = 0
-      return(.plot_plant_om(OM, PlantsLAI, spnames,
+      return(.plot_plant_om(OM, PlantsLAIlive, spnames,
                             type, bySpecies = bySpecies, dates = dates, 
                             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                             summary.freq = summary.freq, ...))
@@ -305,7 +308,7 @@ plot.fordyn<-function(x, type="StandBasalArea",
                         "PlantWaterBalance")) {
       if(type=="SoilPlantConductance") OM = summary(x, freq = "days", output = "Plants$dEdP")[,cohorts,drop=FALSE]
       else OM = summary(x, freq = "days", output = paste0("Plants$",type))[,cohorts,drop=FALSE]
-      return(.plot_plant_om(OM, PlantsLAI, spnames,
+      return(.plot_plant_om(OM, PlantsLAIlive, spnames,
                             type, bySpecies = bySpecies, dates = dates, 
                             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                             summary.freq = summary.freq, ...))
@@ -314,8 +317,8 @@ plot.fordyn<-function(x, type="StandBasalArea",
       OM1 = summary(x, freq = "days", output = "Plants$LeafPsiMax")[,cohorts,drop=FALSE]
       OM2 = summary(x, freq = "days", output = "Plants$LeafPsiMin")[,cohorts,drop=FALSE]
       if(bySpecies) {
-        OM1 = .averageByLAISpecies(OM1, PlantsLAI, spnames)
-        OM2 = .averageByLAISpecies(OM2, PlantsLAI, spnames)
+        OM1 = .averageByLAISpecies(OM1, PlantsLAIlive, spnames)
+        OM2 = .averageByLAISpecies(OM2, PlantsLAIlive, spnames)
       } 
       if(!is.null(dates)) {
         OM1 = OM1[row.names(OM1) %in% as.character(dates),,drop = FALSE]
@@ -333,7 +336,7 @@ plot.fordyn<-function(x, type="StandBasalArea",
       OM = summary(x, freq = "days", output = paste0("Plants$",subtype))[,cohorts,drop=FALSE]
       OM = OM/PlantsLAI
       OM[PlantsLAI==0] = NA
-      return(.plot_plant_om(OM, PlantsLAI, spnames,
+      return(.plot_plant_om(OM, PlantsLAIlive, spnames,
                             type, bySpecies = bySpecies, dates = dates, 
                             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                             summary.freq = summary.freq, ...))
@@ -371,23 +374,14 @@ plot.fordyn<-function(x, type="StandBasalArea",
                           "MortalityBiomassLoss", "CohortBiomassBalance")) {
         OM = summary(x, freq = "days", output = paste0("PlantBiomassBalance$",type))[,cohorts,drop=FALSE]
       } 
-      else if(type %in% c("LeafBiomass", "SapwoodBiomass", "FineRootBiomass", "SapwoodArea", "LeafArea", "FineRootArea","DBH", "Height")) {
+      else if(type %in% c("LeafBiomass", "SapwoodBiomass", "FineRootBiomass", "SapwoodArea", "LeafArea", "FineRootArea","DBH", "Height",
+                          "HuberValue", "RootAreaLeafArea")) {
         OM = summary(x, freq = "days", output = paste0("PlantStructure$",type))[,cohorts,drop=FALSE]
       } 
       else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth", "StarvationRate", "MortalityRate", "DessicationRate")) {
         OM = summary(x, freq = "days", output = paste0("GrowthMortality$",type))[,cohorts,drop=FALSE]
       } 
-      else if(type %in% c("HuberValue")) {
-        SA = summary(x, freq = "days", output = "PlantStructure$SapwoodArea")[,cohorts,drop=FALSE]
-        LA = summary(x, freq = "days", output = "PlantStructure$LeafArea")[,cohorts,drop=FALSE]
-        OM = SA/LA
-      } 
-      else if(type %in% c("RootAreaLeafArea")) {
-        FRA = summary(x, freq = "days", output = "PlantStructure$FineRootArea")[,cohorts,drop=FALSE]
-        LA = summary(x, freq = "days", output = "PlantStructure$LeafArea")[,cohorts,drop=FALSE]
-        OM = FRA/LA
-      } 
-      return(.plot_plant_om(OM, PlantsLAI, spnames,
+      return(.plot_plant_om(OM, PlantsLAIlive, spnames,
                             type, bySpecies = bySpecies, dates = dates, 
                             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                             summary.freq = summary.freq, ...))

@@ -1292,7 +1292,9 @@ List transpirationSperry(List x, NumericVector meteovec,
   }
   //6. Copy LAIexpanded for output
   NumericVector LAIcohort(numCohorts);
-  for(int c=0;c<numCohorts;c++) LAIcohort[c]= LAIphe[c];
+  for(int c=0;c<numCohorts;c++) {
+    LAIcohort[c]= LAIphe[c];
+  }
   LAIcohort.attr("names") = above.attr("row.names");
   
   DataFrame Tinst = DataFrame::create(_["SolarHour"] = solarHour, 
@@ -1422,6 +1424,7 @@ List transpirationSperry(List x, NumericVector meteovec,
     _["LeafSympRWC"] = LeafSympRWCInst,
     _["PWB"] = PWBinst);
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
+                                       _["LAIlive"] = clone(LAIlive),
                                        _["Extraction"] = SoilExtractCoh,
                                        _["Transpiration"] = Eplant,
                                        _["GrossPhotosynthesis"] = Agplant,
@@ -1754,6 +1757,7 @@ List transpirationGranier(List x, NumericVector meteovec,
                                               _["LAIdead"] = LAIcelldead);
   
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
+                                       _["LAIlive"] = clone(LAIlive),
                                        _["AbsorbedSWRFraction"] = CohASWRF, 
                                        _["Transpiration"] = Eplant, 
                                        _["GrossPhotosynthesis"] = Agplant,

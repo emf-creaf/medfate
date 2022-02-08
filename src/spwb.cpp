@@ -657,12 +657,14 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
   NumericMatrix PlantStress(numDays, numCohorts);
   NumericMatrix PlantTranspiration(numDays, numCohorts);
   NumericMatrix PlantLAI(numDays, numCohorts);
+  NumericMatrix PlantLAIlive(numDays, numCohorts);
   NumericMatrix StemPLC(numDays, numCohorts);
   
   PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names"));
   PlantStress.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   
   PlantLAI.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  PlantLAIlive.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names"));
   PlantStress.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   StemPLC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
@@ -676,6 +678,7 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
     PlantGrossPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
     PlantPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
     plants = List::create(Named("LAI") = PlantLAI,
+                          Named("LAIlive") = PlantLAIlive,
                                Named("AbsorbedSWRFraction") = PlantAbsSWRFraction,
                                Named("Transpiration") = PlantTranspiration,
                                Named("GrossPhotosynthesis") = PlantGrossPhotosynthesis,
@@ -719,7 +722,8 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
     PlantNetLWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
     
     plants = List::create(Named("LAI") = PlantLAI,
-                               Named("AbsorbedSWR") = PlantAbsSWR,
+                          Named("LAIlive") = PlantLAIlive,
+                          Named("AbsorbedSWR") = PlantAbsSWR,
                                Named("NetLWR") = PlantNetLWR,
                                Named("Transpiration") = PlantTranspiration,
                                Named("GrossPhotosynthesis") = PlantGrossPhotosynthesis,
@@ -885,6 +889,7 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
   NumericMatrix PlantStress= Rcpp::as<Rcpp::NumericMatrix>(x["PlantStress"]);
   NumericMatrix PlantTranspiration= Rcpp::as<Rcpp::NumericMatrix>(x["Transpiration"]);
   NumericMatrix PlantLAI= Rcpp::as<Rcpp::NumericMatrix>(x["LAI"]);
+  NumericMatrix PlantLAIlive= Rcpp::as<Rcpp::NumericMatrix>(x["LAIlive"]);
   NumericMatrix StemPLC= Rcpp::as<Rcpp::NumericMatrix>(x["StemPLC"]);
   
   int numCohorts = PlantLAI.ncol();
@@ -892,6 +897,7 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
   PlantTranspiration(iday,_) =  Rcpp::as<Rcpp::NumericVector>(Plants["Transpiration"]);
   PlantStress(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
   PlantLAI(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LAI"]);
+  PlantLAIlive(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LAIlive"]);
   StemPLC(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPLC"]); 
   
   if(transpirationMode=="Granier") {
