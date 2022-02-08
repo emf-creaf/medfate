@@ -1606,7 +1606,7 @@ Carbon balance and growth simulations require many parameters that are hard to m
 
 #### Nitrogen content of tissues
 Baseline maintenance respiration rates for each tissue (leaf, sapwood and fine roots) are species-specific parameters in the model. However, **medfate** allows estimating these coefficients from nitrogen concentration. Hence it is useful to draw this latter parameter from trait databases. Here we first extract nitrogen concentration per leaf mass values from TRY (TraitID = 14):
-```{r photosynthetic_capacity}
+```{r }
 TRY_Nleaf <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_14.rds"))
 TRY_Nleaf <- TRY_Nleaf[TRY_Nleaf$ErrorRisk<4, c("AccSpeciesName", "StdValue")]
 ```
@@ -1617,7 +1617,7 @@ SpParams <- populateTraits(SpParams, TRY_Nleaf,
                            taxon_column = "AccSpeciesName")
 ```
 And we do the same for sapwood and fine roots (TraitIDs = 1229 and 475, respectively):
-```{r photosynthetic_capacity}
+```{r nitrogen_content}
 TRY_Nsapwood <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_1229.rds"))
 TRY_Nfineroot <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_475.rds"))
 TRY_Nsapwood <- TRY_Nsapwood[TRY_Nsapwood$ErrorRisk<4, c("AccSpeciesName", "StdValue")]
