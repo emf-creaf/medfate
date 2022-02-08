@@ -44,6 +44,16 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
   transpMode = input$control$transpirationMode
   
   if(is.null(cohorts))  cohorts = row.names(input$cohorts)
+  else if(length(cohorts)==1) {
+    if(cohorts=="T") {
+      cohorts = row.names(input$cohorts)
+      cohorts = cohorts[substr(cohorts,1,1)=="T"]
+    } else if(cohorts=="S") {
+      cohorts = row.names(input$cohorts)
+      cohorts = cohorts[substr(cohorts,1,1)=="S"]
+    }
+  }
+
   spnames = as.character(input$cohorts[cohorts,"Name"])
   PlantsLAI = x$Plants$LAI[,cohorts, drop=FALSE]
   
@@ -175,6 +185,16 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
   type = match.arg(type,TYPES_GROWTH)  
   
   if(is.null(cohorts))  cohorts = row.names(input$cohorts)
+  else if(length(cohorts)==1) {
+    if(cohorts=="T") {
+      cohorts = row.names(input$cohorts)
+      cohorts = cohorts[substr(cohorts,1,1)=="T"]
+    } else if(cohorts=="S") {
+      cohorts = row.names(input$cohorts)
+      cohorts = cohorts[substr(cohorts,1,1)=="S"]
+    }
+  }
+
   spnames = as.character(input$cohorts[cohorts,"Name"])
   PlantsLAI = x$Plants$LAI[,cohorts, drop=FALSE]
   

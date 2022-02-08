@@ -191,6 +191,10 @@
                                      )
                             ),
                             tabPanel("Plants",
+                                     selectInput(inputId = "plant_group_selection",
+                                                 label = "Plant group",
+                                                 choices = c("all", "trees", "shrubs")
+                                                 ),
                                      selectInput(
                                        inputId = "cohort_selection",
                                        label = "Plant cohorts",
@@ -319,13 +323,28 @@
       updateSelectInput(session, "plot_type",
                         choices = sub_choices)
     })
+    observe({
+      plant_group = input$plant_group_selection
+      if(plant_group=="trees") {
+        sel = (substr(cohorts_out,1,1)=="T")
+      } else if(plant_group=="shrubs") {
+        sel = (substr(cohorts_out,1,1)=="S")
+      } else {
+        sel = rep(TRUE, length(cohorts_out))
+      }
+      cohort_choices = cohorts_out[sel]
+      names(cohort_choices) = cohorts_sp_out[sel]
+      updateSelectInput(session, "cohort_selection",
+                        choices = cohort_choices,
+                        selected = cohort_choices)
+    })
     output$results_plot <- renderPlot({
       date_lim = input$date_range
       date_range = dates_out[dates_out >= date_lim[1] & dates_out <= date_lim[2]]
       plot(out, type = input$plot_type, dates = date_range,
            summary.freq = input$summary_type, 
            subdaily = input$subdaily_check,
-           cohorts = (cohort_choices %in% input$cohort_selection),
+           cohorts = cohort_choices[cohort_choices %in% input$cohort_selection],
            bySpecies = input$byspecies_check)
     })
     if(!is.null(measuredData)) {
