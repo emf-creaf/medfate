@@ -761,6 +761,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
                          _["below"] = belowdf,
                          _["belowLayers"] = belowLayers,
                          _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
+                         _["paramsAnatomy"] = paramsAnatomydf,
                          _["paramsInterception"] = paramsInterception(above, SpParams, control),
                          _["paramsTranspiration"] = paramsTranspirationdf,
                          _["internalPhenology"] = internalPhenologyDataFrame(above),
@@ -1138,8 +1139,7 @@ void updateBelow(List x) {
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
   
-  DataFrame paramsAnatomydf = DataFrame::create();
-  if(x.containsElementNamed("paramsAnatomy")) paramsAnatomydf = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+  DataFrame paramsAnatomydf = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
   DataFrame paramsTranspirationdf = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   NumericVector Z50 = belowdf["Z50"];
   NumericVector Z95 = belowdf["Z95"];

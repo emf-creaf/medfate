@@ -79,11 +79,12 @@ Functions \code{forest2spwbInput()} and \code{spwbInput()} return a list of clas
        \item{\code{Tbsen}: Base temperature for the calculation of degree days to leaf senescence.}
      }
   }
-  \item{\code{paramsAnatomy}: A data frame with plant anatomy parameters for each cohort (only if \code{control$transpirationMode = "Sperry"}):
+  \item{\code{paramsAnatomy}: A data frame with plant anatomy parameters for each cohort:
      \itemize{
        \item{\code{Hmax}: Maximum plant height (cm).}
        \item{\code{Hmed}: Median plant height (cm).}
        \item{\code{Al2As}: Leaf area to sapwood area ratio (in m2·m-2).}
+       \item{\code{Ar2Al}: Fine root area to leaf area ratio (in m2·m-2).}
        \item{\code{SLA}: Specific leaf area (mm2/mg = m2/kg).}
        \item{\code{LeafWidth}: Leaf width (in cm).}
        \item{\code{LeafDensity}: Density of leaf tissue (dry weight over volume).}
@@ -154,10 +155,20 @@ Functions \code{forest2growthInput} and \code{growthInput} return a list of clas
 }
 \item{\code{paramsGrowth}: A data frame with growth parameters for each cohort:
      \itemize{
-    \item{\code{WoodC}: Wood carbon content per dry weight (g C /g dry).}
-    \item{\code{RGRsapwoodmax}: Maximum relative growth rate (in basal area or sapwood area) (in cm2·cm-2).}
+    \item{\code{RERleaf}: Maintenance respiration rates (at 20ºC) for leaves (in g gluc·g dry-1·day-1).}
+    \item{\code{RERsapwood}: Maintenance respiration rates (at 20ºC) for sapwood (in g gluc·g dry-1·day-1).}
+    \item{\code{RERfineroot}: Maintenance respiration rates (at 20ºC) for fine roots (in g gluc·g dry-1·day-1).}
+    \item{\code{CCleaf}: Leaf construction costs (in g gluc·g dry-1).}
+    \item{\code{CCsapwood}: Sapwood construction costs (in g gluc·g dry-1).}
+    \item{\code{CCfineroot}: Fine root construction costs (in g gluc·g dry-1).}
+    \item{\code{RGRleafmax}: Maximum leaf relative growth rate (in m2·cm-2·day-1).}
+    \item{\code{RGRsapwoodmax}: Maximum sapwood relative growth rate (in cm2·cm-2·day-1).}
+    \item{\code{RGRfinerootmax}: Maximum fine root relative growth rate (in g dry·g dry-1·day-1).}
+    \item{\code{SRsapwood}: Sapwood daily senescence rate (in day-1).}
+    \item{\code{SRfineroot}: Fine root daily senescence rate (in day-1).}
     \item{\code{fHDmin}: Minimum value of the height-to-diameter ratio (dimensionless).}
     \item{\code{fHDmax}: Maximum value of the height-to-diameter ratio (dimensionless).}
+    \item{\code{WoodC}: Wood carbon content per dry weight (g C /g dry).}
      }
 }
 \item{\code{paramsAllometry}: A data frame with allometric parameters for each cohort:
