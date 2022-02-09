@@ -991,7 +991,7 @@ NumericVector LeafRespirationRateWithImputation(IntegerVector SP, DataFrame SpPa
     if(NumericVector::is_na(RERleaf[c])) {
       //Reich, P. B., M. G. Tjoelker, K. S. Pregitzer, I. J. Wright, J. Oleksyn, and J. L. Machado. 2008. Scaling of respiration to nitrogen in leaves, stems and roots of higher land plants. Ecology Letters 11:793–801.
       double Nleaf_mmol_g = Nleaf[c]/14.0;
-      double RER_nmolCO2_g_s = exp(0.691 + 1.639*log(Nleaf_mmol_g)); //nmol CO2·g-1·s-1
+      double RER_nmolCO2_g_s = pow(10.0, 0.691 + 1.639*log10(Nleaf_mmol_g)); //nmol CO2·g-1·s-1
       RERleaf[c] = (24.0*3600.0)*(RER_nmolCO2_g_s/6.0)*(1e-9)*180.156; // nmol CO2·g-1·s-1 to g gluc·g-1·d-1
     }
   }
@@ -1003,9 +1003,11 @@ NumericVector SapwoodRespirationRateWithImputation(IntegerVector SP, DataFrame S
   for(int c=0;c<RERsapwood.size();c++) {
     if(NumericVector::is_na(RERsapwood[c])) {
       //Reich, P. B., M. G. Tjoelker, K. S. Pregitzer, I. J. Wright, J. Oleksyn, and J. L. Machado. 2008. Scaling of respiration to nitrogen in leaves, stems and roots of higher land plants. Ecology Letters 11:793–801.
-      double Nsapwood_mmol_g = Nsapwood[c]/14.0;
-      double RER_nmolCO2_g_s = exp(1.024 + 1.344*log(Nsapwood_mmol_g)); //nmol CO2·g-1·s-1
-      RERsapwood[c] = 24.0*3600.0*(RER_nmolCO2_g_s/6.0)*(1e-9)*180.156; // nmol CO2·g-1·s-1 to g gluc·g-1·d-1
+      // double Nsapwood_mmol_g = Nsapwood[c]/14.0;
+      // double RER_nmolCO2_g_s = pow(10.0, 1.024 + 1.344*log10(Nsapwood_mmol_g)); //nmol CO2·g-1·s-1
+      // RERsapwood[c] = 24.0*3600.0*(RER_nmolCO2_g_s/6.0)*(1e-9)*180.156; // nmol CO2·g-1·s-1 to g gluc·g-1·d-1
+      // ESTIMATES ARE TOO HIGH
+      RERsapwood[c] = 6.849315e-5;
     }
   }
   return(RERsapwood);
@@ -1017,7 +1019,7 @@ NumericVector FinerootRespirationRateWithImputation(IntegerVector SP, DataFrame 
     if(NumericVector::is_na(RERfineroot[c])) {
       //Reich, P. B., M. G. Tjoelker, K. S. Pregitzer, I. J. Wright, J. Oleksyn, and J. L. Machado. 2008. Scaling of respiration to nitrogen in leaves, stems and roots of higher land plants. Ecology Letters 11:793–801.
       double Nfineroot_mmol_g = Nfineroot[c]/14.0;
-      double RER_nmolCO2_g_s = exp(0.980 + 1.352*log(Nfineroot_mmol_g)); //nmol CO2·g-1·s-1
+      double RER_nmolCO2_g_s = pow(10.0, 0.980 + 1.352*log10(Nfineroot_mmol_g)); //nmol CO2·g-1·s-1
       RERfineroot[c] = 24.0*3600.0*(RER_nmolCO2_g_s/6.0)*(1e-9)*180.156; // nmol CO2·g-1·s-1 to g gluc·g-1·d-1
     }
   }

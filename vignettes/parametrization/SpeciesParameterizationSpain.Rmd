@@ -7,7 +7,7 @@ output:
     toc: TRUE
 bibliography: ../medfate.bib
 params:
-  spparams_rebuild: FALSE
+  spparams_rebuild: TRUE
   IFN_rebuild: FALSE
 ---
 
@@ -1602,13 +1602,35 @@ summary(SpParams[,c("Vmax298", "Jmax298")])
 ```
 
 ### Carbon balance and growth
-Carbon balance and growth simulations require many parameters that are hard to measure experimentally and, hence, need to be estimated via calibration or expert-based guesses. Here we map only one parameter describing the amount of carbon per dry wood tissue.
+Carbon balance and growth simulations require many parameters some of which are hard to measure experimentally.
+
+#### Maintenance respiration rates
+Baseline maintenance respiration rates for each tissue (leaf, sapwood and fine roots) are species-specific parameters in the model. Here we first leaf dark respiration rates per leaf mass values from TRY (TraitID = 41):
+
+```{r }
+TRY_RERleaf <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_41.rds"))
+TRY_RERleaf <- TRY_RERleaf[TRY_RERleaf$ErrorRisk<3, c("AccSpeciesName", "StdValue")]
+```
+
+We now call the population function, while transforming units of micro mol C g-1 s-1 to g gluc g-1 d-1:
+```{r}
+SpParams <- populateTraits(SpParams, TRY_RERleaf, 
+                           trait_mapping = c("RERleaf" = "StdValue"),
+                           scalar_functions = c("RERleaf" = function(x){24.0*3600.0*(x/6.0)*(1e-6)*180.156}),
+                           taxon_column = "AccSpeciesName")
+```
+
+```{r}
+summary(SpParams[,c("RERleaf")])
+```
+
+Sapwood respiration is much harder to measure and database values are not retrieved at present.
 
 #### Nitrogen content of tissues
-Baseline maintenance respiration rates for each tissue (leaf, sapwood and fine roots) are species-specific parameters in the model. However, **medfate** allows estimating these coefficients from nitrogen concentration. Hence it is useful to draw this latter parameter from trait databases. Here we first extract nitrogen concentration per leaf mass values from TRY (TraitID = 14):
+The model allows estimating leaf and fine root respiration rates from nitrogen concentration. Hence it is useful to draw this latter parameter from trait databases. Sapwood respiration rates are given a default value when missing, but we also draw sapwood N concentrations. Here we first extract nitrogen concentration per leaf mass values from TRY (TraitID = 14):
 ```{r }
 TRY_Nleaf <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_14.rds"))
-TRY_Nleaf <- TRY_Nleaf[TRY_Nleaf$ErrorRisk<4, c("AccSpeciesName", "StdValue")]
+TRY_Nleaf <- TRY_Nleaf[TRY_Nleaf$ErrorRisk<3, c("AccSpeciesName", "StdValue")]
 ```
 We now call the population function:
 ```{r}
@@ -1620,8 +1642,8 @@ And we do the same for sapwood and fine roots (TraitIDs = 1229 and 475, respecti
 ```{r nitrogen_content}
 TRY_Nsapwood <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_1229.rds"))
 TRY_Nfineroot <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_475.rds"))
-TRY_Nsapwood <- TRY_Nsapwood[TRY_Nsapwood$ErrorRisk<4, c("AccSpeciesName", "StdValue")]
-TRY_Nfineroot <- TRY_Nfineroot[TRY_Nfineroot$ErrorRisk<4, c("AccSpeciesName", "StdValue")]
+TRY_Nsapwood <- TRY_Nsapwood[TRY_Nsapwood$ErrorRisk<3, c("AccSpeciesName", "StdValue")]
+TRY_Nfineroot <- TRY_Nfineroot[TRY_Nfineroot$ErrorRisk<3, c("AccSpeciesName", "StdValue")]
 SpParams <- populateTraits(SpParams, TRY_Nsapwood, 
                            trait_mapping = c("Nsapwood" = "StdValue"),
                            taxon_column = "AccSpeciesName")
