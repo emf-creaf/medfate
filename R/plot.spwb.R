@@ -250,6 +250,7 @@ plot.fordyn<-function(x, type="StandBasalArea",
   if(type %in% TYPES_GROWTH) {
     
     if(is.null(cohorts))  cohorts = row.names(x$GrowthResults[[1]]$growthInput$cohorts)
+    PlantsLAI = summary(x, freq = "days", output = "Plants$LAI")[,cohorts,drop=FALSE]
     PlantsLAIlive = summary(x, freq = "days", output = "Plants$LAIlive")[,cohorts,drop=FALSE]
     spnames = as.character(x$GrowthResults[[1]]$growthInput$cohorts[cohorts,"Name"])
     input_soil = x$GrowthResults[[1]]$growthInput$soil
