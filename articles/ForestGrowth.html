@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Forest growth</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-02-08</h4>
+            <h4 data-toc-skip class="date">2022-02-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/ForestGrowth.Rmd" class="external-link"><code>vignettes/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -215,10 +215,10 @@
 <p>Parameters related to plant growth can be seen in <code>paramsGrowth</code> and <code>paramsAllometries</code>:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsGrowth</span></code></pre></div>
-<pre><code><span class="co">##            RERleaf   RERsapwood RERfineroot CCleaf CCsapwood CCfineroot</span>
-<span class="co">## T1_148 0.003991730 0.0001992604 0.000186651 1.5905      1.47        1.3</span>
-<span class="co">## T2_168 0.005291588 0.0021393047 0.002032442 1.4300      1.47        1.3</span>
-<span class="co">## S1_165 0.004604275 0.0021393047 0.002032442 1.5320      1.47        1.3</span>
+<pre><code><span class="co">##           RERleaf   RERsapwood  RERfineroot CCleaf CCsapwood CCfineroot</span>
+<span class="co">## T1_148 0.01210607 6.849315e-05 0.0009610199 1.5905      1.47        1.3</span>
+<span class="co">## T2_168 0.01757808 6.849315e-05 0.0072846640 1.4300      1.47        1.3</span>
+<span class="co">## S1_165 0.02647746 6.849315e-05 0.0072846640 1.5320      1.47        1.3</span>
 <span class="co">##        RGRleafmax RGRsapwoodmax RGRfinerootmax    SRsapwood  SRfineroot fHDmin</span>
 <span class="co">## T1_148       0.03         0.005            0.1 0.0001261398 0.001897231     40</span>
 <span class="co">## T2_168       0.03         0.005            0.1 0.0001261398 0.001897231     40</span>
@@ -259,16 +259,16 @@
 <span class="co">## </span>
 <span class="co">##  [Year 2001]: ....................................</span>
 <span class="co">## </span>
-<span class="co">## Final plant biomass (g/m2): 8674.02</span>
-<span class="co">## Change in plant biomass (g/m2): 119.533</span>
-<span class="co">## Plant biomass balance result (g/m2): 119.533</span>
+<span class="co">## Final plant biomass (g/m2): 8720</span>
+<span class="co">## Change in plant biomass (g/m2): 165.509</span>
+<span class="co">## Plant biomass balance result (g/m2): 165.509</span>
 <span class="co">## Plant biomass balance components:</span>
-<span class="co">##   Structural balance (g/m2) 266 Labile balance (g/m2) -146</span>
-<span class="co">##   Plant individual balance (g/m2) 120 Mortality loss (g/m2) 0</span>
+<span class="co">##   Structural balance (g/m2) 266 Labile balance (g/m2) -100</span>
+<span class="co">##   Plant individual balance (g/m2) 166 Mortality loss (g/m2) 0</span>
 <span class="co">## Final soil water content (mm): 269.256</span>
 <span class="co">## Final snowpack content (mm): 0</span>
-<span class="co">## Change in soil water content (mm): -22.0007</span>
-<span class="co">## Soil water balance result (mm): -22.0007</span>
+<span class="co">## Change in soil water content (mm): -22.0006</span>
+<span class="co">## Soil water balance result (mm): -22.0006</span>
 <span class="co">## Change in snowpack water content (mm): 0</span>
 <span class="co">## Snowpack water balance result (mm): 7.10543e-15</span>
 <span class="co">## Water balance components:</span>
@@ -288,16 +288,16 @@
 </h3>
 <p>To inspect components of the plant carbon balance we can first display gross photosynthesis expressed as assimilation relative to biomass:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"GrossPhotosynthesis"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"GrossPhotosynthesis"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-16-1.png" width="672"> Then we can draw the respiration costs (maintenance and growth) in the same units:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"MaintenanceRespiration"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"MaintenanceRespiration"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-17-1.png" width="672"></p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"GrowthCosts"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"GrowthCosts"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-17-2.png" width="672"> Finally we can display the daily negative or positive balance of the plant storage, which determines changes in plant carbon pools:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"LabileCarbonBalance"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"LabileCarbonBalance"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
 </div>
 <div class="section level3">
@@ -305,7 +305,7 @@
 </h3>
 <p>Carbon assimilation and respiration rates define the dynamics of stored carbon, which in medfate is divided into two organs (leaves and sapwood) and two chemical compounds (soluble sugars and starch). The most important storage compartment is sapwood starch, whose dynamics can be shown using:</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"StarchSapwood"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"StarchSapwood"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-19-1.png" width="672"></p>
 </div>
 <div class="section level3">
@@ -313,20 +313,20 @@
 </h3>
 <p>Leaf and sapwood area dynamics arising from the interplay between growth and senescence of tissues can be inspected using:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"LeafArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"LeafArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-20-1.png" width="672"></p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"SapwoodArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"SapwoodArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-20-2.png" width="672"> The corresponding daily growth rates can also be displayed:</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"LAgrowth"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"LAgrowth"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-21-1.png" width="672"></p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"SAgrowth"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"SAgrowth"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-21-2.png" width="672"></p>
 <p>We can also display the resulting dynamics in diameter at breast height (DBH):</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"DBH"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"DBH"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## Warning: Removed 365 row(s) containing missing values (geom_path).</span></code></pre>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-22-1.png" width="672"></p>
 <p>Finally, recall that one can interactively create plots using function <code>shinyplot</code>, e.g.:</p>

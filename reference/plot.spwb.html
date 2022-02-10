@@ -57,25 +57,25 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for spwb</span>
-<span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"PET_Precipitation"</span>, 
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"PET_Precipitation"</span>, 
                     cohorts <span class="op">=</span> <span class="cn">NULL</span>, bySpecies <span class="op">=</span> <span class="cn">FALSE</span>,
                     dates <span class="op">=</span> <span class="cn">NULL</span>, subdaily <span class="op">=</span> <span class="cn">FALSE</span>,
                     xlim <span class="op">=</span> <span class="cn">NULL</span>, ylim<span class="op">=</span><span class="cn">NULL</span>, xlab<span class="op">=</span><span class="cn">NULL</span>, ylab<span class="op">=</span><span class="cn">NULL</span>,
                     summary.freq <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span>
 <span class="co"># S3 method for pwb</span>
-<span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"PlantTranspiration"</span>, 
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"PlantTranspiration"</span>, 
                    cohorts <span class="op">=</span> <span class="cn">NULL</span>, bySpecies <span class="op">=</span> <span class="cn">FALSE</span>,
                    dates <span class="op">=</span> <span class="cn">NULL</span>, subdaily <span class="op">=</span> <span class="cn">FALSE</span>,
                    xlim <span class="op">=</span> <span class="cn">NULL</span>, ylim<span class="op">=</span><span class="cn">NULL</span>, xlab<span class="op">=</span><span class="cn">NULL</span>, ylab<span class="op">=</span><span class="cn">NULL</span>, 
                    summary.freq <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span>
 <span class="co"># S3 method for growth</span>
-<span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"PET_Precipitation"</span>, 
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"PET_Precipitation"</span>, 
                       cohorts <span class="op">=</span> <span class="cn">NULL</span>, bySpecies <span class="op">=</span> <span class="cn">FALSE</span>, 
                       dates <span class="op">=</span> <span class="cn">NULL</span>, subdaily <span class="op">=</span> <span class="cn">FALSE</span>,
                       xlim <span class="op">=</span> <span class="cn">NULL</span>, ylim<span class="op">=</span><span class="cn">NULL</span>, xlab<span class="op">=</span><span class="cn">NULL</span>, ylab<span class="op">=</span><span class="cn">NULL</span>, 
                       summary.freq <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span>
 <span class="co"># S3 method for fordyn</span>
-<span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"StandBasalArea"</span>,
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"StandBasalArea"</span>,
                       cohorts <span class="op">=</span> <span class="cn">NULL</span>, bySpecies <span class="op">=</span> <span class="cn">FALSE</span>, dates <span class="op">=</span> <span class="cn">NULL</span>, 
                       xlim <span class="op">=</span> <span class="cn">NULL</span>, ylim<span class="op">=</span><span class="cn">NULL</span>, xlab<span class="op">=</span><span class="cn">NULL</span>, ylab<span class="op">=</span><span class="cn">NULL</span>, 
                       summary.freq <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
@@ -123,6 +123,7 @@
 <li><p><code>"WTD"</code>: Water table depth.</p></li>
 <li><p><code>"LAI"</code>: Expanded and dead leaf area index of the whole stand.</p></li>
 <li><p><code>"PlantLAI"</code>: Plant cohort leaf area index (expanded leaves).</p></li>
+<li><p><code>"PlantLAIlive"</code>: Plant cohort leaf area index ("live" leaves).</p></li>
 <li><p><code>"PlantStress"</code>: Plant cohort average daily drought stress.</p></li>
 <li><p><code>"PlantPsi"</code>: Plant cohort water potential (only for <code>transpirationMode = "Granier"</code>).</p></li>
 <li><p><code>"PlantTranspiration"</code>: Plant cohort transpiration.</p></li>
@@ -181,10 +182,12 @@
 <li><p><code>"PlantBiomassBalance"</code>:  Daily plant biomass balance, i.e. labile change + structural change (g dry · ind-2).</p></li>
 <li><p><code>"MortalityBiomassLoss"</code>:  Biomass loss due to mortality (g dry · m-2).</p></li>
 <li><p><code>"PlantBiomassBalance"</code>:  Daily cohort biomass balance (including mortality) (g dry · m-2).</p></li>
+<li><p><code>"LeafBiomass"</code>: Leaf structural dry biomass per individual.</p></li>
+<li><p><code>"SapwoodBiomass"</code>: Sapwood dry biomass per individual.</p></li>
+<li><p><code>"FineRootBiomass"</code>: Fine root dry biomass per individual.</p></li>
 <li><p><code>"SapwoodArea"</code>:  Sapwood area per individual.</p></li>
 <li><p><code>"LeafArea"</code>:  Leaf area per individual.</p></li>
 <li><p><code>"FineRootArea"</code>: Fine root area per individual (only for <code>transpirationMode = "Sperry"</code>).</p></li>
-<li><p><code>"FineRootBiomass"</code>: Fine root dry biomass per individual.</p></li>
 <li><p><code>"DBH"</code>: Diameter at breast height (in cm) for an average individual of each plant cohort.</p></li>
 <li><p><code>"Height"</code>: Height (in cm) for an average individual of each plant cohort.</p></li>
 <li><p><code>"SAgrowth"</code>:  Sapwood area growth rate.</p></li>
@@ -250,7 +253,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 19 Transpiration (mm) 334</span>
 <span class="r-in">        </span>
 <span class="r-in"><span class="co">#Plot results</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></span>
 <span class="r-plt img"><img src="plot.spwb-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"></span>
 </code></pre></div>
