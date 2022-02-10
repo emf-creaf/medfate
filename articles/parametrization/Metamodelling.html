@@ -85,25 +85,32 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>This document presents a metamodeling exercise between basic (Granier’s) and advanced (Sperry’s) versions of the soil plant water balance model. The goal is to make transpiration (E) and gross photosynthesis (Ag) estimates produced by the basic water balance model as similar as possible to those predicted by the advanced model which, given its greater process detail and physical basis, is assumed to provide better E and Ag estimates when provided appropriate functional traits are supplied.</p>
-<p>Assuming there are no water limitations, the following parameters are used to determine E and Ag in the basic model, which cannot easily be parameterized from available trait data (see <a href="https://emf-creaf.github.io/medfatebook/index.html" class="external-link uri">https://emf-creaf.github.io/medfatebook/index.html</a>):</p>
+<div class="section level3">
+<h3 id="goal">Goal<a class="anchor" aria-label="anchor" href="#goal"></a>
+</h3>
+<p>This document presents a metamodelling exercise between basic (Granier’s) and advanced (Sperry’s) versions of the soil plant water balance model. The goal is to make predictions produced by the basic water balance model as similar as possible to those predicted by the advanced model which, given its greater process detail and physical basis, is assumed to provide more realistic and accurate predictions when appropriate functional traits are supplied. This should benefit not only water balance simulations (function <code>spwb</code>) but also simulations of forest growth (<code>growth</code>) and dynamics (<code>fordyn</code>).</p>
+</div>
+<div class="section level3">
+<h3 id="target-parameters">Target parameters<a class="anchor" aria-label="anchor" href="#target-parameters"></a>
+</h3>
+<p>The following parameters are used in the basic model, that cannot easily be parameterized from available information (see <a href="https://emf-creaf.github.io/medfatebook/index.html" class="external-link uri">https://emf-creaf.github.io/medfatebook/index.html</a>):</p>
 <ul>
 <li>
-<code>Tmax_LAI</code> and <code>Tmax_LAIsp</code>, which determine the ratio of maximum transpiration over potential evapotranspiration for a given LAI. An empirical function with these parameters was derived by Granier (1999), but without distinguishing between species. A metamodelling exercise should allow deriving species-specific values for these parameters.</li>
+<code>Tmax_LAI</code> and <code>Tmax_LAIsp</code>, which determine the ratio of maximum transpiration over potential evapotranspiration for a given LAI. An empirical function with these parameters was derived by Granier (1999) for European temperate forests, without distinguishing between forests dominated by different species.</li>
 <li>
-<code>WUE</code>, which represents the daily water use efficiency (g C of gross assimilation / l transpired) under conditions of high light and no water stress. Such estimate of WUE is not easily available for many species in trait databases, but we can derive it from metamodelling if Farquhar’s photosynthetic parameters <code>Vmax298</code> and <code>Jmax298</code> are known.</li>
+<code>WUE</code>, which represents the daily water use efficiency (g C of gross assimilation / l transpired) under conditions of high light and no water deficit.</li>
 <li>
 <code>WUE_decay</code>, which is the exponent of the function specifying the decrease in relative WUE for lower positions within the canopy, due to the decrease of available light. Again, this rate of decay should depend on the species, according to its degree of shade tolerance, and will be influenced by parameters regulating plant hydraulics, photosynthesis and light extinction.</li>
+<li>
+<code>Ar2Al</code>, which is the ratio of fine root area to leaf area. This parameter is needed to determine the allocation to fine root biomass.</li>
 </ul>
+<p>As stated above, the general idea is to use simulation from the advanced water balance model to obtain estimates of the previous parameters, so that simulations with the basic water balance model (which is faster) produce an output similar that of the advanced model (which is slower). In the case of <code>Tmax_LAI</code> and <code>Tmax_LAIsp</code> we aim to determine a species-specific factor that can be used to modify the empirical coefficients obtained by Granier (1999). Water use efficiency is an emergent property of the advanced water balance model, depending on multiple parameters (hydraulics, photosynthetic capacity, etc). We can estimate <code>WUE</code> values using simulations with high light levels and no water deficit. The decrease of WUE for plant cohorts in progressively shadier environments with respect to WUE under full light can provide us with an estimate of <code>WUE_decay</code>, which again will depend on multiple plant traits (e.g. the former plus extinction coefficients).</p>
 </div>
-<div class="section level2">
-<h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
-</h2>
-<ul>
-<li>IFN data</li>
-<li>Weather data from interpolation using meteoland (year 2000).</li>
-<li>Soil data from soil grids (could be replaced with local samples).</li>
-</ul>
+<div class="section level3">
+<h3 id="target-species">Target species<a class="anchor" aria-label="anchor" href="#target-species"></a>
+</h3>
+<p>The metamodelling procedure could be applied to any target species, but we focused on the main tree species in Catalonia: <em>Pinus halepensis</em>, <em>Pinus sylvestris</em>, <em>Pinus nigra</em>, <em>Pinus uncinata</em>, <em>Pinus pinea</em>, <em>Quercus ilex</em>, <em>Quercus pubescens</em>, <em>Quercus suber</em>, <em>Fagus sylvatica</em> and <em>Abies alba</em>.</p>
+For each of those species, we first revised the values of the most important parameters in the advanced water balance model:
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -143,13 +150,13 @@ Abies alba
 6
 </td>
 <td style="text-align:right;">
-0.4510000
+1.3000000
 </td>
 <td style="text-align:right;">
-117.00000
+58.08712
 </td>
 <td style="text-align:right;">
-138.0000
+103.2823
 </td>
 </tr>
 <tr>
@@ -166,7 +173,7 @@ Fagus sylvatica
 8
 </td>
 <td style="text-align:right;">
-0.4955495
+0.9000000
 </td>
 <td style="text-align:right;">
 94.50000
@@ -384,20 +391,29 @@ Quercus suber
 </tr>
 </tbody>
 </table>
+<p>Ideally, the predictions of the advanced water balance model should be evaluated with these parameterization before using it as reference for the metamodelling study. Otherwise we could be biasing both models with inappropriate parameter values. The advance water balance model has been evaluated using data from experimental plots in stands dominated by some of the target species, but not others.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="simulations">Simulations<a class="anchor" aria-label="anchor" href="#simulations"></a>
 </h2>
-<p>The Granier and Sperry version of medfate ware run on all 90 forest plots (the advanced model crashed for a few cases) using weather corresponding to year 2000.</p>
-<p>We loaded the forest plot data and, for each plot with results, assemble the PAR corresponding to each cohort, the transpiration obtained by each model and the WUEg resulting from the simulation with Sperry’s model.</p>
+<div class="section level3">
+<h3 id="forest-soil-and-weather-inputs">Forest, soil and weather inputs<a class="anchor" aria-label="anchor" href="#forest-soil-and-weather-inputs"></a>
+</h3>
+<p>We used forest plot data from the third edition of the Spanish National Forest Inventory (IFN3). Forest plots were located in Catalonia and with a minimum basal area of 3 <span class="math inline">\(m^2·ha^{-1}\)</span>. For each target species we randomly selected up to 60 forest plots where the species was dominant (&gt; 80% in basal area). Plant records corresponding to species different than the target species were excluded.</p>
+<p>Like in other exercises, soil data was obtained from SoilGrids, with rock fragment contents corrected according to the amount of surface stoniness recorded in the IFN plots. Daily weather data corresponding to year 2000 was obtained from interpolation using meteoland on the coordinates of each forest plot.</p>
+</div>
+<div class="section level3">
+<h3 id="soil-water-balance-simulations">Soil water balance simulations<a class="anchor" aria-label="anchor" href="#soil-water-balance-simulations"></a>
+</h3>
+<p>For each target species, we ran the soil water balance model using function <code>spwb</code> (actually, <code>spwbpoints</code> from package <strong>medfateland</strong>) and either Granier’s or Sperry’s transpiration mode. Simulations were conducted using <code>control$unlimitedSoilWater = TRUE</code> so that transpiration and photosynthesis estimates did not include water limitations (cohorts in the shade were, however, affected by lower PAR). For each plant cohort in each simulated plot we assembled the percentage of PAR available to the plant cohort, the annual transpiration and annual photosynthesis produced by each model.</p>
+</div>
 </div>
 <div class="section level2">
-<h2 id="transpiration-ratio">Transpiration ratio<a class="anchor" aria-label="anchor" href="#transpiration-ratio"></a>
+<h2 id="fine-root-area-to-leaf-area-ratio">Fine root area to leaf area ratio<a class="anchor" aria-label="anchor" href="#fine-root-area-to-leaf-area-ratio"></a>
 </h2>
-<p>We wanted to determine if there were systematic differences in E between the two models. Such differences should be species-specific. Even if the basic model has a single linear equation (from Granier) to estimate Tmax from LAI, the advanced model estimates E from a complex calculation involving several species-specific functional traits. The ratio between E estimates from the two models could be used to scale the estimates of Granier’s equation (or in other words, to scale its parameters).</p>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
-<p>It is evident that there are differences in the average ratio across species, with highest ratios for P. halepensis and F. sylvatica and lowest ones for Quercus pubescens and Q. ilex.</p>
-We can find the species average ratios and multiply the default Granier coefficients (Tmax_LAI and Tmax_LAIsq).
+<p>Estimates of the fine root area to leaf area ratio (<code>Ar2Al</code>) can be estimated when initializing the advanced water balance model. In this mode, the maximum hydraulic conductance in the rhizosphere is estimated assuming that the resistance of the rhizosphere represents 15% of total hydraulic resistance (see control parameter <code>averageFracRhizosphereResistance</code>), on average across a range of soil water potentials. The model estimates fine root biomass from maximum hydraulic conductance in the rhizosphere (as explained in <a href="https://emf-creaf.github.io/medfatebook/carbonpoolsbalance.html#fine-root-area-and-biomass" class="external-link uri">https://emf-creaf.github.io/medfatebook/carbonpoolsbalance.html#fine-root-area-and-biomass</a>).</p>
+<p>The following table presents the average values (and std. error) of whole-plant maximum hydraulic conductance (i.e. considering leaves stems and coarse roots), as well as average values of the <code>Ar2Al</code> estimates for each species:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -410,13 +426,253 @@ n
 kplant_mean
 </th>
 <th style="text-align:right;">
-kplant_sd
+kplant_se
 </th>
 <th style="text-align:right;">
 Ar2Al_mean
 </th>
 <th style="text-align:right;">
 Ar2Al_se
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Abies alba
+</td>
+<td style="text-align:right;">
+1780
+</td>
+<td style="text-align:right;">
+0.2805085
+</td>
+<td style="text-align:right;">
+0.0031895
+</td>
+<td style="text-align:right;">
+0.6430186
+</td>
+<td style="text-align:right;">
+0.0094036
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fagus sylvatica
+</td>
+<td style="text-align:right;">
+1769
+</td>
+<td style="text-align:right;">
+0.9630081
+</td>
+<td style="text-align:right;">
+0.0072003
+</td>
+<td style="text-align:right;">
+0.4517513
+</td>
+<td style="text-align:right;">
+0.0046184
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus halepensis
+</td>
+<td style="text-align:right;">
+1102
+</td>
+<td style="text-align:right;">
+0.6185928
+</td>
+<td style="text-align:right;">
+0.0039454
+</td>
+<td style="text-align:right;">
+0.7344168
+</td>
+<td style="text-align:right;">
+0.0070314
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus nigra
+</td>
+<td style="text-align:right;">
+1523
+</td>
+<td style="text-align:right;">
+1.2624309
+</td>
+<td style="text-align:right;">
+0.0046903
+</td>
+<td style="text-align:right;">
+2.9911585
+</td>
+<td style="text-align:right;">
+0.0318801
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus pinea
+</td>
+<td style="text-align:right;">
+1314
+</td>
+<td style="text-align:right;">
+0.7224384
+</td>
+<td style="text-align:right;">
+0.0028811
+</td>
+<td style="text-align:right;">
+0.7945862
+</td>
+<td style="text-align:right;">
+0.0060634
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus sylvestris
+</td>
+<td style="text-align:right;">
+1765
+</td>
+<td style="text-align:right;">
+1.1783006
+</td>
+<td style="text-align:right;">
+0.0034281
+</td>
+<td style="text-align:right;">
+2.7295937
+</td>
+<td style="text-align:right;">
+0.0405120
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus uncinata
+</td>
+<td style="text-align:right;">
+1730
+</td>
+<td style="text-align:right;">
+1.4366275
+</td>
+<td style="text-align:right;">
+0.0039828
+</td>
+<td style="text-align:right;">
+1.3749624
+</td>
+<td style="text-align:right;">
+0.0116992
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus faginea
+</td>
+<td style="text-align:right;">
+668
+</td>
+<td style="text-align:right;">
+1.0944696
+</td>
+<td style="text-align:right;">
+0.0111599
+</td>
+<td style="text-align:right;">
+0.3209908
+</td>
+<td style="text-align:right;">
+0.0052834
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus ilex
+</td>
+<td style="text-align:right;">
+1559
+</td>
+<td style="text-align:right;">
+0.7399350
+</td>
+<td style="text-align:right;">
+0.0042168
+</td>
+<td style="text-align:right;">
+3.2520348
+</td>
+<td style="text-align:right;">
+0.0277877
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus pubescens
+</td>
+<td style="text-align:right;">
+1132
+</td>
+<td style="text-align:right;">
+0.7972673
+</td>
+<td style="text-align:right;">
+0.0074647
+</td>
+<td style="text-align:right;">
+0.2799216
+</td>
+<td style="text-align:right;">
+0.0033298
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus suber
+</td>
+<td style="text-align:right;">
+1444
+</td>
+<td style="text-align:right;">
+0.6037066
+</td>
+<td style="text-align:right;">
+0.0038843
+</td>
+<td style="text-align:right;">
+5.2324908
+</td>
+<td style="text-align:right;">
+0.0508960
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level2">
+<h2 id="transpiration-ratio">Transpiration ratio<a class="anchor" aria-label="anchor" href="#transpiration-ratio"></a>
+</h2>
+<p>We wanted to determine if there were systematic differences in E between the two models. Such differences should be species-specific. Even if the basic model has a single linear equation (from Granier) to estimate the ratio Tmax to PET from stand’s LAI, the advanced model estimates transpiration (E) from a complex calculation involving several species-specific functional traits. The ratio between annual E estimates from the two models could be used to scale the estimates of Granier’s equation (or in other words, to scale its parameters).</p>
+<p>The following plot displays the ratio between annual E estimates obtained using the basic and advanced models, where we use the percentage of PAR of the plant cohort in the x-axis to show whether the relationship changes between sunlit or shade cohorts:</p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+It is evident that there are differences in the average ratio across species. We can find the species average ratios and multiply the default coefficients of Granier’s (1999) equation (default values for parameters <code>Tmax_LAI = 0.134</code> and <code>Tmax_LAIsq = -0.006</code>).
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Name
+</th>
+<th style="text-align:right;">
+n
 </th>
 <th style="text-align:right;">
 E_ratio_mean
@@ -443,18 +699,6 @@ Abies alba
 1780
 </td>
 <td style="text-align:right;">
-0.2805085
-</td>
-<td style="text-align:right;">
-0.1345655
-</td>
-<td style="text-align:right;">
-0.6430186
-</td>
-<td style="text-align:right;">
-0.3967401
-</td>
-<td style="text-align:right;">
 0.5496171
 </td>
 <td style="text-align:right;">
@@ -476,18 +720,6 @@ Fagus sylvatica
 </td>
 <td style="text-align:right;">
 1769
-</td>
-<td style="text-align:right;">
-0.9630081
-</td>
-<td style="text-align:right;">
-0.3028403
-</td>
-<td style="text-align:right;">
-0.4517513
-</td>
-<td style="text-align:right;">
-0.1942495
 </td>
 <td style="text-align:right;">
 1.0035804
@@ -513,18 +745,6 @@ Pinus halepensis
 1102
 </td>
 <td style="text-align:right;">
-0.6185928
-</td>
-<td style="text-align:right;">
-0.1309720
-</td>
-<td style="text-align:right;">
-0.7344168
-</td>
-<td style="text-align:right;">
-0.2334156
-</td>
-<td style="text-align:right;">
 1.3251070
 </td>
 <td style="text-align:right;">
@@ -546,18 +766,6 @@ Pinus nigra
 </td>
 <td style="text-align:right;">
 1523
-</td>
-<td style="text-align:right;">
-1.2624309
-</td>
-<td style="text-align:right;">
-0.1830418
-</td>
-<td style="text-align:right;">
-2.9911585
-</td>
-<td style="text-align:right;">
-1.2441418
 </td>
 <td style="text-align:right;">
 1.2544666
@@ -583,18 +791,6 @@ Pinus pinea
 1314
 </td>
 <td style="text-align:right;">
-0.7224384
-</td>
-<td style="text-align:right;">
-0.1044368
-</td>
-<td style="text-align:right;">
-0.7945862
-</td>
-<td style="text-align:right;">
-0.2197946
-</td>
-<td style="text-align:right;">
 1.6750968
 </td>
 <td style="text-align:right;">
@@ -616,18 +812,6 @@ Pinus sylvestris
 </td>
 <td style="text-align:right;">
 1765
-</td>
-<td style="text-align:right;">
-1.1783006
-</td>
-<td style="text-align:right;">
-0.1440222
-</td>
-<td style="text-align:right;">
-2.7295937
-</td>
-<td style="text-align:right;">
-1.7019872
 </td>
 <td style="text-align:right;">
 1.2996779
@@ -653,18 +837,6 @@ Pinus uncinata
 1730
 </td>
 <td style="text-align:right;">
-1.4366275
-</td>
-<td style="text-align:right;">
-0.1656560
-</td>
-<td style="text-align:right;">
-1.3749624
-</td>
-<td style="text-align:right;">
-0.4866085
-</td>
-<td style="text-align:right;">
 1.3201635
 </td>
 <td style="text-align:right;">
@@ -686,18 +858,6 @@ Quercus faginea
 </td>
 <td style="text-align:right;">
 668
-</td>
-<td style="text-align:right;">
-1.0944696
-</td>
-<td style="text-align:right;">
-0.2884360
-</td>
-<td style="text-align:right;">
-0.3209908
-</td>
-<td style="text-align:right;">
-0.1365530
 </td>
 <td style="text-align:right;">
 1.1782881
@@ -723,18 +883,6 @@ Quercus ilex
 1559
 </td>
 <td style="text-align:right;">
-0.7399350
-</td>
-<td style="text-align:right;">
-0.1664965
-</td>
-<td style="text-align:right;">
-3.2520348
-</td>
-<td style="text-align:right;">
-1.0971737
-</td>
-<td style="text-align:right;">
 0.7920657
 </td>
 <td style="text-align:right;">
@@ -758,18 +906,6 @@ Quercus pubescens
 1132
 </td>
 <td style="text-align:right;">
-0.7972673
-</td>
-<td style="text-align:right;">
-0.2511502
-</td>
-<td style="text-align:right;">
-0.2799216
-</td>
-<td style="text-align:right;">
-0.1120326
-</td>
-<td style="text-align:right;">
 1.0658610
 </td>
 <td style="text-align:right;">
@@ -791,18 +927,6 @@ Quercus suber
 </td>
 <td style="text-align:right;">
 1444
-</td>
-<td style="text-align:right;">
-0.6037066
-</td>
-<td style="text-align:right;">
-0.1476023
-</td>
-<td style="text-align:right;">
-5.2324908
-</td>
-<td style="text-align:right;">
-1.9340470
 </td>
 <td style="text-align:right;">
 1.0290614
@@ -835,13 +959,13 @@ Quercus suber
 <h3 id="model-fitting-of-the-relative-wue-reduction">Model fitting of the relative WUE reduction<a class="anchor" aria-label="anchor" href="#model-fitting-of-the-relative-wue-reduction"></a>
 </h3>
 <p>We want to build a model of the relative WUE as a function of available PAR, so that we can reduce species-level maximum WUE values for cohorts in the shadow. To fit the model we need good estimates of relative WUE, which implies that the maximum WUE values make sense. With this aim, we focus on those records corresponding to plots/species where at least 85% of PAR was available for at least one cohort of the species in the plot.</p>
-<p>Using this selection, we first draw the relationship between PAR and WUEg: <img src="Metamodelling_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<p>Using this selection, we first draw the relationship between PAR and WUEg: <img src="Metamodelling_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
 <p>where we see that the relationship is species-specific. WUE is known to decrease for parts of the canopy receiving less light (e.g. Medrano et al. 2012). We can now plot relative WUE in relationship to PAR:</p>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 <p>Even though light extinction is not the same in all species, here it seems reasonable to fit a single function for all species. We thus fit a non-linear model where relative WUE is a power function of PAR:</p>
 <p>We now draw again the previous plot with the fitted relationship, i.e. relative WUEg as a function of PAR:</p>
 <pre><code><span class="co">## Warning: Removed 18 rows containing missing values (geom_point).</span></code></pre>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="maximum-wue-per-species">Maximum WUE per species<a class="anchor" aria-label="anchor" href="#maximum-wue-per-species"></a>
@@ -1420,13 +1544,13 @@ Quercus suber
 <h2 id="evaluate-similarity-in-e-and-an-estimates">Evaluate similarity in E and An estimates<a class="anchor" aria-label="anchor" href="#evaluate-similarity-in-e-and-an-estimates"></a>
 </h2>
 <pre><code><span class="co">## Warning: Removed 113 rows containing missing values (geom_point).</span></code></pre>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
-<pre><code><span class="co">## Warning: Removed 175 rows containing missing values (geom_point).</span></code></pre>
 <p><img src="Metamodelling_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
-<pre><code><span class="co">## Warning: Removed 52 rows containing missing values (geom_point).</span></code></pre>
+<pre><code><span class="co">## Warning: Removed 175 rows containing missing values (geom_point).</span></code></pre>
 <p><img src="Metamodelling_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
-<pre><code><span class="co">## Warning: Removed 626 rows containing missing values (geom_point).</span></code></pre>
+<pre><code><span class="co">## Warning: Removed 52 rows containing missing values (geom_point).</span></code></pre>
 <p><img src="Metamodelling_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<pre><code><span class="co">## Warning: Removed 626 rows containing missing values (geom_point).</span></code></pre>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-17-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
