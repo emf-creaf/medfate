@@ -82,7 +82,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
                    xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                    summary.freq = summary.freq, ...))
   } 
-  else if(type %in% c("PlantLAI","PlantTranspiration","PlantNetPhotosynthesis", "PlantGrossPhotosynthesis",
+  else if(type %in% c("PlantLAI","PlantLAIlive","PlantTranspiration","PlantNetPhotosynthesis", "PlantGrossPhotosynthesis",
                       "PlantAbsorbedSWR","PlantNetLWR")) {
     subtype = substr(type,6,nchar(type))
     OM = x$Plants[[subtype]][,cohorts,drop=FALSE]
@@ -284,7 +284,7 @@ plot.fordyn<-function(x, type="StandBasalArea",
                             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                             summary.freq = summary.freq, ...))
     } 
-    else if(type %in% c("PlantLAI","PlantTranspiration","PlantNetPhotosynthesis", "PlantGrossPhotosynthesis",
+    else if(type %in% c("PlantLAI","PlantLAIlive","PlantTranspiration","PlantNetPhotosynthesis", "PlantGrossPhotosynthesis",
                         "PlantAbsorbedSWR","PlantNetLWR")) {
       subtype = substr(type,6,nchar(type))
       OM = summary(x, freq = "days", output = paste0("Plants$",subtype))[,cohorts,drop=FALSE]

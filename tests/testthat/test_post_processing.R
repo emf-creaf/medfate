@@ -26,6 +26,7 @@ test_that("Can produce all basic spwb plots and summaries",{
   expect_s3_class(plot(S1, "PlantExtraction"), "ggplot")
   expect_s3_class(plot(S1, "LAI"), "ggplot")
   expect_s3_class(plot(S1, "PlantLAI"), "ggplot")
+  expect_s3_class(plot(S1, "PlantLAIlive"), "ggplot")
   expect_s3_class(plot(S1, "PlantStress"), "ggplot")
   expect_s3_class(plot(S1, "StemPLC"), "ggplot")
   expect_s3_class(plot(S1, "PlantPsi"), "ggplot")

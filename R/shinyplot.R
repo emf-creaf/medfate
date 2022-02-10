@@ -191,10 +191,11 @@
                                      )
                             ),
                             tabPanel("Plants",
-                                     selectInput(inputId = "plant_group_selection",
+                                     radioButtons(inputId = "plant_group_selection",
                                                  label = "Plant group",
-                                                 choices = c("all", "trees", "shrubs")
-                                                 ),
+                                                 choices = c("all", "trees", "shrubs"),
+                                                 selected = "all",
+                                                 inline = TRUE),
                                      selectInput(
                                        inputId = "cohort_selection",
                                        label = "Plant cohorts",

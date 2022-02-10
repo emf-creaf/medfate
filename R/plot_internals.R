@@ -35,6 +35,7 @@
 }
 .getPlantPlotTypes<-function(transpirationMode = "Granier") {
   TYPES = c("Plant LAI" = "PlantLAI",
+            "Plant LAI (live)" = "PlantLAIlive",
             "Transpiration" = "PlantTranspiration",
             "Transpiration per leaf" = "TranspirationPerLeaf",
             "Gross photosynthesis" = "PlantGrossPhotosynthesis",
@@ -314,6 +315,7 @@
   else if(type=="PlantWaterBalance") ylab = expression(paste("Plant water balance   ",(L%.%m^{-2})))
   else if(type=="WaterBalancePerLeaf") ylab = expression(paste("Water balance per leaf area ",(L%.%m^{-2})))
   else if(type=="PlantLAI") ylab = expression(paste("Leaf area index ",(m^{-2}%.%m^{-2})))
+  else if(type=="PlantLAIlive") ylab = expression(paste("(Live) leaf area index ",(m^{-2}%.%m^{-2})))
   else if(type=="AbsorbedSWRPerLeaf") ylab = expression(paste("Absorbed SWR per leaf area ",(MJ%.%m^{-2}%.%d^{-1})))
   else if(type=="LeafAbsorbedSWR") ylab = expression(paste("Absorbed SWR per leaf area ",(W%.%m^{-2})))
   else if(type=="NetLWRPerLeaf") ylab = expression(paste("Net LWR per leaf area ",(MJ%.%m^{-2}%.%d^{-1})))

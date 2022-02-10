@@ -60,6 +60,7 @@ The following plots are currently available for \code{\link{spwb}} (most of them
     \item{\code{"WTD"}:}{ Water table depth.}
     \item{\code{"LAI"}:}{ Expanded and dead leaf area index of the whole stand.}
     \item{\code{"PlantLAI"}:}{ Plant cohort leaf area index (expanded leaves).}
+    \item{\code{"PlantLAIlive"}:}{ Plant cohort leaf area index ("live" leaves).}
     \item{\code{"PlantStress"}:}{ Plant cohort average daily drought stress.}
     \item{\code{"PlantPsi"}:}{ Plant cohort water potential (only for \code{transpirationMode = "Granier"}).}
     \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration.}
@@ -124,10 +125,12 @@ In addition to the former, the following plots are available for objects \code{\
     \item{\code{"PlantBiomassBalance"}:  Daily plant biomass balance, i.e. labile change + structural change (g dry · ind-2).}
     \item{\code{"MortalityBiomassLoss"}:  Biomass loss due to mortality (g dry · m-2).}    
     \item{\code{"PlantBiomassBalance"}:  Daily cohort biomass balance (including mortality) (g dry · m-2).}
+    \item{\code{"LeafBiomass"}: Leaf structural dry biomass per individual.}
+    \item{\code{"SapwoodBiomass"}: Sapwood dry biomass per individual.}
+    \item{\code{"FineRootBiomass"}: Fine root dry biomass per individual.}
     \item{\code{"SapwoodArea"}:  Sapwood area per individual.}
     \item{\code{"LeafArea"}:  Leaf area per individual.}
     \item{\code{"FineRootArea"}: Fine root area per individual (only for \code{transpirationMode = "Sperry"}).}
-    \item{\code{"FineRootBiomass"}: Fine root dry biomass per individual.}
     \item{\code{"DBH"}: Diameter at breast height (in cm) for an average individual of each plant cohort.}
     \item{\code{"Height"}: Height (in cm) for an average individual of each plant cohort.}
     \item{\code{"SAgrowth"}:  Sapwood area growth rate.}
