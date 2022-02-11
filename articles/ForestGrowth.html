@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Forest growth</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-02-10</h4>
+            <h4 data-toc-skip class="date">2022-02-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/ForestGrowth.Rmd" class="external-link"><code>vignettes/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -210,8 +210,8 @@
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">below</span></code></pre></div>
 <pre><code><span class="co">##        Z50  Z95 fineRootBiomass coarseRootSoilVolume</span>
 <span class="co">## T1_148 400 2000      1574.98321             9.997093</span>
-<span class="co">## T2_168 400 2000       773.49163             9.997093</span>
-<span class="co">## S1_165 300 1500        14.42518             7.473966</span></code></pre>
+<span class="co">## T2_168 400 2000       721.44857             9.997093</span>
+<span class="co">## S1_165 300 1500        13.57757             7.473966</span></code></pre>
 <p>Parameters related to plant growth can be seen in <code>paramsGrowth</code> and <code>paramsAllometries</code>:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsGrowth</span></code></pre></div>
@@ -226,7 +226,7 @@
 <span class="co">##        fHDmax     WoodC</span>
 <span class="co">## T1_148    130 0.4979943</span>
 <span class="co">## T2_168    100 0.4740096</span>
-<span class="co">## S1_165     NA 0.4750094</span></code></pre>
+<span class="co">## S1_165     NA 0.4749178</span></code></pre>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsAllometries</span></code></pre></div>
 <pre><code><span class="co">##             Aash     Bash      Absh      Bbsh     Acr   B1cr     B2cr</span>
@@ -241,8 +241,8 @@
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">internalCarbon</span></code></pre></div>
 <pre><code><span class="co">##        sugarLeaf starchLeaf sugarSapwood starchSapwood</span>
-<span class="co">## T1_148 0.4029239 0.00925123    0.5740081      3.231261</span>
-<span class="co">## T2_168 0.3585751 0.00925123    1.0750595      3.230196</span>
+<span class="co">## T1_148 0.4029239 0.00925123    0.5738487      3.231261</span>
+<span class="co">## T2_168 0.3585751 0.00925123    1.0741383      3.230196</span>
 <span class="co">## S1_165 0.7223526 0.00925123    0.2857655      3.383669</span></code></pre>
 </div>
 </div>
@@ -252,25 +252,25 @@
 <p>In this vignette we will use one year of example meteorological data with the following precipitation and temperature seasonal trends:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">G1</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Initial plant cohort biomass (g/m2): 8554.49</span>
+<pre><code><span class="co">## Initial plant cohort biomass (g/m2): 8551.44</span>
 <span class="co">## Initial soil water content (mm): 291.257</span>
 <span class="co">## Initial snowpack content (mm): 0</span>
 <span class="co">## Performing daily simulations</span>
 <span class="co">## </span>
 <span class="co">##  [Year 2001]: ....................................</span>
 <span class="co">## </span>
-<span class="co">## Final plant biomass (g/m2): 8720</span>
-<span class="co">## Change in plant biomass (g/m2): 165.509</span>
-<span class="co">## Plant biomass balance result (g/m2): 165.509</span>
+<span class="co">## Final plant biomass (g/m2): 8717.41</span>
+<span class="co">## Change in plant biomass (g/m2): 165.967</span>
+<span class="co">## Plant biomass balance result (g/m2): 165.967</span>
 <span class="co">## Plant biomass balance components:</span>
-<span class="co">##   Structural balance (g/m2) 266 Labile balance (g/m2) -100</span>
+<span class="co">##   Structural balance (g/m2) 264 Labile balance (g/m2) -98</span>
 <span class="co">##   Plant individual balance (g/m2) 166 Mortality loss (g/m2) 0</span>
 <span class="co">## Final soil water content (mm): 269.256</span>
 <span class="co">## Final snowpack content (mm): 0</span>
 <span class="co">## Change in soil water content (mm): -22.0006</span>
 <span class="co">## Soil water balance result (mm): -22.0006</span>
 <span class="co">## Change in snowpack water content (mm): 0</span>
-<span class="co">## Snowpack water balance result (mm): 7.10543e-15</span>
+<span class="co">## Snowpack water balance result (mm): 0</span>
 <span class="co">## Water balance components:</span>
 <span class="co">##   Precipitation (mm) 513</span>
 <span class="co">##   Rain (mm) 462 Snow (mm) 51</span>
