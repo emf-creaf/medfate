@@ -21,43 +21,78 @@ library(nlme)
 
 ## Introduction
 
-This document presents a metamodeling exercise between basic (Granier's) and advanced (Sperry's) versions of the soil plant water balance model. The goal is to make transpiration (E) and gross photosynthesis (Ag) estimates produced by the basic water balance model as similar as possible to those predicted by the advanced model which, given its greater process detail and physical basis, is assumed to provide better E and Ag estimates when provided appropriate functional traits are supplied. 
+### Goal
 
-Assuming there are no water limitations, the following parameters are used to determine E and Ag in the basic model, which cannot easily be parameterized from available trait data (see https://emf-creaf.github.io/medfatebook/index.html):
+This document presents a meta-modelling exercise between basic (Granier's) and advanced (Sperry's) versions of the soil plant water balance model. The goal is to make predictions produced by the basic water balance model as similar as possible to those produced by the advanced model which, given its greater process detail and physical basis, is assumed to provide more realistic and accurate predictions when appropriate functional traits are supplied. The meta-modelling results should benefit not only water balance simulations (function `spwb`) but also simulations of forest growth (`growth`) and dynamics (`fordyn`).
 
- + `Tmax_LAI` and `Tmax_LAIsp`, which determine the ratio of maximum transpiration over potential evapotranspiration for a given LAI. An empirical function with these parameters was derived by Granier (1999), but without distinguishing between species. A metamodelling exercise should allow deriving species-specific values for these parameters.
- + `WUE`, which represents the daily water use efficiency (g C of gross assimilation / l transpired) under conditions of high light and no water stress. Such estimate of WUE is not easily available for many species in trait databases, but we can derive it from metamodelling if Farquhar's photosynthetic parameters `Vmax298` and `Jmax298` are known.
- + `WUE_decay`, which is the exponent of the function specifying the decrease in relative WUE for lower positions within the canopy, due to the decrease of available light. Again, this rate of decay should depend on the species, according to its degree of shade tolerance, and will be influenced by parameters regulating plant hydraulics, photosynthesis and light extinction.
- 
-## Data
+### Target parameters
 
- * IFN data 
- * Weather data from interpolation using meteoland (year 2000).
- * Soil data from soil grids (could be replaced with local samples).
+The following parameters are used in the basic model, that cannot easily be parameterized from available information (see https://emf-creaf.github.io/medfatebook/index.html):
 
+ + `Tmax_LAI` and `Tmax_LAIsp`, which determine the ratio of maximum transpiration over potential evapotranspiration for a given LAI. An empirical function with these parameters was derived by Granier (1999) for European temperate forests, without distinguishing between forests dominated by different species. 
+ + `WUE`, which represents the daily Water Use Efficiency (g C of gross assimilation / l H2O transpired) under conditions of high photosynthetically active radiation (PAR) and no water deficit. 
+ + `WUE_decay`, which is the exponent of the function specifying the decrease in relative WUE for lower (shadier) positions within the canopy, due to the decrease of available PAR. This rate of decay should again be species-specific, according to its degree of shade tolerance, and should be influenced by parameters regulating plant hydraulics, photosynthesis and light extinction.
++ `Ar2Al`, which is the ratio of fine root area to leaf area. This parameter is needed to determine the allocation to fine root biomass under `growth` and `fordyn` simulations using Granier's transpiration approach.
+
+As stated above, the general idea is to use simulation results issued by the advanced water balance model to obtain appropriate estimates of the previous parameters, so that simulations with the basic water balance model (which is faster) produce an output similar that of the advanced model (which is slower). In the case of `Tmax_LAI` and `Tmax_LAIsp` we aim to determine a species-specific factor that can be used to modify the empirical coefficients obtained by Granier (1999). Water use efficiency is an emergent property of the advanced water balance model, depending on multiple parameters (hydraulics, photosynthetic capacity, stomatal conductance, etc). We can thus estimate `WUE` values using simulations with high light levels and no water deficit. The decrease of WUE for plant cohorts in progressively shadier environments with respect to WUE under full light can provide us with an estimate of `WUE_decay`, which again will depend on multiple plant traits.
+
+### Target species
+
+The metamodelling procedure could be applied to any target species, but we focused on the main tree species in Catalonia: *Pinus halepensis*, *Pinus sylvestris*, *Pinus nigra*, *Pinus uncinata*, *Pinus pinea*, *Quercus ilex*, *Quercus pubescens*, *Quercus faginea*,  *Quercus suber*, *Fagus sylvatica* and *Abies alba*.
+
+For each of those species, we first revised the values of the most important parameters in the advanced water balance model (parameters of the hydraulic vulnerability curve are omitted as they should not be relevant in simulations without soil water deficit): 
 ```{r, echo = FALSE}
 customParamsSpecies = read_xlsx("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Data/SpParamsCUSTOM.xlsx", sheet = "SpParamsCUSTOM")
-customParamsSpecies[, c("Name","SLA","Al2As", "VCleaf_kmax", "Kmax_stemxylem", "Vmax298", "Jmax298")] %>%
+customParamsSpecies[, c("Name","SLA","Al2As", "VCleaf_kmax", "Kmax_stemxylem", "Gswmax","Vmax298", "Jmax298")] %>%
   kbl() %>%
   kable_styling()
 ```
 
+Ideally, the transpiration and photosynthesis predictions of the advanced water balance model should be evaluated with these parameterization before using it as reference for the meta-modelling study. Otherwise we could be biasing both models with inappropriate parameter values. At present, the advance water balance model has been evaluated using data from experimental plots in stands dominated by some of the target species, but not others.
+
 ## Simulations
 
-
-The Granier and Sperry version of medfate ware run on all 90 forest plots (the advanced model crashed for a few cases) using weather corresponding to year 2000.
-
-We loaded the forest plot data and, for each plot with results, assemble the PAR corresponding to each cohort, the transpiration obtained by each model and the WUEg resulting from the simulation with Sperry's model.
 ```{r, echo = FALSE}
 df = readRDS("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Rdata/metamodelling_results.rds")
 target_spp = sort(unique(as.numeric(df$SP)))
 ```
 
+### Forest, soil and weather inputs
+
+We used forest plot data from the third edition of the Spanish National Forest Inventory (IFN3). Forest plots were located in Catalonia and with a minimum basal area of 3 $m^2·ha^{-1}$. For each target species we randomly selected up to 60 forest plots where the species was dominant (> 80% in basal area). Plant records corresponding to species different than the target species were excluded. 
+
+Like in other simulation exercises with IFN data, soil data was obtained from SoilGrids from plot coordinates, with rock fragment contents corrected according to the amount of surface stoniness recorded in the field sampling. Daily weather data corresponding to year 2000 was obtained by interpolation using package **meteoland** on the location of each forest plot.
+
+### Fine root area to leaf area ratio
+
+Estimates of the fine root area to leaf area ratio (`Ar2Al`) can be estimated when initializing the advanced water balance model. In this mode, the maximum hydraulic conductance in the rhizosphere is estimated assuming that the resistance of the rhizosphere represents 15% of total hydraulic resistance (see control parameter `averageFracRhizosphereResistance`), on average across a range of soil water potentials. The model estimates fine root biomass from maximum hydraulic conductance in the rhizosphere (as explained in https://emf-creaf.github.io/medfatebook/carbonpoolsbalance.html#fine-root-area-and-biomass). 
+
+The following table presents the average values (and std. error) of whole-plant maximum hydraulic conductance (i.e. considering leaves stems and coarse roots), as well as average values of the `Ar2Al` estimates for each species:
+
+```{r, echo = FALSE}
+TR_sp <- df %>% 
+  group_by(Name) %>%
+  summarize(n = n(),
+            kplant_mean = mean(kplant, na.rm=TRUE),
+            kplant_se = sd(kplant, na.rm=TRUE)/sqrt(n),
+            Ar2Al_mean = mean(Ar2Al, na.rm=TRUE),
+            Ar2Al_se = sd(Ar2Al, na.rm=TRUE)/sqrt(n))
+TR_sp %>%
+  kbl() %>%
+  kable_styling()
+```
+
+
+### Soil water balance simulations
+
+For each target species, we ran the soil water balance model using function `spwb` (actually, `spwbpoints` from package **medfateland**) and either Granier's or Sperry's transpiration mode. Simulations were conducted using `control$unlimitedSoilWater = TRUE` so that transpiration and photosynthesis estimates did not include soil water limitations (cohorts in the shade were still affected by the lower PAR, however). For each plant cohort in each simulated plot we recorded the percentage of PAR available to the plant cohort, the annual transpiration and annual photosynthesis produced by each model.
+
 
 ## Transpiration ratio
 
-We wanted to determine if there were systematic differences in E between the two models. Such differences should be species-specific. Even if the basic model has a single linear equation (from Granier) to estimate Tmax from LAI, the advanced model estimates E from a complex calculation involving several species-specific functional traits. The ratio between E estimates from the two models could be used to scale the estimates of Granier's equation (or in other words, to scale its parameters). 
+We examined if there were systematic differences in annual transpiration (E) between the two models. Such differences should be species-specific. While the basic model has a single linear equation (from Granier) to estimate the ratio maximum transpiration (Tmax) to potential evapotranspiration (PET) from stand's LAI and then divides plant transpiration among plant cohorts, the advanced model estimates cohort transpiration from a complex calculation involving several species-specific functional traits. The ratio between cohort annual E estimates from the two models could be used to scale the estimates of Granier's equation (or in other words, to scale its parameters). 
 
+The following plot displays the ratio between cohort annual E estimates obtained using the basic and advanced models, where we use the percentage of PAR of the plant cohort in the x-axis to show whether the relationship changes between sunlit or shade cohorts:
 
 ```{r, echo = FALSE, fig = TRUE, message=FALSE}
 ggplot(df, aes(x = PAR, y = E_ratio))+
@@ -67,17 +102,11 @@ ggplot(df, aes(x = PAR, y = E_ratio))+
   theme_bw()
 ```
 
-It is evident that there are differences in the average ratio across species, with highest ratios for P. halepensis and F. sylvatica and lowest ones for Quercus pubescens and Q. ilex. 
-
-We can find the species average ratios and multiply the default Granier coefficients (Tmax_LAI and Tmax_LAIsq).
+It is evident that there are differences in the average ratio across species and apparently this ratio does not change with the vertical position of the cohort within the canopy. We can estimate species-average ratios and use them to multiply the default coefficients of Granier's (1999) equation (default values for parameters `Tmax_LAI = 0.134` and `Tmax_LAIsq = -0.006`).
 ```{r, echo = FALSE}
 TR_sp <- df %>% 
   group_by(Name) %>%
   summarize(n = n(),
-            kplant_mean = mean(kplant, na.rm=TRUE),
-            kplant_sd = sd(kplant, na.rm=TRUE),
-            Ar2Al_mean = mean(Ar2Al, na.rm=TRUE),
-            Ar2Al_se = sd(Ar2Al, na.rm=TRUE),
             E_ratio_mean = mean(E_ratio, na.rm=TRUE),
             E_ratio_sd = sd(E_ratio, na.rm=TRUE),
             E_ratio_se = E_ratio_sd/sqrt(n),
@@ -89,9 +118,9 @@ TR_sp %>%
 ```
 
 ## Water use efficiency
-### Relative WUE
+### WUE and relative WUE
 
-WUE values depend on the species and plot environmental factors, as well as on the position of the plant within the canopy. We first estimate the maximum PAR and WUE for each species in each plot, and find the relative WUE as the ratio between WUE and its maximum.
+We estimated WUEg as the ratio between annual gross photosynthesis (Ag) and annual transpiration (E), both estimated using the advanced transpiration model. WUE values thus depend on the species identity (via functional traits) and on plot environmental factors (e.g. climatic conditions), as well as on the position of the plant within the canopy. We then estimate the maximum PAR and maximum WUE across cohorts for each plot, and calculate the relative WUE for each cohort as the ratio between WUE and the plot maximum value.
 ```{r, echo = FALSE}
 df = df[!is.na(df$WUEg),]
 df = df %>% 
@@ -101,11 +130,11 @@ df = df %>%
 
 ### Model fitting of the relative WUE reduction
 
-We want to build a model of the relative WUE as a function of available PAR, so that we can reduce species-level maximum WUE values for cohorts in the shadow. To fit the model we need good estimates of relative WUE, which implies that the maximum WUE values make sense. With this aim, we focus on those records corresponding to plots/species where at least 85% of PAR was available for at least one cohort of the species in the plot.
+We want to build a model of the relative WUE as a function of available PAR, so that we can reduce species-level maximum WUE values for cohorts in the shadow. To fit such model we need good estimates of relative WUE, because this implies that the maximum WUE values correspond to high PAR. With this aim, we focus on those records corresponding to plots/species where at least 90% of PAR was available for at least one cohort of the species in the plot.
 ```{r, echo = FALSE}
 df2 = df[df$PAR_max >90,]
 ```
-Using this selection, we first draw the relationship between PAR and WUEg:
+Using this selection, we then draw the relationship between PAR and WUEg:
 ```{r, echo = FALSE}
 g1<-ggplot(df2, aes(x = PAR, y = WUEg))+
   geom_point(aes(col = Name), size=0.3)+
@@ -124,7 +153,7 @@ ggplot(df2, aes(x = PAR, y = WUEg_rel))+
   theme_bw()
 ```
 
-Even though light extinction is not the same in all species, here it seems reasonable to fit a single function for all species. We thus fit a non-linear model where relative WUE is a power function of PAR:
+Note that the relationship between relative WUE and PAR is less noisy than the relationship between absolute WUE and PAR. For each species, we fit a non-linear model where relative WUE is a power function of PAR:
 ```{r, echo = FALSE}
 b = rep(NA, length(target_spp))
 Pred = numeric(0)
@@ -141,8 +170,7 @@ df2$Pred = Pred
 df$WUEg_max_pred = WUEg_max_pred
 ```
 
-
-We now draw again the previous plot with the fitted relationship, i.e. relative WUEg as a function of PAR:
+We now draw again the previous plot with the species-specific fitted relationships, i.e. relative WUEg as a function of PAR:
 ```{r, echo = FALSE}
 g2<-ggplot(df2, aes(x = PAR, y = WUEg_rel))+
   geom_point(aes(col = Name), size = 0.3, alpha = 0.3)+
@@ -154,12 +182,11 @@ g2<-ggplot(df2, aes(x = PAR, y = WUEg_rel))+
 g2
 ```
 
+Note that there are substantial differences in the decay coefficients among species.
 
 ### Maximum WUE per species
-We can now go back to the original data frame, and use the fitted model to estimate the maximum WUE that would be expected if PAR was 100% for any given plant cohort.
 
-The mean values of WUEg_max for each species can be used as estimates for parameter WUE in medfate. We create a data frame with these as well as mean observed values, and 
-standard deviation and standard error:
+We can now go back to the original aim of estimating maximum WUE (under conditions of high PAR and no water deficit). We can use the fitted model to estimate the maximum WUE that would be expected if PAR was 100% for any given plant cohort, i.e. `WUEg_max`. The mean values of `WUEg_max` for each species can be used as estimates for parameter `WUE` in medfate:
 ```{r, echo = FALSE}
 WUE_sp <- df %>% 
   mutate(PAR50 = as.numeric(PAR>50)) %>%
@@ -176,8 +203,9 @@ WUE_sp %>%
   kable_styling()
 ```
 
-## Metamodelling parameters
+## Meta-modelling parameters
 
+The table containing the four parameters estimated via meta-modelling is the following:
 ```{r, echo = FALSE}
 df_par = readRDS("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Rdata/metamodelling_params.rds")
 
@@ -185,6 +213,7 @@ df_par %>%
   kbl() %>%
   kable_styling()
 ```
+
 
 ## Evaluate similarity in E and An estimates
 
