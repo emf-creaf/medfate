@@ -1,5 +1,5 @@
 ---
-title: "Preparing inputs"
+title: "Preparing model inputs"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
 output: 

@@ -8,7 +8,7 @@ articles:
   contents:
     - starts_with("Package")
     - starts_with("Preparing")
-- title: Simulation models
+- title: Running simulation models
   contents:
     - starts_with("Basic")
     - starts_with("Advanced")
