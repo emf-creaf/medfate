@@ -14,18 +14,16 @@ articles:
     - starts_with("Advanced")
     - starts_with("ForestGrowth")
     - starts_with("ForestDynamics")
-- title: Model parametrization
-  contents:
-    - starts_with("parametrization/SpeciesParameterization")
-    - starts_with("parametrization/Metamodelling")
-- title: Model evaluation
-  contents:
-    - starts_with("evaluation/StandLevelEvaluation")
-    - starts_with("evaluation/IFNEvaluation")
-- title: Model analysis
+- title: Model analysis and parametrization
   contents:
     - starts_with("modelanalysis/Sensitivity")
-- title: Worked examples
+    - starts_with("parametrization/SpeciesParameterization")
+    - starts_with("parametrization/Metamodelling")
+- title: Model performance evaluation
+  contents:
+    - starts_with("evaluation/StandLevelEvaluation")
+    - starts_with("evaluation/RegionalLevelEvaluation")
+- title: Application examples
   contents:
     - starts_with("workedexamples/FontBlanche")
 

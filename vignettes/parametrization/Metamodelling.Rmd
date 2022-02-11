@@ -146,7 +146,7 @@ g1
 
 where we see that the relationship is species-specific. WUE is known to decrease for parts of the canopy receiving less light (e.g. Medrano et al. 2012). We can now plot relative WUE in relationship to PAR:
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 ggplot(df2, aes(x = PAR, y = WUEg_rel))+
   geom_point(aes(col = Name), size = 0.3)+
   xlab("% PAR")+ ylab("% WUEg/WUEg_max")+
@@ -171,7 +171,7 @@ df$WUEg_max_pred = WUEg_max_pred
 ```
 
 We now draw again the previous plot with the species-specific fitted relationships, i.e. relative WUEg as a function of PAR:
-```{r, echo = FALSE}
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 g2<-ggplot(df2, aes(x = PAR, y = WUEg_rel))+
   geom_point(aes(col = Name), size = 0.3, alpha = 0.3)+
   geom_line(aes(x=PAR, y=Pred, col = Name))+
@@ -187,7 +187,7 @@ Note that there are substantial differences in the decay coefficients among spec
 ### Maximum WUE per species
 
 We can now go back to the original aim of estimating maximum WUE (under conditions of high PAR and no water deficit). We can use the fitted model to estimate the maximum WUE that would be expected if PAR was 100% for any given plant cohort, i.e. `WUEg_max`. The mean values of `WUEg_max` for each species can be used as estimates for parameter `WUE` in medfate:
-```{r, echo = FALSE}
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 WUE_sp <- df %>% 
   mutate(PAR50 = as.numeric(PAR>50)) %>%
   group_by(SP, Name) %>%
@@ -198,57 +198,62 @@ WUE_sp <- df %>%
             WUEg_max_sd = sd(WUEg_max_pred)) %>%
   mutate(WUEg_max_se = WUEg_max_sd/sqrt(nWUE)) 
 
-WUE_sp %>%
+WUE_sp[,-1] %>%
   kbl() %>%
   kable_styling()
 ```
 
-## Meta-modelling parameters
 
-The table containing the four parameters estimated via meta-modelling is the following:
+
+## Similarity in E and Ag estimates
+
+### Meta-modelling parameters
+
+The table containing the five parameters estimated via meta-modelling is the following:
 ```{r, echo = FALSE}
 df_par = readRDS("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Rdata/metamodelling_params.rds")
 
-df_par %>%
+df_par[,-1] %>%
   kbl() %>%
   kable_styling()
 ```
 
+### Evaluation of the effect of the new parameters
+Here we evaluated whether the estimated parameters indeed increased the similarity of transpiration (E) and gross photosynthesis (Ag) estimates between the two models. To this aim we ran again the basic water balance model on all the forest plots but using the estimated parameters instead of the default values.
 
-## Evaluate similarity in E and An estimates
+The following plots show the effect of the new parameters on annual E and annual Ag for plant cohorts of the plots included in the study:
 
-
-```{r, echo = FALSE}
-ggplot(df, aes(x=E_granier, y = E_sperry))+
+```{r, echo = FALSE, fig.width=10, fig.height=9, warning=FALSE}
+g1<-ggplot(df, aes(x=E_granier, y = E_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
   ylim(c(0,350))+ xlim(c(0,350))+
-  theme_bw()
-```
-
-
-```{r, echo = FALSE}
-ggplot(df, aes(x=E_granier_meta, y = E_sperry))+
+  xlab("Annual E (basic; default parameters)")+ ylab("Annual E (advanced)")+
+  theme_bw()+theme(legend.position = "none")
+g2<-ggplot(df, aes(x=E_granier_meta, y = E_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
+  scale_color_discrete("")+
   ylim(c(0,350))+ xlim(c(0,350))+
+  xlab("Annual E (basic; new parameters)")+ ylab("Annual E (advanced)")+
   theme_bw()
-```
-
-```{r, echo = FALSE}
-ggplot(df, aes(x=Ag_granier, y = Ag_sperry))+
+l <- get_legend(g2)
+g2<- g2 +theme(legend.position = "none")
+g3<-ggplot(df, aes(x=Ag_granier, y = Ag_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
   ylim(c(0,1500))+ xlim(c(0,1500))+
-  theme_bw()
-```
-
-```{r, echo = FALSE}
-ggplot(df, aes(x=Ag_granier_meta, y = Ag_sperry))+
+  xlab("Annual Ag (basic; default parameters)")+ ylab("Annual Ag (advanced)")+
+  theme_bw()+theme(legend.position = "none")
+g4<-ggplot(df, aes(x=Ag_granier_meta, y = Ag_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
+  scale_color_discrete("")+
   ylim(c(0,1500))+ xlim(c(0,1500))+
-  theme_bw()
+  xlab("Annual Ag (basic; new parameters)")+ ylab("Annual Ag (advanced)")+
+  theme_bw()+theme(legend.position = "none")
+g<-plot_grid(g1,g2,g3,g4, ncol=2)
+plot_grid(g,l, ncol=2, rel_widths = c(1,0.2))
 ```
 
 

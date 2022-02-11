@@ -1,5 +1,5 @@
 ---
-title: "Stand-level evaluation results"
+title: "Stand-level evaluation"
 author: "Miquel De Cáceres"
 date: "`r Sys.Date()`"
 output: 
@@ -9,12 +9,12 @@ output:
 ---
 ```{r eval = FALSE, include = FALSE}
 ## If necessary, rebuild model evaluation
-source("~/OneDrive/Professional/MedfateWorks/MedfateValidation/main_script.R")
+source("~/OneDrive/Professional/MedfateWorks/StandLevelEvaluation/main_script.R")
 ```
 
 
 ```{r setup, include=FALSE}
-params = list(wd='/home/miquel/OneDrive/Professional/MedfateWorks/MedfateValidation/',
+params = list(wd='/home/miquel/OneDrive/Professional/MedfateWorks/StandLevelEvaluation/',
               model='spwb',
               conf='advanced',
               save_plots = FALSE)

@@ -1,5 +1,5 @@
 ---
-title: "Evaluation of forest dynamics with IFN data"
+title: "Evaluation of regional-level forest dynamics with forest inventory data"
 author: "Miquel De Cáceres"
 date: "`r Sys.Date()`"
 output: 
@@ -162,7 +162,7 @@ bai_error_map <-function(data_bai){
 ## Data processing
 
 ```{r, echo = FALSE}
-eval_res <- readRDS("~/OneDrive/Professional/MedfateWorks/IFNevaluation/Rdata/IFNeval_results.rds")
+eval_res <- readRDS("~/OneDrive/Professional/MedfateWorks/RegionalLevelEvaluation/Rdata/IFNeval_results.rds")
 
 SpParams = eval_res$SpParams
 target_spp = eval_res$target_spp
@@ -414,7 +414,7 @@ for(i in 1:length(target_spp)) {
   
   sp = target_spp[i]
   name = names(target_spp)[i]
-  res <- knitr::knit_child('_IFNEvaluation_child.Rmd', quiet = TRUE)
+  res <- knitr::knit_child('_RLEvaluation_child.Rmd', quiet = TRUE)
   cat(res, sep = '\n')
 }
 ```
