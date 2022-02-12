@@ -1,0 +1,741 @@
+---
+title: "Growth Calibration"
+author: "Miquel De Cáceres"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_document:
+    toc: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(kableExtra)
+library(knitr)
+library(ggplot2)
+library(cowplot)
+library(sensitivity)
+library(tidyverse)
+```
+
+## Abstract
+
+On most current PBMs atmospheric CO2 and radiation balance have a dominant influence on dynamics, because forest growth is proportional to the amount of C fixed by photosynthesis.
+
+## Goals
+
+  Calibrate the process-based growth model of 'medfate', including source and sink limitations, for six tree species in Catalonia
+  Compare the performance of the model to predict tree growth (basal area increment) between species-level average values and plot-level calibrated parameters
+
+## Data
+
+ * 90 permanent forest plots (15 plots per dominant species). 
+ * Dominant species are Fagus sylvatica, Pinus halepensis, Pinus nigra, Pinus sylvestris, Quercus pubescens and Quercus ilex.
+ * IFN data (IFN2 for 78 plots, IFN3 for 90 plots, IFN4 for 90 plots)
+ * Dendrological ring width measurements of up to 6 trees per plot. Measurements not available for Quercus ilex. 
+ * Weather data from interpolation using meteoland (1991 - 2015).
+ * Soil data from soil grids (could be replaced with local samples).
+ * Local measurements for sampled trees: Al2As, Ks, Ptlp, SLA (2015).
+
+```{r}
+plot_desc = readRDS("../Rdata/plot_desc_FUN2FUN.rds")
+plot_desc$targetName = as.character(plot_desc$targetName)
+plot_desc$targetName[plot_desc$targetName=="Quercus humilis"] = "Quercus pubescens"
+
+obs_FUN2FUN = readRDS("../Rdata/obs_FUN2FUN_IFN.rds")
+plot_desc$meanBAI = NA
+plot_desc$sdBAI = NA
+for(i in 1:length(obs_FUN2FUN)) {
+  obs_i = obs_FUN2FUN[[i]]
+  if(!is.null(obs_i)) {
+    plot_desc$meanBAI[i] = mean(apply(obs_i[,-1, drop =FALSE],2,mean, na.rm=T), na.rm=T)
+    plot_desc$sdBAI[i] = mean(apply(obs_i[,-1, drop =FALSE],2,sd, na.rm=T), na.rm=T)
+  }
+}
+
+eval_df = readRDS("../Rdata/eval_FUN2FUN.rds")
+
+cal_FUN2FUN_SL_ga = readRDS("../Rdata/cal_FUN2FUN_SL_ga.rds")
+cal_FUN2FUN_SL_ga$Species = as.character(cal_FUN2FUN_SL_ga$Species)
+cal_FUN2FUN_SL_ga$Species[cal_FUN2FUN_SL_ga$Species=="Quercus humilis"] = "Quercus pubescens"
+cal_FUN2FUN_SL_ga$MeanBAI = plot_desc$meanBAI
+cal_FUN2FUN_SL_ga$relvalue_cal = 100*cal_FUN2FUN_SL_ga$value_cal/plot_desc$meanBAI
+
+cal_FUN2FUN_NSL_ga = readRDS("../Rdata/cal_FUN2FUN_NSL_ga.rds")
+cal_FUN2FUN_NSL_ga$Species = as.character(cal_FUN2FUN_NSL_ga$Species)
+cal_FUN2FUN_NSL_ga$Species[cal_FUN2FUN_NSL_ga$Species=="Quercus humilis"] = "Quercus pubescens"
+cal_FUN2FUN_NSL_ga$MeanBAI = plot_desc$meanBAI
+cal_FUN2FUN_NSL_ga$relvalue_cal = 100*cal_FUN2FUN_NSL_ga$value_cal/plot_desc$meanBAI
+eval_df$Obs_BAI = plot_desc$meanBAI
+eval_df$MAErel_uncalibrated = 100*eval_df$MAE_uncalibrated/plot_desc$meanBAI
+eval_df$MAErel_calibrated = 100*eval_df$MAE_calibrated/plot_desc$meanBAI
+
+cal_FUN2FUN_SL_ga$Group = "Gymnosperm"
+cal_FUN2FUN_SL_ga$Group[cal_FUN2FUN_SL_ga$Species %in% c("Fagus sylvatica", "Quercus pubescens")] = "Angiosperm"
+
+cal_FUN2FUN_NSL_ga$Group = cal_FUN2FUN_SL_ga$Group
+```
+
+## Parametrization
+### Parametrization from IFN
+
+For parameters **fHDmin** and **fHDmax**:
+
+  * Take IFN3 tree data (pies mayores)
+  * Remove those lacking diameter or height
+  * By species, calculate HD distribution and take 5% and 95% quantiles.
+  
+### Target parameters for sensitivity analysis/calibration
+  a. **Water use efficiency (WUE)**. Since Granier's model uses the same empirical curve to determine Tmax/PET, differences in WUE may include differences in photosynthetic capacity and water transport capacity.
+  b. **Huber value (1/Al2As)** - Represents the relative allocation of assimilated carbon in leaves vs. sapwood. Values have been measured on the different plots (in 2015), but substantial temporal and spatial variation may exist due to acclimation processes. Therefore, we use measured values for the sake of comparison.
+  c. **Leaf daily respiration rate (RERleaf)** - Used to modulate maintenance respiration demands of leaves, which may represent the largest fraction of maintenance respiration.
+  d. **Sapwood daily respiration rate (RERleaf)** - Used to modulate maintenance respiration demands of living sapwood tissues (parenchyma, cambium, phloem, etc.), which in large trees may also represent a large fraction of maintenance respiration.
+  e. **Leaf maximum relative growth rate (RGRleafmax)** - Used to determine maximum daily leaf growth rate relative to sapwood area (as a proxy of the number of active buds). Actual relative growth rates include temperature and sink limitations to growth.
+  f. **Sapwood maximum relative growth rate (RGRsapwoodmax)** - Used to modulate daily sapwood relative growth rate variations. Actual relative growth rates include temperature and sink limitations to growth.
+  
+Actual carbon assimilation depends on WUE but also Al2As, which results in more or less investment in leaf area. Al2As sets the annual target for sapwood and leaf area. Relative growth rates modulate the actual creation of tissue given the target set. While WUE and Al2As seem more influential, calibrating parameters the other parameters may be useful to set appropriate default values in medfate and to explore if there are differences in these rates related to species or climatic variation.
+
+## Sensitivity analysis
+
+Morris' elementary effects screening method (Morris 1991). Response function final basal area of a IFN3 plot of Fagus sylvatica (a single cohort), after simulating growth between 2001 and 2005, as a function of the target parameters.
+
+
+
+```{r results SA_variance, echo = FALSE}
+sens_var_finalBA = readRDS("../Rdata/sens_finalBA_variance_FUN2FUN.rds")
+parNames = c("rfc@2","RERleaf","RERsapwood","RGRleafmax","RGRsapwoodmax", "SRsapwood", "conduit2sapwood", "Al2As","WUE")
+row.names(sens_var_finalBA$S) = parNames
+row.names(sens_var_finalBA$T) = parNames
+print(sens_var_finalBA)
+```
+
+```{r SA_variance_plot, echo=FALSE, fig.width=6, fig.height=5}
+p1<-ggplot(sens_var_finalBA, choice=1)+
+    labs(title = "Final basal area")+
+    theme(axis.text.x = element_text(angle = 30, vjust = 1, 
+                                     face = "plain", size = 9,
+                                     hjust=1),
+          axis.text.y = element_text(face="plain", size = 9),
+          legend.background = element_blank())
+p1
+```
+
+The variable that primarily determines growth rate is WUE, which, together with the transpiration rate determines carbon availability. Sink limitations may also be operating
+
+
+```{r results SA_variance_cvBAI, echo = FALSE}
+sens_var_cvBAI = readRDS("../Rdata/sens_cvBAI_variance_FUN2FUN.rds")
+row.names(sens_var_cvBAI$S) = parNames
+row.names(sens_var_cvBAI$T) = parNames
+print(sens_var_cvBAI)
+```
+
+```{r SA_variance_cvBAI_plot, echo=FALSE, fig.width=6, fig.height=5}
+p2<-ggplot(sens_var_cvBAI, choice=1)+
+    labs(title="BAI coefficient of variation")+
+    theme(axis.text.x = element_text(angle = 30, vjust = 1, 
+                                     face = "plain", size = 9,
+                                     hjust=1),
+          axis.text.y = element_text(face="plain", size = 9),
+          legend.background = element_blank())
+p2
+```
+
+```{r include = FALSE, echo = FALSE}
+p <- plot_grid(p1, p2, nrow = 2, labels=c("a","b"))
+ggsave("../Plots/sens_var.png",p, width = 6, height = 7)
+```
+
+
+## Calibration
+
+```{r, echo = FALSE}
+cal_FUN2FUN_SL_ga$Species = as.character(cal_FUN2FUN_SL_ga$Species)
+sel = !is.na(cal_FUN2FUN_SL_ga$value_cal)
+cal_FUN2FUN_SL_ga = cal_FUN2FUN_SL_ga[sel,,drop=FALSE]
+cal_FUN2FUN_NSL_ga = cal_FUN2FUN_NSL_ga[sel,,drop=FALSE]
+eval_df = eval_df[sel, ,drop = FALSE]
+
+plot_desc = plot_desc[row.names(cal_FUN2FUN_SL_ga),,drop=FALSE]
+cal_FUN2FUN_SL_ga$P.PET_SpringSummer = plot_desc$P.PET_SpringSummer
+cal_FUN2FUN_SL_ga$P.PET_Summer = plot_desc$P.PET_Summer
+```
+
+### Observed data
+
+Mean annual BAI by species, across plots:
+```{r, echo = FALSE}
+plot_desc  %>% 
+  group_by(targetName) %>% 
+  summarise(meanBAI = mean(meanBAI),
+            sdBAI = mean(sdBAI)) %>%
+  kbl() %>%
+  kable_styling()
+```
+
+```{r, fig.width=8, fig.height=4, echo = FALSE}
+df<-cal_FUN2FUN_SL_ga[,c("Species", "P.PET_SpringSummer", "MeanBAI")]
+mod <-lm(MeanBAI~P.PET_SpringSummer*Species, data = df)
+df$pred <- predict(mod)
+p1<-ggplot(df, aes(x=P.PET_SpringSummer))+
+  geom_point(aes(y = MeanBAI,col=Species, shape = Species))+
+  geom_line(aes(y = pred, col=Species))+
+  xlab("P/PET (Spring-summer)")+ylab("Mean BAI")+
+  theme_bw()+  theme(legend.title = element_text(size=9),
+                     legend.text = element_text(size = 9, face = "italic"),
+                     legend.background = element_blank())
+p1
+```
+
+```{r, echo = FALSE}
+anova(mod)
+```
+
+
+### Calibration results
+
+Results of calibration for each plot:
+
+```{r cal_SL_complete, echo = FALSE}
+df <- cal_FUN2FUN_SL_ga[!is.na(cal_FUN2FUN_SL_ga$value_cal), c(1, 12, 2,3,13,5,7,9,11)]
+names(df) <-  c("Species","MeanBAI","MAE", "MAEcal","relMAEcal", "RERsap","RGRsap", "SRsap", "rfc@2")
+df %>%
+  kbl() %>%
+  kable_styling()
+```
+
+Summary of parameters by species:
+
+```{r cal_SL_sp, echo = FALSE}
+MAE_cal = cal_FUN2FUN_SL_ga$value_cal
+wmean <-function(x, na.rm = TRUE) {
+  median(x, na.rm = na.rm)
+}
+ms = cbind(apply(cal_FUN2FUN_SL_ga[,c(12,2,3,13)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Species, mean, na.rm=T)}),
+          apply(cal_FUN2FUN_SL_ga[,c(5,7,9,11)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Species, wmean, na.rm=T)}))
+mg = cbind(apply(cal_FUN2FUN_SL_ga[,c(12,2,3,13)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Group, mean, na.rm=T)}),
+          apply(cal_FUN2FUN_SL_ga[,c(5,7,9,11)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Group, wmean, na.rm=T)}))
+dfs<-data.frame(Nplots = tapply(cal_FUN2FUN_SL_ga$value_ini, cal_FUN2FUN_SL_ga$Species, function(x){sum(!is.na(x))}))
+dfs <- cbind(dfs, ms)
+dfg<-data.frame(Nplots = tapply(cal_FUN2FUN_SL_ga$value_ini, cal_FUN2FUN_SL_ga$Group, function(x){sum(!is.na(x))}))
+dfg <- cbind(dfg, mg)
+df <- rbind(dfs, dfg)
+names(df) <-  c("N", "MeanBAI","MAE", "MAEcal", "relMAEcal","RERsapwood","RGRsapwoodmax", "SRsapwood", "rfc@2")
+N_tot = sum(dfs$Nplots)
+ma <- c(N_tot,
+        apply(cal_FUN2FUN_SL_ga[,c(12,2,3,13)],2,mean, na.rm=TRUE),
+        apply(cal_FUN2FUN_SL_ga[,c(5,7,9,11)],2,wmean, na.rm=TRUE))
+df <- rbind(df, ma)
+row.names(df)[nrow(df)] = "All"
+df %>%
+  kbl() %>%
+  kable_styling()
+```
+
+
+### Comparison between considering sink limitation or not
+```{r, echo = FALSE}
+cal_FUN2FUN_SL_ga$type="Calibration with SL"
+cal_FUN2FUN_NSL_ga$type="Calibration without SL"
+cal_FUN2FUN = bind_rows(cal_FUN2FUN_SL_ga, cal_FUN2FUN_NSL_ga)
+```
+#### MAE
+
+```{r, echo = FALSE, fig.width=4, fig.height=3.5}
+p1<-ggplot(cal_FUN2FUN)+
+  geom_boxplot(aes(x=Species, y=value_cal, fill=type))+
+  ylim(c(0,30))+
+  labs(x="", y="MAE")+
+  scale_fill_discrete(NULL)+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = c(0.60,0.85))
+ggsave("../Plots/MAE_SL_vs_NSL.png",p1, width = 4, height = 3.5)
+p1
+```
+
+```{r, echo = FALSE}
+anova(aov(value_cal~Species*type, data = cal_FUN2FUN))
+```
+
+
+```{r, echo = FALSE, fig.width = 4, fig.height = 4}
+df = data.frame(Species = cal_FUN2FUN_SL_ga$Species, 
+                MAE_SL = cal_FUN2FUN_SL_ga$value_cal,
+                MAE_NSL = cal_FUN2FUN_NSL_ga$value_cal)
+p1<-ggplot(df)+
+  geom_point(aes(x=MAE_SL, y = MAE_NSL, col=Species, shape = Species))+
+  xlab("MAE including sink limitation")+ 
+  ylab("MAE without sink limitation")+
+  geom_abline(slope=1, intercept= 0)+
+  xlim(c(0,30))+ ylim(c(0,30))+
+  theme_bw() +  theme(legend.position = c(0.75,0.25), 
+                      legend.title = element_text(size=9),
+                      legend.text = element_text(size = 9, face = "italic"),
+                      legend.background = element_blank())
+p1
+ggsave("../Plots/MAE_plot_vs_species.png", p1)
+```
+#### relMAE
+
+```{r, echo = FALSE, fig.width=4, fig.height=3.5}
+p2<-ggplot(cal_FUN2FUN)+
+  geom_boxplot(aes(x=Species, y=relvalue_cal, fill=type))+
+  labs(x="", y="relMAE")+
+  scale_fill_discrete(NULL)+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = c(0.30,0.85))
+ggsave("../Plots/relMAE_SL_vs_NSL.png",p2, width = 4, height = 3.5)
+p2
+```
+```{r, echo = FALSE}
+anova(aov(relvalue_cal~Species*type, data = cal_FUN2FUN))
+```
+
+```{r, echo = FALSE, fig.width = 4, fig.height = 4}
+df = data.frame(Species = cal_FUN2FUN_SL_ga$Species, 
+                relMAE_SL = cal_FUN2FUN_SL_ga$relvalue_cal,
+                relMAE_NSL = cal_FUN2FUN_NSL_ga$relvalue_cal)
+p1<-ggplot(df)+
+  geom_point(aes(x=relMAE_SL, y = relMAE_NSL, col=Species, shape = Species))+
+  xlab("relMAE including sink limitation")+ 
+  ylab("relMAE without sink limitation")+
+  geom_abline(slope=1, intercept= 0)+
+  xlim(c(0,500))+ ylim(c(0,500))+
+  theme_bw() +  theme(legend.position = c(0.75,0.25), 
+                      legend.title = element_text(size=9),
+                      legend.text = element_text(size = 9, face = "italic"),
+                      legend.background = element_blank())
+p1
+ggsave("../Plots/relMAE_plot_vs_species.png", p1)
+```
+
+### Parameter distribution
+#### RERsapwood
+
+```{r, echo = FALSE}
+anova(aov(RERsapwood_cal~Species*type, data = cal_FUN2FUN))
+```
+
+```{r, echo = FALSE, fig.width=4, fig.height=3.5}
+p3<-ggplot(cal_FUN2FUN)+
+  geom_boxplot(aes(x=Species, y=RERsapwood_cal, fill = type))+
+  # ylim(c(0.0005,0.05))+
+  labs(x="", y="RER sapwood")+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = "none")
+p3
+```
+
+```{r, echo = FALSE}
+anova(aov(RERsapwood_cal~Group*type, data = cal_FUN2FUN))
+```
+
+
+```{r, echo = FALSE, fig.width=4, fig.height=3.5}
+p4g<-ggplot(cal_FUN2FUN)+
+  geom_boxplot(aes(x=Group, y=RERsapwood_cal, fill = type))+
+  # ylim(c(0.0005,0.05))+
+  labs(x="", y="RER sapwood")+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = "none")
+p4g
+```
+
+
+#### RGRsapwoodmax
+
+```{r, echo = FALSE}
+anova(aov(RGRsapwoodmax_cal~Species*type, data = cal_FUN2FUN[cal_FUN2FUN$RGRsapwoodmax_cal<0.01,]))
+```
+
+```{r, echo = FALSE, fig.width=4, fig.height=3.5}
+p4<-ggplot(cal_FUN2FUN[cal_FUN2FUN$RGRsapwoodmax_cal<0.01,])+
+  geom_boxplot(aes(x=Species, y=RGRsapwoodmax_cal, fill = type))+
+  # ylim(c(0.0005,0.05))+
+  labs(x="", y="RGR sapwood")+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = "none")
+p4
+```
+
+```{r, echo = FALSE}
+anova(aov(RGRsapwoodmax_cal~Group*type, data = cal_FUN2FUN[cal_FUN2FUN$RGRsapwoodmax_cal<0.01,]))
+```
+
+
+```{r, echo = FALSE, fig.width=4, fig.height=3.5}
+p4g<-ggplot(cal_FUN2FUN[cal_FUN2FUN$RGRsapwoodmax_cal<0.01,])+
+  geom_boxplot(aes(x=Group, y=RGRsapwoodmax_cal, fill = type))+
+  # ylim(c(0.0005,0.05))+
+  labs(x="", y="RGR sapwood")+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = "none")
+p4g
+```
+
+#### SRsapwood
+```{r, echo = FALSE}
+anova(aov(SRsapwood_cal~Species*type, data = cal_FUN2FUN))
+```
+
+```{r, echo = FALSE, fig.width=4, fig.height=3.5}
+p5<-ggplot(cal_FUN2FUN)+
+  geom_boxplot(aes(x=Species, y=SRsapwood_cal, fill=type))+
+  ylim(c(0.00001,0.00025))+
+  labs(x="", y="Sapwood senescence rate")+
+  scale_fill_discrete("")+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = "none")
+p5
+```
+
+```{r, echo = FALSE}
+anova(aov(SRsapwood_cal~Group*type, data = cal_FUN2FUN))
+```
+
+
+```{r, echo = FALSE, fig.width=4, fig.height=3.5}
+p5g<-ggplot(cal_FUN2FUN)+
+  geom_boxplot(aes(x=Group, y=SRsapwood_cal, fill=type))+
+  ylim(c(0.00001,0.00025))+
+  labs(x="", y="Sapwood senescence rate")+
+  scale_fill_discrete("")+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = "none")
+p5g
+```
+
+#### RFC
+
+```{r, echo = FALSE}
+anova(aov(rfc_cal~Species*type, data = cal_FUN2FUN))
+```
+
+```{r, echo = FALSE, fig.width=4, fig.height=3.5}
+p6<-ggplot(cal_FUN2FUN)+
+  geom_boxplot(aes(x=Species, y=rfc_cal, fill=type))+
+  ylim(c(25,95))+
+  labs(x="", y="Rock content (%)")+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = "none")
+p6
+```
+
+```{r, echo = FALSE}
+anova(aov(rfc_cal~Group*type, data = cal_FUN2FUN))
+```
+
+```{r, echo = FALSE, fig.width=4, fig.height=3.5}
+p6g<-ggplot(cal_FUN2FUN)+
+  geom_boxplot(aes(x=Group, y=rfc_cal, fill=type))+
+  ylim(c(25,95))+
+  labs(x="", y="Rock content (%)")+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = "none")
+p6g
+```
+
+
+
+```{r}
+cal_FUN2FUN_SL_ga %>% 
+  mutate(diff_rfc = rfc_ini-rfc_cal) %>%
+  group_by(Species) %>%
+  summarize(diff_rfc = mean(diff_rfc))
+```
+
+
+```{r, echo = FALSE}
+p<-plot_grid(p4,p5,p6, nrow=3,
+          labels=c("a", "b", "c"))
+ggsave("../Plots/cal_param_distr.png",
+       p, width = 6, height = 9)
+```
+
+```{r, echo = FALSE}
+pg<-plot_grid(p4g,p5g,p6g, nrow=1,
+          labels=c("a", "b", "c"))
+ggsave("../Plots/cal_param_distr_group.png",
+       pg, width = 10, height = 6)
+```
+
+### Parameter - error covariance
+
+```{r, echo = FALSE, fig.height=8, fig.width=10}
+g1<- ggplot(cal_FUN2FUN_SL_ga)+
+  geom_point(aes(x=relvalue_cal, y = RERsapwood_cal, col=Species, shape = Species))+
+  theme_bw()
+g2<- ggplot(cal_FUN2FUN_SL_ga)+
+  geom_point(aes(x=relvalue_cal, y = RGRsapwoodmax_cal, col=Species, shape = Species))+
+  theme_bw()
+g3<-ggplot(cal_FUN2FUN_SL_ga)+
+  geom_point(aes(x=relvalue_cal, y = SRsapwood_cal, col=Species, shape = Species))+
+  theme_bw()
+g4<-ggplot(cal_FUN2FUN_SL_ga)+
+  geom_point(aes(x=relvalue_cal, y = rfc_cal, col=Species, shape = Species))+
+  theme_bw()
+plot_grid(g1,g2,g3,g4, ncol = 2)
+```
+
+### Parameter covariances
+
+
+```{r, echo = FALSE, fig.height=12, fig.width=10}
+g1<-ggplot(cal_FUN2FUN_SL_ga)+
+  geom_point(aes(x=RERsapwood_cal, y = RGRsapwoodmax_cal, col=Species, shape = Species))+
+  theme_bw()
+g2<-ggplot(cal_FUN2FUN_SL_ga)+
+  geom_point(aes(x=RERsapwood_cal, y = SRsapwood_cal, col=Species, shape = Species))+
+  theme_bw()
+g3<-ggplot(cal_FUN2FUN_SL_ga)+
+  geom_point(aes(x=RERsapwood_cal, y = rfc_cal, col=Species, shape = Species))+
+  theme_bw()
+g4<-ggplot(cal_FUN2FUN_SL_ga)+
+  geom_point(aes(x=SRsapwood_cal, y = RGRsapwoodmax_cal, col=Species, shape = Species))+
+  theme_bw()
+g5<-ggplot(cal_FUN2FUN_SL_ga)+
+  geom_point(aes(x=rfc_cal, y = RGRsapwoodmax_cal, col=Species, shape = Species))+
+  theme_bw()
+g6<-ggplot(cal_FUN2FUN_SL_ga)+
+  geom_point(aes(x=rfc_cal, y = SRsapwood_cal, col=Species, shape = Species))+
+  theme_bw()
+plot_grid(g1,g2,g3,g4,g5,g6, ncol=2)
+```
+
+
+### Parameter-climate covariance
+
+
+#### RGRsapwood
+```{r, echo = FALSE}
+df<-cal_FUN2FUN_SL_ga[,c("Species", "P.PET_SpringSummer", "RGRsapwoodmax_cal")]
+df<-df[cal_FUN2FUN_SL_ga$relvalue_cal<100,]
+mod <-lm(RGRsapwoodmax_cal~P.PET_SpringSummer*Species, data = df)
+df$pred <- predict(mod)
+```
+
+```{r, fig.width=8, fig.height=4, echo = FALSE}
+p1<-ggplot(df, aes(x=P.PET_SpringSummer))+
+  geom_point(aes(y = RGRsapwoodmax_cal,col=Species, shape = Species))+
+  geom_line(aes(y = pred, col=Species))+
+  xlab("P/PET (Spring-summer)")+ylab("RGR sapwood")+
+  theme_bw()+  theme(legend.title = element_text(size=9),
+                     legend.text = element_text(size = 9, face = "italic"),
+                     legend.background = element_blank())
+ggsave("../Plots/RGRsapwood_vs_PPET.png",p1, width = 6, height = 4)
+p1
+```
+```{r, echo = FALSE}
+anova(mod)
+```
+
+
+
+#### SRsapwood
+```{r, echo = FALSE}
+df<-cal_FUN2FUN_SL_ga[,c("Species", "P.PET_SpringSummer", "SRsapwood_cal")]
+df<-df[cal_FUN2FUN_SL_ga$relvalue_cal<100,]
+mod <-lm(SRsapwood_cal~P.PET_SpringSummer*Species, data = df)
+df$pred <- predict(mod)
+```
+
+```{r, fig.width=8, fig.height=4, echo = FALSE}
+p1<-ggplot(df, aes(x=P.PET_SpringSummer))+
+  geom_point(aes(y = SRsapwood_cal,col=Species, shape = Species))+
+  geom_line(aes(y = pred, col=Species))+
+  xlab("P/PET (Spring-summer)")+ylab("SR sapwood")+
+  theme_bw()+  theme(legend.title = element_text(size=9),
+                     legend.text = element_text(size = 9, face = "italic"),
+                     legend.background = element_blank())
+ggsave("../Plots/SRsapwood_vs_PPET.png",p1, width = 8, height = 4)
+p1
+```
+
+```{r, echo = FALSE}
+anova(mod)
+```
+
+
+#### RFC
+```{r, echo = FALSE}
+df<-cal_FUN2FUN_SL_ga[,c("Species", "P.PET_SpringSummer", "rfc_cal")]
+df<-df[cal_FUN2FUN_SL_ga$relvalue_cal<100,]
+mod <-lm(rfc_cal~P.PET_SpringSummer*Species, data = df)
+df$pred <- predict(mod)
+```
+
+```{r, fig.width=8, fig.height=4, echo = FALSE}
+p1<-ggplot(df, aes(x=P.PET_SpringSummer))+
+  geom_point(aes(y = rfc_cal,col=Species, shape = Species))+
+  geom_line(aes(y = pred, col=Species))+
+  xlab("P/PET (Spring-summer)")+ylab("Rock fragment content (%)")+
+  theme_bw()+  theme(legend.title = element_text(size=9),
+                     legend.text = element_text(size = 9, face = "italic"),
+                     legend.background = element_blank())
+ggsave("../Plots/RFC_vs_PPET.png",p1, width = 8, height = 4)
+p1
+```
+
+```{r, echo = FALSE}
+anova(mod)
+```
+
+
+#### MAErel
+
+```{r, echo = FALSE}
+cal_FUN2FUN_SL_ga$MAE_reldiff = (cal_FUN2FUN_SL_ga$relvalue_cal-cal_FUN2FUN_NSL_ga$relvalue_cal)
+mod <-lm(MAE_reldiff~P.PET_SpringSummer*Species, data = cal_FUN2FUN_SL_ga)
+
+df<-cal_FUN2FUN_SL_ga[,c("Species", "P.PET_SpringSummer", "MAE_reldiff")]
+df$pred <- NA
+pm <- predict(mod)
+df[names(pm),"pred"] <- pm
+```
+
+```{r, fig.width=6, fig.height=4, echo = FALSE}
+p1<-ggplot(df, aes(x=P.PET_SpringSummer))+
+  geom_point(aes(y = MAE_reldiff,col=Species, shape = Species))+
+  geom_line(aes(y = pred, col=Species))+
+  xlab("P/PET (Spring-summer)")+ylab("MAE rel diff")+
+  theme_bw()+  theme(legend.title = element_text(size=9),
+                     legend.text = element_text(size = 9, face = "italic"),
+                     legend.background = element_blank())
+p1
+```
+```{r, echo  = FALSE}
+anova(mod)
+```
+
+
+## Evaluation
+
+```{r, echo = FALSE}
+eval_df = eval_df[!is.na(eval_df$MAE_uncalibrated),, drop=FALSE]
+```
+
+### Annual BAI
+Annual BAI evaluation results by plot:
+```{r echo = FALSE, eval = TRUE}
+df = data.frame(Species = eval_df$Species,
+                OBS = eval_df$Obs_BAI,
+                MAE_unc = eval_df$MAE_uncalibrated,
+                MAE_cal = eval_df$MAE_calibrated,
+                MAErel_unc = eval_df$MAErel_uncalibrated,
+                MAErel_cal = eval_df$MAErel_calibrated,
+                row.names = row.names(eval_df))
+df %>%
+  kbl() %>%
+  kable_styling()
+```
+
+Annual BAI evaluation results by species (medians):
+
+```{r echo = FALSE, eval = TRUE}
+eval_df %>% group_by(Species) %>% 
+  summarise(OBS = median(Obs_BAI, na.rm=T),
+            MAE_unc = median(MAE_uncalibrated, na.rm=T),
+            MAE_cal = median(MAE_calibrated, na.rm=T),
+            MAErel_unc = median(MAErel_uncalibrated, na.rm=T),
+            MAErel_cal = median(MAErel_calibrated, na.rm=T)) %>% 
+  kbl() %>%
+  kable_styling()
+```
+
+```{r, echo = FALSE, eval = TRUE, fig.width=4, fig.height=3.5}
+eval_def_df = eval_df[,c("Species", "MAE_uncalibrated", "MAErel_uncalibrated","MAE_BAItot_uncalibrated", "MAErel_BAItot_uncalibrated")]
+names(eval_def_df)<-c("Species", "MAE_BAI", "MAErel_BAI","MAE_BAItot", "MAErel_BAItot")
+
+eval_cal_df = eval_df[,c("Species", "MAE_calibrated", "MAErel_calibrated","MAE_BAItot_calibrated", "MAErel_BAItot_calibrated")]
+names(eval_cal_df)<-names(eval_def_df)
+
+eval_def_df$type = "Default parameters"
+eval_cal_df$type = "Calibrated"
+
+eval_all_df = bind_rows(eval_def_df,eval_cal_df)
+```
+
+```{r, eval = TRUE, echo = FALSE}
+p1<-ggplot(eval_all_df)+
+  geom_boxplot(aes(x=Species, y=MAE_BAI, fill=type))+
+  labs(x="", y="MAE(annual BAI)")+
+  scale_fill_discrete(NULL)+
+  ylim(c(0,50))+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = c(0.8,0.80))
+p1
+```
+
+```{r, eval = TRUE, echo = FALSE}
+p2<-ggplot(eval_all_df)+
+  geom_boxplot(aes(x=Species, y=MAErel_BAI, fill=type))+
+  labs(x="", y="MAE(relative annual BAI)")+
+  scale_fill_discrete(NULL)+
+  ylim(c(0, 200))+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = c(0.8,0.80))
+p2
+```
+
+
+### Total BAI
+
+Evaluation of total BAI during the 15 years:
+
+```{r echo = FALSE, eval = TRUE}
+df = data.frame(Species = eval_df$Species,
+                OBS = eval_df$Obs_BAItot,
+                MAE_unc = eval_df$MAE_BAItot_uncalibrated,
+                MAE_cal = eval_df$MAE_BAItot_calibrated,
+                MAErel_unc = eval_df$MAErel_BAItot_uncalibrated,
+                MAErel_cal = eval_df$MAErel_BAItot_calibrated,
+                row.names = row.names(eval_df))
+df %>%
+  kbl() %>%
+  kable_styling()
+```
+
+Summary by species (medians)
+```{r echo = FALSE, eval = TRUE}
+eval_df %>% group_by(Species) %>% 
+  summarise(OBS = median(Obs_BAItot, na.rm=T),
+            MAE_unc = median(MAE_BAItot_uncalibrated, na.rm=T),
+            MAE_cal = median(MAE_BAItot_calibrated, na.rm=T),
+            MAErel_unc = median(MAErel_BAItot_uncalibrated, na.rm=T),
+            MAErel_cal = median(MAErel_BAItot_calibrated, na.rm=T)) %>% 
+  kbl() %>%
+  kable_styling()
+```
+
+
+
+```{r eval = TRUE, echo = FALSE}
+p3<-ggplot(eval_all_df)+
+  geom_boxplot(aes(x=Species, y=MAE_BAItot, fill=type))+
+  labs(x="", y="MAE(total BAI)")+
+  scale_fill_discrete(NULL)+
+  ylim(c(0,500))+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = c(0.8,0.80))
+p3
+```
+
+
+```{r, eval = TRUE, echo = FALSE}
+p4<-ggplot(eval_all_df)+
+  geom_boxplot(aes(x=Species, y=MAErel_BAItot, fill=type))+
+  labs(x="", y="MAE(relative total BAI)")+
+  scale_fill_discrete(NULL)+
+  ylim(c(0, 200))+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = c(0.8,0.80))
+p4
+```
+
+```{r, echo = FALSE}
+p<-plot_grid(p1,p2,p3,p4, nrow=2, labels = c("a","b","c", "d"))
+ggsave("../Plots/final_evaluation.png", p, width=10, height=11)
+```
+
+## References
+
+M. D. Morris, 1991, Factorial sampling plans for preliminary computational experiments, Technometrics, 33, 161–174.
