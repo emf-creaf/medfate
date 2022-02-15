@@ -1,5 +1,5 @@
 ---
-title: "Growth Calibration"
+title: "Growth calibration"
 author: "Miquel De Cáceres"
 date: "`r Sys.Date()`"
 output: 
@@ -23,15 +23,15 @@ base_calibration = "~/OneDrive/Professional/MedfateWorks/GrowthCalibration/"
 
 ### Goals
 
-  Determine 
+  The growth model included in **medfate** implements processes regulating plant carbon balance and growth. Parameter values for these processes are obtained from: (a) global functional trait databases; (b) meta-modelling exercises; (c) model calibration exercises. The main goal of the current exercise is to obtain suitable values (via model calibration) for parameters related with the maintenance respiration costs, formation rates and senescence rates of sapwood, because these are difficult to obtain using other means. At the same time, the exercise provides information on the performance of the model to predict secondary growth at the tree and stand levels.
 
 ### Data
 
  * 90 permanent forest plots (15 plots per dominant species). 
  * Dominant species are Fagus sylvatica, Pinus halepensis, Pinus nigra, Pinus sylvestris, Quercus pubescens and Quercus ilex.
- * IFN data (IFN2 for 78 plots, IFN3 for 90 plots, IFN4 for 90 plots)
+ * IFN data (IFN3-IFN4)
  * Dendrological ring width measurements of up to 6 trees per plot. Measurements not available for Quercus ilex. 
- * Weather data from interpolation using meteoland (1991 - 2015).
+ * Weather data from interpolation using meteoland (2001 - 2015).
  * Soil data from soil grids (could be replaced with local samples).
  * Local measurements for sampled trees: Al2As, Ks, Ptlp, SLA (2015).
 
@@ -75,16 +75,14 @@ cal_FUN2FUN_NSL_ga$Group = cal_FUN2FUN_SL_ga$Group
 ```
 
 ### Target parameters for calibration
-  a. **Sapwood daily respiration rate (RERsapwood)** - Used to modulate maintenance respiration demands of living sapwood tissues (parenchyma, cambium, phloem, etc.), which in large trees may also represent a large fraction of maintenance respiration.
-  b. **Sapwood maximum relative growth rate (RGRsapwoodmax)** - Used to modulate daily sapwood relative growth rate variations. Actual relative growth rates include temperature and sink limitations to growth.
-  c. **Sapwood daily senescence rate (SRsapwood)** - Used to modulate daily sapwood relative growth rate variations. Actual relative growth rates include temperature and sink limitations to growth.
-  
-Actual carbon assimilation depends on WUE but also Al2As, which results in more or less investment in leaf area. Al2As sets the annual target for sapwood and leaf area. Relative growth rates modulate the actual creation of tissue given the target set. While WUE and Al2As seem more influential, calibrating parameters the other parameters may be useful to set appropriate default values in medfate and to explore if there are differences in these rates related to species or climatic variation.
 
+  a. **Sapwood daily respiration rate (RERsapwood)** - Used to modulate maintenance respiration demands of living sapwood tissues (parenchyma, cambium, phloem, etc.), which in large trees may also represent a large fraction of maintenance respiration.
+  b. **Sapwood maximum growth rate (RGRsapwoodmax)** - Used to modulate maximum daily sapwood growth rates (relative to current sapwood area). Actual relative growth rates include temperature and sink limitations to growth.
+  c. **Sapwood daily senescence rate (SRsapwood)** - Used to determine the daily proportion of sapwood that becomes heartwood. It regulates the area of functional sapwood, together with the sapwood maximum growth rate.
+  
 ### Sensitivity analysis
 
-Morris' elementary effects screening method (Morris 1991). Response function final basal area of a IFN3 plot of Fagus sylvatica (a single cohort), after simulating growth between 2001 and 2005, as a function of the target parameters.
-
+Response function final basal area of a IFN3 plot of *Pinus sylvestris* (a single cohort), after simulating growth between 2001 and 2005, as a function of the target parameters, as well as some others.
 
 ```{r SA_variance_plot, echo=FALSE, fig.width=6, fig.height=5}
 sens_var_finalBA = readRDS(paste0(base_calibration,"Rdata/sens_finalBA_variance_FUN2FUN.rds"))
@@ -122,6 +120,8 @@ p2
 
 ### Calibration procedure
 
+For each forest plot, we matched each dendrochronological series with a tree cohort by finding which tree (in the IFN3 sampling) had the DBH most similar to that estimated from the dendrochronology at year 2000. Then, we took the series of annual basal area increments (BAI) as the observations to be matched by model growth predictions for the matched tree cohort.  We calibrated the target parameters for the target dominant species using a genetic algorithm. Model parameter values were assumed to be the same for all cohorts of the target species. The remaining species in the plot were given default constant parameter values. The objective function for the genetic algorithm was the mean across cohorts with BAI observations, of the mean absolute error (MAE) resulting from comparing observed and predicted annual BAI.
+
 ## Calibration results
 
 ```{r, echo = FALSE}
@@ -137,10 +137,6 @@ cal_FUN2FUN_SL_ga$P.PET_Summer = plot_desc$P.PET_Summer
 ```
 
 ### Error
-
-Results of calibration for each plot:
-
-Summary of parameters by species:
 
 ```{r cal_SL_sp, echo = FALSE}
 MAE_cal = cal_FUN2FUN_SL_ga$value_cal
@@ -163,14 +159,42 @@ ma <- c(N_tot,
         apply(cal_FUN2FUN_SL_ga[,c(5,7,9,11)],2,wmean, na.rm=TRUE))
 df <- rbind(df, ma)
 row.names(df)[nrow(df)] = "All"
-df %>%
+df[,c("N", "MeanBAI", "MAE", "MAEcal", "relMAEcal")] %>%
+  kbl() %>%
+  kable_styling()
+```
+
+Results of calibration for each plot:
+
+```{r, echo = FALSE, fig.width=8, fig.height=4}
+p1<-ggplot(cal_FUN2FUN_SL_ga)+
+  geom_boxplot(aes(x=Species, y=value_cal, fill=Species))+
+  labs(x="", y="MAE")+
+  scale_fill_discrete(NULL)+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = "none")
+p2<-ggplot(cal_FUN2FUN_SL_ga)+
+  geom_boxplot(aes(x=Species, y=relvalue_cal, fill=Species))+
+  labs(x="", y="relMAE")+
+  scale_fill_discrete(NULL)+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = "none")
+p <- plot_grid(p1,p2, nrow=1)
+p
+```
+
+### Parameter distribution
+
+Summary of parameters by species:
+
+```{r echo = FALSE}
+df[,c("RERsapwood", "RGRsapwoodmax", "SRsapwood", "rfc@2")] %>%
   kbl() %>%
   kable_styling()
 ```
 
 
-### Parameter distribution
-```{r}
+```{r, echo = FALSE}
 df = cal_FUN2FUN_SL_ga
 ```
 
@@ -217,24 +241,6 @@ p6<-ggplot(df)+
                    legend.position = "none")
 p<-plot_grid(p3,p4, p5, p6, labels=c("a", "b", "c","d"), nrow=2)
 p
-```
-
-### Parameter - error covariance
-
-```{r, echo = FALSE, fig.height=8, fig.width=10}
-g1<- ggplot(cal_FUN2FUN_SL_ga)+
-  geom_point(aes(x=relvalue_cal, y = RERsapwood_cal, col=Species, shape = Species))+
-  theme_bw()
-g2<- ggplot(cal_FUN2FUN_SL_ga)+
-  geom_point(aes(x=relvalue_cal, y = RGRsapwoodmax_cal, col=Species, shape = Species))+
-  theme_bw()
-g3<-ggplot(cal_FUN2FUN_SL_ga)+
-  geom_point(aes(x=relvalue_cal, y = SRsapwood_cal, col=Species, shape = Species))+
-  theme_bw()
-g4<-ggplot(cal_FUN2FUN_SL_ga)+
-  geom_point(aes(x=relvalue_cal, y = rfc_cal, col=Species, shape = Species))+
-  theme_bw()
-plot_grid(g1,g2,g3,g4, ncol = 2)
 ```
 
 ### Parameter covariances
