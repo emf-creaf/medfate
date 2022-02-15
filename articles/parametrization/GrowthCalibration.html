@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Growth Calibration • medfate</title>
+<title>Growth calibration • medfate</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../../bootstrap-toc.css">
 <script src="../../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../../pkgdown.css" rel="stylesheet">
-<script src="../../pkgdown.js"></script><meta property="og:title" content="Growth Calibration">
+<script src="../../pkgdown.js"></script><meta property="og:title" content="Growth calibration">
 <meta property="og:description" content="medfate">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -70,7 +70,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Growth Calibration</h1>
+      <h1 data-toc-skip>Growth calibration</h1>
                         <h4 data-toc-skip class="author">Miquel De Cáceres</h4>
             
             <h4 data-toc-skip class="date">2022-02-15</h4>
@@ -88,20 +88,12 @@
 <div class="section level3">
 <h3 id="goals">Goals<a class="anchor" aria-label="anchor" href="#goals"></a>
 </h3>
-<p>Determine</p>
+<p>The growth model included in <strong>medfate</strong> implements processes regulating plant carbon balance and growth. Species-level parameter values for these processes are obtained from: (a) global functional trait databases; (b) meta-modelling exercises; (c) model calibration exercises. The main goal of the current exercise is to obtain suitable values (via model calibration) for parameters related with the maintenance respiration costs, formation rates and senescence rates of sapwood, because these are difficult to obtain using other means. At the same time, the exercise provides information on the performance of the model to predict secondary growth at the tree and stand levels.</p>
 </div>
 <div class="section level3">
-<h3 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
+<h3 id="observational-data">Observational data<a class="anchor" aria-label="anchor" href="#observational-data"></a>
 </h3>
-<ul>
-<li>90 permanent forest plots (15 plots per dominant species).</li>
-<li>Dominant species are Fagus sylvatica, Pinus halepensis, Pinus nigra, Pinus sylvestris, Quercus pubescens and Quercus ilex.</li>
-<li>IFN data (IFN2 for 78 plots, IFN3 for 90 plots, IFN4 for 90 plots)</li>
-<li>Dendrological ring width measurements of up to 6 trees per plot. Measurements not available for Quercus ilex.</li>
-<li>Weather data from interpolation using meteoland (1991 - 2015).</li>
-<li>Soil data from soil grids (could be replaced with local samples).</li>
-<li>Local measurements for sampled trees: Al2As, Ks, Ptlp, SLA (2015).</li>
-</ul>
+<p>The data set used for the calibration exercise corresponds to 75 permanent forest plots of the Spanish National Forest Inventory located in Catalonia. Forest plots correspond to pure stands whose dominant species are <em>Fagus sylvatica</em>, <em>Pinus halepensis</em>, <em>Pinus nigra</em>, <em>Pinus sylvestris</em> or <em>Quercus pubescens</em>. There are 15 plots per each dominant species and each set of 15 plots encompass a range of climatic aridity. Dendrochronological series are available for up to 6 trees per plot, which conforms the observational data for the calibration exercise. In addition, local measurements were made in 2015 for sampled trees of the same plots which : (a) the leaf area to sapwood area ratio (<code>Al2As</code>), the water potential at turgor loss point (which we use as estimate of <code>VCleaf_d</code>), and specific leaf area (<code>SLA</code>).</p>
 </div>
 <div class="section level3">
 <h3 id="target-parameters-for-calibration">Target parameters for calibration<a class="anchor" aria-label="anchor" href="#target-parameters-for-calibration"></a>
@@ -110,16 +102,15 @@
 <li>
 <strong>Sapwood daily respiration rate (RERsapwood)</strong> - Used to modulate maintenance respiration demands of living sapwood tissues (parenchyma, cambium, phloem, etc.), which in large trees may also represent a large fraction of maintenance respiration.</li>
 <li>
-<strong>Sapwood maximum relative growth rate (RGRsapwoodmax)</strong> - Used to modulate daily sapwood relative growth rate variations. Actual relative growth rates include temperature and sink limitations to growth.</li>
+<strong>Sapwood maximum growth rate (RGRsapwoodmax)</strong> - Used to modulate maximum daily sapwood growth rates (relative to current sapwood area). Actual relative growth rates include temperature and sink limitations to growth.</li>
 <li>
-<strong>Sapwood daily senescence rate (SRsapwood)</strong> - Used to modulate daily sapwood relative growth rate variations. Actual relative growth rates include temperature and sink limitations to growth.</li>
+<strong>Sapwood daily senescence rate (SRsapwood)</strong> - Used to determine the daily proportion of sapwood that becomes heartwood. It regulates the area of functional sapwood, together with the sapwood maximum growth rate.</li>
 </ol>
-<p>Actual carbon assimilation depends on WUE but also Al2As, which results in more or less investment in leaf area. Al2As sets the annual target for sapwood and leaf area. Relative growth rates modulate the actual creation of tissue given the target set. While WUE and Al2As seem more influential, calibrating parameters the other parameters may be useful to set appropriate default values in medfate and to explore if there are differences in these rates related to species or climatic variation.</p>
 </div>
 <div class="section level3">
 <h3 id="sensitivity-analysis">Sensitivity analysis<a class="anchor" aria-label="anchor" href="#sensitivity-analysis"></a>
 </h3>
-<p>Morris’ elementary effects screening method (Morris 1991). Response function final basal area of a IFN3 plot of Fagus sylvatica (a single cohort), after simulating growth between 2001 and 2005, as a function of the target parameters.</p>
+<p>Response function final basal area of a IFN3 plot of <em>Pinus sylvestris</em> (a single cohort), after simulating growth between 2001 and 2005, as a function of the target parameters, as well as some others.</p>
 <p><img src="GrowthCalibration_files/figure-html/SA_variance_plot-1.png" width="576"></p>
 <p>The variable that primarily determines growth rate is WUE, which, together with the transpiration rate determines carbon availability. Sink limitations may also be operating</p>
 <p><img src="GrowthCalibration_files/figure-html/SA_variance_cvBAI_plot-1.png" width="576"></p>
@@ -127,6 +118,8 @@
 <div class="section level3">
 <h3 id="calibration-procedure">Calibration procedure<a class="anchor" aria-label="anchor" href="#calibration-procedure"></a>
 </h3>
+<p>For each forest plot, we matched each dendrochronological series with a tree cohort by finding which tree (in the IFN3 sampling) had the DBH most similar to that estimated from the dendrochronology at year 2000. Then, we took the series of annual basal area increments (BAI) as the observations to be matched by model growth predictions for the matched tree cohort. We calibrated the target parameters for the target dominant species using a genetic algorithm. Model parameter values were assumed to be the same for all cohorts of the target species. The remaining species in the plot were given default constant parameter values. The objective function for the genetic algorithm was the mean across cohorts with BAI observations, of the mean absolute error (MAE) resulting from comparing observed and predicted annual BAI.</p>
+<p>Simulations are performed using daily weather data obtained via interpolation using package <strong>meteoland</strong> (2001 - 2015 period), and soil physical characteristics where drawn from SoilGrids data base.</p>
 </div>
 </div>
 <div class="section level2">
@@ -135,8 +128,6 @@
 <div class="section level3">
 <h3 id="error">Error<a class="anchor" aria-label="anchor" href="#error"></a>
 </h3>
-<p>Results of calibration for each plot:</p>
-<p>Summary of parameters by species:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -155,18 +146,6 @@ MAEcal
 </th>
 <th style="text-align:right;">
 relMAEcal
-</th>
-<th style="text-align:right;">
-RERsapwood
-</th>
-<th style="text-align:right;">
-RGRsapwoodmax
-</th>
-<th style="text-align:right;">
-SRsapwood
-</th>
-<th style="text-align:right;">
-<a href="mailto:rfc@2" class="email">rfc@2</a>
 </th>
 </tr></thead>
 <tbody>
@@ -189,18 +168,6 @@ Fagus sylvatica
 <td style="text-align:right;">
 71.11579
 </td>
-<td style="text-align:right;">
-5.05e-05
-</td>
-<td style="text-align:right;">
-0.0027813
-</td>
-<td style="text-align:right;">
-0.0001445
-</td>
-<td style="text-align:right;">
-59.19775
-</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -220,18 +187,6 @@ Pinus halepensis
 </td>
 <td style="text-align:right;">
 110.43257
-</td>
-<td style="text-align:right;">
-3.90e-05
-</td>
-<td style="text-align:right;">
-0.0022681
-</td>
-<td style="text-align:right;">
-0.0000971
-</td>
-<td style="text-align:right;">
-63.08906
 </td>
 </tr>
 <tr>
@@ -253,18 +208,6 @@ Pinus nigra
 <td style="text-align:right;">
 68.48201
 </td>
-<td style="text-align:right;">
-4.85e-05
-</td>
-<td style="text-align:right;">
-0.0014820
-</td>
-<td style="text-align:right;">
-0.0001707
-</td>
-<td style="text-align:right;">
-47.64178
-</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -284,18 +227,6 @@ Pinus sylvestris
 </td>
 <td style="text-align:right;">
 78.49060
-</td>
-<td style="text-align:right;">
-6.08e-05
-</td>
-<td style="text-align:right;">
-0.0025091
-</td>
-<td style="text-align:right;">
-0.0001365
-</td>
-<td style="text-align:right;">
-64.81508
 </td>
 </tr>
 <tr>
@@ -317,18 +248,6 @@ Quercus pubescens
 <td style="text-align:right;">
 57.71123
 </td>
-<td style="text-align:right;">
-5.63e-05
-</td>
-<td style="text-align:right;">
-0.0040606
-</td>
-<td style="text-align:right;">
-0.0001960
-</td>
-<td style="text-align:right;">
-63.26933
-</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -348,18 +267,6 @@ Angiosperm
 </td>
 <td style="text-align:right;">
 64.41351
-</td>
-<td style="text-align:right;">
-5.25e-05
-</td>
-<td style="text-align:right;">
-0.0034371
-</td>
-<td style="text-align:right;">
-0.0001664
-</td>
-<td style="text-align:right;">
-61.03409
 </td>
 </tr>
 <tr>
@@ -381,18 +288,6 @@ Gymnosperm
 <td style="text-align:right;">
 85.80173
 </td>
-<td style="text-align:right;">
-5.20e-05
-</td>
-<td style="text-align:right;">
-0.0021246
-</td>
-<td style="text-align:right;">
-0.0001365
-</td>
-<td style="text-align:right;">
-57.35812
-</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -413,6 +308,157 @@ All
 <td style="text-align:right;">
 77.24644
 </td>
+</tr>
+</tbody>
+</table>
+<p>Results of calibration for each plot:</p>
+<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-3-1.png" width="768"></p>
+</div>
+<div class="section level3">
+<h3 id="parameter-distribution">Parameter distribution<a class="anchor" aria-label="anchor" href="#parameter-distribution"></a>
+</h3>
+<p>Summary of parameters by species:</p>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+RERsapwood
+</th>
+<th style="text-align:right;">
+RGRsapwoodmax
+</th>
+<th style="text-align:right;">
+SRsapwood
+</th>
+<th style="text-align:right;">
+<a href="mailto:rfc@2" class="email">rfc@2</a>
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Fagus sylvatica
+</td>
+<td style="text-align:right;">
+5.05e-05
+</td>
+<td style="text-align:right;">
+0.0027813
+</td>
+<td style="text-align:right;">
+0.0001445
+</td>
+<td style="text-align:right;">
+59.19775
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus halepensis
+</td>
+<td style="text-align:right;">
+3.90e-05
+</td>
+<td style="text-align:right;">
+0.0022681
+</td>
+<td style="text-align:right;">
+0.0000971
+</td>
+<td style="text-align:right;">
+63.08906
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus nigra
+</td>
+<td style="text-align:right;">
+4.85e-05
+</td>
+<td style="text-align:right;">
+0.0014820
+</td>
+<td style="text-align:right;">
+0.0001707
+</td>
+<td style="text-align:right;">
+47.64178
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus sylvestris
+</td>
+<td style="text-align:right;">
+6.08e-05
+</td>
+<td style="text-align:right;">
+0.0025091
+</td>
+<td style="text-align:right;">
+0.0001365
+</td>
+<td style="text-align:right;">
+64.81508
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus pubescens
+</td>
+<td style="text-align:right;">
+5.63e-05
+</td>
+<td style="text-align:right;">
+0.0040606
+</td>
+<td style="text-align:right;">
+0.0001960
+</td>
+<td style="text-align:right;">
+63.26933
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Angiosperm
+</td>
+<td style="text-align:right;">
+5.25e-05
+</td>
+<td style="text-align:right;">
+0.0034371
+</td>
+<td style="text-align:right;">
+0.0001664
+</td>
+<td style="text-align:right;">
+61.03409
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gymnosperm
+</td>
+<td style="text-align:right;">
+5.20e-05
+</td>
+<td style="text-align:right;">
+0.0021246
+</td>
+<td style="text-align:right;">
+0.0001365
+</td>
+<td style="text-align:right;">
+57.35812
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+All
+</td>
 <td style="text-align:right;">
 5.20e-05
 </td>
@@ -428,12 +474,6 @@ All
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section level3">
-<h3 id="parameter-distribution">Parameter distribution<a class="anchor" aria-label="anchor" href="#parameter-distribution"></a>
-</h3>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">df</span> <span class="op">=</span> <span class="va">cal_FUN2FUN_SL_ga</span></code></pre></div>
 <pre><code><span class="co">## Analysis of Variance Table</span>
 <span class="co">## </span>
 <span class="co">## Response: RGRsapwoodmax_cal</span>
@@ -458,17 +498,12 @@ All
 <span class="co">##           Df  Sum Sq Mean Sq F value Pr(&gt;F)</span>
 <span class="co">## Species    4   287.7   71.94  0.1862 0.9448</span>
 <span class="co">## Residuals 70 27037.3  386.25</span></code></pre>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
-</div>
-<div class="section level3">
-<h3 id="parameter---error-covariance">Parameter - error covariance<a class="anchor" aria-label="anchor" href="#parameter---error-covariance"></a>
-</h3>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-9-1.png" width="960"></p>
+<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="parameter-covariances">Parameter covariances<a class="anchor" aria-label="anchor" href="#parameter-covariances"></a>
 </h3>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-10-1.png" width="960"></p>
+<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-11-1.png" width="960"></p>
 </div>
 <div class="section level3">
 <h3 id="comparison-between-considering-sink-limitation-or-not">Comparison between considering sink limitation or not<a class="anchor" aria-label="anchor" href="#comparison-between-considering-sink-limitation-or-not"></a>
@@ -498,10 +533,10 @@ All
 <span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre>
 <pre><code><span class="co">## Warning: Removed 15 rows containing non-finite values (stat_boxplot).</span>
 <span class="co">## Removed 15 rows containing non-finite values (stat_boxplot).</span></code></pre>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-14-1.png" width="768"></p>
+<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-15-1.png" width="768"></p>
 <pre><code><span class="co">## Warning: Removed 16 rows containing missing values (geom_point).</span>
 <span class="co">## Removed 16 rows containing missing values (geom_point).</span></code></pre>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-15-1.png" width="768"></p>
+<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-16-1.png" width="768"></p>
 </div>
 <div class="section level4">
 <h4 id="parameter-distribution-1">Parameter distribution<a class="anchor" aria-label="anchor" href="#parameter-distribution-1"></a>
@@ -548,7 +583,7 @@ All
 <span class="co">## Removed 15 rows containing non-finite values (stat_boxplot).</span>
 <span class="co">## Removed 15 rows containing non-finite values (stat_boxplot).</span>
 <span class="co">## Removed 15 rows containing non-finite values (stat_boxplot).</span></code></pre>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-20-1.png" width="768"></p>
+<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-21-1.png" width="768"></p>
 </div>
 </div>
 </div>
@@ -719,8 +754,8 @@ Quercus humilis
 </tr>
 </tbody>
 </table>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
 <p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
+<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-27-1.png" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="total-bai">Total BAI<a class="anchor" aria-label="anchor" href="#total-bai"></a>
@@ -886,8 +921,8 @@ Quercus humilis
 </tr>
 </tbody>
 </table>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-29-1.png" width="700"></p>
 <p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-30-1.png" width="700"></p>
+<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-31-1.png" width="700"></p>
 </div>
 </div>
   </div>
