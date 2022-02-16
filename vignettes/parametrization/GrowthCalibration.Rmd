@@ -291,7 +291,15 @@ plot_grid(p, l, ncol = 2, rel_widths = c(0.8,0.2))
 
 ## Final evaluation
 
-Finally, we wanted to evaluate the reduction in predictive error of secondary growth attained by calibrating growth parameters, compared to parameter defaults. Moreover, since applications of the growth model will normally be on plots lacking growth observations, we wanted to assess the predictive error of species-level parameter averages. Hence, we ran the growth model on the forest plots using either default parameter values or species-level averages of the calibrated parameters. In this second case, we excluded from the values to be averaged those corresponding to plots where relative MAE was > 100%, assuming that calibration was not successful in those cases.
+Finally, we wanted to evaluate the reduction in predictive error of secondary growth attained by calibrating growth parameters, compared to parameter defaults. Moreover, since applications of the growth model will normally be on plots lacking growth observations, we wanted to assess the predictive error of species-level parameter averages. Hence, we ran the growth model on the forest plots using either default parameter values or species-level averages of the calibrated parameters. In this second case, we excluded from the values to be averaged those corresponding to plots where relative MAE was > 100%, assuming that calibration was not successful in those cases. The following table shows the species-level parameter values:
+
+```{r, echo = FALSE}
+calParamsSpecies = readRDS(paste0(base_calibration,"/Rdata/calibration_params.rds"))
+calParamsSpecies[-6,-1] %>% #Ommits Q. ilex 
+  kbl() %>%
+  kable_styling()
+```
+
 
 
 

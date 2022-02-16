@@ -12,10 +12,37 @@ output:
 library(kableExtra)
 library(sf)
 library(knitr)
+library(medfate)
 library(ggplot2)
 library(cowplot)
 library(tidyverse)
 ```
+
+## Introduction
+
+```{r, echo = FALSE}
+eval_res <- readRDS("~/OneDrive/Professional/MedfateWorks/RegionalLevelEvaluation/Rdata/IFNeval_results.rds")
+
+SpParams = eval_res$SpParams
+target_spp = eval_res$target_spp
+target_IDs = eval_res$target_IDs
+
+dfdbh = eval_res$dfdbh
+dfh = eval_res$dfh
+dfbadead = eval_res$dfbadead
+dfbai = eval_res$dfbai
+dfbai_all = eval_res$dfbai_all
+mapdata = eval_res$mapdata
+medfate_ver = eval_res$package.version
+```
+
+### Goal
+
+The aim of this article is to provide an assessment of the performance of `fordyn` for the prediction of forest dynamics in Catalonia (NE of Spain). To this aim, we simulate forest dynamics between two surveys of the Spanish National Forest Inventory and compare the model predictions of forest growth against inventory data for a large set of permanent plots. The evaluation focuses first on the growth (in diameter and height) of surviving trees, then turning the attention to the basal area of dead trees and overall changes in basal area.
+
+This evaluation was conducted using **medfate** package version **`r medfate_ver`**.
+
+
 
 ```{r, echo = FALSE}
 plot_scatter_dbh<-function(dfdbh, points = TRUE){
@@ -159,30 +186,19 @@ bai_error_map <-function(data_bai){
 }
 ```
 
-## Data processing
-
-```{r, echo = FALSE}
-eval_res <- readRDS("~/OneDrive/Professional/MedfateWorks/RegionalLevelEvaluation/Rdata/IFNeval_results.rds")
-
-SpParams = eval_res$SpParams
-target_spp = eval_res$target_spp
-target_IDs = eval_res$target_IDs
-
-dfdbh = eval_res$dfdbh
-dfh = eval_res$dfh
-dfbadead = eval_res$dfbadead
-dfbai = eval_res$dfbai
-dfbai_all = eval_res$dfbai_all
-mapdata = eval_res$mapdata
-medfate_ver = eval_res$package.version
-```
+### Simulation procedure
 
 
-We processed **`r length(target_IDs)`** repeated plots (A1 between IFN3 and IFN4) dominated by the target species (> 80% basal area corresponding to the target species) and without signs of management (cut trees).
 
-Package version was **`r medfate_ver`**
+We first selected a set of target tree species on the basis of their importance in the Catalan territory: *Pinus halepensis*, *Pinus nigra*, *Pinus sylvestris*, *Pinus pinea*, *Pinus uncinata*, *Fagus sylvatica*, *Abies alba*, *Quercus ilex*, *Quercus faginea*, *Quercus pubescens*, *Quercus suber*. 
 
-Simulations were conducted between 2000/2001 (IFN3) and 2014/2016 (IFN4) depending on the target plot. Target species and key parameters values used in simulations:
+We then selected **`r length(target_IDs)`** repeated plots (A1 between IFN3 and IFN4) (co-)dominated by the target species (> 80% basal area corresponding to the target species) and without signs of management (cut trees).
+
+Soil physical properties were drawn from SoilGrids (Hengl 2016), complemented by rock fragment content estimates derived from surface stoniness measurements in forest plots. Simulations were conducted between 2000/2001 (IFN3) and 2014/2016 (IFN4) depending on the sampling years of the target plot, with daily weather data obtained via interpolation on plot's coordinates using package **meteoland**. 
+
+Default species-specific parameters were modified using the results of the [meta-modelling exercise](https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html) and the [growth calibration exercise](https://emf-creaf.github.io/medfate/articles/parametrization/GrowthCalibration.html). These two exercises do not provide values for all the main species included here, so it is expected that evaluation results are worse for those species not included in those exercises.
+
+The key parameters values used in simulations were the following:
 
 ```{r, echo = FALSE}
 
@@ -193,8 +209,7 @@ df %>%
   kable_styling()
 ```
 
-
-
+In the following sections, we provide the bias, mean absolute error (both in absolute and relative terms) and R-squared of growth and mortality predictions at the tree-level and stand-level. Scatter plots are provided to represent the relationship between predicted and observed values, as well as the factors that may influence the direction and magnitude of prediction error (i.e. initial values, environmental conditions, ...).  Detailed results of growth evaluation by species are provided in the last section.
 
 ## Growth of surviving trees
 
