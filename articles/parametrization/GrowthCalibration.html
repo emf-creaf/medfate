@@ -73,7 +73,7 @@
       <h1 data-toc-skip>Growth calibration</h1>
                         <h4 data-toc-skip class="author">Miquel De Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-02-15</h4>
+            <h4 data-toc-skip class="date">2022-02-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/GrowthCalibration.Rmd" class="external-link"><code>vignettes/parametrization/GrowthCalibration.Rmd</code></a></small>
       <div class="hidden name"><code>GrowthCalibration.Rmd</code></div>
@@ -93,11 +93,12 @@
 <div class="section level3">
 <h3 id="observational-data">Observational data<a class="anchor" aria-label="anchor" href="#observational-data"></a>
 </h3>
-<p>The data set used for the calibration exercise corresponds to 75 permanent forest plots of the Spanish National Forest Inventory located in Catalonia. Forest plots correspond to pure stands whose dominant species are <em>Fagus sylvatica</em>, <em>Pinus halepensis</em>, <em>Pinus nigra</em>, <em>Pinus sylvestris</em> or <em>Quercus pubescens</em>. There are 15 plots per each dominant species and each set of 15 plots encompass a range of climatic aridity. Dendrochronological series are available for up to 6 trees per plot, which conforms the observational data for the calibration exercise. In addition, local measurements were made in 2015 for sampled trees of the same plots which : (a) the leaf area to sapwood area ratio (<code>Al2As</code>), the water potential at turgor loss point (which we use as estimate of <code>VCleaf_d</code>), and specific leaf area (<code>SLA</code>).</p>
+<p>The data set used for the calibration exercise corresponds to 75 permanent forest plots of the Spanish National Forest Inventory located in Catalonia. Forest plots correspond to pure stands whose dominant species are <em>Fagus sylvatica</em>, <em>Pinus halepensis</em>, <em>Pinus nigra</em>, <em>Pinus sylvestris</em> or <em>Quercus pubescens</em>. There are 15 plots per each dominant species and each set of 15 plots encompass a range of climatic aridity. Dendrochronological series are available for up to 6 trees per plot, which conforms the observational data for the calibration exercise. In addition, local measurements were made in 2015 for sampled trees of the same plots which included (a) the leaf area to sapwood area ratio (<code>Al2As</code>) and specific leaf area (<code>SLA</code>). Plot-level averages are used as parameter values for the dominant target species in this exercise.</p>
 </div>
 <div class="section level3">
 <h3 id="target-parameters-for-calibration">Target parameters for calibration<a class="anchor" aria-label="anchor" href="#target-parameters-for-calibration"></a>
 </h3>
+<p>The model parameters for which we desired good estimates are:</p>
 <ol style="list-style-type: lower-alpha">
 <li>
 <strong>Sapwood daily respiration rate (RERsapwood)</strong> - Used to modulate maintenance respiration demands of living sapwood tissues (parenchyma, cambium, phloem, etc.), which in large trees may also represent a large fraction of maintenance respiration.</li>
@@ -106,28 +107,92 @@
 <li>
 <strong>Sapwood daily senescence rate (SRsapwood)</strong> - Used to determine the daily proportion of sapwood that becomes heartwood. It regulates the area of functional sapwood, together with the sapwood maximum growth rate.</li>
 </ol>
+<p>In addition, soil stoniness in the target plots had been estimated from surface stoniness classes. Since soil rock fragment content (<code>rfc</code>) has a strong influence on soil water capacity, we decided to include the proportion of rocks in the second soil layer (between 30 and 100 cm) as a parameter to be calibrated.</p>
 </div>
 <div class="section level3">
 <h3 id="sensitivity-analysis">Sensitivity analysis<a class="anchor" aria-label="anchor" href="#sensitivity-analysis"></a>
 </h3>
-<p>Response function final basal area of a IFN3 plot of <em>Pinus sylvestris</em> (a single cohort), after simulating growth between 2001 and 2005, as a function of the target parameters, as well as some others.</p>
+<p>We conducted a variance-based global sensitivity analysis of model parameters including those to be calibrated and others that we estimated important to determine secondary growth. For the sensitivity analysis we selected a forest plot dominated by <em>Pinus sylvestris</em>, where we collapsed forest structure into a single tree cohort and run simulations using daily weather between 2001 and 2005.</p>
+<p>First we conducted the sensitivity analysis using the final basal area of the stand as the response function.</p>
 <p><img src="GrowthCalibration_files/figure-html/SA_variance_plot-1.png" width="576"></p>
-<p>The variable that primarily determines growth rate is WUE, which, together with the transpiration rate determines carbon availability. Sink limitations may also be operating</p>
+<p>The variable that primarily determines growth rate is WUE, which, together with the transpiration rate determines carbon availability, but the maximum sapwood growth rate comes right after. We repeated the sensitivity analysis but using the coefficient of variation of annual BAI as response function:</p>
 <p><img src="GrowthCalibration_files/figure-html/SA_variance_cvBAI_plot-1.png" width="576"></p>
+<p>From these results we see that other parameters are relevant to determine inter-annual variability in secondary growth.</p>
 </div>
 <div class="section level3">
 <h3 id="calibration-procedure">Calibration procedure<a class="anchor" aria-label="anchor" href="#calibration-procedure"></a>
 </h3>
-<p>For each forest plot, we matched each dendrochronological series with a tree cohort by finding which tree (in the IFN3 sampling) had the DBH most similar to that estimated from the dendrochronology at year 2000. Then, we took the series of annual basal area increments (BAI) as the observations to be matched by model growth predictions for the matched tree cohort. We calibrated the target parameters for the target dominant species using a genetic algorithm. Model parameter values were assumed to be the same for all cohorts of the target species. The remaining species in the plot were given default constant parameter values. The objective function for the genetic algorithm was the mean across cohorts with BAI observations, of the mean absolute error (MAE) resulting from comparing observed and predicted annual BAI.</p>
-<p>Simulations are performed using daily weather data obtained via interpolation using package <strong>meteoland</strong> (2001 - 2015 period), and soil physical characteristics where drawn from SoilGrids data base.</p>
+<p>For each forest plot, we matched each available dendrochronological series with a forest inventory tree cohort by finding which tree (in the IFN3 sampling) had the DBH most similar to that estimated from the dendrochronology at year 2000. Then, we took the series of annual basal area increments (BAI) as the observations to be matched by model secondary growth predictions for the matched tree cohort.</p>
+<p>Simulations were performed using daily weather data for each target plot, obtained via interpolation using package <strong>meteoland</strong> (2001 - 2015 period), and soil physical characteristics where drawn from SoilGrids data base. Water use efficiency parameters (<code>WUE</code> and <code>WUE_decay</code>) were given values resulting from the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html" class="external-link">meta-modelling exercise</a>, whereas other parameters of the sensitivity analysis were left to the species-level defaults of <code>SpParamsMED</code>. We calibrated the four target parameters for the target dominant species of the target plot using a genetic algorithm (function <code>ga</code> from package <strong>GA</strong>). Model parameter values were assumed to be the same for all cohorts of the target species, while the remaining species in the plot were given default constant parameter values. The objective function for the genetic algorithm was the average, across cohorts with observed dendrochronology series, of the mean absolute error (MAE) resulting from comparing observed and predicted annual BAI series. Population size for the genetic algorithm was set to 40 individuals. A maximum of 25 iterations of the genetic algorithm were allowed, and the calibration procedure stopped if the best parameter combination did not change during 5 consecutive iterations.</p>
+The following table shows the range of values explored for each parameter to be calibrated:
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Minimum
+</th>
+<th style="text-align:right;">
+Maximum
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+RERsapwood
+</td>
+<td style="text-align:right;">
+1.0e-06
+</td>
+<td style="text-align:right;">
+1.0e-04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RGRsapwoodmax
+</td>
+<td style="text-align:right;">
+1.0e-04
+</td>
+<td style="text-align:right;">
+1.0e-02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SRsapwood
+</td>
+<td style="text-align:right;">
+1.0e-05
+</td>
+<td style="text-align:right;">
+2.5e-04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="mailto:rfc@2" class="email">rfc@2</a>
+</td>
+<td style="text-align:right;">
+2.5e+01
+</td>
+<td style="text-align:right;">
+9.5e+01
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="section level2">
 <h2 id="calibration-results">Calibration results<a class="anchor" aria-label="anchor" href="#calibration-results"></a>
 </h2>
 <div class="section level3">
-<h3 id="error">Error<a class="anchor" aria-label="anchor" href="#error"></a>
+<h3 id="error-function">Error function<a class="anchor" aria-label="anchor" href="#error-function"></a>
 </h3>
+<p>The following left panel shows the distribution of the final (optimum) values of the error function by dominant species, whereas the right panel shows the distribution of error values in relative terms (as a percentage of the mean observed BAI): <img src="GrowthCalibration_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
+The following table shows the same error values after averaging plot values by species, functional group (angiosperm/gymnosperm), and the overall averages:
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -311,13 +376,13 @@ All
 </tr>
 </tbody>
 </table>
-<p>Results of calibration for each plot:</p>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-3-1.png" width="768"></p>
 </div>
 <div class="section level3">
-<h3 id="parameter-distribution">Parameter distribution<a class="anchor" aria-label="anchor" href="#parameter-distribution"></a>
+<h3 id="parameter-distribution-and-covariance">Parameter distribution and covariance<a class="anchor" aria-label="anchor" href="#parameter-distribution-and-covariance"></a>
 </h3>
-<p>Summary of parameters by species:</p>
+<p>The following panels show the distribution of calibrated parameter values by species:</p>
+<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
+<p>The following table shows mean parameter values by species, functional groups and overall means:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -474,6 +539,7 @@ All
 </tr>
 </tbody>
 </table>
+<p>While some differences can be observed between species, those are not statistically significant, as shown in the following ANOVA tables:</p>
 <pre><code><span class="co">## Analysis of Variance Table</span>
 <span class="co">## </span>
 <span class="co">## Response: RGRsapwoodmax_cal</span>
@@ -498,106 +564,17 @@ All
 <span class="co">##           Df  Sum Sq Mean Sq F value Pr(&gt;F)</span>
 <span class="co">## Species    4   287.7   71.94  0.1862 0.9448</span>
 <span class="co">## Residuals 70 27037.3  386.25</span></code></pre>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
-</div>
-<div class="section level3">
-<h3 id="parameter-covariances">Parameter covariances<a class="anchor" aria-label="anchor" href="#parameter-covariances"></a>
-</h3>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-11-1.png" width="960"></p>
-</div>
-<div class="section level3">
-<h3 id="comparison-between-considering-sink-limitation-or-not">Comparison between considering sink limitation or not<a class="anchor" aria-label="anchor" href="#comparison-between-considering-sink-limitation-or-not"></a>
-</h3>
-<div class="section level4">
-<h4 id="error-1">Error<a class="anchor" aria-label="anchor" href="#error-1"></a>
-</h4>
-<pre><code><span class="co">## Analysis of Variance Table</span>
-<span class="co">## </span>
-<span class="co">## Response: value_cal</span>
-<span class="co">##               Df Sum Sq Mean Sq F value    Pr(&gt;F)    </span>
-<span class="co">## Species        4 1574.2  393.55  7.2676 2.700e-05 ***</span>
-<span class="co">## type           1 1230.0 1230.03 22.7146 5.128e-06 ***</span>
-<span class="co">## Species:type   4 1040.0  260.00  4.8013  0.001231 ** </span>
-<span class="co">## Residuals    125 6769.0   54.15                      </span>
-<span class="co">## ---</span>
-<span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre>
-<pre><code><span class="co">## Analysis of Variance Table</span>
-<span class="co">## </span>
-<span class="co">## Response: relvalue_cal</span>
-<span class="co">##               Df Sum Sq Mean Sq F value    Pr(&gt;F)    </span>
-<span class="co">## Species        4  53415   13354  2.6984   0.03371 *  </span>
-<span class="co">## type           1 109489  109489 22.1246 6.653e-06 ***</span>
-<span class="co">## Species:type   4  56264   14066  2.8423   0.02693 *  </span>
-<span class="co">## Residuals    125 618591    4949                      </span>
-<span class="co">## ---</span>
-<span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre>
-<pre><code><span class="co">## Warning: Removed 15 rows containing non-finite values (stat_boxplot).</span>
-<span class="co">## Removed 15 rows containing non-finite values (stat_boxplot).</span></code></pre>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-15-1.png" width="768"></p>
-<pre><code><span class="co">## Warning: Removed 16 rows containing missing values (geom_point).</span>
-<span class="co">## Removed 16 rows containing missing values (geom_point).</span></code></pre>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-16-1.png" width="768"></p>
-</div>
-<div class="section level4">
-<h4 id="parameter-distribution-1">Parameter distribution<a class="anchor" aria-label="anchor" href="#parameter-distribution-1"></a>
-</h4>
-<pre><code><span class="co">## Analysis of Variance Table</span>
-<span class="co">## </span>
-<span class="co">## Response: RERsapwood_cal</span>
-<span class="co">##               Df     Sum Sq    Mean Sq F value Pr(&gt;F)</span>
-<span class="co">## Species        4 1.6690e-09 4.1726e-10  0.6936 0.5978</span>
-<span class="co">## type           1 3.8000e-11 3.7920e-11  0.0630 0.8022</span>
-<span class="co">## Species:type   4 1.6360e-09 4.0907e-10  0.6800 0.6071</span>
-<span class="co">## Residuals    125 7.5201e-08 6.0161e-10</span></code></pre>
-<pre><code><span class="co">## Analysis of Variance Table</span>
-<span class="co">## </span>
-<span class="co">## Response: RGRsapwoodmax_cal</span>
-<span class="co">##               Df    Sum Sq   Mean Sq F value    Pr(&gt;F)    </span>
-<span class="co">## Species        4 0.0013619 0.0003405  2.7763  0.029855 *  </span>
-<span class="co">## type           1 0.0105863 0.0105863 86.3234 6.164e-16 ***</span>
-<span class="co">## Species:type   4 0.0017402 0.0004350  3.5475  0.008891 ** </span>
-<span class="co">## Residuals    125 0.0153294 0.0001226                      </span>
-<span class="co">## ---</span>
-<span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre>
-<pre><code><span class="co">## Analysis of Variance Table</span>
-<span class="co">## </span>
-<span class="co">## Response: SRsapwood_cal</span>
-<span class="co">##               Df     Sum Sq    Mean Sq F value    Pr(&gt;F)    </span>
-<span class="co">## Species        4 8.8260e-08 2.2064e-08  5.0405 0.0008452 ***</span>
-<span class="co">## type           1 1.4160e-08 1.4156e-08  3.2339 0.0745405 .  </span>
-<span class="co">## Species:type   4 4.1860e-08 1.0464e-08  2.3905 0.0543166 .  </span>
-<span class="co">## Residuals    125 5.4717e-07 4.3774e-09                      </span>
-<span class="co">## ---</span>
-<span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre>
-<pre><code><span class="co">## Analysis of Variance Table</span>
-<span class="co">## </span>
-<span class="co">## Response: rfc_cal</span>
-<span class="co">##               Df Sum Sq Mean Sq F value    Pr(&gt;F)    </span>
-<span class="co">## Species        4   3162   790.6  1.9131   0.11233    </span>
-<span class="co">## type           1   7978  7978.3 19.3054 2.351e-05 ***</span>
-<span class="co">## Species:type   4   4300  1075.1  2.6014   0.03919 *  </span>
-<span class="co">## Residuals    125  51658   413.3                      </span>
-<span class="co">## ---</span>
-<span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre>
-<pre><code><span class="co">## Warning: Removed 15 rows containing non-finite values (stat_boxplot).</span>
-<span class="co">## Removed 15 rows containing non-finite values (stat_boxplot).</span>
-<span class="co">## Removed 15 rows containing non-finite values (stat_boxplot).</span>
-<span class="co">## Removed 15 rows containing non-finite values (stat_boxplot).</span></code></pre>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-21-1.png" width="768"></p>
-</div>
+<p>Finally, the following panels illustrate the overall lack of covariance between calibrated parameter values: <img src="GrowthCalibration_files/figure-html/unnamed-chunk-12-1.png" width="960"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="final-evaluation">Final evaluation<a class="anchor" aria-label="anchor" href="#final-evaluation"></a>
 </h2>
-<div class="section level3">
-<h3 id="annual-bai">Annual BAI<a class="anchor" aria-label="anchor" href="#annual-bai"></a>
-</h3>
-Annual BAI evaluation results by plot:
+<p>Finally, we wanted to evaluate the reduction in predictive error of secondary growth attained by calibrating growth parameters, compared to parameter defaults. Moreover, since applications of the growth model will normally be on plots lacking growth observations, we wanted to assess the predictive error of species-level parameter averages. Hence, we ran the growth model on the forest plots using either default parameter values or species-level averages of the calibrated parameters. In this second case, we excluded from the values to be averaged those corresponding to plots where relative MAE was &gt; 100%, assuming that calibration was not successful in those cases.</p>
+<p>The following panels show the prediction error (either absolute or relative) for the annual BAI, as done above but including the new simulations: <img src="GrowthCalibration_files/figure-html/unnamed-chunk-15-1.png" width="960"></p>
+The following table shows annual BAI evaluation results by species (medians):
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
-<th style="text-align:left;">
-</th>
 <th style="text-align:left;">
 Species
 </th>
@@ -611,17 +588,124 @@ MAE_unc
 MAE_cal
 </th>
 <th style="text-align:right;">
+MAE_cal_sp
+</th>
+<th style="text-align:right;">
 MAErel_unc
 </th>
 <th style="text-align:right;">
 MAErel_cal
 </th>
+<th style="text-align:right;">
+MAErel_cal_sp
+</th>
 </tr></thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-80210
+Fagus sylvatica
 </td>
+<td style="text-align:right;">
+13.397220
+</td>
+<td style="text-align:right;">
+11.500215
+</td>
+<td style="text-align:right;">
+7.133541
+</td>
+<td style="text-align:right;">
+9.749654
+</td>
+<td style="text-align:right;">
+73.70056
+</td>
+<td style="text-align:right;">
+60.13370
+</td>
+<td style="text-align:right;">
+68.53110
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus halepensis
+</td>
+<td style="text-align:right;">
+9.406959
+</td>
+<td style="text-align:right;">
+18.342299
+</td>
+<td style="text-align:right;">
+6.945035
+</td>
+<td style="text-align:right;">
+8.402924
+</td>
+<td style="text-align:right;">
+217.49034
+</td>
+<td style="text-align:right;">
+78.65105
+</td>
+<td style="text-align:right;">
+80.89363
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus nigra
+</td>
+<td style="text-align:right;">
+6.290914
+</td>
+<td style="text-align:right;">
+11.147008
+</td>
+<td style="text-align:right;">
+3.658891
+</td>
+<td style="text-align:right;">
+3.839527
+</td>
+<td style="text-align:right;">
+128.25284
+</td>
+<td style="text-align:right;">
+59.72557
+</td>
+<td style="text-align:right;">
+61.38798
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus sylvestris
+</td>
+<td style="text-align:right;">
+8.569506
+</td>
+<td style="text-align:right;">
+10.348576
+</td>
+<td style="text-align:right;">
+4.342239
+</td>
+<td style="text-align:right;">
+6.969239
+</td>
+<td style="text-align:right;">
+123.03348
+</td>
+<td style="text-align:right;">
+46.79795
+</td>
+<td style="text-align:right;">
+75.95613
+</td>
+</tr>
+<tr>
 <td style="text-align:left;">
 Quercus humilis
 </td>
@@ -629,67 +713,29 @@ Quercus humilis
 4.963597
 </td>
 <td style="text-align:right;">
-2.124068
+5.580407
 </td>
 <td style="text-align:right;">
-1.651088
+2.881796
 </td>
 <td style="text-align:right;">
-42.79291
+4.282767
 </td>
 <td style="text-align:right;">
-33.26394
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-80292
-</td>
-<td style="text-align:left;">
-Pinus sylvestris
-</td>
-<td style="text-align:right;">
-10.376841
-</td>
-<td style="text-align:right;">
-10.348576
-</td>
-<td style="text-align:right;">
-7.334630
-</td>
-<td style="text-align:right;">
-99.72761
-</td>
-<td style="text-align:right;">
-70.68269
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-80299
-</td>
-<td style="text-align:left;">
-Quercus humilis
-</td>
-<td style="text-align:right;">
-4.510970
-</td>
-<td style="text-align:right;">
-6.335806
-</td>
-<td style="text-align:right;">
-2.668738
-</td>
-<td style="text-align:right;">
-140.45329
+83.23294
 </td>
 <td style="text-align:right;">
 59.16105
 </td>
+<td style="text-align:right;">
+68.09035
+</td>
 </tr>
 </tbody>
 </table>
-<p>Annual BAI evaluation results by species (medians):</p>
+<p>We also evaluated the performance of the model in terms of predicting total basal area growth during the 15 years simulated, where we again used as error function the mean absolute error:</p>
+<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-17-1.png" width="960"></p>
+The following table shows total BAI evaluation results by species (medians):
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -705,90 +751,124 @@ MAE_unc
 MAE_cal
 </th>
 <th style="text-align:right;">
+MAE_cal_sp
+</th>
+<th style="text-align:right;">
 MAErel_unc
 </th>
 <th style="text-align:right;">
 MAErel_cal
 </th>
+<th style="text-align:right;">
+MAErel_cal_sp
+</th>
 </tr></thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+Fagus sylvatica
+</td>
+<td style="text-align:right;">
+181.79688
+</td>
+<td style="text-align:right;">
+145.33902
+</td>
+<td style="text-align:right;">
+62.26922
+</td>
+<td style="text-align:right;">
+112.32478
+</td>
+<td style="text-align:right;">
+51.14674
+</td>
+<td style="text-align:right;">
+41.51602
+</td>
+<td style="text-align:right;">
+52.73996
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus halepensis
+</td>
+<td style="text-align:right;">
+120.85361
+</td>
+<td style="text-align:right;">
+193.78324
+</td>
+<td style="text-align:right;">
+87.31114
+</td>
+<td style="text-align:right;">
+93.76410
+</td>
+<td style="text-align:right;">
+223.20346
+</td>
+<td style="text-align:right;">
+69.30576
+</td>
+<td style="text-align:right;">
+73.84094
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus nigra
+</td>
+<td style="text-align:right;">
+86.42111
+</td>
+<td style="text-align:right;">
+126.16311
+</td>
+<td style="text-align:right;">
+31.19553
+</td>
+<td style="text-align:right;">
+35.78656
+</td>
+<td style="text-align:right;">
+114.80337
+</td>
+<td style="text-align:right;">
+43.20256
+</td>
+<td style="text-align:right;">
+45.49360
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 Pinus sylvestris
 </td>
 <td style="text-align:right;">
-10.376841
+116.74324
 </td>
 <td style="text-align:right;">
-10.348576
+121.68389
 </td>
 <td style="text-align:right;">
-7.334630
+50.51439
 </td>
 <td style="text-align:right;">
-99.72761
+73.07897
 </td>
 <td style="text-align:right;">
-70.68269
+146.54119
+</td>
+<td style="text-align:right;">
+40.86037
+</td>
+<td style="text-align:right;">
+68.05801
 </td>
 </tr>
 <tr>
-<td style="text-align:left;">
-Quercus humilis
-</td>
-<td style="text-align:right;">
-4.737284
-</td>
-<td style="text-align:right;">
-4.229937
-</td>
-<td style="text-align:right;">
-2.159913
-</td>
-<td style="text-align:right;">
-91.62310
-</td>
-<td style="text-align:right;">
-46.21250
-</td>
-</tr>
-</tbody>
-</table>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-26-1.png" width="700"></p>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-27-1.png" width="700"></p>
-</div>
-<div class="section level3">
-<h3 id="total-bai">Total BAI<a class="anchor" aria-label="anchor" href="#total-bai"></a>
-</h3>
-<p>Evaluation of total BAI during the 15 years:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:left;">
-Species
-</th>
-<th style="text-align:right;">
-OBS
-</th>
-<th style="text-align:right;">
-MAE_unc
-</th>
-<th style="text-align:right;">
-MAE_cal
-</th>
-<th style="text-align:right;">
-MAErel_unc
-</th>
-<th style="text-align:right;">
-MAErel_cal
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-80210
-</td>
 <td style="text-align:left;">
 Quercus humilis
 </td>
@@ -796,134 +876,27 @@ Quercus humilis
 68.43315
 </td>
 <td style="text-align:right;">
-20.93986
+75.88412
 </td>
 <td style="text-align:right;">
-10.43513
+34.14261
 </td>
 <td style="text-align:right;">
-35.19846
+42.90761
 </td>
 <td style="text-align:right;">
-17.63819
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-80292
-</td>
-<td style="text-align:left;">
-Pinus sylvestris
+77.94476
 </td>
 <td style="text-align:right;">
-144.98118
+44.83174
 </td>
 <td style="text-align:right;">
-134.14252
-</td>
-<td style="text-align:right;">
-92.11885
-</td>
-<td style="text-align:right;">
-122.46092
-</td>
-<td style="text-align:right;">
-71.99343
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-80299
-</td>
-<td style="text-align:left;">
-Quercus humilis
-</td>
-<td style="text-align:right;">
-63.71430
-</td>
-<td style="text-align:right;">
-82.57453
-</td>
-<td style="text-align:right;">
-30.53428
-</td>
-<td style="text-align:right;">
-173.00410
-</td>
-<td style="text-align:right;">
-39.45551
+53.98029
 </td>
 </tr>
 </tbody>
 </table>
-Summary by species (medians)
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Species
-</th>
-<th style="text-align:right;">
-OBS
-</th>
-<th style="text-align:right;">
-MAE_unc
-</th>
-<th style="text-align:right;">
-MAE_cal
-</th>
-<th style="text-align:right;">
-MAErel_unc
-</th>
-<th style="text-align:right;">
-MAErel_cal
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Pinus sylvestris
-</td>
-<td style="text-align:right;">
-144.98118
-</td>
-<td style="text-align:right;">
-134.1425
-</td>
-<td style="text-align:right;">
-92.11885
-</td>
-<td style="text-align:right;">
-122.4609
-</td>
-<td style="text-align:right;">
-71.99343
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Quercus humilis
-</td>
-<td style="text-align:right;">
-66.07372
-</td>
-<td style="text-align:right;">
-51.7572
-</td>
-<td style="text-align:right;">
-20.48470
-</td>
-<td style="text-align:right;">
-104.1013
-</td>
-<td style="text-align:right;">
-28.54685
-</td>
-</tr>
-</tbody>
-</table>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-30-1.png" width="700"></p>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-31-1.png" width="700"></p>
-</div>
+<p>From these results, it is apparent that the calibration improved substantially the predictive capacity of the model. More importantly, using species-level averages do not seem to increase substantially prediction errors, compared to plot-level calibrated parameter values.</p>
 </div>
   </div>
 
