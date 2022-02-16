@@ -570,8 +570,95 @@ All
 <div class="section level2">
 <h2 id="final-evaluation">Final evaluation<a class="anchor" aria-label="anchor" href="#final-evaluation"></a>
 </h2>
-<p>Finally, we wanted to evaluate the reduction in predictive error of secondary growth attained by calibrating growth parameters, compared to parameter defaults. Moreover, since applications of the growth model will normally be on plots lacking growth observations, we wanted to assess the predictive error of species-level parameter averages. Hence, we ran the growth model on the forest plots using either default parameter values or species-level averages of the calibrated parameters. In this second case, we excluded from the values to be averaged those corresponding to plots where relative MAE was &gt; 100%, assuming that calibration was not successful in those cases.</p>
-<p>The following panels show the prediction error (either absolute or relative) for the annual BAI, as done above but including the new simulations: <img src="GrowthCalibration_files/figure-html/unnamed-chunk-15-1.png" width="960"></p>
+<p>Finally, we wanted to evaluate the reduction in predictive error of secondary growth attained by calibrating growth parameters, compared to parameter defaults. Moreover, since applications of the growth model will normally be on plots lacking growth observations, we wanted to assess the predictive error of species-level parameter averages. Hence, we ran the growth model on the forest plots using either default parameter values or species-level averages of the calibrated parameters. In this second case, we excluded from the values to be averaged those corresponding to plots where relative MAE was &gt; 100%, assuming that calibration was not successful in those cases. The following table shows the species-level parameter values:</p>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+RERsapwood
+</th>
+<th style="text-align:right;">
+RGRsapwoodmax
+</th>
+<th style="text-align:right;">
+SRsapwood
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Fagus sylvatica
+</td>
+<td style="text-align:right;">
+5.87e-05
+</td>
+<td style="text-align:right;">
+0.0025337
+</td>
+<td style="text-align:right;">
+0.0001528
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus halepensis
+</td>
+<td style="text-align:right;">
+3.90e-05
+</td>
+<td style="text-align:right;">
+0.0018834
+</td>
+<td style="text-align:right;">
+0.0000864
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus nigra
+</td>
+<td style="text-align:right;">
+4.49e-05
+</td>
+<td style="text-align:right;">
+0.0014786
+</td>
+<td style="text-align:right;">
+0.0001709
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus sylvestris
+</td>
+<td style="text-align:right;">
+6.08e-05
+</td>
+<td style="text-align:right;">
+0.0024895
+</td>
+<td style="text-align:right;">
+0.0001365
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus humilis
+</td>
+<td style="text-align:right;">
+5.63e-05
+</td>
+<td style="text-align:right;">
+0.0035793
+</td>
+<td style="text-align:right;">
+0.0001716
+</td>
+</tr>
+</tbody>
+</table>
+<p>The following panels show the prediction error (either absolute or relative) for the annual BAI, as done above but including the new simulations: <img src="GrowthCalibration_files/figure-html/unnamed-chunk-16-1.png" width="960"></p>
 The following table shows annual BAI evaluation results by species (medians):
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -734,7 +821,7 @@ Quercus humilis
 </tbody>
 </table>
 <p>We also evaluated the performance of the model in terms of predicting total basal area growth during the 15 years simulated, where we again used as error function the mean absolute error:</p>
-<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-17-1.png" width="960"></p>
+<p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-18-1.png" width="960"></p>
 The following table shows total BAI evaluation results by species (medians):
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
