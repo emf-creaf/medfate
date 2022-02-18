@@ -71,7 +71,7 @@
 </dl></div>
     <div id="details">
     <h2>Details</h2>
-    <p>This function implements silvicultural actions following either 'regular' or 'irregular' management models. Irregular models are implemented by executing thinning operations only, whereas regular models include a set of final cuts. Thinning occurs anytime a stand-level metric (e.g. basal area) crosses a given threshold, and different kinds of thinning operations are allowed. Final cuts start whenever mean DBH exceeds a given threshold, and may include different cuts separated a number of years. Planting is only allowed under regular management models, and is applied after the last final cut. Understory clearings are assumed to occur anytime there is an intervention on trees, an only a residual shrub cover is left.</p>
+    <p>This function implements silvicultural actions following either 'regular' or 'irregular' management models. Irregular models are implemented by executing thinning operations only, whereas regular models include a set of final cuts. Thinning occurs anytime a stand-level metric (e.g. basal area) crosses a given threshold, and different kinds of thinning operations are allowed. Unrealistic high frequency thinning can be avoided by setting a minimum number of years to happen between thinning operations. Final cuts start whenever mean DBH exceeds a given threshold, and may include different cuts separated a number of years. Planting is only allowed under regular management models, and is applied after the last final cut. Understory clearings are assumed to occur anytime there is an intervention on trees, an only a residual shrub cover is left.</p>
 <p><em>Thinning types</em>:</p><ul><li><p><code>above</code>: Extract largest trees (according to DBH) until thinning objective is met.</p></li>
 <li><p><code>below</code>: Extract smallest trees (according to DBH) until thinning objective is met.</p></li>
 <li><p><code>systematic</code>: Extract equally from all size classes until thinning objective is met.</p></li>
@@ -91,6 +91,8 @@
 <li><p><code>"thinningMetric"</code>: The stand-level metric used to decide whether thinning is applied, either 'BA' (basal area), 'N' (density) or 'HB' (Hart-Becking index).</p></li>
 <li><p><code>"thinningThreshold"</code>: The threshold value of the stand-level metric causing the thinning decision.</p></li>
 <li><p><code>"thinningPerc"</code>: Percentage of stand's basal area to be removed in thinning operations.</p></li>
+<li><p><code>"minThinningInterval"</code>: Minimum number of years between thinning operations.</p></li>
+<li><p><code>"yearsSinceThinning"</code>: State variable to count the years since the last thinning ocurred.</p></li>
 <li><p><code>"finalMeanDBH"</code>: Mean DBH threshold to start final cuts.</p></li>
 <li><p><code>"finalPerc"</code>: String with percentages of basal area to be removed in final cuts, separated by '-' (e.g. "40-60-100").</p></li>
 <li><p><code>"finalPreviousStage"</code>: Integer state variable to store the stage of final cuts ('0' before starting final cuts).</p></li>
