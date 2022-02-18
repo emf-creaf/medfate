@@ -34,19 +34,23 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
   
   if(action=="thinning") {
     thin = FALSE
+    
+    enoughYearsForThinning = (args$yearsSinceThinning >= args$minThinningInterval)
+    if(is.na(enoughYearsForThinning)) enoughYearsForThinning = TRUE
+    
     if(args$thinningMetric=="BA") {
       if(verbose) cat(paste0("  Basal area: ", round(BAtotal,1), " threshold ", round(args$thinningThreshold)))
-      if(BAtotal > args$thinningThreshold && args$yearsSinceThinning > args$minThinningInterval) thin = TRUE
+      if((BAtotal > args$thinningThreshold) && enoughYearsForThinning) thin = TRUE
     }
     else if(args$thinningMetric=="N") {
       if(verbose) cat(paste0("  Density: ", round(Ntotal,1), " threshold ", round(args$thinningThreshold)))
-      if(Ntotal > args$thinningThreshold && args$yearsSinceThinning > args$minThinningInterval) thin = TRUE
+      if((Ntotal > args$thinningThreshold) && enoughYearsForThinning) thin = TRUE
     }
     else if(args$thinningMetric=="HB") {
       HB = stand_hartBeckingIndex(x)
       if(is.na(HB)) stop("NA Hart-becking index")
       if(verbose) cat(paste0("  Hart-Becking: ", round(HB,1), " threshold ", round(args$thinningThreshold)))
-      if(HB < args$thinningThreshold && args$yearsSinceThinning > args$minThinningInterval) thin = TRUE
+      if(HB < args$thinningThreshold && args$yearsSinceThinning >= args$minThinningInterval) thin = TRUE
     }
     else {
       stop(paste0("Non-recognized thinning metric '", args$thinningMetric,"'.\n"))
@@ -54,7 +58,7 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
     if(thin) {
       BA2remove = BAtotal*(args$thinningPerc/100)
       BAremoved = 0
-      args$yearsSinceThinning = 0
+      args$yearsSinceThinning = 1
       
       if(verbose) cat(paste0(", type: ",args$thinning,", BA to extract: ", round(BA2remove,1)))
       
@@ -228,7 +232,7 @@ defaultManagementArguments<-function(){
     thinningThreshold = 20,
     thinningPerc = 30,
     minThinningInterval = 10,
-    yearsSinceThinning = 0,
+    yearsSinceThinning = NA,
     finalMeanDBH = 20, 
     finalPerc = "40-60-100",
     finalPreviousStage = 0,
