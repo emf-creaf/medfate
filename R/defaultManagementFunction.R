@@ -12,6 +12,8 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
   meanDBH = sum(x$treeData$N * x$treeData$DBH, na.rm=TRUE)/sum(x$treeData$N, na.rm=TRUE)
   
   action = "none"
+  yearsSinceThinning = 0
+  
   if(args$type == "irregular") action = "thinning"
   else if(args$type == "regular") {
     if(verbose) cat(paste0("  mean DBH: ", round(meanDBH,1), " threshold ", args$finalMeanDBH))
@@ -35,17 +37,17 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
     thin = FALSE
     if(args$thinningMetric=="BA") {
       if(verbose) cat(paste0("  Basal area: ", round(BAtotal,1), " threshold ", round(args$thinningThreshold)))
-      if(BAtotal > args$thinningThreshold) thin = TRUE
+      if(BAtotal > args$thinningThreshold & yearsSinceThinning > args$minThinningInterval) thin = TRUE
     }
     else if(args$thinningMetric=="N") {
       if(verbose) cat(paste0("  Density: ", round(Ntotal,1), " threshold ", round(args$thinningThreshold)))
-      if(Ntotal > args$thinningThreshold) thin = TRUE
+      if(Ntotal > args$thinningThreshold & yearsSinceThinning > args$minThinningInterval) thin = TRUE
     }
     else if(args$thinningMetric=="HB") {
       HB = stand_hartBeckingIndex(x)
       if(is.na(HB)) stop("NA Hart-becking index")
       if(verbose) cat(paste0("  Hart-Becking: ", round(HB,1), " threshold ", round(args$thinningThreshold)))
-      if(HB < args$thinningThreshold) thin = TRUE
+      if(HB < args$thinningThreshold & yearsSinceThinning > args$minThinningInterval) thin = TRUE
     }
     else {
       stop(paste0("Non-recognized thinning metric '", args$thinningMetric,"'.\n"))
@@ -53,6 +55,8 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
     if(thin) {
       BA2remove = BAtotal*(args$thinningPerc/100)
       BAremoved = 0
+      yearsSinceThinning = 0
+      
       if(verbose) cat(paste0(", type: ",args$thinning,", BA to extract: ", round(BA2remove,1)))
       
       if(args$thinning %in% c("below", "above")) {
@@ -155,6 +159,8 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
     }
     else {
       action = "none"
+      yearsSinceThinning = yearsSinceThinning + 1
+      
     }
   }
   else if(action=="finalcut") {
@@ -222,6 +228,7 @@ defaultManagementArguments<-function(){
     thinningMetric = "BA", 
     thinningThreshold = 20,
     thinningPerc = 30,
+    minThinningInterval = 10,
     finalMeanDBH = 20, 
     finalPerc = "40-60-100",
     finalPreviousStage = 0,
