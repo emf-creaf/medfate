@@ -158,7 +158,7 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
     }
     else {
       action = "none"
-      args$yearsSinceThinning = yearsSinceThinning + 1
+      args$yearsSinceThinning = args$yearsSinceThinning + 1
       
     }
   }
