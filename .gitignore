@@ -10,9 +10,4 @@ src/*.dll
 medfate.Rproj
 src-i386/*.*
 src-x64/*.*
-modeltests/*.tex
-modeltests/*.log
-modeltests/*.pdf
-modeltests/*.gz
-modeltests/*.toc
 inst/doc/*.*

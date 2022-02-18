@@ -18,7 +18,7 @@ defaultManagementArguments()
   \item{verbose}{A boolean flag enabling console printing.}
 }
 \details{
-This function implements silvicultural actions following either 'regular' or 'irregular' management models. Irregular models are implemented by executing thinning operations only, whereas regular models include a set of final cuts. Thinning occurs anytime a stand-level metric (e.g. basal area) crosses a given threshold, and different kinds of thinning operations are allowed. Final cuts start whenever mean DBH exceeds a given threshold, and may include different cuts separated a number of years. Planting is only allowed under regular management models, and is applied after the last final cut. Understory clearings are assumed to occur anytime there is an intervention on trees, an only a residual shrub cover is left.
+This function implements silvicultural actions following either 'regular' or 'irregular' management models. Irregular models are implemented by executing thinning operations only, whereas regular models include a set of final cuts. Thinning occurs anytime a stand-level metric (e.g. basal area) crosses a given threshold, and different kinds of thinning operations are allowed. Unrealistic high frequency thinning can be avoided by setting a minimum number of years to happen between thinning operations. Final cuts start whenever mean DBH exceeds a given threshold, and may include different cuts separated a number of years. Planting is only allowed under regular management models, and is applied after the last final cut. Understory clearings are assumed to occur anytime there is an intervention on trees, an only a residual shrub cover is left.
 
 \emph{Thinning types}:
 \itemize{
@@ -47,6 +47,8 @@ Function \code{defaultManagementArguments} returns a list with default arguments
      \item{\code{"thinningMetric"}: The stand-level metric used to decide whether thinning is applied, either 'BA' (basal area), 'N' (density) or 'HB' (Hart-Becking index).} 
      \item{\code{"thinningThreshold"}: The threshold value of the stand-level metric causing the thinning decision.}
      \item{\code{"thinningPerc"}: Percentage of stand's basal area to be removed in thinning operations.}
+     \item{\code{"minThinningInterval"}: Minimum number of years between thinning operations.}
+     \item{\code{"yearsSinceThinning"}: State variable to count the years since the last thinning ocurred.}
      \item{\code{"finalMeanDBH"}: Mean DBH threshold to start final cuts.}
      \item{\code{"finalPerc"}: String with percentages of basal area to be removed in final cuts, separated by '-' (e.g. "40-60-100").}
      \item{\code{"finalPreviousStage"}: Integer state variable to store the stage of final cuts ('0' before starting final cuts).}
