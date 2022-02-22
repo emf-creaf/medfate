@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.1</span>
       </span>
     </div>
 
@@ -69,7 +69,7 @@
     <dl><dt>x</dt>
 <dd><p>An object of class <code><a href="forest.html">forest</a></code>.</p></dd>
 <dt>SpParams</dt>
-<dd><p>A data frame with species parameters (see <code><a href="SpParams.html">SpParamsMED</a></code> and <code><a href="SpParams.html">SpParamsMED</a></code>).</p></dd>
+<dd><p>A data frame with species parameters (see <code><a href="SpParams.html">SpParamsDefinition</a></code> and <code><a href="SpParams.html">SpParamsMED</a></code>).</p></dd>
 <dt>gdd</dt>
 <dd><p>Growth degree days to account for leaf phenology effects (in Celsius). This should be left <code>NA</code> in most applications.</p></dd>
 <dt>mode</dt>
@@ -583,10 +583,14 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsPhenology</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             PhenologyType LeafDuration t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen ysen</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 oneflush-evergreen     2.536875  50.0 200.0  0.00  8268  12.5  28.5    2    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 oneflush-evergreen     2.183837  54.5 240.7  4.34 10178  12.5  28.5    2    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 oneflush-evergreen     1.227917  54.5 240.7  4.34 10178  12.5  28.5    2    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             PhenologyType LeafDuration t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 oneflush-evergreen     2.536875  50.0 200.0  0.00  8268  12.5  28.5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 oneflush-evergreen     2.183837  54.5 240.7  4.34 10178  12.5  28.5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 oneflush-evergreen     1.227917  54.5 240.7  4.34 10178  12.5  28.5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        ysen</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsAnatomy</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Hmax Hmed    Al2As Ar2Al      SLA LeafWidth LeafDensity WoodDensity</span>
@@ -965,10 +969,14 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsPhenology</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             PhenologyType LeafDuration t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen ysen</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 oneflush-evergreen     2.536875  50.0 200.0  0.00  8268  12.5  28.5    2    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 oneflush-evergreen     2.183837  54.5 240.7  4.34 10178  12.5  28.5    2    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 oneflush-evergreen     1.227917  54.5 240.7  4.34 10178  12.5  28.5    2    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             PhenologyType LeafDuration t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 oneflush-evergreen     2.536875  50.0 200.0  0.00  8268  12.5  28.5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 oneflush-evergreen     2.183837  54.5 240.7  4.34 10178  12.5  28.5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 oneflush-evergreen     1.227917  54.5 240.7  4.34 10178  12.5  28.5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        ysen</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsAnatomy</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Hmax Hmed    Al2As Ar2Al      SLA LeafWidth LeafDensity WoodDensity</span>
@@ -1394,20 +1402,24 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsPhenology</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             PhenologyType LeafDuration t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen ysen</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 oneflush-evergreen     2.536875  50.0 200.0  0.00  8268  12.5  28.5    2    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 oneflush-evergreen     2.183837  54.5 240.7  4.34 10178  12.5  28.5    2    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 oneflush-evergreen     1.227917  54.5 240.7  4.34 10178  12.5  28.5    2    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             PhenologyType LeafDuration t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 oneflush-evergreen     2.536875  50.0 200.0  0.00  8268  12.5  28.5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 oneflush-evergreen     2.183837  54.5 240.7  4.34 10178  12.5  28.5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 oneflush-evergreen     1.227917  54.5 240.7  4.34 10178  12.5  28.5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        ysen</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsAnatomy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Hmax Hmed    Al2As      SLA LeafWidth LeafDensity WoodDensity FineRootDensity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 1900  850 1317.523 5.140523 0.1384772   0.2982842   0.6077016       0.2982842</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 1300  500 2512.563 6.850951 1.7674359   0.4893392   0.9008264       0.4893392</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  250   80 4189.325 4.980084 1.3761085   0.3709679   0.4389106       0.3709679</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        conduit2sapwood      SRL RLD     r635</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148       0.9236406 3172.572  10 1.964226</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168       0.6238125 4398.812  10 1.805872</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165       0.6238125 4398.812  10 2.289452</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Hmax Hmed    Al2As      SLA LeafWidth LeafDensity WoodDensity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 1900  850 1317.523 5.140523 0.1384772   0.2982842   0.6077016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 1300  500 2512.563 6.850951 1.7674359   0.4893392   0.9008264</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  250   80 4189.325 4.980084 1.3761085   0.3709679   0.4389106</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        FineRootDensity conduit2sapwood      SRL RLD     r635</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148       0.2982842       0.9236406 3172.572  10 1.964226</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168       0.4893392       0.6238125 4398.812  10 1.805872</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165       0.3709679       0.6238125 4398.812  10 2.289452</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsInterception</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        alphaSWR gammaSWR kPAR   g</span>
@@ -1420,20 +1432,24 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.002031250 0.1940833 58.89948 119.9273      0.1500000       0.600000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.006003126 0.2007222 41.80912 103.0690      0.7735834       3.094334</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.010455247 0.2830167 62.78100 118.4486      0.2900000       1.160000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        VCleaf_kmax VCleaf_c  VCleaf_d VCstem_kmax VCstem_c  VCstem_d VCroot_kmax</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    7.166471 1.497782 -2.142745    1.339563 7.458883 -4.481392    1.692905</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    7.354306 1.331076 -1.777291    4.876881 2.558358 -5.103492    4.398520</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    9.579077 1.844224 -3.030130    4.599269 3.537784 -4.126512    4.660990</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        VCroot_c  VCroot_d VGrhizo_kmax Plant_kmax</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 1.916254 -3.240714    158057433   0.677162</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 1.957824 -3.366992    164026595   1.759408</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 1.760307 -2.797092    406534197   1.864396</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        VCleaf_kmax VCleaf_c  VCleaf_d VCstem_kmax VCstem_c  VCstem_d</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    7.166471 1.497782 -2.142745    1.339563 7.458883 -4.481392</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    7.354306 1.331076 -1.777291    4.876881 2.558358 -5.103492</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    9.579077 1.844224 -3.030130    4.599269 3.537784 -4.126512</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        VCroot_kmax VCroot_c  VCroot_d VGrhizo_kmax Plant_kmax</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    1.692905 1.916254 -3.240714    158057433   0.677162</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    4.398520 1.957824 -3.366992    164026595   1.759408</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    4.660990 1.760307 -2.797092    406534197   1.864396</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsWaterStorage</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS    StemAF  Vsapwood</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355 0.9236406 3.6759195</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 -1.483333 19.260000 0.1700 0.2035077 -3.227438 46.420610 0.6238125 1.0902475</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155 0.6238125 0.1365362</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS    StemAF</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355 0.9236406</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 -1.483333 19.260000 0.1700 0.2035077 -3.227438 46.420610 0.6238125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155 0.6238125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Vsapwood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 3.6759195</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 1.0902475</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.1365362</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalPhenology</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi</span>
@@ -1442,14 +1458,14 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165   0   0        FALSE         FALSE          FALSE        FALSE   0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalWater</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Einst RootCrownPsi Stem1Psi Stem2Psi LeafPsi StemSympPsi LeafSympPsi StemPLC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148     0            0        0        0       0           0           0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168     0            0        0        0       0           0           0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165     0            0        0        0       0           0           0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        NSPL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Einst RootCrownPsi Stem1Psi Stem2Psi LeafPsi StemSympPsi LeafSympPsi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148     0            0        0        0       0           0           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168     0            0        0        0       0           0           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165     0            0        0        0       0           0           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        StemPLC NSPL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148       0    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168       0    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165       0    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "spwbInput" "list"     </span>

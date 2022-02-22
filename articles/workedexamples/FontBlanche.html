@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.1</span>
       </span>
     </div>
 
@@ -457,11 +457,11 @@
 <p>If we inspect its elements, we realize that there are several components:</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">fb_SWB</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##  [1] "latitude"          "topography"        "spwbInput"        </span>
-<span class="co">##  [4] "WaterBalance"      "EnergyBalance"     "Temperature"      </span>
-<span class="co">##  [7] "TemperatureLayers" "Soil"              "Stand"            </span>
-<span class="co">## [10] "Plants"            "SunlitLeaves"      "ShadeLeaves"      </span>
-<span class="co">## [13] "subdaily"</span></code></pre>
+<pre><code><span class="co">##  [1] "latitude"          "topography"        "weather"          </span>
+<span class="co">##  [4] "spwbInput"         "WaterBalance"      "EnergyBalance"    </span>
+<span class="co">##  [7] "Temperature"       "TemperatureLayers" "Soil"             </span>
+<span class="co">## [10] "Stand"             "Plants"            "SunlitLeaves"     </span>
+<span class="co">## [13] "ShadeLeaves"       "subdaily"</span></code></pre>
 <p>For example, <code>WaterBalance</code> contains water balance components in form of a data frame with days in rows:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fb_SWB</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">)</span></code></pre></div>

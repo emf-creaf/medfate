@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.1</span>
       </span>
     </div>
 
@@ -59,7 +59,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fuel_stratification</span><span class="op">(</span><span class="va">object</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span>, mode <span class="op">=</span> <span class="st">"MED"</span>,
                       heightProfileStep <span class="op">=</span> <span class="fl">10.0</span>, maxHeightProfile <span class="op">=</span> <span class="fl">5000.0</span>,
                       bulkDensityThreshold <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span>
-<span class="fu">fuel_FCCS</span><span class="op">(</span><span class="va">object</span>, <span class="va">ShrubCover</span>, <span class="va">CanopyCover</span>, <span class="va">SpParams</span>, cohortFMC <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
+<span class="fu">fuel_FCCS</span><span class="op">(</span><span class="va">object</span>, <span class="va">SpParams</span>, cohortFMC <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>,
           gdd <span class="op">=</span> <span class="cn">NA</span>, mode <span class="op">=</span> <span class="st">"MED"</span>, heightProfileStep <span class="op">=</span> <span class="fl">10</span>, maxHeightProfile <span class="op">=</span> <span class="fl">5000</span>, 
           bulkDensityThreshold <span class="op">=</span> <span class="fl">0.05</span>, depthMode <span class="op">=</span> <span class="st">"crownaverage"</span><span class="op">)</span>
 <span class="fu">fuel_windAdjustmentFactor</span><span class="op">(</span><span class="va">topShrubHeight</span>, <span class="va">bottomCanopyHeight</span>, <span class="va">topCanopyHeight</span>,
@@ -70,10 +70,6 @@
     <h2>Arguments</h2>
     <dl><dt>object</dt>
 <dd><p>An object of class <code><a href="forest.html">forest</a></code></p></dd>
-<dt>ShrubCover</dt>
-<dd><p>Total shrub cover (in percent) of the stand.</p></dd>
-<dt>CanopyCover</dt>
-<dd><p>Total canopy cover (in percent) of the stand.</p></dd>
 <dt>SpParams</dt>
 <dd><p>A data frame with species parameters (see <code><a href="SpParams.html">SpParamsMED</a></code>).</p></dd>
 <dt>cohortFMC</dt>
@@ -126,6 +122,7 @@
 <li><p><code>RV</code>: Reactive volume (in m3/m2).</p></li>
 <li><p><code>MinFMC</code>: Minimum fuel moisture content (as percent over dry weight).</p></li>
 <li><p><code>MaxFMC</code>: Maximum fuel moisture content (as percent over dry weight).</p></li>
+<li><p><code>ActFMC</code>: Actual fuel moisture content (as percent over dry weight). These are set to <code>NA</code> if parameter <code>cohortFMC</code> is empty.</p></li>
 </ul><p>Function <code>fuel_stratification</code> returns a list with the following items:</p><ul><li><p><code>surfaceLayerBaseHeight</code>: Base height of crowns of shrubs in the surface layer (in cm).</p></li>
 <li><p><code>surfaceLayerTopHeight</code>: Top height of crowns of shrubs in the surface layer (in cm).</p></li>
 <li><p><code>understoryLAI</code>: Cumulated LAI of the understory layer (i.e. leaf area comprised between surface layer base and top heights).</p></li>
@@ -192,20 +189,26 @@ Function <code>fuel_windAdjustmentFactor</code> returns a value between 0 and 1.
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Calculate fuel properties according to FCCS</span></span>
-<span class="r-in"><span class="va">fccs</span> <span class="op">=</span> <span class="fu">fuel_FCCS</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="fl">50</span>,<span class="fl">100</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">fccs</span> <span class="op">=</span> <span class="fu">fuel_FCCS</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">fccs</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 w cover hbc htc habc hatc       delta        rhob     rhop           PV         beta   betarel</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 0.61531386   100 2.7 7.4  2.6  8.0 4.770490365  0.12898336 595.8159 1.068691e-03 2.240211e-04 0.1483959</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> shrub  0.02372309    50 0.4 0.5  0.0  0.8 0.642625347  0.03691589 412.0091 5.757903e-05 8.959969e-05 0.2912218</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> herb   0.02800000    10 0.0  NA  0.0   NA 0.200000000  0.14000000 400.0000 7.000000e-05 3.500000e-04 0.7375491</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> woody  0.20185195    NA 0.0  NA  0.0   NA 0.007637228 26.43000000 438.9106 4.598931e-04 6.021728e-02 0.7375491</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> litter 0.27309512    NA 0.0  NA  0.0   NA 0.014027046 19.46918201 370.9679 7.361692e-04 5.248213e-02 9.2387331</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        etabetarel    sigma        pDead       FAI        h           RV   MinFMC    MaxFMC ActFMC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> canopy  0.3477514  5252.03 0.0004042436 5.7976757 21012.89 1.032725e-03 74.74129 112.91297     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> shrub   0.5916193  4141.00 0.1448400000 0.2384348 20117.67 5.757903e-05 63.64891  96.53441     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> herb    0.9588969 11483.00 0.0000000000 0.8038100 18608.00 7.000000e-05       NA        NA     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> woody   0.9588969  1601.05 1.0000000000 0.7363118 18608.00 4.598931e-04       NA        NA     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> litter  0.1428898  7431.44 1.0000000000 5.4707970 18608.00 7.361692e-04       NA        NA     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 w  cover hbc htc habc hatc       delta        rhob     rhop</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 0.61531386 100.00 2.7 7.4  2.6  8.0 4.770490365  0.12898336 595.8159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shrub  0.02372309   3.75 0.4 0.5  0.0  0.8 0.642625347  0.03691589 412.0091</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> herb   0.02800000  10.00 0.0  NA  0.0   NA 0.200000000  0.14000000 400.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> woody  0.20185195     NA 0.0  NA  0.0   NA 0.007637228 26.43000000 438.9106</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> litter 0.27309512     NA 0.0  NA  0.0   NA 0.014027046 19.46918201 370.9679</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                  PV         beta   betarel etabetarel    sigma        pDead</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 1.068691e-03 2.240211e-04 0.1483959  0.3477514  5252.03 0.0004042436</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shrub  5.757903e-05 8.959969e-05 0.2912218  0.5916193  4141.00 0.1448400000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> herb   7.000000e-05 3.500000e-04 0.7375491  0.9588969 11483.00 0.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> woody  4.598931e-04 6.021728e-02 0.7375491  0.9588969  1601.05 1.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> litter 7.361692e-04 5.248213e-02 9.2387331  0.1428898  7431.44 1.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              FAI        h           RV   MinFMC    MaxFMC ActFMC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 5.7976757 21012.89 1.032725e-03 74.74129 112.91297     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shrub  0.2384348 20117.67 5.757903e-05 63.64891  96.53441     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> herb   0.8038100 18608.00 7.000000e-05       NA        NA     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> woody  0.7363118 18608.00 4.598931e-04       NA        NA     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> litter 5.4707970 18608.00 7.361692e-04       NA        NA     NA</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">fuel_windAdjustmentFactor</span><span class="op">(</span><span class="va">fccs</span><span class="op">$</span><span class="va">htc</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">fccs</span><span class="op">$</span><span class="va">hbc</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">fccs</span><span class="op">$</span><span class="va">htc</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">fccs</span><span class="op">$</span><span class="va">cover</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1989258</span>

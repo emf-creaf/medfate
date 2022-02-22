@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.1</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
     <dl><dt>FCCSpropsSI</dt>
 <dd><p>A data frame describing the properties of five fuel strata (canopy, shrub, herbs, dead woody and litter) returned by <code><a href="fuel_properties.html">fuel_FCCS</a></code>.</p></dd>
 <dt>MliveSI</dt>
-<dd><p>Moisture of live fuels (in percent of dry weight) for canopy, shrub, and herb strata.</p></dd>
+<dd><p>Moisture of live fuels (in percent of dry weight) for canopy, shrub, and herb strata. Live moisture values are drawn from column <code>ActFCM</code> in <code>FCCSpropsSI</code> if available (see <code><a href="fuel_properties.html">fuel_FCCS</a></code>). Otherwise, moisture values supplied for <code>MliveSI</code> are used.</p></dd>
 <dt>MdeadSI</dt>
 <dd><p>Moisture of dead fuels (in percent of dry weight) for canopy, shrub, herb, woody and litter strata.</p></dd>
 <dt>slope</dt>
@@ -169,7 +169,7 @@
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Calculate fuel properties according to FCCS</span></span>
-<span class="r-in"><span class="va">fccs</span> <span class="op">=</span> <span class="fu"><a href="fuel_properties.html">fuel_FCCS</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="fl">50</span>,<span class="fl">100</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">fccs</span> <span class="op">=</span> <span class="fu"><a href="fuel_properties.html">fuel_FCCS</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Calculate fire behavior according to FCCS</span></span>
 <span class="r-in"><span class="fu">fire_FCCS</span><span class="op">(</span><span class="va">fccs</span><span class="op">)</span></span>
