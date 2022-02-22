@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Forest dynamics</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-02-18</h4>
+            <h4 data-toc-skip class="date">2022-02-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/ForestDynamics.Rmd" class="external-link"><code>vignettes/ForestDynamics.Rmd</code></a></small>
       <div class="hidden name"><code>ForestDynamics.Rmd</code></div>
@@ -390,7 +390,7 @@
            latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>,
            management_function <span class="op">=</span> <span class="va">defaultManagementFunction</span>,
            management_args <span class="op">=</span> <span class="va">args</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Simulating year 2001 (1/10):  (a) Growth/mortality &amp; management [none], (b) Recruitment</span>
+<pre><code><span class="co">## Simulating year 2001 (1/10):  (a) Growth/mortality &amp; management [thinning], (b) Recruitment</span>
 <span class="co">## Simulating year 2002 (2/10):  (a) Growth/mortality &amp; management [none], (b) Recruitment</span>
 <span class="co">## Simulating year 2003 (3/10):  (a) Growth/mortality &amp; management [none], (b) Recruitment</span>
 <span class="co">## Simulating year 2004 (4/10):  (a) Growth/mortality &amp; management [none], (b) Recruitment</span>
@@ -403,9 +403,12 @@
 <p>When management is included in simulations, two additional tables are produced, corresponding to the trees and shrubs that were cut, e.g.:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">CutTreeTable</span></code></pre></div>
-<pre><code><span class="co">##  [1] Step    Year    Cohort  Species Name    N       DBH     Height  Z50    </span>
-<span class="co">## [10] Z95    </span>
-<span class="co">## &lt;0 rows&gt; (or 0-length row.names)</span></code></pre>
+<pre><code><span class="co">##   Step Year Cohort Species             Name          N      DBH   Height Z50</span>
+<span class="co">## 1    1 2001 T1_148     148 Pinus halepensis   9.298506 38.02701 814.2254 400</span>
+<span class="co">## 2    1 2001 T2_168     168     Quercus ilex 384.000000 14.86984 668.7889 400</span>
+<span class="co">##    Z95</span>
+<span class="co">## 1 2000</span>
+<span class="co">## 2 2000</span></code></pre>
 </div>
   </div>
 
