@@ -25,5 +25,5 @@ A matrix with fire behaviour variables (columns) for each simulated day (rows)
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
-\code{\link{spwb}}, \code{\link{fire_FCCS}}
+\code{\link{spwb}}, \code{\link{fuel_FCCS}}, \code{\link{fire_FCCS}}
 }
