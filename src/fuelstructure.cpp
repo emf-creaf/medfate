@@ -260,12 +260,25 @@ CharacterVector leafLitterFuelType(List object, DataFrame SpParams) {
  * FCCS fuel definition
  */
 // [[Rcpp::export("fuel_FCCS")]]
-DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, DataFrame SpParams, NumericVector cohortFMC = NumericVector::create(), 
+DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFMC = NumericVector::create(), 
                          double gdd = NA_REAL, String mode = "MED", 
                          double heightProfileStep = 10.0, double maxHeightProfile = 5000, double bulkDensityThreshold = 0.05,
                          String depthMode = "crownaverage") {
   List liveStrat = fuelLiveStratification(object, SpParams, gdd, mode, 
                                           heightProfileStep, maxHeightProfile, bulkDensityThreshold);
+  
+  NumericVector cc = cohortCover(object, SpParams, mode);
+  
+  DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(object["treeData"]);
+  DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(object["shrubData"]);
+  int ntree = treeData.nrow();
+  int nshrub = shrubData.nrow();
+  double CanopyCover = 0.0;
+  double ShrubCover = 0.0;
+  for(int i=0;i<ntree;i++) CanopyCover = CanopyCover + cc[i];
+  for(int i=0;i<nshrub;i++) ShrubCover = ShrubCover + cc[i+ntree];
+  CanopyCover = std::min(100.0, CanopyCover);
+  ShrubCover = std::min(100.0, ShrubCover);
   
   NumericVector cohLoading = cohortFuel(object, SpParams, gdd, true, mode);
   NumericVector cohLeafLitter = cohortEquilibriumLeafLitter(object, SpParams, AET, mode);

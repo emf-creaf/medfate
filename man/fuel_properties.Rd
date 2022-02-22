@@ -13,7 +13,7 @@ Function \code{fuel_stratification} provides a stratification of the stand into 
 fuel_stratification(object, SpParams, gdd = NA, mode = "MED",
                       heightProfileStep = 10.0, maxHeightProfile = 5000.0,
                       bulkDensityThreshold = 0.05)
-fuel_FCCS(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.numeric(c()),
+fuel_FCCS(object, SpParams, cohortFMC = as.numeric(c()),
           gdd = NA, mode = "MED", heightProfileStep = 10, maxHeightProfile = 5000, 
           bulkDensityThreshold = 0.05, depthMode = "crownaverage")
 fuel_windAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
@@ -21,8 +21,6 @@ fuel_windAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
 }
 \arguments{
   \item{object}{An object of class \code{\link{forest}}}
-  \item{ShrubCover}{Total shrub cover (in percent) of the stand.}
-  \item{CanopyCover}{Total canopy cover (in percent) of the stand.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
   \item{cohortFMC}{A numeric vector of (actual) fuel moisture content by cohort (e.g. can be taken as a row of the matrix returned by \code{\link{moisture_cohortFMC}}).}
   \item{gdd}{Growth degree-days.}
@@ -66,6 +64,7 @@ Function \code{fuel_FCCS} returns a data frame with five rows corresponding to  
 \item{\code{RV}: Reactive volume (in m3/m2).}
 \item{\code{MinFMC}: Minimum fuel moisture content (as percent over dry weight).}
 \item{\code{MaxFMC}: Maximum fuel moisture content (as percent over dry weight).}
+\item{\code{ActFMC}: Actual fuel moisture content (as percent over dry weight). These are set to \code{NA} if parameter \code{cohortFMC} is empty.}
 }
 
 Function \code{fuel_stratification} returns a list with the following items:
@@ -107,7 +106,7 @@ data(SpParamsMED)
 fuel_stratification(exampleforestMED, SpParamsMED)
 
 #Calculate fuel properties according to FCCS
-fccs = fuel_FCCS(exampleforestMED, 50,100, SpParamsMED)
+fccs = fuel_FCCS(exampleforestMED, SpParamsMED)
 fccs
 
 fuel_windAdjustmentFactor(fccs$htc[2], fccs$hbc[1], fccs$htc[1], fccs$cover[1])

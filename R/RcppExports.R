@@ -165,12 +165,12 @@ stand_foliarBiomass <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_shrubCover`, x, excludeMinHeight)
 }
 
-plant_cover <- function(x) {
-    .Call(`_medfate_cohortCover`, x)
+plant_cover <- function(x, SpParams, mode = "MED") {
+    .Call(`_medfate_cohortCover`, x, SpParams, mode)
 }
 
-species_cover <- function(x, SpParams) {
-    .Call(`_medfate_speciesCover`, x, SpParams)
+species_cover <- function(x, SpParams, mode = "MED") {
+    .Call(`_medfate_speciesCover`, x, SpParams, mode)
 }
 
 .shrubPhytovolume <- function(SP, Cover, H, CR, SpParams) {
@@ -293,8 +293,8 @@ fuel_stratification <- function(object, SpParams, gdd = NA_real_, mode = "MED", 
     .Call(`_medfate_fuelLiveStratification`, object, SpParams, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
 }
 
-fuel_FCCS <- function(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.numeric( c()), gdd = NA_real_, mode = "MED", heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05, depthMode = "crownaverage") {
-    .Call(`_medfate_FCCSproperties`, object, ShrubCover, CanopyCover, SpParams, cohortFMC, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold, depthMode)
+fuel_FCCS <- function(object, SpParams, cohortFMC = as.numeric( c()), gdd = NA_real_, mode = "MED", heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05, depthMode = "crownaverage") {
+    .Call(`_medfate_FCCSproperties`, object, SpParams, cohortFMC, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold, depthMode)
 }
 
 mortality_dailyProbability <- function(basalMortalityRate, stressValue, stressThreshold, minValue = 0.0, exponent = 10.0) {

@@ -42,6 +42,7 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
   \itemize{
   \item{\code{"latitude"}: Latitude (in degrees) given as input.} 
   \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.} 
+  \item{\code{"weather"}: A copy of the input weather data frame.}
   \item{\code{"growthInput"}: A copy of the object \code{x} of class \code{\link{growthInput}} given as input.}
   \item{\code{"WaterBalance"}: A data frame where different water balance variables (see \code{\link{spwb}}).}
   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}

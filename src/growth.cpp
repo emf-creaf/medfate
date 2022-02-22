@@ -2332,6 +2332,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   if(transpirationMode=="Granier") {
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
+                     Named("weather") = clone(meteo),
                      Named("growthInput") = growthInput,
                      Named("WaterBalance")=DWB, 
                      Named("BiomassBalance") = StandBiomassBalance,
@@ -2347,6 +2348,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   } else {
     l = List::create(Named("latitude") = latitude,
                    Named("topography") = topo,
+                   Named("weather") = clone(meteo),
                    Named("growthInput") = growthInput,
                    Named("WaterBalance")=DWB, 
                    Named("EnergyBalance") = DEB,

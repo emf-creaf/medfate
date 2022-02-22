@@ -35,7 +35,7 @@ summary.forest<-function(object, SpParams, mode = "MED", detailed = FALSE, ...) 
   }
   summaryLAI<-function(x, SpParams) {
     ntree = nrow(x$treeData)
-    nshrub = nrow(x$treeData)
+    nshrub = nrow(x$shrubData)
     LAIc = plant_LAI(x, SpParams, mode= mode)
     LAIt = 0
     LAIsh = 0
@@ -46,6 +46,17 @@ summary.forest<-function(object, SpParams, mode = "MED", detailed = FALSE, ...) 
              LAI_shrubs = LAIsh, LAIsp))
     else return(c(LAI= (LAIt+LAIsh), LAI_trees = LAIt,
                   LAI_shrubs = LAIsh))
+  }
+  summaryCover<-function(x, SpParams) {
+    ntree = nrow(x$treeData)
+    nshrub = nrow(x$shrubData)
+    coh_cov = plant_cover(x, SpParams)
+    covt = 0
+    covsh = 0
+    if(ntree>0) covt = min(100,sum(coh_cov[1:ntree], na.rm=T))
+    if(nshrub>0) covsh = min(100,sum(coh_cov[(1+ntree):(1+ntree+nshrub)], na.rm=T))
+    return(c(Tree_cover = covt,
+             Shrub_cover = covsh))
   }
   summaryFuel<-function(x, SpParams) {
     ntree = nrow(x$treeData)
@@ -63,6 +74,7 @@ summary.forest<-function(object, SpParams, mode = "MED", detailed = FALSE, ...) 
   }
   s = c(summaryNumber(object, SpParams),
         summaryBasalArea(object, SpParams),
+        summaryCover(object, SpParams),
         summaryLAI(object,SpParams),
         summaryFuel(object,SpParams))
   s["Phytovolume"] = sum(plant_phytovolume(object, SpParams),na.rm=TRUE)
@@ -73,7 +85,8 @@ summary.forest<-function(object, SpParams, mode = "MED", detailed = FALSE, ...) 
 }
 print.summary.forest<-function(x, digits=getOption("digits"),...) {
   cat(paste("Tree density (ind/ha):", x["N"],"\n"))
-  cat(paste("BA (m2/ha):", round(x["BA"],digits),"\n"))
+  cat(paste("Tree BA (m2/ha):", round(x["BA"],digits),"\n"))
+  cat(paste("Cover (%) trees (open ground):", round(x["Tree_cover"],digits), " shrubs:", round(x["Shrub_cover"],digits),"\n"))
   cat(paste("Shrub crown phytovolume (m3/m2):", round(x["Phytovolume"],digits),"\n"))
   cat(paste("LAI (m2/m2) total:", round(x["LAI"], digits)," trees:", round(x["LAI_trees"], digits),
             " shrubs:", round(x["LAI_shrubs"], digits),"\n"))

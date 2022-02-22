@@ -83,6 +83,13 @@ List FCCSbehaviour(DataFrame FCCSpropsSI,
   NumericVector FAI = FCCSpropsSI["FAI"]; //unitless
   NumericVector hdefSI = FCCSpropsSI["h"];
   NumericVector RVSI = FCCSpropsSI["RV"];
+  NumericVector ActFMC = FCCSpropsSI["ActFMC"];
+  
+  //Replace fuel moisture if available
+  if(!NumericVector::is_na(ActFMC[0])) MliveSI[0] = ActFMC[0];
+  if(!NumericVector::is_na(ActFMC[1])) MliveSI[1] = ActFMC[1];
+  if(!NumericVector::is_na(ActFMC[2])) MliveSI[2] = ActFMC[2];
+  
   //Rescale variables to British units
   NumericVector Mlive = MliveSI/100.0; //from percent to proportions
   NumericVector Mdead = MdeadSI/100.0; //from percent to proportions

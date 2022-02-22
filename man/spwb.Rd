@@ -51,6 +51,7 @@ pwb(x, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
   \itemize{
      \item{\code{"latitude"}: Latitude (in degrees) given as input.} 
      \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.} 
+     \item{\code{"weather"}: A copy of the input weather data frame.}
      \item{\code{"spwbInput"}: An (unmodified) copy of the object \code{x} of class \code{\link{spwbInput}} given as input  (note that \code{x} is modified by the simulation function).}
      \item{\code{"WaterBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
        \itemize{

@@ -20,7 +20,7 @@ fire_Rothermel(modeltype, wSI, sSI, delta, mx_dead,
 }
 \arguments{
   \item{FCCSpropsSI}{A data frame describing the properties of five fuel strata (canopy, shrub, herbs, dead woody and litter) returned by \code{\link{fuel_FCCS}}.}
-  \item{MliveSI}{Moisture of live fuels (in percent of dry weight) for canopy, shrub, and herb strata.}
+  \item{MliveSI}{Moisture of live fuels (in percent of dry weight) for canopy, shrub, and herb strata. Live moisture values are drawn from column \code{ActFCM} in \code{FCCSpropsSI} if available (see \code{\link{fuel_FCCS}}). Otherwise, moisture values supplied for \code{MliveSI} are used.}
   \item{MdeadSI}{Moisture of dead fuels (in percent of dry weight) for canopy, shrub, herb, woody and litter strata.}
   \item{slope}{Slope (in degrees).}
   \item{windSpeedSI}{Wind speed (in m/s) at 20 ft (6 m) over vegetation (default 11 m/s = 40 km/h)}
@@ -102,7 +102,7 @@ data(exampleforestMED)
 data(SpParamsMED)
 
 #Calculate fuel properties according to FCCS
-fccs = fuel_FCCS(exampleforestMED, 50,100, SpParamsMED)
+fccs = fuel_FCCS(exampleforestMED, SpParamsMED)
 
 #Calculate fire behavior according to FCCS
 fire_FCCS(fccs)

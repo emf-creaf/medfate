@@ -681,23 +681,63 @@ double shrubCover(List x, double excludeMinHeight = 0.0) {
   }
   return(cov);
 }
+
+NumericVector treeCoverMED(IntegerVector SP, NumericVector N, NumericVector dbh, DataFrame SpParams){
+  NumericVector Acw = speciesNumericParameterWithImputation(SP, SpParams, "a_cw",true);
+  NumericVector Bcw = speciesNumericParameterWithImputation(SP, SpParams, "b_cw",true);
+  int ncoh = N.size();
+  NumericVector cov(ncoh);
+  for(int i=0;i<ncoh;i++) {
+    if(!NumericVector::is_na(dbh[i])) {
+      double cw = Acw[i]*pow(dbh[i], Bcw[i]);
+      cov[i] = std::min(100.0,(N[i]*M_PI*pow(cw/2.0,2.0)/100.0));
+    }
+  }
+  return(cov);
+}
+
+NumericVector treeCoverUS(IntegerVector SP, NumericVector N, NumericVector CrownWidth, DataFrame SpParams){
+  int ncoh = N.size();
+  NumericVector cov(ncoh);
+  for(int i=0;i<ncoh;i++) {
+    if(!NumericVector::is_na(CrownWidth[i])) {
+      double cw = CrownWidth[i]; //Shengli: This is tree crown width. We will get the info from treedata, so I modify the sentence here. Note Crown width (unit in meter) that a tree of cohort i would have in open-ground conditions
+      cov[i] = std::min(100.0,(N[i]*M_PI*pow(cw/2.0,2.0)/100.0));  //I do not understand why there is 100.0 in this sentence. I believe the cw unit in medfate in meter (see I need to ask what is the cw unit in medfate.)
+    }
+  }
+  return(cov);
+}
+
 // [[Rcpp::export("plant_cover")]]
-NumericVector cohortCover(List x) {
+NumericVector cohortCover(List x, DataFrame SpParams, String mode = "MED") {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
-  NumericVector cover = shrubData["Cover"];
-  NumericVector vol(treeData.nrows()+shrubData.nrows(), NA_REAL);
-  for(int i=0;i<cover.size();i++) {
-    vol[i+treeData.nrows()] = cover[i];
+  NumericVector cov(treeData.nrows()+shrubData.nrows(), NA_REAL);
+  NumericVector tcover;
+  if(mode=="MED") {
+    tcover = treeCoverMED(treeData["Species"], treeData["N"], treeData["DBH"],
+                          SpParams);
+  } else {
+    tcover = treeCoverUS(treeData["Species"], treeData["N"], treeData["CrownWidth"], 
+                         SpParams);
   }
-  vol.attr("names") = cohortIDs(x);
-  return(vol);
+  for(int i=0;i<tcover.size();i++) {
+    cov[i] = tcover[i];
+  }
+  NumericVector shcover = shrubData["Cover"];
+  for(int i=0;i<shcover.size();i++) {
+    cov[i+treeData.nrows()] = shcover[i];
+  }
+  cov.attr("names") = cohortIDs(x);
+  return(cov);
 }
 
 // [[Rcpp::export("species_cover")]]
-NumericVector speciesCover(List x, DataFrame SpParams) {
-  NumericVector cc = cohortCover(x);
-  return(sumBySpecies(cc, cohortSpecies(x), SpParams));
+NumericVector speciesCover(List x, DataFrame SpParams, String mode = "MED") {
+  NumericVector cc = cohortCover(x, SpParams, mode);
+  NumericVector sc = sumBySpecies(cc, cohortSpecies(x), SpParams);
+  for(int i=0;i<sc.length();i++) sc[i] = std::min(100.0, sc[i]);
+  return(sc);
 }
 
 /**

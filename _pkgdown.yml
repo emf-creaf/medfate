@@ -91,17 +91,22 @@ reference:
   - growth
   - growth_day
   - fordyn
-  
-- title: Post-processing
-  desc:  Summaries, plots and other post-processing functions
+
+- title: Plots and summaries
+  desc:  Summaries and plots of simulation results
   contents:
-  - resistances
-  - droughtStress
-  - waterUseEfficiency
   - starts_with("plot.spwb")
   - starts_with("summary.spwb")
   - starts_with("extractSubdaily")
   - starts_with("shinyplot.spwb")
+  
+- title: Post-processing
+  desc:  Other post-processing functions
+  contents:
+  - resistances
+  - droughtStress
+  - waterUseEfficiency
+  - fireHazard
 
 - title: Model analysis
   desc:  Evaluation and optimization
@@ -150,11 +155,15 @@ reference:
   - starts_with("woodformation_")
   - starts_with("mortality_")
   - recruitment
+
+- title: Water content
+  desc:  Plant/tissue water contents
+  contents:
+  - starts_with("moisture_")
   
-- title: Fire hazard
-  desc:  Fuel characteristics and fire hazard
+- title: Fuels and fire behaviour
+  desc:  Fuel characteristics and fire behaviour
   contents:
   - starts_with("fire_")
-  - starts_with("moisture_")
   - starts_with("fuel_")
   - SFM_metric

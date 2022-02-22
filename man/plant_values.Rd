@@ -30,7 +30,7 @@ Functions to calculate attributes of plants in a \code{\link{forest}} object.
 plant_basalArea(x)
 plant_largerTreeBasalArea(x)
 plant_characterParameter(x, SpParams, parName)
-plant_cover(x)
+plant_cover(x, SpParams, mode = "MED")
 plant_crownBaseHeight(x, SpParams, mode = "MED")
 plant_crownLength(x, SpParams, mode = "MED")
 plant_crownRatio(x, SpParams, mode = "MED")

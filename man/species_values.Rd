@@ -17,7 +17,7 @@ Functions to calculate attributes of a \code{\link{forest}} object by species or
 }
 \usage{
 species_basalArea(x, SpParams)
-species_cover(x, SpParams)
+species_cover(x, SpParams, mode = "MED")
 species_density(x, SpParams, mode = "MED")
 species_foliarBiomass(x, SpParams, gdd = NA, mode = "MED")
 species_fuel(x, SpParams, gdd = NA, includeDead = TRUE, mode = "MED")

@@ -126,11 +126,15 @@ For each forest plot, we matched each available dendrochronological series with 
 
 Simulations were performed using daily weather data for each target plot, obtained via interpolation using package **meteoland** (2001 - 2015 period), and soil physical characteristics where drawn from SoilGrids data base. Water use efficiency parameters (`WUE` and `WUE_decay`) were given values resulting from the [meta-modelling exercise](https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html), whereas other parameters of the sensitivity analysis were left to the species-level defaults of `SpParamsMED`. We calibrated the four target parameters for the target dominant species of the target plot using a genetic algorithm (function `ga` from package **GA**). Model parameter values were assumed to be the same for all cohorts of the target species, while the remaining species in the plot were given default constant parameter values. The objective function for the genetic algorithm was the average, across cohorts with observed dendrochronology series, of the mean absolute error (MAE) resulting from comparing observed and predicted annual BAI series. Population size for the genetic algorithm was set to 40 individuals. A maximum of 25 iterations of the genetic algorithm were allowed, and the calibration procedure stopped if the best parameter combination did not change during 5 consecutive iterations.
 
-The following table shows the range of values explored for each parameter to be calibrated: 
+The following table shows the default and range of values explored for each parameter to be calibrated: 
 ```{r, echo = FALSE}
-df<-data.frame(Minimum = c(1e-6, 0.0001, 0.00001, 25),
-           Maximum = c(1e-4, 0.0100, 0.00025, 95), 
-           row.names = c("RERsapwood","RGRsapwoodmax","SRsapwood", "rfc@2"))
+ex_ini = readRDS(paste0(base_calibration,"Rdata/growth_SL_ini/80210.rds"))
+
+pg_ini = ex_ini$growthInput$paramsGrowth
+df<-data.frame(Default = c(pg_ini$RERsapwood[1], pg_ini$RGRsapwoodmax[1], pg_ini$SRsapwood[1], NA),
+               Minimum = c(1e-6, 0.0001, 0.00001, 25),
+               Maximum = c(1e-4, 0.0100, 0.00025, 95), 
+               row.names = c("RERsapwood","RGRsapwoodmax","SRsapwood", "rfc@2"))
 
 df %>%
   kbl() %>%
@@ -178,23 +182,23 @@ MAE_cal = cal_FUN2FUN_SL_ga$value_cal
 wmean <-function(x, na.rm = TRUE) {
   median(x, na.rm = na.rm)
 }
-ms = cbind(apply(cal_FUN2FUN_SL_ga[,c(12,2,3,13)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Species, mean, na.rm=T)}),
+ms = cbind(apply(cal_FUN2FUN_SL_ga[,c(12,3,13)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Species, mean, na.rm=T)}),
           apply(cal_FUN2FUN_SL_ga[,c(5,7,9,11)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Species, wmean, na.rm=T)}))
-mg = cbind(apply(cal_FUN2FUN_SL_ga[,c(12,2,3,13)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Group, mean, na.rm=T)}),
+mg = cbind(apply(cal_FUN2FUN_SL_ga[,c(12,3,13)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Group, mean, na.rm=T)}),
           apply(cal_FUN2FUN_SL_ga[,c(5,7,9,11)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Group, wmean, na.rm=T)}))
 dfs<-data.frame(Nplots = tapply(cal_FUN2FUN_SL_ga$value_ini, cal_FUN2FUN_SL_ga$Species, function(x){sum(!is.na(x))}))
 dfs <- cbind(dfs, ms)
 dfg<-data.frame(Nplots = tapply(cal_FUN2FUN_SL_ga$value_ini, cal_FUN2FUN_SL_ga$Group, function(x){sum(!is.na(x))}))
 dfg <- cbind(dfg, mg)
 df <- rbind(dfs, dfg)
-names(df) <-  c("N", "MeanBAI","MAE", "MAEcal", "relMAEcal","RERsapwood","RGRsapwoodmax", "SRsapwood", "rfc@2")
+names(df) <-  c("N", "Mean BAI (cm2/yr)","MAE (cm2/yr)", "MAE (%)","RERsapwood","RGRsapwoodmax", "SRsapwood", "rfc@2")
 N_tot = sum(dfs$Nplots)
 ma <- c(N_tot,
-        apply(cal_FUN2FUN_SL_ga[,c(12,2,3,13)],2,mean, na.rm=TRUE),
+        apply(cal_FUN2FUN_SL_ga[,c(12,3,13)],2,mean, na.rm=TRUE),
         apply(cal_FUN2FUN_SL_ga[,c(5,7,9,11)],2,wmean, na.rm=TRUE))
 df <- rbind(df, ma)
 row.names(df)[nrow(df)] = "All"
-df[,c("N", "MeanBAI", "MAE", "MAEcal", "relMAEcal")] %>%
+df[,c("N", "Mean BAI (cm2/yr)", "MAE (cm2/yr)", "MAE (%)")] %>%
   kbl() %>%
   kable_styling()
 ```
@@ -205,22 +209,32 @@ df[,c("N", "MeanBAI", "MAE", "MAEcal", "relMAEcal")] %>%
 dfpar = cal_FUN2FUN_SL_ga
 ```
 
-The following panels show the distribution of calibrated parameter values by species:
+The following panels show the distribution of calibrated parameter values by species (gray dashed lines indicate the parameter value limits used in the calibration procedure, and the red dotted line indicates the default, non-calibrated, value):
 
 ```{r, echo = FALSE, fig.width=7, fig.height=8, warning=FALSE}
 p3<-ggplot(dfpar)+
   geom_boxplot(aes(x=Species, y=RERsapwood_cal, fill = Species))+
+  geom_hline(yintercept=1e-4, col="gray", linetype = "dashed")+
+  geom_hline(yintercept=1e-6, col="gray", linetype = "dashed")+
+  geom_hline(yintercept=pg_ini$RERsapwood[1], col="red", linetype = "dotted")+
+  ylim(c(1e-6, 1e-4))+
   labs(x="", y="RER sapwood (g gluc/g dry/day)")+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
                    legend.position = "none")
 p4<-ggplot(dfpar)+
   geom_boxplot(aes(x=Species, y=RGRsapwoodmax_cal, fill = Species))+
+  geom_hline(yintercept=0.0001, col="gray", linetype = "dashed")+
+  geom_hline(yintercept=0.01, col="gray", linetype = "dashed")+
+  geom_hline(yintercept=pg_ini$RGRsapwoodmax[1], col="red", linetype = "dotted")+
   ylim(c(0.0001,0.01))+
   labs(x="", y="RGR sapwood (cm2/cm2/day)")+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
                    legend.position = "none")
 p5<-ggplot(dfpar)+
   geom_boxplot(aes(x=Species, y=SRsapwood_cal, fill = Species))+
+  geom_hline(yintercept=0.00001, col="gray", linetype = "dashed")+
+  geom_hline(yintercept=0.00025, col="gray", linetype = "dashed")+
+  geom_hline(yintercept=pg_ini$SRsapwood[1], col="red", linetype = "dotted")+
   ylim(c(0.00001,0.00025))+
   labs(x="", y="Sapwood senescence rate (day-1)")+
   scale_fill_discrete("")+
@@ -228,6 +242,8 @@ p5<-ggplot(dfpar)+
                    legend.position = "none")
 p6<-ggplot(dfpar)+
   geom_boxplot(aes(x=Species, y=rfc_cal, fill = Species))+
+  geom_hline(yintercept=25, col="gray", linetype = "dashed")+
+  geom_hline(yintercept=95, col="gray", linetype = "dashed")+
   ylim(c(25,95))+
   labs(x="", y="Rock content (%)")+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
@@ -244,14 +260,14 @@ df[,c("RERsapwood", "RGRsapwoodmax", "SRsapwood", "rfc@2")] %>%
   kable_styling()
 ```
 
-While some differences can be observed between species, those are not statistically significant, as shown in the following ANOVA tables:
-
-```{r, echo = FALSE}
-anova(aov(RGRsapwoodmax_cal~Species, data = dfpar))
-```
+Some differences can be observed between species, those are not always statistically significant, as shown in the following ANOVA tables:
 
 ```{r, echo = FALSE}
 anova(aov(RERsapwood_cal~Species, data = dfpar))
+```
+
+```{r, echo = FALSE}
+anova(aov(RGRsapwoodmax_cal~Species, data = dfpar))
 ```
 
 ```{r, echo = FALSE}
@@ -267,23 +283,29 @@ Finally, the following panels illustrate the overall lack of covariance between 
 ```{r, echo = FALSE, fig.height=12, fig.width=10}
 g1<-ggplot(cal_FUN2FUN_SL_ga)+
   geom_point(aes(x=RERsapwood_cal, y = RGRsapwoodmax_cal, col=Species, shape = Species))+
+  labs(x="RER sapwood (g gluc/g dry/day)", y="RGR sapwood (cm2/cm2/day)")+
   theme_bw()
 l <- get_legend(g1)
 g1<-g1+theme(legend.position = "none")
 g2<-ggplot(cal_FUN2FUN_SL_ga)+
   geom_point(aes(x=RERsapwood_cal, y = SRsapwood_cal, col=Species, shape = Species))+
+  labs(x="RER sapwood (g gluc/g dry/day)", y="Sapwood senescence rate (day-1)")+
   theme_bw()+theme(legend.position = "none")
 g3<-ggplot(cal_FUN2FUN_SL_ga)+
   geom_point(aes(x=RERsapwood_cal, y = rfc_cal, col=Species, shape = Species))+
+  labs(x="RER sapwood (g gluc/g dry/day)", y="Rock content (%)")+
   theme_bw()+theme(legend.position = "none")
 g4<-ggplot(cal_FUN2FUN_SL_ga)+
   geom_point(aes(x=SRsapwood_cal, y = RGRsapwoodmax_cal, col=Species, shape = Species))+
+  labs(x="Sapwood senescence rate (day-1)", y="RGR sapwood (cm2/cm2/day)")+
   theme_bw()+theme(legend.position = "none")
 g5<-ggplot(cal_FUN2FUN_SL_ga)+
   geom_point(aes(x=rfc_cal, y = RGRsapwoodmax_cal, col=Species, shape = Species))+
+  labs(x="Rock content (%)", y="RGR sapwood (cm2/cm2/day)")+
   theme_bw()+theme(legend.position = "none")
 g6<-ggplot(cal_FUN2FUN_SL_ga)+
   geom_point(aes(x=rfc_cal, y = SRsapwood_cal, col=Species, shape = Species))+
+  labs(x="Rock content (%)", y="Sapwood senescence rate (day-1)")+
   theme_bw()+theme(legend.position = "none")
 p<-plot_grid(g1,g2,g3,g4,g5,g6, ncol=2)
 plot_grid(p, l, ncol = 2, rel_widths = c(0.8,0.2))

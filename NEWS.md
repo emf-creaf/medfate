@@ -2,6 +2,12 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.6.1
+- Tree cover (open grown assumption)
+- Parameters 'ShrubCover' and 'CanopyCover' no longer required in function fuel_FCCS
+- Input weather stored in output from functions 'spwb', 'pwb' and 'growth'
+- New function 'fireHazard'.
+
 # Version 2.6.0
 - Nitrogen content for leaves, sapwood and fine roots added. 'Nleaf' replaces 'Narea' as the latter can be calculated from 'Nleaf' using 'SLA'.
 - Maintenance respiration rates based on N concentration of tissues

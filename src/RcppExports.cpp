@@ -555,25 +555,28 @@ BEGIN_RCPP
 END_RCPP
 }
 // cohortCover
-NumericVector cohortCover(List x);
-RcppExport SEXP _medfate_cohortCover(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortCover(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// speciesCover
-NumericVector speciesCover(List x, DataFrame SpParams);
-RcppExport SEXP _medfate_speciesCover(SEXP xSEXP, SEXP SpParamsSEXP) {
+NumericVector cohortCover(List x, DataFrame SpParams, String mode);
+RcppExport SEXP _medfate_cohortCover(SEXP xSEXP, SEXP SpParamsSEXP, SEXP modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(speciesCover(x, SpParams));
+    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(cohortCover(x, SpParams, mode));
+    return rcpp_result_gen;
+END_RCPP
+}
+// speciesCover
+NumericVector speciesCover(List x, DataFrame SpParams, String mode);
+RcppExport SEXP _medfate_speciesCover(SEXP xSEXP, SEXP SpParamsSEXP, SEXP modeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(speciesCover(x, SpParams, mode));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1003,14 +1006,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // FCCSproperties
-DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, DataFrame SpParams, NumericVector cohortFMC, double gdd, String mode, double heightProfileStep, double maxHeightProfile, double bulkDensityThreshold, String depthMode);
-RcppExport SEXP _medfate_FCCSproperties(SEXP objectSEXP, SEXP ShrubCoverSEXP, SEXP CanopyCoverSEXP, SEXP SpParamsSEXP, SEXP cohortFMCSEXP, SEXP gddSEXP, SEXP modeSEXP, SEXP heightProfileStepSEXP, SEXP maxHeightProfileSEXP, SEXP bulkDensityThresholdSEXP, SEXP depthModeSEXP) {
+DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFMC, double gdd, String mode, double heightProfileStep, double maxHeightProfile, double bulkDensityThreshold, String depthMode);
+RcppExport SEXP _medfate_FCCSproperties(SEXP objectSEXP, SEXP SpParamsSEXP, SEXP cohortFMCSEXP, SEXP gddSEXP, SEXP modeSEXP, SEXP heightProfileStepSEXP, SEXP maxHeightProfileSEXP, SEXP bulkDensityThresholdSEXP, SEXP depthModeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type object(objectSEXP);
-    Rcpp::traits::input_parameter< double >::type ShrubCover(ShrubCoverSEXP);
-    Rcpp::traits::input_parameter< double >::type CanopyCover(CanopyCoverSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type cohortFMC(cohortFMCSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
@@ -1019,7 +1020,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type maxHeightProfile(maxHeightProfileSEXP);
     Rcpp::traits::input_parameter< double >::type bulkDensityThreshold(bulkDensityThresholdSEXP);
     Rcpp::traits::input_parameter< String >::type depthMode(depthModeSEXP);
-    rcpp_result_gen = Rcpp::wrap(FCCSproperties(object, ShrubCover, CanopyCover, SpParams, cohortFMC, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold, depthMode));
+    rcpp_result_gen = Rcpp::wrap(FCCSproperties(object, SpParams, cohortFMC, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold, depthMode));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4881,8 +4882,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_speciesFoliarBiomass", (DL_FUNC) &_medfate_speciesFoliarBiomass, 4},
     {"_medfate_standFoliarBiomass", (DL_FUNC) &_medfate_standFoliarBiomass, 4},
     {"_medfate_shrubCover", (DL_FUNC) &_medfate_shrubCover, 2},
-    {"_medfate_cohortCover", (DL_FUNC) &_medfate_cohortCover, 1},
-    {"_medfate_speciesCover", (DL_FUNC) &_medfate_speciesCover, 2},
+    {"_medfate_cohortCover", (DL_FUNC) &_medfate_cohortCover, 3},
+    {"_medfate_speciesCover", (DL_FUNC) &_medfate_speciesCover, 3},
     {"_medfate_shrubPhytovolume", (DL_FUNC) &_medfate_shrubPhytovolume, 5},
     {"_medfate_cohortPhytovolume", (DL_FUNC) &_medfate_cohortPhytovolume, 2},
     {"_medfate_speciesPhytovolume", (DL_FUNC) &_medfate_speciesPhytovolume, 2},
@@ -4913,7 +4914,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_layerFuelAverageParameter", (DL_FUNC) &_medfate_layerFuelAverageParameter, 6},
     {"_medfate_layerFuelAverageCrownLength", (DL_FUNC) &_medfate_layerFuelAverageCrownLength, 6},
     {"_medfate_fuelLiveStratification", (DL_FUNC) &_medfate_fuelLiveStratification, 7},
-    {"_medfate_FCCSproperties", (DL_FUNC) &_medfate_FCCSproperties, 11},
+    {"_medfate_FCCSproperties", (DL_FUNC) &_medfate_FCCSproperties, 9},
     {"_medfate_dailyMortalityProbability", (DL_FUNC) &_medfate_dailyMortalityProbability, 5},
     {"_medfate_growthDay", (DL_FUNC) &_medfate_growthDay, 14},
     {"_medfate_growth", (DL_FUNC) &_medfate_growth, 6},

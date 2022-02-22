@@ -24,7 +24,7 @@ spwbInput(above,  Z50, Z95, soil, SpParams, control)
 }
 \arguments{
   \item{x}{An object of class \code{\link{forest}}.}
-  \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsMED}}).}
+  \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsDefinition}} and \code{\link{SpParamsMED}}).}
   \item{gdd}{Growth degree days to account for leaf phenology effects (in Celsius). This should be left \code{NA} in most applications.}
   \item{mode}{Calculation mode, either "MED" or "US".}
   \item{soil}{An object of class \code{\link{soil}}.}
