@@ -124,10 +124,13 @@
 </h3>
 <p>For each forest plot, we matched each available dendrochronological series with a forest inventory tree cohort by finding which tree (in the IFN3 sampling) had the DBH most similar to that estimated from the dendrochronology at year 2000. Then, we took the series of annual basal area increments (BAI) as the observations to be matched by model secondary growth predictions for the matched tree cohort.</p>
 <p>Simulations were performed using daily weather data for each target plot, obtained via interpolation using package <strong>meteoland</strong> (2001 - 2015 period), and soil physical characteristics where drawn from SoilGrids data base. Water use efficiency parameters (<code>WUE</code> and <code>WUE_decay</code>) were given values resulting from the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html" class="external-link">meta-modelling exercise</a>, whereas other parameters of the sensitivity analysis were left to the species-level defaults of <code>SpParamsMED</code>. We calibrated the four target parameters for the target dominant species of the target plot using a genetic algorithm (function <code>ga</code> from package <strong>GA</strong>). Model parameter values were assumed to be the same for all cohorts of the target species, while the remaining species in the plot were given default constant parameter values. The objective function for the genetic algorithm was the average, across cohorts with observed dendrochronology series, of the mean absolute error (MAE) resulting from comparing observed and predicted annual BAI series. Population size for the genetic algorithm was set to 40 individuals. A maximum of 25 iterations of the genetic algorithm were allowed, and the calibration procedure stopped if the best parameter combination did not change during 5 consecutive iterations.</p>
-The following table shows the range of values explored for each parameter to be calibrated:
+The following table shows the default and range of values explored for each parameter to be calibrated:
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Default
 </th>
 <th style="text-align:right;">
 Minimum
@@ -142,6 +145,9 @@ Maximum
 RERsapwood
 </td>
 <td style="text-align:right;">
+0.0000685
+</td>
+<td style="text-align:right;">
 1.0e-06
 </td>
 <td style="text-align:right;">
@@ -151,6 +157,9 @@ RERsapwood
 <tr>
 <td style="text-align:left;">
 RGRsapwoodmax
+</td>
+<td style="text-align:right;">
+0.0050000
 </td>
 <td style="text-align:right;">
 1.0e-04
@@ -164,6 +173,9 @@ RGRsapwoodmax
 SRsapwood
 </td>
 <td style="text-align:right;">
+0.0001261
+</td>
+<td style="text-align:right;">
 1.0e-05
 </td>
 <td style="text-align:right;">
@@ -173,6 +185,9 @@ SRsapwood
 <tr>
 <td style="text-align:left;">
 <a href="mailto:rfc@2" class="email">rfc@2</a>
+</td>
+<td style="text-align:right;">
+NA
 </td>
 <td style="text-align:right;">
 2.5e+01
@@ -201,16 +216,13 @@ The following table shows the same error values after averaging plot values by s
 N
 </th>
 <th style="text-align:right;">
-MeanBAI
+Mean BAI (cm2/yr)
 </th>
 <th style="text-align:right;">
-MAE
+MAE (cm2/yr)
 </th>
 <th style="text-align:right;">
-MAEcal
-</th>
-<th style="text-align:right;">
-relMAEcal
+MAE (%)
 </th>
 </tr></thead>
 <tbody>
@@ -223,9 +235,6 @@ Fagus sylvatica
 </td>
 <td style="text-align:right;">
 14.911874
-</td>
-<td style="text-align:right;">
-14.152882
 </td>
 <td style="text-align:right;">
 7.497138
@@ -245,9 +254,6 @@ Pinus halepensis
 9.353759
 </td>
 <td style="text-align:right;">
-20.129465
-</td>
-<td style="text-align:right;">
 6.413050
 </td>
 <td style="text-align:right;">
@@ -263,9 +269,6 @@ Pinus nigra
 </td>
 <td style="text-align:right;">
 6.391289
-</td>
-<td style="text-align:right;">
-11.941776
 </td>
 <td style="text-align:right;">
 3.380512
@@ -285,9 +288,6 @@ Pinus sylvestris
 9.344288
 </td>
 <td style="text-align:right;">
-15.196326
-</td>
-<td style="text-align:right;">
 5.987069
 </td>
 <td style="text-align:right;">
@@ -303,9 +303,6 @@ Quercus pubescens
 </td>
 <td style="text-align:right;">
 6.494994
-</td>
-<td style="text-align:right;">
-6.662728
 </td>
 <td style="text-align:right;">
 2.825792
@@ -325,9 +322,6 @@ Angiosperm
 10.703434
 </td>
 <td style="text-align:right;">
-10.407805
-</td>
-<td style="text-align:right;">
 5.161465
 </td>
 <td style="text-align:right;">
@@ -343,9 +337,6 @@ Gymnosperm
 </td>
 <td style="text-align:right;">
 8.363112
-</td>
-<td style="text-align:right;">
-15.755856
 </td>
 <td style="text-align:right;">
 5.260210
@@ -365,9 +356,6 @@ All
 9.299241
 </td>
 <td style="text-align:right;">
-13.616635
-</td>
-<td style="text-align:right;">
 5.220712
 </td>
 <td style="text-align:right;">
@@ -380,7 +368,7 @@ All
 <div class="section level3">
 <h3 id="parameter-distribution-and-covariance">Parameter distribution and covariance<a class="anchor" aria-label="anchor" href="#parameter-distribution-and-covariance"></a>
 </h3>
-<p>The following panels show the distribution of calibrated parameter values by species:</p>
+<p>The following panels show the distribution of calibrated parameter values by species (gray dashed lines indicate the parameter value limits used in the calibration procedure, and the red dotted line indicates the default, non-calibrated, value):</p>
 <p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
 <p>The following table shows mean parameter values by species, functional groups and overall means:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
@@ -539,7 +527,13 @@ All
 </tr>
 </tbody>
 </table>
-<p>While some differences can be observed between species, those are not statistically significant, as shown in the following ANOVA tables:</p>
+<p>Some differences can be observed between species, those are not always statistically significant, as shown in the following ANOVA tables:</p>
+<pre><code><span class="co">## Analysis of Variance Table</span>
+<span class="co">## </span>
+<span class="co">## Response: RERsapwood_cal</span>
+<span class="co">##           Df     Sum Sq    Mean Sq F value Pr(&gt;F)</span>
+<span class="co">## Species    4 2.6949e-09 6.7372e-10  1.9622 0.1098</span>
+<span class="co">## Residuals 70 2.4035e-08 3.4335e-10</span></code></pre>
 <pre><code><span class="co">## Analysis of Variance Table</span>
 <span class="co">## </span>
 <span class="co">## Response: RGRsapwoodmax_cal</span>
@@ -548,12 +542,6 @@ All
 <span class="co">## Residuals 70 1.1788e-04 1.6840e-06                  </span>
 <span class="co">## ---</span>
 <span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre>
-<pre><code><span class="co">## Analysis of Variance Table</span>
-<span class="co">## </span>
-<span class="co">## Response: RERsapwood_cal</span>
-<span class="co">##           Df     Sum Sq    Mean Sq F value Pr(&gt;F)</span>
-<span class="co">## Species    4 2.6949e-09 6.7372e-10  1.9622 0.1098</span>
-<span class="co">## Residuals 70 2.4035e-08 3.4335e-10</span></code></pre>
 <pre><code><span class="co">## Analysis of Variance Table</span>
 <span class="co">## </span>
 <span class="co">## Response: SRsapwood_cal</span>
