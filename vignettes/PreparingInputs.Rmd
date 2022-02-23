@@ -24,7 +24,7 @@ library(medfate)
 
 Any process-based model of forest functioning and dynamics needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since `medfate` allows simulating cohorts belonging to different species,  **species-specific parameters** are also needed. This vignette explains data structures required as input to run simulations using the package. 
 
-Package [medfateutils](https://github.com/emf-creaf/medfateutils) provides functions for creating suitable inputs for simulations with `medfate`.
+Package [medfateutils](https://emf-creaf.github.io/medfateutils/) provides functions for creating suitable inputs for simulations with `medfate`.
 
 ## Species-specific parameters
 
@@ -56,7 +56,7 @@ data(exampleforestMED)
 exampleforestMED
 ```
 
-Trees are expected to be primarily described in terms of species, diameter (DBH; cm) and height (cm), whereas shrubs are described in terms of species, percent cover (%) and mean height (cm). Root distribution has to be specified for both growth forms, in terms of the depths (mm) corresponding to 50% and 95% of cumulative fine root distribution. Functions are provided in package [medfateutils](https://github.com/emf-creaf/medfateutils) to map variables in user data frames into tables `treeData` and `shrubData`.
+Trees are expected to be primarily described in terms of species, diameter (DBH; cm) and height (cm), whereas shrubs are described in terms of species, percent cover (%) and mean height (cm). Root distribution has to be specified for both growth forms, in terms of the depths (mm) corresponding to 50% and 95% of cumulative fine root distribution. Functions are provided in package [medfateutils](https://emf-creaf.github.io/medfateutils/) to map variables in user data frames into tables `treeData` and `shrubData`.
 
 ### Aboveground and belowground data
 
@@ -150,12 +150,14 @@ Low-level functions, such as `soil_psi2thetaSX()` and `soil_psi2thetaVG()` (and 
 
 ## Meteorological forcing
 
-All simulations in the package require daily weather inputs. The weather variables that are required depend on the complexity of model we are using. In the simplest case, only mean temperature, precipitation and potential evapotranspiration is required, but the more complex simulation model also requires radiation, wind speed, min/max temparature and relative humitidy. Here we show an example of meteorological forcing data. 
+All simulations in the package require daily weather inputs. The weather variables that are required depend on the complexity of model we are using. In the simplest case, only mean temperature, precipitation and potential evapotranspiration is required, but the more complex simulation model also requires radiation, wind speed, min/max temparature and relative humidity. 
+
+Here we show an example of meteorological forcing data. 
 ```{r}
 data(examplemeteo)
 head(examplemeteo)
 ```
-Simulation models in `medfate` have been designed to work along with data generated from package `meteoland`. The user is strongly recommended to resort to this package to obtain suitable weather input for medfate simulations.
+Simulation models in **medfate** have been designed to work along with data generated from package [meteoland](https://emf-creaf.github.io/meteoland/). The user is strongly recommended to resort to this package to obtain suitable weather input for medfate simulations.
 
 
 ## Simulation control
@@ -166,7 +168,8 @@ Apart from data inputs, the behaviour of simulation models can be controlled usi
 control = defaultControl()
 names(control)
 ```
-These parameters should normally be left to their default value under their effect on simulations is fully understood.
+
+Control parameters should normally be left to their default value until their effect on simulations is fully understood.
 
 ## Input objects for simulation functions
 

@@ -340,12 +340,12 @@ names(eval_cal_df)<-names(eval_def_df)
 eval_cal_sp_df = eval_df[,c("Species", "MAE_calibrated_sp", "MAErel_calibrated_sp","MAE_BAItot_calibrated_sp", "MAErel_BAItot_calibrated_sp")]
 names(eval_cal_sp_df)<-names(eval_def_df)
 
-eval_def_df$type = "Default parameters"
+eval_def_df$type = "Overall averages"
 eval_cal_df$type = "Calibrated"
 eval_cal_sp_df$type = "Species-level averages"
 
 eval_all_df = bind_rows(eval_def_df,eval_cal_df,eval_cal_sp_df)
-eval_all_df$type = factor(eval_all_df$type, levels = c("Default parameters", "Calibrated", "Species-level averages"))
+eval_all_df$type = factor(eval_all_df$type, levels = c("Calibrated", "Species-level averages","Overall averages"))
 ```
 
 The following panels show the prediction error (either absolute or relative) for the annual BAI, as done above but including the new simulations:
@@ -371,13 +371,13 @@ plot_grid(p1,p2, nrow=1)
 The following table shows annual BAI evaluation results by species (medians):
 ```{r echo = FALSE, eval = TRUE}
 eval_df %>% group_by(Species) %>% 
-  summarise(OBS = median(Obs_BAI, na.rm=T),
-            MAE_unc = median(MAE_uncalibrated, na.rm=T),
-            MAE_cal = median(MAE_calibrated, na.rm=T),
-            MAE_cal_sp = median(MAE_calibrated_sp, na.rm=T),
-            MAErel_unc = median(MAErel_uncalibrated, na.rm=T),
-            MAErel_cal = median(MAErel_calibrated, na.rm=T),
-            MAErel_cal_sp = median(MAErel_calibrated_sp, na.rm=T)) %>% 
+  summarise(`Observed (cm2/yr)` = median(Obs_BAI, na.rm=T),
+            `MAE plot (cm2/yr)` = median(MAE_calibrated, na.rm=T),
+            `MAE spp. (cm2/yr)` = median(MAE_calibrated_sp, na.rm=T),
+            `MAE all (cm2/yr)` = median(MAE_uncalibrated, na.rm=T),
+            `MAE plot (%)` = median(MAErel_calibrated, na.rm=T),
+            `MAE spp. (%)` = median(MAErel_calibrated_sp, na.rm=T),
+            `MAE all (%)` = median(MAErel_uncalibrated, na.rm=T)) %>% 
   kbl() %>%
   kable_styling()
 ```
@@ -407,13 +407,13 @@ plot_grid(p3,p4, nrow=1)
 The following table shows total BAI evaluation results by species (medians):
 ```{r echo = FALSE, eval = TRUE}
 eval_df %>% group_by(Species) %>% 
-  summarise(OBS = median(Obs_BAItot, na.rm=T),
-            MAE_unc = median(MAE_BAItot_uncalibrated, na.rm=T),
-            MAE_cal = median(MAE_BAItot_calibrated, na.rm=T),
-            MAE_cal_sp = median(MAE_BAItot_calibrated_sp, na.rm=T),
-            MAErel_unc = median(MAErel_BAItot_uncalibrated, na.rm=T),
-            MAErel_cal = median(MAErel_BAItot_calibrated, na.rm=T),
-            MAErel_cal_sp = median(MAErel_BAItot_calibrated_sp, na.rm=T)) %>% 
+  summarise(`Observed (cm2)` = median(Obs_BAItot, na.rm=T),
+            `MAE plot (cm2)` = median(MAE_BAItot_calibrated, na.rm=T),
+            `MAE spp. (cm2)` = median(MAE_BAItot_calibrated_sp, na.rm=T),
+            `MAE all (cm2)` = median(MAE_BAItot_uncalibrated, na.rm=T),
+            `MAE plot (%)` = median(MAErel_BAItot_calibrated, na.rm=T),
+            `MAE spp. (%)` = median(MAErel_BAItot_calibrated_sp, na.rm=T),
+            `MAE all (%)` = median(MAErel_BAItot_uncalibrated, na.rm=T)) %>% 
   kbl() %>%
   kable_styling()
 ```
