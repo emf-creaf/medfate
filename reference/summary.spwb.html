@@ -137,37 +137,38 @@
 <span class="r-in">        </span>
 <span class="r-in"><span class="co">#Monthly summary (averages) of soil status</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S1</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"Soil"</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  W.1       W.2     ML.1      ML.2    MLTot       WTD        SWE PlantExt.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 0.9883340 0.9998059 67.46693 116.78340 184.2503  997.4786 1.68350931  0.1423623</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 0.9447282 0.9552808 64.49025 111.58260 176.0729 1000.0000 0.28233380  0.2993235</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 0.9557346 0.9750939 65.24159 113.89690 179.1385  998.5662 0.01762496  0.2963786</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 0.8777084 0.8748499 59.91526 102.18778 162.1030 1000.0000 0.58931434  0.4337665</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 0.8806006 0.8489488 60.11270  99.16237 159.2751 1000.0000 0.00000000  0.5604305</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 0.6293676 0.6426737 42.96270  75.06819 118.0309 1000.0000 0.00000000  0.6152754</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 0.8065016 0.6246904 55.05445  72.96763 128.0221 1000.0000 0.00000000  1.1979311</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 0.7921914 0.6923136 54.07759  80.86643 134.9440 1000.0000 0.00000000  1.0596437</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 0.7961754 0.7200734 54.34955  84.10894 138.4585 1000.0000 0.00000000  0.7544459</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 0.8337229 0.7270956 56.91267  84.92918 141.8418 1000.0000 0.00000000  0.5765861</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 0.9044009 0.8512540 61.73738  99.43164 161.1690  999.5422 2.67673914  0.3359155</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 0.9047210 0.9354367 61.75923 109.26469 171.0239 1000.0000 0.00000000  0.1903973</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            PlantExt.2       psi.1       psi.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01  0.1978190 -0.03522255 -0.03312624</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01  0.4102826 -0.04542129 -0.04278837</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01  0.4409535 -0.04187582 -0.03778011</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01  0.5071451 -0.06595998 -0.06741009</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01  0.5501495 -0.07265440 -0.08016513</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01  0.9618847 -0.43282967 -0.40090116</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01  0.1333958 -0.18337868 -0.41417564</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01  0.2902989 -0.12234865 -0.21545866</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01  0.3051333 -0.11336651 -0.17609451</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01  0.1834577 -0.09512933 -0.16828753</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01  0.2131148 -0.05960445 -0.09294212</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01  0.3231252 -0.05643025 -0.04744702</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                  W.1       W.2     ML.1      ML.2    MLTot       WTD        SWE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 0.9883340 0.9998059 67.46693 116.78340 184.2503  997.4786 1.68350931</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 0.9447282 0.9552808 64.49025 111.58260 176.0729 1000.0000 0.28233380</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 0.9557346 0.9750939 65.24159 113.89690 179.1385  998.5662 0.01762496</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 0.8777084 0.8748499 59.91526 102.18778 162.1030 1000.0000 0.58931434</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 0.8806006 0.8489488 60.11270  99.16237 159.2751 1000.0000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 0.6293676 0.6426737 42.96270  75.06819 118.0309 1000.0000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 0.8065016 0.6246904 55.05445  72.96763 128.0221 1000.0000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 0.7921914 0.6923136 54.07759  80.86643 134.9440 1000.0000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 0.7961754 0.7200734 54.34955  84.10894 138.4585 1000.0000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 0.8337229 0.7270956 56.91267  84.92918 141.8418 1000.0000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 0.9044009 0.8512540 61.73738  99.43164 161.1690  999.5422 2.67673914</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 0.9047210 0.9354367 61.75923 109.26469 171.0239 1000.0000 0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            PlantExt.1 PlantExt.2       psi.1       psi.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01  0.1423623  0.1978190 -0.03522255 -0.03312624</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01  0.2993235  0.4102826 -0.04542129 -0.04278837</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01  0.2963786  0.4409535 -0.04187582 -0.03778011</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01  0.4337665  0.5071451 -0.06595998 -0.06741009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01  0.5604305  0.5501495 -0.07265440 -0.08016513</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01  0.6152754  0.9618847 -0.43282967 -0.40090116</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01  1.1979311  0.1333958 -0.18337868 -0.41417564</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01  1.0596437  0.2902989 -0.12234865 -0.21545866</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01  0.7544459  0.3051333 -0.11336651 -0.17609451</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01  0.5765861  0.1834577 -0.09512933 -0.16828753</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01  0.3359155  0.2131148 -0.05960445 -0.09294212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01  0.1903973  0.3231252 -0.05643025 -0.04744702</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Queries the tables in 'Plants'</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S1</span><span class="op">$</span><span class="va">Plants</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LAI"                 "LAIlive"             "AbsorbedSWRFraction" "Transpiration"      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "GrossPhotosynthesis" "PlantPsi"            "StemPLC"             "PlantStress"        </span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S1</span><span class="op">$</span><span class="va">Plants</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "LAI"                 "LAIlive"             "AbsorbedSWRFraction"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4] "Transpiration"       "GrossPhotosynthesis" "PlantPsi"           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [7] "StemPLC"             "PlantStress"        </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Monthly summary (averages) of plant stress</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S1</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"Plants$PlantStress"</span>, </span>
