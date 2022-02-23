@@ -73,7 +73,7 @@
       <h1 data-toc-skip>Growth calibration</h1>
                         <h4 data-toc-skip class="author">Miquel De Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-02-22</h4>
+            <h4 data-toc-skip class="date">2022-02-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/GrowthCalibration.Rmd" class="external-link"><code>vignettes/parametrization/GrowthCalibration.Rmd</code></a></small>
       <div class="hidden name"><code>GrowthCalibration.Rmd</code></div>
@@ -254,10 +254,10 @@ Pinus halepensis
 9.353759
 </td>
 <td style="text-align:right;">
-6.413050
+5.355084
 </td>
 <td style="text-align:right;">
-80.82160
+58.68488
 </td>
 </tr>
 <tr>
@@ -271,10 +271,10 @@ Pinus nigra
 6.391289
 </td>
 <td style="text-align:right;">
-3.380512
+3.287372
 </td>
 <td style="text-align:right;">
-55.04046
+52.45179
 </td>
 </tr>
 <tr>
@@ -288,10 +288,10 @@ Pinus sylvestris
 9.344288
 </td>
 <td style="text-align:right;">
-5.987069
+4.316985
 </td>
 <td style="text-align:right;">
-77.81200
+50.46128
 </td>
 </tr>
 <tr>
@@ -305,10 +305,10 @@ Quercus pubescens
 6.494994
 </td>
 <td style="text-align:right;">
-2.825792
+2.704939
 </td>
 <td style="text-align:right;">
-43.56707
+40.25582
 </td>
 </tr>
 <tr>
@@ -322,10 +322,10 @@ Angiosperm
 10.703434
 </td>
 <td style="text-align:right;">
-5.161465
+5.101038
 </td>
 <td style="text-align:right;">
-46.34252
+44.68689
 </td>
 </tr>
 <tr>
@@ -339,10 +339,10 @@ Gymnosperm
 8.363112
 </td>
 <td style="text-align:right;">
-5.260210
+4.319813
 </td>
 <td style="text-align:right;">
-71.22469
+53.86598
 </td>
 </tr>
 <tr>
@@ -356,10 +356,10 @@ All
 9.299241
 </td>
 <td style="text-align:right;">
-5.220712
+4.632303
 </td>
 <td style="text-align:right;">
-61.27182
+50.19435
 </td>
 </tr>
 </tbody>
@@ -411,16 +411,16 @@ Fagus sylvatica
 Pinus halepensis
 </td>
 <td style="text-align:right;">
-4.31e-05
+4.43e-05
 </td>
 <td style="text-align:right;">
-0.0012946
+0.0011810
 </td>
 <td style="text-align:right;">
 0.0001941
 </td>
 <td style="text-align:right;">
-45.47862
+47.45507
 </td>
 </tr>
 <tr>
@@ -428,16 +428,16 @@ Pinus halepensis
 Pinus nigra
 </td>
 <td style="text-align:right;">
-5.95e-05
+6.37e-05
 </td>
 <td style="text-align:right;">
-0.0011521
+0.0010293
 </td>
 <td style="text-align:right;">
-0.0001725
+0.0001710
 </td>
 <td style="text-align:right;">
-56.85270
+53.62743
 </td>
 </tr>
 <tr>
@@ -448,13 +448,13 @@ Pinus sylvestris
 4.74e-05
 </td>
 <td style="text-align:right;">
-0.0024443
+0.0022715
 </td>
 <td style="text-align:right;">
-0.0001309
+0.0001298
 </td>
 <td style="text-align:right;">
-70.51038
+61.42306
 </td>
 </tr>
 <tr>
@@ -462,7 +462,7 @@ Pinus sylvestris
 Quercus pubescens
 </td>
 <td style="text-align:right;">
-4.19e-05
+4.31e-05
 </td>
 <td style="text-align:right;">
 0.0019525
@@ -479,13 +479,13 @@ Quercus pubescens
 Angiosperm
 </td>
 <td style="text-align:right;">
-4.08e-05
+4.25e-05
 </td>
 <td style="text-align:right;">
 0.0015839
 </td>
 <td style="text-align:right;">
-0.0001762
+0.0001742
 </td>
 <td style="text-align:right;">
 55.01730
@@ -496,13 +496,13 @@ Angiosperm
 Gymnosperm
 </td>
 <td style="text-align:right;">
-5.29e-05
+5.72e-05
 </td>
 <td style="text-align:right;">
-0.0015076
+0.0012657
 </td>
 <td style="text-align:right;">
-0.0001725
+0.0001509
 </td>
 <td style="text-align:right;">
 56.31593
@@ -513,13 +513,13 @@ Gymnosperm
 All
 </td>
 <td style="text-align:right;">
-4.59e-05
+4.74e-05
 </td>
 <td style="text-align:right;">
-0.0015462
+0.0013771
 </td>
 <td style="text-align:right;">
-0.0001742
+0.0001663
 </td>
 <td style="text-align:right;">
 56.06072
@@ -532,28 +532,28 @@ All
 <span class="co">## </span>
 <span class="co">## Response: RERsapwood_cal</span>
 <span class="co">##           Df     Sum Sq    Mean Sq F value Pr(&gt;F)</span>
-<span class="co">## Species    4 2.6949e-09 6.7372e-10  1.9622 0.1098</span>
-<span class="co">## Residuals 70 2.4035e-08 3.4335e-10</span></code></pre>
+<span class="co">## Species    4 3.2232e-09 8.0580e-10  2.0136 0.1019</span>
+<span class="co">## Residuals 70 2.8012e-08 4.0017e-10</span></code></pre>
 <pre><code><span class="co">## Analysis of Variance Table</span>
 <span class="co">## </span>
 <span class="co">## Response: RGRsapwoodmax_cal</span>
-<span class="co">##           Df     Sum Sq    Mean Sq F value  Pr(&gt;F)  </span>
-<span class="co">## Species    4 2.2645e-05 5.6612e-06  3.3617 0.01417 *</span>
-<span class="co">## Residuals 70 1.1788e-04 1.6840e-06                  </span>
+<span class="co">##           Df     Sum Sq    Mean Sq F value   Pr(&gt;F)   </span>
+<span class="co">## Species    4 2.1682e-05 5.4206e-06  4.5927 0.002374 **</span>
+<span class="co">## Residuals 70 8.2619e-05 1.1803e-06                    </span>
 <span class="co">## ---</span>
 <span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre>
 <pre><code><span class="co">## Analysis of Variance Table</span>
 <span class="co">## </span>
 <span class="co">## Response: SRsapwood_cal</span>
 <span class="co">##           Df     Sum Sq    Mean Sq F value Pr(&gt;F)</span>
-<span class="co">## Species    4 1.0732e-08 2.6829e-09  0.7676 0.5499</span>
-<span class="co">## Residuals 70 2.4465e-07 3.4951e-09</span></code></pre>
+<span class="co">## Species    4 1.4866e-08 3.7165e-09  1.1469 0.3418</span>
+<span class="co">## Residuals 70 2.2684e-07 3.2405e-09</span></code></pre>
 <pre><code><span class="co">## Analysis of Variance Table</span>
 <span class="co">## </span>
 <span class="co">## Response: rfc_cal</span>
 <span class="co">##           Df  Sum Sq Mean Sq F value Pr(&gt;F)</span>
-<span class="co">## Species    4  1125.5  281.37   0.692    0.6</span>
-<span class="co">## Residuals 70 28462.2  406.60</span></code></pre>
+<span class="co">## Species    4   409.8  102.46  0.2516 0.9078</span>
+<span class="co">## Residuals 70 28508.1  407.26</span></code></pre>
 <p>Finally, the following panels illustrate the overall lack of covariance between calibrated parameter values: <img src="GrowthCalibration_files/figure-html/unnamed-chunk-12-1.png" width="960"></p>
 </div>
 </div>
@@ -715,7 +715,7 @@ Pinus halepensis
 18.562285
 </td>
 <td style="text-align:right;">
-5.281254
+5.024807
 </td>
 <td style="text-align:right;">
 5.917698
@@ -724,7 +724,7 @@ Pinus halepensis
 219.28005
 </td>
 <td style="text-align:right;">
-62.08240
+56.11275
 </td>
 <td style="text-align:right;">
 63.63449
@@ -741,16 +741,16 @@ Pinus nigra
 11.767147
 </td>
 <td style="text-align:right;">
-3.113839
+2.992043
 </td>
 <td style="text-align:right;">
 3.926005
 </td>
 <td style="text-align:right;">
-135.38790
+155.80531
 </td>
 <td style="text-align:right;">
-48.23571
+51.52412
 </td>
 <td style="text-align:right;">
 62.40755
@@ -767,7 +767,7 @@ Pinus sylvestris
 10.741680
 </td>
 <td style="text-align:right;">
-4.342239
+3.936914
 </td>
 <td style="text-align:right;">
 6.483453
@@ -776,7 +776,7 @@ Pinus sylvestris
 138.08012
 </td>
 <td style="text-align:right;">
-46.79795
+44.24788
 </td>
 <td style="text-align:right;">
 71.61438
@@ -790,10 +790,10 @@ Quercus humilis
 4.963597
 </td>
 <td style="text-align:right;">
-5.580407
+5.355813
 </td>
 <td style="text-align:right;">
-2.557959
+2.260871
 </td>
 <td style="text-align:right;">
 4.309038
@@ -875,10 +875,10 @@ Pinus halepensis
 120.85361
 </td>
 <td style="text-align:right;">
-193.7832
+201.3000
 </td>
 <td style="text-align:right;">
-63.25546
+43.25101
 </td>
 <td style="text-align:right;">
 63.03234
@@ -910,10 +910,10 @@ Pinus nigra
 42.71384
 </td>
 <td style="text-align:right;">
-114.80337
+131.38612
 </td>
 <td style="text-align:right;">
-30.91380
+29.50119
 </td>
 <td style="text-align:right;">
 56.47735
@@ -930,16 +930,16 @@ Pinus sylvestris
 134.1525
 </td>
 <td style="text-align:right;">
-50.51439
+35.37859
 </td>
 <td style="text-align:right;">
 77.91645
 </td>
 <td style="text-align:right;">
-159.44444
+159.54277
 </td>
 <td style="text-align:right;">
-44.73678
+34.67664
 </td>
 <td style="text-align:right;">
 63.43824
@@ -956,7 +956,7 @@ Quercus humilis
 69.3224
 </td>
 <td style="text-align:right;">
-28.48604
+20.58177
 </td>
 <td style="text-align:right;">
 54.86898
