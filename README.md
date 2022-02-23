@@ -61,7 +61,7 @@ devtools::install_github("emf-creaf/medfate",
 
 During the development of **medfate** some functions have been
 originally placed there and then moved to more specialized packages
-which no evolve together with **medfate**:
+which evolve together with **medfate**:
 
 -   Package [**meteoland**](https://github.com/emf-creaf/meteoland)
     allows generating daily weather input for simulation models in
@@ -73,6 +73,9 @@ which no evolve together with **medfate**:
     [**medfateutils**](https://github.com/emf-creaf/medfateutils)
     provides functions to help initializing vegetation, soil and species
     parameter inputs for **medfate** simulation functions.
+
+The set of R packages are developed and maintained by the [**Ecosystem
+Modelling Facility**](http://emf.creaf.cat) at CREAF (Spain).
 
 ## References
 

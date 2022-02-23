@@ -34,33 +34,29 @@ Simulation models in `medfate` require a data frame with species parameter value
 data("SpParamsMED")
 ```
 
- A large number of parameters (columns) can be found in `SpParamsMED`:
+ A large number of parameters (columns) can be found in `SpParamsMED`. Not all parameters are needed for all models. You can find parameter definitions in table `SpParamsDefinition`, which we reproduce below:
 
-```{r}
-names(SpParamsMED)
-```
-
-Not all parameters are needed for all models. The user can find parameter definitions in `SpParamsDefinition`:
-
-```{r}
+```{r, echo = FALSE}
 data("SpParamsDefinition")
 knitr::kable(SpParamsDefinition[,-2])
 ```
 
-To fully understand the role of parameters in the model, the user should read the details of model design and formulation at https://emf-creaf.github.io/medfatebook/index.html. An example of how to define and populate a species parameter table for a given region is given in article '*Species parameterization for Spain*'. 
+In order to understand the role of parameters in the model, you should read the details of model design and formulation included in the [**medfatebook**](https://emf-creaf.github.io/medfatebook/index.html). An example of how to define and populate a species parameter table for a given region is given in article [*Species parameterization for Spain*](https://emf-creaf.github.io/medfate/articles/parametrization/SpeciesParameterizationSpain.html). 
 
 ## Vegetation
 
 ### Forest objects
 
-Models included in `medfate` were primarily designed to be ran on **forest inventory plots**. In this kind of data, the vegetation of a sampled area is often described by several records of woody plants (trees and shrubs) along with their size and species identity. Forest plots in `medfate` are assumed to be in a format that follows closely the Spanish national forest inventory. Each forest plot is represented in an object of class `forest`, a list that contains several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` for shrubs:
+Models included in `medfate` were primarily designed to be ran on **forest inventory plots**. In this kind of data, the vegetation of a sampled area is often described by several records of woody plants (trees and shrubs) along with their size and species identity. Forest plots in `medfate` are assumed to be in a data structure that follows closely the Spanish national forest inventory, but is simple enough to so that other forest sampling schemes can be mapped onto it. 
+
+Each forest plot is represented in an object of class `forest`, a list that contains several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` for shrubs:
 
 ```{r}
 data(exampleforestMED)
 exampleforestMED
 ```
 
-Trees are expected to be primarily described in terms of species, diameter (DBH; cm) and height (cm), whereas shrubs are described in terms of species, percent cover (%) and mean height (cm). Root distribution has to be specified for both growth forms, in terms of the depths (mm) corresponding to 50% and 95% of cumulative fine root distribution. Functions are provided to map variables in user data frames into tables `treeData` and `shrubData` (see function `forest_mapWoodyTables()`).
+Trees are expected to be primarily described in terms of species, diameter (DBH; cm) and height (cm), whereas shrubs are described in terms of species, percent cover (%) and mean height (cm). Root distribution has to be specified for both growth forms, in terms of the depths (mm) corresponding to 50% and 95% of cumulative fine root distribution. Functions are provided in package [medfateutils](https://github.com/emf-creaf/medfateutils) to map variables in user data frames into tables `treeData` and `shrubData`.
 
 ### Aboveground and belowground data
 
