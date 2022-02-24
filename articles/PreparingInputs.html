@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Preparing model inputs</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-02-23</h4>
+            <h4 data-toc-skip class="date">2022-02-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/PreparingInputs.Rmd" class="external-link"><code>vignettes/PreparingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>PreparingInputs.Rmd</code></div>
@@ -85,7 +85,7 @@
 <h2 id="about-this-vignette">About this vignette<a class="anchor" aria-label="anchor" href="#about-this-vignette"></a>
 </h2>
 <p>Any process-based model of forest functioning and dynamics needs information on <strong>climate</strong>, <strong>vegetation</strong> and <strong>soils</strong> of the forest stand to be simulated. Moreover, since <code>medfate</code> allows simulating cohorts belonging to different species, <strong>species-specific parameters</strong> are also needed. This vignette explains data structures required as input to run simulations using the package.</p>
-<p>Package <a href="https://github.com/emf-creaf/medfateutils" class="external-link">medfateutils</a> provides functions for creating suitable inputs for simulations with <code>medfate</code>.</p>
+<p>Package <a href="https://emf-creaf.github.io/medfateutils/" class="external-link">medfateutils</a> provides functions for creating suitable inputs for simulations with <code>medfate</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="species-specific-parameters">Species-specific parameters<a class="anchor" aria-label="anchor" href="#species-specific-parameters"></a>
@@ -860,7 +860,7 @@
 <span class="co">## </span>
 <span class="co">## attr(,"class")</span>
 <span class="co">## [1] "forest" "list"</span></code></pre>
-<p>Trees are expected to be primarily described in terms of species, diameter (DBH; cm) and height (cm), whereas shrubs are described in terms of species, percent cover (%) and mean height (cm). Root distribution has to be specified for both growth forms, in terms of the depths (mm) corresponding to 50% and 95% of cumulative fine root distribution. Functions are provided in package <a href="https://github.com/emf-creaf/medfateutils" class="external-link">medfateutils</a> to map variables in user data frames into tables <code>treeData</code> and <code>shrubData</code>.</p>
+<p>Trees are expected to be primarily described in terms of species, diameter (DBH; cm) and height (cm), whereas shrubs are described in terms of species, percent cover (%) and mean height (cm). Root distribution has to be specified for both growth forms, in terms of the depths (mm) corresponding to 50% and 95% of cumulative fine root distribution. Functions are provided in package <a href="https://emf-creaf.github.io/medfateutils/" class="external-link">medfateutils</a> to map variables in user data frames into tables <code>treeData</code> and <code>shrubData</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="aboveground-and-belowground-data">Aboveground and belowground data<a class="anchor" aria-label="anchor" href="#aboveground-and-belowground-data"></a>
@@ -904,7 +904,7 @@
 <pre><code><span class="co">##   widths clay sand om  bd rfc</span>
 <span class="co">## 1    300   25   25 NA 1.5  25</span>
 <span class="co">## 2    700   25   25 NA 1.5  45</span></code></pre>
-<p>where <code>widths</code> are soil layer widths in mm; <code>clay</code> and <code>sand</code> are the percentage of clay and sand, in percent of dry weight, <code>om</code> stands for organic matter, <code>bd</code> is bulk density (in <span class="math inline">\(g \cdot cm^{-3}\)</span>) and <code>rfc</code> the percentage of rock fragments. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via SoilGrids.org (see function <code><a href="https://rdrr.io/pkg/medfateutils/man/soilgridsParams.html" class="external-link">soilgridsParams()</a></code> in package <a href="https://github.com/emf-creaf/medfateutils" class="external-link">medfateutils</a>).</p>
+<p>where <code>widths</code> are soil layer widths in mm; <code>clay</code> and <code>sand</code> are the percentage of clay and sand, in percent of dry weight, <code>om</code> stands for organic matter, <code>bd</code> is bulk density (in <span class="math inline">\(g \cdot cm^{-3}\)</span>) and <code>rfc</code> the percentage of rock fragments. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via SoilGrids.org (see function <code>soilgridsParams()</code> in package <a href="https://github.com/emf-creaf/medfateutils" class="external-link">medfateutils</a>).</p>
 </div>
 <div class="section level3">
 <h3 id="soil-input-object">Soil input object<a class="anchor" aria-label="anchor" href="#soil-input-object"></a>
@@ -916,7 +916,7 @@
 <pre><code><span class="co">## [1] "function"</span></code></pre>
 <p>In addition to the physical soil description, this object contains soil parameters needed for soil water balance simulations:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "SoilDepth"    "W"            "SWE"          "Temp"         "Ksoil"       </span>
 <span class="co">##  [6] "Gsoil"        "dVec"         "sand"         "clay"         "om"          </span>
 <span class="co">## [11] "VG_alpha"     "VG_n"         "VG_theta_res" "VG_theta_sat" "Ksat"        </span>
@@ -997,7 +997,8 @@
 <div class="section level2">
 <h2 id="meteorological-forcing">Meteorological forcing<a class="anchor" aria-label="anchor" href="#meteorological-forcing"></a>
 </h2>
-<p>All simulations in the package require daily weather inputs. The weather variables that are required depend on the complexity of model we are using. In the simplest case, only mean temperature, precipitation and potential evapotranspiration is required, but the more complex simulation model also requires radiation, wind speed, min/max temparature and relative humitidy. Here we show an example of meteorological forcing data.</p>
+<p>All simulations in the package require daily weather inputs. The weather variables that are required depend on the complexity of model we are using. In the simplest case, only mean temperature, precipitation and potential evapotranspiration is required, but the more complex simulation model also requires radiation, wind speed, min/max temparature and relative humidity.</p>
+<p>Here we show an example of meteorological forcing data.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></code></pre></div>
@@ -1022,7 +1023,7 @@
 <span class="co">## 2001-01-04  11.07275  2.000000           172 0.9200627</span>
 <span class="co">## 2001-01-05  13.45205  7.581347           321 2.2914449</span>
 <span class="co">## 2001-01-06  12.84841  6.570501           141 1.7255058</span></code></pre>
-<p>Simulation models in <code>medfate</code> have been designed to work along with data generated from package <code>meteoland</code>. The user is strongly recommended to resort to this package to obtain suitable weather input for medfate simulations.</p>
+<p>Simulation models in <strong>medfate</strong> have been designed to work along with data generated from package <a href="https://emf-creaf.github.io/meteoland/" class="external-link">meteoland</a>. The user is strongly recommended to resort to this package to obtain suitable weather input for medfate simulations.</p>
 </div>
 <div class="section level2">
 <h2 id="simulation-control">Simulation control<a class="anchor" aria-label="anchor" href="#simulation-control"></a>
@@ -1030,7 +1031,7 @@
 <p>Apart from data inputs, the behaviour of simulation models can be controlled using a set of global parameters. The default parameterization is obtained using function <code><a href="../reference/defaultControl.html">defaultControl()</a></code>:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">control</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">control</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "modifyInput"                         "fillMissingSpParams"                </span>
 <span class="co">##  [3] "verbose"                             "subdailyResults"                    </span>
 <span class="co">##  [5] "transpirationMode"                   "soilFunctions"                      </span>
@@ -1067,7 +1068,7 @@
 <span class="co">## [67] "recrShrubCover"                      "recrShrubHeight"                    </span>
 <span class="co">## [69] "recrTreeZ50"                         "recrShrubZ50"                       </span>
 <span class="co">## [71] "recrTreeZ95"                         "recrShrubZ95"</span></code></pre>
-<p>These parameters should normally be left to their default value under their effect on simulations is fully understood.</p>
+<p>Control parameters should normally be left to their default value until their effect on simulations is fully understood.</p>
 </div>
 <div class="section level2">
 <h2 id="input-objects-for-simulation-functions">Input objects for simulation functions<a class="anchor" aria-label="anchor" href="#input-objects-for-simulation-functions"></a>
