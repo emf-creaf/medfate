@@ -182,11 +182,13 @@ evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL,
     pred = pred[sel_complete]
     E <- pred-obs
     Bias <- mean(E)
+    Bias.rel <- 100*Bias/abs(mean(obs))
     MAE <- mean(abs(E))
+    MAE.rel <- 100*MAE/abs(mean(obs))
     r<- cor(obs, pred)
     NSE <- 1 - (sum((obs-pred)^2)/sum((obs-mean(obs))^2))
-    NSEabs <- 1 - (sum(abs(obs-pred))/sum(abs(obs-mean(obs))))
-    return(c(n = sum(sel_complete), Bias= Bias, MAE = MAE, r = r, NSE = NSE, NSEabs = NSEabs))
+    NSE.abs <- 1 - (sum(abs(obs-pred))/sum(abs(obs-mean(obs))))
+    return(c(n = sum(sel_complete), Bias= Bias, Bias.rel= Bias.rel,MAE = MAE, MAE.rel = MAE.rel, r = r, NSE = NSE, NSE.abs = NSE.abs))
   }
   
   # Check arguments
@@ -423,14 +425,18 @@ evaluation_metric<-function(out, measuredData, type="SWC", cohort=NULL,
                         temporalResolution = temporalResolution, SpParams = SpParams)
   obs = df$Observed
   pred = df$Modelled
+  sel_complete = !(is.na(obs) | is.na(pred))
+  obs = obs[sel_complete]
+  pred = pred[sel_complete]
   sd <- sd(obs, na.rm=TRUE)
-  metric<-match.arg(metric, c("loglikelihood", "NSE", "NSEabs", "MAE", "r"))
+  metric<-match.arg(metric, c("loglikelihood", "NSE", "NSE.abs", "MAE", "MAE.rel", "r"))
   m <- switch(metric,
          "loglikelihood" = sum(dnorm(obs, pred, sd, log=TRUE), na.rm=TRUE),
          "NSE" = 1 - (sum((obs-pred)^2, na.rm=TRUE)/sum((obs-mean(obs, na.rm=TRUE))^2, na.rm=TRUE)),
          "MAE" = mean(abs(pred-obs), na.rm=TRUE),
+         "MAE.rel" = 100*mean(abs(pred-obs), na.rm=TRUE)/abs(mean(obs, na.rm=TRUE)),
          "r" = cor(obs, pred),
-         "NSEabs" = 1 - (sum(abs(obs-pred))/sum(abs(obs-mean(obs))))
+         "NSE.abs" = 1 - (sum(abs(obs-pred))/sum(abs(obs-mean(obs))))
   )
   return(m)
 }

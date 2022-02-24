@@ -7,6 +7,7 @@
 - Parameters 'ShrubCover' and 'CanopyCover' no longer required in function fuel_FCCS
 - Input weather stored in output from functions 'spwb', 'pwb' and 'growth'
 - New function 'fireHazard'.
+- Relative bias and relative MAE as evaluation metrics
 
 # Version 2.6.0
 - Nitrogen content for leaves, sapwood and fine roots added. 'Nleaf' replaces 'Narea' as the latter can be calculated from 'Nleaf' using 'SLA'.

@@ -28,7 +28,7 @@ Package [medfateutils](https://emf-creaf.github.io/medfateutils/) provides funct
 
 ## Species-specific parameters
 
-Simulation models in `medfate` require a data frame with species parameter values. The package provides a default data set of parameter values for a set of Mediterranean species. The set of species are reported in the Spanish National Forest Inventory. Hence they represent woody taxa found in Spain, but may not be sufficient for other areas. The values of the parameter table were obtained from global trait data bases, bibliographic searches, fit to empirical data or expert-based guesses:
+Simulation models in `medfate` require a data frame with species parameter values. The package includes a default data set of parameter values for a set of Mediterranean species. The set of species are reported in the Spanish National Forest Inventory. Hence they represent woody taxa found in Spain, but may not be sufficient for other areas. The values of the parameter table were obtained from global trait data bases, bibliographic searches, fit to empirical data or expert-based guesses:
 
 ```{r}
 data("SpParamsMED")

@@ -31,10 +31,20 @@ The data set used for the calibration exercise corresponds to 75 permanent fores
 
 ```{r, echo = FALSE}
 plot_desc = readRDS(paste0(base_calibration,"Rdata/plot_desc_FUN2FUN.rds"))
+obs_FUN2FUN = readRDS(paste0(base_calibration,"Rdata/obs_FUN2FUN_IFN.rds"))
+eval_df = readRDS(paste0(base_calibration,"Rdata/eval_FUN2FUN.rds"))
+cal_FUN2FUN_SL_ga = readRDS(paste0(base_calibration,"Rdata/cal_FUN2FUN_SL_ga.rds"))
+cal_FUN2FUN_NSL_ga = readRDS(paste0(base_calibration,"Rdata/cal_FUN2FUN_NSL_ga.rds"))
+
+sel = !is.na(cal_FUN2FUN_SL_ga$value_cal)
+cal_FUN2FUN_SL_ga = cal_FUN2FUN_SL_ga[sel,]
+cal_FUN2FUN_NSL_ga = cal_FUN2FUN_NSL_ga[sel,]
+plot_desc = plot_desc[sel,]
+obs_FUN2FUN = obs_FUN2FUN[sel]
+
 plot_desc$targetName = as.character(plot_desc$targetName)
 plot_desc$targetName[plot_desc$targetName=="Quercus humilis"] = "Quercus pubescens"
 
-obs_FUN2FUN = readRDS(paste0(base_calibration,"Rdata/obs_FUN2FUN_IFN.rds"))
 plot_desc$meanBAI = NA
 plot_desc$sdBAI = NA
 for(i in 1:length(obs_FUN2FUN)) {
@@ -45,28 +55,30 @@ for(i in 1:length(obs_FUN2FUN)) {
   }
 }
 
-eval_df = readRDS(paste0(base_calibration,"Rdata/eval_FUN2FUN.rds"))
 
-cal_FUN2FUN_SL_ga = readRDS(paste0(base_calibration,"Rdata/cal_FUN2FUN_SL_ga.rds"))
+
 cal_FUN2FUN_SL_ga$Species = as.character(cal_FUN2FUN_SL_ga$Species)
 cal_FUN2FUN_SL_ga$Species[cal_FUN2FUN_SL_ga$Species=="Quercus humilis"] = "Quercus pubescens"
 cal_FUN2FUN_SL_ga$MeanBAI = plot_desc$meanBAI
 cal_FUN2FUN_SL_ga$relvalue_cal = 100*cal_FUN2FUN_SL_ga$value_cal/plot_desc$meanBAI
 
-cal_FUN2FUN_NSL_ga = readRDS(paste0(base_calibration,"Rdata/cal_FUN2FUN_NSL_ga.rds"))
 cal_FUN2FUN_NSL_ga$Species = as.character(cal_FUN2FUN_NSL_ga$Species)
 cal_FUN2FUN_NSL_ga$Species[cal_FUN2FUN_NSL_ga$Species=="Quercus humilis"] = "Quercus pubescens"
 cal_FUN2FUN_NSL_ga$MeanBAI = plot_desc$meanBAI
 cal_FUN2FUN_NSL_ga$relvalue_cal = 100*cal_FUN2FUN_NSL_ga$value_cal/plot_desc$meanBAI
 eval_df$Obs_BAI = plot_desc$meanBAI
-eval_df$MAErel_uncalibrated = 100*eval_df$MAE_uncalibrated/plot_desc$meanBAI
 eval_df$MAErel_calibrated = 100*eval_df$MAE_calibrated/plot_desc$meanBAI
-eval_df$MAErel_calibrated_sp = 100*eval_df$MAE_calibrated_sp/plot_desc$meanBAI
+eval_df$MAErel_spp = 100*eval_df$MAE_spp/plot_desc$meanBAI
+eval_df$MAErel_all = 100*eval_df$MAE_all/plot_desc$meanBAI
 
 cal_FUN2FUN_SL_ga$Group = "Gymnosperm"
 cal_FUN2FUN_SL_ga$Group[cal_FUN2FUN_SL_ga$Species %in% c("Fagus sylvatica", "Quercus pubescens")] = "Angiosperm"
 
 cal_FUN2FUN_NSL_ga$Group = cal_FUN2FUN_SL_ga$Group
+
+cal_FUN2FUN_SL_ga$Species = as.character(cal_FUN2FUN_SL_ga$Species)
+cal_FUN2FUN_SL_ga$P.PET_SpringSummer = plot_desc$P.PET_SpringSummer
+cal_FUN2FUN_SL_ga$P.PET_Summer = plot_desc$P.PET_Summer
 ```
 
 ### Target parameters for calibration
@@ -126,13 +138,9 @@ For each forest plot, we matched each available dendrochronological series with 
 
 Simulations were performed using daily weather data for each target plot, obtained via interpolation using package **meteoland** (2001 - 2015 period), and soil physical characteristics where drawn from SoilGrids data base. Water use efficiency parameters (`WUE` and `WUE_decay`) were given values resulting from the [meta-modelling exercise](https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html), whereas other parameters of the sensitivity analysis were left to the species-level defaults of `SpParamsMED`. We calibrated the four target parameters for the target dominant species of the target plot using a genetic algorithm (function `ga` from package **GA**). Model parameter values were assumed to be the same for all cohorts of the target species, while the remaining species in the plot were given default constant parameter values. The objective function for the genetic algorithm was the average, across cohorts with observed dendrochronology series, of the mean absolute error (MAE) resulting from comparing observed and predicted annual BAI series. Population size for the genetic algorithm was set to 40 individuals. A maximum of 25 iterations of the genetic algorithm were allowed, and the calibration procedure stopped if the best parameter combination did not change during 5 consecutive iterations.
 
-The following table shows the default and range of values explored for each parameter to be calibrated: 
+The following table shows the range of values explored for each parameter to be calibrated: 
 ```{r, echo = FALSE}
-ex_ini = readRDS(paste0(base_calibration,"Rdata/growth_SL_ini/80210.rds"))
-
-pg_ini = ex_ini$growthInput$paramsGrowth
-df<-data.frame(Default = c(pg_ini$RERsapwood[1], pg_ini$RGRsapwoodmax[1], pg_ini$SRsapwood[1], NA),
-               Minimum = c(1e-6, 0.0001, 0.00001, 25),
+df<-data.frame(Minimum = c(1e-6, 0.0001, 0.00001, 25),
                Maximum = c(1e-4, 0.0100, 0.00025, 95), 
                row.names = c("RERsapwood","RGRsapwoodmax","SRsapwood", "rfc@2"))
 
@@ -209,14 +217,13 @@ df[,c("N", "Mean BAI (cm2/yr)", "MAE (cm2/yr)", "MAE (%)")] %>%
 dfpar = cal_FUN2FUN_SL_ga
 ```
 
-The following panels show the distribution of calibrated parameter values by species (gray dashed lines indicate the parameter value limits used in the calibration procedure, and the red dotted line indicates the default, non-calibrated, value):
+The following panels show the distribution of calibrated parameter values by species (gray dashed lines indicate the parameter value limits used in the calibration procedure):
 
 ```{r, echo = FALSE, fig.width=7, fig.height=8, warning=FALSE}
 p3<-ggplot(dfpar)+
   geom_boxplot(aes(x=Species, y=RERsapwood_cal, fill = Species))+
   geom_hline(yintercept=1e-4, col="gray", linetype = "dashed")+
   geom_hline(yintercept=1e-6, col="gray", linetype = "dashed")+
-  geom_hline(yintercept=pg_ini$RERsapwood[1], col="red", linetype = "dotted")+
   ylim(c(1e-6, 1e-4))+
   labs(x="", y="RER sapwood (g gluc/g dry/day)")+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
@@ -225,7 +232,6 @@ p4<-ggplot(dfpar)+
   geom_boxplot(aes(x=Species, y=RGRsapwoodmax_cal, fill = Species))+
   geom_hline(yintercept=0.0001, col="gray", linetype = "dashed")+
   geom_hline(yintercept=0.01, col="gray", linetype = "dashed")+
-  geom_hline(yintercept=pg_ini$RGRsapwoodmax[1], col="red", linetype = "dotted")+
   ylim(c(0.0001,0.01))+
   labs(x="", y="RGR sapwood (cm2/cm2/day)")+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
@@ -234,7 +240,6 @@ p5<-ggplot(dfpar)+
   geom_boxplot(aes(x=Species, y=SRsapwood_cal, fill = Species))+
   geom_hline(yintercept=0.00001, col="gray", linetype = "dashed")+
   geom_hline(yintercept=0.00025, col="gray", linetype = "dashed")+
-  geom_hline(yintercept=pg_ini$SRsapwood[1], col="red", linetype = "dotted")+
   ylim(c(0.00001,0.00025))+
   labs(x="", y="Sapwood senescence rate (day-1)")+
   scale_fill_discrete("")+
@@ -313,7 +318,7 @@ plot_grid(p, l, ncol = 2, rel_widths = c(0.8,0.2))
 
 ## Final evaluation
 
-Finally, we wanted to evaluate the reduction in predictive error of secondary growth attained by calibrating growth parameters, compared to parameter defaults. Moreover, since applications of the growth model will normally be on plots lacking growth observations, we wanted to assess the predictive error of species-level parameter averages. Hence, we ran the growth model on the forest plots using either default parameter values or species-level averages of the calibrated parameters. In this second case, we excluded from the values to be averaged those corresponding to plots where relative MAE was > 100%, assuming that calibration was not successful in those cases. The following table shows the species-level parameter values:
+Finally, we wanted to evaluate the reduction in predictive error of secondary growth attained by calibrating growth parameters. Moreover, since applications of the growth model will normally be on plots lacking growth observations, we wanted to assess the predictive error of species-level parameter averages and overall parameter averages. Hence, we ran the growth model on the forest plots using either species-level averages or the overall averages of the calibrated parameters. In this second case, we excluded from the values to be averaged those corresponding to plots where relative MAE was > 100%, assuming that calibration was not successful in those cases. The following table shows the species-level parameter values:
 
 ```{r, echo = FALSE}
 calParamsSpecies = readRDS(paste0(base_calibration,"/Rdata/calibration_params.rds"))
@@ -324,27 +329,21 @@ calParamsSpecies[-6,-1] %>% #Ommits Q. ilex
 
 
 
-
-```{r, echo = FALSE}
-eval_df = eval_df[!is.na(eval_df$MAE_uncalibrated),, drop=FALSE]
-```
-
-
 ```{r, echo = FALSE, eval = TRUE, fig.width=4, fig.height=3.5, warning=FALSE}
-eval_def_df = eval_df[,c("Species", "MAE_uncalibrated", "MAErel_uncalibrated","MAE_BAItot_uncalibrated", "MAErel_BAItot_uncalibrated")]
-names(eval_def_df)<-c("Species", "MAE_BAI", "MAErel_BAI","MAE_BAItot", "MAErel_BAItot")
+eval_all_df = eval_df[,c("Species", "MAE_all", "MAErel_all","MAE_BAItot_all", "MAErel_BAItot_all")]
+names(eval_all_df)<-c("Species", "MAE_BAI", "MAErel_BAI","MAE_BAItot", "MAErel_BAItot")
 
 eval_cal_df = eval_df[,c("Species", "MAE_calibrated", "MAErel_calibrated","MAE_BAItot_calibrated", "MAErel_BAItot_calibrated")]
-names(eval_cal_df)<-names(eval_def_df)
+names(eval_cal_df)<-names(eval_all_df)
 
-eval_cal_sp_df = eval_df[,c("Species", "MAE_calibrated_sp", "MAErel_calibrated_sp","MAE_BAItot_calibrated_sp", "MAErel_BAItot_calibrated_sp")]
-names(eval_cal_sp_df)<-names(eval_def_df)
+eval_spp_df = eval_df[,c("Species", "MAE_spp", "MAErel_spp","MAE_BAItot_spp", "MAErel_BAItot_spp")]
+names(eval_spp_df)<-names(eval_all_df)
 
-eval_def_df$type = "Overall averages"
 eval_cal_df$type = "Calibrated"
-eval_cal_sp_df$type = "Species-level averages"
+eval_spp_df$type = "Species-level averages"
+eval_all_df$type = "Overall averages"
 
-eval_all_df = bind_rows(eval_def_df,eval_cal_df,eval_cal_sp_df)
+eval_all_df = bind_rows(eval_cal_df, eval_spp_df, eval_all_df)
 eval_all_df$type = factor(eval_all_df$type, levels = c("Calibrated", "Species-level averages","Overall averages"))
 ```
 
@@ -354,7 +353,6 @@ p1<-ggplot(eval_all_df)+
   geom_boxplot(aes(x=Species, y=MAE_BAI, fill=type))+
   labs(x="", y="MAE annual BAI (cm2/yr.)")+
   scale_fill_discrete(NULL)+
-  ylim(c(0,50))+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
                    legend.position = c(0.7,0.80))
 p2<-ggplot(eval_all_df)+
@@ -373,11 +371,11 @@ The following table shows annual BAI evaluation results by species (medians):
 eval_df %>% group_by(Species) %>% 
   summarise(`Observed (cm2/yr)` = median(Obs_BAI, na.rm=T),
             `MAE plot (cm2/yr)` = median(MAE_calibrated, na.rm=T),
-            `MAE spp. (cm2/yr)` = median(MAE_calibrated_sp, na.rm=T),
-            `MAE all (cm2/yr)` = median(MAE_uncalibrated, na.rm=T),
+            `MAE spp (cm2/yr)` = median(MAE_spp, na.rm=T),
+            `MAE all (cm2/yr)` = median(MAE_all, na.rm=T),
             `MAE plot (%)` = median(MAErel_calibrated, na.rm=T),
-            `MAE spp. (%)` = median(MAErel_calibrated_sp, na.rm=T),
-            `MAE all (%)` = median(MAErel_uncalibrated, na.rm=T)) %>% 
+            `MAE spp (%)` = median(MAErel_spp, na.rm=T),
+            `MAE all (%)` = median(MAErel_all, na.rm=T)) %>% 
   kbl() %>%
   kable_styling()
 ```
@@ -389,7 +387,6 @@ p3<-ggplot(eval_all_df)+
   geom_boxplot(aes(x=Species, y=MAE_BAItot, fill=type))+
   labs(x="", y="MAE total BAI (cm2)")+
   scale_fill_discrete(NULL)+
-  ylim(c(0,500))+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
                    legend.position = c(0.75,0.80))
 p4<-ggplot(eval_all_df)+
@@ -409,14 +406,14 @@ The following table shows total BAI evaluation results by species (medians):
 eval_df %>% group_by(Species) %>% 
   summarise(`Observed (cm2)` = median(Obs_BAItot, na.rm=T),
             `MAE plot (cm2)` = median(MAE_BAItot_calibrated, na.rm=T),
-            `MAE spp. (cm2)` = median(MAE_BAItot_calibrated_sp, na.rm=T),
-            `MAE all (cm2)` = median(MAE_BAItot_uncalibrated, na.rm=T),
+            `MAE spp (cm2)` = median(MAE_BAItot_spp, na.rm=T),
+            `MAE all (cm2)` = median(MAE_BAItot_all, na.rm=T),
             `MAE plot (%)` = median(MAErel_BAItot_calibrated, na.rm=T),
-            `MAE spp. (%)` = median(MAErel_BAItot_calibrated_sp, na.rm=T),
-            `MAE all (%)` = median(MAErel_BAItot_uncalibrated, na.rm=T)) %>% 
+            `MAE spp (%)` = median(MAErel_BAItot_spp, na.rm=T),
+            `MAE all (%)` = median(MAErel_BAItot_all, na.rm=T)) %>% 
   kbl() %>%
   kable_styling()
 ```
 
-From these results, it is apparent that the calibration improved substantially the predictive capacity of the model. More importantly, using species-level averages do not seem to increase substantially prediction errors, compared to plot-level calibrated parameter values.
+From these results, it is apparent that the calibration improved substantially the predictive capacity of the model. More importantly, using species-level averages or overall averages do not seem to increase substantially prediction errors, compared to plot-level calibrated parameter values.
 

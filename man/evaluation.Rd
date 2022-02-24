@@ -34,9 +34,10 @@ evaluation_metric(out, measuredData, type="SWC", cohort=NULL,
   \item{metric}{An evaluation metric:
     \itemize{
       \item{\code{"MAE"}: Mean absolute error.}
+      \item{\code{"MAE.rel"}: Mean absolute error in relative terms.}
       \item{\code{"r"}: Pearson's linear correlation coefficient.}
       \item{\code{"NSE"}: Nash-Sutcliffe model efficiency coefficient.}
-      \item{\code{"NSEabs"}: Modified Nash-Sutcliffe model efficiency coefficient (L1 norm) (Legates & McCabe 1999).}
+      \item{\code{"NSE.abs"}: Modified Nash-Sutcliffe model efficiency coefficient (L1 norm) (Legates & McCabe 1999).}
       \item{\code{"loglikelihood"}: Logarithm of the likelihood of observing the data given the model predictions, assuming independent Gaussian errors.}
     }
   }
@@ -61,11 +62,13 @@ evaluation_metric(out, measuredData, type="SWC", cohort=NULL,
   \item{
     Function \code{evaluation_stats} returns evaluation statistics (a vector or a data frame depending on \code{type}):
     \itemize{
-      \item{\code{MAE}: Mean absolute error.}
       \item{\code{Bias}: Mean deviation (positive values correspond to model overestimations).}
+      \item{\code{Bias.rel}: Bias in relative terms (\%).}
+      \item{\code{MAE}: Mean absolute error.}
+      \item{\code{MAE.rel}: Mean absolute error in relative terms (\%).}
       \item{\code{r}: Pearson's linear correlation coefficient.}
       \item{\code{NSE}: Nash-Sutcliffe model efficiency coefficient.}
-      \item{\code{NSEabs}: Modified Nash-Sutcliffe model efficiency coefficient (L1 norm) (Legates & McCabe 1999).}
+      \item{\code{NSE.abs}: Modified Nash-Sutcliffe model efficiency coefficient (L1 norm) (Legates & McCabe 1999).}
     }
   }
   \item{Function \code{evaluation_plot} returns a ggplot object.}
