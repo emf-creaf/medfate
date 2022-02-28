@@ -195,12 +195,14 @@ Here, we illustrate the evaluation functions included in the package using a fak
 data(exampleobs)
 ```
 
-Normally growth evaluations will be at annual scale, but here we only have one year of simulated growth. Assuming we want to evaluate the predictive capacity of the model in terms of monthly basal area increment for the pine cohort, we can plot the relationship using function `evaluation_plot()`:
+Normally growth evaluations will be at annual scale, but here we only have one year of simulated growth. Assuming we want to evaluate the predictive capacity of the model in terms of monthly basal area increment for the pine cohort, we can plot the relationship between observed and predicted values using function `evaluation_plot()`:
 ```{r, fig=TRUE, echo=TRUE, fig.width=4, fig.height=4}
 evaluation_plot(G1, exampleobs, "BAI", cohort = "T1_148", 
                 temporalResolution = "month", plotType = "scatter")
 ```
-And the following would help us quantifying the relationship:
+
+And the following would help us quantifying the strength of the relationship:
+
 ```{r}
 evaluation_stats(G1, exampleobs, "BAI", cohort = "T1_148", 
                  temporalResolution = "month")
