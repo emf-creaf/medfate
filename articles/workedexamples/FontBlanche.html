@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Soil water balance at Font-Blanche</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres (CREAF), Nicolas Martin-StPaul (INRA)</h4>
             
-            <h4 data-toc-skip class="date">2022-02-24</h4>
+            <h4 data-toc-skip class="date">2022-02-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/workedexamples/FontBlanche.Rmd" class="external-link"><code>vignettes/workedexamples/FontBlanche.Rmd</code></a></small>
       <div class="hidden name"><code>FontBlanche.Rmd</code></div>
@@ -548,8 +548,10 @@
 <p><img src="FontBlanche_files/figure-html/unnamed-chunk-28-1.png" width="480" style="display: block; margin: auto;"> Where we see a reasonably good relationship, but the model tends to underestimate total evapotranspiration during seasons with low evaporative demand. Function <code><a href="../../reference/evaluation.html">evaluation_stats()</a></code> allows us to generate evaluation statistics:</p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, type <span class="op">=</span> <span class="st">"SE+TR"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##            n         Bias          MAE            r          NSE       NSEabs </span>
-<span class="co">## 365.00000000  -0.29720231   0.47359921   0.70974934   0.09696143   0.04883988</span></code></pre>
+<pre><code><span class="co">##            n         Bias     Bias.rel          MAE      MAE.rel            r </span>
+<span class="co">## 365.00000000  -0.29720231 -22.30615386   0.47359921  35.54540550   0.70974934 </span>
+<span class="co">##          NSE      NSE.abs </span>
+<span class="co">##   0.09696143   0.04883988</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="soil-moisture">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture"></a>
@@ -569,8 +571,10 @@
 <p>or examine evaluation statistics:</p>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, type <span class="op">=</span> <span class="st">"REW"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##            n         Bias          MAE            r          NSE       NSEabs </span>
-<span class="co">## 364.00000000   0.05127128   0.09228614   0.90705913   0.77353587   0.55778862</span></code></pre>
+<pre><code><span class="co">##            n         Bias     Bias.rel          MAE      MAE.rel            r </span>
+<span class="co">## 364.00000000   0.05127128   7.31065214   0.09228614  13.15886517   0.90705913 </span>
+<span class="co">##          NSE      NSE.abs </span>
+<span class="co">##   0.77353587   0.55778862</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="plant-transpiration">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration"></a>
@@ -590,12 +594,16 @@
 <p>In general, the agreement is quite good, but the model seems to overestimate the transpiration of <em>P. halepensis</em> in early summer and after the first drought period. The transpiration of <em>Q. ilex</em> seems also overestimated in spring and autumn. We can also inspect the evaluation statistics for both species using:</p>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, cohort <span class="op">=</span> <span class="st">"T2_148"</span>, type<span class="op">=</span><span class="st">"E"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##            n         Bias          MAE            r          NSE       NSEabs </span>
-<span class="co">## 300.00000000   0.05932295   0.09700056   0.70240962  -0.25888202   0.01975944</span></code></pre>
+<pre><code><span class="co">##            n         Bias     Bias.rel          MAE      MAE.rel            r </span>
+<span class="co">## 300.00000000   0.05932295  28.84352536   0.09700056  47.16282458   0.70240962 </span>
+<span class="co">##          NSE      NSE.abs </span>
+<span class="co">##  -0.25888202   0.01975944</span></code></pre>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, cohort <span class="op">=</span> <span class="st">"T3_168"</span>, type<span class="op">=</span><span class="st">"E"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##           n        Bias         MAE           r         NSE      NSEabs </span>
-<span class="co">## 309.0000000   0.1263214   0.1636810   0.7379859  -0.4733323  -0.1151244</span></code></pre>
+<pre><code><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span>
+<span class="co">## 309.0000000   0.1263214  43.6405580   0.1636810  56.5472972   0.7379859 </span>
+<span class="co">##         NSE     NSE.abs </span>
+<span class="co">##  -0.4733323  -0.1151244</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="leaf-water-potentials">Leaf water potentials<a class="anchor" aria-label="anchor" href="#leaf-water-potentials"></a>

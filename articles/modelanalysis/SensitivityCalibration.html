@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Sensitivity analysis and calibration</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-02-24</h4>
+            <h4 data-toc-skip class="date">2022-02-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/modelanalysis/SensitivityCalibration.Rmd" class="external-link"><code>vignettes/modelanalysis/SensitivityCalibration.Rmd</code></a></small>
       <div class="hidden name"><code>SensitivityCalibration.Rmd</code></div>
@@ -275,25 +275,32 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##                  SWC       ETR   E_T1_148   E_T2_168 FMC_T1_148 FMC_T2_168</span>
-<span class="co">## 2001-01-01 0.2994907 2.4021328 0.20557604 0.15625832   125.7974   93.08011</span>
-<span class="co">## 2001-01-02 0.2964286 2.4392336 0.29241446 0.21101657   125.7150   93.02984</span>
-<span class="co">## 2001-01-03 0.3100110 0.4761217 0.21991828 0.22501447   125.8453   92.98312</span>
-<span class="co">## 2001-01-04 0.2870939 2.2012198 0.09526183 0.09066472   125.7431   93.02448</span>
-<span class="co">## 2001-01-05 0.2992419 2.1158805 0.27888984 0.28897605   125.8305   93.02372</span>
-<span class="co">## 2001-01-06 0.3061376 2.7518768 0.21940988 0.29704702   125.7044   93.02442</span>
-<span class="co">##              BAI_T1_148    BAI_T2_168</span>
-<span class="co">## 2001-01-01  0.002983884  0.0138367793</span>
-<span class="co">## 2001-01-02  0.045798625  0.0014352504</span>
-<span class="co">## 2001-01-03  0.035767419  0.0006489233</span>
-<span class="co">## 2001-01-04 -0.005288308 -0.0055843463</span>
-<span class="co">## 2001-01-05 -0.011125856 -0.0018824819</span>
-<span class="co">## 2001-01-06  0.028257562 -0.0021069645</span></code></pre>
+<pre><code><span class="co">##                  SWC       ETR   E_T1_148  E_T2_168 FMC_T1_148 FMC_T2_168</span>
+<span class="co">## 2001-01-01 0.3052310 2.6369963 0.14894609 0.2105161   125.7450   93.02873</span>
+<span class="co">## 2001-01-02 0.3014630 2.7498606 0.20978835 0.2388032   125.6583   93.03232</span>
+<span class="co">## 2001-01-03 0.2953839 0.6120317 0.18544797 0.2285990   125.8143   93.01820</span>
+<span class="co">## 2001-01-04 0.2978617 2.1177695 0.07709484 0.1259018   125.8329   93.05593</span>
+<span class="co">## 2001-01-05 0.3033394 2.0612671 0.37479429 0.3414785   125.7902   93.01687</span>
+<span class="co">## 2001-01-06 0.2974828 2.5859089 0.23207644 0.1008629   125.7180   93.02116</span>
+<span class="co">##            BAI_T1_148 BAI_T2_168 DBH_T1_148 DBH_T2_168 Height_T1_148</span>
+<span class="co">## 2001-01-01          0          0      37.55       14.6           800</span>
+<span class="co">## 2001-01-02          0          0      37.55       14.6           800</span>
+<span class="co">## 2001-01-03          0          0      37.55       14.6           800</span>
+<span class="co">## 2001-01-04          0          0      37.55       14.6           800</span>
+<span class="co">## 2001-01-05          0          0      37.55       14.6           800</span>
+<span class="co">## 2001-01-06          0          0      37.55       14.6           800</span>
+<span class="co">##            Height_T2_168</span>
+<span class="co">## 2001-01-01           660</span>
+<span class="co">## 2001-01-02           660</span>
+<span class="co">## 2001-01-03           660</span>
+<span class="co">## 2001-01-04           660</span>
+<span class="co">## 2001-01-05           660</span>
+<span class="co">## 2001-01-06           660</span></code></pre>
 <p>where soil water content dynamics is in column <code>SWC</code>. The model fit to observed data can be measured using the Nash-Sutcliffe coefficient, which we calculate for the initial run using function <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code>:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_metric</a></span><span class="op">(</span><span class="va">S1</span>, measuredData <span class="op">=</span> <span class="va">exampleobs</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, 
                   metric <span class="op">=</span> <span class="st">"NSE"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.9013859</span></code></pre>
+<pre><code><span class="co">## [1] 0.8973232</span></code></pre>
 <p>A call to <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code> provides the coefficient given a model simulation result, but is not a model output function as we defined above. Analogously to the measures of total transpiration and average plant stress, we can use a function factory to define a model output function that takes input factors as inputs, runs the model and performs the evaluation:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">of_eval</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/optimization.html">optimization_evaluation_function</a></span><span class="op">(</span>parNames <span class="op">=</span> <span class="va">parNames</span>,
@@ -304,10 +311,10 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <p>Function <code>of_eval()</code> stores internally both the data needed for conducting simulations and the data needed for evaluating simulation results, so that we only need to provide values for the input factors:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.09451645</span></code></pre>
+<pre><code><span class="co">## [1] 0.1150455</span></code></pre>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] -3.68663</span></code></pre>
+<pre><code><span class="co">## [1] -3.712904</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="global-sensitivity-analyses">Global sensitivity analyses<a class="anchor" aria-label="anchor" href="#global-sensitivity-analyses"></a>
