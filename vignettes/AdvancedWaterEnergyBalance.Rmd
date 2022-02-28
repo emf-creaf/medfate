@@ -134,7 +134,7 @@ The maximum values and shape of vulnerability curves for leaves and stems are re
 
 ### Supply functions
 
-The vulnerability curves conformng the hydraulic network are used in the model to build the **supply function**, which relates water flow (i.e. transpiration) with the drop of water potential along the whole hydraulic pathway. The supply function contains not only these two variables, but also the water potential of intermediate nodes in the the hydraulic network. Function `hydraulics_supplyFunctionPlot()` can be used to inspect any of this variables:
+The vulnerability curves conforming the hydraulic network are used in the model to build the **supply function**, which relates water flow (i.e. transpiration) with the drop of water potential along the whole hydraulic pathway. The supply function contains not only these two variables, but also the water potential of intermediate nodes in the the hydraulic network. Function `hydraulics_supplyFunctionPlot()` can be used to inspect any of this variables:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 3.5}
 hydraulics_supplyFunctionPlot(x, examplesoil, type="E")
 hydraulics_supplyFunctionPlot(x, examplesoil, type="ERhizo")

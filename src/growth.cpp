@@ -314,6 +314,12 @@ List growthDay1(List x, NumericVector meteovec,
                 double runon=0.0, bool verbose = false) {
   
   
+  //Get previous PLC so that defoliation occurs only when PLC increases
+  //Internal state variables
+  DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+  NumericVector StemPLCprev = clone(Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]));
+  
+  
   //Soil-plant water balance
   List spwbOut = spwbDay1(x, meteovec, 
                           elevation, 
@@ -376,7 +382,7 @@ List growthDay1(List x, NumericVector meteovec,
   int numLayers = V.ncol();
   
   //Internal state variables
-  DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+  internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
   //Values at the end of the day (after calling spwb)
   NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
   NumericVector PlantPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]);
@@ -630,10 +636,13 @@ List growthDay1(List x, NumericVector meteovec,
         propLeafSenescence = 1.0;
         leafSenescence[j] = false; //To prevent further loss
       }
-      //Leaf senescence due to drought 
-      double LAplc = std::min(LAexpanded, (1.0 - StemPLC[j])*leafAreaTarget[j]);
-      if(LAplc<LAexpanded) {
-        propLeafSenescence = std::max((LAexpanded-LAplc)/LAexpanded, propLeafSenescence); 
+      //Leaf senescence due to drought (only when PLC increases)
+      double PLCinc = (StemPLC[j]-StemPLCprev[j]);
+      if(PLCinc>0.0) {
+        double LAplc = std::min(LAexpanded, (1.0-StemPLC[j])*leafAreaTarget[j]);
+        if(LAplc<LAexpanded) {
+          propLeafSenescence = std::max((LAexpanded-LAplc)/LAexpanded, propLeafSenescence); 
+        }
       }
       double deltaLAsenescence = std::min(LAexpanded, LAexpanded*propLeafSenescence);
       double senescenceLeafLoss = deltaLAsenescence*(1000.0/SLA[j]);
@@ -654,6 +663,9 @@ List growthDay1(List x, NumericVector meteovec,
       //TRANSLOCATION (in mol gluc) of labile carbon
       double translocationSugarLeaf = propLeafSenescence*Volume_leaves[j]*sugarLeaf[j];
       double translocationStarchLeaf = propLeafSenescence*Volume_leaves[j]*starchLeaf[j];
+      if(starchLeaf[j] > Starch_max_leaves[j]) { // Add excess leaf starch to translocation
+        translocationStarchLeaf += ((starchLeaf[j] - Starch_max_leaves[j])*Volume_leaves[j]);
+      }
       double translocationSugarSapwood = propSASenescence*Volume_sapwood[j]*starchSapwood[j];
       if(Volume_leaves[j]>0) {
         sugarLeaf[j] = ((sugarLeaf[j]*Volume_leaves[j]) - translocationSugarLeaf)/Volume_leaves[j]; 
@@ -661,13 +673,8 @@ List growthDay1(List x, NumericVector meteovec,
       }
       sugarSapwood[j] = ((sugarSapwood[j]*Volume_sapwood[j]) - translocationSugarSapwood)/Volume_sapwood[j]; 
       starchSapwood[j] = ((starchSapwood[j]*Volume_sapwood[j]) + translocationSugarLeaf + translocationStarchLeaf + translocationSugarSapwood)/Volume_sapwood[j]; 
-      
       //ROOT EXUDATION
-      //Excess starch carbon is lost as root exudation
-      if(starchLeaf[j] > Starch_max_leaves[j]) {
-        RootExudation[j] += ((starchLeaf[j] - Starch_max_leaves[j])*(Volume_leaves[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
-        starchLeaf[j] = Starch_max_leaves[j];
-      }
+      //Excess sapwood starch carbon is lost as root exudation
       if(starchSapwood[j] > Starch_max_sapwood[j]) {
         RootExudation[j] += ((starchSapwood[j] - Starch_max_sapwood[j])*(Volume_sapwood[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
         starchSapwood[j] = Starch_max_sapwood[j];
@@ -880,6 +887,11 @@ List growthDay2(List x, NumericVector meteovec,
                 double solarConstant, double delta, 
                 double runon=0.0, bool verbose = false) {
   
+  //Get previous PLC so that defoliation occurs only when PLC increases
+  //Internal state variables
+  DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+  NumericVector StemPLCprev = clone(Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]));
+  
   //1. Soil-plant water balance
   List spwbOut = spwbDay2(x, meteovec, 
                           latitude, elevation, slope, aspect,
@@ -972,7 +984,7 @@ List growthDay2(List x, NumericVector meteovec,
   int numLayers = VCroot_kmax.ncol();
   
   //Internal state variables
-  DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+  internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
   NumericVector NSPL = Rcpp::as<Rcpp::NumericVector>(internalWater["NSPL"]);
 
   //Values at the end of the day (after calling spwb)
@@ -1285,12 +1297,7 @@ List growthDay2(List x, NumericVector meteovec,
             sugarSapwood[j] += (- starchSapwoodIncrease);
           }
         }
-        //Divert to root exudation if starch is over maximum capacity
-        if(starchLeaf[j] > Starch_max_leaves[j]) {
-          RootExudationInst(j,s) += ((starchLeaf[j] - Starch_max_leaves[j])*(Volume_leaves[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
-          starchLeaf[j] = Starch_max_leaves[j];
-        }
-        //Divert to root exudation if starch is over maximum capacity
+        //Divert to root exudation if sapwood starch is over maximum capacity
         if(starchSapwood[j] > Starch_max_sapwood[j]) {
           RootExudationInst(j,s) += ((starchSapwood[j] - Starch_max_sapwood[j])*(Volume_sapwood[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
           starchSapwood[j] = Starch_max_sapwood[j];
@@ -1341,9 +1348,12 @@ List growthDay2(List x, NumericVector meteovec,
         leafSenescence[j] = false; //To prevent further loss
       }
       //Leaf senescence due to drought 
-      double LAplc = std::min(LAexpanded, (1.0 - StemPLC[j])*leafAreaTarget[j]);
-      if(LAplc<LAexpanded) {
-        propLeafSenescence = std::max((LAexpanded-LAplc)/LAexpanded, propLeafSenescence); 
+      double PLCinc = (StemPLC[j]-StemPLCprev[j]);
+      if(PLCinc>0.0) {
+        double LAplc = std::min(LAexpanded, (1.0 - StemPLC[j])*leafAreaTarget[j]);
+        if(LAplc<LAexpanded) {
+          propLeafSenescence = std::max((LAexpanded-LAplc)/LAexpanded, propLeafSenescence); 
+        }
       }
       //Complete defoliation if RWCsymp < 0.5
       if(LAexpanded > 0.0 && LeafSympRWC[j]<0.5){
