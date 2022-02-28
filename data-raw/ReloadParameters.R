@@ -50,7 +50,11 @@ exampleobs = data.frame(SWC = S1$Soil$W.1*(soil_thetaFC(examplesoil1)[1]),
              FMC_PH= fmc[,PH_cohName],
              FMC_QI = fmc[,QI_cohName],
              BAI_PH = S1$PlantStructure$SapwoodArea[,PH_cohName]*S1$GrowthMortality$SAgrowth[,PH_cohName],
-             BAI_QI = S1$PlantStructure$SapwoodArea[,QI_cohName]*S1$GrowthMortality$SAgrowth[,QI_cohName])
+             BAI_QI = S1$PlantStructure$SapwoodArea[,QI_cohName]*S1$GrowthMortality$SAgrowth[,QI_cohName],
+             DBH_PH = S1$PlantStructure$DBH[,PH_cohName],
+             DBH_QI = S1$PlantStructure$DBH[,QI_cohName],
+             Height_PH = S1$PlantStructure$Height[,PH_cohName],
+             Height_QI = S1$PlantStructure$Height[,QI_cohName])
 #Add normal error
 exampleobs$SWC = exampleobs$SWC + rnorm(nrow(exampleobs), mean = 0, sd = sd(exampleobs$SWC)/4)
 exampleobs$ETR = exampleobs$ETR + rnorm(nrow(exampleobs), mean = 0, sd = sd(exampleobs$ETR)/4)
@@ -58,12 +62,28 @@ exampleobs$E_PH = exampleobs$E_PH + rnorm(nrow(exampleobs), mean = 0, sd = sd(ex
 exampleobs$E_QI = exampleobs$E_QI + rnorm(nrow(exampleobs), mean = 0, sd = sd(exampleobs$E_QI)/4)
 exampleobs$FMC_PH = exampleobs$FMC_PH + rnorm(nrow(exampleobs), mean = 0, sd = sd(exampleobs$FMC_PH)/4)
 exampleobs$FMC_QI = exampleobs$FMC_QI + rnorm(nrow(exampleobs), mean = 0, sd = sd(exampleobs$FMC_QI)/4)
-exampleobs$BAI_PH = exampleobs$BAI_PH + rnorm(nrow(exampleobs), mean = 0, sd = sd(exampleobs$BAI_PH)/4)
-exampleobs$BAI_QI = exampleobs$BAI_QI + rnorm(nrow(exampleobs), mean = 0, sd = sd(exampleobs$BAI_QI)/4)
-
-names(exampleobs)[3:8] = c(paste0("E_",PH_cohName), paste0("E_",QI_cohName),
+for(i in 1:nrow(exampleobs)) {
+  m = exp(rnorm(1, mean = 0, sd = 0.5))
+  exampleobs$BAI_PH[i] = exampleobs$BAI_PH[i]*m
+  m = exp(rnorm(1, mean = 0, sd = 1))
+  if(i<nrow(exampleobs)) {
+    exampleobs$DBH_PH[i+1] = exampleobs$DBH_PH[i] + max(0, (exampleobs$DBH_PH[i+1]-exampleobs$DBH_PH[i])*m)
+    exampleobs$Height_PH[i+1] = exampleobs$Height_PH[i] +  max(0, (exampleobs$Height_PH[i+1]-exampleobs$Height_PH[i])*m)
+  }
+  
+  m = exp(rnorm(1, mean = 0, sd = 0.5))
+  exampleobs$BAI_QI[i] = exampleobs$BAI_QI[i]*m
+  m = exp(rnorm(1, mean = 0, sd = 1))
+  if(i<nrow(exampleobs)) {
+    exampleobs$DBH_QI[i+1] = exampleobs$DBH_QI[i] +  max(0, (exampleobs$DBH_QI[i+1]-exampleobs$DBH_QI[i])*m)
+    exampleobs$Height_QI[i+1] = exampleobs$Height_QI[i] +  max(0, (exampleobs$Height_QI[i+1]-exampleobs$Height_QI[i])*m)
+  }
+}
+names(exampleobs)[3:12] = c(paste0("E_",PH_cohName), paste0("E_",QI_cohName),
                            paste0("FMC_",PH_cohName),paste0("FMC_",QI_cohName),
-                           paste0("BAI_",PH_cohName),paste0("BAI_",QI_cohName))
+                           paste0("BAI_",PH_cohName),paste0("BAI_",QI_cohName),
+                           paste0("DBH_",PH_cohName),paste0("DBH_",QI_cohName),
+                           paste0("Height_",PH_cohName),paste0("Height_",QI_cohName))
 
 usethis::use_data(exampleobs, overwrite = T)
 

@@ -8,7 +8,8 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "WP", "FMC"))
   } else {
     modelInput<- out[["growthInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "WP", "FMC", "BAI"))
+    type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "WP", "FMC", 
+                             "BAI", "DBH", "Height"))
   }
   if(type=="SWC") {
     sm = out$Soil
@@ -148,9 +149,47 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     if(!(obscolumn %in% names(measuredData))) stop(paste0("Column '", obscolumn, "' not found in measured data frame."))
     df$Observed[d %in% rownames(measuredData)] = measuredData[[obscolumn]][rownames(measuredData) %in% d] 
   }  
+  else if(type=="DBH") {
+    DBH = out$PlantStructure$DBH
+    d = rownames(DBH)
+    spnames = modelInput$cohorts$Name
+    allcohnames = row.names(modelInput$cohorts)
+    
+    if(is.null(cohort)) {
+      icoh = 1
+      cohort = allcohnames[1] 
+      message("Choosing first cohort")
+    } else {
+      icoh = which(allcohnames==cohort)
+    }
+    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = DBH[,icoh])
+    ## Fill observed values
+    obscolumn = paste0("DBH_", cohort)
+    if(!(obscolumn %in% names(measuredData))) stop(paste0("Column '", obscolumn, "' not found in measured data frame."))
+    df$Observed[d %in% rownames(measuredData)] = measuredData[[obscolumn]][rownames(measuredData) %in% d] 
+  }  
+  else if(type=="Height") {
+    Height = out$PlantStructure$Height
+    d = rownames(Height)
+    spnames = modelInput$cohorts$Name
+    allcohnames = row.names(modelInput$cohorts)
+    
+    if(is.null(cohort)) {
+      icoh = 1
+      cohort = allcohnames[1] 
+      message("Choosing first cohort")
+    } else {
+      icoh = which(allcohnames==cohort)
+    }
+    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = Height[,icoh])
+    ## Fill observed values
+    obscolumn = paste0("Height_", cohort)
+    if(!(obscolumn %in% names(measuredData))) stop(paste0("Column '", obscolumn, "' not found in measured data frame."))
+    df$Observed[d %in% rownames(measuredData)] = measuredData[[obscolumn]][rownames(measuredData) %in% d] 
+  }  
   if(temporalResolution != "day") {
     d.cut = cut(as.Date(d), breaks=temporalResolution)
-    if(type %in% c("SWC", "REW", "FMC")) {
+    if(type %in% c("SWC", "REW", "FMC", "DBH", "Height")) {
       df = data.frame(Dates = as.Date(levels(d.cut)),
                       Observed = tapply(df$Observed, d.cut, FUN = mean, na.rm = TRUE),
                       Modelled = tapply(df$Modelled, d.cut, FUN = mean, na.rm = TRUE))
@@ -197,7 +236,8 @@ evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL,
     type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "WP", "FMC"))
   } else {
     modelInput<- out[["growthInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "WP", "FMC", "BAI"))
+    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "WP", "FMC", 
+                             "BAI", "DBH", "Height"))
   }
   
   df = evaluation_table(out = out, measuredData = measuredData, 
@@ -215,6 +255,8 @@ evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL,
     row.names(eval_res)<-c("Predawn potentials", "Midday potentials")
   }
   else if(type=="BAI") eval_res = evalstats(df$Observed, df$Modelled)
+  else if(type=="DBH") eval_res = evalstats(df$Observed, df$Modelled)
+  else if(type=="Height") eval_res = evalstats(df$Observed, df$Modelled)
   return(eval_res)
 }
 
@@ -265,7 +307,8 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "WP", "FMC"))
   } else {
     modelInput<- out[["growthInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "WP", "FMC", "BAI"))
+    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "WP", "FMC", 
+                             "BAI", "DBH", "Height"))
   }
   
   df = evaluation_table(out = out, measuredData = measuredData, 
@@ -354,6 +397,50 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
       g<-scatterplot(df, 
                      xlab = paste0("Modelled basal area increment (cm2/", temporalResolution,")"),
                      ylab = paste0("Measured basal area increment (cm2/", temporalResolution,")"), 
+                     title=paste0(cohort , " (",spnames[icoh],")"))
+    }
+  }
+  else if(type=="DBH") {
+    allcohnames = row.names(modelInput$cohorts)
+    spnames = modelInput$cohorts$Name
+    
+    if(is.null(cohort)) {
+      icoh = 1
+      cohort = allcohnames[1] 
+      message("Choosing first cohort")
+    } else {
+      icoh = which(allcohnames==cohort)
+    }
+    
+    if(plotType=="dynamics") {
+      g<-dynamicsplot(df, ylab = paste0("DBH (cm)"), 
+                      title=paste0(cohort , " (",spnames[icoh],")"))
+    } else {
+      g<-scatterplot(df, 
+                     xlab = paste0("Modelled DBH (cm)"),
+                     ylab = paste0("Measured DBH (cm)"), 
+                     title=paste0(cohort , " (",spnames[icoh],")"))
+    }
+  }
+  else if(type=="Height") {
+    allcohnames = row.names(modelInput$cohorts)
+    spnames = modelInput$cohorts$Name
+    
+    if(is.null(cohort)) {
+      icoh = 1
+      cohort = allcohnames[1] 
+      message("Choosing first cohort")
+    } else {
+      icoh = which(allcohnames==cohort)
+    }
+    
+    if(plotType=="dynamics") {
+      g<-dynamicsplot(df, ylab = paste0("Height (cm)"), 
+                      title=paste0(cohort , " (",spnames[icoh],")"))
+    } else {
+      g<-scatterplot(df, 
+                     xlab = paste0("Modelled height (cm)"),
+                     ylab = paste0("Measured height (cm)"), 
                      title=paste0(cohort , " (",spnames[icoh],")"))
     }
   }

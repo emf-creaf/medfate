@@ -19,14 +19,16 @@ library(medfate)
 
 ## About this vignette
 
-This document describes how to run the growth model of `medfate`, implemented in function `growth()`. All the details of the model design and formulation can be found at https://emf-creaf.github.io/medfatebook/index.html. 
+This document describes how to run the growth model of `medfate`, implemented in function `growth()`. All the details of the model design and formulation can be found at the corresponding chapters of the [medfate book](https://emf-creaf.github.io/medfatebook/index.html). 
+
+Because the forest growth model builds on the water balance model, the reader is assumed here to be familiarized with `spwb()`. If not, we recommend reading vignette [*Basic water balance*](https://emf-creaf.github.io/medfate/articles/BasicWaterBalance.html) before this one. 
 
 ## Preparing model inputs
-Model inputs are explained in greater detail in vignette '*Simulation inputs*'. Here we only review the different steps required to run function `growth()`.
+Model inputs are explained in greater detail in vignette [*Preparing model inputs*](https://emf-creaf.github.io/medfate/articles/PreparingInputs.html). Here we briefly review the different steps required to run function `growth()`.
 
 ### Soil, vegetation, meteorology and species data
 
-Soil information needs to be entered as a `data frame` with soil layers in rows and physical attributes in columns. Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
+Soil physical characteristics needs to be specified using a `data frame` with soil layers in rows and physical attributes in columns. Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
 
 ```{r}
 spar = defaultSoilParams(4)
@@ -37,19 +39,22 @@ The soil input for water balance simulation is actually a list of class `soil` t
 examplesoil = soil(spar)
 ```
 
-As explained in the package overview, models included in `medfate` were primarily designed to be ran on **forest inventory plots**. Here we use the example object provided with the package:
+As explained in the package overview, models included in `medfate` were primarily designed to be ran on **forest inventory plots**. Here we use the example forest object provided with the package:
 ```{r}
 data(exampleforestMED)
 exampleforestMED
 ```
 
-In the basic water balance, only mean temperature, precipitation and potential evapotranspiration is required, but radiation may also be necessary to simulate snow melt. 
+Weather input needs to be in form of a `data.frame` with days in rows and variables in columns. Here we will also use the default data included in the package:
+
 ```{r}
 data(examplemeteo)
 head(examplemeteo)
 ```
 
-Finally, simulations in `medfate` require a data frame with species parameter values, which we load using defaults for Catalonia (NE Spain):
+The weather variables required by the `growth()` function depend on the complexity of the water balance simulations underlying growth (i.e. on the control parameter `transpirationMode`, see below). 
+ 
+Finally, all simulations in `medfate` require a data frame with species parameter values, for which we load using defaults for Catalonia (NE Spain):
 
 ```{r}
 data("SpParamsMED")
@@ -67,104 +72,149 @@ Here we will run growth simulations using the basic water balance model (i.e. `t
 
 ### Growth input object
 
-A last object is needed before calling simulation functions, called `growthInput`. This is analogous to `spwbInput` and consists in the compilation of aboveground and belowground parameters and the specification of additional parameter values for each plant cohort. The object can be obtained by calling function `growthInput()`, but if one has a `forest` object, it can be generated more directly using function `forest2growthInput()`:
+A last object, called `growthInput`, needs to be created before calling the simulation function. This is analogous to `spwbInput` and consists in the compilation of soil and cohort-level parameters needed for simulations. The object can be obtained by calling function `growthInput()`, but if one has a `forest` object, it can be generated more directly using function `forest2growthInput()`:
 
 ```{r}
 x = forest2growthInput(exampleforestMED, examplesoil, SpParamsMED, control)
 ```
 
-All the input information for forest data and species parameter values can be inspected by printing different elements of the input object, which are: 
+All the input information for forest data and species parameter values can be inspected by printing different elements of the input object, whose names are: 
 ```{r}
 names(x)
 ```
-First, information about the cohort species is found in element `cohorts`  (i.e. code, species and name):
+As with `spwbInput` objects, information about the cohort species is found in element `cohorts`  (i.e. code, species and name):
 ```{r}
 x$cohorts
 ```
 
-Element `above` contains the aboveground structure data that we already know, but with additional columns that describe the estimated initial amount of sapwood area and carbon reserves (if required):
+Element `above` contains the above-ground structure data that we already know, but with an additional columns that describes the estimated initial amount of *sapwood area*:
 ```{r}
 x$above
 ```
 
-As with the soil input object, the `growthInput` object will be modified during simulations. In the case of `growth()`, these modifications concern `SA`, `fastCstorage`, `slowCstorage`, `LAI_expanded` and `LAI_dead` in element `above`, as well as canopy variables.
+Unless indicated in the control parameters, the `growthInput` object will be modified during simulations. In the case of `growth()`, these modifications concern all structural variables in element `above` as well as other state variables such as carbon storage levels and allocation targets.
 
-Elements starting with `params*` contain cohort-specific model parameters. Aboveground parameters related to plant transpiration can be seen in `paramsTransp`:
-```{r}
-x$paramsTransp
-```
-
-Belowground parameters can be seen in `below` and include root distribution as well as maximum root and rhizosphere conductances by soil layer:
-```{r}
-x$below
-```
-
-Parameters related to plant growth can be seen in `paramsGrowth` and `paramsAllometries`:
+Elements starting with `params*` contain cohort-specific model parameters. Some of them were already presented in previous vignettes ([*Basic water balance*](https://emf-creaf.github.io/medfate/articles/BasicWaterBalance.html) and [*Advanced water balance*](https://emf-creaf.github.io/medfate/articles/AdvancedWaterBalance.html)). An important set of new cohort-specific parameters for the forest growth model are `paramsGrowth`:
 ```{r}
 x$paramsGrowth
+```
+which includes maximum growth rates, senescence rates and maintenance respiration rages. Another important set of parameters is given in `paramsAllometries`:
+```{r}
 x$paramsAllometries
 ```
+Note that in the previous models, allometries were already used to estimate above-ground structural parameters, but these were static during simulations. 
 
-Finally, elements starting with `internal*` contain state variables required to keep track of plant status. For example, the carbon storage levels can be seen in `internalCarbon`:
+Elements starting with `internal*` contain state variables required to keep track of plant status. For example, the metabolic and storage carbon levels can be seen in `internalCarbon`:
 ```{r}
 x$internalCarbon
 ```
+and `internalAllocation` stores the carbon allocation targets:
+
+```{r}
+x$internalAllocation
+```
+Additional `internal*` elements are `internalMortality`, used to keep track of dead individuals; and `internalRings`, which stores state variables used to model sink limitations on wood formation.
 
 ## Executing the growth model
 
-In this vignette we will use one year of example meteorological data with the following precipitation and temperature seasonal trends:
+Having all the input information we are ready to call function `growth()`, which has the same parameter names as `spwb()`:
 ```{r}
 G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
-
 ```
 
-While water/carbon balances and growth of leaf/sapwood/root tissues is performed on a daily basis, structural variables are only updated once a year, here coinciding with the end of the simulation.
+At the end of daily simulations, the `growth()` function displays information regarding the carbon and water balance, which is mostly useful to check that balances are closed. 
 
-## Plotting results
+As we indicated above, the `growth()` simulations modify (by default) the `growthInput` object. We can check this comparing the initial values in element `above` with the current ones:
 
-In addition to all the plots that were available for result of simulations with function `spwb()`, one can display the following information out of the output of function `growth()`:
+```{r}
+x$above
+```
 
-### Carbon balance components
-To inspect components of the plant carbon balance we can first display gross photosynthesis expressed as assimilation relative to biomass:
-```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+but elements starting with `internal*`, containing state variables, are also modified. This behaviour is intended to be used to concatenate consecutive calls to `growth()` with the same object.
+
+Function `growth()` returns an object of class with the same name, actually a list:
+```{r}
+class(G1)
+```
+If we inspect its elements, we realize that some of them are the same as returned by `spwb()`:
+```{r}
+names(G1)
+```
+
+The new list elements, with respect to the output of function `spwb()`, are `LabileCarbonBalance` (components of the labile carbon balance), `PlantBiomassBalance` (plant- and cohort-level biomass balance), `PlantStructure` (daily series of structural variables) and `GrowthMortality` (daily growth and mortality rates).
+
+
+## Plots and summaries
+
+Users can inspect the output of `growth()` simulations using functions `summary()` and `plot()` on the simulation output. Several plots are available, in addition to all the plots that were available to display the results of `spwb()` simulations. Some of them are illustrated in the following subsections:
+
+### Carbon balance
+To inspect components of the plant carbon balance we can first display daily gross photosynthesis expressed as the carbon fixation relative to dry biomass:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=4}
 plot(G1, "GrossPhotosynthesis", bySpecies = T)
 ```
-Then we can draw the respiration costs (maintenance and growth) in the same units:
-```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+Then we can draw the maintenance respiration costs (which include the sum of leaf, sapwood and fine root respiration) in the same units:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=4}
 plot(G1, "MaintenanceRespiration", bySpecies = T)
-plot(G1, "GrowthCosts", bySpecies = T)
 ```
 Finally we can display the daily negative or positive balance of the plant storage, which determines changes in plant carbon pools:
-```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=4}
 plot(G1, "LabileCarbonBalance", bySpecies = T)
 ```
 
-### Carbon storage
-Carbon assimilation and respiration rates define the dynamics of stored carbon, which in medfate is divided into two organs (leaves and sapwood) and two chemical compounds (soluble sugars and starch). The most important storage compartment is sapwood starch, whose dynamics can be shown using:
-```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+Carbon assimilation and respiration rates define the dynamics of stored carbon. The most important storage compartment is sapwood starch, whose dynamics can be shown using:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=4}
 plot(G1, "StarchSapwood", bySpecies = T)
 ```
 
 
-### Leaf and sapwood area changes
+### Structural changes
 Leaf and sapwood area dynamics arising from the interplay between growth and senescence of tissues can be inspected using:
-```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=4}
 plot(G1, "LeafArea", bySpecies = T)
 plot(G1, "SapwoodArea", bySpecies = T)
 ```
-The corresponding daily growth rates can also be displayed:
-```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
-plot(G1, "LAgrowth", bySpecies = T)
-plot(G1, "SAgrowth", bySpecies = T)
-```
-
-
-We can also display the resulting dynamics in diameter at breast height (DBH):
-```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+Even if one year is a short period for tree growth, we can display the resulting dynamics in diameter at breast height (DBH) or plant height:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=4}
 plot(G1, "DBH", bySpecies = T)
+plot(G1, "Height", bySpecies = T)
 ```
 
+### Interactive plots
 Finally, recall that one can interactively create plots using function `shinyplot`, e.g.:
 ```{r, eval = FALSE}
 shinyplot(G1)
+```
+
+## Growth evaluation
+
+Evaluation of growth simulations will normally imply the comparison of predicted vs observed basal area increment (BAI) at a given temporal resolution or the comparison of predicted vs observed tree diameter or plant height. 
+
+Here, we illustrate the evaluation functions included in the package using a fake data set, consisting on the predicted values and some added error.
+```{r}
+data(exampleobs)
+```
+
+Normally growth evaluations will be at annual scale, but here we only have one year of simulated growth. Assuming we want to evaluate the predictive capacity of the model in terms of monthly basal area increment for the pine cohort, we can plot the relationship using function `evaluation_plot()`:
+```{r, fig=TRUE, echo=TRUE, fig.width=4, fig.height=4}
+evaluation_plot(G1, exampleobs, "BAI", cohort = "T1_148", 
+                temporalResolution = "month", plotType = "scatter")
+```
+And the following would help us quantifying the relationship:
+```{r}
+evaluation_stats(G1, exampleobs, "BAI", cohort = "T1_148", 
+                 temporalResolution = "month")
+```
+
+The observed data set is fake and the evaluation is unrealistically good. For illustrative purposes, one could also compare DBH values, here drawing the observed and predicted time series together: 
+
+```{r, echo=TRUE, fig.width=7, fig.height=4}
+evaluation_plot(G1, exampleobs, "DBH", cohort = "T1_148", 
+                temporalResolution = "day")
+```
+
+Again, actual comparisons will be done at coarser temporal resolution. For convenience, function `shinyplot()` also accepts an observed data frame as second argument, which allows performing model evaluation interactively:
+
+```{r, eval = FALSE}
+shinyplot(G1, exampleobs)
 ```

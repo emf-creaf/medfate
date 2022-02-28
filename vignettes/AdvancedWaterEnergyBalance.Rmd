@@ -19,11 +19,11 @@ library(medfate)
 
 ## About this vignette
 
-This document describes how to run a water and energy balance model that uses a more detailed approach for hydraulics and stomatal regulation described in De Cáceres et al. (2021). This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation can be found at  https://emf-creaf.github.io/medfatebook/index.html. 
+This document describes how to run a water and energy balance model that uses a more detailed approach for hydraulics and stomatal regulation described in De Cáceres et al. (2021). This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation can be found at the  [medfatebook](https://emf-creaf.github.io/medfatebook/index.html). 
 
 ## Preparing model inputs
 
-Model inputs are explained in greater detail in vignette '*Simulation inputs*'. Here we only review the different steps required to run function `spwb()`.
+Model inputs are explained in greater detail in vignette [*Preparing model inputs*](https://emf-creaf.github.io/medfate/articles/PreparingInputs.html). Here we only review the different steps required to run function `spwb()`.
 
 ### Soil, vegetation, meteorology and species data
 

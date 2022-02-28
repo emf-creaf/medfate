@@ -242,6 +242,12 @@
     if(type_out=="growth" && any(paste0("BAI_", cohorts_out) %in% names(measuredData))) {
       eval_choices[["Basal area increment"]] = "BAI"
     }
+    if(type_out=="growth" && any(paste0("DBH_", cohorts_out) %in% names(measuredData))) {
+      eval_choices[["Diameter at breast height"]] = "DBH"
+    }
+    if(type_out=="growth" && any(paste0("Height_", cohorts_out) %in% names(measuredData))) {
+      eval_choices[["Plant height"]] = "Height"
+    }
   }
   evaluation <- tabPanel("Evaluation",
                          sidebarLayout(
@@ -352,7 +358,7 @@
       observe({
         eval_plot <- input$eval_type
         sub_choices <- NULL
-        if(eval_plot %in% c("E", "BAI", "FMC")) {
+        if(eval_plot %in% c("E", "BAI", "DBH", "Height", "FMC")) {
           sel = paste0(eval_plot,"_", cohorts_out) %in% names(measuredData)
           sub_choices = cohorts_out[sel]
           names(sub_choices) = cohorts_sp_out[sel]

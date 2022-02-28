@@ -10,6 +10,7 @@
 - Relative bias and relative MAE as evaluation metrics
 - Drought-related leaf senescence only occurring if 'StemPLC' increases
 - Embolized sapwood proportion discounted from sapwood maintenance respiration 
+- Evaluation of DBH and Height series
 
 # Version 2.6.0
 - Nitrogen content for leaves, sapwood and fine roots added. 'Nleaf' replaces 'Narea' as the latter can be calculated from 'Nleaf' using 'SLA'.
