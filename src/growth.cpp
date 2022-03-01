@@ -1681,11 +1681,11 @@ List growthDay2(List x, NumericVector meteovec,
 List growthDay(List x, CharacterVector date, double tmin, double tmax, double rhmin, 
                double rhmax, double rad, double wind, 
                double latitude, double elevation, double slope, double aspect,  
-               double prec, double runon=0.0) {
+               double prec, double runon=0.0, bool modifyInput = true) {
   //Control parameters
   List control = x["control"];
   bool verbose = control["verbose"];
-  bool modifyInput = control["modifyInput"];
+  
   bool leafPhenology = control["leafPhenology"];
   String transpirationMode = control["transpirationMode"];
   double Catm = control["Catm"];
@@ -1847,7 +1847,6 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
   bool verbose = control["verbose"];
-  bool modifyInput = control["modifyInput"];
   bool subdailyResults = control["subdailyResults"];
   bool leafPhenology = control["leafPhenology"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
@@ -1856,14 +1855,9 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   checkgrowthInput(x, transpirationMode, soilFunctions);
 
   //Store input
-  List growthInput;
-  if(modifyInput) {
-    growthInput = clone(x); // Will modify x and return the unmodified object
-  } else {
-    x = clone(x);
-    growthInput = x; //Will not modified input x and return the final modified object
-  }
-  
+  List growthInput = x; // Store initial object
+  x = clone(x); //Ensure a copy will be modified
+
   //Soil params 
   List soil = x["soil"];
   
@@ -2344,6 +2338,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                      Named("topography") = topo,
                      Named("weather") = clone(meteo),
                      Named("growthInput") = growthInput,
+                     Named("growthOutput") = clone(x),
                      Named("WaterBalance")=DWB, 
                      Named("BiomassBalance") = StandBiomassBalance,
                      Named("Soil")=SWB,
@@ -2360,6 +2355,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                    Named("topography") = topo,
                    Named("weather") = clone(meteo),
                    Named("growthInput") = growthInput,
+                   Named("growthOutput") = clone(x),
                    Named("WaterBalance")=DWB, 
                    Named("EnergyBalance") = DEB,
                    Named("BiomassBalance") = StandBiomassBalance,

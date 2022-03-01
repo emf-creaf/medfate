@@ -83,7 +83,6 @@ names(x)
 ```
 Note that (since **ver 2.0**) the water balance input object contains an element `soil` with the soil input. 
 
-It is important to remember that, unlike normal objects in R, any water balance simulation will modify the `spwbInput` object. For example, the state of the soil at the end of the simulated process (i.e. `W`) will be stored. Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next. In the case of soil water balance, these modifications are small, for example concerning `LAI_expanded`, but in the case of growth simulations the object is used to store the status of vegetation during and at the end of simulations. 
 
 Finally, note that users can set cohort-specific parameters for soil water balance (instead of using species-level values) by modifying manually the parameter values in this object. Since some parameters may be coordinated by design, however, it is better to use specific package functions for this purpose.
 
@@ -118,7 +117,7 @@ sd1
 
 ### Water balance for multiple days
 
-Most often, users will use function `spwb()` to run the soil water balance model. This function requires the `spwbInput` object and the meteorological data frame. However, function `spwb_day()` modified the state variables of the input objects. In particular, the values of soil moisture are now:
+Most often, users will use function `spwb()` to run the soil water balance model. This function requires the `spwbInput` object and the meteorological data frame. However, function `spwb_day()` by default modifies the state variables of the input objects. In particular, the values of soil moisture are now:
 ```{r}
 x$soil$W
 ```

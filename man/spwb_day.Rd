@@ -8,9 +8,11 @@ Function \code{spwb_day} performs water balance for a single day and \code{growt
 }
 \usage{
 spwb_day(x, date, tmin, tmax, rhmin, rhmax, rad, wind, 
-         latitude, elevation, slope, aspect, prec, runon = 0.0)
+         latitude, elevation, slope, aspect, prec, runon = 0.0,
+         modifyInput = TRUE)
 growth_day(x, date, tmin, tmax, rhmin, rhmax, rad, wind, 
-           latitude, elevation, slope, aspect, prec, runon = 0.0)
+           latitude, elevation, slope, aspect, prec, runon = 0.0,
+           modifyInput = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -24,6 +26,7 @@ growth_day(x, date, tmin, tmax, rhmin, rhmax, rad, wind,
   \item{latitude}{Latitude (in degrees). Required when using the 'Sperry' transpiration mode.}
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Sperry' transpiration mode.}
   \item{runon}{Surface water amount running on the target area from upslope (in mm).}
+  \item{modifyInput}{Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.}
 }
 \details{
   Detailed model description is available in the vignettes section. The model using 'Granier' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Sperry' transpiration mode are computationally much more expensive, are described in De Cáceres et al. (2021) and are illustrated by function \code{\link{transp_transpirationSperry}}. 
@@ -64,9 +67,6 @@ De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-}
-\note{
-Object \code{x} is modified during the simulation, unless control parameter \code{modifyInput = FALSE}.
 }
 \seealso{
 \code{\link{spwbInput}}, \code{\link{spwb}},  \code{\link{plot.spwb_day}},  

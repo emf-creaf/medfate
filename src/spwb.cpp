@@ -356,11 +356,11 @@ List spwbDay2(List x, NumericVector meteovec,
 // [[Rcpp::export("spwb_day")]]
 List spwbDay(List x, CharacterVector date, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
             double latitude, double elevation, double slope, double aspect,  
-            double prec, double runon=0.0) {
+            double prec, double runon=0.0, bool modifyInput = true) {
   //Control parameters
   List control = x["control"];
   bool verbose = control["verbose"];
-  bool modifyInput = control["modifyInput"];
+  
   bool leafPhenology = control["leafPhenology"];
   String transpirationMode = control["transpirationMode"];
   double Catm = control["Catm"];
@@ -1061,7 +1061,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   String soilFunctions = control["soilFunctions"];
   String cavitationRefill = control["cavitationRefill"];
   bool verbose = control["verbose"];
-  bool modifyInput = control["modifyInput"];
+  
   bool subdailyResults = control["subdailyResults"];
   bool leafPhenology = control["leafPhenology"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
@@ -1069,13 +1069,8 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   checkspwbInput(x,transpirationMode, soilFunctions);
   
   //Store input
-  List spwbInput;
-  if(modifyInput) {
-    spwbInput = clone(x); // Will modify x and return the unmodified object
-  } else {
-    x = clone(x);
-    spwbInput = x; //Will not modified input x and return the final modified object
-  }
+  List spwbInput = x; // Store initial object
+  x = clone(x); //Ensure a copy will be modified
   
   List soil = x["soil"];
   
@@ -1353,6 +1348,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
                      Named("topography") = topo,
                      Named("weather") = clone(meteo),
                      Named("spwbInput") = spwbInput,
+                     Named("spwbOutput") = clone(x),
                      Named("WaterBalance")=DWB, 
                      Named("Soil")=SWB,
                      Named("Stand")=Stand, 
@@ -1363,6 +1359,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
                      Named("topography") = topo,
                      Named("weather") = clone(meteo),
                      Named("spwbInput") = spwbInput,
+                     Named("spwbOutput") = clone(x),
                      Named("WaterBalance")=DWB, 
                      Named("EnergyBalance") = DEB,
                      Named("Temperature") = DT,
@@ -1391,19 +1388,13 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   String soilFunctions = control["soilFunctions"];
   String cavitationRefill = control["cavitationRefill"];
   bool verbose = control["verbose"];
-  bool modifyInput = control["modifyInput"];
   bool subdailyResults = control["subdailyResults"];
   bool leafPhenology = control["leafPhenology"];
   bool multiLayerBalance = control["multiLayerBalance"];
   
   //Store input
-  List spwbInput;
-  if(modifyInput) {
-    spwbInput = clone(x); // Will modify x and return the unmodified object
-  } else {
-    x = clone(x);
-    spwbInput = x; //Will not modified input x and return the final modified object
-  }
+  List spwbInput = x; // Store initial object
+  x = clone(x); //Ensure a copy will be modified
   
   
   List soil = x["soil"];
@@ -1725,6 +1716,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
                      Named("topography") = topo,
                      Named("weather") = clone(meteo),
                      Named("spwbInput") = spwbInput,
+                     Named("spwbOutput") = clone(x),
                      Named("WaterBalance")=DWB, 
                      Named("Soil")=SWB,
                      Named("Stand") =Stand,
@@ -1735,6 +1727,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
                      Named("topography") = topo,
                      Named("weather") = clone(meteo),
                      Named("spwbInput") = spwbInput,
+                     Named("spwbOutput") = clone(x),
                      Named("WaterBalance")=DWB, 
                      Named("EnergyBalance") = DEB,
                      Named("Temperature") = DT,

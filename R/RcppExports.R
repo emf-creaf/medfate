@@ -301,8 +301,8 @@ mortality_dailyProbability <- function(basalMortalityRate, stressValue, stressTh
     .Call(`_medfate_dailyMortalityProbability`, basalMortalityRate, stressValue, stressThreshold, minValue, exponent)
 }
 
-growth_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon = 0.0) {
-    .Call(`_medfate_growthDay`, x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon)
+growth_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon = 0.0, modifyInput = TRUE) {
+    .Call(`_medfate_growthDay`, x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon, modifyInput)
 }
 
 growth <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
@@ -901,8 +901,8 @@ soil_thermalConductivity <- function(soil, model = "SX") {
     .Call(`_medfate_thermalConductivity`, soil, model)
 }
 
-spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon = 0.0) {
-    .Call(`_medfate_spwbDay`, x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon)
+spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon = 0.0, modifyInput = TRUE) {
+    .Call(`_medfate_spwbDay`, x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon, modifyInput)
 }
 
 spwb <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {

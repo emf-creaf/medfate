@@ -44,6 +44,7 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
   \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.} 
   \item{\code{"weather"}: A copy of the input weather data frame.}
   \item{\code{"growthInput"}: A copy of the object \code{x} of class \code{\link{growthInput}} given as input.}
+  \item{\code{"growthOutput"}: An copy of the final state of the object \code{x} of class \code{\link{growthInput}}.}
   \item{\code{"WaterBalance"}: A data frame where different water balance variables (see \code{\link{spwb}}).}
   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
   \item{\code{"BiomassBalance"}: A data frame with the daily values of biomass balance components.}
@@ -102,9 +103,6 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-}
-\note{
-Objects \code{x} and \code{soil} are modified during the simulation.   
 }
 \seealso{
 \code{\link{growthInput}}, \code{\link{growth_day}}, \code{\link{plot.growth}}

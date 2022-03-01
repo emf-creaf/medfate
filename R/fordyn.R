@@ -126,7 +126,6 @@ fordyn<-function(forest, soil, SpParams,
   
   # Modify control parameters
   verboseDyn = control$verbose
-  control$modifyInput = FALSE
   control$verbose = FALSE
   control$subdailyResults = FALSE
   
@@ -184,7 +183,7 @@ fordyn<-function(forest, soil, SpParams,
     growthResults[[iYear]] = Gi
     
     # 1.3 Retrieve modified growth output
-    xo = Gi$growthInput
+    xo = Gi$growthOutput
     
     # 2.2 Update dead tree/shrub tables
     deadTreeTableYear = .createDeadTreeTable(iYear, year, xo)
