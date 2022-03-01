@@ -242,6 +242,9 @@
     if(type_out=="growth" && any(paste0("BAI_", cohorts_out) %in% names(measuredData))) {
       eval_choices[["Basal area increment"]] = "BAI"
     }
+    if(type_out=="growth" && any(paste0("DI_", cohorts_out) %in% names(measuredData))) {
+      eval_choices[["Diameter increment"]] = "DI"
+    }
     if(type_out=="growth" && any(paste0("DBH_", cohorts_out) %in% names(measuredData))) {
       eval_choices[["Diameter at breast height"]] = "DBH"
     }
@@ -358,7 +361,7 @@
       observe({
         eval_plot <- input$eval_type
         sub_choices <- NULL
-        if(eval_plot %in% c("E", "BAI", "DBH", "Height", "FMC")) {
+        if(eval_plot %in% c("E", "BAI", "DI", "DBH", "Height", "FMC")) {
           sel = paste0(eval_plot,"_", cohorts_out) %in% names(measuredData)
           sub_choices = cohorts_out[sel]
           names(sub_choices) = cohorts_sp_out[sel]
