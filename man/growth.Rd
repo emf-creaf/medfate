@@ -90,9 +90,9 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
     }
   \item{\code{"GrowthMortality"}: A list of daily growth and mortality rates for plant cohorts, with elements:}
     \itemize{
-        \item{\code{"LAgrowth"}: Leaf area growth relative to sapwood area (in m2·cm-2·day-1) for an average individual of each plant cohort.}
-        \item{\code{"SAgrowth"}: Sapwood area relative growth rate (in cm2·cm-2·day-1) for an average individual of each plant cohort.}
-        \item{\code{"FRAgrowth"}: Fine root area growth relative to sapwood area (in m2·cm-2·day-1) for an average individual of each plant cohort.}
+        \item{\code{"LAgrowth"}: Leaf area growth (in m2·day-1) for an average individual of each plant cohort.}
+        \item{\code{"SAgrowth"}: Sapwood area growth rate (in cm2·day-1) for an average individual of each plant cohort.}
+        \item{\code{"FRAgrowth"}: Fine root area growth (in m2·day-1) for an average individual of each plant cohort.}
         \item{\code{"StarvationRate"}: Daily mortality rate from starvation (ind/d-1).}
         \item{\code{"DessicationRate"}: Daily mortality rate from dessication (ind/d-1).}
         \item{\code{"MortalityRate"}: Daily mortality rate (any cause) (ind/d-1).}

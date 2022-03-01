@@ -784,12 +784,12 @@ List growthDay1(List x, NumericVector meteovec,
       FineRootArea[j] = fineRootBiomass[j]*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4;
       SapwoodBiomass[j] = sapwoodStructuralBiomass(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j]);
       LeafBiomass[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
-      SAgrowth[j] += deltaSAgrowth[j]/SAprev; //Store sapwood area growth rate (cm2/cm2)
-      LAgrowth[j] += deltaLAgrowth[j]/SAprev;//Store Leaf area growth rate in relation to sapwood area (m2/cm2)
+      SAgrowth[j] += deltaSAgrowth[j]; //Store sapwood area growth rate (cm2/day)
+      LAgrowth[j] += deltaLAgrowth[j];//Store Leaf area growth rate (m2/day)
       LeafArea[j] = LAexpanded;
       HuberValue[j] = SA[j]/leafAreaTarget[j]; 
       RootAreaLeafArea[j] = FineRootArea[j]/leafAreaTarget[j]; 
-      FRAgrowth[j] = sum(deltaFRBgrowth)*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4/SA[j];//Store fine root area growth rate (m2·cm-2·d-1)
+      FRAgrowth[j] = sum(deltaFRBgrowth)*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4;//Store fine root area growth rate (m2·d-1)
     }
   }
   
@@ -1546,9 +1546,9 @@ List growthDay2(List x, NumericVector meteovec,
       FineRootArea[j] = fineRootBiomass[j]*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4;
       HuberValue[j] = SA[j]/leafAreaTarget[j]; 
       RootAreaLeafArea[j] = FineRootArea[j]/leafAreaTarget[j]; 
-      LAgrowth[j] += deltaLAgrowth[j]/SAprev;//Store Leaf area growth rate in relation to sapwood area (m2·cm-2·d-1)
-      SAgrowth[j] += deltaSAgrowth[j]/SAprev; //Store sapwood area growth rate (cm2·cm-2·d-1)
-      FRAgrowth[j] = sum(deltaFRBgrowth)*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4/SA[j];//Store fine root area growth rate (m2·cm-2·d-1)
+      LAgrowth[j] += deltaLAgrowth[j];//Store Leaf area growth rate (m2·d-1)
+      SAgrowth[j] += deltaSAgrowth[j]; //Store sapwood area growth rate (cm2·d-1)
+      FRAgrowth[j] = sum(deltaFRBgrowth)*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4;//Store fine root area growth rate (m2·d-1)
 
     }
   }

@@ -41,20 +41,22 @@ data(SpParamsMED)
 examplesoil1 = soil(defaultSoilParams(4))
 control = defaultControl("Granier")
 x1 = forest2growthInput(exampleforestMED,examplesoil1, SpParamsMED, control)
+DBH_ini_PH = x1$above[PH_cohName, "DBH"]
+DBH_ini_QI = x1$above[QI_cohName, "DBH"]
 S1<-growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 fmc<-moisture_cohortFMC(S1, SpParamsMED)
+DI_PH = S1$PlantStructure$DBH[,PH_cohName] - c(DBH_ini_PH, S1$PlantStructure$DBH[-nrow(examplemeteo),PH_cohName])
+DI_QI = S1$PlantStructure$DBH[,QI_cohName] - c(DBH_ini_QI, S1$PlantStructure$DBH[-nrow(examplemeteo),QI_cohName])
 exampleobs = data.frame(SWC = S1$Soil$W.1*(soil_thetaFC(examplesoil1)[1]), 
              ETR  = S1$WaterBalance$Evapotranspiration, 
              E_PH = S1$Plants$Transpiration[,PH_cohName]/x1$above[PH_cohName,"LAI_expanded"],
              E_QI = S1$Plants$Transpiration[,QI_cohName]/x1$above[QI_cohName,"LAI_expanded"],
              FMC_PH= fmc[,PH_cohName],
              FMC_QI = fmc[,QI_cohName],
-             BAI_PH = S1$PlantStructure$SapwoodArea[,PH_cohName]*S1$GrowthMortality$SAgrowth[,PH_cohName],
-             BAI_QI = S1$PlantStructure$SapwoodArea[,QI_cohName]*S1$GrowthMortality$SAgrowth[,QI_cohName],
-             DBH_PH = S1$PlantStructure$DBH[,PH_cohName],
-             DBH_QI = S1$PlantStructure$DBH[,QI_cohName],
-             Height_PH = S1$PlantStructure$Height[,PH_cohName],
-             Height_QI = S1$PlantStructure$Height[,QI_cohName])
+             BAI_PH = S1$GrowthMortality$SAgrowth[,PH_cohName],
+             BAI_QI = S1$GrowthMortality$SAgrowth[,QI_cohName],
+             DI_PH = DI_PH,
+             DI_QI = DI_QI)
 #Add normal error
 exampleobs$SWC = exampleobs$SWC + rnorm(nrow(exampleobs), mean = 0, sd = sd(exampleobs$SWC)/4)
 exampleobs$ETR = exampleobs$ETR + rnorm(nrow(exampleobs), mean = 0, sd = sd(exampleobs$ETR)/4)
@@ -62,28 +64,14 @@ exampleobs$E_PH = exampleobs$E_PH + rnorm(nrow(exampleobs), mean = 0, sd = sd(ex
 exampleobs$E_QI = exampleobs$E_QI + rnorm(nrow(exampleobs), mean = 0, sd = sd(exampleobs$E_QI)/4)
 exampleobs$FMC_PH = exampleobs$FMC_PH + rnorm(nrow(exampleobs), mean = 0, sd = sd(exampleobs$FMC_PH)/4)
 exampleobs$FMC_QI = exampleobs$FMC_QI + rnorm(nrow(exampleobs), mean = 0, sd = sd(exampleobs$FMC_QI)/4)
-for(i in 1:nrow(exampleobs)) {
-  m = exp(rnorm(1, mean = 0, sd = 0.5))
-  exampleobs$BAI_PH[i] = exampleobs$BAI_PH[i]*m
-  m = exp(rnorm(1, mean = 0, sd = 1))
-  if(i<nrow(exampleobs)) {
-    exampleobs$DBH_PH[i+1] = exampleobs$DBH_PH[i] + max(0, (exampleobs$DBH_PH[i+1]-exampleobs$DBH_PH[i])*m)
-    exampleobs$Height_PH[i+1] = exampleobs$Height_PH[i] +  max(0, (exampleobs$Height_PH[i+1]-exampleobs$Height_PH[i])*m)
-  }
-  
-  m = exp(rnorm(1, mean = 0, sd = 0.5))
-  exampleobs$BAI_QI[i] = exampleobs$BAI_QI[i]*m
-  m = exp(rnorm(1, mean = 0, sd = 1))
-  if(i<nrow(exampleobs)) {
-    exampleobs$DBH_QI[i+1] = exampleobs$DBH_QI[i] +  max(0, (exampleobs$DBH_QI[i+1]-exampleobs$DBH_QI[i])*m)
-    exampleobs$Height_QI[i+1] = exampleobs$Height_QI[i] +  max(0, (exampleobs$Height_QI[i+1]-exampleobs$Height_QI[i])*m)
-  }
-}
-names(exampleobs)[3:12] = c(paste0("E_",PH_cohName), paste0("E_",QI_cohName),
+exampleobs$BAI_PH = exampleobs$BAI_PH*exp(rnorm(nrow(exampleobs), mean = 0, sd = 0.5))
+exampleobs$BAI_QI = exampleobs$BAI_QI*exp(rnorm(nrow(exampleobs), mean = 0, sd = 0.5))
+exampleobs$DI_PH = exampleobs$DI_PH*exp(rnorm(nrow(exampleobs), mean = 0, sd = 0.5))
+exampleobs$DI_QI = exampleobs$DI_QI*exp(rnorm(nrow(exampleobs), mean = 0, sd = 0.5))
+names(exampleobs)[3:10] = c(paste0("E_",PH_cohName), paste0("E_",QI_cohName),
                            paste0("FMC_",PH_cohName),paste0("FMC_",QI_cohName),
                            paste0("BAI_",PH_cohName),paste0("BAI_",QI_cohName),
-                           paste0("DBH_",PH_cohName),paste0("DBH_",QI_cohName),
-                           paste0("Height_",PH_cohName),paste0("Height_",QI_cohName))
+                           paste0("DI_",PH_cohName),paste0("DI_",QI_cohName))
 
 usethis::use_data(exampleobs, overwrite = T)
 
