@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.2</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Basic water balance</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-02-28</h4>
+            <h4 data-toc-skip class="date">2022-03-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/BasicWaterBalance.Rmd" class="external-link"><code>vignettes/BasicWaterBalance.Rmd</code></a></small>
       <div class="hidden name"><code>BasicWaterBalance.Rmd</code></div>
@@ -183,7 +183,6 @@
 <span class="co">## [10] "paramsInterception"  "paramsTranspiration" "internalPhenology"  </span>
 <span class="co">## [13] "internalWater"</span></code></pre>
 <p>Note that (since <strong>ver 2.0</strong>) the water balance input object contains an element <code>soil</code> with the soil input.</p>
-<p>It is important to remember that, unlike normal objects in R, any water balance simulation will modify the <code>spwbInput</code> object. For example, the state of the soil at the end of the simulated process (i.e. <code>W</code>) will be stored. Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next. In the case of soil water balance, these modifications are small, for example concerning <code>LAI_expanded</code>, but in the case of growth simulations the object is used to store the status of vegetation during and at the end of simulations.</p>
 <p>Finally, note that users can set cohort-specific parameters for soil water balance (instead of using species-level values) by modifying manually the parameter values in this object. Since some parameters may be coordinated by design, however, it is better to use specific package functions for this purpose.</p>
 </div>
 </div>
@@ -263,7 +262,7 @@
 <div class="section level3">
 <h3 id="water-balance-for-multiple-days">Water balance for multiple days<a class="anchor" aria-label="anchor" href="#water-balance-for-multiple-days"></a>
 </h3>
-<p>Most often, users will use function <code><a href="../reference/spwb.html">spwb()</a></code> to run the soil water balance model. This function requires the <code>spwbInput</code> object and the meteorological data frame. However, function <code><a href="../reference/spwb_day.html">spwb_day()</a></code> modified the state variables of the input objects. In particular, the values of soil moisture are now:</p>
+<p>Most often, users will use function <code><a href="../reference/spwb.html">spwb()</a></code> to run the soil water balance model. This function requires the <code>spwbInput</code> object and the meteorological data frame. However, function <code><a href="../reference/spwb_day.html">spwb_day()</a></code> by default modifies the state variables of the input objects. In particular, the values of soil moisture are now:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">W</span></code></pre></div>
 <pre><code><span class="co">## [1] 0.9862766 0.9950403 0.9982639 0.9985703</span></code></pre>
@@ -300,8 +299,8 @@
 <p>If we inspect its elements, we realize that the output is arranged differently than in <code><a href="../reference/spwb_day.html">spwb_day()</a></code>:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] "latitude"     "topography"   "weather"      "spwbInput"    "WaterBalance"</span>
-<span class="co">## [6] "Soil"         "Stand"        "Plants"       "subdaily"</span></code></pre>
+<pre><code><span class="co">##  [1] "latitude"     "topography"   "weather"      "spwbInput"    "spwbOutput"  </span>
+<span class="co">##  [6] "WaterBalance" "Soil"         "Stand"        "Plants"       "subdaily"</span></code></pre>
 <p>In particular, element <code>spwbInput</code> contains a copy of the input parameters that were used to run the model:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">spwbInput</span><span class="op">)</span></code></pre></div>

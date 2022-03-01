@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.2</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Forest growth</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-02-28</h4>
+            <h4 data-toc-skip class="date">2022-03-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/ForestGrowth.Rmd" class="external-link"><code>vignettes/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -279,14 +279,14 @@
 <p>As we indicated above, the <code><a href="../reference/growth.html">growth()</a></code> simulations modify (by default) the <code>growthInput</code> object. We can check this comparing the initial values in element <code>above</code> with the current ones:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">above</span></code></pre></div>
-<pre><code><span class="co">##         SP        N      DBH    Cover         H        CR         SA   LAI_live</span>
-<span class="co">## T1_148 148 168.0000 38.02700       NA 814.22519 0.6577287 445.264784 0.98747492</span>
-<span class="co">## T2_168 168 384.0000 14.86984       NA 668.78888 0.6032997  98.381315 0.95143399</span>
-<span class="co">## S1_165 165 749.4923       NA 2.774878  70.59701 0.8032817   1.319418 0.04114946</span>
-<span class="co">##        LAI_expanded     LAI_dead</span>
-<span class="co">## T1_148   0.96340535 1.281620e-24</span>
-<span class="co">## T2_168   0.92767082 1.123437e-24</span>
-<span class="co">## S1_165   0.03928201 2.336671e-32</span></code></pre>
+<pre><code><span class="co">##         SP        N   DBH Cover   H        CR         SA   LAI_live</span>
+<span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 437.032040 0.96734365</span>
+<span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642  96.506387 0.93111690</span>
+<span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817   1.251072 0.03928201</span>
+<span class="co">##        LAI_expanded LAI_dead</span>
+<span class="co">## T1_148   0.96734365        0</span>
+<span class="co">## T2_168   0.93111690        0</span>
+<span class="co">## S1_165   0.03928201        0</span></code></pre>
 <p>but elements starting with <code>internal*</code>, containing state variables, are also modified. This behaviour is intended to be used to concatenate consecutive calls to <code><a href="../reference/growth.html">growth()</a></code> with the same object.</p>
 <p>Function <code><a href="../reference/growth.html">growth()</a></code> returns an object of class with the same name, actually a list:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
@@ -296,10 +296,10 @@
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">G1</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "latitude"            "topography"          "weather"            </span>
-<span class="co">##  [4] "growthInput"         "WaterBalance"        "BiomassBalance"     </span>
-<span class="co">##  [7] "Soil"                "Stand"               "Plants"             </span>
-<span class="co">## [10] "LabileCarbonBalance" "PlantBiomassBalance" "PlantStructure"     </span>
-<span class="co">## [13] "GrowthMortality"     "subdaily"</span></code></pre>
+<span class="co">##  [4] "growthInput"         "growthOutput"        "WaterBalance"       </span>
+<span class="co">##  [7] "BiomassBalance"      "Soil"                "Stand"              </span>
+<span class="co">## [10] "Plants"              "LabileCarbonBalance" "PlantBiomassBalance"</span>
+<span class="co">## [13] "PlantStructure"      "GrowthMortality"     "subdaily"</span></code></pre>
 <p>The new list elements, with respect to the output of function <code><a href="../reference/spwb.html">spwb()</a></code>, are <code>LabileCarbonBalance</code> (components of the labile carbon balance), <code>PlantBiomassBalance</code> (plant- and cohort-level biomass balance), <code>PlantStructure</code> (daily series of structural variables) and <code>GrowthMortality</code> (daily growth and mortality rates).</p>
 </div>
 <div class="section level2">
@@ -357,22 +357,23 @@
 <p>Here, we illustrate the evaluation functions included in the package using a fake data set, consisting on the predicted values and some added error.</p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></code></pre></div>
-<p>Normally growth evaluations will be at annual scale, but here we only have one year of simulated growth. Assuming we want to evaluate the predictive capacity of the model in terms of monthly basal area increment for the pine cohort, we can plot the relationship using function <code><a href="../reference/evaluation.html">evaluation_plot()</a></code>:</p>
+<p>Normally growth evaluations will be at annual scale, but here we only have one year of simulated growth. Assuming we want to evaluate the predictive capacity of the model in terms of monthly basal area increment for the pine cohort, we can plot the relationship between observed and predicted values using function <code><a href="../reference/evaluation.html">evaluation_plot()</a></code>:</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, 
                 temporalResolution <span class="op">=</span> <span class="st">"month"</span>, plotType <span class="op">=</span> <span class="st">"scatter"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## `geom_smooth()` using formula 'y ~ x'</span></code></pre>
-<p><img src="ForestGrowth_files/figure-html/unnamed-chunk-27-1.png" width="384"> And the following would help us quantifying the relationship:</p>
+<p><img src="ForestGrowth_files/figure-html/unnamed-chunk-27-1.png" width="384"></p>
+<p>And the following would help us quantifying the strength of the relationship:</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, 
                  temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span>
-<span class="co">##  12.0000000  -0.3818151 -13.9251933   0.3821802  13.9385069   0.9943580 </span>
-<span class="co">##         NSE     NSE.abs </span>
-<span class="co">##   0.9408183   0.8476994</span></code></pre>
-<p>The observed data set is fake and the evaluation is unrealistically good. For illustrative purposes, one could also compare DBH values, here drawing the observed and predicted time series together:</p>
+<pre><code><span class="co">##          n       Bias   Bias.rel        MAE    MAE.rel          r        NSE </span>
+<span class="co">## 12.0000000 -0.2322918 -8.9626618  0.2614587 10.0880277  0.9930323  0.9657755 </span>
+<span class="co">##    NSE.abs </span>
+<span class="co">##  0.8886899</span></code></pre>
+<p>The observed data set is fake and the evaluation is unrealistically good. For illustrative purposes, we also compare diameter increment values, here drawing the observed and predicted time series together:</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"DBH"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, 
+<code class="sourceCode R"><span class="fu"><a href="../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"DI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, 
                 temporalResolution <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-29-1.png" width="672"></p>
 <p>Again, actual comparisons will be done at coarser temporal resolution. For convenience, function <code><a href="../reference/shinyplot.html">shinyplot()</a></code> also accepts an observed data frame as second argument, which allows performing model evaluation interactively:</p>

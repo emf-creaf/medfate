@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.2</span>
       </span>
     </div>
 
@@ -104,7 +104,8 @@
     <p>Function <code>spwb</code> returns a list of class 'spwb' whereas Function <code>pwb</code> returns a list of class 'pwb'. There are many elements in common in these lists, so they are listed here together:</p><ul><li><p><code>"latitude"</code>: Latitude (in degrees) given as input.</p></li>
 <li><p><code>"topography"</code>: Vector with elevation, slope and aspect given as input.</p></li>
 <li><p><code>"weather"</code>: A copy of the input weather data frame.</p></li>
-<li><p><code>"spwbInput"</code>: An (unmodified) copy of the object <code>x</code> of class <code><a href="modelInput.html">spwbInput</a></code> given as input  (note that <code>x</code> is modified by the simulation function).</p></li>
+<li><p><code>"spwbInput"</code>: An copy of the object <code>x</code> of class <code><a href="modelInput.html">spwbInput</a></code> given as input.</p></li>
+<li><p><code>"spwbOutput"</code>: An copy of the final state of the object <code>x</code> of class <code><a href="modelInput.html">spwbInput</a></code>.</p></li>
 <li><p><code>"WaterBalance"</code>: A data frame where different variables (in columns) are given for each simulated day (in rows):</p><ul><li><p><code>"PET"</code>: Potential evapotranspiration (in mm).</p></li>
 <li><p><code>"Precipitation"</code>: Input precipitation (in mm).</p></li>
 <li><p><code>"Rain"</code>: Precipitation as rain (in mm).</p></li>
@@ -179,10 +180,6 @@
     <div id="author">
     <h2>Author</h2>
     <p>Miquel De Cáceres Ainsa, CREAF</p>
-    </div>
-    <div id="note">
-    <h2>Note</h2>
-    <p>State variables stored in objects <code>x</code> are modified during the simulation, unless control parameter <code>modifyInput = FALSE</code>.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>

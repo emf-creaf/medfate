@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.2</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Advanced water and energy balance</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-02-28</h4>
+            <h4 data-toc-skip class="date">2022-03-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/AdvancedWaterEnergyBalance.Rmd" class="external-link"><code>vignettes/AdvancedWaterEnergyBalance.Rmd</code></a></small>
       <div class="hidden name"><code>AdvancedWaterEnergyBalance.Rmd</code></div>
@@ -652,10 +652,10 @@
 <div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "latitude"          "topography"        "weather"          </span>
-<span class="co">##  [4] "spwbInput"         "WaterBalance"      "EnergyBalance"    </span>
-<span class="co">##  [7] "Temperature"       "TemperatureLayers" "Soil"             </span>
-<span class="co">## [10] "Stand"             "Plants"            "SunlitLeaves"     </span>
-<span class="co">## [13] "ShadeLeaves"       "subdaily"</span></code></pre>
+<span class="co">##  [4] "spwbInput"         "spwbOutput"        "WaterBalance"     </span>
+<span class="co">##  [7] "EnergyBalance"     "Temperature"       "TemperatureLayers"</span>
+<span class="co">## [10] "Soil"              "Stand"             "Plants"           </span>
+<span class="co">## [13] "SunlitLeaves"      "ShadeLeaves"       "subdaily"</span></code></pre>
 <p>In particular, element <code>spwbInput</code> contains a copy of the input parameters that were used to run the model:</p>
 <div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">spwbInput</span><span class="op">)</span></code></pre></div>

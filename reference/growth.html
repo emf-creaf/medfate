@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.2</span>
       </span>
     </div>
 
@@ -94,6 +94,7 @@
 <li><p><code>"topography"</code>: Vector with elevation, slope and aspect given as input.</p></li>
 <li><p><code>"weather"</code>: A copy of the input weather data frame.</p></li>
 <li><p><code>"growthInput"</code>: A copy of the object <code>x</code> of class <code><a href="modelInput.html">growthInput</a></code> given as input.</p></li>
+<li><p><code>"growthOutput"</code>: An copy of the final state of the object <code>x</code> of class <code><a href="modelInput.html">growthInput</a></code>.</p></li>
 <li><p><code>"WaterBalance"</code>: A data frame where different water balance variables (see <code><a href="spwb.html">spwb</a></code>).</p></li>
 <li><p><code>"EnergyBalance"</code>: A data frame with the daily values of energy balance components for the soil and the canopy (only for <code>transpirationMode = "Sperry"</code>; see <code><a href="spwb.html">spwb</a></code>).</p></li>
 <li><p><code>"BiomassBalance"</code>: A data frame with the daily values of biomass balance components.</p></li>
@@ -132,9 +133,9 @@
 <li><p><code>"DBH"</code>: Diameter at breast height (in cm) for an average individual of each plant cohort.</p></li>
 <li><p><code>"Height"</code>: Height (in cm) for an average individual of each plant cohort.</p></li>
 </ul></li>
-<li><p><code>"GrowthMortality"</code>: A list of daily growth and mortality rates for plant cohorts, with elements:</p><ul><li><p><code>"LAgrowth"</code>: Leaf area growth relative to sapwood area (in m2·cm-2·day-1) for an average individual of each plant cohort.</p></li>
-<li><p><code>"SAgrowth"</code>: Sapwood area relative growth rate (in cm2·cm-2·day-1) for an average individual of each plant cohort.</p></li>
-<li><p><code>"FRAgrowth"</code>: Fine root area growth relative to sapwood area (in m2·cm-2·day-1) for an average individual of each plant cohort.</p></li>
+<li><p><code>"GrowthMortality"</code>: A list of daily growth and mortality rates for plant cohorts, with elements:</p><ul><li><p><code>"LAgrowth"</code>: Leaf area growth (in m2·day-1) for an average individual of each plant cohort.</p></li>
+<li><p><code>"SAgrowth"</code>: Sapwood area growth rate (in cm2·day-1) for an average individual of each plant cohort.</p></li>
+<li><p><code>"FRAgrowth"</code>: Fine root area growth (in m2·day-1) for an average individual of each plant cohort.</p></li>
 <li><p><code>"StarvationRate"</code>: Daily mortality rate from starvation (ind/d-1).</p></li>
 <li><p><code>"DessicationRate"</code>: Daily mortality rate from dessication (ind/d-1).</p></li>
 <li><p><code>"MortalityRate"</code>: Daily mortality rate (any cause) (ind/d-1).</p></li>
@@ -144,10 +145,6 @@
     <div id="author">
     <h2>Author</h2>
     <p>Miquel De Cáceres Ainsa, CREAF</p>
-    </div>
-    <div id="note">
-    <h2>Note</h2>
-    <p>Objects <code>x</code> and <code>soil</code> are modified during the simulation.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>

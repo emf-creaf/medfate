@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.2</span>
       </span>
     </div>
 
@@ -51,6 +51,10 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="2.6.2" id="version-262">Version 2.6.2<a class="anchor" aria-label="anchor" href="#version-262"></a></h2>
+<ul><li>Control parameter ‘modifyInput’ is no longer available. Functions ‘spwb’, ‘pwb’ and ‘growth’ do not modify input objects and return an element ‘spwbOutput’ or ‘growthOutput’ with a copy of the final state.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="2.6.1" id="version-261">Version 2.6.1<a class="anchor" aria-label="anchor" href="#version-261"></a></h2>
 <ul><li>Tree cover (open grown assumption)</li>
 <li>Parameters ‘ShrubCover’ and ‘CanopyCover’ no longer required in function fuel_FCCS</li>
@@ -59,7 +63,8 @@
 <li>Relative bias and relative MAE as evaluation metrics</li>
 <li>Drought-related leaf senescence only occurring if ‘StemPLC’ increases</li>
 <li>Embolized sapwood proportion discounted from sapwood maintenance respiration</li>
-<li>Evaluation of DBH and Height series</li>
+<li>Evaluation of diameter increment (DI), DBH and Height series</li>
+<li>Output growth rates not relative to sapwood area</li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="2.6.0" id="version-260">Version 2.6.0<a class="anchor" aria-label="anchor" href="#version-260"></a></h2>

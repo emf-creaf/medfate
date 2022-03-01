@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.2</span>
       </span>
     </div>
 
@@ -75,7 +75,7 @@
 <dt>measuredData</dt>
 <dd><p>A data frame with observed/measured values. Dates should be in row names, whereas columns should be named according to the type of output to be evaluated (see details).</p></dd>
 <dt>type</dt>
-<dd><p>A string with the kind of model output to be evaluated. Accepted values are <code>"SWC"</code> (soil moisture content), <code>"REW"</code> relative extractable water, <code>"ETR"</code> (total evapotranspiration), <code>"SE+TR"</code> (modelled soil evaporation + transpiration against observed total evapotranspiration), <code>"E"</code> (transpiration per leaf area), <code>"FMC"</code> (fuel moisture content), <code>"WP"</code> (plant water potentials), <code>"BAI"</code> (basal area increment), <code>"DBH"</code> (diameter at breast height) or <code>"Height"</code> (plant height).</p></dd>
+<dd><p>A string with the kind of model output to be evaluated. Accepted values are <code>"SWC"</code> (soil moisture content), <code>"REW"</code> relative extractable water, <code>"ETR"</code> (total evapotranspiration), <code>"SE+TR"</code> (modelled soil evaporation + transpiration against observed total evapotranspiration), <code>"E"</code> (transpiration per leaf area), <code>"FMC"</code> (fuel moisture content), <code>"WP"</code> (plant water potentials), <code>"BAI"</code> (basal area increment), <code>"DI"</code> (diameter increment), <code>"DBH"</code> (diameter at breast height) or <code>"Height"</code> (plant height).</p></dd>
 <dt>cohort</dt>
 <dd><p>A string of the cohort to be compared (e.g. "T1_68"). If <code>NULL</code> results for the first cohort will be evaluated.</p></dd>
 <dt>temporalResolution</dt>
@@ -101,6 +101,7 @@
 <li><p><code>"FMC"</code>: For each plant cohort whose transpiration is to be evaluated, a column starting with <code>"FCM_"</code> and continuing with a cohort name (e.g. <code>"FMC_T1_68"</code>) with fuel moisture content as percent of dry weight.</p></li>
 <li><p><code>"WP"</code>: For each plant cohort whose transpiration is to be evaluated, two columns, one starting with <code>"PD_"</code> (for pre-dawn) and the other with <code>"MD_"</code> (for midday), and continuing with a cohort name (e.g. <code>"PD_T1_68"</code>). They should contain leaf water potential values in MPa. These are compared against sunlit water potentials.</p></li>
 <li><p><code>"BAI"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"BAI_"</code> and continuing with a cohort name (e.g. <code>"BAI_T1_68"</code>) with basal area increment in cm2/day, cm2/week, cm2/month or cm2/year, depending on the temporal resolution.</p></li>
+<li><p><code>"DI"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"DI_"</code> and continuing with a cohort name (e.g. <code>"DI_T1_68"</code>) with basal area increment in cm/day, cm/week, cm/month or cm/year, depending on the temporal resolution.</p></li>
 <li><p><code>"DBH"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"DBH_"</code> and continuing with a cohort name (e.g. <code>"DBH_T1_68"</code>) with DBH values in cm.</p></li>
 <li><p><code>"Height"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"Height_"</code> and continuing with a cohort name (e.g. <code>"Height_T1_68"</code>) with Height values in cm.</p></li>
 </ul><p>Additional columns may exist with the standard error of measured quantities. These should be named as the referred quantity, followed by <code>"_err"</code> (e.g. <code>"PD_T1_68_err"</code>), and are used to draw confidence intervals around observations.</p>   
@@ -181,13 +182,13 @@
 <span class="r-in"><span class="co">#Evaluation statistics for soil water content</span></span>
 <span class="r-in"><span class="fu">evaluation_stats</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             n          Bias      Bias.rel           MAE       MAE.rel </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 365.000000000  -0.003394387  -1.214167434   0.005693216   2.036455668 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 365.000000000  -0.003054490  -1.093916885   0.005365242   1.921475841 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             r           NSE       NSE.abs </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.965278124   0.897323153   0.649571805 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.968017730   0.904540405   0.671871763 </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#NSE only</span></span>
 <span class="r-in"><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span>, metric<span class="op">=</span><span class="st">"NSE"</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.8973232</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.9045404</span>
 <span class="r-in"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Comparison of temporal dynamics</span></span>
@@ -196,7 +197,7 @@
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Loglikelihood value</span></span>
 <span class="r-in"><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1039.221</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1044.873</span>
 </code></pre></div>
     </div>
   </div>

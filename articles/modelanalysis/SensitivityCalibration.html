@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.2</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Sensitivity analysis and calibration</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-02-28</h4>
+            <h4 data-toc-skip class="date">2022-03-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/modelanalysis/SensitivityCalibration.Rmd" class="external-link"><code>vignettes/modelanalysis/SensitivityCalibration.Rmd</code></a></small>
       <div class="hidden name"><code>SensitivityCalibration.Rmd</code></div>
@@ -93,7 +93,7 @@
 <p>As an example data set we will use here the same data sets provided to illustrate simulation functions in <strong>medfate</strong>. We begin by loading the package and the example forest data:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/" class="external-link">medfate</a></span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Package 'medfate' [ver. 2.6.1]</span></code></pre>
+<pre><code><span class="co">## Package 'medfate' [ver. 2.6.2]</span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span>
 <span class="va">exampleforestMED</span></code></pre></div>
@@ -253,7 +253,7 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <pre><code><span class="co">## [1] 55.93925</span></code></pre>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_transp</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 296.834</span></code></pre>
+<pre><code><span class="co">## [1] 296.8383</span></code></pre>
 <p>It is important to understand the steps that are done when we call <code>of_transp()</code>:</p>
 <ol style="list-style-type: decimal">
 <li>The function <code>of_transp()</code> calls <code><a href="../../reference/spwb.html">spwb()</a></code> using all the parameters specified in its construction (i.e. in the call to the function factory), except for the input factors indicated in <code>parNames</code>, which are specified as input at the time of calling <code>of_transp()</code>.</li>
@@ -267,40 +267,33 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
                                  latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>,
                                  summary_function <span class="op">=</span> <span class="va">sf_stress</span><span class="op">)</span>
 <span class="fu">of_stress</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.6793884</span></code></pre>
+<pre><code><span class="co">## [1] 0.6671017</span></code></pre>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_stress</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 119.7895</span></code></pre>
+<pre><code><span class="co">## [1] 119.7577</span></code></pre>
 <p>As mentioned above, another kind of output function can be the evaluation of model performance. Here we will assume that performance in terms of predictability of soil water content is desired; and use a data set of ‘observed’ values (actually simulated values with gaussian error) as reference:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##                  SWC       ETR   E_T1_148  E_T2_168 FMC_T1_148 FMC_T2_168</span>
-<span class="co">## 2001-01-01 0.3052310 2.6369963 0.14894609 0.2105161   125.7450   93.02873</span>
-<span class="co">## 2001-01-02 0.3014630 2.7498606 0.20978835 0.2388032   125.6583   93.03232</span>
-<span class="co">## 2001-01-03 0.2953839 0.6120317 0.18544797 0.2285990   125.8143   93.01820</span>
-<span class="co">## 2001-01-04 0.2978617 2.1177695 0.07709484 0.1259018   125.8329   93.05593</span>
-<span class="co">## 2001-01-05 0.3033394 2.0612671 0.37479429 0.3414785   125.7902   93.01687</span>
-<span class="co">## 2001-01-06 0.2974828 2.5859089 0.23207644 0.1008629   125.7180   93.02116</span>
-<span class="co">##            BAI_T1_148 BAI_T2_168 DBH_T1_148 DBH_T2_168 Height_T1_148</span>
-<span class="co">## 2001-01-01          0          0      37.55       14.6           800</span>
-<span class="co">## 2001-01-02          0          0      37.55       14.6           800</span>
-<span class="co">## 2001-01-03          0          0      37.55       14.6           800</span>
-<span class="co">## 2001-01-04          0          0      37.55       14.6           800</span>
-<span class="co">## 2001-01-05          0          0      37.55       14.6           800</span>
-<span class="co">## 2001-01-06          0          0      37.55       14.6           800</span>
-<span class="co">##            Height_T2_168</span>
-<span class="co">## 2001-01-01           660</span>
-<span class="co">## 2001-01-02           660</span>
-<span class="co">## 2001-01-03           660</span>
-<span class="co">## 2001-01-04           660</span>
-<span class="co">## 2001-01-05           660</span>
-<span class="co">## 2001-01-06           660</span></code></pre>
+<pre><code><span class="co">##                  SWC       ETR   E_T1_148   E_T2_168 FMC_T1_148 FMC_T2_168</span>
+<span class="co">## 2001-01-01 0.3036752 2.3185329 0.17356184 0.09485793   125.7665   93.02852</span>
+<span class="co">## 2001-01-02 0.3058060 2.5900378 0.22866515 0.23774705   125.7604   93.02888</span>
+<span class="co">## 2001-01-03 0.3002824 0.5741025 0.17375769 0.19200715   125.6374   92.99245</span>
+<span class="co">## 2001-01-04 0.3038575 1.9898945 0.01138068 0.11740145   125.6605   93.04688</span>
+<span class="co">## 2001-01-05 0.2943251 2.0922785 0.25794855 0.33700697   125.7246   93.04958</span>
+<span class="co">## 2001-01-06 0.2993661 2.2977425 0.16884854 0.24076690   125.7059   93.02410</span>
+<span class="co">##            BAI_T1_148 BAI_T2_168 DI_T1_148 DI_T2_168</span>
+<span class="co">## 2001-01-01          0          0         0         0</span>
+<span class="co">## 2001-01-02          0          0         0         0</span>
+<span class="co">## 2001-01-03          0          0         0         0</span>
+<span class="co">## 2001-01-04          0          0         0         0</span>
+<span class="co">## 2001-01-05          0          0         0         0</span>
+<span class="co">## 2001-01-06          0          0         0         0</span></code></pre>
 <p>where soil water content dynamics is in column <code>SWC</code>. The model fit to observed data can be measured using the Nash-Sutcliffe coefficient, which we calculate for the initial run using function <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code>:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_metric</a></span><span class="op">(</span><span class="va">S1</span>, measuredData <span class="op">=</span> <span class="va">exampleobs</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, 
                   metric <span class="op">=</span> <span class="st">"NSE"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.8973232</span></code></pre>
+<pre><code><span class="co">## [1] 0.9045404</span></code></pre>
 <p>A call to <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code> provides the coefficient given a model simulation result, but is not a model output function as we defined above. Analogously to the measures of total transpiration and average plant stress, we can use a function factory to define a model output function that takes input factors as inputs, runs the model and performs the evaluation:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">of_eval</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/optimization.html">optimization_evaluation_function</a></span><span class="op">(</span>parNames <span class="op">=</span> <span class="va">parNames</span>,
@@ -311,10 +304,10 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <p>Function <code>of_eval()</code> stores internally both the data needed for conducting simulations and the data needed for evaluating simulation results, so that we only need to provide values for the input factors:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.1150455</span></code></pre>
+<pre><code><span class="co">## [1] 0.09354154</span></code></pre>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] -3.712904</span></code></pre>
+<pre><code><span class="co">## [1] -3.649056</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="global-sensitivity-analyses">Global sensitivity analyses<a class="anchor" aria-label="anchor" href="#global-sensitivity-analyses"></a>
