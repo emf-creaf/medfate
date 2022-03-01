@@ -150,7 +150,7 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
   }  
   else if(type=="DI") {
     DBH = out$PlantStructure$DBH
-    DI = DBH - rbind(out$growthInput$above$DBH, DBH[-nrow(DBH),])
+    DI = DBH - rbind(modelInput$above$DBH, DBH[-nrow(DBH),])
     d = rownames(DI)
     spnames = modelInput$cohorts$Name
     allcohnames = row.names(modelInput$cohorts)
