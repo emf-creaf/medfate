@@ -92,8 +92,6 @@ Element `above` contains the above-ground structure data that we already know, b
 x$above
 ```
 
-Unless indicated in the control parameters, the `growthInput` object will be modified during simulations. In the case of `growth()`, these modifications concern all structural variables in element `above` as well as other state variables such as carbon storage levels and allocation targets.
-
 Elements starting with `params*` contain cohort-specific model parameters. Some of them were already presented in previous vignettes ([*Basic water balance*](https://emf-creaf.github.io/medfate/articles/BasicWaterBalance.html) and [*Advanced water balance*](https://emf-creaf.github.io/medfate/articles/AdvancedWaterBalance.html)). An important set of new cohort-specific parameters for the forest growth model are `paramsGrowth`:
 ```{r}
 x$paramsGrowth
@@ -124,13 +122,6 @@ G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
 
 At the end of daily simulations, the `growth()` function displays information regarding the carbon and water balance, which is mostly useful to check that balances are closed. 
 
-As we indicated above, the `growth()` simulations modify (by default) the `growthInput` object. We can check this comparing the initial values in element `above` with the current ones:
-
-```{r}
-x$above
-```
-
-but elements starting with `internal*`, containing state variables, are also modified. This behaviour is intended to be used to concatenate consecutive calls to `growth()` with the same object.
 
 Function `growth()` returns an object of class with the same name, actually a list:
 ```{r}
@@ -141,7 +132,7 @@ If we inspect its elements, we realize that some of them are the same as returne
 names(G1)
 ```
 
-The new list elements, with respect to the output of function `spwb()`, are `LabileCarbonBalance` (components of the labile carbon balance), `PlantBiomassBalance` (plant- and cohort-level biomass balance), `PlantStructure` (daily series of structural variables) and `GrowthMortality` (daily growth and mortality rates).
+Some elements are common with the output of `spwb()`. In particular, `growthInput` contains a copy of the input object, whereas `growthOutput` contains the same object, but with values of state variables at the end of simulation. The new list elements, with respect to the output of function `spwb()`, are `LabileCarbonBalance` (components of the labile carbon balance), `PlantBiomassBalance` (plant- and cohort-level biomass balance), `PlantStructure` (daily series of structural variables) and `GrowthMortality` (daily growth and mortality rates).
 
 
 ## Plots and summaries
@@ -188,7 +179,7 @@ shinyplot(G1)
 
 ## Growth evaluation
 
-Evaluation of growth simulations will normally imply the comparison of predicted vs observed basal area increment (BAI) at a given temporal resolution or the comparison of predicted vs observed tree diameter or plant height. 
+Evaluation of growth simulations will normally imply the comparison of predicted vs observed basal area increment (BAI) or diameter increment at a given temporal resolution. 
 
 Here, we illustrate the evaluation functions included in the package using a fake data set, consisting on the predicted values and some added error.
 ```{r}

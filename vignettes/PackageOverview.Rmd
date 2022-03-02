@@ -97,7 +97,6 @@ Sub-model functions are grouped by *subject*, which is included in the name of t
 -   `photo_*`: Leaf photosynthesis.
 -   `root_*`: Root distribution and conductance calculations.
 -   `soil_*`: Soil hydraulics and thermodynamics.
--   `spwb_*`: Soil water balance parameter optimization/calibration routines.
 -   `transp_*`: Stomatal regulation and resulting transpiration/photosynthesis.
 -   `wind_*`: Canopy turbulence.
 
