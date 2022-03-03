@@ -750,49 +750,36 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
                            paramsAnatomydf, paramsTranspirationdf, control);
   List belowLayers = below["belowLayers"];
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(below["below"]);
-
-  List input;
+  
+  DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf, fillMissingSpParams);
+  
+  DataFrame paramsCanopydf;
+  List ctl = clone(control);
   if(transpirationMode=="Granier") {
-    input = List::create(_["control"] = clone(control),
-                         _["soil"] = clone(soil),
-                         _["canopy"] = List::create(),
-                         _["cohorts"] = cohortDescdf,
-                         _["above"] = plantsdf,
-                         _["below"] = belowdf,
-                         _["belowLayers"] = belowLayers,
-                         _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
-                         _["paramsAnatomy"] = paramsAnatomydf,
-                         _["paramsInterception"] = paramsInterception(above, SpParams, control),
-                         _["paramsTranspiration"] = paramsTranspirationdf,
-                         _["internalPhenology"] = internalPhenologyDataFrame(above),
-                         _["internalWater"] = internalWaterDataFrame(above, transpirationMode));
+    paramsCanopydf = List::create();
   } else if(transpirationMode =="Sperry"){
-    
-    DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf, fillMissingSpParams);
-
-    List ctl = clone(control);
+    paramsCanopydf = paramsCanopy(above, control);
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
       ctl["soilFunctions"] = soilFunctions;
       Rcerr<<"Soil pedotransfer functions set to Van Genuchten ('VG').\n";
     }
-
-    input = List::create(_["control"] = ctl,
-                         _["soil"] = clone(soil),
-                         _["canopy"] = paramsCanopy(above, control),
-                         _["cohorts"] = cohortDescdf,
-                         _["above"] = plantsdf,
-                         _["below"] = belowdf,
-                         _["belowLayers"] = belowLayers,
-                         _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
-                         _["paramsAnatomy"] = paramsAnatomydf,
-                         _["paramsInterception"] = paramsInterception(above, SpParams, control),
-                         _["paramsTranspiration"] = paramsTranspirationdf,
-                         _["paramsWaterStorage"] = paramsWaterStoragedf,
-                         _["internalPhenology"] = internalPhenologyDataFrame(above),
-                         _["internalWater"] = internalWaterDataFrame(above, transpirationMode));
   }
-
+  List input = List::create(_["control"] = ctl,
+                            _["soil"] = clone(soil),
+                            _["canopy"] = paramsCanopydf,
+                            _["cohorts"] = cohortDescdf,
+                            _["above"] = plantsdf,
+                            _["below"] = belowdf,
+                            _["belowLayers"] = belowLayers,
+                            _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
+                            _["paramsAnatomy"] = paramsAnatomydf,
+                            _["paramsInterception"] = paramsInterception(above, SpParams, control),
+                            _["paramsTranspiration"] = paramsTranspirationdf,
+                            _["paramsWaterStorage"] = paramsWaterStoragedf,
+                            _["internalPhenology"] = internalPhenologyDataFrame(above),
+                            _["internalWater"] = internalWaterDataFrame(above, transpirationMode));
+  
   input.attr("class") = CharacterVector::create("spwbInput","list");
   return(input);
 }
@@ -887,66 +874,43 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(below["below"]);
   
   
-  List input;
+  DataFrame paramsCanopydf;
+  List ctl = clone(control);
   if(transpirationMode=="Granier") {
-    input = List::create(_["control"] = clone(control),
-                         _["soil"] = clone(soil),
-                         _["canopy"] = List::create(),
-                         _["cohorts"] = cohortDescdf,
-                         _["above"] = plantsdf,
-                         _["below"] = belowdf,
-                         _["belowLayers"] = belowLayers,
-                         _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
-                         _["paramsAnatomy"] = paramsAnatomydf,
-                         _["paramsInterception"] = paramsInterception(above, SpParams, control),
-                         _["paramsTranspiration"] = paramsTranspirationdf,
-                         _["paramsWaterStorage"] = paramsWaterStoragedf,
-                         _["paramsGrowth"]= paramsGrowthdf,
-                         _["paramsAllometries"] = paramsAllometriesdf,
-                         _["internalPhenology"] = internalPhenologyDataFrame(above),
-                         _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
-                         _["internalCarbon"] = internalCarbonDataFrame(plantsdf, belowdf, belowLayers,
-                                                         paramsAnatomydf, 
-                                                         paramsWaterStoragedf,
-                                                         paramsGrowthdf, control),
-                        _["internalAllocation"] = internalAllocationDataFrame(plantsdf, belowdf,
-                                                            paramsAnatomydf,
-                                                            paramsTranspirationdf, control),
-                        _["internalMortality"] = internalMortalityDataFrame(plantsdf),
-                        _["internalRings"] = ringList);
+    paramsCanopydf = List::create();
   } else if(transpirationMode =="Sperry"){
+    paramsCanopydf = paramsCanopy(above, control);
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
-      warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
+      ctl["soilFunctions"] = soilFunctions;
+      Rcerr<<"Soil pedotransfer functions set to Van Genuchten ('VG').\n";
     }
-
-    input = List::create(_["control"] = clone(control),
-                         _["soil"] = clone(soil),
-                         _["canopy"] = paramsCanopy(above, control),
-                         _["cohorts"] = cohortDescdf,
-                         _["above"] = plantsdf,
-                         _["below"] = belowdf,
-                         _["belowLayers"] = belowLayers,
-                         _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
-                         _["paramsAnatomy"] = paramsAnatomydf,
-                         _["paramsInterception"] = paramsInterception(above, SpParams, control),
-                         _["paramsTranspiration"] = paramsTranspirationdf,
-                         _["paramsWaterStorage"] = paramsWaterStoragedf,
-                         _["paramsGrowth"]= paramsGrowthdf,
-                         _["paramsAllometries"] = paramsAllometriesdf,
-                         _["internalPhenology"] = internalPhenologyDataFrame(above),
-                         _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
-                         _["internalCarbon"] = internalCarbonDataFrame(plantsdf, belowdf, belowLayers,
-                                                         paramsAnatomydf, 
-                                                         paramsWaterStoragedf,
-                                                         paramsGrowthdf, control),
-                         _["internalAllocation"] = internalAllocationDataFrame(plantsdf, belowdf,
-                                                         paramsAnatomydf,
-                                                         paramsTranspirationdf, control),
-                         _["internalMortality"] = internalMortalityDataFrame(plantsdf),
-                         _["internalRings"] = ringList);
-    
   } 
+  List input = List::create(_["control"] = ctl,
+                       _["soil"] = clone(soil),
+                       _["canopy"] = paramsCanopydf,
+                       _["cohorts"] = cohortDescdf,
+                       _["above"] = plantsdf,
+                       _["below"] = belowdf,
+                       _["belowLayers"] = belowLayers,
+                       _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
+                       _["paramsAnatomy"] = paramsAnatomydf,
+                       _["paramsInterception"] = paramsInterception(above, SpParams, control),
+                       _["paramsTranspiration"] = paramsTranspirationdf,
+                       _["paramsWaterStorage"] = paramsWaterStoragedf,
+                       _["paramsGrowth"]= paramsGrowthdf,
+                       _["paramsAllometries"] = paramsAllometriesdf,
+                       _["internalPhenology"] = internalPhenologyDataFrame(above),
+                       _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
+                       _["internalCarbon"] = internalCarbonDataFrame(plantsdf, belowdf, belowLayers,
+                                                       paramsAnatomydf, 
+                                                       paramsWaterStoragedf,
+                                                       paramsGrowthdf, control),
+                       _["internalAllocation"] = internalAllocationDataFrame(plantsdf, belowdf,
+                                                      paramsAnatomydf,
+                                                      paramsTranspirationdf, control),
+                       _["internalMortality"] = internalMortalityDataFrame(plantsdf),
+                       _["internalRings"] = ringList);
   
   input.attr("class") = CharacterVector::create("growthInput","list");
   return(input);
