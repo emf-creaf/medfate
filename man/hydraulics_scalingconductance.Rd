@@ -9,8 +9,6 @@
 \alias{hydraulics_referenceConductivityHeightFactor}
 \alias{hydraulics_taperFactorSavage}
 \alias{hydraulics_terminalConduitRadius}
-\alias{hydraulics_stemWaterCapacity}
-\alias{hydraulics_leafWaterCapacity}
 \title{
 Scaling from conductivity to conductance
 }
@@ -40,8 +38,6 @@ hydraulics_rootxylemConductanceProportions(L, V)
 hydraulics_referenceConductivityHeightFactor(refheight, height)
 hydraulics_terminalConduitRadius(height)
 hydraulics_taperFactorSavage(height)
-hydraulics_stemWaterCapacity(Al2As, height, wd)
-hydraulics_leafWaterCapacity(SLA, ld)
 }
 
 \arguments{
@@ -68,9 +64,6 @@ hydraulics_leafWaterCapacity(SLA, ld)
   \item{height}{Plant height (in cm).}
   \item{refheight}{Reference plant height of measurement of xylem conductivity (in cm).}
   \item{taper}{A boolean flag to indicate correction by taper of xylem conduits (Christoffersen et al. 2017).}
-  \item{SLA}{Specific leaf area (mm2·mg-1).}
-  \item{wd}{Wood density (g·cm-3).}
-  \item{ld}{Leaf tissue density (g·cm-3).}
 }
 \details{
 Details of the hydraulic model are given in a vignette.

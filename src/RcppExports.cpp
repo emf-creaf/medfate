@@ -1926,31 +1926,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// stemWaterCapacity
-double stemWaterCapacity(double Al2As, double height, double wd);
-RcppExport SEXP _medfate_stemWaterCapacity(SEXP Al2AsSEXP, SEXP heightSEXP, SEXP wdSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type Al2As(Al2AsSEXP);
-    Rcpp::traits::input_parameter< double >::type height(heightSEXP);
-    Rcpp::traits::input_parameter< double >::type wd(wdSEXP);
-    rcpp_result_gen = Rcpp::wrap(stemWaterCapacity(Al2As, height, wd));
-    return rcpp_result_gen;
-END_RCPP
-}
-// leafWaterCapacity
-double leafWaterCapacity(double SLA, double ld);
-RcppExport SEXP _medfate_leafWaterCapacity(SEXP SLASEXP, SEXP ldSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type SLA(SLASEXP);
-    Rcpp::traits::input_parameter< double >::type ld(ldSEXP);
-    rcpp_result_gen = Rcpp::wrap(leafWaterCapacity(SLA, ld));
-    return rcpp_result_gen;
-END_RCPP
-}
 // erFactor
 double erFactor(int doy, double pet, double prec, double Rconv, double Rsyn);
 static SEXP _medfate_erFactor_try(SEXP doySEXP, SEXP petSEXP, SEXP precSEXP, SEXP RconvSEXP, SEXP RsynSEXP) {
@@ -4423,6 +4398,33 @@ RcppExport SEXP _medfate_pwb(SEXP xSEXP, SEXP meteoSEXP, SEXP WSEXP, SEXP latitu
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// sapwoodWaterCapacity
+double sapwoodWaterCapacity(double Al2As, double height, NumericVector V, NumericVector L, double wd);
+RcppExport SEXP _medfate_sapwoodWaterCapacity(SEXP Al2AsSEXP, SEXP heightSEXP, SEXP VSEXP, SEXP LSEXP, SEXP wdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Al2As(Al2AsSEXP);
+    Rcpp::traits::input_parameter< double >::type height(heightSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< double >::type wd(wdSEXP);
+    rcpp_result_gen = Rcpp::wrap(sapwoodWaterCapacity(Al2As, height, V, L, wd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// leafWaterCapacity
+double leafWaterCapacity(double SLA, double ld);
+RcppExport SEXP _medfate_leafWaterCapacity(SEXP SLASEXP, SEXP ldSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type SLA(SLASEXP);
+    Rcpp::traits::input_parameter< double >::type ld(ldSEXP);
+    rcpp_result_gen = Rcpp::wrap(leafWaterCapacity(SLA, ld));
+    return rcpp_result_gen;
+END_RCPP
+}
 // turgorLossPoint
 double turgorLossPoint(double pi0, double epsilon);
 RcppExport SEXP _medfate_turgorLossPoint(SEXP pi0SEXP, SEXP epsilonSEXP) {
@@ -4570,16 +4572,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // transpirationGranier
-List transpirationGranier(List x, DataFrame meteo, int day, bool modifyInput);
-RcppExport SEXP _medfate_transpirationGranier(SEXP xSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP modifyInputSEXP) {
+List transpirationGranier(List x, DataFrame meteo, int day, double elevation, bool modifyInput);
+RcppExport SEXP _medfate_transpirationGranier(SEXP xSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP elevationSEXP, SEXP modifyInputSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type meteo(meteoSEXP);
     Rcpp::traits::input_parameter< int >::type day(daySEXP);
+    Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
     Rcpp::traits::input_parameter< bool >::type modifyInput(modifyInputSEXP);
-    rcpp_result_gen = Rcpp::wrap(transpirationGranier(x, meteo, day, modifyInput));
+    rcpp_result_gen = Rcpp::wrap(transpirationGranier(x, meteo, day, elevation, modifyInput));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4963,8 +4966,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_referenceConductivityHeightFactor", (DL_FUNC) &_medfate_referenceConductivityHeightFactor, 2},
     {"_medfate_maximumStemHydraulicConductance", (DL_FUNC) &_medfate_maximumStemHydraulicConductance, 5},
     {"_medfate_rootxylemConductanceProportions", (DL_FUNC) &_medfate_rootxylemConductanceProportions, 2},
-    {"_medfate_stemWaterCapacity", (DL_FUNC) &_medfate_stemWaterCapacity, 3},
-    {"_medfate_leafWaterCapacity", (DL_FUNC) &_medfate_leafWaterCapacity, 2},
     {"_medfate_erFactor", (DL_FUNC) &_medfate_erFactor, 5},
     {"_medfate_soilEvaporationAmount", (DL_FUNC) &_medfate_soilEvaporationAmount, 3},
     {"_medfate_soilEvaporation", (DL_FUNC) &_medfate_soilEvaporation, 5},
@@ -5071,6 +5072,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_spwbDay", (DL_FUNC) &_medfate_spwbDay, 15},
     {"_medfate_spwb", (DL_FUNC) &_medfate_spwb, 6},
     {"_medfate_pwb", (DL_FUNC) &_medfate_pwb, 10},
+    {"_medfate_sapwoodWaterCapacity", (DL_FUNC) &_medfate_sapwoodWaterCapacity, 5},
+    {"_medfate_leafWaterCapacity", (DL_FUNC) &_medfate_leafWaterCapacity, 2},
     {"_medfate_turgorLossPoint", (DL_FUNC) &_medfate_turgorLossPoint, 2},
     {"_medfate_symplasticRelativeWaterContent", (DL_FUNC) &_medfate_symplasticRelativeWaterContent, 3},
     {"_medfate_symplasticWaterPotential", (DL_FUNC) &_medfate_symplasticWaterPotential, 3},
@@ -5081,7 +5084,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_cohortFMCDay", (DL_FUNC) &_medfate_cohortFMCDay, 3},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 7},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 12},
-    {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 4},
+    {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 5},
     {"_medfate_windCanopyTurbulenceModel", (DL_FUNC) &_medfate_windCanopyTurbulenceModel, 6},
     {"_medfate_windCanopyTurbulence", (DL_FUNC) &_medfate_windCanopyTurbulence, 6},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},

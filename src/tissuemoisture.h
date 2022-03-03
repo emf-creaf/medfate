@@ -5,6 +5,8 @@
 #endif
 using namespace Rcpp;
 
+double sapwoodWaterCapacity(double Al2As, double height, NumericVector V, NumericVector L, double wd);
+double leafWaterCapacity(double SLA, double ld);
 
 double symplasticRelativeWaterContent(double psiSym, double pi0, double epsilon);
 double symplasticWaterPotential(double RWC, double pi0, double epsilon);

@@ -481,14 +481,6 @@ hydraulics_rootxylemConductanceProportions <- function(L, V) {
     .Call(`_medfate_rootxylemConductanceProportions`, L, V)
 }
 
-hydraulics_stemWaterCapacity <- function(Al2As, height, wd) {
-    .Call(`_medfate_stemWaterCapacity`, Al2As, height, wd)
-}
-
-hydraulics_leafWaterCapacity <- function(SLA, ld) {
-    .Call(`_medfate_leafWaterCapacity`, SLA, ld)
-}
-
 hydrology_erFactor <- function(doy, pet, prec, Rconv = 5.6, Rsyn = 1.5) {
     .Call(`_medfate_erFactor`, doy, pet, prec, Rconv, Rsyn)
 }
@@ -913,6 +905,14 @@ pwb <- function(x, meteo, W, latitude, elevation = NA_real_, slope = NA_real_, a
     .Call(`_medfate_pwb`, x, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation)
 }
 
+moisture_sapwoodWaterCapacity <- function(Al2As, height, V, L, wd) {
+    .Call(`_medfate_sapwoodWaterCapacity`, Al2As, height, V, L, wd)
+}
+
+moisture_leafWaterCapacity <- function(SLA, ld) {
+    .Call(`_medfate_leafWaterCapacity`, SLA, ld)
+}
+
 moisture_turgorLossPoint <- function(pi0, epsilon) {
     .Call(`_medfate_turgorLossPoint`, pi0, epsilon)
 }
@@ -953,8 +953,8 @@ transp_transpirationSperry <- function(x, meteo, day, latitude, elevation, slope
     .Call(`_medfate_transpirationSperry`, x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, stepFunctions, modifyInput)
 }
 
-transp_transpirationGranier <- function(x, meteo, day, modifyInput = TRUE) {
-    .Call(`_medfate_transpirationGranier`, x, meteo, day, modifyInput)
+transp_transpirationGranier <- function(x, meteo, day, elevation, modifyInput = TRUE) {
+    .Call(`_medfate_transpirationGranier`, x, meteo, day, elevation, modifyInput)
 }
 
 wind_canopyTurbulenceModel <- function(zm, Cx, hm, d0, z0, model = "k-epsilon") {

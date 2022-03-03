@@ -2414,27 +2414,4 @@ NumericVector rootxylemConductanceProportions(NumericVector L, NumericVector V) 
 // }
 
 
-/**
- * Calculate water capacity of stem per leaf area (in mm = l·m-2)
- * 
- * Al2As - Leaf area to sapwood area ratio (in m2·m-2)
- * height - plant height (in cm)
- * wd - wood density (in g·cm-3)
- * http://www.fao.org/forestry/17109/en/
- */
-// [[Rcpp::export("hydraulics_stemWaterCapacity")]]
-double stemWaterCapacity(double Al2As, double height, double wd) {
-  return(1000*(height/(Al2As*100.0))*(1.0- (wd/1.54)));
-}
-
-/**
- * Calculate  capacity of leaves per leaf area (in mm = l·m-2)
- * 
- * SLA - Specific leaf area (in m2/kg)
- * ld - leaf density (in g/cm3 = 1000 kg/m3)
- */
-// [[Rcpp::export("hydraulics_leafWaterCapacity")]]
-double leafWaterCapacity(double SLA, double ld) {
-  return(1000.0/(1000.0*ld*SLA))*(1.0- (ld/1.54));
-}
 

@@ -7,8 +7,8 @@ using namespace Rcpp;
 
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax, 
                         double gainModifier = 1.0, double costModifier = 1.0, String costWater = "dEdP");
-List transpirationGranier(List x, NumericVector meteovec, 
-                          bool modifyInput = true);
+List transpirationGranier(List x, NumericVector meteovec,
+                          double elevation, bool modifyInput = true);
 List transpirationSperry(List x, NumericVector meteovec,
                   double latitude, double elevation, double slope, double aspect,
                   double solarConstant, double delta,

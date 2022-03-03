@@ -21,8 +21,9 @@ const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
 const double Cp_Jmol = 29.37152; // J * mol^-1 * ºC^-1
 const double eps_xylem = 1e3; // xylem elastic modulus (1 GPa = 1000 MPa)
 
-const double Krelative_disconnection = 0.10; //10% of whole-plant relative conductance leads to disconnection from soil
-  
+// const double Krelative_disconnection = 0.10; //10% of whole-plant relative conductance leads to disconnection from soil
+const double WeibullShape=3.0;
+
 //Returns the average soil moisture within the rhizosphere of each cohort
 NumericMatrix cohortRhizosphereMoisture(NumericMatrix W, List RHOP) {
   int numCohorts = W.nrow();
@@ -1559,8 +1560,51 @@ List transpirationSperry(List x, DataFrame meteo, int day,
 } 
 
 
+//Plant volume in l·m-2 ground = mm
+double plantVol(double plantPsi, NumericVector pars) {
+
+  double leafrwc = tissueRelativeWaterContent(plantPsi, pars["leafpi0"], pars["leafeps"], 
+                                              plantPsi, WeibullShape, pars["psi_critic"], 
+                                              pars["leafaf"], 0.0);
+  double stemrwc = tissueRelativeWaterContent(plantPsi, pars["stempi0"], pars["stemeps"], 
+                                              plantPsi, WeibullShape, pars["psi_critic"], 
+                                              pars["stemaf"], pars["stem_plc"]);
+  return(((pars["Vleaf"] * leafrwc)*pars["LAIphe"]) + ((pars["Vsapwood"] * stemrwc)*pars["LAIlive"]));
+}
+
+
+double findNewPlantPsiConnected(double flowFromRoots, double plantPsi, double rootCrownPsi,
+                                NumericVector parsVol){
+  //More negative rootCrownPsi causes increased flow due to water being removed
+  if(rootCrownPsi <= plantPsi) return(rootCrownPsi); 
+  else {
+    double V = plantVol(plantPsi, parsVol);
+    double psiStep = rootCrownPsi - plantPsi;
+    double Vnew = plantVol(plantPsi + psiStep, parsVol);
+    while((Vnew - V) > flowFromRoots) {
+      psiStep = psiStep/2.0;
+      Vnew = plantVol(plantPsi + psiStep, parsVol);
+    }
+    return(plantPsi+psiStep);
+  }
+  return(plantPsi);
+}
+
+double findNewPlantPsiCuticular(double E_cut, double plantPsi, NumericVector parsVol){
+  double V = plantVol(plantPsi, parsVol);
+  double psiStep = 0.001;
+  double Vnew = plantVol(plantPsi - psiStep, parsVol);
+  int cnt = 0;
+  while(((V - Vnew) < E_cut) & (cnt < 100)) {
+     cnt++;
+     psiStep = psiStep + 0.001;
+     Vnew = plantVol(plantPsi - psiStep, parsVol);
+  }
+  return(plantPsi - psiStep);
+}
+
 List transpirationGranier(List x, NumericVector meteovec,  
-                          bool modifyInput = true) {
+                          double elevation, bool modifyInput = true) {
   //Control parameters
   List control = x["control"];
   String cavitationRefill = control["cavitationRefill"];
@@ -1575,6 +1619,14 @@ List transpirationGranier(List x, NumericVector meteovec,
   //Meteo input
   double tday = meteovec["tday"];
   double pet = meteovec["pet"];
+  double rhmax = meteovec["rhmax"];
+  double rhmin = meteovec["rhmin"];
+  double tmax = meteovec["tmax"];
+  double tmin = meteovec["tmin"];
+  //Daily average water vapor pressure at the atmosphere (kPa)
+  double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin,rhmax);
+  //Atmospheric pressure
+  double Patm = meteoland::utils_atmosphericPressure(elevation);
   
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -1605,6 +1657,7 @@ List transpirationGranier(List x, NumericVector meteovec,
   NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
   
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+  NumericVector Gswmin = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gswmin"]);
   NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
   NumericVector Psi_Critic = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Critic"]);
   NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
@@ -1690,8 +1743,12 @@ List transpirationGranier(List x, NumericVector meteovec,
   
   NumericVector Kl, epc, Vl;
   NumericVector Kunsat = conductivity(soil);
-  double WeibullShape=3.0;
   for(int c=0;c<numCohorts;c++) {
+    NumericVector parsVol = NumericVector::create(_["psi_critic"] = Psi_Critic[c], _["stem_plc"] = StemPLC[c],
+                                                  _["leafpi0"] = LeafPI0[c], _["leafeps"] = LeafEPS[c],
+                                                  _["leafaf"] = LeafAF[c],_["stempi0"] = StemPI0[c],_["stemeps"] = StemEPS[c],
+                                                  _["stemaf"] = StemAF[c],_["Vsapwood"] = Vsapwood[c],_["Vleaf"] = Vleaf[c],
+                                                  _["LAIphe"] = LAIphe[c],_["LAIlive"] = LAIlive[c]);
     if(plantWaterPools) { 
       //Copy rhizosphere moisture to soil moisture
       NumericVector W_c = soil_c["W"];
@@ -1708,37 +1765,63 @@ List transpirationGranier(List x, NumericVector meteovec,
       if(cavitationRefill!="total") {
         Klc[l] = std::min(Klc[l], 1.0-StemPLC[c]); 
       }
-      if(Klc[l] < Krelative_disconnection) { 
-        RootPsi(c,l) = K2Psi(Krelative_disconnection,Psi_Extract[c],WeibullShape);
-        Klc[l] = 0.0; // Prevents drawing water from layer
-      }
       Kunlc[l] = pow(Kunsat[l],0.5)*V(c,l);
     }
+    //Extraction from soil
     double sumKunlc = sum(Kunlc);
     double Klcmean = sum(Klc*V(c,_));
     for(int l=0;l<nlayers;l++) {
-      double epc = std::max(TmaxCoh[c]*Klcmean*(Kunlc[l]/sumKunlc),0.0);
-      //Extraction
-      EplantCoh(c,l) = epc;
-      
-      //Transpiration
-      Eplant[c] = Eplant[c] + epc;
-      
-      //Plant water balance
-      PWB[c] = 0.0;
+      EplantCoh(c,l) = std::max(TmaxCoh[c]*Klcmean*(Kunlc[l]/sumKunlc),0.0);
     }
+
+    //Cuticular transpiration    
+    double lvp_tmax = leafVapourPressure(tmax,  PlantPsi[c]);
+    double lvp_tmin = leafVapourPressure(tmin,  PlantPsi[c]);
+    double vpd_tmax = std::max(0.0, lvp_tmax - vpatm);
+    double vpd_tmin = std::max(0.0, lvp_tmin - vpatm);
+    double E_gmin = Gswmin[c]*(vpd_tmin+vpd_tmax)/(2.0*Patm); // mol·s-1·m-2
+    double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
+    
+    //The plant is connected to the soil if transpiration is larger than cuticular transpiration 
+    bool connected = (sum(EplantCoh(c,_)) > E_cut);
+    double oldVol = plantVol(PlantPsi[c], parsVol); 
+    //If connected to any soil layer modify transpiration according to 
+    //changes in relative water content
+    if(connected) {
+      Eplant[c] = sum(EplantCoh(c,_));
+      double rootCrownPsi = averagePsi(RootPsi(c,_), V(c,_), WeibullShape, Psi_Extract[c]);
+      PlantPsi[c] = findNewPlantPsiConnected(Eplant[c], PlantPsi[c], rootCrownPsi, parsVol);
+      double newVol = plantVol(PlantPsi[c], parsVol);
+
+      double volDiff = newVol - oldVol;
+      //Plant transpiration and water balance
+      PWB[c] = volDiff;
+      Eplant[c] = Eplant[c]  - volDiff;
+    } else {
+      //Set extraction to zero (so that water balance is fulfilled)
+      for(int l=0;l<nlayers;l++) EplantCoh(c,l) = 0.0;
+      
+      //If not connected to any layer, cuticular transpiration should be still operating
+      PlantPsi[c] = findNewPlantPsiCuticular(E_cut, PlantPsi[c], parsVol);
+      double newVol = plantVol(PlantPsi[c], parsVol);
+      E_cut = (oldVol - newVol); //Re-adjust E_cut so that it matches changes in WP
+      Eplant[c] = E_cut;
+      PWB[c] = -E_cut;
+    }
+      
+    
+    //Photosynthesis
+    Agplant[c] = WUE[c]*Eplant[c]*std::min(1.0, pow(PARcohort[c]/100.0,WUE_decay[c]));
+    
   }
 
+  //Plant water status (StemPLC, RWC, DDS)
   for(int c=0;c<numCohorts;c++) {
-    PlantPsi[c] = averagePsi(RootPsi(c,_), V(c,_), WeibullShape, Psi_Extract[c]);
     if(cavitationRefill!="total") {
       StemPLC[c] = std::max(1.0 - Psi2K(PlantPsi[c],Psi_Critic[c],WeibullShape), StemPLC[c]); //Track current embolism if no refill
     } else {
       StemPLC[c] = 1.0 - Psi2K(PlantPsi[c],Psi_Critic[c],WeibullShape);
     }
-    Agplant[c] = WUE[c]*Eplant[c]*std::min(1.0, pow(PARcohort[c]/100.0,WUE_decay[c]));
-    // Rcout<< c<< " "<< WUE[c] << " "<< Eplant[c] << " " << PARcohort[c]<< " " << Agplant[c]<<"\n"; 
-    
     //Relative water content
     double apoRWC = apoplasticRelativeWaterContent(PlantPsi[c], WeibullShape, Psi_Critic[c]);
     double leafSympRWC = symplasticRelativeWaterContent(PlantPsi[c],  LeafPI0[c], LeafEPS[c]);
@@ -1803,16 +1886,32 @@ List transpirationGranier(List x, NumericVector meteovec,
 
 // [[Rcpp::export("transp_transpirationGranier")]]
 List transpirationGranier(List x, DataFrame meteo, int day,
-                          bool modifyInput = true) {
+                          double elevation, bool modifyInput = true) {
+  if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
+  NumericVector MinTemperature = meteo["MinTemperature"];
+  if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
+  NumericVector MaxTemperature = meteo["MaxTemperature"];
+  if(!meteo.containsElementNamed("MinRelativeHumidity")) stop("Please include variable 'MinRelativeHumidity' in weather input.");
+  NumericVector MinRelativeHumidity = meteo["MinRelativeHumidity"];
+  if(!meteo.containsElementNamed("MaxRelativeHumidity")) stop("Please include variable 'MaxRelativeHumidity' in weather input.");
+  NumericVector MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
   if(!meteo.containsElementNamed("MeanTemperature")) stop("Please include variable 'MeanTemperature' in weather input.");
   NumericVector MeanTemperature = meteo["MeanTemperature"];
   if(!meteo.containsElementNamed("PET")) stop("Please include variable 'PET' in weather input.");
   NumericVector PET = meteo["PET"];
   double pet = PET[day-1];
   double tday = MeanTemperature[day-1];
+  double tmin = MinTemperature[day-1];
+  double tmax = MaxTemperature[day-1];
+  double rhmax = MaxRelativeHumidity[day-1];
+  double rhmin = MinRelativeHumidity[day-1];
   NumericVector meteovec = NumericVector::create(
+    Named("tmax") = tmax,
+    Named("tmin") = tmin,
+    Named("rhmin") = rhmin, 
+    Named("rhmax") = rhmax,
     Named("tday") = tday, 
     Named("pet") = pet);
-  return(transpirationGranier(x, meteovec, modifyInput));
+  return(transpirationGranier(x, meteovec, elevation, modifyInput));
 } 
 

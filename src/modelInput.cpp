@@ -114,11 +114,15 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
   return(paramsAnatomydf);
 }
 
-DataFrame paramsWaterStorage(DataFrame above, DataFrame SpParams,
+DataFrame paramsWaterStorage(DataFrame above, List belowLayers,
+                             DataFrame SpParams,
                              DataFrame paramsAnatomydf, bool fillMissingSpParams) {
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
   int numCohorts = SP.size();
+  
+  NumericMatrix V = belowLayers["V"];
+  NumericMatrix L = belowLayers["L"];
   
   NumericVector StemPI0 = speciesNumericParameterWithImputation(SP, SpParams, "StemPI0", fillMissingSpParams);
   NumericVector StemEPS = speciesNumericParameterWithImputation(SP, SpParams, "StemEPS", fillMissingSpParams);
@@ -134,9 +138,9 @@ DataFrame paramsWaterStorage(DataFrame above, DataFrame SpParams,
   NumericVector SLA = paramsAnatomydf["SLA"];
   NumericVector Al2As = paramsAnatomydf["Al2As"];
 
-  //Calculate stem and leaf capacity per leaf area (in m3·m-2)
+  //Calculate stem and leaf capacity per leaf area (in l·m-2)
   for(int c=0;c<numCohorts;c++){
-    Vsapwood[c] = stemWaterCapacity(Al2As[c], H[c], WoodDensity[c]); 
+    Vsapwood[c] = sapwoodWaterCapacity(Al2As[c], H[c], V, L, WoodDensity[c]); 
     Vleaf[c] = leafWaterCapacity(SLA[c], LeafDensity[c]); 
   }
   DataFrame paramsWaterStoragedf = DataFrame::create(
@@ -648,16 +652,16 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
   int numCohorts = above.nrow();
   DataFrame df;
   if(transpirationMode=="Granier") {
-    df = DataFrame::create(Named("PlantPsi") = NumericVector(numCohorts, 0.0),
+    df = DataFrame::create(Named("PlantPsi") = NumericVector(numCohorts, -0.033),
                            Named("StemPLC") = NumericVector(numCohorts, 0.0));
   } else {
     df = DataFrame::create(Named("Einst") = NumericVector(numCohorts, 0.0),
-                           Named("RootCrownPsi") = NumericVector(numCohorts, 0.0),
-                           Named("Stem1Psi") = NumericVector(numCohorts, 0.0),
-                           Named("Stem2Psi") = NumericVector(numCohorts, 0.0),
-                           Named("LeafPsi") = NumericVector(numCohorts, 0.0),
-                           Named("StemSympPsi") = NumericVector(numCohorts, 0.0),
-                           Named("LeafSympPsi") = NumericVector(numCohorts, 0.0),
+                           Named("RootCrownPsi") = NumericVector(numCohorts, -0.033),
+                           Named("Stem1Psi") = NumericVector(numCohorts, -0.033),
+                           Named("Stem2Psi") = NumericVector(numCohorts, -0.033),
+                           Named("LeafPsi") = NumericVector(numCohorts, -0.033),
+                           Named("StemSympPsi") = NumericVector(numCohorts, -0.033),
+                           Named("LeafSympPsi") = NumericVector(numCohorts, -0.033),
                            Named("StemPLC") = NumericVector(numCohorts, 0.0),
                            Named("NSPL") = NumericVector(numCohorts, 1.0));
   }
@@ -750,7 +754,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   List belowLayers = below["belowLayers"];
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(below["below"]);
   
-  DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf, fillMissingSpParams);
+  DataFrame paramsWaterStoragedf = paramsWaterStorage(above, belowLayers, SpParams, paramsAnatomydf, fillMissingSpParams);
   
   DataFrame paramsCanopydf;
   List ctl = clone(control);
@@ -818,8 +822,6 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   
   DataFrame paramsGrowthdf = paramsGrowth(above, SpParams, control);
-
-  DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf, fillMissingSpParams);
   
   DataFrame paramsAllometriesdf = paramsAllometries(above, SpParams, fillMissingSpParams);
   
@@ -871,6 +873,8 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                            paramsAnatomydf, paramsTranspirationdf, control);
   List belowLayers = below["belowLayers"];
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(below["below"]);
+  
+  DataFrame paramsWaterStoragedf = paramsWaterStorage(above, belowLayers, SpParams, paramsAnatomydf, fillMissingSpParams);
   
   
   DataFrame paramsCanopydf;

@@ -1878,6 +1878,15 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   int numDays = Precipitation.size();
   if(!meteo.containsElementNamed("MeanTemperature")) stop("Please include variable 'MeanTemperature' in weather input.");
   NumericVector MeanTemperature = meteo["MeanTemperature"];
+  if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
+  if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
+  MinTemperature = meteo["MinTemperature"];
+  if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
+  MaxTemperature = meteo["MaxTemperature"];
+  if(!meteo.containsElementNamed("MinRelativeHumidity")) stop("Please include variable 'MinRelativeHumidity' in weather input.");
+  MinRelativeHumidity = meteo["MinRelativeHumidity"];
+  if(!meteo.containsElementNamed("MaxRelativeHumidity")) stop("Please include variable 'MaxRelativeHumidity' in weather input.");
+  MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
   NumericVector WindSpeed(numDays, NA_REAL);
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
   NumericVector PET = NumericVector(numDays,0.0);
@@ -1893,15 +1902,6 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
       else Radiation = meteo["Radiation"];
     }
   } else if(transpirationMode=="Sperry") {
-    if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
-    if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
-    MinTemperature = meteo["MinTemperature"];
-    if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
-    MaxTemperature = meteo["MaxTemperature"];
-    if(!meteo.containsElementNamed("MinRelativeHumidity")) stop("Please include variable 'MinRelativeHumidity' in weather input.");
-    MinRelativeHumidity = meteo["MinRelativeHumidity"];
-    if(!meteo.containsElementNamed("MaxRelativeHumidity")) stop("Please include variable 'MaxRelativeHumidity' in weather input.");
-    MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
     if(!meteo.containsElementNamed("Radiation")) stop("Please include variable 'Radiation' in weather input.");
     Radiation = meteo["Radiation"];
     if(meteo.containsElementNamed("CO2")) {
@@ -2073,8 +2073,8 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     //2. Water balance and photosynthesis
     if(transpirationMode=="Granier") {
       NumericVector meteovec = NumericVector::create(
-        Named("tday") = MeanTemperature[i], 
-        Named("prec") = Precipitation[i],
+        Named("tday") = MeanTemperature[i], Named("tmax") = MaxTemperature[i],Named("tmin") = MinTemperature[i],
+        Named("prec") = Precipitation[i], Named("rhmin") = MinRelativeHumidity[i], Named("rhmax") = MaxRelativeHumidity[i],
         Named("rad") = Radiation[i], 
         Named("pet") = PET[i],
         Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
