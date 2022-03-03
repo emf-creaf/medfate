@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.0</span>
       </span>
     </div>
 
@@ -149,7 +149,7 @@
 <li><p><code>Psi_Extract</code>: Water potential corresponding to 50% relative conductance (in MPa).</p></li>
 <li><p><code>Psi_Critic</code>: Water potential corresponding to 50% of stem cavitation (in MPa).</p></li>
 <li><p><code>WUE</code>: Water use efficiency for carbon assimilation (g C/mm water).</p></li>
-<li><p><code>pRootDisc</code>: Proportion of whole-plant conductance leading to disconnection from soil.</p></li>
+<li><p><code>WUE_decay</code>: Exponential decay coeffient of WUE with PAR.</p></li>
 </ul>
     If <code>control$transpirationMode = "Sperry"</code> columns are:
     <ul><li><p><code>Gswmax</code>: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).</p></li>
@@ -539,7 +539,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $cohorts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         SP              Name</span>
@@ -555,22 +555,22 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 fineRootBiomass coarseRootSoilVolume</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 400 2000      1574.98321             9.997093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 400 2000       721.44857             9.997093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 300 1500        13.57757             7.473966</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600      1574.98321             4.381122</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000       721.44857             7.526346</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000        13.57757             5.544086</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$V</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                1         2          3          4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.3771008 0.4775321 0.10931061 0.03605652</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.3771008 0.4775321 0.10931061 0.03605652</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.5044057 0.4037153 0.07011387 0.02176513</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                1         2          3           4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.8604899 0.1194556 0.01511005 0.004944476</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.5008953 0.4505941 0.04064831 0.007862284</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.6799879 0.2737911 0.03567632 0.010544678</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$L</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           1        2        3        4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 2150 2123.378 2089.784 3239.518</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 2150 2123.378 2089.784 3239.518</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 2150 1821.357 1908.416 3160.904</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 2150 1137.834 1645.161 3058.717</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 2150 1891.826 1812.060 3097.046</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 2150 1480.808 1750.917 3096.459</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$Wpool</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        1 2 3 4</span>
@@ -606,10 +606,24 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.55 0.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsTranspiration</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Tmax_LAI Tmax_LAIsq Psi_Extract Psi_Critic      WUE WUE_decay pRootDisc</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    0.134     -0.006   -2.600000  -3.816852 3.849903    0.2812         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    0.134     -0.006   -3.001667  -3.001667 1.720883    0.2812         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    0.134     -0.006   -3.455000  -6.950920 3.289704    0.2812         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Gswmin Tmax_LAI Tmax_LAIsq Psi_Extract Psi_Critic      WUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.002031250    0.134     -0.006   -1.596176  -3.816852 3.849903</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.006003126    0.134     -0.006   -1.842765  -2.968825 1.720883</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.010455247    0.134     -0.006   -2.121073  -6.950920 3.289704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        WUE_decay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    0.2812</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    0.2812</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    0.2812</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $paramsWaterStorage</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS    StemAF</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355 0.9236406</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 -1.483333 19.260000 0.1700 0.2035077 -3.227438 46.420610 0.6238125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155 0.6238125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Vsapwood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 6.440145</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 2.084001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 1.163264</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalPhenology</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi</span>
@@ -619,9 +633,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalWater</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        PlantPsi StemPLC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148        0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168        0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165        0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148   -0.033       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168   -0.033       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165   -0.033       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "spwbInput" "list"     </span>
@@ -922,7 +936,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopy</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $cohorts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         SP              Name</span>
@@ -938,22 +952,22 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 fineRootBiomass coarseRootSoilVolume</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 400 2000      1574.98321             9.997093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 400 2000       721.44857             9.997093</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 300 1500        13.57757             7.473966</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600      1574.98321             4.381122</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000       721.44857             7.526346</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000        13.57757             5.544086</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$V</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                1         2          3          4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.3771008 0.4775321 0.10931061 0.03605652</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.3771008 0.4775321 0.10931061 0.03605652</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.5044057 0.4037153 0.07011387 0.02176513</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                1         2          3           4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.8604899 0.1194556 0.01511005 0.004944476</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.5008953 0.4505941 0.04064831 0.007862284</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.6799879 0.2737911 0.03567632 0.010544678</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$L</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           1        2        3        4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 2150 2123.378 2089.784 3239.518</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 2150 2123.378 2089.784 3239.518</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 2150 1821.357 1908.416 3160.904</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 2150 1137.834 1645.161 3058.717</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 2150 1891.826 1812.060 3097.046</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 2150 1480.808 1750.917 3096.459</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$Wpool</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        1 2 3 4</span>
@@ -989,10 +1003,24 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.55 0.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsTranspiration</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Tmax_LAI Tmax_LAIsq Psi_Extract Psi_Critic      WUE WUE_decay pRootDisc</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    0.134     -0.006   -2.600000  -3.816852 3.849903    0.2812         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    0.134     -0.006   -3.001667  -3.001667 1.720883    0.2812         0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    0.134     -0.006   -3.455000  -6.950920 3.289704    0.2812         0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Gswmin Tmax_LAI Tmax_LAIsq Psi_Extract Psi_Critic      WUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.002031250    0.134     -0.006   -1.596176  -3.816852 3.849903</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.006003126    0.134     -0.006   -1.842765  -2.968825 1.720883</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.010455247    0.134     -0.006   -2.121073  -6.950920 3.289704</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        WUE_decay</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    0.2812</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    0.2812</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    0.2812</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $paramsWaterStorage</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS    StemAF</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355 0.9236406</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 -1.483333 19.260000 0.1700 0.2035077 -3.227438 46.420610 0.6238125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155 0.6238125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Vsapwood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 6.440145</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 2.084001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 1.163264</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalPhenology</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi</span>
@@ -1002,9 +1030,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalWater</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        PlantPsi StemPLC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148        0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168        0       0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165        0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148   -0.033       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168   -0.033       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165   -0.033       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "spwbInput" "list"     </span>
@@ -1350,34 +1378,34 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 fineRootBiomass coarseRootSoilVolume</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 400 2000       9990.9291               20.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 400 2000       3717.8452               22.000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 300 1500        188.9035                0.125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600      15176.9786            12.500000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000       4204.9164            20.500000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000        219.8371             0.171875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$V</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                1         2          3          4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.3771008 0.4775321 0.10931061 0.03605652</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.3771008 0.4775321 0.10931061 0.03605652</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.5044057 0.4037153 0.07011387 0.02176513</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                1         2          3           4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.8604899 0.1194556 0.01511005 0.004944476</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.5008953 0.4505941 0.04064831 0.007862284</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.6799879 0.2737911 0.03567632 0.010544678</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$L</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                1        2        3        4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 3566.4612 3810.030 3668.404 5515.067</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 3725.8934 3947.185 3749.837 5589.016</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  598.6612 1204.262 2105.636 4093.059</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 4200.8720 2111.100 2490.392 4443.548</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 4111.3972 3763.531 3030.038 4716.269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  706.6219 1197.247 2088.359 4075.954</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$VGrhizo_kmax</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                1        2        3       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148  99471540 44913597 10281053 3391244</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 102629106 47069045 10774451 3553993</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 299837332 86916167 15094867 4685831</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                1        2       3         4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 226979798 11235224 1421154  465045.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 136320161 44413840 4006594  774964.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 404209828 58944700 7680781 2270171.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$VCroot_kmax</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               1         2         3          4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.669392 0.7934779 0.1886452 0.04138983</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 1.726879 2.0641914 0.4973759 0.11007362</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 3.228470 1.2845535 0.1275906 0.02037563</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               1         2          3           4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 1.291017 0.3566345 0.03824052 0.007013197</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 2.088048 2.0519794 0.22992038 0.028571507</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 3.704838 0.8804217 0.06577032 0.009959998</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$Wpool</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        1 2 3 4</span>
@@ -1428,19 +1456,19 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    7.354306 1.331076 -1.777291    4.876881 2.558358 -5.103492</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    9.579077 1.844224 -3.030130    4.599269 3.537784 -4.126512</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        VCroot_kmax VCroot_c  VCroot_d VGrhizo_kmax Plant_kmax</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    1.692905 1.916254 -3.240714    158057433   0.677162</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    4.398520 1.957824 -3.366992    164026595   1.759408</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    4.660990 1.760307 -2.797092    406534197   1.864396</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    1.692905 1.916254 -3.240714    240101222   0.677162</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    4.398520 1.957824 -3.366992    185515558   1.759408</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    4.660990 1.760307 -2.797092    473105480   1.864396</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsWaterStorage</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS    StemAF</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355 0.9236406</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 -1.483333 19.260000 0.1700 0.2035077 -3.227438 46.420610 0.6238125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155 0.6238125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         Vsapwood</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 3.6759195</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 1.0902475</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.1365362</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Vsapwood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 7.704643</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 2.538595</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 1.632942</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalPhenology</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi</span>
@@ -1450,9 +1478,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalWater</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Einst RootCrownPsi Stem1Psi Stem2Psi LeafPsi StemSympPsi LeafSympPsi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148     0            0        0        0       0           0           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168     0            0        0        0       0           0           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165     0            0        0        0       0           0           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148     0       -0.033   -0.033   -0.033  -0.033      -0.033      -0.033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168     0       -0.033   -0.033   -0.033  -0.033      -0.033      -0.033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165     0       -0.033   -0.033   -0.033  -0.033      -0.033      -0.033</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        StemPLC NSPL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148       0    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168       0    1</span>

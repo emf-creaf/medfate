@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.0</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Species parameterization for Spain</h1>
                         <h4 data-toc-skip class="author">Miquel De Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-03-02</h4>
+            <h4 data-toc-skip class="date">2022-03-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/SpeciesParameterizationSpain.Rmd" class="external-link"><code>vignettes/parametrization/SpeciesParameterizationSpain.Rmd</code></a></small>
       <div class="hidden name"><code>SpeciesParameterizationSpain.Rmd</code></div>
@@ -146,20 +146,20 @@
 <span class="co">##  [70] "gammaSWR"             "alphaSWR"             "kPAR"                </span>
 <span class="co">##  [73] "g"                    "Tmax_LAI"             "Tmax_LAIsq"          </span>
 <span class="co">##  [76] "Psi_Extract"          "Psi_Critic"           "WUE"                 </span>
-<span class="co">##  [79] "WUE_decay"            "pRootDisc"            "Gswmin"              </span>
-<span class="co">##  [82] "Gswmax"               "VCleaf_kmax"          "VCleaf_c"            </span>
-<span class="co">##  [85] "VCleaf_d"             "Kmax_stemxylem"       "VCstem_c"            </span>
-<span class="co">##  [88] "VCstem_d"             "Kmax_rootxylem"       "VCroot_c"            </span>
-<span class="co">##  [91] "VCroot_d"             "Vmax298"              "Jmax298"             </span>
-<span class="co">##  [94] "Nleaf"                "Nsapwood"             "Nfineroot"           </span>
-<span class="co">##  [97] "WoodC"                "RERleaf"              "RERsapwood"          </span>
-<span class="co">## [100] "RERfineroot"          "CCleaf"               "CCsapwood"           </span>
-<span class="co">## [103] "CCfineroot"           "RGRleafmax"           "RGRsapwoodmax"       </span>
-<span class="co">## [106] "RGRfinerootmax"       "SRsapwood"            "SRfineroot"          </span>
-<span class="co">## [109] "SeedProductionHeight" "RecrTreeDBH"          "RecrTreeHeight"      </span>
-<span class="co">## [112] "RecrShrubHeight"      "RecrTreeDensity"      "RecrShrubCover"      </span>
-<span class="co">## [115] "RecrZ50"              "RecrZ95"              "MinTempRecr"         </span>
-<span class="co">## [118] "MinMoistureRecr"      "MinFPARRecr"</span></code></pre>
+<span class="co">##  [79] "WUE_decay"            "Gswmin"               "Gswmax"              </span>
+<span class="co">##  [82] "VCleaf_kmax"          "VCleaf_c"             "VCleaf_d"            </span>
+<span class="co">##  [85] "Kmax_stemxylem"       "VCstem_c"             "VCstem_d"            </span>
+<span class="co">##  [88] "Kmax_rootxylem"       "VCroot_c"             "VCroot_d"            </span>
+<span class="co">##  [91] "Vmax298"              "Jmax298"              "Nleaf"               </span>
+<span class="co">##  [94] "Nsapwood"             "Nfineroot"            "WoodC"               </span>
+<span class="co">##  [97] "RERleaf"              "RERsapwood"           "RERfineroot"         </span>
+<span class="co">## [100] "CCleaf"               "CCsapwood"            "CCfineroot"          </span>
+<span class="co">## [103] "RGRleafmax"           "RGRsapwoodmax"        "RGRfinerootmax"      </span>
+<span class="co">## [106] "SRsapwood"            "SRfineroot"           "SeedProductionHeight"</span>
+<span class="co">## [109] "RecrTreeDBH"          "RecrTreeHeight"       "RecrShrubHeight"     </span>
+<span class="co">## [112] "RecrTreeDensity"      "RecrShrubCover"       "RecrZ50"             </span>
+<span class="co">## [115] "RecrZ95"              "MinTempRecr"          "MinMoistureRecr"     </span>
+<span class="co">## [118] "MinFPARRecr"</span></code></pre>
 <p>It is obvious that such a sheer number of parameters cannot be searched for manually, even for a small number of target species. Hence, it is important to draw values from allometric and plant trait data bases. Not all model parameters have their counterpart in publicly-available databases, and even when using data bases it is unlikely that one will find appropriate parameter values for all species. To help with this situation, <strong>medfate</strong> has <em>inbuilt imputation procedures</em> to estimate missing values for many parameters before starting model simulations. However, imputed parameter estimates will normally be worse than estimates coming from data bases. Hence, we should put a strong effort in finding source parameter data before relying on inbuilt imputation.</p>
 </div>
 <div class="section level3">
@@ -1967,21 +1967,22 @@
 <div class="sourceCode" id="cb312"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">bartlett</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">bartlett</span><span class="op">)</span><span class="op">==</span><span class="st">"πtlp.(MPa)"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Ptlp"</span>
 <span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">hydratry</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">hydratry</span><span class="op">)</span><span class="op">==</span><span class="st">"PItlp"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Ptlp"</span></code></pre></div>
-<p>The mapping is done by calling <code><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html" class="external-link">populateTraits()</a></code> on a merged dataset:</p>
+<p>However, we did not take <span class="math inline">\(\Psi_{tlp}\)</span> directly as a value for <span class="math inline">\(\Psi_{extract}\)</span> but assumed that <span class="math inline">\(\Psi_{tlp}\)</span> corresponded to 5% of maximum transpiration. Using <span class="math inline">\(\Psi_{tlp}\)</span> and the equation that relates <span class="math inline">\(\Psi_{extract}\)</span> with relative whole plant transpiration <span class="math inline">\(\Psi_{extract}\)</span> is <span class="math inline">\(\Psi_{extract} = \left[ln(0.5)/ln(0.05)\right]^{(1/r)} \cdot \Psi_{tlp}\)</span>, where <span class="math inline">\(r = 3\)</span>. The mapping is done by calling <code><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html" class="external-link">populateTraits()</a></code> on a merged dataset:</p>
 <div class="sourceCode" id="cb313"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Ptlp_data</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">martin_stpaul</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Ptlp"</span><span class="op">)</span><span class="op">]</span>,
                   <span class="va">hydratry</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Ptlp"</span><span class="op">)</span><span class="op">]</span>,
                   <span class="va">bartlett</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Ptlp"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
 <span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html" class="external-link">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">Ptlp_data</span>, 
                            trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Psi_Extract"</span> <span class="op">=</span> <span class="st">"Ptlp"</span><span class="op">)</span>,
-                           taxon_column <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></code></pre></div>
+                           taxon_column <span class="op">=</span> <span class="st">"Species"</span>,
+                           scalar_functions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Psi_Extract"</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="va">x</span><span class="op">*</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">0.5</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">0.05</span><span class="op">)</span><span class="op">)</span><span class="op">^</span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">3</span><span class="op">)</span><span class="op">}</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## Mapping [Ptlp -&gt; Psi_Extract] species: 38 conspecific: 60 genus: 0 family: 0 order: 0 group: 0</span></code></pre>
 <pre><code><span class="co">## 119 missing trait values (54.8 %) after populating with input data.</span></code></pre>
 <p>The distribution of parameter values is:</p>
 <div class="sourceCode" id="cb316"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Psi_Extract"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span>
-<span class="co">##  -4.250  -2.982  -2.294  -2.445  -1.968  -1.020     119</span></code></pre>
+<span class="co">## -2.6091 -1.8310 -1.4086 -1.5011 -1.2084 -0.6262     119</span></code></pre>
 </div>
 <div class="section level4">
 <h4 id="critical-water-potential">Critical water potential<a class="anchor" aria-label="anchor" href="#critical-water-potential"></a>
@@ -2024,7 +2025,7 @@
 <div class="sourceCode" id="cb328"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Psi_Critic"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA's </span>
-<span class="co">## -10.2174  -5.1166  -3.4531  -3.9347  -2.4693  -0.4269       66</span></code></pre>
+<span class="co">## -10.2174  -5.1166  -3.4276  -3.8453  -2.4627  -0.4269       66</span></code></pre>
 </div>
 <div class="section level4">
 <h4 id="water-use-efficiency">Water use efficiency<a class="anchor" aria-label="anchor" href="#water-use-efficiency"></a>

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.0</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Forest growth</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-03-02</h4>
+            <h4 data-toc-skip class="date">2022-03-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/ForestGrowth.Rmd" class="external-link"><code>vignettes/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -112,12 +112,12 @@
 <span class="co">## </span>
 <span class="co">## $treeData</span>
 <span class="co">##   Species   N   DBH Height Z50  Z95</span>
-<span class="co">## 1     148 168 37.55    800 400 2000</span>
-<span class="co">## 2     168 384 14.60    660 400 2000</span>
+<span class="co">## 1     148 168 37.55    800 100  600</span>
+<span class="co">## 2     168 384 14.60    660 300 1000</span>
 <span class="co">## </span>
 <span class="co">## $shrubData</span>
 <span class="co">##   Species Cover Height Z50  Z95</span>
-<span class="co">## 1     165  3.75     80 300 1500</span>
+<span class="co">## 1     165  3.75     80 200 1000</span>
 <span class="co">## </span>
 <span class="co">## $herbCover</span>
 <span class="co">## [1] 10</span>
@@ -230,9 +230,9 @@
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">internalCarbon</span></code></pre></div>
 <pre><code><span class="co">##        sugarLeaf starchLeaf sugarSapwood starchSapwood</span>
-<span class="co">## T1_148 0.4029239 0.00925123    0.5738487      3.231261</span>
-<span class="co">## T2_168 0.3585751 0.00925123    1.0741383      3.230196</span>
-<span class="co">## S1_165 0.7223526 0.00925123    0.2857655      3.383669</span></code></pre>
+<span class="co">## T1_148 0.4029239 0.00925123    0.5738487      3.276375</span>
+<span class="co">## T2_168 0.3585751 0.00925123    1.0741383      3.280965</span>
+<span class="co">## S1_165 0.7223526 0.00925123    0.2857655      3.445161</span></code></pre>
 <p>and <code>internalAllocation</code> stores the carbon allocation targets:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">internalAllocation</span></code></pre></div>
@@ -249,31 +249,32 @@
 <p>Having all the input information we are ready to call function <code><a href="../reference/growth.html">growth()</a></code>, which has the same parameter names as <code><a href="../reference/spwb.html">spwb()</a></code>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">G1</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Initial plant cohort biomass (g/m2): 8551.44</span>
+<pre><code><span class="co">## Initial plant cohort biomass (g/m2): 8436.88</span>
 <span class="co">## Initial soil water content (mm): 291.257</span>
 <span class="co">## Initial snowpack content (mm): 0</span>
 <span class="co">## Performing daily simulations</span>
 <span class="co">## </span>
 <span class="co">##  [Year 2001]: ....................................</span>
 <span class="co">## </span>
-<span class="co">## Final plant biomass (g/m2): 8717.39</span>
-<span class="co">## Change in plant biomass (g/m2): 165.947</span>
-<span class="co">## Plant biomass balance result (g/m2): 165.947</span>
+<span class="co">## Final plant biomass (g/m2): 8574.24</span>
+<span class="co">## Change in plant biomass (g/m2): 137.365</span>
+<span class="co">## Plant biomass balance result (g/m2): 137.365</span>
 <span class="co">## Plant biomass balance components:</span>
-<span class="co">##   Structural balance (g/m2) 264 Labile balance (g/m2) -98</span>
-<span class="co">##   Plant individual balance (g/m2) 166 Mortality loss (g/m2) 0</span>
-<span class="co">## Final soil water content (mm): 269.256</span>
+<span class="co">##   Structural balance (g/m2) 260 Labile balance (g/m2) -123</span>
+<span class="co">##   Plant individual balance (g/m2) 137 Mortality loss (g/m2) 0</span>
+<span class="co">## Final soil water content (mm): 269.694</span>
 <span class="co">## Final snowpack content (mm): 0</span>
-<span class="co">## Change in soil water content (mm): -22.0006</span>
-<span class="co">## Soil water balance result (mm): -22.0006</span>
+<span class="co">## Change in soil water content (mm): -21.5629</span>
+<span class="co">## Soil water balance result (mm): -21.5629</span>
 <span class="co">## Change in snowpack water content (mm): 0</span>
 <span class="co">## Snowpack water balance result (mm): 7.10543e-15</span>
 <span class="co">## Water balance components:</span>
 <span class="co">##   Precipitation (mm) 513</span>
 <span class="co">##   Rain (mm) 462 Snow (mm) 51</span>
 <span class="co">##   Interception (mm) 97 Net rainfall (mm) 365</span>
-<span class="co">##   Infiltration (mm) 407 Runoff (mm) 9 Deep drainage (mm) 76</span>
-<span class="co">##   Soil evaporation (mm) 28 Transpiration (mm) 325</span></code></pre>
+<span class="co">##   Infiltration (mm) 407 Runoff (mm) 9 Deep drainage (mm) 84</span>
+<span class="co">##   Soil evaporation (mm) 21 Transpiration (mm) 324</span>
+<span class="co">##   Plant extraction from soil (mm) 324  Plant water balance (mm) -0</span></code></pre>
 <p>At the end of daily simulations, the <code><a href="../reference/growth.html">growth()</a></code> function displays information regarding the carbon and water balance, which is mostly useful to check that balances are closed.</p>
 <p>Function <code><a href="../reference/growth.html">growth()</a></code> returns an object of class with the same name, actually a list:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
@@ -354,10 +355,10 @@
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, 
                  temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##          n       Bias   Bias.rel        MAE    MAE.rel          r        NSE </span>
-<span class="co">## 12.0000000 -0.2322918 -8.9626618  0.2614587 10.0880277  0.9930323  0.9657755 </span>
-<span class="co">##    NSE.abs </span>
-<span class="co">##  0.8886899</span></code></pre>
+<pre><code><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span>
+<span class="co">##  12.0000000  -0.2885493 -10.4329271   0.2885493  10.4329271   0.9984737 </span>
+<span class="co">##         NSE     NSE.abs </span>
+<span class="co">##   0.9831543   0.8831584</span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically good. For illustrative purposes, we also compare diameter increment values, here drawing the observed and predicted time series together:</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"DI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, 

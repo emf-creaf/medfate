@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.6.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.0</span>
       </span>
     </div>
 
@@ -57,7 +57,7 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">transp_transpirationGranier</span><span class="op">(</span><span class="va">x</span>, <span class="va">meteo</span>, <span class="va">day</span>, 
-                            modifyInput <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+                            <span class="va">elevation</span>, modifyInput <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu">transp_transpirationSperry</span><span class="op">(</span><span class="va">x</span>, <span class="va">meteo</span>, <span class="va">day</span>,
                            <span class="va">latitude</span>, <span class="va">elevation</span>, <span class="va">slope</span>, <span class="va">aspect</span>, 
                            canopyEvaporation <span class="op">=</span> <span class="fl">0</span>, snowMelt <span class="op">=</span> <span class="fl">0</span>, soilEvaporation <span class="op">=</span> <span class="fl">0</span>, 
@@ -214,7 +214,7 @@
 <span class="r-in"><span class="co"># Transpiration according to Granier's model, plant water potential </span></span>
 <span class="r-in"><span class="co"># and plant stress for a given day</span></span>
 <span class="r-in"><span class="va">t1</span> <span class="op">=</span> <span class="fu">transp_transpirationGranier</span><span class="op">(</span><span class="va">x1</span>, <span class="va">examplemeteo</span>, <span class="fl">1</span>, </span>
-<span class="r-in">                            modifyInput <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in">                                 elevation <span class="op">=</span> <span class="fl">100</span>, modifyInput <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Switch to 'Sperry' transpiration mode</span></span>
 <span class="r-in"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></span>
