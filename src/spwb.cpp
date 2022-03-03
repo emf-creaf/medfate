@@ -84,7 +84,7 @@ List spwbDay1(List x, NumericVector meteovec,
                                              snowpack, true);
   
   NumericVector infilPerc, EsoilVec;
-  NumericVector EplantVec(nlayers, 0.0);
+  NumericVector ExtractionVec(nlayers, 0.0);
   
   if(!plantWaterPools) {
     //Soil infiltration and percolation
@@ -137,9 +137,10 @@ List spwbDay1(List x, NumericVector meteovec,
   List transp = transpirationGranier(x, meteovec, elevation, true);
   // Rcout<<"hola2";
   NumericMatrix EplantCoh = Rcpp::as<Rcpp::NumericMatrix>(transp["Extraction"]);
-  for(int l=0;l<nlayers;l++) EplantVec[l] = sum(EplantCoh(_,l));
+  for(int l=0;l<nlayers;l++) ExtractionVec[l] = sum(EplantCoh(_,l));
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
-
+  NumericVector Eplant = Rcpp::as<Rcpp::NumericVector>(Plants["Transpiration"]);
+  
   NumericVector psiVec = psi(soil, soilFunctions); //Calculate current soil water potential for output
   
   NumericVector DB = NumericVector::create(_["PET"] = pet, 
@@ -147,12 +148,12 @@ List spwbDay1(List x, NumericVector meteovec,
                                            _["NetRain"] = hydroInputs["NetRain"], _["Snowmelt"] = hydroInputs["Snowmelt"],
                                            _["Runon"] = hydroInputs["Runon"], 
                                            _["Infiltration"] = infilPerc["Infiltration"], _["Runoff"] = infilPerc["Runoff"], _["DeepDrainage"] = infilPerc["DeepDrainage"],
-                                           _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(EplantVec), _["Transpiration"] = sum(EplantVec));
+                                           _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(ExtractionVec), _["Transpiration"] = sum(Eplant));
   
   NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell, _["LAIlive"] = LAIcelllive,  _["LAIexpanded"] = LAIcellexpanded, _["LAIdead"] = LAIcelldead, 
                                            _["Cm"] = Cm, _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
   DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, 
-                                   _["PlantExtraction"] = EplantVec, 
+                                   _["PlantExtraction"] = ExtractionVec, 
                                    _["psi"] = psiVec);
   List l = List::create(_["cohorts"] = clone(cohorts),
                         _["WaterBalance"] = DB, 
