@@ -38,6 +38,7 @@
             "Plant LAI (live)" = "PlantLAIlive",
             "Transpiration" = "PlantTranspiration",
             "Transpiration per leaf" = "TranspirationPerLeaf",
+            "Plant water balance" = "PlantWaterBalance",
             "Gross photosynthesis" = "PlantGrossPhotosynthesis",
             "Gross photosynthesis per leaf" = "GrossPhotosynthesisPerLeaf")
   if(transpirationMode == "Sperry") {
@@ -64,11 +65,12 @@
               "Leaf symplastic relative water content" = "LeafSympRWC")
   } else {
     TYPES <-c(TYPES,
-              "Plant water potential" = "PlantPsi")
+              "Plant water potential" = "PlantPsi",
+              "Stem relative water content" = "StemRWC",
+              "Leaf relative water content" = "LeafRWC")
   }
   if(transpirationMode == "Sperry") {
     TYPES <-c(TYPES,
-              "Plant water balance" = "PlantWaterBalance",
               "Soil-plant conductance" = "SoilPlantConductance")
   }
   TYPES <-c(TYPES,

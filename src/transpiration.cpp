@@ -21,6 +21,8 @@ const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
 const double Cp_Jmol = 29.37152; // J * mol^-1 * ºC^-1
 const double eps_xylem = 1e3; // xylem elastic modulus (1 GPa = 1000 MPa)
 
+const double Krelative_disconnection = 0.10; //10% of whole-plant relative conductance leads to disconnection from soil
+  
 //Returns the average soil moisture within the rhizosphere of each cohort
 NumericMatrix cohortRhizosphereMoisture(NumericMatrix W, List RHOP) {
   int numCohorts = W.nrow();
@@ -1607,7 +1609,6 @@ List transpirationGranier(List x, NumericVector meteovec,
   NumericVector Psi_Critic = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Critic"]);
   NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
   NumericVector WUE_decay(numCohorts, 0.2812);
-  NumericVector pRootDisc = Rcpp::as<Rcpp::NumericVector>(paramsTransp["pRootDisc"]);
   NumericVector Tmax_LAI(numCohorts, 0.134);
   NumericVector Tmax_LAIsq(numCohorts, -0.006);
   if(paramsTransp.containsElementNamed("Tmax_LAI")) {
@@ -1617,6 +1618,18 @@ List transpirationGranier(List x, NumericVector meteovec,
   if(paramsTransp.containsElementNamed("WUE_decay")) {
     WUE_decay = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_decay"]);
   }
+  
+  //Water storage parameters
+  DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
+  NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
+  NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
+  NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
+  NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]); //l·m-2 = mm
+  NumericVector LeafPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafPI0"]);
+  NumericVector LeafEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafEPS"]);
+  NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
+  NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
+  
   //Communication vectors
   //Comunication with outside
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
@@ -1672,6 +1685,9 @@ List transpirationGranier(List x, NumericVector meteovec,
   NumericMatrix RootPsi(numCohorts, nlayers);
   NumericVector Eplant(numCohorts, 0.0), Agplant(numCohorts, 0.0);
   NumericVector DDS(numCohorts, 0.0);
+  NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts),RWCssm(numCohorts), RWClsm(numCohorts);
+  NumericVector PWB(numCohorts,0.0);
+  
   NumericVector Kl, epc, Vl;
   NumericVector Kunsat = conductivity(soil);
   double WeibullShape=3.0;
@@ -1683,7 +1699,6 @@ List transpirationGranier(List x, NumericVector meteovec,
       //Update soil water potential from pool moisture
       psiSoil = psi(soil_c,soilFunctions); 
     }
-    NumericVector LSc(nlayers);
     NumericVector Klc(nlayers);
     NumericVector Kunlc(nlayers);
     for(int l=0;l<nlayers;l++) {
@@ -1693,25 +1708,25 @@ List transpirationGranier(List x, NumericVector meteovec,
       if(cavitationRefill!="total") {
         Klc[l] = std::min(Klc[l], 1.0-StemPLC[c]); 
       }
-      LSc[l] = Klc[l];
-      if(Klc[l]<pRootDisc[c]) { 
-        RootPsi(c,l) = K2Psi(pRootDisc[c],Psi_Extract[c],WeibullShape);
-        LSc[l] = pRootDisc[c]; //So that layer stress does not go below pRootDisc
+      if(Klc[l] < Krelative_disconnection) { 
+        RootPsi(c,l) = K2Psi(Krelative_disconnection,Psi_Extract[c],WeibullShape);
         Klc[l] = 0.0; // Prevents drawing water from layer
       }
       Kunlc[l] = pow(Kunsat[l],0.5)*V(c,l);
     }
     double sumKunlc = sum(Kunlc);
     double Klcmean = sum(Klc*V(c,_));
-    double LScmean = sum(LSc*V(c,_));
     for(int l=0;l<nlayers;l++) {
       double epc = std::max(TmaxCoh[c]*Klcmean*(Kunlc[l]/sumKunlc),0.0);
-      //If relative conductance is smaller than the value for root disconnection
-      //Set root potential to minimum value before disconnection and transpiration from that layer to zero
+      //Extraction
       EplantCoh(c,l) = epc;
+      
+      //Transpiration
       Eplant[c] = Eplant[c] + epc;
+      
+      //Plant water balance
+      PWB[c] = 0.0;
     }
-    DDS[c] = Phe[c]*(1.0 - LScmean); 
   }
 
   for(int c=0;c<numCohorts;c++) {
@@ -1723,9 +1738,18 @@ List transpirationGranier(List x, NumericVector meteovec,
     }
     Agplant[c] = WUE[c]*Eplant[c]*std::min(1.0, pow(PARcohort[c]/100.0,WUE_decay[c]));
     // Rcout<< c<< " "<< WUE[c] << " "<< Eplant[c] << " " << PARcohort[c]<< " " << Agplant[c]<<"\n"; 
+    
+    //Relative water content
+    double apoRWC = apoplasticRelativeWaterContent(PlantPsi[c], WeibullShape, Psi_Critic[c]);
+    double leafSympRWC = symplasticRelativeWaterContent(PlantPsi[c],  LeafPI0[c], LeafEPS[c]);
+    double stemSympRWC = symplasticRelativeWaterContent(PlantPsi[c],  StemPI0[c], StemEPS[c]);
+    RWClm[c] =  leafSympRWC*(1.0 - LeafAF[c]) + apoRWC*LeafAF[c];
+    RWCsm[c] =  stemSympRWC*(1.0 - StemAF[c]) + apoRWC*StemAF[c];
+    //Daily drought stress from plant WP
+    DDS[c] = Phe[c]*(1.0 - Psi2K(PlantPsi[c],Psi_Extract[c],WeibullShape)); 
   }
   
-  
+    
   if(modifyInput) {
     internalWater["StemPLC"] = StemPLC;
     internalWater["PlantPsi"] = PlantPsi;
@@ -1763,7 +1787,10 @@ List transpirationGranier(List x, NumericVector meteovec,
                                        _["GrossPhotosynthesis"] = Agplant,
                                        _["PlantPsi"] = PlantPsi, 
                                        _["DDS"] = DDS,
-                                       _["StemPLC"] = StemPLC);
+                                       _["StemRWC"] = RWCsm,
+                                       _["LeafRWC"] = RWClm,
+                                       _["StemPLC"] = StemPLC,
+                                       _["WaterBalance"] = PWB);
   Plants.attr("row.names") = above.attr("row.names");
   EplantCoh.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   List l = List::create(_["cohorts"] = clone(cohorts),

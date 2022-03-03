@@ -577,15 +577,7 @@ NumericVector leafAFWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(leafAF);
 }
-NumericVector pRootDiscWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector pRootDisc = speciesNumericParameter(SP, SpParams, "pRootDisc");
-  for(int c=0;c<pRootDisc.size();c++) {
-    if(NumericVector::is_na(pRootDisc[c])) {
-      pRootDisc[c] = 0.0;
-    }
-  }
-  return(pRootDisc);
-}
+
 NumericVector TmaxLAIWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector Tmax_LAI = speciesNumericParameter(SP, SpParams, "Tmax_LAI");
   for(int c=0;c<Tmax_LAI.size();c++) {
@@ -1286,7 +1278,6 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "LeafPI0") return(leafPI0WithImputation(SP, SpParams));
     else if(parName == "LeafEPS") return(leafEPSWithImputation(SP, SpParams));
     else if(parName == "LeafAF") return(leafAFWithImputation(SP, SpParams));
-    else if(parName == "pRootDisc") return(pRootDiscWithImputation(SP, SpParams));
     else if(parName == "Tmax_LAI") return(TmaxLAIWithImputation(SP, SpParams));
     else if(parName == "Tmax_LAIsq") return(TmaxLAIsqWithImputation(SP, SpParams));
     else if(parName == "WUE") return(WUEWithImputation(SP, SpParams));
