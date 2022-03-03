@@ -41,7 +41,7 @@ A list, with the following options (default values in parentheses):
     \itemize{
       \item{"none" - no refilling.}
       \item{"annual" - every first day of the year.}
-      \item{"rate" - following a rate of new sapwood formation (only available if \code{transpirationMode = "Sperry"})}
+      \item{"rate" - following a rate of new sapwood formation.}
       \item{"total" - instantaneous complete refilling.}
     }
   }

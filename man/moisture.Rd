@@ -56,6 +56,7 @@ moisture_leafWaterCapacity(SLA, ld)
   \item{L}{Vector with the length of coarse roots (mm) for each soil layer.}
   \item{V}{Vector with the proportion [0-1] of fine roots within each soil layer.}
   \item{Al2As}{Leaf area to sapwood area (in m2·m-2).}
+  \item{height}{Plant height (in cm).}  
   \item{SLA}{Specific leaf area (mm2·mg-1).}
   \item{wd}{Wood density (g·cm-3).}
   \item{ld}{Leaf tissue density (g·cm-3).}

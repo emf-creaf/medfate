@@ -1423,14 +1423,15 @@ Parameter $\Psi_{extract}$ (`Psi_Extract`) is the water potential at which trans
 names(bartlett)[names(bartlett)=="πtlp.(MPa)"] = "Ptlp"
 names(hydratry)[names(hydratry)=="PItlp"] = "Ptlp"
 ```
-The mapping is done by calling `populateTraits()` on a merged dataset:
+However, we did not take $\Psi_{tlp}$ directly as a value for $\Psi_{extract}$ but assumed that $\Psi_{tlp}$ corresponded to 5% of maximum transpiration. Using $\Psi_{tlp}$ and the equation that relates  $\Psi_{extract}$ with relative whole plant transpiration $\Psi_{extract}$ is $\Psi_{extract} = \left[ln(0.5)/ln(0.05)\right]^{(1/r)} \cdot \Psi_{tlp}$, where $r = 3$. The mapping is done by calling `populateTraits()` on a merged dataset:
 ```{r}
 Ptlp_data = rbind(martin_stpaul[, c("Species", "Ptlp")],
                   hydratry[, c("Species", "Ptlp")],
                   bartlett[,c("Species", "Ptlp")])
 SpParams <- populateTraits(SpParams, Ptlp_data, 
                            trait_mapping = list("Psi_Extract" = "Ptlp"),
-                           taxon_column = "Species")
+                           taxon_column = "Species",
+                           scalar_functions = c("Psi_Extract" = function(x){x*(log(0.5)/log(0.05))^(1/3)}))
 ```
 The distribution of parameter values is:
 ```{r}

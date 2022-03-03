@@ -1608,6 +1608,7 @@ List transpirationGranier(List x, NumericVector meteovec,
   //Control parameters
   List control = x["control"];
   String cavitationRefill = control["cavitationRefill"];
+  double refillMaximumRate = control["refillMaximumRate"];
   String soilFunctions = control["soilFunctions"];
   double verticalLayerSize = control["verticalLayerSize"];
   bool plantWaterPools = control["plantWaterPools"];
@@ -1653,6 +1654,9 @@ List transpirationGranier(List x, NumericVector meteovec,
     poolProportions = belowdf["poolProportions"];
   }
   //Parameters  
+  DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+  NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
+  
   DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
   NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
   
@@ -1830,6 +1834,12 @@ List transpirationGranier(List x, NumericVector meteovec,
     RWCsm[c] =  stemSympRWC*(1.0 - StemAF[c]) + apoRWC*StemAF[c];
     //Daily drought stress from plant WP
     DDS[c] = Phe[c]*(1.0 - Psi2K(PlantPsi[c],Psi_Extract[c],WeibullShape)); 
+    
+    if(cavitationRefill=="rate") {
+      double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
+      double r = refillMaximumRate*std::max(0.0, (PlantPsi[c] + 1.5)/1.5);
+      StemPLC[c] = std::max(0.0, StemPLC[c] - (r/SAmax));
+    }
   }
   
     
