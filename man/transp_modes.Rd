@@ -171,7 +171,7 @@ x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 # Transpiration according to Granier's model, plant water potential 
 # and plant stress for a given day
 t1 = transp_transpirationGranier(x1, examplemeteo, 1, 
-                            modifyInput = FALSE)
+                                 elevation, modifyInput = FALSE)
 
 #Switch to 'Sperry' transpiration mode
 control = defaultControl("Sperry")

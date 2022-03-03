@@ -10,7 +10,7 @@
 \alias{moisture_cohortFMCDay}
 \alias{moisture_pressureVolumeCurvePlot}
 \alias{moisture_turgorLossPoint}
-\alias{moisture_stemWaterCapacity}
+\alias{moisture_sapwoodWaterCapacity}
 \alias{moisture_leafWaterCapacity}
 
 \title{
@@ -34,8 +34,8 @@ moisture_pressureVolumeCurvePlot(x, segment="leaf",
                     fraction = "all",
                     psiVec =  seq(-0.1, -8.0, by =-0.01),
                     speciesNames = FALSE)
-hydraulics_stemWaterCapacity(Al2As, height, V, L, wd)
-hydraulics_leafWaterCapacity(SLA, ld)
+moisture_sapwoodWaterCapacity(Al2As, height, V, L, wd)
+moisture_leafWaterCapacity(SLA, ld)
 }
 \arguments{
   \item{psiSym, psiApo}{Symplastic or apoplastic water potential (MPa).}
