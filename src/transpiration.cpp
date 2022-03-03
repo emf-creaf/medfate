@@ -1771,7 +1771,7 @@ List transpirationGranier(List x, NumericVector meteovec,
       }
       Kunlc[l] = pow(Kunsat[l],0.5)*V(c,l);
     }
-    //Extraction from soil
+    //Extraction from soil (can later be modified if there are changes in plant water content)
     double sumKunlc = sum(Kunlc);
     double Klcmean = sum(Klc*V(c,_));
     for(int l=0;l<nlayers;l++) {
@@ -1786,21 +1786,25 @@ List transpirationGranier(List x, NumericVector meteovec,
     double E_gmin = Gswmin[c]*(vpd_tmin+vpd_tmax)/(2.0*Patm); // mol·s-1·m-2
     double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
     
-    //The plant is connected to the soil if transpiration is larger than cuticular transpiration 
-    bool connected = (sum(EplantCoh(c,_)) > E_cut);
+    //The plant is connected to the soil if plant psi does not lead to turgor loss point
+    double rootCrownPsi = averagePsi(RootPsi(c,_), V(c,_), WeibullShape, Psi_Extract[c]);
+    bool connected = (Psi2K(rootCrownPsi, Psi_Extract[c], WeibullShape) > 0.05);
     double oldVol = plantVol(PlantPsi[c], parsVol); 
     //If connected to any soil layer modify transpiration according to 
     //changes in relative water content
     if(connected) {
       Eplant[c] = sum(EplantCoh(c,_));
-      double rootCrownPsi = averagePsi(RootPsi(c,_), V(c,_), WeibullShape, Psi_Extract[c]);
       PlantPsi[c] = findNewPlantPsiConnected(Eplant[c], PlantPsi[c], rootCrownPsi, parsVol);
       double newVol = plantVol(PlantPsi[c], parsVol);
 
       double volDiff = newVol - oldVol;
       //Plant transpiration and water balance
       PWB[c] = volDiff;
-      Eplant[c] = Eplant[c]  - volDiff;
+
+      //Divide the difference among soil layers extraction
+      for(int l=0;l<nlayers;l++) {
+        EplantCoh(c,l) += volDiff*(EplantCoh(c,l)/Eplant[c]);
+      }
     } else {
       //Set extraction to zero (so that water balance is fulfilled)
       for(int l=0;l<nlayers;l++) EplantCoh(c,l) = 0.0;
