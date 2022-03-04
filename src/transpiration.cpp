@@ -1592,15 +1592,26 @@ double findNewPlantPsiConnected(double flowFromRoots, double plantPsi, double ro
 
 double findNewPlantPsiCuticular(double E_cut, double plantPsi, NumericVector parsVol){
   double V = plantVol(plantPsi, parsVol);
+  // Rcout<< " V: "<< V<<" "<< E_cut<<" ";
   double psiStep = 0.001;
-  double Vnew = plantVol(plantPsi - psiStep, parsVol);
+  double psi = plantPsi - psiStep;
+  double Vnew = plantVol(psi, parsVol);
+  double Vdecrease = V - Vnew;
+  double Etol = 1e-6;
   int cnt = 0;
-  while(((V - Vnew) < E_cut) & (cnt < 100)) {
+  while((std::abs(Vdecrease - E_cut) > Etol) & (cnt < 100)) {
      cnt++;
-     psiStep = psiStep + 0.001;
-     Vnew = plantVol(plantPsi - psiStep, parsVol);
+     if(Vdecrease > E_cut) {
+       //Go one step behind and reduce step size 
+       psi = psi + psiStep;
+       psiStep = psiStep/2.0; 
+     } else {
+       psi = psi - psiStep;
+     }
+     Vnew = plantVol(psi, parsVol);
+     Vdecrease = V - Vnew;
   }
-  return(plantPsi - psiStep);
+  return(psi);
 }
 
 List transpirationGranier(List x, NumericVector meteovec,  
@@ -1626,7 +1637,7 @@ List transpirationGranier(List x, NumericVector meteovec,
   double tmin = meteovec["tmin"];
   //Daily average water vapor pressure at the atmosphere (kPa)
   double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin,rhmax);
-  //Atmospheric pressure
+  //Atmospheric pressure (kPa)
   double Patm = meteoland::utils_atmosphericPressure(elevation);
   
   //Vegetation input
@@ -1779,13 +1790,26 @@ List transpirationGranier(List x, NumericVector meteovec,
     }
 
     
-    //The plant is connected to the soil if plant psi does not lead to turgor loss point
+    //Cuticular transpiration    
+    // double lvp_tmax = leafVapourPressure(tmax,  PlantPsi[c]);
+    // double lvp_tmin = leafVapourPressure(tmin,  PlantPsi[c]);
+    // double vpd_tmax = std::max(0.0, lvp_tmax - vpatm);
+    // double vpd_tmin = std::max(0.0, lvp_tmin - vpatm);
+    // double E_gmin = Gswmin[c]*(vpd_tmin+vpd_tmax)/(2.0*Patm); // mol·s-1·m-2
+    // double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
+    // 
     double rootCrownPsi = averagePsi(RootPsi(c,_), V(c,_), WeibullShape, Psi_Extract[c]);
-    bool connected = (Psi2K(rootCrownPsi, Psi_Extract[c], WeibullShape) > 0.05);
+    
+    //a ) The plant is connected to the soil if plant psi does not lead to turgor loss point
+    // bool connected = (Psi2K(rootCrownPsi, Psi_Extract[c], WeibullShape) > 0.05);
+    // b ) The plant is connected to the soil as long as normal transpiration is larger than cuticular
+    // bool connected = (sum(EplantCoh(c,_)) > E_cut);
+    
+    
     double oldVol = plantVol(PlantPsi[c], parsVol); 
     //If connected to any soil layer modify transpiration according to 
     //changes in relative water content
-    if(connected) {
+    // if(connected) {
       Eplant[c] = sum(EplantCoh(c,_));
       PlantPsi[c] = findNewPlantPsiConnected(Eplant[c], PlantPsi[c], rootCrownPsi, parsVol);
       double newVol = plantVol(PlantPsi[c], parsVol);
@@ -1798,26 +1822,17 @@ List transpirationGranier(List x, NumericVector meteovec,
       for(int l=0;l<nlayers;l++) {
         EplantCoh(c,l) += volDiff*(EplantCoh(c,l)/Eplant[c]);
       }
-    } else {
-      //Set extraction to zero (so that water balance is fulfilled)
-      for(int l=0;l<nlayers;l++) EplantCoh(c,l) = 0.0;
-      
-      //Cuticular transpiration    
-      double lvp_tmax = leafVapourPressure(tmax,  PlantPsi[c]);
-      double lvp_tmin = leafVapourPressure(tmin,  PlantPsi[c]);
-      double vpd_tmax = std::max(0.0, lvp_tmax - vpatm);
-      double vpd_tmin = std::max(0.0, lvp_tmin - vpatm);
-      double E_gmin = Gswmin[c]*(vpd_tmin+vpd_tmax)/(2.0*Patm); // mol·s-1·m-2
-      double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
-      
-      //If not connected to any layer, cuticular transpiration should be still operating
-      PlantPsi[c] = findNewPlantPsiCuticular(E_cut, PlantPsi[c], parsVol);
-      double newVol = plantVol(PlantPsi[c], parsVol);
-      E_cut = (oldVol - newVol); //Re-adjust E_cut so that it matches changes in WP
-      Eplant[c] = E_cut;
-      PWB[c] = -E_cut;
-    }
-      
+    // } else {
+    //   //Set extraction to zero (so that water balance is fulfilled)
+    //   for(int l=0;l<nlayers;l++) EplantCoh(c,l) = 0.0;
+    //   // Rcout<< c << " "<< PlantPsi[c]<< " ["<< vpd_tmin <<" , "<<vpd_tmax<<"] "<< E_gmin;
+    //   //If not connected to any layer, cuticular transpiration should be still operating
+    //   PlantPsi[c] = findNewPlantPsiCuticular(E_cut, PlantPsi[c], parsVol);
+    //   Rcout<< " "<<PlantPsi[c]<<"\n";
+    //   Eplant[c] = E_cut;
+    //   PWB[c] = -E_cut;
+    // }
+    //   
     
     //Photosynthesis
     Agplant[c] = WUE[c]*Eplant[c]*std::min(1.0, pow(PARcohort[c]/100.0,WUE_decay[c]));
