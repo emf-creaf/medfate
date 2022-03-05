@@ -1657,13 +1657,13 @@ List transpirationGranier(List x, NumericVector meteovec,
 
   //Water pools
   NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
-  NumericMatrix Wrhizo;
   List RHOP;
   NumericVector poolProportions(numCohorts);
   if(plantWaterPools) {
     RHOP = belowLayers["RHOP"];
     poolProportions = belowdf["poolProportions"];
   }
+  
   //Parameters  
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
   NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
@@ -1740,56 +1740,95 @@ List transpirationGranier(List x, NumericVector meteovec,
   if(pabs>0.0) TmaxCoh = Tmax*(CohASWRF/pabs);
   
   //Actual plant transpiration
-  //Soil input
-  NumericVector psiSoil = psi(soil,soilFunctions); //Update soil water potential
-  List soil_c;
-  if(plantWaterPools) {
-    soil_c= clone(soil); //Clone soil
-    //Calculate average rhizosphere moisture, including rhizosphere overlaps
-    Wrhizo = cohortRhizosphereMoisture(Wpool, RHOP);
-  }
   int nlayers = Wpool.ncol();
-  NumericMatrix EplantCoh(numCohorts, nlayers);
-  NumericMatrix RootPsi(numCohorts, nlayers);
+  NumericMatrix Extraction(numCohorts, nlayers); // this is final extraction of each cohort from each layer
+  NumericMatrix ExtractionPoolsCoh(numCohorts, nlayers); //this is used to store extraction of a SINGLE plant cohort from all pools
+  
   NumericVector Eplant(numCohorts, 0.0), Agplant(numCohorts, 0.0);
   NumericVector DDS(numCohorts, 0.0);
   NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts),RWCssm(numCohorts), RWClsm(numCohorts);
   NumericVector PWB(numCohorts,0.0);
-  
   NumericVector Kl, epc, Vl;
+  
+  //Calculate unsaturated conductivity
   NumericVector Kunsat = conductivity(soil);
+  //Calculate soil water potential
+  NumericVector psiSoil = psi(soil,soilFunctions);
+  for(int l = 0; l<nlayers;l++)  {
+    // Rcout<<l<< " psi: "<< psiSoil[l]<<"\n";
+  }
+  NumericMatrix KunsatM(numCohorts, nlayers);
+  NumericMatrix psiSoilM(numCohorts, nlayers);
+  if(plantWaterPools) {
+    List soil_pool = clone(soil);
+    NumericVector Ws_pool = soil_pool["W"];
+    for(int j = 0; j<numCohorts;j++) {
+      //Copy values of soil moisture from pool of cohort j
+      for(int l = 0; l<nlayers;l++) Ws_pool[l] = Wpool(j,l);
+      //Calculate unsaturated conductivity
+      KunsatM(j,_) = conductivity(soil_pool);
+      //Calculate soil water potential
+      psiSoilM(j,_) = psi(soil_pool, soilFunctions);
+      // for(int l = 0; l<nlayers;l++)  {
+      //   Rcout<<j<< " "<< l <<" psiM: "<< psiSoilM(j,l)<<"\n";
+      // }
+    }
+  }
+
   for(int c=0;c<numCohorts;c++) {
     NumericVector parsVol = NumericVector::create(_["psi_critic"] = Psi_Critic[c], _["stem_plc"] = StemPLC[c],
                                                   _["leafpi0"] = LeafPI0[c], _["leafeps"] = LeafEPS[c],
                                                   _["leafaf"] = LeafAF[c],_["stempi0"] = StemPI0[c],_["stemeps"] = StemEPS[c],
                                                   _["stemaf"] = StemAF[c],_["Vsapwood"] = Vsapwood[c],_["Vleaf"] = Vleaf[c],
                                                   _["LAIphe"] = LAIphe[c],_["LAIlive"] = LAIlive[c]);
-    if(plantWaterPools) { 
-      //Copy rhizosphere moisture to soil moisture
-      NumericVector W_c = soil_c["W"];
-      for(int l=0;l<nlayers;l++) W_c[l] = Wrhizo(c,l);
-      //Update soil water potential from pool moisture
-      psiSoil = psi(soil_c,soilFunctions); 
-    }
-    NumericVector Klc(nlayers);
-    NumericVector Kunlc(nlayers);
-    for(int l=0;l<nlayers;l++) {
-      RootPsi(c,l) = psiSoil[l]; //Set initial guess of root potential to soil values
-      Klc[l] = Psi2K(psiSoil[l], Psi_Extract[c], WeibullShape);
-      //Limit Mean Kl due to previous cavitation
-      if(cavitationRefill!="total") {
-        Klc[l] = std::min(Klc[l], 1.0-StemPLC[c]); 
-      }
-      Kunlc[l] = pow(Kunsat[l],0.5)*V(c,l);
-    }
+    
+    double rootCrownPsi = NA_REAL;
+    
     //Extraction from soil (can later be modified if there are changes in plant water content)
-    double sumKunlc = sum(Kunlc);
-    double Klcmean = sum(Klc*V(c,_));
-    for(int l=0;l<nlayers;l++) {
-      EplantCoh(c,l) = std::max(TmaxCoh[c]*Klcmean*(Kunlc[l]/sumKunlc),0.0);
+    if(!plantWaterPools) {
+      NumericVector Klc(nlayers);
+      NumericVector Kunlc(nlayers);
+      for(int l=0;l<nlayers;l++) {
+        Klc[l] = Psi2K(psiSoil[l], Psi_Extract[c], WeibullShape);
+        //Limit Mean Kl due to previous cavitation
+        if(cavitationRefill!="total") {
+          Klc[l] = std::min(Klc[l], 1.0-StemPLC[c]); 
+        }
+        Kunlc[l] = pow(Kunsat[l],0.5)*V(c,l);
+      }
+      double sumKunlc = sum(Kunlc);
+      double Klcmean = sum(Klc*V(c,_));
+      for(int l=0;l<nlayers;l++) {
+        Extraction(c,l) = std::max(TmaxCoh[c]*Klcmean*(Kunlc[l]/sumKunlc),0.0);
+      }
+      rootCrownPsi = averagePsi(psiSoil, V(c,_), WeibullShape, Psi_Extract[c]);
+      // Rcout<< c << " : " << rootCrownPsi<<"\n";
+    } else {
+      NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
+      NumericMatrix Klc(numCohorts, nlayers);
+      NumericMatrix Kunlc(numCohorts, nlayers);
+      NumericMatrix RHOPcohV(numCohorts, nlayers);
+      for(int j = 0;j<numCohorts;j++) {
+        for(int l=0;l<nlayers;l++) {
+          RHOPcohV(j,l) = RHOPcoh(j,l)*V(c,l);
+          Klc(j,l) = Psi2K(psiSoilM(c,l), Psi_Extract[c], WeibullShape);
+          //Limit Mean Kl due to previous cavitation
+          if(cavitationRefill!="total") Klc(j,l) = std::min(Klc(j,l), 1.0-StemPLC[c]); 
+          Kunlc(j,l) = pow(KunsatM(j,l),0.5)*RHOPcohV(j,l);
+        }
+      }
+      double sumKunlc = sum(Kunlc);
+      double Klcmean = sum(Klc*RHOPcohV);
+      for(int l=0;l<nlayers;l++) {
+        for(int j = 0;j<numCohorts;j++) {
+          ExtractionPoolsCoh(j,l) = std::max(TmaxCoh[c]*Klcmean*(Kunlc(j,l)/sumKunlc),0.0);
+        }
+        Extraction(c,l) = sum(ExtractionPoolsCoh(_,l)); // Sum extraction from all pools (layer l)
+      }
+      rootCrownPsi = averagePsiPool(psiSoilM, RHOPcohV, WeibullShape, Psi_Extract[c]);
+      // Rcout<< c << " : " << rootCrownPsi<<"\n";
     }
 
-    
     //Cuticular transpiration    
     // double lvp_tmax = leafVapourPressure(tmax,  PlantPsi[c]);
     // double lvp_tmin = leafVapourPressure(tmin,  PlantPsi[c]);
@@ -1798,45 +1837,34 @@ List transpirationGranier(List x, NumericVector meteovec,
     // double E_gmin = Gswmin[c]*(vpd_tmin+vpd_tmax)/(2.0*Patm); // mol·s-1·m-2
     // double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
     // 
-    double rootCrownPsi = averagePsi(RootPsi(c,_), V(c,_), WeibullShape, Psi_Extract[c]);
-    
-    //a ) The plant is connected to the soil if plant psi does not lead to turgor loss point
-    // bool connected = (Psi2K(rootCrownPsi, Psi_Extract[c], WeibullShape) > 0.05);
-    // b ) The plant is connected to the soil as long as normal transpiration is larger than cuticular
-    // bool connected = (sum(EplantCoh(c,_)) > E_cut);
-    
     
     double oldVol = plantVol(PlantPsi[c], parsVol); 
     //If connected to any soil layer modify transpiration according to 
     //changes in relative water content
-    // if(connected) {
-      Eplant[c] = sum(EplantCoh(c,_));
-      PlantPsi[c] = findNewPlantPsiConnected(Eplant[c], PlantPsi[c], rootCrownPsi, parsVol);
-      double newVol = plantVol(PlantPsi[c], parsVol);
-
-      double volDiff = newVol - oldVol;
-      //Plant transpiration and water balance
-      PWB[c] = volDiff;
-
-      //Divide the difference among soil layers extraction
-      for(int l=0;l<nlayers;l++) {
-        EplantCoh(c,l) += volDiff*(EplantCoh(c,l)/Eplant[c]);
+    Eplant[c] = sum(Extraction(c,_));
+    PlantPsi[c] = findNewPlantPsiConnected(Eplant[c], PlantPsi[c], rootCrownPsi, parsVol);
+    double newVol = plantVol(PlantPsi[c], parsVol);
+    
+    double volDiff = newVol - oldVol;
+    //Plant transpiration and water balance
+    PWB[c] = volDiff;
+    
+    //Divide the difference among soil layers extraction
+    for(int l=0;l<nlayers;l++) {
+      if(!plantWaterPools) { 
+        Extraction(c,l) += volDiff*(Extraction(c,l)/Eplant[c]);
+      } else { // recalculate also extraction from soil pools
+        for(int j = 0;j<numCohorts;j++) {
+          ExtractionPoolsCoh(j,l) += volDiff*(ExtractionPoolsCoh(j,l)/Eplant[c]);
+          if(modifyInput) Wpool(j,l) = Wpool(j,l) - (ExtractionPoolsCoh(j,l)/(Water_FC[l]*poolProportions[j])); //Apply extraction from pools
+        }
+        //Recalculate extraction from soil layers
+        Extraction(c,l) = sum(ExtractionPoolsCoh(_,l)); // Sum extraction from all pools (layer l)
       }
-    // } else {
-    //   //Set extraction to zero (so that water balance is fulfilled)
-    //   for(int l=0;l<nlayers;l++) EplantCoh(c,l) = 0.0;
-    //   // Rcout<< c << " "<< PlantPsi[c]<< " ["<< vpd_tmin <<" , "<<vpd_tmax<<"] "<< E_gmin;
-    //   //If not connected to any layer, cuticular transpiration should be still operating
-    //   PlantPsi[c] = findNewPlantPsiCuticular(E_cut, PlantPsi[c], parsVol);
-    //   Rcout<< " "<<PlantPsi[c]<<"\n";
-    //   Eplant[c] = E_cut;
-    //   PWB[c] = -E_cut;
-    // }
-    //   
+    }
     
     //Photosynthesis
     Agplant[c] = WUE[c]*Eplant[c]*std::min(1.0, pow(PARcohort[c]/100.0,WUE_decay[c]));
-    
   }
 
   //Plant water status (StemPLC, RWC, DDS)
@@ -1870,15 +1898,11 @@ List transpirationGranier(List x, NumericVector meteovec,
   //Modifies input soil
   if(modifyInput) {
     NumericVector Ws = soil["W"];
-    for(int l=0;l<nlayers;l++) Ws[l] = Ws[l] - (sum(EplantCoh(_,l))/Water_FC[l]); 
-    if(plantWaterPools) {
-      rhizosphereMoistureExtraction(EplantCoh, Water_FC,
-                                    Wpool, RHOP,
-                                    poolProportions);
-    } else { //copy soil to the pools of all cohorts
-      for(int c=0;c<numCohorts;c++) {
+    for(int l=0;l<nlayers;l++) Ws[l] = Ws[l] - (sum(Extraction(_,l))/Water_FC[l]); 
+    if(!plantWaterPools){ //copy soil to the pools of all cohorts
+      for(int j=0;j<numCohorts;j++) {
         for(int l=0;l<nlayers;l++) {
-          Wpool(c,l) = Ws[l];
+          Wpool(j,l) = Ws[l];
         }
       }
     }
@@ -1905,11 +1929,11 @@ List transpirationGranier(List x, NumericVector meteovec,
                                        _["StemPLC"] = StemPLC,
                                        _["WaterBalance"] = PWB);
   Plants.attr("row.names") = above.attr("row.names");
-  EplantCoh.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
+  Extraction.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   List l = List::create(_["cohorts"] = clone(cohorts),
                         _["Stand"] = Stand,
                         _["Plants"] = Plants,
-                        _["Extraction"] = EplantCoh);
+                        _["Extraction"] = Extraction);
   return(l);
 }
 

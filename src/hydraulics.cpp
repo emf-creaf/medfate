@@ -55,7 +55,14 @@ double averagePsi(NumericVector psi, NumericVector v, double c, double d) {
   double psires =  d*pow(log(sum(K*v))/(-0.6931472),1.0/c);
   return(psires);
 }
-
+double averagePsiPool(NumericMatrix Psi, NumericMatrix RHOPcohV, double c, double d) {
+  int nlayers = Psi.ncol();
+  int numCohorts = Psi.nrow();
+  NumericMatrix K(numCohorts, nlayers);
+  for(int j =0;j<numCohorts;j++) for(int l=0;l<nlayers;l++) K(j,l)= exp(-0.6931472*pow(std::abs(Psi(j,l)/d),c));
+  double psires =  d*pow(log(sum(K*RHOPcohV))/(-0.6931472),1.0/c);
+  return(psires);
+}
 
 
 // [[Rcpp::export("hydraulics_xylemConductance")]]

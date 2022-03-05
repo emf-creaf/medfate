@@ -36,7 +36,7 @@ List spwbDay1(List x, NumericVector meteovec,
   List belowLayers = x["belowLayers"];
   NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
   NumericVector Wsoil = soil["W"];
-
+  
   //Weather input
   double tday = meteovec["tday"];
   double pet = meteovec["pet"]; 
@@ -97,6 +97,9 @@ List spwbDay1(List x, NumericVector meteovec,
     //Copy soil status to x
     for(int c=0;c<numCohorts;c++) for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l];
   } else {
+    DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
+    NumericVector poolProportions = belowdf["poolProportions"];
+    
     //Reset soil moisture
     for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
     
@@ -106,8 +109,7 @@ List spwbDay1(List x, NumericVector meteovec,
                                       _["DeepDrainage"] = 0.0);
     EsoilVec = NumericVector(nlayers,0.0);
     for(int c=0;c<numCohorts;c++) {
-      double f_soil_c = LAIlive[c]/LAIcelllive;
-      
+
       //Clone soil and copy moisture values from x
       List soil_c =  clone(soil);
       NumericVector W_c = soil_c["W"];
@@ -120,14 +122,14 @@ List spwbDay1(List x, NumericVector meteovec,
       //Evaporation from bare soil_c (if there is no snow)
       NumericVector EsoilVec_c = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, true);
       //Copy result vectors
-      infilPerc["Infiltration"] = infilPerc["Infiltration"] + f_soil_c*infilPerc_c["Infiltration"];
-      infilPerc["Runoff"] = infilPerc["Runoff"] + f_soil_c*infilPerc_c["Runoff"];
-      infilPerc["DeepDrainage"] = infilPerc["DeepDrainage"] + f_soil_c*infilPerc_c["DeepDrainage"];
-      for(int l=0;l<nlayers;l++) EsoilVec[l] = EsoilVec[l] + f_soil_c*EsoilVec_c[l];
+      infilPerc["Infiltration"] = infilPerc["Infiltration"] + poolProportions[c]*infilPerc_c["Infiltration"];
+      infilPerc["Runoff"] = infilPerc["Runoff"] + poolProportions[c]*infilPerc_c["Runoff"];
+      infilPerc["DeepDrainage"] = infilPerc["DeepDrainage"] + poolProportions[c]*infilPerc_c["DeepDrainage"];
+      for(int l=0;l<nlayers;l++) EsoilVec[l] = EsoilVec[l] + poolProportions[c]*EsoilVec_c[l];
       // Copy soil_c status back to x
       for(int l=0;l<nlayers;l++) {
         Wpool(c,l) = W_c[l];
-        Wsoil[l] = Wsoil[l] + f_soil_c*Wpool(c,l); //weighted average for soil moisture
+        Wsoil[l] = Wsoil[l] + poolProportions[c]*Wpool(c,l); //weighted average for soil moisture
       }
     }
   }
@@ -253,6 +255,8 @@ List spwbDay2(List x, NumericVector meteovec,
     //Copy soil status to x
     for(int c=0;c<numCohorts;c++) for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l];
   } else {
+    DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
+    NumericVector poolProportions = belowdf["poolProportions"];
     //Reset soil moisture
     for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
     
@@ -276,14 +280,14 @@ List spwbDay2(List x, NumericVector meteovec,
       //Evaporation from bare soil_c (if there is no snow)
       NumericVector EsoilVec_c = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, true);
       //Copy result vectors
-      infilPerc["Infiltration"] = infilPerc["Infiltration"] + f_soil_c*infilPerc_c["Infiltration"];
-      infilPerc["Runoff"] = infilPerc["Runoff"] + f_soil_c*infilPerc_c["Runoff"];
-      infilPerc["DeepDrainage"] = infilPerc["DeepDrainage"] + f_soil_c*infilPerc_c["DeepDrainage"];
-      for(int l=0;l<nlayers;l++) EsoilVec[l] = EsoilVec[l] + f_soil_c*EsoilVec_c[l];
+      infilPerc["Infiltration"] = infilPerc["Infiltration"] + poolProportions[c]*infilPerc_c["Infiltration"];
+      infilPerc["Runoff"] = infilPerc["Runoff"] + poolProportions[c]*infilPerc_c["Runoff"];
+      infilPerc["DeepDrainage"] = infilPerc["DeepDrainage"] + poolProportions[c]*infilPerc_c["DeepDrainage"];
+      for(int l=0;l<nlayers;l++) EsoilVec[l] = EsoilVec[l] + poolProportions[c]*EsoilVec_c[l];
       // Copy soil_c status back to x
       for(int l=0;l<nlayers;l++) {
         Wpool(c,l) = W_c[l];
-        Wsoil[l] = Wsoil[l] + f_soil_c*Wpool(c,l); //weighted average for soil moisture
+        Wsoil[l] = Wsoil[l] + poolProportions[c]*Wpool(c,l); //weighted average for soil moisture
       }
     }
   }

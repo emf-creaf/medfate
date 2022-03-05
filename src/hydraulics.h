@@ -10,6 +10,7 @@ NumericVector K2Psi(NumericVector K, NumericVector Psi_extract, double ws= 3.0);
 double Psi2K(double psi, double Psi_extract, double ws= 3.0);
 NumericVector Psi2K(double psi, NumericVector Psi_extract, double ws= 3.0);
 double averagePsi(NumericVector psi, NumericVector v, double c, double d);
+double averagePsiPool(NumericMatrix Psi, NumericMatrix RHOPcoh, double c, double d);
 
 double correctConductanceForViscosity(double kxylem, double temp);
 
