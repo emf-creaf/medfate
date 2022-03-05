@@ -1830,32 +1830,40 @@ List transpirationGranier(List x, NumericVector meteovec,
     }
 
     //Cuticular transpiration    
-    // double lvp_tmax = leafVapourPressure(tmax,  PlantPsi[c]);
-    // double lvp_tmin = leafVapourPressure(tmin,  PlantPsi[c]);
-    // double vpd_tmax = std::max(0.0, lvp_tmax - vpatm);
-    // double vpd_tmin = std::max(0.0, lvp_tmin - vpatm);
-    // double E_gmin = Gswmin[c]*(vpd_tmin+vpd_tmax)/(2.0*Patm); // mol·s-1·m-2
-    // double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
-    // 
+    double lvp_tmax = leafVapourPressure(tmax,  PlantPsi[c]);
+    double lvp_tmin = leafVapourPressure(tmin,  PlantPsi[c]);
+    double vpd_tmax = std::max(0.0, lvp_tmax - vpatm);
+    double vpd_tmin = std::max(0.0, lvp_tmin - vpatm);
+    double E_gmin = Gswmin[c]*(vpd_tmin+vpd_tmax)/(2.0*Patm); // mol·s-1·m-2
+    double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
+
     
     double oldVol = plantVol(PlantPsi[c], parsVol); 
-    //If connected to any soil layer modify transpiration according to 
-    //changes in relative water content
-    Eplant[c] = sum(Extraction(c,_));
+    
+    //Transpiration is the maximum of predicted extraction and cuticular transpiration
+    double ext_sum = sum(Extraction(c,_));
+    double corr_extraction = 0.0;
+    if(E_cut > ext_sum) {
+      Eplant[c] = E_cut;
+      corr_extraction = E_cut - ext_sum; //Correction to be added to extraction
+    } else {
+      Eplant[c] = ext_sum;
+    }
     PlantPsi[c] = findNewPlantPsiConnected(Eplant[c], PlantPsi[c], rootCrownPsi, parsVol);
     double newVol = plantVol(PlantPsi[c], parsVol);
     
     double volDiff = newVol - oldVol;
+    
     //Plant transpiration and water balance
     PWB[c] = volDiff;
     
     //Divide the difference among soil layers extraction
     for(int l=0;l<nlayers;l++) {
       if(!plantWaterPools) { 
-        Extraction(c,l) += volDiff*(Extraction(c,l)/Eplant[c]);
+        Extraction(c,l) += (volDiff+corr_extraction)*(Extraction(c,l)/ext_sum);
       } else { // recalculate also extraction from soil pools
         for(int j = 0;j<numCohorts;j++) {
-          ExtractionPoolsCoh(j,l) += volDiff*(ExtractionPoolsCoh(j,l)/Eplant[c]);
+          ExtractionPoolsCoh(j,l) += (volDiff+corr_extraction)*(ExtractionPoolsCoh(j,l)/ext_sum);
           if(modifyInput) Wpool(j,l) = Wpool(j,l) - (ExtractionPoolsCoh(j,l)/(Water_FC[l]*poolProportions[j])); //Apply extraction from pools
         }
         //Recalculate extraction from soil layers
