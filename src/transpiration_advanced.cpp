@@ -21,45 +21,6 @@ const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
 const double Cp_Jmol = 29.37152; // J * mol^-1 * ºC^-1
 const double eps_xylem = 1e3; // xylem elastic modulus (1 GPa = 1000 MPa)
 
-// const double Krelative_disconnection = 0.10; //10% of whole-plant relative conductance leads to disconnection from soil
-const double WeibullShape=3.0;
-
-//Returns the average soil moisture within the rhizosphere of each cohort
-NumericMatrix cohortRhizosphereMoisture(NumericMatrix W, List RHOP) {
-  int numCohorts = W.nrow();
-  int nlayers = W.ncol();
-  NumericMatrix CRM(numCohorts, nlayers);
-  CRM.attr("dimnames") = W.attr("dimnames");
-  
-  for(int coh=0;coh<numCohorts;coh++) {
-    NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[coh]);
-    for(int l=0;l<nlayers;l++) {
-      CRM(coh,l) = 0.0;
-      for(int c=0;c<numCohorts;c++) {
-        CRM(coh,l) += RHOPcoh(c,l)*W(c,l);
-      }
-    }
-  }
-  return(CRM);
-}
-
-void rhizosphereMoistureExtraction(NumericMatrix cohExtract, 
-                                   NumericVector WaterFC,
-                                   NumericMatrix Wpool, 
-                                   List RHOP,
-                                   NumericVector poolProportions) {
-  int numCohorts = Wpool.nrow();
-  int nlayers = Wpool.ncol();
-  for(int coh=0;coh<numCohorts;coh++) {
-    NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[coh]);
-    for(int c=0;c<numCohorts;c++) {
-      for(int l=0;l<nlayers;l++) {
-        Wpool(c,l) -= (RHOPcoh(c,l)*cohExtract(coh,l)/(WaterFC[l]*poolProportions[c]));
-      }
-    }
-  }
-}
-
 
 // [[Rcpp::export("transp_profitMaximization")]]
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax, 
@@ -141,6 +102,50 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, d
                       Named("iMaxProfit")=imaxprofit));
 }
 
+
+void copyRhizoPsi(int c, int iPM, 
+                  NumericMatrix RhizoPsi, NumericMatrix RhizoPsiMAT,
+                  LogicalMatrix layerConnected, 
+                  List RHOP, List layerConnectedPools,
+                  NumericVector VCroot_c, NumericVector VCroot_d,  
+                  bool plantWaterPools) {
+  int nlayers = layerConnected.ncol();
+  int numCohorts = layerConnected.nrow();
+  
+  if(!plantWaterPools) {
+    int cl = 0;
+    for(int l=0;l<nlayers;l++) {
+      if(layerConnected(c,l)) {
+        RhizoPsiMAT(c,l) = RhizoPsi(iPM,cl);
+        cl++;
+      } 
+    }
+  } else {
+    NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
+    LogicalMatrix layerConnectedCoh = Rcpp::as<Rcpp::LogicalMatrix>(layerConnectedPools[c]);
+    NumericVector rplv(numCohorts,NA_REAL);
+    NumericVector vplv(numCohorts,NA_REAL);
+    int cl = 0;
+    for(int l=0;l<nlayers;l++) {
+      int clj = 0;
+      for(int j=0;j<numCohorts;j++) {
+        if(layerConnectedCoh(j,l)) {
+          rplv[clj] = RhizoPsi(iPM,cl);
+          vplv[clj] = RHOPcoh(c,l);
+          cl++;
+          clj++;
+        }
+      }
+      NumericVector pv(clj,NA_REAL);
+      NumericVector vv(clj,NA_REAL);
+      for(int j=0;j<clj;j++) {
+        pv[j] = rplv[j];
+        vv[j] = vplv[j];
+      }
+      RhizoPsiMAT(c,l) = averagePsi(pv,vv,VCroot_c[c], VCroot_d[c]);
+    }
+  }
+}
 
 List transpirationSperry(List x, NumericVector meteovec, 
                   double latitude, double elevation, double slope, double aspect, 
@@ -239,7 +244,6 @@ List transpirationSperry(List x, NumericVector meteovec,
   
   //Water pools
   NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
-  NumericMatrix Wrhizo;
   List RHOP;
   NumericVector poolProportions(numCohorts);
   if(plantWaterPools) {
@@ -478,69 +482,58 @@ List transpirationSperry(List x, NumericVector meteovec,
   
   //Hydraulics: determine layers where the plant is connected
   IntegerVector nlayerscon(numCohorts,0);
+  LogicalMatrix layerConnected(numCohorts, nlayers);
+  List layerConnectedPools(numCohorts);
+  
   NumericMatrix SoilWaterExtract(numCohorts, nlayers);
+  std::fill(SoilWaterExtract.begin(), SoilWaterExtract.end(), 0.0);
   NumericMatrix soilLayerExtractInst(nlayers, ntimesteps);
   std::fill(soilLayerExtractInst.begin(), soilLayerExtractInst.end(), 0.0);
 
-  LogicalMatrix layerConnected(numCohorts, nlayers);
-  for(int c=0;c<numCohorts;c++) {
-    nlayerscon[c] = 0;
-    for(int l=0;l<nlayers;l++) {
-      SoilWaterExtract(c,l) = 0.0;
-      if(V(c,l)>0.0) {
-        layerConnected(c,l)= true;
-        if(layerConnected(c,l)) nlayerscon[c]=nlayerscon[c]+1;
-      } else {
-        layerConnected(c,l) = false;
-      }
-    }
-    if((nlayerscon[c]==0) & verbose) Rcout<<"D";
-  }
-  
+
   //Average sap fluidity
   double sapFluidityDay = 1.0/waterDynamicViscosity((tmin+tmax)/2.0);
   
   //Hydraulics: supply functions
-  List soil_c;
-  if(plantWaterPools) {
-    soil_c= clone(soil); //Clone soil
-    //Calculate average rhizosphere moisture, including rhizosphere overlaps
-    Wrhizo = cohortRhizosphereMoisture(Wpool, RHOP);
-  }
   List supply(numCohorts);
   List supplyAboveground(numCohorts);
   supply.attr("names") = above.attr("row.names");
   for(int c=0;c<numCohorts;c++) {
-    if(plantWaterPools) { 
-      //Copy rhizosphere moisture to soil moisture
-      NumericVector W_c = soil_c["W"];
-      for(int l=0;l<nlayers;l++) W_c[l] = Wrhizo(c,l);
-      //Update soil water potential from pool moisture
-      psiSoil = psi(soil_c,soilFunctions); 
-    }
     
-    // Copy values from connected layers
-    NumericVector Vc = NumericVector(nlayerscon[c]);
-    NumericVector VCroot_kmaxc = NumericVector(nlayerscon[c]);
-    NumericVector VGrhizo_kmaxc = NumericVector(nlayerscon[c]);
-    NumericVector psic = NumericVector(nlayerscon[c]);
-    NumericVector VG_nc = NumericVector(nlayerscon[c]);
-    NumericVector VG_alphac= NumericVector(nlayerscon[c]);
-    int cnt=0;
-    for(int l=0;l<nlayers;l++) {
-      if(layerConnected(c,l)) {
-        Vc[cnt] = V(c,l);
-        VCroot_kmaxc[cnt] = sapFluidityDay*VCroot_kmax(c,l);
-        VGrhizo_kmaxc[cnt] = VGrhizo_kmax(c,l);
-        psic[cnt] = psiSoil[l];
-        VG_nc[cnt] = VG_n[l];
-        VG_alphac[cnt] = VG_alpha[l];
-        cnt++;
+    if(!plantWaterPools) {
+      //Determine connected layers (non-zero fine root abundance)
+      nlayerscon[c] = 0;
+      for(int l=0;l<nlayers;l++) {
+        if(V(c,l)>0.0) {
+          layerConnected(c,l)= true;
+          nlayerscon[c]=nlayerscon[c]+1;
+        } else {
+          layerConnected(c,l) = false;
+        }
       }
-    }
-    // double minFlow = std::max(0.0,1000.0*(Gwmin[c]*(tmin+tmax)/2.0)/Patm);
-    // Rcout<<minFlow<<"\n";
-    if(nlayerscon[c]>0) {
+      if(nlayerscon[c]==0) stop("Plant cohort not connected to any soil layer!");
+      
+      // Copy values from connected layers
+      NumericVector Vc = NumericVector(nlayerscon[c]);
+      NumericVector VCroot_kmaxc = NumericVector(nlayerscon[c]);
+      NumericVector VGrhizo_kmaxc = NumericVector(nlayerscon[c]);
+      NumericVector psic = NumericVector(nlayerscon[c]);
+      NumericVector VG_nc = NumericVector(nlayerscon[c]);
+      NumericVector VG_alphac= NumericVector(nlayerscon[c]);
+      int cnt=0;
+      for(int l=0;l<nlayers;l++) {
+        if(layerConnected(c,l)) {
+          Vc[cnt] = V(c,l);
+          VCroot_kmaxc[cnt] = sapFluidityDay*VCroot_kmax(c,l);
+          VGrhizo_kmaxc[cnt] = VGrhizo_kmax(c,l);
+          psic[cnt] = psiSoil[l];
+          VG_nc[cnt] = VG_n[l];
+          VG_alphac[cnt] = VG_alpha[l];
+          cnt++;
+        }
+      }
+      
+      
       //Build supply function networks 
       if(!capacitance) {
         supply[c] = supplyFunctionNetwork(psic,
@@ -548,8 +541,8 @@ List transpirationSperry(List x, NumericVector meteovec,
                                           VCroot_kmaxc, VCroot_c[c], VCroot_d[c],
                                           sapFluidityDay*VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
                                           sapFluidityDay*VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                          NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]), 
-                                          0.0, maxNsteps, 
+                                          NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]),
+                                          0.0, maxNsteps,
                                           ntrial, psiTol, ETol, 0.001); 
       } else {
         supply[c] = supplyFunctionNetworkStem1(psic,
@@ -557,14 +550,87 @@ List transpirationSperry(List x, NumericVector meteovec,
                                                sapFluidityDay*VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
                                                sapFluidityDay*VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
                                                0.0, //StemPLCVEC[c],
-                                               0.0, maxNsteps, 
+                                               0.0, maxNsteps,
                                                ntrial, psiTol, ETol, 0.001); 
-        
       }
     } else {
-      stop("Plant cohort not connected to any soil layer!");
+      // Plant water pools
+      
+      //Copy soil water potentials from pools
+      NumericMatrix psiSoilM(numCohorts, nlayers);
+      List soil_pool = clone(soil);
+      NumericVector Ws_pool = soil_pool["W"];
+      for(int j = 0; j<numCohorts;j++) {
+        //Copy values of soil moisture from pool of cohort j
+        for(int l = 0; l<nlayers;l++) Ws_pool[l] = Wpool(j,l);
+        //Calculate soil water potential
+        psiSoilM(j,_) = psi(soil_pool, soilFunctions);
+      }
+      
+      //Determine connected layers (non-zero fine root abundance)
+      NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
+      LogicalMatrix layerConnectedCoh(numCohorts, nlayers);
+      
+      nlayerscon[c] = 0;
+      for(int j=0; j<numCohorts;j++) {
+        for(int l=0;l<nlayers;l++) {
+          if((V(c,l)>0.0) & (RHOPcoh(j,l)>0.0)) {
+            layerConnectedCoh(j,l)= true;
+            nlayerscon[c]=nlayerscon[c] + 1;
+          } else {
+            layerConnectedCoh(j,l) = false;
+          }
+        }
+      }
+      if(nlayerscon[c]==0) stop("Plant cohort not connected to any soil layer!");
+      //Store in list
+      layerConnectedPools[c] = layerConnectedCoh; 
+      
+      // Copy values from connected layers
+      NumericVector Vc = NumericVector(nlayerscon[c]);
+      NumericVector VCroot_kmaxc = NumericVector(nlayerscon[c]);
+      NumericVector VGrhizo_kmaxc = NumericVector(nlayerscon[c]);
+      NumericVector psic = NumericVector(nlayerscon[c]);
+      NumericVector VG_nc = NumericVector(nlayerscon[c]);
+      NumericVector VG_alphac= NumericVector(nlayerscon[c]);
+      int cnt=0;
+      for(int j=0; j<numCohorts;j++) {
+        for(int l=0;l<nlayers;l++) {
+          if(layerConnectedCoh(j,l)) {
+            Vc[cnt] = V(c,l)*RHOPcoh(j,l);
+            VCroot_kmaxc[cnt] = sapFluidityDay*VCroot_kmax(c,l)*RHOPcoh(j,l);
+            VGrhizo_kmaxc[cnt] = VGrhizo_kmax(c,l)*RHOPcoh(j,l);
+            psic[cnt] = psiSoilM(j,l);
+            VG_nc[cnt] = VG_n[l];
+            VG_alphac[cnt] = VG_alpha[l];
+            cnt++;
+          }
+        }
+      }
+      
+      //Build supply function networks 
+      if(!capacitance) {
+        supply[c] = supplyFunctionNetwork(psic,
+                                          VGrhizo_kmaxc,VG_nc,VG_alphac,
+                                          VCroot_kmaxc, VCroot_c[c], VCroot_d[c],
+                                          sapFluidityDay*VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                          sapFluidityDay*VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                          NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]),
+                                          0.0, maxNsteps,
+                                          ntrial, psiTol, ETol, 0.001); 
+      } else {
+        supply[c] = supplyFunctionNetworkStem1(psic,
+                                               VGrhizo_kmaxc,VG_nc,VG_alphac,
+                                               sapFluidityDay*VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
+                                               sapFluidityDay*VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                               0.0, //StemPLCVEC[c],
+                                               0.0, maxNsteps,
+                                               ntrial, psiTol, ETol, 0.001); 
+      }
     }
   }
+  
+  
   //Sugar conc in sapwood and leaf of each cohort
   NumericVector sugarLeaf(numCohorts, 0.0);
   NumericVector sugarSapwood(numCohorts, 0.0);
@@ -574,8 +640,6 @@ List transpirationSperry(List x, NumericVector meteovec,
   }
   
   //Transpiration and photosynthesis
-  NumericVector psiBk(nlayers);
-  for(int l=0;l<nlayers;l++) psiBk[l] = psiSoil[l]; //Store initial soil water potential
   NumericMatrix K(numCohorts, nlayers);
   NumericVector Eplant(numCohorts, 0.0), Anplant(numCohorts, 0.0), Agplant(numCohorts, 0.0);
   NumericMatrix Rninst(numCohorts,ntimesteps);
@@ -855,14 +919,15 @@ List transpirationSperry(List x, NumericVector meteovec,
             for(int lc=0;lc<nlayerscon[c];lc++) {
               ElayersVEC[lc] = ERhizo(iPM,lc)*tstep; //Scale according to the time step
             }
+            
             //Copy RhizoPsi and from connected layers to RhizoPsi from soil layers
-            int cl = 0;
-            for(int l=0;l<nlayers;l++) {
-              if(layerConnected(c,l)) {
-                RhizoPsiMAT(c,l) = RhizoPsi(iPM,cl);
-                cl++;
-              } 
-            }
+            copyRhizoPsi(c,iPM, 
+                         RhizoPsi, RhizoPsiMAT,
+                         layerConnected, 
+                         RHOP, layerConnectedPools,
+                         VCroot_c, VCroot_d,  
+                         plantWaterPools);
+            
             StemSympPsiVEC[c] = Stem1PsiVEC[c]; //Stem symplastic compartment coupled with apoplastic compartment
             LeafSympPsiVEC[c] = LeafPsiVEC[c]; //Leaf symplastic compartment coupled with apoplastic compartment
             
@@ -955,22 +1020,17 @@ List transpirationSperry(List x, NumericVector meteovec,
                 Vcav = 0.0;
               }
 
-              // if((c==2) & (n==1)) {
-              //   Rcout<< iPMB<<"  sum(ERhizo(iPMB,_) "<<  sum(ERhizo(iPMB,_)) << " Flatstem: "<<Flatstem<<" Flatleaf: "<<Flatleaf<<" VStemApo_mmol: "<<VStemApo_mmol<<" Psi: "<< Stem1PsiVEC[c]<<" StemSympPsiVEC: "<< StemSympPsiVEC[c]<<" LeafSympPsiVEC: "<< LeafSympPsiVEC[c]<<"\n";
-              //   if(scnt>10.0) stop("");
-              // }
             }
             
             // Rcout<<c<<" after - EinstVEC: "<<EinstVEC[c] << " RWCStemApo: " << RWCStemApo << "  Stem1PsiVEC:"<< Stem1PsiVEC[c]<<" StemSympPsiVEC: "<< StemSympPsiVEC[c]<<" LeafSympPsiVEC: "<< LeafSympPsiVEC[c] <<"\n";
 
             //Copy RhizoPsi and from connected layers to RhizoPsi from soil layers
-            int cl = 0;
-            for(int l=0;l<nlayers;l++) {
-              if(layerConnected(c,l)) {
-                RhizoPsiMAT(c,l) = RhizoPsi(iPMB,cl);
-                cl++;
-              } 
-            }
+            copyRhizoPsi(c,iPMB, 
+                         RhizoPsi, RhizoPsiMAT,
+                         layerConnected, 
+                         RHOP, layerConnectedPools,
+                         VCroot_c, VCroot_d,  
+                         plantWaterPools);
           }
           
           //Scale soil water extracted from leaf to cohort level
@@ -991,15 +1051,29 @@ List transpirationSperry(List x, NumericVector meteovec,
 
           
           //Copy transpiration and from connected layers to transpiration from soil layers
-          int cl = 0;
-          for(int l=0;l<nlayers;l++) {
-            if(layerConnected(c,l)) {
-              SoilWaterExtract(c,l) += Esoilcn[cl]; //Add to cummulative transpiration from layers
-              soilLayerExtractInst(l,n) += Esoilcn[cl];
-              cl++;
-            } 
+          if(!plantWaterPools) {
+            int cl = 0;
+            for(int l=0;l<nlayers;l++) {
+              if(layerConnected(c,l)) {
+                SoilWaterExtract(c,l) += Esoilcn[cl]; //Add to cummulative transpiration from layers
+                soilLayerExtractInst(l,n) += Esoilcn[cl];
+                cl++;
+              } 
+            }
+          } else {
+            NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
+            LogicalMatrix layerConnectedCoh = Rcpp::as<Rcpp::LogicalMatrix>(layerConnectedPools[c]);
+            int cl = 0;
+            for(int j = 0;j<numCohorts;j++) {
+              for(int l=0;l<nlayers;l++) {
+                if(layerConnectedCoh(j,l)) {
+                  SoilWaterExtract(c,l) += Esoilcn[cl]/poolProportions[j]; //Add to cummulative transpiration from layers
+                  soilLayerExtractInst(l,n) += Esoilcn[cl]/poolProportions[j];
+                  cl++;
+                }
+              }
+            }
           }
-          
         } else {
           if(verbose) Rcout<<"NS!";
           Psi_SH(c,n) = NA_REAL;
@@ -1276,9 +1350,9 @@ List transpirationSperry(List x, NumericVector meteovec,
       Ws[l] = std::max(Ws[l] - (sum(soilLayerExtractInst(l,_))/Water_FC[l]),0.0);
     } 
     if(plantWaterPools) {
-      rhizosphereMoistureExtraction(SoilWaterExtract, Water_FC,
-                                    Wpool, RHOP,
-                                    poolProportions);
+      // rhizosphereMoistureExtraction(SoilWaterExtract, Water_FC,
+      //                               Wpool, RHOP,
+      //                               poolProportions);
       // for(int l=0;l<nlayers;l++) {
       //   double Ws2 = 0.0;
       //   for(int c=0;c<numCohorts;c++) Ws2 +=Wpool(c,l)*poolProportions[c];
@@ -1560,420 +1634,5 @@ List transpirationSperry(List x, DataFrame meteo, int day,
 } 
 
 
-//Plant volume in l·m-2 ground = mm
-double plantVol(double plantPsi, NumericVector pars) {
 
-  double leafrwc = tissueRelativeWaterContent(plantPsi, pars["leafpi0"], pars["leafeps"], 
-                                              plantPsi, WeibullShape, pars["psi_critic"], 
-                                              pars["leafaf"], 0.0);
-  double stemrwc = tissueRelativeWaterContent(plantPsi, pars["stempi0"], pars["stemeps"], 
-                                              plantPsi, WeibullShape, pars["psi_critic"], 
-                                              pars["stemaf"], pars["stem_plc"]);
-  return(((pars["Vleaf"] * leafrwc)*pars["LAIphe"]) + ((pars["Vsapwood"] * stemrwc)*pars["LAIlive"]));
-}
-
-
-double findNewPlantPsiConnected(double flowFromRoots, double plantPsi, double rootCrownPsi,
-                                NumericVector parsVol){
-  //More negative rootCrownPsi causes increased flow due to water being removed
-  if(rootCrownPsi <= plantPsi) return(rootCrownPsi); 
-  else {
-    double V = plantVol(plantPsi, parsVol);
-    double psiStep = rootCrownPsi - plantPsi;
-    double Vnew = plantVol(plantPsi + psiStep, parsVol);
-    while((Vnew - V) > flowFromRoots) {
-      psiStep = psiStep/2.0;
-      Vnew = plantVol(plantPsi + psiStep, parsVol);
-    }
-    return(plantPsi+psiStep);
-  }
-  return(plantPsi);
-}
-
-double findNewPlantPsiCuticular(double E_cut, double plantPsi, NumericVector parsVol){
-  double V = plantVol(plantPsi, parsVol);
-  // Rcout<< " V: "<< V<<" "<< E_cut<<" ";
-  double psiStep = 0.001;
-  double psi = plantPsi - psiStep;
-  double Vnew = plantVol(psi, parsVol);
-  double Vdecrease = V - Vnew;
-  double Etol = 1e-6;
-  int cnt = 0;
-  while((std::abs(Vdecrease - E_cut) > Etol) & (cnt < 100)) {
-     cnt++;
-     if(Vdecrease > E_cut) {
-       //Go one step behind and reduce step size 
-       psi = psi + psiStep;
-       psiStep = psiStep/2.0; 
-     } else {
-       psi = psi - psiStep;
-     }
-     Vnew = plantVol(psi, parsVol);
-     Vdecrease = V - Vnew;
-  }
-  return(psi);
-}
-
-List transpirationGranier(List x, NumericVector meteovec,  
-                          double elevation, bool modifyInput = true) {
-  //Control parameters
-  List control = x["control"];
-  String cavitationRefill = control["cavitationRefill"];
-  double refillMaximumRate = control["refillMaximumRate"];
-  String soilFunctions = control["soilFunctions"];
-  double verticalLayerSize = control["verticalLayerSize"];
-  bool plantWaterPools = control["plantWaterPools"];
-
-  //Soil water at field capacity
-  List soil = x["soil"];
-  NumericVector Water_FC = waterFC(soil, soilFunctions);
-  
-  //Meteo input
-  double tday = meteovec["tday"];
-  double pet = meteovec["pet"];
-  double rhmax = meteovec["rhmax"];
-  double rhmin = meteovec["rhmin"];
-  double tmax = meteovec["tmax"];
-  double tmin = meteovec["tmin"];
-  //Daily average water vapor pressure at the atmosphere (kPa)
-  double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin,rhmax);
-  //Atmospheric pressure (kPa)
-  double Patm = meteoland::utils_atmosphericPressure(elevation);
-  
-  //Vegetation input
-  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
-  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
-  NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
-  NumericVector LAIdead = Rcpp::as<Rcpp::NumericVector>(above["LAI_dead"]);
-  NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
-  NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
-  int numCohorts = LAIphe.size();
-
-  //Root distribution input
-  DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
-  List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
-  NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["V"]);
-
-  //Water pools
-  NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
-  List RHOP;
-  NumericVector poolProportions(numCohorts);
-  if(plantWaterPools) {
-    RHOP = belowLayers["RHOP"];
-    poolProportions = belowdf["poolProportions"];
-  }
-  
-  //Parameters  
-  DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
-  NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
-  
-  DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
-  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
-  
-  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
-  NumericVector Gswmin = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gswmin"]);
-  NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
-  NumericVector Psi_Critic = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Critic"]);
-  NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
-  NumericVector WUE_decay(numCohorts, 0.2812);
-  NumericVector Tmax_LAI(numCohorts, 0.134);
-  NumericVector Tmax_LAIsq(numCohorts, -0.006);
-  if(paramsTransp.containsElementNamed("Tmax_LAI")) {
-    Tmax_LAI = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Tmax_LAI"]);
-    Tmax_LAIsq = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Tmax_LAIsq"]);
-  }
-  if(paramsTransp.containsElementNamed("WUE_decay")) {
-    WUE_decay = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_decay"]);
-  }
-  
-  //Water storage parameters
-  DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
-  NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
-  NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
-  NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
-  NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]); //l·m-2 = mm
-  NumericVector LeafPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafPI0"]);
-  NumericVector LeafEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafEPS"]);
-  NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
-  NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
-  
-  //Communication vectors
-  //Comunication with outside
-  DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
-  NumericVector PlantPsi = clone(Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]));
-  NumericVector StemPLC = clone(Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]));
-  
-  //Determine whether leaves are out (phenology) and the adjusted Leaf area
-  NumericVector Phe(numCohorts,0.0);
-  double s = 0.0, LAIcell = 0.0, canopyHeight = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0,LAIcelldead = 0.0;
-  for(int c=0;c<numCohorts;c++) {
-    if(LAIlive[c]>0) Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
-    else Phe[c]=0.0;
-    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
-    LAIcell += LAIphe[c]+LAIdead[c];
-    LAIcelldead += LAIdead[c];
-    LAIcellexpanded +=LAIphe[c];
-    LAIcelllive += LAIlive[c];
-    if(canopyHeight<H[c]) canopyHeight = H[c];
-  }
-  int nz = ceil(canopyHeight/verticalLayerSize); //Number of vertical layers
-  NumericVector z(nz+1,0.0);
-  NumericVector zmid(nz);
-  for(int i=1;i<=nz;i++) {
-    z[i] = z[i-1] + verticalLayerSize;
-    zmid[i-1] = (verticalLayerSize/2.0) + verticalLayerSize*((double) (i-1));
-  }
-  
-  NumericVector PARcohort = parcohortC(H, LAIphe,  LAIdead, kPAR, CR);
-  NumericVector CohASWRF = cohortAbsorbedSWRFraction(z, LAIphe,  LAIdead, H, CR, kPAR);
-  CohASWRF = pow(CohASWRF, 0.75);
-  
-  //Apply fractions to potential evapotranspiration
-  //Maximum canopy transpiration
-  //    Tmax = PET[i]*(-0.006*pow(LAIcell[i],2.0)+0.134*LAIcell[i]+0.036); //From Granier (1999)
-  NumericVector Tmax = pet*(Tmax_LAIsq*pow(LAIcell,2.0)+ Tmax_LAI*LAIcell); //From Granier (1999)
-  
-  //Fraction of Tmax attributed to each plant cohort
-  double pabs = std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
-  NumericVector TmaxCoh(numCohorts,0.0);
-  if(pabs>0.0) TmaxCoh = Tmax*(CohASWRF/pabs);
-  
-  //Actual plant transpiration
-  int nlayers = Wpool.ncol();
-  NumericMatrix Extraction(numCohorts, nlayers); // this is final extraction of each cohort from each layer
-  NumericMatrix ExtractionPoolsCoh(numCohorts, nlayers); //this is used to store extraction of a SINGLE plant cohort from all pools
-  
-  NumericVector Eplant(numCohorts, 0.0), Agplant(numCohorts, 0.0);
-  NumericVector DDS(numCohorts, 0.0);
-  NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts),RWCssm(numCohorts), RWClsm(numCohorts);
-  NumericVector PWB(numCohorts,0.0);
-  NumericVector Kl, epc, Vl;
-  
-  //Calculate unsaturated conductivity
-  NumericVector Kunsat = conductivity(soil);
-  //Calculate soil water potential
-  NumericVector psiSoil = psi(soil,soilFunctions);
-  for(int l = 0; l<nlayers;l++)  {
-    // Rcout<<l<< " psi: "<< psiSoil[l]<<"\n";
-  }
-  NumericMatrix KunsatM(numCohorts, nlayers);
-  NumericMatrix psiSoilM(numCohorts, nlayers);
-  if(plantWaterPools) {
-    List soil_pool = clone(soil);
-    NumericVector Ws_pool = soil_pool["W"];
-    for(int j = 0; j<numCohorts;j++) {
-      //Copy values of soil moisture from pool of cohort j
-      for(int l = 0; l<nlayers;l++) Ws_pool[l] = Wpool(j,l);
-      //Calculate unsaturated conductivity
-      KunsatM(j,_) = conductivity(soil_pool);
-      //Calculate soil water potential
-      psiSoilM(j,_) = psi(soil_pool, soilFunctions);
-      // for(int l = 0; l<nlayers;l++)  {
-      //   Rcout<<j<< " "<< l <<" psiM: "<< psiSoilM(j,l)<<"\n";
-      // }
-    }
-  }
-
-  for(int c=0;c<numCohorts;c++) {
-    NumericVector parsVol = NumericVector::create(_["psi_critic"] = Psi_Critic[c], _["stem_plc"] = StemPLC[c],
-                                                  _["leafpi0"] = LeafPI0[c], _["leafeps"] = LeafEPS[c],
-                                                  _["leafaf"] = LeafAF[c],_["stempi0"] = StemPI0[c],_["stemeps"] = StemEPS[c],
-                                                  _["stemaf"] = StemAF[c],_["Vsapwood"] = Vsapwood[c],_["Vleaf"] = Vleaf[c],
-                                                  _["LAIphe"] = LAIphe[c],_["LAIlive"] = LAIlive[c]);
-    
-    double rootCrownPsi = NA_REAL;
-    
-    //Extraction from soil (can later be modified if there are changes in plant water content)
-    if(!plantWaterPools) {
-      NumericVector Klc(nlayers);
-      NumericVector Kunlc(nlayers);
-      for(int l=0;l<nlayers;l++) {
-        Klc[l] = Psi2K(psiSoil[l], Psi_Extract[c], WeibullShape);
-        //Limit Mean Kl due to previous cavitation
-        if(cavitationRefill!="total") {
-          Klc[l] = std::min(Klc[l], 1.0-StemPLC[c]); 
-        }
-        Kunlc[l] = pow(Kunsat[l],0.5)*V(c,l);
-      }
-      double sumKunlc = sum(Kunlc);
-      double Klcmean = sum(Klc*V(c,_));
-      for(int l=0;l<nlayers;l++) {
-        Extraction(c,l) = std::max(TmaxCoh[c]*Klcmean*(Kunlc[l]/sumKunlc),0.0);
-      }
-      rootCrownPsi = averagePsi(psiSoil, V(c,_), WeibullShape, Psi_Extract[c]);
-      // Rcout<< c << " : " << rootCrownPsi<<"\n";
-    } else {
-      NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
-      NumericMatrix Klc(numCohorts, nlayers);
-      NumericMatrix Kunlc(numCohorts, nlayers);
-      NumericMatrix RHOPcohV(numCohorts, nlayers);
-      for(int j = 0;j<numCohorts;j++) {
-        for(int l=0;l<nlayers;l++) {
-          RHOPcohV(j,l) = RHOPcoh(j,l)*V(c,l);
-          Klc(j,l) = Psi2K(psiSoilM(c,l), Psi_Extract[c], WeibullShape);
-          //Limit Mean Kl due to previous cavitation
-          if(cavitationRefill!="total") Klc(j,l) = std::min(Klc(j,l), 1.0-StemPLC[c]); 
-          Kunlc(j,l) = pow(KunsatM(j,l),0.5)*RHOPcohV(j,l);
-        }
-      }
-      double sumKunlc = sum(Kunlc);
-      double Klcmean = sum(Klc*RHOPcohV);
-      for(int l=0;l<nlayers;l++) {
-        for(int j = 0;j<numCohorts;j++) {
-          ExtractionPoolsCoh(j,l) = std::max(TmaxCoh[c]*Klcmean*(Kunlc(j,l)/sumKunlc),0.0);
-        }
-        Extraction(c,l) = sum(ExtractionPoolsCoh(_,l)); // Sum extraction from all pools (layer l)
-      }
-      rootCrownPsi = averagePsiPool(psiSoilM, RHOPcohV, WeibullShape, Psi_Extract[c]);
-      // Rcout<< c << " : " << rootCrownPsi<<"\n";
-    }
-
-    //Cuticular transpiration    
-    double lvp_tmax = leafVapourPressure(tmax,  PlantPsi[c]);
-    double lvp_tmin = leafVapourPressure(tmin,  PlantPsi[c]);
-    double vpd_tmax = std::max(0.0, lvp_tmax - vpatm);
-    double vpd_tmin = std::max(0.0, lvp_tmin - vpatm);
-    double E_gmin = Gswmin[c]*(vpd_tmin+vpd_tmax)/(2.0*Patm); // mol·s-1·m-2
-    double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
-
-    
-    double oldVol = plantVol(PlantPsi[c], parsVol); 
-    
-    //Transpiration is the maximum of predicted extraction and cuticular transpiration
-    double ext_sum = sum(Extraction(c,_));
-    double corr_extraction = 0.0;
-    if(E_cut > ext_sum) {
-      Eplant[c] = E_cut;
-      corr_extraction = E_cut - ext_sum; //Correction to be added to extraction
-    } else {
-      Eplant[c] = ext_sum;
-    }
-    PlantPsi[c] = findNewPlantPsiConnected(Eplant[c], PlantPsi[c], rootCrownPsi, parsVol);
-    double newVol = plantVol(PlantPsi[c], parsVol);
-    
-    double volDiff = newVol - oldVol;
-    
-    //Plant transpiration and water balance
-    PWB[c] = volDiff;
-    
-    //Divide the difference among soil layers extraction
-    for(int l=0;l<nlayers;l++) {
-      if(!plantWaterPools) { 
-        Extraction(c,l) += (volDiff+corr_extraction)*(Extraction(c,l)/ext_sum);
-      } else { // recalculate also extraction from soil pools
-        for(int j = 0;j<numCohorts;j++) {
-          ExtractionPoolsCoh(j,l) += (volDiff+corr_extraction)*(ExtractionPoolsCoh(j,l)/ext_sum);
-          if(modifyInput) Wpool(j,l) = Wpool(j,l) - (ExtractionPoolsCoh(j,l)/(Water_FC[l]*poolProportions[j])); //Apply extraction from pools
-        }
-        //Recalculate extraction from soil layers
-        Extraction(c,l) = sum(ExtractionPoolsCoh(_,l)); // Sum extraction from all pools (layer l)
-      }
-    }
-    
-    //Photosynthesis
-    Agplant[c] = WUE[c]*Eplant[c]*std::min(1.0, pow(PARcohort[c]/100.0,WUE_decay[c]));
-  }
-
-  //Plant water status (StemPLC, RWC, DDS)
-  for(int c=0;c<numCohorts;c++) {
-    if(cavitationRefill!="total") {
-      StemPLC[c] = std::max(1.0 - Psi2K(PlantPsi[c],Psi_Critic[c],WeibullShape), StemPLC[c]); //Track current embolism if no refill
-    } else {
-      StemPLC[c] = 1.0 - Psi2K(PlantPsi[c],Psi_Critic[c],WeibullShape);
-    }
-    //Relative water content
-    double apoRWC = apoplasticRelativeWaterContent(PlantPsi[c], WeibullShape, Psi_Critic[c]);
-    double leafSympRWC = symplasticRelativeWaterContent(PlantPsi[c],  LeafPI0[c], LeafEPS[c]);
-    double stemSympRWC = symplasticRelativeWaterContent(PlantPsi[c],  StemPI0[c], StemEPS[c]);
-    RWClm[c] =  leafSympRWC*(1.0 - LeafAF[c]) + apoRWC*LeafAF[c];
-    RWCsm[c] =  stemSympRWC*(1.0 - StemAF[c]) + apoRWC*StemAF[c];
-    //Daily drought stress from plant WP
-    DDS[c] = Phe[c]*(1.0 - Psi2K(PlantPsi[c],Psi_Extract[c],WeibullShape)); 
-    
-    if(cavitationRefill=="rate") {
-      double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
-      double r = refillMaximumRate*std::max(0.0, (PlantPsi[c] + 1.5)/1.5);
-      StemPLC[c] = std::max(0.0, StemPLC[c] - (r/SAmax));
-    }
-  }
-  
-    
-  if(modifyInput) {
-    internalWater["StemPLC"] = StemPLC;
-    internalWater["PlantPsi"] = PlantPsi;
-  }
-  //Modifies input soil
-  if(modifyInput) {
-    NumericVector Ws = soil["W"];
-    for(int l=0;l<nlayers;l++) Ws[l] = Ws[l] - (sum(Extraction(_,l))/Water_FC[l]); 
-    if(!plantWaterPools){ //copy soil to the pools of all cohorts
-      for(int j=0;j<numCohorts;j++) {
-        for(int l=0;l<nlayers;l++) {
-          Wpool(j,l) = Ws[l];
-        }
-      }
-    }
-  }
-  
-  //Copy LAIexpanded for output
-  NumericVector LAIcohort(numCohorts);
-  for(int c=0;c<numCohorts;c++) LAIcohort[c]= LAIphe[c];
-  
-  NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell,
-                                              _["LAIlive"] = LAIcelllive, 
-                                              _["LAIexpanded"] = LAIcellexpanded, 
-                                              _["LAIdead"] = LAIcelldead);
-  
-  DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
-                                       _["LAIlive"] = clone(LAIlive),
-                                       _["AbsorbedSWRFraction"] = CohASWRF, 
-                                       _["Transpiration"] = Eplant, 
-                                       _["GrossPhotosynthesis"] = Agplant,
-                                       _["PlantPsi"] = PlantPsi, 
-                                       _["DDS"] = DDS,
-                                       _["StemRWC"] = RWCsm,
-                                       _["LeafRWC"] = RWClm,
-                                       _["StemPLC"] = StemPLC,
-                                       _["WaterBalance"] = PWB);
-  Plants.attr("row.names") = above.attr("row.names");
-  Extraction.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
-  List l = List::create(_["cohorts"] = clone(cohorts),
-                        _["Stand"] = Stand,
-                        _["Plants"] = Plants,
-                        _["Extraction"] = Extraction);
-  return(l);
-}
-
-
-// [[Rcpp::export("transp_transpirationGranier")]]
-List transpirationGranier(List x, DataFrame meteo, int day,
-                          double elevation, bool modifyInput = true) {
-  if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
-  NumericVector MinTemperature = meteo["MinTemperature"];
-  if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
-  NumericVector MaxTemperature = meteo["MaxTemperature"];
-  if(!meteo.containsElementNamed("MinRelativeHumidity")) stop("Please include variable 'MinRelativeHumidity' in weather input.");
-  NumericVector MinRelativeHumidity = meteo["MinRelativeHumidity"];
-  if(!meteo.containsElementNamed("MaxRelativeHumidity")) stop("Please include variable 'MaxRelativeHumidity' in weather input.");
-  NumericVector MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
-  if(!meteo.containsElementNamed("MeanTemperature")) stop("Please include variable 'MeanTemperature' in weather input.");
-  NumericVector MeanTemperature = meteo["MeanTemperature"];
-  if(!meteo.containsElementNamed("PET")) stop("Please include variable 'PET' in weather input.");
-  NumericVector PET = meteo["PET"];
-  double pet = PET[day-1];
-  double tday = MeanTemperature[day-1];
-  double tmin = MinTemperature[day-1];
-  double tmax = MaxTemperature[day-1];
-  double rhmax = MaxRelativeHumidity[day-1];
-  double rhmin = MinRelativeHumidity[day-1];
-  NumericVector meteovec = NumericVector::create(
-    Named("tmax") = tmax,
-    Named("tmin") = tmin,
-    Named("rhmin") = rhmin, 
-    Named("rhmax") = rhmax,
-    Named("tday") = tday, 
-    Named("pet") = pet);
-  return(transpirationGranier(x, meteovec, elevation, modifyInput));
-} 
 

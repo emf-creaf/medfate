@@ -341,7 +341,7 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
     
     NumericMatrix RhizoPsi =  NumericMatrix(numCohorts, nlayers);
     RhizoPsi.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
-    std::fill(RhizoPsi.begin(), RhizoPsi.end(), 0.0);
+    std::fill(RhizoPsi.begin(), RhizoPsi.end(), -0.033);
 
     
     NumericVector FRB(numCohorts), CRSV(numCohorts),FRAI(numCohorts);
@@ -1021,20 +1021,20 @@ void resetInputs(List x) {
     NumericVector NSPL = Rcpp::as<Rcpp::NumericVector>(internalWater["NSPL"]);
     for(int i=0;i<LeafPsi.size();i++) {
       Einst[i] = 0.0;
-      RootCrownPsi[i] = 0.0;
-      Stem1Psi[i] = 0.0;
-      Stem2Psi[i] = 0.0;
-      LeafPsi[i] = 0.0;
-      LeafSympPsi[i] = 0.0;
-      StemSympPsi[i] = 0.0;
+      RootCrownPsi[i] = -0.033;
+      Stem1Psi[i] = -0.033;
+      Stem2Psi[i] = -0.033;
+      LeafPsi[i] = -0.033;
+      LeafSympPsi[i] = -0.033;
+      StemSympPsi[i] = -0.033;
       StemPLC[i] = 0.0;
       NSPL[i] = 1.0;
-      for(int j=0;j<RhizoPsi.ncol();j++) RhizoPsi(i,j) = 0.0;
+      for(int j=0;j<RhizoPsi.ncol();j++) RhizoPsi(i,j) = -0.033;
     }
   } else {
     NumericVector PlantPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]);
     for(int i=0;i<StemPLC.length();i++) {
-      PlantPsi[i] = 0.0;
+      PlantPsi[i] = -0.033;
       StemPLC[i] = 0.0;
     }
   }
