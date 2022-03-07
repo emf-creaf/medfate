@@ -340,7 +340,8 @@ List growthDay1(List x, NumericVector meteovec,
   bool shrubDynamics = control["shrubDynamics"];
   String allocationStrategy = control["allocationStrategy"];
   String cavitationRefill = control["cavitationRefill"];
-  bool plantWaterPools = control["plantWaterPools"];
+  String rhizosphereOverlap = control["rhizosphereOverlap"];
+  bool plantWaterPools = (rhizosphereOverlap!="total");
   double nonSugarConcentration = control["nonSugarConcentration"];
   List equilibriumOsmoticConcentration  = control["equilibriumOsmoticConcentration"];
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
@@ -930,7 +931,8 @@ List growthDay2(List x, NumericVector meteovec,
   bool shrubDynamics = control["shrubDynamics"];
   String allocationStrategy = control["allocationStrategy"];
   String cavitationRefill = control["cavitationRefill"];
-  bool plantWaterPools = control["plantWaterPools"];
+  String rhizosphereOverlap = control["rhizosphereOverlap"];
+  bool plantWaterPools = (rhizosphereOverlap!="total");
   bool taper = control["taper"];
   bool nonStomatalPhotosynthesisLimitation = control["nonStomatalPhotosynthesisLimitation"];
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
@@ -1587,7 +1589,12 @@ List growthDay2(List x, NumericVector meteovec,
     // for(int j=0;j<numCohorts;j++) poolProportions[j] = LAI_live[j]/sum(LAI_live);
     //Update RHOP
     List RHOP = belowLayers["RHOP"];
-    List newRHOP = horizontalProportions(poolProportions, CRSV, N, V,dVec, rfc);
+    List newRHOP;
+    if(rhizosphereOverlap=="none") {
+      newRHOP = nonoverlapHorizontalProportions(V);
+    } else {
+      newRHOP = horizontalProportions(poolProportions, CRSV, N, V,dVec, rfc);
+    }
     for(int j=0;j<numCohorts;j++) RHOP[j] = newRHOP[j];
   }
   

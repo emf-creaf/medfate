@@ -469,6 +469,19 @@ double coarseRootSoilVolume(NumericVector v, NumericVector d, double depthWidthR
 //   return(l);
 // }
 
+List nonoverlapHorizontalProportions(NumericMatrix V) {
+  int numCohorts = V.nrow();
+  int numlayers = V.ncol();
+  List l(numCohorts);
+  for(int coh=0;coh<numCohorts;coh++) {
+    NumericMatrix RHOP(numCohorts,numlayers);
+    std::fill(RHOP.begin(), RHOP.end(), 0.0);
+    RHOP.attr("dimnames") = V.attr("dimnames");
+    l[coh] = RHOP;
+  }
+  l.attr("names") = rownames(V);
+  return(l);
+}
 // [[Rcpp::export("root_horizontalProportions")]]
 List horizontalProportions(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, 
                            NumericVector d, NumericVector rfc) {

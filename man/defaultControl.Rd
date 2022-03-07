@@ -34,7 +34,13 @@ A list, with the following options (default values in parentheses):
   \item{\code{rockyLayerDrainage (=TRUE)}: Boolean flag to indicate the simulation of drainage from rocky layers (> 95\% of rocks).}
   \item{\code{unlimitedSoilWater (=FALSE)}: Boolean flag to indicate the simulation of plant transpiration assuming that soil water is always at field capacity.}
   \item{\code{unfoldingDD (=300)}: Degree-days for complete leaf unfolding after budburst has occurred.}
-  \item{\code{plantWaterPools (=FALSE)}: Boolean flag to indicate the simulation of water balance assuming that each cohort has its own water pools.}
+  \item{\code{rhizosphereOverlap (="total")}: A string indicating the degree of rhizosphere spatial overlap between plant cohorts:
+    \itemize{
+      \item{"none" - no overlap (independent water pools).}
+      \item{"partial" - partial overlap determined by coarse root volume.}
+      \item{"total" - total overlap (plants extract from common soil pools).}
+    }
+  }
   \item{\code{verticalLayerSize (= 100)}: Size of vertical layers (in cm) for the calculation of light extinction (and photosynthesis).}
   \item{\code{windMeasurementHeight (=200)}: Height (in cm) over the canopy corresponding to wind measurements.}
   \item{\code{cavitationRefill (= "total")}: A string indicating how refilling of embolized conduits is done:

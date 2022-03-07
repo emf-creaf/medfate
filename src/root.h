@@ -34,6 +34,7 @@ double coarseRootSoilVolume(NumericVector v, NumericVector d, double depthWidthR
 NumericVector coarseRootLengthsFromVolume(double VolInd, NumericVector v, NumericVector d, NumericVector rfc);
 NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
 
+List nonoverlapHorizontalProportions(NumericMatrix V);
 List horizontalProportions(NumericVector poolProportions, NumericVector VolInd, 
                            NumericVector N, NumericMatrix V, 
                            NumericVector d, NumericVector rfc);

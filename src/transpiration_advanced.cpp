@@ -172,7 +172,8 @@ List transpirationSperry(List x, NumericVector meteovec,
   String costWater = control["costWater"];
   double costModifier = control["costModifier"];
   double gainModifier = control["gainModifier"];
-  bool plantWaterPools = control["plantWaterPools"];
+  String rhizosphereOverlap = control["rhizosphereOverlap"];
+  bool plantWaterPools = (rhizosphereOverlap!="total");
   double verticalLayerSize = control["verticalLayerSize"];
   double windMeasurementHeight  = control["windMeasurementHeight"];
   double thermalCapacityLAI = control["thermalCapacityLAI"];

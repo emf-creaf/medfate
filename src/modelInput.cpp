@@ -258,7 +258,7 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   int numCohorts = N.size();
   
   
-  bool plantWaterPools = control["plantWaterPools"];
+  String rhizosphereOverlap = control["rhizosphereOverlap"];
   String transpirationMode = control["transpirationMode"];
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
   
@@ -300,13 +300,15 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
       double fineRootArea = Ar2Al[c]*LA;//fine root area in m2
       FRB[c] = fineRootArea/(specificRootSurfaceArea(SRL[c], FineRootDensity[c])*1e-4);
     }
-    if(plantWaterPools) {
+    if(rhizosphereOverlap!="total") {
       belowdf = DataFrame::create(_["Z50"] = Z50,
                                   _["Z95"] = Z95,
                                   _["fineRootBiomass"] = FRB,
                                   _["coarseRootSoilVolume"] = CRSV,
                                   _["poolProportions"] = poolProportions);
-      List RHOP = horizontalProportions(poolProportions, CRSV, N, V, dVec, rfc);
+      List RHOP;
+      if(rhizosphereOverlap=="none") RHOP = nonoverlapHorizontalProportions(V);
+      else RHOP = horizontalProportions(poolProportions, CRSV, N, V, dVec, rfc);
       belowLayers = List::create(_["V"] = V,
                                  _["L"] = L,
                                  _["Wpool"] = Wpool,
@@ -379,13 +381,15 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                                _["VCroot_kmax"] = VCroot_kmax,
                                _["Wpool"] = Wpool,
                                _["RhizoPsi"] = RhizoPsi);
-    if(plantWaterPools) {
+    if(rhizosphereOverlap!="total") {
       belowdf = DataFrame::create(_["Z50"]=Z50,
                                   _["Z95"]=Z95,
                                   _["fineRootBiomass"] = FRB,
                                   _["coarseRootSoilVolume"] = CRSV,
                                   _["poolProportions"] = poolProportions);
-      List RHOP = horizontalProportions(poolProportions, CRSV, N, V, dVec, rfc);
+      List RHOP;
+      if(rhizosphereOverlap=="none") RHOP = nonoverlapHorizontalProportions(V);
+      else RHOP = horizontalProportions(poolProportions, CRSV, N, V, dVec, rfc);
       belowLayers["RHOP"] = RHOP;
     } else {
       belowdf = DataFrame::create(_["Z50"]=Z50,

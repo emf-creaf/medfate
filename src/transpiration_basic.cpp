@@ -81,7 +81,8 @@ List transpirationGranier(List x, NumericVector meteovec,
   double refillMaximumRate = control["refillMaximumRate"];
   String soilFunctions = control["soilFunctions"];
   double verticalLayerSize = control["verticalLayerSize"];
-  bool plantWaterPools = control["plantWaterPools"];
+  String rhizosphereOverlap = control["rhizosphereOverlap"];
+  bool plantWaterPools = (rhizosphereOverlap!="total");
   
   //Soil water at field capacity
   List soil = x["soil"];

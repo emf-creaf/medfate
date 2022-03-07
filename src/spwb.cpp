@@ -26,7 +26,8 @@ List spwbDay1(List x, NumericVector meteovec,
   List control = x["control"];
   bool snowpack = control["snowpack"];
   bool rockyLayerDrainage = control["rockyLayerDrainage"];
-  bool plantWaterPools = control["plantWaterPools"];
+  String rhizosphereOverlap = control["rhizosphereOverlap"];
+  bool plantWaterPools = (rhizosphereOverlap!="total");
   String soilFunctions = control["soilFunctions"];
 
   //Soil parameters
@@ -178,7 +179,8 @@ List spwbDay2(List x, NumericVector meteovec,
   List control = x["control"];
   bool rockyLayerDrainage = control["rockyLayerDrainage"];
   bool snowpack = control["snowpack"];
-  bool plantWaterPools = control["plantWaterPools"];
+  String rhizosphereOverlap = control["rhizosphereOverlap"];
+  bool plantWaterPools = (rhizosphereOverlap!="total");
   String soilFunctions = control["soilFunctions"];
   int ntimesteps = control["ndailysteps"];
 
