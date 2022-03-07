@@ -1067,8 +1067,10 @@ List transpirationSperry(List x, NumericVector meteovec,
             for(int j = 0;j<numCohorts;j++) {
               for(int l=0;l<nlayers;l++) {
                 if(layerConnectedCoh(j,l)) {
-                  SoilWaterExtract(c,l) += Esoilcn[cl]/poolProportions[j]; //Add to cummulative transpiration from layers
-                  soilLayerExtractInst(l,n) += Esoilcn[cl]/poolProportions[j];
+                  SoilWaterExtract(c,l) += Esoilcn[cl]; //Add to cummulative transpiration from layers
+                  soilLayerExtractInst(l,n) += Esoilcn[cl];
+                  //Apply extraction to soil layer
+                  if(modifyInput) Wpool(j,l) = Wpool(j,l) - (Esoilcn[cl]/(Water_FC[l]*poolProportions[j])); //Apply extraction from pools
                   cl++;
                 }
               }
@@ -1349,17 +1351,7 @@ List transpirationSperry(List x, NumericVector meteovec,
     for(int l=0;l<nlayers;l++) {
       Ws[l] = std::max(Ws[l] - (sum(soilLayerExtractInst(l,_))/Water_FC[l]),0.0);
     } 
-    if(plantWaterPools) {
-      // rhizosphereMoistureExtraction(SoilWaterExtract, Water_FC,
-      //                               Wpool, RHOP,
-      //                               poolProportions);
-      // for(int l=0;l<nlayers;l++) {
-      //   double Ws2 = 0.0;
-      //   for(int c=0;c<numCohorts;c++) Ws2 +=Wpool(c,l)*poolProportions[c];
-      // 
-      //   Rcout<<l<<": "<< Ws[l]<< " = " << Ws2<<"\n";
-      // }
-    } else { //copy soil to the pools of all cohorts
+    if(!plantWaterPools) { //copy soil to the pools of all cohorts
       for(int c=0;c<numCohorts;c++) {
         for(int l=0;l<nlayers;l++) {
           Wpool(c,l) = Ws[l];
