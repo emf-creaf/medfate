@@ -356,6 +356,8 @@ List growthDay1(List x, NumericVector meteovec,
   //Soil
   List soil  = x["soil"];
   NumericVector psiSoil = psi(soil,"soilFunctions");
+  NumericVector dVec = soil["dVec"];
+  NumericVector rfc = soil["rfc"];
   
   //Weather
   double tday = meteovec["tday"];
@@ -377,7 +379,10 @@ List growthDay1(List x, NumericVector meteovec,
   NumericVector Z95 = Rcpp::as<Rcpp::NumericVector>(belowdf["Z95"]);
   NumericVector Z50 = Rcpp::as<Rcpp::NumericVector>(belowdf["Z50"]);
   NumericVector fineRootBiomass = Rcpp::as<Rcpp::NumericVector>(belowdf["fineRootBiomass"]);
+  NumericVector CRSV = Rcpp::as<Rcpp::NumericVector>(belowdf["coarseRootSoilVolume"]);
   List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
+  List RHOP;
+  if(plantWaterPools) RHOP = belowLayers["RHOP"];
   NumericMatrix V = belowLayers["V"];
   NumericMatrix L = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["L"]);
   int numLayers = V.ncol();
@@ -700,6 +705,10 @@ List growthDay1(List x, NumericVector meteovec,
       for(int s=0;s<numLayers;s++) { 
         V(j,s) = newFRB[s]/fineRootBiomass[j];
       }
+      for(int c=0;c<numCohorts;c++){
+        L(c,_) = coarseRootLengths(V(c,_), dVec, 0.5); //Arbitrary ratio (to revise some day)
+        CRSV[c] = coarseRootSoilVolume(V(c,_), dVec, 0.5);
+      }
       
       //UPDATE DERIVED QUANTITIES (individual level)      
       //Update Huber value
@@ -822,9 +831,15 @@ List growthDay1(List x, NumericVector meteovec,
   closePlantBiomassBalance(plantBiomassBalance, x,
                       LabileCarbonBalance, LeafBiomassBalance, FineRootBiomassBalance);
   
-  //Update pool proportions??
+  //Update pool proportions and rhizosphere overlap
   if(plantWaterPools) {
     NumericVector poolProportions = Rcpp::as<Rcpp::NumericVector>(belowdf["poolProportions"]);
+    for(int j=0;j<numCohorts;j++) poolProportions[j] = LAI_live[j]/sum(LAI_live);
+    //Update RHOP
+    List newRHOP;
+    if(rhizosphereOverlap=="none") newRHOP = nonoverlapHorizontalProportions(V);
+    else newRHOP = horizontalProportions(poolProportions, CRSV, N, V, dVec, rfc);
+    for(int j=0;j<numCohorts;j++) RHOP[j] = newRHOP[j];
   }
   
 
@@ -978,6 +993,8 @@ List growthDay2(List x, NumericVector meteovec,
   NumericVector fineRootBiomass = Rcpp::as<Rcpp::NumericVector>(belowdf["fineRootBiomass"]);
   NumericVector CRSV = Rcpp::as<Rcpp::NumericVector>(belowdf["coarseRootSoilVolume"]);
   List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
+  List RHOP;
+  if(plantWaterPools) RHOP = belowLayers["RHOP"];
   NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["V"]);
   NumericMatrix L = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["L"]);
   NumericMatrix RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["RhizoPsi"]);
@@ -1583,12 +1600,11 @@ List growthDay2(List x, NumericVector meteovec,
                       LabileCarbonBalance, LeafBiomassBalance, FineRootBiomassBalance);
   
   
-  //Update pool proportions??
+  //Update pool proportions and rhizosphere overlap
   if(plantWaterPools) {
     NumericVector poolProportions = Rcpp::as<Rcpp::NumericVector>(belowdf["poolProportions"]);
-    // for(int j=0;j<numCohorts;j++) poolProportions[j] = LAI_live[j]/sum(LAI_live);
+    for(int j=0;j<numCohorts;j++) poolProportions[j] = LAI_live[j]/sum(LAI_live);
     //Update RHOP
-    List RHOP = belowLayers["RHOP"];
     List newRHOP;
     if(rhizosphereOverlap=="none") {
       newRHOP = nonoverlapHorizontalProportions(V);

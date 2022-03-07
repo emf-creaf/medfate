@@ -476,6 +476,7 @@ List nonoverlapHorizontalProportions(NumericMatrix V) {
   for(int coh=0;coh<numCohorts;coh++) {
     NumericMatrix RHOP(numCohorts,numlayers);
     std::fill(RHOP.begin(), RHOP.end(), 0.0);
+    for(int l=0;l<numlayers;l++) RHOP(coh,l) = 1.0; 
     RHOP.attr("dimnames") = V.attr("dimnames");
     l[coh] = RHOP;
   }
