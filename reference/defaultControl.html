@@ -81,7 +81,11 @@
 <li><p><code>rockyLayerDrainage (=TRUE)</code>: Boolean flag to indicate the simulation of drainage from rocky layers (&gt; 95% of rocks).</p></li>
 <li><p><code>unlimitedSoilWater (=FALSE)</code>: Boolean flag to indicate the simulation of plant transpiration assuming that soil water is always at field capacity.</p></li>
 <li><p><code>unfoldingDD (=300)</code>: Degree-days for complete leaf unfolding after budburst has occurred.</p></li>
-<li><p><code>plantWaterPools (=FALSE)</code>: Boolean flag to indicate the simulation of water balance assuming that each cohort has its own water pools.</p></li>
+<li><p><code>rhizosphereOverlap (="total")</code>: A string indicating the degree of rhizosphere spatial overlap between plant cohorts:
+    </p><ul><li><p>"none" - no overlap (independent water pools).</p></li>
+<li><p>"partial" - partial overlap determined by coarse root volume.</p></li>
+<li><p>"total" - total overlap (plants extract from common soil pools).</p></li>
+</ul></li>
 <li><p><code>verticalLayerSize (= 100)</code>: Size of vertical layers (in cm) for the calculation of light extinction (and photosynthesis).</p></li>
 <li><p><code>windMeasurementHeight (=200)</code>: Height (in cm) over the canopy corresponding to wind measurements.</p></li>
 <li><p><code>cavitationRefill (= "total")</code>: A string indicating how refilling of embolized conduits is done:

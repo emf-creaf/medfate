@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Basic water balance</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-03-03</h4>
+            <h4 data-toc-skip class="date">2022-03-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/BasicWaterBalance.Rmd" class="external-link"><code>vignettes/BasicWaterBalance.Rmd</code></a></small>
       <div class="hidden name"><code>BasicWaterBalance.Rmd</code></div>
@@ -326,13 +326,13 @@
 <span class="co">## 2001-01-06 1.7255058     13.359801 13.359801    0 11.5338016        0</span>
 <span class="co">##            Infiltration Runoff DeepDrainage Evapotranspiration Interception</span>
 <span class="co">## 2001-01-01    3.3294560      0    2.6410612          2.3529634     1.539653</span>
-<span class="co">## 2001-01-02    0.9931555      0    0.6910882          2.5312260     1.505136</span>
-<span class="co">## 2001-01-03    0.0000000      0    0.1399147          0.5634985     0.000000</span>
-<span class="co">## 2001-01-04    4.2685601      0    2.1570470          2.1796198     1.528413</span>
-<span class="co">## 2001-01-05    0.6812806      0    0.5380019          2.1678038     1.203121</span>
-<span class="co">## 2001-01-06   11.5338016      0    8.4268659          2.7351633     1.825999</span>
+<span class="co">## 2001-01-02    0.9931555      0    0.6887895          2.5312260     1.505136</span>
+<span class="co">## 2001-01-03    0.0000000      0    0.1394399          0.5634985     0.000000</span>
+<span class="co">## 2001-01-04    4.2685601      0    2.1569484          2.1796198     1.528413</span>
+<span class="co">## 2001-01-05    0.6812806      0    0.5379815          2.1678038     1.203121</span>
+<span class="co">## 2001-01-06   11.5338016      0    8.4268616          2.7351633     1.825999</span>
 <span class="co">##            SoilEvaporation PlantExtraction Transpiration</span>
-<span class="co">## 2001-01-01       0.5000000       0.3103293     0.3133106</span>
+<span class="co">## 2001-01-01       0.5000000       0.3132273     0.3133106</span>
 <span class="co">## 2001-01-02       0.5000000       0.5260888     0.5260899</span>
 <span class="co">## 2001-01-03       0.1355986       0.4278075     0.4278999</span>
 <span class="co">## 2001-01-04       0.4330351       0.2182767     0.2181719</span>
@@ -343,8 +343,8 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">Plants</span><span class="op">$</span><span class="va">PlantPsi</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##                 T1_148      T2_168      S1_165</span>
 <span class="co">## 2001-01-01 -0.03406950 -0.03361555 -0.03383064</span>
-<span class="co">## 2001-01-02 -0.03407986 -0.03363247 -0.03385304</span>
-<span class="co">## 2001-01-03 -0.03522747 -0.03440961 -0.03481887</span>
+<span class="co">## 2001-01-02 -0.03407988 -0.03363249 -0.03385307</span>
+<span class="co">## 2001-01-03 -0.03522748 -0.03440961 -0.03481887</span>
 <span class="co">## 2001-01-04 -0.03392305 -0.03353054 -0.03371655</span>
 <span class="co">## 2001-01-05 -0.03409718 -0.03364379 -0.03386819</span>
 <span class="co">## 2001-01-06 -0.03405084 -0.03358505 -0.03379025</span></code></pre>
@@ -406,7 +406,7 @@
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"Soil"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##                  W.1       W.2       W.3       W.4     ML.1      ML.2     ML.3</span>
-<span class="co">## 2001-01-01 0.9846029 0.9978342 0.9996194 1.0113771 67.21224 116.55310 75.81923</span>
+<span class="co">## 2001-01-01 0.9846019 0.9978340 0.9996193 1.0113763 67.21217 116.55308 75.81923</span>
 <span class="co">## 2001-02-01 0.9202217 0.9754962 0.9946205 0.9966726 62.81736 113.94389 75.44008</span>
 <span class="co">## 2001-03-01 0.9375601 0.9827316 0.9967875 1.0057258 64.00094 114.78903 75.60444</span>
 <span class="co">## 2001-04-01 0.8295637 0.9149175 0.9782107 0.9862069 56.62874 106.86792 74.19542</span>
@@ -419,7 +419,7 @@
 <span class="co">## 2001-11-01 0.9182623 0.9485583 0.8737731 0.8622959 62.68360 110.79737 66.27403</span>
 <span class="co">## 2001-12-01 0.8723562 0.9586848 0.9923456 0.9958767 59.54990 111.98021 75.26753</span>
 <span class="co">##                ML.4    MLTot      WTD        SWE PlantExt.1 PlantExt.2</span>
-<span class="co">## 2001-01-01 30.68441 290.2690 3963.283 1.68350931  0.2255977  0.1015598</span>
+<span class="co">## 2001-01-01 30.68439 290.2689 3963.285 1.68350931  0.2256681  0.1015801</span>
 <span class="co">## 2001-02-01 30.23829 282.4396 4000.000 0.28233380  0.4065944  0.2629261</span>
 <span class="co">## 2001-03-01 30.51296 284.9074 3976.978 0.01762496  0.4429293  0.2573294</span>
 <span class="co">## 2001-04-01 29.92077 267.6129 4000.000 0.58931434  0.4517386  0.3957170</span>
@@ -432,7 +432,7 @@
 <span class="co">## 2001-11-01 26.16140 265.9164 3993.365 2.67673914  0.3477128  0.1894635</span>
 <span class="co">## 2001-12-01 30.21414 277.0118 4000.000 0.00000000  0.2581153  0.2174134</span>
 <span class="co">##             PlantExt.3  PlantExt.4       psi.1       psi.2       psi.3</span>
-<span class="co">## 2001-01-01 0.010220958 0.002690396 -0.03600174 -0.03341127 -0.03307199</span>
+<span class="co">## 2001-01-01 0.010223130 0.002691065 -0.03600192 -0.03341130 -0.03307199</span>
 <span class="co">## 2001-02-01 0.032098031 0.007880029 -0.05301429 -0.03793529 -0.03398776</span>
 <span class="co">## 2001-03-01 0.029558291 0.007546458 -0.04697359 -0.03610213 -0.03352664</span>
 <span class="co">## 2001-04-01 0.073833295 0.019491967 -0.08842164 -0.05294595 -0.03711392</span>
@@ -445,7 +445,7 @@
 <span class="co">## 2001-11-01 0.009628993 0.002272021 -0.05343413 -0.04392037 -0.07708214</span>
 <span class="co">## 2001-12-01 0.030228494 0.007635518 -0.06895400 -0.04144851 -0.03438733</span>
 <span class="co">##                  psi.4</span>
-<span class="co">## 2001-01-01 -0.03130321</span>
+<span class="co">## 2001-01-01 -0.03130334</span>
 <span class="co">## 2001-02-01 -0.03360933</span>
 <span class="co">## 2001-03-01 -0.03225967</span>
 <span class="co">## 2001-04-01 -0.03554586</span>
@@ -461,7 +461,7 @@
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##                  T1_148       T2_168       S1_165</span>
-<span class="co">## 2001-01-01 7.414484e-06 4.503430e-06 3.053987e-06</span>
+<span class="co">## 2001-01-01 7.414485e-06 4.503430e-06 3.053987e-06</span>
 <span class="co">## 2001-02-01 2.430773e-05 1.162766e-05 8.973549e-06</span>
 <span class="co">## 2001-03-01 1.739336e-05 8.688982e-06 6.543138e-06</span>
 <span class="co">## 2001-04-01 1.061940e-04 4.654759e-05 3.777809e-05</span>
@@ -478,8 +478,8 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"day"</span>, output<span class="op">=</span><span class="st">"PlantStress"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##            Pinus halepensis Quercus coccifera Quercus ilex</span>
 <span class="co">## 2001-01-01     6.740295e-06      2.812477e-06 4.207608e-06</span>
-<span class="co">## 2001-01-02     6.746445e-06      2.818067e-06 4.213964e-06</span>
-<span class="co">## 2001-01-03     7.451193e-06      3.066212e-06 4.512881e-06</span>
+<span class="co">## 2001-01-02     6.746454e-06      2.818075e-06 4.213973e-06</span>
+<span class="co">## 2001-01-03     7.451195e-06      3.066213e-06 4.512883e-06</span>
 <span class="co">## 2001-01-04     6.653746e-06      2.784118e-06 4.175769e-06</span>
 <span class="co">## 2001-01-05     6.756734e-06      2.821851e-06 4.218221e-06</span>
 <span class="co">## 2001-01-06     6.729224e-06      2.802416e-06 4.196168e-06</span></code></pre>
@@ -487,7 +487,7 @@
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"month"</span>, FUN <span class="op">=</span> <span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##            Pinus halepensis Quercus coccifera Quercus ilex</span>
-<span class="co">## 2001-01-01     7.414484e-06      3.053987e-06 4.503430e-06</span>
+<span class="co">## 2001-01-01     7.414485e-06      3.053987e-06 4.503430e-06</span>
 <span class="co">## 2001-02-01     2.430773e-05      8.973549e-06 1.162766e-05</span>
 <span class="co">## 2001-03-01     1.739336e-05      6.543138e-06 8.688982e-06</span>
 <span class="co">## 2001-04-01     1.061940e-04      3.777809e-05 4.654759e-05</span>
