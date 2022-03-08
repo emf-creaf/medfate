@@ -1,0 +1,159 @@
+---
+title: "Soil water pools and species interactions"
+author: "Miquel De Caceres (CREAF)"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(cowplot)
+library(medfate)
+
+base_pools = "~/OneDrive/Professional/MedfateWorks/PlantWaterPools/"
+```
+
+## Introduction
+
+
+
+
+
+### About this vignette
+
+
+```{r, echo = FALSE}
+WB_FB_basic_total = readRDS(paste0(base_pools,"Rdata/Output/fb_basic_total.rds"))
+WB_FB_basic_none = readRDS(paste0(base_pools,"Rdata/Output/fb_basic_none.rds"))
+WB_PR_basic_total = readRDS(paste0(base_pools,"Rdata/Output/pr_basic_total.rds"))
+WB_PR_basic_none = readRDS(paste0(base_pools,"Rdata/Output/pr_basic_none.rds"))
+WB_PU_basic_total = readRDS(paste0(base_pools,"Rdata/Output/pu_basic_total.rds"))
+WB_PU_basic_none = readRDS(paste0(base_pools,"Rdata/Output/pu_basic_none.rds"))
+WB_CB_basic_total = readRDS(paste0(base_pools,"Rdata/Output/cb_basic_total.rds"))
+WB_CB_basic_none = readRDS(paste0(base_pools,"Rdata/Output/cb_basic_none.rds"))
+WB_ES_basic_total = readRDS(paste0(base_pools,"Rdata/Output/es_basic_total.rds"))
+WB_ES_basic_none = readRDS(paste0(base_pools,"Rdata/Output/es_basic_none.rds"))
+```
+
+```{r, echo = FALSE}
+WB_FB_advanced_total = readRDS(paste0(base_pools,"Rdata/Output/fb_advanced_total.rds"))
+WB_FB_advanced_none = readRDS(paste0(base_pools,"Rdata/Output/fb_advanced_none.rds"))
+WB_PR_advanced_total = readRDS(paste0(base_pools,"Rdata/Output/pr_advanced_total.rds"))
+WB_PR_advanced_none = readRDS(paste0(base_pools,"Rdata/Output/pr_advanced_none.rds"))
+WB_PU_advanced_total = readRDS(paste0(base_pools,"Rdata/Output/pu_advanced_total.rds"))
+WB_PU_advanced_none = readRDS(paste0(base_pools,"Rdata/Output/pu_advanced_none.rds"))
+WB_CB_advanced_total = readRDS(paste0(base_pools,"Rdata/Output/cb_advanced_total.rds"))
+WB_CB_advanced_none = readRDS(paste0(base_pools,"Rdata/Output/cb_advanced_none.rds"))
+WB_ES_advanced_total = readRDS(paste0(base_pools,"Rdata/Output/es_advanced_total.rds"))
+WB_ES_advanced_none = readRDS(paste0(base_pools,"Rdata/Output/es_advanced_none.rds"))
+```
+
+```{r, echo = FALSE}
+plot_one<-function(plot_name, sim_total, sim_none, type, ylim = NULL) {
+g_total = plot(sim_total, type, bySpecies = TRUE, ylim = ylim) + ggplot2::labs(title= paste0(plot_name," - Total overlap"))
+g_none = plot(sim_none, type, bySpecies = TRUE, ylim = ylim) + ggplot2::labs(title= paste0(plot_name," - No overlap"))
+
+l = get_legend(g_total)
+g_total <- g_total+theme(legend.position = "none")
+
+g_none<-g_none +theme(legend.position = "none")
+plot_grid(g_total, g_none, l, nrow=1, rel_widths = c(1,1,0.45))
+}
+```
+
+## Effects in the basic water balance model 
+### Transpiration per leaf area unit
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 13}
+type = "TranspirationPerLeaf"
+fb_plot = plot_one("FONTBLANCHE", WB_FB_basic_total, WB_FB_basic_none, type, c(0,2))
+pr_plot = plot_one("PRADES", WB_PR_basic_total, WB_PR_basic_none, type, c(0,2))
+pu_plot = plot_one("PUECHABON", WB_PU_basic_total, WB_PU_basic_none, type, c(0,2))
+cb_plot = plot_one("CAN BALASC", WB_CB_basic_total, WB_CB_basic_none, type,  c(0,2))
+es_plot = plot_one("ALTO TAJO", WB_ES_basic_total, WB_ES_basic_none, type, c(0,2))
+cowplot::plot_grid(fb_plot, pr_plot, pu_plot, cb_plot,es_plot, nrow = 5)
+```
+
+
+### Soil water potential
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 13}
+type = "SoilPsi"
+fb_plot = plot_one("FONTBLANCHE", WB_FB_basic_total, WB_FB_basic_none, type, c(-5,0))
+pr_plot = plot_one("PRADES", WB_PR_basic_total, WB_PR_basic_none, type, c(-8,0))
+pu_plot = plot_one("PUECHABON", WB_PU_basic_total, WB_PU_basic_none, type, c(-6,0))
+cb_plot = plot_one("CAN BALASC", WB_CB_basic_total, WB_CB_basic_none, type,  c(-6,0))
+es_plot = plot_one("ALTO TAJO", WB_ES_basic_total, WB_ES_basic_none, type, c(-6,0))
+cowplot::plot_grid(fb_plot, pr_plot, pu_plot, cb_plot,es_plot, nrow = 5)
+```
+
+### Plant water potential
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 13}
+type = "PlantPsi"
+fb_plot = plot_one("FONTBLANCHE", WB_FB_basic_total, WB_FB_basic_none, type, c(-4,0))
+pr_plot = plot_one("PRADES", WB_PR_basic_total, WB_PR_basic_none, type, c(-3,0))
+pu_plot = plot_one("PUECHABON", WB_PU_basic_total, WB_PU_basic_none, type, c(-4,0))
+cb_plot = plot_one("CAN BALASC", WB_CB_basic_total, WB_CB_basic_none, type, c(-4,0))
+es_plot = plot_one("ALTO TAJO", WB_ES_basic_total, WB_ES_basic_none, type, c(-2.5,0))
+cowplot::plot_grid(fb_plot, pr_plot, pu_plot, cb_plot, es_plot, nrow = 5)
+```
+
+### Stem cavitation
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 13}
+type = "StemPLC"
+fb_plot = plot_one("FONTBLANCHE", WB_FB_basic_total, WB_FB_basic_none, type, c(0,100))
+pr_plot = plot_one("PRADES", WB_PR_basic_total, WB_PR_basic_none, type, c(0,100))
+pu_plot = plot_one("PUECHABON", WB_PU_basic_total, WB_PU_basic_none, type, c(0,100))
+cb_plot = plot_one("CAN BALASC", WB_CB_basic_total, WB_CB_basic_none, type, c(0,100))
+es_plot = plot_one("ALTO TAJO", WB_CB_basic_total, WB_ES_basic_none, type, c(0,100))
+cowplot::plot_grid(fb_plot, pr_plot, pu_plot, cb_plot,es_plot, nrow = 5)
+```
+
+## Effects in the advanced water balance model 
+### Transpiration per leaf area unit
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 13}
+type = "TranspirationPerLeaf"
+fb_plot = plot_one("FONTBLANCHE", WB_FB_advanced_total, WB_FB_advanced_none, type, c(0,2))
+pr_plot = plot_one("PRADES", WB_PR_advanced_total, WB_PR_advanced_none, type, c(0,2))
+pu_plot = plot_one("PUECHABON", WB_PU_advanced_total, WB_PU_advanced_none, type, c(0,2))
+cb_plot = plot_one("CAN BALASC", WB_CB_advanced_total, WB_CB_advanced_none, type,  c(0,2))
+es_plot = plot_one("ALTO TAJO", WB_ES_advanced_total, WB_ES_advanced_none, type, c(0,2))
+cowplot::plot_grid(fb_plot, pr_plot, pu_plot, cb_plot,es_plot, nrow = 5)
+```
+
+
+### Soil water potential
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 13}
+type = "SoilPsi"
+fb_plot = plot_one("FONTBLANCHE", WB_FB_advanced_total, WB_FB_advanced_none, type, c(-5,0))
+pr_plot = plot_one("PRADES", WB_PR_advanced_total, WB_PR_advanced_none, type, c(-8,0))
+pu_plot = plot_one("PUECHABON", WB_PU_advanced_total, WB_PU_advanced_none, type, c(-6,0))
+cb_plot = plot_one("CAN BALASC", WB_CB_advanced_total, WB_CB_advanced_none, type,  c(-6,0))
+es_plot = plot_one("ALTO TAJO", WB_ES_advanced_total, WB_ES_advanced_none, type,  c(-6,0))
+cowplot::plot_grid(fb_plot, pr_plot, pu_plot, cb_plot, es_plot, nrow = 5)
+```
+
+
+### Range of leaf water potential
+
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 13}
+type = "LeafPsiRange"
+fb_plot = plot_one("FONTBLANCHE", WB_FB_advanced_total, WB_FB_advanced_none, type)
+pr_plot = plot_one("PRADES", WB_PR_advanced_total, WB_PR_advanced_none, type)
+pu_plot = plot_one("PUECHABON", WB_PU_advanced_total, WB_PU_advanced_none, type)
+cb_plot = plot_one("CAN BALASC", WB_CB_advanced_total, WB_CB_advanced_none, type)
+es_plot = plot_one("ALTO TAJO", WB_ES_advanced_total, WB_ES_advanced_none, type)
+cowplot::plot_grid(fb_plot, pr_plot, pu_plot, cb_plot,es_plot, nrow = 5)
+```
+
+### Stem cavitation
+```{r, echo = FALSE, fig=TRUE, fig.align="center", fig.width=10, fig.height = 13}
+type = "StemPLC"
+fb_plot = plot_one("FONTBLANCHE", WB_FB_advanced_total, WB_FB_advanced_none, type, c(0,100))
+pr_plot = plot_one("PRADES", WB_PR_advanced_total, WB_PR_advanced_none, type, c(0,100))
+pu_plot = plot_one("PUECHABON", WB_PU_advanced_total, WB_PU_advanced_none, type, c(0,100))
+cb_plot = plot_one("CAN BALASC", WB_CB_advanced_total, WB_CB_advanced_none, type, c(0,100))
+es_plot = plot_one("ALTO TAJO", WB_ES_advanced_total, WB_ES_advanced_none, type, c(0,100))
+cowplot::plot_grid(fb_plot, pr_plot, pu_plot, cb_plot, es_plot, nrow = 5)
+```

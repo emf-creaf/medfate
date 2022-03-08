@@ -27,6 +27,7 @@ articles:
 - title: Application examples
   contents:
     - starts_with("workedexamples/FontBlanche")
+    - starts_with("workedexamples/PlantWaterPools")
 
     
 reference:
