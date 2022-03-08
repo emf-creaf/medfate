@@ -1,5 +1,5 @@
 ---
-title: "Soil water pools and species interactions"
+title: "Water pools and species interactions"
 author: "Miquel De Caceres (CREAF)"
 date: "`r Sys.Date()`"
 output:
@@ -16,13 +16,8 @@ library(medfate)
 base_pools = "~/OneDrive/Professional/MedfateWorks/PlantWaterPools/"
 ```
 
-## Introduction
+## About this vignette
 
-
-
-
-
-### About this vignette
 
 
 ```{r, echo = FALSE}
