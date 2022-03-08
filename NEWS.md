@@ -6,7 +6,8 @@
 - Basic water balance model with relative water content
 - 'pRootDisc' eliminated from species parameters
 - Plant water balance and cuticular tranpiration added to the basic water balance model
-- Water pools revised for basic water balance
+- Water pools revised for the basic and water balance models
+- Shared water pools is now controlled via parameter 'rhizosphereOverlap'
 
 # Version 2.6.2
 - Control parameter 'modifyInput' is no longer available. Functions 'spwb', 'pwb' and 'growth' do not modify input objects and return an element 'spwbOutput' or 'growthOutput' with a copy of the final state.

@@ -255,6 +255,7 @@ List transpirationGranier(List x, NumericVector meteovec,
       double Klcmean = sum(Klc*V(c,_));
       for(int l=0;l<nlayers;l++) {
         Extraction(c,l) = std::max(TmaxCoh[c]*Klcmean*(Kunlc[l]/sumKunlc),0.0);
+        Rcout<< " Extraction(c,l) [1]: "<< Extraction(c,l) <<"\n";
       }
       rootCrownPsi = averagePsi(psiSoil, V(c,_), WeibullShape, Psi_Extract[c]);
       // Rcout<< c << " : " << rootCrownPsi<<"\n";
@@ -291,8 +292,7 @@ List transpirationGranier(List x, NumericVector meteovec,
     double vpd_tmin = std::max(0.0, lvp_tmin - vpatm);
     double E_gmin = Gswmin[c]*(vpd_tmin+vpd_tmax)/(2.0*Patm); // mol·s-1·m-2
     double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
-    
-    
+
     double oldVol = plantVol(PlantPsi[c], parsVol); 
     
     //Transpiration is the maximum of predicted extraction and cuticular transpiration
@@ -308,17 +308,16 @@ List transpirationGranier(List x, NumericVector meteovec,
     double newVol = plantVol(PlantPsi[c], parsVol);
     
     double volDiff = newVol - oldVol;
-    
     //Plant transpiration and water balance
     PWB[c] = volDiff;
     
     //Divide the difference among soil layers extraction
     for(int l=0;l<nlayers;l++) {
       if(!plantWaterPools) { 
-        Extraction(c,l) += (volDiff+corr_extraction)*(Extraction(c,l)/ext_sum);
+        if(ext_sum>0.0) Extraction(c,l) += (volDiff+corr_extraction)*(Extraction(c,l)/ext_sum);
       } else { // recalculate also extraction from soil pools
         for(int j = 0;j<numCohorts;j++) {
-          ExtractionPoolsCoh(j,l) += (volDiff+corr_extraction)*(ExtractionPoolsCoh(j,l)/ext_sum);
+          if(ext_sum>0.0) ExtractionPoolsCoh(j,l) += (volDiff+corr_extraction)*(ExtractionPoolsCoh(j,l)/ext_sum);
           if(modifyInput) Wpool(j,l) = Wpool(j,l) - (ExtractionPoolsCoh(j,l)/(Water_FC[l]*poolProportions[j])); //Apply extraction from pools
         }
         //Recalculate extraction from soil layers

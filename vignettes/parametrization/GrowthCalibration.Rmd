@@ -27,15 +27,20 @@ base_calibration = "~/OneDrive/Professional/MedfateWorks/GrowthCalibration/"
 
 ### Observational data
 
-The data set used for the calibration exercise corresponds to 75 permanent forest plots of the Spanish National Forest Inventory located in Catalonia. Forest plots correspond to pure stands whose dominant species are *Fagus sylvatica*, *Pinus halepensis*, *Pinus nigra*, *Pinus sylvestris* or *Quercus pubescens*. There are 15 plots per each dominant species and each set of 15 plots encompass a range of climatic aridity. Dendrochronological series are available for up to 6 trees per plot, which conforms the observational data for the calibration exercise. In addition, local measurements were made in 2015 for sampled trees of the same plots which included (a) the leaf area to sapwood area ratio (`Al2As`) and specific leaf area (`SLA`). Plot-level averages are used as parameter values for the dominant target species in this exercise.
+We used to data sets for the calibration exercise:
+
+  a) The first data set corresponds to 75 permanent forest plots of the Spanish National Forest Inventory located in Catalonia. Forest plots correspond to pure stands whose dominant species are *Fagus sylvatica*, *Pinus halepensis*, *Pinus nigra*, *Pinus sylvestris* or *Quercus pubescens*. There are 15 plots per each dominant species and each set of 15 plots encompass a range of climatic aridity. Plot characteristics are described in Rosas et al. (2019). Dendrochronological series are available for up to 6 trees per plot and were sampled in December 2015. Note that a sixth species (*Quercus ilex*) was included in Rosas et al (2019), but dendrochronological dating is not available.
+  b) The second data set corresponds to 12 plots located in the Pyrenees and describing pure *Pinus uncinata* stands close to the treeline. Dendrochronological series were taken in 2004-2005 from tree base samples and were available for almost all trees in each stand. Forest stands and sampling procedures are described in Batllori & Gutiérrez (2008) and Batllori et al. (2009).
 
 ```{r, echo = FALSE}
+
+cal_uncinata_SL_ga = readRDS(paste0(base_calibration,"Rdata/cal_uncinata_SL_ga.rds"))
+
 plot_desc = readRDS(paste0(base_calibration,"Rdata/plot_desc_FUN2FUN.rds"))
 obs_FUN2FUN = readRDS(paste0(base_calibration,"Rdata/obs_FUN2FUN_IFN.rds"))
 eval_df = readRDS(paste0(base_calibration,"Rdata/eval_FUN2FUN.rds"))
 cal_FUN2FUN_SL_ga = readRDS(paste0(base_calibration,"Rdata/cal_FUN2FUN_SL_ga.rds"))
 cal_FUN2FUN_NSL_ga = readRDS(paste0(base_calibration,"Rdata/cal_FUN2FUN_NSL_ga.rds"))
-
 sel = !is.na(cal_FUN2FUN_SL_ga$value_cal)
 cal_FUN2FUN_SL_ga = cal_FUN2FUN_SL_ga[sel,]
 cal_FUN2FUN_NSL_ga = cal_FUN2FUN_NSL_ga[sel,]
@@ -60,21 +65,10 @@ for(i in 1:length(obs_FUN2FUN)) {
 cal_FUN2FUN_SL_ga$Species = as.character(cal_FUN2FUN_SL_ga$Species)
 cal_FUN2FUN_SL_ga$Species[cal_FUN2FUN_SL_ga$Species=="Quercus humilis"] = "Quercus pubescens"
 cal_FUN2FUN_SL_ga$MeanBAI = plot_desc$meanBAI
-cal_FUN2FUN_SL_ga$relvalue_cal = 100*cal_FUN2FUN_SL_ga$value_cal/plot_desc$meanBAI
 
 cal_FUN2FUN_NSL_ga$Species = as.character(cal_FUN2FUN_NSL_ga$Species)
 cal_FUN2FUN_NSL_ga$Species[cal_FUN2FUN_NSL_ga$Species=="Quercus humilis"] = "Quercus pubescens"
 cal_FUN2FUN_NSL_ga$MeanBAI = plot_desc$meanBAI
-cal_FUN2FUN_NSL_ga$relvalue_cal = 100*cal_FUN2FUN_NSL_ga$value_cal/plot_desc$meanBAI
-eval_df$Obs_BAI = plot_desc$meanBAI
-eval_df$MAErel_calibrated = 100*eval_df$MAE_calibrated/plot_desc$meanBAI
-eval_df$MAErel_spp = 100*eval_df$MAE_spp/plot_desc$meanBAI
-eval_df$MAErel_all = 100*eval_df$MAE_all/plot_desc$meanBAI
-
-cal_FUN2FUN_SL_ga$Group = "Gymnosperm"
-cal_FUN2FUN_SL_ga$Group[cal_FUN2FUN_SL_ga$Species %in% c("Fagus sylvatica", "Quercus pubescens")] = "Angiosperm"
-
-cal_FUN2FUN_NSL_ga$Group = cal_FUN2FUN_SL_ga$Group
 
 cal_FUN2FUN_SL_ga$Species = as.character(cal_FUN2FUN_SL_ga$Species)
 cal_FUN2FUN_SL_ga$P.PET_SpringSummer = plot_desc$P.PET_SpringSummer
@@ -134,9 +128,9 @@ From these results we see that other parameters are relevant to determine inter-
 
 ### Calibration procedure
 
-For each forest plot, we matched each available dendrochronological series with a forest inventory tree cohort by finding which tree (in the IFN3 sampling) had the DBH most similar to that estimated from the dendrochronology at year 2000. Then, we took the series of annual basal area increments (BAI) as the observations to be matched by model secondary growth predictions for the matched tree cohort.  
+For each forest plot in the first data set, we matched each available dendrochronological series with a forest inventory tree cohort by finding which tree (in the IFN3 sampling) had the DBH most similar to that estimated from the dendrochronology at year 2000. Then, we took the series of annual basal area increments (BAI) as the observations to be matched by model secondary growth predictions for the matched tree cohort. For each forest plot of the second data set, we took all available dendrochronological series between 1990 and 2004. Available diameter increments (DI) were used to infer DBH at year 1990 and we transformed DI into annual BAI.
 
-Simulations were performed using daily weather data for each target plot, obtained via interpolation using package **meteoland** (2001 - 2015 period), and soil physical characteristics where drawn from SoilGrids data base. Water use efficiency parameters (`WUE` and `WUE_decay`) were given values resulting from the [meta-modelling exercise](https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html), whereas other parameters of the sensitivity analysis were left to the species-level defaults of `SpParamsMED`. We calibrated the four target parameters for the target dominant species of the target plot using a genetic algorithm (function `ga` from package **GA**). Model parameter values were assumed to be the same for all cohorts of the target species, while the remaining species in the plot were given default constant parameter values. The objective function for the genetic algorithm was the average, across cohorts with observed dendrochronology series, of the mean absolute error (MAE) resulting from comparing observed and predicted annual BAI series. Population size for the genetic algorithm was set to 40 individuals. A maximum of 25 iterations of the genetic algorithm were allowed, and the calibration procedure stopped if the best parameter combination did not change during 5 consecutive iterations.
+Simulations were performed using daily weather data for each target plot, obtained via interpolation using package **meteoland** (2001 - 2015 period or 1990-2004 period, depending on the data set), and soil physical characteristics where drawn from SoilGrids data base. Water use efficiency parameters (`WUE` and `WUE_decay`) were given values resulting from the [meta-modelling exercise](https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html), whereas other parameters of the sensitivity analysis were left to the species-level defaults of `SpParamsMED`. We calibrated the four target parameters for the target dominant species of the target plot using a genetic algorithm (function `ga` from package **GA**). Model parameter values were assumed to be the same for all cohorts of the target species, while the remaining species in the plot were given default constant parameter values. The objective function for the genetic algorithm was the average, across cohorts with observed dendrochronology series, of the mean absolute error (MAE) resulting from comparing observed and predicted annual BAI series. Population size for the genetic algorithm was set to 40 individuals. A maximum of 25 iterations of the genetic algorithm were allowed, and the calibration procedure stopped if the best parameter combination did not change during 5 consecutive iterations.
 
 The following table shows the range of values explored for each parameter to be calibrated: 
 ```{r, echo = FALSE}
@@ -152,69 +146,29 @@ df %>%
 
 ## Calibration results
 
-```{r, echo = FALSE}
-cal_FUN2FUN_SL_ga$Species = as.character(cal_FUN2FUN_SL_ga$Species)
-sel = !is.na(cal_FUN2FUN_SL_ga$value_cal)
-cal_FUN2FUN_SL_ga = cal_FUN2FUN_SL_ga[sel,,drop=FALSE]
-cal_FUN2FUN_NSL_ga = cal_FUN2FUN_NSL_ga[sel,,drop=FALSE]
-eval_df = eval_df[sel, ,drop = FALSE]
-
-plot_desc = plot_desc[row.names(cal_FUN2FUN_SL_ga),,drop=FALSE]
-cal_FUN2FUN_SL_ga$P.PET_SpringSummer = plot_desc$P.PET_SpringSummer
-cal_FUN2FUN_SL_ga$P.PET_Summer = plot_desc$P.PET_Summer
-```
 
 ### Error function
+```{r, echo = FALSE}
+df = rbind(cal_FUN2FUN_SL_ga[,c(1,2,3, 5,7,9,11)], cal_uncinata_SL_ga[,c(1,2,3, 5,7,9,11)])
+```
 
-The following left panel shows the distribution of the final (optimum) values of the error function by dominant species, whereas the right panel shows the distribution of error values in relative terms (as a percentage of the mean observed BAI):
-```{r, echo = FALSE, fig.width=8, fig.height=4}
-p1<-ggplot(cal_FUN2FUN_SL_ga)+
+The following panel shows the distribution of the final (optimum) values of the error function (average relative MAE) by dominant species:
+
+```{r, echo = FALSE, fig.width=4, fig.height=4}
+p1<-ggplot(df)+
   geom_boxplot(aes(x=Species, y=value_cal, fill=Species))+
-  labs(x="", y="MAE (cm2/yr)")+
-  scale_fill_discrete(NULL)+
-  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
-                   legend.position = "none")
-p2<-ggplot(cal_FUN2FUN_SL_ga)+
-  geom_boxplot(aes(x=Species, y=relvalue_cal, fill=Species))+
   labs(x="", y="Relative MAE (%)")+
   scale_fill_discrete(NULL)+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
                    legend.position = "none")
-p <- plot_grid(p1,p2, nrow=1)
-p
+p1
 ```
 
-The following table shows the same error values after averaging plot values by species, functional group (angiosperm/gymnosperm), and the overall averages:
-```{r cal_SL_sp, echo = FALSE}
-MAE_cal = cal_FUN2FUN_SL_ga$value_cal
-wmean <-function(x, na.rm = TRUE) {
-  median(x, na.rm = na.rm)
-}
-ms = cbind(apply(cal_FUN2FUN_SL_ga[,c(12,3,13)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Species, mean, na.rm=T)}),
-          apply(cal_FUN2FUN_SL_ga[,c(5,7,9,11)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Species, wmean, na.rm=T)}))
-mg = cbind(apply(cal_FUN2FUN_SL_ga[,c(12,3,13)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Group, mean, na.rm=T)}),
-          apply(cal_FUN2FUN_SL_ga[,c(5,7,9,11)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Group, wmean, na.rm=T)}))
-dfs<-data.frame(Nplots = tapply(cal_FUN2FUN_SL_ga$value_ini, cal_FUN2FUN_SL_ga$Species, function(x){sum(!is.na(x))}))
-dfs <- cbind(dfs, ms)
-dfg<-data.frame(Nplots = tapply(cal_FUN2FUN_SL_ga$value_ini, cal_FUN2FUN_SL_ga$Group, function(x){sum(!is.na(x))}))
-dfg <- cbind(dfg, mg)
-df <- rbind(dfs, dfg)
-names(df) <-  c("N", "Mean BAI (cm2/yr)","MAE (cm2/yr)", "MAE (%)","RERsapwood","RGRsapwoodmax", "SRsapwood", "rfc@2")
-N_tot = sum(dfs$Nplots)
-ma <- c(N_tot,
-        apply(cal_FUN2FUN_SL_ga[,c(12,3,13)],2,mean, na.rm=TRUE),
-        apply(cal_FUN2FUN_SL_ga[,c(5,7,9,11)],2,wmean, na.rm=TRUE))
-df <- rbind(df, ma)
-row.names(df)[nrow(df)] = "All"
-df[,c("N", "Mean BAI (cm2/yr)", "MAE (cm2/yr)", "MAE (%)")] %>%
-  kbl() %>%
-  kable_styling()
-```
 
 ### Parameter distribution and covariance
 
 ```{r, echo = FALSE}
-dfpar = cal_FUN2FUN_SL_ga
+dfpar =df
 ```
 
 The following panels show the distribution of calibrated parameter values by species (gray dashed lines indicate the parameter value limits used in the calibration procedure):
@@ -257,15 +211,24 @@ p<-plot_grid(p3,p4, p5, p6, labels=c("a", "b", "c","d"), nrow=2)
 p
 ```
 
-The following table shows mean parameter values by species, functional groups and overall means:
+The following table shows mean error and parameter values by species and overall means:
 
 ```{r echo = FALSE}
-df[,c("RERsapwood", "RGRsapwoodmax", "SRsapwood", "rfc@2")] %>%
+MAE_cal = cal_FUN2FUN_SL_ga$value_cal
+ms_F2F = apply(cal_FUN2FUN_SL_ga[,c(3, 5,7,9,11)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Species, mean, na.rm=T)})
+ms_UNC = apply(cal_uncinata_SL_ga[,c(3, 5,7,9,11)],2,function(x) {tapply(x, cal_uncinata_SL_ga$Species, mean, na.rm=T)})
+ms_UNC = data.frame(row.names  = "Pinus uncinata", t(ms_UNC))
+df <- rbind(ms_F2F, ms_UNC)
+names(df) <-  c("Rel. MAE (%)", "RERsapwood","RGRsapwoodmax", "SRsapwood", "rfc@2")
+ma <- apply(rbind(cal_FUN2FUN_SL_ga[,c(3, 5,7,9,11)], cal_uncinata_SL_ga[,c(3, 5,7,9,11)]),2,mean, na.rm=TRUE)
+df <- rbind(df, ma)
+row.names(df)[nrow(df)] = "All"
+df %>%
   kbl() %>%
   kable_styling()
 ```
 
-Some differences can be observed between species, those are not always statistically significant, as shown in the following ANOVA tables:
+Statistically significant differences can be observed between species for `RERsapwood` and `RGRsapwoodmax`, as shown in the following ANOVA tables:
 
 ```{r, echo = FALSE}
 anova(aov(RERsapwood_cal~Species, data = dfpar))
@@ -286,29 +249,29 @@ anova(aov(rfc_cal~Species, data = dfpar))
 
 Finally, the following panels illustrate the overall lack of covariance between calibrated parameter values:
 ```{r, echo = FALSE, fig.height=12, fig.width=10}
-g1<-ggplot(cal_FUN2FUN_SL_ga)+
+g1<-ggplot(dfpar)+
   geom_point(aes(x=RERsapwood_cal, y = RGRsapwoodmax_cal, col=Species, shape = Species))+
   labs(x="RER sapwood (g gluc/g dry/day)", y="RGR sapwood (cm2/cm2/day)")+
   theme_bw()
 l <- get_legend(g1)
 g1<-g1+theme(legend.position = "none")
-g2<-ggplot(cal_FUN2FUN_SL_ga)+
+g2<-ggplot(dfpar)+
   geom_point(aes(x=RERsapwood_cal, y = SRsapwood_cal, col=Species, shape = Species))+
   labs(x="RER sapwood (g gluc/g dry/day)", y="Sapwood senescence rate (day-1)")+
   theme_bw()+theme(legend.position = "none")
-g3<-ggplot(cal_FUN2FUN_SL_ga)+
+g3<-ggplot(dfpar)+
   geom_point(aes(x=RERsapwood_cal, y = rfc_cal, col=Species, shape = Species))+
   labs(x="RER sapwood (g gluc/g dry/day)", y="Rock content (%)")+
   theme_bw()+theme(legend.position = "none")
-g4<-ggplot(cal_FUN2FUN_SL_ga)+
+g4<-ggplot(dfpar)+
   geom_point(aes(x=SRsapwood_cal, y = RGRsapwoodmax_cal, col=Species, shape = Species))+
   labs(x="Sapwood senescence rate (day-1)", y="RGR sapwood (cm2/cm2/day)")+
   theme_bw()+theme(legend.position = "none")
-g5<-ggplot(cal_FUN2FUN_SL_ga)+
+g5<-ggplot(dfpar)+
   geom_point(aes(x=rfc_cal, y = RGRsapwoodmax_cal, col=Species, shape = Species))+
   labs(x="Rock content (%)", y="RGR sapwood (cm2/cm2/day)")+
   theme_bw()+theme(legend.position = "none")
-g6<-ggplot(cal_FUN2FUN_SL_ga)+
+g6<-ggplot(dfpar)+
   geom_point(aes(x=rfc_cal, y = SRsapwood_cal, col=Species, shape = Species))+
   labs(x="Rock content (%)", y="Sapwood senescence rate (day-1)")+
   theme_bw()+theme(legend.position = "none")
@@ -322,7 +285,7 @@ Finally, we wanted to evaluate the reduction in predictive error of secondary gr
 
 ```{r, echo = FALSE}
 calParamsSpecies = readRDS(paste0(base_calibration,"/Rdata/calibration_params.rds"))
-calParamsSpecies[-6,-1] %>% #Ommits Q. ilex 
+calParamsSpecies[,-1] %>% #Ommits index 
   kbl() %>%
   kable_styling()
 ```
@@ -369,8 +332,7 @@ plot_grid(p1,p2, nrow=1)
 The following table shows annual BAI evaluation results by species (medians):
 ```{r echo = FALSE, eval = TRUE}
 eval_df %>% group_by(Species) %>% 
-  summarise(`Observed (cm2/yr)` = median(Obs_BAI, na.rm=T),
-            `MAE plot (cm2/yr)` = median(MAE_calibrated, na.rm=T),
+  summarise(`MAE plot (cm2/yr)` = median(MAE_calibrated, na.rm=T),
             `MAE spp (cm2/yr)` = median(MAE_spp, na.rm=T),
             `MAE all (cm2/yr)` = median(MAE_all, na.rm=T),
             `MAE plot (%)` = median(MAErel_calibrated, na.rm=T),
@@ -404,8 +366,7 @@ plot_grid(p3,p4, nrow=1)
 The following table shows total BAI evaluation results by species (medians):
 ```{r echo = FALSE, eval = TRUE}
 eval_df %>% group_by(Species) %>% 
-  summarise(`Observed (cm2)` = median(Obs_BAItot, na.rm=T),
-            `MAE plot (cm2)` = median(MAE_BAItot_calibrated, na.rm=T),
+  summarise(`MAE plot (cm2)` = median(MAE_BAItot_calibrated, na.rm=T),
             `MAE spp (cm2)` = median(MAE_BAItot_spp, na.rm=T),
             `MAE all (cm2)` = median(MAE_BAItot_all, na.rm=T),
             `MAE plot (%)` = median(MAErel_BAItot_calibrated, na.rm=T),
@@ -417,3 +378,8 @@ eval_df %>% group_by(Species) %>%
 
 From these results, it is apparent that the calibration improved substantially the predictive capacity of the model. More importantly, using species-level averages or overall averages do not seem to increase substantially prediction errors, compared to plot-level calibrated parameter values.
 
+## Bibliography
+
++ Batllori, E., J. M. Blanco-Moreno, J. M. Ninot, E. Gutiérrez, and E. Carrillo. 2009. Vegetation patterns at the alpine treeline ecotone: the influence of tree cover on abrupt change in species composition of alpine communities. Journal of Vegetation Science 20:814–825.
++ Batllori, E., and E. Gutiérrez. 2008. Regional tree line dynamics in response to global change in the Pyrenees. Journal of Ecology 96:1275–1288.
++ Rosas, T., M. Mencuccini, J. Barba, H. Cochard, S. Saura-Mas, and J. Martínez-Vilalta. 2019. Adjustments and coordination of hydraulic, leaf and stem traits along a water availability gradient. New Phytologist 223:632–646.
