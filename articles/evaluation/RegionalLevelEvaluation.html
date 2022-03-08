@@ -73,7 +73,7 @@
       <h1 data-toc-skip>Evaluation of regional-level forest dynamics with forest inventory data</h1>
                         <h4 data-toc-skip class="author">Miquel De Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-03-07</h4>
+            <h4 data-toc-skip class="date">2022-03-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/evaluation/RegionalLevelEvaluation.Rmd" class="external-link"><code>vignettes/evaluation/RegionalLevelEvaluation.Rmd</code></a></small>
       <div class="hidden name"><code>RegionalLevelEvaluation.Rmd</code></div>
@@ -89,13 +89,13 @@
 <h3 id="goal">Goal<a class="anchor" aria-label="anchor" href="#goal"></a>
 </h3>
 <p>The aim of this article is to provide an assessment of the performance of <code>fordyn</code> for the prediction of forest dynamics in Catalonia (NE of Spain). To this aim, we simulate forest dynamics between two surveys of the Spanish National Forest Inventory and compare the model predictions of forest growth against inventory data for a large set of permanent plots. The evaluation focuses first on the growth (in diameter and height) of surviving trees, then turning the attention to the basal area of dead trees and overall changes in basal area.</p>
-<p>This evaluation was conducted using <strong>medfate</strong> package version <strong>2.6.0</strong>.</p>
+<p>This evaluation was conducted using <strong>medfate</strong> package version <strong>2.7.0</strong>.</p>
 </div>
 <div class="section level3">
 <h3 id="simulation-procedure">Simulation procedure<a class="anchor" aria-label="anchor" href="#simulation-procedure"></a>
 </h3>
 <p>We first selected a set of target tree species on the basis of their importance in the Catalan territory: <em>Pinus halepensis</em>, <em>Pinus nigra</em>, <em>Pinus sylvestris</em>, <em>Pinus pinea</em>, <em>Pinus uncinata</em>, <em>Fagus sylvatica</em>, <em>Abies alba</em>, <em>Quercus ilex</em>, <em>Quercus faginea</em>, <em>Quercus pubescens</em>, <em>Quercus suber</em>.</p>
-<p>We then selected <strong>2261</strong> repeated plots (A1 between IFN3 and IFN4) (co-)dominated by the target species (&gt; 80% basal area corresponding to the target species) and without signs of management (cut trees).</p>
+<p>We then selected <strong>2264</strong> repeated plots (A1 between IFN3 and IFN4) (co-)dominated by the target species (&gt; 80% basal area corresponding to the target species) and without signs of management (cut trees).</p>
 <p>Soil physical properties were drawn from SoilGrids (Hengl 2016), complemented by rock fragment content estimates derived from surface stoniness measurements in forest plots. Simulations were conducted between 2000/2001 (IFN3) and 2014/2016 (IFN4) depending on the sampling years of the target plot, with daily weather data obtained via interpolation on plot’s coordinates using package <strong>meteoland</strong>.</p>
 <p>Default species-specific parameters were modified using the results of the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html" class="external-link">meta-modelling exercise</a> and the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/GrowthCalibration.html" class="external-link">growth calibration exercise</a>. These two exercises do not provide values for all the main species included here, so it is expected that evaluation results are worse for those species not included in those exercises.</p>
 <p>The key parameters values used in simulations were the following:</p>
@@ -185,10 +185,10 @@ Fagus sylvatica
 18.320000
 </td>
 <td style="text-align:right;">
-0.0015078
+0.0016004
 </td>
 <td style="text-align:right;">
-0.0001923
+0.0001648
 </td>
 <td style="text-align:right;">
 50
@@ -217,10 +217,10 @@ Pinus halepensis
 5.140523
 </td>
 <td style="text-align:right;">
-0.0011373
+0.0007811
 </td>
 <td style="text-align:right;">
-0.0001840
+0.0001306
 </td>
 <td style="text-align:right;">
 80
@@ -249,10 +249,10 @@ Pinus nigra
 4.569508
 </td>
 <td style="text-align:right;">
-0.0011329
+0.0005168
 </td>
 <td style="text-align:right;">
-0.0001724
+0.0001344
 </td>
 <td style="text-align:right;">
 80
@@ -313,10 +313,10 @@ Pinus sylvestris
 4.897943
 </td>
 <td style="text-align:right;">
-0.0018711
+0.0014057
 </td>
 <td style="text-align:right;">
-0.0001298
+0.0000889
 </td>
 <td style="text-align:right;">
 80
@@ -345,10 +345,10 @@ Pinus uncinata
 3.804390
 </td>
 <td style="text-align:right;">
-0.0020000
+0.0057691
 </td>
 <td style="text-align:right;">
-0.0001000
+0.0002193
 </td>
 <td style="text-align:right;">
 80
@@ -441,10 +441,10 @@ Quercus pubescens
 11.800000
 </td>
 <td style="text-align:right;">
-0.0019525
+0.0019670
 </td>
 <td style="text-align:right;">
-0.0001599
+0.0001926
 </td>
 <td style="text-align:right;">
 50
@@ -498,6 +498,11 @@ Quercus suber
 <h3 id="annual-diameter-increment-cmyr">Annual diameter increment (cm/yr)<a class="anchor" aria-label="anchor" href="#annual-diameter-increment-cmyr"></a>
 </h3>
 <p>Predictive capacity table:</p>
+<pre><code><span class="co">## Warning in cor(obs, pred): the standard deviation is zero</span>
+
+<span class="co">## Warning in cor(obs, pred): the standard deviation is zero</span>
+
+<span class="co">## Warning in cor(obs, pred): the standard deviation is zero</span></code></pre>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -534,28 +539,28 @@ R2
 All
 </td>
 <td style="text-align:right;">
-36519
+38646
 </td>
 <td style="text-align:right;">
-0.2153365
+0.2108582
 </td>
 <td style="text-align:right;">
-0.1704050
+0.0129151
 </td>
 <td style="text-align:right;">
--0.0449315
+-0.1979431
 </td>
 <td style="text-align:right;">
--20.865727
+-93.87497
 </td>
 <td style="text-align:right;">
-0.1301377
+0.2115737
 </td>
 <td style="text-align:right;">
-60.43456
+100.33931
 </td>
 <td style="text-align:right;">
-0.0429455
+0.0001007
 </td>
 </tr>
 <tr>
@@ -563,28 +568,28 @@ All
 Abies alba
 </td>
 <td style="text-align:right;">
-825
+1071
 </td>
 <td style="text-align:right;">
-0.3675428
+0.3295572
 </td>
 <td style="text-align:right;">
-0.1328321
+0.0001618
 </td>
 <td style="text-align:right;">
--0.2347107
+-0.3293954
 </td>
 <td style="text-align:right;">
--63.859425
+-99.95090
 </td>
 <td style="text-align:right;">
-0.2587381
+0.3349910
 </td>
 <td style="text-align:right;">
-70.39672
+101.64880
 </td>
 <td style="text-align:right;">
-0.0889727
+0.0003733
 </td>
 </tr>
 <tr>
@@ -592,28 +597,28 @@ Abies alba
 Fagus sylvatica
 </td>
 <td style="text-align:right;">
-995
+1018
 </td>
 <td style="text-align:right;">
-0.2569557
+0.2546938
 </td>
 <td style="text-align:right;">
-0.1962135
+0.0000000
 </td>
 <td style="text-align:right;">
--0.0607421
+-0.2546938
 </td>
 <td style="text-align:right;">
--23.639148
+-100.00000
 </td>
 <td style="text-align:right;">
-0.1399823
+0.2565905
 </td>
 <td style="text-align:right;">
-54.47722
+100.74467
 </td>
 <td style="text-align:right;">
-0.1122245
+NA
 </td>
 </tr>
 <tr>
@@ -627,22 +632,22 @@ Pinus halepensis
 0.2802342
 </td>
 <td style="text-align:right;">
-0.1799852
+0.0016663
 </td>
 <td style="text-align:right;">
--0.1002491
+-0.2785680
 </td>
 <td style="text-align:right;">
--35.773321
+-99.40541
 </td>
 <td style="text-align:right;">
-0.1548248
+0.2808990
 </td>
 <td style="text-align:right;">
-55.24835
+100.23723
 </td>
 <td style="text-align:right;">
-0.0771715
+0.0019117
 </td>
 </tr>
 <tr>
@@ -650,28 +655,28 @@ Pinus halepensis
 Pinus nigra
 </td>
 <td style="text-align:right;">
-4776
+4859
 </td>
 <td style="text-align:right;">
-0.2060465
+0.2059806
 </td>
 <td style="text-align:right;">
-0.1245343
+0.0038446
 </td>
 <td style="text-align:right;">
--0.0815122
+-0.2021360
 </td>
 <td style="text-align:right;">
--39.560087
+-98.13353
 </td>
 <td style="text-align:right;">
-0.1324831
+0.2087639
 </td>
 <td style="text-align:right;">
-64.29767
+101.35125
 </td>
 <td style="text-align:right;">
-0.0167080
+0.0087021
 </td>
 </tr>
 <tr>
@@ -685,22 +690,22 @@ Pinus pinea
 0.2999214
 </td>
 <td style="text-align:right;">
-0.3193134
+0.0243352
 </td>
 <td style="text-align:right;">
-0.0193920
+-0.2755862
 </td>
 <td style="text-align:right;">
-6.465683
+-91.88613
 </td>
 <td style="text-align:right;">
-0.1909349
+0.3043589
 </td>
 <td style="text-align:right;">
-63.66162
+101.47953
 </td>
 <td style="text-align:right;">
-0.0303763
+0.0095228
 </td>
 </tr>
 <tr>
@@ -708,28 +713,28 @@ Pinus pinea
 Pinus sylvestris
 </td>
 <td style="text-align:right;">
-9210
+9316
 </td>
 <td style="text-align:right;">
-0.2269495
+0.2263338
 </td>
 <td style="text-align:right;">
-0.2098611
+0.0102769
 </td>
 <td style="text-align:right;">
--0.0170884
+-0.2160569
 </td>
 <td style="text-align:right;">
--7.529615
+-95.45940
 </td>
 <td style="text-align:right;">
-0.1311604
+0.2206883
 </td>
 <td style="text-align:right;">
-57.79276
+97.50567
 </td>
 <td style="text-align:right;">
-0.0130801
+0.0016826
 </td>
 </tr>
 <tr>
@@ -737,28 +742,28 @@ Pinus sylvestris
 Pinus uncinata
 </td>
 <td style="text-align:right;">
-4272
+4309
 </td>
 <td style="text-align:right;">
-0.1902857
+0.1899456
 </td>
 <td style="text-align:right;">
-0.1210862
+0.0670971
 </td>
 <td style="text-align:right;">
--0.0691996
+-0.1228486
 </td>
 <td style="text-align:right;">
--36.366148
+-64.67564
 </td>
 <td style="text-align:right;">
-0.1205010
+0.1985237
 </td>
 <td style="text-align:right;">
-63.32633
+104.51604
 </td>
 <td style="text-align:right;">
-0.0174140
+0.0000822
 </td>
 </tr>
 <tr>
@@ -766,28 +771,28 @@ Pinus uncinata
 Quercus faginea
 </td>
 <td style="text-align:right;">
-445
+702
 </td>
 <td style="text-align:right;">
-0.1636854
+0.1629214
 </td>
 <td style="text-align:right;">
-0.1883207
+0.0000000
 </td>
 <td style="text-align:right;">
-0.0246354
+-0.1629214
 </td>
 <td style="text-align:right;">
-15.050430
+-100.00000
 </td>
 <td style="text-align:right;">
-0.1397537
+0.1656737
 </td>
 <td style="text-align:right;">
-85.37949
+101.68936
 </td>
 <td style="text-align:right;">
-0.0609369
+NA
 </td>
 </tr>
 <tr>
@@ -795,28 +800,28 @@ Quercus faginea
 Quercus ilex
 </td>
 <td style="text-align:right;">
-5563
+6504
 </td>
 <td style="text-align:right;">
-0.1328265
+0.1287322
 </td>
 <td style="text-align:right;">
-0.1573966
+0.0053207
 </td>
 <td style="text-align:right;">
-0.0245701
+-0.1234115
 </td>
 <td style="text-align:right;">
-18.497888
+-95.86686
 </td>
 <td style="text-align:right;">
-0.0891714
+0.1302115
 </td>
 <td style="text-align:right;">
-67.13375
+101.14910
 </td>
 <td style="text-align:right;">
-0.0682906
+0.0055862
 </td>
 </tr>
 <tr>
@@ -824,28 +829,28 @@ Quercus ilex
 Quercus pubescens
 </td>
 <td style="text-align:right;">
-1952
+2089
 </td>
 <td style="text-align:right;">
-0.1658276
+0.1617451
 </td>
 <td style="text-align:right;">
-0.1358185
+0.0000000
 </td>
 <td style="text-align:right;">
--0.0300091
+-0.1617451
 </td>
 <td style="text-align:right;">
--18.096537
+-100.00000
 </td>
 <td style="text-align:right;">
-0.0898171
+0.1637749
 </td>
 <td style="text-align:right;">
-54.16292
+101.25492
 </td>
 <td style="text-align:right;">
-0.0542731
+NA
 </td>
 </tr>
 <tr>
@@ -853,28 +858,28 @@ Quercus pubescens
 Quercus suber
 </td>
 <td style="text-align:right;">
-1174
+1471
 </td>
 <td style="text-align:right;">
-0.1819330
+0.1702551
 </td>
 <td style="text-align:right;">
-0.1570980
+0.0165489
 </td>
 <td style="text-align:right;">
--0.0248350
+-0.1537062
 </td>
 <td style="text-align:right;">
--13.650624
+-90.27993
 </td>
 <td style="text-align:right;">
-0.1198437
+0.1684295
 </td>
 <td style="text-align:right;">
-65.87241
+98.92777
 </td>
 <td style="text-align:right;">
-0.0063123
+0.0063780
 </td>
 </tr>
 </tbody>
@@ -888,6 +893,11 @@ Quercus suber
 <h3 id="annual-height-increment-cmyr">Annual height increment (cm/yr)<a class="anchor" aria-label="anchor" href="#annual-height-increment-cmyr"></a>
 </h3>
 <p>Predictive capacity table:</p>
+<pre><code><span class="co">## Warning in cor(obs, pred): the standard deviation is zero</span>
+
+<span class="co">## Warning in cor(obs, pred): the standard deviation is zero</span>
+
+<span class="co">## Warning in cor(obs, pred): the standard deviation is zero</span></code></pre>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -924,28 +934,28 @@ R2
 All
 </td>
 <td style="text-align:right;">
-36519
+38646
 </td>
 <td style="text-align:right;">
-9.990983
+9.791875
 </td>
 <td style="text-align:right;">
-6.918965
+0.5800184
 </td>
 <td style="text-align:right;">
--3.0720179
+-9.211856
 </td>
 <td style="text-align:right;">
--30.7479037
+-94.07653
 </td>
 <td style="text-align:right;">
-9.404321
+11.613802
 </td>
 <td style="text-align:right;">
-94.12808
+118.6065
 </td>
 <td style="text-align:right;">
-0.0145817
+0.0009950
 </td>
 </tr>
 <tr>
@@ -953,28 +963,28 @@ All
 Abies alba
 </td>
 <td style="text-align:right;">
-825
+1071
 </td>
 <td style="text-align:right;">
-16.992794
+16.336114
 </td>
 <td style="text-align:right;">
-3.958454
+0.0052602
 </td>
 <td style="text-align:right;">
--13.0343399
+-16.330854
 </td>
 <td style="text-align:right;">
--76.7051024
+-99.96780
 </td>
 <td style="text-align:right;">
-19.202492
+21.425350
 </td>
 <td style="text-align:right;">
-113.00374
+131.1533
 </td>
 <td style="text-align:right;">
-0.1918804
+0.0000355
 </td>
 </tr>
 <tr>
@@ -982,28 +992,28 @@ Abies alba
 Fagus sylvatica
 </td>
 <td style="text-align:right;">
-995
+1018
 </td>
 <td style="text-align:right;">
-16.247750
+16.295446
 </td>
 <td style="text-align:right;">
-7.188083
+0.0000000
 </td>
 <td style="text-align:right;">
--9.0596676
+-16.295446
 </td>
 <td style="text-align:right;">
--55.7595201
+-100.00000
 </td>
 <td style="text-align:right;">
-16.078239
+19.695880
 </td>
 <td style="text-align:right;">
-98.95671
+120.8674
 </td>
 <td style="text-align:right;">
-0.0016102
+NA
 </td>
 </tr>
 <tr>
@@ -1017,22 +1027,22 @@ Pinus halepensis
 11.666313
 </td>
 <td style="text-align:right;">
-7.068988
+0.0664347
 </td>
 <td style="text-align:right;">
--4.5973250
+-11.599878
 </td>
 <td style="text-align:right;">
--39.4068393
+-99.43054
 </td>
 <td style="text-align:right;">
-9.436002
+12.451121
 </td>
 <td style="text-align:right;">
-80.88247
+106.7271
 </td>
 <td style="text-align:right;">
-0.0023611
+0.0054681
 </td>
 </tr>
 <tr>
@@ -1040,28 +1050,28 @@ Pinus halepensis
 Pinus nigra
 </td>
 <td style="text-align:right;">
-4776
+4859
 </td>
 <td style="text-align:right;">
-11.641885
+11.622045
 </td>
 <td style="text-align:right;">
-6.413169
+0.1963762
 </td>
 <td style="text-align:right;">
--5.2287166
+-11.425668
 </td>
 <td style="text-align:right;">
--44.9129722
+-98.31031
 </td>
 <td style="text-align:right;">
-9.766820
+12.605313
 </td>
 <td style="text-align:right;">
-83.89381
+108.4604
 </td>
 <td style="text-align:right;">
-0.0002799
+0.0027027
 </td>
 </tr>
 <tr>
@@ -1075,22 +1085,22 @@ Pinus pinea
 13.354563
 </td>
 <td style="text-align:right;">
-11.100308
+1.0070081
 </td>
 <td style="text-align:right;">
--2.2542551
+-12.347555
 </td>
 <td style="text-align:right;">
--16.8800370
+-92.45945
 </td>
 <td style="text-align:right;">
-9.411315
+13.808832
 </td>
 <td style="text-align:right;">
-70.47266
+103.4016
 </td>
 <td style="text-align:right;">
-0.0023719
+0.0027290
 </td>
 </tr>
 <tr>
@@ -1098,28 +1108,28 @@ Pinus pinea
 Pinus sylvestris
 </td>
 <td style="text-align:right;">
-9210
+9316
 </td>
 <td style="text-align:right;">
-11.447607
+11.467656
 </td>
 <td style="text-align:right;">
-10.125551
+0.5563407
 </td>
 <td style="text-align:right;">
--1.3220557
+-10.911315
 </td>
 <td style="text-align:right;">
--11.5487516
+-95.14861
 </td>
 <td style="text-align:right;">
-9.920999
+12.779639
 </td>
 <td style="text-align:right;">
-86.66440
+111.4407
 </td>
 <td style="text-align:right;">
-0.0032414
+0.0013916
 </td>
 </tr>
 <tr>
@@ -1127,28 +1137,28 @@ Pinus sylvestris
 Pinus uncinata
 </td>
 <td style="text-align:right;">
-4272
+4309
 </td>
 <td style="text-align:right;">
-11.437705
+11.452443
 </td>
 <td style="text-align:right;">
-5.427747
+3.0402881
 </td>
 <td style="text-align:right;">
--6.0099579
+-8.412155
 </td>
 <td style="text-align:right;">
--52.5451384
+-73.45293
 </td>
 <td style="text-align:right;">
-9.825261
+12.357239
 </td>
 <td style="text-align:right;">
-85.90238
+107.9005
 </td>
 <td style="text-align:right;">
-0.0186099
+0.0007053
 </td>
 </tr>
 <tr>
@@ -1156,28 +1166,28 @@ Pinus uncinata
 Quercus faginea
 </td>
 <td style="text-align:right;">
-445
+702
 </td>
 <td style="text-align:right;">
-4.310230
+4.487647
 </td>
 <td style="text-align:right;">
-5.120104
+0.0000000
 </td>
 <td style="text-align:right;">
-0.8098747
+-4.487647
 </td>
 <td style="text-align:right;">
-18.7895955
+-100.00000
 </td>
 <td style="text-align:right;">
-7.230842
+7.663578
 </td>
 <td style="text-align:right;">
-167.76001
+170.7705
 </td>
 <td style="text-align:right;">
-0.0095545
+NA
 </td>
 </tr>
 <tr>
@@ -1185,28 +1195,28 @@ Quercus faginea
 Quercus ilex
 </td>
 <td style="text-align:right;">
-5563
+6504
 </td>
 <td style="text-align:right;">
-4.130004
+4.206929
 </td>
 <td style="text-align:right;">
-4.153568
+0.1444438
 </td>
 <td style="text-align:right;">
-0.0235643
+-4.062485
 </td>
 <td style="text-align:right;">
-0.5705632
+-96.56653
 </td>
 <td style="text-align:right;">
-6.279445
+6.932241
 </td>
 <td style="text-align:right;">
-152.04454
+164.7815
 </td>
 <td style="text-align:right;">
-0.0127657
+0.0000588
 </td>
 </tr>
 <tr>
@@ -1214,28 +1224,28 @@ Quercus ilex
 Quercus pubescens
 </td>
 <td style="text-align:right;">
-1952
+2089
 </td>
 <td style="text-align:right;">
-4.388060
+4.352634
 </td>
 <td style="text-align:right;">
-4.544687
+0.0000000
 </td>
 <td style="text-align:right;">
-0.1566264
+-4.352634
 </td>
 <td style="text-align:right;">
-3.5693769
+-100.00000
 </td>
 <td style="text-align:right;">
-8.758463
+9.359795
 </td>
 <td style="text-align:right;">
-199.59759
+215.0375
 </td>
 <td style="text-align:right;">
-0.0335071
+NA
 </td>
 </tr>
 <tr>
@@ -1243,28 +1253,28 @@ Quercus pubescens
 Quercus suber
 </td>
 <td style="text-align:right;">
-1174
+1471
 </td>
 <td style="text-align:right;">
-3.634204
+3.413031
 </td>
 <td style="text-align:right;">
-4.221691
+0.5029490
 </td>
 <td style="text-align:right;">
-0.5874871
+-2.910082
 </td>
 <td style="text-align:right;">
-16.1654982
+-85.26386
 </td>
 <td style="text-align:right;">
-6.333059
+6.678578
 </td>
 <td style="text-align:right;">
-174.26265
+195.6788
 </td>
 <td style="text-align:right;">
-0.0094386
+0.0000035
 </td>
 </tr>
 </tbody>
@@ -1274,7 +1284,12 @@ Quercus suber
 <h3 id="stand-level-basal-area-increment-m2ha">Stand-level basal area increment (m2/ha)<a class="anchor" aria-label="anchor" href="#stand-level-basal-area-increment-m2ha"></a>
 </h3>
 <p>This comparison does not take into account changes in density. In other words, densities from IFN3 are used to calculate stand-level basal area of surviving trees. It is meant to evaluate the effect of diameter increment of surviving trees in terms of stand basal area increments.</p>
-Predictive capacity table:
+<p>Predictive capacity table:</p>
+<pre><code><span class="co">## Warning in cor(obs, pred): the standard deviation is zero</span>
+
+<span class="co">## Warning in cor(obs, pred): the standard deviation is zero</span>
+
+<span class="co">## Warning in cor(obs, pred): the standard deviation is zero</span></code></pre>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -1311,28 +1326,28 @@ R2
 0-All
 </td>
 <td style="text-align:right;">
-2261
+2264
 </td>
 <td style="text-align:right;">
-4.4858721
+4.708172
 </td>
 <td style="text-align:right;">
-3.2506027
+0.2455574
 </td>
 <td style="text-align:right;">
--1.2352694
+-4.462615
 </td>
 <td style="text-align:right;">
--27.5368844
+-94.78444
 </td>
 <td style="text-align:right;">
-2.0998560
+4.604024
 </td>
 <td style="text-align:right;">
-46.81043
+97.78793
 </td>
 <td style="text-align:right;">
-0.2572559
+0.0046810
 </td>
 </tr>
 <tr>
@@ -1340,28 +1355,28 @@ R2
 Abies alba
 </td>
 <td style="text-align:right;">
-60
+63
 </td>
 <td style="text-align:right;">
-5.1565646
+6.025452
 </td>
 <td style="text-align:right;">
-1.4841269
+0.0043544
 </td>
 <td style="text-align:right;">
--3.6724378
+-6.021097
 </td>
 <td style="text-align:right;">
--71.2186899
+-99.92773
 </td>
 <td style="text-align:right;">
-3.6839377
+6.021097
 </td>
 <td style="text-align:right;">
-71.44170
+99.92773
 </td>
 <td style="text-align:right;">
-0.3631079
+0.0200900
 </td>
 </tr>
 <tr>
@@ -1369,28 +1384,28 @@ Abies alba
 Fagus sylvatica
 </td>
 <td style="text-align:right;">
-72
+74
 </td>
 <td style="text-align:right;">
-3.9273299
+3.909779
 </td>
 <td style="text-align:right;">
-2.8638064
+0.0000000
 </td>
 <td style="text-align:right;">
--1.0635235
+-3.909779
 </td>
 <td style="text-align:right;">
--27.0800649
+-100.00000
 </td>
 <td style="text-align:right;">
-1.6168275
+3.909779
 </td>
 <td style="text-align:right;">
-41.16862
+100.00000
 </td>
 <td style="text-align:right;">
-0.6219699
+NA
 </td>
 </tr>
 <tr>
@@ -1401,25 +1416,25 @@ Pinus halepensis
 662
 </td>
 <td style="text-align:right;">
-3.5478623
+3.547862
 </td>
 <td style="text-align:right;">
-1.9986589
+0.0158957
 </td>
 <td style="text-align:right;">
--1.5492034
+-3.531967
 </td>
 <td style="text-align:right;">
--43.6658277
+-99.55196
 </td>
 <td style="text-align:right;">
-1.8559610
+3.532289
 </td>
 <td style="text-align:right;">
-52.31209
+99.56104
 </td>
 <td style="text-align:right;">
-0.4025496
+0.0242776
 </td>
 </tr>
 <tr>
@@ -1427,28 +1442,28 @@ Pinus halepensis
 Pinus nigra
 </td>
 <td style="text-align:right;">
-448
+451
 </td>
 <td style="text-align:right;">
-2.8161030
+2.843972
 </td>
 <td style="text-align:right;">
-1.5032393
+0.0426890
 </td>
 <td style="text-align:right;">
--1.3128638
+-2.801283
 </td>
 <td style="text-align:right;">
--46.6198765
+-98.49897
 </td>
 <td style="text-align:right;">
-1.6688627
+2.839125
 </td>
 <td style="text-align:right;">
-59.26142
+99.82959
 </td>
 <td style="text-align:right;">
-0.3514629
+0.0000001
 </td>
 </tr>
 <tr>
@@ -1459,25 +1474,25 @@ Pinus pinea
 188
 </td>
 <td style="text-align:right;">
-1.8957682
+1.895768
 </td>
 <td style="text-align:right;">
-1.9011616
+0.1470232
 </td>
 <td style="text-align:right;">
-0.0053934
+-1.748745
 </td>
 <td style="text-align:right;">
-0.2844964
+-92.24467
 </td>
 <td style="text-align:right;">
-1.0384750
+1.874288
 </td>
 <td style="text-align:right;">
-54.77859
+98.86695
 </td>
 <td style="text-align:right;">
-0.2607157
+0.0111734
 </td>
 </tr>
 <tr>
@@ -1485,28 +1500,28 @@ Pinus pinea
 Pinus sylvestris
 </td>
 <td style="text-align:right;">
-620
+623
 </td>
 <td style="text-align:right;">
-4.0697458
+4.102243
 </td>
 <td style="text-align:right;">
-3.4525331
+0.1593548
 </td>
 <td style="text-align:right;">
--0.6172127
+-3.942888
 </td>
 <td style="text-align:right;">
--15.1658781
+-96.11542
 </td>
 <td style="text-align:right;">
-1.8778571
+3.959586
 </td>
 <td style="text-align:right;">
-46.14188
+96.52247
 </td>
 <td style="text-align:right;">
-0.3875882
+0.0232471
 </td>
 </tr>
 <tr>
@@ -1514,28 +1529,28 @@ Pinus sylvestris
 Pinus uncinata
 </td>
 <td style="text-align:right;">
-227
+228
 </td>
 <td style="text-align:right;">
-4.2319362
+4.260241
 </td>
 <td style="text-align:right;">
-2.3615965
+1.3711498
 </td>
 <td style="text-align:right;">
--1.8703397
+-2.889091
 </td>
 <td style="text-align:right;">
--44.1958384
+-67.81520
 </td>
 <td style="text-align:right;">
-2.1429236
+4.179120
 </td>
 <td style="text-align:right;">
-50.63696
+98.09586
 </td>
 <td style="text-align:right;">
-0.3722258
+0.0164942
 </td>
 </tr>
 <tr>
@@ -1543,28 +1558,28 @@ Pinus uncinata
 Quercus faginea
 </td>
 <td style="text-align:right;">
-135
+163
 </td>
 <td style="text-align:right;">
-0.8333656
+1.143026
 </td>
 <td style="text-align:right;">
-0.8682248
+0.0000000
 </td>
 <td style="text-align:right;">
-0.0348592
+-1.143026
 </td>
 <td style="text-align:right;">
-4.1829374
+-100.00000
 </td>
 <td style="text-align:right;">
-0.5959615
+1.144821
 </td>
 <td style="text-align:right;">
-71.51261
+100.15707
 </td>
 <td style="text-align:right;">
-0.3237225
+NA
 </td>
 </tr>
 <tr>
@@ -1572,28 +1587,28 @@ Quercus faginea
 Quercus ilex
 </td>
 <td style="text-align:right;">
-666
+697
 </td>
 <td style="text-align:right;">
-1.8865499
+2.103446
 </td>
 <td style="text-align:right;">
-2.0315418
+0.0814254
 </td>
 <td style="text-align:right;">
-0.1449919
+-2.022021
 </td>
 <td style="text-align:right;">
-7.6855578
+-96.12895
 </td>
 <td style="text-align:right;">
-0.9157485
+2.070030
 </td>
 <td style="text-align:right;">
-48.54091
+98.41135
 </td>
 <td style="text-align:right;">
-0.3172920
+0.0041662
 </td>
 </tr>
 <tr>
@@ -1601,28 +1616,28 @@ Quercus ilex
 Quercus pubescens
 </td>
 <td style="text-align:right;">
-334
+347
 </td>
 <td style="text-align:right;">
-1.3603380
+1.410337
 </td>
 <td style="text-align:right;">
-1.0235098
+0.0000000
 </td>
 <td style="text-align:right;">
--0.3368282
+-1.410337
 </td>
 <td style="text-align:right;">
--24.7606253
+-100.00000
 </td>
 <td style="text-align:right;">
-0.5835314
+1.414507
 </td>
 <td style="text-align:right;">
-42.89606
+100.29562
 </td>
 <td style="text-align:right;">
-0.6069251
+NA
 </td>
 </tr>
 <tr>
@@ -1630,28 +1645,28 @@ Quercus pubescens
 Quercus suber
 </td>
 <td style="text-align:right;">
-158
+166
 </td>
 <td style="text-align:right;">
-1.7500024
+2.010966
 </td>
 <td style="text-align:right;">
-1.3396637
+0.1782999
 </td>
 <td style="text-align:right;">
--0.4103387
+-1.832666
 </td>
 <td style="text-align:right;">
--23.4478949
+-91.13362
 </td>
 <td style="text-align:right;">
-0.8261987
+1.864850
 </td>
 <td style="text-align:right;">
-47.21129
+92.73405
 </td>
 <td style="text-align:right;">
-0.4478802
+0.0482095
 </td>
 </tr>
 </tbody>
@@ -1705,28 +1720,28 @@ R2
 0-All
 </td>
 <td style="text-align:right;">
-2261
+2264
 </td>
 <td style="text-align:right;">
-0.7417375
+0.7412187
 </td>
 <td style="text-align:right;">
-1.0818384
+0.0738496
 </td>
 <td style="text-align:right;">
-0.3401009
+-0.6673691
 </td>
 <td style="text-align:right;">
-45.851914
+-90.036729
 </td>
 <td style="text-align:right;">
-1.4626322
+0.7946488
 </td>
 <td style="text-align:right;">
-197.18999
+107.2084
 </td>
 <td style="text-align:right;">
-0.0097891
+0.0021898
 </td>
 </tr>
 <tr>
@@ -1734,28 +1749,28 @@ R2
 Abies alba
 </td>
 <td style="text-align:right;">
-62
+64
 </td>
 <td style="text-align:right;">
-0.8070301
+0.7982265
 </td>
 <td style="text-align:right;">
-2.7825506
+0.0000000
 </td>
 <td style="text-align:right;">
-1.9755205
+-0.7982265
 </td>
 <td style="text-align:right;">
-244.788938
+-100.000000
 </td>
 <td style="text-align:right;">
-2.6178692
+0.7982265
 </td>
 <td style="text-align:right;">
-324.38308
+100.0000
 </td>
 <td style="text-align:right;">
-0.0280851
+NA
 </td>
 </tr>
 <tr>
@@ -1769,22 +1784,22 @@ Fagus sylvatica
 0.3773067
 </td>
 <td style="text-align:right;">
-0.2475302
+0.0000000
 </td>
 <td style="text-align:right;">
--0.1297765
+-0.3773067
 </td>
 <td style="text-align:right;">
--34.395497
+-100.000000
 </td>
 <td style="text-align:right;">
-0.5761859
+0.3773067
 </td>
 <td style="text-align:right;">
-152.71022
+100.0000
 </td>
 <td style="text-align:right;">
-0.0007374
+NA
 </td>
 </tr>
 <tr>
@@ -1798,22 +1813,22 @@ Pinus halepensis
 0.6391724
 </td>
 <td style="text-align:right;">
-0.0011014
+0.0000000
 </td>
 <td style="text-align:right;">
--0.6380710
+-0.6391724
 </td>
 <td style="text-align:right;">
--99.827683
+-100.000000
 </td>
 <td style="text-align:right;">
-0.6380710
+0.6391724
 </td>
 <td style="text-align:right;">
-99.82768
+100.0000
 </td>
 <td style="text-align:right;">
-0.0001233
+NA
 </td>
 </tr>
 <tr>
@@ -1827,22 +1842,22 @@ Pinus nigra
 0.2433483
 </td>
 <td style="text-align:right;">
-0.2306110
+0.0006413
 </td>
 <td style="text-align:right;">
--0.0127373
+-0.2427070
 </td>
 <td style="text-align:right;">
--5.234185
+-99.736484
 </td>
 <td style="text-align:right;">
-0.4508736
+0.2439895
 </td>
 <td style="text-align:right;">
-185.27916
+100.2635
 </td>
 <td style="text-align:right;">
-0.0003028
+0.0002606
 </td>
 </tr>
 <tr>
@@ -1868,7 +1883,7 @@ Pinus pinea
 0.3363204
 </td>
 <td style="text-align:right;">
-104.95802
+104.9580
 </td>
 <td style="text-align:right;">
 0.0006348
@@ -1879,28 +1894,28 @@ Pinus pinea
 Pinus sylvestris
 </td>
 <td style="text-align:right;">
-643
+644
 </td>
 <td style="text-align:right;">
-0.7167006
+0.7155877
 </td>
 <td style="text-align:right;">
-0.1703282
+0.0000000
 </td>
 <td style="text-align:right;">
--0.5463724
+-0.7155877
 </td>
 <td style="text-align:right;">
--76.234401
+-100.000000
 </td>
 <td style="text-align:right;">
-0.8049218
+0.7155877
 </td>
 <td style="text-align:right;">
-112.30934
+100.0000
 </td>
 <td style="text-align:right;">
-0.0103044
+NA
 </td>
 </tr>
 <tr>
@@ -1908,28 +1923,28 @@ Pinus sylvestris
 Pinus uncinata
 </td>
 <td style="text-align:right;">
-228
+229
 </td>
 <td style="text-align:right;">
-0.9189380
+0.9149252
 </td>
 <td style="text-align:right;">
-0.0594619
+0.0000000
 </td>
 <td style="text-align:right;">
--0.8594762
+-0.9149252
 </td>
 <td style="text-align:right;">
--93.529285
+-100.000000
 </td>
 <td style="text-align:right;">
-0.8907458
+0.9149252
 </td>
 <td style="text-align:right;">
-96.93209
+100.0000
 </td>
 <td style="text-align:right;">
-0.0165482
+NA
 </td>
 </tr>
 <tr>
@@ -1943,22 +1958,22 @@ Quercus faginea
 0.1280362
 </td>
 <td style="text-align:right;">
-1.3414103
+0.0000000
 </td>
 <td style="text-align:right;">
-1.2133741
+-0.1280362
 </td>
 <td style="text-align:right;">
-947.680523
+-100.000000
 </td>
 <td style="text-align:right;">
-1.3524997
+0.1280362
 </td>
 <td style="text-align:right;">
-1056.34171
+100.0000
 </td>
 <td style="text-align:right;">
-0.0647739
+NA
 </td>
 </tr>
 <tr>
@@ -1972,22 +1987,22 @@ Quercus ilex
 0.2068219
 </td>
 <td style="text-align:right;">
-1.7397422
+0.1088527
 </td>
 <td style="text-align:right;">
-1.5329203
+-0.0979693
 </td>
 <td style="text-align:right;">
-741.178749
+-47.368898
 </td>
 <td style="text-align:right;">
-1.7181598
+0.2971462
 </td>
 <td style="text-align:right;">
-830.74348
+143.6725
 </td>
 <td style="text-align:right;">
-0.0642500
+0.0262325
 </td>
 </tr>
 <tr>
@@ -2001,22 +2016,22 @@ Quercus pubescens
 0.1823678
 </td>
 <td style="text-align:right;">
-0.4033596
+0.0000000
 </td>
 <td style="text-align:right;">
-0.2209918
+-0.1823678
 </td>
 <td style="text-align:right;">
-121.179212
+-100.000000
 </td>
 <td style="text-align:right;">
-0.4316077
+0.1823678
 </td>
 <td style="text-align:right;">
-236.66882
+100.0000
 </td>
 <td style="text-align:right;">
-0.2270584
+NA
 </td>
 </tr>
 <tr>
@@ -2030,22 +2045,22 @@ Quercus suber
 0.5664461
 </td>
 <td style="text-align:right;">
-2.5648975
+0.5160979
 </td>
 <td style="text-align:right;">
-1.9984514
+-0.0503482
 </td>
 <td style="text-align:right;">
-352.805241
+-8.888434
 </td>
 <td style="text-align:right;">
-2.3498526
+0.9005044
 </td>
 <td style="text-align:right;">
-414.84136
+158.9744
 </td>
 <td style="text-align:right;">
-0.0389646
+0.0270555
 </td>
 </tr>
 </tbody>
@@ -2062,6 +2077,11 @@ Quercus suber
 </h2>
 <p>This includes growth of surviving trees, mortality reductions and ingrowth (increase in trees with DBH&gt;5) due to sapling growth (in the observed data, this includes also incorporation of trees into large diameter classes due to sampling design).</p>
 <p>Predictive capacity table:</p>
+<pre><code><span class="co">## Warning in cor(obs, pred): the standard deviation is zero</span>
+
+<span class="co">## Warning in cor(obs, pred): the standard deviation is zero</span>
+
+<span class="co">## Warning in cor(obs, pred): the standard deviation is zero</span></code></pre>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -2098,28 +2118,28 @@ R2
 0-All
 </td>
 <td style="text-align:right;">
-2261
+2264
 </td>
 <td style="text-align:right;">
-5.1867108
+5.2229907
 </td>
 <td style="text-align:right;">
-3.1410260
+0.2768707
 </td>
 <td style="text-align:right;">
--2.0456848
+-4.9461199
 </td>
 <td style="text-align:right;">
--39.4408877
+-94.69900
 </td>
 <td style="text-align:right;">
-3.572957
+5.2007136
 </td>
 <td style="text-align:right;">
-68.88677
+99.57348
 </td>
 <td style="text-align:right;">
-0.0509798
+0.0038342
 </td>
 </tr>
 <tr>
@@ -2127,28 +2147,28 @@ R2
 Abies alba
 </td>
 <td style="text-align:right;">
-61
+64
 </td>
 <td style="text-align:right;">
-6.3189605
+6.2840111
 </td>
 <td style="text-align:right;">
--0.6169243
+0.0042864
 </td>
 <td style="text-align:right;">
--6.9358848
+-6.2797247
 </td>
 <td style="text-align:right;">
--109.7630658
+-99.93179
 </td>
 <td style="text-align:right;">
-7.205462
+6.4453253
 </td>
 <td style="text-align:right;">
-114.02924
+102.56706
 </td>
 <td style="text-align:right;">
-0.0010605
+0.0212316
 </td>
 </tr>
 <tr>
@@ -2156,28 +2176,28 @@ Abies alba
 Fagus sylvatica
 </td>
 <td style="text-align:right;">
-72
+74
 </td>
 <td style="text-align:right;">
-4.1161103
+4.0373770
 </td>
 <td style="text-align:right;">
-3.2604689
+0.0000000
 </td>
 <td style="text-align:right;">
--0.8556413
+-4.0373770
 </td>
 <td style="text-align:right;">
--20.7876195
+-100.00000
 </td>
 <td style="text-align:right;">
-2.226662
+4.2755555
 </td>
 <td style="text-align:right;">
-54.09628
+105.89934
 </td>
 <td style="text-align:right;">
-0.3794150
+NA
 </td>
 </tr>
 <tr>
@@ -2191,22 +2211,22 @@ Pinus halepensis
 3.7092005
 </td>
 <td style="text-align:right;">
-2.7698300
+0.0225019
 </td>
 <td style="text-align:right;">
--0.9393705
+-3.6866986
 </td>
 <td style="text-align:right;">
--25.3254178
+-99.39335
 </td>
 <td style="text-align:right;">
-2.350479
+3.8865204
 </td>
 <td style="text-align:right;">
-63.36888
+104.78054
 </td>
 <td style="text-align:right;">
-0.2428751
+0.0000043
 </td>
 </tr>
 <tr>
@@ -2214,28 +2234,28 @@ Pinus halepensis
 Pinus nigra
 </td>
 <td style="text-align:right;">
-446
+449
 </td>
 <td style="text-align:right;">
-3.3534649
+3.3739280
 </td>
 <td style="text-align:right;">
-1.8129377
+0.0656686
 </td>
 <td style="text-align:right;">
--1.5405272
+-3.3082594
 </td>
 <td style="text-align:right;">
--45.9383731
+-98.05365
 </td>
 <td style="text-align:right;">
-2.341955
+3.4522346
 </td>
 <td style="text-align:right;">
-69.83688
+102.32093
 </td>
 <td style="text-align:right;">
-0.1402530
+0.0110465
 </td>
 </tr>
 <tr>
@@ -2249,22 +2269,22 @@ Pinus pinea
 1.6196307
 </td>
 <td style="text-align:right;">
-1.9809530
+0.1048495
 </td>
 <td style="text-align:right;">
-0.3613223
+-1.5147812
 </td>
 <td style="text-align:right;">
-22.3089322
+-93.52633
 </td>
 <td style="text-align:right;">
-1.403318
+1.8598114
 </td>
 <td style="text-align:right;">
-86.64431
+114.82935
 </td>
 <td style="text-align:right;">
-0.1889363
+0.0132626
 </td>
 </tr>
 <tr>
@@ -2272,28 +2292,28 @@ Pinus pinea
 Pinus sylvestris
 </td>
 <td style="text-align:right;">
-619
+622
 </td>
 <td style="text-align:right;">
-4.0138302
+4.0099238
 </td>
 <td style="text-align:right;">
-4.0326781
+0.2165201
 </td>
 <td style="text-align:right;">
-0.0188479
+-3.7934037
 </td>
 <td style="text-align:right;">
-0.4695744
+-94.60039
 </td>
 <td style="text-align:right;">
-2.777763
+4.0841763
 </td>
 <td style="text-align:right;">
-69.20479
+101.85172
 </td>
 <td style="text-align:right;">
-0.2396998
+0.0290069
 </td>
 </tr>
 <tr>
@@ -2301,28 +2321,28 @@ Pinus sylvestris
 Pinus uncinata
 </td>
 <td style="text-align:right;">
-225
+226
 </td>
 <td style="text-align:right;">
-4.5372353
+4.5452221
 </td>
 <td style="text-align:right;">
-2.9817497
+1.7018101
 </td>
 <td style="text-align:right;">
--1.5554856
+-2.8434120
 </td>
 <td style="text-align:right;">
--34.2826737
+-62.55826
 </td>
 <td style="text-align:right;">
-2.855848
+4.8255751
 </td>
 <td style="text-align:right;">
-62.94247
+106.16808
 </td>
 <td style="text-align:right;">
-0.2098643
+0.0074440
 </td>
 </tr>
 <tr>
@@ -2330,28 +2350,28 @@ Pinus uncinata
 Quercus faginea
 </td>
 <td style="text-align:right;">
-62
+71
 </td>
 <td style="text-align:right;">
-0.6975651
+0.6534487
 </td>
 <td style="text-align:right;">
--0.0186854
+0.0000000
 </td>
 <td style="text-align:right;">
--0.7162504
+-0.6534487
 </td>
 <td style="text-align:right;">
--102.6786567
+-100.00000
 </td>
 <td style="text-align:right;">
-1.320429
+0.8552522
 </td>
 <td style="text-align:right;">
-189.29113
+130.88284
 </td>
 <td style="text-align:right;">
-0.0125483
+NA
 </td>
 </tr>
 <tr>
@@ -2359,28 +2379,28 @@ Quercus faginea
 Quercus ilex
 </td>
 <td style="text-align:right;">
-666
+695
 </td>
 <td style="text-align:right;">
-3.3903156
+3.2965282
 </td>
 <td style="text-align:right;">
-0.8023903
+0.0603942
 </td>
 <td style="text-align:right;">
--2.5879253
+-3.2361340
 </td>
 <td style="text-align:right;">
--76.3328733
+-98.16795
 </td>
 <td style="text-align:right;">
-3.752735
+3.4058917
 </td>
 <td style="text-align:right;">
-110.68985
+103.31754
 </td>
 <td style="text-align:right;">
-0.0023603
+0.0006669
 </td>
 </tr>
 <tr>
@@ -2388,28 +2408,28 @@ Quercus ilex
 Quercus pubescens
 </td>
 <td style="text-align:right;">
-334
+346
 </td>
 <td style="text-align:right;">
-1.9433207
+1.8952926
 </td>
 <td style="text-align:right;">
-1.0350245
+0.0000000
 </td>
 <td style="text-align:right;">
--0.9082962
+-1.8952926
 </td>
 <td style="text-align:right;">
--46.7393898
+-100.00000
 </td>
 <td style="text-align:right;">
-1.591447
+2.0524800
 </td>
 <td style="text-align:right;">
-81.89320
+108.29357
 </td>
 <td style="text-align:right;">
-0.1546678
+NA
 </td>
 </tr>
 <tr>
@@ -2417,28 +2437,28 @@ Quercus pubescens
 Quercus suber
 </td>
 <td style="text-align:right;">
-160
+166
 </td>
 <td style="text-align:right;">
-2.1107006
+2.0367264
 </td>
 <td style="text-align:right;">
--0.9572594
+0.0074207
 </td>
 <td style="text-align:right;">
--3.0679600
+-2.0293056
 </td>
 <td style="text-align:right;">
--145.3526823
+-99.63565
 </td>
 <td style="text-align:right;">
-3.539437
+2.3983988
 </td>
 <td style="text-align:right;">
-167.69015
+117.75754
 </td>
 <td style="text-align:right;">
-0.0018499
+0.0262652
 </td>
 </tr>
 </tbody>
