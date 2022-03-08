@@ -255,7 +255,6 @@ List transpirationGranier(List x, NumericVector meteovec,
       double Klcmean = sum(Klc*V(c,_));
       for(int l=0;l<nlayers;l++) {
         Extraction(c,l) = std::max(TmaxCoh[c]*Klcmean*(Kunlc[l]/sumKunlc),0.0);
-        Rcout<< " Extraction(c,l) [1]: "<< Extraction(c,l) <<"\n";
       }
       rootCrownPsi = averagePsi(psiSoil, V(c,_), WeibullShape, Psi_Extract[c]);
       // Rcout<< c << " : " << rootCrownPsi<<"\n";
