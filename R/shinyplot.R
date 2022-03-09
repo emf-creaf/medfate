@@ -233,7 +233,7 @@
       eval_choices[["Transpiration per leaf area"]] = "E"
     }
     if(any(paste0("FMC_", cohorts_out) %in% names(measuredData))) {
-      eval_choices[["Fuel moisture content"]] = "FMC"
+      eval_choices[["Live fuel moisture content"]] = "LFMC"
     }
     if(any(c(paste0("PD_", cohorts_out) %in% names(measuredData),
              paste0("MD_", cohorts_out) %in% names(measuredData)))) {

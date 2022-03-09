@@ -26,7 +26,7 @@ optimization_evaluation_function(parNames, x,
                       meteo, latitude,
                       elevation = NA, slope = NA, aspect = NA, 
                       measuredData, type = "SWC", cohorts = NULL, 
-                      temporalResolution = "day", SpParams = NULL, 
+                      temporalResolution = "day",
                       metric = "loglikelihood")
 optimization_multicohort_function(cohortParNames, cohortNames, x, 
                       meteo, latitude, 
@@ -38,7 +38,7 @@ optimization_evaluation_multicohort_function(cohortParNames, cohortNames, x,
                       otherParNames = NULL,
                       elevation = NA, slope = NA, aspect = NA, 
                       measuredData, type = "SWC", cohorts = cohortNames,
-                      temporalResolution = "day", SpParams = NULL, 
+                      temporalResolution = "day", 
                       metric = "loglikelihood")
 }
 \arguments{
@@ -48,10 +48,9 @@ optimization_evaluation_multicohort_function(cohortParNames, cohortNames, x,
   \item{meteo, latitude, elevation, slope, aspect}{Additional parameters to simulation functions \code{\link{spwb}} or \code{\link{growth}}.}
   \item{verbose}{A flag to indicate extra console output.}
   \item{measuredData}{A data frame with observed/measured values. Dates should be in row names, whereas columns should be named according to the type of output to be evaluated (see details).}
-  \item{type}{A string with the kind of model output to be evaluated. Accepted values are \code{"SWC"} (soil moisture content), \code{"REW"} relative extractable water, \code{"ETR"} (total evapotranspiration), \code{"E"} (transpiration per leaf area), \code{"FMC"} (fuel moisture content) and \code{"WP"} (plant water potentials).}
+  \item{type}{A string with the kind of model output to be evaluated. Accepted values are \code{"SWC"} (soil moisture content), \code{"REW"} relative extractable water, \code{"ETR"} (total evapotranspiration), \code{"E"} (transpiration per leaf area), \code{"LFMC"} (live fuel moisture content) and \code{"WP"} (plant water potentials).}
   \item{cohorts}{A string or a vector of strings with the cohorts to be compared (e.g. "T1_68"). If several cohort names are provided, the function \code{optimization_cohorts_function} evaluates the performance for each one and provides the mean value. If \code{NULL} results for the first cohort will be evaluated.}
   \item{temporalResolution}{A string to indicate the temporal resolution of the model evaluation, which can be "day", "week", "month" or "year". Observed and modelled values are aggregated temporally (using either means or sums) before comparison.}
-  \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}), only needed if \code{type = "FMC"}.}
   \item{metric}{An evaluation metric (see \code{\link{evaluation_metric}}).}
   \item{summary_function}{A function whose input is the result of \code{\link{spwb}} or \code{\link{growth}}. The function must return a numeric scalar in the case of \code{optimization_function}, but is not restricted in the case of \code{multiple_runs}.}
   \item{args}{A list of additional arguments of \code{optimization_function}.}

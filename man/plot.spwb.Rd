@@ -7,7 +7,7 @@
 
 \title{Plots simulation results}
 \description{
-Function \code{plot} produces temporal graphs of the results of the soil plant water balance model (see \code{\link{spwb}}), plant water balance model (see \code{\link{pwb}}), the forest growth model (see \code{\link{growth}}) or the forest dynamics model (see \code{\link{fordyn}}).
+Function \code{plot} plots time series of the results of the soil plant water balance model (see \code{\link{spwb}}), plant water balance model (see \code{\link{pwb}}), the forest growth model (see \code{\link{growth}}) or the forest dynamics model (see \code{\link{fordyn}}).
 }
 \usage{
 \method{plot}{spwb}(x, type="PET_Precipitation", 
@@ -67,6 +67,9 @@ The following plots are currently available for \code{\link{spwb}} (most of them
     \item{\code{"TranspirationPerLeaf"}:}{ Plant cohort transpiration per leaf area.}
     \item{\code{"PlantGrossPhotosynthesis"}:}{ Plant cohort photosynthesis.}
     \item{\code{"GrossPhotosynthesisPerLeaf"}:}{ Plant cohort photosynthesis per leaf area.}
+    \item{\code{"StemRWC"}:  Average daily stem relative water content.}
+    \item{\code{"LeafRWC"}:  Average daily leaf relative water content.}
+    \item{\code{"LFMC"}:  Live fuel moisture content.}
   }
   The following plots are available for \code{\link{spwb}} and \code{\link{pwb}} \emph{only if} \code{transpirationMode = "Sperry"}:
   \itemize{
@@ -89,9 +92,6 @@ The following plots are currently available for \code{\link{spwb}} (most of them
     \item{\code{"GSWMax_SH"}: Maximum stomatal conductance of shade leaves.}
     \item{\code{"StemPsi"}:  Midday (upper) stem water potential.}
     \item{\code{"RootPsi"}:  Midday root crown water potential.}
-    \item{\code{"StemRWC"}:  Average daily stem relative water content.}
-    \item{\code{"LeafRWC"}:  Average daily leaf relative water content.}
-    \item{\code{"LFMC"}:  Live fuel moisture content.}
     \item{\code{"PlantNetPhotosynthesis"}:  Plant cohort net photosynthesis.}
     \item{\code{"NetPhotosynthesisPerLeaf"}:  Plant cohort net photosynthesis per leaf area.}
     \item{\code{"PlantWUE"}:  Plant cohort daily water use efficiency.}
@@ -110,6 +110,7 @@ In addition to the former, the following plots are available for objects \code{\
     \item{\code{"BiomassBalance"}:  Stand-level biomass balance components.}
     \item{\code{"GrossPhotosynthesis"}:  Gross photosynthesis rate per dry weight.}
     \item{\code{"MaintenanceRespiration"}:  Maintenance respiration cost per dry weight.}
+    \item{\code{"PhotosynthesisMaintenanceRatio"}:  The ratio of gross photosynthesis over maintenance respiration.}
     \item{\code{"RootExudation"}:  Root exudation rate per dry weight.}
     \item{\code{"LabileCarbonBalance"}:  Labile carbon balance per dry weight.}
     \item{\code{"SugarLeaf"}:  Sugar concentration in leaves.}

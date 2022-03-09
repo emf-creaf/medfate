@@ -14,10 +14,10 @@ Shiny app with interactive plots
 Creates a shiny app with interactive plots for simulation results and evaluation
 }
 \usage{
-\method{shinyplot}{spwb}(x, measuredData = NULL, SpParams = NULL, ...)
-\method{shinyplot}{pwb}(x, measuredData = NULL, SpParams = NULL, ...)
-\method{shinyplot}{growth}(x, measuredData = NULL, SpParams = NULL, ...)
-\method{shinyplot}{fordyn}(x, measuredData = NULL, SpParams = NULL, ...)
+\method{shinyplot}{spwb}(x, measuredData = NULL, ...)
+\method{shinyplot}{pwb}(x, measuredData = NULL, ...)
+\method{shinyplot}{growth}(x, measuredData = NULL, ...)
+\method{shinyplot}{fordyn}(x, measuredData = NULL, ...)
 \method{shinyplot}{spwb_day}(x, ...)
 \method{shinyplot}{pwb_day}(x, ...)
 \method{shinyplot}{growth_day}(x, ...)
@@ -25,7 +25,6 @@ Creates a shiny app with interactive plots for simulation results and evaluation
 \arguments{
   \item{x}{An object of the right class.}
   \item{measuredData}{A data frame with observed/measured values (see \code{\link{evaluation_plot}}).}
-  \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
   \item{...}{Additional parameters.}
 }
 \details{Only run this function in interactive mode. When \code{measuredData} is not \code{NULL}, an additional panel is shown for evaluation plots.}
@@ -64,6 +63,6 @@ S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 data(exampleobs)
 
 #Call interactive plot shiny app
-shinyplot(S1, exampleobs, SpParamsMED)
+shinyplot(S1, exampleobs)
 }
 }
