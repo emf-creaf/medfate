@@ -429,6 +429,8 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   NumericVector SRfineroot = speciesNumericParameter(SP, SpParams, "SRfineroot");
   NumericVector fHDmin = speciesNumericParameter(SP, SpParams, "fHDmin");
   NumericVector fHDmax = speciesNumericParameter(SP, SpParams, "fHDmax");
+
+  NumericVector MortalityBaselineRate = speciesNumericParameter(SP, SpParams, "MortalityBaselineRate");
   
   List maximumRelativeGrowthRates = control["maximumRelativeGrowthRates"];
   double RGRleafmax_default = maximumRelativeGrowthRates["leaf"];
@@ -445,6 +447,9 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   double SRsapwood_default = senescenceRates["sapwood"];
   double SRfineroot_default = senescenceRates["fineroot"];
   
+  double mortalityBaselineRate_default = control["mortalityBaselineRate"];
+  
+  
   if(fillMissingSpParams) {
     for(int c=0;c<numCohorts;c++){
       if(NumericVector::is_na(CCleaf[c])) CCleaf[c] = CCleaf_default;
@@ -455,6 +460,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
       if(NumericVector::is_na(RGRfinerootmax[c])) RGRfinerootmax[c] = RGRfinerootmax_default;
       if(NumericVector::is_na(SRsapwood[c])) SRsapwood[c] = SRsapwood_default;
       if(NumericVector::is_na(SRfineroot[c])) SRfineroot[c] = SRfineroot_default;
+      if(NumericVector::is_na(MortalityBaselineRate[c])) MortalityBaselineRate[c] = mortalityBaselineRate_default;
     }
   }
   
@@ -471,7 +477,8 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
                                                _["SRfineroot"] = SRfineroot,
                                                _["fHDmin"] = fHDmin,
                                                _["fHDmax"] = fHDmax,
-                                               _["WoodC"] = WoodC);
+                                               _["WoodC"] = WoodC,
+                                               _["MortalityBaselineRate"] = MortalityBaselineRate);
   paramsGrowthdf.attr("row.names") = above.attr("row.names");
   return(paramsGrowthdf);
 }

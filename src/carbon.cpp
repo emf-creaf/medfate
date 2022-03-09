@@ -101,6 +101,7 @@ double turgor(double psi, double sugarConc, double temp, double nonSugarConc) {
  * Leaf area in m2 · ind-1
  */
 double leafArea(double LAI, double N) {
+  if(N==0.0) return(0.0);
   return(10000.0*LAI/N);
 }
 /**

@@ -8,6 +8,7 @@
 - Plant water balance and cuticular tranpiration added to the basic water balance model
 - Water pools revised for the basic and water balance models
 - Shared water pools is now controlled via parameter 'rhizosphereOverlap'
+- New species-specific parameter 'MortalityBaselineRate'
 
 # Version 2.6.2
 - Control parameter 'modifyInput' is no longer available. Functions 'spwb', 'pwb' and 'growth' do not modify input objects and return an element 'spwbOutput' or 'growthOutput' with a copy of the final state.

@@ -326,7 +326,6 @@ List growthDayInner(List x, NumericVector meteovec,
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
   String mortalityMode = control["mortalityMode"];
-  double mortalityBaselineRate = control["mortalityBaselineRate"];
   double mortalityRelativeSugarThreshold= control["mortalityRelativeSugarThreshold"];
   double mortalityRWCThreshold= control["mortalityRWCThreshold"];
   bool allowDessication = control["allowDessication"];
@@ -523,6 +522,7 @@ List growthDayInner(List x, NumericVector meteovec,
   NumericVector RGRfinerootmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRfinerootmax"]);
   NumericVector SRsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["SRsapwood"]);
   NumericVector SRfineroot = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["SRfineroot"]);
+  NumericVector MortalityBaselineRate = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["MortalityBaselineRate"]);
   
   //Phenology parameters
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
@@ -608,7 +608,6 @@ List growthDayInner(List x, NumericVector meteovec,
   NumericVector TotalLivingBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalLivingBiomass"]);
   NumericVector TotalBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalBiomass"]);
 
-  double basalMortalityRate = 1.0 - exp(log(1.0 - mortalityBaselineRate)/356.0);
   
 
   //3. Carbon balance, growth, senescence and mortality by cohort
@@ -1080,7 +1079,8 @@ List growthDayInner(List x, NumericVector meteovec,
             if(verbose) Rcout<<" [Cohort "<< j<<" died from dessication] ";
           }
         } else {
-
+          double basalMortalityRate = 1.0 - exp(log(1.0 - MortalityBaselineRate[j])/356.0);
+          
           if(allowStarvation) starvationRate[j] = dailyMortalityProbability(basalMortalityRate, sugarSapwood[j], mortalitySugarThreshold, 0.0);
           if(allowDessication) dessicationRate[j] = dailyMortalityProbability(basalMortalityRate, stemSympRWC, mortalityRWCThreshold, 0.0);
           mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));
@@ -1128,7 +1128,7 @@ List growthDayInner(List x, NumericVector meteovec,
         LAI_live[j] = leafAreaTarget[j]*N[j]/10000.0;
       }
       //Update fine root biomass target     
-      if(LAI_live[j]>0) {
+      if(LAI_live[j]>0.0 & N[j]>0.0) {
         if(transpirationMode=="Granier") {
           fineRootBiomassTarget[j] = (Ar2Al[j]*leafAreaTarget[j])/(specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4);
         } else {
