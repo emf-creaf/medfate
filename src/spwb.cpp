@@ -669,7 +669,7 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
   NumericMatrix PlantLAI(numDays, numCohorts);
   NumericMatrix PlantLAIlive(numDays, numCohorts);
   NumericMatrix StemPLC(numDays, numCohorts);
-  NumericMatrix StemRWC(numDays, numCohorts), LeafRWC(numDays, numCohorts);
+  NumericMatrix StemRWC(numDays, numCohorts), LeafRWC(numDays, numCohorts), LFMC(numDays, numCohorts);
   NumericMatrix PlantWaterBalance(numDays, numCohorts);
   
   PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names"));
@@ -682,6 +682,7 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
   StemPLC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   StemRWC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   LeafRWC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  LFMC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantWaterBalance.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   
   List plants;
@@ -702,6 +703,7 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
                                Named("PlantWaterBalance") = PlantWaterBalance,
                                Named("LeafRWC") = LeafRWC, 
                                Named("StemRWC") = StemRWC, 
+                               Named("LFMC") = LFMC,
                                Named("PlantStress") = PlantStress);
   } else {
     NumericMatrix dEdP(numDays, numCohorts);
@@ -717,13 +719,10 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
     }
     RhizoPsi.attr("names") = above.attr("row.names");
     
-    NumericMatrix StemSympRWC(numDays, numCohorts), LeafSympRWC(numDays, numCohorts);
     NumericMatrix PlantNetPhotosynthesis(numDays, numCohorts);
     NumericMatrix PlantGrossPhotosynthesis(numDays, numCohorts);
     NumericMatrix PlantAbsSWR(numDays, numCohorts);
     NumericMatrix PlantNetLWR(numDays, numCohorts);
-    StemSympRWC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-    LeafSympRWC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
     dEdP.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
     LeafPsiMin.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
     LeafPsiMax.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
@@ -747,12 +746,11 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
                                Named("LeafPsiMax") = LeafPsiMax, 
                                Named("LeafRWC") = LeafRWC, 
                                Named("StemRWC") = StemRWC, 
-                               Named("LeafSympRWC") = LeafSympRWC, 
-                               Named("StemSympRWC") = StemSympRWC, 
                                Named("StemPsi") = StemPsi, 
                                Named("StemPLC") = StemPLC, 
                                Named("RootPsi") = RootPsi, 
                                Named("RhizoPsi") = RhizoPsi, 
+                               Named("LFMC") = LFMC,
                                Named("PlantStress") = PlantStress);
     
   }
@@ -906,6 +904,7 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
   NumericMatrix StemPLC= Rcpp::as<Rcpp::NumericMatrix>(x["StemPLC"]);
   NumericMatrix StemRWC= Rcpp::as<Rcpp::NumericMatrix>(x["StemRWC"]);
   NumericMatrix LeafRWC= Rcpp::as<Rcpp::NumericMatrix>(x["LeafRWC"]);
+  NumericMatrix LFMC= Rcpp::as<Rcpp::NumericMatrix>(x["LFMC"]);
   NumericMatrix PlantWaterBalance= Rcpp::as<Rcpp::NumericMatrix>(x["PlantWaterBalance"]);
   
   int numCohorts = PlantLAI.ncol();
@@ -917,6 +916,7 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
   StemPLC(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPLC"]); 
   StemRWC(iday,_) = as<Rcpp::NumericVector>(Plants["StemRWC"]);
   LeafRWC(iday,_) = as<Rcpp::NumericVector>(Plants["LeafRWC"]); 
+  LFMC(iday,_) = as<Rcpp::NumericVector>(Plants["LFMC"]); 
   PlantWaterBalance(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["WaterBalance"]); 
   
   
@@ -954,9 +954,7 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
     NumericMatrix PlantGrossPhotosynthesis= Rcpp::as<Rcpp::NumericMatrix>(x["GrossPhotosynthesis"]);
     NumericMatrix PlantAbsSWR= Rcpp::as<Rcpp::NumericMatrix>(x["AbsorbedSWR"]);
     NumericMatrix PlantNetLWR= Rcpp::as<Rcpp::NumericMatrix>(x["NetLWR"]);
-    NumericMatrix StemSympRWC= Rcpp::as<Rcpp::NumericMatrix>(x["StemSympRWC"]);
-    NumericMatrix LeafSympRWC= Rcpp::as<Rcpp::NumericMatrix>(x["LeafSympRWC"]);
-    
+
     List SunlitLeavesInst = sDay["SunlitLeavesInst"]; 
     List ShadeLeavesInst = sDay["ShadeLeavesInst"]; 
 
@@ -1002,9 +1000,7 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
       NumericMatrix nm = Rcpp::as<Rcpp::NumericMatrix>(RhizoPsi[c]);
       nm(iday,_) =  RhizoPsiStep(c,_);
     }
-    StemSympRWC(iday,_) = as<Rcpp::NumericVector>(Plants["StemSympRWC"]);
-    LeafSympRWC(iday,_) = as<Rcpp::NumericVector>(Plants["LeafSympRWC"]); 
-    
+
   }
 }
 

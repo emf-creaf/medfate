@@ -61,13 +61,13 @@
               "Midday root crown water potential" = "RootPsi",
               "Stem relative water content" = "StemRWC",
               "Leaf relative water content" = "LeafRWC",
-              "Stem symplastic relative water content" = "StemSympRWC",
-              "Leaf symplastic relative water content" = "LeafSympRWC")
+              "Live fuel moisture content" = "LFMC")
   } else {
     TYPES <-c(TYPES,
               "Plant water potential" = "PlantPsi",
               "Stem relative water content" = "StemRWC",
-              "Leaf relative water content" = "LeafRWC")
+              "Leaf relative water content" = "LeafRWC",
+              "Live fuel moisture content" = "LFMC")
   }
   if(transpirationMode == "Sperry") {
     TYPES <-c(TYPES,
@@ -362,6 +362,7 @@
   else if(type=="StemSympRWC") ylab = "Relative water content in stem symplasm [%]"
   else if(type=="StemSympPsi") ylab = "Stem symplastic water potential (MPa)"
   else if(type=="LeafRWC") ylab = "Relative water content in leaf [%]"
+  else if(type=="LFMC") ylab = "Live fuel moisture content [%]"
   else if(type=="LeafSympRWC") ylab = "Relative water content in leaf symplasm [%]"
   else if(type=="LeafSympPsi") ylab = "Leaf symplastic water potential (MPa)"
   else if(type=="PlantPsi") ylab = "Plant water potential (MPa)"

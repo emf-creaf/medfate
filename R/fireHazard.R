@@ -1,7 +1,7 @@
 .firehaz_sim<-function(forest, x, SpParams, standardConditions = FALSE, freq = "days", fun = "max") {
   slope = x$topography[["slope"]]
   weather = x$weather
-  fmc = moisture_cohortFMC(x, SpParams)
+  fmc = x$Plants$LFMC
   if(is.na(slope)) slope = 0.0
 
   dates = as.Date(row.names(weather))

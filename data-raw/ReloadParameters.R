@@ -44,7 +44,7 @@ x1 = forest2growthInput(exampleforestMED,examplesoil1, SpParamsMED, control)
 DBH_ini_PH = x1$above[PH_cohName, "DBH"]
 DBH_ini_QI = x1$above[QI_cohName, "DBH"]
 S1<-growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
-fmc<-moisture_cohortFMC(S1, SpParamsMED)
+fmc<-S1$Plants$LFMC
 DI_PH = S1$PlantStructure$DBH[,PH_cohName] - c(DBH_ini_PH, S1$PlantStructure$DBH[-nrow(examplemeteo),PH_cohName])
 DI_QI = S1$PlantStructure$DBH[,QI_cohName] - c(DBH_ini_QI, S1$PlantStructure$DBH[-nrow(examplemeteo),QI_cohName])
 exampleobs = data.frame(SWC = S1$Soil$W.1*(soil_thetaFC(examplesoil1)[1]), 

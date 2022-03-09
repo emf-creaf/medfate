@@ -20,7 +20,7 @@ fireHazard(x, SpParams, forest = NULL, standardConditions = FALSE,
   \item{fun}{Summary function (by default, maximum values).}
 }
 \details{
-Live fuel moisture of shrub and canopy layers is estimated from plant water status (see function \code{\link{moisture_cohortFMC}}). Dead fuel moisture is estimated following Resco-de-Dios et al. (2015).
+Live fuel moisture of shrub and canopy layers is estimated from plant water status. Dead fuel moisture is estimated following Resco-de-Dios et al. (2015).
 }
 \value{
 A matrix with fire behaviour variables (columns) for each simulated day (rows) or coarser time steps if summaries are requested.

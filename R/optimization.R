@@ -72,7 +72,7 @@ optimization_evaluation_function<-function(parNames, x,
                                            meteo, latitude,
                                            elevation = NA, slope = NA, aspect = NA, 
                                            measuredData, type = "SWC", cohorts = NULL, 
-                                           temporalResolution = "day", SpParams = NULL, 
+                                           temporalResolution = "day", 
                                            metric = "loglikelihood") {
   sf<-function(S) {
     if(!is.null(cohorts)) { # If cohorts != NULL evaluate output for each cohort and average the result
@@ -80,14 +80,14 @@ optimization_evaluation_function<-function(parNames, x,
       for(i in 1:length(cohorts)) {
         if(paste0(type,"_", cohorts[i]) %in% names(measuredData)) {
           y[i] = evaluation_metric(S, measuredData = measuredData, type=type, 
-                                   cohort=cohorts[i], SpParams = SpParams, 
+                                   cohort=cohorts[i], 
                                    temporalResolution = temporalResolution, metric = metric)
         }
       }
       return(mean(y, na.rm=TRUE))
     } else { # If cohorts == NULL evaluate output for first cohort (or no referred to any)
       y = evaluation_metric(S, measuredData = measuredData, type=type, 
-                            cohort=NULL, SpParams = SpParams, 
+                            cohort=NULL, 
                             temporalResolution = temporalResolution, metric = metric)
     }
     return(y)
@@ -144,7 +144,7 @@ optimization_evaluation_multicohort_function<-function(cohortParNames, cohortNam
                                                        otherParNames = NULL,
                                                        elevation = NA, slope = NA, aspect = NA, 
                                                        measuredData, type = "SWC", cohorts = cohortNames,
-                                                       temporalResolution = "day", SpParams = NULL, 
+                                                       temporalResolution = "day", 
                                                        metric = "loglikelihood") {
   sf<-function(S) {
     if(!is.null(cohorts)) { # If cohorts != NULL evaluate output for each cohort and average the result
@@ -152,14 +152,14 @@ optimization_evaluation_multicohort_function<-function(cohortParNames, cohortNam
       for(i in 1:length(cohorts)) {
         if(paste0(type,"_", cohorts[i]) %in% names(measuredData)) {
           y[i] = evaluation_metric(S, measuredData = measuredData, type=type, 
-                                   cohort=cohorts[i], SpParams = SpParams, 
+                                   cohort=cohorts[i], 
                                    temporalResolution = temporalResolution, metric = metric)
         }
       }
       return(mean(y, na.rm=TRUE))
     } else { # If cohorts == NULL evaluate output for first cohort (or no referred to any)
       y = evaluation_metric(S, measuredData = measuredData, type=type, 
-                            cohort=NULL, SpParams = SpParams, 
+                            cohort=NULL, 
                             temporalResolution = temporalResolution, metric = metric)
     }
     return(y)

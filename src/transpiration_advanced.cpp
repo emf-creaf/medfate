@@ -282,6 +282,7 @@ List transpirationSperry(List x, NumericVector meteovec,
 
   //Water storage parameters
   DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
+  NumericVector maxFMC = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxFMC"]);
   NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
   NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
   NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
@@ -1327,14 +1328,13 @@ List transpirationSperry(List x, NumericVector meteovec,
 
   //4z. Plant daily drought stress (from root collar mid-day water potential)
   NumericVector SoilExtractCoh(numCohorts,0.0);
-  NumericVector DDS(numCohorts, 0.0);
+  NumericVector DDS(numCohorts, 0.0), LFMC(numCohorts, 0.0);
   for(int c=0;c<numCohorts;c++) {
     SoilExtractCoh[c] =  sum(SoilWaterExtract(c,_));
     PLCm[c] = sum(PLC(c,_))/((double)PLC.ncol());
     RWCsm[c] = sum(StemRWCInst(c,_))/((double)StemRWCInst.ncol());
     RWClm[c] = sum(LeafRWCInst(c,_))/((double)LeafRWCInst.ncol());
-    RWCssm[c] = sum(StemSympRWCInst(c,_))/((double)StemSympRWCInst.ncol());
-    RWClsm[c] = sum(LeafSympRWCInst(c,_))/((double)LeafSympRWCInst.ncol());
+    LFMC[c] = RWClm[c]*maxFMC[c];
     dEdPm[c] = sum(dEdPInst(c,_))/((double)dEdPInst.ncol());  
     double maxConductance = maximumSoilPlantConductance(VGrhizo_kmax(c,_), VCroot_kmax(c,_), VCstem_kmax[c], VCleaf_kmax[c]);
     DDS[c] = Phe[c]*(1.0 - (dEdPm[c]/(sapFluidityDay*maxConductance)));
@@ -1412,14 +1412,14 @@ List transpirationSperry(List x, NumericVector meteovec,
   StemPsiInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   LeafSympPsiInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   StemSympPsiInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  LeafSympRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  StemSympRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   RootPsiInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Aginst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Aninst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PLC.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   LeafRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   StemRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  LeafSympRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  StemSympRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PWBinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   minPsiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   soilLayerExtractInst.attr("dimnames") = List::create(seq(1,nlayers), seq(1,ntimesteps));
@@ -1508,8 +1508,7 @@ List transpirationSperry(List x, NumericVector meteovec,
                                        _["DDS"] = DDS, //Daily drought stress is the ratio of average soil plant conductance over its maximum value
                                        _["StemRWC"] = RWCsm,
                                        _["LeafRWC"] = RWClm,
-                                       _["StemSympRWC"] = RWCssm,
-                                       _["LeafSympRWC"] = RWClsm,
+                                       _["LFMC"] = LFMC,
                                        _["WaterBalance"] = PWB);
   Plants.attr("row.names") = above.attr("row.names");
   NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell, 

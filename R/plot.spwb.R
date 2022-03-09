@@ -75,7 +75,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
                       xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                       summary.freq = summary.freq, ...))
   }
-  else if(type %in% c("StemPLC", "StemRWC", "LeafRWC", "StemSympRWC", "LeafSympRWC")) {
+  else if(type %in% c("StemPLC", "StemRWC", "LeafRWC")) {
     OM = x$Plants[[type]][,cohorts,drop=FALSE]*100
     return(.plot_plant_om(OM, PlantsLAIlive, spnames,
                    type, bySpecies = bySpecies, dates = dates, 
@@ -93,7 +93,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
   } 
   else if(type %in% c("SoilPlantConductance","PlantPsi", "LeafPsiMin",
                       "LeafPsiMax", "StemPsi", "RootPsi", "PlantStress",
-                      "PlantWaterBalance")) {
+                      "PlantWaterBalance", "LFMC")) {
     if(type=="SoilPlantConductance") OM = x$Plants[["dEdP"]][,cohorts,drop=FALSE]
     else OM = x$Plants[[type]][,cohorts,drop=FALSE]
     return(.plot_plant_om(OM, PlantsLAIlive, spnames,

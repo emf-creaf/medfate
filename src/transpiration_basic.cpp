@@ -149,6 +149,7 @@ List transpirationGranier(List x, NumericVector meteovec,
   
   //Water storage parameters
   DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
+  NumericVector maxFMC = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxFMC"]);
   NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
   NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
   NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
@@ -205,7 +206,7 @@ List transpirationGranier(List x, NumericVector meteovec,
   NumericMatrix ExtractionPoolsCoh(numCohorts, nlayers); //this is used to store extraction of a SINGLE plant cohort from all pools
   
   NumericVector Eplant(numCohorts, 0.0), Agplant(numCohorts, 0.0);
-  NumericVector DDS(numCohorts, 0.0);
+  NumericVector DDS(numCohorts, 0.0), LFMC(numCohorts, 0.0);
   NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts),RWCssm(numCohorts), RWClsm(numCohorts);
   NumericVector PWB(numCohorts,0.0);
   NumericVector Kl, epc, Vl;
@@ -335,12 +336,16 @@ List transpirationGranier(List x, NumericVector meteovec,
     } else {
       StemPLC[c] = 1.0 - Psi2K(PlantPsi[c],Psi_Critic[c],WeibullShape);
     }
-    //Relative water content
-    double apoRWC = apoplasticRelativeWaterContent(PlantPsi[c], WeibullShape, Psi_Critic[c]);
-    double leafSympRWC = symplasticRelativeWaterContent(PlantPsi[c],  LeafPI0[c], LeafEPS[c]);
-    double stemSympRWC = symplasticRelativeWaterContent(PlantPsi[c],  StemPI0[c], StemEPS[c]);
-    RWClm[c] =  leafSympRWC*(1.0 - LeafAF[c]) + apoRWC*LeafAF[c];
-    RWCsm[c] =  stemSympRWC*(1.0 - StemAF[c]) + apoRWC*StemAF[c];
+    
+    //Relative water content and fuel moisture from plant water potential
+    RWClm[c] =  tissueRelativeWaterContent(PlantPsi[c], LeafPI0[c], LeafEPS[c], 
+                                           PlantPsi[c], WeibullShape, Psi_Critic[c], 
+                                           LeafAF[c], StemPLC[c]);
+    RWCsm[c] =  tissueRelativeWaterContent(PlantPsi[c], StemPI0[c], StemEPS[c], 
+                                           PlantPsi[c], WeibullShape, Psi_Critic[c], 
+                                           StemAF[c], StemPLC[c]);
+    LFMC[c] = maxFMC[c]*RWClm[c];
+    
     //Daily drought stress from plant WP
     DDS[c] = Phe[c]*(1.0 - Psi2K(PlantPsi[c],Psi_Extract[c],WeibullShape)); 
     
@@ -387,6 +392,7 @@ List transpirationGranier(List x, NumericVector meteovec,
                                        _["DDS"] = DDS,
                                        _["StemRWC"] = RWCsm,
                                        _["LeafRWC"] = RWClm,
+                                       _["LFMC"] = LFMC,
                                        _["StemPLC"] = StemPLC,
                                        _["WaterBalance"] = PWB);
   Plants.attr("row.names") = above.attr("row.names");

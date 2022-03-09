@@ -91,8 +91,7 @@ The following plots are currently available for \code{\link{spwb}} (most of them
     \item{\code{"RootPsi"}:  Midday root crown water potential.}
     \item{\code{"StemRWC"}:  Average daily stem relative water content.}
     \item{\code{"LeafRWC"}:  Average daily leaf relative water content.}
-    \item{\code{"StemSympRWC"}:  Average daily symplastic stem relative water content.}
-    \item{\code{"LeafSympRWC"}:  Average daily symplastic leaf relative water content.}
+    \item{\code{"LFMC"}:  Live fuel moisture content.}
     \item{\code{"PlantNetPhotosynthesis"}:  Plant cohort net photosynthesis.}
     \item{\code{"NetPhotosynthesisPerLeaf"}:  Plant cohort net photosynthesis per leaf area.}
     \item{\code{"PlantWUE"}:  Plant cohort daily water use efficiency.}

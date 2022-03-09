@@ -131,6 +131,8 @@ DataFrame paramsWaterStorage(DataFrame above, List belowLayers,
   NumericVector LeafEPS = speciesNumericParameterWithImputation(SP, SpParams, "LeafEPS", fillMissingSpParams);
   NumericVector LeafAF = speciesNumericParameterWithImputation(SP, SpParams, "LeafAF", fillMissingSpParams);
   
+  NumericVector maxFMC = speciesNumericParameterWithImputation(SP, SpParams, "maxFMC", fillMissingSpParams);
+  
   NumericVector Vsapwood(numCohorts), Vleaf(numCohorts);
   
   NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
@@ -143,8 +145,8 @@ DataFrame paramsWaterStorage(DataFrame above, List belowLayers,
     Vsapwood[c] = sapwoodWaterCapacity(Al2As[c], H[c], V, L, WoodDensity[c]); 
     Vleaf[c] = leafWaterCapacity(SLA[c], LeafDensity[c]); 
   }
-  DataFrame paramsWaterStoragedf = DataFrame::create(
-    _["LeafPI0"] = LeafPI0, _["LeafEPS"] = LeafEPS, _["LeafAF"] = LeafAF, _["Vleaf"] = Vleaf,
+  DataFrame paramsWaterStoragedf = DataFrame::create(_["maxFMC"] = maxFMC,
+      _["LeafPI0"] = LeafPI0, _["LeafEPS"] = LeafEPS, _["LeafAF"] = LeafAF, _["Vleaf"] = Vleaf,
       _["StemPI0"] = StemPI0, _["StemEPS"] = StemEPS, _["StemAF"] = StemAF, _["Vsapwood"] = Vsapwood);
   paramsWaterStoragedf.attr("row.names") = above.attr("row.names");
   

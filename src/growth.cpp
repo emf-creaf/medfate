@@ -476,17 +476,15 @@ List growthDayInner(List x, NumericVector meteovec,
   }
 
   //Data from spwb
-  NumericVector LeafSympRWC, StemSympRWC, Tcan;
+  NumericVector Tcan;
   NumericMatrix StemSympPsiInst, LeafSympPsiInst, StemSympRWCInst, LeafSympRWCInst;
   List eb;
   if(transpirationMode=="Sperry") {
-    LeafSympRWC = Plants["LeafSympRWC"];
-    StemSympRWC = Plants["StemSympRWC"];
     StemSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympPsi"]);
     LeafSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympPsi"]);
     StemSympRWCInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympRWC"]);
     LeafSympRWCInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympRWC"]);
-    
+
     eb = spwbOut["EnergyBalance"];  
     DataFrame tempDF =  Rcpp::as<Rcpp::DataFrame>(eb["Temperature"]);
     Tcan = Rcpp::as<Rcpp::NumericVector>(tempDF["Tcan"]);
@@ -946,7 +944,8 @@ List growthDayInner(List x, NumericVector meteovec,
       }
       if(transpirationMode=="Sperry") {
         //Complete defoliation if RWCsymp < 0.5
-        if(LAexpanded > 0.0 && LeafSympRWC[j]<0.5){
+        double leafSympRWC = sum(LeafSympRWCInst(j,_))/((double) numSteps);
+        if((LAexpanded > 0.0) & (leafSympRWC<0.5)){
           if(allowDefoliation) {
             propLeafSenescence = 1.0;
             if(verbose) Rcout<<" [Cohort "<< j<<" defoliated ] ";
@@ -1085,7 +1084,7 @@ List growthDayInner(List x, NumericVector meteovec,
       if((!shrubDynamics) & isShrub) dynamicCohort = false;
       double stemSympRWC = NA_REAL;
       if(transpirationMode=="Granier") stemSympRWC = symplasticRelativeWaterContent(PlantPsi[j], StemPI0[j], StemEPS[j]);
-      else stemSympRWC = StemSympRWC[j];
+      else stemSympRWC = sum(StemSympRWCInst(j,_))/((double) numSteps);
       if(dynamicCohort) {
         if(mortalityMode=="whole-cohort/deterministic") {
           if((sugarSapwood[j]<mortalitySugarThreshold) & allowStarvation) {

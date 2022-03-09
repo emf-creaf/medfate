@@ -22,7 +22,7 @@ fuel_windAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
 \arguments{
   \item{object}{An object of class \code{\link{forest}}}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
-  \item{cohortFMC}{A numeric vector of (actual) fuel moisture content by cohort (e.g. can be taken as a row of the matrix returned by \code{\link{moisture_cohortFMC}}).}
+  \item{cohortFMC}{A numeric vector of (actual) fuel moisture content by cohort.}
   \item{gdd}{Growth degree-days.}
   \item{mode}{Calculation mode, either "MED" or "US".}
   \item{heightProfileStep}{Precision for the fuel bulk density profile.}

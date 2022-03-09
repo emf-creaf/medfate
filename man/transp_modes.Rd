@@ -79,8 +79,7 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
       \item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
       \item{\code{"StemRWC"}: Relative water content of stem tissue (including symplasm and apoplasm).}
       \item{\code{"LeafRWC"}: Relative water content of leaf tissue (including symplasm and apoplasm).}
-      \item{\code{"StemSympRWC"}: Relative water content of symplastic stem tissue.}
-      \item{\code{"LeafSympRWC"}: Relative water content of symplastic leaf tissue.}
+      \item{\code{"LFMC"}: Live fuel moisture content (in percent of dry weight).}
       \item{\code{"WaterBalance"}: Plant water balance (extraction - transpiration).}
     }
   }

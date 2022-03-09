@@ -4507,31 +4507,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cohortFMC
-NumericMatrix cohortFMC(List spwb, DataFrame SpParams);
-RcppExport SEXP _medfate_cohortFMC(SEXP spwbSEXP, SEXP SpParamsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type spwb(spwbSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortFMC(spwb, SpParams));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cohortFMCDay
-NumericVector cohortFMCDay(List spwb_day, List x, DataFrame SpParams);
-RcppExport SEXP _medfate_cohortFMCDay(SEXP spwb_daySEXP, SEXP xSEXP, SEXP SpParamsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type spwb_day(spwb_daySEXP);
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortFMCDay(spwb_day, x, SpParams));
-    return rcpp_result_gen;
-END_RCPP
-}
 // profitMaximization
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax, double gainModifier, double costModifier, String costWater);
 RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GswminSEXP, SEXP GswmaxSEXP, SEXP gainModifierSEXP, SEXP costModifierSEXP, SEXP costWaterSEXP) {
@@ -5080,8 +5055,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_apoplasticRelativeWaterContent", (DL_FUNC) &_medfate_apoplasticRelativeWaterContent, 3},
     {"_medfate_apoplasticWaterPotential", (DL_FUNC) &_medfate_apoplasticWaterPotential, 3},
     {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 8},
-    {"_medfate_cohortFMC", (DL_FUNC) &_medfate_cohortFMC, 2},
-    {"_medfate_cohortFMCDay", (DL_FUNC) &_medfate_cohortFMCDay, 3},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 7},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 12},
     {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 5},

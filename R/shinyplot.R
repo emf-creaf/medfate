@@ -67,7 +67,7 @@
   shinyApp(ui = ui, server = server)
 }
 
-.shinyplot_sim<-function(out, measuredData = NULL, SpParams = NULL) {
+.shinyplot_sim<-function(out, measuredData = NULL) {
   if(inherits(out, c("spwb_day", "pwb_day", "growth_day"))) return(.shinyplot_day(out))
   if(!inherits(out, c("growth", "pwb" , "spwb", "fordyn"))) stop("Wrong class for 'out'. Should either be 'spwb', 'growth' or 'fordyn'.")
   type_out = class(out)[1] #growth, spwb, fordyn
@@ -379,7 +379,6 @@
                         type = input$eval_type,
                         temporalResolution = input$eval_summary_type,
                         cohort = input$eval_cohort,
-                        SpParams = SpParams,
                         plotType = "dynamic")
       )
       output$scatter_eval_plot <- renderPlot(
@@ -387,15 +386,13 @@
                         type = input$eval_type,
                         temporalResolution = input$eval_summary_type,
                         cohort = input$eval_cohort,
-                        SpParams = SpParams,
                         plotType = "scatter")
       )
       output$eval_stats <- renderPrint({
         evaluation_stats(out, measuredData, 
                          type = input$eval_type,
                          temporalResolution = input$eval_summary_type,
-                         cohort = input$eval_cohort,
-                         SpParams = SpParams)
+                         cohort = input$eval_cohort)
       })
     }
   }
@@ -404,17 +401,17 @@
   shinyApp(ui = ui, server = server)
 }
 
-shinyplot.growth<-function(x, measuredData = NULL, SpParams = NULL, ...) {
-  .shinyplot_sim(x, measuredData = measuredData, SpParams = SpParams)
+shinyplot.growth<-function(x, measuredData = NULL, ...) {
+  .shinyplot_sim(x, measuredData = measuredData)
 }
-shinyplot.spwb<-function(x, measuredData = NULL, SpParams = NULL, ...) {
-  .shinyplot_sim(x, measuredData = measuredData, SpParams = SpParams)
+shinyplot.spwb<-function(x, measuredData = NULL, ...) {
+  .shinyplot_sim(x, measuredData = measuredData)
 }
-shinyplot.pwb<-function(x, measuredData = NULL, SpParams = NULL, ...) {
-  .shinyplot_sim(x, measuredData = measuredData, SpParams = SpParams)
+shinyplot.pwb<-function(x, measuredData = NULL, ...) {
+  .shinyplot_sim(x, measuredData = measuredData)
 }
-shinyplot.fordyn<-function(x, measuredData = NULL, SpParams = NULL, ...) {
-  .shinyplot_sim(x, measuredData = measuredData, SpParams = SpParams)
+shinyplot.fordyn<-function(x, measuredData = NULL, ...) {
+  .shinyplot_sim(x, measuredData = measuredData)
 }
 shinyplot.growth_day<-function(x, ...) {
   .shinyplot_day(x)

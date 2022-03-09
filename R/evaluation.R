@@ -1,14 +1,14 @@
 evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL, 
-                           temporalResolution = "day", SpParams = NULL) {
+                           temporalResolution = "day") {
   
   # Check arguments
   temporalResolution = match.arg(temporalResolution, c("day", "week", "month", "year"))
   if("spwbInput" %in% names(out)) {
     modelInput<-out[["spwbInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "WP", "FMC"))
+    type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "WP", "LFMC"))
   } else {
     modelInput<- out[["growthInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "WP", "FMC", 
+    type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "WP", "LFMC", 
                              "BAI", "DI","DBH", "Height"))
   }
   if(type=="SWC") {
@@ -111,7 +111,7 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     }
   }
   else if(type=="FMC") {
-    fmc = moisture_cohortFMC(out, SpParams)
+    fmc = out$Plants$LFMC
     d = rownames(fmc)
     spnames = modelInput$cohorts$Name
     allcohnames = row.names(modelInput$cohorts)
@@ -233,7 +233,7 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
 }
 
 evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL, 
-                           temporalResolution = "day", SpParams = NULL) {
+                           temporalResolution = "day") {
   evalstats<-function(obs, pred) {
     sel_complete = !(is.na(obs) | is.na(pred))
     obs = obs[sel_complete]
@@ -261,7 +261,7 @@ evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL,
   
   df = evaluation_table(out = out, measuredData = measuredData, 
                         type = type, cohort = cohort, 
-                        temporalResolution = temporalResolution, SpParams = SpParams)
+                        temporalResolution = temporalResolution)
   if(type=="SWC") eval_res = evalstats(df$Observed, df$Modelled)
   else if(type=="REW") eval_res = evalstats(df$Observed, df$Modelled)
   else if(type=="E") eval_res = evalstats(df$Observed, df$Modelled)
@@ -281,7 +281,7 @@ evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL,
 }
 
 evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL, 
-                          temporalResolution = "day", SpParams = NULL, 
+                          temporalResolution = "day",
                           plotType = "dynamics") {
   scatterplot<-function(df, xlab="", ylab="", title=NULL, err = FALSE) {
     g<-ggplot(df, aes_string(x="Modelled"))
@@ -333,7 +333,7 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
   
   df = evaluation_table(out = out, measuredData = measuredData, 
                         type = type, cohort = cohort, 
-                        temporalResolution = temporalResolution, SpParams = SpParams)
+                        temporalResolution = temporalResolution)
   
   if(type=="SWC") {
     if(plotType=="dynamics") {
@@ -547,11 +547,11 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
 }
 
 evaluation_metric<-function(out, measuredData, type="SWC", cohort=NULL, 
-                            temporalResolution = "day", SpParams = NULL,
+                            temporalResolution = "day",
                             metric = "loglikelihood") {
   df = evaluation_table(out = out, measuredData = measuredData, 
                         type = type, cohort = cohort, 
-                        temporalResolution = temporalResolution, SpParams = SpParams)
+                        temporalResolution = temporalResolution)
   obs = df$Observed
   pred = df$Modelled
   sel_complete = !(is.na(obs) | is.na(pred))
