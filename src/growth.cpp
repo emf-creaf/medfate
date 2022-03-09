@@ -622,9 +622,13 @@ List growthDayInner(List x, NumericVector meteovec,
       double LAdead = leafArea(LAI_dead[j], N[j]);
 
       double minimumStarchForSecondaryGrowth = Starch_max_sapwood[j]*minimumRelativeStarchForGrowth;
-
+      double minimumStarchForPrimaryGrowth = Starch_max_sapwood[j]*0.1;
+        
+      double leafAgG = 0.0;
       double leafRespDay = 0.0;
-
+      double sapwoodResp = 0.0;
+      double finerootResp = 0.0;
+      
       //Estimate phloem conductance as a factor of stem conductance
       double k_phloem = NA_REAL;
       if(transpirationMode=="Sperry") k_phloem = VCstem_kmax[j]*phloemConductanceFactor*(0.018/1000.0);
@@ -654,12 +658,11 @@ List growthDayInner(List x, NumericVector meteovec,
         double B_resp_fineroots = fineRootBiomass[j];
         double QR = qResp(tday);
         if(LAexpanded>0.0) leafRespDay = B_resp_leaves*RERleaf[j]*QR;
-        double sapwoodResp = B_resp_sapwood*RERsapwood[j]*QR;
-        double finerootResp = B_resp_fineroots*RERfineroot[j]*QR;
+        sapwoodResp = B_resp_sapwood*RERsapwood[j]*QR;
+        finerootResp = B_resp_fineroots*RERfineroot[j]*QR;
         MaintenanceRespiration[j] += (leafRespDay+sapwoodResp+finerootResp)/TotalLivingBiomass[j]; 
         
         //PHOTOSYNTHESIS
-        double leafAgG = 0.0;
         if(LAexpanded>0.0) {
           
           //gross fotosynthesis
@@ -681,7 +684,7 @@ List growthDayInner(List x, NumericVector meteovec,
           double deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]*(rleafcell/rleafcellmax));
           if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
           double deltaLAavailable = 0.0;
-          deltaLAavailable = std::max(0.0, starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j])/costPerLA);
+          deltaLAavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerLA);
           deltaLAgrowth[j] = std::min(deltaLAsink, deltaLAavailable);
           growthCostLA = deltaLAgrowth[j]*costPerLA;
         }
@@ -692,7 +695,7 @@ List growthDayInner(List x, NumericVector meteovec,
             double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
             double deltaFRBsink = (V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[s]/rleafcellmax);
             if(!sinkLimitation) deltaFRBsink = (V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
-            double deltaFRBavailable = std::max(0.0,starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j])/CCfineroot[j]);
+            double deltaFRBavailable = std::max(0.0,(starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/CCfineroot[j]);
             deltaFRBgrowth[s] = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
             growthCostFRB += deltaFRBgrowth[s]*CCfineroot[j];
           }
@@ -765,7 +768,9 @@ List growthDayInner(List x, NumericVector meteovec,
           double leafRespStep = 0.0;
           if(LAexpanded>0.0) leafRespStep = B_resp_leaves*RERleaf[j]*QR/((double) numSteps);
           double sapwoodRespStep = B_resp_sapwood*RERsapwood[j]*QR/((double) numSteps);
+          sapwoodResp += sapwoodRespStep;
           double finerootRespStep = B_resp_fineroots*RERfineroot[j]*QR/((double) numSteps);
+          finerootResp += finerootRespStep;
           leafRespDay +=leafRespStep;
           MaintenanceRespirationInst(j,s) = (leafRespStep+sapwoodRespStep+finerootRespStep)/TotalLivingBiomass[j];//Rm in g gluc· gdry-1
           MaintenanceRespiration[j] += MaintenanceRespirationInst(j,s); 
@@ -775,6 +780,7 @@ List growthDayInner(List x, NumericVector meteovec,
           if(LAexpanded>0.0) {
             double leafAgStepC = AgStep(j,s)/(N[j]/10000.0); //Translate g C · m-2 · h-1 to g C · h-1
             leafAgStepG = leafAgStepC*(glucoseMolarMass/(carbonMolarMass*6.0)); // from g C· h-1 to g gluc · h-1
+            leafAgG += leafAgStepG;
             GrossPhotosynthesisInst(j,s) = leafAgStepG/TotalLivingBiomass[j]; //Ag in g gluc · gdry-1
             GrossPhotosynthesis[j] += GrossPhotosynthesisInst(j,s); 
           }
@@ -790,7 +796,7 @@ List growthDayInner(List x, NumericVector meteovec,
             double deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]*(rleafcell/rleafcellmax));
             if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
             //Grow at expense of stem sugar
-            double deltaLAavailable = std::max(0.0, starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j])/costPerLA);
+            double deltaLAavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerLA);
             double deltaLAgrowthStep = std::min(deltaLAsink, deltaLAavailable);
             growthCostLAStep += deltaLAgrowthStep*costPerLA;
             deltaLAgrowth[j] += deltaLAgrowthStep;
@@ -801,7 +807,7 @@ List growthDayInner(List x, NumericVector meteovec,
               double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
               double deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[s]/rleafcellmax);
               if(!sinkLimitation) deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
-              double deltaFRBavailable = std::max(0.0, starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j])/CCfineroot[j]);
+              double deltaFRBavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/CCfineroot[j]);
               double deltaFRBgrowthStep = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
               growthCostFRBStep += deltaFRBgrowthStep*CCfineroot[j];
               deltaFRBgrowth[s] += deltaFRBgrowthStep;
@@ -909,16 +915,27 @@ List growthDayInner(List x, NumericVector meteovec,
       double propLeafSenescence = 0.0;
       //Leaf senescence due to age (Ca+ accumulation) only in evergreen species
       if(phenoType[j] == "progressive-evergreen") {
-        propLeafSenescence = (1.0/(365.25*leafDuration[j]));
+        propLeafSenescence = (LAexpanded/(365.25*LAlive*leafDuration[j]));
       }
       else if((phenoType[j] == "oneflush-evergreen") & (leafSenescence[j])) {
-        propLeafSenescence = (1.0/leafDuration[j]); // Fraction of old leaves that die
+        propLeafSenescence = (LAexpanded/(LAlive*leafDuration[j])); // Fraction of old leaves that die
         leafSenescence[j] = false; //To prevent further loss
       }
       else if(((phenoType[j] == "winter-deciduous") || (phenoType[j] == "winter-semideciduous")) & leafSenescence[j]) {
         propLeafSenescence = 1.0;
         leafSenescence[j] = false; //To prevent further loss
       }
+      //Leaf senescence due to negative carbon (needs to be done integrating longer time-spans)
+      // if((LAexpanded>0.0) & (!leafUnfolding[j])) {
+      //   // double leafRespBal = leafAgG - sapwoodResp - finerootResp;
+      //   if(leafAgG < leafRespDay) {
+      //     double leafRespPerLA = leafRespDay/LAexpanded;
+      //     double LAexcess = (leafRespDay - leafAgG)/leafRespPerLA;
+      //     //Maximum of 1% defoliation per day (to have a progressive process)
+      //     double propDefoliation = std::min(0.01, LAexcess/LAexpanded);
+      //     propLeafSenescence = std::max(propDefoliation, propLeafSenescence);
+      //   }
+      // }
       //Leaf senescence due to drought (only when PLC increases)
       double PLCinc = (StemPLC[j]-StemPLCprev[j]);
       if(PLCinc>0.0) {
@@ -1164,8 +1181,8 @@ List growthDayInner(List x, NumericVector meteovec,
   //UPDATE STRUCTURAL VARIABLES
   updateStructuralVariables(x, deltaSAgrowth);
   
-  //RECALCULATE storage concentrations (SA, LA and H may have changed)
   for(int j=0;j<numCohorts;j++){
+    //RECALCULATE storage concentrations (SA, LA and H may have changed)
     double newVolumeSapwood = sapwoodStorageVolume(SA[j], H[j], L(j,_),V(j,_),WoodDensity[j], conduit2sapwood[j]);
     double newVolumeLeaves = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
     if(newVolumeLeaves > 0.0) {

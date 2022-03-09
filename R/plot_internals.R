@@ -146,6 +146,7 @@
 .getLabileGROWTHPlotTypes<-function(transpirationMode = "Granier") {
   TYPES= c("Gross photosynthesis per dry" = "GrossPhotosynthesis",
            "Maintenance respiration per dry" = "MaintenanceRespiration",
+           "Photosynthesis-maintenance ratio" = "PhotosynthesisMaintenanceRatio",
            "Growth costs per dry" = "GrowthCosts",
            "Labile carbon balance per dry" = "LabileCarbonBalance",
            "Leaf sugar concentration" = "SugarLeaf",
@@ -324,6 +325,7 @@
   else if(type=="LeafNetLWR") ylab = expression(paste("Net LWR per leaf area ",(W%.%m^{-2})))
   else if(type=="GrossPhotosynthesis") ylab=expression(paste("Gross photosynthesis ", (gGluc%.%gdry^{-1}%.%d^{-1})))
   else if(type=="MaintenanceRespiration") ylab=expression(paste("Maintenance respiration ", (gGluc%.%gdry^{-1}%.%d^{-1})))
+  else if(type=="PhotosynthesisMaintenanceRatio") ylab="Photosynthesis-maintenance ratio "
   else if(type=="GrowthCosts") ylab=expression(paste("Growth costs ", (gGluc%.%gdry^{-1}%.%d^{-1})))
   else if(type=="LabileCarbonBalance") ylab=expression(paste("Labile carbon balance ", (gGluc%.%gdry^{-1}%.%d^{-1})))
   else if(type=="SugarLeaf") ylab=expression(paste("Leaf sugar concentration  ", (mol%.%L^{-1})))

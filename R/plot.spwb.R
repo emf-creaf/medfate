@@ -217,6 +217,11 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
                       "LeafPI0", "StemPI0")) {
       OM = x$LabileCarbonBalance[[type]][,cohorts,drop=FALSE]
   } 
+  else if(type == "PhotosynthesisMaintenanceRatio") {
+    OM1 = x$LabileCarbonBalance[["GrossPhotosynthesis"]][,cohorts,drop=FALSE]
+    OM2 = x$LabileCarbonBalance[["MaintenanceRespiration"]][,cohorts,drop=FALSE]
+    OM = OM1/OM2
+  } 
   else if(type %in% c("StructuralBiomassBalance","LabileBiomassBalance", "PlantBiomassBalance",
                       "MortalityBiomassLoss","CohortBiomassBalance")) {
     OM = x$PlantBiomassBalance[[type]][,cohorts,drop=FALSE]
@@ -371,6 +376,11 @@ plot.fordyn<-function(x, type="StandBasalArea",
                      "LeafPI0", "StemPI0")) {
         OM = summary(x, freq = "days", output = paste0("LabileCarbonBalance$",type))[,cohorts,drop=FALSE]
       } 
+      if(type =="PhotosynthesisMaintenanceRatio") {
+        OM1 = summary(x, freq = "days", output = "LabileCarbonBalance$GrossPhotosynthesis")[,cohorts,drop=FALSE]
+        OM2 = summary(x, freq = "days", output = "LabileCarbonBalance$MaintenanceRespiration")[,cohorts,drop=FALSE]
+        OM = OM1/OM2
+      }
       else if(type %in% c("StructuralBiomassBalance", "LabileBiomassBalance", "PlantBiomassBalance", 
                           "MortalityBiomassLoss", "CohortBiomassBalance")) {
         OM = summary(x, freq = "days", output = paste0("PlantBiomassBalance$",type))[,cohorts,drop=FALSE]
