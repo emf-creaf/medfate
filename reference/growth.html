@@ -166,10 +166,10 @@
 <span class="r-in"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Initialize soil with default soil params (4 layers)</span></span>
-<span class="r-in"><span class="va">examplesoil1</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Initialize vegetation input</span></span>
-<span class="r-in"><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil1</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Call simulation function</span></span>
 <span class="r-in"><span class="va">G1</span><span class="op">&lt;-</span><span class="fu">growth</span><span class="op">(</span><span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
@@ -180,18 +180,18 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]: ....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant biomass (g/m2): 8590.45</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant biomass (g/m2): 153.572</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance result (g/m2): 153.572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant biomass (g/m2): 8590.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant biomass (g/m2): 153.537</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance result (g/m2): 153.537</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance components:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Structural balance (g/m2) 276 Labile balance (g/m2) -122</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Structural balance (g/m2) 276 Labile balance (g/m2) -123</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Plant individual balance (g/m2) 154 Mortality loss (g/m2) 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 269.694</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 269.697</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -21.5629</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -21.5629</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -21.5601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -21.5601</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 7.10543e-15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
@@ -204,11 +204,8 @@
 <span class="r-in"><span class="co">#Switch to 'Sperry' transpiration mode</span></span>
 <span class="r-in"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co">#Initialize soil with default soil params (4 layers)</span></span>
-<span class="r-in"><span class="va">examplesoil2</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
 <span class="r-in"><span class="co">#Initialize vegetation input</span></span>
-<span class="r-in"><span class="va">x2</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil2</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">x2</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Call simulation function (11 days)</span></span>
 <span class="r-in"><span class="va">d</span> <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">110</span></span>

@@ -64,8 +64,6 @@
 <span class="fu">moisture_tissueRWC</span><span class="op">(</span><span class="va">psiSym</span>, <span class="va">pi0</span>, <span class="va">epsilon</span>, 
                    <span class="va">psiApo</span>, <span class="va">c</span>, <span class="va">d</span>, 
                    <span class="va">af</span>, femb <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>
-<span class="fu">moisture_cohortFMC</span><span class="op">(</span><span class="va">spwb</span>, <span class="va">SpParams</span><span class="op">)</span>
-<span class="fu">moisture_cohortFMCDay</span><span class="op">(</span><span class="va">spwb_day</span>, <span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span>
 <span class="fu">moisture_pressureVolumeCurvePlot</span><span class="op">(</span><span class="va">x</span>, segment<span class="op">=</span><span class="st">"leaf"</span>, 
                     fraction <span class="op">=</span> <span class="st">"all"</span>,
                     psiVec <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.1</span>, <span class="op">-</span><span class="fl">8.0</span>, by <span class="op">=</span><span class="op">-</span><span class="fl">0.01</span><span class="op">)</span>,
@@ -100,12 +98,6 @@
 <dd><p>Vector of water potential values to evaluate for the pressure-volume curve.</p></dd>
 <dt>speciesNames</dt>
 <dd><p>A flag to indicate the use of species names instead of cohort names in plots.</p></dd>
-<dt>spwb</dt>
-<dd><p>Object returned by function <code><a href="spwb.html">spwb</a></code> or <code><a href="growth.html">growth</a></code>.</p></dd>
-<dt>spwb_day</dt>
-<dd><p>Object returned by function <code><a href="spwb_day.html">spwb_day</a></code> or <code><a href="spwb_day.html">growth_day</a></code>.</p></dd>
-<dt>SpParams</dt>
-<dd><p>A data frame with species parameters (see <code><a href="SpParams.html">SpParamsMED</a></code> and <code><a href="SpParams.html">SpParamsMED</a></code>).</p></dd>
 <dt>L</dt>
 <dd><p>Vector with the length of coarse roots (mm) for each soil layer.</p></dd>
 <dt>V</dt>
@@ -121,10 +113,6 @@
 <dt>ld</dt>
 <dd><p>Leaf tissue density (g·cm-3).</p></dd>
 </dl></div>
-    <div id="details">
-    <h2>Details</h2>
-    <p>Details of the tissue moisture calculations are given in a vignette. Function <code>moisture_cohortFMC()</code> calculates the fuel moisture content of leaves of each cohort, from the results of soil water balance.</p>
-    </div>
     <div id="value">
     <h2>Value</h2>
     <p>Values returned for each function are:</p><ul><li><p><code>moisture_symplasticRWC</code>: Relative water content [0-1] of the symplastic fraction.</p></li>
@@ -133,8 +121,6 @@
 <li><p><code>moisture_apoplasticWaterPotential</code>: Water potential (in MPa) of the apoplastic fraction.</p></li>
 <li><p><code>moisture_turgorLossPoint</code>: Water potential (in MPa) corresponding to turgor loss point.</p></li>
 <li><p><code>moisture_segmentRWC</code>: Segment relative water content [0-1].</p></li>
-<li><p><code>moisture_cohortFMC</code>: A matrix with daily moisture content per dry weight (in percent) of each cohort.</p></li>
-<li><p><code>moisture_cohortFMCDay</code>: A vector with moisture content per dry weight (in percent) of each cohort.</p></li>
 </ul></div>
     <div id="references">
     <h2>References</h2>

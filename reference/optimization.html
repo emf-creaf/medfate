@@ -69,7 +69,7 @@
                       <span class="va">meteo</span>, <span class="va">latitude</span>,
                       elevation <span class="op">=</span> <span class="cn">NA</span>, slope <span class="op">=</span> <span class="cn">NA</span>, aspect <span class="op">=</span> <span class="cn">NA</span>, 
                       <span class="va">measuredData</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, cohorts <span class="op">=</span> <span class="cn">NULL</span>, 
-                      temporalResolution <span class="op">=</span> <span class="st">"day"</span>, SpParams <span class="op">=</span> <span class="cn">NULL</span>, 
+                      temporalResolution <span class="op">=</span> <span class="st">"day"</span>,
                       metric <span class="op">=</span> <span class="st">"loglikelihood"</span><span class="op">)</span>
 <span class="fu">optimization_multicohort_function</span><span class="op">(</span><span class="va">cohortParNames</span>, <span class="va">cohortNames</span>, <span class="va">x</span>, 
                       <span class="va">meteo</span>, <span class="va">latitude</span>, 
@@ -81,7 +81,7 @@
                       otherParNames <span class="op">=</span> <span class="cn">NULL</span>,
                       elevation <span class="op">=</span> <span class="cn">NA</span>, slope <span class="op">=</span> <span class="cn">NA</span>, aspect <span class="op">=</span> <span class="cn">NA</span>, 
                       <span class="va">measuredData</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, cohorts <span class="op">=</span> <span class="va">cohortNames</span>,
-                      temporalResolution <span class="op">=</span> <span class="st">"day"</span>, SpParams <span class="op">=</span> <span class="cn">NULL</span>, 
+                      temporalResolution <span class="op">=</span> <span class="st">"day"</span>, 
                       metric <span class="op">=</span> <span class="st">"loglikelihood"</span><span class="op">)</span></code></pre></div>
     </div>
 
@@ -100,13 +100,11 @@
 <dt>measuredData</dt>
 <dd><p>A data frame with observed/measured values. Dates should be in row names, whereas columns should be named according to the type of output to be evaluated (see details).</p></dd>
 <dt>type</dt>
-<dd><p>A string with the kind of model output to be evaluated. Accepted values are <code>"SWC"</code> (soil moisture content), <code>"REW"</code> relative extractable water, <code>"ETR"</code> (total evapotranspiration), <code>"E"</code> (transpiration per leaf area), <code>"FMC"</code> (fuel moisture content) and <code>"WP"</code> (plant water potentials).</p></dd>
+<dd><p>A string with the kind of model output to be evaluated. Accepted values are <code>"SWC"</code> (soil moisture content), <code>"REW"</code> relative extractable water, <code>"ETR"</code> (total evapotranspiration), <code>"E"</code> (transpiration per leaf area), <code>"LFMC"</code> (live fuel moisture content) and <code>"WP"</code> (plant water potentials).</p></dd>
 <dt>cohorts</dt>
 <dd><p>A string or a vector of strings with the cohorts to be compared (e.g. "T1_68"). If several cohort names are provided, the function <code>optimization_cohorts_function</code> evaluates the performance for each one and provides the mean value. If <code>NULL</code> results for the first cohort will be evaluated.</p></dd>
 <dt>temporalResolution</dt>
 <dd><p>A string to indicate the temporal resolution of the model evaluation, which can be "day", "week", "month" or "year". Observed and modelled values are aggregated temporally (using either means or sums) before comparison.</p></dd>
-<dt>SpParams</dt>
-<dd><p>A data frame with species parameters (see <code><a href="SpParams.html">SpParamsMED</a></code>), only needed if <code>type = "FMC"</code>.</p></dd>
 <dt>metric</dt>
 <dd><p>An evaluation metric (see <code><a href="evaluation.html">evaluation_metric</a></code>).</p></dd>
 <dt>summary_function</dt>

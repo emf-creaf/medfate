@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Advanced water and energy balance</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-03-08</h4>
+            <h4 data-toc-skip class="date">2022-03-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/AdvancedWaterEnergyBalance.Rmd" class="external-link"><code>vignettes/AdvancedWaterEnergyBalance.Rmd</code></a></small>
       <div class="hidden name"><code>AdvancedWaterEnergyBalance.Rmd</code></div>
@@ -290,14 +290,14 @@
 <p>Finally, parameters related to pressure-volume curves and water storage capacity of leaf and stem organs are in <code>paramsWaterStorage</code>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsWaterStorage</span></code></pre></div>
-<pre><code><span class="co">##          LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS    StemAF</span>
-<span class="co">## T1_148 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355 0.9236406</span>
-<span class="co">## T2_168 -1.483333 19.260000 0.1700 0.2035077 -3.227438 46.420610 0.6238125</span>
-<span class="co">## S1_165 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155 0.6238125</span>
-<span class="co">##        Vsapwood</span>
-<span class="co">## T1_148 7.704643</span>
-<span class="co">## T2_168 2.538595</span>
-<span class="co">## S1_165 1.632942</span></code></pre>
+<pre><code><span class="co">##           maxFMC   LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS</span>
+<span class="co">## T1_148 126.03063 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355</span>
+<span class="co">## T2_168  93.15304 -1.483333 19.260000 0.1700 0.2035077 -3.227438 46.420610</span>
+<span class="co">## S1_165  96.53441 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155</span>
+<span class="co">##           StemAF Vsapwood</span>
+<span class="co">## T1_148 0.9236406 7.704643</span>
+<span class="co">## T2_168 0.6238125 2.538595</span>
+<span class="co">## S1_165 0.6238125 1.632942</span></code></pre>
 <p>Finally, remember that one can play with plant-specific parameters for soil water balance (instead of using species-level values) by modifying manually the parameter values in this object.</p>
 </div>
 </div>
@@ -464,14 +464,14 @@
 <span class="co">## T1_148        1.76139471 -0.4167135 -0.6573851 1.106540e-07 -1.0194907</span>
 <span class="co">## T2_168        1.36457651 -0.2371220 -0.3290151 2.150284e-04 -0.5670809</span>
 <span class="co">## S1_165        0.05680973 -0.2745354 -0.3960759 6.448543e-05 -0.6400038</span>
-<span class="co">##         LeafPsiMax      dEdP        DDS   StemRWC   LeafRWC StemSympRWC</span>
-<span class="co">## T1_148 -0.04507573 0.4437757 0.02971234 0.9986152 0.9391344   0.9818663</span>
-<span class="co">## T2_168 -0.04567436 1.1483913 0.03360889 0.9988096 0.9797239   0.9971922</span>
-<span class="co">## S1_165 -0.05687966 1.2457201 0.01073681 0.9910667 0.9848637   0.9763599</span>
-<span class="co">##        LeafSympRWC  WaterBalance</span>
-<span class="co">## T1_148   0.9607905  8.077306e-18</span>
-<span class="co">## T2_168   0.9893141 -1.105886e-17</span>
-<span class="co">## S1_165   0.9858135 -2.574980e-19</span></code></pre>
+<span class="co">##         LeafPsiMax      dEdP        DDS   StemRWC   LeafRWC      LFMC</span>
+<span class="co">## T1_148 -0.04507573 0.4437757 0.02971234 0.9986152 0.9391344 122.03964</span>
+<span class="co">## T2_168 -0.04567436 1.1483913 0.03360889 0.9988096 0.9797239  92.05765</span>
+<span class="co">## S1_165 -0.05687966 1.2457201 0.01073681 0.9910667 0.9848637  95.41049</span>
+<span class="co">##         WaterBalance</span>
+<span class="co">## T1_148  8.077306e-18</span>
+<span class="co">## T2_168 -1.105886e-17</span>
+<span class="co">## S1_165 -2.574980e-19</span></code></pre>
 <p>While <code>Plants</code> contains one value per cohort and variable that summarizes the whole simulated day, information by disaggregated by time step can be accessed in <code>PlantsInst</code>. Moreover, we can use function <code><a href="../reference/plot.spwb_day.html">plot.spwb_day()</a></code> to draw plots of sub-daily variation per species of plant transpiration per ground area (L·m<span class="math inline">\(^{-2}\)</span>), transpiration per leaf area (also in L·m<span class="math inline">\(^{-2}\)</span>), plant net photosynthesis (in g C·m<span class="math inline">\(^{-2}\)</span>), and plant water potential (in MPa):</p>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"PlantTranspiration"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>

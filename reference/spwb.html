@@ -164,8 +164,7 @@
 <li><p><code>"LeafPsiMax"</code>: A data frame with the maximum (predawn) daily (average) leaf water potential of each plant (in MPa).</p></li>
 <li><p><code>"LeafRWC"</code>: A data frame with the average daily leaf relative water content of each plant (in percent).</p></li>
 <li><p><code>"StemRWC"</code>: A data frame with the average daily stem relative water content of each plant (in percent).</p></li>
-<li><p><code>"LeafSympRWC"</code>: A data frame with the average daily leaf symplasm relative water content of each plant (in percent).</p></li>
-<li><p><code>"StemSympRWC"</code>: A data frame with the average daily stem symplasm relative water content of each plant (in percent).</p></li>
+<li><p><code>"LFMC"</code>: A data frame with the daily live fuel moisture content (in percent of dry weight).</p></li>
 <li><p><code>"StemPsi"</code>: A data frame with the minimum daily stem water potential of each plant (in MPa).</p></li>
 <li><p><code>"StemPLC"</code>: A data frame with the average daily proportion of stem conductance loss of each plant ([0-1]).</p></li>
 <li><p><code>"RootPsi"</code>: A data frame with the minimum daily root water potential of each plant (in MPa).</p></li>
@@ -290,13 +289,11 @@
 <span class="r-in"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="va">examplesoil2</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
 <span class="r-in"><span class="co">#Switch to 'Sperry' transpiration mode</span></span>
 <span class="r-in"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Initialize input</span></span>
-<span class="r-in"><span class="va">x2</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil2</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">x2</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Call simulation function (11 days)</span></span>
 <span class="r-in"><span class="va">d</span> <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">110</span></span>
