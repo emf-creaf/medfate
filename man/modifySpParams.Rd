@@ -50,13 +50,13 @@ data(exampleforestMED)
 data(SpParamsMED)
 
 #Initialize soil with default soil params (4 layers)
-examplesoil1 = soil(defaultSoilParams(4))
+examplesoil = soil(defaultSoilParams(4))
 
 #Initialize control parameters
 control = defaultControl("Granier")
 
 #Initialize input
-x1 = forest2spwbInput(exampleforestMED,examplesoil1, SpParamsMED, control)
+x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 # Cohort name for Pinus halepensis
 PH_coh = paste0("T1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"])
@@ -83,7 +83,7 @@ x1$soil
 x1s$soil
 
 # When modifying growth input objects dependencies increase
-x1 = forest2growthInput(exampleforestMED,examplesoil1, SpParamsMED, control)
+x1 = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
 customParams <- c(2000,2)
 names(customParams) <- paste0(PH_coh,c("/Al2As", "/LAI_live"))
 x1m <- modifyInputParams(x1, customParams)

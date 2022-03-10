@@ -1144,7 +1144,7 @@ List growthDayInner(List x, NumericVector meteovec,
         LAI_live[j] = leafAreaTarget[j]*N[j]/10000.0;
       }
       //Update fine root biomass target     
-      if(LAI_live[j]>0.0 & N[j]>0.0) {
+      if((LAI_live[j]>0.0) & (N[j]>0.0)) {
         if(transpirationMode=="Granier") {
           fineRootBiomassTarget[j] = (Ar2Al[j]*leafAreaTarget[j])/(specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4);
         } else {

@@ -94,13 +94,13 @@ data(exampleforestMED)
 data(SpParamsMED)
 
 #Initialize soil with default soil params (4 layers)
-examplesoil1 = soil(defaultSoilParams(4))
+examplesoil = soil(defaultSoilParams(4))
 
 #Initialize control parameters
 control = defaultControl("Granier")
 
 #Initialize input
-x1 = forest2spwbInput(exampleforestMED,examplesoil1, SpParamsMED, control)
+x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 # Cohort name for Pinus halepensis
 PH_coh = paste0("T1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"])

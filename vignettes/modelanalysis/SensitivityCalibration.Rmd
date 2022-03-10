@@ -48,8 +48,8 @@ The data set consists of a forest with two tree species (*Pinus halepensis*/`r P
 We first initialize a soil with four layers (default values of texture, bulk density and rock content) and the species input parameters for simulation function `spwb()`:
 
 ```{r}
-examplesoil1 = soil(defaultSoilParams(4))
-x1 = forest2spwbInput(exampleforestMED,examplesoil1, SpParamsMED, control = defaultControl())
+examplesoil = soil(defaultSoilParams(4))
+x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control = defaultControl())
 ```
 
 Although it is not necessary, we make an initial call to the model (`spwb()`) with the default parameter settings:
