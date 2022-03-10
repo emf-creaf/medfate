@@ -106,6 +106,11 @@ pwb(x, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
      \item{\code{"Transpiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort.}
      \item{\code{"GrossPhotosynthesis"}: A data frame with the amount of daily gross photosynthesis (in g C·m-2) for each plant cohort. }
      \item{\code{"PlantPsi"}: A data frame with the average daily water potential of each plant (in MPa).}
+     \item{\code{"StemPLC"}: A data frame with the average daily proportion of stem conductance loss of each plant ([0-1]).}
+     \item{\code{"PlantWaterBalance"}: A data frame with the daily balance between transpiration and soil water extraction for each plant cohort. }
+     \item{\code{"LeafRWC"}: A data frame with the average daily leaf relative water content of each plant (in percent).}
+     \item{\code{"StemRWC"}: A data frame with the average daily stem relative water content of each plant (in percent). }
+     \item{\code{"LFMC"}: A data frame with the daily live fuel moisture content (in percent of dry weight).}
      \item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance).}
 }
 If \code{transpirationMode="Sperry"}, element \code{"Plants"} is a list with the following subelements:
