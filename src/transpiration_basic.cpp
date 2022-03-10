@@ -127,6 +127,7 @@ List transpirationGranier(List x, NumericVector meteovec,
   //Parameters  
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
   NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
+  NumericVector r635 = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["r635"]);
   
   DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
   NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
@@ -344,7 +345,7 @@ List transpirationGranier(List x, NumericVector meteovec,
     RWCsm[c] =  tissueRelativeWaterContent(PlantPsi[c], StemPI0[c], StemEPS[c], 
                                            PlantPsi[c], WeibullShape, Psi_Critic[c], 
                                            StemAF[c], StemPLC[c]);
-    LFMC[c] = maxFMC[c]*RWClm[c];
+    LFMC[c] = maxFMC[c]*((1.0/r635[c])*RWClm[c]+(1.0 - (1.0/r635[c]))*RWCsm[c]);
     
     //Daily drought stress from plant WP
     DDS[c] = Phe[c]*(1.0 - Psi2K(PlantPsi[c],Psi_Extract[c],WeibullShape)); 

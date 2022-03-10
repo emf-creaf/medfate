@@ -262,6 +262,7 @@ List transpirationSperry(List x, NumericVector meteovec,
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
   NumericVector leafWidth = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["LeafWidth"]);
   NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
+  NumericVector r635 = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["r635"]);
   
   //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
@@ -1334,7 +1335,7 @@ List transpirationSperry(List x, NumericVector meteovec,
     PLCm[c] = sum(PLC(c,_))/((double)PLC.ncol());
     RWCsm[c] = sum(StemRWCInst(c,_))/((double)StemRWCInst.ncol());
     RWClm[c] = sum(LeafRWCInst(c,_))/((double)LeafRWCInst.ncol());
-    LFMC[c] = RWClm[c]*maxFMC[c];
+    LFMC[c] = maxFMC[c]*((1.0/r635[c])*RWClm[c]+(1.0 - (1.0/r635[c]))*RWCsm[c]);
     dEdPm[c] = sum(dEdPInst(c,_))/((double)dEdPInst.ncol());  
     double maxConductance = maximumSoilPlantConductance(VGrhizo_kmax(c,_), VCroot_kmax(c,_), VCstem_kmax[c], VCleaf_kmax[c]);
     DDS[c] = Phe[c]*(1.0 - (dEdPm[c]/(sapFluidityDay*maxConductance)));
