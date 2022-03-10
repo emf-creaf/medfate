@@ -264,14 +264,14 @@
 <p>The <code>spwbInput</code>object also includes cohort parameter values for several kinds of traits. For example, plant anatomy parameters are described in <code>paramsAnatomy</code>:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsAnatomy</span></code></pre></div>
-<pre><code><span class="co">##        Hmax Hmed    Al2As      SLA LeafWidth LeafDensity WoodDensity</span>
-<span class="co">## T1_148 1900  850 1317.523 5.140523 0.1384772   0.2982842   0.6077016</span>
-<span class="co">## T2_168 1300  500 2512.563 6.850951 1.7674359   0.4893392   0.9008264</span>
-<span class="co">## S1_165  250   80 4189.325 4.980084 1.3761085   0.3709679   0.4389106</span>
-<span class="co">##        FineRootDensity conduit2sapwood      SRL RLD     r635</span>
-<span class="co">## T1_148       0.2982842       0.9236406 3172.572  10 1.964226</span>
-<span class="co">## T2_168       0.4893392       0.6238125 4398.812  10 1.805872</span>
-<span class="co">## S1_165       0.3709679       0.6238125 4398.812  10 2.289452</span></code></pre>
+<pre><code><span class="co">##        Hmed    Al2As      SLA LeafWidth LeafDensity WoodDensity FineRootDensity</span>
+<span class="co">## T1_148  850 1317.523 5.140523 0.1384772   0.2982842   0.6077016       0.2982842</span>
+<span class="co">## T2_168  500 2512.563 6.850951 1.7674359   0.4893392   0.9008264       0.4893392</span>
+<span class="co">## S1_165   80 4189.325 4.980084 1.3761085   0.3709679   0.4389106       0.3709679</span>
+<span class="co">##        conduit2sapwood      SRL RLD     r635</span>
+<span class="co">## T1_148       0.9236406 3172.572  10 1.964226</span>
+<span class="co">## T2_168       0.6238125 4398.812  10 1.805872</span>
+<span class="co">## S1_165       0.6238125 4398.812  10 2.289452</span></code></pre>
 <p>Parameters related to plant transpiration and photosynthesis can be seen in <code>paramsTranspiration</code>:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsTranspiration</span></code></pre></div>
