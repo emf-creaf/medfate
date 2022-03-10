@@ -121,10 +121,10 @@ data(SpParamsMED)
 control = defaultControl("Granier")
 
 #Initialize soil with default soil params (4 layers)
-examplesoil1 = soil(defaultSoilParams(4))
+examplesoil = soil(defaultSoilParams(4))
 
 #Initialize vegetation input
-x1 = forest2growthInput(exampleforestMED, examplesoil1, SpParamsMED, control)
+x1 = forest2growthInput(exampleforestMED, examplesoil, SpParamsMED, control)
 
 #Call simulation function
 G1<-growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -133,11 +133,8 @@ G1<-growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 #Switch to 'Sperry' transpiration mode
 control = defaultControl("Sperry")
 
-#Initialize soil with default soil params (4 layers)
-examplesoil2 = soil(defaultSoilParams(4))
-
 #Initialize vegetation input
-x2 = forest2growthInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+x2 = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Call simulation function (11 days)
 d = 100:110

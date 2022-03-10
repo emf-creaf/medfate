@@ -178,13 +178,11 @@ summary(S1, freq="months",FUN=mean, output="Soil")
 
 
 \dontrun{
-examplesoil2 = soil(defaultSoilParams(4))
-
 #Switch to 'Sperry' transpiration mode
 control = defaultControl("Sperry")
 
 #Initialize input
-x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Call simulation function (11 days)
 d = 100:110

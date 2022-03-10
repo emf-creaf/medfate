@@ -4,9 +4,9 @@ data(examplemeteo)
 data(exampleforestMED)
 data(SpParamsMED)
 d = 100:105
+examplesoil = soil(defaultSoilParams(4))
 
 test_that("Can produce all basic spwb plots and summaries",{
-  examplesoil = soil(defaultSoilParams(2))
   control = defaultControl("Granier")
   control$verbose = FALSE
   x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
@@ -50,10 +50,9 @@ test_that("Can produce all basic spwb plots and summaries",{
 })
 
 test_that("Can produce all advanced spwb plots and summaries",{
-  examplesoil2 = soil(defaultSoilParams(4))
   control = defaultControl("Sperry")
   control$verbose = FALSE
-  x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+  x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
   coh_1 = row.names(x2$cohorts)[1]
   expect_s3_class(x2, "spwbInput")
   S2<-spwb(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
@@ -125,11 +124,10 @@ test_that("Can produce all advanced spwb plots and summaries",{
 })
 
 test_that("Can produce all advanced subdaily spwb plots",{
-  examplesoil2 = soil(defaultSoilParams(4))
   control = defaultControl("Sperry")
   control$verbose = FALSE
   control$subdailyResults = TRUE
-  x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+  x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
   expect_s3_class(x2, "spwbInput")
   S2<-spwb(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
   expect_s3_class(S2, "spwb")
@@ -192,10 +190,9 @@ test_that("Can produce all advanced subdaily spwb plots",{
 })
 
 test_that("Can produce all advanced spwb_day plots",{
-  examplesoil2 = soil(defaultSoilParams(4))
   control = defaultControl("Sperry")
   control$verbose = FALSE
-  x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+  x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
   expect_s3_class(x2, "spwbInput")
   d1 = d[1]
   sd2<-spwb_day(x2, rownames(examplemeteo)[d1],
@@ -295,10 +292,9 @@ test_that("Can produce all basic growth plots and summaries",{
 })
 
 test_that("Can produce all advanced growth plots and summaries",{
-  examplesoil2 = soil(defaultSoilParams(4))
   control = defaultControl("Sperry")
   control$verbose = FALSE
-  x2 = forest2growthInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+  x2 = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
   coh_1 = row.names(x2$cohorts)[1]
   expect_s3_class(x2, "growthInput")
   G2<-growth(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
@@ -317,11 +313,10 @@ test_that("Can produce all advanced growth plots and summaries",{
 })
 
 test_that("Can produce all advanced subdaily growth plots",{
-  examplesoil2 = soil(defaultSoilParams(4))
   control = defaultControl("Sperry")
   control$verbose = FALSE
   control$subdailyResults = TRUE
-  x2 = forest2growthInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+  x2 = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
   expect_s3_class(x2, "growthInput")
   G2<-growth(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
   expect_s3_class(G2, "growth")
@@ -351,10 +346,9 @@ test_that("Can produce all advanced subdaily growth plots",{
 })
 
 test_that("Can produce all advanced growth_day plots",{
-  examplesoil2 = soil(defaultSoilParams(4))
   control = defaultControl("Sperry")
   control$verbose = FALSE
-  x2 = forest2growthInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+  x2 = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
   expect_s3_class(x2, "growthInput")
   d1 = d[1]
   sd2<-growth_day(x2, rownames(examplemeteo)[d1],

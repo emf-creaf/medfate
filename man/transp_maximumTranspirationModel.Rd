@@ -52,13 +52,13 @@ data(exampleforestMED)
 data(SpParamsMED)
 
 # Initialize soil with default soil params
-examplesoil2 = soil(defaultSoilParams(2))
+examplesoil = soil(defaultSoilParams(4))
 
 # Initialize control parameters for 'Sperry' transpiration mode
 control = defaultControl(transpirationMode="Sperry")
 
 # Initialize input
-x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 # Estimate maximum transpiration ratio models for each cohort
 m = transp_maximumTranspirationModel(x2, examplemeteo, 

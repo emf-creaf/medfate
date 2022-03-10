@@ -72,17 +72,14 @@ data(exampleforestMED)
 data(SpParamsMED)
 
 
-#Initialize soil with default soil params (2 layers)
-examplesoil = soil(defaultSoilParams(2))
+#Initialize soil with default soil params (4 layers)
+examplesoil = soil(defaultSoilParams(4))
 
 #Initialize control parameters
 control = defaultControl(transpirationMode="Sperry")
 
-#Initialize soil with default soil params (2 layers)
-examplesoil2 = soil(defaultSoilParams(2))
-
 #Initialize input
-x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 # Stomatal VPD curve and chosen value for the 12th time step at day 100
 transp_stomatalRegulationPlot(x2, examplemeteo, day=100, timestep = 12,
