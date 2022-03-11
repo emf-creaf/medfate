@@ -62,7 +62,6 @@ The following plots are currently available for \code{\link{spwb}} (most of them
     \item{\code{"PlantLAI"}:}{ Plant cohort leaf area index (expanded leaves).}
     \item{\code{"PlantLAIlive"}:}{ Plant cohort leaf area index ("live" leaves).}
     \item{\code{"PlantStress"}:}{ Plant cohort average daily drought stress.}
-    \item{\code{"PlantPsi"}:}{ Plant cohort water potential (only for \code{transpirationMode = "Granier"}).}
     \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration.}
     \item{\code{"TranspirationPerLeaf"}:}{ Plant cohort transpiration per leaf area.}
     \item{\code{"PlantGrossPhotosynthesis"}:}{ Plant cohort photosynthesis.}
@@ -70,6 +69,12 @@ The following plots are currently available for \code{\link{spwb}} (most of them
     \item{\code{"StemRWC"}:  Average daily stem relative water content.}
     \item{\code{"LeafRWC"}:  Average daily leaf relative water content.}
     \item{\code{"LFMC"}:  Live fuel moisture content.}
+  }
+    The following plots are available for \code{\link{spwb}} and \code{\link{pwb}} \emph{only if} \code{transpirationMode = "Granier"}:
+  \itemize{
+      \item{\code{"PlantPsi"}:}{ Plant cohort water potential.}
+      \item{\code{"FPAR"}:}{ Fraction of PAR at the canopy level of each plant cohort.}
+      \item{\code{"AbsorbedSWRFraction"}:}{ Fraction of SWR absorbed by each plant cohort.}
   }
   The following plots are available for \code{\link{spwb}} and \code{\link{pwb}} \emph{only if} \code{transpirationMode = "Sperry"}:
   \itemize{
