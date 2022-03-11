@@ -50,7 +50,11 @@
               "Absorbed short-wave radiation per leaf" = "AbsorbedSWRPerLeaf",
               "Net long-wave radiation" = "PlantNetLWR",
               "Net long-wave radiation per leaf" = "NetLWRPerLeaf")
-  }            
+  } else {
+    TYPES <-c(TYPES,
+              "Fraction of PAR" = "FPAR",
+              "Absorbed SWR fraction" = "AbsorbedSWRFraction")
+  }           
 
   if(transpirationMode == "Sperry") {
     TYPES <-c(TYPES,
@@ -312,6 +316,8 @@
   else if(type=="GrossPhotosynthesisPerLeaf") ylab = expression(paste("Gross photosynthesis per leaf area ",(g*C%.%m^{-2}%.%d^{-1})))
   else if(type=="NetPhotosynthesisPerLeaf") ylab = expression(paste("Net photosynthesis per leaf area ",(g*C%.%m^{-2}%.%d^{-1})))
   else if(type=="PlantWUE") ylab = expression(paste("Plant water use efficiency ",(g*C%.%L^{-1})))
+  else if(type=="FPAR") ylab = "Average fraction of PAR (%)"
+  else if(type=="AbsorbedSWRFraction") ylab = "Fraction of absorbed SWR (%)"
   else if(type=="PlantAbsorbedSWR") ylab = expression(paste("Plant absorbed SWR ",(MJ%.%m^{-2}%.%d^{-1})))
   else if(type=="PlantNetLWR") ylab = expression(paste("Plant net LWR ",(MJ%.%m^{-2}%.%d^{-1})))
   else if(type=="PlantExtraction") ylab = expression(paste("Extraction from soil layers   ",(L%.%m^{-2})))

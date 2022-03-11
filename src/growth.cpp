@@ -464,14 +464,16 @@ List growthDayInner(List x, NumericVector meteovec,
   
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(spwbOut["Plants"]);
   List PlantsInst;
-  NumericVector Ag;
-  NumericMatrix AgStep;
+  NumericVector Ag, PARcohort;
+  NumericMatrix AgStep, AnStep;
   int numSteps = 1;
   if(transpirationMode=="Granier") {
     Ag = Plants["GrossPhotosynthesis"];
+    PARcohort= Plants["FPAR"];
   } else {
     PlantsInst = spwbOut["PlantsInst"];
     AgStep  =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["Ag"]);
+    AnStep  =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["An"]);
     numSteps = AgStep.ncol();
   }
 
@@ -529,10 +531,11 @@ List growthDayInner(List x, NumericVector meteovec,
   
   //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
-  NumericVector Psi_Extract, Kmax_stemxylem, Plant_kmax, VCleaf_kmax, VCleaf_c, VCleaf_d;
+  NumericVector Psi_Extract, WUE_decay, Kmax_stemxylem, Plant_kmax, VCleaf_kmax, VCleaf_c, VCleaf_d;
   NumericVector VCstem_kmax, VCstem_c, VCstem_d, VCroot_kmaxVEC, VCroot_c, VCroot_d, VGrhizo_kmaxVEC;
   if(transpirationMode=="Granier") {
     Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
+    WUE_decay = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_decay"]);
   } else {
     Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
     Plant_kmax= paramsTransp["Plant_kmax"];
@@ -655,7 +658,9 @@ List growthDayInner(List x, NumericVector meteovec,
         // Rcout<<j<< " maintenance costs of leaf sugars: "<< (leafSugarMass/B_resp_leaves)<<" sapwood sugars: "<< (sapwoodSugarMass/B_resp_sapwood)<<"\n";
         double B_resp_fineroots = fineRootBiomass[j];
         double QR = qResp(tday);
-        if(LAexpanded>0.0) leafRespDay = B_resp_leaves*RERleaf[j]*QR;
+        if(LAexpanded>0.0) {
+          leafRespDay = B_resp_leaves*RERleaf[j]*QR*std::min(1.0, pow(PARcohort[j]/100.0,WUE_decay[j]));
+        }
         sapwoodResp = B_resp_sapwood*RERsapwood[j]*QR;
         finerootResp = B_resp_fineroots*RERfineroot[j]*QR;
         MaintenanceRespiration[j] += (leafRespDay+sapwoodResp+finerootResp)/TotalLivingBiomass[j]; 
@@ -758,30 +763,35 @@ List growthDayInner(List x, NumericVector meteovec,
           double leafSugarMassStep = sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass);
           double sapwoodSugarMassStep = sugarSapwood[j]*(Volume_sapwood[j]*glucoseMolarMass);
           
+
+          
+          //LEAF PHOTOSYNTHESIS and RESPIRATION
+          double leafRespStep = 0.0;
+          double leafAgStepG = 0.0, leafAnStepG=0.0;
+          if(LAexpanded>0.0){
+            double leafAgStepC = AgStep(j,s)/(N[j]/10000.0); //Translate g C · m-2 · h-1 to g C · h-1
+            double leafAnStepC = AnStep(j,s)/(N[j]/10000.0); //Translate g C · m-2 · h-1 to g C · h-1
+            leafAgStepG = leafAgStepC*(glucoseMolarMass/(carbonMolarMass*6.0)); // from g C· h-1 to g gluc · h-1
+            leafAnStepG = leafAnStepC*(glucoseMolarMass/(carbonMolarMass*6.0)); // from g C· h-1 to g gluc · h-1
+            leafAgG += leafAgStepG;
+            leafRespStep = leafAgStepG - leafAnStepG; //Respiration as Ag - An
+            GrossPhotosynthesisInst(j,s) = leafAgStepG/TotalLivingBiomass[j]; //Ag in g gluc · gdry-1
+            GrossPhotosynthesis[j] += GrossPhotosynthesisInst(j,s); 
+          }
+          
           //MAINTENANCE RESPIRATION
           double B_resp_leaves = LeafStructBiomass[j] + leafSugarMassStep;
           double B_resp_sapwood = SapwoodLivingStructBiomass[j] + sapwoodSugarMassStep;
           double B_resp_fineroots = fineRootBiomass[j];
           double QR = qResp(Tcan[s]);
-          double leafRespStep = 0.0;
-          if(LAexpanded>0.0) leafRespStep = B_resp_leaves*RERleaf[j]*QR/((double) numSteps);
+          leafRespDay +=leafRespStep;
           double sapwoodRespStep = B_resp_sapwood*RERsapwood[j]*QR/((double) numSteps);
           sapwoodResp += sapwoodRespStep;
           double finerootRespStep = B_resp_fineroots*RERfineroot[j]*QR/((double) numSteps);
           finerootResp += finerootRespStep;
-          leafRespDay +=leafRespStep;
           MaintenanceRespirationInst(j,s) = (leafRespStep+sapwoodRespStep+finerootRespStep)/TotalLivingBiomass[j];//Rm in g gluc· gdry-1
           MaintenanceRespiration[j] += MaintenanceRespirationInst(j,s); 
           
-          //PHOTOSYNTHESIS
-          double leafAgStepG = 0.0;
-          if(LAexpanded>0.0) {
-            double leafAgStepC = AgStep(j,s)/(N[j]/10000.0); //Translate g C · m-2 · h-1 to g C · h-1
-            leafAgStepG = leafAgStepC*(glucoseMolarMass/(carbonMolarMass*6.0)); // from g C· h-1 to g gluc · h-1
-            leafAgG += leafAgStepG;
-            GrossPhotosynthesisInst(j,s) = leafAgStepG/TotalLivingBiomass[j]; //Ag in g gluc · gdry-1
-            GrossPhotosynthesis[j] += GrossPhotosynthesisInst(j,s); 
-          }
           
           //GROWTH        
           double growthCostLAStep = 0.0;

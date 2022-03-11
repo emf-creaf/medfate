@@ -202,7 +202,7 @@ The key parameters values used in simulations were the following:
 
 ```{r, echo = FALSE}
 
-df = SpParams[SpParams$SpIndex %in% target_spp, c("Name", "Tmax_LAI", "Tmax_LAIsq", "WUE","Al2As","SLA", "RGRsapwoodmax", "SRsapwood", "fHDmin", "fHDmax")]
+df = SpParams[SpParams$SpIndex %in% target_spp, c("Name", "Tmax_LAI", "Tmax_LAIsq", "WUE","Al2As","Ar2Al", "SLA", "RGRsapwoodmax", "SRsapwood", "fHDmin", "fHDmax")]
 row.names(df) = NULL
 df %>%
   kbl() %>%
