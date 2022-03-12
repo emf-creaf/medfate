@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Forest growth</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-03-10</h4>
+            <h4 data-toc-skip class="date">2022-03-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/ForestGrowth.Rmd" class="external-link"><code>vignettes/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -256,18 +256,18 @@
 <span class="co">## </span>
 <span class="co">##  [Year 2001]: ....................................</span>
 <span class="co">## </span>
-<span class="co">## Final plant biomass (g/m2): 8590.42</span>
-<span class="co">## Change in plant biomass (g/m2): 153.537</span>
-<span class="co">## Plant biomass balance result (g/m2): 153.537</span>
+<span class="co">## Final plant biomass (g/m2): 8613.75</span>
+<span class="co">## Change in plant biomass (g/m2): 176.867</span>
+<span class="co">## Plant biomass balance result (g/m2): 176.867</span>
 <span class="co">## Plant biomass balance components:</span>
-<span class="co">##   Structural balance (g/m2) 276 Labile balance (g/m2) -123</span>
-<span class="co">##   Plant individual balance (g/m2) 154 Mortality loss (g/m2) 0</span>
-<span class="co">## Final soil water content (mm): 269.697</span>
+<span class="co">##   Structural balance (g/m2) 276 Labile balance (g/m2) -99</span>
+<span class="co">##   Plant individual balance (g/m2) 177 Mortality loss (g/m2) 0</span>
+<span class="co">## Final soil water content (mm): 269.693</span>
 <span class="co">## Final snowpack content (mm): 0</span>
-<span class="co">## Change in soil water content (mm): -21.5601</span>
-<span class="co">## Soil water balance result (mm): -21.5601</span>
+<span class="co">## Change in soil water content (mm): -21.5634</span>
+<span class="co">## Soil water balance result (mm): -21.5634</span>
 <span class="co">## Change in snowpack water content (mm): 0</span>
-<span class="co">## Snowpack water balance result (mm): -7.10543e-15</span>
+<span class="co">## Snowpack water balance result (mm): 7.10543e-15</span>
 <span class="co">## Water balance components:</span>
 <span class="co">##   Precipitation (mm) 513</span>
 <span class="co">##   Rain (mm) 462 Snow (mm) 51</span>
@@ -356,9 +356,9 @@
 <code class="sourceCode R"><span class="fu"><a href="../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, 
                  temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span>
-<span class="co">##  12.0000000  -0.2882785 -10.4231365   0.2882785  10.4231365   0.9984759 </span>
+<span class="co">##  12.0000000  -0.2884494 -10.4293171   0.2884494  10.4293171   0.9984748 </span>
 <span class="co">##         NSE     NSE.abs </span>
-<span class="co">##   0.9831867   0.8832680</span></code></pre>
+<span class="co">##   0.9831655   0.8831988</span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically good. For illustrative purposes, we also compare diameter increment values, here drawing the observed and predicted time series together:</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"DI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, 

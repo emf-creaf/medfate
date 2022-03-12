@@ -125,7 +125,6 @@
 <li><p><code>"PlantLAI"</code>: Plant cohort leaf area index (expanded leaves).</p></li>
 <li><p><code>"PlantLAIlive"</code>: Plant cohort leaf area index ("live" leaves).</p></li>
 <li><p><code>"PlantStress"</code>: Plant cohort average daily drought stress.</p></li>
-<li><p><code>"PlantPsi"</code>: Plant cohort water potential (only for <code>transpirationMode = "Granier"</code>).</p></li>
 <li><p><code>"PlantTranspiration"</code>: Plant cohort transpiration.</p></li>
 <li><p><code>"TranspirationPerLeaf"</code>: Plant cohort transpiration per leaf area.</p></li>
 <li><p><code>"PlantGrossPhotosynthesis"</code>: Plant cohort photosynthesis.</p></li>
@@ -133,6 +132,9 @@
 <li><p><code>"StemRWC"</code>:  Average daily stem relative water content.</p></li>
 <li><p><code>"LeafRWC"</code>:  Average daily leaf relative water content.</p></li>
 <li><p><code>"LFMC"</code>:  Live fuel moisture content.</p></li>
+</ul><p>The following plots are available for <code><a href="spwb.html">spwb</a></code> and <code><a href="spwb.html">pwb</a></code> <em>only if</em> <code>transpirationMode = "Granier"</code>:</p><ul><li><p><code>"PlantPsi"</code>: Plant cohort water potential.</p></li>
+<li><p><code>"FPAR"</code>: Fraction of PAR at the canopy level of each plant cohort.</p></li>
+<li><p><code>"AbsorbedSWRFraction"</code>: Fraction of SWR absorbed by each plant cohort.</p></li>
 </ul><p>The following plots are available for <code><a href="spwb.html">spwb</a></code> and <code><a href="spwb.html">pwb</a></code> <em>only if</em> <code>transpirationMode = "Sperry"</code>:</p><ul><li><p><code>"HydraulicRedistribution"</code>: Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network.</p></li>
 <li><p><code>"SoilPlantConductance"</code>: Average instantaneous overall soil plant conductance (calculated as the derivative of the supply function).</p></li>
 <li><p><code>"LeafPsiMin"</code>:  Midday leaf water potential.</p></li>
