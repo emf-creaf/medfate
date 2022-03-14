@@ -5,7 +5,7 @@
 # Version 2.7.0
 - Basic water balance model with relative water content
 - 'pRootDisc' eliminated from species parameters
-- Plant water balance and cuticular tranpiration added to the basic water balance model
+- Plant water balance and cuticular transpiration added to the basic water balance model
 - Water pools revised for the basic and water balance models
 - Shared water pools is now controlled via parameter 'rhizosphereOverlap'
 - New species-specific parameter 'MortalityBaselineRate'
