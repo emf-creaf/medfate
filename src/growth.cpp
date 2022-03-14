@@ -346,8 +346,7 @@ List growthDayInner(List x, NumericVector meteovec,
   List equilibriumOsmoticConcentration  = control["equilibriumOsmoticConcentration"];
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
   double equilibriumSapwoodTotalConc = equilibriumOsmoticConcentration["sapwood"];
-  double minimumRelativeStarchForGrowth = control["minimumRelativeStarchForGrowth"];
-  
+
   //Soil-plant water balance
   List spwbOut;
   if(transpirationMode=="Granier") {
@@ -522,6 +521,7 @@ List growthDayInner(List x, NumericVector meteovec,
   NumericVector RGRfinerootmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRfinerootmax"]);
   NumericVector SRsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["SRsapwood"]);
   NumericVector SRfineroot = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["SRfineroot"]);
+  NumericVector RSSG = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RSSG"]);
   NumericVector MortalityBaselineRate = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["MortalityBaselineRate"]);
   
   //Phenology parameters
@@ -622,7 +622,7 @@ List growthDayInner(List x, NumericVector meteovec,
       double LAlive = leafArea(LAI_live[j], N[j]);
       double LAdead = leafArea(LAI_dead[j], N[j]);
 
-      double minimumStarchForSecondaryGrowth = Starch_max_sapwood[j]*minimumRelativeStarchForGrowth;
+      double minimumStarchForSecondaryGrowth = Starch_max_sapwood[j]*RSSG[j];
       double minimumStarchForPrimaryGrowth = Starch_max_sapwood[j]*0.1;
         
       double leafAgG = 0.0;

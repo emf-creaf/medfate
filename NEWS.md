@@ -10,6 +10,7 @@
 - Shared water pools is now controlled via parameter 'rhizosphereOverlap'
 - New species-specific parameter 'MortalityBaselineRate'
 - Live fuel moisture content now included in simulation results
+- New species-specific parameter 'RSSG' (minimum relative starch for sapwood growth)
 
 # Version 2.6.2
 - Control parameter 'modifyInput' is no longer available. Functions 'spwb', 'pwb' and 'growth' do not modify input objects and return an element 'spwbOutput' or 'growthOutput' with a copy of the final state.

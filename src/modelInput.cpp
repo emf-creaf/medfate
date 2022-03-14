@@ -435,9 +435,9 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
 
   NumericVector WoodC = speciesNumericParameterWithImputation(SP, SpParams, "WoodC", fillMissingSpParams);
   
-  NumericVector RERleaf = speciesNumericParameterWithImputation(SP, SpParams, "RERleaf");
-  NumericVector RERsapwood = speciesNumericParameterWithImputation(SP, SpParams, "RERsapwood");
-  NumericVector RERfineroot = speciesNumericParameterWithImputation(SP, SpParams, "RERfineroot");
+  NumericVector RERleaf = speciesNumericParameterWithImputation(SP, SpParams, "RERleaf", fillMissingSpParams);
+  NumericVector RERsapwood = speciesNumericParameterWithImputation(SP, SpParams, "RERsapwood", fillMissingSpParams);
+  NumericVector RERfineroot = speciesNumericParameterWithImputation(SP, SpParams, "RERfineroot", fillMissingSpParams);
   
   
   NumericVector CCleaf = speciesNumericParameter(SP, SpParams, "CCleaf");
@@ -451,6 +451,9 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   NumericVector fHDmin = speciesNumericParameter(SP, SpParams, "fHDmin");
   NumericVector fHDmax = speciesNumericParameter(SP, SpParams, "fHDmax");
 
+  double minimumRelativeStarchForGrowth_default = control["minimumRelativeStarchForGrowth"];
+  NumericVector RSSG = speciesNumericParameter(SP, SpParams, "RSSG");
+  
   NumericVector MortalityBaselineRate = speciesNumericParameter(SP, SpParams, "MortalityBaselineRate");
   
   List maximumRelativeGrowthRates = control["maximumRelativeGrowthRates"];
@@ -481,6 +484,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
       if(NumericVector::is_na(RGRfinerootmax[c])) RGRfinerootmax[c] = RGRfinerootmax_default;
       if(NumericVector::is_na(SRsapwood[c])) SRsapwood[c] = SRsapwood_default;
       if(NumericVector::is_na(SRfineroot[c])) SRfineroot[c] = SRfineroot_default;
+      if(NumericVector::is_na(RSSG[c])) RSSG[c] = minimumRelativeStarchForGrowth_default;
       if(NumericVector::is_na(MortalityBaselineRate[c])) MortalityBaselineRate[c] = mortalityBaselineRate_default;
     }
   }
@@ -496,6 +500,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
                                                _["RGRfinerootmax"] = RGRfinerootmax,
                                                _["SRsapwood"] = SRsapwood,
                                                _["SRfineroot"] = SRfineroot,
+                                               _["RSSG"] = RSSG,
                                                _["fHDmin"] = fHDmin,
                                                _["fHDmax"] = fHDmax,
                                                _["WoodC"] = WoodC,
