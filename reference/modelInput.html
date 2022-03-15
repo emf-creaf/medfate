@@ -144,7 +144,8 @@
 <li><p><code>alphaSWR</code>: Absorbance coefficient for SWR .</p></li>
 </ul></li>
 <li><p><code>paramsTranspiration</code>: A data frame with parameters for transpiration and photosynthesis. If <code>control$transpirationMode = "Granier"</code>, columns are:
-    </p><ul><li><p><code>Tmax_LAI</code>: Coefficient relating LAI with the ratio of maximum transpiration over potential evapotranspiration.</p></li>
+    </p><ul><li><p><code>Gswmin</code>: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).</p></li>
+<li><p><code>Tmax_LAI</code>: Coefficient relating LAI with the ratio of maximum transpiration over potential evapotranspiration.</p></li>
 <li><p><code>Tmax_LAIsq</code>: Coefficient relating squared LAI with the ratio of maximum transpiration over potential evapotranspiration.</p></li>
 <li><p><code>Psi_Extract</code>: Water potential corresponding to 50% relative conductance (in MPa).</p></li>
 <li><p><code>Psi_Critic</code>: Water potential corresponding to 50% of stem cavitation (in MPa).</p></li>
@@ -152,7 +153,8 @@
 <li><p><code>WUE_decay</code>: Exponential decay coeffient of WUE with PAR.</p></li>
 </ul>
     If <code>control$transpirationMode = "Sperry"</code> columns are:
-    <ul><li><p><code>Gswmax</code>: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).</p></li>
+    <ul><li><p><code>Gswmin</code>: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).</p></li>
+<li><p><code>Gswmax</code>: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).</p></li>
 <li><p><code>Vmax298</code>: Maximum Rubisco carboxilation rate at 25ºC (in micromol CO2·s-1·m-2).</p></li>
 <li><p><code>Jmax298</code>: Maximum rate of electron transport at 25ºC (in micromol photons·s-1·m-2).</p></li>
 <li><p><code>Kmax_stemxylem</code>: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-2).</p></li>
@@ -192,6 +194,7 @@
 <li><p><code>RGRfinerootmax</code>: Maximum fine root relative growth rate (in g dry·g dry-1·day-1).</p></li>
 <li><p><code>SRsapwood</code>: Sapwood daily senescence rate (in day-1).</p></li>
 <li><p><code>SRfineroot</code>: Fine root daily senescence rate (in day-1).</p></li>
+<li><p><code>RSSG</code>: Minimum relative starch for sapwood growth (proportion).</p></li>
 <li><p><code>fHDmin</code>: Minimum value of the height-to-diameter ratio (dimensionless).</p></li>
 <li><p><code>fHDmax</code>: Maximum value of the height-to-diameter ratio (dimensionless).</p></li>
 <li><p><code>WoodC</code>: Wood carbon content per dry weight (g C /g dry).</p></li>
