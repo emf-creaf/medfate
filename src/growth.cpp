@@ -662,7 +662,7 @@ List growthDayInner(List x, NumericVector meteovec,
           leafRespDay = B_resp_leaves*RERleaf[j]*QR*std::min(1.0, pow(PARcohort[j]/100.0,WUE_decay[j]));
         }
         sapwoodResp = B_resp_sapwood*RERsapwood[j]*QR;
-        finerootResp = B_resp_fineroots*RERfineroot[j]*QR;
+        finerootResp = B_resp_fineroots*RERfineroot[j]*QR*(LAexpanded/LAlive);
         MaintenanceRespiration[j] += (leafRespDay+sapwoodResp+finerootResp)/TotalLivingBiomass[j]; 
         
         //PHOTOSYNTHESIS
@@ -787,7 +787,7 @@ List growthDayInner(List x, NumericVector meteovec,
           leafRespDay +=leafRespStep;
           double sapwoodRespStep = B_resp_sapwood*RERsapwood[j]*QR/((double) numSteps);
           sapwoodResp += sapwoodRespStep;
-          double finerootRespStep = B_resp_fineroots*RERfineroot[j]*QR/((double) numSteps);
+          double finerootRespStep = B_resp_fineroots*RERfineroot[j]*QR*(LAexpanded/LAlive)/((double) numSteps);
           finerootResp += finerootRespStep;
           MaintenanceRespirationInst(j,s) = (leafRespStep+sapwoodRespStep+finerootRespStep)/TotalLivingBiomass[j];//Rm in g gluc· gdry-1
           MaintenanceRespiration[j] += MaintenanceRespirationInst(j,s); 
