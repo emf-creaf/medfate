@@ -306,6 +306,8 @@ List transpirationGranier(List x, NumericVector meteovec,
       Eplant[c] = ext_sum;
     }
     PlantPsi[c] = findNewPlantPsiConnected(Eplant[c], PlantPsi[c], rootCrownPsi, parsVol);
+    //For deciduous species, make water potential follow soil during winter
+    if(LAIphe[c]==0.0) PlantPsi[c] = rootCrownPsi;
     double newVol = plantVol(PlantPsi[c], parsVol);
     
     double volDiff = newVol - oldVol;
