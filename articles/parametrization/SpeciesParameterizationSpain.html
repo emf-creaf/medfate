@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.1</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Species parameterization for Spain</h1>
                         <h4 data-toc-skip class="author">Miquel De Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-03-15</h4>
+            <h4 data-toc-skip class="date">2022-03-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/SpeciesParameterizationSpain.Rmd" class="external-link"><code>vignettes/parametrization/SpeciesParameterizationSpain.Rmd</code></a></small>
       <div class="hidden name"><code>SpeciesParameterizationSpain.Rmd</code></div>
@@ -156,10 +156,11 @@
 <span class="co">## [100] "CCleaf"                "CCsapwood"             "CCfineroot"           </span>
 <span class="co">## [103] "RGRleafmax"            "RGRsapwoodmax"         "RGRfinerootmax"       </span>
 <span class="co">## [106] "SRsapwood"             "SRfineroot"            "RSSG"                 </span>
-<span class="co">## [109] "MortalityBaselineRate" "SeedProductionHeight"  "RecrTreeDBH"          </span>
-<span class="co">## [112] "RecrTreeHeight"        "RecrShrubHeight"       "RecrTreeDensity"      </span>
-<span class="co">## [115] "RecrShrubCover"        "RecrZ50"               "RecrZ95"              </span>
-<span class="co">## [118] "MinTempRecr"           "MinMoistureRecr"       "MinFPARRecr"</span></code></pre>
+<span class="co">## [109] "MortalityBaselineRate" "SeedProductionHeight"  "ProbRecr"             </span>
+<span class="co">## [112] "MinTempRecr"           "MinMoistureRecr"       "MinFPARRecr"          </span>
+<span class="co">## [115] "RecrTreeDBH"           "RecrTreeHeight"        "RecrShrubHeight"      </span>
+<span class="co">## [118] "RecrTreeDensity"       "RecrShrubCover"        "RecrZ50"              </span>
+<span class="co">## [121] "RecrZ95"</span></code></pre>
 <p>It is obvious that such a sheer number of parameters cannot be searched for manually, even for a small number of target species. Hence, it is important to draw values from allometric and plant trait data bases. Not all model parameters have their counterpart in publicly-available databases, and even when using data bases it is unlikely that one will find appropriate parameter values for all species. To help with this situation, <strong>medfate</strong> has <em>inbuilt imputation procedures</em> to estimate missing values for many parameters before starting model simulations. However, imputed parameter estimates will normally be worse than estimates coming from data bases. Hence, we should put a strong effort in finding source parameter data before relying on inbuilt imputation.</p>
 </div>
 <div class="section level3">
