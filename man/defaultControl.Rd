@@ -103,12 +103,13 @@ A list, with the following options (default values in parentheses):
 \bold{Forest dynamics}:
 \itemize{
    \item{\code{allowRecruitment (=TRUE)}: Boolean flag to indicate that recruitment is allowed.}
-   \item{\code{ recruitmentMode [= "deterministic"]}: String describing how recruitment is applied. Current accepted values are "deterministic" or "stochastic".}
+   \item{\code{ recruitmentMode [= "stochastic"]}: String describing how recruitment is applied. Current accepted values are "deterministic" or "stochastic".}
    \item{\code{ removeEmptyCohorts [= TRUE]}: Boolean flag to indicate the removal of cohorts whose density is too low.}
    \item{\code{ minimumCohortDensity [= 1]}: Threshold of density resulting in cohort removal.}
    \item{\code{ seedRain [= NULL]}: Vector of species codes whose seed rain is to be simulated. If \code{NULL} the species identity of seed rain is taken from species currently present in the forest stand and with minimum size (see below).}
    \item{\code{ seedProductionTreeHeight [= 300]}: Default minimum tree height for producing seeds (when species parameter \code{SeedProductionHeight} is missing).}
    \item{\code{ seedProductionShrubHeight [= 30]}: Default minimum shrub height for producing seeds (when species parameter \code{SeedProductionHeight} is missing).}
+   \item{\code{probRecr = [0.05]}: Default annual probability of recruitment (when species parameter \code{ProbRecr} is missing).}
    \item{\code{ minTempRecr [= 0]}: Default threshold of minimum average temperature of the coldest month necessary for recruiting (when species parameter \code{MinTempRecr} is missing).} 
    \item{\code{ minMoistureRecr [= 0.3]}: Default threshold of minimum moisture index (annual precipitation over annual ETP) necessary for recruiting (when species parameter \code{MinMoistureRecr} is missing).} 
    \item{\code{ minFPARRecr [= 10]}: Default threshold of minimum fraction of PAR (in \%)  reaching the ground necessary for recruiting (when species parameter \code{MinFPARRecr} is missing).} 

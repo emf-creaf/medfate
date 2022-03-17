@@ -1,7 +1,7 @@
 recruitment<-function(forest, SpParams, control,
                       minMonthTemp, moistureIndex) {
   if((nrow(forest$treeData)>0) || (nrow(forest$shrubData)>0)) {
-    PARperc = vprofile_PARExtinction(forest, SpParams, draw = FALSE)[1]
+    PARperc = light_PARground(forest, SpParams)
   } else {
     PARperc = 100
   } 
@@ -35,11 +35,10 @@ recruitment<-function(forest, SpParams, control,
   ## Determine if species can recruit 
   tree_recr_selection = logical(0)
   tree_minFPAR = numeric(0)
-  tree_maxN = numeric(0)
   if(length(treeSpp)>0) {
     recr_forest$treeData$Species = treeSpp
-    tree_maxN = species_parameter(treeSpp, SpParams, "RecrTreeDensity")
-    tree_maxN[is.na(tree_maxN)] = control$recrTreeDensity
+    recr_forest$treeData$N = species_parameter(treeSpp, SpParams, "RecrTreeDensity")
+    recr_forest$treeData$N[is.na(recr_forest$treeData$N)] = control$recrTreeDensity
     recr_forest$treeData$DBH = species_parameter(treeSpp, SpParams, "RecrTreeDBH")
     recr_forest$treeData$DBH[is.na(recr_forest$treeData$DBH)] = control$recrTreeDBH
     recr_forest$treeData$Height = species_parameter(treeSpp, SpParams, "RecrTreeHeight")
@@ -58,11 +57,10 @@ recruitment<-function(forest, SpParams, control,
   }
   shrub_recr_selection = logical(0)
   shrub_minFPAR = numeric(0)
-  shrub_maxCover = numeric(0)
   if((length(shrubSpp)>0)) {
     recr_forest$shrubData$Species = shrubSpp
-    shrub_maxCover = species_parameter(shrubSpp, SpParams, "RecrShrubCover")
-    shrub_maxCover[is.na(shrub_maxCover)] = control$recrShrubCover
+    recr_forest$shrubData$Cover = species_parameter(shrubSpp, SpParams, "RecrShrubCover")
+    recr_forest$shrubData$Cover[is.na(recr_forest$shrubData$Cover)] = control$recrShrubCover
     recr_forest$shrubData$Height = species_parameter(shrubSpp, SpParams, "RecrShrubHeight")
     recr_forest$shrubData$Height[is.na(recr_forest$shrubData$Height)] = control$recrShrubHeight
     recr_forest$shrubData$Z50 = species_parameter(shrubSpp, SpParams, "RecrZ50")
@@ -77,42 +75,21 @@ recruitment<-function(forest, SpParams, control,
     shrub_minFPAR[is.na(shrub_minFPAR)] = control$minFPARRecr
     shrub_recr_selection = (minMonthTemp > minTemp) & (moistureIndex > minMoisture) & (PARperc > shrub_minFPAR)
     if(!control$shrubDynamics) shrub_recr_selection = rep(FALSE, nrow(recr_forest$shrubData))
-    # recrString = paste0(shrubSpp[recr_selection], collapse =",")
-    # if(verboseDyn) {
-    #   if(recrString=="") recrString = "<none>"
-    #   cat(paste0("       Shrub species with seed rain: ", paste0(shrubSpp, collapse =","), 
-    #              " recruited: ", recrString ,"\n"))
-    # }
   }
-  ntree = length(tree_recr_selection)
-  nshrub = length(shrub_recr_selection)
-  ind_area = plant_individualArea(recr_forest, SpParams)
-  shr_area = ind_area[(ntree+1):(ntree+nshrub)]
-  recr_step_N = 10
-  while(sum(tree_recr_selection)>0 || sum(shrub_recr_selection)>0) {
-    ini_N = plant_density(recr_forest, SpParams)
-    # print(ini_N)
-    if(sum(tree_recr_selection)>0) {
-      ini_N_trees = ini_N[1:ntree]
-      recr_forest$treeData$N[tree_recr_selection] = ini_N_trees[tree_recr_selection] + recr_step_N 
-    }
-    if(sum(shrub_recr_selection)>0) {
-      ini_N_shrubs = ini_N[(ntree+1):(ntree+nshrub)]
-      cover_new = pmin(shrub_maxCover, (ini_N_shrubs+recr_step_N)*shr_area/100)
-      recr_forest$shrubData$Cover[shrub_recr_selection] = cover_new[shrub_recr_selection]
-    }
-    # Recalculate light and recruitment selection
-    forest_plus = forest
-    forest_plus$treeData = rbind(forest$treeData, recr_forest$treeData)
-    forest_plus$shrubData = rbind(forest$shrubData, recr_forest$shrubData)
-    PARperc = light_PARground(forest_plus, SpParams)
-    tree_recr_selection = tree_recr_selection & (PARperc > tree_minFPAR) & (recr_forest$treeData$N < tree_maxN)
-    shrub_recr_selection = shrub_recr_selection & (PARperc > shrub_minFPAR) & (recr_forest$shrubData$Cover < shrub_maxCover)
-  }
-  # Add individuals progressively, as long as species can recruit given light limitations
+
+  tree_recr_prob = species_parameter(treeSpp, SpParams, "ProbRecr")
+  tree_recr_prob[is.na(tree_recr_prob)] = control$probRecr
+  tree_recr_prob[!tree_recr_selection] = 0
+  shrub_recr_prob = species_parameter(shrubSpp, SpParams, "ProbRecr")
+  shrub_recr_prob[is.na(shrub_recr_prob)] = control$probRecr
+  shrub_recr_prob[!shrub_recr_selection] = 0
+  
   if(control$recruitmentMode=="stochastic") {
-    recr_forest$treeData$N = rpois(length(treeSpp), recr_forest$treeData$N)
-    recr_forest$shrubData$Cover = rpois(length(shrubSpp), recr_forest$shrubData$Cover)
+    recr_forest$treeData$N = rbinom(length(treeSpp), size = 1, prob = tree_recr_prob)*rpois(length(treeSpp), recr_forest$treeData$N)
+    recr_forest$shrubData$Cover = rbinom(length(shrubSpp), size = 1, prob = shrub_recr_prob)*rpois(length(shrubSpp), recr_forest$shrubData$Cover)
+  } else {
+    recr_forest$treeData$N = recr_forest$treeData$N*tree_recr_prob
+    recr_forest$shrubData$Cover = recr_forest$shrubData$Cover*shrub_recr_prob
   }
   recr_forest$treeData = recr_forest$treeData[recr_forest$treeData$N>0, ,drop=FALSE]
   recr_forest$shrubData = recr_forest$shrubData[recr_forest$shrubData$Cover>0, ,drop=FALSE]

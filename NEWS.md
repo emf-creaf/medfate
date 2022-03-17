@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.7.1
+- Revision of recruitment model, with the addition of a recruitment probability (ProbRecr) within the bioclimatic limits
+
 # Version 2.7.0
 - Basic water balance model with relative water content
 - 'pRootDisc' eliminated from species parameters
