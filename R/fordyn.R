@@ -147,8 +147,10 @@ fordyn<-function(forest, soil, SpParams,
     forest = forest$NextForestObject
   } else {
     #Subset columns relevant for fordyn (in case there are other)
-    forest$treeData = forest$treeData[,c("Species","DBH", "Height","N","Z50","Z95")]
-    forest$shrubData = forest$shrubData[,c("Species","Height","Cover", "Z50","Z95")]
+    if(control$allowRecruitment) {
+      forest$treeData = forest$treeData[,c("Species","DBH", "Height","N","Z50","Z95")]
+      forest$shrubData = forest$shrubData[,c("Species","Height","Cover", "Z50","Z95")]
+    }
     xi = forest2growthInput(forest, soil, SpParams, control)
   }
   forestStructures[[1]] = forest
