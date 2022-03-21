@@ -2,9 +2,9 @@
 \name{defaultControl}
 \alias{defaultControl}
 
-\title{Default simulation control parameters for models}
+\title{Control parameters for simulation models}
 \description{
-Creates a list with global default parameters for simulation models.
+Creates a list control parameters default values for simulations.
 }
 \usage{
 defaultControl(transpirationMode = "Granier") 
@@ -24,7 +24,7 @@ A list, with the following options (default values in parentheses):
    \item{\code{fillMissingSpParams (=TRUE)}: Boolean flag to indicate that functions \code{\link{spwbInput}} and \code{\link{growthInput}} should provide estimates for functional parameters if these are lacking in the species parameter table \code{\link{SpParams}}. Note that if \code{fillMissingSpParams} is set to \code{FALSE} then simulations may fail if the user does not provide values for required parameters.}
    \item{\code{subdailyResults (=FALSE)}: Boolean flag to force subdaily results to be stored (as a list called 'subdaily' of \code{\link{spwb_day}} objects, one by simulated date) in calls to \code{\link{spwb}}. In function \code{fordyn} \code{subdailyResults} is always set to FALSE.}
 }
-\bold{Water balance}:
+\bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}}):
 \itemize{
    \item{\code{transpirationMode (="Granier")}: Transpiration model (either 'Granier' or 'Sperry'). See \code{\link{spwbInput}}.}
    \item{\code{soilFunctions (="SX")}: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten). If \code{transpirationMode = "Sperry"} then soilFunctions is set by default to \code{'VG'}.}
@@ -52,7 +52,7 @@ A list, with the following options (default values in parentheses):
     }
   }
 }
-\bold{Water balance with 'Sperry'}:
+\bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Sperry"}):
 \itemize{
    \item{\code{ndailysteps (= 24)}: Number of steps into which each day is divided for determination of stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).}
    \item{\code{nsubsteps (= 3600)}: Number of substeps into which each step is divided for multi-layer canopy energy balance solving.}
@@ -79,7 +79,7 @@ A list, with the following options (default values in parentheses):
    \item{\code{boundaryLayerSize (= 2000)}: Size of the boundary layer (in cm) over the canopy (relevant for multi-layer canopy energy balance).}
    \item{\code{refillMaximumRate (= 0.05)}: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).}
 }
-\bold{Growth/mortality}:
+\bold{Forest growth} (functions \code{\link{growth}} or \code{\link{growth_day}}):
 \itemize{
    \item{\code{allowDessication (=TRUE)}: Boolean flag to indicate that mortality by dessication is allowed.}
    \item{\code{allowStarvation (=TRUE)}: Boolean flag to indicate that mortality by starvation is allowed.}
@@ -100,7 +100,7 @@ A list, with the following options (default values in parentheses):
    \item{\code{mortalityRelativeSugarThreshold [= 0.3]}: Threshold of stem sugar concentration, in relation to the equilibrium sugar concentration, resulting in an increased mortality rate/probability whenever levels are below.}
    \item{\code{mortalityRWCThreshold [= 0.3]}: Threshold of stem relative water content resulting in increased mortality rate/probability whenever levels are below.}
 }
-\bold{Forest dynamics}:
+\bold{Forest dynamics} (function \code{\link{fordyn}}):
 \itemize{
    \item{\code{allowRecruitment (=TRUE)}: Boolean flag to indicate that recruitment is allowed.}
    \item{\code{ recruitmentMode [= "stochastic"]}: String describing how recruitment is applied. Current accepted values are "deterministic" or "stochastic".}
@@ -129,5 +129,5 @@ A list, with the following options (default values in parentheses):
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
- \code{\link{spwbInput}}, \code{\link{spwb}}
+ \code{\link{spwbInput}}, \code{\link{spwb}}, \code{\link{growth}}, \code{\link{fordyn}}
 }
