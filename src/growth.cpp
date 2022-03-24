@@ -967,7 +967,7 @@ List growthDayInner(List x, NumericVector meteovec,
 
       //Define sapwood senescense
       double propSASenescence = SRsapwood[j]/(1.0+15.0*exp(-0.01*H[j]));
-      double deltaSASenescence = propSASenescence*SA[j];
+      double deltaSASenescence = propSASenescence*SA[j]*std::max(0.0,(tday-5.0)/20.0);
       
       //FRB SENESCENCE
       NumericVector deltaFRBsenescence(numLayers, 0.0);

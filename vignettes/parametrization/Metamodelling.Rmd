@@ -2,6 +2,7 @@
 title: "Meta-modelling exercise"
 author: "Miquel De Cáceres"
 date: "`r Sys.Date()`"
+always_allow_html: true
 output: 
   rmarkdown::html_document:
     toc: TRUE
@@ -95,11 +96,12 @@ We examined if there were systematic differences in annual transpiration (E) bet
 The following plot displays the ratio between cohort annual E estimates obtained using the basic and advanced models, where we use the percentage of PAR of the plant cohort in the x-axis to show whether the relationship changes between sunlit or shade cohorts:
 
 ```{r, echo = FALSE, fig = TRUE, message=FALSE}
-ggplot(df, aes(x = PAR, y = E_ratio))+
+g1<-ggplot(df, aes(x = PAR, y = E_ratio))+
   geom_point(aes(col = Name), size=0.3, alpha = 0.3)+
   geom_smooth(method = "loess", aes(group = Name, col = Name))+
-  ylab("E (advanced) / E (basic)")+xlab("PAR (%)")+
+  ylab("E (advanced) / E (basic)")+xlab("FPAR (%)")+
   theme_bw()
+g1
 ```
 
 It is evident that there are differences in the average ratio across species and apparently this ratio does not change with the vertical position of the cohort within the canopy. We can estimate species-average ratios and use them to multiply the default coefficients of Granier's (1999) equation (default values for parameters `Tmax_LAI = 0.134` and `Tmax_LAIsq = -0.006`).
@@ -136,24 +138,24 @@ df2 = df[df$PAR_max >90,]
 ```
 Using this selection, we then draw the relationship between PAR and WUEg:
 ```{r, echo = FALSE}
-g1<-ggplot(df2, aes(x = PAR, y = WUEg))+
+ggplot(df2, aes(x = PAR, y = WUEg))+
   geom_point(aes(col = Name), size=0.3)+
-  xlab("% PAR")+ ylab("WUE (g C/L H20)")+
+  xlab("FPAR (%)")+ ylab("WUE (g C/L H20)")+
   theme(legend.position = "none")+
   theme_bw()
-g1
 ```
 
-where we see that the relationship is species-specific. WUE is known to decrease for parts of the canopy receiving less light (e.g. Medrano et al. 2012). We can now plot relative WUE in relationship to PAR:
+where we see that the relationship is species-specific. WUE is known to decrease for parts of the canopy receiving less light (e.g. Medrano et al. 2012). We can now plot relative WUE in relationship to FPAR:
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 ggplot(df2, aes(x = PAR, y = WUEg_rel))+
   geom_point(aes(col = Name), size = 0.3)+
-  xlab("% PAR")+ ylab("% WUEg/WUEg_max")+
+  xlab("FPAR (%)")+ ylab("% WUEg/WUEg_max")+
   theme_bw()
 ```
 
-Note that the relationship between relative WUE and PAR is less noisy than the relationship between absolute WUE and PAR. For each species, we fit a non-linear model where relative WUE is a power function of PAR:
+Note that the relationship between relative WUE and PAR is less noisy than the relationship between absolute WUE and FPAR. For each species, we fit a non-linear model where relative WUE is a power function of FPAR:
+
 ```{r, echo = FALSE}
 b = rep(NA, length(target_spp))
 Pred = numeric(0)
@@ -170,19 +172,29 @@ df2$Pred = Pred
 df$WUEg_max_pred = WUEg_max_pred
 ```
 
-We now draw again the previous plot with the species-specific fitted relationships, i.e. relative WUEg as a function of PAR:
+We now draw again the previous plot with the species-specific fitted relationships, i.e. relative WUEg as a function of FPAR:
+
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 g2<-ggplot(df2, aes(x = PAR, y = WUEg_rel))+
   geom_point(aes(col = Name), size = 0.3, alpha = 0.3)+
-  geom_line(aes(x=PAR, y=Pred, col = Name))+
+  geom_line(aes(x=PAR, y=Pred, col = Name), size = 1)+
   ylim(c(0,100))+ xlim(c(0,100))+
-  ylab("% WUEg/WUEg_max")+
-  xlab("% PAR")+
+  ylab("WUEg/max(WUEg) (%)")+
+  xlab("FPAR (%)")+
   theme_bw()
 g2
 ```
 
 Note that there are substantial differences in the decay coefficients among species.
+
+```{r, echo = FALSE}
+l = get_legend(g2)
+g <- plot_grid(g1 + theme(legend.position = "none"), 
+               g2 + theme(legend.position = "none"), 
+               l, ncol=3,
+               rel_widths = c(1,1,0.5))
+ggsave2("meta_fit.png", g, width = 9, height = 4)
+```
 
 ### Maximum WUE per species
 
@@ -252,11 +264,32 @@ g4<-ggplot(df, aes(x=Ag_granier_meta, y = Ag_sperry))+
   ylim(c(0,1500))+ xlim(c(0,1500))+
   xlab("Annual Ag (basic; new parameters)")+ ylab("Annual Ag (advanced)")+
   theme_bw()+theme(legend.position = "none")
-g<-plot_grid(g1,g2,g3,g4, ncol=2)
-plot_grid(g,l, ncol=2, rel_widths = c(1,0.2))
+g0<-plot_grid(g1,g2,g3,g4, ncol=2)
+g<-plot_grid(g0,l, ncol=2, rel_widths = c(1,0.2))
+ggsave("meta_eval.png", plot_grid(g3,g4,l, ncol=3, rel_widths = c(1,1,0.5)), width=9, height = 4)
+g
 ```
 
 
+<!-- ```{r, echo = FALSE} -->
+<!-- sel_E = (df$E_sperry < 300) -->
+<!-- m = lm(E_sperry~-1+E_granier, data = df[sel_E,]) -->
+<!-- summary(m) -->
+<!-- ``` -->
+
+<!-- ```{r, echo = FALSE} -->
+<!-- m = lm(E_sperry~-1+E_granier_meta, data = df[sel_E,]) -->
+<!-- summary(m) -->
+<!-- ``` -->
+
+<!-- # ```{r, echo = FALSE} -->
+<!-- # m = lm(Ag_sperry~-1+Ag_granier, data = df) -->
+<!-- # summary(m) -->
+<!-- # ``` -->
+<!-- # ```{r, echo = FALSE} -->
+<!-- # m = lm(Ag_sperry~-1+Ag_granier_meta, data = df) -->
+<!-- # summary(m) -->
+<!-- # ``` -->
 
 ## References
 

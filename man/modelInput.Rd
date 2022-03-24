@@ -172,6 +172,7 @@ Functions \code{forest2growthInput} and \code{growthInput} return a list of clas
     \item{\code{fHDmin}: Minimum value of the height-to-diameter ratio (dimensionless).}
     \item{\code{fHDmax}: Maximum value of the height-to-diameter ratio (dimensionless).}
     \item{\code{WoodC}: Wood carbon content per dry weight (g C /g dry).}
+    \item{\code{MortalityBaselineRate}: Deterministic proportion or probability specifying the baseline reduction of cohort's density occurring in a year.}
      }
 }
 \item{\code{paramsAllometry}: A data frame with allometric parameters for each cohort:
