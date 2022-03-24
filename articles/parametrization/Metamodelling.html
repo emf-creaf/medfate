@@ -73,7 +73,7 @@
       <h1 data-toc-skip>Meta-modelling exercise</h1>
                         <h4 data-toc-skip class="author">Miquel De Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-03-17</h4>
+            <h4 data-toc-skip class="date">2022-03-24</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/Metamodelling.Rmd" class="external-link"><code>vignettes/parametrization/Metamodelling.Rmd</code></a></small>
       <div class="hidden name"><code>Metamodelling.Rmd</code></div>
@@ -996,11 +996,15 @@ Quercus suber
 </h3>
 <p>We want to build a model of the relative WUE as a function of available PAR, so that we can reduce species-level maximum WUE values for cohorts in the shadow. To fit such model we need good estimates of relative WUE, because this implies that the maximum WUE values correspond to high PAR. With this aim, we focus on those records corresponding to plots/species where at least 90% of PAR was available for at least one cohort of the species in the plot.</p>
 <p>Using this selection, we then draw the relationship between PAR and WUEg: <img src="Metamodelling_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
-<p>where we see that the relationship is species-specific. WUE is known to decrease for parts of the canopy receiving less light (e.g. Medrano et al. 2012). We can now plot relative WUE in relationship to PAR:</p>
+<p>where we see that the relationship is species-specific. WUE is known to decrease for parts of the canopy receiving less light (e.g. Medrano et al. 2012). We can now plot relative WUE in relationship to FPAR:</p>
 <p><img src="Metamodelling_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
-<p>Note that the relationship between relative WUE and PAR is less noisy than the relationship between absolute WUE and PAR. For each species, we fit a non-linear model where relative WUE is a power function of PAR:</p>
-<p>We now draw again the previous plot with the species-specific fitted relationships, i.e. relative WUEg as a function of PAR: <img src="Metamodelling_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+<p>Note that the relationship between relative WUE and PAR is less noisy than the relationship between absolute WUE and FPAR. For each species, we fit a non-linear model where relative WUE is a power function of FPAR:</p>
+<p>We now draw again the previous plot with the species-specific fitted relationships, i.e. relative WUEg as a function of FPAR:</p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 <p>Note that there are substantial differences in the decay coefficients among species.</p>
+<pre><code><span class="co">## Warning: Removed 26 rows containing missing values (geom_point).</span></code></pre>
+<pre><code><span class="co">## `geom_smooth()` using formula 'y ~ x'</span></code></pre>
+<pre><code><span class="co">## Warning: Removed 26 rows containing missing values (geom_point).</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="maximum-wue-per-species">Maximum WUE per species<a class="anchor" aria-label="anchor" href="#maximum-wue-per-species"></a>
@@ -1545,7 +1549,24 @@ Quercus suber
 </h3>
 <p>Here we evaluated whether the estimated parameters indeed increased the similarity of transpiration (E) and gross photosynthesis (Ag) estimates between the two models. To this aim we ran again the basic water balance model on all the forest plots but using the estimated parameters instead of the default values.</p>
 <p>The following plots show the effect of the new parameters on annual E and annual Ag for plant cohorts of the plots included in the study:</p>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-14-1.png" width="960"></p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-15-1.png" width="960"></p>
+<!-- ```{r, echo = FALSE} -->
+<!-- sel_E = (df$E_sperry < 300) -->
+<!-- m = lm(E_sperry~-1+E_granier, data = df[sel_E,]) -->
+<!-- summary(m) -->
+<!-- ``` -->
+<!-- ```{r, echo = FALSE} -->
+<!-- m = lm(E_sperry~-1+E_granier_meta, data = df[sel_E,]) -->
+<!-- summary(m) -->
+<!-- ``` -->
+<!-- # ```{r, echo = FALSE} -->
+<!-- # m = lm(Ag_sperry~-1+Ag_granier, data = df) -->
+<!-- # summary(m) -->
+<!-- # ``` -->
+<!-- # ```{r, echo = FALSE} -->
+<!-- # m = lm(Ag_sperry~-1+Ag_granier_meta, data = df) -->
+<!-- # summary(m) -->
+<!-- # ``` -->
 </div>
 </div>
 <div class="section level2">
