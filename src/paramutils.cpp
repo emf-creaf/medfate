@@ -699,9 +699,10 @@ NumericVector psiExtractWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector leafPI0 = leafPI0WithImputation(SP, SpParams);
   NumericVector leafEPS = leafEPSWithImputation(SP, SpParams);
   NumericVector Psi_Extract = speciesNumericParameter(SP, SpParams, "Psi_Extract");
+  double corr = pow(log(0.5)/log(0.05), 1.0/3.0); //Weibull's shape = 3.0
   for(int c=0;c<Psi_Extract.size();c++) {
     if(NumericVector::is_na(Psi_Extract[c])) {
-      Psi_Extract[c] = turgorLossPoint(leafPI0[c], leafEPS[c]);
+      Psi_Extract[c] = corr*turgorLossPoint(leafPI0[c], leafEPS[c]);
     }
   }
   return(Psi_Extract);
