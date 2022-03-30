@@ -193,7 +193,7 @@ g <- plot_grid(g1 + theme(legend.position = "none"),
                g2 + theme(legend.position = "none"), 
                l, ncol=3,
                rel_widths = c(1,1,0.5))
-ggsave2("meta_fit.png", g, width = 9, height = 4)
+# ggsave2("meta_fit.png", g, width = 9, height = 4)
 ```
 
 ### Maximum WUE per species
@@ -266,7 +266,7 @@ g4<-ggplot(df, aes(x=Ag_granier_meta, y = Ag_sperry))+
   theme_bw()+theme(legend.position = "none")
 g0<-plot_grid(g1,g2,g3,g4, ncol=2)
 g<-plot_grid(g0,l, ncol=2, rel_widths = c(1,0.2))
-ggsave("meta_eval.png", plot_grid(g3,g4,l, ncol=3, rel_widths = c(1,1,0.5)), width=9, height = 4)
+# ggsave("meta_eval.png", plot_grid(g3,g4,l, ncol=3, rel_widths = c(1,1,0.5)), width=9, height = 4)
 g
 ```
 

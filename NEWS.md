@@ -6,6 +6,7 @@
 - Revision of recruitment model, with the addition of a recruitment probability (ProbRecr) within the bioclimatic limits
 - Temperature effects on sapwood conversion to heartwood
 - Correction of estimation of Psi_Extract from turgor loss point
+- Estimation of RSSG from shade tolerance
 
 # Version 2.7.0
 - Basic water balance model with relative water content

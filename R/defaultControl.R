@@ -51,7 +51,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     phloemConductanceFactor = 0.2, # phloem conductance per leaf area basis (l*m-2*MPa-1*s-1)
     nonSugarConcentration = 0.25, # mol · l-1
     equilibriumOsmoticConcentration = list(leaf = 0.8, sapwood = 0.6),  # (Paljakka et al. 2017)
-    minimumRelativeStarchForGrowth = 0.25,
+    minimumRelativeStarchForGrowth = 0.50,
     constructionCosts = list(leaf = 1.5, 
                              sapwood = 1.47, 
                              fineroot = 1.30), #  g gluc · g dw -1
@@ -61,7 +61,7 @@ defaultControl<-function(transpirationMode = "Granier") {
                                       sapwood = 0.005, # cm2 sapwood ·cm-2 sapwood· day-1
                                       fineroot = 0.1), # g dw · g dw -1 · day -1
     mortalityMode = "density/deterministic",
-    mortalityBaselineRate = 0.0,
+    mortalityBaselineRate = 0.0015,
     mortalityRelativeSugarThreshold = 0.3,
     mortalityRWCThreshold = 0.3,
     
