@@ -1690,6 +1690,28 @@ The distribution of parameter values is:
 summary(SpParams[,c("CCleaf", "CCsapwood", "CCfineroot")])
 ```
 
+#### Relative starch for sapwood growth
+Relative starch for sapwood growth ($RSSG$) is a threshold indicating when sapwood formation is possible. For relative starch levels below this threshold sapwood growth is not possible, so that carbon is saved for maintenance and replacement of leaves/fine roots. This parameter is related to shade tolerance, because a high $RSSG$ allows the plant to survive with low carbon assimilation at the cost of not growing. 
+
+Shadow tolerance is available at TRY (TraitID = 603), but data is in several scales depending on the data set. We selected data set 49, which corresponds to @Niinemets2006 and describes shade tolerance in a scale from 1 to 5:
+```{r RSSG}
+TRY_ShadeTol <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_603.rds"))
+TRY_ShadeTol <- TRY_ShadeTol[TRY_ShadeTol$DatasetID==49,]
+```
+
+We estimated $RSSG$ as a linear function of shade tolerance, with 1 corresponding to 25% of relative starch and 5 corresponding to 95%:
+```{r}
+TRY_ShadeTol$OrigValueStr<- as.numeric(TRY_ShadeTol$OrigValueStr)
+SpParams <- populateTraits(SpParams, TRY_ShadeTol, 
+                           trait_mapping = c("RSSG" = "OrigValueStr"),
+                           scalar_functions = c("RSSG" = function(x){0.25+0.70*((x-1)/4)}), 
+                           taxon_column = "AccSpeciesName")
+```
+
+The distribution of parameter values after estimation is:
+```{r}
+summary(SpParams[,c("RSSG")])
+```
 
 ## Initialize forest plot lists for Spain
 
