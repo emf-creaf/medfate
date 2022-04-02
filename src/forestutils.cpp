@@ -202,13 +202,7 @@ NumericVector dbhClassBasalArea(List x, NumericVector DBHbreaks) {
   return(dcBA);
 }
 // [[Rcpp::export("stand_basalArea")]]
-double standBasalArea(List x) {
-  NumericVector ba = cohortBasalArea(x);
-  double tba = 0.0;
-  for(int i=0;i<ba.size();i++){if(!NumericVector::is_na(ba[i])) tba+=ba[i];}
-  return(tba);
-}
-double standBasalAreaForMinDBH(List x, double minDBH) {
+double standBasalArea(List x, double minDBH = 7.5) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   NumericVector tba = treeBasalArea(treeData["N"], treeData["DBH"]);
   NumericVector treeDBH = treeData["DBH"];

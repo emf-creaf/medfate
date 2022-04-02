@@ -101,8 +101,8 @@
 }
 .summarizeStand<-function(step, cohSum, x) {
   isTree = !is.na(x$above$DBH)
-  HB = .hartBeckingIndex(x$above$N[isTree], x$above$H[isTree])
-  domH = .dominantTreeHeight(x$above$N[isTree], x$above$H[isTree])
+  HB = .hartBeckingIndex(x$above$N[isTree], x$above$H[isTree], x$above$DBH[isTree])
+  domH = .dominantTreeHeight(x$above$N[isTree], x$above$H[isTree], x$above$DBH[isTree])
   domDBH = .dominantTreeDiameter(x$above$N[isTree], x$above$DBH[isTree])
   qmDBH = .quadraticMeanTreeDiameter(x$above$N[isTree], x$above$DBH[isTree])
   standSumYear = data.frame("Step" = step,

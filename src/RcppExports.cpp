@@ -389,13 +389,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // standBasalArea
-double standBasalArea(List x);
-RcppExport SEXP _medfate_standBasalArea(SEXP xSEXP) {
+double standBasalArea(List x, double minDBH);
+RcppExport SEXP _medfate_standBasalArea(SEXP xSEXP, SEXP minDBHSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(standBasalArea(x));
+    Rcpp::traits::input_parameter< double >::type minDBH(minDBHSEXP);
+    rcpp_result_gen = Rcpp::wrap(standBasalArea(x, minDBH));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4849,7 +4850,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_cohortBasalArea", (DL_FUNC) &_medfate_cohortBasalArea, 1},
     {"_medfate_speciesBasalArea", (DL_FUNC) &_medfate_speciesBasalArea, 2},
     {"_medfate_cohortLargerTreeBasalArea", (DL_FUNC) &_medfate_cohortLargerTreeBasalArea, 1},
-    {"_medfate_standBasalArea", (DL_FUNC) &_medfate_standBasalArea, 1},
+    {"_medfate_standBasalArea", (DL_FUNC) &_medfate_standBasalArea, 2},
     {"_medfate_individualArea", (DL_FUNC) &_medfate_individualArea, 3},
     {"_medfate_cohortDensity", (DL_FUNC) &_medfate_cohortDensity, 3},
     {"_medfate_speciesDensity", (DL_FUNC) &_medfate_speciesDensity, 3},

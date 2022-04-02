@@ -113,8 +113,8 @@ plant_largerTreeBasalArea <- function(x) {
     .Call(`_medfate_cohortLargerTreeBasalArea`, x)
 }
 
-stand_basalArea <- function(x) {
-    .Call(`_medfate_standBasalArea`, x)
+stand_basalArea <- function(x, minDBH = 7.5) {
+    .Call(`_medfate_standBasalArea`, x, minDBH)
 }
 
 plant_individualArea <- function(x, SpParams, mode = "MED") {

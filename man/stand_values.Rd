@@ -16,11 +16,11 @@
 Functions to calculate stand attributes of a \code{\link{forest}} object.
 }
 \usage{
-stand_basalArea(x)
-stand_dominantTreeHeight(x)
-stand_dominantTreeDiameter(x)
-stand_quadraticMeanTreeDiameter(x)
-stand_hartBeckingIndex(x)
+stand_basalArea(x, minDBH = 7.5)
+stand_dominantTreeHeight(x, minDBH = 7.5)
+stand_dominantTreeDiameter(x, minDBH = 7.5)
+stand_quadraticMeanTreeDiameter(x, minDBH = 7.5)
+stand_hartBeckingIndex(x, minDBH = 7.5)
 stand_foliarBiomass(x, SpParams, gdd = NA, mode = "MED")
 stand_fuel(x, SpParams, gdd = NA, includeDead = TRUE, mode = "MED")
 stand_LAI(x, SpParams, gdd = NA, mode = "MED")
@@ -28,6 +28,7 @@ stand_phytovolume(x, SpParams)
 }
 \arguments{
   \item{x}{An object of class \code{\link{forest}}.}
+  \item{minDBH}{Minimum diameter at breast height (in cm) to include in estimation.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
   \item{gdd}{Growth degree days (to account for leaf phenology effects).}
   \item{includeDead}{A flag to indicate that standing dead fuels (dead branches) are included.}

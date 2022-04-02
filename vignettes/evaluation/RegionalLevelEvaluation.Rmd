@@ -16,12 +16,13 @@ library(medfate)
 library(ggplot2)
 library(cowplot)
 library(tidyverse)
+evalDIR = "~/OneDrive/Professional/MedfateWorks/RegionalLevelEvaluation"
 ```
 
 ## Introduction
 
 ```{r, echo = FALSE}
-eval_res <- readRDS("~/OneDrive/Professional/MedfateWorks/RegionalLevelEvaluation/Rdata/IFNeval_results.rds")
+eval_res <- readRDS(paste0(evalDIR, "/Rdata/IFNeval_results.rds"))
 
 SpParams = eval_res$SpParams
 target_spp = eval_res$target_spp
@@ -401,17 +402,23 @@ dfbai_all %>% group_by(Name) %>%
 Predictive capacity plot:
 
 ```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message = FALSE}
-plot_scatter_bai(dfbai_all[dfbai_all$Name=="0-All", ], 
+p1<-plot_scatter_bai(dfbai_all[dfbai_all$Name=="0-All", ], 
                  quantity = "basal area change", xylim = c(-5,20), errorlim = c(-20,20)) 
+p1
 ```
 
 Relationship between overall basal area change and climatic variables (MAT and P/PET):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=8, warning=FALSE, message=FALSE}
-plot_cov_clim_bai(dfbai_all[dfbai_all$Name=="0-All",], 
+p2<-plot_cov_clim_bai(dfbai_all[dfbai_all$Name=="0-All",], 
                   quantity = "Basal area change", ylim = c(-5,20), errorlim = c(-20,20))
+p2
 ```
 
+```{r, echo = FALSE}
+p0<-cowplot::plot_grid(p1,p2, nrow=2, rel_heights = c(0.33,0.66))
+ggsave(paste0(evalDIR,"/Plots/BAtot_eval.png"),p0, width = 8, height=10)
+```
 
 Spatial distribution of errors:
 
@@ -419,7 +426,9 @@ Spatial distribution of errors:
 
 mapdata_bac = mapdata
 mapdata_bac$error = dfbai_all$error[dfbai_all$Name=="0-All"]
-bai_error_map(mapdata_bac)
+pm<-bai_error_map(mapdata_bac)
+ggsave(paste0(evalDIR,"/Plots/BAtot_error_map.png"),pm, width = 6, height=6)
+pm
 ```
 
 ## Detailed growth evaluation by species

@@ -7,6 +7,7 @@
 - Temperature effects on sapwood conversion to heartwood
 - Correction of estimation of Psi_Extract from turgor loss point
 - Estimation of RSSG from shade tolerance
+- Minimum DBH parameter in stand metrics
 
 # Version 2.7.0
 - Basic water balance model with relative water content

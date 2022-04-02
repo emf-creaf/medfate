@@ -161,6 +161,8 @@ p1<-ggplot(df)+
   scale_fill_discrete(NULL)+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
                    legend.position = "none")
+
+ggsave(paste0(base_calibration,"Plots/relMAE.png"), p1, width=3.5, height = 3.5)
 p1
 ```
 
@@ -208,6 +210,7 @@ p6<-ggplot(dfpar)+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
                    legend.position = "none")
 p<-plot_grid(p3,p4, p5, p6, labels=c("a", "b", "c","d"), nrow=2)
+ggsave(paste0(base_calibration,"Plots/parameter_distribution.png"), p, width=7, height = 8)
 p
 ```
 
