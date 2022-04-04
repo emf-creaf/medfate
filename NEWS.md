@@ -8,6 +8,7 @@
 - Correction of estimation of Psi_Extract from turgor loss point
 - Estimation of RSSG from shade tolerance
 - Minimum DBH parameter in stand metrics
+- SpParamsMED include the results of parameter estimation exercises
 
 # Version 2.7.0
 - Basic water balance model with relative water content
