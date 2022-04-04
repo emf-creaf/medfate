@@ -3,18 +3,74 @@ MEGANParams<-read.csv("data-raw/MEGANParams.csv",skip=0)
 usethis::use_data(MEGANParams, overwrite = T)
 rm(MEGANParams)
 
-## Reload parameters from 'SpParams.xlsx'
+
+# SpParams ----------------------------------------------------------------
 SpParamsDefinition <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsDefinition.xlsx",
                                               sheet="Definition", na = "NA"), stringsAsFactors=FALSE)
 usethis::use_data(SpParamsDefinition, overwrite = T)
-SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsMED.xlsx",
-                                              sheet="SpParamsMED", na = "NA"), stringsAsFactors=FALSE)
-usethis::use_data(SpParamsMED, overwrite = T)
-rm(SpParamsMED)
 SpParamsUS <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsUS.xlsx",
-                                              sheet="SpParamsUS", na = "NA"), stringsAsFactors=FALSE)
+                                             sheet="SpParamsUS", na = "NA"), stringsAsFactors=FALSE)
 usethis::use_data(SpParamsUS, overwrite = T)
 rm(SpParamsUS)
+
+SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsMED.xlsx",
+                                              sheet="SpParamsMED", na = "NA"), stringsAsFactors=FALSE)
+
+MFWdir = "~/OneDrive/Professional/MedfateWorks/"
+# Change defaults for all (remaining) species
+SpParamsMED$WUE = 5
+SpParamsMED$RERsapwood = 5.18e-05
+SpParamsMED$RGRsapwoodmax = 0.0020
+SpParamsMED$SRsapwood = 0.00015
+
+# Revised hydraulic/photosynthesis parameters
+customParamsSpecies = readxl::read_xlsx(paste0(MFWdir,"Metamodelling_TR_WUE/Data/SpParamsCUSTOM.xlsx"))
+customParamsSpecies$SpIndex = NA
+for(i in 1:nrow(customParamsSpecies)) customParamsSpecies$SpIndex[i] = SpParamsMED$SpIndex[SpParamsMED$Name==customParamsSpecies$Name[i]]
+SpParamsMED = medfate::modifySpParams(SpParamsMED, customParamsSpecies, subsetSpecies = FALSE)
+# Results of meta-modelling exercise
+customParamsMetamodelling = readRDS(paste0(MFWdir,"Metamodelling_TR_WUE/Rdata/metamodelling_params.rds"))
+customParamsMetamodelling$Ar2Al = NA # Do not trust metamodeling estimates for Ar2Al
+SpParamsMED = medfate::modifySpParams(SpParamsMED, customParamsMetamodelling, subsetSpecies = FALSE)
+# Load growth calibration results
+calParamsSpecies = readRDS(paste0(MFWdir,"GrowthCalibration/Rdata/calibration_params.rds"))
+#Modify Species Parameters according to results
+SpParamsMED = medfate::modifySpParams(SpParamsMED, calParamsSpecies, subsetSpecies = FALSE)
+# Load tree ingrowth calibration results
+recruitmentParamsSpecies = readRDS(paste0(MFWdir,"MortalityCalibration/Rdata/tree_recruitment_params.rds"))
+SpParamsMED = medfate::modifySpParams(SpParamsMED, recruitmentParamsSpecies, subsetSpecies = FALSE)
+# Load Mortality calibration results
+mortalityParamsSpecies = readRDS(paste0(MFWdir,"MortalityCalibration/Rdata/mort_rates.rds"))
+# Manual tuning
+pines = c("Pinus halepensis", "Pinus nigra", "Pinus pinea","Pinus sylvestris", "Pinus uncinata")
+SpParamsMED$fHDmin[SpParamsMED$Name %in% pines] = 80
+SpParamsMED$fHDmax[SpParamsMED$Name %in% pines] = 160
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Pinus pinea"] = 0.0035
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Pinus uncinata"] = 0.004
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Pinus sylvestris"] = 0.003
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Pinus halepensis"] = 0.0035
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Pinus nigra"] = 0.0015
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Quercus suber"] = 0.004
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Quercus pubescens"] = 0.0016
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Quercus faginea"] = 0.0016
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Quercus ilex"] = 0.0016
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Fagus sylvatica"] = 0.0016
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Abies alba"] = 0.0016
+SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Quercus ilex"] = 0.0025
+SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Quercus faginea"] = 0.0025
+SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Quercus suber"] = 0.0030
+SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Quercus pubescens"] = 0.0030
+SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Pinus pinea"] = 0.0025
+SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Pinus halepensis"] = 0.0025
+SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Pinus nigra"] = 0.0015
+SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Pinus sylvestris"] = 0.0020
+SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Pinus uncinata"] = 0.0035
+SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Abies alba"] = 0.0065
+SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Fagus sylvatica"] = 0.0020
+#Save data
+usethis::use_data(SpParamsMED, overwrite = T)
+rm(SpParamsMED)
+
 
 
 ## Trait family means
