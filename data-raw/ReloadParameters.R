@@ -42,6 +42,22 @@ SpParamsMED = medfate::modifySpParams(SpParamsMED, recruitmentParamsSpecies, sub
 # Load Mortality calibration results
 mortalityParamsSpecies = readRDS(paste0(MFWdir,"MortalityCalibration/Rdata/mort_rates.rds"))
 # Manual tuning
+#Use allometries of A. alba for P. abies
+SpParamsMED[147,26:37] = SpParamsMED[1,26:37]
+#Use allometries of A. alba for A. pinsapo
+SpParamsMED[2,26:37] = SpParamsMED[1,26:37]
+#Use allometries of A. alba for P. menziesii
+SpParamsMED[163,26:37] = SpParamsMED[1,26:37]
+#Use allometries of A. alba for Cedrus
+SpParamsMED[34,26:37] = SpParamsMED[1,26:37]
+#Use allometries of A. alba for T.baccata
+SpParamsMED[201,26:37] = SpParamsMED[1,26:37]
+#Use allometries of J. communis for J. phoenicea
+SpParamsMED[118,26:37] = SpParamsMED[116,26:37]
+#Use allometries of J. communis for J. phoenicea
+SpParamsMED[121,26:37] = SpParamsMED[116,26:37]
+#Use allometries of J. communis for Cupressus
+SpParamsMED[62,26:37] = SpParamsMED[116,26:37]
 pines = c("Pinus halepensis", "Pinus nigra", "Pinus pinea","Pinus sylvestris", "Pinus uncinata")
 SpParamsMED$fHDmin[SpParamsMED$Name %in% pines] = 80
 SpParamsMED$fHDmax[SpParamsMED$Name %in% pines] = 160
