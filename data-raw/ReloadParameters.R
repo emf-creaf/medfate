@@ -17,11 +17,6 @@ SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsMED.xlsx",
                                               sheet="SpParamsMED", na = "NA"), stringsAsFactors=FALSE)
 
 MFWdir = "~/OneDrive/Professional/MedfateWorks/"
-# Change defaults for all (remaining) species
-SpParamsMED$WUE = 5
-SpParamsMED$RERsapwood = 5.18e-05
-SpParamsMED$RGRsapwoodmax = 0.0020
-SpParamsMED$SRsapwood = 0.00015
 
 # Revised hydraulic/photosynthesis parameters
 customParamsSpecies = readxl::read_xlsx(paste0(MFWdir,"Metamodelling_TR_WUE/Data/SpParamsCUSTOM.xlsx"))

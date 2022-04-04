@@ -517,6 +517,7 @@ List growthDayInner(List x, NumericVector meteovec,
   NumericVector CCsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["CCsapwood"]);
   NumericVector CCfineroot = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["CCfineroot"]);
   NumericVector RGRleafmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRleafmax"]);
+  NumericVector RGRcambiummax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRcambiummax"]);
   NumericVector RGRsapwoodmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRsapwoodmax"]);
   NumericVector RGRfinerootmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRfinerootmax"]);
   NumericVector SRsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["SRsapwood"]);
@@ -711,8 +712,14 @@ List growthDayInner(List x, NumericVector meteovec,
           else deltaSAring = SAring[SAring.size()-1] - SAring[SAring.size()-2];
           double cellfileareamaxincrease = 950.0; //Found empirically with T = 30 degrees and Psi = -0.033
           double rgrcellfile = (deltaSAring/10.0)/cellfileareamaxincrease;
-          double deltaSAsink = (SA[j]*RGRsapwoodmax[j]*rgrcellfile); 
-          if(!sinkLimitation) deltaSAsink = SA[j]*RGRsapwoodmax[j]; //Deactivates temperature and turgor limitation
+          double deltaSAsink = NA_REAL;
+          if(!NumericVector::is_na(DBH[j])) { //Trees
+            deltaSAsink = (3.141592*DBH[j]*RGRcambiummax[j]*rgrcellfile); 
+            if(!sinkLimitation) deltaSAsink = 3.141592*DBH[j]*RGRcambiummax[j]; //Deactivates temperature and turgor limitation
+          } else { // Shrubs
+            deltaSAsink = (SA[j]*RGRsapwoodmax[j]*rgrcellfile); 
+            if(!sinkLimitation) deltaSAsink = SA[j]*RGRsapwoodmax[j]; //Deactivates temperature and turgor limitation
+          }
           double deltaSAavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForSecondaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerSA);
           deltaSAgrowth[j] = std::min(deltaSAsink, deltaSAavailable);
           // Rcout<< SAring.size()<<" " <<j<< " "<< PlantPsi[j]<< " "<< LeafPI0[j]<<" dSAring "<<deltaSAring<< " dSAsink "<< deltaSAsink<<" dSAgrowth "<< deltaSAgrowth<<" rgrcellfile"<< rgrcellfile<<"\n";
@@ -830,8 +837,14 @@ List growthDayInner(List x, NumericVector meteovec,
             else deltaSAring = SAring[SAring.size()-1] - SAring[SAring.size()-2];
             double cellfileareamaxincrease = 950.0; //Found empirically with T = 30 degrees and Psi = -0.033
             double rgrcellfile = (deltaSAring/10.0)/cellfileareamaxincrease;
-            double deltaSAsink = (SA[j]*RGRsapwoodmax[j]*rgrcellfile)/((double) numSteps); 
-            if(!sinkLimitation) deltaSAsink = SA[j]*RGRsapwoodmax[j]/((double) numSteps); //Deactivates temperature and turgor limitation
+            double deltaSAsink = NA_REAL;
+            if(!NumericVector::is_na(DBH[j])) { //Trees
+              deltaSAsink = (3.141592*DBH[j]*RGRcambiummax[j]*rgrcellfile)/((double) numSteps); 
+              if(!sinkLimitation) deltaSAsink = 3.141592*DBH[j]*RGRcambiummax[j]/((double) numSteps); //Deactivates temperature and turgor limitation
+            } else { // Shrubs
+              deltaSAsink = (SA[j]*RGRsapwoodmax[j]*rgrcellfile)/((double) numSteps); 
+              if(!sinkLimitation) deltaSAsink = SA[j]*RGRsapwoodmax[j]/((double) numSteps); //Deactivates temperature and turgor limitation
+            }
             double deltaSAavailable = std::max(0.0, (starchSapwood[j] - minimumStarchForSecondaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerSA);
             double deltaSAgrowthStep = std::min(deltaSAsink, deltaSAavailable);
             if(deltaSAgrowthStep<0.0) {

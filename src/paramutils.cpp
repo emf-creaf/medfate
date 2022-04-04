@@ -609,38 +609,43 @@ NumericVector WUEWithImputation(IntegerVector SP, DataFrame SpParams) {
   CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
   CharacterVector leafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
   NumericVector WUE = speciesNumericParameter(SP, SpParams, "WUE");
-  //Access internal data frame "trait_family_means"
-  Environment pkg = Environment::namespace_env("medfate");
-  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
-  CharacterVector fams = TFM.attr("row.names");
-  NumericVector fam_WUE = TFM["WUE"];
-  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
   for(int c=0;c<WUE.size();c++) {
     if(NumericVector::is_na(WUE[c])) {
-      for(int i=0;i<fams.size();i++) {
-        if(fams[i]==family[c]) {
-          WUE[c] = fam_WUE[i];
-        }
-      }
-    }
-    if(NumericVector::is_na(WUE[c])) {
-      if(leafShape[c]=="Linear") {
-        WUE[c]= 3.707131;
-      } else if(leafShape[c]=="Needle") {
-        WUE[c]= 3.707131;
-      } else if(leafShape[c]=="Broad") {
-        if(leafSize[c]=="Small") {
-          WUE[c] = 4.289629;
-        } else if(leafSize[c]=="Medium") {
-          WUE[c] = 3.982086;
-        } else if(leafSize[c]=="Large") {
-          WUE[c]= 3.027647;
-        }
-      } else if(leafShape[c]=="Scale") { 
-        WUE[c] = 1.665034;
-      }
+      WUE[c] = 5.0; //default value
     }
   }
+  //Access internal data frame "trait_family_means"
+  // Environment pkg = Environment::namespace_env("medfate");
+  // DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  // CharacterVector fams = TFM.attr("row.names");
+  // NumericVector fam_WUE = TFM["WUE"];
+  // CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  // for(int c=0;c<WUE.size();c++) {
+  //   if(NumericVector::is_na(WUE[c])) {
+  //     for(int i=0;i<fams.size();i++) {
+  //       if(fams[i]==family[c]) {
+  //         WUE[c] = fam_WUE[i];
+  //       }
+  //     }
+  //   }
+  //   if(NumericVector::is_na(WUE[c])) {
+  //     if(leafShape[c]=="Linear") {
+  //       WUE[c]= 3.707131;
+  //     } else if(leafShape[c]=="Needle") {
+  //       WUE[c]= 3.707131;
+  //     } else if(leafShape[c]=="Broad") {
+  //       if(leafSize[c]=="Small") {
+  //         WUE[c] = 4.289629;
+  //       } else if(leafSize[c]=="Medium") {
+  //         WUE[c] = 3.982086;
+  //       } else if(leafSize[c]=="Large") {
+  //         WUE[c]= 3.027647;
+  //       }
+  //     } else if(leafShape[c]=="Scale") { 
+  //       WUE[c] = 1.665034;
+  //     }
+  //   }
+  // }
   return(WUE);
 }
 NumericVector WUEDecayWithImputation(IntegerVector SP, DataFrame SpParams) {
@@ -1009,7 +1014,7 @@ NumericVector SapwoodRespirationRateWithImputation(IntegerVector SP, DataFrame S
       // double RER_nmolCO2_g_s = pow(10.0, 1.024 + 1.344*log10(Nsapwood_mmol_g)); //nmol CO2·g-1·s-1
       // RERsapwood[c] = 24.0*3600.0*(RER_nmolCO2_g_s/6.0)*(1e-9)*180.156; // nmol CO2·g-1·s-1 to g gluc·g-1·d-1
       // ESTIMATES ARE TOO HIGH
-      RERsapwood[c] = 6.849315e-5;
+      RERsapwood[c] = 5.18e-05;
     }
   }
   return(RERsapwood);

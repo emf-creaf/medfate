@@ -445,6 +445,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   NumericVector CCfineroot = speciesNumericParameter(SP, SpParams, "CCfineroot");
   NumericVector RGRleafmax = speciesNumericParameter(SP, SpParams, "RGRleafmax");
   NumericVector RGRsapwoodmax = speciesNumericParameter(SP, SpParams, "RGRsapwoodmax");
+  NumericVector RGRcambiummax = speciesNumericParameter(SP, SpParams, "RGRcambiummax");
   NumericVector RGRfinerootmax = speciesNumericParameter(SP, SpParams, "RGRfinerootmax");
   NumericVector SRsapwood = speciesNumericParameter(SP, SpParams, "SRsapwood");
   NumericVector SRfineroot = speciesNumericParameter(SP, SpParams, "SRfineroot");
@@ -459,6 +460,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   List maximumRelativeGrowthRates = control["maximumRelativeGrowthRates"];
   double RGRleafmax_default = maximumRelativeGrowthRates["leaf"];
   double RGRsapwoodmax_default = maximumRelativeGrowthRates["sapwood"];
+  double RGRcambiummax_default = maximumRelativeGrowthRates["cambium"];
   double RGRfinerootmax_default = maximumRelativeGrowthRates["fineroot"];
   
   
@@ -480,6 +482,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
       if(NumericVector::is_na(CCsapwood[c])) CCsapwood[c] = CCsapwood_default;
       if(NumericVector::is_na(CCfineroot[c])) CCfineroot[c] = CCfineroot_default;
       if(NumericVector::is_na(RGRleafmax[c])) RGRleafmax[c] = RGRleafmax_default;
+      if(NumericVector::is_na(RGRcambiummax[c])) RGRcambiummax[c] = RGRcambiummax_default;
       if(NumericVector::is_na(RGRsapwoodmax[c])) RGRsapwoodmax[c] = RGRsapwoodmax_default;
       if(NumericVector::is_na(RGRfinerootmax[c])) RGRfinerootmax[c] = RGRfinerootmax_default;
       if(NumericVector::is_na(SRsapwood[c])) SRsapwood[c] = SRsapwood_default;
@@ -497,6 +500,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
                                                _["CCfineroot"] = CCfineroot,
                                                _["RGRleafmax"] = RGRleafmax,
                                                _["RGRsapwoodmax"] = RGRsapwoodmax,
+                                               _["RGRcambiummax"] = RGRcambiummax,
                                                _["RGRfinerootmax"] = RGRfinerootmax,
                                                _["SRsapwood"] = SRsapwood,
                                                _["SRfineroot"] = SRfineroot,
