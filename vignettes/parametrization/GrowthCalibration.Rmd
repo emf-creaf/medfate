@@ -80,53 +80,12 @@ cal_FUN2FUN_SL_ga$P.PET_Summer = plot_desc$P.PET_Summer
 The model parameters for which we desired good estimates are:
 
   a. **Sapwood daily respiration rate (RERsapwood)** - Used to modulate maintenance respiration demands of living sapwood tissues (parenchyma, cambium, phloem, etc.), which in large trees may also represent a large fraction of maintenance respiration.
-  b. **Sapwood maximum growth rate (RGRsapwoodmax)** - Used to modulate maximum daily sapwood growth rates (relative to current sapwood area). Actual relative growth rates include temperature and sink limitations to growth.
+  b. **Sapwood maximum growth rate (RGRcambiummax)** - Used to modulate tree maximum daily sapwood growth rates (relative to current cambium perimeter). Actual relative growth rates include temperature and sink limitations to growth.
   c. **Sapwood daily senescence rate (SRsapwood)** - Used to determine the daily proportion of sapwood that becomes heartwood. It regulates the area of functional sapwood, together with the sapwood maximum growth rate.
 
 In addition, soil stoniness in the target plots had been estimated from surface stoniness classes. Since soil rock fragment content (`rfc`) has a strong influence on soil water capacity, we decided to include the proportion of rocks in the second soil layer (between 30 and 100 cm) as a parameter to be calibrated.
 
-### Sensitivity analysis
-
-We conducted a variance-based global sensitivity analysis of model parameters including those to be calibrated and others that we estimated important to determine secondary growth. For the sensitivity analysis we selected a forest plot dominated by *Pinus sylvestris*, where we collapsed forest structure into a single tree cohort and run simulations using daily weather between 2001 and 2005.
-
-First we conducted the sensitivity analysis using the final basal area of the stand as the response function.
-
-```{r SA_variance_plot, echo=FALSE, fig.width=6, fig.height=5}
-sens_var_finalBA = readRDS(paste0(base_calibration,"Rdata/sens_finalBA_variance_FUN2FUN.rds"))
-parNames = c("rfc@2","RERleaf","RERsapwood","RGRleafmax","RGRsapwoodmax", "SRsapwood", "conduit2sapwood", "Al2As","WUE")
-row.names(sens_var_finalBA$S) = parNames
-row.names(sens_var_finalBA$T) = parNames
-
-p1<-ggplot(sens_var_finalBA, choice=1)+
-    labs(title = "Final basal area")+
-    theme(axis.text.x = element_text(angle = 30, vjust = 1, 
-                                     face = "plain", size = 9,
-                                     hjust=1),
-          axis.text.y = element_text(face="plain", size = 9),
-          legend.background = element_blank())
-p1
-```
-
-The variable that primarily determines growth rate is WUE, which, together with the transpiration rate determines carbon availability, but the maximum sapwood growth rate comes right after. We repeated the sensitivity analysis but using the coefficient of variation of annual BAI as response function:
-
-```{r SA_variance_cvBAI_plot, echo=FALSE, fig.width=6, fig.height=5}
-sens_var_cvBAI = readRDS(paste0(base_calibration,"Rdata/sens_cvBAI_variance_FUN2FUN.rds"))
-row.names(sens_var_cvBAI$S) = parNames
-row.names(sens_var_cvBAI$T) = parNames
-
-p2<-ggplot(sens_var_cvBAI, choice=1)+
-    labs(title="BAI coefficient of variation")+
-    theme(axis.text.x = element_text(angle = 30, vjust = 1, 
-                                     face = "plain", size = 9,
-                                     hjust=1),
-          axis.text.y = element_text(face="plain", size = 9),
-          legend.background = element_blank())
-p2
-```
-
-From these results we see that other parameters are relevant to determine inter-annual variability in secondary growth.
-
-### Calibration procedure
+## Calibration procedure
 
 For each forest plot in the first data set, we matched each available dendrochronological series with a forest inventory tree cohort by finding which tree (in the IFN3 sampling) had the DBH most similar to that estimated from the dendrochronology at year 2000. Then, we took the series of annual basal area increments (BAI) as the observations to be matched by model secondary growth predictions for the matched tree cohort. For each forest plot of the second data set, we took all available dendrochronological series between 1990 and 2004. Available diameter increments (DI) were used to infer DBH at year 1990 and we transformed DI into annual BAI.
 
@@ -135,8 +94,8 @@ Simulations were performed using daily weather data for each target plot, obtain
 The following table shows the range of values explored for each parameter to be calibrated: 
 ```{r, echo = FALSE}
 df<-data.frame(Minimum = c(1e-6, 0.0001, 0.00001, 25),
-               Maximum = c(1e-4, 0.0100, 0.00025, 95), 
-               row.names = c("RERsapwood","RGRsapwoodmax","SRsapwood", "rfc@2"))
+               Maximum = c(1e-4, 0.0200, 0.00025, 95), 
+               row.names = c("RERsapwood","RGRcambiummax","SRsapwood", "rfc@2"))
 
 df %>%
   kbl() %>%
@@ -185,11 +144,11 @@ p3<-ggplot(dfpar)+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
                    legend.position = "none")
 p4<-ggplot(dfpar)+
-  geom_boxplot(aes(x=Species, y=RGRsapwoodmax_cal, fill = Species))+
+  geom_boxplot(aes(x=Species, y=RGRcambiummax_cal, fill = Species))+
   geom_hline(yintercept=0.0001, col="gray", linetype = "dashed")+
-  geom_hline(yintercept=0.01, col="gray", linetype = "dashed")+
-  ylim(c(0.0001,0.01))+
-  labs(x="", y="RGR sapwood (cm2/cm2/day)")+
+  geom_hline(yintercept=0.02, col="gray", linetype = "dashed")+
+  ylim(c(0.0001,0.02))+
+  labs(x="", y="RGR cambium (cm2/cm/day)")+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
                    legend.position = "none")
 p5<-ggplot(dfpar)+
@@ -222,7 +181,7 @@ ms_F2F = apply(cal_FUN2FUN_SL_ga[,c(3, 5,7,9,11)],2,function(x) {tapply(x, cal_F
 ms_UNC = apply(cal_uncinata_SL_ga[,c(3, 5,7,9,11)],2,function(x) {tapply(x, cal_uncinata_SL_ga$Species, mean, na.rm=T)})
 ms_UNC = data.frame(row.names  = "Pinus uncinata", t(ms_UNC))
 df <- rbind(ms_F2F, ms_UNC)
-names(df) <-  c("Rel. MAE (%)", "RERsapwood","RGRsapwoodmax", "SRsapwood", "rfc@2")
+names(df) <-  c("Rel. MAE (%)", "RERsapwood","RGRcambiummax", "SRsapwood", "rfc@2")
 ma <- apply(rbind(cal_FUN2FUN_SL_ga[,c(3, 5,7,9,11)], cal_uncinata_SL_ga[,c(3, 5,7,9,11)]),2,mean, na.rm=TRUE)
 df <- rbind(df, ma)
 row.names(df)[nrow(df)] = "All"
@@ -231,14 +190,14 @@ df %>%
   kable_styling()
 ```
 
-Statistically significant differences can be observed between species for `RERsapwood` and `RGRsapwoodmax`, as shown in the following ANOVA tables:
+Statistically significant differences can be observed between species for `RERsapwood` and `RGRcambiummax`, as shown in the following ANOVA tables:
 
 ```{r, echo = FALSE}
 anova(aov(RERsapwood_cal~Species, data = dfpar))
 ```
 
 ```{r, echo = FALSE}
-anova(aov(RGRsapwoodmax_cal~Species, data = dfpar))
+anova(aov(RGRcambiummax_cal~Species, data = dfpar))
 ```
 
 ```{r, echo = FALSE}
@@ -253,8 +212,8 @@ anova(aov(rfc_cal~Species, data = dfpar))
 Finally, the following panels illustrate the overall lack of covariance between calibrated parameter values:
 ```{r, echo = FALSE, fig.height=12, fig.width=10}
 g1<-ggplot(dfpar)+
-  geom_point(aes(x=RERsapwood_cal, y = RGRsapwoodmax_cal, col=Species, shape = Species))+
-  labs(x="RER sapwood (g gluc/g dry/day)", y="RGR sapwood (cm2/cm2/day)")+
+  geom_point(aes(x=RERsapwood_cal, y = RGRcambiummax_cal, col=Species, shape = Species))+
+  labs(x="RER sapwood (g gluc/g dry/day)", y="RGR cambium (cm2/cm/day)")+
   theme_bw()
 l <- get_legend(g1)
 g1<-g1+theme(legend.position = "none")
@@ -267,12 +226,12 @@ g3<-ggplot(dfpar)+
   labs(x="RER sapwood (g gluc/g dry/day)", y="Rock content (%)")+
   theme_bw()+theme(legend.position = "none")
 g4<-ggplot(dfpar)+
-  geom_point(aes(x=SRsapwood_cal, y = RGRsapwoodmax_cal, col=Species, shape = Species))+
-  labs(x="Sapwood senescence rate (day-1)", y="RGR sapwood (cm2/cm2/day)")+
+  geom_point(aes(x=SRsapwood_cal, y = RGRcambiummax_cal, col=Species, shape = Species))+
+  labs(x="Sapwood senescence rate (day-1)", y="RGR cambium (cm2/cm/day)")+
   theme_bw()+theme(legend.position = "none")
 g5<-ggplot(dfpar)+
-  geom_point(aes(x=rfc_cal, y = RGRsapwoodmax_cal, col=Species, shape = Species))+
-  labs(x="Rock content (%)", y="RGR sapwood (cm2/cm2/day)")+
+  geom_point(aes(x=rfc_cal, y = RGRcambiummax_cal, col=Species, shape = Species))+
+  labs(x="Rock content (%)", y="RGR cambium (cm2/cm/day)")+
   theme_bw()+theme(legend.position = "none")
 g6<-ggplot(dfpar)+
   geom_point(aes(x=rfc_cal, y = SRsapwood_cal, col=Species, shape = Species))+

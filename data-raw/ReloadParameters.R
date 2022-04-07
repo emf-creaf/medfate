@@ -13,8 +13,10 @@ SpParamsUS <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsUS.xlsx",
 usethis::use_data(SpParamsUS, overwrite = T)
 rm(SpParamsUS)
 
-SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsMED.xlsx",
-                                              sheet="SpParamsMED", na = "NA"), stringsAsFactors=FALSE)
+
+# Initial table
+SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/InitialSpParamsMED.xlsx",
+                                              sheet="InitialSpParamsMED", na = "NA"), stringsAsFactors=FALSE)
 
 MFWdir = "~/OneDrive/Professional/MedfateWorks/"
 
@@ -24,18 +26,18 @@ customParamsSpecies$SpIndex = NA
 for(i in 1:nrow(customParamsSpecies)) customParamsSpecies$SpIndex[i] = SpParamsMED$SpIndex[SpParamsMED$Name==customParamsSpecies$Name[i]]
 SpParamsMED = medfate::modifySpParams(SpParamsMED, customParamsSpecies, subsetSpecies = FALSE)
 # Results of meta-modelling exercise
-customParamsMetamodelling = readRDS(paste0(MFWdir,"Metamodelling_TR_WUE/Rdata/metamodelling_params.rds"))
-customParamsMetamodelling$Ar2Al = NA # Do not trust metamodeling estimates for Ar2Al
-SpParamsMED = medfate::modifySpParams(SpParamsMED, customParamsMetamodelling, subsetSpecies = FALSE)
+metamodellingParamsSpecies = readRDS(paste0(MFWdir,"Metamodelling_TR_WUE/Rdata/metamodelling_params.rds"))
+metamodellingParamsSpecies$Ar2Al = NA # Do not trust metamodeling estimates for Ar2Al
+SpParamsMED = medfate::modifySpParams(SpParamsMED, metamodellingParamsSpecies, subsetSpecies = FALSE)
 # Load growth calibration results
 calParamsSpecies = readRDS(paste0(MFWdir,"GrowthCalibration/Rdata/calibration_params.rds"))
 #Modify Species Parameters according to results
 SpParamsMED = medfate::modifySpParams(SpParamsMED, calParamsSpecies, subsetSpecies = FALSE)
-# Load tree ingrowth calibration results
-recruitmentParamsSpecies = readRDS(paste0(MFWdir,"MortalityCalibration/Rdata/tree_recruitment_params.rds"))
+# Load ingrowth calibration results
+recruitmentParamsSpecies = readRDS(paste0(MFWdir,"MortalityIngrowthCalibration/Rdata/final_recruitment_params.rds"))
 SpParamsMED = medfate::modifySpParams(SpParamsMED, recruitmentParamsSpecies, subsetSpecies = FALSE)
 # Load Mortality calibration results
-mortalityParamsSpecies = readRDS(paste0(MFWdir,"MortalityCalibration/Rdata/mort_rates.rds"))
+mortalityParamsSpecies = readRDS(paste0(MFWdir,"MortalityIngrowthCalibration/Rdata/mort_rates.rds"))
 # Manual tuning
 #Use allometries of A. alba for P. abies
 SpParamsMED[147,26:37] = SpParamsMED[1,26:37]
@@ -80,6 +82,12 @@ SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Abies alba"] = 0.0065
 SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Fagus sylvatica"] = 0.0020
 #Save data
 usethis::use_data(SpParamsMED, overwrite = T)
+
+wb <- openxlsx::createWorkbook()
+openxlsx::addWorksheet(wb, "SpParamsMED")
+openxlsx::writeDataTable(wb, "SpParamsMED", SpParamsMED)
+openxlsx::saveWorkbook(wb,"data-raw/SpParamsMED.xlsx", overwrite=TRUE)
+
 rm(SpParamsMED)
 
 

@@ -1,5 +1,5 @@
 ---
-title: "Species parameterization for Spain"
+title: "Initial species parameterization for Spain"
 author: "Miquel De Cáceres"
 date: "`r Sys.Date()`"
 output: 
@@ -13,11 +13,11 @@ params:
 
 ## Introduction
 
-This vignette describes the procedures used to obtain the species parameter data table `SpParamsMED` included in package **medfate**. The taxon entities chosen are intended to cover most of the woody plant taxa in Spain, as they are reported in the Spanish National Forest Inventory surveys (*Inventario Forestal Nacional* or IFN). In addition, a list of `forest` objects is also created for each of three IFN surveys, where species codification follows `SpParamsMED`.
+This vignette describes the procedures used to obtain the initial species parameter data table that serves to obtain the data frame `SpParamsMED` included in package **medfate**. The taxon entities chosen are intended to cover most of the woody plant taxa in Spain, as they are reported in the Spanish National Forest Inventory surveys (*Inventario Forestal Nacional* or IFN). In addition, a list of `forest` objects is also created for each of three IFN surveys, where species codification follows the parameter data table.
 
 The vignette is not self-contained, in the sense that it cannot be reproduced without access to data sets that are not included. Nevertheless, it is intended to serve as example of species parameterization for other regions.
 
-### Required packages
+### Required packages`
 Installed version of **medfate** should be **ver 2.3** or higher. 
 ```{r, eval = FALSE}
 install.packages("medfate")
@@ -70,13 +70,12 @@ It is obvious that such a sheer number of parameters cannot be searched for manu
 
 ### Steps to build a species parameter table
 
-The following sections describe different steps that we used to obtain the species parameter table `SpParamsMED` for simulations with **medfate**, which can be grouped into five main tasks:
+The following sections describe different steps that we used to obtain the species parameter table, which can be grouped into five main tasks:
 
  1. Initialize the parameter table with target taxonomic entities.
  2. Draw species parameters from forest inventory (IFN in our case) data.
  3. Populate tree and shrub allometric coefficients from suitable allometric databases.
  4. Populate plant functional traits from available data bases
- 5. Populate recruitment limits using bioclimatic data, forest inventory data and previous parameter estimates.
  
  
 ### Source data paths
@@ -1481,21 +1480,6 @@ The distribution of parameter values is:
 summary(SpParams[,c("Psi_Critic")])
 ```
 
-#### Water use efficiency
-Water use efficiency  ($WUE$) is the leaf transpiration rate per photosynthesis rate. We can draw values of the water use efficiency from TRY (TraitID = 134), after filtering out extreme values:
-```{r WUE}
-TRY_WUE  <-readRDS(file.path(DB_path,"TraitDatabases/TRY/TRY_traits/TRY_134.rds"))
-TRY_WUE <- TRY_WUE %>% filter(StdValue < 40, ErrorRisk <3)
-SpParams <- populateTraits(SpParams, TRY_WUE, 
-                           trait_mapping = c("WUE" = "StdValue"),
-                           taxon_column = "AccSpeciesName",
-                           summary_function = "max")
-```
-In this case we took the maximum value for each species, to better fit the model parameter definition. Note, in addition, that TRY data corresponds to **net** photosynthesis over transpiration, whereas the model parameter is defined as **gross** photosynthesis over transpiration, which means that a correction should be applied. The distribution of parameter values is:
-```{r}
-summary(SpParams[,c("WUE")])
-```
-
 ### Transpiration/photosynthesis (Sperry's model)
 
 Simulations with the Sperry's transpiration model require many species-specific parameters, several of them unavailable in plant trait data bases. Here we make an effort to provide suitable values for some of them, particularly stem hydraulic efficiency and vulnerability. Others are estimated in **medfate** via inbuilt imputation or scaling procedures, as described in medfate's reference book. 
@@ -1713,6 +1697,14 @@ The distribution of parameter values after estimation is:
 summary(SpParams[,c("RSSG")])
 ```
 
+
+```{r save_SpParams, eval = params$spparams_rebuild, include = FALSE}
+  wb <- openxlsx::createWorkbook()
+  openxlsx::addWorksheet(wb, "InitialSpParamsMED")
+  openxlsx::writeDataTable(wb, "InitialSpParamsMED", SpParams)
+  openxlsx::saveWorkbook(wb,"../../data-raw/InitialSpParamsMED.xlsx", overwrite=TRUE)
+```
+
 ## Initialize forest plot lists for Spain
 
 If we have a species parameter table with taxonomic information, growth forms and species maximum rooting depths (`Z95`), we are ready to create lists of `forest` objects from forest plot data. Here we will use function `IFN2forestlist()` from package **medfateutils**, which has been designed to parse data from the Spanish National Forest Inventory. In section *Parameters drawn from IFN data* we loaded shrub and tree data from the three forest inventory surveys: IFN2, IFN3 and IFN4. Here we use this information to create forest lists:
@@ -1837,282 +1829,6 @@ rm(treeDataIFN4CAT)
 rm(regDataIFN4CAT)
 rm(regTreeDataIFN4CAT)
 rm(shrubDataIFN4CAT)
-```
-
-## Recruitment parameters
-
-This section describes the parametrization of bioclimatic recruitment thresholds for the forest dynamics model `fordyn()` included in `medfate`. Specifically, we aim to find suitable values for parameters:
-
-  + `MinTempRecr`: Minimum average temperature of the coldest month necessary for recruiting.
-  + `MinMoistureRecr`: Minimum moisture index (annual precipitation over annual ETP) necessary for recruiting.
-  + `MinFPARRecr`: Minimum fraction of PAR (in \%)  reaching the ground necessary for recruiting. 
-  
-To find suitable values for these parameters that set the recruitment requirements we will first determine bioclimatic and light conditions in IFN3 plots and then we will calculate the 1\% quantile from the observed distribution of each target species.
-
-### Bioclimatic and ground PAR conditions of IFN3 plots
-
-#### Mean temperature of the coldest month and moisture index
-Load yearly weather data (from Santander's Group) between 1981 and 2015, for all IFN plots in Spain:
-```{r climate_stats}
-pr_year <- readRDS(file.path(DB_path, "IFNbioclimatic/Sources/pr_year.rds"))
-pet_year <- readRDS(file.path(DB_path, "IFNbioclimatic/Sources/pet_year.rds"))
-tmin_year <- readRDS(file.path(DB_path, "IFNbioclimatic/Sources/tmin_year.rds"))
-```
-
-These are objects of class `SpatialPointsDataFrame`:
-
-  + `tmin_year` contains the mean temperature of the coldest month for each year and plot. 
-  + `pr_year` contains the annual precipitation for each year and plot.
-  + `pet_year` contains the annual potential evapotranspiration for each year and plot.
-    
-We calculate interannual means for tmin and the annual moisture index, for the period 1995-2005 that includes IFN3 (around 2000):
-```{r}
-yearStrings = as.character(seq(as.Date("1995-01-01"), as.Date("2005-01-01"), by="year"))
-pet_year@data[pet_year@data<100] <- NA
-ppet_mean <- rowMeans(pr_year@data[,yearStrings]/pet_year@data[,yearStrings], 
-                      na.rm=TRUE)
-tmin_mean <- rowMeans(tmin_year@data[,yearStrings], na.rm = TRUE)
-bioclimIFN34 <- data.frame(ppet_mean, tmin_mean)
-summary(bioclimIFN34)
-```
-
-
-#### Percentage of PAR reaching the ground
-To calculate the percentage of PAR reaching the ground we need forest plot data as well as suitable parameters for leaf area estimation and light extinction. Hence, this part of the parameterization process requires other parameters to be estimated first. In addition, we will make use of **medfate** functions to estimate PAR extinction, which require `forest` objects. Hence we need forest inventory data in the form of a list of `forest` objects (see function `IFN2forestlist` from package **medfateutils**). Assuming we have converted IFN3 data into this form, we load the list of `forest` objects corresponding to IFN3 plots in Spain:
-```{r PAR_ground_calculation}
-forest_list = readRDS(file.path(IFN_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
-```
-We then calculate percentage of PAR reaching the ground using `medfate` function `vprofile_PARExtinction()`:
-```{r, eval = params$spparams_rebuild}
-par_groundIFN3 = rep(NA, length(forest_list))
-names(par_groundIFN3) = names(forest_list)
-for(i in 1:length(forest_list)) {
-  f = forest_list[[i]]
-  if((nrow(f$treeData)>0) || (nrow(f$shrubData)>0)) {
-      # remove small trees and shrubs
-    if(nrow(f$treeData)>0) f$treeData = f$treeData[f$treeData$DBH>5,, drop=FALSE]
-    if(nrow(f$shrubData)>0) f$shrubData = f$shrubData[f$shrubData$Height>50,, drop=FALSE]
-    par_groundIFN3[[i]] = light_PARground(f, SpParams)
-  } else {
-    par_groundIFN3[[i]] = 100
-  }
-}
-```
-
-```{r, include = FALSE}
-if(params$spparams_rebuild) {
-  saveRDS(par_groundIFN3, "par_groundIFN3.rds")
-} else {
-  par_groundIFN3 = readRDS("par_groundIFN3.rds")
-}
-```
-
-Some plots could have missing `par_groundIFN3` values, which could be the result of missing parameter values in `SpParams`:
-```{r}
-table(is.na(par_groundIFN3))
-```
-Subset plots with PAR data:
-```{r}
-par_groundIFN3 <- par_groundIFN3[!is.na(par_groundIFN3)]
-```
-
-
-#### Subset of plots with available information
-Define vectors of plot IDs for which there is information about bioclimatic and light conditions:
-```{r}
-plotBioclim = row.names(bioclimIFN34)
-plotPAR = names(par_groundIFN3)
-```
-Since we took Spain for bioclimatic limits, there are n = `r length(plotBioclim)` plots with bioclimatic information and n = `r length(plotPAR)` plots with PAR information.
-
-### Characterizing distribution of bioclimatic variables for IFN species
-
-#### Load and filter IFN3 data
-We begin by loading IFN3 data tables (regeneration data, tree data and shrub data):
-```{r load_IFN3_filter}
-reg<-readRDS(file.path(IFN_path,"Products/IFN3/Rdata/regDataIFN3_Spain.rds"))
-tree<-readRDS(file.path(IFN_path,"Products/IFN3/Rdata/treeDataIFN3_Spain.rds"))
-shrub<-readRDS(file.path(IFN_path,"Products/IFN3/Rdata/shrubDataIFN3_Spain.rds"))
-```
-
-We filter the three datasets according to available plot bioclimatic information:
-```{r}
-regFiltBioclim <- reg %>% 
-  filter(ID %in% plotBioclim) %>% 
-  mutate(Species = as.numeric(Species)) %>% 
-  filter(!is.na(Species)) %>% 
-  filter(Species > 0)
-
-treeFiltBioclim <- tree %>% 
-  filter(ID %in% plotBioclim) %>% 
-  mutate(Species = as.numeric(Species)) %>% 
-  filter(!is.na(Species)) %>% 
-  filter(Species > 0)
-
-shrubFiltBioclim <- shrub %>% 
-  filter(ID %in% plotBioclim) %>% 
-  mutate(Species = as.numeric(Species)) %>% 
-  filter(!is.na(Species)) %>% 
-  filter(Species > 0)
-```
-We do the same for PAR information:
-```{r}
-regFiltPAR <- reg %>% 
-  filter(ID %in% plotPAR) %>% 
-  mutate(Species = as.numeric(Species)) %>% 
-  filter(!is.na(Species)) %>% 
-  filter(Species > 0)
-
-treeFiltPAR <- tree %>% 
-  filter(ID %in% plotPAR) %>% 
-  mutate(Species = as.numeric(Species)) %>% 
-  filter(!is.na(Species)) %>% 
-  filter(Species > 0)
-
-shrubFiltPAR <- shrub %>% 
-  filter(ID %in% plotPAR) %>% 
-  mutate(Species = as.numeric(Species)) %>% 
-  filter(!is.na(Species)) %>% 
-  filter(Species > 0)
-```
-
-#### Target species
-Determine the IFN species to be characterized, by finding unique species codes:
-```{r}
-spUnique <- sort(unique(c(regFiltBioclim$Species, 
-                          treeFiltBioclim$Species, 
-                          shrubFiltBioclim$Species)))
-```
-There are `r length(spUnique)` species to be characterized. Note that we used the full set of IFN species codes and not the entities in `SpParams`. This is because we want to characterize the bioclimatic limits of the original species.
-
-Translate IFN species codes to medfate species codes (some species are considered together in `medfate`):
-```{r}
-Species_medfate = translateIFNSpeciesCodes(spUnique, SpParams$IFNcodes)
-```
-
-Some IFN species do not have counterparts in `SpParams`, as these were discarded when defining the set of target species:
-```{r}
-table(is.na(Species_medfate))
-```
-
-#### Quantile tables
-Define quantile probabilities (1\%, 5\% and 10\%):
-```{r quantiles}
-probs=c(0.01, 0.05, 0.1)
-```
-
-We now create quantile output tables, including a column `n` with the number of plots on which quantiles are based:
-```{r}
-q_ppet<-data.frame(Species = spUnique, 
-                   Species_medfate = Species_medfate,
-                   q1 = NA,
-                   q5 = NA, 
-                   q10 = NA,
-                   n = NA)
-q_tmin<-q_ppet
-q_par <- q_ppet
-```
-
-We fill quantile output for minimum temperature and moisture index. This is done by finding (for each species), the set of plots where the species is present (either as adult, regeneration or shrub) and subseting the bioclimatic information corresponding to this set of plots. Quantiles are estimated from this set, as long as it contains more than 1 plot. The number of plots in the set is also stored:
-```{r}
-for(i in 1:length(spUnique)) {
-  sp = spUnique[i]
-  ids_reg_bioclim = unique(regFiltBioclim$ID[regFiltBioclim$Species==sp])
-  ids_tree_bioclim = unique(treeFiltBioclim$ID[treeFiltBioclim$Species==sp])
-  ids_shrub_bioclim = unique(shrubFiltBioclim$ID[shrubFiltBioclim$Species==sp])
-  ids_bioclim <- unique(c(ids_reg_bioclim, ids_tree_bioclim, ids_shrub_bioclim))
-  q_ppet[i,6] = length(ids_bioclim)
-  q_tmin[i,6] = length(ids_bioclim)
-  if(length(ids_bioclim)>1) {
-    q_ppet[i,3:5] = quantile(bioclimIFN34[ids_bioclim,"ppet_mean"],
-                             probs=probs, na.rm = T)
-    q_tmin[i,3:5] = quantile(bioclimIFN34[ids_bioclim,"tmin_mean"],
-                             probs=probs, na.rm = T)
-  }
-}
-```
-The resulting quantile tables are for the temperature of the coldest month:
-```{r rows.print = 20, echo = FALSE}
-head(q_tmin)
-```
-and for the moisture index:
-```{r rows.print = 20, echo = FALSE}
-head(q_ppet)
-```
-
-We now fill quantile output for PAR limits in a similar way. Here we focus on regeneration and shrub data tables only, because the adults in the plot may have recruited long ago, when light conditions in the ground where quite different:
-```{r}
-for(i in 1:length(spUnique)) {
-  sp = spUnique[i]
-  ids_reg_par = unique(regFiltPAR$ID[regFiltPAR$Species==sp])
-  ids_shrub_par = unique(shrubFiltPAR$ID[shrubFiltPAR$Species==sp])
-  ids_par <- unique(c(ids_reg_par, ids_shrub_par))
-  q_par[i,6] = length(ids_par)
-  if(length(ids_par)>1) {
-    q_par[i,3:5] = quantile(par_groundIFN3[ids_par], probs=probs, na.rm = T)
-  }
-}
-```
-The resulting quantile table is:
-```{r rows.print = 20, echo = FALSE}
-head(q_par)
-```
-Store quantile tables:
-```{r, include = FALSE}
-saveRDS(q_ppet, file.path(DB_path, "/IFNbioclimatic/Products/IFNSpeciesQuantiles_PPET.rds"))
-saveRDS(q_tmin, file.path(DB_path, "/IFNbioclimatic/Products/IFNSpeciesQuantiles_TMIN.rds"))
-saveRDS(q_par, file.path(DB_path, "/IFNbioclimatic/Products/IFNSpeciesQuantiles_PAR.rds"))
-```
-
-### Fill medfate parameters
-
-For each species in medfate we find the corresponding IFN species in the quantile tables. If the relationship is univocal, 1\% quantile value of the IFN species is stored. If there are more than one IFN species for the target medfate species, we keep the weighted average of 1\% quantile values, using the number of plots as weights.
-```{r fill_bioclim}
-for(i in 1:nrow(SpParams)) {
-  SPtarget = SpParams$SpIndex[i]
-  #MinFPARRecr
-  r_sel = which(q_par$Species_medfate==SPtarget)
-  if(length(r_sel)==1) {
-    SpParams$MinFPARRecr[i] = q_par$q1[r_sel]
-  } else if(length(r_sel)>1) {
-    n = q_par$n[r_sel]
-    q1 = q_par$q1[r_sel]
-    q1 = q1[!is.na(n)]
-    n = n[!is.na(n)]
-    SpParams$MinFPARRecr[i] = sum(n*q1, na.rm=TRUE)/sum(n, na.rm=TRUE)
-  }
-  #MinTempRecr
-  r_sel = which(q_tmin$Species_medfate==SPtarget)
-  if(length(r_sel)==1) {
-    SpParams$MinTempRecr[i] = q_tmin$q1[r_sel]
-  } else if(length(r_sel)>1) {
-    n = q_tmin$n[r_sel]
-    q1 = q_tmin$q1[r_sel]
-    SpParams$MinTempRecr[i] = sum(n*q1, na.rm=TRUE)/sum(n, na.rm=TRUE)
-  }
-  #MinMoistureRecr
-  r_sel = which(q_ppet$Species_medfate==SPtarget)
-  if(length(r_sel)==1) {
-    SpParams$MinMoistureRecr[i] = q_ppet$q1[r_sel]
-  } else if(length(r_sel)>1) {
-    n = q_ppet$n[r_sel]
-    q1 = q_ppet$q1[r_sel]
-    q1 = q1[!is.na(q1)]
-    n = n[!is.na(q1)]
-    SpParams$MinMoistureRecr[i] = sum(n*q1, na.rm=TRUE)/sum(n, na.rm=TRUE)
-  }
-}
-```
-
-```{r}
-summary(SpParams[,c("MinFPARRecr","MinTempRecr","MinMoistureRecr"), drop=FALSE])
-```
-
-```{r save_SpParams, eval = params$spparams_rebuild, include = FALSE}
-  wb <- openxlsx::createWorkbook()
-  openxlsx::addWorksheet(wb, "SpParamsMED")
-  openxlsx::writeDataTable(wb, "SpParamsMED", SpParams)
-  openxlsx::saveWorkbook(wb,"../../data-raw/SpParamsMED.xlsx", overwrite=TRUE)
 ```
 
 ## References
