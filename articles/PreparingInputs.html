@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.2</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Preparing model inputs</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-03-30</h4>
+            <h4 data-toc-skip class="date">2022-04-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/PreparingInputs.Rmd" class="external-link"><code>vignettes/PreparingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>PreparingInputs.Rmd</code></div>
@@ -728,107 +728,113 @@
 </tr>
 <tr class="even">
 <td align="left">RGRsapwoodmax</td>
-<td align="left">Maximum sapwood relative growth rate (in basal area or sapwood area)</td>
+<td align="left">Maximum sapwood growth rate relative to sapwood area (for shrubs)</td>
 <td align="left">Numeric</td>
 <td align="left">cm2/cm2/day</td>
 </tr>
 <tr class="odd">
+<td align="left">RGRcambiummax</td>
+<td align="left">Maximum sapwood growth rate relative to cambium perimeter (for trees)</td>
+<td align="left">Numeric</td>
+<td align="left">cm2/cm/day</td>
+</tr>
+<tr class="even">
 <td align="left">RGRfinerootmax</td>
 <td align="left">Maximum fineroot relative growth rate</td>
 <td align="left">Numeric</td>
 <td align="left">g dry/g dry/day</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SRsapwood</td>
 <td align="left">Sapwood daily senescence rate</td>
 <td align="left">Numeric</td>
 <td align="left">Day-1</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">SRfineroot</td>
 <td align="left">Fine root daily senescence rate</td>
 <td align="left">Numeric</td>
 <td align="left">Day-1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RSSG</td>
 <td align="left">Minimum relative starch for sapwood growth</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">MortalityBaselineRate</td>
 <td align="left">Deterministic proportion or probability specifying the baseline reduction of cohort’s density occurring in a year</td>
 <td align="left">Numeric</td>
 <td align="left">Year-1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SeedProductionHeight</td>
 <td align="left">Minimum height for seed production</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">ProbRecr</td>
 <td align="left">Probability of recruitment within the bioclimatic envelope</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">MinTempRecr</td>
 <td align="left">Minimum average temperature of the coldest month for successful recruitment</td>
 <td align="left">Numeric</td>
 <td align="left">ºC</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">MinMoistureRecr</td>
 <td align="left">Minimum value of the moisture index (annual precipitation over annual PET) for successful recruitment</td>
 <td align="left">Numeric</td>
 <td align="left">unitless</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">MinFPARRecr</td>
 <td align="left">Minimum percentage of PAR at the ground level for successful recruitment</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrTreeDBH</td>
 <td align="left">Recruitment tree dbh</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrTreeHeight</td>
 <td align="left">Recruitment tree height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrShrubHeight</td>
 <td align="left">Recruitment shrub height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrTreeDensity</td>
 <td align="left">Recruitment tree density</td>
 <td align="left">Numeric</td>
 <td align="left">ind/ha</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrShrubCover</td>
 <td align="left">Recruitment shrub cover</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrZ50</td>
 <td align="left">Recruitment depth corresponding to 50% of fine roots</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrZ95</td>
 <td align="left">Recruitment depth corresponding to 95% of fine roots</td>
 <td align="left">Numeric</td>
@@ -883,7 +889,7 @@
 <span class="va">above</span></code></pre></div>
 <pre><code><span class="co">##         SP        N   DBH Cover   H        CR   LAI_live LAI_expanded LAI_dead</span>
 <span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 0.96734365   0.96734365        0</span>
-<span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642 0.93111690   0.93111690        0</span>
+<span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642 0.86167321   0.86167321        0</span>
 <span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817 0.03928201   0.03928201        0</span></code></pre>
 <p>Note that the call to <code><a href="../reference/modelInput.html">forest2aboveground()</a></code> included species parameters, because species-specific values are needed to calculate leaf area from tree diameters or shrub cover. Columns <code>N</code>, <code>DBH</code> and <code>Cover</code> are required for simulating growth, but not for soil water balance, which only requires columns <code>SP</code>, <code>H</code> (in cm), <code>CR</code> (i.e. the crown ratio), <code>LAI_live</code>, <code>LAI_expanded</code> and <code>LAI_dead</code>. Here plant cohorts are given unique codes that tell us whether they correspond to trees or shrubs, but the user can use other row identifiers as long as they are unique. In practice, the user only needs to worry to calculate the values for <code>LAI_live</code>. <code>LAI_live</code> and <code>LAI_expanded</code> can contain the same LAI values, and <code>LAI_dead</code> is normally zero. This is so because models update <code>LAI_expanded</code> and <code>LAI_dead</code> according to the leaf phenology of species.</p>
 <p>Aboveground leaf area distribution (with or without distinguishing among cohorts) can be examined by calling function <code><a href="../reference/VerticalProfiles.html">vprofile_leafAreaDensity()</a></code>:</p>

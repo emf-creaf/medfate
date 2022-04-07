@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.2</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Forest growth</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-03-30</h4>
+            <h4 data-toc-skip class="date">2022-04-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/ForestGrowth.Rmd" class="external-link"><code>vignettes/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -193,27 +193,27 @@
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">above</span></code></pre></div>
 <pre><code><span class="co">##         SP        N   DBH Cover   H        CR         SA   LAI_live</span>
 <span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 437.032040 0.96734365</span>
-<span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642  96.506387 0.93111690</span>
+<span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642  57.407064 0.86167321</span>
 <span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817   1.251072 0.03928201</span>
 <span class="co">##        LAI_expanded LAI_dead</span>
 <span class="co">## T1_148   0.96734365        0</span>
-<span class="co">## T2_168   0.93111690        0</span>
+<span class="co">## T2_168   0.86167321        0</span>
 <span class="co">## S1_165   0.03928201        0</span></code></pre>
 <p>Elements starting with <code>params*</code> contain cohort-specific model parameters. Some of them were already presented in previous vignettes (<a href="https://emf-creaf.github.io/medfate/articles/BasicWaterBalance.html" class="external-link"><em>Basic water balance</em></a> and <a href="https://emf-creaf.github.io/medfate/articles/AdvancedWaterBalance.html" class="external-link"><em>Advanced water balance</em></a>). An important set of new cohort-specific parameters for the forest growth model are <code>paramsGrowth</code>:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsGrowth</span></code></pre></div>
 <pre><code><span class="co">##           RERleaf   RERsapwood  RERfineroot CCleaf CCsapwood CCfineroot</span>
-<span class="co">## T1_148 0.01210607 6.849315e-05 0.0009610199 1.5905      1.47        1.3</span>
-<span class="co">## T2_168 0.01757808 6.849315e-05 0.0072846640 1.4300      1.47        1.3</span>
-<span class="co">## S1_165 0.02647746 6.849315e-05 0.0072846640 1.5320      1.47        1.3</span>
-<span class="co">##        RGRleafmax RGRsapwoodmax RGRfinerootmax    SRsapwood  SRfineroot</span>
-<span class="co">## T1_148       0.03         0.005            0.1 0.0001261398 0.001897231</span>
-<span class="co">## T2_168       0.03         0.005            0.1 0.0001261398 0.001897231</span>
-<span class="co">## S1_165       0.03         0.005            0.1 0.0001261398 0.001897231</span>
-<span class="co">##             RSSG fHDmin fHDmax     WoodC MortalityBaselineRate</span>
-<span class="co">## T1_148 0.3112500     40    130 0.4979943                0.0015</span>
-<span class="co">## T2_168 0.6035000     40    100 0.4740096                0.0015</span>
-<span class="co">## S1_165 0.5152018     NA     NA 0.4749178                0.0015</span></code></pre>
+<span class="co">## T1_148 0.01210607 4.175349e-05 0.0009610199 1.5905      1.47        1.3</span>
+<span class="co">## T2_168 0.01757808 5.180000e-05 0.0072846640 1.4300      1.47        1.3</span>
+<span class="co">## S1_165 0.02647746 5.180000e-05 0.0072846640 1.5320      1.47        1.3</span>
+<span class="co">##        RGRleafmax RGRsapwoodmax RGRcambiummax RGRfinerootmax    SRsapwood</span>
+<span class="co">## T1_148       0.03         0.002   0.001395156            0.1 0.0001447323</span>
+<span class="co">## T2_168       0.03         0.002   0.005000000            0.1 0.0001261398</span>
+<span class="co">## S1_165       0.03         0.002   0.005000000            0.1 0.0001261398</span>
+<span class="co">##         SRfineroot      RSSG fHDmin fHDmax     WoodC MortalityBaselineRate</span>
+<span class="co">## T1_148 0.001897231 0.3112500     80    160 0.4979943                0.0035</span>
+<span class="co">## T2_168 0.001897231 0.6035000     40    100 0.4740096                0.0016</span>
+<span class="co">## S1_165 0.001897231 0.5152018     NA     NA 0.4749178                0.0015</span></code></pre>
 <p>which includes maximum growth rates, senescence rates and maintenance respiration rages. Another important set of parameters is given in <code>paramsAllometries</code>:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsAllometries</span></code></pre></div>
@@ -238,7 +238,7 @@
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">internalAllocation</span></code></pre></div>
 <pre><code><span class="co">##        allocationTarget leafAreaTarget fineRootBiomassTarget</span>
 <span class="co">## T1_148         1317.523      57.579979            1574.98321</span>
-<span class="co">## T2_168         2512.563      24.247836             721.44857</span>
+<span class="co">## T2_168         3908.823      22.439407             667.64217</span>
 <span class="co">## S1_165         4189.325       0.524115              13.57757</span></code></pre>
 <p>Additional <code>internal*</code> elements are <code>internalMortality</code>, used to keep track of dead individuals; and <code>internalRings</code>, which stores state variables used to model sink limitations on wood formation.</p>
 </div>
@@ -249,32 +249,32 @@
 <p>Having all the input information we are ready to call function <code><a href="../reference/growth.html">growth()</a></code>, which has the same parameter names as <code><a href="../reference/spwb.html">spwb()</a></code>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">G1</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Initial plant cohort biomass (g/m2): 8436.88</span>
+<pre><code><span class="co">## Initial plant cohort biomass (g/m2): 7109.27</span>
 <span class="co">## Initial soil water content (mm): 291.257</span>
 <span class="co">## Initial snowpack content (mm): 0</span>
 <span class="co">## Performing daily simulations</span>
 <span class="co">## </span>
 <span class="co">##  [Year 2001]: ....................................</span>
 <span class="co">## </span>
-<span class="co">## Final plant biomass (g/m2): 8918.99</span>
-<span class="co">## Change in plant biomass (g/m2): 482.11</span>
-<span class="co">## Plant biomass balance result (g/m2): 482.11</span>
+<span class="co">## Final plant biomass (g/m2): 7268.7</span>
+<span class="co">## Change in plant biomass (g/m2): 159.433</span>
+<span class="co">## Plant biomass balance result (g/m2): 159.433</span>
 <span class="co">## Plant biomass balance components:</span>
-<span class="co">##   Structural balance (g/m2) 480 Labile balance (g/m2) 15</span>
-<span class="co">##   Plant individual balance (g/m2) 495 Mortality loss (g/m2) 13</span>
-<span class="co">## Final soil water content (mm): 269.546</span>
+<span class="co">##   Structural balance (g/m2) 66 Labile balance (g/m2) 115</span>
+<span class="co">##   Plant individual balance (g/m2) 181 Mortality loss (g/m2) 22</span>
+<span class="co">## Final soil water content (mm): 268.771</span>
 <span class="co">## Final snowpack content (mm): 0</span>
-<span class="co">## Change in soil water content (mm): -21.7111</span>
-<span class="co">## Soil water balance result (mm): -21.7111</span>
+<span class="co">## Change in soil water content (mm): -22.4859</span>
+<span class="co">## Soil water balance result (mm): -22.4859</span>
 <span class="co">## Change in snowpack water content (mm): 0</span>
 <span class="co">## Snowpack water balance result (mm): 0</span>
 <span class="co">## Water balance components:</span>
 <span class="co">##   Precipitation (mm) 513</span>
 <span class="co">##   Rain (mm) 462 Snow (mm) 51</span>
-<span class="co">##   Interception (mm) 97 Net rainfall (mm) 365</span>
-<span class="co">##   Infiltration (mm) 407 Runoff (mm) 9 Deep drainage (mm) 83</span>
-<span class="co">##   Soil evaporation (mm) 21 Transpiration (mm) 325</span>
-<span class="co">##   Plant extraction from soil (mm) 325  Plant water balance (mm) -0</span></code></pre>
+<span class="co">##   Interception (mm) 95 Net rainfall (mm) 368</span>
+<span class="co">##   Infiltration (mm) 410 Runoff (mm) 9 Deep drainage (mm) 75</span>
+<span class="co">##   Soil evaporation (mm) 19 Transpiration (mm) 338</span>
+<span class="co">##   Plant extraction from soil (mm) 338  Plant water balance (mm) -0</span></code></pre>
 <p>At the end of daily simulations, the <code><a href="../reference/growth.html">growth()</a></code> function displays information regarding the carbon and water balance, which is mostly useful to check that balances are closed.</p>
 <p>Function <code><a href="../reference/growth.html">growth()</a></code> returns an object of class with the same name, actually a list:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
@@ -355,10 +355,10 @@
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, 
                  temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##          n       Bias   Bias.rel        MAE    MAE.rel          r        NSE </span>
-<span class="co">## 12.0000000 -0.2429470 -8.7841099  0.2429470  8.7841099  0.9985129  0.9879290 </span>
-<span class="co">##    NSE.abs </span>
-<span class="co">##  0.9016240</span></code></pre>
+<pre><code><span class="co">##            n         Bias     Bias.rel          MAE      MAE.rel            r </span>
+<span class="co">##  12.00000000  -0.03299074 -16.17667527   0.03326925  16.31323973   0.99782247 </span>
+<span class="co">##          NSE      NSE.abs </span>
+<span class="co">##   0.95421386   0.82034739</span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically good. For illustrative purposes, we also compare diameter increment values, here drawing the observed and predicted time series together:</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"DI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, 

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.2</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Sensitivity analysis and calibration</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-03-30</h4>
+            <h4 data-toc-skip class="date">2022-04-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/modelanalysis/SensitivityCalibration.Rmd" class="external-link"><code>vignettes/modelanalysis/SensitivityCalibration.Rmd</code></a></small>
       <div class="hidden name"><code>SensitivityCalibration.Rmd</code></div>
@@ -93,7 +93,7 @@
 <p>As an example data set we will use here the same data sets provided to illustrate simulation functions in <strong>medfate</strong>. We begin by loading the package and the example forest data:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/" class="external-link">medfate</a></span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Package 'medfate' [ver. 2.7.1]</span></code></pre>
+<pre><code><span class="co">## Package 'medfate' [ver. 2.7.2]</span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span>
 <span class="va">exampleforestMED</span></code></pre></div>
@@ -147,19 +147,19 @@
 <span class="co">## </span>
 <span class="co">##  [Year 2001]:....................................</span>
 <span class="co">## </span>
-<span class="co">## Final soil water content (mm): 269.534</span>
+<span class="co">## Final soil water content (mm): 266.112</span>
 <span class="co">## Final snowpack content (mm): 0</span>
-<span class="co">## Change in soil water content (mm): -21.7226</span>
-<span class="co">## Soil water balance result (mm): -21.7226</span>
+<span class="co">## Change in soil water content (mm): -25.1443</span>
+<span class="co">## Soil water balance result (mm): -25.1443</span>
 <span class="co">## Change in snowpack water content (mm): 0</span>
-<span class="co">## Snowpack water balance result (mm): 7.10543e-15</span>
+<span class="co">## Snowpack water balance result (mm): 0</span>
 <span class="co">## Water balance components:</span>
 <span class="co">##   Precipitation (mm) 513</span>
 <span class="co">##   Rain (mm) 462 Snow (mm) 51</span>
-<span class="co">##   Interception (mm) 98 Net rainfall (mm) 364</span>
-<span class="co">##   Infiltration (mm) 406 Runoff (mm) 9 Deep drainage (mm) 75</span>
-<span class="co">##   Soil evaporation (mm) 19 Transpiration (mm) 334</span>
-<span class="co">##   Plant extraction from soil (mm) 334  Plant water balance (mm) -0</span></code></pre>
+<span class="co">##   Interception (mm) 96 Net rainfall (mm) 366</span>
+<span class="co">##   Infiltration (mm) 408 Runoff (mm) 9 Deep drainage (mm) 67</span>
+<span class="co">##   Soil evaporation (mm) 17 Transpiration (mm) 350</span>
+<span class="co">##   Plant extraction from soil (mm) 350  Plant water balance (mm) -0</span></code></pre>
 <p>Function <code><a href="../../reference/spwb.html">spwb()</a></code> will be implicitly called multiple times in the sensitivity analyses and calibration analyses that we will illustrate below.</p>
 </div>
 <div class="section level2">
@@ -181,13 +181,13 @@
 <p>Here we will mostly interested in ranking parameters according to different objectives. We will take as input factors three plant traits (leaf area index, fine root distribution and the water potential corresponding to a reduction in plant conductance) in the three plant cohorts (species), and two soil factors (the rock fragment content of soil layer 1 and 2). In total, eleven model parameters will be studied. The following shows the initial values for plant trait parameters:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x1</span><span class="op">$</span><span class="va">above</span><span class="op">$</span><span class="va">LAI_live</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.96734365 0.93111690 0.03928201</span></code></pre>
+<pre><code><span class="co">## [1] 0.96734365 0.86167321 0.03928201</span></code></pre>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x1</span><span class="op">$</span><span class="va">below</span><span class="op">$</span><span class="va">Z50</span></code></pre></div>
 <pre><code><span class="co">## [1] 100 300 200</span></code></pre>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x1</span><span class="op">$</span><span class="va">paramsTransp</span><span class="op">$</span><span class="va">Psi_Extract</span></code></pre></div>
-<pre><code><span class="co">## [1] -1.596176 -1.842765 -2.121073</span></code></pre>
+<pre><code><span class="co">## [1] -2.303000 -1.964000 -2.121073</span></code></pre>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x1</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">rfc</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></code></pre></div>
 <pre><code><span class="co">## [1] 25 45</span></code></pre>
@@ -228,7 +228,7 @@
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sf_transp</span><span class="op">&lt;-</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">Transpiration</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span>
 <span class="fu">sf_transp</span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 334.1886</span></code></pre>
+<pre><code><span class="co">## [1] 349.8361</span></code></pre>
 <p>Another prediction function can focus on plant drought stress. We define a function that, given a simulation result, calculates the average drought stress of plants (measured using the water stress index) over the simulated period:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sf_stress</span><span class="op">&lt;-</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
@@ -238,7 +238,7 @@
   <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sweep.html" class="external-link">sweep</a></span><span class="op">(</span><span class="va">stress</span>,<span class="fl">2</span>, <span class="va">lai_p</span>, <span class="st">"*"</span><span class="op">)</span>, na.rm<span class="op">=</span><span class="cn">T</span><span class="op">)</span>
 <span class="op">}</span>
 <span class="fu">sf_stress</span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 6.215406</span></code></pre>
+<pre><code><span class="co">## [1] 7.637467</span></code></pre>
 <p>Sensitivity analysis requires model output functions whose parameters are the input factors to be studied. <span class="math display">\[\begin{equation}
 y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 \end{equation}\]</span> where <span class="math inline">\(y\)</span> is the output, <span class="math inline">\(g\)</span> is the output function and <span class="math inline">\(\mathbf{x} = \{x_1, x_2, \dots, x_n\}\)</span> is the vector of parameter input factors. Functions <code>of_transp</code> and <code>of_stress</code> take simulation results as input, not values of input factors. Instead, we need to define functions that take soil and plant trait values as input, run the soil plant water balance model and return the desired prediction or performance statistic. These functions can be generated using the function factory <code><a href="../../reference/optimization.html">optimization_function()</a></code>. The following code defines one of such functions focusing on total transpiration:</p>
@@ -251,7 +251,7 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <p>Note that we provided all the data needed for simulations as input to <code><a href="../../reference/optimization.html">optimization_function()</a></code>, as well as the names of the parameters to study and the function <code>sf_transp</code>. The resulting object <code>of_transp</code> is a function itself, which we can call with parameter values (or sets of parameter values) as input:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_transp</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 55.93924</span></code></pre>
+<pre><code><span class="co">## [1] 58.38871</span></code></pre>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_transp</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] 0</span></code></pre>
@@ -268,7 +268,7 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
                                  latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>,
                                  summary_function <span class="op">=</span> <span class="va">sf_stress</span><span class="op">)</span>
 <span class="fu">of_stress</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.7282808</span></code></pre>
+<pre><code><span class="co">## [1] 0.7524061</span></code></pre>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_stress</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf</span>
@@ -279,13 +279,13 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##                  SWC      ETR   E_T1_148   E_T2_168 FMC_T1_148 FMC_T2_168</span>
-<span class="co">## 2001-01-01 0.3125792 2.166630 0.11493375 0.14508191   125.8495   92.97828</span>
-<span class="co">## 2001-01-02 0.3065418 2.446479 0.28739792 0.30651534   125.7901   92.97694</span>
-<span class="co">## 2001-01-03 0.2919231 1.016358 0.22292214 0.15781931   125.8245   93.01687</span>
-<span class="co">## 2001-01-04 0.3027636 2.359727 0.04854116 0.06753429   125.8628   92.95963</span>
-<span class="co">## 2001-01-05 0.3015457 2.240244 0.31151954 0.32729759   125.7033   93.05582</span>
-<span class="co">## 2001-01-06 0.2880046 2.817495 0.17314683 0.19757163   125.8108   93.01873</span>
+<pre><code><span class="co">##                  SWC       ETR     E_T1_148  E_T2_168 FMC_T1_148 FMC_T2_168</span>
+<span class="co">## 2001-01-01 0.2995062 2.2699042  0.195686939 0.1433095   125.9888   93.10436</span>
+<span class="co">## 2001-01-02 0.3051488 2.5686994  0.319458083 0.2229245   125.8272   93.11233</span>
+<span class="co">## 2001-01-03 0.2880321 0.5472155  0.202467908 0.2226380   125.8836   93.03976</span>
+<span class="co">## 2001-01-04 0.2896135 1.9293939 -0.006413486 0.1082622   125.8667   93.05872</span>
+<span class="co">## 2001-01-05 0.3018158 2.3145178  0.278545191 0.1959239   125.8366   93.03899</span>
+<span class="co">## 2001-01-06 0.3025300 2.4832387  0.268117900 0.1423526   125.9902   93.07631</span>
 <span class="co">##            BAI_T1_148 BAI_T2_168 DI_T1_148 DI_T2_168</span>
 <span class="co">## 2001-01-01          0          0         0         0</span>
 <span class="co">## 2001-01-02          0          0         0         0</span>
@@ -297,7 +297,7 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_metric</a></span><span class="op">(</span><span class="va">S1</span>, measuredData <span class="op">=</span> <span class="va">exampleobs</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, 
                   metric <span class="op">=</span> <span class="st">"NSE"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.889093</span></code></pre>
+<pre><code><span class="co">## [1] 0.8635179</span></code></pre>
 <p>A call to <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code> provides the coefficient given a model simulation result, but is not a model output function as we defined above. Analogously to the measures of total transpiration and average plant stress, we can use a function factory to define a model output function that takes input factors as inputs, runs the model and performs the evaluation:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">of_eval</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/optimization.html">optimization_evaluation_function</a></span><span class="op">(</span>parNames <span class="op">=</span> <span class="va">parNames</span>,
@@ -308,7 +308,7 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <p>Function <code>of_eval()</code> stores internally both the data needed for conducting simulations and the data needed for evaluating simulation results, so that we only need to provide values for the input factors:</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] -0.3468305</span></code></pre>
+<pre><code><span class="co">## [1] -0.5072244</span></code></pre>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] -Inf</span></code></pre>
@@ -649,12 +649,6 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
      xlab <span class="op">=</span> <span class="st">"Average plant stress"</span>,
      xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">30</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0.3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf</span>
-
-<span class="co">## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf</span>
-
-<span class="co">## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf</span>
-
-<span class="co">## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf</span>
 
 <span class="co">## Warning in max(lwp, na.rm = T): no non-missing arguments to max; returning -Inf</span>
 

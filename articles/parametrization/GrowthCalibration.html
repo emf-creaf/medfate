@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.2</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
       <h1 data-toc-skip>Growth calibration</h1>
                         <h4 data-toc-skip class="author">Miquel De Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-03-30</h4>
+            <h4 data-toc-skip class="date">2022-04-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/GrowthCalibration.Rmd" class="external-link"><code>vignettes/parametrization/GrowthCalibration.Rmd</code></a></small>
       <div class="hidden name"><code>GrowthCalibration.Rmd</code></div>
@@ -107,25 +107,16 @@
 <li>
 <strong>Sapwood daily respiration rate (RERsapwood)</strong> - Used to modulate maintenance respiration demands of living sapwood tissues (parenchyma, cambium, phloem, etc.), which in large trees may also represent a large fraction of maintenance respiration.</li>
 <li>
-<strong>Sapwood maximum growth rate (RGRsapwoodmax)</strong> - Used to modulate maximum daily sapwood growth rates (relative to current sapwood area). Actual relative growth rates include temperature and sink limitations to growth.</li>
+<strong>Sapwood maximum growth rate (RGRcambiummax)</strong> - Used to modulate tree maximum daily sapwood growth rates (relative to current cambium perimeter). Actual relative growth rates include temperature and sink limitations to growth.</li>
 <li>
 <strong>Sapwood daily senescence rate (SRsapwood)</strong> - Used to determine the daily proportion of sapwood that becomes heartwood. It regulates the area of functional sapwood, together with the sapwood maximum growth rate.</li>
 </ol>
 <p>In addition, soil stoniness in the target plots had been estimated from surface stoniness classes. Since soil rock fragment content (<code>rfc</code>) has a strong influence on soil water capacity, we decided to include the proportion of rocks in the second soil layer (between 30 and 100 cm) as a parameter to be calibrated.</p>
 </div>
-<div class="section level3">
-<h3 id="sensitivity-analysis">Sensitivity analysis<a class="anchor" aria-label="anchor" href="#sensitivity-analysis"></a>
-</h3>
-<p>We conducted a variance-based global sensitivity analysis of model parameters including those to be calibrated and others that we estimated important to determine secondary growth. For the sensitivity analysis we selected a forest plot dominated by <em>Pinus sylvestris</em>, where we collapsed forest structure into a single tree cohort and run simulations using daily weather between 2001 and 2005.</p>
-<p>First we conducted the sensitivity analysis using the final basal area of the stand as the response function.</p>
-<p><img src="GrowthCalibration_files/figure-html/SA_variance_plot-1.png" width="576"></p>
-<p>The variable that primarily determines growth rate is WUE, which, together with the transpiration rate determines carbon availability, but the maximum sapwood growth rate comes right after. We repeated the sensitivity analysis but using the coefficient of variation of annual BAI as response function:</p>
-<p><img src="GrowthCalibration_files/figure-html/SA_variance_cvBAI_plot-1.png" width="576"></p>
-<p>From these results we see that other parameters are relevant to determine inter-annual variability in secondary growth.</p>
 </div>
-<div class="section level3">
-<h3 id="calibration-procedure">Calibration procedure<a class="anchor" aria-label="anchor" href="#calibration-procedure"></a>
-</h3>
+<div class="section level2">
+<h2 id="calibration-procedure">Calibration procedure<a class="anchor" aria-label="anchor" href="#calibration-procedure"></a>
+</h2>
 <p>For each forest plot in the first data set, we matched each available dendrochronological series with a forest inventory tree cohort by finding which tree (in the IFN3 sampling) had the DBH most similar to that estimated from the dendrochronology at year 2000. Then, we took the series of annual basal area increments (BAI) as the observations to be matched by model secondary growth predictions for the matched tree cohort. For each forest plot of the second data set, we took all available dendrochronological series between 1990 and 2004. Available diameter increments (DI) were used to infer DBH at year 1990 and we transformed DI into annual BAI.</p>
 <p>Simulations were performed using daily weather data for each target plot, obtained via interpolation using package <strong>meteoland</strong> (2001 - 2015 period or 1990-2004 period, depending on the data set), and soil physical characteristics where drawn from SoilGrids data base. Water use efficiency parameters (<code>WUE</code> and <code>WUE_decay</code>) were given values resulting from the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html" class="external-link">meta-modelling exercise</a>, whereas other parameters of the sensitivity analysis were left to the species-level defaults of <code>SpParamsMED</code>. We calibrated the four target parameters for the target dominant species of the target plot using a genetic algorithm (function <code>ga</code> from package <strong>GA</strong>). Model parameter values were assumed to be the same for all cohorts of the target species, while the remaining species in the plot were given default constant parameter values. The objective function for the genetic algorithm was the average, across cohorts with observed dendrochronology series, of the mean absolute error (MAE) resulting from comparing observed and predicted annual BAI series. Population size for the genetic algorithm was set to 40 individuals. A maximum of 25 iterations of the genetic algorithm were allowed, and the calibration procedure stopped if the best parameter combination did not change during 5 consecutive iterations.</p>
 The following table shows the range of values explored for each parameter to be calibrated:
@@ -154,13 +145,13 @@ RERsapwood
 </tr>
 <tr>
 <td style="text-align:left;">
-RGRsapwoodmax
+RGRcambiummax
 </td>
 <td style="text-align:right;">
 1.0e-04
 </td>
 <td style="text-align:right;">
-1.0e-02
+2.0e-02
 </td>
 </tr>
 <tr>
@@ -188,7 +179,6 @@ SRsapwood
 </tbody>
 </table>
 </div>
-</div>
 <div class="section level2">
 <h2 id="calibration-results">Calibration results<a class="anchor" aria-label="anchor" href="#calibration-results"></a>
 </h2>
@@ -215,7 +205,7 @@ Rel. MAE (%)
 RERsapwood
 </th>
 <th style="text-align:right;">
-RGRsapwoodmax
+RGRcambiummax
 </th>
 <th style="text-align:right;">
 SRsapwood
@@ -230,19 +220,19 @@ SRsapwood
 Fagus sylvatica
 </td>
 <td style="text-align:right;">
-46.84278
+50.79184
 </td>
 <td style="text-align:right;">
-4.74e-05
+4.85e-05
 </td>
 <td style="text-align:right;">
-0.0020187
+0.0042420
 </td>
 <td style="text-align:right;">
-0.0001610
+0.0001472
 </td>
 <td style="text-align:right;">
-62.20481
+58.35796
 </td>
 </tr>
 <tr>
@@ -250,19 +240,19 @@ Fagus sylvatica
 Pinus halepensis
 </td>
 <td style="text-align:right;">
-50.61971
+54.28676
 </td>
 <td style="text-align:right;">
-4.62e-05
+4.19e-05
 </td>
 <td style="text-align:right;">
-0.0009469
+0.0030972
 </td>
 <td style="text-align:right;">
-0.0001344
+0.0001280
 </td>
 <td style="text-align:right;">
-54.05399
+68.96319
 </td>
 </tr>
 <tr>
@@ -270,19 +260,19 @@ Pinus halepensis
 Pinus nigra
 </td>
 <td style="text-align:right;">
-48.24500
+50.21999
 </td>
 <td style="text-align:right;">
-5.51e-05
+4.72e-05
 </td>
 <td style="text-align:right;">
-0.0005829
+0.0017272
 </td>
 <td style="text-align:right;">
-0.0001333
+0.0001353
 </td>
 <td style="text-align:right;">
-51.89222
+72.27062
 </td>
 </tr>
 <tr>
@@ -290,19 +280,19 @@ Pinus nigra
 Pinus sylvestris
 </td>
 <td style="text-align:right;">
-44.90696
+45.63719
 </td>
 <td style="text-align:right;">
-4.92e-05
+5.81e-05
 </td>
 <td style="text-align:right;">
-0.0017476
+0.0031669
 </td>
 <td style="text-align:right;">
-0.0001169
+0.0001626
 </td>
 <td style="text-align:right;">
-58.95173
+65.07753
 </td>
 </tr>
 <tr>
@@ -310,19 +300,19 @@ Pinus sylvestris
 Quercus pubescens
 </td>
 <td style="text-align:right;">
-40.18709
+41.42122
 </td>
 <td style="text-align:right;">
-5.18e-05
+4.87e-05
 </td>
 <td style="text-align:right;">
-0.0027375
+0.0034123
 </td>
 <td style="text-align:right;">
-0.0001807
+0.0001639
 </td>
 <td style="text-align:right;">
-56.87677
+49.59120
 </td>
 </tr>
 <tr>
@@ -330,19 +320,19 @@ Quercus pubescens
 Pinus uncinata
 </td>
 <td style="text-align:right;">
-59.55992
+61.28591
 </td>
 <td style="text-align:right;">
-4.99e-05
+5.18e-05
 </td>
 <td style="text-align:right;">
-0.0055390
+0.0117073
 </td>
 <td style="text-align:right;">
-0.0002028
+0.0001482
 </td>
 <td style="text-align:right;">
-48.05869
+34.78091
 </td>
 </tr>
 <tr>
@@ -350,52 +340,52 @@ Pinus uncinata
 All
 </td>
 <td style="text-align:right;">
-48.00853
+50.23892
 </td>
 <td style="text-align:right;">
-4.99e-05
+4.93e-05
 </td>
 <td style="text-align:right;">
-0.0021491
+0.0043123
 </td>
 <td style="text-align:right;">
-0.0001532
+0.0001475
 </td>
 <td style="text-align:right;">
-55.59077
+58.98021
 </td>
 </tr>
 </tbody>
 </table>
-<p>Statistically significant differences can be observed between species for <code>RERsapwood</code> and <code>RGRsapwoodmax</code>, as shown in the following ANOVA tables:</p>
+<p>Statistically significant differences can be observed between species for <code>RERsapwood</code> and <code>RGRcambiummax</code>, as shown in the following ANOVA tables:</p>
 <pre><code><span class="co">## Analysis of Variance Table</span>
 <span class="co">## </span>
 <span class="co">## Response: RERsapwood_cal</span>
 <span class="co">##           Df     Sum Sq    Mean Sq F value Pr(&gt;F)</span>
-<span class="co">## Species    5 7.6800e-10 1.5354e-10  0.3925 0.8526</span>
-<span class="co">## Residuals 81 3.1682e-08 3.9113e-10</span></code></pre>
+<span class="co">## Species    5 2.1360e-09 4.2726e-10  0.8565 0.5141</span>
+<span class="co">## Residuals 81 4.0407e-08 4.9885e-10</span></code></pre>
 <pre><code><span class="co">## Analysis of Variance Table</span>
 <span class="co">## </span>
-<span class="co">## Response: RGRsapwoodmax_cal</span>
+<span class="co">## Response: RGRcambiummax_cal</span>
 <span class="co">##           Df     Sum Sq    Mean Sq F value    Pr(&gt;F)    </span>
-<span class="co">## Species    5 0.00020424 4.0848e-05  17.635 8.775e-12 ***</span>
-<span class="co">## Residuals 81 0.00018762 2.3160e-06                      </span>
+<span class="co">## Species    5 0.00081053 1.6211e-04  14.452 4.159e-10 ***</span>
+<span class="co">## Residuals 81 0.00090859 1.1217e-05                      </span>
 <span class="co">## ---</span>
 <span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre>
 <pre><code><span class="co">## Analysis of Variance Table</span>
 <span class="co">## </span>
 <span class="co">## Response: SRsapwood_cal</span>
-<span class="co">##           Df     Sum Sq    Mean Sq F value   Pr(&gt;F)   </span>
-<span class="co">## Species    5 7.2813e-08 1.4563e-08  4.4433 0.001257 **</span>
-<span class="co">## Residuals 81 2.6547e-07 3.2774e-09                    </span>
-<span class="co">## ---</span>
-<span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre>
+<span class="co">##           Df     Sum Sq    Mean Sq F value Pr(&gt;F)</span>
+<span class="co">## Species    5 1.5360e-08 3.0717e-09  0.7721 0.5726</span>
+<span class="co">## Residuals 81 3.2225e-07 3.9784e-09</span></code></pre>
 <pre><code><span class="co">## Analysis of Variance Table</span>
 <span class="co">## </span>
 <span class="co">## Response: rfc_cal</span>
-<span class="co">##           Df  Sum Sq Mean Sq F value Pr(&gt;F)</span>
-<span class="co">## Species    5  1771.8  354.37  1.0456 0.3968</span>
-<span class="co">## Residuals 81 27452.0  338.91</span></code></pre>
+<span class="co">##           Df Sum Sq Mean Sq F value    Pr(&gt;F)    </span>
+<span class="co">## Species    5  13058 2611.49  7.2167 1.244e-05 ***</span>
+<span class="co">## Residuals 81  29311  361.87                      </span>
+<span class="co">## ---</span>
+<span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre>
 <p>Finally, the following panels illustrate the overall lack of covariance between calibrated parameter values: <img src="GrowthCalibration_files/figure-html/unnamed-chunk-12-1.png" width="960"></p>
 </div>
 </div>
@@ -411,7 +401,7 @@ All
 RERsapwood
 </th>
 <th style="text-align:right;">
-RGRsapwoodmax
+RGRcambiummax
 </th>
 <th style="text-align:right;">
 SRsapwood
@@ -423,13 +413,13 @@ SRsapwood
 Fagus sylvatica
 </td>
 <td style="text-align:right;">
-4.59e-05
+4.78e-05
 </td>
 <td style="text-align:right;">
-0.0016004
+0.0024203
 </td>
 <td style="text-align:right;">
-0.0001648
+0.0001307
 </td>
 </tr>
 <tr>
@@ -437,13 +427,13 @@ Fagus sylvatica
 Pinus halepensis
 </td>
 <td style="text-align:right;">
-4.74e-05
+4.18e-05
 </td>
 <td style="text-align:right;">
-0.0007811
+0.0013952
 </td>
 <td style="text-align:right;">
-0.0001306
+0.0001447
 </td>
 </tr>
 <tr>
@@ -451,13 +441,13 @@ Pinus halepensis
 Pinus nigra
 </td>
 <td style="text-align:right;">
-4.99e-05
+5.51e-05
 </td>
 <td style="text-align:right;">
-0.0005168
+0.0008923
 </td>
 <td style="text-align:right;">
-0.0001344
+0.0001311
 </td>
 </tr>
 <tr>
@@ -465,13 +455,13 @@ Pinus nigra
 Pinus sylvestris
 </td>
 <td style="text-align:right;">
-5.32e-05
+6.08e-05
 </td>
 <td style="text-align:right;">
-0.0014057
+0.0019765
 </td>
 <td style="text-align:right;">
-0.0000889
+0.0001752
 </td>
 </tr>
 <tr>
@@ -479,13 +469,13 @@ Pinus sylvestris
 Pinus uncinata
 </td>
 <td style="text-align:right;">
-4.91e-05
+4.57e-05
 </td>
 <td style="text-align:right;">
-0.0057691
+0.0129212
 </td>
 <td style="text-align:right;">
-0.0002193
+0.0001507
 </td>
 </tr>
 <tr>
@@ -493,13 +483,13 @@ Pinus uncinata
 Quercus humilis
 </td>
 <td style="text-align:right;">
-5.13e-05
+4.14e-05
 </td>
 <td style="text-align:right;">
-0.0019670
+0.0026502
 </td>
 <td style="text-align:right;">
-0.0001926
+0.0001771
 </td>
 </tr>
 </tbody>

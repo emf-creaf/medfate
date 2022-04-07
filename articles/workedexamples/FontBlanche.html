@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.2</span>
       </span>
     </div>
 
@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Soil and plant water balances at Font-Blanche</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres (CREAF), Nicolas Martin-StPaul (INRA)</h4>
             
-            <h4 data-toc-skip class="date">2022-03-30</h4>
+            <h4 data-toc-skip class="date">2022-04-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/workedexamples/FontBlanche.Rmd" class="external-link"><code>vignettes/workedexamples/FontBlanche.Rmd</code></a></small>
       <div class="hidden name"><code>FontBlanche.Rmd</code></div>
@@ -198,7 +198,7 @@
 <span class="co">## 169 Tree/Shrub Phanerophyte     Broad   Medium oneflush-evergreen  500 1300  NA</span>
 <span class="co">##      Z95 fHDmin fHDmax    a_ash    b_ash    a_bsh     b_bsh    a_btsh   b_btsh</span>
 <span class="co">## 143 2353     45    109       NA       NA       NA        NA        NA       NA</span>
-<span class="co">## 149 7500     40    130       NA       NA       NA        NA        NA       NA</span>
+<span class="co">## 149 7500     80    160       NA       NA       NA        NA        NA       NA</span>
 <span class="co">## 169 5020     40    100 1.857486 1.885548 0.523883 0.7337293 0.7327147 0.737577</span>
 <span class="co">##     cr      a_fbt    b_fbt        c_fbt d_fbt    a_cr  b_1cr    b_2cr</span>
 <span class="co">## 143 NA         NA       NA           NA    NA      NA     NA       NA</span>
@@ -211,7 +211,7 @@
 <span class="co">##     Tbgdd  Ssen Phsen Tbsen xsen ysen      SLA LeafDensity WoodDensity</span>
 <span class="co">## 143    NA    NA    NA    NA   NA   NA 6.881886   0.5327417   0.7050000</span>
 <span class="co">## 149    NA    NA    NA    NA   NA   NA 5.140523   0.2982842   0.6077016</span>
-<span class="co">## 169  4.34 10178  12.5  28.5    2    2 6.850951   0.4893392   0.9008264</span>
+<span class="co">## 169  4.34 10178  12.5  28.5    2    2 6.340000   0.4893392   0.9008264</span>
 <span class="co">##     FineRootDensity conduit2sapwood     r635    pDead    Al2As Ar2Al LeafWidth</span>
 <span class="co">## 143              NA              NA 1.917579 0.119768 1698.950    NA 1.2000000</span>
 <span class="co">## 149              NA       0.9236406 1.964226 0.000500  631.000    NA 0.1384772</span>
@@ -220,42 +220,46 @@
 <span class="co">## 143       NA  NA 108.24724 56.53442        NA        NA     NA      NA      NA</span>
 <span class="co">## 149 3172.572  NA 126.03063 86.22550 -1.591429  8.918571 0.3525      NA      NA</span>
 <span class="co">## 169 4398.812  NA  93.15304 57.44192 -2.660000 10.570000 0.4300      NA      NA</span>
-<span class="co">##     StemAF  SAV HeatContent LigninPercent gammaSWR alphaSWR kPAR   g Tmax_LAI</span>
-<span class="co">## 143     NA 9630       21400            NA       NA       NA   NA 0.8       NA</span>
-<span class="co">## 149     NA 6050       22150      24.52473       NA       NA   NA 1.0       NA</span>
-<span class="co">## 169     NA 4050       19300      28.97492       NA       NA   NA 0.8       NA</span>
-<span class="co">##     Tmax_LAIsq Psi_Extract Psi_Critic      WUE WUE_decay      Gswmin    Gswmax</span>
-<span class="co">## 143         NA   -1.896994  -6.489351       NA        NA          NA        NA</span>
-<span class="co">## 149         NA   -1.596176  -3.816852 3.849903        NA 0.002031250 0.1940833</span>
-<span class="co">## 169         NA   -1.842765  -2.968825 1.720883        NA 0.006003126 0.2007222</span>
-<span class="co">##     VCleaf_kmax VCleaf_c VCleaf_d Kmax_stemxylem VCstem_c  VCstem_d</span>
-<span class="co">## 143        3.00       NA       NA      0.4083769 2.619333 -7.533736</span>
-<span class="co">## 149        4.00       NA       NA      0.1500000 7.458883 -4.481392</span>
-<span class="co">## 169        2.63     5.41    -4.18      0.4000000 2.558358 -5.103492</span>
-<span class="co">##     Kmax_rootxylem VCroot_c VCroot_d  Vmax298  Jmax298    Nleaf Nsapwood</span>
-<span class="co">## 143             NA       NA       NA 65.23250 146.2701 16.09170  2.78000</span>
-<span class="co">## 149             NA       NA       NA 58.89948 119.9273 11.91507  1.26556</span>
-<span class="co">## 169             NA       NA       NA 41.80912 103.0690 14.11983  5.66150</span>
-<span class="co">##     Nfineroot     WoodC    RERleaf RERsapwood RERfineroot CCleaf CCsapwood</span>
-<span class="co">## 143        NA        NA         NA         NA          NA 1.6300        NA</span>
-<span class="co">## 149  9.187476 0.4979943 0.01210607         NA          NA 1.5905      1.47</span>
-<span class="co">## 169 12.166747 0.4740096 0.01757808         NA          NA 1.4300        NA</span>
-<span class="co">##     CCfineroot RGRleafmax RGRsapwoodmax RGRfinerootmax SRsapwood SRfineroot</span>
-<span class="co">## 143         NA         NA            NA             NA        NA         NA</span>
-<span class="co">## 149        1.3         NA            NA             NA        NA         NA</span>
-<span class="co">## 169         NA         NA            NA             NA        NA         NA</span>
-<span class="co">##        RSSG MortalityBaselineRate SeedProductionHeight ProbRecr MinTempRecr</span>
-<span class="co">## 143      NA                    NA                   NA       NA    1.231819</span>
-<span class="co">## 149 0.31125                    NA                   NA       NA    2.035703</span>
-<span class="co">## 169 0.60350                    NA                   NA       NA    0.405868</span>
-<span class="co">##     MinMoistureRecr MinFPARRecr RecrTreeDBH RecrTreeHeight RecrShrubHeight</span>
-<span class="co">## 143       0.3464240   0.5076498          NA             NA              NA</span>
-<span class="co">## 149       0.2022525   6.2887361          NA             NA              NA</span>
-<span class="co">## 169       0.2860409   1.5786236          NA             NA              NA</span>
-<span class="co">##     RecrTreeDensity RecrShrubCover RecrZ50 RecrZ95</span>
-<span class="co">## 143              NA             NA      NA      NA</span>
-<span class="co">## 149              NA             NA      NA      NA</span>
-<span class="co">## 169              NA             NA      NA      NA</span></code></pre>
+<span class="co">##     StemAF  SAV HeatContent LigninPercent gammaSWR alphaSWR kPAR   g  Tmax_LAI</span>
+<span class="co">## 143     NA 9630       21400            NA       NA       NA   NA 0.8        NA</span>
+<span class="co">## 149     NA 6050       22150      24.52473       NA       NA   NA 1.0 0.1751014</span>
+<span class="co">## 169     NA 4050       19300      28.97492       NA       NA   NA 0.8 0.1123937</span>
+<span class="co">##       Tmax_LAIsq Psi_Extract Psi_Critic      WUE WUE_decay      Gswmin</span>
+<span class="co">## 143           NA   -1.896994  -6.489351       NA        NA          NA</span>
+<span class="co">## 149 -0.007840361   -2.303000  -5.140000 6.107080 0.6831032 0.003086667</span>
+<span class="co">## 169 -0.005032554   -1.964000  -6.965000 7.564588 0.2387449 0.004473333</span>
+<span class="co">##        Gswmax VCleaf_kmax VCleaf_c  VCleaf_d Kmax_stemxylem  VCstem_c  VCstem_d</span>
+<span class="co">## 143        NA        3.00       NA        NA      0.4083769  2.619333 -7.533736</span>
+<span class="co">## 149 0.2850000        4.00 11.13705 -2.380849      0.1500000 12.710000 -5.290000</span>
+<span class="co">## 169 0.2007222        2.63  5.41000 -4.180000      0.4000000  3.560000 -7.720000</span>
+<span class="co">##     Kmax_rootxylem VCroot_c  VCroot_d  Vmax298  Jmax298    Nleaf Nsapwood</span>
+<span class="co">## 143             NA       NA        NA 65.23250 146.2701 16.09170  2.78000</span>
+<span class="co">## 149             NA 11.13705 -3.065569 72.19617 124.1687 11.91507  1.26556</span>
+<span class="co">## 169             NA  1.33937 -2.214081 68.51600 118.7863 14.11983  5.66150</span>
+<span class="co">##     Nfineroot     WoodC    RERleaf   RERsapwood RERfineroot CCleaf CCsapwood</span>
+<span class="co">## 143        NA        NA         NA           NA          NA 1.6300        NA</span>
+<span class="co">## 149  9.187476 0.4979943 0.01210607 4.175349e-05          NA 1.5905      1.47</span>
+<span class="co">## 169 12.166747 0.4740096 0.01757808           NA          NA 1.4300        NA</span>
+<span class="co">##     CCfineroot RGRleafmax RGRsapwoodmax RGRcambiummax RGRfinerootmax</span>
+<span class="co">## 143         NA         NA            NA            NA             NA</span>
+<span class="co">## 149        1.3         NA            NA   0.001395156             NA</span>
+<span class="co">## 169         NA         NA            NA            NA             NA</span>
+<span class="co">##        SRsapwood SRfineroot    RSSG MortalityBaselineRate SeedProductionHeight</span>
+<span class="co">## 143           NA         NA      NA                    NA                   NA</span>
+<span class="co">## 149 0.0001447323         NA 0.31125                0.0035                   NA</span>
+<span class="co">## 169           NA         NA 0.60350                0.0016                   NA</span>
+<span class="co">##       ProbRecr MinTempRecr MinMoistureRecr MinFPARRecr RecrTreeDBH</span>
+<span class="co">## 143 0.05324406  -3.1286158       0.2962462   0.5229490    8.596437</span>
+<span class="co">## 149 0.02954479   0.1708717       0.1360426   4.5561462    9.398003</span>
+<span class="co">## 169 0.03591124  -4.1957498       0.1805285   0.2359398    8.944161</span>
+<span class="co">##     RecrTreeHeight RecrShrubHeight RecrTreeDensity RecrShrubCover RecrZ50</span>
+<span class="co">## 143       525.4367              NA        235.1347             NA      NA</span>
+<span class="co">## 149       569.2412              NA        246.2535             NA      NA</span>
+<span class="co">## 169       472.3629              NA        352.2668             NA      NA</span>
+<span class="co">##     RecrZ95</span>
+<span class="co">## 143      NA</span>
+<span class="co">## 149      NA</span>
+<span class="co">## 169      NA</span></code></pre>
 <p>Note that the function returns a subset of rows for the species mentioned in <code>customParams</code>. Not all parameters are needed for the soil water balance model. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (<a href="http://emf-creaf.github.io/medfate" class="external-link uri">http://emf-creaf.github.io/medfate</a>).</p>
 </div>
 <div class="section level3">
@@ -330,7 +334,7 @@
 <pre><code><span class="co">##         SP    N       DBH Cover         H        CR  LAI_live LAI_expanded</span>
 <span class="co">## T1_142 142 1248  2.587859    NA  323.0000 0.5510653 0.1878448    0.1878448</span>
 <span class="co">## T2_148 148  256 26.759914    NA 1195.7667 0.6126601 0.9278754    0.9278754</span>
-<span class="co">## T3_168 168 3104  6.220031    NA  495.5532 0.5531152 2.0430558    2.0430558</span>
+<span class="co">## T3_168 168 3104  6.220031    NA  495.5532 0.5531152 1.8906826    1.8906826</span>
 <span class="co">##        LAI_dead</span>
 <span class="co">## T1_142        0</span>
 <span class="co">## T2_148        0</span>
@@ -435,35 +439,27 @@
 <span class="co">## Initial snowpack content (mm): 0</span>
 <span class="co">## Performing daily simulations</span>
 <span class="co">## </span>
-<span class="co">##  [Year 2014]:........................</span></code></pre>
-<pre><code><span class="co">## Warning in spwb(fb_x, fb_meteo, elevation = 420, latitude = 43.24083): overflow</span>
-<span class="co">## problem in the computation of one of the gamma factors before starting the</span>
-<span class="co">## Newton iteration. The initial approximation to the root is given as output.</span></code></pre>
-<pre><code><span class="co">## .....</span></code></pre>
-<pre><code><span class="co">## Warning in spwb(fb_x, fb_meteo, elevation = 420, latitude = 43.24083): overflow</span>
-<span class="co">## problem in the computation of one of the gamma factors before starting the</span>
-<span class="co">## Newton iteration. The initial approximation to the root is given as output.</span></code></pre>
-<pre><code><span class="co">## .......</span>
+<span class="co">##  [Year 2014]:....................................</span>
 <span class="co">## </span>
-<span class="co">## Final soil water content (mm): 267.397</span>
+<span class="co">## Final soil water content (mm): 267.231</span>
 <span class="co">## Final snowpack content (mm): 0</span>
-<span class="co">## Change in soil water content (mm): -1.25911</span>
-<span class="co">## Soil water balance result (mm): -1.25911</span>
+<span class="co">## Change in soil water content (mm): -1.42465</span>
+<span class="co">## Soil water balance result (mm): -1.42465</span>
 <span class="co">## Change in snowpack water content (mm): 0</span>
 <span class="co">## Snowpack water balance result (mm): 0</span>
 <span class="co">## Water balance components:</span>
 <span class="co">##   Precipitation (mm) 1066</span>
 <span class="co">##   Rain (mm) 1066 Snow (mm) 0</span>
-<span class="co">##   Interception (mm) 201 Net rainfall (mm) 865</span>
-<span class="co">##   Infiltration (mm) 684 Runoff (mm) 181 Deep drainage (mm) 312</span>
-<span class="co">##   Soil evaporation (mm) 2 Transpiration (mm) 382</span>
-<span class="co">##   Plant extraction from soil (mm) 371  Plant water balance (mm) -11 Hydraulic redistribution (mm) 50</span></code></pre>
+<span class="co">##   Interception (mm) 195 Net rainfall (mm) 871</span>
+<span class="co">##   Infiltration (mm) 689 Runoff (mm) 182 Deep drainage (mm) 320</span>
+<span class="co">##   Soil evaporation (mm) 2 Transpiration (mm) 369</span>
+<span class="co">##   Plant extraction from soil (mm) 368  Plant water balance (mm) -1 Hydraulic redistribution (mm) 41</span></code></pre>
 <p>Console output provides the water balance totals for the period considered, which may span several years. The output of function <code><a href="../../reference/spwb.html">spwb()</a></code> is an object of class with the same name, actually a list:</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">fb_SWB</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] "spwb" "list"</span></code></pre>
 <p>If we inspect its elements, we realize that there are several components:</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">fb_SWB</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "latitude"          "topography"        "weather"          </span>
 <span class="co">##  [4] "spwbInput"         "spwbOutput"        "WaterBalance"     </span>
@@ -471,34 +467,34 @@
 <span class="co">## [10] "Soil"              "Stand"             "Plants"           </span>
 <span class="co">## [13] "SunlitLeaves"      "ShadeLeaves"       "subdaily"</span></code></pre>
 <p>For example, <code>WaterBalance</code> contains water balance components in form of a data frame with days in rows:</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fb_SWB</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##                  PET Precipitation     Rain Snow     NetRain Snowmelt</span>
 <span class="co">## 2014-01-01 0.7069121      0.000000 0.000000    0 0.000000000        0</span>
 <span class="co">## 2014-01-02 0.6952499      0.000000 0.000000    0 0.000000000        0</span>
 <span class="co">## 2014-01-03 0.7215430      0.000000 0.000000    0 0.000000000        0</span>
-<span class="co">## 2014-01-04 0.6505653      2.590674 2.590674    0 0.004775841        0</span>
+<span class="co">## 2014-01-04 0.6505653      2.590674 2.590674    0 0.005193331        0</span>
 <span class="co">## 2014-01-05 2.6766516      0.000000 0.000000    0 0.000000000        0</span>
 <span class="co">## 2014-01-06 1.3093186      0.000000 0.000000    0 0.000000000        0</span>
 <span class="co">##            Infiltration Runoff DeepDrainage Evapotranspiration Interception</span>
-<span class="co">## 2014-01-01  0.000000000      0            0        0.021710103     0.000000</span>
-<span class="co">## 2014-01-02  0.000000000      0            0        0.001986865     0.000000</span>
-<span class="co">## 2014-01-03  0.000000000      0            0        0.009842813     0.000000</span>
-<span class="co">## 2014-01-04  0.004775841      0            0        2.587756902     2.585898</span>
-<span class="co">## 2014-01-05  0.000000000      0            0        0.605504462     0.000000</span>
-<span class="co">## 2014-01-06  0.000000000      0            0        0.572994553     0.000000</span>
+<span class="co">## 2014-01-01  0.000000000      0            0        0.022529173      0.00000</span>
+<span class="co">## 2014-01-02  0.000000000      0            0        0.002114115      0.00000</span>
+<span class="co">## 2014-01-03  0.000000000      0            0        0.010207136      0.00000</span>
+<span class="co">## 2014-01-04  0.005193331      0            0        2.587458482      2.58548</span>
+<span class="co">## 2014-01-05  0.000000000      0            0        0.646983196      0.00000</span>
+<span class="co">## 2014-01-06  0.000000000      0            0        0.627248103      0.00000</span>
 <span class="co">##            SoilEvaporation PlantExtraction Transpiration</span>
-<span class="co">## 2014-01-01     0.002020193    1.922054e-02   0.019689910</span>
-<span class="co">## 2014-01-02     0.001986865    1.436537e-04   0.000000000</span>
-<span class="co">## 2014-01-03     0.002062005    7.703542e-03   0.007780808</span>
-<span class="co">## 2014-01-04     0.001859167    7.205372e-05   0.000000000</span>
-<span class="co">## 2014-01-05     0.007649259    5.754368e-01   0.597855204</span>
-<span class="co">## 2014-01-06     0.003741733    5.617456e-01   0.569252820</span>
+<span class="co">## 2014-01-01     0.002149577    0.0199157732    0.02037960</span>
+<span class="co">## 2014-01-02     0.002114115    0.0001639823    0.00000000</span>
+<span class="co">## 2014-01-03     0.002194067    0.0079744304    0.00801307</span>
+<span class="co">## 2014-01-04     0.001978238    0.0001006743    0.00000000</span>
+<span class="co">## 2014-01-05     0.008139158    0.6242973294    0.63884404</span>
+<span class="co">## 2014-01-06     0.003981374    0.6163303613    0.62326673</span>
 <span class="co">##            HydraulicRedistribution</span>
-<span class="co">## 2014-01-01            1.466066e-06</span>
-<span class="co">## 2014-01-02            4.046999e-06</span>
-<span class="co">## 2014-01-03            1.771673e-05</span>
-<span class="co">## 2014-01-04            2.791024e-05</span>
+<span class="co">## 2014-01-01            1.496157e-06</span>
+<span class="co">## 2014-01-02            2.177436e-06</span>
+<span class="co">## 2014-01-03            1.330966e-05</span>
+<span class="co">## 2014-01-04            2.089100e-05</span>
 <span class="co">## 2014-01-05            0.000000e+00</span>
 <span class="co">## 2014-01-06            0.000000e+00</span></code></pre>
 </div>
@@ -513,7 +509,7 @@
 <li>Pre-dawn and midday leaf water potentials for Q. ilex and P. halepensis.</li>
 </ul>
 <p>We first load the measured data into the workspace and filter for the dates used in the simulation:</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fb_observed</span> <span class="op">=</span> <span class="va">fb</span><span class="op">$</span><span class="va">measuredData</span>
 <span class="va">fb_observed</span> <span class="op">=</span> <span class="va">fb_observed</span><span class="op">[</span><span class="va">fb_observed</span><span class="op">$</span><span class="va">Date</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="va">fb_meteo</span><span class="op">)</span>,<span class="op">]</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fb_observed</span><span class="op">)</span></code></pre></div>
@@ -542,53 +538,53 @@
 <h3 id="stand-evapotranspiration">Stand evapotranspiration<a class="anchor" aria-label="anchor" href="#stand-evapotranspiration"></a>
 </h3>
 <p>Package <code>medfate</code> contains several functions to assist the evaluation of model results. We can first compare the observed vs modelled total evapotranspiration. We can plot the two time series:</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, type <span class="op">=</span> <span class="st">"ETR"</span>, plotType<span class="op">=</span><span class="st">"dynamics"</span><span class="op">)</span><span class="op">+</span>
   <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.8</span>,<span class="fl">0.85</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="FontBlanche_files/figure-html/unnamed-chunk-26-1.png" width="768" style="display: block; margin: auto;"></p>
 <p>It is easy to see that in rainy days the predicted evapotranspiration is much higher than that of the observed data. We repeat the comparison but excluding the intercepted water from modeled results:</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, type <span class="op">=</span> <span class="st">"SE+TR"</span>, plotType<span class="op">=</span><span class="st">"dynamics"</span><span class="op">)</span><span class="op">+</span>
   <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.8</span>,<span class="fl">0.85</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="FontBlanche_files/figure-html/unnamed-chunk-27-1.png" width="768" style="display: block; margin: auto;"> The relationship can be shown in a scatter plot:</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, type <span class="op">=</span> <span class="st">"SE+TR"</span>, plotType<span class="op">=</span><span class="st">"scatter"</span><span class="op">)</span></code></pre></div>
 <p><img src="FontBlanche_files/figure-html/unnamed-chunk-28-1.png" width="480" style="display: block; margin: auto;"> Where we see a reasonably good relationship, but the model tends to underestimate total evapotranspiration during seasons with low evaporative demand. Function <code><a href="../../reference/evaluation.html">evaluation_stats()</a></code> allows us to generate evaluation statistics:</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, type <span class="op">=</span> <span class="st">"SE+TR"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##            n         Bias     Bias.rel          MAE      MAE.rel            r </span>
-<span class="co">## 365.00000000  -0.28065958 -21.06455972   0.47526820  35.67067019   0.69768049 </span>
+<span class="co">## 365.00000000  -0.31491672 -23.63568695   0.45703737  34.30237742   0.71287868 </span>
 <span class="co">##          NSE      NSE.abs </span>
-<span class="co">##   0.09277962   0.04548792</span></code></pre>
+<span class="co">##   0.14161479   0.08210209</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="soil-moisture">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture"></a>
 </h3>
 <p>We can compare observed vs modelled soil moisture content in a similar way as we did for total evapotranspiration:</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, plotType<span class="op">=</span><span class="st">"dynamics"</span><span class="op">)</span></code></pre></div>
 <p><img src="FontBlanche_files/figure-html/unnamed-chunk-30-1.png" width="700"></p>
 <p>Clearly, the absolute values of the modeled and measured SMC do not match, which can indicate that either the soil moisture sensors are not calibrated or that we are using an inappropriate soil texture in the model. To avoid this issue, we can use relative extractable water, where in the case of observed data the function divides the observed values by the 95% quantile:</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, type <span class="op">=</span> <span class="st">"REW"</span>, plotType<span class="op">=</span><span class="st">"dynamics"</span><span class="op">)</span></code></pre></div>
 <p><img src="FontBlanche_files/figure-html/unnamed-chunk-31-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>As before, we can generate a scatter plot:</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, type <span class="op">=</span> <span class="st">"REW"</span>, plotType<span class="op">=</span><span class="st">"scatter"</span><span class="op">)</span></code></pre></div>
 <p><img src="FontBlanche_files/figure-html/unnamed-chunk-32-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>or examine evaluation statistics:</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, type <span class="op">=</span> <span class="st">"REW"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##            n         Bias     Bias.rel          MAE      MAE.rel            r </span>
-<span class="co">## 364.00000000   0.05181035   7.38751697   0.09262243  13.20681610   0.90702536 </span>
+<span class="co">## 364.00000000   0.06189970   8.82613327   0.09322436  13.29264339   0.92195009 </span>
 <span class="co">##          NSE      NSE.abs </span>
-<span class="co">##   0.77275327   0.55617720</span></code></pre>
+<span class="co">##   0.78022331   0.55329292</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="plant-transpiration">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration"></a>
 </h3>
 <p>The following plots display the observed and predicted transpiration dynamics for <em>Pinus halepensis</em> and <em>Quercus ilex</em>:</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">g1</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, 
                             cohort <span class="op">=</span> <span class="st">"T2_148"</span>,
                             type<span class="op">=</span><span class="st">"E"</span>, plotType <span class="op">=</span> <span class="st">"dynamics"</span><span class="op">)</span><span class="op">+</span>
@@ -600,24 +596,24 @@
 <span class="fu">plot_grid</span><span class="op">(</span><span class="va">g1</span>, <span class="va">g2</span>, ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
 <p><img src="FontBlanche_files/figure-html/unnamed-chunk-34-1.png" width="768"></p>
 <p>In general, the agreement is quite good, but the model seems to overestimate the transpiration of <em>P. halepensis</em> in early summer and after the first drought period. The transpiration of <em>Q. ilex</em> seems also overestimated in spring and autumn. We can also inspect the evaluation statistics for both species using:</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, cohort <span class="op">=</span> <span class="st">"T2_148"</span>, type<span class="op">=</span><span class="st">"E"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##            n         Bias     Bias.rel          MAE      MAE.rel            r </span>
-<span class="co">## 300.00000000   0.06496809  31.58825556   0.10098299  49.09913119   0.68808317 </span>
-<span class="co">##          NSE      NSE.abs </span>
-<span class="co">##  -0.36360511  -0.02048510</span></code></pre>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, cohort <span class="op">=</span> <span class="st">"T3_168"</span>, type<span class="op">=</span><span class="st">"E"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span>
-<span class="co">## 309.0000000   0.1319564  45.5873151   0.1629365  56.2900770   0.7502075 </span>
+<span class="co">## 300.0000000   0.2516036 122.3326546   0.2640445 128.3815669   0.8305495 </span>
 <span class="co">##         NSE     NSE.abs </span>
-<span class="co">##  -0.4861207  -0.1100520</span></code></pre>
+<span class="co">##  -6.9639635  -1.6683054</span></code></pre>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, cohort <span class="op">=</span> <span class="st">"T3_168"</span>, type<span class="op">=</span><span class="st">"E"</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">##            n         Bias     Bias.rel          MAE      MAE.rel            r </span>
+<span class="co">## 309.00000000   0.05988098  20.68723276   0.09450990  32.65057413   0.81062039 </span>
+<span class="co">##          NSE      NSE.abs </span>
+<span class="co">##   0.45552144   0.35612392</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="leaf-water-potentials">Leaf water potentials<a class="anchor" aria-label="anchor" href="#leaf-water-potentials"></a>
 </h3>
 <p>Finally, we can compare observed with predicted water potentials. In this case measurements are available for three dates, but they include the standard deviation of several measurements.</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">g1</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="va">fb_observed</span>, 
                             cohort <span class="op">=</span> <span class="st">"T2_148"</span>,
                             type<span class="op">=</span><span class="st">"WP"</span>, plotType <span class="op">=</span> <span class="st">"dynamics"</span><span class="op">)</span><span class="op">+</span>
@@ -635,7 +631,7 @@
 <h2 id="drawing-plots">Drawing plots<a class="anchor" aria-label="anchor" href="#drawing-plots"></a>
 </h2>
 <p>Package <code>medfate</code> provides a simple <code>plot</code> function for objects of class <code>spwb</code>. Here we will use this function to display the seasonal variation predicted by the model, as well as the variation at higher temporal resolution within four different selected 3-day periods that we define here:</p>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">d1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2014-03-01"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2014-03-03"</span><span class="op">)</span>, by<span class="op">=</span><span class="st">"day"</span><span class="op">)</span>
 <span class="va">d2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2014-06-01"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2014-06-03"</span><span class="op">)</span>, by<span class="op">=</span><span class="st">"day"</span><span class="op">)</span>
 <span class="va">d3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2014-08-01"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2014-08-03"</span><span class="op">)</span>, by<span class="op">=</span><span class="st">"day"</span><span class="op">)</span>
@@ -644,14 +640,14 @@
 <h3 id="meteorological-input-and-inputoutput-water-flows">Meteorological input and input/output water flows<a class="anchor" aria-label="anchor" href="#meteorological-input-and-inputoutput-water-flows"></a>
 </h3>
 <p>Function <code><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot()</a></code> can be used to show the meteorological input:</p>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, type <span class="op">=</span> <span class="st">"PET_Precipitation"</span><span class="op">)</span></code></pre></div>
 <p><img src="FontBlanche_files/figure-html/unnamed-chunk-38-1.png" width="768"> It is apparent the climatic drought period between april and august 2014. This should have an impact on soil moisture and plant stress.</p>
 <p>If we are interested in forest hydrology, we can plot the amount of water that the model predicts to leave the forest via surface runoff or drainage to lower water compartments.</p>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, type <span class="op">=</span> <span class="st">"Export"</span><span class="op">)</span></code></pre></div>
 <p><img src="FontBlanche_files/figure-html/unnamed-chunk-39-1.png" width="768"> As expected, water exported from the forest plot was only relevant for the autumn and winter periods. Note also that the model predicts some runoff during convective storms during autumn, whereas winter events occur when the soil is already full, so that most exported water is assumed to be lost via deep drainage. One can also display the evapotranspiration flows, which we do in the following plot that also combines the two previous:</p>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">g1</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span>
 <span class="va">g2</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"Evapotranspiration"</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.13</span>,<span class="fl">0.73</span><span class="op">)</span><span class="op">)</span>
 <span class="va">g3</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"Export"</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.35</span>,<span class="fl">0.60</span><span class="op">)</span><span class="op">)</span>
@@ -662,13 +658,13 @@
 <h3 id="soil-moisture-dynamics-and-hydraulic-redistribution">Soil moisture dynamics and hydraulic redistribution<a class="anchor" aria-label="anchor" href="#soil-moisture-dynamics-and-hydraulic-redistribution"></a>
 </h3>
 <p>It is also useful to plot the dynamics of soil state variables by layer, such as the percentage of moisture in relation to field capacity:</p>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, type<span class="op">=</span><span class="st">"SoilTheta"</span><span class="op">)</span></code></pre></div>
 <p><img src="FontBlanche_files/figure-html/unnamed-chunk-41-1.png" width="768"> Note that the model predicts soil drought to occur earlier in the season for the first three layers (0-200 cm) whereas the bottom layer dries out much more slowly. At this point is important to mention that the water balance model incorporates. We can also display the dynamics of the corresponding soil layer water potentials:</p>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, type<span class="op">=</span><span class="st">"SoilPsi"</span><span class="op">)</span></code></pre></div>
 <p><img src="FontBlanche_files/figure-html/unnamed-chunk-42-1.png" width="768"> or draw a composite plot including absolute soil water volume:</p>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">g1</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span>
 <span class="va">g2</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"SoilVol"</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.08</span>,<span class="fl">0.65</span><span class="op">)</span><span class="op">)</span>
 <span class="va">g3</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"SoilPsi"</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.08</span>,<span class="fl">0.5</span><span class="op">)</span><span class="op">)</span>
@@ -679,14 +675,14 @@
 <h3 id="root-water-uptake-and-hydraulic-redistribution">Root water uptake and hydraulic redistribution<a class="anchor" aria-label="anchor" href="#root-water-uptake-and-hydraulic-redistribution"></a>
 </h3>
 <p>The following composite plot shows the daily root water uptake (or release) from different soil layers, and the daily amount of water entering soil layers due to hydraulic redistribution:</p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">g1</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"SoilPsi"</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span><span class="op">+</span><span class="fu">ylab</span><span class="op">(</span><span class="st">"Soil wp (MPa)"</span><span class="op">)</span>
 <span class="va">g2</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"PlantExtraction"</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.08</span>,<span class="fl">0.68</span><span class="op">)</span><span class="op">)</span>
 <span class="va">g3</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"HydraulicRedistribution"</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.08</span>,<span class="fl">0.5</span><span class="op">)</span><span class="op">)</span>
 <span class="fu">plot_grid</span><span class="op">(</span><span class="va">g1</span>, <span class="va">g2</span>,  <span class="va">g3</span>, rel_heights <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.4</span>,<span class="fl">0.8</span>,<span class="fl">0.8</span><span class="op">)</span>, ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
 <p><img src="FontBlanche_files/figure-html/unnamed-chunk-44-1.png" width="768"></p>
 <p>If we create a composite plot including subdaily water uptake/release patterns, we can further understand the redistribution flows created by the model during different periods:</p>
-<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">g0</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"PlantExtraction"</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.08</span>,<span class="fl">0.68</span><span class="op">)</span><span class="op">)</span>
 <span class="va">g1</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"PlantExtraction"</span>, subdaily <span class="op">=</span> <span class="cn">T</span>, dates <span class="op">=</span> <span class="va">d1</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_datetime</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 day"</span>,  date_labels <span class="op">=</span> <span class="st">"%m/%d"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.05</span>,<span class="fl">0.13</span><span class="op">)</span><span class="op">)</span>
 <span class="va">g2</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"PlantExtraction"</span>, subdaily <span class="op">=</span> <span class="cn">T</span>, dates <span class="op">=</span> <span class="va">d2</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_datetime</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 day"</span>,  date_labels <span class="op">=</span> <span class="st">"%m/%d"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span><span class="op">+</span><span class="fu">ylab</span><span class="op">(</span><span class="st">""</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.05</span>,<span class="fl">0.13</span><span class="op">)</span><span class="op">)</span>
@@ -699,11 +695,11 @@
 <h3 id="plant-transpiration-1">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-1"></a>
 </h3>
 <p>We can use function <code><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot()</a></code> to display the seasonal dynamics of cohort-level variables, such as plant transpiration per leaf area:</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">5</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, type<span class="op">=</span><span class="st">"TranspirationPerLeaf"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="FontBlanche_files/figure-html/unnamed-chunk-46-1.png" width="768"> Where we can observe that some species transpire more than others due to their vertical position within the canopy.</p>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">g1</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span>
 <span class="va">g2</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"TranspirationPerLeaf"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>,<span class="fl">0.75</span><span class="op">)</span><span class="op">)</span>
 <span class="va">g21</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"LeafTranspiration"</span>, subdaily <span class="op">=</span> <span class="cn">T</span>, dates <span class="op">=</span> <span class="va">d1</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_datetime</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 day"</span>,  date_labels <span class="op">=</span> <span class="st">"%m/%d"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0.32</span><span class="op">)</span><span class="op">)</span>
@@ -719,11 +715,11 @@
 <h3 id="plant-stress">Plant stress<a class="anchor" aria-label="anchor" href="#plant-stress"></a>
 </h3>
 <p>In the model, reduction of (whole-plant) plant transpiration is what used to define drought stress, which depends on the species identity:</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, type<span class="op">=</span><span class="st">"PlantStress"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="FontBlanche_files/figure-html/unnamed-chunk-48-1.png" width="768"></p>
 <p>To examine the impact of drought on plants, one can inspect the whole-plant conductance (from which the stress index is derived) or the stem percent loss of conductance derived from embolism, as we do in the following composite plot:</p>
-<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">g1</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span>
 <span class="va">g2</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"SoilPlantConductance"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span>
   <span class="fu">ylab</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Soil-plant conductance "</span>,<span class="op">(</span><span class="va">mmol</span><span class="op">%.%</span><span class="va">m</span><span class="op">^</span><span class="op">{</span><span class="op">-</span><span class="fl">2</span><span class="op">}</span><span class="op">%.%</span><span class="va">s</span><span class="op">^</span><span class="op">{</span><span class="op">-</span><span class="fl">1</span><span class="op">}</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
@@ -736,7 +732,7 @@
 <div class="section level3">
 <h3 id="leaf-water-potentials-1">Leaf water potentials<a class="anchor" aria-label="anchor" href="#leaf-water-potentials-1"></a>
 </h3>
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">g1</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span>
 <span class="va">g2</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"LeafPsiRange"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>,<span class="fl">0.25</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">ylab</span><span class="op">(</span><span class="st">"Leaf water potential (MPa)"</span><span class="op">)</span>
 <span class="va">g21</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"LeafPsi"</span>, subdaily <span class="op">=</span> <span class="cn">T</span>, dates <span class="op">=</span> <span class="va">d1</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_datetime</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 day"</span>,  date_labels <span class="op">=</span> <span class="st">"%m/%d"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">7</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span>
@@ -751,7 +747,7 @@
 <div class="section level3">
 <h3 id="stomatal-conductance">Stomatal conductance<a class="anchor" aria-label="anchor" href="#stomatal-conductance"></a>
 </h3>
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">g1</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span>
 <span class="va">g2</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"GSWMax_SL"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_date</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 month"</span>, date_labels <span class="op">=</span> <span class="st">"%m"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>,<span class="fl">0.74</span><span class="op">)</span><span class="op">)</span><span class="op">+</span><span class="fu">ylab</span><span class="op">(</span><span class="st">"Sunlit leaf stomatal conductance"</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0.3</span><span class="op">)</span><span class="op">)</span>
 <span class="va">g21</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fb_SWB</span>, <span class="st">"LeafStomatalConductance"</span>, subdaily <span class="op">=</span> <span class="cn">T</span>, dates <span class="op">=</span> <span class="va">d1</span><span class="op">)</span><span class="op">+</span><span class="fu">scale_x_datetime</span><span class="op">(</span>date_breaks <span class="op">=</span> <span class="st">"1 day"</span>,  date_labels <span class="op">=</span> <span class="st">"%m/%d"</span><span class="op">)</span><span class="op">+</span><span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html" class="external-link">ylim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0.2</span><span class="op">)</span><span class="op">)</span>
@@ -768,76 +764,76 @@
 <h2 id="generating-output-summaries">Generating output summaries<a class="anchor" aria-label="anchor" href="#generating-output-summaries"></a>
 </h2>
 <p>While the water balance model operates at daily and sub-daily steps, users will normally be interested in outputs at larger time scales. The package provides a <code>summary</code> for objects of class <code>spwb</code>. This function can be used to summarize the model’s output at different temporal steps (i.e. weekly, monthly or annual). For example, to obtain the average soil moisture and water potentials by months one can use:</p>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fb_SWB</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">sum</span>, output<span class="op">=</span><span class="st">"WaterBalance"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##                  PET Precipitation      Rain Snow      NetRain Snowmelt</span>
-<span class="co">## 2014-01-01  35.23346     205.04814 205.04814    0 1.726759e+02        0</span>
-<span class="co">## 2014-02-01  48.49678     181.09641 181.09641    0 1.435927e+02        0</span>
-<span class="co">## 2014-03-01 104.75296      44.61248  44.61248    0 3.766082e+01        0</span>
-<span class="co">## 2014-04-01 139.46449      15.00000  15.00000    0 4.211283e+00        0</span>
-<span class="co">## 2014-05-01 187.72494      21.60000  21.60000    0 1.487742e+01        0</span>
-<span class="co">## 2014-06-01 211.53241      33.60000  33.60000    0 2.417885e+01        0</span>
-<span class="co">## 2014-07-01 231.97039       0.60000   0.60000    0 1.106085e-03        0</span>
-<span class="co">## 2014-08-01 202.66644      60.40000  60.40000    0 4.965710e+01        0</span>
-<span class="co">## 2014-09-01 132.31589     137.60000 137.60000    0 1.205581e+02        0</span>
-<span class="co">## 2014-10-01  83.06045      50.60000  50.60000    0 3.821617e+01        0</span>
-<span class="co">## 2014-11-01  39.40767     222.60000 222.60000    0 1.868485e+02        0</span>
-<span class="co">## 2014-12-01  34.85722      93.00000  93.00000    0 7.211063e+01        0</span>
+<span class="co">## 2014-01-01  35.23346     205.04814 205.04814    0 1.736437e+02        0</span>
+<span class="co">## 2014-02-01  48.49678     181.09641 181.09641    0 1.448022e+02        0</span>
+<span class="co">## 2014-03-01 104.75296      44.61248  44.61248    0 3.790038e+01        0</span>
+<span class="co">## 2014-04-01 139.46449      15.00000  15.00000    0 4.446821e+00        0</span>
+<span class="co">## 2014-05-01 187.72494      21.60000  21.60000    0 1.499916e+01        0</span>
+<span class="co">## 2014-06-01 211.53241      33.60000  33.60000    0 2.442020e+01        0</span>
+<span class="co">## 2014-07-01 231.97039       0.60000   0.60000    0 1.202775e-03        0</span>
+<span class="co">## 2014-08-01 202.66644      60.40000  60.40000    0 4.977747e+01        0</span>
+<span class="co">## 2014-09-01 132.31589     137.60000 137.60000    0 1.211631e+02        0</span>
+<span class="co">## 2014-10-01  83.06045      50.60000  50.60000    0 3.857967e+01        0</span>
+<span class="co">## 2014-11-01  39.40767     222.60000 222.60000    0 1.883066e+02        0</span>
+<span class="co">## 2014-12-01  34.85722      93.00000  93.00000    0 7.295469e+01        0</span>
 <span class="co">##            Infiltration     Runoff DeepDrainage Evapotranspiration Interception</span>
-<span class="co">## 2014-01-01 1.435504e+02 29.1255683    110.71110           40.26198   32.3722071</span>
-<span class="co">## 2014-02-01 1.088554e+02 34.7373342    118.38271           51.44170   37.5037111</span>
-<span class="co">## 2014-03-01 3.463971e+01  3.0211107     12.56941           46.58233    6.9516557</span>
-<span class="co">## 2014-04-01 4.211283e+00  0.0000000      0.00000           64.88271   10.7887175</span>
-<span class="co">## 2014-05-01 1.454552e+01  0.3318959      0.00000           68.15992    6.7225809</span>
-<span class="co">## 2014-06-01 2.326234e+01  0.9165046      0.00000           65.50069    9.4211531</span>
-<span class="co">## 2014-07-01 1.106085e-03  0.0000000      0.00000           28.23184    0.5988939</span>
-<span class="co">## 2014-08-01 3.297113e+01 16.6859693      0.00000           43.52487   10.7429044</span>
-<span class="co">## 2014-09-01 8.503454e+01 35.5235549      0.00000           46.40069   17.0418999</span>
-<span class="co">## 2014-10-01 3.058066e+01  7.6355117      0.00000           48.80877   12.3838299</span>
-<span class="co">## 2014-11-01 1.461764e+02 40.6721026     15.67732           48.91325   35.7515416</span>
-<span class="co">## 2014-12-01 5.998722e+01 12.1234145     55.04738           32.33698   20.8893653</span>
+<span class="co">## 2014-01-01 1.442556e+02 29.3881058    110.60955           40.13683   31.4044082</span>
+<span class="co">## 2014-02-01 1.098887e+02 34.9134515    118.57484           51.35878   36.2942197</span>
+<span class="co">## 2014-03-01 3.482223e+01  3.0781470     12.07649           46.88010    6.7120971</span>
+<span class="co">## 2014-04-01 4.446821e+00  0.0000000      0.00000           63.20416   10.5531787</span>
+<span class="co">## 2014-05-01 1.464926e+01  0.3499015      0.00000           62.45026    6.6008417</span>
+<span class="co">## 2014-06-01 2.347549e+01  0.9447159      0.00000           57.27702    9.1797959</span>
+<span class="co">## 2014-07-01 1.202775e-03  0.0000000      0.00000           25.27951    0.5987972</span>
+<span class="co">## 2014-08-01 3.301127e+01 16.7661942      0.00000           43.04185   10.6225325</span>
+<span class="co">## 2014-09-01 8.543987e+01 35.7232027      0.00000           46.52280   16.4369313</span>
+<span class="co">## 2014-10-01 3.087977e+01  7.6999068      0.00000           50.01788   12.0203254</span>
+<span class="co">## 2014-11-01 1.473860e+02 40.9206184     21.70418           48.02509   34.2934163</span>
+<span class="co">## 2014-12-01 6.075695e+01 12.1977453     56.95698           31.94098   20.0453082</span>
 <span class="co">##            SoilEvaporation PlantExtraction Transpiration</span>
-<span class="co">## 2014-01-01      0.10068918        7.687291      7.789079</span>
-<span class="co">## 2014-02-01      0.13859272       13.660035     13.799395</span>
-<span class="co">## 2014-03-01      0.29936001       39.114849     39.331318</span>
-<span class="co">## 2014-04-01      0.29704783       53.552448     53.796945</span>
-<span class="co">## 2014-05-01      0.18468206       60.458295     61.252658</span>
-<span class="co">## 2014-06-01      0.14744282       53.611831     55.932098</span>
-<span class="co">## 2014-07-01      0.13497092       21.861629     27.497977</span>
-<span class="co">## 2014-08-01      0.16483310       30.553892     32.617129</span>
-<span class="co">## 2014-09-01      0.16624277       29.168520     29.192545</span>
-<span class="co">## 2014-10-01      0.23034390       36.443804     36.194598</span>
-<span class="co">## 2014-11-01      0.11261811       13.159613     13.049088</span>
-<span class="co">## 2014-12-01      0.09961398       11.338149     11.347997</span>
+<span class="co">## 2014-01-01       0.1071379        8.595503      8.625287</span>
+<span class="co">## 2014-02-01       0.1474689       14.893377     14.917093</span>
+<span class="co">## 2014-03-01       0.3185326       39.776600     39.849474</span>
+<span class="co">## 2014-04-01       0.2920164       52.242458     52.358966</span>
+<span class="co">## 2014-05-01       0.1868775       55.364983     55.662537</span>
+<span class="co">## 2014-06-01       0.1546691       47.513363     47.942556</span>
+<span class="co">## 2014-07-01       0.1403421       23.938550     24.540370</span>
+<span class="co">## 2014-08-01       0.1804763       32.314377     32.238842</span>
+<span class="co">## 2014-09-01       0.1875684       30.351949     29.898298</span>
+<span class="co">## 2014-10-01       0.2465440       37.857744     37.751010</span>
+<span class="co">## 2014-11-01       0.1198308       13.707704     13.611841</span>
+<span class="co">## 2014-12-01       0.1059938       11.771732     11.789678</span>
 <span class="co">##            HydraulicRedistribution</span>
-<span class="co">## 2014-01-01             0.055672130</span>
-<span class="co">## 2014-02-01             0.032586906</span>
-<span class="co">## 2014-03-01             0.012815204</span>
-<span class="co">## 2014-04-01             0.317272069</span>
-<span class="co">## 2014-05-01             4.482095111</span>
-<span class="co">## 2014-06-01             6.944414979</span>
-<span class="co">## 2014-07-01             1.757656857</span>
-<span class="co">## 2014-08-01             7.084678733</span>
-<span class="co">## 2014-09-01            13.581159747</span>
-<span class="co">## 2014-10-01            12.395474130</span>
-<span class="co">## 2014-11-01             3.734492968</span>
-<span class="co">## 2014-12-01             0.002550331</span></code></pre>
+<span class="co">## 2014-01-01             0.049178864</span>
+<span class="co">## 2014-02-01             0.023804885</span>
+<span class="co">## 2014-03-01             0.035008879</span>
+<span class="co">## 2014-04-01             0.635537026</span>
+<span class="co">## 2014-05-01             4.015419670</span>
+<span class="co">## 2014-06-01             4.834400817</span>
+<span class="co">## 2014-07-01             2.425566761</span>
+<span class="co">## 2014-08-01             5.337791476</span>
+<span class="co">## 2014-09-01            10.891424046</span>
+<span class="co">## 2014-10-01            10.005937929</span>
+<span class="co">## 2014-11-01             2.771285584</span>
+<span class="co">## 2014-12-01             0.001940903</span></code></pre>
 <p>Parameter <code>output</code> is used to indicate the element of the <code>spwb</code> object for which we desire summaries. Similarly, it is possible to calculate the average stress of the three tree species by months:</p>
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fb_SWB</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##            Phillyrea latifolia Pinus halepensis Quercus ilex</span>
-<span class="co">## 2014-01-01         0.044177144       0.04969178  0.042949048</span>
-<span class="co">## 2014-02-01         0.032074096       0.04268967  0.029697194</span>
-<span class="co">## 2014-03-01         0.014782177       0.04548130  0.009266641</span>
-<span class="co">## 2014-04-01         0.001822067       0.04837250 -0.008978565</span>
-<span class="co">## 2014-05-01         0.056393168       0.14283691  0.007484958</span>
-<span class="co">## 2014-06-01         0.287155581       0.39221482  0.162011356</span>
-<span class="co">## 2014-07-01         0.638291331       0.67427301  0.475881302</span>
-<span class="co">## 2014-08-01         0.558503189       0.58837557  0.546909504</span>
-<span class="co">## 2014-09-01         0.443907962       0.49540908  0.483730860</span>
-<span class="co">## 2014-10-01         0.079506681       0.17152305  0.245044449</span>
-<span class="co">## 2014-11-01         0.081166224       0.15782020  0.246172863</span>
-<span class="co">## 2014-12-01         0.070850269       0.14769062  0.229890345</span></code></pre>
+<span class="co">## 2014-01-01         0.044049265      0.041657999   0.04712842</span>
+<span class="co">## 2014-02-01         0.031462437      0.026815863   0.03641531</span>
+<span class="co">## 2014-03-01         0.015006272      0.003303594   0.02390993</span>
+<span class="co">## 2014-04-01         0.002347632     -0.019384318   0.01511661</span>
+<span class="co">## 2014-05-01         0.044342009     -0.034181869   0.07814110</span>
+<span class="co">## 2014-06-01         0.201707819      0.024654886   0.25185823</span>
+<span class="co">## 2014-07-01         0.448960198      0.542577116   0.48521714</span>
+<span class="co">## 2014-08-01         0.379760181      0.418330377   0.43455200</span>
+<span class="co">## 2014-09-01         0.292489708      0.429571830   0.34540800</span>
+<span class="co">## 2014-10-01         0.047504924      0.007641777   0.06166284</span>
+<span class="co">## 2014-11-01         0.052399076      0.028541751   0.05604694</span>
+<span class="co">## 2014-12-01         0.044552873      0.026587607   0.04511360</span></code></pre>
 <p>In this case, the <code>summary</code> function aggregates the output by species using LAI values as weights.</p>
 </div>
 <div class="section level2">

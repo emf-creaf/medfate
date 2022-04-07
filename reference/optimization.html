@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.2</span>
       </span>
     </div>
 
@@ -180,13 +180,13 @@ Function <code>optimization_evaluation_multicohort_function</code> returns a fun
 <span class="r-in"><span class="fu">multiple_runs</span><span class="op">(</span><span class="va">parMatrix</span>, </span>
 <span class="r-in">              <span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">42</span>, elevation <span class="op">=</span> <span class="fl">100</span>,</span>
 <span class="r-in">              summary_function <span class="op">=</span> <span class="va">sf</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1. Parameter values = [200, 500] f = 334.166303953873</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2. Parameter values = [300, 1000] f = 334.341089916366</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1. Parameter values = [200, 500] f = 349.798932945655</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2. Parameter values = [300, 1000] f = 349.964449531523</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 334.1663</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 349.7989</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 334.3411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 349.9644</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in">              </span>
 <span class="r-in"><span class="co">#Load observed data (in this case the same simulation results with some added error)  </span></span>
@@ -200,9 +200,9 @@ Function <code>optimization_evaluation_multicohort_function</code> returns a fun
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Evaluate for the values of the parameter matrix</span></span>
 <span class="r-in"><span class="fu">of</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 334.1663</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 349.7989</span>
 <span class="r-in"><span class="fu">of</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 334.1663 334.3411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 349.7989 349.9644</span>
 <span class="r-in"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Generate a loglikelihood function for soil water content</span></span>
@@ -216,9 +216,9 @@ Function <code>optimization_evaluation_multicohort_function</code> returns a fun
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Loglikelihood for the values of the parameter matrix</span></span>
 <span class="r-in"><span class="fu">oef</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 943.7304</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 921.4833</span>
 <span class="r-in"><span class="fu">oef</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 943.7304 949.8533</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 921.4833 930.7982</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
