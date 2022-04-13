@@ -30,9 +30,8 @@ metamodellingParamsSpecies = readRDS(paste0(MFWdir,"Metamodelling_TR_WUE/Rdata/m
 metamodellingParamsSpecies$Ar2Al = NA # Do not trust metamodeling estimates for Ar2Al
 SpParamsMED = medfate::modifySpParams(SpParamsMED, metamodellingParamsSpecies, subsetSpecies = FALSE)
 # Load growth calibration results
-growthParamsSpecies = readRDS(paste0(MFWdir,"GrowthCalibration/Rdata/calibration_params.rds"))
-#Modify Species Parameters according to results
-SpParamsMED = medfate::modifySpParams(SpParamsMED, growthParamsSpecies, subsetSpecies = FALSE)
+RGRcambiummaxTrees = readRDS(paste0(MFWdir,"GrowthCalibration/Rdata/RGRcambiummax_trees.rds"))
+SpParamsMED = medfate::modifySpParams(SpParamsMED, RGRcambiummaxTrees, subsetSpecies = FALSE)
 # Load ingrowth calibration results
 recruitmentParamsSpecies = readRDS(paste0(MFWdir,"MortalityIngrowthCalibration/Rdata/final_recruitment_params.rds"))
 SpParamsMED = medfate::modifySpParams(SpParamsMED, recruitmentParamsSpecies, subsetSpecies = FALSE)

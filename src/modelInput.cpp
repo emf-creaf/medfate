@@ -431,6 +431,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   bool fillMissingSpParams = control["fillMissingSpParams"];
   
   IntegerVector SP = above["SP"];
+  NumericVector DBH = above["DBH"];
   int numCohorts = SP.size();
 
   NumericVector WoodC = speciesNumericParameterWithImputation(SP, SpParams, "WoodC", fillMissingSpParams);
@@ -482,8 +483,8 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
       if(NumericVector::is_na(CCsapwood[c])) CCsapwood[c] = CCsapwood_default;
       if(NumericVector::is_na(CCfineroot[c])) CCfineroot[c] = CCfineroot_default;
       if(NumericVector::is_na(RGRleafmax[c])) RGRleafmax[c] = RGRleafmax_default;
-      if(NumericVector::is_na(RGRcambiummax[c])) RGRcambiummax[c] = RGRcambiummax_default;
-      if(NumericVector::is_na(RGRsapwoodmax[c])) RGRsapwoodmax[c] = RGRsapwoodmax_default;
+      if(NumericVector::is_na(RGRcambiummax[c]) && !NumericVector::is_na(DBH[c])) RGRcambiummax[c] = RGRcambiummax_default;
+      if(NumericVector::is_na(RGRsapwoodmax[c]) && NumericVector::is_na(DBH[c])) RGRsapwoodmax[c] = RGRsapwoodmax_default;
       if(NumericVector::is_na(RGRfinerootmax[c])) RGRfinerootmax[c] = RGRfinerootmax_default;
       if(NumericVector::is_na(SRsapwood[c])) SRsapwood[c] = SRsapwood_default;
       if(NumericVector::is_na(SRfineroot[c])) SRfineroot[c] = SRfineroot_default;
@@ -906,9 +907,9 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   plantsdf.attr("row.names") = above.attr("row.names");
   
 
-  List ringList(numCohorts);
-  for(int i=0;i<numCohorts;i++) ringList[i] = initialize_ring();
-  ringList.attr("names") = above.attr("row.names");
+  // List ringList(numCohorts);
+  // for(int i=0;i<numCohorts;i++) ringList[i] = initialize_ring();
+  // ringList.attr("names") = above.attr("row.names");
   
   List below = paramsBelow(above, Z50, Z95, soil, 
                            paramsAnatomydf, paramsTranspirationdf, control);
@@ -953,8 +954,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                        _["internalAllocation"] = internalAllocationDataFrame(plantsdf, belowdf,
                                                       paramsAnatomydf,
                                                       paramsTranspirationdf, control),
-                       _["internalMortality"] = internalMortalityDataFrame(plantsdf),
-                       _["internalRings"] = ringList);
+                       _["internalMortality"] = internalMortalityDataFrame(plantsdf));
   
   input.attr("class") = CharacterVector::create("growthInput","list");
   return(input);

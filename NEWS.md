@@ -5,6 +5,7 @@
 # Version 2.7.2
 - SpParamsMED include the results of parameter estimation exercises
 - RGRsapwoodmax and RGRcambiummax regulate sapwood formation for shrubs/trees, respectively 
+- Simplified sapwood growth (no ring of cells)
 
 # Version 2.7.1
 - Revision of recruitment model, with the addition of a recruitment probability (ProbRecr) within the bioclimatic limits

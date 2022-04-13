@@ -565,7 +565,7 @@ List growthDayInner(List x, NumericVector meteovec,
   
 
   //Ring of forming vessels
-  List ringList = as<Rcpp::List>(x["internalRings"]);
+  // List ringList = as<Rcpp::List>(x["internalRings"]);
   
   //Subdaily output matrices (Sperry)
   NumericMatrix LabileCarbonBalanceInst(numCohorts, numSteps);  
@@ -595,7 +595,7 @@ List growthDayInner(List x, NumericVector meteovec,
   double equilibriumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConcentration;
   double mortalitySugarThreshold = equilibriumSapwoodSugarConc*mortalityRelativeSugarThreshold;
 
-  double rleafcellmax = relative_expansion_rate(0.0 ,30.0, -2.0,0.5,0.05,5.0);
+  double rcellmax = relative_expansion_rate(0.0 ,30.0, -2.0,0.5,0.05,5.0);
   
   //Initial Biomass balance
   NumericVector LeafBiomassBalance(numCohorts,0.0), FineRootBiomassBalance(numCohorts,0.0);
@@ -636,16 +636,18 @@ List growthDayInner(List x, NumericVector meteovec,
       if(transpirationMode=="Sperry") k_phloem = VCstem_kmax[j]*phloemConductanceFactor*(0.018/1000.0);
       
       //Xylogenesis
-      List ring = ringList[j];
-      double rleafcell = NA_REAL;
+      // List ring = ringList[j];
+      double rleafcell = NA_REAL, rcambiumcell = NA_REAL;
       NumericVector rfineroot(numLayers);
       if(transpirationMode=="Granier") {
-        grow_ring(ring, PlantPsi[j] ,tday, 10.0);
-        rleafcell = std::min(rleafcellmax, relative_expansion_rate(PlantPsi[j] ,tday, LeafPI0[j],0.5,0.05,5.0));
+        // grow_ring(ring, PlantPsi[j] ,tday, 10.0);
+        rleafcell = std::min(rcellmax, relative_expansion_rate(PlantPsi[j] ,tday, LeafPI0[j],0.5,0.05,5.0));
+        rcambiumcell = std::min(rcellmax, relative_expansion_rate(PlantPsi[j] ,tday, StemPI0[j],0.5,0.05,5.0));
         for(int s=0;s<numLayers;s++) rfineroot[s] = relative_expansion_rate(psiSoil[s] ,tday, StemPI0[j],0.5,0.05,5.0);
       } else {
-        grow_ring(ringList[j], psiSympStem[j] ,tday, 10.0);
-        rleafcell = std::min(rleafcellmax, relative_expansion_rate(psiSympLeaf[j] ,tday, LeafPI0[j],0.5,0.05,5.0));
+        // grow_ring(ringList[j], psiSympStem[j] ,tday, 10.0);
+        rleafcell = std::min(rcellmax, relative_expansion_rate(psiSympLeaf[j] ,tday, LeafPI0[j],0.5,0.05,5.0));
+        rcambiumcell = std::min(rcellmax, relative_expansion_rate(psiSympStem[j] ,tday, StemPI0[j],0.5,0.05,5.0));
         for(int s=0;s<numLayers;s++) rfineroot[s] = relative_expansion_rate(RhizoPsi(j,s) ,tday, StemPI0[j],0.5,0.05,5.0);
       }
       
@@ -685,7 +687,7 @@ List growthDayInner(List x, NumericVector meteovec,
         
         if(leafUnfolding[j]) {
           double deltaLApheno = std::max(leafAreaTarget[j] - LAexpanded, 0.0);
-          double deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]*(rleafcell/rleafcellmax));
+          double deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]*(rleafcell/rcellmax));
           if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
           double deltaLAavailable = 0.0;
           deltaLAavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerLA);
@@ -697,7 +699,7 @@ List growthDayInner(List x, NumericVector meteovec,
         if(fineRootBiomass[j] < fineRootBiomassTarget[j]) {
           for(int s = 0;s<numLayers;s++) {
             double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
-            double deltaFRBsink = (V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[s]/rleafcellmax);
+            double deltaFRBsink = (V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[s]/rcellmax);
             if(!sinkLimitation) deltaFRBsink = (V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
             double deltaFRBavailable = std::max(0.0,(starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/CCfineroot[j]);
             deltaFRBgrowth[s] = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
@@ -706,18 +708,18 @@ List growthDayInner(List x, NumericVector meteovec,
         }
         
         if(LAexpanded>0.0) {
-          NumericVector SAring = ring["SA"];
-          double deltaSAring = 0.0;
-          if(SAring.size()==1) deltaSAring = SAring[0];
-          else deltaSAring = SAring[SAring.size()-1] - SAring[SAring.size()-2];
-          double cellfileareamaxincrease = 950.0; //Found empirically with T = 30 degrees and Psi = -0.033
-          double rgrcellfile = (deltaSAring/10.0)/cellfileareamaxincrease;
+          // NumericVector SAring = ring["SA"];
+          // double deltaSAring = 0.0;
+          // if(SAring.size()==1) deltaSAring = SAring[0];
+          // else deltaSAring = SAring[SAring.size()-1] - SAring[SAring.size()-2];
+          // double cellfileareamaxincrease = 950.0; //Found empirically with T = 30 degrees and Psi = -0.033
+          // double rgrcellfile = (deltaSAring/10.0)/cellfileareamaxincrease;
           double deltaSAsink = NA_REAL;
           if(!NumericVector::is_na(DBH[j])) { //Trees
-            deltaSAsink = (3.141592*DBH[j]*RGRcambiummax[j]*rgrcellfile); 
+            deltaSAsink = (3.141592*DBH[j]*RGRcambiummax[j]*(rcambiumcell/rcellmax)); 
             if(!sinkLimitation) deltaSAsink = 3.141592*DBH[j]*RGRcambiummax[j]; //Deactivates temperature and turgor limitation
           } else { // Shrubs
-            deltaSAsink = (SA[j]*RGRsapwoodmax[j]*rgrcellfile); 
+            deltaSAsink = (SA[j]*RGRsapwoodmax[j]*(rcambiumcell/rcellmax)); 
             if(!sinkLimitation) deltaSAsink = SA[j]*RGRsapwoodmax[j]; //Deactivates temperature and turgor limitation
           }
           double deltaSAavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForSecondaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerSA);
@@ -808,7 +810,7 @@ List growthDayInner(List x, NumericVector meteovec,
           //Leaf growth
           if(leafUnfolding[j]) {
             double deltaLApheno = std::max(leafAreaTarget[j] - LAexpanded, 0.0);
-            double deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]*(rleafcell/rleafcellmax));
+            double deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]*(rleafcell/rcellmax));
             if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
             //Grow at expense of stem sugar
             double deltaLAavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerLA);
@@ -820,7 +822,7 @@ List growthDayInner(List x, NumericVector meteovec,
           if(fineRootBiomass[j] < fineRootBiomassTarget[j]) {
             for(int s = 0;s<numLayers;s++) {
               double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
-              double deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[s]/rleafcellmax);
+              double deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[s]/rcellmax);
               if(!sinkLimitation) deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
               double deltaFRBavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/CCfineroot[j]);
               double deltaFRBgrowthStep = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
@@ -830,19 +832,19 @@ List growthDayInner(List x, NumericVector meteovec,
           }
           //sapwood area growth
           if(LAexpanded>0.0) {
-            List ring = ringList[j];
-            NumericVector SAring = ring["SA"];
-            double deltaSAring = 0.0;
-            if(SAring.size()==1) deltaSAring = SAring[0];
-            else deltaSAring = SAring[SAring.size()-1] - SAring[SAring.size()-2];
-            double cellfileareamaxincrease = 950.0; //Found empirically with T = 30 degrees and Psi = -0.033
-            double rgrcellfile = (deltaSAring/10.0)/cellfileareamaxincrease;
+            // List ring = ringList[j];
+            // NumericVector SAring = ring["SA"];
+            // double deltaSAring = 0.0;
+            // if(SAring.size()==1) deltaSAring = SAring[0];
+            // else deltaSAring = SAring[SAring.size()-1] - SAring[SAring.size()-2];
+            // double cellfileareamaxincrease = 950.0; //Found empirically with T = 30 degrees and Psi = -0.033
+            // double rgrcellfile = (deltaSAring/10.0)/cellfileareamaxincrease;
             double deltaSAsink = NA_REAL;
             if(!NumericVector::is_na(DBH[j])) { //Trees
-              deltaSAsink = (3.141592*DBH[j]*RGRcambiummax[j]*rgrcellfile)/((double) numSteps); 
+              deltaSAsink = (3.141592*DBH[j]*RGRcambiummax[j]*(rcambiumcell/rcellmax))/((double) numSteps); 
               if(!sinkLimitation) deltaSAsink = 3.141592*DBH[j]*RGRcambiummax[j]/((double) numSteps); //Deactivates temperature and turgor limitation
             } else { // Shrubs
-              deltaSAsink = (SA[j]*RGRsapwoodmax[j]*rgrcellfile)/((double) numSteps); 
+              deltaSAsink = (SA[j]*RGRsapwoodmax[j]*(rcambiumcell/rcellmax))/((double) numSteps); 
               if(!sinkLimitation) deltaSAsink = SA[j]*RGRsapwoodmax[j]/((double) numSteps); //Deactivates temperature and turgor limitation
             }
             double deltaSAavailable = std::max(0.0, (starchSapwood[j] - minimumStarchForSecondaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerSA);
@@ -1870,11 +1872,11 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     
 
     //5 Update structural variables
-    if(((i<(numDays-1)) && (DOY[i+1]==1)) || (i==(numDays-1))) { 
-      //reset ring structures
-      List ringList = x["internalRings"];
-      for(int j=0;j<numCohorts; j++) ringList[j] = initialize_ring();
-    }
+    // if(((i<(numDays-1)) && (DOY[i+1]==1)) || (i==(numDays-1))) { 
+    //   //reset ring structures
+    //   List ringList = x["internalRings"];
+    //   for(int j=0;j<numCohorts; j++) ringList[j] = initialize_ring();
+    // }
 
     if(subdailyResults) {
       subdailyRes[i] = clone(s);
