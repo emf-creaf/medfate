@@ -100,7 +100,7 @@ List _expand_cell(double psi, double Tc,
   // Variable update
   double CRD1 = CRD0*(1.0+r); // cell diameter (volume) increment
   double pi1 = _n2pi(n, CRD1, Tref); // pi is returned at Tref in order to be consistent with input
-  double phi1 = phi0 + phi0*(s*r - h*temperature_function(Tc, -999.9)); //changes in cell wall properties. Hardening (thickening and lignification) is temperature sensitive but not threshold prone because lignification does not need microtubules
+  double phi1 = phi0 + phi0*(s*r - h*(_metR(Tc, 87.5e3, 1.09e3, 333e3)/_metR(Tref, 87.5e3, 1.09e3, 333e3))); //changes in cell wall properties. Hardening (thickening and lignification) is temperature sensitive but not threshold prone because lignification does not need microtubules
   if(phi1<0.0) {
     phi1=0.0;
   }
