@@ -13,7 +13,6 @@ library(kableExtra)
 library(knitr)
 library(ggplot2)
 library(cowplot)
-library(sensitivity)
 library(tidyverse)
 
 base_calibration = "~/OneDrive/Professional/MedfateWorks/GrowthCalibration/"

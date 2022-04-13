@@ -1,5 +1,5 @@
 ---
-title: "Initial species parameterization for Spain"
+title: "Initial species parameter table for Spain"
 author: "Miquel De Cáceres"
 date: "`r Sys.Date()`"
 output: 

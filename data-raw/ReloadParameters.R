@@ -30,9 +30,9 @@ metamodellingParamsSpecies = readRDS(paste0(MFWdir,"Metamodelling_TR_WUE/Rdata/m
 metamodellingParamsSpecies$Ar2Al = NA # Do not trust metamodeling estimates for Ar2Al
 SpParamsMED = medfate::modifySpParams(SpParamsMED, metamodellingParamsSpecies, subsetSpecies = FALSE)
 # Load growth calibration results
-calParamsSpecies = readRDS(paste0(MFWdir,"GrowthCalibration/Rdata/calibration_params.rds"))
+growthParamsSpecies = readRDS(paste0(MFWdir,"GrowthCalibration/Rdata/calibration_params.rds"))
 #Modify Species Parameters according to results
-SpParamsMED = medfate::modifySpParams(SpParamsMED, calParamsSpecies, subsetSpecies = FALSE)
+SpParamsMED = medfate::modifySpParams(SpParamsMED, growthParamsSpecies, subsetSpecies = FALSE)
 # Load ingrowth calibration results
 recruitmentParamsSpecies = readRDS(paste0(MFWdir,"MortalityIngrowthCalibration/Rdata/final_recruitment_params.rds"))
 SpParamsMED = medfate::modifySpParams(SpParamsMED, recruitmentParamsSpecies, subsetSpecies = FALSE)
@@ -69,17 +69,17 @@ SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Quercus faginea"] = 0.0016
 SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Quercus ilex"] = 0.0016
 SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Fagus sylvatica"] = 0.0016
 SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Abies alba"] = 0.0016
-SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Quercus ilex"] = 0.0025
-SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Quercus faginea"] = 0.0025
-SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Quercus suber"] = 0.0030
-SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Quercus pubescens"] = 0.0030
-SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Pinus pinea"] = 0.0025
-SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Pinus halepensis"] = 0.0025
-SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Pinus nigra"] = 0.0015
-SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Pinus sylvestris"] = 0.0020
-SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Pinus uncinata"] = 0.0035
-SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Abies alba"] = 0.0065
-SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Fagus sylvatica"] = 0.0020
+# SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Quercus ilex"] = 0.0025
+# SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Quercus faginea"] = 0.0025
+# SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Quercus suber"] = 0.0030
+# SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Quercus pubescens"] = 0.0030
+# SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Pinus pinea"] = 0.0025
+# SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Pinus halepensis"] = 0.0025
+# SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Pinus nigra"] = 0.0015
+# SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Pinus sylvestris"] = 0.0020
+# SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Pinus uncinata"] = 0.0035
+# SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Abies alba"] = 0.0065
+# SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Fagus sylvatica"] = 0.0020
 #Save data
 usethis::use_data(SpParamsMED, overwrite = T)
 
