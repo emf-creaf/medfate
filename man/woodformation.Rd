@@ -3,6 +3,7 @@
 \alias{woodformation_initRing}
 \alias{woodformation_growRing}
 \alias{woodformation_relativeExpansionRate}
+\alias{woodformation_temperatureEffect}
 
 \title{Wood formation}
 \description{
@@ -14,6 +15,7 @@ woodformation_growRing(ring, psi, Tc,
                        Nc=8.85, phi0=0.13, pi0=-0.8, CRD0=8.3,
                        Y_P=0.05, Y_T=5.0, h=0.043*1.8, s=1.8)
 woodformation_relativeExpansionRate(psi, Tc, pi, phi, Y_P, Y_T)
+woodformation_temperatureEffect(Tc, Y_T=5.0, DHa=87.5e3, DSd=1.09e3, DHd=333e3)
 }
 \arguments{
   \item{ring}{An object of class \code{\link{ring}} returned by function \code{woodformation_initRing}.}
@@ -29,9 +31,10 @@ woodformation_relativeExpansionRate(psi, Tc, pi, phi, Y_P, Y_T)
   \item{s}{Cell wall softening coefficient (unitless)}
   \item{pi}{Osmotic potential (in MPa)}
   \item{phi}{Cell extensibility (in MPa-1 day-1)}
+  \item{DHa, DSd, DHd}{Enthalpy of activation, enthalpy difference and entropy difference between the catalytically active and inactive states of the enzymatic system (Parent et al. 2010).}
 }
 \value{
-Function \code{woodformation_initRing()} returns a list of class 'ring', that is a list containing a data frame \code{cells} and two vectors: \code{P} and \code{SA}. Dataframe \code{cells} contains the columns "formation_date", "phi", "pi" and "CRD" and as many rows as dates processed. Vectors \code{P} and \code{SA} contain, respectively, the number of cells produced and the sapwood area corresponding to the ring of cells (assuming a tangencial radius of 20 micrometers). Function \code{woodformation_growRing()} modifies the input 'ring' object according to the environmental conditions given as input. Function \code{woodformation_relativeExpansionRate()} returns a numeric scalar with the relative expansion rate.
+Function \code{woodformation_initRing()} returns a list of class 'ring', that is a list containing a data frame \code{cells} and two vectors: \code{P} and \code{SA}. Dataframe \code{cells} contains the columns "formation_date", "phi", "pi" and "CRD" and as many rows as dates processed. Vectors \code{P} and \code{SA} contain, respectively, the number of cells produced and the sapwood area corresponding to the ring of cells (assuming a tangencial radius of 20 micrometers). Function \code{woodformation_growRing()} modifies the input 'ring' object according to the environmental conditions given as input. Function \code{woodformation_relativeExpansionRate()} returns a numeric scalar with the relative expansion rate. Function \code{woodformation_temperatureEffect()} returns a scalar between 0 and 1 reflecting the temperature effect on tissue formation rate.
 }
 \note{
 Code modified from package xylomod by Antoine Cabon, available at GitHub
@@ -45,6 +48,8 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 Cabon A, \enc{Fernández-de-Uña}{Fernandez-de-Una} L, Gea-Izquierdo G, Meinzer FC, Woodruff DR, \enc{Martínez-Vilalta}{Martinez-Vilalta} J, De \enc{Cáceres}{Caceres} M. 2020a. Water potential control of turgor-driven tracheid enlargement in Scots pine at its xeric distribution edge. New Phytologist 225: 209–221.
 
 Cabon A, Peters RL, Fonti P, \enc{Martínez-Vilalta}{Martinez-Vilalta}  J, De \enc{Cáceres}{Caceres} M. 2020b. Temperature and water potential co-limit stem cambial activity along a steep elevational gradient. New Phytologist: nph.16456.
+
+Parent, B., O. Turc, Y. Gibon, M. Stitt, and F. Tardieu. 2010. Modelling temperature-compensated physiological rates, based on the co-ordination of responses to temperature of developmental processes. Journal of Experimental Botany 61:2057–2069.
 }
 \seealso{
  \code{\link{growth}}

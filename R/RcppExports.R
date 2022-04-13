@@ -985,6 +985,10 @@ woodformation_initRing <- function() {
     .Call(`_medfate_initialize_ring`)
 }
 
+woodformation_temperatureEffect <- function(Tc, Y_T = 5.0, DHa = 87.5e3, DSd = 1.09e3, DHd = 333e3) {
+    .Call(`_medfate_temperature_function`, Tc, Y_T, DHa, DSd, DHd)
+}
+
 woodformation_relativeExpansionRate <- function(psi, Tc, pi, phi, Y_P, Y_T) {
     .Call(`_medfate_relative_expansion_rate`, psi, Tc, pi, phi, Y_P, Y_T)
 }

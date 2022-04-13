@@ -41,9 +41,11 @@ double _metR(double Tc, double DHa, double DSd, double DHd){
   double out = Tk*exp(-DHa/(Rn*Tk)) / (1.0+exp(DSd/Rn*(1.0-(DHd/(DSd*Tk)))));
   return(out);
 }
-double T_fun(double Tc, double Y_T=8.0, double DHa=87.5e3, double DSd=1.09e3, double DHd=333e3){
+
+// [[Rcpp::export("woodformation_temperatureEffect")]]
+double temperature_function(double Tc, double Y_T=5.0, double DHa=87.5e3, double DSd=1.09e3, double DHd=333e3){
   double out = _metR(Tc, DHa, DSd, DHd);
-  out = out/_metR(Tref, DHa, DSd, DHd); // the output is equal to 1 at Tref degC
+  out = out/_metR(30.0, DHa, DSd, DHd); // the output is equal to 1 at 30 degC
   out = out*_microT(Tc, Y_T);
   // out = 1;
   return(out);
@@ -66,7 +68,7 @@ double _n2pi(double n, double V, double Tc){
 double relative_expansion_rate(double psi, double Tc, double pi, double phi, double Y_P, double Y_T){
   double out = phi*(psi-pi-Y_P);
   if(out<0.0) out=0.0;
-  out = out*T_fun(Tc,Y_T);
+  out = out*temperature_function(Tc,Y_T);
   return(out);
 }
 
@@ -98,7 +100,7 @@ List _expand_cell(double psi, double Tc,
   // Variable update
   double CRD1 = CRD0*(1.0+r); // cell diameter (volume) increment
   double pi1 = _n2pi(n, CRD1, Tref); // pi is returned at Tref in order to be consistent with input
-  double phi1 = phi0 + phi0*(s*r - h*T_fun(Tc, -999.9)); //changes in cell wall properties. Hardening (thickening and lignification) is temperature sensitive but not threshold prone because lignification does not need microtubules
+  double phi1 = phi0 + phi0*(s*r - h*temperature_function(Tc, -999.9)); //changes in cell wall properties. Hardening (thickening and lignification) is temperature sensitive but not threshold prone because lignification does not need microtubules
   if(phi1<0.0) {
     phi1=0.0;
   }

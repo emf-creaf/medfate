@@ -4682,6 +4682,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// temperature_function
+double temperature_function(double Tc, double Y_T, double DHa, double DSd, double DHd);
+RcppExport SEXP _medfate_temperature_function(SEXP TcSEXP, SEXP Y_TSEXP, SEXP DHaSEXP, SEXP DSdSEXP, SEXP DHdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Tc(TcSEXP);
+    Rcpp::traits::input_parameter< double >::type Y_T(Y_TSEXP);
+    Rcpp::traits::input_parameter< double >::type DHa(DHaSEXP);
+    Rcpp::traits::input_parameter< double >::type DSd(DSdSEXP);
+    Rcpp::traits::input_parameter< double >::type DHd(DHdSEXP);
+    rcpp_result_gen = Rcpp::wrap(temperature_function(Tc, Y_T, DHa, DSd, DHd));
+    return rcpp_result_gen;
+END_RCPP
+}
 // relative_expansion_rate
 double relative_expansion_rate(double psi, double Tc, double pi, double phi, double Y_P, double Y_T);
 RcppExport SEXP _medfate_relative_expansion_rate(SEXP psiSEXP, SEXP TcSEXP, SEXP piSEXP, SEXP phiSEXP, SEXP Y_PSEXP, SEXP Y_TSEXP) {
@@ -5068,6 +5083,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_windSpeedAtHeightOverCanopy", (DL_FUNC) &_medfate_windSpeedAtHeightOverCanopy, 3},
     {"_medfate_windExtinctionProfile", (DL_FUNC) &_medfate_windExtinctionProfile, 4},
     {"_medfate_initialize_ring", (DL_FUNC) &_medfate_initialize_ring, 0},
+    {"_medfate_temperature_function", (DL_FUNC) &_medfate_temperature_function, 5},
     {"_medfate_relative_expansion_rate", (DL_FUNC) &_medfate_relative_expansion_rate, 6},
     {"_medfate_grow_ring", (DL_FUNC) &_medfate_grow_ring, 11},
     {"_medfate_RcppExport_registerCCallable", (DL_FUNC) &_medfate_RcppExport_registerCCallable, 0},
