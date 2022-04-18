@@ -1,9 +1,9 @@
 import(meteoland)
 import(ggplot2)
 import(shiny)
-importFrom("stats", "aggregate","filter","uniroot", "median",
+importFrom("stats", "aggregate","filter","median",
            "cor","quantile", "dnorm", "Gamma", "glm", "predict",
-           "rpois", "rbinom")
+           "rpois", "rbinom", "uniroot")
 importFrom("grDevices", "rainbow")
 importFrom("graphics", "axis", "abline", "barplot", "legend", "lines", "matplot","mtext",
            "matlines", "par", "polygon","axis.Date")

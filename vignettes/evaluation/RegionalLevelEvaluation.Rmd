@@ -35,6 +35,9 @@ dfbai = eval_res$dfbai
 dfbai_all = eval_res$dfbai_all
 mapdata = eval_res$mapdata
 medfate_ver = eval_res$package.version
+
+load("~/OneDrive/Datasets/Limits/Products/Catalonia/catalonia.rdata")
+cat_sfc = sf::st_as_sfc(cat.contour)
 ```
 
 ### Goal
@@ -181,6 +184,7 @@ bai_error_map <-function(data_bai){
   data_bai$error[data_bai$error < map_lower] = map_lower
   ggplot(data_bai)+
     geom_sf(aes(col=error), size=0.5)+
+    geom_sf(data = cat_sfc)+
     scale_color_gradient2("m2/ha",low="blue", mid="yellow", high="red")+
     theme_bw()+
     theme(panel.grid = element_blank())

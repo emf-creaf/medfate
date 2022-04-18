@@ -4,6 +4,7 @@
 \alias{woodformation_growRing}
 \alias{woodformation_relativeExpansionRate}
 \alias{woodformation_temperatureEffect}
+\alias{woodformation_relativeGrowthRate}
 
 \title{Wood formation}
 \description{
@@ -16,6 +17,7 @@ woodformation_growRing(ring, psi, Tc,
                        Y_P=0.05, Y_T=5.0, h=0.043*1.8, s=1.8)
 woodformation_relativeExpansionRate(psi, Tc, pi, phi, Y_P, Y_T)
 woodformation_temperatureEffect(Tc, Y_T=5.0, DHa=87.5e3, DSd=1.09e3, DHd=333e3)
+woodformation_relativeGrowthRate(dbh1, dbh2, yeardiff, lower = -2, upper = 8)
 }
 \arguments{
   \item{ring}{An object of class \code{\link{ring}} returned by function \code{woodformation_initRing}.}
@@ -32,9 +34,12 @@ woodformation_temperatureEffect(Tc, Y_T=5.0, DHa=87.5e3, DSd=1.09e3, DHd=333e3)
   \item{pi}{Osmotic potential (in MPa)}
   \item{phi}{Cell extensibility (in MPa-1 day-1)}
   \item{DHa, DSd, DHd}{Enthalpy of activation, enthalpy difference and entropy difference between the catalytically active and inactive states of the enzymatic system (Parent et al. 2010).}
+  \item{dbh1, dbh2}{Initial and final diameter at breast height.}
+  \item{yeardiff}{Interval between dbh measurements, in years.}
+  \item{lower, upper}{Lower and upper bounds for root finding.}
 }
 \value{
-Function \code{woodformation_initRing()} returns a list of class 'ring', that is a list containing a data frame \code{cells} and two vectors: \code{P} and \code{SA}. Dataframe \code{cells} contains the columns "formation_date", "phi", "pi" and "CRD" and as many rows as dates processed. Vectors \code{P} and \code{SA} contain, respectively, the number of cells produced and the sapwood area corresponding to the ring of cells (assuming a tangencial radius of 20 micrometers). Function \code{woodformation_growRing()} modifies the input 'ring' object according to the environmental conditions given as input. Function \code{woodformation_relativeExpansionRate()} returns a numeric scalar with the relative expansion rate. Function \code{woodformation_temperatureEffect()} returns a scalar between 0 and 1 reflecting the temperature effect on tissue formation rate.
+Function \code{woodformation_initRing()} returns a list of class 'ring', that is a list containing a data frame \code{cells} and two vectors: \code{P} and \code{SA}. Dataframe \code{cells} contains the columns "formation_date", "phi", "pi" and "CRD" and as many rows as dates processed. Vectors \code{P} and \code{SA} contain, respectively, the number of cells produced and the sapwood area corresponding to the ring of cells (assuming a tangencial radius of 20 micrometers). Function \code{woodformation_growRing()} modifies the input 'ring' object according to the environmental conditions given as input. Function \code{woodformation_relativeExpansionRate()} returns a numeric scalar with the relative expansion rate. Function \code{woodformation_temperatureEffect()} returns a scalar between 0 and 1 reflecting the temperature effect on tissue formation rate. Function \code{woodformation_relativeGrowthRate} returns the annual growth rate, relative to cambium perimeter, estimated from initial and final diameter values.
 }
 \note{
 Code modified from package xylomod by Antoine Cabon, available at GitHub
