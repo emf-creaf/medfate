@@ -31,6 +31,7 @@ target_IDs = eval_res$target_IDs
 dfdbh = eval_res$dfdbh
 dfh = eval_res$dfh
 dfbadead = eval_res$dfbadead
+dfbarecr = eval_res$dfbarecr
 dfbai = eval_res$dfbai
 dfbai_all = eval_res$dfbai_all
 mapdata = eval_res$mapdata
@@ -187,7 +188,7 @@ bai_error_map <-function(data_bai){
     geom_sf(data = cat_sfc)+
     scale_color_gradient2("m2/ha",low="blue", mid="yellow", high="red")+
     theme_bw()+
-    theme(panel.grid = element_blank())
+    theme(panel.grid = element_blank(), legend.position = c(0.75,0.25))
 }
 ```
 
@@ -207,7 +208,7 @@ The key parameters values used in simulations were the following:
 
 ```{r, echo = FALSE}
 
-df = SpParams[SpParams$SpIndex %in% target_spp, c("Name", "Tmax_LAI", "Tmax_LAIsq", "WUE","Al2As","Ar2Al", "SLA", "RGRsapwoodmax", "SRsapwood", "fHDmin", "fHDmax")]
+df = SpParams[SpParams$SpIndex %in% target_spp, c("Name", "Tmax_LAI", "Tmax_LAIsq", "WUE","Al2As", "SLA", "RGRcambiummax", "fHDmin", "fHDmax")]
 row.names(df) = NULL
 df %>%
   kbl() %>%
@@ -234,7 +235,8 @@ res_sp <- dfdbh %>% group_by(Name) %>%
             Biasrel = 100*Bias/Obs,
             MAE = mean(abs(error), na.rm=TRUE),
             MAErel = 100*MAE/Obs,
-            R2 = cor(obs,pred)^2)
+            R2 = cor(obs,pred)^2) %>% 
+  filter(n>=100)
 res_all <- dfdbh %>%
   summarize(Name = "All", 
             n = n(),
@@ -244,7 +246,7 @@ res_all <- dfdbh %>%
             Biasrel = 100*Bias/Obs,
             MAE = mean(abs(error), na.rm=TRUE),
             MAErel = 100*MAE/Obs,
-            R2 = cor(obs,pred)^2)
+            R2 = cor(obs,pred)^2) 
 
 bind_rows(res_all,res_sp) %>%
   kbl() %>%
@@ -278,7 +280,8 @@ res_sp <- dfh %>% group_by(Name) %>%
             Biasrel = 100*Bias/Obs,
             MAE = mean(abs(error), na.rm=TRUE),
             MAErel = 100*MAE/Obs,
-            R2 = cor(obs,pred)^2)
+            R2 = cor(obs,pred)^2)%>% 
+  filter(n>=100)
 res_all <- dfh %>%
   summarize(Name = "All",
             n = n(),
@@ -310,7 +313,8 @@ dfbai %>% group_by(Name) %>%
             Biasrel = 100*Bias/Obs,
             MAE = mean(abs(error), na.rm=TRUE),
             MAErel = 100*MAE/Obs,
-            R2 = cor(obs,pred)^2) %>%
+            R2 = cor(obs,pred)^2) %>% 
+  filter(n>=100) %>%
   kbl() %>%
   kable_styling()
 ```
@@ -353,7 +357,8 @@ dfbadead %>% group_by(Name) %>%
             Biasrel = 100*Bias/Obs,
             MAE = mean(abs(error), na.rm=TRUE),
             MAErel = 100*MAE/Obs,
-            R2 = cor(obs,pred)^2) %>%
+            R2 = cor(obs,pred)^2) %>% 
+  filter(n>=100) %>%
   kbl() %>%
   kable_styling()
 ```
@@ -380,6 +385,53 @@ mapdata_badead$error = dfbadead$error[dfbadead$Name=="0-All"]
 bai_error_map(mapdata_badead)
 ```
 
+
+
+## Ingrowth (m2/ha)
+
+Increase of basal area due to ingrowth of trees with diameters between 7.5 cm and 12.5 cm during the IFN3-IFN4 period against model's ingrowth prediction.
+
+
+Predictive capacity table:
+
+```{r, echo = FALSE, warning=FALSE}
+dfbarecr %>% group_by(Name) %>%
+  summarize(n = n(),
+            Obs = mean(obs, na.rm=TRUE),
+            Pred = mean(pred, na.rm=TRUE),
+            Bias = mean(error, na.rm=TRUE),
+            Biasrel = 100*Bias/Obs,
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/Obs,
+            R2 = cor(obs,pred)^2) %>% 
+  filter(n>=100) %>%
+  kbl() %>%
+  kable_styling()
+```
+
+Predictive capacity plot:
+
+```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message = FALSE}
+plot_scatter_bai(dfbarecr[dfbarecr$Name=="0-All", ], 
+                 quantity = "ingrowth basal area", xylim = c(0,15), errorlim = c(-15,15)) 
+```
+
+Relationship between ingrowth basal area and climatic variables (MAT and P/PET):
+
+```{r, echo = FALSE, fig.width=8, fig.height=8, warning=FALSE, message=FALSE}
+plot_cov_clim_bai(dfbarecr[dfbarecr$Name=="0-All",], 
+                  quantity = "Ingrowth basal area", ylim = c(0,15), errorlim = c(-15,15))
+```
+
+Spatial distribution of errors:
+
+```{r, echo = FALSE, fig.width=7, fig.height=7}
+mapdata_barecr = mapdata
+mapdata_barecr$error = dfbarecr$error[dfbarecr$Name=="0-All"]
+bai_error_map(mapdata_barecr)
+```
+
+
 ## Overall stand-level basal area change (m2/ha)
 
 This includes growth of surviving trees, mortality reductions and ingrowth (increase in trees with DBH>5) due to sapling growth (in the observed data, this includes also incorporation of trees into large diameter classes due to sampling design).
@@ -397,7 +449,8 @@ dfbai_all %>% group_by(Name) %>%
             Biasrel = 100*Bias/Obs,
             MAE = mean(abs(error), na.rm=TRUE),
             MAErel = 100*MAE/Obs,
-            R2 = cor(obs,pred)^2) %>%
+            R2 = cor(obs,pred)^2) %>% 
+  filter(n>=100) %>%
   kbl() %>%
   kable_styling()
 ```
@@ -438,6 +491,10 @@ pm
 ## Detailed growth evaluation by species
 
 ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
+sp_n <- dfbai_all[dfbai_all$Name!="0-All",] %>% group_by(Name) %>%
+    summarize(n = n())
+sp100 = sp_n$Name[sp_n$n>100]
+target_spp = target_spp[names(target_spp) %in% sp100]
 for(i in 1:length(target_spp)) {
   
   sp = target_spp[i]
