@@ -33,7 +33,7 @@ We used to data sets for the calibration exercise:
 
 ```{r, echo = FALSE}
 
-cal_uncinata_SL_ga = readRDS(paste0(base_calibration,"Rdata/cal_uncinata_SL_ga.rds"))
+# cal_uncinata_SL_ga = readRDS(paste0(base_calibration,"Rdata/cal_uncinata_SL_ga.rds"))
 
 plot_desc = readRDS(paste0(base_calibration,"Rdata/plot_desc_FUN2FUN.rds"))
 obs_FUN2FUN = readRDS(paste0(base_calibration,"Rdata/obs_FUN2FUN_IFN.rds"))
@@ -107,7 +107,8 @@ df %>%
 
 ### Error function
 ```{r, echo = FALSE}
-df = rbind(cal_FUN2FUN_SL_ga[,c(1,2,3, 5,7,9,11)], cal_uncinata_SL_ga[,c(1,2,3, 5,7,9,11)])
+df = cal_FUN2FUN_SL_ga[,c(1,2,3, 5,7,9,11)]
+# df = rbind(cal_FUN2FUN_SL_ga[,c(1,2,3, 5,7,9,11)], cal_uncinata_SL_ga[,c(1,2,3, 5,7,9,11)])
 ```
 
 The following panel shows the distribution of the final (optimum) values of the error function (average relative MAE) by dominant species:
@@ -177,11 +178,13 @@ The following table shows mean error and parameter values by species and overall
 ```{r echo = FALSE}
 MAE_cal = cal_FUN2FUN_SL_ga$value_cal
 ms_F2F = apply(cal_FUN2FUN_SL_ga[,c(3, 5,7,9,11)],2,function(x) {tapply(x, cal_FUN2FUN_SL_ga$Species, mean, na.rm=T)})
-ms_UNC = apply(cal_uncinata_SL_ga[,c(3, 5,7,9,11)],2,function(x) {tapply(x, cal_uncinata_SL_ga$Species, mean, na.rm=T)})
-ms_UNC = data.frame(row.names  = "Pinus uncinata", t(ms_UNC))
-df <- rbind(ms_F2F, ms_UNC)
+# ms_UNC = apply(cal_uncinata_SL_ga[,c(3, 5,7,9,11)],2,function(x) {tapply(x, cal_uncinata_SL_ga$Species, mean, na.rm=T)})
+# ms_UNC = data.frame(row.names  = "Pinus uncinata", t(ms_UNC))
+# df <- rbind(ms_F2F, ms_UNC)
+df <- ms_F2F
 names(df) <-  c("Rel. MAE (%)", "RERsapwood","RGRcambiummax", "SRsapwood", "rfc@2")
-ma <- apply(rbind(cal_FUN2FUN_SL_ga[,c(3, 5,7,9,11)], cal_uncinata_SL_ga[,c(3, 5,7,9,11)]),2,mean, na.rm=TRUE)
+# ma <- apply(rbind(cal_FUN2FUN_SL_ga[,c(3, 5,7,9,11)], cal_uncinata_SL_ga[,c(3, 5,7,9,11)]),2,mean, na.rm=TRUE)
+ma <- apply(cal_FUN2FUN_SL_ga[,c(3, 5,7,9,11)],2,mean, na.rm=TRUE)
 df <- rbind(df, ma)
 row.names(df)[nrow(df)] = "All"
 df %>%
