@@ -55,7 +55,7 @@ SpParamsMED[118,26:37] = SpParamsMED[116,26:37]
 SpParamsMED[121,26:37] = SpParamsMED[116,26:37]
 #Use allometries of J. communis for Cupressus
 SpParamsMED[62,26:37] = SpParamsMED[116,26:37]
-pines = c("Pinus halepensis", "Pinus nigra", "Pinus pinea","Pinus sylvestris", "Pinus uncinata")
+pines = c("Pinus halepensis", "Pinus nigra", "Pinus pinea","Pinus sylvestris", "Pinus uncinata", "Pinus radiata", "Pinus pinaster")
 SpParamsMED$fHDmin[SpParamsMED$Name %in% pines] = 80
 SpParamsMED$fHDmax[SpParamsMED$Name %in% pines] = 160
 #Save data
