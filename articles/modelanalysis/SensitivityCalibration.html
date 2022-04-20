@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Sensitivity analysis and calibration</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-04-07</h4>
+            <h4 data-toc-skip class="date">2022-04-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/modelanalysis/SensitivityCalibration.Rmd" class="external-link"><code>vignettes/modelanalysis/SensitivityCalibration.Rmd</code></a></small>
       <div class="hidden name"><code>SensitivityCalibration.Rmd</code></div>
@@ -279,13 +279,13 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##                  SWC       ETR     E_T1_148  E_T2_168 FMC_T1_148 FMC_T2_168</span>
-<span class="co">## 2001-01-01 0.2995062 2.2699042  0.195686939 0.1433095   125.9888   93.10436</span>
-<span class="co">## 2001-01-02 0.3051488 2.5686994  0.319458083 0.2229245   125.8272   93.11233</span>
-<span class="co">## 2001-01-03 0.2880321 0.5472155  0.202467908 0.2226380   125.8836   93.03976</span>
-<span class="co">## 2001-01-04 0.2896135 1.9293939 -0.006413486 0.1082622   125.8667   93.05872</span>
-<span class="co">## 2001-01-05 0.3018158 2.3145178  0.278545191 0.1959239   125.8366   93.03899</span>
-<span class="co">## 2001-01-06 0.3025300 2.4832387  0.268117900 0.1423526   125.9902   93.07631</span>
+<pre><code><span class="co">##                  SWC       ETR  E_T1_148  E_T2_168 FMC_T1_148 FMC_T2_168</span>
+<span class="co">## 2001-01-01 0.3153932 2.1252206 0.1848864 0.1521299   125.9171   93.05652</span>
+<span class="co">## 2001-01-02 0.3085002 2.3906040 0.4359122 0.2086504   126.0207   93.05650</span>
+<span class="co">## 2001-01-03 0.3080566 0.4822521 0.2978885 0.1378589   126.0187   93.07475</span>
+<span class="co">## 2001-01-04 0.2856190 2.3915601 0.2473134 0.1057368   125.7906   93.09755</span>
+<span class="co">## 2001-01-05 0.2922478 1.8692411 0.2785708 0.2774446   125.9349   93.11352</span>
+<span class="co">## 2001-01-06 0.3042607 2.4878134 0.2608769 0.2016061   125.8216   93.05236</span>
 <span class="co">##            BAI_T1_148 BAI_T2_168 DI_T1_148 DI_T2_168</span>
 <span class="co">## 2001-01-01          0          0         0         0</span>
 <span class="co">## 2001-01-02          0          0         0         0</span>
@@ -297,7 +297,7 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_metric</a></span><span class="op">(</span><span class="va">S1</span>, measuredData <span class="op">=</span> <span class="va">exampleobs</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, 
                   metric <span class="op">=</span> <span class="st">"NSE"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.8635179</span></code></pre>
+<pre><code><span class="co">## [1] 0.8601449</span></code></pre>
 <p>A call to <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code> provides the coefficient given a model simulation result, but is not a model output function as we defined above. Analogously to the measures of total transpiration and average plant stress, we can use a function factory to define a model output function that takes input factors as inputs, runs the model and performs the evaluation:</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">of_eval</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/optimization.html">optimization_evaluation_function</a></span><span class="op">(</span>parNames <span class="op">=</span> <span class="va">parNames</span>,
@@ -308,7 +308,7 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <p>Function <code>of_eval()</code> stores internally both the data needed for conducting simulations and the data needed for evaluating simulation results, so that we only need to provide values for the input factors:</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] -0.5072244</span></code></pre>
+<pre><code><span class="co">## [1] -0.503836</span></code></pre>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] -Inf</span></code></pre>

@@ -73,7 +73,7 @@
       <h1 data-toc-skip>Evaluation of regional-level forest dynamics with forest inventory data</h1>
                         <h4 data-toc-skip class="author">Miquel De Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-04-07</h4>
+            <h4 data-toc-skip class="date">2022-04-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/evaluation/RegionalLevelEvaluation.Rmd" class="external-link"><code>vignettes/evaluation/RegionalLevelEvaluation.Rmd</code></a></small>
       <div class="hidden name"><code>RegionalLevelEvaluation.Rmd</code></div>
@@ -89,13 +89,12 @@
 <h3 id="goal">Goal<a class="anchor" aria-label="anchor" href="#goal"></a>
 </h3>
 <p>The aim of this article is to provide an assessment of the performance of <code>fordyn</code> for the prediction of forest dynamics in Catalonia (NE of Spain). To this aim, we simulate forest dynamics between two surveys of the Spanish National Forest Inventory and compare the model predictions of forest growth against inventory data for a large set of permanent plots. The evaluation focuses first on the growth (in diameter and height) of surviving trees, then turning the attention to the basal area of dead trees and overall changes in basal area.</p>
-<p>This evaluation was conducted using <strong>medfate</strong> package version <strong>2.7.0</strong>.</p>
+<p>This evaluation was conducted using <strong>medfate</strong> package version <strong>2.7.2</strong>.</p>
 </div>
 <div class="section level3">
 <h3 id="simulation-procedure">Simulation procedure<a class="anchor" aria-label="anchor" href="#simulation-procedure"></a>
 </h3>
-<p>We first selected a set of target tree species on the basis of their importance in the Catalan territory: <em>Pinus halepensis</em>, <em>Pinus nigra</em>, <em>Pinus sylvestris</em>, <em>Pinus pinea</em>, <em>Pinus uncinata</em>, <em>Fagus sylvatica</em>, <em>Abies alba</em>, <em>Quercus ilex</em>, <em>Quercus faginea</em>, <em>Quercus pubescens</em>, <em>Quercus suber</em>.</p>
-<p>We then selected <strong>2251</strong> repeated plots (A1 between IFN3 and IFN4) (co-)dominated by the target species (&gt; 80% basal area corresponding to the target species) and without signs of management (cut trees).</p>
+<p>We selected <strong>3150</strong> repeated plots (A1 between IFN3 and IFN4) without signs of management (cut trees) and whose basal area did not decrease between inventory surveys.</p>
 <p>Soil physical properties were drawn from SoilGrids (Hengl 2016), complemented by rock fragment content estimates derived from surface stoniness measurements in forest plots. Simulations were conducted between 2000/2001 (IFN3) and 2014/2016 (IFN4) depending on the sampling years of the target plot, with daily weather data obtained via interpolation on plot’s coordinates using package <strong>meteoland</strong>.</p>
 <p>Default species-specific parameters were modified using the results of the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html" class="external-link">meta-modelling exercise</a> and the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/GrowthCalibration.html" class="external-link">growth calibration exercise</a>. These two exercises do not provide values for all the main species included here, so it is expected that evaluation results are worse for those species not included in those exercises.</p>
 <p>The key parameters values used in simulations were the following:</p>
@@ -117,22 +116,19 @@ WUE
 Al2As
 </th>
 <th style="text-align:right;">
-Ar2Al
-</th>
-<th style="text-align:right;">
 SLA
 </th>
 <th style="text-align:right;">
-RGRsapwoodmax
-</th>
-<th style="text-align:right;">
-SRsapwood
+RGRcambiummax
 </th>
 <th style="text-align:right;">
 fHDmin
 </th>
 <th style="text-align:right;">
 fHDmax
+</th>
+<th style="text-align:right;">
+MortalityBaselineRate
 </th>
 </tr></thead>
 <tbody>
@@ -153,22 +149,1043 @@ Abies alba
 7194.245
 </td>
 <td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
 7.768174
 </td>
 <td style="text-align:right;">
-0.0065
-</td>
-<td style="text-align:right;">
-0.0001500
+0.0080000
 </td>
 <td style="text-align:right;">
 40
 </td>
 <td style="text-align:right;">
 111
+</td>
+<td style="text-align:right;">
+0.0004
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Abies pinsapo
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+6790.546
+</td>
+<td style="text-align:right;">
+3.420603
+</td>
+<td style="text-align:right;">
+0.0054114
+</td>
+<td style="text-align:right;">
+37
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Acacia spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+5238.444
+</td>
+<td style="text-align:right;">
+6.701288
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Acer campestre
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+9056.403
+</td>
+<td style="text-align:right;">
+14.118911
+</td>
+<td style="text-align:right;">
+0.0015799
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+150
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Acer monspessulanum
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+3404.914
+</td>
+<td style="text-align:right;">
+12.955898
+</td>
+<td style="text-align:right;">
+0.0010463
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Acer negundo
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+10619.758
+</td>
+<td style="text-align:right;">
+24.799802
+</td>
+<td style="text-align:right;">
+0.0034211
+</td>
+<td style="text-align:right;">
+69
+</td>
+<td style="text-align:right;">
+133
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Acer opalus
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+9056.403
+</td>
+<td style="text-align:right;">
+21.634942
+</td>
+<td style="text-align:right;">
+0.0017065
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Acer platanoides
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+9056.403
+</td>
+<td style="text-align:right;">
+19.805517
+</td>
+<td style="text-align:right;">
+0.0019751
+</td>
+<td style="text-align:right;">
+79
+</td>
+<td style="text-align:right;">
+127
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Acer pseudoplatanus
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+9056.403
+</td>
+<td style="text-align:right;">
+15.961542
+</td>
+<td style="text-align:right;">
+0.0020162
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ailanthus altissima
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+31.165320
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+58
+</td>
+<td style="text-align:right;">
+135
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Alnus glutinosa
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+5541.256
+</td>
+<td style="text-align:right;">
+16.349875
+</td>
+<td style="text-align:right;">
+0.0020665
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Amelanchier ovalis
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+2447.228
+</td>
+<td style="text-align:right;">
+11.334074
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Apollonias barbujana
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+7.067983
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+146
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Arbutus canariensis
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+5129.541
+</td>
+<td style="text-align:right;">
+6.970642
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+61
+</td>
+<td style="text-align:right;">
+118
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Arbutus unedo
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+5129.541
+</td>
+<td style="text-align:right;">
+8.073095
+</td>
+<td style="text-align:right;">
+0.0008000
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+0.0025
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Betula spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+4771.425
+</td>
+<td style="text-align:right;">
+22.993993
+</td>
+<td style="text-align:right;">
+0.0030000
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+0.0025
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Buxus sempervirens
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+8.458495
+</td>
+<td style="text-align:right;">
+0.0008054
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Carpinus betulus
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+15.570664
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+44
+</td>
+<td style="text-align:right;">
+90
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Castanea sativa
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+13.862317
+</td>
+<td style="text-align:right;">
+0.0040000
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Cedrus spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+8.047390
+</td>
+<td style="text-align:right;">
+0.0041074
+</td>
+<td style="text-align:right;">
+48
+</td>
+<td style="text-align:right;">
+108
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Celtis australis
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+7735.297
+</td>
+<td style="text-align:right;">
+23.868556
+</td>
+<td style="text-align:right;">
+0.0026363
+</td>
+<td style="text-align:right;">
+52
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ceratonia siliqua
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+4.949812
+</td>
+<td style="text-align:right;">
+0.0011468
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Chamaecyparis lawsoniana
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+6.665472
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+136
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Chamaerops humilis
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+5.522500
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Cornus sanguinea
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+7478.584
+</td>
+<td style="text-align:right;">
+18.027236
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Corylus avellana
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+8781.000
+</td>
+<td style="text-align:right;">
+17.653947
+</td>
+<td style="text-align:right;">
+0.0007453
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Crataegus spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+12.337986
+</td>
+<td style="text-align:right;">
+0.0007441
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Cupressus spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+5.824112
+</td>
+<td style="text-align:right;">
+0.0019060
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+145
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Dracaena drago
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+22.320000
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+129
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Erica arborea
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+2044.990
+</td>
+<td style="text-align:right;">
+8.117985
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Erica scoparia
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+2044.990
+</td>
+<td style="text-align:right;">
+7.035931
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Eucalyptus spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+4548.028
+</td>
+<td style="text-align:right;">
+9.409216
+</td>
+<td style="text-align:right;">
+0.0044603
+</td>
+<td style="text-align:right;">
+70
+</td>
+<td style="text-align:right;">
+202
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Euonymus europaeus
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+16.186048
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
 </td>
 </tr>
 <tr>
@@ -188,22 +1205,883 @@ Fagus sylvatica
 2076.120
 </td>
 <td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
 18.320000
 </td>
 <td style="text-align:right;">
-0.0020
-</td>
-<td style="text-align:right;">
-0.0001648
+0.0028705
 </td>
 <td style="text-align:right;">
 50
 </td>
 <td style="text-align:right;">
 160
+</td>
+<td style="text-align:right;">
+0.0016
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ficus carica
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+11028.841
+</td>
+<td style="text-align:right;">
+12.677852
+</td>
+<td style="text-align:right;">
+0.0010410
+</td>
+<td style="text-align:right;">
+41
+</td>
+<td style="text-align:right;">
+110
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Frangula alnus
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+6422.000
+</td>
+<td style="text-align:right;">
+22.428883
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+57
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fraxinus spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+23.910436
+</td>
+<td style="text-align:right;">
+0.0028668
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gleditsia triacanthos
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Heberdenia bahamensis
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+8.840102
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+173
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ilex spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+4886.362
+</td>
+<td style="text-align:right;">
+10.511715
+</td>
+<td style="text-align:right;">
+0.0009229
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Juglans spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+19643.000
+</td>
+<td style="text-align:right;">
+26.198829
+</td>
+<td style="text-align:right;">
+0.0026947
+</td>
+<td style="text-align:right;">
+41
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Juniperus cedrus
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+1856.107
+</td>
+<td style="text-align:right;">
+4.027473
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+129
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Juniperus communis
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+2266.839
+</td>
+<td style="text-align:right;">
+6.794709
+</td>
+<td style="text-align:right;">
+0.0006798
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Juniperus oxycedrus
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+2983.316
+</td>
+<td style="text-align:right;">
+5.912578
+</td>
+<td style="text-align:right;">
+0.0007755
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Juniperus phoenicea
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+1856.107
+</td>
+<td style="text-align:right;">
+4.984873
+</td>
+<td style="text-align:right;">
+0.0006703
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Juniperus thurifera
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+1856.107
+</td>
+<td style="text-align:right;">
+4.027473
+</td>
+<td style="text-align:right;">
+0.0007739
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Larix spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+3307.012
+</td>
+<td style="text-align:right;">
+12.437474
+</td>
+<td style="text-align:right;">
+0.0025003
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+175
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Laurus spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+8.163854
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+150
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lonicera spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+4994.585
+</td>
+<td style="text-align:right;">
+22.390534
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+129
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Malus sylvestris
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+13.457260
+</td>
+<td style="text-align:right;">
+0.0009834
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+122
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Morus spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+31.158834
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+43
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Myrica faya
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+12.195153
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+148
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Myrtus communis
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+2680.965
+</td>
+<td style="text-align:right;">
+9.260292
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ocotea phoetens
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+9808.438
+</td>
+<td style="text-align:right;">
+12.651150
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+66
+</td>
+<td style="text-align:right;">
+134
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Olea europaea
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+5.495173
+</td>
+<td style="text-align:right;">
+0.0005612
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Persea indica
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+9.456614
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Phillyrea latifolia
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+1698.950
+</td>
+<td style="text-align:right;">
+6.881886
+</td>
+<td style="text-align:right;">
+0.0008456
+</td>
+<td style="text-align:right;">
+45
+</td>
+<td style="text-align:right;">
+109
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Phoenix spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+47
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Picconia excelsa
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+5.727442
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+62
+</td>
+<td style="text-align:right;">
+124
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Picea abies
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+1355.932
+</td>
+<td style="text-align:right;">
+4.496242
+</td>
+<td style="text-align:right;">
+0.0029891
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+148
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus canariensis
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+1608.774
+</td>
+<td style="text-align:right;">
+7.763084
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+112
+</td>
+<td style="text-align:right;">
+NA
 </td>
 </tr>
 <tr>
@@ -223,22 +2101,19 @@ Pinus halepensis
 1317.523
 </td>
 <td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
 5.140523
 </td>
 <td style="text-align:right;">
-0.0025
-</td>
-<td style="text-align:right;">
-0.0001306
+0.0024752
 </td>
 <td style="text-align:right;">
 80
 </td>
 <td style="text-align:right;">
 160
+</td>
+<td style="text-align:right;">
+0.0045
 </td>
 </tr>
 <tr>
@@ -258,22 +2133,51 @@ Pinus nigra
 1272.265
 </td>
 <td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
 4.569508
 </td>
 <td style="text-align:right;">
-0.0015
-</td>
-<td style="text-align:right;">
-0.0001344
+0.0018243
 </td>
 <td style="text-align:right;">
 80
 </td>
 <td style="text-align:right;">
 160
+</td>
+<td style="text-align:right;">
+0.0020
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus pinaster
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+1013.171
+</td>
+<td style="text-align:right;">
+2.419246
+</td>
+<td style="text-align:right;">
+0.0070000
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+NA
 </td>
 </tr>
 <tr>
@@ -293,22 +2197,51 @@ Pinus pinea
 1615.509
 </td>
 <td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
 4.207291
 </td>
 <td style="text-align:right;">
-0.0025
-</td>
-<td style="text-align:right;">
-0.0001500
+0.0024942
 </td>
 <td style="text-align:right;">
 80
 </td>
 <td style="text-align:right;">
 160
+</td>
+<td style="text-align:right;">
+0.0035
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus radiata
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+2409.639
+</td>
+<td style="text-align:right;">
+7.289987
+</td>
+<td style="text-align:right;">
+0.0086465
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+170
+</td>
+<td style="text-align:right;">
+NA
 </td>
 </tr>
 <tr>
@@ -328,22 +2261,19 @@ Pinus sylvestris
 1598.180
 </td>
 <td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
 4.897943
 </td>
 <td style="text-align:right;">
-0.0020
-</td>
-<td style="text-align:right;">
-0.0000889
+0.0031864
 </td>
 <td style="text-align:right;">
 80
 </td>
 <td style="text-align:right;">
 160
+</td>
+<td style="text-align:right;">
+0.0040
 </td>
 </tr>
 <tr>
@@ -363,22 +2293,307 @@ Pinus uncinata
 1608.774
 </td>
 <td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
 3.804390
 </td>
 <td style="text-align:right;">
-0.0035
-</td>
-<td style="text-align:right;">
-0.0002193
+0.0045000
 </td>
 <td style="text-align:right;">
 80
 </td>
 <td style="text-align:right;">
 160
+</td>
+<td style="text-align:right;">
+0.0040
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pistacia atlantica
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+4455.589
+</td>
+<td style="text-align:right;">
+10.268128
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pistacia terebinthus
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+4455.589
+</td>
+<td style="text-align:right;">
+10.176447
+</td>
+<td style="text-align:right;">
+0.0008647
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Platanus spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+18.020216
+</td>
+<td style="text-align:right;">
+0.0049098
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+189
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pleiomeris canariensis
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+150
+</td>
+<td style="text-align:right;">
+150
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Populus spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+5648.704
+</td>
+<td style="text-align:right;">
+14.216904
+</td>
+<td style="text-align:right;">
+0.0040829
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+177
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Prunus spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+8996.601
+</td>
+<td style="text-align:right;">
+15.163692
+</td>
+<td style="text-align:right;">
+0.0025684
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pseudotsuga menziesii
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+2407.925
+</td>
+<td style="text-align:right;">
+8.020413
+</td>
+<td style="text-align:right;">
+0.0047810
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+148
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pyrus spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+10.619331
+</td>
+<td style="text-align:right;">
+0.0014986
+</td>
+<td style="text-align:right;">
+49
+</td>
+<td style="text-align:right;">
+117
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus canariensis
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+4189.325
+</td>
+<td style="text-align:right;">
+16.468934
+</td>
+<td style="text-align:right;">
+0.0018840
+</td>
+<td style="text-align:right;">
+56
+</td>
+<td style="text-align:right;">
+135
+</td>
+<td style="text-align:right;">
+NA
 </td>
 </tr>
 <tr>
@@ -398,22 +2613,19 @@ Quercus faginea
 4189.325
 </td>
 <td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
 8.328895
 </td>
 <td style="text-align:right;">
-0.0025
-</td>
-<td style="text-align:right;">
-0.0001500
+0.0012032
 </td>
 <td style="text-align:right;">
 40
 </td>
 <td style="text-align:right;">
 120
+</td>
+<td style="text-align:right;">
+0.0004
 </td>
 </tr>
 <tr>
@@ -433,22 +2645,83 @@ Quercus ilex
 3908.823
 </td>
 <td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
 6.340000
 </td>
 <td style="text-align:right;">
-0.0025
-</td>
-<td style="text-align:right;">
-0.0001500
+0.0007000
 </td>
 <td style="text-align:right;">
 40
 </td>
 <td style="text-align:right;">
 100
+</td>
+<td style="text-align:right;">
+0.0004
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus lusitanica
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+4189.325
+</td>
+<td style="text-align:right;">
+6.762250
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+129
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus petraea
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+4189.325
+</td>
+<td style="text-align:right;">
+19.669137
+</td>
+<td style="text-align:right;">
+0.0012470
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+150
+</td>
+<td style="text-align:right;">
+NA
 </td>
 </tr>
 <tr>
@@ -468,22 +2741,115 @@ Quercus pubescens
 6031.582
 </td>
 <td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
 11.800000
 </td>
 <td style="text-align:right;">
-0.0030
-</td>
-<td style="text-align:right;">
-0.0001926
+0.0011649
 </td>
 <td style="text-align:right;">
 50
 </td>
 <td style="text-align:right;">
 110
+</td>
+<td style="text-align:right;">
+0.0006
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus pyrenaica
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+4189.325
+</td>
+<td style="text-align:right;">
+6.697064
+</td>
+<td style="text-align:right;">
+0.0013890
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+130
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus robur
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+4189.325
+</td>
+<td style="text-align:right;">
+10.454901
+</td>
+<td style="text-align:right;">
+0.0018071
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus rubra
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+4189.325
+</td>
+<td style="text-align:right;">
+15.683995
+</td>
+<td style="text-align:right;">
+0.0012513
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+NA
 </td>
 </tr>
 <tr>
@@ -503,22 +2869,499 @@ Quercus suber
 4189.325
 </td>
 <td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
 8.656130
 </td>
 <td style="text-align:right;">
-0.0030
-</td>
-<td style="text-align:right;">
-0.0001500
+0.0007500
 </td>
 <td style="text-align:right;">
 40
 </td>
 <td style="text-align:right;">
 100
+</td>
+<td style="text-align:right;">
+0.0020
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rhamnus spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+941.000
+</td>
+<td style="text-align:right;">
+13.427982
+</td>
+<td style="text-align:right;">
+0.0010929
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rhus coriaria
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+4905.159
+</td>
+<td style="text-align:right;">
+12.782358
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+46
+</td>
+<td style="text-align:right;">
+118
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Robinia pseudacacia
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+27.291276
+</td>
+<td style="text-align:right;">
+0.0028642
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Salix spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+8556.500
+</td>
+<td style="text-align:right;">
+13.837752
+</td>
+<td style="text-align:right;">
+0.0016174
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+151
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sambucus spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+6797.000
+</td>
+<td style="text-align:right;">
+21.518674
+</td>
+<td style="text-align:right;">
+0.0027531
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sideroxylon mirmulans
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+16.135461
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+129
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sophora japonica
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+11.000000
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+129
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sorbus spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+2870.889
+</td>
+<td style="text-align:right;">
+14.950003
+</td>
+<td style="text-align:right;">
+0.0019125
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+150
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tamarix spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+9.700682
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+111
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Taxus baccata
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+7.756546
+</td>
+<td style="text-align:right;">
+0.0006250
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+102
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tetraclinis articulata
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+2747.253
+</td>
+<td style="text-align:right;">
+3.379000
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Thuja spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+6.853059
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tilia spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+24.458818
+</td>
+<td style="text-align:right;">
+0.0019386
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ulmus spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+18.528753
+</td>
+<td style="text-align:right;">
+0.0011840
+</td>
+<td style="text-align:right;">
+52
+</td>
+<td style="text-align:right;">
+155
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Visnea mocanera
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+7.189073
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+59
+</td>
+<td style="text-align:right;">
+130
+</td>
+<td style="text-align:right;">
+NA
 </td>
 </tr>
 </tbody>
@@ -533,7 +3376,7 @@ Quercus suber
 <div class="section level3">
 <h3 id="annual-diameter-increment-cmyr">Annual diameter increment (cm/yr)<a class="anchor" aria-label="anchor" href="#annual-diameter-increment-cmyr"></a>
 </h3>
-<p>Predictive capacity table:</p>
+Overall predictive capacity:
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -555,375 +3398,50 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
-MAE
+RMSQ
 </th>
 <th style="text-align:right;">
-MAErel
+RMSQrel
 </th>
 <th style="text-align:right;">
 R2
 </th>
 </tr></thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td style="text-align:left;">
 All
 </td>
 <td style="text-align:right;">
-38218
+50451
 </td>
 <td style="text-align:right;">
-0.2119263
+0.2130824
 </td>
 <td style="text-align:right;">
-0.2034288
+0.2195535
 </td>
 <td style="text-align:right;">
--0.0084974
+0.0064712
 </td>
 <td style="text-align:right;">
--4.009621
+2.947421
 </td>
 <td style="text-align:right;">
-0.1284070
+0.1862383
 </td>
 <td style="text-align:right;">
-60.59044
+84.82592
 </td>
 <td style="text-align:right;">
-0.0801616
+0.0603064
 </td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Abies alba
-</td>
-<td style="text-align:right;">
-970
-</td>
-<td style="text-align:right;">
-0.3494580
-</td>
-<td style="text-align:right;">
-0.2479520
-</td>
-<td style="text-align:right;">
--0.1015060
-</td>
-<td style="text-align:right;">
--29.046691
-</td>
-<td style="text-align:right;">
-0.2330974
-</td>
-<td style="text-align:right;">
-66.70256
-</td>
-<td style="text-align:right;">
-0.1094474
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Fagus sylvatica
-</td>
-<td style="text-align:right;">
-993
-</td>
-<td style="text-align:right;">
-0.2569539
-</td>
-<td style="text-align:right;">
-0.2420493
-</td>
-<td style="text-align:right;">
--0.0149046
-</td>
-<td style="text-align:right;">
--5.800499
-</td>
-<td style="text-align:right;">
-0.1404080
-</td>
-<td style="text-align:right;">
-54.64328
-</td>
-<td style="text-align:right;">
-0.1343919
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pinus halepensis
-</td>
-<td style="text-align:right;">
-6205
-</td>
-<td style="text-align:right;">
-0.2799852
-</td>
-<td style="text-align:right;">
-0.2846752
-</td>
-<td style="text-align:right;">
-0.0046900
-</td>
-<td style="text-align:right;">
-1.675091
-</td>
-<td style="text-align:right;">
-0.1607206
-</td>
-<td style="text-align:right;">
-57.40324
-</td>
-<td style="text-align:right;">
-0.0737416
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pinus nigra
-</td>
-<td style="text-align:right;">
-4810
-</td>
-<td style="text-align:right;">
-0.2053970
-</td>
-<td style="text-align:right;">
-0.1879145
-</td>
-<td style="text-align:right;">
--0.0174825
-</td>
-<td style="text-align:right;">
--8.511564
-</td>
-<td style="text-align:right;">
-0.1203497
-</td>
-<td style="text-align:right;">
-58.59371
-</td>
-<td style="text-align:right;">
-0.0190600
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pinus pinea
-</td>
-<td style="text-align:right;">
-1069
-</td>
-<td style="text-align:right;">
-0.2998551
-</td>
-<td style="text-align:right;">
-0.3403452
-</td>
-<td style="text-align:right;">
-0.0404901
-</td>
-<td style="text-align:right;">
-13.503225
-</td>
-<td style="text-align:right;">
-0.1870343
-</td>
-<td style="text-align:right;">
-62.37491
-</td>
-<td style="text-align:right;">
-0.0062160
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pinus sylvestris
-</td>
-<td style="text-align:right;">
-9196
-</td>
-<td style="text-align:right;">
-0.2267441
-</td>
-<td style="text-align:right;">
-0.2061962
-</td>
-<td style="text-align:right;">
--0.0205479
-</td>
-<td style="text-align:right;">
--9.062142
-</td>
-<td style="text-align:right;">
-0.1306283
-</td>
-<td style="text-align:right;">
-57.61046
-</td>
-<td style="text-align:right;">
-0.0137127
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pinus uncinata
-</td>
-<td style="text-align:right;">
-4278
-</td>
-<td style="text-align:right;">
-0.1904455
-</td>
-<td style="text-align:right;">
-0.1799730
-</td>
-<td style="text-align:right;">
--0.0104724
-</td>
-<td style="text-align:right;">
--5.498908
-</td>
-<td style="text-align:right;">
-0.1240164
-</td>
-<td style="text-align:right;">
-65.11911
-</td>
-<td style="text-align:right;">
-0.0119281
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Quercus faginea
-</td>
-<td style="text-align:right;">
-656
-</td>
-<td style="text-align:right;">
-0.1655550
-</td>
-<td style="text-align:right;">
-0.1608633
-</td>
-<td style="text-align:right;">
--0.0046917
-</td>
-<td style="text-align:right;">
--2.833919
-</td>
-<td style="text-align:right;">
-0.1051775
-</td>
-<td style="text-align:right;">
-63.53025
-</td>
-<td style="text-align:right;">
-0.0684081
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Quercus ilex
-</td>
-<td style="text-align:right;">
-6453
-</td>
-<td style="text-align:right;">
-0.1325138
-</td>
-<td style="text-align:right;">
-0.1529845
-</td>
-<td style="text-align:right;">
-0.0204707
-</td>
-<td style="text-align:right;">
-15.448002
-</td>
-<td style="text-align:right;">
-0.0910136
-</td>
-<td style="text-align:right;">
-68.68232
-</td>
-<td style="text-align:right;">
-0.0665396
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Quercus pubescens
-</td>
-<td style="text-align:right;">
-2034
-</td>
-<td style="text-align:right;">
-0.1610242
-</td>
-<td style="text-align:right;">
-0.1387050
-</td>
-<td style="text-align:right;">
--0.0223192
-</td>
-<td style="text-align:right;">
--13.860765
-</td>
-<td style="text-align:right;">
-0.0923101
-</td>
-<td style="text-align:right;">
-57.32685
-</td>
-<td style="text-align:right;">
-0.0489756
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Quercus suber
-</td>
-<td style="text-align:right;">
-1554
-</td>
-<td style="text-align:right;">
-0.1726847
-</td>
-<td style="text-align:right;">
-0.1407336
-</td>
-<td style="text-align:right;">
--0.0319512
-</td>
-<td style="text-align:right;">
--18.502601
-</td>
-<td style="text-align:right;">
-0.1222471
-</td>
-<td style="text-align:right;">
-70.79204
-</td>
-<td style="text-align:right;">
-0.0151380
-</td>
-</tr>
-</tbody>
+</tr></tbody>
 </table>
 <p>Predictive capacity plot:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
 <p>Relationship between diameter increase and climatic variables (MAT, P/PET and available PAR):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-6-1.png" width="768"></p>
-</div>
-<div class="section level3">
-<h3 id="annual-height-increment-cmyr">Annual height increment (cm/yr)<a class="anchor" aria-label="anchor" href="#annual-height-increment-cmyr"></a>
-</h3>
-<p>Predictive capacity table:</p>
+<p>Predictive capacity by species (for species with &gt; 100 tree records):</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -945,10 +3463,10 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
-MAE
+RMSQ
 </th>
 <th style="text-align:right;">
-MAErel
+RMSQrel
 </th>
 <th style="text-align:right;">
 R2
@@ -957,60 +3475,234 @@ R2
 <tbody>
 <tr>
 <td style="text-align:left;">
-All
+Abies alba
 </td>
 <td style="text-align:right;">
-38218
+1277
 </td>
 <td style="text-align:right;">
-9.877050
+0.3419583
 </td>
 <td style="text-align:right;">
-8.303356
+0.2203365
 </td>
 <td style="text-align:right;">
--1.5736940
+-0.1216218
 </td>
 <td style="text-align:right;">
--15.932834
+-55.1982187
 </td>
 <td style="text-align:right;">
-9.396016
+0.3040981
 </td>
 <td style="text-align:right;">
-95.12978
+138.01531
 </td>
 <td style="text-align:right;">
-0.0219724
+0.1327937
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Abies alba
+Acer campestre
 </td>
 <td style="text-align:right;">
-970
+131
 </td>
 <td style="text-align:right;">
-16.702889
+0.1583738
 </td>
 <td style="text-align:right;">
-7.760706
+0.1305616
 </td>
 <td style="text-align:right;">
--8.9421829
+-0.0278122
 </td>
 <td style="text-align:right;">
--53.536744
+-21.3019628
 </td>
 <td style="text-align:right;">
-17.312797
+0.1548131
 </td>
 <td style="text-align:right;">
-103.65151
+118.57470
 </td>
 <td style="text-align:right;">
-0.1116305
+0.0579404
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Acer monspessulanum
+</td>
+<td style="text-align:right;">
+105
+</td>
+<td style="text-align:right;">
+0.1441992
+</td>
+<td style="text-align:right;">
+0.1453150
+</td>
+<td style="text-align:right;">
+0.0011158
+</td>
+<td style="text-align:right;">
+0.7678619
+</td>
+<td style="text-align:right;">
+0.1493643
+</td>
+<td style="text-align:right;">
+102.78658
+</td>
+<td style="text-align:right;">
+0.0343624
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Acer opalus
+</td>
+<td style="text-align:right;">
+156
+</td>
+<td style="text-align:right;">
+0.1735533
+</td>
+<td style="text-align:right;">
+0.1717442
+</td>
+<td style="text-align:right;">
+-0.0018091
+</td>
+<td style="text-align:right;">
+-1.0533948
+</td>
+<td style="text-align:right;">
+0.3190632
+</td>
+<td style="text-align:right;">
+185.77818
+</td>
+<td style="text-align:right;">
+0.0107169
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Arbutus unedo
+</td>
+<td style="text-align:right;">
+379
+</td>
+<td style="text-align:right;">
+0.1069803
+</td>
+<td style="text-align:right;">
+0.1317438
+</td>
+<td style="text-align:right;">
+0.0247635
+</td>
+<td style="text-align:right;">
+18.7967133
+</td>
+<td style="text-align:right;">
+0.1463658
+</td>
+<td style="text-align:right;">
+111.09885
+</td>
+<td style="text-align:right;">
+0.0129565
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Betula spp.
+</td>
+<td style="text-align:right;">
+459
+</td>
+<td style="text-align:right;">
+0.1487416
+</td>
+<td style="text-align:right;">
+0.1596429
+</td>
+<td style="text-align:right;">
+0.0109013
+</td>
+<td style="text-align:right;">
+6.8285710
+</td>
+<td style="text-align:right;">
+0.1759618
+</td>
+<td style="text-align:right;">
+110.22211
+</td>
+<td style="text-align:right;">
+0.0188485
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Castanea sativa
+</td>
+<td style="text-align:right;">
+207
+</td>
+<td style="text-align:right;">
+0.2379150
+</td>
+<td style="text-align:right;">
+0.1471379
+</td>
+<td style="text-align:right;">
+-0.0907771
+</td>
+<td style="text-align:right;">
+-61.6952317
+</td>
+<td style="text-align:right;">
+0.3161392
+</td>
+<td style="text-align:right;">
+214.85912
+</td>
+<td style="text-align:right;">
+0.0000190
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Crataegus spp.
+</td>
+<td style="text-align:right;">
+107
+</td>
+<td style="text-align:right;">
+0.0712732
+</td>
+<td style="text-align:right;">
+0.0700566
+</td>
+<td style="text-align:right;">
+-0.0012166
+</td>
+<td style="text-align:right;">
+-1.7365954
+</td>
+<td style="text-align:right;">
+0.0822005
+</td>
+<td style="text-align:right;">
+117.33448
+</td>
+<td style="text-align:right;">
+0.0104953
 </td>
 </tr>
 <tr>
@@ -1018,28 +3710,57 @@ Abies alba
 Fagus sylvatica
 </td>
 <td style="text-align:right;">
-993
+1672
 </td>
 <td style="text-align:right;">
-16.299786
+0.2611917
 </td>
 <td style="text-align:right;">
-8.946492
+0.2719537
 </td>
 <td style="text-align:right;">
--7.3532941
+0.0107620
 </td>
 <td style="text-align:right;">
--45.112826
+3.9572883
 </td>
 <td style="text-align:right;">
-16.024123
+0.2238616
 </td>
 <td style="text-align:right;">
-98.30880
+82.31606
 </td>
 <td style="text-align:right;">
-0.0019717
+0.0503739
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fraxinus spp.
+</td>
+<td style="text-align:right;">
+283
+</td>
+<td style="text-align:right;">
+0.2794319
+</td>
+<td style="text-align:right;">
+0.2849832
+</td>
+<td style="text-align:right;">
+0.0055512
+</td>
+<td style="text-align:right;">
+1.9479136
+</td>
+<td style="text-align:right;">
+0.2817799
+</td>
+<td style="text-align:right;">
+98.87597
+</td>
+<td style="text-align:right;">
+0.0307734
 </td>
 </tr>
 <tr>
@@ -1047,28 +3768,28 @@ Fagus sylvatica
 Pinus halepensis
 </td>
 <td style="text-align:right;">
-6205
+6679
 </td>
 <td style="text-align:right;">
-11.666637
+0.2842242
 </td>
 <td style="text-align:right;">
-11.082437
+0.2773672
 </td>
 <td style="text-align:right;">
--0.5841996
+-0.0068570
 </td>
 <td style="text-align:right;">
--5.007438
+-2.4721787
 </td>
 <td style="text-align:right;">
-10.071138
+0.1913917
 </td>
 <td style="text-align:right;">
-86.32426
+69.00301
 </td>
 <td style="text-align:right;">
-0.0030605
+0.0355280
 </td>
 </tr>
 <tr>
@@ -1076,28 +3797,57 @@ Pinus halepensis
 Pinus nigra
 </td>
 <td style="text-align:right;">
-4810
+5316
 </td>
 <td style="text-align:right;">
-11.623056
+0.2057280
 </td>
 <td style="text-align:right;">
-9.658969
+0.2218985
 </td>
 <td style="text-align:right;">
--1.9640866
+0.0161704
 </td>
 <td style="text-align:right;">
--16.898195
+7.2873143
 </td>
 <td style="text-align:right;">
-9.405545
+0.1546570
 </td>
 <td style="text-align:right;">
-80.92145
+69.69720
 </td>
 <td style="text-align:right;">
-0.0013457
+0.0081947
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus pinaster
+</td>
+<td style="text-align:right;">
+411
+</td>
+<td style="text-align:right;">
+0.3726032
+</td>
+<td style="text-align:right;">
+0.3000101
+</td>
+<td style="text-align:right;">
+-0.0725931
+</td>
+<td style="text-align:right;">
+-24.1968768
+</td>
+<td style="text-align:right;">
+0.4332694
+</td>
+<td style="text-align:right;">
+144.41827
+</td>
+<td style="text-align:right;">
+0.0027751
 </td>
 </tr>
 <tr>
@@ -1105,28 +3855,28 @@ Pinus nigra
 Pinus pinea
 </td>
 <td style="text-align:right;">
-1069
+1260
 </td>
 <td style="text-align:right;">
-13.350381
+0.2956115
 </td>
 <td style="text-align:right;">
-12.069159
+0.2924915
 </td>
 <td style="text-align:right;">
--1.2812219
+-0.0031200
 </td>
 <td style="text-align:right;">
--9.596894
+-1.0666951
 </td>
 <td style="text-align:right;">
-9.336630
+0.1931856
 </td>
 <td style="text-align:right;">
-69.93530
+66.04827
 </td>
 <td style="text-align:right;">
-0.0020994
+0.0050042
 </td>
 </tr>
 <tr>
@@ -1134,28 +3884,28 @@ Pinus pinea
 Pinus sylvestris
 </td>
 <td style="text-align:right;">
-9196
+10775
 </td>
 <td style="text-align:right;">
-11.417794
+0.2305052
 </td>
 <td style="text-align:right;">
-10.126514
+0.2611957
 </td>
 <td style="text-align:right;">
--1.2912794
+0.0306906
 </td>
 <td style="text-align:right;">
--11.309360
+11.7500351
 </td>
 <td style="text-align:right;">
-9.970057
+0.1737837
 </td>
 <td style="text-align:right;">
-87.32035
+66.53389
 </td>
 <td style="text-align:right;">
-0.0019248
+0.0043427
 </td>
 </tr>
 <tr>
@@ -1163,28 +3913,57 @@ Pinus sylvestris
 Pinus uncinata
 </td>
 <td style="text-align:right;">
-4278
+4419
 </td>
 <td style="text-align:right;">
-11.456495
+0.1919000
 </td>
 <td style="text-align:right;">
-7.849328
+0.1995260
 </td>
 <td style="text-align:right;">
--3.6071671
+0.0076260
 </td>
 <td style="text-align:right;">
--31.485782
+3.8220513
 </td>
 <td style="text-align:right;">
-9.421681
+0.1652022
 </td>
 <td style="text-align:right;">
-82.23877
+82.79731
 </td>
 <td style="text-align:right;">
-0.0183347
+0.0025225
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Populus spp.
+</td>
+<td style="text-align:right;">
+175
+</td>
+<td style="text-align:right;">
+0.4933050
+</td>
+<td style="text-align:right;">
+0.1407929
+</td>
+<td style="text-align:right;">
+-0.3525121
+</td>
+<td style="text-align:right;">
+-250.3763603
+</td>
+<td style="text-align:right;">
+0.6153672
+</td>
+<td style="text-align:right;">
+437.07260
+</td>
+<td style="text-align:right;">
+0.0144797
 </td>
 </tr>
 <tr>
@@ -1192,28 +3971,28 @@ Pinus uncinata
 Quercus faginea
 </td>
 <td style="text-align:right;">
-656
+764
 </td>
 <td style="text-align:right;">
-4.468550
+0.1657130
 </td>
 <td style="text-align:right;">
-4.560878
+0.1759357
 </td>
 <td style="text-align:right;">
-0.0923274
+0.0102228
 </td>
 <td style="text-align:right;">
-2.066160
+5.8105072
 </td>
 <td style="text-align:right;">
-7.035857
+0.1299538
 </td>
 <td style="text-align:right;">
-157.45278
+73.86436
 </td>
 <td style="text-align:right;">
-0.0060364
+0.0225920
 </td>
 </tr>
 <tr>
@@ -1221,28 +4000,57 @@ Quercus faginea
 Quercus ilex
 </td>
 <td style="text-align:right;">
-6453
+8536
 </td>
 <td style="text-align:right;">
-4.813154
+0.1357367
 </td>
 <td style="text-align:right;">
-4.220487
+0.1647140
 </td>
 <td style="text-align:right;">
--0.5926671
+0.0289773
 </td>
 <td style="text-align:right;">
--12.313486
+17.5924979
 </td>
 <td style="text-align:right;">
-6.833347
+0.1424374
 </td>
 <td style="text-align:right;">
-141.97232
+86.47559
 </td>
 <td style="text-align:right;">
-0.0019087
+0.0350160
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus petraea
+</td>
+<td style="text-align:right;">
+1316
+</td>
+<td style="text-align:right;">
+0.1735538
+</td>
+<td style="text-align:right;">
+0.1699088
+</td>
+<td style="text-align:right;">
+-0.0036450
+</td>
+<td style="text-align:right;">
+-2.1452924
+</td>
+<td style="text-align:right;">
+0.1564686
+</td>
+<td style="text-align:right;">
+92.08977
+</td>
+<td style="text-align:right;">
+0.0161524
 </td>
 </tr>
 <tr>
@@ -1250,28 +4058,28 @@ Quercus ilex
 Quercus pubescens
 </td>
 <td style="text-align:right;">
-2034
+2800
 </td>
 <td style="text-align:right;">
-4.457326
+0.1718456
 </td>
 <td style="text-align:right;">
-4.746553
+0.1650905
 </td>
 <td style="text-align:right;">
-0.2892272
+-0.0067551
 </td>
 <td style="text-align:right;">
-6.488805
+-4.0917560
 </td>
 <td style="text-align:right;">
-8.946199
+0.1465398
 </td>
 <td style="text-align:right;">
-200.70775
+88.76332
 </td>
 <td style="text-align:right;">
-0.0132738
+0.0370561
 </td>
 </tr>
 <tr>
@@ -1279,28 +4087,881 @@ Quercus pubescens
 Quercus suber
 </td>
 <td style="text-align:right;">
-1554
+2248
 </td>
 <td style="text-align:right;">
-3.512161
+0.1665360
 </td>
 <td style="text-align:right;">
-3.998542
+0.1816044
 </td>
 <td style="text-align:right;">
-0.4863804
+0.0150684
 </td>
 <td style="text-align:right;">
-13.848465
+8.2973943
 </td>
 <td style="text-align:right;">
-6.293663
+0.1769615
 </td>
 <td style="text-align:right;">
-179.19629
+97.44342
 </td>
 <td style="text-align:right;">
-0.0200018
+0.0264422
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sorbus spp.
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+0.1643981
+</td>
+<td style="text-align:right;">
+0.1179805
+</td>
+<td style="text-align:right;">
+-0.0464175
+</td>
+<td style="text-align:right;">
+-39.3433608
+</td>
+<td style="text-align:right;">
+0.1738936
+</td>
+<td style="text-align:right;">
+147.39177
+</td>
+<td style="text-align:right;">
+0.0005520
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tilia spp.
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+0.2618046
+</td>
+<td style="text-align:right;">
+0.1142992
+</td>
+<td style="text-align:right;">
+-0.1475054
+</td>
+<td style="text-align:right;">
+-129.0519823
+</td>
+<td style="text-align:right;">
+0.2532157
+</td>
+<td style="text-align:right;">
+221.53758
+</td>
+<td style="text-align:right;">
+0.0775248
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level3">
+<h3 id="annual-height-increment-cmyr">Annual height increment (cm/yr)<a class="anchor" aria-label="anchor" href="#annual-height-increment-cmyr"></a>
+</h3>
+Overall predictive capacity:
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Name
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Obs
+</th>
+<th style="text-align:right;">
+Pred
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Biasrel
+</th>
+<th style="text-align:right;">
+RMSQ
+</th>
+<th style="text-align:right;">
+RMSQrel
+</th>
+<th style="text-align:right;">
+R2
+</th>
+</tr></thead>
+<tbody><tr>
+<td style="text-align:left;">
+All
+</td>
+<td style="text-align:right;">
+50451
+</td>
+<td style="text-align:right;">
+9.676766
+</td>
+<td style="text-align:right;">
+9.797013
+</td>
+<td style="text-align:right;">
+0.1202472
+</td>
+<td style="text-align:right;">
+1.227386
+</td>
+<td style="text-align:right;">
+13.86861
+</td>
+<td style="text-align:right;">
+141.5596
+</td>
+<td style="text-align:right;">
+0.0391143
+</td>
+</tr></tbody>
+</table>
+<p>Predictive capacity by species (for species with &gt; 100 tree records):</p>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Name
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Obs
+</th>
+<th style="text-align:right;">
+Pred
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Biasrel
+</th>
+<th style="text-align:right;">
+RMSQ
+</th>
+<th style="text-align:right;">
+RMSQrel
+</th>
+<th style="text-align:right;">
+R2
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Abies alba
+</td>
+<td style="text-align:right;">
+1277
+</td>
+<td style="text-align:right;">
+17.610979
+</td>
+<td style="text-align:right;">
+8.365178
+</td>
+<td style="text-align:right;">
+-9.2458003
+</td>
+<td style="text-align:right;">
+-110.527235
+</td>
+<td style="text-align:right;">
+23.171611
+</td>
+<td style="text-align:right;">
+277.00080
+</td>
+<td style="text-align:right;">
+0.0958716
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Acer campestre
+</td>
+<td style="text-align:right;">
+131
+</td>
+<td style="text-align:right;">
+8.369586
+</td>
+<td style="text-align:right;">
+4.999991
+</td>
+<td style="text-align:right;">
+-3.3695949
+</td>
+<td style="text-align:right;">
+-67.392019
+</td>
+<td style="text-align:right;">
+15.066372
+</td>
+<td style="text-align:right;">
+301.32798
+</td>
+<td style="text-align:right;">
+0.0377745
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Acer monspessulanum
+</td>
+<td style="text-align:right;">
+105
+</td>
+<td style="text-align:right;">
+6.041828
+</td>
+<td style="text-align:right;">
+4.154088
+</td>
+<td style="text-align:right;">
+-1.8877406
+</td>
+<td style="text-align:right;">
+-45.442965
+</td>
+<td style="text-align:right;">
+10.328863
+</td>
+<td style="text-align:right;">
+248.64335
+</td>
+<td style="text-align:right;">
+0.0006429
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Acer opalus
+</td>
+<td style="text-align:right;">
+156
+</td>
+<td style="text-align:right;">
+8.263055
+</td>
+<td style="text-align:right;">
+7.536481
+</td>
+<td style="text-align:right;">
+-0.7265739
+</td>
+<td style="text-align:right;">
+-9.640757
+</td>
+<td style="text-align:right;">
+15.529820
+</td>
+<td style="text-align:right;">
+206.06194
+</td>
+<td style="text-align:right;">
+0.0183583
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Arbutus unedo
+</td>
+<td style="text-align:right;">
+379
+</td>
+<td style="text-align:right;">
+1.445712
+</td>
+<td style="text-align:right;">
+3.666321
+</td>
+<td style="text-align:right;">
+2.2206089
+</td>
+<td style="text-align:right;">
+60.567770
+</td>
+<td style="text-align:right;">
+9.017974
+</td>
+<td style="text-align:right;">
+245.96794
+</td>
+<td style="text-align:right;">
+0.0115775
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Betula spp.
+</td>
+<td style="text-align:right;">
+459
+</td>
+<td style="text-align:right;">
+9.169583
+</td>
+<td style="text-align:right;">
+8.510868
+</td>
+<td style="text-align:right;">
+-0.6587154
+</td>
+<td style="text-align:right;">
+-7.739697
+</td>
+<td style="text-align:right;">
+17.599161
+</td>
+<td style="text-align:right;">
+206.78456
+</td>
+<td style="text-align:right;">
+0.0012415
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Castanea sativa
+</td>
+<td style="text-align:right;">
+207
+</td>
+<td style="text-align:right;">
+7.633153
+</td>
+<td style="text-align:right;">
+6.315827
+</td>
+<td style="text-align:right;">
+-1.3173268
+</td>
+<td style="text-align:right;">
+-20.857552
+</td>
+<td style="text-align:right;">
+17.623398
+</td>
+<td style="text-align:right;">
+279.03549
+</td>
+<td style="text-align:right;">
+0.0194509
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Crataegus spp.
+</td>
+<td style="text-align:right;">
+107
+</td>
+<td style="text-align:right;">
+5.674404
+</td>
+<td style="text-align:right;">
+1.601129
+</td>
+<td style="text-align:right;">
+-4.0732742
+</td>
+<td style="text-align:right;">
+-254.400079
+</td>
+<td style="text-align:right;">
+9.073469
+</td>
+<td style="text-align:right;">
+566.69186
+</td>
+<td style="text-align:right;">
+0.0165003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fagus sylvatica
+</td>
+<td style="text-align:right;">
+1672
+</td>
+<td style="text-align:right;">
+14.750573
+</td>
+<td style="text-align:right;">
+11.497731
+</td>
+<td style="text-align:right;">
+-3.2528424
+</td>
+<td style="text-align:right;">
+-28.291169
+</td>
+<td style="text-align:right;">
+20.221580
+</td>
+<td style="text-align:right;">
+175.87453
+</td>
+<td style="text-align:right;">
+0.0013369
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fraxinus spp.
+</td>
+<td style="text-align:right;">
+283
+</td>
+<td style="text-align:right;">
+14.856243
+</td>
+<td style="text-align:right;">
+12.980686
+</td>
+<td style="text-align:right;">
+-1.8755569
+</td>
+<td style="text-align:right;">
+-14.448827
+</td>
+<td style="text-align:right;">
+23.500668
+</td>
+<td style="text-align:right;">
+181.04334
+</td>
+<td style="text-align:right;">
+0.0296486
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus halepensis
+</td>
+<td style="text-align:right;">
+6679
+</td>
+<td style="text-align:right;">
+11.649445
+</td>
+<td style="text-align:right;">
+11.834654
+</td>
+<td style="text-align:right;">
+0.1852096
+</td>
+<td style="text-align:right;">
+1.564976
+</td>
+<td style="text-align:right;">
+12.767500
+</td>
+<td style="text-align:right;">
+107.88232
+</td>
+<td style="text-align:right;">
+0.0023298
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus nigra
+</td>
+<td style="text-align:right;">
+5316
+</td>
+<td style="text-align:right;">
+11.709501
+</td>
+<td style="text-align:right;">
+12.847160
+</td>
+<td style="text-align:right;">
+1.1376592
+</td>
+<td style="text-align:right;">
+8.855336
+</td>
+<td style="text-align:right;">
+11.752396
+</td>
+<td style="text-align:right;">
+91.47855
+</td>
+<td style="text-align:right;">
+0.0024076
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus pinaster
+</td>
+<td style="text-align:right;">
+411
+</td>
+<td style="text-align:right;">
+19.606752
+</td>
+<td style="text-align:right;">
+8.812693
+</td>
+<td style="text-align:right;">
+-10.7940585
+</td>
+<td style="text-align:right;">
+-122.483083
+</td>
+<td style="text-align:right;">
+21.249264
+</td>
+<td style="text-align:right;">
+241.12111
+</td>
+<td style="text-align:right;">
+0.0051662
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus pinea
+</td>
+<td style="text-align:right;">
+1260
+</td>
+<td style="text-align:right;">
+13.256547
+</td>
+<td style="text-align:right;">
+11.725403
+</td>
+<td style="text-align:right;">
+-1.5311440
+</td>
+<td style="text-align:right;">
+-13.058349
+</td>
+<td style="text-align:right;">
+11.340012
+</td>
+<td style="text-align:right;">
+96.71319
+</td>
+<td style="text-align:right;">
+0.0007388
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus sylvestris
+</td>
+<td style="text-align:right;">
+10775
+</td>
+<td style="text-align:right;">
+11.324843
+</td>
+<td style="text-align:right;">
+13.681304
+</td>
+<td style="text-align:right;">
+2.3564617
+</td>
+<td style="text-align:right;">
+17.223955
+</td>
+<td style="text-align:right;">
+12.941465
+</td>
+<td style="text-align:right;">
+94.59233
+</td>
+<td style="text-align:right;">
+0.0252725
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus uncinata
+</td>
+<td style="text-align:right;">
+4419
+</td>
+<td style="text-align:right;">
+11.409725
+</td>
+<td style="text-align:right;">
+9.711565
+</td>
+<td style="text-align:right;">
+-1.6981601
+</td>
+<td style="text-align:right;">
+-17.485957
+</td>
+<td style="text-align:right;">
+11.824950
+</td>
+<td style="text-align:right;">
+121.76153
+</td>
+<td style="text-align:right;">
+0.0400203
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Populus spp.
+</td>
+<td style="text-align:right;">
+175
+</td>
+<td style="text-align:right;">
+17.135913
+</td>
+<td style="text-align:right;">
+6.019298
+</td>
+<td style="text-align:right;">
+-11.1166155
+</td>
+<td style="text-align:right;">
+-184.682934
+</td>
+<td style="text-align:right;">
+38.246628
+</td>
+<td style="text-align:right;">
+635.40018
+</td>
+<td style="text-align:right;">
+0.0322440
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus faginea
+</td>
+<td style="text-align:right;">
+764
+</td>
+<td style="text-align:right;">
+4.612368
+</td>
+<td style="text-align:right;">
+5.581831
+</td>
+<td style="text-align:right;">
+0.9694629
+</td>
+<td style="text-align:right;">
+17.368187
+</td>
+<td style="text-align:right;">
+9.915593
+</td>
+<td style="text-align:right;">
+177.64050
+</td>
+<td style="text-align:right;">
+0.0028678
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus ilex
+</td>
+<td style="text-align:right;">
+8536
+</td>
+<td style="text-align:right;">
+4.784522
+</td>
+<td style="text-align:right;">
+5.029064
+</td>
+<td style="text-align:right;">
+0.2445420
+</td>
+<td style="text-align:right;">
+4.862574
+</td>
+<td style="text-align:right;">
+12.519960
+</td>
+<td style="text-align:right;">
+248.95207
+</td>
+<td style="text-align:right;">
+0.0000680
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus petraea
+</td>
+<td style="text-align:right;">
+1316
+</td>
+<td style="text-align:right;">
+5.167974
+</td>
+<td style="text-align:right;">
+8.573958
+</td>
+<td style="text-align:right;">
+3.4059836
+</td>
+<td style="text-align:right;">
+39.724753
+</td>
+<td style="text-align:right;">
+14.796378
+</td>
+<td style="text-align:right;">
+172.57348
+</td>
+<td style="text-align:right;">
+0.0084375
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus pubescens
+</td>
+<td style="text-align:right;">
+2800
+</td>
+<td style="text-align:right;">
+4.846312
+</td>
+<td style="text-align:right;">
+5.854863
+</td>
+<td style="text-align:right;">
+1.0085513
+</td>
+<td style="text-align:right;">
+17.225874
+</td>
+<td style="text-align:right;">
+13.067259
+</td>
+<td style="text-align:right;">
+223.18642
+</td>
+<td style="text-align:right;">
+0.0256122
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus suber
+</td>
+<td style="text-align:right;">
+2248
+</td>
+<td style="text-align:right;">
+2.946185
+</td>
+<td style="text-align:right;">
+5.691004
+</td>
+<td style="text-align:right;">
+2.7448188
+</td>
+<td style="text-align:right;">
+48.230834
+</td>
+<td style="text-align:right;">
+9.764869
+</td>
+<td style="text-align:right;">
+171.58428
+</td>
+<td style="text-align:right;">
+0.0057266
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sorbus spp.
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+7.373242
+</td>
+<td style="text-align:right;">
+4.872958
+</td>
+<td style="text-align:right;">
+-2.5002838
+</td>
+<td style="text-align:right;">
+-51.309364
+</td>
+<td style="text-align:right;">
+16.310765
+</td>
+<td style="text-align:right;">
+334.72000
+</td>
+<td style="text-align:right;">
+0.0001476
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tilia spp.
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+20.176435
+</td>
+<td style="text-align:right;">
+5.898018
+</td>
+<td style="text-align:right;">
+-14.2784170
+</td>
+<td style="text-align:right;">
+-242.088406
+</td>
+<td style="text-align:right;">
+28.867594
+</td>
+<td style="text-align:right;">
+489.44571
+</td>
+<td style="text-align:right;">
+0.0062693
 </td>
 </tr>
 </tbody>
@@ -1332,10 +4993,77 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
-MAE
+RMSQ
 </th>
 <th style="text-align:right;">
-MAErel
+RMSQrel
+</th>
+<th style="text-align:right;">
+R2
+</th>
+</tr></thead>
+<tbody><tr>
+<td style="text-align:left;">
+All
+</td>
+<td style="text-align:right;">
+3150
+</td>
+<td style="text-align:right;">
+4.50715
+</td>
+<td style="text-align:right;">
+4.55501
+</td>
+<td style="text-align:right;">
+0.0478599
+</td>
+<td style="text-align:right;">
+1.050709
+</td>
+<td style="text-align:right;">
+3.206505
+</td>
+<td style="text-align:right;">
+70.39512
+</td>
+<td style="text-align:right;">
+0.3580804
+</td>
+</tr></tbody>
+</table>
+<p>Predictive capacity plot:</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-11-1.png" width="768"></p>
+<p>Relationship between basal area increase and climatic variables (MAT and P/PET):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-12-1.png" width="768"></p>
+<p>Spatial error distribution:</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
+Predictive capacity by species (occurring in more than 100 plots):
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Name
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Obs
+</th>
+<th style="text-align:right;">
+Pred
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Biasrel
+</th>
+<th style="text-align:right;">
+RMSQ
+</th>
+<th style="text-align:right;">
+RMSQrel
 </th>
 <th style="text-align:right;">
 R2
@@ -1344,60 +5072,31 @@ R2
 <tbody>
 <tr>
 <td style="text-align:left;">
-0-All
+Arbutus unedo
 </td>
 <td style="text-align:right;">
-2251
+133
 </td>
 <td style="text-align:right;">
-4.721257
+0.705505
 </td>
 <td style="text-align:right;">
-4.1715581
+0.8270892
 </td>
 <td style="text-align:right;">
--0.5496986
+0.1215842
 </td>
 <td style="text-align:right;">
--11.643056
+14.7002550
 </td>
 <td style="text-align:right;">
-2.0781419
+1.0622080
 </td>
 <td style="text-align:right;">
-44.01671
+128.42726
 </td>
 <td style="text-align:right;">
-0.2405736
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Abies alba
-</td>
-<td style="text-align:right;">
-61
-</td>
-<td style="text-align:right;">
-5.951856
-</td>
-<td style="text-align:right;">
-3.4552462
-</td>
-<td style="text-align:right;">
--2.4966096
-</td>
-<td style="text-align:right;">
--41.946742
-</td>
-<td style="text-align:right;">
-3.4473383
-</td>
-<td style="text-align:right;">
-57.92039
-</td>
-<td style="text-align:right;">
-0.1660833
+0.0851354
 </td>
 </tr>
 <tr>
@@ -1405,28 +5104,28 @@ Abies alba
 Fagus sylvatica
 </td>
 <td style="text-align:right;">
-73
+147
 </td>
 <td style="text-align:right;">
-3.882744
+3.387866
 </td>
 <td style="text-align:right;">
-3.5017435
+3.5931239
 </td>
 <td style="text-align:right;">
--0.3810008
+0.2052574
 </td>
 <td style="text-align:right;">
--9.812669
+5.7125044
 </td>
 <td style="text-align:right;">
-1.5630038
+2.2940998
 </td>
 <td style="text-align:right;">
-40.25513
+63.84694
 </td>
 <td style="text-align:right;">
-0.6314639
+0.5985087
 </td>
 </tr>
 <tr>
@@ -1434,28 +5133,28 @@ Fagus sylvatica
 Pinus halepensis
 </td>
 <td style="text-align:right;">
-658
+761
 </td>
 <td style="text-align:right;">
-3.550407
+3.369784
 </td>
 <td style="text-align:right;">
-3.3737901
+3.2653781
 </td>
 <td style="text-align:right;">
--0.1766172
+-0.1044060
 </td>
 <td style="text-align:right;">
--4.974562
+-3.1973634
 </td>
 <td style="text-align:right;">
-1.7089478
+2.0344164
 </td>
 <td style="text-align:right;">
-48.13385
+62.30263
 </td>
 <td style="text-align:right;">
-0.3750020
+0.5747676
 </td>
 </tr>
 <tr>
@@ -1463,28 +5162,28 @@ Pinus halepensis
 Pinus nigra
 </td>
 <td style="text-align:right;">
-448
+528
 </td>
 <td style="text-align:right;">
-2.830614
+2.630016
 </td>
 <td style="text-align:right;">
-2.3528065
+2.8254642
 </td>
 <td style="text-align:right;">
--0.4778075
+0.1954479
 </td>
 <td style="text-align:right;">
--16.879994
+6.9173734
 </td>
 <td style="text-align:right;">
-1.3270147
+1.7092095
 </td>
 <td style="text-align:right;">
-46.88081
+60.49305
 </td>
 <td style="text-align:right;">
-0.4744840
+0.6325817
 </td>
 </tr>
 <tr>
@@ -1492,28 +5191,28 @@ Pinus nigra
 Pinus pinea
 </td>
 <td style="text-align:right;">
-186
+239
 </td>
 <td style="text-align:right;">
-1.913385
+1.733352
 </td>
 <td style="text-align:right;">
-2.0923362
+1.7039397
 </td>
 <td style="text-align:right;">
-0.1789508
+-0.0294126
 </td>
 <td style="text-align:right;">
-9.352574
+-1.7261512
 </td>
 <td style="text-align:right;">
-1.0352310
+1.1920883
 </td>
 <td style="text-align:right;">
-54.10468
+69.96071
 </td>
 <td style="text-align:right;">
-0.3613439
+0.6089321
 </td>
 </tr>
 <tr>
@@ -1521,28 +5220,28 @@ Pinus pinea
 Pinus sylvestris
 </td>
 <td style="text-align:right;">
-616
+818
 </td>
 <td style="text-align:right;">
-4.106690
+3.696454
 </td>
 <td style="text-align:right;">
-3.4113223
+4.1356311
 </td>
 <td style="text-align:right;">
--0.6953681
+0.4391775
 </td>
 <td style="text-align:right;">
--16.932567
+10.6193594
 </td>
 <td style="text-align:right;">
-1.9143071
+2.6381145
 </td>
 <td style="text-align:right;">
-46.61435
+63.78989
 </td>
 <td style="text-align:right;">
-0.3571500
+0.5351571
 </td>
 </tr>
 <tr>
@@ -1550,28 +5249,28 @@ Pinus sylvestris
 Pinus uncinata
 </td>
 <td style="text-align:right;">
-227
+252
 </td>
 <td style="text-align:right;">
-4.259151
+3.997922
 </td>
 <td style="text-align:right;">
-3.6117357
+3.9100910
 </td>
 <td style="text-align:right;">
--0.6474150
+-0.0878314
 </td>
 <td style="text-align:right;">
--15.200565
+-2.2462739
 </td>
 <td style="text-align:right;">
-1.8428510
+3.1457539
 </td>
 <td style="text-align:right;">
-43.26804
+80.45219
 </td>
 <td style="text-align:right;">
-0.2720554
+0.3520496
 </td>
 </tr>
 <tr>
@@ -1579,28 +5278,28 @@ Pinus uncinata
 Quercus faginea
 </td>
 <td style="text-align:right;">
-159
+196
 </td>
 <td style="text-align:right;">
-1.105362
+0.985571
 </td>
 <td style="text-align:right;">
-0.9250808
+1.0167083
 </td>
 <td style="text-align:right;">
--0.1802806
+0.0311374
 </td>
 <td style="text-align:right;">
--16.309653
+3.0625685
 </td>
 <td style="text-align:right;">
-0.5533529
+0.7446071
 </td>
 <td style="text-align:right;">
-50.06081
+73.23704
 </td>
 <td style="text-align:right;">
-0.5295332
+0.6085164
 </td>
 </tr>
 <tr>
@@ -1608,28 +5307,57 @@ Quercus faginea
 Quercus ilex
 </td>
 <td style="text-align:right;">
-692
+986
 </td>
 <td style="text-align:right;">
-2.159550
+2.024244
 </td>
 <td style="text-align:right;">
-2.2622924
+2.4156144
 </td>
 <td style="text-align:right;">
-0.1027425
+0.3913702
 </td>
 <td style="text-align:right;">
-4.757588
+16.2016829
 </td>
 <td style="text-align:right;">
-1.0690302
+2.5083525
 </td>
 <td style="text-align:right;">
-49.50245
+103.83911
 </td>
 <td style="text-align:right;">
-0.2788028
+0.2972199
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus petraea
+</td>
+<td style="text-align:right;">
+185
+</td>
+<td style="text-align:right;">
+1.479389
+</td>
+<td style="text-align:right;">
+1.4117300
+</td>
+<td style="text-align:right;">
+-0.0676585
+</td>
+<td style="text-align:right;">
+-4.7925971
+</td>
+<td style="text-align:right;">
+0.9106324
+</td>
+<td style="text-align:right;">
+64.50471
+</td>
+<td style="text-align:right;">
+0.5762272
 </td>
 </tr>
 <tr>
@@ -1637,28 +5365,28 @@ Quercus ilex
 Quercus pubescens
 </td>
 <td style="text-align:right;">
-341
+496
 </td>
 <td style="text-align:right;">
-1.397084
+1.359937
 </td>
 <td style="text-align:right;">
-1.0717748
+1.2371406
 </td>
 <td style="text-align:right;">
--0.3253091
+-0.1227966
 </td>
 <td style="text-align:right;">
--23.284866
+-9.9258425
 </td>
 <td style="text-align:right;">
-0.6417321
+1.0492182
 </td>
 <td style="text-align:right;">
-45.93368
+84.80994
 </td>
 <td style="text-align:right;">
-0.5463932
+0.5568934
 </td>
 </tr>
 <tr>
@@ -1666,45 +5394,39 @@ Quercus pubescens
 Quercus suber
 </td>
 <td style="text-align:right;">
-169
+254
 </td>
 <td style="text-align:right;">
-2.235250
+1.996436
 </td>
 <td style="text-align:right;">
-1.5460729
+2.0162300
 </td>
 <td style="text-align:right;">
--0.6891775
+0.0197944
 </td>
 <td style="text-align:right;">
--30.832228
+0.9817516
 </td>
 <td style="text-align:right;">
-1.1552795
+2.1680483
 </td>
 <td style="text-align:right;">
-51.68457
+107.52981
 </td>
 <td style="text-align:right;">
-0.3071358
+0.3588107
 </td>
 </tr>
 </tbody>
 </table>
-<p>Predictive capacity plot:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
-<p>Relationship between basal area increase and climatic variables (MAT and P/PET):</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-10-1.png" width="768"></p>
-<p>Spatial error distribution:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="mortality-m2ha">Mortality (m2/ha)<a class="anchor" aria-label="anchor" href="#mortality-m2ha"></a>
 </h2>
 <p>Reduction of basal area due to trees (DBH &gt; 5) that died during the IFN3-IFN4 period against model’s mortality prediction.</p>
-<p>Predictive capacity table:</p>
+<p>Overall predictive capacity:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -1726,10 +5448,77 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
-MAE
+RMSQ
 </th>
 <th style="text-align:right;">
-MAErel
+RMSQrel
+</th>
+<th style="text-align:right;">
+R2
+</th>
+</tr></thead>
+<tbody><tr>
+<td style="text-align:left;">
+All
+</td>
+<td style="text-align:right;">
+3150
+</td>
+<td style="text-align:right;">
+0.9056131
+</td>
+<td style="text-align:right;">
+0.9420331
+</td>
+<td style="text-align:right;">
+0.03642
+</td>
+<td style="text-align:right;">
+3.866104
+</td>
+<td style="text-align:right;">
+2.243799
+</td>
+<td style="text-align:right;">
+238.1869
+</td>
+<td style="text-align:right;">
+0.0729338
+</td>
+</tr></tbody>
+</table>
+<p>Predictive capacity plot:</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-16-1.png" width="768"></p>
+<p>Relationship between dead basal area and climatic variables (MAT and P/PET):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-17-1.png" width="768"></p>
+<p>Spatial distribution of errors:</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
+<p>Predictive capacity by species (occurring in more than 50 plots):</p>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Name
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Obs
+</th>
+<th style="text-align:right;">
+Pred
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Biasrel
+</th>
+<th style="text-align:right;">
+RMSQ
+</th>
+<th style="text-align:right;">
+RMSQrel
 </th>
 <th style="text-align:right;">
 R2
@@ -1738,60 +5527,205 @@ R2
 <tbody>
 <tr>
 <td style="text-align:left;">
-0-All
+Abies alba
 </td>
 <td style="text-align:right;">
-2251
+87
 </td>
 <td style="text-align:right;">
-0.7414716
+0.8974018
 </td>
 <td style="text-align:right;">
-0.7134788
+0.1011043
 </td>
 <td style="text-align:right;">
--0.0279928
+-0.7962975
 </td>
 <td style="text-align:right;">
--3.775305
+-787.6001591
 </td>
 <td style="text-align:right;">
-0.7984962
+1.6749912
 </td>
 <td style="text-align:right;">
-107.69073
+1656.6965
 </td>
 <td style="text-align:right;">
-0.0492395
+0.0155631
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Abies alba
+Acer campestre
+</td>
+<td style="text-align:right;">
+53
+</td>
+<td style="text-align:right;">
+0.0514123
+</td>
+<td style="text-align:right;">
+0.1637173
+</td>
+<td style="text-align:right;">
+0.1123051
+</td>
+<td style="text-align:right;">
+68.5969323
+</td>
+<td style="text-align:right;">
+0.5020765
+</td>
+<td style="text-align:right;">
+306.6728
+</td>
+<td style="text-align:right;">
+0.0045319
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Acer opalus
 </td>
 <td style="text-align:right;">
 62
 </td>
 <td style="text-align:right;">
-0.8070301
+0.0309649
 </td>
 <td style="text-align:right;">
-0.7023349
+0.2143462
 </td>
 <td style="text-align:right;">
--0.1046953
+0.1833813
 </td>
 <td style="text-align:right;">
--12.972907
+85.5537841
 </td>
 <td style="text-align:right;">
-0.9919292
+0.5287902
 </td>
 <td style="text-align:right;">
-122.91104
+246.6991
 </td>
 <td style="text-align:right;">
-0.0025223
+0.0219898
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Arbutus unedo
+</td>
+<td style="text-align:right;">
+151
+</td>
+<td style="text-align:right;">
+0.4135440
+</td>
+<td style="text-align:right;">
+0.1808147
+</td>
+<td style="text-align:right;">
+-0.2327293
+</td>
+<td style="text-align:right;">
+-128.7115372
+</td>
+<td style="text-align:right;">
+0.8750117
+</td>
+<td style="text-align:right;">
+483.9274
+</td>
+<td style="text-align:right;">
+0.0010582
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Betula spp.
+</td>
+<td style="text-align:right;">
+101
+</td>
+<td style="text-align:right;">
+0.5015888
+</td>
+<td style="text-align:right;">
+0.4125622
+</td>
+<td style="text-align:right;">
+-0.0890266
+</td>
+<td style="text-align:right;">
+-21.5789425
+</td>
+<td style="text-align:right;">
+1.1649313
+</td>
+<td style="text-align:right;">
+282.3650
+</td>
+<td style="text-align:right;">
+0.0910846
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Castanea sativa
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+1.9219356
+</td>
+<td style="text-align:right;">
+1.4876623
+</td>
+<td style="text-align:right;">
+-0.4342733
+</td>
+<td style="text-align:right;">
+-29.1916592
+</td>
+<td style="text-align:right;">
+4.1077517
+</td>
+<td style="text-align:right;">
+276.1213
+</td>
+<td style="text-align:right;">
+0.0043816
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Crataegus spp.
+</td>
+<td style="text-align:right;">
+52
+</td>
+<td style="text-align:right;">
+0.2019370
+</td>
+<td style="text-align:right;">
+0.0671602
+</td>
+<td style="text-align:right;">
+-0.1347769
+</td>
+<td style="text-align:right;">
+-200.6797651
+</td>
+<td style="text-align:right;">
+0.5672920
+</td>
+<td style="text-align:right;">
+844.6853
+</td>
+<td style="text-align:right;">
+0.0022616
 </td>
 </tr>
 <tr>
@@ -1799,28 +5733,57 @@ Abies alba
 Fagus sylvatica
 </td>
 <td style="text-align:right;">
-73
+147
 </td>
 <td style="text-align:right;">
-0.3824753
+0.3190163
 </td>
 <td style="text-align:right;">
-0.3030986
+0.3075388
 </td>
 <td style="text-align:right;">
--0.0793767
+-0.0114775
 </td>
 <td style="text-align:right;">
--20.753421
+-3.7320601
 </td>
 <td style="text-align:right;">
-0.4375289
+0.7179890
 </td>
 <td style="text-align:right;">
-114.39403
+233.4629
 </td>
 <td style="text-align:right;">
-0.2379619
+0.1965829
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fraxinus spp.
+</td>
+<td style="text-align:right;">
+84
+</td>
+<td style="text-align:right;">
+0.2254446
+</td>
+<td style="text-align:right;">
+0.0721375
+</td>
+<td style="text-align:right;">
+-0.1533071
+</td>
+<td style="text-align:right;">
+-212.5207960
+</td>
+<td style="text-align:right;">
+0.6723463
+</td>
+<td style="text-align:right;">
+932.0347
+</td>
+<td style="text-align:right;">
+0.0149318
 </td>
 </tr>
 <tr>
@@ -1828,28 +5791,28 @@ Fagus sylvatica
 Pinus halepensis
 </td>
 <td style="text-align:right;">
-667
+774
 </td>
 <td style="text-align:right;">
-0.6430055
+0.6151061
 </td>
 <td style="text-align:right;">
-0.4507435
+0.5378968
 </td>
 <td style="text-align:right;">
--0.1922621
+-0.0772092
 </td>
 <td style="text-align:right;">
--29.900531
+-14.3539135
 </td>
 <td style="text-align:right;">
-0.6072666
+0.9867294
 </td>
 <td style="text-align:right;">
-94.44190
+183.4421
 </td>
 <td style="text-align:right;">
-0.2698442
+0.2735625
 </td>
 </tr>
 <tr>
@@ -1857,28 +5820,57 @@ Pinus halepensis
 Pinus nigra
 </td>
 <td style="text-align:right;">
-454
+535
 </td>
 <td style="text-align:right;">
-0.2444203
+0.2679482
 </td>
 <td style="text-align:right;">
-0.2564153
+0.2921523
 </td>
 <td style="text-align:right;">
-0.0119950
+0.0242041
 </td>
 <td style="text-align:right;">
-4.907525
+8.2847553
 </td>
 <td style="text-align:right;">
-0.3824402
+0.8010914
 </td>
 <td style="text-align:right;">
-156.46826
+274.2033
 </td>
 <td style="text-align:right;">
-0.0034890
+0.0311997
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus pinaster
+</td>
+<td style="text-align:right;">
+95
+</td>
+<td style="text-align:right;">
+1.2791597
+</td>
+<td style="text-align:right;">
+2.3590987
+</td>
+<td style="text-align:right;">
+1.0799390
+</td>
+<td style="text-align:right;">
+45.7776106
+</td>
+<td style="text-align:right;">
+6.9248699
+</td>
+<td style="text-align:right;">
+293.5388
+</td>
+<td style="text-align:right;">
+0.1025217
 </td>
 </tr>
 <tr>
@@ -1886,28 +5878,28 @@ Pinus nigra
 Pinus pinea
 </td>
 <td style="text-align:right;">
-190
+245
 </td>
 <td style="text-align:right;">
-0.3238063
+0.2871725
 </td>
 <td style="text-align:right;">
-0.3154644
+0.2862889
 </td>
 <td style="text-align:right;">
--0.0083419
+-0.0008836
 </td>
 <td style="text-align:right;">
--2.576196
+-0.3086272
 </td>
 <td style="text-align:right;">
-0.4475196
+0.6695383
 </td>
 <td style="text-align:right;">
-138.20596
+233.8680
 </td>
 <td style="text-align:right;">
-0.1002902
+0.1190956
 </td>
 </tr>
 <tr>
@@ -1915,28 +5907,28 @@ Pinus pinea
 Pinus sylvestris
 </td>
 <td style="text-align:right;">
-639
+849
 </td>
 <td style="text-align:right;">
-0.7147780
+0.7152006
 </td>
 <td style="text-align:right;">
-0.6438540
+0.7351620
 </td>
 <td style="text-align:right;">
--0.0709240
+0.0199614
 </td>
 <td style="text-align:right;">
--9.922522
+2.7152343
 </td>
 <td style="text-align:right;">
-0.7783261
+1.6334688
 </td>
 <td style="text-align:right;">
-108.89061
+222.1917
 </td>
 <td style="text-align:right;">
-0.0342001
+0.0610167
 </td>
 </tr>
 <tr>
@@ -1944,28 +5936,57 @@ Pinus sylvestris
 Pinus uncinata
 </td>
 <td style="text-align:right;">
-228
+254
 </td>
 <td style="text-align:right;">
-0.9189380
+1.0035738
 </td>
 <td style="text-align:right;">
-1.0278624
+0.9607715
 </td>
 <td style="text-align:right;">
-0.1089244
+-0.0428023
 </td>
 <td style="text-align:right;">
-11.853287
+-4.4549938
 </td>
 <td style="text-align:right;">
-0.8997555
+1.3454847
 </td>
 <td style="text-align:right;">
-97.91253
+140.0421
 </td>
 <td style="text-align:right;">
-0.2351877
+0.2650804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Populus spp.
+</td>
+<td style="text-align:right;">
+83
+</td>
+<td style="text-align:right;">
+0.8282838
+</td>
+<td style="text-align:right;">
+0.6313703
+</td>
+<td style="text-align:right;">
+-0.1969136
+</td>
+<td style="text-align:right;">
+-31.1882877
+</td>
+<td style="text-align:right;">
+3.3384668
+</td>
+<td style="text-align:right;">
+528.7653
+</td>
+<td style="text-align:right;">
+0.0389427
 </td>
 </tr>
 <tr>
@@ -1973,28 +5994,28 @@ Pinus uncinata
 Quercus faginea
 </td>
 <td style="text-align:right;">
-165
+210
 </td>
 <td style="text-align:right;">
-0.1280362
+0.1005152
 </td>
 <td style="text-align:right;">
-0.3417791
+0.4001444
 </td>
 <td style="text-align:right;">
-0.2137429
+0.2996292
 </td>
 <td style="text-align:right;">
-166.939418
+74.8802696
 </td>
 <td style="text-align:right;">
-0.4116666
+1.4593413
 </td>
 <td style="text-align:right;">
-321.52357
+364.7037
 </td>
 <td style="text-align:right;">
-0.0138110
+0.0225431
 </td>
 </tr>
 <tr>
@@ -2002,28 +6023,57 @@ Quercus faginea
 Quercus ilex
 </td>
 <td style="text-align:right;">
-699
+998
 </td>
 <td style="text-align:right;">
-0.2026924
+0.2331740
 </td>
 <td style="text-align:right;">
-0.2913888
+0.4203910
 </td>
 <td style="text-align:right;">
-0.0886964
+0.1872171
 </td>
 <td style="text-align:right;">
-43.759115
+44.5340335
 </td>
 <td style="text-align:right;">
-0.3603911
+1.3531029
 </td>
 <td style="text-align:right;">
-177.80197
+321.8677
 </td>
 <td style="text-align:right;">
-0.0694491
+0.0840769
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus petraea
+</td>
+<td style="text-align:right;">
+187
+</td>
+<td style="text-align:right;">
+0.3023675
+</td>
+<td style="text-align:right;">
+0.3779714
+</td>
+<td style="text-align:right;">
+0.0756039
+</td>
+<td style="text-align:right;">
+20.0025481
+</td>
+<td style="text-align:right;">
+0.9339919
+</td>
+<td style="text-align:right;">
+247.1065
+</td>
+<td style="text-align:right;">
+0.0919721
 </td>
 </tr>
 <tr>
@@ -2031,28 +6081,28 @@ Quercus ilex
 Quercus pubescens
 </td>
 <td style="text-align:right;">
-353
+516
 </td>
 <td style="text-align:right;">
-0.1839177
+0.1872343
 </td>
 <td style="text-align:right;">
-0.1957379
+0.2394510
 </td>
 <td style="text-align:right;">
-0.0118202
+0.0522168
 </td>
 <td style="text-align:right;">
-6.426920
+21.8068634
 </td>
 <td style="text-align:right;">
-0.2748603
+1.0205665
 </td>
 <td style="text-align:right;">
-149.44747
+426.2110
 </td>
 <td style="text-align:right;">
-0.1353738
+0.0795591
 </td>
 </tr>
 <tr>
@@ -2060,44 +6110,347 @@ Quercus pubescens
 Quercus suber
 </td>
 <td style="text-align:right;">
-169
+254
 </td>
 <td style="text-align:right;">
-0.5664461
+0.4963654
 </td>
 <td style="text-align:right;">
-0.5232424
+0.3926826
 </td>
 <td style="text-align:right;">
--0.0432036
+-0.1036828
 </td>
 <td style="text-align:right;">
--7.627139
+-26.4037311
 </td>
 <td style="text-align:right;">
-0.6660519
+1.1578818
 </td>
 <td style="text-align:right;">
-117.58434
+294.8646
 </td>
 <td style="text-align:right;">
-0.0526780
+0.0414427
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sorbus spp.
+</td>
+<td style="text-align:right;">
+52
+</td>
+<td style="text-align:right;">
+0.1211614
+</td>
+<td style="text-align:right;">
+0.1020565
+</td>
+<td style="text-align:right;">
+-0.0191049
+</td>
+<td style="text-align:right;">
+-18.7199532
+</td>
+<td style="text-align:right;">
+0.4321056
+</td>
+<td style="text-align:right;">
+423.3985
+</td>
+<td style="text-align:right;">
+0.1127980
 </td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section level2">
+<h2 id="ingrowth-m2ha">Ingrowth (m2/ha)<a class="anchor" aria-label="anchor" href="#ingrowth-m2ha"></a>
+</h2>
+<p>Increase of basal area due to ingrowth of trees with diameters between 7.5 cm and 12.5 cm during the IFN3-IFN4 period against model’s ingrowth prediction.</p>
+<p>Overall predictive capacity:</p>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Name
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Obs
+</th>
+<th style="text-align:right;">
+Pred
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Biasrel
+</th>
+<th style="text-align:right;">
+RMSQ
+</th>
+<th style="text-align:right;">
+RMSQrel
+</th>
+<th style="text-align:right;">
+R2
+</th>
+</tr></thead>
+<tbody><tr>
+<td style="text-align:left;">
+All
+</td>
+<td style="text-align:right;">
+3150
+</td>
+<td style="text-align:right;">
+1.294118
+</td>
+<td style="text-align:right;">
+1.040737
+</td>
+<td style="text-align:right;">
+-0.2533806
+</td>
+<td style="text-align:right;">
+-24.34626
+</td>
+<td style="text-align:right;">
+2.325284
+</td>
+<td style="text-align:right;">
+223.4267
+</td>
+<td style="text-align:right;">
+0.0484162
+</td>
+</tr></tbody>
+</table>
 <p>Predictive capacity plot:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-13-1.png" width="768"></p>
-<p>Relationship between dead basal area and climatic variables (MAT and P/PET):</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-14-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-21-1.png" width="768"></p>
+<p>Relationship between ingrowth basal area and climatic variables (MAT and P/PET):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-22-1.png" width="768"></p>
 <p>Spatial distribution of errors:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-15-1.png" width="672"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-23-1.png" width="672"></p>
+<p>Predictive capacity by species (with ingrowth occurring in more than 30 plots):</p>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Name
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Obs
+</th>
+<th style="text-align:right;">
+Pred
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Biasrel
+</th>
+<th style="text-align:right;">
+RMSQ
+</th>
+<th style="text-align:right;">
+RMSQrel
+</th>
+<th style="text-align:right;">
+R2
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Pinus halepensis
+</td>
+<td style="text-align:right;">
+204
+</td>
+<td style="text-align:right;">
+2.353455
+</td>
+<td style="text-align:right;">
+3.470891
+</td>
+<td style="text-align:right;">
+1.1174354
+</td>
+<td style="text-align:right;">
+32.1944875
+</td>
+<td style="text-align:right;">
+2.961738
+</td>
+<td style="text-align:right;">
+85.33077
+</td>
+<td style="text-align:right;">
+0.2664294
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus nigra
+</td>
+<td style="text-align:right;">
+61
+</td>
+<td style="text-align:right;">
+1.306100
+</td>
+<td style="text-align:right;">
+1.558157
+</td>
+<td style="text-align:right;">
+0.2520575
+</td>
+<td style="text-align:right;">
+16.1766440
+</td>
+<td style="text-align:right;">
+1.178629
+</td>
+<td style="text-align:right;">
+75.64252
+</td>
+<td style="text-align:right;">
+0.1460142
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus sylvestris
+</td>
+<td style="text-align:right;">
+130
+</td>
+<td style="text-align:right;">
+1.621993
+</td>
+<td style="text-align:right;">
+2.055884
+</td>
+<td style="text-align:right;">
+0.4338913
+</td>
+<td style="text-align:right;">
+21.1048504
+</td>
+<td style="text-align:right;">
+1.357176
+</td>
+<td style="text-align:right;">
+66.01422
+</td>
+<td style="text-align:right;">
+0.2877159
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus uncinata
+</td>
+<td style="text-align:right;">
+52
+</td>
+<td style="text-align:right;">
+1.883719
+</td>
+<td style="text-align:right;">
+1.880031
+</td>
+<td style="text-align:right;">
+-0.0036881
+</td>
+<td style="text-align:right;">
+-0.1961734
+</td>
+<td style="text-align:right;">
+1.738716
+</td>
+<td style="text-align:right;">
+92.48339
+</td>
+<td style="text-align:right;">
+0.2370026
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus ilex
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+1.973968
+</td>
+<td style="text-align:right;">
+1.899079
+</td>
+<td style="text-align:right;">
+-0.0748890
+</td>
+<td style="text-align:right;">
+-3.9434362
+</td>
+<td style="text-align:right;">
+2.209249
+</td>
+<td style="text-align:right;">
+116.33266
+</td>
+<td style="text-align:right;">
+0.1087576
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus pubescens
+</td>
+<td style="text-align:right;">
+39
+</td>
+<td style="text-align:right;">
+2.003007
+</td>
+<td style="text-align:right;">
+1.778784
+</td>
+<td style="text-align:right;">
+-0.2242233
+</td>
+<td style="text-align:right;">
+-12.6054257
+</td>
+<td style="text-align:right;">
+1.523503
+</td>
+<td style="text-align:right;">
+85.64857
+</td>
+<td style="text-align:right;">
+0.3983081
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="overall-stand-level-basal-area-change-m2ha">Overall stand-level basal area change (m2/ha)<a class="anchor" aria-label="anchor" href="#overall-stand-level-basal-area-change-m2ha"></a>
 </h2>
 <p>This includes growth of surviving trees, mortality reductions and ingrowth (increase in trees with DBH&gt;5) due to sapling growth (in the observed data, this includes also incorporation of trees into large diameter classes due to sampling design).</p>
-<p>Predictive capacity table:</p>
+<p>Overall predictive capacity:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -2119,10 +6472,77 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
-MAE
+RMSQ
 </th>
 <th style="text-align:right;">
-MAErel
+RMSQrel
+</th>
+<th style="text-align:right;">
+R2
+</th>
+</tr></thead>
+<tbody><tr>
+<td style="text-align:left;">
+All
+</td>
+<td style="text-align:right;">
+3150
+</td>
+<td style="text-align:right;">
+4.969922
+</td>
+<td style="text-align:right;">
+5.570264
+</td>
+<td style="text-align:right;">
+0.6003416
+</td>
+<td style="text-align:right;">
+10.77761
+</td>
+<td style="text-align:right;">
+4.89184
+</td>
+<td style="text-align:right;">
+87.82062
+</td>
+<td style="text-align:right;">
+0.1096831
+</td>
+</tr></tbody>
+</table>
+<p>Predictive capacity plot:</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-26-1.png" width="768"></p>
+<p>Relationship between overall basal area change and climatic variables (MAT and P/PET):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-27-1.png" width="768"></p>
+<p>Spatial distribution of errors:</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-29-1.png" width="672"></p>
+<p>Predictive capacity by species (occurring in more than 50 plots):</p>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Name
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Obs
+</th>
+<th style="text-align:right;">
+Pred
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Biasrel
+</th>
+<th style="text-align:right;">
+RMSQ
+</th>
+<th style="text-align:right;">
+RMSQrel
 </th>
 <th style="text-align:right;">
 R2
@@ -2131,60 +6551,89 @@ R2
 <tbody>
 <tr>
 <td style="text-align:left;">
-0-All
+Abies alba
 </td>
 <td style="text-align:right;">
-2251
+87
 </td>
 <td style="text-align:right;">
-5.2125681
+6.2130550
 </td>
 <td style="text-align:right;">
-4.7241504
+3.9655298
 </td>
 <td style="text-align:right;">
--0.4884176
+-2.2475252
 </td>
 <td style="text-align:right;">
--9.370000
+-56.6765420
 </td>
 <td style="text-align:right;">
-2.9862663
+6.186918
 </td>
 <td style="text-align:right;">
-57.28973
+156.01745
 </td>
 <td style="text-align:right;">
-0.1477358
+0.1085182
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Abies alba
+Arbutus unedo
 </td>
 <td style="text-align:right;">
-62
+136
 </td>
 <td style="text-align:right;">
-6.2955810
+0.9346034
 </td>
 <td style="text-align:right;">
-3.1378589
+2.3304946
 </td>
 <td style="text-align:right;">
--3.1577222
+1.3958913
 </td>
 <td style="text-align:right;">
--50.157756
+59.8967812
 </td>
 <td style="text-align:right;">
-4.8551809
+2.968770
 </td>
 <td style="text-align:right;">
-77.12046
+127.38799
 </td>
 <td style="text-align:right;">
-0.0563742
+0.0006577
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Betula spp.
+</td>
+<td style="text-align:right;">
+92
+</td>
+<td style="text-align:right;">
+1.0361037
+</td>
+<td style="text-align:right;">
+1.5156487
+</td>
+<td style="text-align:right;">
+0.4795450
+</td>
+<td style="text-align:right;">
+31.6395883
+</td>
+<td style="text-align:right;">
+2.899294
+</td>
+<td style="text-align:right;">
+191.29064
+</td>
+<td style="text-align:right;">
+0.0087068
 </td>
 </tr>
 <tr>
@@ -2192,28 +6641,57 @@ Abies alba
 Fagus sylvatica
 </td>
 <td style="text-align:right;">
-73
+147
 </td>
 <td style="text-align:right;">
-4.0240487
+3.5995564
 </td>
 <td style="text-align:right;">
-4.1628761
+4.1888759
 </td>
 <td style="text-align:right;">
-0.1388274
+0.5893195
 </td>
 <td style="text-align:right;">
-3.449943
+14.0686791
 </td>
 <td style="text-align:right;">
-2.2259570
+3.689643
 </td>
 <td style="text-align:right;">
-55.31635
+88.08194
 </td>
 <td style="text-align:right;">
-0.4090507
+0.2653483
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fraxinus spp.
+</td>
+<td style="text-align:right;">
+79
+</td>
+<td style="text-align:right;">
+1.5707017
+</td>
+<td style="text-align:right;">
+1.8481758
+</td>
+<td style="text-align:right;">
+0.2774741
+</td>
+<td style="text-align:right;">
+15.0134027
+</td>
+<td style="text-align:right;">
+2.857801
+</td>
+<td style="text-align:right;">
+154.62819
+</td>
+<td style="text-align:right;">
+0.0893178
 </td>
 </tr>
 <tr>
@@ -2221,28 +6699,28 @@ Fagus sylvatica
 Pinus halepensis
 </td>
 <td style="text-align:right;">
-657
+762
 </td>
 <td style="text-align:right;">
-3.7112477
+3.5468970
 </td>
 <td style="text-align:right;">
-3.7946760
+4.7039540
 </td>
 <td style="text-align:right;">
-0.0834283
+1.1570570
 </td>
 <td style="text-align:right;">
-2.247984
+24.5975401
 </td>
 <td style="text-align:right;">
-2.5159962
+3.756058
 </td>
 <td style="text-align:right;">
-67.79381
+79.84896
 </td>
 <td style="text-align:right;">
-0.2120488
+0.1971174
 </td>
 </tr>
 <tr>
@@ -2250,28 +6728,57 @@ Pinus halepensis
 Pinus nigra
 </td>
 <td style="text-align:right;">
-446
+526
 </td>
 <td style="text-align:right;">
-3.3667710
+3.1018638
 </td>
 <td style="text-align:right;">
-2.7310202
+3.8705595
 </td>
 <td style="text-align:right;">
--0.6357509
+0.7686957
 </td>
 <td style="text-align:right;">
--18.883103
+19.8600667
 </td>
 <td style="text-align:right;">
-2.1011262
+3.816514
 </td>
 <td style="text-align:right;">
-62.40776
+98.60366
 </td>
 <td style="text-align:right;">
-0.2102872
+0.1587181
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pinus pinaster
+</td>
+<td style="text-align:right;">
+61
+</td>
+<td style="text-align:right;">
+2.7838093
+</td>
+<td style="text-align:right;">
+-3.3623473
+</td>
+<td style="text-align:right;">
+-6.1461566
+</td>
+<td style="text-align:right;">
+-182.7936300
+</td>
+<td style="text-align:right;">
+10.943627
+</td>
+<td style="text-align:right;">
+325.47580
+</td>
+<td style="text-align:right;">
+0.0000070
 </td>
 </tr>
 <tr>
@@ -2279,28 +6786,28 @@ Pinus nigra
 Pinus pinea
 </td>
 <td style="text-align:right;">
-186
+240
 </td>
 <td style="text-align:right;">
-1.6311851
+1.4506891
 </td>
 <td style="text-align:right;">
-1.7704484
+1.7173194
 </td>
 <td style="text-align:right;">
-0.1392632
+0.2666303
 </td>
 <td style="text-align:right;">
-8.537550
+15.5259591
 </td>
 <td style="text-align:right;">
-1.4290571
+2.013598
 </td>
 <td style="text-align:right;">
-87.60852
+117.25239
 </td>
 <td style="text-align:right;">
-0.1710077
+0.2223149
 </td>
 </tr>
 <tr>
@@ -2308,28 +6815,28 @@ Pinus pinea
 Pinus sylvestris
 </td>
 <td style="text-align:right;">
-615
+817
 </td>
 <td style="text-align:right;">
-4.0249128
+3.5653547
 </td>
 <td style="text-align:right;">
-3.4260422
+4.8187967
 </td>
 <td style="text-align:right;">
--0.5988706
+1.2534420
 </td>
 <td style="text-align:right;">
--14.879094
+26.0115152
 </td>
 <td style="text-align:right;">
-2.6730304
+4.388814
 </td>
 <td style="text-align:right;">
-66.41213
+91.07698
 </td>
 <td style="text-align:right;">
-0.2499292
+0.1786858
 </td>
 </tr>
 <tr>
@@ -2337,28 +6844,57 @@ Pinus sylvestris
 Pinus uncinata
 </td>
 <td style="text-align:right;">
-225
+250
 </td>
 <td style="text-align:right;">
-4.5372353
+4.2218147
 </td>
 <td style="text-align:right;">
-3.2577006
+4.4591486
 </td>
 <td style="text-align:right;">
--1.2795346
+0.2373339
 </td>
 <td style="text-align:right;">
--28.200755
+5.3224041
 </td>
 <td style="text-align:right;">
-2.9642851
+4.119849
 </td>
 <td style="text-align:right;">
-65.33241
+92.39093
 </td>
 <td style="text-align:right;">
-0.1939974
+0.1561790
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Populus spp.
+</td>
+<td style="text-align:right;">
+65
+</td>
+<td style="text-align:right;">
+1.9266944
+</td>
+<td style="text-align:right;">
+-0.8631132
+</td>
+<td style="text-align:right;">
+-2.7898076
+</td>
+<td style="text-align:right;">
+-323.2261592
+</td>
+<td style="text-align:right;">
+5.841715
+</td>
+<td style="text-align:right;">
+676.81915
+</td>
+<td style="text-align:right;">
+0.0228620
 </td>
 </tr>
 <tr>
@@ -2366,28 +6902,28 @@ Pinus uncinata
 Quercus faginea
 </td>
 <td style="text-align:right;">
-68
+81
 </td>
 <td style="text-align:right;">
-0.6535093
+0.7317686
 </td>
 <td style="text-align:right;">
-0.5664545
+1.5795632
 </td>
 <td style="text-align:right;">
--0.0870548
+0.8477946
 </td>
 <td style="text-align:right;">
--13.321122
+53.6727242
 </td>
 <td style="text-align:right;">
-0.6836318
+2.408691
 </td>
 <td style="text-align:right;">
-104.60934
+152.49092
 </td>
 <td style="text-align:right;">
-0.2205362
+0.0000036
 </td>
 </tr>
 <tr>
@@ -2395,28 +6931,57 @@ Quercus faginea
 Quercus ilex
 </td>
 <td style="text-align:right;">
-690
+986
 </td>
 <td style="text-align:right;">
-3.3072936
+3.1153027
 </td>
 <td style="text-align:right;">
-3.6161264
+3.1382916
 </td>
 <td style="text-align:right;">
-0.3088328
+0.0229888
 </td>
 <td style="text-align:right;">
-9.337931
+0.7325274
 </td>
 <td style="text-align:right;">
-2.2510571
+3.791696
 </td>
 <td style="text-align:right;">
-68.06342
+120.82039
 </td>
 <td style="text-align:right;">
-0.2191617
+0.0600317
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus petraea
+</td>
+<td style="text-align:right;">
+158
+</td>
+<td style="text-align:right;">
+1.7619375
+</td>
+<td style="text-align:right;">
+1.4596924
+</td>
+<td style="text-align:right;">
+-0.3022451
+</td>
+<td style="text-align:right;">
+-20.7060827
+</td>
+<td style="text-align:right;">
+2.713656
+</td>
+<td style="text-align:right;">
+185.90600
+</td>
+<td style="text-align:right;">
+0.0370633
 </td>
 </tr>
 <tr>
@@ -2424,28 +6989,28 @@ Quercus ilex
 Quercus pubescens
 </td>
 <td style="text-align:right;">
-340
+492
 </td>
 <td style="text-align:right;">
-1.8971143
+1.8033172
 </td>
 <td style="text-align:right;">
-1.4549678
+1.7198354
 </td>
 <td style="text-align:right;">
--0.4421464
+-0.0834819
 </td>
 <td style="text-align:right;">
--23.306263
+-4.8540611
 </td>
 <td style="text-align:right;">
-1.3526715
+2.360410
 </td>
 <td style="text-align:right;">
-71.30153
+137.24627
 </td>
 <td style="text-align:right;">
-0.3207857
+0.1311047
 </td>
 </tr>
 <tr>
@@ -2453,162 +7018,156 @@ Quercus pubescens
 Quercus suber
 </td>
 <td style="text-align:right;">
-169
+254
 </td>
 <td style="text-align:right;">
-2.0026610
+1.9622125
 </td>
 <td style="text-align:right;">
-1.3423143
+1.9416395
 </td>
 <td style="text-align:right;">
--0.6603466
+-0.0205731
 </td>
 <td style="text-align:right;">
--32.973461
+-1.0595714
 </td>
 <td style="text-align:right;">
-1.9238786
+2.470909
 </td>
 <td style="text-align:right;">
-96.06612
+127.25890
 </td>
 <td style="text-align:right;">
-0.0653922
+0.1129323
 </td>
 </tr>
 </tbody>
 </table>
-<p>Predictive capacity plot:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-17-1.png" width="768"></p>
-<p>Relationship between overall basal area change and climatic variables (MAT and P/PET):</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-18-1.png" width="768"></p>
-<p>Spatial distribution of errors:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-20-1.png" width="672"></p>
 </div>
 <div class="section level2">
-<h2 id="detailed-growth-evaluation-by-species">Detailed growth evaluation by species<a class="anchor" aria-label="anchor" href="#detailed-growth-evaluation-by-species"></a>
+<h2 id="detailed-growth-evaluation-by-species-occurring-in-more-than-100-plots">Detailed growth evaluation by species (occurring in more than 100 plots)<a class="anchor" aria-label="anchor" href="#detailed-growth-evaluation-by-species-occurring-in-more-than-100-plots"></a>
 </h2>
 <div class="section level3">
-<h3 id="abies-alba">Abies alba<a class="anchor" aria-label="anchor" href="#abies-alba"></a>
+<h3 id="arbutus-unedo">Arbutus unedo<a class="anchor" aria-label="anchor" href="#arbutus-unedo"></a>
 </h3>
 <p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-23-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-24-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-33-1.png" width="768"></p>
+<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-34-1.png" width="768"></p>
 <p>Prediction ability for <strong>stand-level basal area increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-25-1.png" width="768"></p>
-<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-26-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-27-1.png" width="672"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-35-1.png" width="768"></p>
+<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-36-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-37-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="fagus-sylvatica">Fagus sylvatica<a class="anchor" aria-label="anchor" href="#fagus-sylvatica"></a>
 </h3>
 <p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-29-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-30-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-39-1.png" width="768"></p>
+<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-40-1.png" width="768"></p>
 <p>Prediction ability for <strong>stand-level basal area increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-31-1.png" width="768"></p>
-<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-32-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-33-1.png" width="672"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-41-1.png" width="768"></p>
+<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-42-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-43-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="pinus-halepensis">Pinus halepensis<a class="anchor" aria-label="anchor" href="#pinus-halepensis"></a>
 </h3>
 <p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-35-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-36-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-45-1.png" width="768"></p>
+<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-46-1.png" width="768"></p>
 <p>Prediction ability for <strong>stand-level basal area increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-37-1.png" width="768"></p>
-<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-38-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-39-1.png" width="672"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-47-1.png" width="768"></p>
+<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-48-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-49-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="pinus-nigra">Pinus nigra<a class="anchor" aria-label="anchor" href="#pinus-nigra"></a>
 </h3>
 <p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-41-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-42-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-51-1.png" width="768"></p>
+<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-52-1.png" width="768"></p>
 <p>Prediction ability for <strong>stand-level basal area increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-43-1.png" width="768"></p>
-<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-44-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-45-1.png" width="672"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-53-1.png" width="768"></p>
+<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-54-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-55-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="pinus-pinea">Pinus pinea<a class="anchor" aria-label="anchor" href="#pinus-pinea"></a>
 </h3>
 <p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-47-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-48-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-57-1.png" width="768"></p>
+<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-58-1.png" width="768"></p>
 <p>Prediction ability for <strong>stand-level basal area increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-49-1.png" width="768"></p>
-<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-50-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-51-1.png" width="672"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-59-1.png" width="768"></p>
+<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-60-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-61-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="pinus-sylvestris">Pinus sylvestris<a class="anchor" aria-label="anchor" href="#pinus-sylvestris"></a>
 </h3>
 <p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-53-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-54-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-63-1.png" width="768"></p>
+<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-64-1.png" width="768"></p>
 <p>Prediction ability for <strong>stand-level basal area increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-55-1.png" width="768"></p>
-<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-56-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-57-1.png" width="672"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-65-1.png" width="768"></p>
+<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-66-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-67-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="pinus-uncinata">Pinus uncinata<a class="anchor" aria-label="anchor" href="#pinus-uncinata"></a>
 </h3>
 <p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-59-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-60-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-69-1.png" width="768"></p>
+<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-70-1.png" width="768"></p>
 <p>Prediction ability for <strong>stand-level basal area increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-61-1.png" width="768"></p>
-<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-62-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-63-1.png" width="672"></p>
-</div>
-<div class="section level3">
-<h3 id="quercus-faginea">Quercus faginea<a class="anchor" aria-label="anchor" href="#quercus-faginea"></a>
-</h3>
-<p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-65-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-66-1.png" width="768"></p>
-<p>Prediction ability for <strong>stand-level basal area increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-67-1.png" width="768"></p>
-<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-68-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-69-1.png" width="672"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-71-1.png" width="768"></p>
+<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-72-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-73-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="quercus-ilex">Quercus ilex<a class="anchor" aria-label="anchor" href="#quercus-ilex"></a>
 </h3>
 <p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-71-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-72-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-75-1.png" width="768"></p>
+<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-76-1.png" width="768"></p>
 <p>Prediction ability for <strong>stand-level basal area increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-73-1.png" width="768"></p>
-<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-74-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-75-1.png" width="672"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-77-1.png" width="768"></p>
+<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-78-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-79-1.png" width="672"></p>
+</div>
+<div class="section level3">
+<h3 id="quercus-petraea">Quercus petraea<a class="anchor" aria-label="anchor" href="#quercus-petraea"></a>
+</h3>
+<p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-81-1.png" width="768"></p>
+<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-82-1.png" width="768"></p>
+<p>Prediction ability for <strong>stand-level basal area increase</strong> of surviving trees:</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-83-1.png" width="768"></p>
+<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-84-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-85-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="quercus-pubescens">Quercus pubescens<a class="anchor" aria-label="anchor" href="#quercus-pubescens"></a>
 </h3>
 <p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-77-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-78-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-87-1.png" width="768"></p>
+<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-88-1.png" width="768"></p>
 <p>Prediction ability for <strong>stand-level basal area increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-79-1.png" width="768"></p>
-<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-80-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-81-1.png" width="672"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-89-1.png" width="768"></p>
+<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-90-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-91-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="quercus-suber">Quercus suber<a class="anchor" aria-label="anchor" href="#quercus-suber"></a>
 </h3>
 <p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-83-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-84-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-93-1.png" width="768"></p>
+<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-94-1.png" width="768"></p>
 <p>Prediction ability for <strong>stand-level basal area increase</strong> of surviving trees:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-85-1.png" width="768"></p>
-<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-86-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-87-1.png" width="672"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-95-1.png" width="768"></p>
+<p>Relationship between <strong>basal area increase</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-96-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area increase</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-97-1.png" width="672"></p>
 </div>
 </div>
   </div>

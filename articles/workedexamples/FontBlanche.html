@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Soil and plant water balances at Font-Blanche</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres (CREAF), Nicolas Martin-StPaul (INRA)</h4>
             
-            <h4 data-toc-skip class="date">2022-04-07</h4>
+            <h4 data-toc-skip class="date">2022-04-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/workedexamples/FontBlanche.Rmd" class="external-link"><code>vignettes/workedexamples/FontBlanche.Rmd</code></a></small>
       <div class="hidden name"><code>FontBlanche.Rmd</code></div>
@@ -236,30 +236,26 @@
 <span class="co">## 143             NA       NA        NA 65.23250 146.2701 16.09170  2.78000</span>
 <span class="co">## 149             NA 11.13705 -3.065569 72.19617 124.1687 11.91507  1.26556</span>
 <span class="co">## 169             NA  1.33937 -2.214081 68.51600 118.7863 14.11983  5.66150</span>
-<span class="co">##     Nfineroot     WoodC    RERleaf   RERsapwood RERfineroot CCleaf CCsapwood</span>
-<span class="co">## 143        NA        NA         NA           NA          NA 1.6300        NA</span>
-<span class="co">## 149  9.187476 0.4979943 0.01210607 4.175349e-05          NA 1.5905      1.47</span>
-<span class="co">## 169 12.166747 0.4740096 0.01757808           NA          NA 1.4300        NA</span>
-<span class="co">##     CCfineroot RGRleafmax RGRsapwoodmax RGRcambiummax RGRfinerootmax</span>
-<span class="co">## 143         NA         NA            NA            NA             NA</span>
-<span class="co">## 149        1.3         NA            NA   0.001395156             NA</span>
-<span class="co">## 169         NA         NA            NA            NA             NA</span>
-<span class="co">##        SRsapwood SRfineroot    RSSG MortalityBaselineRate SeedProductionHeight</span>
-<span class="co">## 143           NA         NA      NA                    NA                   NA</span>
-<span class="co">## 149 0.0001447323         NA 0.31125                0.0035                   NA</span>
-<span class="co">## 169           NA         NA 0.60350                0.0016                   NA</span>
-<span class="co">##       ProbRecr MinTempRecr MinMoistureRecr MinFPARRecr RecrTreeDBH</span>
-<span class="co">## 143 0.05324406  -3.1286158       0.2962462   0.5229490    8.596437</span>
-<span class="co">## 149 0.02954479   0.1708717       0.1360426   4.5561462    9.398003</span>
-<span class="co">## 169 0.03591124  -4.1957498       0.1805285   0.2359398    8.944161</span>
-<span class="co">##     RecrTreeHeight RecrShrubHeight RecrTreeDensity RecrShrubCover RecrZ50</span>
-<span class="co">## 143       525.4367              NA        235.1347             NA      NA</span>
-<span class="co">## 149       569.2412              NA        246.2535             NA      NA</span>
-<span class="co">## 169       472.3629              NA        352.2668             NA      NA</span>
-<span class="co">##     RecrZ95</span>
-<span class="co">## 143      NA</span>
-<span class="co">## 149      NA</span>
-<span class="co">## 169      NA</span></code></pre>
+<span class="co">##     Nfineroot     WoodC    RERleaf RERsapwood RERfineroot CCleaf CCsapwood</span>
+<span class="co">## 143        NA        NA         NA         NA          NA 1.6300        NA</span>
+<span class="co">## 149  9.187476 0.4979943 0.01210607         NA          NA 1.5905      1.47</span>
+<span class="co">## 169 12.166747 0.4740096 0.01757808         NA          NA 1.4300        NA</span>
+<span class="co">##     CCfineroot RGRleafmax RGRsapwoodmax RGRcambiummax RGRfinerootmax SRsapwood</span>
+<span class="co">## 143         NA         NA            NA  0.0008455887             NA        NA</span>
+<span class="co">## 149        1.3         NA            NA  0.0024751672             NA        NA</span>
+<span class="co">## 169         NA         NA            NA  0.0007000000             NA        NA</span>
+<span class="co">##     SRfineroot    RSSG MortalityBaselineRate SeedProductionHeight   ProbRecr</span>
+<span class="co">## 143         NA      NA           0.004867133                   NA 0.05324406</span>
+<span class="co">## 149         NA 0.31125           0.005000000                   NA 0.02954479</span>
+<span class="co">## 169         NA 0.60350           0.000300000                   NA 0.03591124</span>
+<span class="co">##     MinTempRecr MinMoistureRecr MinFPARRecr RecrTreeDBH RecrTreeHeight</span>
+<span class="co">## 143  -3.1286158       0.2962462   0.5229490    8.596437       525.4367</span>
+<span class="co">## 149   0.1708717       0.1360426   4.5561462    9.398003       569.2412</span>
+<span class="co">## 169  -4.1957498       0.1805285   0.2359398    8.944161       472.3629</span>
+<span class="co">##     RecrShrubHeight RecrTreeDensity RecrShrubCover RecrZ50 RecrZ95</span>
+<span class="co">## 143              NA        235.1347             NA      NA      NA</span>
+<span class="co">## 149              NA        246.2535             NA      NA      NA</span>
+<span class="co">## 169              NA        352.2668             NA      NA      NA</span></code></pre>
 <p>Note that the function returns a subset of rows for the species mentioned in <code>customParams</code>. Not all parameters are needed for the soil water balance model. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (<a href="http://emf-creaf.github.io/medfate" class="external-link uri">http://emf-creaf.github.io/medfate</a>).</p>
 </div>
 <div class="section level3">
