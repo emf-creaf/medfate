@@ -134,7 +134,6 @@ Instead of examining year by year, it is possible to plot the whole series of re
 ```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
 plot(fd, "LeafArea")
 ```
-where we can see the leaf area drop of the second year along with the progressive recovery of the following years. 
 
 Finally, we can create interactive plots for particular steps using function `shinyplot()`, e.g.:
 ```{r, eval = FALSE}

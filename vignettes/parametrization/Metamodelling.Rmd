@@ -33,13 +33,13 @@ The following parameters are used in the basic model, that cannot easily be para
  + `Tmax_LAI` and `Tmax_LAIsp`, which determine the ratio of maximum transpiration over potential evapotranspiration for a given LAI. An empirical function with these parameters was derived by Granier (1999) for European temperate forests, without distinguishing between forests dominated by different species. 
  + `WUE`, which represents the daily Water Use Efficiency (g C of gross assimilation / l H2O transpired) under conditions of high photosynthetically active radiation (PAR) and no water deficit. 
  + `WUE_decay`, which is the exponent of the function specifying the decrease in relative WUE for lower (shadier) positions within the canopy, due to the decrease of available PAR. This rate of decay should again be species-specific, according to its degree of shade tolerance, and should be influenced by parameters regulating plant hydraulics, photosynthesis and light extinction.
-+ `Ar2Al`, which is the ratio of fine root area to leaf area. This parameter is needed to determine the allocation to fine root biomass under `growth` and `fordyn` simulations using Granier's transpiration approach.
+
 
 As stated above, the general idea is to use simulation results issued by the advanced water balance model to obtain appropriate estimates of the previous parameters, so that simulations with the basic water balance model (which is faster) produce an output similar that of the advanced model (which is slower). In the case of `Tmax_LAI` and `Tmax_LAIsp` we aim to determine a species-specific factor that can be used to modify the empirical coefficients obtained by Granier (1999). Water use efficiency is an emergent property of the advanced water balance model, depending on multiple parameters (hydraulics, photosynthetic capacity, stomatal conductance, etc). We can thus estimate `WUE` values using simulations with high light levels and no water deficit. The decrease of WUE for plant cohorts in progressively shadier environments with respect to WUE under full light can provide us with an estimate of `WUE_decay`, which again will depend on multiple plant traits.
 
 ### Target species
 
-The metamodelling procedure could be applied to any target species, but we focused on the main tree species in Catalonia: *Pinus halepensis*, *Pinus sylvestris*, *Pinus nigra*, *Pinus uncinata*, *Pinus pinea*, *Quercus faginea*, *Quercus ilex*, *Quercus pubescens*,   *Quercus suber*, *Fagus sylvatica* and *Abies alba*.
+The metamodelling procedure could be applied to any target species, but we focused on the main tree species in Catalonia: *Pinus halepensis*, *Pinus sylvestris*, *Pinus nigra*, *Pinus uncinata*, *Pinus pinea*, *Quercus faginea*, *Quercus ilex*, *Quercus pubescens*,   *Quercus suber*, *Fagus sylvatica*, *Castanea sativa* and *Abies alba*.
 
 For each of those species, we first revised the values of the most important parameters in the advanced water balance model (parameters of the hydraulic vulnerability curve are omitted as they should not be relevant in simulations without soil water deficit): 
 ```{r, echo = FALSE}
@@ -63,26 +63,6 @@ target_spp = sort(unique(as.numeric(df$SP)))
 We used forest plot data from the third edition of the Spanish National Forest Inventory (IFN3). Forest plots were located in Catalonia and with a minimum basal area of 3 $m^2·ha^{-1}$. For each target species we randomly selected up to 60 forest plots where the species was dominant (> 80% in basal area). Plant records corresponding to species different than the target species were excluded. 
 
 Like in other simulation exercises with IFN data, soil data was obtained from SoilGrids from plot coordinates, with rock fragment contents corrected according to the amount of surface stoniness recorded in the field sampling. Daily weather data corresponding to year 2000 was obtained by interpolation using package **meteoland** on the location of each forest plot.
-
-### Fine root area to leaf area ratio
-
-Estimates of the fine root area to leaf area ratio (`Ar2Al`) can be estimated when initializing the advanced water balance model. In this mode, the maximum hydraulic conductance in the rhizosphere is estimated assuming that the resistance of the rhizosphere represents 15% of total hydraulic resistance (see control parameter `averageFracRhizosphereResistance`), on average across a range of soil water potentials. The model estimates fine root biomass from maximum hydraulic conductance in the rhizosphere (as explained in https://emf-creaf.github.io/medfatebook/carbonpoolsbalance.html#fine-root-area-and-biomass). 
-
-The following table presents the average values (and std. error) of whole-plant maximum hydraulic conductance (i.e. considering leaves stems and coarse roots), as well as average values of the `Ar2Al` estimates for each species:
-
-```{r, echo = FALSE}
-TR_sp <- df %>% 
-  group_by(Name) %>%
-  summarize(n = n(),
-            kplant_mean = mean(kplant, na.rm=TRUE),
-            kplant_se = sd(kplant, na.rm=TRUE)/sqrt(n),
-            Ar2Al_mean = mean(Ar2Al, na.rm=TRUE),
-            Ar2Al_se = sd(Ar2Al, na.rm=TRUE)/sqrt(n))
-TR_sp %>%
-  kbl() %>%
-  kable_styling()
-```
-
 
 ### Soil water balance simulations
 
