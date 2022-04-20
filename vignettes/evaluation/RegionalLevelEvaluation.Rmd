@@ -177,12 +177,10 @@ plot_cov_clim_bai<-function(dfbai, quantity = "Basal area increment", ylim = c(0
   plot_grid(g1, g2, g3, g4, nrow=2)
 }
 
-bai_error_map <-function(data_bai){
-  map_upper = 10
-  map_lower = -10
+bai_error_map <-function(data_bai, upper = 10, lower = -10){
   data_bai = data_bai[!is.na(data_bai$error),]
-  data_bai$error[data_bai$error > map_upper] = map_upper
-  data_bai$error[data_bai$error < map_lower] = map_lower
+  data_bai$error[data_bai$error > upper] = upper
+  data_bai$error[data_bai$error < lower] = lower
   ggplot(data_bai)+
     geom_sf(aes(col=error), size=0.5)+
     geom_sf(data = cat_sfc)+
@@ -205,7 +203,7 @@ The key parameters values used in simulations were the following:
 
 ```{r, echo = FALSE}
 
-df = SpParams[SpParams$SpIndex %in% target_spp, c("Name", "Tmax_LAI", "Tmax_LAIsq", "WUE","Al2As", "SLA", "RGRcambiummax", "fHDmin", "fHDmax")]
+df = SpParams[SpParams$SpIndex %in% target_spp, c("Name", "Tmax_LAI", "Tmax_LAIsq", "WUE","Al2As", "SLA", "RGRcambiummax", "fHDmin", "fHDmax", "MortalityBaselineRate")]
 row.names(df) = NULL
 df %>%
   kbl() %>%
@@ -250,7 +248,7 @@ Relationship between diameter increase and climatic variables (MAT, P/PET and av
 plot_cov_clim_dbh(dfdbh, points = TRUE)
 ```
 
-Predictive capacity by species (for species with > 200 records):
+Predictive capacity by species (for species with > 100 tree records):
 
 ```{r, echo = FALSE}
 dfdbh %>% group_by(Name) %>%
@@ -262,7 +260,7 @@ dfdbh %>% group_by(Name) %>%
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
-  filter(n>=200) %>%
+  filter(n>=100) %>%
   kbl() %>%
   kable_styling()
 ```
@@ -284,7 +282,7 @@ dfh %>%
   kbl() %>%
   kable_styling()
 ```
-Predictive capacity by species (for species with > 200 records):
+Predictive capacity by species (for species with > 100 tree records):
 
 ```{r, echo = FALSE}
 dfh %>% group_by(Name) %>%
@@ -296,7 +294,7 @@ dfh %>% group_by(Name) %>%
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2)%>% 
-  filter(n>=200) %>%
+  filter(n>=100) %>%
   kbl() %>%
   kable_styling()
 ```
@@ -400,10 +398,10 @@ Spatial distribution of errors:
 ```{r, echo = FALSE, fig.width=7, fig.height=7}
 mapdata_badead = mapdata
 mapdata_badead$error = dfbadead$error[dfbadead$Name=="0-All"]
-bai_error_map(mapdata_badead)
+bai_error_map(mapdata_badead, upper = 5, lower = -5)
 ```
 
-Predictive capacity by species (occurring in more than 100 plots):
+Predictive capacity by species (occurring in more than 50 plots):
 
 ```{r, echo = FALSE, warning=FALSE}
 dfbadead[dfbadead$Name!="0-All",] %>% group_by(Name) %>%
@@ -415,7 +413,7 @@ dfbadead[dfbadead$Name!="0-All",] %>% group_by(Name) %>%
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
-  filter(n>=100) %>%
+  filter(n>=50) %>%
   kbl() %>%
   kable_styling()
 ```
@@ -462,11 +460,11 @@ Spatial distribution of errors:
 ```{r, echo = FALSE, fig.width=7, fig.height=7}
 mapdata_barecr = mapdata
 mapdata_barecr$error = dfbarecr$error[dfbarecr$Name=="0-All"]
-bai_error_map(mapdata_barecr)
+bai_error_map(mapdata_barecr, upper = 5, lower = -5)
 ```
 
 
-Predictive capacity by species (with ingrowth occurring in more than 50 plots):
+Predictive capacity by species (with ingrowth occurring in more than 30 plots):
 
 ```{r, echo = FALSE, warning=FALSE}
 dfbarecr[dfbarecr$Name!="0-All",] %>% group_by(Name) %>%
@@ -478,7 +476,7 @@ dfbarecr[dfbarecr$Name!="0-All",] %>% group_by(Name) %>%
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
-  filter(n>=50) %>%
+  filter(n>=30) %>%
   kbl() %>%
   kable_styling()
 ```
@@ -540,7 +538,7 @@ pm
 ```
 
 
-Predictive capacity by species (occurring in more than 100 plots):
+Predictive capacity by species (occurring in more than 50 plots):
 
 ```{r, echo = FALSE, warning=FALSE}
 dfbai_all[dfbai_all$Name!="0-All",] %>% group_by(Name) %>%
@@ -552,7 +550,7 @@ dfbai_all[dfbai_all$Name!="0-All",] %>% group_by(Name) %>%
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
-  filter(n>=100) %>%
+  filter(n>=50) %>%
   kbl() %>%
   kable_styling()
 ```
