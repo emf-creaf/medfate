@@ -57,17 +57,19 @@ SpParamsMED[62,26:37] = SpParamsMED[116,26:37]
 pines = c("Pinus halepensis", "Pinus nigra", "Pinus pinea","Pinus sylvestris", "Pinus uncinata")
 SpParamsMED$fHDmin[SpParamsMED$Name %in% pines] = 80
 SpParamsMED$fHDmax[SpParamsMED$Name %in% pines] = 160
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Arbutus unedo"] = 0.0025
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Betula spp."] = 0.0025
 SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Pinus pinea"] = 0.0035
 SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Pinus uncinata"] = 0.004
 SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Pinus sylvestris"] = 0.004
-SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Pinus halepensis"] = 0.004
-SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Pinus nigra"] = 0.0015
-SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Quercus suber"] = 0.0016
-SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Quercus pubescens"] = 0.0010
-SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Quercus faginea"] = 0.0008
-SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Quercus ilex"] = 0.0008
-SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Fagus sylvatica"] = 0.002
-SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Abies alba"] = 0.0016
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Pinus halepensis"] = 0.0045
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Pinus nigra"] = 0.0020
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Quercus suber"] = 0.0020
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Quercus pubescens"] = 0.0006
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Quercus faginea"] = 0.0004
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Quercus ilex"] = 0.0004
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Fagus sylvatica"] = 0.0016
+SpParamsMED$MortalityBaselineRate[SpParamsMED$Name=="Abies alba"] = 0.0004
 # SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Quercus ilex"] = 0.0025
 # SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Quercus faginea"] = 0.0025
 # SpParamsMED$RGRsapwoodmax[SpParamsMED$Name=="Quercus suber"] = 0.0030

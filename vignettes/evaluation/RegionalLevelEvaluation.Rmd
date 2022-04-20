@@ -228,9 +228,9 @@ dfdbh %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/Obs,
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/Obs,
+            Biasrel = 100*Bias/abs(Pred),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>%
   kbl() %>%
   kable_styling()
@@ -258,9 +258,9 @@ dfdbh %>% group_by(Name) %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/Obs,
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/Obs,
+            Biasrel = 100*Bias/abs(Pred),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
   filter(n>=200) %>%
   kbl() %>%
@@ -277,9 +277,9 @@ dfh %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/Obs,
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/Obs,
+            Biasrel = 100*Bias/abs(Pred),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>%
   kbl() %>%
   kable_styling()
@@ -292,9 +292,9 @@ dfh %>% group_by(Name) %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/Obs,
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/Obs,
+            Biasrel = 100*Bias/abs(Pred),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2)%>% 
   filter(n>=200) %>%
   kbl() %>%
@@ -315,9 +315,9 @@ dfbai[dfbai$Name=="0-All",] %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/Obs,
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/Obs,
+            Biasrel = 100*Bias/abs(Pred),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
   kbl() %>%
   kable_styling()
@@ -351,9 +351,9 @@ dfbai[dfbai$Name!="0-All",] %>% group_by(Name) %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/Obs,
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/Obs,
+            Biasrel = 100*Bias/abs(Pred),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
   filter(n>=100) %>%
   kbl() %>%
@@ -373,9 +373,9 @@ dfbadead[dfbadead$Name=="0-All",] %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/Obs,
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/Obs,
+            Biasrel = 100*Bias/abs(Pred),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
   kbl() %>%
   kable_styling()
@@ -411,9 +411,9 @@ dfbadead[dfbadead$Name!="0-All",] %>% group_by(Name) %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/Obs,
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/Obs,
+            Biasrel = 100*Bias/abs(Pred),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
   filter(n>=100) %>%
   kbl() %>%
@@ -435,9 +435,9 @@ dfbarecr[dfbarecr$Name=="0-All",] %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/Obs,
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/Obs,
+            Biasrel = 100*Bias/abs(Pred),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
   kbl() %>%
   kable_styling()
@@ -474,9 +474,9 @@ dfbarecr[dfbarecr$Name!="0-All",] %>% group_by(Name) %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/Obs,
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/Obs,
+            Biasrel = 100*Bias/abs(Pred),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
   filter(n>=50) %>%
   kbl() %>%
@@ -498,9 +498,9 @@ dfbai_all[dfbai_all$Name=="0-All",] %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/Obs,
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/Obs,
+            Biasrel = 100*Bias/abs(Pred),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
   kbl() %>%
   kable_styling()
@@ -548,9 +548,9 @@ dfbai_all[dfbai_all$Name!="0-All",] %>% group_by(Name) %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/Obs,
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/Obs,
+            Biasrel = 100*Bias/abs(Pred),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
   filter(n>=100) %>%
   kbl() %>%
