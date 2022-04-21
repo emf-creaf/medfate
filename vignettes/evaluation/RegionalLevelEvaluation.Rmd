@@ -33,7 +33,7 @@ dfh = eval_res$dfh
 dfbadead = eval_res$dfbadead
 dfbarecr = eval_res$dfbarecr
 dfbai = eval_res$dfbai
-dfbai_all = eval_res$dfbai_all
+dfbai_all = eval_res$dfbasum
 mapdata = eval_res$mapdata
 medfate_ver = eval_res$package.version
 
@@ -413,7 +413,7 @@ dfbadead[dfbadead$Name!="0-All",] %>% group_by(Name) %>%
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
-  filter(n>=100) %>%
+  filter(n>=50) %>%
   kbl() %>%
   kable_styling()
 ```
