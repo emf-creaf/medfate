@@ -214,7 +214,7 @@ In the following sections, we provide the bias, mean absolute error (both in abs
 
 ## Growth of surviving trees
 
-Comparison of growth of trees that survived in both observed and simulated data.
+Comparison of growth of trees (DBH >= 7.5) that survived in both observed and simulated data.
 
 ### Annual diameter increment (cm/yr)
 
@@ -359,7 +359,7 @@ dfbai[dfbai$Name!="0-All",] %>% group_by(Name) %>%
 ```
 ## Mortality (m2/ha)
 
-Reduction of basal area due to trees (DBH > 5) that died during the IFN3-IFN4 period against model's mortality prediction.
+Reduction of basal area due to trees (DBH >= 7.5) that died during the IFN3-IFN4 period against model's mortality prediction.
 
 
 Overall predictive capacity:
@@ -401,7 +401,7 @@ mapdata_badead$error = dfbadead$error[dfbadead$Name=="0-All"]
 bai_error_map(mapdata_badead, upper = 5, lower = -5)
 ```
 
-Predictive capacity by species (occurring in more than 50 plots):
+Predictive capacity by species (occurring in more than 100 plots):
 
 ```{r, echo = FALSE, warning=FALSE}
 dfbadead[dfbadead$Name!="0-All",] %>% group_by(Name) %>%
@@ -413,7 +413,7 @@ dfbadead[dfbadead$Name!="0-All",] %>% group_by(Name) %>%
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
-  filter(n>=50) %>%
+  filter(n>=100) %>%
   kbl() %>%
   kable_styling()
 ```
@@ -464,7 +464,7 @@ bai_error_map(mapdata_barecr, upper = 5, lower = -5)
 ```
 
 
-Predictive capacity by species (with ingrowth occurring in more than 30 plots):
+Predictive capacity by species (occurring in more than 100 plots):
 
 ```{r, echo = FALSE, warning=FALSE}
 dfbarecr[dfbarecr$Name!="0-All",] %>% group_by(Name) %>%
@@ -476,7 +476,7 @@ dfbarecr[dfbarecr$Name!="0-All",] %>% group_by(Name) %>%
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
-  filter(n>=30) %>%
+  filter(n>=100) %>%
   kbl() %>%
   kable_styling()
 ```
@@ -538,7 +538,7 @@ pm
 ```
 
 
-Predictive capacity by species (occurring in more than 50 plots):
+Predictive capacity by species (occurring in more than 100 plots):
 
 ```{r, echo = FALSE, warning=FALSE}
 dfbai_all[dfbai_all$Name!="0-All",] %>% group_by(Name) %>%
@@ -550,7 +550,7 @@ dfbai_all[dfbai_all$Name!="0-All",] %>% group_by(Name) %>%
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Pred),
             R2 = cor(obs,pred)^2) %>% 
-  filter(n>=50) %>%
+  filter(n>=100) %>%
   kbl() %>%
   kable_styling()
 ```
