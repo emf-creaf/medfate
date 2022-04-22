@@ -6,6 +6,10 @@ output:
   rmarkdown::html_document:
     df_print: paged
     toc: TRUE
+params:
+  minTreeRecords: 200
+  minPlotRecords: 100
+  minPlotRecordsDetailed: 100
 ---
 
 ```{r setup, include=FALSE}
@@ -226,9 +230,9 @@ dfdbh %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Pred),
+            Biasrel = 100*Bias/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Pred),
+            RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>%
   kbl() %>%
   kable_styling()
@@ -248,7 +252,7 @@ Relationship between diameter increase and climatic variables (MAT, P/PET and av
 plot_cov_clim_dbh(dfdbh, points = TRUE)
 ```
 
-Predictive capacity by species (for species with > 100 tree records):
+Predictive capacity by species (for species with > `r params$minTreeRecords` tree records):
 
 ```{r, echo = FALSE}
 dfdbh %>% group_by(Name) %>%
@@ -256,11 +260,11 @@ dfdbh %>% group_by(Name) %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Pred),
+            Biasrel = 100*Bias/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Pred),
+            RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 
-  filter(n>=100) %>%
+  filter(n>=params$minTreeRecords) %>%
   kbl() %>%
   kable_styling()
 ```
@@ -275,14 +279,14 @@ dfh %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Pred),
+            Biasrel = 100*Bias/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Pred),
+            RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>%
   kbl() %>%
   kable_styling()
 ```
-Predictive capacity by species (for species with > 100 tree records):
+Predictive capacity by species (for species with > `r params$minTreeRecords` tree records):
 
 ```{r, echo = FALSE}
 dfh %>% group_by(Name) %>%
@@ -290,11 +294,11 @@ dfh %>% group_by(Name) %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Pred),
+            Biasrel = 100*Bias/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Pred),
+            RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2)%>% 
-  filter(n>=100) %>%
+  filter(n>=params$minTreeRecords) %>%
   kbl() %>%
   kable_styling()
 ```
@@ -313,9 +317,9 @@ dfbai[dfbai$Name=="0-All",] %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Pred),
+            Biasrel = 100*Bias/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Pred),
+            RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 
   kbl() %>%
   kable_styling()
@@ -342,18 +346,18 @@ map_data_bai$error = dfbai$error[dfbai$Name=="0-All"]
 bai_error_map(map_data_bai)
 ```
 
-Predictive capacity by species (occurring in more than 100 plots):
+Predictive capacity by species (occurring in more than `r params$minPlotRecords` plots):
 ```{r, echo = FALSE}
 dfbai[dfbai$Name!="0-All",] %>% group_by(Name) %>%
   summarize(n = n(),
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Pred),
+            Biasrel = 100*Bias/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Pred),
+            RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 
-  filter(n>=100) %>%
+  filter(n>=params$minPlotRecords) %>%
   kbl() %>%
   kable_styling()
 ```
@@ -371,9 +375,9 @@ dfbadead[dfbadead$Name=="0-All",] %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Pred),
+            Biasrel = 100*Bias/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Pred),
+            RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 
   kbl() %>%
   kable_styling()
@@ -401,7 +405,7 @@ mapdata_badead$error = dfbadead$error[dfbadead$Name=="0-All"]
 bai_error_map(mapdata_badead, upper = 5, lower = -5)
 ```
 
-Predictive capacity by species (occurring in more than 100 plots):
+Predictive capacity by species (occurring in more than `r params$minPlotRecords` plots):
 
 ```{r, echo = FALSE, warning=FALSE}
 dfbadead[dfbadead$Name!="0-All",] %>% group_by(Name) %>%
@@ -409,11 +413,11 @@ dfbadead[dfbadead$Name!="0-All",] %>% group_by(Name) %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Pred),
+            Biasrel = 100*Bias/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Pred),
+            RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 
-  filter(n>=50) %>%
+  filter(n>=params$minPlotRecords) %>%
   kbl() %>%
   kable_styling()
 ```
@@ -433,9 +437,9 @@ dfbarecr[dfbarecr$Name=="0-All",] %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Pred),
+            Biasrel = 100*Bias/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Pred),
+            RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 
   kbl() %>%
   kable_styling()
@@ -464,7 +468,7 @@ bai_error_map(mapdata_barecr, upper = 5, lower = -5)
 ```
 
 
-Predictive capacity by species (occurring in more than 100 plots):
+Predictive capacity by species (occurring in more than `r params$minPlotRecords` plots):
 
 ```{r, echo = FALSE, warning=FALSE}
 dfbarecr[dfbarecr$Name!="0-All",] %>% group_by(Name) %>%
@@ -472,11 +476,11 @@ dfbarecr[dfbarecr$Name!="0-All",] %>% group_by(Name) %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Pred),
+            Biasrel = 100*Bias/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Pred),
+            RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 
-  filter(n>=100) %>%
+  filter(n>=params$minPlotRecords) %>%
   kbl() %>%
   kable_styling()
 ```
@@ -496,9 +500,9 @@ dfbai_all[dfbai_all$Name=="0-All",] %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Pred),
+            Biasrel = 100*Bias/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Pred),
+            RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 
   kbl() %>%
   kable_styling()
@@ -538,7 +542,7 @@ pm
 ```
 
 
-Predictive capacity by species (occurring in more than 100 plots):
+Predictive capacity by species (occurring in more than `r params$minPlotRecords` plots):
 
 ```{r, echo = FALSE, warning=FALSE}
 dfbai_all[dfbai_all$Name!="0-All",] %>% group_by(Name) %>%
@@ -546,22 +550,22 @@ dfbai_all[dfbai_all$Name!="0-All",] %>% group_by(Name) %>%
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Pred),
+            Biasrel = 100*Bias/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Pred),
+            RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 
-  filter(n>=100) %>%
+  filter(n>=params$minPlotRecords) %>%
   kbl() %>%
   kable_styling()
 ```
 
 
-## Detailed growth evaluation by species (occurring in more than 100 plots)
+## Detailed growth evaluation by species (occurring in more than `r params$minPlotRecordsDetailed` plots)
 
 ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
 sp_n <- dfbai_all[dfbai_all$Name!="0-All",] %>% group_by(Name) %>%
     summarize(n = n())
-sp100 = sp_n$Name[sp_n$n>100]
+sp100 = sp_n$Name[sp_n$n>params$minPlotRecordsDetailed]
 target_spp = target_spp[names(target_spp) %in% sp100]
 for(i in 1:length(target_spp)) {
   
