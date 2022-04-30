@@ -84,7 +84,7 @@ NumericVector sumBySpecies(NumericVector x, IntegerVector sp, DataFrame SpParams
   for(int i=0;i<sp.size();i++) {
     for(int j=0;j<uniqueSp.size();j++) {
       if(sp[i]==uniqueSp[j]) {
-        sba[j] +=x[i];
+        if(!NumericVector::is_na(x[i])) sba[j] +=x[i];
       }
     }
   }

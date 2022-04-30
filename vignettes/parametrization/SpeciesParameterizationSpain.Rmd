@@ -7,7 +7,7 @@ output:
     toc: TRUE
 bibliography: ../medfate.bib
 params:
-  spparams_rebuild: FALSE
+  spparams_rebuild: TRUE
   IFN_rebuild: FALSE
 ---
 
@@ -1688,7 +1688,7 @@ We estimated $RSSG$ as a linear function of shade tolerance, with 1 correspondin
 TRY_ShadeTol$OrigValueStr<- as.numeric(TRY_ShadeTol$OrigValueStr)
 SpParams <- populateTraits(SpParams, TRY_ShadeTol, 
                            trait_mapping = c("RSSG" = "OrigValueStr"),
-                           scalar_functions = c("RSSG" = function(x){0.25+0.70*((x-1)/4)}), 
+                           scalar_functions = c("RSSG" = function(x){min(0.95,0.25+0.70*((x-1)/2))}), 
                            taxon_column = "AccSpeciesName")
 ```
 

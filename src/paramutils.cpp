@@ -1062,6 +1062,7 @@ NumericVector leafDurationWithImputation(IntegerVector SP, DataFrame SpParams) {
     if(NumericVector::is_na(leafDuration[c])) {
       if((phenoType[c]=="winter-deciduous") | (phenoType[c]=="winter-semideciduous")) leafDuration[c] = 1.0; 
       else leafDuration[c] = 2.42; //Average value
+      // From Falster et al. (2018) 1/LeafDuration = b1*(LMA/LMA_0)^(-b2), with LMA_0 = 0.1978791, b1 = 0.4565655, b2 = 1.71
     }
   }
   return(leafDuration);
