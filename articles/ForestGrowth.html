@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Forest growth</h1>
                         <h4 data-toc-skip class="author">Miquel De Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-04-22</h4>
+            <h4 data-toc-skip class="date">2022-05-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/ForestGrowth.Rmd" class="external-link"><code>vignettes/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -211,9 +211,9 @@
 <span class="co">## T2_168       0.03            NA   0.000650000            0.1 0.0001261398</span>
 <span class="co">## S1_165       0.03         0.002            NA            0.1 0.0001261398</span>
 <span class="co">##         SRfineroot      RSSG fHDmin fHDmax     WoodC MortalityBaselineRate</span>
-<span class="co">## T1_148 0.001897231 0.3112500     80    160 0.4979943                0.0050</span>
-<span class="co">## T2_168 0.001897231 0.6035000     40    100 0.4740096                0.0000</span>
-<span class="co">## S1_165 0.001897231 0.5152018     NA     NA 0.4749178                0.0015</span></code></pre>
+<span class="co">## T1_148 0.001897231 0.3725000     80    160 0.4979943                0.0050</span>
+<span class="co">## T2_168 0.001897231 0.9500000     40    100 0.4740096                0.0000</span>
+<span class="co">## S1_165 0.001897231 0.7804035     NA     NA 0.4749178                0.0015</span></code></pre>
 <p>which includes maximum growth rates, senescence rates and maintenance respiration rages. Another important set of parameters is given in <code>paramsAllometries</code>:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsAllometries</span></code></pre></div>
@@ -256,18 +256,18 @@
 <span class="co">## </span>
 <span class="co">##  [Year 2001]: ....................................</span>
 <span class="co">## </span>
-<span class="co">## Final plant biomass (g/m2): 7347.3</span>
-<span class="co">## Change in plant biomass (g/m2): 238.035</span>
-<span class="co">## Plant biomass balance result (g/m2): 238.035</span>
+<span class="co">## Final plant biomass (g/m2): 7347.27</span>
+<span class="co">## Change in plant biomass (g/m2): 238.004</span>
+<span class="co">## Plant biomass balance result (g/m2): 238.004</span>
 <span class="co">## Plant biomass balance components:</span>
 <span class="co">##   Structural balance (g/m2) 147 Labile balance (g/m2) 117</span>
 <span class="co">##   Plant individual balance (g/m2) 264 Mortality loss (g/m2) 26</span>
 <span class="co">## Final soil water content (mm): 268.687</span>
 <span class="co">## Final snowpack content (mm): 0</span>
-<span class="co">## Change in soil water content (mm): -22.5699</span>
-<span class="co">## Soil water balance result (mm): -22.5699</span>
+<span class="co">## Change in soil water content (mm): -22.57</span>
+<span class="co">## Soil water balance result (mm): -22.57</span>
 <span class="co">## Change in snowpack water content (mm): 0</span>
-<span class="co">## Snowpack water balance result (mm): 7.10543e-15</span>
+<span class="co">## Snowpack water balance result (mm): 0</span>
 <span class="co">## Water balance components:</span>
 <span class="co">##   Precipitation (mm) 513</span>
 <span class="co">##   Rain (mm) 462 Snow (mm) 51</span>
@@ -355,10 +355,10 @@
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, 
                  temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##            n         Bias     Bias.rel          MAE      MAE.rel            r </span>
-<span class="co">##  12.00000000  -0.09736916 -10.44910714   0.09770705  10.48536840   0.99582449 </span>
-<span class="co">##          NSE      NSE.abs </span>
-<span class="co">##   0.97372958   0.85835547</span></code></pre>
+<pre><code><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span>
+<span class="co">## 12.00000000 -0.06622203 -7.35231796  0.10432221 11.58240068  0.98533974 </span>
+<span class="co">##         NSE     NSE.abs </span>
+<span class="co">##  0.96085838  0.84864074</span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically good. For illustrative purposes, we also compare diameter increment values, here drawing the observed and predicted time series together:</p>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"DI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, 
@@ -387,7 +387,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>

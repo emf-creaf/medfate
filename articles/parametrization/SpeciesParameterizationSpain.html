@@ -72,7 +72,7 @@
       <h1 data-toc-skip>Initial species parameter table for Spain</h1>
                         <h4 data-toc-skip class="author">Miquel De Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-04-22</h4>
+            <h4 data-toc-skip class="date">2022-05-02</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/SpeciesParameterizationSpain.Rmd" class="external-link"><code>vignettes/parametrization/SpeciesParameterizationSpain.Rmd</code></a></small>
       <div class="hidden name"><code>SpeciesParameterizationSpain.Rmd</code></div>
@@ -2302,7 +2302,7 @@
 <code class="sourceCode R"><span class="va">TRY_ShadeTol</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">TRY_ShadeTol</span><span class="op">$</span><span class="va">OrigValueStr</span><span class="op">)</span>
 <span class="va">SpParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/populateTraits.html" class="external-link">populateTraits</a></span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">TRY_ShadeTol</span>, 
                            trait_mapping <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RSSG"</span> <span class="op">=</span> <span class="st">"OrigValueStr"</span><span class="op">)</span>,
-                           scalar_functions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RSSG"</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="fl">0.25</span><span class="op">+</span><span class="fl">0.70</span><span class="op">*</span><span class="op">(</span><span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">/</span><span class="fl">4</span><span class="op">)</span><span class="op">}</span><span class="op">)</span>, 
+                           scalar_functions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RSSG"</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fl">0.95</span>,<span class="fl">0.25</span><span class="op">+</span><span class="fl">0.70</span><span class="op">*</span><span class="op">(</span><span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">}</span><span class="op">)</span>, 
                            taxon_column <span class="op">=</span> <span class="st">"AccSpeciesName"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## Mapping [OrigValueStr -&gt; RSSG] species: 47 conspecific: 82 genus: 0 family: 0 order: 0 group: 0</span></code></pre>
 <pre><code><span class="co">## 88 missing trait values (40.6 %) after populating with input data.</span></code></pre>
@@ -2310,7 +2310,7 @@
 <div class="sourceCode" id="cb397"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">SpParams</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RSSG"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's </span>
-<span class="co">##  0.2850  0.3296  0.4425  0.4715  0.5918  0.8800      88</span></code></pre>
+<span class="co">##  0.3200  0.4093  0.6350  0.6411  0.9337  0.9500      88</span></code></pre>
 </div>
 </div>
 </div>
@@ -2450,7 +2450,7 @@ Zanne, A. E., G. Lopez-Gonzalez, D. A. Coomes, J. Ilic, S. Jansen, S. L. Lewis, 
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer>
