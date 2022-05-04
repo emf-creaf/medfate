@@ -2,7 +2,7 @@ medfate - Mediterranean Forest Simulation
 ================
 
 <!-- badges: start -->
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/medfate)](https://cran.r-project.org/package=medfate)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/medfate)](https://cran.r-project.org/package=medfate)
 [![](https://cranlogs.r-pkg.org/badges/medfate)](https://cran.rstudio.com/web/packages/medfate/index.html)
 [![R-CMD-check](https://github.com/emf-creaf/medfate/workflows/R-CMD-check/badge.svg)](https://github.com/emf-creaf/medfate/actions)
 <!-- badges: end -->
@@ -17,7 +17,8 @@ processes:
 -   Soil water balance (De Cáceres et al. 2015)
 -   Plant hydraulics, transpiration and photosynthesis (De Cáceres et
     al. 2021)
--   Plant growth (in preparation)
+-   Carbon balance, plant growth, senescence and mortality (in
+    preparation)
 -   Forest dynamics (in preparation)
 
 The models are parameterized for species of the Mediterranean region
@@ -28,19 +29,24 @@ composition could be modelled with different parameter sets.
 
 Package **medfate** can be found at
 [CRAN](https://CRAN.R-project.org/package=medfate), where it is updated
-every few months. Users can also download and install the latest stable
-versions GitHub as follows (required package `devtools` should be
-installed/updated first):
+every few months. Installation from CRAN can be done via:
 
 ``` r
-devtools::install_github("emf-creaf/medfate")
+install.packages("medfate")
+```
+
+Users can also download and install the latest stable versions GitHub as
+follows (required package `remotes` should be installed/updated first):
+
+``` r
+remotes::install_github("emf-creaf/medfate")
 ```
 
 Additionally, users can have help to run package functions directly as
 package vignettes, by forcing their inclusion in installation:
 
 ``` r
-devtools::install_github("emf-creaf/medfate", 
+remotes::install_github("emf-creaf/medfate", 
                          build_opts = c("--no-resave-data", "--no-manual"),
                          build_vignettes = TRUE)
 ```
@@ -50,7 +56,8 @@ devtools::install_github("emf-creaf/medfate",
 -   The package includes a number of *vignettes* that illustrate how to
     run simulation models in **medfate**.
 
--   Additional articles can be found at the package
+-   Additional articles regarding parameter estimation and model
+    evaluation can be found at the package
     [website](https://emf-creaf.github.io/medfate/).
 
 -   Complete documentation of the models included in the package can be
@@ -74,8 +81,8 @@ which evolve together with **medfate**:
     provides functions to help initializing vegetation, soil and species
     parameter inputs for **medfate** simulation functions.
 
-The set of R packages are developed and maintained by the [**Ecosystem
-Modelling Facility**](http://emf.creaf.cat) at CREAF (Spain).
+The set of R packages are developed and maintained by the [*Ecosystem
+Modelling Facility*](http://emf.creaf.cat) at CREAF (Spain).
 
 ## References
 

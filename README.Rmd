@@ -20,22 +20,28 @@ Package **medfate** is designed to assist forest scientists to simulate forest f
 
 + Soil water balance (De Cáceres et al. 2015)
 + Plant hydraulics, transpiration and photosynthesis (De Cáceres et al. 2021)
-+ Plant growth (in preparation)
++ Carbon balance, plant growth, senescence and mortality (in preparation)
 + Forest dynamics (in preparation)
 
 The models are parameterized for species of the Mediterranean region (particularly for Catalonia, NE Spain), but forests with different composition could be modelled with different parameter sets.
 
 ## Package installation
 
-Package **medfate** can be found at [CRAN](https://CRAN.R-project.org/package=medfate), where it is updated every few months. Users can also download and install the latest stable versions GitHub as follows (required package `devtools` should be installed/updated first):
+Package **medfate** can be found at [CRAN](https://CRAN.R-project.org/package=medfate), where it is updated every few months. Installation from CRAN can be done via:
 
-```{r installation, eval = FALSE}
-devtools::install_github("emf-creaf/medfate")
+```{r installation cran, eval = FALSE}
+install.packages("medfate")
+```
+
+Users can also download and install the latest stable versions GitHub as follows (required package `remotes` should be installed/updated first):
+
+```{r installation github, eval = FALSE}
+remotes::install_github("emf-creaf/medfate")
 ```
 
 Additionally, users can have help to run package functions directly as package vignettes, by forcing their inclusion in installation: 
 ```{r installation vignettes, eval = FALSE}
-devtools::install_github("emf-creaf/medfate", 
+remotes::install_github("emf-creaf/medfate", 
                          build_opts = c("--no-resave-data", "--no-manual"),
                          build_vignettes = TRUE)
 ```
@@ -44,7 +50,7 @@ devtools::install_github("emf-creaf/medfate",
 
 + The package includes a number of *vignettes* that illustrate how to run simulation models in **medfate**. 
 
-+ Additional articles can be found at the package [website](https://emf-creaf.github.io/medfate/).
++ Additional articles regarding parameter estimation and model evaluation can be found at the package [website](https://emf-creaf.github.io/medfate/).
 
 + Complete documentation of the models included in the package can be found in [medfate's reference book](https://emf-creaf.github.io/medfatebook/index.html). 
 
