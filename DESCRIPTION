@@ -6,13 +6,14 @@ Date: 2022-05-04
 Authors@R: c(
 	person('Miquel', 'De Cáceres', role=c('aut','cre'),
 	email='miquelcaceres@gmail.com', comment = c(ORCID = "0000-0001-7132-2080")),
-	person('Shengli', 'Huang', role='aut'),
-	person('Víctor', 'Granda', role='aut'),
-	person('Antoine', 'Cabon', role='aut'),
-	person('Aitor', 'Améztegui', role='ctb'),
-	person('Jordi', 'Martínez-Vilalta', role='ctb'),
-	person('Maurizio', 'Mencuccini', role='ctb'),
-	person('Nicolas', 'Martin-StPaul', role='ctb'))
+	person('Shengli', 'Huang', role='aut', comment = c(ORCID = "0000-0003-3927-7042")),
+	person('Víctor', 'Granda', role='aut', comment = c(ORCID = "0000-0002-0469-1991")),
+	person('Antoine', 'Cabon', role='aut', comment = c(ORCID = "0000-0001-6426-1726")),
+	person('Aitor', 'Améztegui', role='ctb', comment = c(ORCID = "0000-0003-2006-1559")),
+	person('Jordi', 'Martínez-Vilalta', role='ctb', comment = c(ORCID = "0000-0002-2332-7298")),
+	person('Maurizio', 'Mencuccini', role='ctb', comment = c(ORCID = "0000-0003-0840-1477")),
+	person('Nicolas', 'Martin-StPaul', role='ctb', comment = c(ORCID = "0000-0001-7574-0108"))
+	)
 Description: Functions to simulate Mediterranean forest functioning and dynamics using cohort-based description of vegetation [De Caceres et al. (2015) <doi:10.1016/j.agrformet.2015.06.012>; De Caceres et al. (2021) <doi:10.1016/j.agrformet.2020.108233>].
 License: GPL (>= 2)
 URL: https://emf-creaf.github.io/medfate/

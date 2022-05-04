@@ -109,4 +109,4 @@ During the development of **medfate** some functions have been originally placed
   + Package [**medfateland**](https://github.com/emf-creaf/medfateland) extends **medfate** by allowing simulations to be performed in a spatially explicit context.
   + Package [**medfateutils**](https://github.com/emf-creaf/medfateutils) provides functions to help initializing vegetation, soil and species parameter inputs for **medfate** simulation functions.
 
-The set of R packages are developed and maintained by the [*Ecosystem Modelling Facility*](http://emf.creaf.cat) at CREAF (Spain).
+The set of R packages are developed and maintained by the [*Ecosystem Modelling Facility*](https://emf.creaf.cat) at CREAF (Spain).

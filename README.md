@@ -82,7 +82,7 @@ which evolve together with **medfate**:
     parameter inputs for **medfate** simulation functions.
 
 The set of R packages are developed and maintained by the [*Ecosystem
-Modelling Facility*](http://emf.creaf.cat) at CREAF (Spain).
+Modelling Facility*](https://emf.creaf.cat) at CREAF (Spain).
 
 ## References
 

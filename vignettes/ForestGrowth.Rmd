@@ -92,7 +92,7 @@ Element `above` contains the above-ground structure data that we already know, b
 x$above
 ```
 
-Elements starting with `params*` contain cohort-specific model parameters. Some of them were already presented in previous vignettes ([*Basic water balance*](https://emf-creaf.github.io/medfate/articles/BasicWaterBalance.html) and [*Advanced water balance*](https://emf-creaf.github.io/medfate/articles/AdvancedWaterBalance.html)). An important set of new cohort-specific parameters for the forest growth model are `paramsGrowth`:
+Elements starting with `params*` contain cohort-specific model parameters. Some of them were already presented in previous vignettes ([*Basic water balance*](https://emf-creaf.github.io/medfate/articles/BasicWaterBalance.html) and [*Advanced water/energy balance*](https://emf-creaf.github.io/medfate/articles/AdvancedWaterEnergyBalance.html)). An important set of new cohort-specific parameters for the forest growth model are `paramsGrowth`:
 ```{r}
 x$paramsGrowth
 ```
