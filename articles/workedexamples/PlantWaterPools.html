@@ -70,9 +70,10 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Water pools and species interactions</h1>
-                        <h4 data-toc-skip class="author">Miquel De Caceres (CREAF)</h4>
+                        <h4 data-toc-skip class="author">Miquel De
+Caceres (CREAF)</h4>
             
-            <h4 data-toc-skip class="date">2022-05-02</h4>
+            <h4 data-toc-skip class="date">2022-05-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/workedexamples/PlantWaterPools.Rmd" class="external-link"><code>vignettes/workedexamples/PlantWaterPools.Rmd</code></a></small>
       <div class="hidden name"><code>PlantWaterPools.Rmd</code></div>
@@ -84,14 +85,47 @@
 <div class="section level2">
 <h2 id="about-this-vignette">About this vignette<a class="anchor" aria-label="anchor" href="#about-this-vignette"></a>
 </h2>
-<p>By default, simulations in <strong>medfate</strong> assume that soil moisture under all plant cohorts is the same (i.e. water sources corresponding to vertical soil layers are shared among cohorts). Therefore, the models neglect spatial variation in soil moisture observed in mixed forest stands (Schume et al. 2004). Variations in soil moisture beneath plant cohorts (and, implicitly, horizontal variation of soil moisture) can be simulated in <strong>medfate</strong> if required by the user (see control parameter <code>rhizosphereOverlap</code>). This involves considering that a given plant cohort will perform water uptake from the <strong>water pool</strong> surrounding its roots, whereas it may not have access to the water beneath other plants. However, there can exist some degree of horizontal overlap between water pools exploited by different plants.</p>
-<p>The aim of this vignette is to illustrate the sensitivity of the advanced water balance model (De Cáceres et al. 2021) to the consideration of independent water pools.</p>
+<p>By default, simulations in <strong>medfate</strong> assume that soil
+moisture under all plant cohorts is the same (i.e. water sources
+corresponding to vertical soil layers are shared among cohorts).
+Therefore, the models neglect spatial variation in soil moisture
+observed in mixed forest stands (Schume et al. 2004). Variations in soil
+moisture beneath plant cohorts (and, implicitly, horizontal variation of
+soil moisture) can be simulated in <strong>medfate</strong> if required
+by the user (see control parameter <code>rhizosphereOverlap</code>).
+This involves considering that a given plant cohort will perform water
+uptake from the <strong>water pool</strong> surrounding its roots,
+whereas it may not have access to the water beneath other plants.
+However, there can exist some degree of horizontal overlap between water
+pools exploited by different plants.</p>
+<p>The aim of this vignette is to illustrate the sensitivity of the
+advanced water balance model (De Cáceres et al. 2021) to the
+consideration of independent water pools.</p>
 </div>
 <div class="section level2">
 <h2 id="simulations">Simulations<a class="anchor" aria-label="anchor" href="#simulations"></a>
 </h2>
-<p>As target forest stands we take five experimental plots whose data was already used when presenting the water balance model in De Cáceres et al. (2021). An evaluation of model performance in these experimental plots is given in <a href="https://emf-creaf.github.io/medfate/articles/evaluation/StandLevelEvaluation.html" class="external-link"><em>Stand-level evaluation</em></a>.</p>
-<p>For each of these plots we performed two simulations with the advanced water balance model (<code>transpirationMode = "Sperry"</code>), one using the default assumption of complete rhizosphere overlap (<code>rhizosphereOverlap = "total"</code>) and the other assuming complete independence of water pools (<code>rhizosphereOverlap = "none"</code>). The two simulations were performed considering water capacitance of plant tissues (<code>capacitance = TRUE</code>), and recovery from embolism was assumed to depend on soil moisture (<code>cavitationRefill = "rate"</code>). We performed a burn-in simulation for the available weather of the forest plot (1 to 3 years, depending on the plot), so that soil moisture, plant water potentials and xylem percent loss conductance (PLC) could be equilibrated. After this burn-in period, we run again the model for one year only, to simplify the examination of the results.</p>
+<p>As target forest stands we take five experimental plots whose data
+was already used when presenting the water balance model in De Cáceres
+et al. (2021). An evaluation of model performance in these experimental
+plots is given in <a href="https://emf-creaf.github.io/medfate/articles/evaluation/StandLevelEvaluation.html" class="external-link"><em>Stand-level
+evaluation</em></a>.</p>
+<p>For each of these plots we performed two simulations with the
+advanced water balance model
+(<code>transpirationMode = "Sperry"</code>), one using the default
+assumption of complete rhizosphere overlap
+(<code>rhizosphereOverlap = "total"</code>) and the other assuming
+complete independence of water pools
+(<code>rhizosphereOverlap = "none"</code>). The two simulations were
+performed considering water capacitance of plant tissues
+(<code>capacitance = TRUE</code>), and recovery from embolism was
+assumed to depend on soil moisture
+(<code>cavitationRefill = "rate"</code>). We performed a burn-in
+simulation for the available weather of the forest plot (1 to 3 years,
+depending on the plot), so that soil moisture, plant water potentials
+and xylem percent loss conductance (PLC) could be equilibrated. After
+this burn-in period, we run again the model for one year only, to
+simplify the examination of the results.</p>
 </div>
 <div class="section level2">
 <h2 id="results">Results<a class="anchor" aria-label="anchor" href="#results"></a>
@@ -99,43 +133,99 @@
 <div class="section level3">
 <h3 id="transpiration-per-leaf-area-unit-lm-2">Transpiration per leaf area unit (l·m-2)<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-unit-lm-2"></a>
 </h3>
-<p>Differences in transpiration per leaf area unit can be observed in simulations assuming total overlap (left panels) vs. simulations assuming independent water pools (right panels). Transpiration is similar during wet periods, but differences are notorious during dry periods, where transpiration decrease curves become more distinct across species. <img src="PlantWaterPools_files/figure-html/unnamed-chunk-3-1.png" width="960" style="display: block; margin: auto;"></p>
+<p>Differences in transpiration per leaf area unit can be observed in
+simulations assuming total overlap (left panels) vs. simulations
+assuming independent water pools (right panels). Transpiration is
+similar during wet periods, but differences are notorious during dry
+periods, where transpiration decrease curves become more distinct across
+species.
+<img src="PlantWaterPools_files/figure-html/unnamed-chunk-3-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="soil-water-potential-mpa">Soil water potential (MPa)<a class="anchor" aria-label="anchor" href="#soil-water-potential-mpa"></a>
 </h3>
-<p>Soil moisture dynamics do not differ between the two assumptions, if we examine the topmost soil layers (layers 1 and 2). However, soil moisture dynamics of deeper layers (mostly layer 4 but sometimes also layer 3) is different depending on whether water pools are considered or not. Presumably, this is the effect of some species drawing more or less water from deeper layers of their water pool depending on their root distribution, whereas in simulations without water pools the species with deeper root systems drives the dynamics of soil moisture in the stand. <img src="PlantWaterPools_files/figure-html/unnamed-chunk-4-1.png" width="960" style="display: block; margin: auto;"></p>
+<p>Soil moisture dynamics do not differ between the two assumptions, if
+we examine the topmost soil layers (layers 1 and 2). However, soil
+moisture dynamics of deeper layers (mostly layer 4 but sometimes also
+layer 3) is different depending on whether water pools are considered or
+not. Presumably, this is the effect of some species drawing more or less
+water from deeper layers of their water pool depending on their root
+distribution, whereas in simulations without water pools the species
+with deeper root systems drives the dynamics of soil moisture in the
+stand.
+<img src="PlantWaterPools_files/figure-html/unnamed-chunk-4-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="range-of-leaf-water-potential-mpa">Range of leaf water potential (MPa)<a class="anchor" aria-label="anchor" href="#range-of-leaf-water-potential-mpa"></a>
 </h3>
-<p>Leaf water potential of species seems to be strongly affected by the decision of considering independent water pools. If those are not considered (total rhizosphere overlap), pre-dawn water potentials are similar across species (which drives drought stress and cavitation of the most sensitive species), whereas in simulations with independent water pools pre-dawn water potentials of different species equilibrate at different values, reflecting the different soil moisture levels in their water pools. This is for the benefit of species known to close their stomata early during drought or for species with more vulnerable hydraulic systems. For example, a species like <em>Arbutus unedo</em> in Can Balasc is forced to attain very negative (-5 MPa) water potentials in simulations with complete rhizosphere overlap, whereas it stays around safer levels (&lt; -2.5 MPa) with independent water pools.</p>
+<p>Leaf water potential of species seems to be strongly affected by the
+decision of considering independent water pools. If those are not
+considered (total rhizosphere overlap), pre-dawn water potentials are
+similar across species (which drives drought stress and cavitation of
+the most sensitive species), whereas in simulations with independent
+water pools pre-dawn water potentials of different species equilibrate
+at different values, reflecting the different soil moisture levels in
+their water pools. This is for the benefit of species known to close
+their stomata early during drought or for species with more vulnerable
+hydraulic systems. For example, a species like <em>Arbutus unedo</em> in
+Can Balasc is forced to attain very negative (-5 MPa) water potentials
+in simulations with complete rhizosphere overlap, whereas it stays
+around safer levels (&lt; -2.5 MPa) with independent water pools.</p>
 <p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-5-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="percent-loss-conductance">Percent loss conductance (%)<a class="anchor" aria-label="anchor" href="#percent-loss-conductance"></a>
 </h3>
-<p>Percent loss conductance (PLC) values are rather similar for oaks in the two simulated scenarios. In contrast, PLC values are much lower for more sensitive species like pines or <em>Arbutus</em>, when considering independent water pools. This is in agreement with less negative water potentials in this simulation. PLC of most resistant species like <em>Buxus sempervirens</em> are low and little affected by the decision.</p>
+<p>Percent loss conductance (PLC) values are rather similar for oaks in
+the two simulated scenarios. In contrast, PLC values are much lower for
+more sensitive species like pines or <em>Arbutus</em>, when considering
+independent water pools. This is in agreement with less negative water
+potentials in this simulation. PLC of most resistant species like
+<em>Buxus sempervirens</em> are low and little affected by the
+decision.</p>
 <p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-6-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="live-fuel-moisture-content">Live fuel moisture content (%)<a class="anchor" aria-label="anchor" href="#live-fuel-moisture-content"></a>
 </h3>
-<p>Dynamics of live fuel moisture content (LFMC) of species generally follow the same patterns of pre-dawn water potentials. I.e. simulations assuming total horizontal overlap of rhizosphere distribution leading to lower LFMC values for some species such as pines.</p>
+<p>Dynamics of live fuel moisture content (LFMC) of species generally
+follow the same patterns of pre-dawn water potentials. I.e. simulations
+assuming total horizontal overlap of rhizosphere distribution leading to
+lower LFMC values for some species such as pines.</p>
 <p><img src="PlantWaterPools_files/figure-html/unnamed-chunk-7-1.png" width="960" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="discussion">Discussion<a class="anchor" aria-label="anchor" href="#discussion"></a>
 </h2>
-<p>In this vignette we illustrated the impact of considering or not spatial overlap of rhizosphere distribution among species in mixed forest stands. We evaluated the two extreme situations, namely total overlap and completely independent water pools. The second assumption seems to lead to more realistic results in terms of leaf water potentials and PLC values, which raises the question of which option should be the default in <strong>medfate</strong>. Reality probably lies between the two extreme situations, with a partial overlap of water pools. This option is also available in <strong>medfate</strong>, but a new problem arises as to how to decide the degree of overlap, and current implementation leads to results similar to those of assuming shared water pools (here redistribution plays an homogenization role). Moreover, it is possible that the (functional) degree of overlap be dynamic, i.e., the drier the soils the more unconnected and independent rhizospheres.</p>
+<p>In this vignette we illustrated the impact of considering or not
+spatial overlap of rhizosphere distribution among species in mixed
+forest stands. We evaluated the two extreme situations, namely total
+overlap and completely independent water pools. The second assumption
+seems to lead to more realistic results in terms of leaf water
+potentials and PLC values, which raises the question of which option
+should be the default in <strong>medfate</strong>. Reality probably lies
+between the two extreme situations, with a partial overlap of water
+pools. This option is also available in <strong>medfate</strong>, but a
+new problem arises as to how to decide the degree of overlap, and
+current implementation leads to results similar to those of assuming
+shared water pools (here redistribution plays an homogenization role).
+Moreover, it is possible that the (functional) degree of overlap be
+dynamic, i.e., the drier the soils the more unconnected and independent
+rhizospheres.</p>
 </div>
 <div class="section level2">
 <h2 id="bibliography">Bibliography<a class="anchor" aria-label="anchor" href="#bibliography"></a>
 </h2>
 <ul>
-<li>De Cáceres, M., M. Mencuccini, N. Martin-StPaul, J.-M. Limousin, L. Coll, R. Poyatos, A. Cabon, V. Granda, A. Forner, F. Valladares, and J. Martínez-Vilalta. 2021. Unravelling the effect of species mixing on water use and drought stress in Mediterranean forests: A modelling approach. Agricultural and Forest Meteorology 296:108233.</li>
-<li>Schume, H., G. Jost, and H. Hager. 2004. Soil water depletion and recharge patterns in mixed and pure forest stands of European beech and Norway spruce. Journal of Hydrology 289:258–274.</li>
+<li>De Cáceres, M., M. Mencuccini, N. Martin-StPaul, J.-M. Limousin, L.
+Coll, R. Poyatos, A. Cabon, V. Granda, A. Forner, F. Valladares, and J.
+Martínez-Vilalta. 2021. Unravelling the effect of species mixing on
+water use and drought stress in Mediterranean forests: A modelling
+approach. Agricultural and Forest Meteorology 296:108233.</li>
+<li>Schume, H., G. Jost, and H. Hager. 2004. Soil water depletion and
+recharge patterns in mixed and pure forest stands of European beech and
+Norway spruce. Journal of Hydrology 289:258–274.</li>
 </ul>
 </div>
   </div>

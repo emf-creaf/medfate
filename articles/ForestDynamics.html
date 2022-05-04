@@ -70,9 +70,10 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Forest dynamics</h1>
-                        <h4 data-toc-skip class="author">Miquel De Caceres</h4>
+                        <h4 data-toc-skip class="author">Miquel De
+Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-05-02</h4>
+            <h4 data-toc-skip class="date">2022-05-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/ForestDynamics.Rmd" class="external-link"><code>vignettes/ForestDynamics.Rmd</code></a></small>
       <div class="hidden name"><code>ForestDynamics.Rmd</code></div>
@@ -84,24 +85,48 @@
 <div class="section level2">
 <h2 id="about-this-vignette">About this vignette<a class="anchor" aria-label="anchor" href="#about-this-vignette"></a>
 </h2>
-<p>This document describes how to run the forest dynamics model of <code>medfate</code>, implemented in function <code><a href="../reference/fordyn.html">fordyn()</a></code>. This document is meant to teach users to run the simulation model with function <code><a href="../reference/fordyn.html">fordyn()</a></code>. Details of the model design and formulation can be found at the corresponding chapters of the <a href="https://emf-creaf.github.io/medfatebook/index.html" class="external-link">medfate book</a>.</p>
-<p>Because the model builds on the growth and water balance models, the reader is assumed here to be familiarized with <code><a href="../reference/spwb.html">spwb()</a></code> and <code><a href="../reference/growth.html">growth()</a></code> (otherwise read vignettes <a href="https://emf-creaf.github.io/medfate/articles/BasicWaterBalance.html" class="external-link"><em>Basic water balance</em></a> and <a href="https://emf-creaf.github.io/medfate/articles/ForestGrowth.html" class="external-link"><em>Forest growth</em></a>).</p>
+<p>This document describes how to run the forest dynamics model of
+<code>medfate</code>, implemented in function <code><a href="../reference/fordyn.html">fordyn()</a></code>.
+This document is meant to teach users to run the simulation model with
+function <code><a href="../reference/fordyn.html">fordyn()</a></code>. Details of the model design and
+formulation can be found at the corresponding chapters of the <a href="https://emf-creaf.github.io/medfatebook/index.html" class="external-link">medfate
+book</a>.</p>
+<p>Because the model builds on the growth and water balance models, the
+reader is assumed here to be familiarized with <code><a href="../reference/spwb.html">spwb()</a></code> and
+<code><a href="../reference/growth.html">growth()</a></code> (otherwise read vignettes <a href="https://emf-creaf.github.io/medfate/articles/BasicWaterBalance.html" class="external-link"><em>Basic
+water balance</em></a> and <a href="https://emf-creaf.github.io/medfate/articles/ForestGrowth.html" class="external-link"><em>Forest
+growth</em></a>).</p>
 </div>
 <div class="section level2">
 <h2 id="preparing-model-inputs">Preparing model inputs<a class="anchor" aria-label="anchor" href="#preparing-model-inputs"></a>
 </h2>
-<p>Any forest dynamics model needs information on climate, vegetation and soils of the forest stand to be simulated. Moreover, since models in <code>medfate</code> differentiate between species, information on species-specific model parameters is also needed. In this subsection we explain the different steps to prepare the data needed to run function <code><a href="../reference/fordyn.html">fordyn()</a></code>.</p>
-<p>Model inputs are explained in greater detail in vignette ‘<em>Simulation inputs</em>’. Here we only review the different steps required to run function <code><a href="../reference/fordyn.html">fordyn()</a></code>.</p>
+<p>Any forest dynamics model needs information on climate, vegetation
+and soils of the forest stand to be simulated. Moreover, since models in
+<code>medfate</code> differentiate between species, information on
+species-specific model parameters is also needed. In this subsection we
+explain the different steps to prepare the data needed to run function
+<code><a href="../reference/fordyn.html">fordyn()</a></code>.</p>
+<p>Model inputs are explained in greater detail in vignette
+‘<em>Simulation inputs</em>’. Here we only review the different steps
+required to run function <code><a href="../reference/fordyn.html">fordyn()</a></code>.</p>
 <div class="section level3">
 <h3 id="soil-vegetation-meteorology-and-species-data">Soil, vegetation, meteorology and species data<a class="anchor" aria-label="anchor" href="#soil-vegetation-meteorology-and-species-data"></a>
 </h3>
-<p>Soil information needs to be entered as a <code>data frame</code> with soil layers in rows and physical attributes in columns. Soil physical attributes can be initialized to default values, for a given number of layers, using function <code><a href="../reference/defaultSoilParams.html">defaultSoilParams()</a></code>:</p>
+<p>Soil information needs to be entered as a <code>data frame</code>
+with soil layers in rows and physical attributes in columns. Soil
+physical attributes can be initialized to default values, for a given
+number of layers, using function <code><a href="../reference/defaultSoilParams.html">defaultSoilParams()</a></code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">spar</span> <span class="op">=</span> <span class="fu"><a href="../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></code></pre></div>
-<p>The soil input for water balance simulation is actually a list of class <code>soil</code> that is created using a function with the same name:</p>
+<p>The soil input for water balance simulation is actually a list of
+class <code>soil</code> that is created using a function with the same
+name:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">spar</span><span class="op">)</span></code></pre></div>
-<p>As explained in the package overview, models included in <code>medfate</code> were primarily designed to be ran on <strong>forest inventory plots</strong>. Here we use the example object provided with the package:</p>
+<p>As explained in the package overview, models included in
+<code>medfate</code> were primarily designed to be ran on <strong>forest
+inventory plots</strong>. Here we use the example object provided with
+the package:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span>
 <span class="va">exampleforestMED</span></code></pre></div>
@@ -128,7 +153,9 @@
 <span class="co">## </span>
 <span class="co">## attr(,"class")</span>
 <span class="co">## [1] "forest" "list"</span></code></pre>
-<p>In the basic water balance, only mean temperature, precipitation and potential evapotranspiration is required, but radiation may also be necessary to simulate snow melt.</p>
+<p>In the basic water balance, only mean temperature, precipitation and
+potential evapotranspiration is required, but radiation may also be
+necessary to simulate snow melt.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></code></pre></div>
@@ -153,30 +180,44 @@
 <span class="co">## 2001-01-04  11.07275  2.000000           172 0.9200627</span>
 <span class="co">## 2001-01-05  13.45205  7.581347           321 2.2914449</span>
 <span class="co">## 2001-01-06  12.84841  6.570501           141 1.7255058</span></code></pre>
-<p>Finally, simulations in <code>medfate</code> require a data frame with species parameter values, which we load using defaults for Catalonia (NE Spain):</p>
+<p>Finally, simulations in <code>medfate</code> require a data frame
+with species parameter values, which we load using defaults for
+Catalonia (NE Spain):</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpParamsMED"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="simulation-control">Simulation control<a class="anchor" aria-label="anchor" href="#simulation-control"></a>
 </h3>
-<p>Apart from data inputs, the behaviour of simulation models can be controlled using a set of global parameters. The default parameterization is obtained using function <code><a href="../reference/defaultControl.html">defaultControl()</a></code>:</p>
+<p>Apart from data inputs, the behaviour of simulation models can be
+controlled using a set of global parameters. The default
+parameterization is obtained using function
+<code><a href="../reference/defaultControl.html">defaultControl()</a></code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></code></pre></div>
-<p>Here we will run simulations of forest dynamics using the basic water balance model (i.e. <code>transpirationMode = "Granier"</code>). The complexity of the soil water balance calculations can be changed by using <code>"Sperry"</code> as input to <code><a href="../reference/defaultControl.html">defaultControl()</a></code>. However, when running <code><a href="../reference/fordyn.html">fordyn()</a></code> sub-daily output will never be stored (i.e. setting <code>subdailyResults = TRUE</code> is useless).</p>
+<p>Here we will run simulations of forest dynamics using the basic water
+balance model (i.e. <code>transpirationMode = "Granier"</code>). The
+complexity of the soil water balance calculations can be changed by
+using <code>"Sperry"</code> as input to <code><a href="../reference/defaultControl.html">defaultControl()</a></code>.
+However, when running <code><a href="../reference/fordyn.html">fordyn()</a></code> sub-daily output will never
+be stored (i.e. setting <code>subdailyResults = TRUE</code> is
+useless).</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="executing-the-forest-dynamics-model">Executing the forest dynamics model<a class="anchor" aria-label="anchor" href="#executing-the-forest-dynamics-model"></a>
 </h2>
-<p>In this vignette we will fake a ten-year weather input by repeating the example weather data frame ten times.</p>
+<p>In this vignette we will fake a ten-year weather input by repeating
+the example weather data frame ten times.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">meteo</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">examplemeteo</span>, <span class="va">examplemeteo</span>, <span class="va">examplemeteo</span>, <span class="va">examplemeteo</span>,
                     <span class="va">examplemeteo</span>, <span class="va">examplemeteo</span>, <span class="va">examplemeteo</span>, <span class="va">examplemeteo</span>,
                     <span class="va">examplemeteo</span>, <span class="va">examplemeteo</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="va">meteo</span><span class="op">)</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2001-01-01"</span><span class="op">)</span>, 
                              <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2010-12-29"</span><span class="op">)</span>, by<span class="op">=</span><span class="st">"day"</span><span class="op">)</span></code></pre></div>
-<p>Now we run the forest dynamics model using all inputs (note that no intermediate input object is needed, as in <code><a href="../reference/spwb.html">spwb()</a></code> or <code><a href="../reference/growth.html">growth()</a></code>):</p>
+<p>Now we run the forest dynamics model using all inputs (note that no
+intermediate input object is needed, as in <code><a href="../reference/spwb.html">spwb()</a></code> or
+<code><a href="../reference/growth.html">growth()</a></code>):</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/fordyn.html">fordyn</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">meteo</span>, <span class="va">control</span>, 
            latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div>
@@ -190,7 +231,12 @@
 <span class="co">## Simulating year 2008 (8/10):  (a) Growth/mortality, (b) Recruitment</span>
 <span class="co">## Simulating year 2009 (9/10):  (a) Growth/mortality, (b) Recruitment</span>
 <span class="co">## Simulating year 2010 (10/10):  (a) Growth/mortality, (b) Recruitment</span></code></pre>
-<p>It is worth noting that, while <code><a href="../reference/fordyn.html">fordyn()</a></code> calls function <code><a href="../reference/growth.html">growth()</a></code> internally for each simulated year, the <code>verbose</code> option of the control parameters only affects function <code><a href="../reference/fordyn.html">fordyn()</a></code> (i.e. all console output from <code><a href="../reference/growth.html">growth()</a></code> is hidden). Recruitment and summaries are done only once a year at the level of function <code><a href="../reference/fordyn.html">fordyn()</a></code>.</p>
+<p>It is worth noting that, while <code><a href="../reference/fordyn.html">fordyn()</a></code> calls function
+<code><a href="../reference/growth.html">growth()</a></code> internally for each simulated year, the
+<code>verbose</code> option of the control parameters only affects
+function <code><a href="../reference/fordyn.html">fordyn()</a></code> (i.e. all console output from
+<code><a href="../reference/growth.html">growth()</a></code> is hidden). Recruitment and summaries are done
+only once a year at the level of function <code><a href="../reference/fordyn.html">fordyn()</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="inspecting-model-outputs">Inspecting model outputs<a class="anchor" aria-label="anchor" href="#inspecting-model-outputs"></a>
@@ -198,7 +244,10 @@
 <div class="section level3">
 <h3 id="stand-species-and-cohort-summaries-and-plots">Stand, species and cohort summaries and plots<a class="anchor" aria-label="anchor" href="#stand-species-and-cohort-summaries-and-plots"></a>
 </h3>
-<p>Among other outputs, function <code><a href="../reference/fordyn.html">fordyn()</a></code> calculates standard summary statistics that describe the structural and compositional state of the forest at each time step. For example, we can access stand-level statistics using:</p>
+<p>Among other outputs, function <code><a href="../reference/fordyn.html">fordyn()</a></code> calculates
+standard summary statistics that describe the structural and
+compositional state of the forest at each time step. For example, we can
+access stand-level statistics using:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">StandSummary</span></code></pre></div>
 <pre><code><span class="co">##    Step NumTreeSpecies NumTreeCohorts NumShrubSpecies NumShrubCohorts</span>
@@ -210,9 +259,9 @@
 <span class="co">## 6     5              2              2               1               1</span>
 <span class="co">## 7     6              2              2               1               1</span>
 <span class="co">## 8     7              2              2               1               1</span>
-<span class="co">## 9     8              2              2               1               1</span>
-<span class="co">## 10    9              2              2               1               1</span>
-<span class="co">## 11   10              2              2               1               1</span>
+<span class="co">## 9     8              2              3               1               1</span>
+<span class="co">## 10    9              2              3               1               1</span>
+<span class="co">## 11   10              2              3               1               1</span>
 <span class="co">##    TreeDensityLive TreeBasalAreaLive DominantTreeHeight DominantTreeDiameter</span>
 <span class="co">## 1         552.0000          25.03330           800.0000             37.55000</span>
 <span class="co">## 2         551.1388          25.17084           809.1730             37.71939</span>
@@ -222,9 +271,9 @@
 <span class="co">## 6         547.7357          25.71181           844.9094             38.39117</span>
 <span class="co">## 7         546.8964          25.84236           853.5003             38.55558</span>
 <span class="co">## 8         546.0614          25.97104           861.9590             38.71859</span>
-<span class="co">## 9         545.2284          26.09759           870.2872             38.88022</span>
-<span class="co">## 10        544.4019          26.22254           878.4863             39.04045</span>
-<span class="co">## 11        543.5841          26.34608           886.5548             39.19923</span>
+<span class="co">## 9         911.2284          27.71453           870.2872             38.88022</span>
+<span class="co">## 10        910.4019          27.85883           878.0245             39.03105</span>
+<span class="co">## 11        909.5841          27.95878           883.9636             39.14751</span>
 <span class="co">##    QuadraticMeanTreeDiameter HartBeckingIndex ShrubCoverLive BasalAreaDead</span>
 <span class="co">## 1                   24.02949         53.20353       3.750000    0.00000000</span>
 <span class="co">## 2                   24.11423         52.64148       2.737354    0.09623075</span>
@@ -234,9 +283,9 @@
 <span class="co">## 6                   24.44758         50.57133       3.378488    0.09765926</span>
 <span class="co">## 7                   24.52837         50.10070       3.553792    0.09799256</span>
 <span class="co">## 8                   24.60815         49.64696       3.734968    0.09831638</span>
-<span class="co">## 9                   24.68687         49.20941       3.922868    0.09890025</span>
-<span class="co">## 10                  24.76467         48.78712       4.116283    0.09893420</span>
-<span class="co">## 11                  24.84160         48.37946       4.315724    0.09868695</span>
+<span class="co">## 9                   19.67865         38.06482       3.922868    0.09890025</span>
+<span class="co">## 10                  19.73876         37.74651       4.098768    0.09888653</span>
+<span class="co">## 11                  19.78303         37.50975       4.205784    0.09842668</span>
 <span class="co">##    ShrubCoverDead BasalAreaCut ShrubCoverCut</span>
 <span class="co">## 1     0.000000000            0             0</span>
 <span class="co">## 2     0.004097987            0             0</span>
@@ -247,8 +296,8 @@
 <span class="co">## 7     0.005308704            0             0</span>
 <span class="co">## 8     0.005582251            0             0</span>
 <span class="co">## 9     0.005881747            0             0</span>
-<span class="co">## 10    0.006158252            0             0</span>
-<span class="co">## 11    0.006423370            0             0</span></code></pre>
+<span class="co">## 10    0.006148073            0             0</span>
+<span class="co">## 11    0.006340335            0             0</span></code></pre>
 <p>Species-level analogous statistics are shown using:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">SpeciesSummary</span></code></pre></div>
@@ -279,13 +328,13 @@
 <span class="co">## 24    7     168      Quercus ilex          1        384.0000          6.889718</span>
 <span class="co">## 25    8     148  Pinus halepensis          1        161.2284         19.142065</span>
 <span class="co">## 26    8     165 Quercus coccifera          1              NA                NA</span>
-<span class="co">## 27    8     168      Quercus ilex          1        384.0000          6.955530</span>
-<span class="co">## 28    9     148  Pinus halepensis          1        160.4019         19.201232</span>
+<span class="co">## 27    8     168      Quercus ilex          2        750.0000          8.572468</span>
+<span class="co">## 28    9     148  Pinus halepensis          1        160.4019         19.191982</span>
 <span class="co">## 29    9     165 Quercus coccifera          1              NA                NA</span>
-<span class="co">## 30    9     168      Quercus ilex          1        384.0000          7.021306</span>
-<span class="co">## 31   10     148  Pinus halepensis          1        159.5841         19.259046</span>
+<span class="co">## 30    9     168      Quercus ilex          2        750.0000          8.666847</span>
+<span class="co">## 31   10     148  Pinus halepensis          1        159.5841         19.208254</span>
 <span class="co">## 32   10     165 Quercus coccifera          1              NA                NA</span>
-<span class="co">## 33   10     168      Quercus ilex          1        384.0000          7.087029</span>
+<span class="co">## 33   10     168      Quercus ilex          2        750.0000          8.750527</span>
 <span class="co">##    ShrubCoverLive BasalAreaDead ShrubCoverDead BasalAreaCut ShrubCoverCut</span>
 <span class="co">## 1              NA    0.00000000             NA            0            NA</span>
 <span class="co">## 2        3.750000            NA    0.000000000           NA             0</span>
@@ -314,13 +363,15 @@
 <span class="co">## 25             NA    0.09890025             NA            0            NA</span>
 <span class="co">## 26       3.922868            NA    0.005881747           NA             0</span>
 <span class="co">## 27             NA    0.00000000             NA            0            NA</span>
-<span class="co">## 28             NA    0.09893420             NA            0            NA</span>
-<span class="co">## 29       4.116283            NA    0.006158252           NA             0</span>
+<span class="co">## 28             NA    0.09888653             NA            0            NA</span>
+<span class="co">## 29       4.098768            NA    0.006148073           NA             0</span>
 <span class="co">## 30             NA    0.00000000             NA            0            NA</span>
-<span class="co">## 31             NA    0.09868695             NA            0            NA</span>
-<span class="co">## 32       4.315724            NA    0.006423370           NA             0</span>
+<span class="co">## 31             NA    0.09842668             NA            0            NA</span>
+<span class="co">## 32       4.205784            NA    0.006340335           NA             0</span>
 <span class="co">## 33             NA    0.00000000             NA            0            NA</span></code></pre>
-<p>Package <code>medfate</code> provides a simple <code>plot</code> function for objects of class <code>fordyn</code>. For example, we can show the interannual variation in stand-level basal area using:</p>
+<p>Package <code>medfate</code> provides a simple <code>plot</code>
+function for objects of class <code>fordyn</code>. For example, we can
+show the interannual variation in stand-level basal area using:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, type <span class="op">=</span> <span class="st">"StandBasalArea"</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestDynamics_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;"></p>
@@ -328,32 +379,37 @@
 <div class="section level3">
 <h3 id="treeshrub-tables">Tree/shrub tables<a class="anchor" aria-label="anchor" href="#treeshrub-tables"></a>
 </h3>
-<p>Another useful output of <code><a href="../reference/fordyn.html">fordyn()</a></code> are tables in long format with cohort structural information (i.e. DBH, height, density, etc) for each time step:</p>
+<p>Another useful output of <code><a href="../reference/fordyn.html">fordyn()</a></code> are tables in long
+format with cohort structural information (i.e. DBH, height, density,
+etc) for each time step:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">TreeTable</span></code></pre></div>
-<pre><code><span class="co">##    Step Year Cohort Species             Name        N      DBH   Height Z50</span>
-<span class="co">## 1     0   NA T1_148     148 Pinus halepensis 168.0000 37.55000 800.0000 100</span>
-<span class="co">## 2     0   NA T2_168     168     Quercus ilex 384.0000 14.60000 660.0000 300</span>
-<span class="co">## 3     1 2001 T1_148     148 Pinus halepensis 167.1388 37.71939 809.1730 100</span>
-<span class="co">## 4     1 2001 T2_168     168     Quercus ilex 384.0000 14.67423 662.4111 300</span>
-<span class="co">## 5     2 2002 T1_148     148 Pinus halepensis 166.2821 37.88910 818.2975 100</span>
-<span class="co">## 6     2 2002 T2_168     168     Quercus ilex 384.0000 14.74849 664.8315 300</span>
-<span class="co">## 7     3 2003 T1_148     148 Pinus halepensis 165.4297 38.05782 827.3037 100</span>
-<span class="co">## 8     3 2003 T2_168     168     Quercus ilex 384.0000 14.82244 667.2506 300</span>
-<span class="co">## 9     4 2004 T1_148     148 Pinus halepensis 164.5794 38.22527 836.1787 100</span>
-<span class="co">## 10    4 2004 T2_168     168     Quercus ilex 384.0000 14.89604 669.6659 300</span>
-<span class="co">## 11    5 2005 T1_148     148 Pinus halepensis 163.7357 38.39117 844.9094 100</span>
-<span class="co">## 12    5 2005 T2_168     168     Quercus ilex 384.0000 14.96922 672.0744 300</span>
-<span class="co">## 13    6 2006 T1_148     148 Pinus halepensis 162.8964 38.55558 853.5003 100</span>
-<span class="co">## 14    6 2006 T2_168     168     Quercus ilex 384.0000 15.04198 674.4759 300</span>
-<span class="co">## 15    7 2007 T1_148     148 Pinus halepensis 162.0614 38.71859 861.9590 100</span>
-<span class="co">## 16    7 2007 T2_168     168     Quercus ilex 384.0000 15.11437 676.8707 300</span>
-<span class="co">## 17    8 2008 T1_148     148 Pinus halepensis 161.2284 38.88022 870.2872 100</span>
-<span class="co">## 18    8 2008 T2_168     168     Quercus ilex 384.0000 15.18639 679.2582 300</span>
-<span class="co">## 19    9 2009 T1_148     148 Pinus halepensis 160.4019 39.04045 878.4863 100</span>
-<span class="co">## 20    9 2009 T2_168     168     Quercus ilex 384.0000 15.25803 681.6378 300</span>
-<span class="co">## 21   10 2010 T1_148     148 Pinus halepensis 159.5841 39.19923 886.5548 100</span>
-<span class="co">## 22   10 2010 T2_168     168     Quercus ilex 384.0000 15.32927 684.0083 300</span>
+<pre><code><span class="co">##    Step Year Cohort Species             Name        N       DBH   Height Z50</span>
+<span class="co">## 1     0   NA T1_148     148 Pinus halepensis 168.0000 37.550000 800.0000 100</span>
+<span class="co">## 2     0   NA T2_168     168     Quercus ilex 384.0000 14.600000 660.0000 300</span>
+<span class="co">## 3     1 2001 T1_148     148 Pinus halepensis 167.1388 37.719389 809.1730 100</span>
+<span class="co">## 4     1 2001 T2_168     168     Quercus ilex 384.0000 14.674234 662.4111 300</span>
+<span class="co">## 5     2 2002 T1_148     148 Pinus halepensis 166.2821 37.889100 818.2975 100</span>
+<span class="co">## 6     2 2002 T2_168     168     Quercus ilex 384.0000 14.748488 664.8315 300</span>
+<span class="co">## 7     3 2003 T1_148     148 Pinus halepensis 165.4297 38.057820 827.3037 100</span>
+<span class="co">## 8     3 2003 T2_168     168     Quercus ilex 384.0000 14.822443 667.2506 300</span>
+<span class="co">## 9     4 2004 T1_148     148 Pinus halepensis 164.5794 38.225272 836.1787 100</span>
+<span class="co">## 10    4 2004 T2_168     168     Quercus ilex 384.0000 14.896042 669.6659 300</span>
+<span class="co">## 11    5 2005 T1_148     148 Pinus halepensis 163.7357 38.391173 844.9094 100</span>
+<span class="co">## 12    5 2005 T2_168     168     Quercus ilex 384.0000 14.969216 672.0744 300</span>
+<span class="co">## 13    6 2006 T1_148     148 Pinus halepensis 162.8964 38.555577 853.5003 100</span>
+<span class="co">## 14    6 2006 T2_168     168     Quercus ilex 384.0000 15.041984 674.4759 300</span>
+<span class="co">## 15    7 2007 T1_148     148 Pinus halepensis 162.0614 38.718592 861.9590 100</span>
+<span class="co">## 16    7 2007 T2_168     168     Quercus ilex 384.0000 15.114374 676.8707 300</span>
+<span class="co">## 17    8 2008 T1_148     148 Pinus halepensis 161.2284 38.880220 870.2872 100</span>
+<span class="co">## 18    8 2008 T2_168     168     Quercus ilex 384.0000 15.186389 679.2582 300</span>
+<span class="co">## 19    8 2008 T3_168     168     Quercus ilex 366.0000  7.500000 472.3629 100</span>
+<span class="co">## 20    9 2009 T1_148     148 Pinus halepensis 160.4019 39.031048 878.0245 100</span>
+<span class="co">## 21    9 2009 T2_168     168     Quercus ilex 384.0000 15.255572 681.5704 300</span>
+<span class="co">## 22    9 2009 T3_168     168     Quercus ilex 366.0000  7.571236 476.3004 100</span>
+<span class="co">## 23   10 2010 T1_148     148 Pinus halepensis 159.5841 39.147506 883.9636 100</span>
+<span class="co">## 24   10 2010 T2_168     168     Quercus ilex 384.0000 15.315733 683.5829 300</span>
+<span class="co">## 25   10 2010 T3_168     168     Quercus ilex 366.0000  7.635771 479.8595 100</span>
 <span class="co">##     Z95</span>
 <span class="co">## 1   600</span>
 <span class="co">## 2  1000</span>
@@ -373,10 +429,13 @@
 <span class="co">## 16 1000</span>
 <span class="co">## 17  600</span>
 <span class="co">## 18 1000</span>
-<span class="co">## 19  600</span>
-<span class="co">## 20 1000</span>
-<span class="co">## 21  600</span>
-<span class="co">## 22 1000</span></code></pre>
+<span class="co">## 19 1000</span>
+<span class="co">## 20  600</span>
+<span class="co">## 21 1000</span>
+<span class="co">## 22 1000</span>
+<span class="co">## 23  600</span>
+<span class="co">## 24 1000</span>
+<span class="co">## 25 1000</span></code></pre>
 <p>The same can be shown for dead trees:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">DeadTreeTable</span></code></pre></div>
@@ -389,8 +448,8 @@
 <span class="co">## 6     6 2006 T1_148     148 Pinus halepensis 0.8393223 38.55558 853.5003 100</span>
 <span class="co">## 7     7 2007 T1_148     148 Pinus halepensis 0.8350199 38.71859 861.9590 100</span>
 <span class="co">## 8     8 2008 T1_148     148 Pinus halepensis 0.8330097 38.88022 870.2872 100</span>
-<span class="co">## 9     9 2009 T1_148     148 Pinus halepensis 0.8264694 39.04045 878.4863 100</span>
-<span class="co">## 10   10 2010 T1_148     148 Pinus halepensis 0.8177390 39.19923 886.5548 100</span>
+<span class="co">## 9     9 2009 T1_148     148 Pinus halepensis 0.8264694 39.03105 878.0245 100</span>
+<span class="co">## 10   10 2010 T1_148     148 Pinus halepensis 0.8177390 39.14751 883.9636 100</span>
 <span class="co">##    Z95</span>
 <span class="co">## 1  600</span>
 <span class="co">## 2  600</span>
@@ -406,14 +465,22 @@
 <div class="section level3">
 <h3 id="accessing-the-output-from-function-growth">Accessing the output from function growth()<a class="anchor" aria-label="anchor" href="#accessing-the-output-from-function-growth"></a>
 </h3>
-<p>Since function <code><a href="../reference/fordyn.html">fordyn()</a></code> makes internal calls to function <code><a href="../reference/growth.html">growth()</a></code>, it stores the result in a vector called <code>GrowthResults</code>, which we can use to inspect intra-annual patterns of desired variables. For example, the following shows the leaf area for individuals of the three cohorts during the second year:</p>
+<p>Since function <code><a href="../reference/fordyn.html">fordyn()</a></code> makes internal calls to function
+<code><a href="../reference/growth.html">growth()</a></code>, it stores the result in a vector called
+<code>GrowthResults</code>, which we can use to inspect intra-annual
+patterns of desired variables. For example, the following shows the leaf
+area for individuals of the three cohorts during the second year:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span><span class="op">$</span><span class="va">GrowthResults</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="st">"LeafArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
-<p><img src="ForestDynamics_files/figure-html/unnamed-chunk-14-1.png" width="672"> Instead of examining year by year, it is possible to plot the whole series of results by passing a <code>fordyn</code> object to the <code><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot()</a></code> function:</p>
+<p><img src="ForestDynamics_files/figure-html/unnamed-chunk-14-1.png" width="672">
+Instead of examining year by year, it is possible to plot the whole
+series of results by passing a <code>fordyn</code> object to the
+<code><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot()</a></code> function:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, <span class="st">"LeafArea"</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestDynamics_files/figure-html/unnamed-chunk-15-1.png" width="672"></p>
-<p>Finally, we can create interactive plots for particular steps using function <code><a href="../reference/shinyplot.html">shinyplot()</a></code>, e.g.:</p>
+<p>Finally, we can create interactive plots for particular steps using
+function <code><a href="../reference/shinyplot.html">shinyplot()</a></code>, e.g.:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/shinyplot.html">shinyplot</a></span><span class="op">(</span><span class="va">fd</span><span class="op">$</span><span class="va">GrowthResults</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></code></pre></div>
 </div>
@@ -421,8 +488,16 @@
 <div class="section level2">
 <h2 id="forest-dynamics-including-management">Forest dynamics including management<a class="anchor" aria-label="anchor" href="#forest-dynamics-including-management"></a>
 </h2>
-<p>The package allows including forest management in simulations of forest dynamics. This is done in a very flexible manner, in the sense that <code><a href="../reference/fordyn.html">fordyn()</a></code> allows the user to supply an arbitrary function implementing a desired management strategy for the stand whose dynamics are to be simulated. The package includes, however, an in-built default function called <code><a href="../reference/defaultManagementFunction.html">defaultManagementFunction()</a></code> along with a flexible parameterization, a list with defaults provided by function <code><a href="../reference/defaultManagementFunction.html">defaultManagementArguments()</a></code>.</p>
-<p>Here we provide an example of simulations including forest management:</p>
+<p>The package allows including forest management in simulations of
+forest dynamics. This is done in a very flexible manner, in the sense
+that <code><a href="../reference/fordyn.html">fordyn()</a></code> allows the user to supply an arbitrary
+function implementing a desired management strategy for the stand whose
+dynamics are to be simulated. The package includes, however, an in-built
+default function called <code><a href="../reference/defaultManagementFunction.html">defaultManagementFunction()</a></code> along
+with a flexible parameterization, a list with defaults provided by
+function <code><a href="../reference/defaultManagementFunction.html">defaultManagementArguments()</a></code>.</p>
+<p>Here we provide an example of simulations including forest
+management:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Default arguments</span>
 <span class="va">args</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/defaultManagementFunction.html">defaultManagementArguments</a></span><span class="op">(</span><span class="op">)</span>
@@ -443,7 +518,8 @@
 <span class="co">## Simulating year 2008 (8/10):  (a) Growth/mortality &amp; management [none], (b) Recruitment</span>
 <span class="co">## Simulating year 2009 (9/10):  (a) Growth/mortality &amp; management [none], (b) Recruitment</span>
 <span class="co">## Simulating year 2010 (10/10):  (a) Growth/mortality &amp; management [none], (b) Recruitment</span></code></pre>
-<p>When management is included in simulations, two additional tables are produced, corresponding to the trees and shrubs that were cut, e.g.:</p>
+<p>When management is included in simulations, two additional tables are
+produced, corresponding to the trees and shrubs that were cut, e.g.:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fd</span><span class="op">$</span><span class="va">CutTreeTable</span></code></pre></div>
 <pre><code><span class="co">##   Step Year Cohort Species             Name          N      DBH   Height Z50</span>

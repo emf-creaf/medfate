@@ -71,9 +71,10 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Growth calibration</h1>
-                        <h4 data-toc-skip class="author">Miquel De Cáceres</h4>
+                        <h4 data-toc-skip class="author">Miquel De
+Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-05-02</h4>
+            <h4 data-toc-skip class="date">2022-05-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/GrowthCalibration.Rmd" class="external-link"><code>vignettes/parametrization/GrowthCalibration.Rmd</code></a></small>
       <div class="hidden name"><code>GrowthCalibration.Rmd</code></div>
@@ -88,15 +89,40 @@
 <div class="section level3">
 <h3 id="goals">Goals<a class="anchor" aria-label="anchor" href="#goals"></a>
 </h3>
-<p>The growth model included in <strong>medfate</strong> implements processes regulating plant carbon balance and growth. Species-level parameter values for these processes are obtained from: (a) global functional trait databases; (b) meta-modelling exercises; (c) model calibration exercises. The main goal of the current exercise is to obtain suitable values (via model calibration) for parameters related with the maintenance respiration costs, formation rates and senescence rates of sapwood, because these are difficult to obtain using other means. At the same time, the exercise provides information on the performance of the model to predict secondary growth at the tree and stand levels.</p>
+<p>The growth model included in <strong>medfate</strong> implements
+processes regulating plant carbon balance and growth. Species-level
+parameter values for these processes are obtained from: (a) global
+functional trait databases; (b) meta-modelling exercises; (c) model
+calibration exercises. The main goal of the current exercise is to
+obtain suitable values (via model calibration) for parameters related
+with the maintenance respiration costs, formation rates and senescence
+rates of sapwood, because these are difficult to obtain using other
+means. At the same time, the exercise provides information on the
+performance of the model to predict secondary growth at the tree and
+stand levels.</p>
 </div>
 <div class="section level3">
 <h3 id="observational-data">Observational data<a class="anchor" aria-label="anchor" href="#observational-data"></a>
 </h3>
 <p>We used to data sets for the calibration exercise:</p>
 <ol style="list-style-type: lower-alpha">
-<li>The first data set corresponds to 75 permanent forest plots of the Spanish National Forest Inventory located in Catalonia. Forest plots correspond to pure stands whose dominant species are <em>Fagus sylvatica</em>, <em>Pinus halepensis</em>, <em>Pinus nigra</em>, <em>Pinus sylvestris</em> or <em>Quercus pubescens</em>. There are 15 plots per each dominant species and each set of 15 plots encompass a range of climatic aridity. Plot characteristics are described in Rosas et al. (2019). Dendrochronological series are available for up to 6 trees per plot and were sampled in December 2015. Note that a sixth species (<em>Quercus ilex</em>) was included in Rosas et al (2019), but dendrochronological dating is not available.</li>
-<li>The second data set corresponds to 12 plots located in the Pyrenees and describing pure <em>Pinus uncinata</em> stands close to the treeline. Dendrochronological series were taken in 2004-2005 from tree base samples and were available for almost all trees in each stand. Forest stands and sampling procedures are described in Batllori &amp; Gutiérrez (2008) and Batllori et al. (2009).</li>
+<li>The first data set corresponds to 75 permanent forest plots of the
+Spanish National Forest Inventory located in Catalonia. Forest plots
+correspond to pure stands whose dominant species are <em>Fagus
+sylvatica</em>, <em>Pinus halepensis</em>, <em>Pinus nigra</em>,
+<em>Pinus sylvestris</em> or <em>Quercus pubescens</em>. There are 15
+plots per each dominant species and each set of 15 plots encompass a
+range of climatic aridity. Plot characteristics are described in Rosas
+et al. (2019). Dendrochronological series are available for up to 6
+trees per plot and were sampled in December 2015. Note that a sixth
+species (<em>Quercus ilex</em>) was included in Rosas et al (2019), but
+dendrochronological dating is not available.</li>
+<li>The second data set corresponds to 12 plots located in the Pyrenees
+and describing pure <em>Pinus uncinata</em> stands close to the
+treeline. Dendrochronological series were taken in 2004-2005 from tree
+base samples and were available for almost all trees in each stand.
+Forest stands and sampling procedures are described in Batllori &amp;
+Gutiérrez (2008) and Batllori et al. (2009).</li>
 </ol>
 </div>
 <div class="section level3">
@@ -105,21 +131,64 @@
 <p>The model parameters for which we desired good estimates are:</p>
 <ol style="list-style-type: lower-alpha">
 <li>
-<strong>Sapwood daily respiration rate (RERsapwood)</strong> - Used to modulate maintenance respiration demands of living sapwood tissues (parenchyma, cambium, phloem, etc.), which in large trees may also represent a large fraction of maintenance respiration.</li>
+<strong>Sapwood daily respiration rate (RERsapwood)</strong> - Used
+to modulate maintenance respiration demands of living sapwood tissues
+(parenchyma, cambium, phloem, etc.), which in large trees may also
+represent a large fraction of maintenance respiration.</li>
 <li>
-<strong>Sapwood maximum growth rate (RGRcambiummax)</strong> - Used to modulate tree maximum daily sapwood growth rates (relative to current cambium perimeter). Actual relative growth rates include temperature and sink limitations to growth.</li>
+<strong>Sapwood maximum growth rate (RGRcambiummax)</strong> - Used
+to modulate tree maximum daily sapwood growth rates (relative to current
+cambium perimeter). Actual relative growth rates include temperature and
+sink limitations to growth.</li>
 <li>
-<strong>Sapwood daily senescence rate (SRsapwood)</strong> - Used to determine the daily proportion of sapwood that becomes heartwood. It regulates the area of functional sapwood, together with the sapwood maximum growth rate.</li>
+<strong>Sapwood daily senescence rate (SRsapwood)</strong> - Used to
+determine the daily proportion of sapwood that becomes heartwood. It
+regulates the area of functional sapwood, together with the sapwood
+maximum growth rate.</li>
 </ol>
-<p>In addition, soil stoniness in the target plots had been estimated from surface stoniness classes. Since soil rock fragment content (<code>rfc</code>) has a strong influence on soil water capacity, we decided to include the proportion of rocks in the second soil layer (between 30 and 100 cm) as a parameter to be calibrated.</p>
+<p>In addition, soil stoniness in the target plots had been estimated
+from surface stoniness classes. Since soil rock fragment content
+(<code>rfc</code>) has a strong influence on soil water capacity, we
+decided to include the proportion of rocks in the second soil layer
+(between 30 and 100 cm) as a parameter to be calibrated.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="calibration-procedure">Calibration procedure<a class="anchor" aria-label="anchor" href="#calibration-procedure"></a>
 </h2>
-<p>For each forest plot in the first data set, we matched each available dendrochronological series with a forest inventory tree cohort by finding which tree (in the IFN3 sampling) had the DBH most similar to that estimated from the dendrochronology at year 2000. Then, we took the series of annual basal area increments (BAI) as the observations to be matched by model secondary growth predictions for the matched tree cohort. For each forest plot of the second data set, we took all available dendrochronological series between 1990 and 2004. Available diameter increments (DI) were used to infer DBH at year 1990 and we transformed DI into annual BAI.</p>
-<p>Simulations were performed using daily weather data for each target plot, obtained via interpolation using package <strong>meteoland</strong> (2001 - 2015 period or 1990-2004 period, depending on the data set), and soil physical characteristics where drawn from SoilGrids data base. Water use efficiency parameters (<code>WUE</code> and <code>WUE_decay</code>) were given values resulting from the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html" class="external-link">meta-modelling exercise</a>, whereas other parameters of the sensitivity analysis were left to the species-level defaults of <code>SpParamsMED</code>. We calibrated the four target parameters for the target dominant species of the target plot using a genetic algorithm (function <code>ga</code> from package <strong>GA</strong>). Model parameter values were assumed to be the same for all cohorts of the target species, while the remaining species in the plot were given default constant parameter values. The objective function for the genetic algorithm was the average, across cohorts with observed dendrochronology series, of the mean absolute error (MAE) resulting from comparing observed and predicted annual BAI series. Population size for the genetic algorithm was set to 40 individuals. A maximum of 25 iterations of the genetic algorithm were allowed, and the calibration procedure stopped if the best parameter combination did not change during 5 consecutive iterations.</p>
-The following table shows the range of values explored for each parameter to be calibrated:
+<p>For each forest plot in the first data set, we matched each available
+dendrochronological series with a forest inventory tree cohort by
+finding which tree (in the IFN3 sampling) had the DBH most similar to
+that estimated from the dendrochronology at year 2000. Then, we took the
+series of annual basal area increments (BAI) as the observations to be
+matched by model secondary growth predictions for the matched tree
+cohort. For each forest plot of the second data set, we took all
+available dendrochronological series between 1990 and 2004. Available
+diameter increments (DI) were used to infer DBH at year 1990 and we
+transformed DI into annual BAI.</p>
+<p>Simulations were performed using daily weather data for each target
+plot, obtained via interpolation using package
+<strong>meteoland</strong> (2001 - 2015 period or 1990-2004 period,
+depending on the data set), and soil physical characteristics where
+drawn from SoilGrids data base. Water use efficiency parameters
+(<code>WUE</code> and <code>WUE_decay</code>) were given values
+resulting from the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html" class="external-link">meta-modelling
+exercise</a>, whereas other parameters of the sensitivity analysis were
+left to the species-level defaults of <code>SpParamsMED</code>. We
+calibrated the four target parameters for the target dominant species of
+the target plot using a genetic algorithm (function <code>ga</code> from
+package <strong>GA</strong>). Model parameter values were assumed to be
+the same for all cohorts of the target species, while the remaining
+species in the plot were given default constant parameter values. The
+objective function for the genetic algorithm was the average, across
+cohorts with observed dendrochronology series, of the mean absolute
+error (MAE) resulting from comparing observed and predicted annual BAI
+series. Population size for the genetic algorithm was set to 40
+individuals. A maximum of 25 iterations of the genetic algorithm were
+allowed, and the calibration procedure stopped if the best parameter
+combination did not change during 5 consecutive iterations.</p>
+The following table shows the range of values explored for each
+parameter to be calibrated:
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -185,15 +254,20 @@ SRsapwood
 <div class="section level3">
 <h3 id="error-function">Error function<a class="anchor" aria-label="anchor" href="#error-function"></a>
 </h3>
-<p>The following panel shows the distribution of the final (optimum) values of the error function (average relative MAE) by dominant species:</p>
+<p>The following panel shows the distribution of the final (optimum)
+values of the error function (average relative MAE) by dominant
+species:</p>
 <p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-4-1.png" width="384"></p>
 </div>
 <div class="section level3">
 <h3 id="parameter-distribution-and-covariance">Parameter distribution and covariance<a class="anchor" aria-label="anchor" href="#parameter-distribution-and-covariance"></a>
 </h3>
-<p>The following panels show the distribution of calibrated parameter values by species (gray dashed lines indicate the parameter value limits used in the calibration procedure):</p>
+<p>The following panels show the distribution of calibrated parameter
+values by species (gray dashed lines indicate the parameter value limits
+used in the calibration procedure):</p>
 <p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
-<p>The following table shows mean error and parameter values by species and overall means:</p>
+<p>The following table shows mean error and parameter values by species
+and overall means:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -337,7 +411,9 @@ All
 </tr>
 </tbody>
 </table>
-<p>Statistically significant differences can be observed between species for <code>RERsapwood</code> and <code>RGRcambiummax</code>, as shown in the following ANOVA tables:</p>
+<p>Statistically significant differences can be observed between species
+for <code>RERsapwood</code> and <code>RGRcambiummax</code>, as shown in
+the following ANOVA tables:</p>
 <pre><code><span class="co">## Analysis of Variance Table</span>
 <span class="co">## </span>
 <span class="co">## Response: RERsapwood_cal</span>
@@ -366,13 +442,25 @@ All
 <span class="co">## Residuals 70 28124.4  401.78                  </span>
 <span class="co">## ---</span>
 <span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></code></pre>
-<p>Finally, the following panels illustrate the overall lack of covariance between calibrated parameter values: <img src="GrowthCalibration_files/figure-html/unnamed-chunk-12-1.png" width="960"></p>
+<p>Finally, the following panels illustrate the overall lack of
+covariance between calibrated parameter values:
+<img src="GrowthCalibration_files/figure-html/unnamed-chunk-12-1.png" width="960"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="final-evaluation">Final evaluation<a class="anchor" aria-label="anchor" href="#final-evaluation"></a>
 </h2>
-<p>Finally, we wanted to evaluate the reduction in predictive error of secondary growth attained by calibrating growth parameters. Moreover, since applications of the growth model will normally be on plots lacking growth observations, we wanted to assess the predictive error of species-level parameter averages and overall parameter averages. Hence, we ran the growth model on the forest plots using either species-level averages or the overall averages of the calibrated parameters. In this second case, we excluded from the values to be averaged those corresponding to plots where relative MAE was &gt; 100%, assuming that calibration was not successful in those cases. The following table shows the species-level parameter values:</p>
+<p>Finally, we wanted to evaluate the reduction in predictive error of
+secondary growth attained by calibrating growth parameters. Moreover,
+since applications of the growth model will normally be on plots lacking
+growth observations, we wanted to assess the predictive error of
+species-level parameter averages and overall parameter averages. Hence,
+we ran the growth model on the forest plots using either species-level
+averages or the overall averages of the calibrated parameters. In this
+second case, we excluded from the values to be averaged those
+corresponding to plots where relative MAE was &gt; 100%, assuming that
+calibration was not successful in those cases. The following table shows
+the species-level parameter values:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -474,8 +562,12 @@ Quercus humilis
 </tr>
 </tbody>
 </table>
-<p>The following panels show the prediction error (either absolute or relative) for the annual BAI, as done above but including the new simulations: <img src="GrowthCalibration_files/figure-html/unnamed-chunk-15-1.png" width="960"></p>
-The following table shows annual BAI evaluation results by species (medians):
+<p>The following panels show the prediction error (either absolute or
+relative) for the annual BAI, as done above but including the new
+simulations:
+<img src="GrowthCalibration_files/figure-html/unnamed-chunk-15-1.png" width="960"></p>
+The following table shows annual BAI evaluation results by species
+(medians):
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -641,9 +733,12 @@ Quercus humilis
 </tr>
 </tbody>
 </table>
-<p>We also evaluated the performance of the model in terms of predicting total basal area growth during the 15 years simulated, where we again used as error function the mean absolute error:</p>
+<p>We also evaluated the performance of the model in terms of predicting
+total basal area growth during the 15 years simulated, where we again
+used as error function the mean absolute error:</p>
 <p><img src="GrowthCalibration_files/figure-html/unnamed-chunk-17-1.png" width="960"></p>
-The following table shows total BAI evaluation results by species (medians):
+The following table shows total BAI evaluation results by species
+(medians):
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -809,15 +904,27 @@ Quercus humilis
 </tr>
 </tbody>
 </table>
-<p>From these results, it is apparent that the calibration improved substantially the predictive capacity of the model. More importantly, using species-level averages or overall averages do not seem to increase substantially prediction errors, compared to plot-level calibrated parameter values.</p>
+<p>From these results, it is apparent that the calibration improved
+substantially the predictive capacity of the model. More importantly,
+using species-level averages or overall averages do not seem to increase
+substantially prediction errors, compared to plot-level calibrated
+parameter values.</p>
 </div>
 <div class="section level2">
 <h2 id="bibliography">Bibliography<a class="anchor" aria-label="anchor" href="#bibliography"></a>
 </h2>
 <ul>
-<li>Batllori, E., J. M. Blanco-Moreno, J. M. Ninot, E. Gutiérrez, and E. Carrillo. 2009. Vegetation patterns at the alpine treeline ecotone: the influence of tree cover on abrupt change in species composition of alpine communities. Journal of Vegetation Science 20:814–825.</li>
-<li>Batllori, E., and E. Gutiérrez. 2008. Regional tree line dynamics in response to global change in the Pyrenees. Journal of Ecology 96:1275–1288.</li>
-<li>Rosas, T., M. Mencuccini, J. Barba, H. Cochard, S. Saura-Mas, and J. Martínez-Vilalta. 2019. Adjustments and coordination of hydraulic, leaf and stem traits along a water availability gradient. New Phytologist 223:632–646.</li>
+<li>Batllori, E., J. M. Blanco-Moreno, J. M. Ninot, E. Gutiérrez, and E.
+Carrillo. 2009. Vegetation patterns at the alpine treeline ecotone: the
+influence of tree cover on abrupt change in species composition of
+alpine communities. Journal of Vegetation Science 20:814–825.</li>
+<li>Batllori, E., and E. Gutiérrez. 2008. Regional tree line dynamics in
+response to global change in the Pyrenees. Journal of Ecology
+96:1275–1288.</li>
+<li>Rosas, T., M. Mencuccini, J. Barba, H. Cochard, S. Saura-Mas, and J.
+Martínez-Vilalta. 2019. Adjustments and coordination of hydraulic, leaf
+and stem traits along a water availability gradient. New Phytologist
+223:632–646.</li>
 </ul>
 </div>
   </div>

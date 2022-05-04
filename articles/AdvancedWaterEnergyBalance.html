@@ -70,9 +70,10 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Advanced water and energy balance</h1>
-                        <h4 data-toc-skip class="author">Miquel De Caceres</h4>
+                        <h4 data-toc-skip class="author">Miquel De
+Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-05-02</h4>
+            <h4 data-toc-skip class="date">2022-05-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/AdvancedWaterEnergyBalance.Rmd" class="external-link"><code>vignettes/AdvancedWaterEnergyBalance.Rmd</code></a></small>
       <div class="hidden name"><code>AdvancedWaterEnergyBalance.Rmd</code></div>
@@ -84,22 +85,36 @@
 <div class="section level2">
 <h2 id="about-this-vignette">About this vignette<a class="anchor" aria-label="anchor" href="#about-this-vignette"></a>
 </h2>
-<p>This document describes how to run a water and energy balance model that uses a more detailed approach for hydraulics and stomatal regulation described in De Cáceres et al. (2021). This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation can be found at the <a href="https://emf-creaf.github.io/medfatebook/index.html" class="external-link">medfatebook</a>.</p>
+<p>This document describes how to run a water and energy balance model
+that uses a more detailed approach for hydraulics and stomatal
+regulation described in De Cáceres et al. (2021). This document is meant
+to teach users to run the simulation model within R. All the details of
+the model design and formulation can be found at the <a href="https://emf-creaf.github.io/medfatebook/index.html" class="external-link">medfatebook</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="preparing-model-inputs">Preparing model inputs<a class="anchor" aria-label="anchor" href="#preparing-model-inputs"></a>
 </h2>
-<p>Model inputs are explained in greater detail in vignette <a href="https://emf-creaf.github.io/medfate/articles/PreparingInputs.html" class="external-link"><em>Preparing model inputs</em></a>. Here we only review the different steps required to run function <code><a href="../reference/spwb.html">spwb()</a></code>.</p>
+<p>Model inputs are explained in greater detail in vignette <a href="https://emf-creaf.github.io/medfate/articles/PreparingInputs.html" class="external-link"><em>Preparing
+model inputs</em></a>. Here we only review the different steps required
+to run function <code><a href="../reference/spwb.html">spwb()</a></code>.</p>
 <div class="section level3">
 <h3 id="soil-vegetation-meteorology-and-species-data">Soil, vegetation, meteorology and species data<a class="anchor" aria-label="anchor" href="#soil-vegetation-meteorology-and-species-data"></a>
 </h3>
-<p>Soil information needs to be entered as a <code>data frame</code> with soil layers in rows and physical attributes in columns. Soil physical attributes can be initialized to default values, for a given number of layers, using function <code><a href="../reference/defaultSoilParams.html">defaultSoilParams()</a></code>:</p>
+<p>Soil information needs to be entered as a <code>data frame</code>
+with soil layers in rows and physical attributes in columns. Soil
+physical attributes can be initialized to default values, for a given
+number of layers, using function <code><a href="../reference/defaultSoilParams.html">defaultSoilParams()</a></code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">spar</span> <span class="op">=</span> <span class="fu"><a href="../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></code></pre></div>
-<p>The soil input for water balance simulation is actually a list of class <code>soil</code> that is created using a function with the same name:</p>
+<p>The soil input for water balance simulation is actually a list of
+class <code>soil</code> that is created using a function with the same
+name:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">spar</span><span class="op">)</span></code></pre></div>
-<p>As explained in the package overview, models included in <code>medfate</code> were primarily designed to be ran on <strong>forest inventory plots</strong>. Here we use the example object provided with the package:</p>
+<p>As explained in the package overview, models included in
+<code>medfate</code> were primarily designed to be ran on <strong>forest
+inventory plots</strong>. Here we use the example object provided with
+the package:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span>
 <span class="va">exampleforestMED</span></code></pre></div>
@@ -126,7 +141,9 @@
 <span class="co">## </span>
 <span class="co">## attr(,"class")</span>
 <span class="co">## [1] "forest" "list"</span></code></pre>
-<p>Advanced water and energy balance modeling requires daily precipitation, radiation, wind speed, min/max temparatures and relative humitidy as inputs:</p>
+<p>Advanced water and energy balance modeling requires daily
+precipitation, radiation, wind speed, min/max temparatures and relative
+humitidy as inputs:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></code></pre></div>
@@ -151,32 +168,52 @@
 <span class="co">## 2001-01-04  11.07275  2.000000           172 0.9200627</span>
 <span class="co">## 2001-01-05  13.45205  7.581347           321 2.2914449</span>
 <span class="co">## 2001-01-06  12.84841  6.570501           141 1.7255058</span></code></pre>
-<p>Finally, simulations in <code>medfate</code> require a data frame with species parameter values, which we load using defaults for Catalonia (NE Spain):</p>
+<p>Finally, simulations in <code>medfate</code> require a data frame
+with species parameter values, which we load using defaults for
+Catalonia (NE Spain):</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpParamsMED"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="simulation-control">Simulation control<a class="anchor" aria-label="anchor" href="#simulation-control"></a>
 </h3>
-<p>Apart from data inputs, the behaviour of simulation models is controlled using a set of global parameters. The default parameterization is obtained using function <code><a href="../reference/defaultControl.html">defaultControl()</a></code>:</p>
+<p>Apart from data inputs, the behaviour of simulation models is
+controlled using a set of global parameters. The default
+parameterization is obtained using function
+<code><a href="../reference/defaultControl.html">defaultControl()</a></code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></code></pre></div>
-<p>To use the complex soil water balance model we must change the values of <code>transpirationMode</code> (to switch from “Granier” to “Sperry”) and <code>soilFunctions</code> (to switch from Saxton’s retention curve, “SX”, to Van Genuchten’s retention curve, “VG”). This is automatically done when calling function <code><a href="../reference/defaultControl.html">defaultControl()</a></code> with <code>"Sperry"</code> as parameter input.</p>
+<p>To use the complex soil water balance model we must change the values
+of <code>transpirationMode</code> (to switch from “Granier” to “Sperry”)
+and <code>soilFunctions</code> (to switch from Saxton’s retention curve,
+“SX”, to Van Genuchten’s retention curve, “VG”). This is automatically
+done when calling function <code><a href="../reference/defaultControl.html">defaultControl()</a></code> with
+<code>"Sperry"</code> as parameter input.</p>
 </div>
 <div class="section level3">
 <h3 id="water-balance-input-object">Water balance input object<a class="anchor" aria-label="anchor" href="#water-balance-input-object"></a>
 </h3>
-<p>A last object is needed before calling simulation functions, called <code>spwbInput</code>. It consists in the compilation of aboveground and belowground parameters and the specification of additional parameter values for each plant cohort. This is done by calling function <code><a href="../reference/modelInput.html">spwbInput()</a></code>, but if one has a <code>forest</code> object, the object can be generated more directly using function <code><a href="../reference/modelInput.html">forest2spwbInput()</a></code>:</p>
+<p>A last object is needed before calling simulation functions, called
+<code>spwbInput</code>. It consists in the compilation of aboveground
+and belowground parameters and the specification of additional parameter
+values for each plant cohort. This is done by calling function
+<code><a href="../reference/modelInput.html">spwbInput()</a></code>, but if one has a <code>forest</code> object,
+the object can be generated more directly using function
+<code><a href="../reference/modelInput.html">forest2spwbInput()</a></code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../reference/modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></code></pre></div>
-<p>The <code>spwbInput</code> object for advanced water and energy balance is similar to that of simple water balance simulations, but contains more elements. Information about the cohort species is found in element <code>cohorts</code> (i.e. code, species and name):</p>
+<p>The <code>spwbInput</code> object for advanced water and energy
+balance is similar to that of simple water balance simulations, but
+contains more elements. Information about the cohort species is found in
+element <code>cohorts</code> (i.e. code, species and name):</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">cohorts</span></code></pre></div>
 <pre><code><span class="co">##         SP              Name</span>
 <span class="co">## T1_148 148  Pinus halepensis</span>
 <span class="co">## T2_168 168      Quercus ilex</span>
 <span class="co">## S1_165 165 Quercus coccifera</span></code></pre>
-<p>Element <code>canopy</code> contains state variables within the canopy:</p>
+<p>Element <code>canopy</code> contains state variables within the
+canopy:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">canopy</span></code></pre></div>
 <pre><code><span class="co">##    zlow zmid  zup Tair Cair VPair</span>
@@ -208,8 +245,14 @@
 <span class="co">## 26 2500 2550 2600   NA   NA    NA</span>
 <span class="co">## 27 2600 2650 2700   NA   NA    NA</span>
 <span class="co">## 28 2700 2750 2800   NA   NA    NA</span></code></pre>
-<p>Canopy temperature, water vapour pressure and <span class="math inline">\(CO_2\)</span> concentration are state variables needed for canopy energy balance. If the canopy energy balance assumes a single canopy layer, the same values will be assumed through the canopy. Variation of within-canopy state variables is modelled if a multi-canopy energy balance is used (see control parameter <code>multiLayerBalance</code>).</p>
-<p>As you may already known, element <code>above</code> contains the aboveground structure data that we already know:</p>
+<p>Canopy temperature, water vapour pressure and <span class="math inline">\(CO_2\)</span> concentration are state variables
+needed for canopy energy balance. If the canopy energy balance assumes a
+single canopy layer, the same values will be assumed through the canopy.
+Variation of within-canopy state variables is modelled if a multi-canopy
+energy balance is used (see control parameter
+<code>multiLayerBalance</code>).</p>
+<p>As you may already known, element <code>above</code> contains the
+aboveground structure data that we already know:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">above</span></code></pre></div>
 <pre><code><span class="co">##          H        CR        N   LAI_live LAI_expanded LAI_dead</span>
@@ -261,7 +304,9 @@
 <span class="co">## T1_148 -0.033 -0.033 -0.033 -0.033</span>
 <span class="co">## T2_168 -0.033 -0.033 -0.033 -0.033</span>
 <span class="co">## S1_165 -0.033 -0.033 -0.033 -0.033</span></code></pre>
-<p>The <code>spwbInput</code>object also includes cohort parameter values for several kinds of traits. For example, plant anatomy parameters are described in <code>paramsAnatomy</code>:</p>
+<p>The <code>spwbInput</code>object also includes cohort parameter
+values for several kinds of traits. For example, plant anatomy
+parameters are described in <code>paramsAnatomy</code>:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsAnatomy</span></code></pre></div>
 <pre><code><span class="co">##        Hmed    Al2As      SLA LeafWidth LeafDensity WoodDensity FineRootDensity</span>
@@ -272,7 +317,8 @@
 <span class="co">## T1_148       0.9236406 3172.572  10 1.964226</span>
 <span class="co">## T2_168       0.6238125 4398.812  10 1.805872</span>
 <span class="co">## S1_165       0.6238125 4398.812  10 2.289452</span></code></pre>
-<p>Parameters related to plant transpiration and photosynthesis can be seen in <code>paramsTranspiration</code>:</p>
+<p>Parameters related to plant transpiration and photosynthesis can be
+seen in <code>paramsTranspiration</code>:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsTranspiration</span></code></pre></div>
 <pre><code><span class="co">##             Gswmin    Gswmax  Vmax298  Jmax298 Kmax_stemxylem Kmax_rootxylem</span>
@@ -287,7 +333,9 @@
 <span class="co">## T1_148    1.505250 11.137051 -3.065569     29078608  0.6021000</span>
 <span class="co">## T2_168    1.730249  1.339370 -2.214081     92609924  0.6920994</span>
 <span class="co">## S1_165    4.660990  1.760307 -2.797092    473105480  1.8643961</span></code></pre>
-<p>Finally, parameters related to pressure-volume curves and water storage capacity of leaf and stem organs are in <code>paramsWaterStorage</code>:</p>
+<p>Finally, parameters related to pressure-volume curves and water
+storage capacity of leaf and stem organs are in
+<code>paramsWaterStorage</code>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsWaterStorage</span></code></pre></div>
 <pre><code><span class="co">##           maxFMC   LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS</span>
@@ -298,17 +346,30 @@
 <span class="co">## T1_148 0.9236406 7.669572</span>
 <span class="co">## T2_168 0.6238125 1.623685</span>
 <span class="co">## S1_165 0.6238125 1.619915</span></code></pre>
-<p>Finally, remember that one can play with plant-specific parameters for soil water balance (instead of using species-level values) by modifying manually the parameter values in this object.</p>
+<p>Finally, remember that one can play with plant-specific parameters
+for soil water balance (instead of using species-level values) by
+modifying manually the parameter values in this object.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="static-analysis-of-submodels">Static analysis of submodels<a class="anchor" aria-label="anchor" href="#static-analysis-of-submodels"></a>
 </h2>
-<p>Before using the advanced water and energy balance model, is important to understand the parameters that influence the different sub-models. Package <code>medfate</code> provides low-level functions corresponding to sub-models (light extinction, hydraulics, transpiration, photosynthesis…). In addition, there are several high-level plotting functions that allow examining several aspects of these processes.</p>
+<p>Before using the advanced water and energy balance model, is
+important to understand the parameters that influence the different
+sub-models. Package <code>medfate</code> provides low-level functions
+corresponding to sub-models (light extinction, hydraulics,
+transpiration, photosynthesis…). In addition, there are several
+high-level plotting functions that allow examining several aspects of
+these processes.</p>
 <div class="section level3">
 <h3 id="vulnerability-curves">Vulnerability curves<a class="anchor" aria-label="anchor" href="#vulnerability-curves"></a>
 </h3>
-<p>Given a <code>spwbInput</code> object, we can use function <code><a href="../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot()</a></code> to inspect <strong>vulnerability curves</strong> (i.e. how hydraulic conductance of a given segment changes with the water potential) for each plant cohort and each of the different segments of the soil-plant hydraulic network: rhizosphere, roots, stems and leaves:</p>
+<p>Given a <code>spwbInput</code> object, we can use function
+<code><a href="../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot()</a></code> to inspect
+<strong>vulnerability curves</strong> (i.e. how hydraulic conductance of
+a given segment changes with the water potential) for each plant cohort
+and each of the different segments of the soil-plant hydraulic network:
+rhizosphere, roots, stems and leaves:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"leaf"</span><span class="op">)</span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-16-1.png" width="480" style="display: block; margin: auto;"></p>
@@ -321,12 +382,28 @@
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"rhizo"</span><span class="op">)</span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-16-4.png" width="480" style="display: block; margin: auto;"></p>
-<p>The maximum values and shape of vulnerability curves for leaves and stems are regulated by parameters in <code>paramsTranspiration</code>. Roots have vulnerability curve parameters in the same data frame, but maximum conductance values need to be specified for each soil layer and are given in <code>belowLayers$VCroot_kmax</code>. Note that the last call to <code><a href="../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot()</a></code> includes a <code>soil</code> object. This is because the van Genuchten parameters that define the shape of the vulnerability curve for the rhizosphere are stored in this object. Maximum conductance values in the rhizosphere are given in <code>belowLayers$VGrhizo_kmax</code>.</p>
+<p>The maximum values and shape of vulnerability curves for leaves and
+stems are regulated by parameters in <code>paramsTranspiration</code>.
+Roots have vulnerability curve parameters in the same data frame, but
+maximum conductance values need to be specified for each soil layer and
+are given in <code>belowLayers$VCroot_kmax</code>. Note that the last
+call to <code><a href="../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot()</a></code> includes a
+<code>soil</code> object. This is because the van Genuchten parameters
+that define the shape of the vulnerability curve for the rhizosphere are
+stored in this object. Maximum conductance values in the rhizosphere are
+given in <code>belowLayers$VGrhizo_kmax</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="supply-functions">Supply functions<a class="anchor" aria-label="anchor" href="#supply-functions"></a>
 </h3>
-<p>The vulnerability curves conforming the hydraulic network are used in the model to build the <strong>supply function</strong>, which relates water flow (i.e. transpiration) with the drop of water potential along the whole hydraulic pathway. The supply function contains not only these two variables, but also the water potential of intermediate nodes in the the hydraulic network. Function <code><a href="../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot()</a></code> can be used to inspect any of this variables:</p>
+<p>The vulnerability curves conforming the hydraulic network are used in
+the model to build the <strong>supply function</strong>, which relates
+water flow (i.e. transpiration) with the drop of water potential along
+the whole hydraulic pathway. The supply function contains not only these
+two variables, but also the water potential of intermediate nodes in the
+the hydraulic network. Function
+<code><a href="../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot()</a></code> can be used to inspect any
+of this variables:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"E"</span><span class="op">)</span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-1.png" width="480" style="display: block; margin: auto;"></p>
@@ -339,12 +416,26 @@
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"StemPsi"</span><span class="op">)</span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-4.png" width="480" style="display: block; margin: auto;"></p>
-<p>Calls to <code><a href="../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot()</a></code> always need both a <code>spwbInput</code> object and a <code>soil</code> object. The soil moisture state (i.e. its water potential) is the starting point for the calculation of the supply function, so different curves will be obtained for different values of soil moisture.</p>
+<p>Calls to <code><a href="../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot()</a></code> always need
+both a <code>spwbInput</code> object and a <code>soil</code> object. The
+soil moisture state (i.e. its water potential) is the starting point for
+the calculation of the supply function, so different curves will be
+obtained for different values of soil moisture.</p>
 </div>
 <div class="section level3">
 <h3 id="stomatal-regulation-and-photosynthesis">Stomatal regulation and photosynthesis<a class="anchor" aria-label="anchor" href="#stomatal-regulation-and-photosynthesis"></a>
 </h3>
-<p>The soil water balance model determines stomatal conductance and transpiration separately for sunlit and shade leaves. Stomatal conductance is determined after building a photosynthesis function corresponding to the supply function and finding the value of stomatal conductance that maximizes carbon revenue while avoiding hydraulic damage (a profit-maximization approach). Given a meteorological and soil inputs and a chosen day and timestep, function <code><a href="../reference/transp_stomatalregulation.html">transp_stomatalRegulationPlot()</a></code> allows displaying the supply and photosynthesis curves for sunlit and shade leaves, along with an indication of the values corresponding to the chosen stomatal aperture:</p>
+<p>The soil water balance model determines stomatal conductance and
+transpiration separately for sunlit and shade leaves. Stomatal
+conductance is determined after building a photosynthesis function
+corresponding to the supply function and finding the value of stomatal
+conductance that maximizes carbon revenue while avoiding hydraulic
+damage (a profit-maximization approach). Given a meteorological and soil
+inputs and a chosen day and timestep, function
+<code><a href="../reference/transp_stomatalregulation.html">transp_stomatalRegulationPlot()</a></code> allows displaying the
+supply and photosynthesis curves for sunlit and shade leaves, along with
+an indication of the values corresponding to the chosen stomatal
+aperture:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">d</span> <span class="op">=</span> <span class="fl">100</span>
 <span class="fu"><a href="../reference/transp_stomatalregulation.html">transp_stomatalRegulationPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, day <span class="op">=</span> <span class="va">d</span>, timestep<span class="op">=</span><span class="fl">12</span>,
@@ -390,17 +481,23 @@
 <div class="section level3">
 <h3 id="running-the-model">Running the model<a class="anchor" aria-label="anchor" href="#running-the-model"></a>
 </h3>
-<p>Soil water balance simulations will normally span periods of several months or years, but since the model operates at a daily and subdaily temporal scales, it is possible to perform soil water balance for one day only. This is done using function <code><a href="../reference/spwb_day.html">spwb_day()</a></code>. In the following code we select the same day as before from the meteorological input data and perform soil water balance for that day only:</p>
+<p>Soil water balance simulations will normally span periods of several
+months or years, but since the model operates at a daily and subdaily
+temporal scales, it is possible to perform soil water balance for one
+day only. This is done using function <code><a href="../reference/spwb_day.html">spwb_day()</a></code>. In the
+following code we select the same day as before from the meteorological
+input data and perform soil water balance for that day only:</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sd1</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/spwb_day.html">spwb_day</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>,  
+<code class="sourceCode R"><span class="va">sd1</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/spwb_day.html">spwb_day</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>,  
              <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, 
              <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, 
              <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Radiation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">WindSpeed</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, 
              latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, 
              slope<span class="op">=</span> <span class="fl">0</span>, aspect <span class="op">=</span> <span class="fl">0</span>, prec <span class="op">=</span> <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Precipitation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span><span class="op">)</span></code></pre></div>
-<p>The output of <code><a href="../reference/spwb_day.html">spwb_day()</a></code> is a list with several elements:</p>
+<p>The output of <code><a href="../reference/spwb_day.html">spwb_day()</a></code> is a list with several
+elements:</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sd1</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sd1</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "cohorts"          "WaterBalance"     "EnergyBalance"    "Soil"            </span>
 <span class="co">##  [5] "Stand"            "Plants"           "RhizoPsi"         "SunlitLeaves"    </span>
 <span class="co">##  [9] "ShadeLeaves"      "ExtractionInst"   "PlantsInst"       "SunlitLeavesInst"</span>
@@ -409,7 +506,8 @@
 <div class="section level3">
 <h3 id="water-balance-output">Water balance output<a class="anchor" aria-label="anchor" href="#water-balance-output"></a>
 </h3>
-<p>Element <code>WaterBalance</code> contains the soil water balance flows of the day (precipitation, infiltration, transpiration, …)</p>
+<p>Element <code>WaterBalance</code> contains the soil water balance
+flows of the day (precipitation, infiltration, transpiration, …)</p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sd1</span><span class="op">$</span><span class="va">WaterBalance</span></code></pre></div>
 <pre><code><span class="co">##                     PET                    Rain                    Snow </span>
@@ -422,7 +520,9 @@
 <span class="co">##              0.02432124              0.67987403              0.67987403 </span>
 <span class="co">## HydraulicRedistribution </span>
 <span class="co">##              0.00000000</span></code></pre>
-<p>And <code>Soil</code> contains water evaporated from each soil layer, water transpired from each soil layer and the final soil water potential:</p>
+<p>And <code>Soil</code> contains water evaporated from each soil layer,
+water transpired from each soil layer and the final soil water
+potential:</p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sd1</span><span class="op">$</span><span class="va">Soil</span></code></pre></div>
 <pre><code><span class="co">##   SoilEvaporation HydraulicInput HydraulicOutput PlantExtraction         psi</span>
@@ -434,12 +534,19 @@
 <div class="section level3">
 <h3 id="soil-and-canopy-energy-balance">Soil and canopy energy balance<a class="anchor" aria-label="anchor" href="#soil-and-canopy-energy-balance"></a>
 </h3>
-<p>Element <code>EnergyBalance</code> contains subdaily variation in atmosphere, canopy and soil temperatures, as well as canopy and soil energy balance components.</p>
+<p>Element <code>EnergyBalance</code> contains subdaily variation in
+atmosphere, canopy and soil temperatures, as well as canopy and soil
+energy balance components.</p>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sd1</span><span class="op">$</span><span class="va">EnergyBalance</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sd1</span><span class="op">$</span><span class="va">EnergyBalance</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] "Temperature"         "CanopyEnergyBalance" "SoilEnergyBalance"  </span>
 <span class="co">## [4] "TemperatureLayers"   "VaporPressureLayers"</span></code></pre>
-<p>Package <code>medfate</code> provides a <code>plot</code> function for objects of class <code>spwb_day</code> that can be used to inspect the results of the simulation. We use this function to display subdaily dynamics in plant, soil and canopy variables. For example, we can use it to display temperature variations (only the temperature of the topmost soil layer is drawn):</p>
+<p>Package <code>medfate</code> provides a <code>plot</code> function
+for objects of class <code>spwb_day</code> that can be used to inspect
+the results of the simulation. We use this function to display subdaily
+dynamics in plant, soil and canopy variables. For example, we can use it
+to display temperature variations (only the temperature of the topmost
+soil layer is drawn):</p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"Temperature"</span><span class="op">)</span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-25-1.png" width="480" style="display: block; margin: auto;"></p>
@@ -453,7 +560,8 @@
 <div class="section level3">
 <h3 id="plant-output">Plant output<a class="anchor" aria-label="anchor" href="#plant-output"></a>
 </h3>
-<p>Element <code>Plants</code> contains output values by plant cohort. Several output variables can be inspected in this element.</p>
+<p>Element <code>Plants</code> contains output values by plant cohort.
+Several output variables can be inspected in this element.</p>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sd1</span><span class="op">$</span><span class="va">Plants</span></code></pre></div>
 <pre><code><span class="co">##               LAI    LAIlive Extraction Transpiration GrossPhotosynthesis</span>
@@ -472,7 +580,14 @@
 <span class="co">## T1_148 -1.756408e-17</span>
 <span class="co">## T2_168 -6.071532e-18</span>
 <span class="co">## S1_165 -1.097755e-18</span></code></pre>
-<p>While <code>Plants</code> contains one value per cohort and variable that summarizes the whole simulated day, information by disaggregated by time step can be accessed in <code>PlantsInst</code>. Moreover, we can use function <code><a href="../reference/plot.spwb_day.html">plot.spwb_day()</a></code> to draw plots of sub-daily variation per species of plant transpiration per ground area (L·m<span class="math inline">\(^{-2}\)</span>), transpiration per leaf area (also in L·m<span class="math inline">\(^{-2}\)</span>), plant net photosynthesis (in g C·m<span class="math inline">\(^{-2}\)</span>), and plant water potential (in MPa):</p>
+<p>While <code>Plants</code> contains one value per cohort and variable
+that summarizes the whole simulated day, information by disaggregated by
+time step can be accessed in <code>PlantsInst</code>. Moreover, we can
+use function <code><a href="../reference/plot.spwb_day.html">plot.spwb_day()</a></code> to draw plots of sub-daily
+variation per species of plant transpiration per ground area (L·m<span class="math inline">\(^{-2}\)</span>), transpiration per leaf area (also
+in L·m<span class="math inline">\(^{-2}\)</span>), plant net
+photosynthesis (in g C·m<span class="math inline">\(^{-2}\)</span>), and
+plant water potential (in MPa):</p>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"PlantTranspiration"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-27-1.png" width="480" style="display: block; margin: auto;"></p>
@@ -489,7 +604,9 @@
 <div class="section level3">
 <h3 id="output-for-sunlit-and-shade-leaves">Output for sunlit and shade leaves<a class="anchor" aria-label="anchor" href="#output-for-sunlit-and-shade-leaves"></a>
 </h3>
-<p>The model distinguishes between sunlit and shade leaves for stomatal regulation. Static properties of sunlit and shade leaves, for each cohort, can be accessed via:</p>
+<p>The model distinguishes between sunlit and shade leaves for stomatal
+regulation. Static properties of sunlit and shade leaves, for each
+cohort, can be accessed via:</p>
 <div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sd1</span><span class="op">$</span><span class="va">SunlitLeaves</span></code></pre></div>
 <pre><code><span class="co">##                LAI  Vmax298  Jmax298 LeafPsiMin  LeafPsiMax      GSWMin</span>
@@ -510,11 +627,16 @@
 <span class="co">## T1_148 0.1965295 2.991322 11.31505</span>
 <span class="co">## T2_168 0.0514913 2.782116 11.02711</span>
 <span class="co">## S1_165 0.1128689 2.882138 10.96402</span></code></pre>
-<p>Instantaneous values are also stored for sunlit and shade leaves. We can also use the <code>plot</code> function for objects of class <code>spwb_day</code> to draw instantaneous variations in temperature for sunlit and shade leaves:</p>
+<p>Instantaneous values are also stored for sunlit and shade leaves. We
+can also use the <code>plot</code> function for objects of class
+<code>spwb_day</code> to draw instantaneous variations in temperature
+for sunlit and shade leaves:</p>
 <div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafTemperature"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;"></p>
-<p>Note that sunlit leaves of some species reach temperatures higher than the canopy. We can also plot variations in instantaneous gross and net photosynthesis rates:</p>
+<p>Note that sunlit leaves of some species reach temperatures higher
+than the canopy. We can also plot variations in instantaneous gross and
+net photosynthesis rates:</p>
 <div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafGrossPhotosynthesis"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;"></p>
@@ -547,7 +669,12 @@
 <div class="section level3">
 <h3 id="running-the-model-1">Running the model<a class="anchor" aria-label="anchor" href="#running-the-model-1"></a>
 </h3>
-<p>Users will often use function <code><a href="../reference/spwb.html">spwb()</a></code> to run the soil water balance model for several days. This function requires the <code>spwbInput</code> object, the <code>soil</code> object and the meteorological data frame. However, running <code><a href="../reference/spwb_day.html">spwb_day()</a></code> modified the input objects. In particular, the soil moisture at the end of the simulation was:</p>
+<p>Users will often use function <code><a href="../reference/spwb.html">spwb()</a></code> to run the soil
+water balance model for several days. This function requires the
+<code>spwbInput</code> object, the <code>soil</code> object and the
+meteorological data frame. However, running <code><a href="../reference/spwb_day.html">spwb_day()</a></code>
+modified the input objects. In particular, the soil moisture at the end
+of the simulation was:</p>
 <div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">W</span></code></pre></div>
 <pre><code><span class="co">## [1] 0.9925617 0.9982682 0.9997147 0.9998906</span></code></pre>
@@ -587,7 +714,9 @@
 <span class="co">## 26 2500 2550 2600 6.543248  386 0.5170718</span>
 <span class="co">## 27 2600 2650 2700 6.543248  386 0.5170718</span>
 <span class="co">## 28 2700 2750 2800 6.543248  386 0.5170718</span></code></pre>
-<p>We simply use function <code><a href="../reference/resetInputs.html">resetInputs()</a></code> to reset state variables to their default values, so that the new simulation is not affected by the end state of the previous simulation:</p>
+<p>We simply use function <code><a href="../reference/resetInputs.html">resetInputs()</a></code> to reset state
+variables to their default values, so that the new simulation is not
+affected by the end state of the previous simulation:</p>
 <div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/resetInputs.html">resetInputs</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
 <span class="va">x</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">W</span></code></pre></div>
@@ -626,7 +755,8 @@
 <span class="co">## 26 2500 2550 2600   NA  386    NA</span>
 <span class="co">## 27 2600 2650 2700   NA  386    NA</span>
 <span class="co">## 28 2700 2750 2800   NA  386    NA</span></code></pre>
-<p>Now we are ready to call function <code><a href="../reference/spwb.html">spwb()</a></code>. In this example, we only simulate 61 days to save computational time:</p>
+<p>Now we are ready to call function <code><a href="../reference/spwb.html">spwb()</a></code>. In this
+example, we only simulate 61 days to save computational time:</p>
 <div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">S</span> <span class="op">=</span> <span class="fu"><a href="../reference/spwb.html">spwb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span><span class="op">[</span><span class="fl">110</span><span class="op">:</span><span class="fl">170</span>,<span class="op">]</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## Initial soil water content (mm): 286.862</span>
@@ -648,23 +778,28 @@
 <span class="co">##   Infiltration (mm) 28 Runoff (mm) 0 Deep drainage (mm) 20</span>
 <span class="co">##   Soil evaporation (mm) 1 Transpiration (mm) 51</span>
 <span class="co">##   Plant extraction from soil (mm) 51  Plant water balance (mm) 0 Hydraulic redistribution (mm) 1</span></code></pre>
-<p>Function <code><a href="../reference/spwb.html">spwb()</a></code> returns an object of class <em>spwb</em>. If we inspect its elements, we realize that the output is arranged differently than in <code><a href="../reference/spwb_day.html">spwb_day()</a></code>:</p>
+<p>Function <code><a href="../reference/spwb.html">spwb()</a></code> returns an object of class
+<em>spwb</em>. If we inspect its elements, we realize that the output is
+arranged differently than in <code><a href="../reference/spwb_day.html">spwb_day()</a></code>:</p>
 <div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "latitude"          "topography"        "weather"          </span>
 <span class="co">##  [4] "spwbInput"         "spwbOutput"        "WaterBalance"     </span>
 <span class="co">##  [7] "EnergyBalance"     "Temperature"       "TemperatureLayers"</span>
 <span class="co">## [10] "Soil"              "Stand"             "Plants"           </span>
 <span class="co">## [13] "SunlitLeaves"      "ShadeLeaves"       "subdaily"</span></code></pre>
-<p>In particular, element <code>spwbInput</code> contains a copy of the input parameters that were used to run the model:</p>
+<p>In particular, element <code>spwbInput</code> contains a copy of the
+input parameters that were used to run the model:</p>
 <div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">spwbInput</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">spwbInput</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "control"             "soil"                "canopy"             </span>
 <span class="co">##  [4] "cohorts"             "above"               "below"              </span>
 <span class="co">##  [7] "belowLayers"         "paramsPhenology"     "paramsAnatomy"      </span>
 <span class="co">## [10] "paramsInterception"  "paramsTranspiration" "paramsWaterStorage" </span>
 <span class="co">## [13] "internalPhenology"   "internalWater"</span></code></pre>
-<p>As before, <code>WaterBalance</code> contains water balance components, but in this case in form of a data frame with days in rows:</p>
+<p>As before, <code>WaterBalance</code> contains water balance
+components, but in this case in form of a data frame with days in
+rows:</p>
 <div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##                 PET Precipitation      Rain     Snow      NetRain Snowmelt</span>
@@ -695,7 +830,9 @@
 <span class="co">## 2001-04-23                       0</span>
 <span class="co">## 2001-04-24                       0</span>
 <span class="co">## 2001-04-25                       0</span></code></pre>
-<p>Elements <code>Plants</code> is itself a list with several elements that contain daily output results by plant cohorts, for example leaf minimum (midday) water potentials are:</p>
+<p>Elements <code>Plants</code> is itself a list with several elements
+that contain daily output results by plant cohorts, for example leaf
+minimum (midday) water potentials are:</p>
 <div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">Plants</span><span class="op">$</span><span class="va">LeafPsiMin</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##               T1_148     T2_168     S1_165</span>
@@ -709,7 +846,11 @@
 <div class="section level3">
 <h3 id="plotting-and-summarizing-results">Plotting and summarizing results<a class="anchor" aria-label="anchor" href="#plotting-and-summarizing-results"></a>
 </h3>
-<p>Package <code>medfate</code> also provides a <code>plot</code> function for objects of class <code>spwb</code>. It can be used to show the meteorological input. Additionally, it can also be used to draw soil and plant variables. In the code below we draw water fluxes, soil water potentials, plant transpiration and plant (mid-day) water potential:</p>
+<p>Package <code>medfate</code> also provides a <code>plot</code>
+function for objects of class <code>spwb</code>. It can be used to show
+the meteorological input. Additionally, it can also be used to draw soil
+and plant variables. In the code below we draw water fluxes, soil water
+potentials, plant transpiration and plant (mid-day) water potential:</p>
 <div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"Evapotranspiration"</span><span class="op">)</span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-46-1.png" width="672" style="display: block; margin: auto;"></p>
@@ -722,10 +863,16 @@
 <div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"LeafPsiMin"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-46-4.png" width="672" style="display: block; margin: auto;"></p>
-<p>Alternatively, one can interactively create plots using function <code>shinyplot</code>, e.g.:</p>
+<p>Alternatively, one can interactively create plots using function
+<code>shinyplot</code>, e.g.:</p>
 <div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/shinyplot.html">shinyplot</a></span><span class="op">(</span><span class="va">S</span><span class="op">)</span></code></pre></div>
-<p>While the simulation model uses daily steps, users may be interested in outputs at larger time scales. The package provides a <code>summary</code> for objects of class <code>spwb</code>. This function can be used to summarize the model’s output at different temporal steps (i.e. weekly, annual, …). For example, to obtain the average soil moisture and water potentials by months one can use:</p>
+<p>While the simulation model uses daily steps, users may be interested
+in outputs at larger time scales. The package provides a
+<code>summary</code> for objects of class <code>spwb</code>. This
+function can be used to summarize the model’s output at different
+temporal steps (i.e. weekly, annual, …). For example, to obtain the
+average soil moisture and water potentials by months one can use:</p>
 <div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"Soil"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##                  W.1       W.2       W.3       W.4     ML.1     ML.2     ML.3</span>
@@ -744,14 +891,21 @@
 <span class="co">## 2001-04-01                0 -0.03795246 -0.03401728 -0.03316512 -0.03206830</span>
 <span class="co">## 2001-05-01                0 -0.06352246 -0.03776518 -0.03372723 -0.03282065</span>
 <span class="co">## 2001-06-01                0 -0.23840503 -0.05396268 -0.03580186 -0.03399040</span></code></pre>
-<p>Parameter <code>output</code> is used to indicate the element of the <code>spwb</code> object for which we desire summaries. Similarly, it is possible to calculate the average stress of plant cohorts by months:</p>
+<p>Parameter <code>output</code> is used to indicate the element of the
+<code>spwb</code> object for which we desire summaries. Similarly, it is
+possible to calculate the average stress of plant cohorts by months:</p>
 <div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##                 T1_148     T2_168      S1_165</span>
 <span class="co">## 2001-04-01 0.001311865 0.04408984 0.009024102</span>
 <span class="co">## 2001-05-01 0.002823361 0.06080031 0.014420944</span>
 <span class="co">## 2001-06-01 0.007943101 0.09169530 0.028443384</span></code></pre>
-<p>The <code>summary</code> function can be also used to aggregate the output by species. In this case, the values of plant cohorts belonging to the same species will be averaged using LAI values as weights. For example, we may average the daily drought stress across cohorts of the same species (here there is only one cohort by species, so this does not modify the output):</p>
+<p>The <code>summary</code> function can be also used to aggregate the
+output by species. In this case, the values of plant cohorts belonging
+to the same species will be averaged using LAI values as weights. For
+example, we may average the daily drought stress across cohorts of the
+same species (here there is only one cohort by species, so this does not
+modify the output):</p>
 <div class="sourceCode" id="cb104"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"day"</span>, output<span class="op">=</span><span class="st">"PlantStress"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##            Pinus halepensis Quercus coccifera Quercus ilex</span>
@@ -761,7 +915,8 @@
 <span class="co">## 2001-04-23     0.0006113854       0.005357905   0.03240558</span>
 <span class="co">## 2001-04-24     0.0012997183       0.008816085   0.04758876</span>
 <span class="co">## 2001-04-25     0.0025492632       0.013615493   0.06563404</span></code></pre>
-<p>Or we can combine the aggregation by species with a temporal aggregation (here monthly averages):</p>
+<p>Or we can combine the aggregation by species with a temporal
+aggregation (here monthly averages):</p>
 <div class="sourceCode" id="cb106"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"month"</span>, FUN <span class="op">=</span> <span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##            Pinus halepensis Quercus coccifera Quercus ilex</span>

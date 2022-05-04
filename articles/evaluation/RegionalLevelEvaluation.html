@@ -70,10 +70,12 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Evaluation of regional-level forest dynamics with forest inventory data</h1>
-                        <h4 data-toc-skip class="author">Miquel De Cáceres</h4>
+      <h1 data-toc-skip>Evaluation of regional-level forest dynamics
+with forest inventory data</h1>
+                        <h4 data-toc-skip class="author">Miquel De
+Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-05-02</h4>
+            <h4 data-toc-skip class="date">2022-05-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/evaluation/RegionalLevelEvaluation.Rmd" class="external-link"><code>vignettes/evaluation/RegionalLevelEvaluation.Rmd</code></a></small>
       <div class="hidden name"><code>RegionalLevelEvaluation.Rmd</code></div>
@@ -88,15 +90,36 @@
 <div class="section level3">
 <h3 id="goal">Goal<a class="anchor" aria-label="anchor" href="#goal"></a>
 </h3>
-<p>The aim of this article is to provide an assessment of the performance of <code>fordyn</code> for the prediction of forest dynamics in Catalonia (NE of Spain). To this aim, we simulate forest dynamics between two surveys of the Spanish National Forest Inventory and compare the model predictions of forest growth against inventory data for a large set of permanent plots. The evaluation focuses first on the growth (in diameter and height) of surviving trees, then turning the attention to the basal area of dead trees and overall changes in basal area.</p>
-<p>This evaluation was conducted using <strong>medfate</strong> package version <strong>2.7.2</strong>.</p>
+<p>The aim of this article is to provide an assessment of the
+performance of <code>fordyn</code> for the prediction of forest dynamics
+in Catalonia (NE of Spain). To this aim, we simulate forest dynamics
+between two surveys of the Spanish National Forest Inventory and compare
+the model predictions of forest growth against inventory data for a
+large set of permanent plots. The evaluation focuses first on the growth
+(in diameter and height) of surviving trees, then turning the attention
+to the basal area of dead trees and overall changes in basal area.</p>
+<p>This evaluation was conducted using <strong>medfate</strong> package
+version <strong>2.7.2</strong>.</p>
 </div>
 <div class="section level3">
 <h3 id="simulation-procedure">Simulation procedure<a class="anchor" aria-label="anchor" href="#simulation-procedure"></a>
 </h3>
-<p>We selected <strong>3150</strong> repeated plots (A1 between IFN3 and IFN4) without signs of management (cut trees) and whose basal area did not decrease between inventory surveys.</p>
-<p>Soil physical properties were drawn from SoilGrids (Hengl 2016), complemented by rock fragment content estimates derived from surface stoniness measurements in forest plots. Simulations were conducted between 2000/2001 (IFN3) and 2014/2016 (IFN4) depending on the sampling years of the target plot, with daily weather data obtained via interpolation on plot’s coordinates using package <strong>meteoland</strong>.</p>
-<p>Default species-specific parameters were modified using the results of the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html" class="external-link">meta-modelling exercise</a> and the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/GrowthCalibration.html" class="external-link">growth calibration exercise</a>. These two exercises do not provide values for all the main species included here, so it is expected that evaluation results are worse for those species not included in those exercises.</p>
+<p>We selected <strong>3150</strong> repeated plots (A1 between IFN3 and
+IFN4) without signs of management (cut trees) and whose basal area did
+not decrease between inventory surveys.</p>
+<p>Soil physical properties were drawn from SoilGrids (Hengl 2016),
+complemented by rock fragment content estimates derived from surface
+stoniness measurements in forest plots. Simulations were conducted
+between 2000/2001 (IFN3) and 2014/2016 (IFN4) depending on the sampling
+years of the target plot, with daily weather data obtained via
+interpolation on plot’s coordinates using package
+<strong>meteoland</strong>.</p>
+<p>Default species-specific parameters were modified using the results
+of the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html" class="external-link">meta-modelling
+exercise</a> and the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/GrowthCalibration.html" class="external-link">growth
+calibration exercise</a>. These two exercises do not provide values for
+all the main species included here, so it is expected that evaluation
+results are worse for those species not included in those exercises.</p>
 <p>The key parameters values used in simulations were the following:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -3366,13 +3389,21 @@ NA
 </tr>
 </tbody>
 </table>
-<p>In the following sections, we provide the bias, mean absolute error (both in absolute and relative terms) and R-squared of growth and mortality predictions at the tree-level and stand-level. Scatter plots are provided to represent the relationship between predicted and observed values, as well as the factors that may influence the direction and magnitude of prediction error (i.e. initial values, environmental conditions, …). Detailed results of growth evaluation by species are provided in the last section.</p>
+<p>In the following sections, we provide the bias, mean absolute error
+(both in absolute and relative terms) and R-squared of growth and
+mortality predictions at the tree-level and stand-level. Scatter plots
+are provided to represent the relationship between predicted and
+observed values, as well as the factors that may influence the direction
+and magnitude of prediction error (i.e. initial values, environmental
+conditions, …). Detailed results of growth evaluation by species are
+provided in the last section.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="growth-of-surviving-trees">Growth of surviving trees<a class="anchor" aria-label="anchor" href="#growth-of-surviving-trees"></a>
 </h2>
-<p>Comparison of growth of trees (DBH &gt;= 7.5) that survived in both observed and simulated data.</p>
+<p>Comparison of growth of trees (DBH &gt;= 7.5) that survived in both
+observed and simulated data.</p>
 <div class="section level3">
 <h3 id="annual-diameter-increment-cmyr">Annual diameter increment (cm/yr)<a class="anchor" aria-label="anchor" href="#annual-diameter-increment-cmyr"></a>
 </h3>
@@ -3439,9 +3470,11 @@ All
 </table>
 <p>Predictive capacity plot:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
-<p>Relationship between diameter increase and climatic variables (MAT, P/PET and available PAR):</p>
+<p>Relationship between diameter increase and climatic variables (MAT,
+P/PET and available PAR):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-6-1.png" width="768"></p>
-<p>Predictive capacity by species (for species with &gt; 200 tree records):</p>
+<p>Predictive capacity by species (for species with &gt; 200 tree
+records):</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -4033,7 +4066,8 @@ All
 </td>
 </tr></tbody>
 </table>
-<p>Predictive capacity by species (for species with &gt; 200 tree records):</p>
+<p>Predictive capacity by species (for species with &gt; 200 tree
+records):</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -4564,7 +4598,11 @@ Quercus suber
 <div class="section level3">
 <h3 id="stand-level-basal-area-increment-m2ha">Stand-level basal area increment (m2/ha)<a class="anchor" aria-label="anchor" href="#stand-level-basal-area-increment-m2ha"></a>
 </h3>
-<p>This comparison does not take into account changes in density. In other words, densities from IFN3 are used to calculate stand-level basal area of surviving trees. It is meant to evaluate the effect of diameter increment of surviving trees in terms of stand basal area increments.</p>
+<p>This comparison does not take into account changes in density. In
+other words, densities from IFN3 are used to calculate stand-level basal
+area of surviving trees. It is meant to evaluate the effect of diameter
+increment of surviving trees in terms of stand basal area
+increments.</p>
 Predictive capacity table:
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -4628,7 +4666,8 @@ All
 </table>
 <p>Predictive capacity plot:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-11-1.png" width="768"></p>
-<p>Relationship between basal area increase and climatic variables (MAT and P/PET):</p>
+<p>Relationship between basal area increase and climatic variables (MAT
+and P/PET):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-12-1.png" width="768"></p>
 <p>Spatial error distribution:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
@@ -5019,7 +5058,8 @@ Quercus suber
 <div class="section level2">
 <h2 id="mortality-m2ha">Mortality (m2/ha)<a class="anchor" aria-label="anchor" href="#mortality-m2ha"></a>
 </h2>
-<p>Reduction of basal area due to trees (DBH &gt;= 7.5) that died during the IFN3-IFN4 period against model’s mortality prediction.</p>
+<p>Reduction of basal area due to trees (DBH &gt;= 7.5) that died during
+the IFN3-IFN4 period against model’s mortality prediction.</p>
 <p>Overall predictive capacity:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5083,11 +5123,13 @@ All
 </table>
 <p>Predictive capacity plot:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-16-1.png" width="768"></p>
-<p>Relationship between dead basal area and climatic variables (MAT and P/PET):</p>
+<p>Relationship between dead basal area and climatic variables (MAT and
+P/PET):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-17-1.png" width="768"></p>
 <p>Spatial distribution of errors:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-18-1.png" width="672"></p>
-<p>Predictive capacity by species (occurring in more than 100 plots):</p>
+<p>Predictive capacity by species (occurring in more than 100
+plots):</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -5502,7 +5544,9 @@ Quercus suber
 <div class="section level2">
 <h2 id="ingrowth-m2ha">Ingrowth (m2/ha)<a class="anchor" aria-label="anchor" href="#ingrowth-m2ha"></a>
 </h2>
-<p>Increase of basal area due to ingrowth of trees with diameters between 7.5 cm and 12.5 cm during the IFN3-IFN4 period against model’s ingrowth prediction.</p>
+<p>Increase of basal area due to ingrowth of trees with diameters
+between 7.5 cm and 12.5 cm during the IFN3-IFN4 period against model’s
+ingrowth prediction.</p>
 <p>Overall predictive capacity:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5566,11 +5610,13 @@ All
 </table>
 <p>Predictive capacity plot:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-21-1.png" width="768"></p>
-<p>Relationship between ingrowth basal area and climatic variables (MAT and P/PET):</p>
+<p>Relationship between ingrowth basal area and climatic variables (MAT
+and P/PET):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-22-1.png" width="768"></p>
 <p>Spatial distribution of errors:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-23-1.png" width="672"></p>
-<p>Predictive capacity by species (occurring in more than 100 plots):</p>
+<p>Predictive capacity by species (occurring in more than 100
+plots):</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -5985,7 +6031,10 @@ Quercus suber
 <div class="section level2">
 <h2 id="overall-stand-level-basal-area-change-m2ha">Overall stand-level basal area change (m2/ha)<a class="anchor" aria-label="anchor" href="#overall-stand-level-basal-area-change-m2ha"></a>
 </h2>
-<p>This includes growth of surviving trees, mortality reductions and ingrowth (increase in trees with DBH&gt;5) due to sapling growth (in the observed data, this includes also incorporation of trees into large diameter classes due to sampling design).</p>
+<p>This includes growth of surviving trees, mortality reductions and
+ingrowth (increase in trees with DBH&gt;5) due to sapling growth (in the
+observed data, this includes also incorporation of trees into large
+diameter classes due to sampling design).</p>
 <p>Overall predictive capacity:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -6049,11 +6098,13 @@ All
 </table>
 <p>Predictive capacity plot:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-26-1.png" width="768"></p>
-<p>Relationship between overall basal area change and climatic variables (MAT and P/PET):</p>
+<p>Relationship between overall basal area change and climatic variables
+(MAT and P/PET):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-27-1.png" width="768"></p>
 <p>Spatial distribution of errors:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-29-1.png" width="672"></p>
-<p>Predictive capacity by species (occurring in more than 100 plots):</p>
+<p>Predictive capacity by species (occurring in more than 100
+plots):</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -6468,149 +6519,254 @@ Quercus suber
 <div class="section level2">
 <h2 id="detailed-evaluation-by-species">Detailed evaluation by species<a class="anchor" aria-label="anchor" href="#detailed-evaluation-by-species"></a>
 </h2>
-<p>In the following we provide detailed evaluation results for the most important species (those occurring in more than 100 plots).</p>
+<p>In the following we provide detailed evaluation results for the most
+important species (those occurring in more than 100 plots).</p>
 <div class="section level3">
 <h3 id="arbutus-unedo">Arbutus unedo<a class="anchor" aria-label="anchor" href="#arbutus-unedo"></a>
 </h3>
-<p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
+<p>Prediction ability for <strong>diameter increase</strong> of
+surviving trees:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-33-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-34-1.png" width="768"></p>
-<p>Prediction ability for <strong>stand-level basal area changes</strong> (including growth, mortality and ingrowth):</p>
+<p>Relationship between <strong>diameter increase</strong> and climatic
+variables (MAT, P/PET and available PAR):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-34-1.png" width="768"></p>
+<p>Prediction ability for <strong>stand-level basal area
+changes</strong> (including growth, mortality and ingrowth):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-35-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-36-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area changes</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-37-1.png" width="672"></p>
+<p>Relationship between <strong>basal area changes</strong> and climatic
+variables (MAT and P/PET):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-36-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area
+changes</strong>:
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-37-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="crataegus-spp-">Crataegus spp.<a class="anchor" aria-label="anchor" href="#crataegus-spp-"></a>
 </h3>
-<p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
+<p>Prediction ability for <strong>diameter increase</strong> of
+surviving trees:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-39-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-40-1.png" width="768"></p>
-<p>Prediction ability for <strong>stand-level basal area changes</strong> (including growth, mortality and ingrowth):</p>
+<p>Relationship between <strong>diameter increase</strong> and climatic
+variables (MAT, P/PET and available PAR):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-40-1.png" width="768"></p>
+<p>Prediction ability for <strong>stand-level basal area
+changes</strong> (including growth, mortality and ingrowth):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-41-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-42-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area changes</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-43-1.png" width="672"></p>
+<p>Relationship between <strong>basal area changes</strong> and climatic
+variables (MAT and P/PET):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-42-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area
+changes</strong>:
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-43-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="fagus-sylvatica">Fagus sylvatica<a class="anchor" aria-label="anchor" href="#fagus-sylvatica"></a>
 </h3>
-<p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
+<p>Prediction ability for <strong>diameter increase</strong> of
+surviving trees:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-45-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-46-1.png" width="768"></p>
-<p>Prediction ability for <strong>stand-level basal area changes</strong> (including growth, mortality and ingrowth):</p>
+<p>Relationship between <strong>diameter increase</strong> and climatic
+variables (MAT, P/PET and available PAR):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-46-1.png" width="768"></p>
+<p>Prediction ability for <strong>stand-level basal area
+changes</strong> (including growth, mortality and ingrowth):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-47-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-48-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area changes</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-49-1.png" width="672"></p>
+<p>Relationship between <strong>basal area changes</strong> and climatic
+variables (MAT and P/PET):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-48-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area
+changes</strong>:
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-49-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="pinus-halepensis">Pinus halepensis<a class="anchor" aria-label="anchor" href="#pinus-halepensis"></a>
 </h3>
-<p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
+<p>Prediction ability for <strong>diameter increase</strong> of
+surviving trees:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-51-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-52-1.png" width="768"></p>
-<p>Prediction ability for <strong>stand-level basal area changes</strong> (including growth, mortality and ingrowth):</p>
+<p>Relationship between <strong>diameter increase</strong> and climatic
+variables (MAT, P/PET and available PAR):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-52-1.png" width="768"></p>
+<p>Prediction ability for <strong>stand-level basal area
+changes</strong> (including growth, mortality and ingrowth):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-53-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-54-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area changes</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-55-1.png" width="672"></p>
+<p>Relationship between <strong>basal area changes</strong> and climatic
+variables (MAT and P/PET):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-54-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area
+changes</strong>:
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-55-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="pinus-nigra">Pinus nigra<a class="anchor" aria-label="anchor" href="#pinus-nigra"></a>
 </h3>
-<p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
+<p>Prediction ability for <strong>diameter increase</strong> of
+surviving trees:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-57-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-58-1.png" width="768"></p>
-<p>Prediction ability for <strong>stand-level basal area changes</strong> (including growth, mortality and ingrowth):</p>
+<p>Relationship between <strong>diameter increase</strong> and climatic
+variables (MAT, P/PET and available PAR):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-58-1.png" width="768"></p>
+<p>Prediction ability for <strong>stand-level basal area
+changes</strong> (including growth, mortality and ingrowth):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-59-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-60-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area changes</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-61-1.png" width="672"></p>
+<p>Relationship between <strong>basal area changes</strong> and climatic
+variables (MAT and P/PET):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-60-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area
+changes</strong>:
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-61-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="pinus-pinea">Pinus pinea<a class="anchor" aria-label="anchor" href="#pinus-pinea"></a>
 </h3>
-<p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
+<p>Prediction ability for <strong>diameter increase</strong> of
+surviving trees:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-63-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-64-1.png" width="768"></p>
-<p>Prediction ability for <strong>stand-level basal area changes</strong> (including growth, mortality and ingrowth):</p>
+<p>Relationship between <strong>diameter increase</strong> and climatic
+variables (MAT, P/PET and available PAR):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-64-1.png" width="768"></p>
+<p>Prediction ability for <strong>stand-level basal area
+changes</strong> (including growth, mortality and ingrowth):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-65-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-66-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area changes</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-67-1.png" width="672"></p>
+<p>Relationship between <strong>basal area changes</strong> and climatic
+variables (MAT and P/PET):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-66-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area
+changes</strong>:
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-67-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="pinus-sylvestris">Pinus sylvestris<a class="anchor" aria-label="anchor" href="#pinus-sylvestris"></a>
 </h3>
-<p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
+<p>Prediction ability for <strong>diameter increase</strong> of
+surviving trees:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-69-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-70-1.png" width="768"></p>
-<p>Prediction ability for <strong>stand-level basal area changes</strong> (including growth, mortality and ingrowth):</p>
+<p>Relationship between <strong>diameter increase</strong> and climatic
+variables (MAT, P/PET and available PAR):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-70-1.png" width="768"></p>
+<p>Prediction ability for <strong>stand-level basal area
+changes</strong> (including growth, mortality and ingrowth):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-71-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-72-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area changes</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-73-1.png" width="672"></p>
+<p>Relationship between <strong>basal area changes</strong> and climatic
+variables (MAT and P/PET):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-72-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area
+changes</strong>:
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-73-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="pinus-uncinata">Pinus uncinata<a class="anchor" aria-label="anchor" href="#pinus-uncinata"></a>
 </h3>
-<p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
+<p>Prediction ability for <strong>diameter increase</strong> of
+surviving trees:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-75-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-76-1.png" width="768"></p>
-<p>Prediction ability for <strong>stand-level basal area changes</strong> (including growth, mortality and ingrowth):</p>
+<p>Relationship between <strong>diameter increase</strong> and climatic
+variables (MAT, P/PET and available PAR):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-76-1.png" width="768"></p>
+<p>Prediction ability for <strong>stand-level basal area
+changes</strong> (including growth, mortality and ingrowth):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-77-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-78-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area changes</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-79-1.png" width="672"></p>
+<p>Relationship between <strong>basal area changes</strong> and climatic
+variables (MAT and P/PET):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-78-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area
+changes</strong>:
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-79-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="quercus-faginea">Quercus faginea<a class="anchor" aria-label="anchor" href="#quercus-faginea"></a>
 </h3>
-<p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
+<p>Prediction ability for <strong>diameter increase</strong> of
+surviving trees:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-81-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-82-1.png" width="768"></p>
-<p>Prediction ability for <strong>stand-level basal area changes</strong> (including growth, mortality and ingrowth):</p>
+<p>Relationship between <strong>diameter increase</strong> and climatic
+variables (MAT, P/PET and available PAR):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-82-1.png" width="768"></p>
+<p>Prediction ability for <strong>stand-level basal area
+changes</strong> (including growth, mortality and ingrowth):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-83-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-84-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area changes</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-85-1.png" width="672"></p>
+<p>Relationship between <strong>basal area changes</strong> and climatic
+variables (MAT and P/PET):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-84-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area
+changes</strong>:
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-85-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="quercus-ilex">Quercus ilex<a class="anchor" aria-label="anchor" href="#quercus-ilex"></a>
 </h3>
-<p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
+<p>Prediction ability for <strong>diameter increase</strong> of
+surviving trees:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-87-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-88-1.png" width="768"></p>
-<p>Prediction ability for <strong>stand-level basal area changes</strong> (including growth, mortality and ingrowth):</p>
+<p>Relationship between <strong>diameter increase</strong> and climatic
+variables (MAT, P/PET and available PAR):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-88-1.png" width="768"></p>
+<p>Prediction ability for <strong>stand-level basal area
+changes</strong> (including growth, mortality and ingrowth):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-89-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-90-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area changes</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-91-1.png" width="672"></p>
+<p>Relationship between <strong>basal area changes</strong> and climatic
+variables (MAT and P/PET):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-90-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area
+changes</strong>:
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-91-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="quercus-petraea">Quercus petraea<a class="anchor" aria-label="anchor" href="#quercus-petraea"></a>
 </h3>
-<p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
+<p>Prediction ability for <strong>diameter increase</strong> of
+surviving trees:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-93-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-94-1.png" width="768"></p>
-<p>Prediction ability for <strong>stand-level basal area changes</strong> (including growth, mortality and ingrowth):</p>
+<p>Relationship between <strong>diameter increase</strong> and climatic
+variables (MAT, P/PET and available PAR):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-94-1.png" width="768"></p>
+<p>Prediction ability for <strong>stand-level basal area
+changes</strong> (including growth, mortality and ingrowth):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-95-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-96-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area changes</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-97-1.png" width="672"></p>
+<p>Relationship between <strong>basal area changes</strong> and climatic
+variables (MAT and P/PET):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-96-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area
+changes</strong>:
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-97-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="quercus-pubescens">Quercus pubescens<a class="anchor" aria-label="anchor" href="#quercus-pubescens"></a>
 </h3>
-<p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
+<p>Prediction ability for <strong>diameter increase</strong> of
+surviving trees:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-99-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-100-1.png" width="768"></p>
-<p>Prediction ability for <strong>stand-level basal area changes</strong> (including growth, mortality and ingrowth):</p>
+<p>Relationship between <strong>diameter increase</strong> and climatic
+variables (MAT, P/PET and available PAR):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-100-1.png" width="768"></p>
+<p>Prediction ability for <strong>stand-level basal area
+changes</strong> (including growth, mortality and ingrowth):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-101-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-102-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area changes</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-103-1.png" width="672"></p>
+<p>Relationship between <strong>basal area changes</strong> and climatic
+variables (MAT and P/PET):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-102-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area
+changes</strong>:
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-103-1.png" width="672"></p>
 </div>
 <div class="section level3">
 <h3 id="quercus-suber">Quercus suber<a class="anchor" aria-label="anchor" href="#quercus-suber"></a>
 </h3>
-<p>Prediction ability for <strong>diameter increase</strong> of surviving trees:</p>
+<p>Prediction ability for <strong>diameter increase</strong> of
+surviving trees:</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-105-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increase</strong> and climatic variables (MAT, P/PET and available PAR): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-106-1.png" width="768"></p>
-<p>Prediction ability for <strong>stand-level basal area changes</strong> (including growth, mortality and ingrowth):</p>
+<p>Relationship between <strong>diameter increase</strong> and climatic
+variables (MAT, P/PET and available PAR):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-106-1.png" width="768"></p>
+<p>Prediction ability for <strong>stand-level basal area
+changes</strong> (including growth, mortality and ingrowth):</p>
 <p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-107-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic variables (MAT and P/PET): <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-108-1.png" width="768"></p>
-<p>Spatial distribution of errors in <strong>basal area changes</strong>: <img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-109-1.png" width="672"></p>
+<p>Relationship between <strong>basal area changes</strong> and climatic
+variables (MAT and P/PET):
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-108-1.png" width="768"></p>
+<p>Spatial distribution of errors in <strong>basal area
+changes</strong>:
+<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-109-1.png" width="672"></p>
 </div>
 </div>
   </div>
