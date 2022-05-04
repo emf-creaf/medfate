@@ -217,7 +217,7 @@ are needed. All the input information for forest data and species
 parameter values can be inspected by accessing the different elements of
 this object, whose names are.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "control"             "soil"                "canopy"             </span>
 <span class="co">##  [4] "cohorts"             "above"               "below"              </span>
 <span class="co">##  [7] "belowLayers"         "paramsPhenology"     "paramsAnatomy"      </span>
@@ -257,7 +257,7 @@ complex transpiration model. This is why so many meteorological
 variables are required. The output of <code><a href="../reference/spwb_day.html">spwb_day()</a></code> is a list
 with five elements:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sd1</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sd1</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] "cohorts"      "WaterBalance" "Soil"         "Stand"        "Plants"</span></code></pre>
 <ul>
 <li>
@@ -374,13 +374,13 @@ name, actually a list:</p>
 <p>If we inspect its elements, we realize that the output is arranged
 differently than in <code><a href="../reference/spwb_day.html">spwb_day()</a></code>:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "latitude"     "topography"   "weather"      "spwbInput"    "spwbOutput"  </span>
 <span class="co">##  [6] "WaterBalance" "Soil"         "Stand"        "Plants"       "subdaily"</span></code></pre>
 <p>In particular, element <code>spwbInput</code> contains a copy of the
 input parameters that were used to run the model:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">spwbInput</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">spwbInput</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "control"             "soil"                "canopy"             </span>
 <span class="co">##  [4] "cohorts"             "above"               "below"              </span>
 <span class="co">##  [7] "belowLayers"         "paramsPhenology"     "paramsAnatomy"      </span>

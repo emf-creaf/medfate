@@ -497,7 +497,7 @@ input data and perform soil water balance for that day only:</p>
 <p>The output of <code><a href="../reference/spwb_day.html">spwb_day()</a></code> is a list with several
 elements:</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sd1</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sd1</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "cohorts"          "WaterBalance"     "EnergyBalance"    "Soil"            </span>
 <span class="co">##  [5] "Stand"            "Plants"           "RhizoPsi"         "SunlitLeaves"    </span>
 <span class="co">##  [9] "ShadeLeaves"      "ExtractionInst"   "PlantsInst"       "SunlitLeavesInst"</span>
@@ -538,7 +538,7 @@ potential:</p>
 atmosphere, canopy and soil temperatures, as well as canopy and soil
 energy balance components.</p>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sd1</span><span class="op">$</span><span class="va">EnergyBalance</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sd1</span><span class="op">$</span><span class="va">EnergyBalance</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## [1] "Temperature"         "CanopyEnergyBalance" "SoilEnergyBalance"  </span>
 <span class="co">## [4] "TemperatureLayers"   "VaporPressureLayers"</span></code></pre>
 <p>Package <code>medfate</code> provides a <code>plot</code> function
@@ -782,7 +782,7 @@ example, we only simulate 61 days to save computational time:</p>
 <em>spwb</em>. If we inspect its elements, we realize that the output is
 arranged differently than in <code><a href="../reference/spwb_day.html">spwb_day()</a></code>:</p>
 <div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "latitude"          "topography"        "weather"          </span>
 <span class="co">##  [4] "spwbInput"         "spwbOutput"        "WaterBalance"     </span>
 <span class="co">##  [7] "EnergyBalance"     "Temperature"       "TemperatureLayers"</span>
@@ -791,7 +791,7 @@ arranged differently than in <code><a href="../reference/spwb_day.html">spwb_day
 <p>In particular, element <code>spwbInput</code> contains a copy of the
 input parameters that were used to run the model:</p>
 <div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">spwbInput</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">spwbInput</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "control"             "soil"                "canopy"             </span>
 <span class="co">##  [4] "cohorts"             "above"               "below"              </span>
 <span class="co">##  [7] "belowLayers"         "paramsPhenology"     "paramsAnatomy"      </span>

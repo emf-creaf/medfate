@@ -80,7 +80,7 @@
 <ul>
 <li>Soil water balance (De Cáceres et al. 2015)</li>
 <li>Plant hydraulics, transpiration and photosynthesis (De Cáceres et al. 2021)</li>
-<li>Plant growth (in preparation)</li>
+<li>Carbon balance, plant growth, senescence and mortality (in preparation)</li>
 <li>Forest dynamics (in preparation)</li>
 </ul>
 <p>The models are parameterized for species of the Mediterranean region (particularly for Catalonia, NE Spain), but forests with different composition could be modelled with different parameter sets.</p>
@@ -88,12 +88,15 @@
 <div class="section level2">
 <h2 id="package-installation">Package installation<a class="anchor" aria-label="anchor" href="#package-installation"></a>
 </h2>
-<p>Package <strong>medfate</strong> can be found at <a href="https://CRAN.R-project.org/package=medfate" class="external-link">CRAN</a>, where it is updated every few months. Users can also download and install the latest stable versions GitHub as follows (required package <code>devtools</code> should be installed/updated first):</p>
+<p>Package <strong>medfate</strong> can be found at <a href="https://CRAN.R-project.org/package=medfate" class="external-link">CRAN</a>, where it is updated every few months. Installation from CRAN can be done via:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"emf-creaf/medfate"</span><span class="op">)</span></code></pre></div>
-<p>Additionally, users can have help to run package functions directly as package vignettes, by forcing their inclusion in installation:</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"medfate"</span><span class="op">)</span></code></pre></div>
+<p>Users can also download and install the latest stable versions GitHub as follows (required package <code>remotes</code> should be installed/updated first):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"emf-creaf/medfate"</span>, 
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"emf-creaf/medfate"</span><span class="op">)</span></code></pre></div>
+<p>Additionally, users can have help to run package functions directly as package vignettes, by forcing their inclusion in installation:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"emf-creaf/medfate"</span>, 
                          build_opts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"--no-resave-data"</span>, <span class="st">"--no-manual"</span><span class="op">)</span>,
                          build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
@@ -102,7 +105,7 @@
 </h2>
 <ul>
 <li><p>The package includes a number of <em>vignettes</em> that illustrate how to run simulation models in <strong>medfate</strong>.</p></li>
-<li><p>Additional articles can be found at the package <a href="https://emf-creaf.github.io/medfate/" class="external-link">website</a>.</p></li>
+<li><p>Additional articles regarding parameter estimation and model evaluation can be found at the package <a href="https://emf-creaf.github.io/medfate/" class="external-link">website</a>.</p></li>
 <li><p>Complete documentation of the models included in the package can be found in <a href="https://emf-creaf.github.io/medfatebook/index.html" class="external-link">medfate’s reference book</a>.</p></li>
 </ul>
 </div>
@@ -115,7 +118,7 @@
 <li>Package <a href="https://github.com/emf-creaf/medfateland" class="external-link"><strong>medfateland</strong></a> extends <strong>medfate</strong> by allowing simulations to be performed in a spatially explicit context.</li>
 <li>Package <a href="https://github.com/emf-creaf/medfateutils" class="external-link"><strong>medfateutils</strong></a> provides functions to help initializing vegetation, soil and species parameter inputs for <strong>medfate</strong> simulation functions.</li>
 </ul>
-<p>The set of R packages are developed and maintained by the <a href="http://emf.creaf.cat" class="external-link"><strong>Ecosystem Modelling Facility</strong></a> at CREAF (Spain).</p>
+<p>The set of R packages are developed and maintained by the <a href="https://emf.creaf.cat" class="external-link"><em>Ecosystem Modelling Facility</em></a> at CREAF (Spain).</p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -164,9 +167,9 @@
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Miquel De Cáceres <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0001-7132-2080" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Shengli Huang <br><small class="roles"> Author </small>  </li>
-<li>Víctor Granda <br><small class="roles"> Author </small>  </li>
-<li>Antoine Cabon <br><small class="roles"> Author </small>  </li>
+<li>Shengli Huang <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-3927-7042" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Víctor Granda <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-0469-1991" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Antoine Cabon <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0001-6426-1726" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
