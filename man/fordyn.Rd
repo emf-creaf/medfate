@@ -74,6 +74,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 \code{\link{growth}}, \code{\link{recruitment}}, \code{\link{plot.growth}}, \code{\link{defaultManagementFunction}}
 }
 \examples{
+\dontrun{
 #Load example daily meteorological data
 data(examplemeteo)
 #Prepare a two-year meteorological data with half precipitation during 
@@ -110,4 +111,5 @@ fd$TreeTable
 
 #Dead tree table by annual steps
 fd$DeadTreeTable
+}
 }

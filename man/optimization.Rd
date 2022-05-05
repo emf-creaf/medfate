@@ -84,6 +84,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 \code{\link{evaluation_metric}}, \code{\link{modifyInputParams}}, \code{\link{spwb}}, \code{\link{growth}}
 }
 \examples{
+\dontrun{
 #Load example daily meteorological data
 data(examplemeteo)
 
@@ -147,5 +148,5 @@ oef<-optimization_evaluation_function(parNames = parNames,
 # Loglikelihood for the values of the parameter matrix
 oef(parMatrix[1, ])
 oef(parMatrix)
-
+}
 }
