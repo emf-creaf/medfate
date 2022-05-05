@@ -143,7 +143,8 @@ Function <code>optimization_evaluation_multicohort_function</code> returns a fun
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">#Load example daily meteorological data</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+<span class="r-in"><span class="co">#Load example daily meteorological data</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Load example plot plant data</span></span>
@@ -164,7 +165,6 @@ Function <code>optimization_evaluation_multicohort_function</code> returns a fun
 <span class="r-in"><span class="co"># Cohort name for Pinus halepensis</span></span>
 <span class="r-in"><span class="va">PH_coh</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"T1_"</span>, <span class="va">SpParamsMED</span><span class="op">$</span><span class="va">SpIndex</span><span class="op">[</span><span class="va">SpParamsMED</span><span class="op">$</span><span class="va">Name</span><span class="op">==</span><span class="st">"Pinus halepensis"</span><span class="op">]</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">PH_coh</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "T1_148"</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">#Parameter names of interest</span></span>
 <span class="r-in"><span class="va">parNames</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">PH_coh</span>,<span class="st">"/Z50"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">PH_coh</span>,<span class="st">"/Z95"</span><span class="op">)</span><span class="op">)</span></span>
@@ -180,14 +180,6 @@ Function <code>optimization_evaluation_multicohort_function</code> returns a fun
 <span class="r-in"><span class="fu">multiple_runs</span><span class="op">(</span><span class="va">parMatrix</span>, </span>
 <span class="r-in">              <span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">42</span>, elevation <span class="op">=</span> <span class="fl">100</span>,</span>
 <span class="r-in">              summary_function <span class="op">=</span> <span class="va">sf</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1. Parameter values = [200, 500] f = 349.798932945655</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2. Parameter values = [300, 1000] f = 349.964449531523</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 349.7989</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 349.9644</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in">              </span>
 <span class="r-in"><span class="co">#Load observed data (in this case the same simulation results with some added error)  </span></span>
 <span class="r-in"><span class="co"># Generate a prediction function for total transpiration over the simulated period</span></span>
@@ -200,9 +192,7 @@ Function <code>optimization_evaluation_multicohort_function</code> returns a fun
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Evaluate for the values of the parameter matrix</span></span>
 <span class="r-in"><span class="fu">of</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 349.7989</span>
 <span class="r-in"><span class="fu">of</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 349.7989 349.9644</span>
 <span class="r-in"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Generate a loglikelihood function for soil water content</span></span>
@@ -216,10 +206,8 @@ Function <code>optimization_evaluation_multicohort_function</code> returns a fun
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Loglikelihood for the values of the parameter matrix</span></span>
 <span class="r-in"><span class="fu">oef</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 912.9217</span>
 <span class="r-in"><span class="fu">oef</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 912.9217 919.0236</span>
-<span class="r-in"></span>
+<span class="r-in"><span class="op">}</span></span>
 </code></pre></div>
     </div>
   </div>

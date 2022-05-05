@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-05-04</h4>
+            <h4 data-toc-skip class="date">2022-05-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/ForestDynamics.Rmd" class="external-link"><code>vignettes/ForestDynamics.Rmd</code></a></small>
       <div class="hidden name"><code>ForestDynamics.Rmd</code></div>
@@ -373,7 +373,7 @@ access stand-level statistics using:</p>
 function for objects of class <code>fordyn</code>. For example, we can
 show the interannual variation in stand-level basal area using:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, type <span class="op">=</span> <span class="st">"StandBasalArea"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, type <span class="op">=</span> <span class="st">"StandBasalArea"</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestDynamics_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -465,13 +465,13 @@ etc) for each time step:</p>
 patterns of desired variables. For example, the following shows the leaf
 area for individuals of the three cohorts during the second year:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span><span class="op">$</span><span class="va">GrowthResults</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="st">"LeafArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span><span class="op">$</span><span class="va">GrowthResults</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="st">"LeafArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestDynamics_files/figure-html/unnamed-chunk-14-1.png" width="672">
 Instead of examining year by year, it is possible to plot the whole
 series of results by passing a <code>fordyn</code> object to the
-<code><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot()</a></code> function:</p>
+<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> function:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, <span class="st">"LeafArea"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fd</span>, <span class="st">"LeafArea"</span><span class="op">)</span></code></pre></div>
 <p><img src="ForestDynamics_files/figure-html/unnamed-chunk-15-1.png" width="672"></p>
 <p>Finally, we can create interactive plots for particular steps using
 function <code><a href="../reference/shinyplot.html">shinyplot()</a></code>, e.g.:</p>
