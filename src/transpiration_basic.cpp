@@ -58,7 +58,7 @@ double findNewPlantPsiCuticular(double E_cut, double plantPsi, NumericVector par
   double Vdecrease = V - Vnew;
   double Etol = 1e-6;
   int cnt = 0;
-  while((std::abs(Vdecrease - E_cut) > Etol) & (cnt < 100)) {
+  while((std::abs(Vdecrease - E_cut) > Etol) && (cnt < 100)) {
     cnt++;
     if(Vdecrease > E_cut) {
       //Go one step behind and reduce step size 

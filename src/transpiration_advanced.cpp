@@ -342,7 +342,7 @@ List transpirationSperry(List x, NumericVector meteovec,
     LAIcelldead += LAIdead[c];
     LAIcelllive += LAIlive[c];
     LAIcellexpanded +=LAIphe[c];
-    if((canopyHeight<H[c]) & ((LAIphe[c]+LAIdead[c])>0.0)) canopyHeight = H[c];
+    if((canopyHeight<H[c]) && ((LAIphe[c]+LAIdead[c])>0.0)) canopyHeight = H[c];
   }
   //Create z vector with all layer height limits
   NumericVector z(ncanlayers+1,0.0);
@@ -476,9 +476,9 @@ List transpirationSperry(List x, NumericVector meteovec,
     double hc_sh = numsh/densh;
     double hc  = num/den;
     for(int i=0;i<ncanlayers;i++) {
-      if((hc > zlow[i]) & (hc <=zup[i])) iLayerCohort[c] = i;
-      if((hc_sl > zlow[i]) & (hc_sl <=zup[i])) iLayerSunlit[c] = i;
-      if((hc_sh > zlow[i]) & (hc_sh <=zup[i])) iLayerShade[c] = i;
+      if((hc > zlow[i]) && (hc <=zup[i])) iLayerCohort[c] = i;
+      if((hc_sl > zlow[i]) && (hc_sl <=zup[i])) iLayerSunlit[c] = i;
+      if((hc_sh > zlow[i]) && (hc_sh <=zup[i])) iLayerShade[c] = i;
     }
     // Rcout << c << " "<< hc_sl<<" "<< iLayerSunlit[c]<< " "<< hc_sh<<" "<< iLayerShade[c]<<"\n";
   }
@@ -577,7 +577,7 @@ List transpirationSperry(List x, NumericVector meteovec,
       nlayerscon[c] = 0;
       for(int j=0; j<numCohorts;j++) {
         for(int l=0;l<nlayers;l++) {
-          if((V(c,l)>0.0) & (RHOPcoh(j,l)>0.0)) {
+          if((V(c,l)>0.0) && (RHOPcoh(j,l)>0.0)) {
             layerConnectedCoh(j,l)= true;
             nlayerscon[c]=nlayerscon[c] + 1;
           } else {
@@ -1262,7 +1262,7 @@ List transpirationSperry(List x, NumericVector meteovec,
             deltaH -= Hcansoils;
             deltaMoisture -= ((moistureLayer[i+1] - moistureLayer[i])*uw[i])/(deltaZ*dU[i]);
             deltaCO2 -= ((CO2Layer[i+1] - CO2Layer[i])*uw[i])/(deltaZ*dU[i]);
-          } else if((i > 0) & (i<(ncanlayers-1))) { //Intermediate layers
+          } else if((i > 0) && (i<(ncanlayers-1))) { //Intermediate layers
             deltaH -= (Cp_JKG*rho[i]*(Tair[i+1] - Tair[i-1])*uw[i])/(2.0*deltaZ*dU[i]);
             deltaMoisture -= ((moistureLayer[i+1] - moistureLayer[i-1])*uw[i])/(2.0*deltaZ*dU[i]);
             deltaCO2 -= ((CO2Layer[i+1] - CO2Layer[i-1])*uw[i])/(2.0*deltaZ*dU[i]);

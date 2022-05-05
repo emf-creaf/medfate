@@ -1212,7 +1212,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   if(verbose) Rcout << "Performing daily simulations\n";
   NumericVector Eplanttot(numDays,0.0);
   List s;
-  for(int i=0;(i<numDays) & (!error_occurence);i++) {
+  for(int i=0;(i<numDays) && (!error_occurence);i++) {
       if(verbose) {
         if(DOY[i]==1 || i==0) {
           std::string c = as<std::string>(dateStrings[i]);

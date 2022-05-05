@@ -722,7 +722,7 @@ DataFrame paramsCanopy(DataFrame above, List control) {
   double boundaryLayerSize = control["boundaryLayerSize"];
   double canopyHeight = 0.0;
   for(int c=0;c<numCohorts;c++) {
-    if((canopyHeight<H[c]) & ((LAI_live[c]+LAI_dead[c])>0.0)) canopyHeight = H[c];
+    if((canopyHeight<H[c]) && ((LAI_live[c]+LAI_dead[c])>0.0)) canopyHeight = H[c];
   }
   int nz = ceil((canopyHeight+boundaryLayerSize)/verticalLayerSize); //Number of vertical layers (adding 2 m above to match wind measurement height)
   NumericVector zlow(nz,0.0);
@@ -758,11 +758,11 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   NumericVector CR = above["CR"];
   
   String transpirationMode = control["transpirationMode"];
-  if((transpirationMode!="Granier") & (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
+  if((transpirationMode!="Granier") && (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
 
   bool fillMissingSpParams = control["fillMissingSpParams"];
   String soilFunctions = control["soilFunctions"]; 
-  if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
+  if((soilFunctions!="SX") && (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   
   int numCohorts = SP.size();
   for(int c=0;c<numCohorts;c++){
@@ -850,12 +850,12 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   control["cavitationRefill"] = "growth";
   
   String transpirationMode = control["transpirationMode"];
-  if((transpirationMode!="Granier") & (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
+  if((transpirationMode!="Granier") && (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
 
   bool fillMissingSpParams = control["fillMissingSpParams"];
   
   String soilFunctions = control["soilFunctions"]; 
-  if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
+  if((soilFunctions!="SX") && (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   
   
   DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams, fillMissingSpParams, "growth",transpirationMode);

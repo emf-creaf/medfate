@@ -180,7 +180,7 @@ NumericVector leafphotosynthesis(double Q, double Catm, double Gc, double Tleaf,
     x1=x-(fx/fx1);/*calculate x{1} from x, fx and fx1*/ 
     cnt++;
     if(verbose) Rcout<<x<<"     "<<x1<<"           "<<std::abs(x1-x)<<"\n";        
-  } while ((std::abs(x1-x)>=e) & (cnt < mxiter));
+  } while ((std::abs(x1-x)>=e) && (cnt < mxiter));
   double A = photosynthesis_Ci(Q,x1,GT,Km,Vmax,Jmax);
   NumericVector res = NumericVector::create(x1, A);
   res.attr("names") = CharacterVector::create("Ci", "A");

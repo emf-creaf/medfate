@@ -254,17 +254,17 @@ double theta2psiVanGenuchten(double n, double alpha, double theta_res, double th
 String USDAType(double clay, double sand) {
   double silt = 100 - clay - sand;
   if((silt+1.5*clay)<15) return("Sand");
-  else if(((silt+1.5*clay)>=15) & ((silt + 2.0*clay)<30)) return("Loamy sand");
-  else if(((clay>=7) & (clay<20) & (sand>52) & ((silt + 2.0*clay)>=30)) | ((clay < 7) & (silt < 50) & ((silt + 2.0*clay)>=30))) return("Sandy loam");
-  else if(((clay>=7) & (clay<27)) & ((silt>=28) & (silt<50)) & (sand<=52)) return("Loam");
-  else if(((silt>=50) & ((clay>=12) & (clay<27))) | ((silt>=50) & (silt<80) & (clay <12))) return("Silt loam");
-  else if((silt>=80) & (clay<12)) return("Silt");
-  else if(((clay>=20) & (clay<35)) & (silt<28) & (sand>45)) return("Sandy clay loam");
-  else if(((clay>=27) & (clay<40)) & ((sand>20) & (sand<=45))) return("Clay loam");
-  else if(((clay>=27) & (clay<40)) & (sand<=20)) return("Silty clay loam");
-  else if((clay>=35) & (sand>45)) return("Sandy clay");
-  else if((clay>=40) & (silt>=40)) return("Silty clay");
-  else if((clay>=40) & (sand<=45) &(silt<40)) return("Clay");
+  else if(((silt+1.5*clay)>=15) && ((silt + 2.0*clay)<30)) return("Loamy sand");
+  else if(((clay>=7) && (clay<20) && (sand>52) && ((silt + 2.0*clay)>=30)) || ((clay < 7) && (silt < 50) && ((silt + 2.0*clay)>=30))) return("Sandy loam");
+  else if(((clay>=7) && (clay<27)) && ((silt>=28) && (silt<50)) && (sand<=52)) return("Loam");
+  else if(((silt>=50) && ((clay>=12) && (clay<27))) || ((silt>=50) && (silt<80) && (clay <12))) return("Silt loam");
+  else if((silt>=80) && (clay<12)) return("Silt");
+  else if(((clay>=20) && (clay<35)) && (silt<28) && (sand>45)) return("Sandy clay loam");
+  else if(((clay>=27) && (clay<40)) && ((sand>20) && (sand<=45))) return("Clay loam");
+  else if(((clay>=27) && (clay<40)) && (sand<=20)) return("Silty clay loam");
+  else if((clay>=35) && (sand>45)) return("Sandy clay");
+  else if((clay>=40) && (silt>=40)) return("Silty clay");
+  else if((clay>=40) && (sand<=45) && (silt<40)) return("Clay");
   return("Unknown");
 }
 

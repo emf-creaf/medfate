@@ -6,7 +6,7 @@ NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase = 5.0, dou
   int nDays = Temp.size();
   NumericVector GDD(nDays);
   for(int i=0;i<nDays;i++){
-    if((Temp[i]-Tbase < 0.0) & (DOY[i]>200)) {
+    if((Temp[i]-Tbase < 0.0) && (DOY[i]>200)) {
       cum = 0.0;
     } else if (DOY[i]<200){ //Only increase in the first part of the year
       if(Temp[i]-Tbase>0.0) cum = cum + (Temp[i]-Tbase);
@@ -107,7 +107,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
         sen[j] = 0.0;
         budFormation[j] = false;
         leafSenescence[j] = false;
-        if((tmean-Tbgdd[j]>0.0) & (doy >= ((int) t0gdd[j]))) gdd[j] = gdd[j] + (tmean - Tbgdd[j]);
+        if((tmean-Tbgdd[j]>0.0) && (doy >= ((int) t0gdd[j]))) gdd[j] = gdd[j] + (tmean - Tbgdd[j]);
         phi[j] = leafDevelopmentStatus(Sgdd[j], gdd[j], unfoldingDD);
         leafUnfolding[j] = (phi[j]>0.0);
         leafDormancy[j] = (phi[j]==0.0);
@@ -182,7 +182,7 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
     //Leaf unfolding and senescence only dealt with if called from spwb
     if(!fromGrowthModel) {
       if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") {
-        if((leafSenescence[j]) & (LAI_expanded[j]>0.0)) {
+        if((leafSenescence[j]) && (LAI_expanded[j]>0.0)) {
           double LAI_exp_prev= LAI_expanded[j]; //Store previous value
           LAI_expanded[j] = 0.0; //Update expanded leaf area (will decrease if LAI_live decreases)
           LAI_dead[j] += LAI_exp_prev;//Check increase dead leaf area if expanded leaf area has decreased

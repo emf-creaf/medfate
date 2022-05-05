@@ -104,7 +104,7 @@ NumericVector kPARWithImputation(IntegerVector SP, DataFrame SpParams) {
       if(NumericVector::is_na(kPAR[j])) kPAR[j] = 0.55;
     } else if(leafShape[j]=="Linear") {
       if(NumericVector::is_na(kPAR[j])) kPAR[j] = 0.45;
-    } else if((leafShape[j]=="Needle") | (leafShape[j]=="Scale")){
+    } else if((leafShape[j]=="Needle") || (leafShape[j]=="Scale")){
       if(NumericVector::is_na(kPAR[j])) kPAR[j] = 0.50;
     }
   }
@@ -118,7 +118,7 @@ NumericVector gammaSWRWithImputation(IntegerVector SP, DataFrame SpParams) {
       if(NumericVector::is_na(gammaSWR[j])) gammaSWR[j] = 0.18;
     } else if(leafShape[j]=="Linear") {
       if(NumericVector::is_na(gammaSWR[j])) gammaSWR[j] = 0.15;
-    } else if((leafShape[j]=="Needle") | (leafShape[j]=="Scale")){
+    } else if((leafShape[j]=="Needle") || (leafShape[j]=="Scale")){
       if(NumericVector::is_na(gammaSWR[j])) gammaSWR[j] = 0.14;
     }
   }
@@ -139,7 +139,7 @@ NumericVector gWithImputation(IntegerVector SP, DataFrame SpParams) {
       if(NumericVector::is_na(g[j])) g[j] = 0.5;
     } else if(leafShape[j]=="Linear") {
       if(NumericVector::is_na(g[j])) g[j] = 0.8;
-    } else if((leafShape[j]=="Needle") | (leafShape[j]=="Scale")){
+    } else if((leafShape[j]=="Needle") || (leafShape[j]=="Scale")){
       if(NumericVector::is_na(g[j])) g[j] = 1.0;
     }
   }
@@ -217,7 +217,7 @@ NumericVector ligninPercentWithImputation(IntegerVector SP, DataFrame SpParams) 
         cohLigninPercent[i] = 14.55;
       } else if(leafShape[i]=="Spines") {
         cohLigninPercent[i] = 14.55;
-      } else if((leafShape[i]=="Linear") | (leafShape[i]=="Needle")) {
+      } else if((leafShape[i]=="Linear") || (leafShape[i]=="Needle")) {
         if(leafSize[i]=="Small") {
           cohLigninPercent[i] = 18.55;
         } else if(leafSize[i] == "Medium") {
@@ -248,7 +248,7 @@ NumericVector surfaceToAreaRatioWithImputation(IntegerVector SP, DataFrame SpPar
         cohSAV[i] = 1120.0;
       } else if(leafShape[i]=="Spines") {
         cohSAV[i] = 6750.0;
-      } else if((leafShape[i]=="Linear") | (leafShape[i]=="Needle")) {
+      } else if((leafShape[i]=="Linear") || (leafShape[i]=="Needle")) {
         if(leafSize[i]=="Small") {
           cohSAV[i] = 3620.0;
         } else if(leafSize[i] == "Medium") {
@@ -279,7 +279,7 @@ NumericVector heatContentWithImputation(IntegerVector SP, DataFrame SpParams) {
         cohHeatContent[i] = 20504.0;
       } else if(leafShape[i]=="Spines") {
         cohHeatContent[i] = 20433.0;
-      } else if((leafShape[i]=="Linear") | (leafShape[i]=="Needle")) {
+      } else if((leafShape[i]=="Linear") || (leafShape[i]=="Needle")) {
         if(leafSize[i]=="Small") {
           cohHeatContent[i] = 21888.0;
         } else if(leafSize[i] == "Medium") {
@@ -678,9 +678,9 @@ NumericVector psi50Imputation(NumericVector psi50, IntegerVector SP, DataFrame S
     if(NumericVector::is_na(psi50[c])) {
       // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
       if(Group[c]=="Angiosperm") {
-        if((GrowthForm[c]=="Shrub") & (phenoType[c] != "winter-deciduous") & (phenoType[c] != "winter-semideciduous")) {
+        if((GrowthForm[c]=="Shrub") && (phenoType[c] != "winter-deciduous") && (phenoType[c] != "winter-semideciduous")) {
           psi50[c] = -5.09; //Angiosperm evergreen shrub
-        } else if((GrowthForm[c]!="Shrub") & ((phenoType[c] == "winter-deciduous") | (phenoType[c] == "winter-semideciduous"))) {
+        } else if((GrowthForm[c]!="Shrub") && ((phenoType[c] == "winter-deciduous") || (phenoType[c] == "winter-semideciduous"))) {
           psi50[c] = -2.34; //Angiosperm winter-deciduous tree
         } else { 
           psi50[c] = -1.51; //Angiosperm evergreen tree
@@ -776,9 +776,9 @@ NumericVector KmaxStemXylemWithImputation(IntegerVector SP, DataFrame SpParams) 
     if(NumericVector::is_na(Kmax_stemxylem[c])) {
       // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
       if(Group[c]=="Angiosperm") {
-        if((GrowthForm[c]=="Shrub") & ((phenoType[c] == "winter-deciduous") | (phenoType[c] == "winter-semideciduous"))) {
+        if((GrowthForm[c]=="Shrub") && ((phenoType[c] == "winter-deciduous") || (phenoType[c] == "winter-semideciduous"))) {
           Kmax_stemxylem[c] = 1.55; //Angiosperm deciduous shrub
-        } else if(((GrowthForm[c]=="Tree") | (GrowthForm[c]=="Tree/Shrub")) & ((phenoType[c] == "winter-deciduous") | (phenoType[c] == "winter-semideciduous"))) {
+        } else if(((GrowthForm[c]=="Tree") || (GrowthForm[c]=="Tree/Shrub")) && ((phenoType[c] == "winter-deciduous") || (phenoType[c] == "winter-semideciduous"))) {
           Kmax_stemxylem[c] = 1.58; //Angiosperm winter-deciduous tree
         } else { 
           Kmax_stemxylem[c] = 2.43; //Angiosperm evergreen tree
@@ -882,7 +882,7 @@ NumericVector Vmax298WithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector Vmax298 = speciesNumericParameter(SP, SpParams, "Vmax298");
   for(int c=0;c<Vmax298.size();c++) {
     if(NumericVector::is_na(Vmax298[c]))  {
-      if(!NumericVector::is_na(SLA[c]) & !NumericVector::is_na(Nleaf[c]))  {
+      if(!NumericVector::is_na(SLA[c]) && !NumericVector::is_na(Nleaf[c]))  {
         //Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173
         double lnN = log(Nleaf[c]/SLA[c]); // Narea (g · m-2) = Nmass/SLA = (mgN/gdry)*(1 gN/1000 mg N)*(1000 g dry/ 1 kg dry)* (kg dry / m2 )
         double lnSLA = log(SLA[c]/1000.0); //SLA in m2*g-1
@@ -1060,7 +1060,7 @@ NumericVector leafDurationWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector leafDuration = speciesNumericParameter(SP, SpParams, "LeafDuration");
   for(int c=0;c<leafDuration.size();c++) {
     if(NumericVector::is_na(leafDuration[c])) {
-      if((phenoType[c]=="winter-deciduous") | (phenoType[c]=="winter-semideciduous")) leafDuration[c] = 1.0; 
+      if((phenoType[c]=="winter-deciduous") || (phenoType[c]=="winter-semideciduous")) leafDuration[c] = 1.0; 
       else leafDuration[c] = 2.42; //Average value
       // From Falster et al. (2018) 1/LeafDuration = b1*(LMA/LMA_0)^(-b2), with LMA_0 = 0.1978791, b1 = 0.4565655, b2 = 1.71
     }
@@ -1330,13 +1330,13 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "Tbsen") return(TbsenWithImputation(SP, SpParams));
     else if(parName == "xsen") return(xsenWithImputation(SP, SpParams));
     else if(parName == "ysen") return(ysenWithImputation(SP, SpParams));
-    else if((parName == "a_fbt") | (parName == "b_fbt")| (parName == "c_fbt")| (parName == "d_fbt")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
-    else if((parName == "a_cw") | (parName == "b_cw")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
-    else if((parName == "a_cr") | (parName == "b_1cr")| (parName == "b_2cr")| (parName == "b_3cr")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
-    else if((parName == "c_1cr")| (parName == "c_2cr")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
-    else if((parName == "a_ash")| (parName == "b_ash")) return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName));
-    else if((parName == "a_bsh")| (parName == "b_bsh")) return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName));
-    else if((parName == "a_btsh")| (parName == "b_btsh")| (parName == "cr")) return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName));
+    else if((parName == "a_fbt") || (parName == "b_fbt") || (parName == "c_fbt") || (parName == "d_fbt")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
+    else if((parName == "a_cw") || (parName == "b_cw")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
+    else if((parName == "a_cr") || (parName == "b_1cr") || (parName == "b_2cr") || (parName == "b_3cr")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
+    else if((parName == "c_1cr") || (parName == "c_2cr")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
+    else if((parName == "a_ash") || (parName == "b_ash")) return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName));
+    else if((parName == "a_bsh") || (parName == "b_bsh")) return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName));
+    else if((parName == "a_btsh") || (parName == "b_btsh") || (parName == "cr")) return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName));
   }
   return(speciesNumericParameter(SP, SpParams,parName));
 }

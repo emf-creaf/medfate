@@ -160,7 +160,7 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
   
   int cnt=0;
   int maxcnt = 100;
-  while((maxerr>0.1) & (cnt < maxcnt)) {
+  while((maxerr>0.1) && (cnt < maxcnt)) {
     // Viscocity (and derivative) Model
     for(int i=0;i<N;i++) {
       vt[i]=pow(Cu,1.0/4.0)*Lmix[i]*sqrt(std::abs(k[i])); 

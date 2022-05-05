@@ -285,7 +285,7 @@ List FCCSbehaviour(DataFrame FCCSpropsSI,
   double TC = 0.0;
   double ic_ratio = NA_REAL;
   if(FAI[0]>0.0) {
-    if((!NumericVector::is_na(I_b)) & (!NumericVector::is_na(I_c))) {
+    if((!NumericVector::is_na(I_b)) && (!NumericVector::is_na(I_c))) {
       ic_ratio = (I_b/60.0)/I_c;
       IC = std::min(9.0, 4.0*pow(ic_ratio,0.2));
     }
@@ -396,7 +396,7 @@ List rothermel(String modeltype, NumericVector wSI, NumericVector sSI, double de
   // transfer partially cured herbaceous fuels to dead
   if (modeltype=="D") {
     double kt = 0.0;
-    if((m[3]>=0.3) & (m[3]<1.2)) kt = (1.20-m[3])/0.9;
+    if((m[3]>=0.3) && (m[3]<1.2)) kt = (1.20-m[3])/0.9;
     // weighting SAV from transferred cured herbaceous
     double f1=w[0]*s[0]/32.0;
     double f4 = w[3]*kt*s[3]/32.0;
@@ -533,7 +533,7 @@ List rothermel(String modeltype, NumericVector wSI, NumericVector sSI, double de
   //resulting effect and virtual wind speed
   double phi = vEff[0];
   double vws = pow(phi/(C*pow(rpr,-E)), 1.0/B);
-  if((B==0.0) |(rpr==0.0)) vws = 0.0;
+  if((B==0.0) || (rpr==0.0)) vws = 0.0;
   vws = vws/196.8504; //from ft/min to m/s
 //  Rcout<<vws<<"\n";
 

@@ -197,7 +197,7 @@ NumericVector dbhClassBasalArea(List x, NumericVector DBHbreaks) {
   int ntree = treeData.nrows();
   NumericVector dcBA(nclasses);
   for(int i=0;i<ntree;i++) {
-    for(int j=0;j<nclasses;j++) if((treeDBH[i]>=DBHbreaks[j]) & (treeDBH[i]<DBHbreaks[j+1])) dcBA[j] += tba[i]; 
+    for(int j=0;j<nclasses;j++) if((treeDBH[i]>=DBHbreaks[j]) && (treeDBH[i]<DBHbreaks[j+1])) dcBA[j] += tba[i]; 
   }
   return(dcBA);
 }
@@ -243,7 +243,7 @@ NumericVector dbhClassDensity(List x, NumericVector DBHbreaks) {
   int ntree = treeData.nrows();
   NumericVector dcDens(nclasses);
   for(int i=0;i<ntree;i++) {
-    for(int j=0;j<nclasses;j++) if((treeDBH[i]>=DBHbreaks[j]) & (treeDBH[i]<DBHbreaks[j+1])) dcDens[j] += treeDens[i]; 
+    for(int j=0;j<nclasses;j++) if((treeDBH[i]>=DBHbreaks[j]) && (treeDBH[i]<DBHbreaks[j+1])) dcDens[j] += treeDens[i]; 
   }
   return(dcDens);
 }
@@ -255,7 +255,7 @@ NumericVector shrubIndividualAreaMED(IntegerVector SP, NumericVector Cover, Nume
   int ncoh = SP.size();
   NumericVector areaind(ncoh);
   for(int i=0;i<ncoh;i++) {
-    if((!NumericVector::is_na(Cover[i])) & (!NumericVector::is_na(H[i]))) {
+    if((!NumericVector::is_na(Cover[i])) && (!NumericVector::is_na(H[i]))) {
       areaind[i] = aShrubArea[i]*pow(H[i],bShrubArea[i])/10000.0; 
     }
   }
@@ -266,7 +266,7 @@ NumericVector shrubIndividualAreaUS(NumericVector H, NumericVector SingleShrubCr
   int ncoh = SingleShrubCrownArea.size();
   NumericVector areaind(ncoh);
   for(int i=0;i<ncoh;i++) {
-    if((!NumericVector::is_na(SingleShrubCrownArea[i])) & (!NumericVector::is_na(H[i]))) {
+    if((!NumericVector::is_na(SingleShrubCrownArea[i])) && (!NumericVector::is_na(H[i]))) {
       areaind[i] = SingleShrubCrownArea[i];   //This is the new equation with single shrub crown area modelled from RVS directly. Note RVS PCH (Projected area, crown, horizontal surface) is in cm^2, but in medfate input file, I have converted it to m2
     }
   }
@@ -574,7 +574,7 @@ NumericVector shrubFoliarBiomassMED(IntegerVector SP, NumericVector Cover, Numer
   double volind = NA_REAL,weightkgind = NA_REAL;
   for(int i=0;i<ncoh;i++) {
     // Rcout<<i<<": "<< H[i]<<" "<<CR[i]<<" "<<aShrubFuel[i]<<" "<<bShrubFuel[i]<< " "<< pDead[i]<<" "<<fTreeFuel[i]<<" "<< areaind[i]<<".\n";
-    if((!NumericVector::is_na(Cover[i])) & (!NumericVector::is_na(H[i]))) {
+    if((!NumericVector::is_na(Cover[i])) && (!NumericVector::is_na(H[i]))) {
       volind = areaind[i]*((H[i]-(H[i]*(1.0-CR[i])))/100.0); //Crown phytovolume of an individual (in m3)
       weightkgind = aShrubFuel[i]*pow(volind,bShrubFuel[i]); //Fuel (in kg) of an individual (includes dead fuels)
       weightkgind = weightkgind - (weightkgind*pDead[i]); //Removes dead fuels
@@ -743,7 +743,7 @@ NumericVector shrubPhytovolume(IntegerVector SP, NumericVector Cover, NumericVec
   NumericVector vol(ncoh);
   NumericVector areaind = shrubIndividualAreaMED(SP,Cover,H,SpParams); //area of an individual (in m2)
   for(int i=0;i<ncoh;i++) {
-    if((!NumericVector::is_na(Cover[i]))& (!NumericVector::is_na(H[i]))) {
+    if((!NumericVector::is_na(Cover[i])) && (!NumericVector::is_na(H[i]))) {
       double volind = areaind[i]*(H[i]/100.0); //Phytovolume of an individual (in m3)
       // Rcout <<areaind<<" "<< volind<<"\n";
       vol[i] = volind * (Cover[i]/(100.0*areaind[i]));
@@ -793,7 +793,7 @@ NumericVector treeFuelMED(IntegerVector SP, NumericVector N, NumericVector dbh, 
   double ftf = 0.0, btf = 0.0;
   NumericVector fuel(ncoh);
   for(int i=0;i<ncoh;i++) {
-    if((!NumericVector::is_na(dbh[i]))& (!NumericVector::is_na(N[i]))) {
+    if((!NumericVector::is_na(dbh[i])) && (!NumericVector::is_na(N[i]))) {
       ftf = fb[i]; //Foliar biomass (kg per m2)
       btf = ftf*(fTreeFuel[i]-1.0); // Small branch fuels (proportion of foliar fuels)
       if(!NumericVector::is_na(gdd)) { //Apply phenology correction to foliar fuels
@@ -846,7 +846,7 @@ NumericVector shrubFuelMED(IntegerVector SP, NumericVector Cover, NumericVector 
   NumericVector W(ncoh);
   NumericVector areaind = shrubIndividualAreaMED(SP,Cover,H,SpParams); //area of an individual (in m2)
   for(int i=0;i<ncoh;i++) {
-    if((!NumericVector::is_na(Cover[i])) & (!NumericVector::is_na(H[i]))) {
+    if((!NumericVector::is_na(Cover[i])) && (!NumericVector::is_na(H[i]))) {
       volind = areaind[i]*(H[i]/100.0); //Phytovolume of an individual (in m3)
       weightkgind = aShrubFuel[i]*pow(volind,bShrubFuel[i]); //Dry weight (in kg) of an individual
       if(!includeDead) {
@@ -1260,7 +1260,7 @@ int minDBHTreeCohort(List x, double excludeMin = 0.0) {
   int n = DBH.size();
   double min = 999999.0;
   for(int i=0;i<n;i++) {
-    if((DBH[i]<min) & (DBH[i]>excludeMin)) {
+    if((DBH[i]<min) && (DBH[i]>excludeMin)) {
       min = DBH[i];
       treeCohort = i;
     }

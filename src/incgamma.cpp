@@ -59,7 +59,7 @@ double exmin1(double x) {
   double y;
   if(x==0.0) {
     y=1.0;
-  } else if ((x<-0.69) | (x > 0.4)) {
+  } else if ((x<-0.69) || (x > 0.4)) {
     y=(exp(x)-1.0)/x;
   } {
     double t = x/2.0;
@@ -115,7 +115,7 @@ double exmin1minx(double x) {
 //   END FUNCTION logoneplusx
 double logoneplusx(double x) {
   double y0=log(1.0+x);
-  if((-0.2928 < x) & (x < 0.4142)){
+  if((-0.2928 < x) && (x < 0.4142)){
     double s = y0*exmin1(y0);
     double r = (s-x)/(s+1.0);
     y0=y0-r*(6.0-r)/(6.0-4.0*r);
@@ -456,7 +456,7 @@ double dompart(double a, double x, bool qt) {
   if(qt) {
     dompart = dp;
   } else {
-    if((a<3.0) | (x<0.2)) {
+    if((a<3.0) || (x<0.2)) {
       dompart = exp(a*lnx - x)/tgamma(a+1.0); //using in-built tgamma instead of fortran gamma
     } else {
       double mu = (x-a)/a;
@@ -765,7 +765,7 @@ double saeta(double a, double eta){
   t=s;
   y=eta;
   m=1;
-  while((std::abs(t/s)>eps) & (m<25)){
+  while((std::abs(t/s)>eps) && (m<25)){
     t=bm[m]*y;
     s=s+t;
     m=m+1;
@@ -1108,7 +1108,7 @@ NumericVector incgam(double a, double x) {
     if(dp<0.0) {
       stop("dp < 0");
     } else {
-      if ((x < 0.3*a) | (a<12.0)) {
+      if ((x < 0.3*a) || (a<12.0)) {
         p=ptaylor(a,x,dp);
       } else {
         p=pqasymp(a,x,dp, true);
@@ -1132,7 +1132,7 @@ NumericVector incgam(double a, double x) {
         if(dp<0.0) {
           stop("dp < 0");
         } else {
-          if((x>2.35*a) | (a<12.0)) {
+          if((x>2.35*a) || (a<12.0)) {
             q = qfraction(a,x,dp);
           } else {
             q=pqasymp(a,x,dp,false);
@@ -1317,7 +1317,7 @@ double lambdaeta(double eta) {
     la=la+L*r*(ak[0]+r*(ak[1]+r*(ak[2]+r*(ak[3]+r*(ak[4]+r*ak[5])))));
   }
   r= 1.0;
-  if(((eta>-3.5) & (eta<-0.03)) | ((eta>0.03) & (eta<40))) {
+  if(((eta>-3.5) && (eta<-0.03)) || ((eta>0.03) && (eta<40))) {
     r=1.0;
     q=la;
     while(r > 1.0e-8) {
@@ -1766,7 +1766,7 @@ double invincgam(double a, double p, double q) {
     ck[3]= (1.0/3.0)*(31.0+8.0*a2+33.0*a)/(ap13*ap2*(a+3.0));
     ck[4]= (1.0/24.0)*(2888.0+1179.0*a3+125.0*a4+3971.0*a2+5661.0*a)/(ap14*ap22*(a+3.0)*(a+4.0)); 
     x0=r*(1.0+r*(ck[1]+r*(ck[2]+r*(ck[3]+r*ck[4]))));
-  } else if((q < std::min(0.02,exp(-1.5*a)/tgamma(a))) & (a<10.0)) {
+  } else if((q < std::min(0.02,exp(-1.5*a)/tgamma(a))) && (a<10.0)) {
     m=0;
     b=1.0-a; 
     b2=b*b;
@@ -1774,7 +1774,7 @@ double invincgam(double a, double p, double q) {
     eta=sqrt(-2.0/a*log(q*gamstar(a)*sqrttwopi/sqrt(a)));
     x0=a*lambdaeta(eta); 
     L=log(x0); 
-    if((a>0.12) | (x0>5.0))  {
+    if((a>0.12) || (x0>5.0))  {
       L2=L*L;
       L3=L2*L;
       L4=L3*L;
@@ -1820,7 +1820,7 @@ double invincgam(double a, double p, double q) {
   a2=a*a;
   a3=a2*a;
   //Implementation of the high order Newton-like method
-  while((t>1.0e-15) & (n< 15)) {
+  while((t>1.0e-15) && (n< 15)) {
     x=x0;
     x2=x*x;
     if(m==0) {

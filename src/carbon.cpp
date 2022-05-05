@@ -197,7 +197,7 @@ double sapwoodStarchCapacity(double SA, double H, NumericVector L, NumericVector
 // [[Rcpp::export("carbon_carbonCompartments")]]
 DataFrame carbonCompartments(List x, String biomassUnits = "g_m2") {
   
-  if((biomassUnits!="g_m2") & (biomassUnits !="g_ind")) stop("Wrong biomass units");
+  if((biomassUnits!="g_m2") && (biomassUnits !="g_ind")) stop("Wrong biomass units");
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);

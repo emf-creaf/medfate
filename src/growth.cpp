@@ -940,16 +940,16 @@ List growthDayInner(List x, NumericVector meteovec,
       if(phenoType[j] == "progressive-evergreen") {
         propLeafSenescence = (LAexpanded/(365.25*LAlive*leafDuration[j]));
       }
-      else if((phenoType[j] == "oneflush-evergreen") & (leafSenescence[j])) {
+      else if((phenoType[j] == "oneflush-evergreen") && (leafSenescence[j])) {
         propLeafSenescence = (LAexpanded/(LAlive*leafDuration[j])); // Fraction of old leaves that die
         leafSenescence[j] = false; //To prevent further loss
       }
-      else if(((phenoType[j] == "winter-deciduous") || (phenoType[j] == "winter-semideciduous")) & leafSenescence[j]) {
+      else if(((phenoType[j] == "winter-deciduous") || (phenoType[j] == "winter-semideciduous")) && leafSenescence[j]) {
         propLeafSenescence = 1.0;
         leafSenescence[j] = false; //To prevent further loss
       }
       //Leaf senescence due to negative carbon (needs to be done integrating longer time-spans)
-      // if((LAexpanded>0.0) & (!leafUnfolding[j])) {
+      // if((LAexpanded>0.0) && (!leafUnfolding[j])) {
       //   // double leafRespBal = leafAgG - sapwoodResp - finerootResp;
       //   if(leafAgG < leafRespDay) {
       //     double leafRespPerLA = leafRespDay/LAexpanded;
@@ -970,7 +970,7 @@ List growthDayInner(List x, NumericVector meteovec,
       if(transpirationMode=="Sperry") {
         //Complete defoliation if RWCsymp < 0.5
         double leafSympRWC = sum(LeafSympRWCInst(j,_))/((double) numSteps);
-        if((LAexpanded > 0.0) & (leafSympRWC<0.5)){
+        if((LAexpanded > 0.0) && (leafSympRWC<0.5)){
           if(allowDefoliation) {
             propLeafSenescence = 1.0;
             if(verbose) Rcout<<" [Cohort "<< j<<" defoliated ] ";
@@ -1106,16 +1106,16 @@ List growthDayInner(List x, NumericVector meteovec,
       double Ndead_day = 0.0;
       bool dynamicCohort = true;
       bool isShrub = !NumericVector::is_na(Cover[j]);
-      if((!shrubDynamics) & isShrub) dynamicCohort = false;
+      if((!shrubDynamics) && isShrub) dynamicCohort = false;
       double stemSympRWC = NA_REAL;
       if(transpirationMode=="Granier") stemSympRWC = symplasticRelativeWaterContent(PlantPsi[j], StemPI0[j], StemEPS[j]);
       else stemSympRWC = sum(StemSympRWCInst(j,_))/((double) numSteps);
       if(dynamicCohort) {
         if(mortalityMode=="whole-cohort/deterministic") {
-          if((sugarSapwood[j]<mortalitySugarThreshold) & allowStarvation) {
+          if((sugarSapwood[j]<mortalitySugarThreshold) && allowStarvation) {
             Ndead_day = N[j];
             if(verbose) Rcout<<" [Cohort "<< j<<" died from starvation] ";
-          } else if( (stemSympRWC < mortalityRWCThreshold) & allowDessication) {
+          } else if( (stemSympRWC < mortalityRWCThreshold) && allowDessication) {
             Ndead_day = N[j];
             if(verbose) Rcout<<" [Cohort "<< j<<" died from dessication] ";
           }
@@ -1169,7 +1169,7 @@ List growthDayInner(List x, NumericVector meteovec,
         LAI_live[j] = leafAreaTarget[j]*N[j]/10000.0;
       }
       //Update fine root biomass target     
-      if((LAI_live[j]>0.0) & (N[j]>0.0)) {
+      if((LAI_live[j]>0.0) && (N[j]>0.0)) {
         if(transpirationMode=="Granier") {
           fineRootBiomassTarget[j] = (Ar2Al[j]*leafAreaTarget[j])/(specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4);
         } else {
@@ -1685,7 +1685,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   //Count years (times structural variables will be updated)
   int numYears = 0;
   for(int i=0;i<numDays;i++) {
-    if(((DOY[i]==1) && (i>0)) | ((i==(numDays-1)) && (DOY[i]>=365))) numYears = numYears + 1;
+    if(((DOY[i]==1) && (i>0)) || ((i==(numDays-1)) && (DOY[i]>=365))) numYears = numYears + 1;
   }
 
   NumericVector initialContent = water(soil, soilFunctions);
