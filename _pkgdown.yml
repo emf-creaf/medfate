@@ -6,14 +6,14 @@ home:
 articles:
 - title: Introduction
   contents:
-    - starts_with("Package")
-    - starts_with("Preparing")
+    - starts_with("intro/Package")
+    - starts_with("intro/Preparing")
 - title: Running simulation models
   contents:
-    - starts_with("Basic")
-    - starts_with("Advanced")
-    - starts_with("ForestGrowth")
-    - starts_with("ForestDynamics")
+    - starts_with("runmodels/Basic")
+    - starts_with("runmodels/Advanced")
+    - starts_with("runmodels/ForestGrowth")
+    - starts_with("runmodels/ForestDynamics")
 - title: Model analysis and parametrization
   contents:
     - starts_with("modelanalysis/Sensitivity")
