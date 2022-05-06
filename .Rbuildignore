@@ -9,4 +9,5 @@
 ^docs/*$
 ^_pkgdown\.yml$
 ^\.github$
+^vignettes/.bib*$
 ^vignettes/*$
