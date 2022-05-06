@@ -25,7 +25,7 @@ The models are parameterized for species of the Mediterranean region
 (particularly for Catalonia, NE Spain), but forests with different
 composition could be modelled with different parameter sets.
 
-## Package installation
+## Package installation & documentation
 
 Package **medfate** can be found at
 [CRAN](https://CRAN.R-project.org/package=medfate), where it is updated
@@ -42,27 +42,14 @@ follows (required package `remotes` should be installed/updated first):
 remotes::install_github("emf-creaf/medfate")
 ```
 
-Additionally, users can have help to run package functions directly as
-package vignettes, by forcing their inclusion in installation:
+A number of *vignettes* illustrate how to run simulation models in
+**medfate**. These, and additional articles regarding parameter
+estimation and model evaluation can be found at the package
+[website](https://emf-creaf.github.io/medfate/).
 
-``` r
-remotes::install_github("emf-creaf/medfate", 
-                         build_opts = c("--no-resave-data", "--no-manual"),
-                         build_vignettes = TRUE)
-```
-
-## Documentation
-
--   The package includes a number of *vignettes* that illustrate how to
-    run simulation models in **medfate**.
-
--   Additional articles regarding parameter estimation and model
-    evaluation can be found at the package
-    [website](https://emf-creaf.github.io/medfate/).
-
--   Complete documentation of the models included in the package can be
-    found in [medfate’s reference
-    book](https://emf-creaf.github.io/medfatebook/index.html).
+A complete documentation of the models included in the package can be
+found in [medfate’s reference
+book](https://emf-creaf.github.io/medfatebook/index.html).
 
 ## Companion R packages
 
