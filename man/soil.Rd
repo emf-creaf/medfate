@@ -15,7 +15,7 @@ redefineSoilLayers(SoilParams, widths = c(300, 700, 1000, 2000))
 }
 \arguments{
   \item{SoilParams}{A data frame of soil parameters (see an example in \code{\link{defaultSoilParams}}).}
-  \item{VG_PTF}{Pedotransfer functions to obtain parameters for the van Genuchten-Mualem equations. Either \code{"Carsel"} (Carsel & Parrish 1988) or \code{"Toth"} (Toth et al. 2015).}
+  \item{VG_PTF}{Pedotransfer functions to obtain parameters for the van Genuchten-Mualem equations. Either \code{"Carsel"} (Carsel and Parrish 1988) or \code{"Toth"} (Toth et al. 2015).}
   \item{W}{A numerical vector with the initial relative water content of each soil layer.}
   \item{SWE}{Initial snow water equivalent of the snow pack on the soil surface (mm).}
   \item{x}{An object of class \code{soil}.}
@@ -49,9 +49,9 @@ Function \code{soil} returns a list of class \code{soil} with the following elem
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \references{
-Carsel, R.F., & Parrish, R.S. 1988. Developing joint probability distributions of soil water retention characteristics. Water Resources Research 24: 755–769.
+Carsel, R.F., and Parrish, R.S. 1988. Developing joint probability distributions of soil water retention characteristics. Water Resources Research 24: 755–769.
 
-\enc{Tóth}{Toth}, B., Weynants, M., Nemes, A., \enc{Makó}{Mako}, A., Bilas, G., & \enc{Tóth}{Toth}, G. 2015. New generation of hydraulic pedotransfer functions for Europe. European Journal of Soil Science 66: 226–238.
+\enc{Tóth}{Toth}, B., Weynants, M., Nemes, A., \enc{Makó}{Mako}, A., Bilas, G., and \enc{Tóth}{Toth}, G. 2015. New generation of hydraulic pedotransfer functions for Europe. European Journal of Soil Science 66: 226–238.
 
 Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
 }

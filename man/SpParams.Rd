@@ -23,7 +23,7 @@ Data frame \code{SpParamsDefinition} has parameters in rows and columns 'Paramet
 Plant trait parameter sources are listed in the bibliography section. Details of the procedures used to obtain the species parameter tables can be found in the article 'Species parameterization for Spain' at https://emf-creaf.github.io/medfate/. 
 }
 \source{
-Asse, D., Randin, C. F., Bonhomme, M., Delestrade, A., & Chuine, I. (2020). Process-based models outcompete correlative models in projecting spring phenology of trees in a future warmer climate. Agricultural and Forest Meteorology, 285–286(January), 107931. https://doi.org/10.1016/j.agrformet.2020.107931
+Asse, D., Randin, C. F., Bonhomme, M., Delestrade, A., and Chuine, I. (2020). Process-based models outcompete correlative models in projecting spring phenology of trees in a future warmer climate. Agricultural and Forest Meteorology, 285–286(January), 107931. https://doi.org/10.1016/j.agrformet.2020.107931
 
 Bartlett, Megan K, Christine Scoffoni, and Lawren Sack. 2012. The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis. Ecology Letters 15 (5): 393–405. https://doi.org/10.1111/j.1461-0248.2012.01751.x. 
 
@@ -53,9 +53,9 @@ Sanchez‐Martinez, Pablo, Jordi Martinez‐Vilalta, Kyle G. Dexter, Ricardo A. 
 
 \enc{Tavşanoǧlu}{Tavsanoglu}, \enc{Çaǧatay}{Cagatay}, and Juli G. Pausas. 2018. A functional trait database for Mediterranean Basin plants. Scientific Data 5: 1–18. https://doi.org/10.1038/sdata.2018.135.
 
-Vitasse, Y., \enc{François}{Francois}, C., Delpierre, N., \enc{Dufrêne}{Dufrene}, E., Kremer, A., Chuine, I., & Delzon, S. (2011). Assessing the effects of climate change on the phenology of European temperate trees. Agricultural and Forest Meteorology, 151(7), 969–980. https://doi.org/10.1016/j.agrformet.2011.03.003
+Vitasse, Y., \enc{François}{Francois}, C., Delpierre, N., \enc{Dufrêne}{Dufrene}, E., Kremer, A., Chuine, I., and Delzon, S. (2011). Assessing the effects of climate change on the phenology of European temperate trees. Agricultural and Forest Meteorology, 151(7), 969–980. https://doi.org/10.1016/j.agrformet.2011.03.003
 
-Yebra, Marta, Gianluca Scortechini, Abdulbaset Badi, María Eugenia Beget, Matthias M. Boer, Ross Bradstock, Emilio Chuvieco, et al. 2019. Globe-LFMC, a global plant water status database for vegetation ecophysiology and wildfire applications. Scientific Data 6 (1): 155. https://doi.org/10.1038/s41597-019-0164-9.
+Yebra, Marta, Gianluca Scortechini, Abdulbaset Badi, Maria Eugenia Beget, Matthias M. Boer, Ross Bradstock, Emilio Chuvieco, et al. 2019. Globe-LFMC, a global plant water status database for vegetation ecophysiology and wildfire applications. Scientific Data 6 (1): 155. https://doi.org/10.1038/s41597-019-0164-9.
 
 Zanne, A. E., G. Lopez-Gonzalez, D. A. Coomes, J. Ilic, S. Jansen, S. L. Lewis, R. B. Miller, N. G. Swenson, M. C. Wiemann, and J. Chave. 2009. Global wood density database. http://datadryad.org/handle/10255/dryad.235. 
 }

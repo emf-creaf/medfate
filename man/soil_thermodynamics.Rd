@@ -32,9 +32,9 @@ soil_temperatureGradient(dVec, Temp)
 Function \code{soil_thermalConductivity} returns a vector with values of thermal conductivity (W/m/ºK) for each soil layer. Function \code{soil_thermalCapacity} returns a vector with values of heat storage capacity (J/m3/ºK) for each soil layer. Function \code{soil_temperatureGradient} returns a vector with values of temperature gradient between consecutive soil layers. Function \code{soil_temperatureChange} returns a vector with values of instantaneous temperature change (ºC/s) for each soil layer.
 }
 \references{
-Cox, P.M., Betts, R.A., Bunton, C.B., Essery, R.L.H., Rowntree, P.R., & Smith, J. 1999. The impact of new land surface physics on the GCM simulation of climate and climate sensitivity. Climate Dynamics 15: 183–203.
+Cox, P.M., Betts, R.A., Bunton, C.B., Essery, R.L.H., Rowntree, P.R., and Smith, J. 1999. The impact of new land surface physics on the GCM simulation of climate and climate sensitivity. Climate Dynamics 15: 183–203.
 
-Dharssi, I., Vidale, P.L., Verhoef, A., MacPherson, B., Jones, C., & Best, M. 2009. New soil physical properties implemented in the Unified Model at PS18. 9–12.
+Dharssi, I., Vidale, P.L., Verhoef, A., MacPherson, B., Jones, C., and Best, M. 2009. New soil physical properties implemented in the Unified Model at PS18. 9–12.
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF

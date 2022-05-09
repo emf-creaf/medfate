@@ -9,5 +9,10 @@
 ^docs/*$
 ^_pkgdown\.yml$
 ^\.github$
-^vignettes/.bib*$
-^vignettes/*$
+^vignettes/medfate.bib$
+^vignettes/intro/*$
+^vignettes/evaluation/*$
+^vignettes/modelanalysis/*$
+^vignettes/runmodels/*$
+^vignettes/workedexamples/*$
+^vignettes/parametrization/*$

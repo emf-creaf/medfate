@@ -66,7 +66,7 @@ data(exampleforestMED)
 # Species basal area in the forest plot
 species_basalArea(exampleforestMED, SpParamsMED)
 
-# Value of parameter `Psi_Extract` for species 157 (Pinus halepensis)
+# Value of parameter "Psi_Extract" for species 157 (Pinus halepensis)
 # and 176 (Quercus ilex)
 species_parameter(c(157,176), SpParamsMED, "Psi_Extract")
 }

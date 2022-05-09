@@ -16,7 +16,7 @@ data(exampleforestUS)
  An object of class \code{\link{forest}} containing the description of the tree, sapling and shrub cohorts of a forest patch.
 }
 \source{
-DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. Dirección General de Conservación de la Naturaleza, Ministerio de Medio Ambiente, Madrid.
+DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. \enc{Dirección}{Direccion} General de \enc{Conservación}{Conservacion} de la Naturaleza, Ministerio de Medio Ambiente, Madrid.
 }
 \seealso{ \code{\link{forest}}, \code{\link{spwb}}, \code{\link{forest2spwbInput}}}
 \examples{

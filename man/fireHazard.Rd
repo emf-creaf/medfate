@@ -26,7 +26,7 @@ Live fuel moisture of shrub and canopy layers is estimated from plant water stat
 A matrix with fire behaviour variables (columns) for each simulated day (rows) or coarser time steps if summaries are requested.
 }
 \references{
-Resco de Dios, V., A. W. Fellows, R. H. Nolan, M. M. Boer, R. a. Bradstock, F. Domingo, and M. L. Goulden. 2015. A semi-mechanistic model for predicting the moisture content of fine litter. Agricultural and Forest Meteorology 203:64–73.
+Resco de Dios, V., A. W. Fellows, R. H. Nolan, M. M. Boer, R. A. Bradstock, F. Domingo, and M. L. Goulden. 2015. A semi-mechanistic model for predicting the moisture content of fine litter. Agricultural and Forest Meteorology 203:64–73.
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
