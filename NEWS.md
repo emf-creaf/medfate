@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.7.3
+- Cleaning for CRAN
+
 # Version 2.7.2
 - SpParamsMED include the results of parameter estimation exercises
 - RGRsapwoodmax and RGRcambiummax regulate sapwood formation for shrubs/trees, respectively 
