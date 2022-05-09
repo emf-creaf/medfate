@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-05-06</h4>
+            <h4 data-toc-skip class="date">2022-05-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/PreparingInputs.Rmd" class="external-link"><code>vignettes/intro/PreparingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>PreparingInputs.Rmd</code></div>
@@ -113,12 +113,12 @@ expert-based guesses:</p>
 <code>SpParamsMED</code>. Not all parameters are needed for all models.
 You can find parameter definitions in table
 <code>SpParamsDefinition</code>, which we reproduce below:</p>
-<table class="table">
+<table style="width:100%;" class="table">
 <colgroup>
 <col width="5%">
-<col width="86%">
-<col width="2%">
-<col width="6%">
+<col width="85%">
+<col width="1%">
+<col width="7%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">ParameterName</th>
@@ -141,7 +141,7 @@ You can find parameter definitions in table
 </tr>
 <tr class="odd">
 <td align="left">SpIndex</td>
-<td align="left">Species index 0,1,2,…</td>
+<td align="left">Species index 0,1,2,</td>
 <td align="left">Integer</td>
 <td align="left">NA</td>
 </tr>
@@ -379,20 +379,20 @@ weight)</td>
 <td align="left">Sgdd</td>
 <td align="left">Degree days for leaf budburst</td>
 <td align="left">Numeric</td>
-<td align="left">ºC</td>
+<td align="left">Degrees C</td>
 </tr>
 <tr class="odd">
 <td align="left">Tbgdd</td>
 <td align="left">Base temperature for the calculation of degree days to
 leaf budburst</td>
 <td align="left">Numeric</td>
-<td align="left">ºC</td>
+<td align="left">Degrees C</td>
 </tr>
 <tr class="even">
 <td align="left">Ssen</td>
 <td align="left">Degree days corresponding to senescence</td>
 <td align="left">Numeric</td>
-<td align="left">ºC</td>
+<td align="left">Degrees C</td>
 </tr>
 <tr class="odd">
 <td align="left">Phsen</td>
@@ -406,7 +406,7 @@ senescence</td>
 <td align="left">Base temperature for the calculation of degree days to
 senescence</td>
 <td align="left">Numeric</td>
-<td align="left">ºC</td>
+<td align="left">Degrees C</td>
 </tr>
 <tr class="odd">
 <td align="left">xsen</td>
@@ -473,13 +473,13 @@ elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="left">Al2As</td>
 <td align="left">Leaf area to sapwood area ratio</td>
 <td align="left">Numeric</td>
-<td align="left">m2·m-2</td>
+<td align="left">m2 / m2</td>
 </tr>
 <tr class="odd">
 <td align="left">Ar2Al</td>
 <td align="left">Root area to leaf area ratio</td>
 <td align="left">Numeric</td>
-<td align="left">m2·m-2</td>
+<td align="left">m2 / m2</td>
 </tr>
 <tr class="even">
 <td align="left">LeafWidth</td>
@@ -620,21 +620,21 @@ ratio of maximum transpiration over potential evapotranspiration.</td>
 <td align="left">Water potential corresponding to stomatal closure
 (aprox.)</td>
 <td align="left">Numeric</td>
-<td align="left">Mpa</td>
+<td align="left">MPa</td>
 </tr>
 <tr class="odd">
 <td align="left">Psi_Critic</td>
 <td align="left">Water potential corresponding to 50% of stem cavitation
 (~ 50% PLC)</td>
 <td align="left">Numeric</td>
-<td align="left">Mpa</td>
+<td align="left">MPa</td>
 </tr>
 <tr class="even">
 <td align="left">WUE</td>
 <td align="left">Water use efficiency (gross photosynthesis over
 transpiration)</td>
 <td align="left">Numeric</td>
-<td align="left">g C · mm H2O-1</td>
+<td align="left">g C * mm H2O-1</td>
 </tr>
 <tr class="odd">
 <td align="left">WUE_decay</td>
@@ -646,19 +646,19 @@ transpiration)</td>
 <td align="left">Gswmin</td>
 <td align="left">Minimum stomatal conductance to water vapour</td>
 <td align="left">Numeric</td>
-<td align="left">mol H2O·s-1·m-2</td>
+<td align="left">mol H2O * s-1 * m-2</td>
 </tr>
 <tr class="odd">
 <td align="left">Gswmax</td>
 <td align="left">Maximum stomatal conductance to water vapour</td>
 <td align="left">Numeric</td>
-<td align="left">mol H2O·s-1·m-2</td>
+<td align="left">mol H2O * s-1 * m-2</td>
 </tr>
 <tr class="even">
 <td align="left">VCleaf_kmax</td>
 <td align="left">Maximum leaf hydraulic conductance</td>
 <td align="left">Numeric</td>
-<td align="left">mmol H2O·s-1·m-2·MPa-1</td>
+<td align="left">mmol H2O * s-1 * m-2 * MPa-1</td>
 </tr>
 <tr class="odd">
 <td align="left">VCleaf_c</td>
@@ -670,14 +670,14 @@ transpiration)</td>
 <td align="left">VCleaf_d</td>
 <td align="left">Parameter d of the leaf vulnerability curve</td>
 <td align="left">Numeric</td>
-<td align="left">Mpa</td>
+<td align="left">MPa</td>
 </tr>
 <tr class="odd">
 <td align="left">Kmax_stemxylem</td>
 <td align="left">Maximum sapwood-specific hydraulic conductivity of stem
 xylem</td>
 <td align="left">Numeric</td>
-<td align="left">kg H2O·s-1·m-1·MPa-1</td>
+<td align="left">kg H2O * s-1 * m-1 * Mpa-1</td>
 </tr>
 <tr class="even">
 <td align="left">VCstem_c</td>
@@ -689,14 +689,14 @@ xylem</td>
 <td align="left">VCstem_d</td>
 <td align="left">Parameter d of the stem xylem vulnerability curve</td>
 <td align="left">Numeric</td>
-<td align="left">Mpa</td>
+<td align="left">MPa</td>
 </tr>
 <tr class="even">
 <td align="left">Kmax_rootxylem</td>
 <td align="left">Maximum sapwood-specific hydraulic conductivity of root
 xylem</td>
 <td align="left">Numeric</td>
-<td align="left">kg H2O·s-1·m-1·MPa-1</td>
+<td align="left">kg H2O * s-1 * m-1 * Mpa-1</td>
 </tr>
 <tr class="odd">
 <td align="left">VCroot_c</td>
@@ -708,19 +708,19 @@ xylem</td>
 <td align="left">VCroot_d</td>
 <td align="left">Parameter d of the root xylem vulnerability curve</td>
 <td align="left">Numeric</td>
-<td align="left">Mpa</td>
+<td align="left">MPa</td>
 </tr>
 <tr class="odd">
 <td align="left">Vmax298</td>
 <td align="left">Maximum Rubisco carboxilation rate</td>
 <td align="left">Numeric</td>
-<td align="left">mmol CO2·s-1·m-2</td>
+<td align="left">mmol CO2 * s-1* m-2</td>
 </tr>
 <tr class="even">
 <td align="left">Jmax298</td>
 <td align="left">Maximum rate of electron transport at 298K</td>
 <td align="left">Numeric</td>
-<td align="left">mmol electrons·s-1·m-2</td>
+<td align="left">mmol electrons * s-1 * m-2</td>
 </tr>
 <tr class="odd">
 <td align="left">Nleaf</td>
@@ -750,38 +750,38 @@ xylem</td>
 <td align="left">RERleaf</td>
 <td align="left">Maintenance respiration rates for leaves.</td>
 <td align="left">Numeric</td>
-<td align="left">g gluc · g dry-1 · day-1</td>
+<td align="left">g gluc * g dry-1 * day-1</td>
 </tr>
 <tr class="even">
 <td align="left">RERsapwood</td>
 <td align="left">Maintenance respiration rates for living cells of
 sapwood.</td>
 <td align="left">Numeric</td>
-<td align="left">g gluc · g dry-1 · day-1</td>
+<td align="left">g gluc * g dry-1 * day-1</td>
 </tr>
 <tr class="odd">
 <td align="left">RERfineroot</td>
 <td align="left">Maintenance respiration rates for fine roots.</td>
 <td align="left">Numeric</td>
-<td align="left">g gluc · g dry-1 · day-1</td>
+<td align="left">g gluc * g dry-1 * day-1</td>
 </tr>
 <tr class="even">
 <td align="left">CCleaf</td>
 <td align="left">Leaf construction costs</td>
 <td align="left">Numeric</td>
-<td align="left">g gluc · g dry-1</td>
+<td align="left">g gluc * g dry-1</td>
 </tr>
 <tr class="odd">
 <td align="left">CCsapwood</td>
 <td align="left">Sapwood construction costs</td>
 <td align="left">Numeric</td>
-<td align="left">g gluc · g dry-1</td>
+<td align="left">g gluc * g dry-1</td>
 </tr>
 <tr class="even">
 <td align="left">CCfineroot</td>
 <td align="left">Fine root construction costs</td>
 <td align="left">Numeric</td>
-<td align="left">g gluc · g dry-1</td>
+<td align="left">g gluc * g dry-1</td>
 </tr>
 <tr class="odd">
 <td align="left">RGRleafmax</td>
@@ -852,7 +852,7 @@ envelope</td>
 <td align="left">Minimum average temperature of the coldest month for
 successful recruitment</td>
 <td align="left">Numeric</td>
-<td align="left">ºC</td>
+<td align="left">Degrees C</td>
 </tr>
 <tr class="even">
 <td align="left">MinMoistureRecr</td>
