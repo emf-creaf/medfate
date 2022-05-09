@@ -7,6 +7,8 @@ rm(MEGANParams)
 # SpParams ----------------------------------------------------------------
 SpParamsDefinition <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsDefinition.xlsx",
                                               sheet="Definition", na = "NA"), stringsAsFactors=FALSE)
+SpParamsDefinition$Definition = stringi::stri_enc_toascii(SpParamsDefinition$Definition)
+SpParamsDefinition$Units = stringi::stri_enc_toascii(SpParamsDefinition$Units)
 usethis::use_data(SpParamsDefinition, overwrite = T)
 SpParamsUS <-as.data.frame(readxl::read_xlsx("data-raw/SpParamsUS.xlsx",
                                              sheet="SpParamsUS", na = "NA"), stringsAsFactors=FALSE)

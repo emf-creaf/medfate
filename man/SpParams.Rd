@@ -49,7 +49,7 @@ Mencuccini, Maurizio, Teresa Rosas, Lucy Rowland, Brendan Choat, Hans Cornelisse
 
 Pausas, Juli G., R. Brandon Pratt, Jon E. Keeley, Anna L. Jacobsen, Aaron R. Ramirez, Alberto Vilagrosa, Susana Paula, Iolana N. Kaneakua-Pia, and Stephen D. Davis. 2016. Towards understanding resprouting at the global scale. New Phytologist 209 (3): 945–54. https://doi.org/10.1111/nph.13644.
 
-Sanchez‐Martinez, Pablo, Jordi Martinez‐Vilalta, Kyle G. Dexter, Ricardo A. Segovia, and Maurizio Mencuccini. 2020. Adaptation and coordinated evolution of plant hydraulic traits. Ecology Letters, August, ele.13584. https://doi.org/10.1111/ele.13584.
+Sanchez-\enc{Martínez}{Martinez}, Pablo, Jordi \enc{Martínez}{Martinez}-Vilalta, Kyle G. Dexter, Ricardo A. Segovia, and Maurizio Mencuccini. 2020. Adaptation and coordinated evolution of plant hydraulic traits. Ecology Letters, August, ele.13584. https://doi.org/10.1111/ele.13584.
 
 \enc{Tavşanoǧlu}{Tavsanoglu}, \enc{Çaǧatay}{Cagatay}, and Juli G. Pausas. 2018. A functional trait database for Mediterranean Basin plants. Scientific Data 5: 1–18. https://doi.org/10.1038/sdata.2018.135.
 
