@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 ## About this vignette
 
-A companion vignette [*Understanding model inputs*](https://emf-creaf.github.io/medfate/articles/UnderstandingInputs.html) explained the vegetation, soil and weather structures needed to run the simulation models included in **medfate**. Preparing inputs for simulations with **medfate** is not straightforward, because it requires obtaining and reshaping data for vegetation, soil and weather. Therefore, this vignette illustrates some common issues that arise in the process of preparing inputs, so that the user is aware of them when processing his/her own data.
+A companion vignette [*Understanding model inputs*](https://emf-creaf.github.io/medfate/articles/intro/UnderstandingInputs.html) explained the vegetation, soil and weather structures needed to run the simulation models included in **medfate**. Preparing inputs for simulations with **medfate** is not straightforward, because it requires obtaining and reshaping data for vegetation, soil and weather. Therefore, this vignette illustrates some common issues that arise in the process of preparing inputs, so that the user is aware of them when processing his/her own data.
 
 We begin by loading packages **medfate**, **medfateutils** and **meteoland**:
 
