@@ -23,7 +23,7 @@ The present document describes how to run the soil plant water balance model des
 
 ## Preparing model inputs
 
-Model inputs are explained in greater detail in vignette [*Preparing model inputs*](https://emf-creaf.github.io/medfate/articles/PreparingInputs.html). Here we only review the different steps required to run function `spwb()`.
+Model inputs are explained in greater detail in vignettes [*Understanding model inputs*](https://emf-creaf.github.io/medfate/articles/UnderstandingInputs.html) and [*Preparing model inputs*](https://emf-creaf.github.io/medfate/articles/PreparingInputs.html). Here we only review the different steps required to run function `spwb()`.
 
 ### Soil, vegetation, meteorology and species data
 

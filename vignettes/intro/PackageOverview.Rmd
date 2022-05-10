@@ -5,11 +5,6 @@ date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: TRUE
-vignette: >
-  %\VignetteIndexEntry{Package overview}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignettePackage{medfate}
-  \usepackage[utf8]{inputenc}
 ---
 
 ```{r setup, include=FALSE}

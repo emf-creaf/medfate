@@ -5,11 +5,6 @@ date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: TRUE
-vignette: >
-  %\VignetteIndexEntry{Forest growth}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignettePackage{medfate}
-  \usepackage[utf8]{inputenc}
 ---
 
 ```{r setup, include=FALSE}
@@ -24,7 +19,8 @@ This document describes how to run the growth model of `medfate`, implemented in
 Because the forest growth model builds on the water balance model, the reader is assumed here to be familiarized with `spwb()`. If not, we recommend reading vignette [*Basic water balance*](https://emf-creaf.github.io/medfate/articles/BasicWaterBalance.html) before this one. 
 
 ## Preparing model inputs
-Model inputs are explained in greater detail in vignette [*Preparing model inputs*](https://emf-creaf.github.io/medfate/articles/PreparingInputs.html). Here we briefly review the different steps required to run function `growth()`.
+
+Model inputs are explained in greater detail in vignettes [*Understanding model inputs*](https://emf-creaf.github.io/medfate/articles/UnderstandingInputs.html) and [*Preparing model inputs*](https://emf-creaf.github.io/medfate/articles/PreparingInputs.html). Here we briefly review the different steps required to run function `growth()`.
 
 ### Soil, vegetation, meteorology and species data
 

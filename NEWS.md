@@ -4,6 +4,7 @@
 
 # Version 2.7.3
 - Cleaning for CRAN
+- New article to prepare model inputs
 
 # Version 2.7.2
 - SpParamsMED include the results of parameter estimation exercises

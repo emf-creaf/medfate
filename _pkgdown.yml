@@ -7,6 +7,7 @@ articles:
 - title: Introduction
   contents:
     - starts_with("intro/Package")
+    - starts_with("intro/Understanding")
     - starts_with("intro/Preparing")
 - title: Running simulation models
   contents:
