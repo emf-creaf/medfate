@@ -71,9 +71,9 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Preparing model inputs</h1>
                         <h4 data-toc-skip class="author">Miquel De
-Caceres</h4>
+Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-05-09</h4>
+            <h4 data-toc-skip class="date">2022-05-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/PreparingInputs.Rmd" class="external-link"><code>vignettes/intro/PreparingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>PreparingInputs.Rmd</code></div>
@@ -85,1222 +85,464 @@ Caceres</h4>
 <div class="section level2">
 <h2 id="about-this-vignette">About this vignette<a class="anchor" aria-label="anchor" href="#about-this-vignette"></a>
 </h2>
-<p>Any process-based model of forest functioning and dynamics needs
-information on <strong>climate</strong>, <strong>vegetation</strong> and
-<strong>soils</strong> of the forest stand to be simulated. Moreover,
-since <code>medfate</code> allows simulating cohorts belonging to
-different species, <strong>species-specific parameters</strong> are also
-needed. This vignette explains data structures required as input to run
-simulations using the package.</p>
-<p>Package <a href="https://emf-creaf.github.io/medfateutils/" class="external-link">medfateutils</a>
-provides functions for creating suitable inputs for simulations with
-<code>medfate</code>.</p>
-</div>
-<div class="section level2">
-<h2 id="species-specific-parameters">Species-specific parameters<a class="anchor" aria-label="anchor" href="#species-specific-parameters"></a>
-</h2>
-<p>Simulation models in <code>medfate</code> require a data frame with
-species parameter values. The package includes a default data set of
-parameter values for a set of Mediterranean species. The set of species
-are reported in the Spanish National Forest Inventory. Hence they
-represent woody taxa found in Spain, but may not be sufficient for other
-areas. The values of the parameter table were obtained from global trait
-data bases, bibliographic searches, fit to empirical data or
-expert-based guesses:</p>
+<p>Vignette <a href="https://emf-creaf.github.io/medfate/articles/UnderstandingInputs.html" class="external-link"><em>Understanding
+model inputs</em></a>. Preparing inputs for simulations with
+<strong>medfate</strong> is not straightforward, because it requires
+obtaining and reshaping data for vegetation, soil and weather. This
+vignette illustrates some common issues that arise in the process of
+preparing inputs, so that the user is aware of them when processing
+his/her own data.</p>
+<p>We begin by loading packages <strong>medfate</strong>,
+<strong>medfateutils</strong> and <strong>meteoland</strong>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpParamsMED"</span><span class="op">)</span></code></pre></div>
-<p>A large number of parameters (columns) can be found in
-<code>SpParamsMED</code>. Not all parameters are needed for all models.
-You can find parameter definitions in table
-<code>SpParamsDefinition</code>, which we reproduce below:</p>
-<table style="width:100%;" class="table">
-<colgroup>
-<col width="5%">
-<col width="85%">
-<col width="1%">
-<col width="7%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">ParameterName</th>
-<th align="left">Definition</th>
-<th align="left">Type</th>
-<th align="left">Units</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">Name</td>
-<td align="left">Taxon names (species binomials or genus)</td>
-<td align="left">String</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">IFNcodes</td>
-<td align="left">Codes in the forest inventory, separated by ‘/’</td>
-<td align="left">String</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">SpIndex</td>
-<td align="left">Species index 0,1,2,</td>
-<td align="left">Integer</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">Genus</td>
-<td align="left">Taxonomic genus</td>
-<td align="left">String</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">Order</td>
-<td align="left">Taxonomical order</td>
-<td align="left">String</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">Family</td>
-<td align="left">Taxonomical family</td>
-<td align="left">String</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">Group</td>
-<td align="left">Either “Gymnosperm” or “Angiosperm”</td>
-<td align="left">String</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">GrowthForm</td>
-<td align="left">Growth form: Either “Shrub”, “Tree” or
-“Tree/Shrub”</td>
-<td align="left">String</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">LifeForm</td>
-<td align="left">Raunkiaer life form</td>
-<td align="left">String</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">LeafShape</td>
-<td align="left">Broad/Needle/Linear/Scale/Spines/Succulent</td>
-<td align="left">String</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">LeafSize</td>
-<td align="left">Either “Small” (&lt; 225 mm), “Medium” (&gt; 225 mm
-&amp; &lt; 2025 mm) or “Large” (&gt; 2025 mm)</td>
-<td align="left">String</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">PhenologyType</td>
-<td align="left">Leaf phenology type, either “oneflush-evergreen” (new
-leaves develop in spring-summer), “progressive-evergreen” (new leaves
-develop during any season), “winter-deciduous” (leaf senescence in
-autumn, new leaves in spring-summer) or “winter-semideciduous” (same as
-before, but abscission of senescent leaves occurs when new leaves are
-produced).</td>
-<td align="left">NA</td>
-<td align="left">Categorical</td>
-</tr>
-<tr class="odd">
-<td align="left">Hmed</td>
-<td align="left">Median plant height</td>
-<td align="left">Numeric</td>
-<td align="left">cm</td>
-</tr>
-<tr class="even">
-<td align="left">Hmax</td>
-<td align="left">Maximum plant height</td>
-<td align="left">Numeric</td>
-<td align="left">cm</td>
-</tr>
-<tr class="odd">
-<td align="left">Z50</td>
-<td align="left">Depth corresponding to 50% of fine roots</td>
-<td align="left">Numeric</td>
-<td align="left">mm</td>
-</tr>
-<tr class="even">
-<td align="left">Z95</td>
-<td align="left">Depth corresponding to 95% of fine roots</td>
-<td align="left">Numeric</td>
-<td align="left">mm</td>
-</tr>
-<tr class="odd">
-<td align="left">fHDmin</td>
-<td align="left">Minimum value of height-diameter ratio</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">fHDmax</td>
-<td align="left">Maximum value of height-diameter ratio</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">a_ash</td>
-<td align="left">Allometric coefficient for shrub area as function of
-height</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">b_ash</td>
-<td align="left">Allometric coefficient for shrub area as function of
-height</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">a_bsh</td>
-<td align="left">Allometric coefficient for fine fuel shrub biomass (dry
-weight)</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">b_bsh</td>
-<td align="left">Allometric coefficient for fine fuel shrub biomass (dry
-weight)</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">a_btsh</td>
-<td align="left">Allometric coefficient for total fuel shrub biomass
-(dry weight)</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">b_btsh</td>
-<td align="left">Allometric coefficient for total fuel shrub biomass
-(dry weight)</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">cr</td>
-<td align="left">Proportion of total height corresponding to the crown
-(i.e. Crown length divided by total height)</td>
-<td align="left">Numeric</td>
-<td align="left">[0-1]</td>
-</tr>
-<tr class="even">
-<td align="left">a_fbt</td>
-<td align="left">Regression coefficient for tree foliar biomass</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">b_fbt</td>
-<td align="left">Regression coefficient for tree foliar biomass</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">c_fbt</td>
-<td align="left">Regression coefficient for tree foliar biomass</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">d_fbt</td>
-<td align="left">Regression coefficient for tree foliar biomass</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">a_cr</td>
-<td align="left">Regression coefficient for crown ratio</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">b_1cr</td>
-<td align="left">Regression coefficient for crown ratio</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">b_2cr</td>
-<td align="left">Regression coefficient for crown ratio</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">b_3cr</td>
-<td align="left">Regression coefficient for crown ratio</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">c_1cr</td>
-<td align="left">Regression coefficient for crown ratio</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">c_2cr</td>
-<td align="left">Regression coefficient for crown ratio</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">a_cw</td>
-<td align="left">Regression coefficient for crown width</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">b_cw</td>
-<td align="left">Regression coefficient for crown width</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">LeafDuration</td>
-<td align="left">Duration of leaves in year</td>
-<td align="left">Numeric</td>
-<td align="left">years</td>
-</tr>
-<tr class="odd">
-<td align="left">t0gdd</td>
-<td align="left">Date to start the accumulation of degree days</td>
-<td align="left">Numeric</td>
-<td align="left">days</td>
-</tr>
-<tr class="even">
-<td align="left">Sgdd</td>
-<td align="left">Degree days for leaf budburst</td>
-<td align="left">Numeric</td>
-<td align="left">Degrees C</td>
-</tr>
-<tr class="odd">
-<td align="left">Tbgdd</td>
-<td align="left">Base temperature for the calculation of degree days to
-leaf budburst</td>
-<td align="left">Numeric</td>
-<td align="left">Degrees C</td>
-</tr>
-<tr class="even">
-<td align="left">Ssen</td>
-<td align="left">Degree days corresponding to senescence</td>
-<td align="left">Numeric</td>
-<td align="left">Degrees C</td>
-</tr>
-<tr class="odd">
-<td align="left">Phsen</td>
-<td align="left">Photoperiod corresponding to start counting
-senescence</td>
-<td align="left">Numeric</td>
-<td align="left">hours</td>
-</tr>
-<tr class="even">
-<td align="left">Tbsen</td>
-<td align="left">Base temperature for the calculation of degree days to
-senescence</td>
-<td align="left">Numeric</td>
-<td align="left">Degrees C</td>
-</tr>
-<tr class="odd">
-<td align="left">xsen</td>
-<td align="left">Discrete values, to allow for any
-absent/proportional/more than proportional effects of temperature on
-senescence</td>
-<td align="left">Integer</td>
-<td align="left">{0,1,2}</td>
-</tr>
-<tr class="even">
-<td align="left">ysen</td>
-<td align="left">Discrete values, to allow for any
-absent/proportional/more than proportional effects of photoperiod on
-senescence</td>
-<td align="left">Integer</td>
-<td align="left">{0,1,2}</td>
-</tr>
-<tr class="odd">
-<td align="left">SLA</td>
-<td align="left">Specific leaf area (mm2/mg = m2/kg)</td>
-<td align="left">Numeric</td>
-<td align="left">m2/kg</td>
-</tr>
-<tr class="even">
-<td align="left">LeafDensity</td>
-<td align="left">Density of leaf tissue (dry weight over volume)</td>
-<td align="left">Numeric</td>
-<td align="left">g/cm3</td>
-</tr>
-<tr class="odd">
-<td align="left">WoodDensity</td>
-<td align="left">Wood tissue density (at 0% humidity!)</td>
-<td align="left">Numeric</td>
-<td align="left">g/cm3</td>
-</tr>
-<tr class="even">
-<td align="left">FineRootDensity</td>
-<td align="left">Density of fine root tissue (dry weight over
-volume).</td>
-<td align="left">Numeric</td>
-<td align="left">g/cm3</td>
-</tr>
-<tr class="odd">
-<td align="left">conduit2sapwood</td>
-<td align="left">Proportion of sapwood corresponding to conducive
-elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
-<td align="left">Numeric</td>
-<td align="left">[0,1]</td>
-</tr>
-<tr class="even">
-<td align="left">r635</td>
-<td align="left">Ratio of foliar (photosynthetic) + small branches
-(&lt;6.35 mm) dry biomass to foliar (photosynthetic) dry biomass</td>
-<td align="left">Numeric</td>
-<td align="left">&gt;=1</td>
-</tr>
-<tr class="odd">
-<td align="left">pDead</td>
-<td align="left">Proportion of total fine fuels that are dead</td>
-<td align="left">Numeric</td>
-<td align="left">[0,1]</td>
-</tr>
-<tr class="even">
-<td align="left">Al2As</td>
-<td align="left">Leaf area to sapwood area ratio</td>
-<td align="left">Numeric</td>
-<td align="left">m2 / m2</td>
-</tr>
-<tr class="odd">
-<td align="left">Ar2Al</td>
-<td align="left">Root area to leaf area ratio</td>
-<td align="left">Numeric</td>
-<td align="left">m2 / m2</td>
-</tr>
-<tr class="even">
-<td align="left">LeafWidth</td>
-<td align="left">Leaf width</td>
-<td align="left">Numeric</td>
-<td align="left">cm</td>
-</tr>
-<tr class="odd">
-<td align="left">SRL</td>
-<td align="left">Specific root length</td>
-<td align="left">Numeric</td>
-<td align="left">cm/g</td>
-</tr>
-<tr class="even">
-<td align="left">RLD</td>
-<td align="left">Fine root length density (density of root length per
-soil volume)</td>
-<td align="left">Numeric</td>
-<td align="left">cm/cm3</td>
-</tr>
-<tr class="odd">
-<td align="left">maxFMC</td>
-<td align="left">Maximum fuel moisture (in percent of dry weight)</td>
-<td align="left">Numeric</td>
-<td align="left">%</td>
-</tr>
-<tr class="even">
-<td align="left">minFMC</td>
-<td align="left">Minimum fuel moisture (in percent of dry weight)</td>
-<td align="left">Numeric</td>
-<td align="left">%</td>
-</tr>
-<tr class="odd">
-<td align="left">LeafPI0</td>
-<td align="left">Osmotic potential at full turgor of leaves</td>
-<td align="left">Numeric</td>
-<td align="left">Mpa</td>
-</tr>
-<tr class="even">
-<td align="left">LeafEPS</td>
-<td align="left">Modulus of elasticity (capacity of the cell wall to
-resist changes in volume in response to changes in turgor) of
-leaves</td>
-<td align="left">Numeric</td>
-<td align="left">Mpa</td>
-</tr>
-<tr class="odd">
-<td align="left">LeafAF</td>
-<td align="left">Apoplastic fraction (proportion of water outside the
-living cells) in leaves</td>
-<td align="left">Numeric</td>
-<td align="left">%</td>
-</tr>
-<tr class="even">
-<td align="left">StemPI0</td>
-<td align="left">Osmotic potential at full turgor of symplastic xylem
-tissue</td>
-<td align="left">Numeric</td>
-<td align="left">Mpa</td>
-</tr>
-<tr class="odd">
-<td align="left">StemEPS</td>
-<td align="left">Modulus of elasticity (capacity of the cell wall to
-resist changes in volume in response to changes in turgor) of symplastic
-xylem tissue</td>
-<td align="left">Numeric</td>
-<td align="left">Mpa</td>
-</tr>
-<tr class="even">
-<td align="left">StemAF</td>
-<td align="left">Apoplastic fraction (proportion of water outside the
-living cells) in stem xylem</td>
-<td align="left">Numeric</td>
-<td align="left">%</td>
-</tr>
-<tr class="odd">
-<td align="left">SAV</td>
-<td align="left">Surface-area-to-volume ratio of the small fuel (1h)
-fraction (leaves and branches &lt; 6.35mm)</td>
-<td align="left">Numeric</td>
-<td align="left">m2/m3</td>
-</tr>
-<tr class="even">
-<td align="left">HeatContent</td>
-<td align="left">High fuel heat content</td>
-<td align="left">Numeric</td>
-<td align="left">kJ/kg</td>
-</tr>
-<tr class="odd">
-<td align="left">LigninPercent</td>
-<td align="left">Percent of lignin+cutin over dry weight in leaves</td>
-<td align="left">Numeric</td>
-<td align="left">%</td>
-</tr>
-<tr class="even">
-<td align="left">gammaSWR</td>
-<td align="left">Reflectance (albedo) coefficient for SWR (gammaPAR is
-0.8*gammaSWR)</td>
-<td align="left">Numeric</td>
-<td align="left">unitless</td>
-</tr>
-<tr class="odd">
-<td align="left">alphaSWR</td>
-<td align="left">Absorbance coefficient for SWR (alphaPAR is
-alphaSWR*1.35)</td>
-<td align="left">Numeric</td>
-<td align="left">unitless</td>
-</tr>
-<tr class="even">
-<td align="left">kPAR</td>
-<td align="left">Light extinction coeficient for PAR (extinction
-coefficient for SWR is kPAR/1.35)</td>
-<td align="left">Numeric</td>
-<td align="left">unitless</td>
-</tr>
-<tr class="odd">
-<td align="left">g</td>
-<td align="left">Canopy water storage capacity per LAI unit</td>
-<td align="left">Numeric</td>
-<td align="left">mm/LAI</td>
-</tr>
-<tr class="even">
-<td align="left">Tmax_LAI</td>
-<td align="left">Empirical coefficient relating LAI with the ratio of
-maximum transpiration over potential evapotranspiration.</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">Tmax_LAIsq</td>
-<td align="left">Empirical coefficient relating squared LAI with the
-ratio of maximum transpiration over potential evapotranspiration.</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">Psi_Extract</td>
-<td align="left">Water potential corresponding to stomatal closure
-(aprox.)</td>
-<td align="left">Numeric</td>
-<td align="left">MPa</td>
-</tr>
-<tr class="odd">
-<td align="left">Psi_Critic</td>
-<td align="left">Water potential corresponding to 50% of stem cavitation
-(~ 50% PLC)</td>
-<td align="left">Numeric</td>
-<td align="left">MPa</td>
-</tr>
-<tr class="even">
-<td align="left">WUE</td>
-<td align="left">Water use efficiency (gross photosynthesis over
-transpiration)</td>
-<td align="left">Numeric</td>
-<td align="left">g C * mm H2O-1</td>
-</tr>
-<tr class="odd">
-<td align="left">WUE_decay</td>
-<td align="left">Exponent for relative WUE decay depending on % PAR</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">Gswmin</td>
-<td align="left">Minimum stomatal conductance to water vapour</td>
-<td align="left">Numeric</td>
-<td align="left">mol H2O * s-1 * m-2</td>
-</tr>
-<tr class="odd">
-<td align="left">Gswmax</td>
-<td align="left">Maximum stomatal conductance to water vapour</td>
-<td align="left">Numeric</td>
-<td align="left">mol H2O * s-1 * m-2</td>
-</tr>
-<tr class="even">
-<td align="left">VCleaf_kmax</td>
-<td align="left">Maximum leaf hydraulic conductance</td>
-<td align="left">Numeric</td>
-<td align="left">mmol H2O * s-1 * m-2 * MPa-1</td>
-</tr>
-<tr class="odd">
-<td align="left">VCleaf_c</td>
-<td align="left">Parameter c of the leaf vulnerability curve</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">VCleaf_d</td>
-<td align="left">Parameter d of the leaf vulnerability curve</td>
-<td align="left">Numeric</td>
-<td align="left">MPa</td>
-</tr>
-<tr class="odd">
-<td align="left">Kmax_stemxylem</td>
-<td align="left">Maximum sapwood-specific hydraulic conductivity of stem
-xylem</td>
-<td align="left">Numeric</td>
-<td align="left">kg H2O * s-1 * m-1 * Mpa-1</td>
-</tr>
-<tr class="even">
-<td align="left">VCstem_c</td>
-<td align="left">Parameter c of the stem xylem vulnerability curve</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">VCstem_d</td>
-<td align="left">Parameter d of the stem xylem vulnerability curve</td>
-<td align="left">Numeric</td>
-<td align="left">MPa</td>
-</tr>
-<tr class="even">
-<td align="left">Kmax_rootxylem</td>
-<td align="left">Maximum sapwood-specific hydraulic conductivity of root
-xylem</td>
-<td align="left">Numeric</td>
-<td align="left">kg H2O * s-1 * m-1 * Mpa-1</td>
-</tr>
-<tr class="odd">
-<td align="left">VCroot_c</td>
-<td align="left">Parameter c of the root xylem vulnerability curve</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">VCroot_d</td>
-<td align="left">Parameter d of the root xylem vulnerability curve</td>
-<td align="left">Numeric</td>
-<td align="left">MPa</td>
-</tr>
-<tr class="odd">
-<td align="left">Vmax298</td>
-<td align="left">Maximum Rubisco carboxilation rate</td>
-<td align="left">Numeric</td>
-<td align="left">mmol CO2 * s-1* m-2</td>
-</tr>
-<tr class="even">
-<td align="left">Jmax298</td>
-<td align="left">Maximum rate of electron transport at 298K</td>
-<td align="left">Numeric</td>
-<td align="left">mmol electrons * s-1 * m-2</td>
-</tr>
-<tr class="odd">
-<td align="left">Nleaf</td>
-<td align="left">Nitrogen mass per leaf dry mass</td>
-<td align="left">Numeric</td>
-<td align="left">mg N / g dry</td>
-</tr>
-<tr class="even">
-<td align="left">Nsapwood</td>
-<td align="left">Nitrogen mass per sapwood dry mass</td>
-<td align="left">Numeric</td>
-<td align="left">mg N / g dry</td>
-</tr>
-<tr class="odd">
-<td align="left">Nfineroot</td>
-<td align="left">Nitrogen mass per fine root dry mass</td>
-<td align="left">Numeric</td>
-<td align="left">mg N / g dry</td>
-</tr>
-<tr class="even">
-<td align="left">WoodC</td>
-<td align="left">Wood carbon content per dry mass</td>
-<td align="left">Numeric</td>
-<td align="left">g C / g dry</td>
-</tr>
-<tr class="odd">
-<td align="left">RERleaf</td>
-<td align="left">Maintenance respiration rates for leaves.</td>
-<td align="left">Numeric</td>
-<td align="left">g gluc * g dry-1 * day-1</td>
-</tr>
-<tr class="even">
-<td align="left">RERsapwood</td>
-<td align="left">Maintenance respiration rates for living cells of
-sapwood.</td>
-<td align="left">Numeric</td>
-<td align="left">g gluc * g dry-1 * day-1</td>
-</tr>
-<tr class="odd">
-<td align="left">RERfineroot</td>
-<td align="left">Maintenance respiration rates for fine roots.</td>
-<td align="left">Numeric</td>
-<td align="left">g gluc * g dry-1 * day-1</td>
-</tr>
-<tr class="even">
-<td align="left">CCleaf</td>
-<td align="left">Leaf construction costs</td>
-<td align="left">Numeric</td>
-<td align="left">g gluc * g dry-1</td>
-</tr>
-<tr class="odd">
-<td align="left">CCsapwood</td>
-<td align="left">Sapwood construction costs</td>
-<td align="left">Numeric</td>
-<td align="left">g gluc * g dry-1</td>
-</tr>
-<tr class="even">
-<td align="left">CCfineroot</td>
-<td align="left">Fine root construction costs</td>
-<td align="left">Numeric</td>
-<td align="left">g gluc * g dry-1</td>
-</tr>
-<tr class="odd">
-<td align="left">RGRleafmax</td>
-<td align="left">Maximum leaf relative growth rate</td>
-<td align="left">Numeric</td>
-<td align="left">m2/cm2/day</td>
-</tr>
-<tr class="even">
-<td align="left">RGRsapwoodmax</td>
-<td align="left">Maximum sapwood growth rate relative to sapwood area
-(for shrubs)</td>
-<td align="left">Numeric</td>
-<td align="left">cm2/cm2/day</td>
-</tr>
-<tr class="odd">
-<td align="left">RGRcambiummax</td>
-<td align="left">Maximum sapwood growth rate relative to cambium
-perimeter (for trees)</td>
-<td align="left">Numeric</td>
-<td align="left">cm2/cm/day</td>
-</tr>
-<tr class="even">
-<td align="left">RGRfinerootmax</td>
-<td align="left">Maximum fineroot relative growth rate</td>
-<td align="left">Numeric</td>
-<td align="left">g dry/g dry/day</td>
-</tr>
-<tr class="odd">
-<td align="left">SRsapwood</td>
-<td align="left">Sapwood daily senescence rate</td>
-<td align="left">Numeric</td>
-<td align="left">Day-1</td>
-</tr>
-<tr class="even">
-<td align="left">SRfineroot</td>
-<td align="left">Fine root daily senescence rate</td>
-<td align="left">Numeric</td>
-<td align="left">Day-1</td>
-</tr>
-<tr class="odd">
-<td align="left">RSSG</td>
-<td align="left">Minimum relative starch for sapwood growth</td>
-<td align="left">Numeric</td>
-<td align="left">[0-1]</td>
-</tr>
-<tr class="even">
-<td align="left">MortalityBaselineRate</td>
-<td align="left">Deterministic proportion or probability specifying the
-baseline reduction of cohort’s density occurring in a year</td>
-<td align="left">Numeric</td>
-<td align="left">Year-1</td>
-</tr>
-<tr class="odd">
-<td align="left">SeedProductionHeight</td>
-<td align="left">Minimum height for seed production</td>
-<td align="left">Numeric</td>
-<td align="left">cm</td>
-</tr>
-<tr class="even">
-<td align="left">ProbRecr</td>
-<td align="left">Probability of recruitment within the bioclimatic
-envelope</td>
-<td align="left">Numeric</td>
-<td align="left">[0-1]</td>
-</tr>
-<tr class="odd">
-<td align="left">MinTempRecr</td>
-<td align="left">Minimum average temperature of the coldest month for
-successful recruitment</td>
-<td align="left">Numeric</td>
-<td align="left">Degrees C</td>
-</tr>
-<tr class="even">
-<td align="left">MinMoistureRecr</td>
-<td align="left">Minimum value of the moisture index (annual
-precipitation over annual PET) for successful recruitment</td>
-<td align="left">Numeric</td>
-<td align="left">unitless</td>
-</tr>
-<tr class="odd">
-<td align="left">MinFPARRecr</td>
-<td align="left">Minimum percentage of PAR at the ground level for
-successful recruitment</td>
-<td align="left">Numeric</td>
-<td align="left">%</td>
-</tr>
-<tr class="even">
-<td align="left">RecrTreeDBH</td>
-<td align="left">Recruitment tree dbh</td>
-<td align="left">Numeric</td>
-<td align="left">cm</td>
-</tr>
-<tr class="odd">
-<td align="left">RecrTreeHeight</td>
-<td align="left">Recruitment tree height</td>
-<td align="left">Numeric</td>
-<td align="left">cm</td>
-</tr>
-<tr class="even">
-<td align="left">RecrShrubHeight</td>
-<td align="left">Recruitment shrub height</td>
-<td align="left">Numeric</td>
-<td align="left">cm</td>
-</tr>
-<tr class="odd">
-<td align="left">RecrTreeDensity</td>
-<td align="left">Recruitment tree density</td>
-<td align="left">Numeric</td>
-<td align="left">ind/ha</td>
-</tr>
-<tr class="even">
-<td align="left">RecrShrubCover</td>
-<td align="left">Recruitment shrub cover</td>
-<td align="left">Numeric</td>
-<td align="left">%</td>
-</tr>
-<tr class="odd">
-<td align="left">RecrZ50</td>
-<td align="left">Recruitment depth corresponding to 50% of fine
-roots</td>
-<td align="left">Numeric</td>
-<td align="left">mm</td>
-</tr>
-<tr class="even">
-<td align="left">RecrZ95</td>
-<td align="left">Recruitment depth corresponding to 95% of fine
-roots</td>
-<td align="left">Numeric</td>
-<td align="left">mm</td>
-</tr>
-</tbody>
-</table>
-<p>In order to understand the role of parameters in the model, you
-should read the details of model design and formulation included in the
-<a href="https://emf-creaf.github.io/medfatebook/index.html" class="external-link"><strong>medfatebook</strong></a>.
-An example of how to define and populate a species parameter table for a
-given region is given in article <a href="https://emf-creaf.github.io/medfate/articles/parametrization/SpeciesParameterizationSpain.html" class="external-link"><em>Species
-parameterization for Spain</em></a>.</p>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/" class="external-link">medfate</a></span><span class="op">)</span>
+<span class="co">#&gt; Package 'medfate' [ver. 2.7.3]</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">medfateutils</span><span class="op">)</span>
+<span class="co">#&gt; Registered S3 method overwritten by 'ape':</span>
+<span class="co">#&gt;   method   from </span>
+<span class="co">#&gt;   plot.mst spdep</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/meteoland/index.html" class="external-link">meteoland</a></span><span class="op">)</span>
+<span class="co">#&gt; Loading required package: sp</span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="vegetation">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation"></a>
+<h2 id="buildingmanipulating-forest-objects">Building/manipulating forest objects<a class="anchor" aria-label="anchor" href="#buildingmanipulating-forest-objects"></a>
 </h2>
+<p>In this section we show how to build and manipulate objects of class
+<code>forest</code>, for their use in package medfate, starting from a
+table containing forest inventory data.</p>
 <div class="section level3">
-<h3 id="forest-objects">Forest objects<a class="anchor" aria-label="anchor" href="#forest-objects"></a>
+<h3 id="poblet-tree-data-set">Poblet tree data set<a class="anchor" aria-label="anchor" href="#poblet-tree-data-set"></a>
 </h3>
-<p>Models included in <code>medfate</code> were primarily designed to be
-ran on <strong>forest inventory plots</strong>. In this kind of data,
-the vegetation of a sampled area is often described by several records
-of woody plants (trees and shrubs) along with their size and species
-identity. Forest plots in <code>medfate</code> are assumed to be in a
-data structure that follows closely the Spanish national forest
-inventory, but is simple enough to so that other forest sampling schemes
-can be mapped onto it.</p>
-<p>Each forest plot is represented in an object of class
-<code>forest</code>, a list that contains several elements. Among them,
-the most important items are two data frames, <code>treeData</code> (for
-trees) and <code>shrubData</code> for shrubs:</p>
+<p>Package <strong>medfateutils</strong> includes a small dataset of
+tree data, corresponding to a dense holm oak forest in Poblet
+(Catalonia, Spain). As a result of the abandonment of previous coppicing
+exploitation, there is a high density of stems per individual.</p>
+<p>We begin by loading the tree data from Poblet:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span>
-<span class="va">exampleforestMED</span></code></pre></div>
-<pre><code><span class="co">## $ID</span>
-<span class="co">## [1] "1"</span>
-<span class="co">## </span>
-<span class="co">## $patchsize</span>
-<span class="co">## [1] 10000</span>
-<span class="co">## </span>
-<span class="co">## $treeData</span>
-<span class="co">##   Species   N   DBH Height Z50  Z95</span>
-<span class="co">## 1     148 168 37.55    800 100  600</span>
-<span class="co">## 2     168 384 14.60    660 300 1000</span>
-<span class="co">## </span>
-<span class="co">## $shrubData</span>
-<span class="co">##   Species Cover Height Z50  Z95</span>
-<span class="co">## 1     165  3.75     80 200 1000</span>
-<span class="co">## </span>
-<span class="co">## $herbCover</span>
-<span class="co">## [1] 10</span>
-<span class="co">## </span>
-<span class="co">## $herbHeight</span>
-<span class="co">## [1] 20</span>
-<span class="co">## </span>
-<span class="co">## attr(,"class")</span>
-<span class="co">## [1] "forest" "list"</span></code></pre>
-<p>Trees are expected to be primarily described in terms of species,
-diameter (DBH; cm) and height (cm), whereas shrubs are described in
-terms of species, percent cover (%) and mean height (cm). Root
-distribution has to be specified for both growth forms, in terms of the
-depths (mm) corresponding to 50% and 95% of cumulative fine root
-distribution. Functions are provided in package <a href="https://emf-creaf.github.io/medfateutils/" class="external-link">medfateutils</a> to map
-variables in user data frames into tables <code>treeData</code> and
-<code>shrubData</code>.</p>
-</div>
-<div class="section level3">
-<h3 id="aboveground-and-belowground-data">Aboveground and belowground data<a class="anchor" aria-label="anchor" href="#aboveground-and-belowground-data"></a>
-</h3>
-<p>We recommend users to define <code>forest</code> objects as starting
-point for simulations with <code>medfate</code>. However, simulation
-functions in <code>medfate</code> allow starting in a more general way
-using two data frames, one with <strong>aboveground</strong> information
-(i.e. the leave area and size of plants) and the other with
-<strong>belowground</strong> information (i.e. root distribution). The
-aboveground data frame does not distinguish between trees and shrubs. It
-includes, for each plant cohort to be considered in rows, its
-<em>species identity</em>, <em>height</em> and <em>leaf area index</em>
-(LAI). While users can build their input data themselves, we use
-function <code><a href="../../reference/modelInput.html">forest2aboveground()</a></code> on the object
-<code>exampleforestMED</code> to show how should the data look like:</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"poblet_trees"</span><span class="op">)</span></code></pre></div>
+<p>and we inspect its content, for example using:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">)</span>
+<span class="co">#&gt;   Plot.Code            Indv.Ref       Species           Diameter.cm   </span>
+<span class="co">#&gt;  Length:717         Min.   :  1.0   Length:717         Min.   : 7.50  </span>
+<span class="co">#&gt;  Class :character   1st Qu.: 45.0   Class :character   1st Qu.: 9.10  </span>
+<span class="co">#&gt;  Mode  :character   Median : 97.0   Mode  :character   Median :11.10  </span>
+<span class="co">#&gt;                     Mean   :103.4                      Mean   :11.62  </span>
+<span class="co">#&gt;                     3rd Qu.:156.0                      3rd Qu.:13.40  </span>
+<span class="co">#&gt;                     Max.   :261.0                      Max.   :26.00</span></code></pre></div>
+<p>The data frame includes tree data corresponding to three forest
+inventories:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">above</span> <span class="op">=</span> <span class="fu"><a href="../../reference/modelInput.html">forest2aboveground</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
-<span class="va">above</span></code></pre></div>
-<pre><code><span class="co">##         SP        N   DBH Cover   H        CR   LAI_live LAI_expanded LAI_dead</span>
-<span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 0.96734365   0.96734365        0</span>
-<span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642 0.86167321   0.86167321        0</span>
-<span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817 0.03928201   0.03928201        0</span></code></pre>
-<p>Note that the call to <code><a href="../../reference/modelInput.html">forest2aboveground()</a></code> included
-species parameters, because species-specific values are needed to
-calculate leaf area from tree diameters or shrub cover. Columns
-<code>N</code>, <code>DBH</code> and <code>Cover</code> are required for
-simulating growth, but not for soil water balance, which only requires
-columns <code>SP</code>, <code>H</code> (in cm), <code>CR</code>
-(i.e. the crown ratio), <code>LAI_live</code>, <code>LAI_expanded</code>
-and <code>LAI_dead</code>. Here plant cohorts are given unique codes
-that tell us whether they correspond to trees or shrubs, but the user
-can use other row identifiers as long as they are unique. In practice,
-the user only needs to worry to calculate the values for
-<code>LAI_live</code>. <code>LAI_live</code> and
-<code>LAI_expanded</code> can contain the same LAI values, and
-<code>LAI_dead</code> is normally zero. This is so because models update
-<code>LAI_expanded</code> and <code>LAI_dead</code> according to the
-leaf phenology of species.</p>
-<p>Aboveground leaf area distribution (with or without distinguishing
-among cohorts) can be examined by calling function
-<code><a href="../../reference/VerticalProfiles.html">vprofile_leafAreaDensity()</a></code>:</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     POBL_CTL POBL_THI_AFT POBL_THI_BEF </span>
+<span class="co">#&gt;          267          189          261</span></code></pre></div>
+<p><code>POBL_CTL</code> corresponds to an oak forest where no treatment
+was done (control), whereas <code>POBL_THI_BEF</code> and
+<code>POBL_THI_AFT</code> are two forest inventories conducted on the
+same forest plot, before and after a thinning intervention to reduce the
+number of stems.</p>
+</div>
+<div class="section level3">
+<h3 id="mapping-trees-from-the-control-forest">Mapping trees from the control forest<a class="anchor" aria-label="anchor" href="#mapping-trees-from-the-control-forest"></a>
+</h3>
+<p>We initialize an empty forest object using function
+<code><a href="../../reference/forest.html">emptyforest()</a></code> from package <strong>medfate</strong>:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">forest_ctl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest.html">emptyforest</a></span><span class="op">(</span><span class="st">"POBL_CTL"</span><span class="op">)</span>
+<span class="va">forest_ctl</span>
+<span class="co">#&gt; $ID</span>
+<span class="co">#&gt; [1] "POBL_CTL"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $patchsize</span>
+<span class="co">#&gt; [1] 10000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $treeData</span>
+<span class="co">#&gt; [1] Species DBH     Height  N       Z50     Z95    </span>
+<span class="co">#&gt; &lt;0 rows&gt; (or 0-length row.names)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $shrubData</span>
+<span class="co">#&gt; [1] Species Height  Cover   Z50     Z95    </span>
+<span class="co">#&gt; &lt;0 rows&gt; (or 0-length row.names)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $herbCover</span>
+<span class="co">#&gt; [1] 0</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $herbHeight</span>
+<span class="co">#&gt; [1] 0</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; attr(,"class")</span>
+<span class="co">#&gt; [1] "forest" "list"</span></code></pre></div>
+<p>Now we will fill in data for element <code>treeData</code> in the
+<code>forest</code> object. For that, we need to define a mapping from
+column names in <code>poblet_trees</code> to variables in
+<code>treeData</code>. The mapping can be defined using a <strong>named
+string vector</strong>, i.e. a vector where element names are variable
+names in <code>treeData</code> and vector elements are strings of the
+variable names in <code>poblet_trees</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/VerticalProfiles.html">vprofile_leafAreaDensity</a></span><span class="op">(</span><span class="va">above</span>, byCohorts <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></code></pre></div>
-<p><img src="PreparingInputs_files/figure-html/unnamed-chunk-6-1.png" width="384" style="display: block; margin: auto;"></p>
+<code class="sourceCode R"><span class="va">mapping</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species.name"</span> <span class="op">=</span> <span class="st">"Species"</span>, <span class="st">"DBH"</span> <span class="op">=</span> <span class="st">"Diameter.cm"</span><span class="op">)</span></code></pre></div>
+<p>We can now replace the empty <code>treeData</code> in
+<code>forest_ctl</code> using function
+<code><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable()</a></code> from
+<strong>medfateutils</strong>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/VerticalProfiles.html">vprofile_leafAreaDensity</a></span><span class="op">(</span><span class="va">above</span>, byCohorts <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
-<p><img src="PreparingInputs_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;"></p>
-<p>Regarding <strong>belowground</strong> information, we need vectors
-with depths corresponding to 50% and 95% of fine roots, which we simply
-concatenate from our forest data:</p>
+<code class="sourceCode R"><span class="va">forest_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span>,<span class="op">]</span>, 
+                                           mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span><span class="op">)</span></code></pre></div>
+<p>We can inspect the result using:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Z50</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">$</span><span class="va">treeData</span><span class="op">$</span><span class="va">Z50</span>, <span class="va">exampleforestMED</span><span class="op">$</span><span class="va">shrubData</span><span class="op">$</span><span class="va">Z50</span><span class="op">)</span>
-<span class="va">Z95</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">$</span><span class="va">treeData</span><span class="op">$</span><span class="va">Z95</span>, <span class="va">exampleforestMED</span><span class="op">$</span><span class="va">shrubData</span><span class="op">$</span><span class="va">Z95</span><span class="op">)</span></code></pre></div>
-<p>These parameters specify a continuous distribution of fine roots.
-Users can visually inspect the distribution of fine roots of
-<code>forest</code> objects by calling function
-<code><a href="../../reference/VerticalProfiles.html">vprofile_rootDistribution()</a></code>:</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_ctl</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
+<span class="co">#&gt;     Species            N      Height             DBH          Z50         </span>
+<span class="co">#&gt;  Min.   :  4.0   Min.   :1   Mode:logical   Min.   : 7.50   Mode:logical  </span>
+<span class="co">#&gt;  1st Qu.: 19.0   1st Qu.:1   NA's:267       1st Qu.: 9.00   NA's:267      </span>
+<span class="co">#&gt;  Median :168.0   Median :1                  Median :10.70                 </span>
+<span class="co">#&gt;  Mean   :105.3   Mean   :1                  Mean   :11.53                 </span>
+<span class="co">#&gt;  3rd Qu.:168.0   3rd Qu.:1                  3rd Qu.:13.30                 </span>
+<span class="co">#&gt;  Max.   :168.0   Max.   :1                  Max.   :26.00                 </span>
+<span class="co">#&gt;    Z95         </span>
+<span class="co">#&gt;  Mode:logical  </span>
+<span class="co">#&gt;  NA's:267      </span>
+<span class="co">#&gt;                </span>
+<span class="co">#&gt;                </span>
+<span class="co">#&gt;                </span>
+<span class="co">#&gt; </span></code></pre></div>
+<p>Some data are missing, but we will not worry about it now. One way to
+evaluate if the tree data is correctly specified is to display a summary
+of the <code>forest</code> object using the <code>summary</code>
+function defined in <strong>medfate</strong> for this object class:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/VerticalProfiles.html">vprofile_rootDistribution</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></code></pre></div>
-<p><img src="PreparingInputs_files/figure-html/unnamed-chunk-9-1.png" width="480" style="display: block; margin: auto;"></p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="soils">Soils<a class="anchor" aria-label="anchor" href="#soils"></a>
-</h2>
-<div class="section level3">
-<h3 id="soil-physical-description">Soil physical description<a class="anchor" aria-label="anchor" href="#soil-physical-description"></a>
-</h3>
-<p>Simulation models in <code>medfate</code> require information on the
-physical attributes of soil, namely soil depth, texture, bulk density
-and rock fragment content. Soil physical attributes can be initialized
-to default values, for a given number of layers, using function
-<code><a href="../../reference/defaultSoilParams.html">defaultSoilParams()</a></code>:</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
+<span class="co">#&gt; Tree density (ind/ha): 267 </span>
+<span class="co">#&gt; Tree BA (m2/ha): 3.0179815 </span>
+<span class="co">#&gt; Cover (%) trees (open ground): 42.1205627  shrubs: 0 </span>
+<span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span>
+<span class="co">#&gt; LAI (m2/m2) total: 0.530447  trees: 0.530447  shrubs: 0 </span>
+<span class="co">#&gt; Live fine fuel (kg/m2) total: 0.1372838  trees: 0.1372838  shrubs: 0 </span>
+<span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></code></pre></div>
+<p>The values of stand density and stand basal area are too low for such
+a dense forest, which indicates that something needs to be corrected. At
+this point, it is important to remember that <code>forest</code> objects
+need the density of trees to be specified as <em>stems per hectare</em>.
+We conducted our tree data mapping without indicating the area of the
+sampled plot. We are told that forest stand sampling was done using a
+circular plot whose radius was 15 m. We can calculate the sampled area
+using:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">spar</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">spar</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##   widths clay sand om  bd rfc</span>
-<span class="co">## 1    300   25   25 NA 1.5  25</span>
-<span class="co">## 2    700   25   25 NA 1.5  45</span></code></pre>
-<p>where <code>widths</code> are soil layer widths in mm;
-<code>clay</code> and <code>sand</code> are the percentage of clay and
-sand, in percent of dry weight, <code>om</code> stands for organic
-matter, <code>bd</code> is bulk density (in <span class="math inline">\(g \cdot cm^{-3}\)</span>) and <code>rfc</code> the
-percentage of rock fragments. Because soil properties vary strongly at
-fine spatial scales, ideally soil physical attributes should be measured
-on samples taken at the forest stand to be simulated. For those users
-lacking such data, soil properties modelled at larger scales are
-available via SoilGrids.org (see function <code><a href="https://rdrr.io/pkg/medfateutils/man/soilgridsParams.html" class="external-link">soilgridsParams()</a></code>
-in package <a href="https://github.com/emf-creaf/medfateutils" class="external-link">medfateutils</a>).</p>
-</div>
-<div class="section level3">
-<h3 id="soil-input-object">Soil input object<a class="anchor" aria-label="anchor" href="#soil-input-object"></a>
-</h3>
-<p>The soil input for simulations is an object of class
-<code>soil</code> (a list) that is created using a function with the
-same name:</p>
+<code class="sourceCode R"><span class="va">sampled_area</span> <span class="op">=</span> <span class="va">pi</span><span class="op">*</span><span class="fl">15</span><span class="op">^</span><span class="fl">2</span></code></pre></div>
+<p>and use this information to map the tree data again, where we specify
+parameter <code>plot.size</code>:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">forest_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span>,<span class="op">]</span>, 
+                                           mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
+                                           plot.size <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></code></pre></div>
+<p>We run again the summary:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">spar</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">soil</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] "function"</span></code></pre>
-<p>In addition to the physical soil description, this object contains
-soil parameters needed for soil water balance simulations:</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
+<span class="co">#&gt; Tree density (ind/ha): 3777.27731604765 </span>
+<span class="co">#&gt; Tree BA (m2/ha): 42.6957047 </span>
+<span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span>
+<span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span>
+<span class="co">#&gt; LAI (m2/m2) total: 6.7141704  trees: 6.7141704  shrubs: 0 </span>
+<span class="co">#&gt; Live fine fuel (kg/m2) total: 1.7424533  trees: 1.7424533  shrubs: 0 </span>
+<span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></code></pre></div>
+<p>which results in a much higher basal area and density, as should be
+expected for a dense oak forest resulting from an abandoned old
+coppice.</p>
+<p>Another issue that we see is the percentage of PAR and SWR that
+reaches the ground, which have missing values. This indicates that
+medfate cannot calculate the light extinction profile, in our case
+because tree heights are missing. Thus, we should somehow estimate tree
+heights, for example using an allometric relationship:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Height.cm</span> <span class="op">=</span> <span class="fl">100</span> <span class="op">*</span> <span class="fl">1.806</span><span class="op">*</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Diameter.cm</span><span class="op">^</span><span class="fl">0.518</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Height.cm</span><span class="op">)</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;   512.9   566.9   628.3   638.0   692.7   976.5</span></code></pre></div>
+<p>So trees are between 5 and 10 m height. Once tree heights are
+defined, we can include them in our mapping:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##  [1] "SoilDepth"    "W"            "SWE"          "Temp"         "Ksoil"       </span>
-<span class="co">##  [6] "Gsoil"        "dVec"         "sand"         "clay"         "om"          </span>
-<span class="co">## [11] "VG_alpha"     "VG_n"         "VG_theta_res" "VG_theta_sat" "Ksat"        </span>
-<span class="co">## [16] "Kdrain"       "macro"        "bd"           "rfc"</span></code></pre>
-<p>For example, <code>macro</code> specifies the macroporosity of each
-layer; <code>Gsoil</code> and <code>Ksoil</code> are parameters needed
-to model the process of water infiltration into the soil. The meaning of
-all elements in the soil object can be found in the help page for
-function <code><a href="../../reference/soil.html">soil()</a></code>.</p>
-<p>At any time, one can show the characteristics and status of the soil
-object using its <code>print</code> function:</p>
+<code class="sourceCode R"><span class="va">mapping</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species.name"</span> <span class="op">=</span> <span class="st">"Species"</span>, <span class="st">"DBH"</span> <span class="op">=</span> <span class="st">"Diameter.cm"</span>,
+            <span class="st">"Height"</span> <span class="op">=</span> <span class="st">"Height.cm"</span><span class="op">)</span></code></pre></div>
+<p>and rerun the tree data mapping:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">forest_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span>,<span class="op">]</span>, 
+                                           mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
+                                           plot.size <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></code></pre></div>
+<p>Now the summary of the control forest stand looks like:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">examplesoil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Soil depth (mm): 1000 </span>
-<span class="co">## </span>
-<span class="co">## Layer  1  [ 0  to  300 mm ] </span>
-<span class="co">##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="co">##     Rock fragment content (%): 25 Macroporosity (%): 5 </span>
-<span class="co">##     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="co">##     Vol. WP (mm): 32 Vol. FC (mm): 68 Vol. SAT (mm): 111 Vol. current (mm): 68 </span>
-<span class="co">##     Temperature (Celsius): NA </span>
-<span class="co">## </span>
-<span class="co">## Layer  2  [ 300  to  1000 mm ] </span>
-<span class="co">##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="co">##     Rock fragment content (%): 45 Macroporosity (%): 5 </span>
-<span class="co">##     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
-<span class="co">##     Vol. WP (mm): 55 Vol. FC (mm): 117 Vol. SAT (mm): 190 Vol. current (mm): 117 </span>
-<span class="co">##     Temperature (Celsius): NA </span>
-<span class="co">## </span>
-<span class="co">## Total soil saturated capacity (mm): 300 </span>
-<span class="co">## Total soil water holding capacity (mm): 185 </span>
-<span class="co">## Total soil extractable water (mm): 116 </span>
-<span class="co">## Total soil current Volume (mm): 185 </span>
-<span class="co">## </span>
-<span class="co">## Snow pack water equivalent (mm): 0 </span>
-<span class="co">## Soil water table depth (mm): 1000</span></code></pre>
-<p>Importantly, the soil object is used to store the degree of moisture
-of each soil layer. In particular, element <code>W</code> contains the
-state variable that represents moisture content - the proportion of
-moisture <strong>relative to field capacity</strong> - which is normally
-initialized to 1 for each layer:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">examplesoil</span><span class="op">$</span><span class="va">W</span></code></pre></div>
-<pre><code><span class="co">## [1] 1 1</span></code></pre>
-<p>Advanced soil plant energy and water balance modelling requires
-considering the temperature of soil. Hence, <code>Temp</code> contains
-the temperature (in degrees) of soil layers:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">examplesoil</span><span class="op">$</span><span class="va">Temp</span></code></pre></div>
-<pre><code><span class="co">## [1] NA NA</span></code></pre>
-<p>Soil layer temperatures are initialized to missing values, so that at
-the first time step they will be set to atmospheric temperature. While
-simple water balance modeling can be run using either Saxton’s or Van
-Genuchten’s equations as water retention curves, Van Genuchten’s model
-is forced for advanced modelling.</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
+<span class="co">#&gt; Tree density (ind/ha): 3777.27731604765 </span>
+<span class="co">#&gt; Tree BA (m2/ha): 42.6957047 </span>
+<span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span>
+<span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span>
+<span class="co">#&gt; LAI (m2/m2) total: 6.7141704  trees: 6.7141704  shrubs: 0 </span>
+<span class="co">#&gt; Live fine fuel (kg/m2) total: 1.7424533  trees: 1.7424533  shrubs: 0 </span>
+<span class="co">#&gt; PAR ground (%): 2.4902336  SWR ground (%): 6.4867878</span></code></pre></div>
+<p>The fraction of PAR/SWR reaching the ground is low, as would be
+expected for a dense forest.</p>
 </div>
 <div class="section level3">
-<h3 id="water-retention-curves">Water retention curves<a class="anchor" aria-label="anchor" href="#water-retention-curves"></a>
+<h3 id="mapping-trees-from-the-managed-forest">Mapping trees from the managed forest<a class="anchor" aria-label="anchor" href="#mapping-trees-from-the-managed-forest"></a>
 </h3>
-<p>The modelled moisture content of the soil depends on the
-<strong>water retention curve</strong> used to represent the
-relationship between soil volumetric water content (<span class="math inline">\(\theta\)</span>; %) and soil water potential
-(<span class="math inline">\(\Psi\)</span>; MPa). By default the Saxton
-(<code>model = "SX"</code>) equations are used to model the water
-retention curve, but the user may choose to follow Van Genuchten -
-Mualem equations, which will give slightly different values for the same
-texture:</p>
+<p>Here we can repeat our mapping for the managed forest plot, which has
+two codes corresponding to before and after the thinning intervention.
+Let us first address the pre-thinning state:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">forest_thi_bef</span> <span class="op">=</span> <span class="fu"><a href="../../reference/forest.html">emptyforest</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">forest_thi_bef</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_BEF"</span>,<span class="op">]</span>, 
+                                mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
+                                plot.size <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_thi_bef</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
+<span class="co">#&gt;     Species            N             Height           DBH          Z50         </span>
+<span class="co">#&gt;  Min.   :  4.0   Min.   :14.15   Min.   :512.9   Min.   : 7.50   Mode:logical  </span>
+<span class="co">#&gt;  1st Qu.: 19.0   1st Qu.:14.15   1st Qu.:563.7   1st Qu.: 9.00   NA's:261      </span>
+<span class="co">#&gt;  Median :168.0   Median :14.15   Median :628.3   Median :11.10                 </span>
+<span class="co">#&gt;  Mean   :114.5   Mean   :14.15   Mean   :635.5   Mean   :11.51                 </span>
+<span class="co">#&gt;  3rd Qu.:168.0   3rd Qu.:14.15   3rd Qu.:681.9   3rd Qu.:13.00                 </span>
+<span class="co">#&gt;  Max.   :168.0   Max.   :14.15   Max.   :944.9   Max.   :24.40                 </span>
+<span class="co">#&gt;  NA's   :2                                                                     </span>
+<span class="co">#&gt;    Z95         </span>
+<span class="co">#&gt;  Mode:logical  </span>
+<span class="co">#&gt;  NA's:261      </span>
+<span class="co">#&gt;                </span>
+<span class="co">#&gt;                </span>
+<span class="co">#&gt;                </span>
+<span class="co">#&gt;                </span>
+<span class="co">#&gt; </span></code></pre></div>
+<p>Note that the <code>Species</code> variable contains two missing
+values. This will normally happen when some species cannot be
+identified. We can verify if this happens for other parts of the Poblet
+tree data:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Species</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">SpParamsMED</span><span class="op">$</span><span class="va">Name</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; [1] 4</span></code></pre></div>
+<p>If we display species counts we can identify which species is not
+being parsed:</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Acer monspessulanum       Arbutus unedo Phillyrea latifolia     Quercus humilis </span>
+<span class="co">#&gt;                   2                 265                   6                   4 </span>
+<span class="co">#&gt;        Quercus ilex </span>
+<span class="co">#&gt;                 440</span></code></pre></div>
+<p>In this case, the name used for the downy oak (<em>Quercus
+humilis</em>) is a synonym and needs to be replaced by its accepted name
+(<em>Quercus pubescens</em>), which we can do:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Species</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Species</span><span class="op">==</span><span class="st">"Quercus humilis"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Quercus pubescens"</span></code></pre></div>
+<p>Now we repeat our mapping:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">forest_thi_bef</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_BEF"</span>,<span class="op">]</span>, 
+                                mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
+                                plot.size <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_thi_bef</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
+<span class="co">#&gt; Tree density (ind/ha): 3692.39467973197 </span>
+<span class="co">#&gt; Tree BA (m2/ha): 40.9224267 </span>
+<span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span>
+<span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span>
+<span class="co">#&gt; LAI (m2/m2) total: 6.5530107  trees: 6.5530107  shrubs: 0 </span>
+<span class="co">#&gt; Live fine fuel (kg/m2) total: 1.6994566  trees: 1.6994566  shrubs: 0 </span>
+<span class="co">#&gt; PAR ground (%): 2.7210404  SWR ground (%): 6.9269881</span></code></pre></div>
+<p>Like the control plot, these statistics indicate a dense oak forest.
+We can repeat the same operations with the forest plot after the
+thinning intervention:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">examplesoil</span>, model<span class="op">=</span><span class="st">"VG"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Soil depth (mm): 1000 </span>
-<span class="co">## </span>
-<span class="co">## Layer  1  [ 0  to  300 mm ] </span>
-<span class="co">##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="co">##     Rock fragment content (%): 25 Macroporosity (%): 5 </span>
-<span class="co">##     Theta WP (%): 13 Theta FC (%): 29 Theta SAT (%): 42 Theta current (%) 29 </span>
-<span class="co">##     Vol. WP (mm): 30 Vol. FC (mm): 64 Vol. SAT (mm): 95 Vol. current (mm): 64 </span>
-<span class="co">##     Temperature (Celsius): NA </span>
-<span class="co">## </span>
-<span class="co">## Layer  2  [ 300  to  1000 mm ] </span>
-<span class="co">##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
-<span class="co">##     Rock fragment content (%): 45 Macroporosity (%): 5 </span>
-<span class="co">##     Theta WP (%): 13 Theta FC (%): 30 Theta SAT (%): 42 Theta current (%) 30 </span>
-<span class="co">##     Vol. WP (mm): 49 Vol. FC (mm): 117 Vol. SAT (mm): 163 Vol. current (mm): 117 </span>
-<span class="co">##     Temperature (Celsius): NA </span>
-<span class="co">## </span>
-<span class="co">## Total soil saturated capacity (mm): 258 </span>
-<span class="co">## Total soil water holding capacity (mm): 181 </span>
-<span class="co">## Total soil extractable water (mm): 118 </span>
-<span class="co">## Total soil current Volume (mm): 181 </span>
-<span class="co">## </span>
-<span class="co">## Snow pack water equivalent (mm): 0 </span>
-<span class="co">## Soil water table depth (mm): 1000</span></code></pre>
-<p>While Saxton equations use texture and organic matter as inputs, the
-Van Genuchten-Mualem equations need other parameters, which are
-estimated using pedotransfer functions and their names start with
-<code>VG_</code> (two alternative options are provided in function
-<code>soil</code> to estimate Van Genuchten parameters). The following
-code calls function <code><a href="../../reference/soil_texture.html">soil_retentionCurvePlot()</a></code> to illustrate
-the difference between the two water retention models in this soil:</p>
+<code class="sourceCode R"><span class="va">forest_thi_aft</span> <span class="op">=</span> <span class="fu"><a href="../../reference/forest.html">emptyforest</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">forest_thi_aft</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_AFT"</span>,<span class="op">]</span>, 
+                                mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
+                                plot.size <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_thi_aft</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
+<span class="co">#&gt; Tree density (ind/ha): 2673.80304394384 </span>
+<span class="co">#&gt; Tree BA (m2/ha): 31.6162035 </span>
+<span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span>
+<span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span>
+<span class="co">#&gt; LAI (m2/m2) total: 5.0833939  trees: 5.0833939  shrubs: 0 </span>
+<span class="co">#&gt; Live fine fuel (kg/m2) total: 1.3224411  trees: 1.3224411  shrubs: 0 </span>
+<span class="co">#&gt; PAR ground (%): 6.1061933  SWR ground (%): 12.6058106</span></code></pre></div>
+<p>Note the decrease in tree density and basal area, and the increase in
+light reaching the ground, despite the estimated leaf area index is
+still high.</p>
+</div>
+<div class="section level3">
+<h3 id="reducing-the-number-of-woody-cohorts">Reducing the number of woody cohorts<a class="anchor" aria-label="anchor" href="#reducing-the-number-of-woody-cohorts"></a>
+</h3>
+<p>So far we have considered that each tree record should correspond to
+a woody cohort. We can check the number of tree cohorts in each
+<code>forest</code> structure using:</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">forest_ctl</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
+<span class="co">#&gt; [1] 267</span>
+<span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">forest_thi_bef</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
+<span class="co">#&gt; [1] 261</span>
+<span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">forest_thi_aft</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
+<span class="co">#&gt; [1] 189</span></code></pre></div>
+<p>This large amount of cohorts can slow done simulations considerably.
+Hence, it is advisable to lump them into coarser woody cohorts. One way
+of doing this is via function <code><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees()</a></code> from
+package <strong>medfate</strong>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/soil_texture.html">soil_retentionCurvePlot</a></span><span class="op">(</span><span class="va">examplesoil</span>, model<span class="op">=</span><span class="st">"both"</span><span class="op">)</span></code></pre></div>
-<p><img src="PreparingInputs_files/figure-html/unnamed-chunk-17-1.png" width="480" style="display: block; margin: auto;"></p>
-<p>Low-level functions, such as <code><a href="../../reference/soil_texture.html">soil_psi2thetaSX()</a></code> and
-<code><a href="../../reference/soil_texture.html">soil_psi2thetaVG()</a></code> (and their counterparts
-<code><a href="../../reference/soil_texture.html">soil_theta2psiSX()</a></code> and <code><a href="../../reference/soil_texture.html">soil_theta2psiVG()</a></code>),
-can be used to calculate volumetric soil moisture from the water
-potential (and viceversa) using the two models. When simulating soil
-water balance, the user can choose among the two models (see
-<code>control</code> parameters below).</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="meteorological-forcing">Meteorological forcing<a class="anchor" aria-label="anchor" href="#meteorological-forcing"></a>
-</h2>
-<p>All simulations in the package require daily weather inputs. The
-weather variables that are required depend on the complexity of model we
-are using. In the simplest case, only mean temperature, precipitation
-and potential evapotranspiration is required, but the more complex
-simulation model also requires radiation, wind speed, min/max
-temparature and relative humidity.</p>
-<p>Here we show an example of meteorological forcing data.</p>
+<code class="sourceCode R"><span class="va">forest_ctl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees</a></span><span class="op">(</span><span class="va">forest_ctl</span><span class="op">)</span>
+<span class="va">forest_thi_bef</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees</a></span><span class="op">(</span><span class="va">forest_thi_bef</span><span class="op">)</span>
+<span class="va">forest_thi_aft</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees</a></span><span class="op">(</span><span class="va">forest_thi_aft</span><span class="op">)</span></code></pre></div>
+<p>By default, the function will pool tree cohorts of the same species
+and diameter class (defined every 5 cm). We can check the new number of
+tree cohorts using again:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##            MeanTemperature MinTemperature MaxTemperature Precipitation</span>
-<span class="co">## 2001-01-01      3.57668969     -0.5934215       6.287950      4.869109</span>
-<span class="co">## 2001-01-02      1.83695972     -2.3662458       4.569737      2.498292</span>
-<span class="co">## 2001-01-03      0.09462563     -3.8541036       2.661951      0.000000</span>
-<span class="co">## 2001-01-04      1.13866156     -1.8744860       3.097705      5.796973</span>
-<span class="co">## 2001-01-05      4.70578690      0.3288287       7.551532      1.884401</span>
-<span class="co">## 2001-01-06      4.57036721      0.5461322       7.186784     13.359801</span>
-<span class="co">##            MeanRelativeHumidity MinRelativeHumidity MaxRelativeHumidity</span>
-<span class="co">## 2001-01-01             78.73709            65.15411           100.00000</span>
-<span class="co">## 2001-01-02             69.70800            57.43761            94.71780</span>
-<span class="co">## 2001-01-03             70.69610            58.77432            94.66823</span>
-<span class="co">## 2001-01-04             76.89156            66.84256            95.80950</span>
-<span class="co">## 2001-01-05             76.67424            62.97656           100.00000</span>
-<span class="co">## 2001-01-06             89.01940            74.25754           100.00000</span>
-<span class="co">##            Radiation WindSpeed WindDirection       PET</span>
-<span class="co">## 2001-01-01  12.89251  2.000000           172 1.3212770</span>
-<span class="co">## 2001-01-02  13.03079  7.662544           278 2.2185985</span>
-<span class="co">## 2001-01-03  16.90722  2.000000           141 1.8045176</span>
-<span class="co">## 2001-01-04  11.07275  2.000000           172 0.9200627</span>
-<span class="co">## 2001-01-05  13.45205  7.581347           321 2.2914449</span>
-<span class="co">## 2001-01-06  12.84841  6.570501           141 1.7255058</span></code></pre>
-<p>Simulation models in <strong>medfate</strong> have been designed to
-work along with data generated from package <a href="https://emf-creaf.github.io/meteoland/" class="external-link">meteoland</a>. The user is
-strongly recommended to resort to this package to obtain suitable
-weather input for medfate simulations.</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">forest_ctl</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
+<span class="co">#&gt; [1] 9</span>
+<span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">forest_thi_bef</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
+<span class="co">#&gt; [1] 11</span>
+<span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">forest_thi_aft</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
+<span class="co">#&gt; [1] 8</span></code></pre></div>
+<p>We can check whether stand properties were altered using the
+<code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> function:</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">forest_thi_aft</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
+<span class="co">#&gt; Tree density (ind/ha): 2673.80304394384 </span>
+<span class="co">#&gt; Tree BA (m2/ha): 31.6162035 </span>
+<span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span>
+<span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span>
+<span class="co">#&gt; LAI (m2/m2) total: 5.1144373  trees: 5.1144373  shrubs: 0 </span>
+<span class="co">#&gt; Live fine fuel (kg/m2) total: 1.3298915  trees: 1.3298915  shrubs: 0 </span>
+<span class="co">#&gt; PAR ground (%): 6.0028221  SWR ground (%): 12.4473851</span></code></pre></div>
+<p>Function <code><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees()</a></code> will preserve the stand
+density and basal area that the stand description had before merging
+cohorts. Other properties like leaf area index may be slightly
+modified.</p>
+<p>In general, it is advisable to reduce the number of woody cohorts
+before running simulation models in <strong>medfate</strong>.</p>
+</div>
 </div>
 <div class="section level2">
-<h2 id="simulation-control">Simulation control<a class="anchor" aria-label="anchor" href="#simulation-control"></a>
+<h2 id="retrieving-soilgrids-data">Retrieving SoilGrids data<a class="anchor" aria-label="anchor" href="#retrieving-soilgrids-data"></a>
 </h2>
-<p>Apart from data inputs, the behaviour of simulation models can be
-controlled using a set of global parameters. The default
-parameterization is obtained using function
-<code><a href="../../reference/defaultControl.html">defaultControl()</a></code>:</p>
+<p>Because soil properties vary strongly at fine spatial scales, ideally
+soil physical attributes should be measured on samples taken at the
+forest stand to be simulated. For those users lacking such data, soil
+properties modelled at larger scales are available via
+SoilGrids.org.</p>
+<p>Retrieval of soil properties from SoilGrids can be done using
+function <code><a href="https://rdrr.io/pkg/medfateutils/man/soilgridsParams.html" class="external-link">soilgridsParams()</a></code> from package
+<strong>medfateutils</strong>. Assuming we know the plot coordinates, we
+first create an object <code>SpatialPoints</code> (see package
+<strong>sp</strong>):</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">control</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##  [1] "fillMissingSpParams"                 "verbose"                            </span>
-<span class="co">##  [3] "subdailyResults"                     "transpirationMode"                  </span>
-<span class="co">##  [5] "soilFunctions"                       "defaultWindSpeed"                   </span>
-<span class="co">##  [7] "snowpack"                            "leafPhenology"                      </span>
-<span class="co">##  [9] "rockyLayerDrainage"                  "unlimitedSoilWater"                 </span>
-<span class="co">## [11] "rhizosphereOverlap"                  "unfoldingDD"                        </span>
-<span class="co">## [13] "verticalLayerSize"                   "windMeasurementHeight"              </span>
-<span class="co">## [15] "cavitationRefill"                    "ndailysteps"                        </span>
-<span class="co">## [17] "nsubsteps"                           "cochard"                            </span>
-<span class="co">## [19] "capacitance"                         "taper"                              </span>
-<span class="co">## [21] "multiLayerBalance"                   "gainModifier"                       </span>
-<span class="co">## [23] "costModifier"                        "costWater"                          </span>
-<span class="co">## [25] "klatstem"                            "klatleaf"                           </span>
-<span class="co">## [27] "numericParams"                       "fracLeafResistance"                 </span>
-<span class="co">## [29] "fracRootResistance"                  "averageFracRhizosphereResistance"   </span>
-<span class="co">## [31] "Catm"                                "thermalCapacityLAI"                 </span>
-<span class="co">## [33] "boundaryLayerSize"                   "refillMaximumRate"                  </span>
-<span class="co">## [35] "allowDessication"                    "allowStarvation"                    </span>
-<span class="co">## [37] "allowDefoliation"                    "sinkLimitation"                     </span>
-<span class="co">## [39] "shrubDynamics"                       "allocationStrategy"                 </span>
-<span class="co">## [41] "nonStomatalPhotosynthesisLimitation" "phloemConductanceFactor"            </span>
-<span class="co">## [43] "nonSugarConcentration"               "equilibriumOsmoticConcentration"    </span>
-<span class="co">## [45] "minimumRelativeStarchForGrowth"      "constructionCosts"                  </span>
-<span class="co">## [47] "senescenceRates"                     "maximumRelativeGrowthRates"         </span>
-<span class="co">## [49] "mortalityMode"                       "mortalityBaselineRate"              </span>
-<span class="co">## [51] "mortalityRelativeSugarThreshold"     "mortalityRWCThreshold"              </span>
-<span class="co">## [53] "allowRecruitment"                    "recruitmentMode"                    </span>
-<span class="co">## [55] "removeEmptyCohorts"                  "minimumCohortDensity"               </span>
-<span class="co">## [57] "seedRain"                            "seedProductionTreeHeight"           </span>
-<span class="co">## [59] "seedProductionShrubHeight"           "probRecr"                           </span>
-<span class="co">## [61] "minTempRecr"                         "minMoistureRecr"                    </span>
-<span class="co">## [63] "minFPARRecr"                         "recrTreeDBH"                        </span>
-<span class="co">## [65] "recrTreeDensity"                     "recrTreeHeight"                     </span>
-<span class="co">## [67] "recrShrubCover"                      "recrShrubHeight"                    </span>
-<span class="co">## [69] "recrTreeZ50"                         "recrShrubZ50"                       </span>
-<span class="co">## [71] "recrTreeZ95"                         "recrShrubZ95"</span></code></pre>
-<p>Control parameters should normally be left to their default value
-until their effect on simulations is fully understood.</p>
+<code class="sourceCode R"><span class="va">cc</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">1.0219</span>, <span class="fl">41.3443</span><span class="op">)</span>
+<span class="va">coords_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sp/man/SpatialPoints.html" class="external-link">SpatialPoints</a></span><span class="op">(</span><span class="va">cc</span>, <span class="fu"><a href="https://rdrr.io/pkg/sp/man/CRS-class.html" class="external-link">CRS</a></span><span class="op">(</span>SRS_string <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>This object can be used to query SoilGrids using
+<code><a href="https://rdrr.io/pkg/medfateutils/man/soilgridsParams.html" class="external-link">soilgridsParams()</a></code>:</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">poblet_soil_props</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/soilgridsParams.html" class="external-link">soilgridsParams</a></span><span class="op">(</span><span class="va">coords_sp</span>, widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300</span>, <span class="fl">700</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>This function returns a data frame of soil properties:</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">poblet_soil_props</span>
+<span class="co">#&gt;   widths     clay     sand       om       bd  rfc</span>
+<span class="co">#&gt; 1    300 26.43333 31.06667 4.133333 1.166667 18.0</span>
+<span class="co">#&gt; 2    700 30.40000 29.75000 0.900000 1.440000 19.2</span>
+<span class="co">#&gt; 3   1000 31.60000 29.60000 0.610000 1.500000 20.9</span></code></pre></div>
+<p>This data frame is a physical description of the soil. Remember that
+the soil data structure for <strong>medfate</strong> simulations is
+built using function <code><a href="../../reference/soil.html">soil()</a></code>:</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">poblet_soil</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">poblet_soil_props</span><span class="op">)</span></code></pre></div>
+<p>We can inspect the soil definition using:</p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">poblet_soil</span><span class="op">)</span>
+<span class="co">#&gt; Soil depth (mm): 2000 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Layer  1  [ 0  to  300 mm ] </span>
+<span class="co">#&gt;     clay (%): 26 silt (%): 38 sand (%): 31 organic matter (%): 4 [ Loam ]</span>
+<span class="co">#&gt;     Rock fragment content (%): 18 Macroporosity (%): 22 </span>
+<span class="co">#&gt;     Theta WP (%): 18 Theta FC (%): 34 Theta SAT (%): 51 Theta current (%) 34 </span>
+<span class="co">#&gt;     Vol. WP (mm): 44 Vol. FC (mm): 83 Vol. SAT (mm): 125 Vol. current (mm): 83 </span>
+<span class="co">#&gt;     Temperature (Celsius): NA </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Layer  2  [ 300  to  1000 mm ] </span>
+<span class="co">#&gt;     clay (%): 30 silt (%): 39 sand (%): 30 organic matter (%): 1 [ Clay loam ]</span>
+<span class="co">#&gt;     Rock fragment content (%): 19 Macroporosity (%): 9 </span>
+<span class="co">#&gt;     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 </span>
+<span class="co">#&gt;     Vol. WP (mm): 106 Vol. FC (mm): 186 Vol. SAT (mm): 250 Vol. current (mm): 186 </span>
+<span class="co">#&gt;     Temperature (Celsius): NA </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Layer  3  [ 1000  to  2000 mm ] </span>
+<span class="co">#&gt;     clay (%): 32 silt (%): 38 sand (%): 30 organic matter (%): 1 [ Clay loam ]</span>
+<span class="co">#&gt;     Rock fragment content (%): 21 Macroporosity (%): 6 </span>
+<span class="co">#&gt;     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 </span>
+<span class="co">#&gt;     Vol. WP (mm): 152 Vol. FC (mm): 263 Vol. SAT (mm): 347 Vol. current (mm): 263 </span>
+<span class="co">#&gt;     Temperature (Celsius): NA </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Total soil saturated capacity (mm): 723 </span>
+<span class="co">#&gt; Total soil water holding capacity (mm): 532 </span>
+<span class="co">#&gt; Total soil extractable water (mm): 280 </span>
+<span class="co">#&gt; Total soil current Volume (mm): 532 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Snow pack water equivalent (mm): 0 </span>
+<span class="co">#&gt; Soil water table depth (mm): 2000</span></code></pre></div>
+<p>It is important to remember that SoilGrids may underestimate the
+amount of rocks in the soil. This is because soil samples (which were
+used to generate the global database) do not normally contain large
+stones or blocks. Hence, realistic simulations should reduce the soil
+water holding capacity by increasing the column <code>rfc</code>. For
+example, here we will assume that the third layer contains 80% of
+rocks:</p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">poblet_soil_props</span><span class="op">$</span><span class="va">rfc</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">=</span> <span class="fl">80</span></code></pre></div>
+<p>If we rebuild the soil object and inspect its properties we will see
+the effect on the soil water holding capacity and soil extractable
+water:</p>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">poblet_soil</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">poblet_soil_props</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">poblet_soil</span><span class="op">)</span>
+<span class="co">#&gt; Soil depth (mm): 2000 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Layer  1  [ 0  to  300 mm ] </span>
+<span class="co">#&gt;     clay (%): 26 silt (%): 38 sand (%): 31 organic matter (%): 4 [ Loam ]</span>
+<span class="co">#&gt;     Rock fragment content (%): 18 Macroporosity (%): 22 </span>
+<span class="co">#&gt;     Theta WP (%): 18 Theta FC (%): 34 Theta SAT (%): 51 Theta current (%) 34 </span>
+<span class="co">#&gt;     Vol. WP (mm): 44 Vol. FC (mm): 83 Vol. SAT (mm): 125 Vol. current (mm): 83 </span>
+<span class="co">#&gt;     Temperature (Celsius): NA </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Layer  2  [ 300  to  1000 mm ] </span>
+<span class="co">#&gt;     clay (%): 30 silt (%): 39 sand (%): 30 organic matter (%): 1 [ Clay loam ]</span>
+<span class="co">#&gt;     Rock fragment content (%): 19 Macroporosity (%): 9 </span>
+<span class="co">#&gt;     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 </span>
+<span class="co">#&gt;     Vol. WP (mm): 106 Vol. FC (mm): 186 Vol. SAT (mm): 250 Vol. current (mm): 186 </span>
+<span class="co">#&gt;     Temperature (Celsius): NA </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Layer  3  [ 1000  to  2000 mm ] </span>
+<span class="co">#&gt;     clay (%): 32 silt (%): 38 sand (%): 30 organic matter (%): 1 [ Clay loam ]</span>
+<span class="co">#&gt;     Rock fragment content (%): 80 Macroporosity (%): 6 </span>
+<span class="co">#&gt;     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 </span>
+<span class="co">#&gt;     Vol. WP (mm): 38 Vol. FC (mm): 67 Vol. SAT (mm): 88 Vol. current (mm): 67 </span>
+<span class="co">#&gt;     Temperature (Celsius): NA </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Total soil saturated capacity (mm): 463 </span>
+<span class="co">#&gt; Total soil water holding capacity (mm): 336 </span>
+<span class="co">#&gt; Total soil extractable water (mm): 179 </span>
+<span class="co">#&gt; Total soil current Volume (mm): 336 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Snow pack water equivalent (mm): 0 </span>
+<span class="co">#&gt; Soil water table depth (mm): 2000</span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="input-objects-for-simulation-functions">Input objects for simulation functions<a class="anchor" aria-label="anchor" href="#input-objects-for-simulation-functions"></a>
+<h2 id="interpolating-weather">Interpolating weather<a class="anchor" aria-label="anchor" href="#interpolating-weather"></a>
 </h2>
-<p>Simulation functions <code><a href="../../reference/spwb.html">spwb()</a></code> and <code><a href="../../reference/growth.html">growth()</a></code>
-(and similar functions) require first combining forest, soil,
-species-parameter and simulation control inputs into a single input
-object (of class <code>spwbInput</code> or <code>growthInput</code>)
-that is then used as input to the corresponding simulation function
-along with weather data. The combination of inputs is done via functions
-<code><a href="../../reference/modelInput.html">spwbInput()</a></code> and <code><a href="../../reference/modelInput.html">growthInput()</a></code>, respectively,
-or the more convenient <code><a href="../../reference/modelInput.html">forest2spwbInput()</a></code> and
-<code><a href="../../reference/modelInput.html">forest2growthInput()</a></code>. While it complicates the code, having
-this additional step is handy because cohort-level parameters and state
-variables initialized can then be modified by the user (or an automated
-calibration algorithm) before calling the actual simulation functions.
-The input objects for functions <code><a href="../../reference/spwb.html">spwb()</a></code> and
-<code><a href="../../reference/growth.html">growth()</a></code> are presented in more detail in then vignettes
-corresponding to each model.</p>
-<p>Function <code><a href="../../reference/fordyn.html">fordyn()</a></code> is different from the other two
-models, in the sense that the user enters forest, soil,
-species-parameter and simulation control inputs directly into the
-simulation function (in fact, <code><a href="../../reference/fordyn.html">fordyn()</a></code> internally calls
-<code><a href="../../reference/modelInput.html">forest2growthInput()</a></code> to initialize the input object to
-function <code><a href="../../reference/growth.html">growth()</a></code>).</p>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">poblet_spt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meteoland/man/SpatialPointsTopography.html" class="external-link">SpatialPointsTopography</a></span><span class="op">(</span><span class="va">coords_sp</span>,
+                                      elevation <span class="op">=</span> <span class="fl">850</span>, slope <span class="op">=</span> <span class="fl">15.1</span>, aspect <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"exampleinterpolationdata"</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">meteo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meteoland/man/interpolationpoints.html" class="external-link">interpolationpoints</a></span><span class="op">(</span><span class="va">exampleinterpolationdata</span>, <span class="va">poblet_spt</span><span class="op">)</span>
+<span class="co">#&gt; Warning in interpolationpoints(exampleinterpolationdata, poblet_spt): CRS</span>
+<span class="co">#&gt; projection of 'points' adapted to that of 'object'.</span>
+<span class="co">#&gt; Processing point '1' (1/1) -</span>
+<span class="co">#&gt; Warning in interpolationpoints(exampleinterpolationdata, poblet_spt): Point '1'</span>
+<span class="co">#&gt; outside the boundary box of interpolation data object.</span>
+<span class="co">#&gt;  done.</span></code></pre></div>
 </div>
   </div>
 
