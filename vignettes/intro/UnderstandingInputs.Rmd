@@ -17,9 +17,8 @@ library(medfate)
 
 ## About this vignette
 
-Any process-based model of forest functioning and dynamics needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since `medfate` allows simulating cohorts belonging to different species,  **species-specific parameters** are also needed. This vignette explains data structures required as input to run simulations using the package. 
+Any process-based model of forest functioning and dynamics needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since `medfate` allows simulating cohorts belonging to different species,  **species-specific parameters** are also needed. This vignette explains data structures required as input to run simulations using the package so that the user can understand them. A companion vignette [*Preparing model inputs*](https://emf-creaf.github.io/medfate/articles/intro/PreparingInputs.html) provides a practical example to illustrate how to create model inputs and the common problems encountered.
 
-Package [medfateutils](https://emf-creaf.github.io/medfateutils/) provides functions for creating suitable inputs for simulations with `medfate`.
 
 ## Species-specific parameters
 

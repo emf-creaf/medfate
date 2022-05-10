@@ -23,7 +23,7 @@ library(medfate)
 
 Currently, the package distributed from CRAN does not include any vignette. Articles covering model simulation examples, sensitivity analysis, parameter specification, model evaluation and applications can be found at the package [website](https://emf-creaf.github.io/medfate/). 
 
-Complete documentation on the design and formulation of medfate models can be found at the [medfate reference book](https://emf-creaf.github.io/medfatebook/index.html). 
+Complete documentation on the design and formulation of **medfate** models can be found at the [medfate reference book](https://emf-creaf.github.io/medfatebook/index.html). 
 
 
 ## Dynamic simulation functions
@@ -34,7 +34,7 @@ Three main kinds of simulations can be done in medfate, each model building on t
 
 Eco-hydrological processes are fundamental for the simulation models included in the `medfate` package. In particular, the package allows the simulation of water balance of soils and plants within forest stands. Processes affecting soil water content include rainfall, canopy interception, infiltration and runoff, percolation and deep drainage, soil evaporation and plant transpiration. In `medfate`, the soil water balance of a forest is primarily used to predict drought stress for living plants in it. Soil/plant water balance can be studied for a given forest stand using function `spwb()`. Function `spwb()` can be run in two different modes, implying a different level of complexity. The basic mode focuses on soil water balance and strongly simplifies processes underlying plant transpiration. The advanced mode is computationally more demanding but provides an explicit simulation of processes regulating stomatal behaviour and water transport through the plant, which also requires an explicit energy balance. 
 
-Examples of simulation with `spwb()` under the two transpiration modes are provided in vignettes [*Basic water balance*](https://emf-creaf.github.io/medfate/articles/BasicWaterBalance.html) and [*Advanced water and energy balance*](https://emf-creaf.github.io/medfate/articles/AdvancedWaterEnergyBalance.html), respectively. 
+Examples of simulation with `spwb()` under the two transpiration modes are provided in vignettes [*Basic water balance*](https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html) and [*Advanced water and energy balance*](https://emf-creaf.github.io/medfate/articles/runmodels/AdvancedWaterEnergyBalance.html), respectively. 
 
 
 ### Carbon balance, growth and mortality
@@ -43,13 +43,13 @@ Changes in leaf area and plant growth are key to evaluate the influence of clima
 
 Package `medfate` allows simulating daily water/carbon balances, growth and mortality of a set of cohorts (competing for light and water) in a single forest stand using function `growth()`, which adds carbon balance, growth and mortality processes to those simulated by function `spwb()`. As before, function `growth()` can be run using two levels of complexity to match the corresponding complexity of plant transpiration. 
 
-An example of simulation with `growth()` is provided in vignette [*Forest growth*](https://emf-creaf.github.io/medfate/articles/ForestGrowth.html). 
+An example of simulation with `growth()` is provided in vignette [*Forest growth*](https://emf-creaf.github.io/medfate/articles/runmodels/ForestGrowth.html). 
 
 ### Forest dynamics
 
 Changes in forest structure and composition result from the interplay of demographic processes (growth, mortality and recruitment) and may include forest management. Since version 2.2.0, the package includes function `fordyn()`, which allows simulating these processes at yearly time steps on a given forest stand. Function `fordyn()` builds on the previous two simulation functions and incorporates recruitment and forest management to the set of simulated processes. 
 
-An example of simulation with `fordyn()` is provided in vignette [*Forest dynamics*](https://emf-creaf.github.io/medfate/articles/ForestDynamics.html). 
+An example of simulation with `fordyn()` is provided in vignette [*Forest dynamics*](https://emf-creaf.github.io/medfate/articles/runmodels/ForestDynamics.html). 
 
 
 ## Other package functions
