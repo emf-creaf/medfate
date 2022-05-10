@@ -85,13 +85,15 @@ Cáceres</h4>
 <div class="section level2">
 <h2 id="about-this-vignette">About this vignette<a class="anchor" aria-label="anchor" href="#about-this-vignette"></a>
 </h2>
-<p>Vignette <a href="https://emf-creaf.github.io/medfate/articles/UnderstandingInputs.html" class="external-link"><em>Understanding
-model inputs</em></a>. Preparing inputs for simulations with
+<p>A companion vignette <a href="https://emf-creaf.github.io/medfate/articles/UnderstandingInputs.html" class="external-link"><em>Understanding
+model inputs</em></a> explained the vegetation, soil and weather
+structures needed to run the simulation models included in
+<strong>medfate</strong>. Preparing inputs for simulations with
 <strong>medfate</strong> is not straightforward, because it requires
-obtaining and reshaping data for vegetation, soil and weather. This
-vignette illustrates some common issues that arise in the process of
-preparing inputs, so that the user is aware of them when processing
-his/her own data.</p>
+obtaining and reshaping data for vegetation, soil and weather.
+Therefore, this vignette illustrates some common issues that arise in
+the process of preparing inputs, so that the user is aware of them when
+processing his/her own data.</p>
 <p>We begin by loading packages <strong>medfate</strong>,
 <strong>medfateutils</strong> and <strong>meteoland</strong>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -530,11 +532,34 @@ water:</p>
 <div class="section level2">
 <h2 id="interpolating-weather">Interpolating weather<a class="anchor" aria-label="anchor" href="#interpolating-weather"></a>
 </h2>
+<p>While soil information is often scarce and uncertain, obtaining daily
+weather data suitable for simulations is not straightforward either.
+Here we illustrate one way of obtaining such data using package
+<strong>meteoland</strong>. We begin by building an object of class
+<code>SpatialPointsTopography</code>, which contain both the coordinates
+of our site as well as topographic variables.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">poblet_spt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meteoland/man/SpatialPointsTopography.html" class="external-link">SpatialPointsTopography</a></span><span class="op">(</span><span class="va">coords_sp</span>,
-                                      elevation <span class="op">=</span> <span class="fl">850</span>, slope <span class="op">=</span> <span class="fl">15.1</span>, aspect <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></code></pre></div>
+                                      elevation <span class="op">=</span> <span class="fl">850</span>, slope <span class="op">=</span> <span class="fl">15.1</span>, aspect <span class="op">=</span> <span class="fl">15</span><span class="op">)</span>
+<span class="va">poblet_spt</span>
+<span class="co">#&gt; Object of class SpatialPointsTopography</span>
+<span class="co">#&gt;         coordinates elevation slope aspect</span>
+<span class="co">#&gt; 1 (1.0219, 41.3443)       850  15.1     15</span></code></pre></div>
+<p>The more difficult part of using package <strong>meteoland</strong>
+is to assemble weather data from surface weather stations into an object
+of class <code>MeteorologyInterpolationData</code>. Please see the <a href="https://emf-creaf.github.io/meteoland/index.html" class="external-link">meteoland
+package documentation</a> to learn how to do that. Here we will assume
+that such an object is already available, by using the example object
+provided in the <strong>meteoland</strong> package.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"exampleinterpolationdata"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"exampleinterpolationdata"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">exampleinterpolationdata</span><span class="op">)</span>
+<span class="co">#&gt; [1] "MeteorologyInterpolationData"</span>
+<span class="co">#&gt; attr(,"package")</span>
+<span class="co">#&gt; [1] "meteoland"</span></code></pre></div>
+<p>Once we have this interpolator, obtaining interpolated weather for a
+set of target points is rather straightforward using function
+<code><a href="https://rdrr.io/pkg/meteoland/man/interpolationpoints.html" class="external-link">interpolationpoints()</a></code> from <strong>meteoland</strong>:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">meteo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meteoland/man/interpolationpoints.html" class="external-link">interpolationpoints</a></span><span class="op">(</span><span class="va">exampleinterpolationdata</span>, <span class="va">poblet_spt</span><span class="op">)</span>
 <span class="co">#&gt; Warning in interpolationpoints(exampleinterpolationdata, poblet_spt): CRS</span>
@@ -543,6 +568,71 @@ water:</p>
 <span class="co">#&gt; Warning in interpolationpoints(exampleinterpolationdata, poblet_spt): Point '1'</span>
 <span class="co">#&gt; outside the boundary box of interpolation data object.</span>
 <span class="co">#&gt;  done.</span></code></pre></div>
+<p>Note that a warning was raised, because the boundary box of the
+interpolator does not include the location of the Poblet forests. In
+this case, the result of the interpolation is not reliable and should
+not be used. The output of function <code><a href="https://rdrr.io/pkg/meteoland/man/interpolationpoints.html" class="external-link">interpolationpoints()</a></code>
+is an object of class <code>SpatialPointsMeteorology</code>, whose
+structure is:</p>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">meteo</span><span class="op">)</span>
+<span class="co">#&gt; Formal class 'SpatialPointsMeteorology' [package "meteoland"] with 5 slots</span>
+<span class="co">#&gt;   ..@ dates      : Date[1:1461], format: "2000-01-01" "2000-01-02" ...</span>
+<span class="co">#&gt;   ..@ data       :List of 1</span>
+<span class="co">#&gt;   .. ..$ 1:'data.frame': 1461 obs. of  12 variables:</span>
+<span class="co">#&gt;   .. .. ..$ DOY                 : num [1:1461] 1 2 3 4 5 6 7 8 9 10 ...</span>
+<span class="co">#&gt;   .. .. ..$ MeanTemperature     : num [1:1461] 5.56 6.71 7.34 4.46 8.08 ...</span>
+<span class="co">#&gt;   .. .. ..$ MinTemperature      : num [1:1461] -0.1435 -0.0685 0.3771 0.1058 -2.7598 ...</span>
+<span class="co">#&gt;   .. .. ..$ MaxTemperature      : num [1:1461] 9.26 11.11 11.86 7.3 15.13 ...</span>
+<span class="co">#&gt;   .. .. ..$ Precipitation       : num [1:1461] 0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="co">#&gt;   .. .. ..$ MeanRelativeHumidity: num [1:1461] 86.5 82.2 79.1 77.6 56.6 ...</span>
+<span class="co">#&gt;   .. .. ..$ MinRelativeHumidity : num [1:1461] 67.1 61 58.3 63.8 35.5 ...</span>
+<span class="co">#&gt;   .. .. ..$ MaxRelativeHumidity : num [1:1461] 100 100 100 100 100 100 100 NaN NaN NaN ...</span>
+<span class="co">#&gt;   .. .. ..$ Radiation           : num [1:1461] 2.29 2.49 2.56 2.11 2.87 ...</span>
+<span class="co">#&gt;   .. .. ..$ WindSpeed           : num [1:1461] 0.833 0.833 0 1.111 0 ...</span>
+<span class="co">#&gt;   .. .. ..$ WindDirection       : num [1:1461] 230 170 0 220 0 ...</span>
+<span class="co">#&gt;   .. .. ..$ PET                 : num [1:1461] 0.218 0.285 0.182 0.247 0.348 ...</span>
+<span class="co">#&gt;   ..@ coords     : num [1, 1:2] 1.02 41.34</span>
+<span class="co">#&gt;   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="co">#&gt;   .. .. ..$ : chr "1"</span>
+<span class="co">#&gt;   .. .. ..$ : chr [1:2] "coords.x1" "coords.x2"</span>
+<span class="co">#&gt;   ..@ bbox       : num [1:2, 1:2] 1.02 41.34 1.02 41.34</span>
+<span class="co">#&gt;   .. ..- attr(*, "dimnames")=List of 2</span>
+<span class="co">#&gt;   .. .. ..$ : chr [1:2] "coords.x1" "coords.x2"</span>
+<span class="co">#&gt;   .. .. ..$ : chr [1:2] "min" "max"</span>
+<span class="co">#&gt;   ..@ proj4string:Formal class 'CRS' [package "sp"] with 1 slot</span>
+<span class="co">#&gt;   .. .. ..@ projargs: chr "+proj=longlat +datum=WGS84 +no_defs"</span>
+<span class="co">#&gt;   .. .. ..$ comment: chr "GEOGCRS[\"WGS 84 (with axis order normalized for visualization)\",\n    DATUM[\"World Geodetic System 1984\",\n"| __truncated__</span></code></pre></div>
+<p>We can access the weather data frame by subsetting the appropriate
+element of slot <code>data</code>:</p>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">poblet_weather</span> <span class="op">&lt;-</span> <span class="va">meteo</span><span class="op">@</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">poblet_weather</span><span class="op">)</span>
+<span class="co">#&gt;            DOY MeanTemperature MinTemperature MaxTemperature Precipitation</span>
+<span class="co">#&gt; 2000-01-01   1        5.555184     -0.1435010       9.260269             0</span>
+<span class="co">#&gt; 2000-01-02   2        6.707019     -0.0685338      11.112247             0</span>
+<span class="co">#&gt; 2000-01-03   3        7.338177      0.3771072      11.864021             0</span>
+<span class="co">#&gt; 2000-01-04   4        4.464909      0.1058438       7.299021             0</span>
+<span class="co">#&gt; 2000-01-05   5        8.079838     -2.7597730      15.127374             0</span>
+<span class="co">#&gt; 2000-01-06   6        4.403091     -3.2647648       9.388462             0</span>
+<span class="co">#&gt;            MeanRelativeHumidity MinRelativeHumidity MaxRelativeHumidity</span>
+<span class="co">#&gt; 2000-01-01             86.51313            67.13659                 100</span>
+<span class="co">#&gt; 2000-01-02             82.20012            61.02807                 100</span>
+<span class="co">#&gt; 2000-01-03             79.07784            58.33286                 100</span>
+<span class="co">#&gt; 2000-01-04             77.59076            63.75526                 100</span>
+<span class="co">#&gt; 2000-01-05             56.60804            35.51277                 100</span>
+<span class="co">#&gt; 2000-01-06             68.22612            48.43355                 100</span>
+<span class="co">#&gt;            Radiation WindSpeed WindDirection       PET</span>
+<span class="co">#&gt; 2000-01-01  2.285965 0.8333333           230 0.2183801</span>
+<span class="co">#&gt; 2000-01-02  2.494350 0.8333333           170 0.2846305</span>
+<span class="co">#&gt; 2000-01-03  2.557200 0.0000000             0 0.1821787</span>
+<span class="co">#&gt; 2000-01-04  2.114212 1.1111111           220 0.2465335</span>
+<span class="co">#&gt; 2000-01-05  2.865159 0.0000000             0 0.3480644</span>
+<span class="co">#&gt; 2000-01-06  2.815494 0.5555556           240 0.3108101</span></code></pre></div>
+<p>As we indicated above, the daily weather data is not valid in this
+case because of the mismatch between the boundaries of the interpolator
+data set and the location of our plots. Nevertheless, the process for
+obtaining weather data would be similar in other cases.</p>
 </div>
   </div>
 
