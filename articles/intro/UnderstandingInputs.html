@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-05-10</h4>
+            <h4 data-toc-skip class="date">2022-05-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>UnderstandingInputs.Rmd</code></div>
@@ -90,11 +90,12 @@ information on <strong>climate</strong>, <strong>vegetation</strong> and
 <strong>soils</strong> of the forest stand to be simulated. Moreover,
 since <code>medfate</code> allows simulating cohorts belonging to
 different species, <strong>species-specific parameters</strong> are also
-needed. This vignette explains data structures required as input to run
-simulations using the package so that the user can understand them. A
-companion vignette <a href="https://emf-creaf.github.io/medfate/articles/intro/PreparingInputs.html" class="external-link"><em>Preparing
+needed. Finally, <strong>simulation control parameters</strong> may need
+to be changed, depending on the goals of the simulation. This vignette
+explains data structures required as input to run simulations using the
+package so that the user can understand them. A companion vignette <a href="https://emf-creaf.github.io/medfate/articles/intro/PreparingInputs.html" class="external-link"><em>Preparing
 model inputs</em></a> provides a practical example to illustrate how to
-create model inputs and the common problems encountered.</p>
+create model inputs and some common problems encountered.</p>
 </div>
 <div class="section level2">
 <h2 id="species-specific-parameters">Species-specific parameters<a class="anchor" aria-label="anchor" href="#species-specific-parameters"></a>
@@ -938,7 +939,7 @@ can be mapped onto it.</p>
 <p>Each forest plot is represented in an object of class
 <code>forest</code>, a list that contains several elements. Among them,
 the most important items are two data frames, <code>treeData</code> (for
-trees) and <code>shrubData</code> for shrubs:</p>
+trees) and <code>shrubData</code> (for shrubs):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span>
 <span class="va">exampleforestMED</span></code></pre></div>
@@ -1077,7 +1078,7 @@ same name:</p>
 <p>In addition to the physical soil description, this object contains
 soil parameters needed for soil water balance simulations:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "SoilDepth"    "W"            "SWE"          "Temp"         "Ksoil"       </span>
 <span class="co">##  [6] "Gsoil"        "dVec"         "sand"         "clay"         "om"          </span>
 <span class="co">## [11] "VG_alpha"     "VG_n"         "VG_theta_res" "VG_theta_sat" "Ksat"        </span>
@@ -1237,7 +1238,7 @@ parameterization is obtained using function
 <code><a href="../../reference/defaultControl.html">defaultControl()</a></code>:</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">control</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">control</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##  [1] "fillMissingSpParams"                 "verbose"                            </span>
 <span class="co">##  [3] "subdailyResults"                     "transpirationMode"                  </span>
 <span class="co">##  [5] "soilFunctions"                       "defaultWindSpeed"                   </span>
@@ -1293,8 +1294,9 @@ this additional step is handy because cohort-level parameters and state
 variables initialized can then be modified by the user (or an automated
 calibration algorithm) before calling the actual simulation functions.
 The input objects for functions <code><a href="../../reference/spwb.html">spwb()</a></code> and
-<code><a href="../../reference/growth.html">growth()</a></code> are presented in more detail in then vignettes
-corresponding to each model.</p>
+<code><a href="../../reference/growth.html">growth()</a></code> are presented in more detail in vignettes <a href="https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html" class="external-link"><em>Basic
+water balance</em></a> and <a href="https://emf-creaf.github.io/medfate/articles/runmodels/ForestGrowth.html" class="external-link"><em>Forest
+growth</em></a>, respectively.</p>
 <p>Function <code><a href="../../reference/fordyn.html">fordyn()</a></code> is different from the other two
 models, in the sense that the user enters forest, soil,
 species-parameter and simulation control inputs directly into the

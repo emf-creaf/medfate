@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-05-10</h4>
+            <h4 data-toc-skip class="date">2022-05-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/PackageOverview.Rmd" class="external-link"><code>vignettes/intro/PackageOverview.Rmd</code></a></small>
       <div class="hidden name"><code>PackageOverview.Rmd</code></div>
@@ -109,12 +109,12 @@ also forest structural and compositional dynamics, the taxonomic
 identity of plants is stored, and parameter values need to be provided
 for each taxonomic entity (but the package could be used with functional
 groups).</p>
-<p>Currently, the package distributed from CRAN does not include any
-vignette. Articles covering model simulation examples, sensitivity
-analysis, parameter specification, model evaluation and applications can
-be found at the package <a href="https://emf-creaf.github.io/medfate/" class="external-link">website</a>.</p>
-<p>Complete documentation on the design and formulation of
-<strong>medfate</strong> models can be found at the <a href="https://emf-creaf.github.io/medfatebook/index.html" class="external-link">medfate
+<p>Currently, the distributed R package does not include any vignette,
+but the package <a href="https://emf-creaf.github.io/medfate/" class="external-link">website</a> includes
+articles covering model simulation examples, sensitivity analysis,
+parameter specification, model evaluation and applications. In addition,
+complete documentation on the design and formulation of the simulation
+models can be found at the <a href="https://emf-creaf.github.io/medfatebook/index.html" class="external-link">medfate
 reference book</a>.</p>
 </div>
 <div class="section level2">
@@ -134,13 +134,13 @@ soil evaporation and plant transpiration. In <code>medfate</code>, the
 soil water balance of a forest is primarily used to predict drought
 stress for living plants in it. Soil/plant water balance can be studied
 for a given forest stand using function <code><a href="../../reference/spwb.html">spwb()</a></code>. Function
-<code><a href="../../reference/spwb.html">spwb()</a></code> can be run in two different modes, implying a
-different level of complexity. The basic mode focuses on soil water
-balance and strongly simplifies processes underlying plant
-transpiration. The advanced mode is computationally more demanding but
-provides an explicit simulation of processes regulating stomatal
-behaviour and water transport through the plant, which also requires an
-explicit energy balance.</p>
+<code><a href="../../reference/spwb.html">spwb()</a></code> can be run in two different transpiration modes,
+implying a different level of complexity. The basic mode focuses on soil
+water balance and strongly simplifies processes underlying plant
+transpiration. In contrast, the advanced transpiration mode is
+computationally more demanding but provides an explicit simulation of
+processes regulating stomatal behaviour and water transport through the
+plant, which also requires an explicit energy balance.</p>
 <p>Examples of simulation with <code><a href="../../reference/spwb.html">spwb()</a></code> under the two
 transpiration modes are provided in vignettes <a href="https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html" class="external-link"><em>Basic
 water balance</em></a> and <a href="https://emf-creaf.github.io/medfate/articles/runmodels/AdvancedWaterEnergyBalance.html" class="external-link"><em>Advanced
@@ -154,25 +154,23 @@ influence of climatic conditions on forest structure and function.
 Processes affecting changes leaf area and plant size are those involved
 in water, energy and carbon balances, as well as those directly
 affecting meristematic activity (e.g. phenology or other sink
-limitations). Processes influencing plant water balance include those
-affecting soil water content, such as rainfall, canopy interception,
-infiltration and runoff, percolation and deep drainage, soil evaporation
-and plant transpiration. Carbon balance arises from the interplay
-between carbon assimilation via photosynthesis and the respiration costs
-required for the maintenance of existing cells and the formation of new
-tissue. Water and carbon balances are coupled through the regulation of
-gas exchange done by leaf stomata. Plant growth is affected by the
-availability of carbon (source limitation), but also by temperature and
-water status (sink limitation). In addition, water and carbon status of
-cohort plants can increase the likelihood of mortality, resulting in a
-decrease of the number of individuals in the cohort.</p>
+limitations). Carbon balance arises from the interplay between carbon
+assimilation via photosynthesis and the respiration costs required for
+the maintenance of existing cells and the formation of new tissue. Water
+and carbon balances are coupled through the regulation of gas exchange
+done by leaf stomata. Plant growth is affected by the availability of
+carbon (source limitation), but also by temperature and water status
+(sink limitation). In addition, water and carbon status of cohort plants
+can increase the likelihood of mortality, resulting in a decrease of the
+number of individuals in the cohort.</p>
 <p>Package <code>medfate</code> allows simulating daily water/carbon
 balances, growth and mortality of a set of cohorts (competing for light
 and water) in a single forest stand using function
 <code><a href="../../reference/growth.html">growth()</a></code>, which adds carbon balance, growth and mortality
 processes to those simulated by function <code><a href="../../reference/spwb.html">spwb()</a></code>. As before,
 function <code><a href="../../reference/growth.html">growth()</a></code> can be run using two levels of complexity
-to match the corresponding complexity of plant transpiration.</p>
+which match the two transpiration modes of function
+<code><a href="../../reference/spwb.html">spwb()</a></code>.</p>
 <p>An example of simulation with <code><a href="../../reference/growth.html">growth()</a></code> is provided in
 vignette <a href="https://emf-creaf.github.io/medfate/articles/runmodels/ForestGrowth.html" class="external-link"><em>Forest
 growth</em></a>.</p>
@@ -182,7 +180,7 @@ growth</em></a>.</p>
 </h3>
 <p>Changes in forest structure and composition result from the interplay
 of demographic processes (growth, mortality and recruitment) and may
-include forest management. Since version 2.2.0, the package includes
+include disturbances such as forest management. The package includes
 function <code><a href="../../reference/fordyn.html">fordyn()</a></code>, which allows simulating these processes
 at yearly time steps on a given forest stand. Function
 <code><a href="../../reference/fordyn.html">fordyn()</a></code> builds on the previous two simulation functions
@@ -218,54 +216,12 @@ density, leaf area density).</li>
 </ul>
 </div>
 <div class="section level3">
-<h3 id="fuel-properties-and-fire-hazard">Fuel properties and fire hazard<a class="anchor" aria-label="anchor" href="#fuel-properties-and-fire-hazard"></a>
-</h3>
-<p>Vegetation functioning and dynamics have strong, but complex, effects
-on fire hazard. On one hand, growth and death of organs and individuals
-changes the amount of standing live and dead fuels, as well as downed
-dead fuels. On the other, day-to-day changes in soil and plant water
-content changes the physical properties of fuel, notably fuel moisture
-content.</p>
-<p>Package <code>medfate</code> provides functions to estimate fuel
-properties and potential fire behaviour in forest inventory plots.
-Specifically, function <code><a href="../../reference/fuel_properties.html">fuel_stratification()</a></code> provides a
-stratification of the stand into understory and canopy strata; and
-<code><a href="../../reference/fuel_properties.html">fuel_FCCS()</a></code> calculates fuel characteristics from a
-<code>forest</code> object following an adaptation of the protocols
-described for the Fuel Characteristics Classification System (Prichard
-et al. 2013). Function <code>fuel_cohortFineFMC()</code> allows
-obtaining daily fuel moisture content estimates corresponding to the
-water status of plants, as returned by function <code><a href="../../reference/spwb.html">spwb()</a></code>.</p>
-<p>In FCCS, fuelbed is divided into six strata, including canopy, shrub,
-herbaceous vegetation, dead woody materials, leaf litter and ground
-fuels. All except ground fuels are considered here. The intensity of
-burning depends on several factors, including topography, wind
-conditions, fuel structure and its moisture content, which is determined
-from antecedent and current meteorological conditions. A modification of
-the Rothermel’s (1972) model is used in function
-<code><a href="../../reference/fire_behaviour.html">fire_FCCS()</a></code> to calculate the intensity of surface fire
-reaction and the rate of fire spread of surface fires assuming a
-steady-state fire. Both quantities are dependent on fuel
-characteristics, windspeed and direction, and topographic slope and
-aspect. Fuel and fire behaviour functions allow obtaining the
-following:</p>
-<ol style="list-style-type: decimal">
-<li>Fuel characteristics by stratum.</li>
-<li>Surface fire behavior (i.e. reaction intensity, rate of spread,
-fireline intensity and flame length).</li>
-<li>Crown fire behavior.</li>
-<li>Fire potential ratings of surface fire behavior and crown fire
-behavior.</li>
-</ol>
-</div>
-<div class="section level3">
 <h3 id="sub-model-functions">Sub-model functions<a class="anchor" aria-label="anchor" href="#sub-model-functions"></a>
 </h3>
 <p>Many of the functions included in <code>medfate</code> are internally
 called by simulation functions. Some of them are made available to the
-user, to facilitate understanding the different sub-models and to
-facilitate a more creative use of the package, but most users can use
-the package while ignoring them.</p>
+user to facilitate a deeper understanding the different sub-models and a
+more creative use of the package, but most users can ignore them.</p>
 <p>Sub-model functions are grouped by <em>subject</em>, which is
 included in the name of the function. The different sub-model functions
 are (by subject):</p>
@@ -299,6 +255,66 @@ transpiration/photosynthesis.</li>
 <li>
 <code>wind_*</code>: Canopy turbulence.</li>
 </ul>
+</div>
+<div class="section level3">
+<h3 id="plots-summaries-and-post-processing">Plots, summaries and post-processing<a class="anchor" aria-label="anchor" href="#plots-summaries-and-post-processing"></a>
+</h3>
+<p>Simulation models produce multiple outputs and it is important to
+learn how to visualize them and extract information for further
+analysis. Each simulation function returns an output object whose S3
+class has the same name as the simulation function
+(e.g. <code><a href="../../reference/spwb.html">spwb()</a></code> returns an object of class <code>spwb</code>).
+The package includes implementations of <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and
+<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> for simulation output objects, which facilitates
+displaying and extracting information. In addition, a generic function
+<code><a href="../../reference/shinyplot.html">shinyplot()</a></code> (as well as its implementation for different
+output objects) allows an interactive exploration of simulation
+results.</p>
+<p>Some package function are meant to be used on simulation results and
+produce time series of additional (derived) properties:</p>
+<ul>
+<li>
+<code><a href="../../reference/droughtStress.html">droughtStress()</a></code> : Plant/stand drought stress
+indices</li>
+<li>
+<code><a href="../../reference/waterUseEfficiency.html">waterUseEfficiency()</a></code> : Water use efficiency
+metrics</li>
+<li>
+<code><a href="../../reference/resistances.html">resistances()</a></code> : Hydraulic resistances to water
+transport</li>
+<li>
+<code><a href="../../reference/fireHazard.html">fireHazard()</a></code> : Potential fire behaviour (see
+below)</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="fuel-properties-and-fire-hazard">Fuel properties and fire hazard<a class="anchor" aria-label="anchor" href="#fuel-properties-and-fire-hazard"></a>
+</h3>
+<p>Vegetation functioning and dynamics have strong, but complex, effects
+on fire hazard. On one hand, growth and death of organs and individuals
+changes the amount of standing live and dead fuels, as well as downed
+dead fuels. On the other, day-to-day changes in soil and plant water
+content changes the physical properties of fuel, notably fuel moisture
+content.</p>
+<p>Package <code>medfate</code> provides functions to estimate fuel
+properties and potential fire behaviour in forest inventory plots.
+Specifically, function <code><a href="../../reference/fuel_properties.html">fuel_stratification()</a></code> estimates the
+division of live fuels in the stand between understory and canopy
+strata; and <code><a href="../../reference/fuel_properties.html">fuel_FCCS()</a></code> calculates fuel characteristics
+from a <code>forest</code> object following an adaptation of the
+protocols described for the Fuel Characteristics Classification System
+(Prichard et al. 2013). In FCCS, fuelbed is divided into six strata,
+including canopy, shrub, herbaceous vegetation, dead woody materials,
+leaf litter and ground fuels. All except ground fuels are considered
+here. The intensity of burning depends on several factors, including
+topography, wind conditions, fuel structure and its moisture content,
+which is determined from antecedent and current meteorological
+conditions. A modification of the Rothermel’s (1972) model is used in
+function <code><a href="../../reference/fire_behaviour.html">fire_FCCS()</a></code> to calculate the intensity of surface
+fire reaction and the rate of fire spread of surface fires assuming a
+steady-state fire. Both quantities are dependent on fuel
+characteristics, windspeed and direction, and topographic slope and
+aspect.</p>
 </div>
 </div>
 <div class="section level2">
