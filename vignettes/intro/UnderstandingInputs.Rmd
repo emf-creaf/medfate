@@ -3,7 +3,7 @@ title: "Understanding model inputs"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::html_vignette:
+  html_document:
     toc: TRUE
 ---
 
@@ -15,9 +15,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(medfate)
 ```
 
-## About this vignette
+## About this article
 
-Any process-based model of forest functioning and dynamics needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since `medfate` allows simulating cohorts belonging to different species,  **species-specific parameters** are also needed. Finally, **simulation control parameters** may need to be changed, depending on the goals of the simulation. This vignette explains data structures required as input to run simulations using the package so that the user can understand them. A companion vignette [*Preparing model inputs*](https://emf-creaf.github.io/medfate/articles/intro/PreparingInputs.html) provides a practical example to illustrate how to create model inputs and some common problems encountered.
+Any process-based model of forest functioning and dynamics needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since `medfate` allows simulating cohorts belonging to different species,  **species-specific parameters** are also needed. Finally, **simulation control parameters** may need to be changed, depending on the goals of the simulation. This article explains data structures required as input to run simulations using the package so that the user can understand them. A companion article [*Preparing model inputs*](https://emf-creaf.github.io/medfate/articles/intro/PreparingInputs.html) provides a practical example to illustrate how to create model inputs and some common problems encountered.
 
 
 ## Species-specific parameters
@@ -167,6 +167,6 @@ Control parameters should normally be left to their default value until their ef
 
 ## Input objects for simulation functions
 
-Simulation functions `spwb()` and `growth()` (and similar functions) require first combining forest, soil, species-parameter and simulation control inputs into a single input object (of class `spwbInput` or `growthInput`) that is then used as input to the corresponding simulation function along with weather data. The combination of inputs is done via functions `spwbInput()` and `growthInput()`, respectively, or the more convenient `forest2spwbInput()` and `forest2growthInput()`. While it complicates the code, having this additional step is handy because cohort-level parameters and state variables initialized can then be modified by the user (or an automated calibration algorithm) before calling the actual simulation functions. The input objects for functions `spwb()` and `growth()` are presented in more detail in vignettes [*Basic water balance*](https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html) and [*Forest growth*](https://emf-creaf.github.io/medfate/articles/runmodels/ForestGrowth.html), respectively.
+Simulation functions `spwb()` and `growth()` (and similar functions) require first combining forest, soil, species-parameter and simulation control inputs into a single input object (of class `spwbInput` or `growthInput`) that is then used as input to the corresponding simulation function along with weather data. The combination of inputs is done via functions `spwbInput()` and `growthInput()`, respectively, or the more convenient `forest2spwbInput()` and `forest2growthInput()`. While it complicates the code, having this additional step is handy because cohort-level parameters and state variables initialized can then be modified by the user (or an automated calibration algorithm) before calling the actual simulation functions. The input objects for functions `spwb()` and `growth()` are presented in more detail in articles [*Basic water balance*](https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html) and [*Forest growth*](https://emf-creaf.github.io/medfate/articles/runmodels/ForestGrowth.html), respectively.
 
 Function `fordyn()` is different from the other two models, in the sense that the user enters forest, soil, species-parameter and simulation control inputs directly into the simulation function (in fact, `fordyn()` internally calls `forest2growthInput()` to initialize the input object to function `growth()`).
