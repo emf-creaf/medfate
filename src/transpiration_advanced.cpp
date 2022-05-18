@@ -63,6 +63,7 @@ List profitMaximization2(List supplyFunction, int initialPos,
   photoCurrent = photoInitial;
   profitCurrent = profitInitial;
   
+  int prevStep = 0;
   bool cont = true;
   // Rcout<< " initialPos " << initialPos;
   while(cont) {
@@ -89,15 +90,20 @@ List profitMaximization2(List supplyFunction, int initialPos,
       photoNext = photoAgMax;
       profitNext = profitAgMax;
     }
-    
-    if(((profitPrev >= profitCurrent) && (photoPrev["Gsw"] >= Gswmin)) || (photoCurrent["Gsw"]>Gswmax)) {
+    bool selDecr = ((profitPrev >= profitCurrent) && (photoPrev["Gsw"] >= Gswmin)) || (photoCurrent["Gsw"]>Gswmax);
+    selDecr = selDecr && (prevStep<=0);
+    bool selIncr = ((profitNext > profitCurrent) && (photoNext["Gsw"] <= Gswmax)) || (photoCurrent["Gsw"]<Gswmin);
+    selIncr = selIncr && (prevStep>=0);
+    if(selDecr) {
       profitCurrent = profitPrev;
       photoCurrent = photoPrev;
       iPos = iPos-1;
-    } else if(((profitNext > profitCurrent) && (photoNext["Gsw"] <= Gswmax)) || (photoCurrent["Gsw"]<Gswmin)) {
+      prevStep = -1;
+    } else if(selIncr) {
       profitCurrent = profitNext;
       photoCurrent = photoNext;
       iPos = iPos+1;
+      prevStep = 1;
     } else {
       cont = false;
     }
