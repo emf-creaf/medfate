@@ -14,6 +14,10 @@ DataFrame leafPhotosynthesisFunction(NumericVector E, NumericVector psiLeaf, dou
                                      double absRad, double Q, double Vmax298, double Jmax298, 
                                      double leafWidth = 1.0, double refLeafArea = 1.0, bool verbose = false);
 
+NumericVector leafPhotosynthesisOneFunction2(double E, double psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, 
+                                             double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, 
+                                             double leafWidth = 1.0, double refLeafArea = 1.0, bool verbose = false);
+
 DataFrame leafPhotosynthesisFunction2(NumericVector E, NumericVector psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, 
                                      double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, 
                                      double leafWidth = 1.0, double refLeafArea = 1.0, bool verbose = false);
