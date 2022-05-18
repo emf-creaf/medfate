@@ -22,7 +22,6 @@ defaultControl<-function(transpirationMode = "Granier") {
     #spwb with sperry
     ndailysteps = 24,
     nsubsteps = 3600,
-    cochard = FALSE,
     capacitance = FALSE,
     taper = TRUE,
     multiLayerBalance = FALSE,

@@ -58,7 +58,6 @@ A list, with the following options (default values in parentheses):
    \item{\code{nsubsteps (= 3600)}: Number of substeps into which each step is divided for multi-layer canopy energy balance solving.}
    \item{\code{capacitance (=FALSE)}: Whether the effect of plant water compartments is considered in simulations.}
    \item{\code{multiLayerBalance (=FALSE)}: Flag to indicate multiple canopy energy balance. If \code{FALSE}, canopy is considered a single layer for energy balance.}
-   \item{\code{cochard (=FALSE)}: Boolean flag to indicate the stomatal closure when leaf water potential is below turgor loss point so that transpiration depends on cuticular properties (Martin-StPaul et al. 2017).}
    \item{\code{taper (= TRUE)}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
    \item{\code{gainModifier, costModifier (= 1)}: Modifiers (exponents) of the gain and cost functions defined in Sperry et al. (2016).}
    \item{\code{klatstem (= 0.01)}: Stem symplastic-apoplastic lateral conductance (in mmol·s-1·m-2·MPa-1). Only relevant when \code{capacitance = TRUE}.}
