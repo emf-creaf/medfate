@@ -68,7 +68,7 @@ List profitMaximization2(List supplyFunction, int initialPos,
   // Rcout<< " initialPos " << initialPos;
   while(cont) {
     // Rcout<<".";
-    if(iPos>0) {
+    if((iPos>0) && (prevStep <= 0)) {
       photoPrev = leafPhotosynthesisOneFunction2(E[iPos-1], leafPsi[iPos-1], Catm, Patm, Tair, vpa, u, 
                                                  SWRabs, LWRnet, Q, Vmax298, Jmax298, 
                                                  leafWidth, refLeafArea, false);
@@ -79,7 +79,7 @@ List profitMaximization2(List supplyFunction, int initialPos,
       photoPrev = photoCurrent;
       profitPrev = profitCurrent;
     }
-    if(iPos < (nsteps-1)) {
+    if((iPos < (nsteps-1)) && (prevStep >= 0)) {
       photoNext = leafPhotosynthesisOneFunction2(E[iPos+1], leafPsi[iPos+1], Catm, Patm, Tair, vpa, u, 
                                                  SWRabs, LWRnet, Q, Vmax298, Jmax298, 
                                                  leafWidth, refLeafArea, false);
