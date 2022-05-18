@@ -4509,8 +4509,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // profitMaximization
-List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax, double gainModifier, double costModifier, String costWater);
-RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GswminSEXP, SEXP GswmaxSEXP, SEXP gainModifierSEXP, SEXP costModifierSEXP, SEXP costWaterSEXP) {
+List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax);
+RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GswminSEXP, SEXP GswmaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -4518,10 +4518,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type photosynthesisFunction(photosynthesisFunctionSEXP);
     Rcpp::traits::input_parameter< double >::type Gswmin(GswminSEXP);
     Rcpp::traits::input_parameter< double >::type Gswmax(GswmaxSEXP);
-    Rcpp::traits::input_parameter< double >::type gainModifier(gainModifierSEXP);
-    Rcpp::traits::input_parameter< double >::type costModifier(costModifierSEXP);
-    Rcpp::traits::input_parameter< String >::type costWater(costWaterSEXP);
-    rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction, Gswmin, Gswmax, gainModifier, costModifier, costWater));
+    rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction, Gswmin, Gswmax));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5071,7 +5068,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_apoplasticRelativeWaterContent", (DL_FUNC) &_medfate_apoplasticRelativeWaterContent, 3},
     {"_medfate_apoplasticWaterPotential", (DL_FUNC) &_medfate_apoplasticWaterPotential, 3},
     {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 8},
-    {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 7},
+    {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 4},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 12},
     {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 5},
     {"_medfate_windCanopyTurbulenceModel", (DL_FUNC) &_medfate_windCanopyTurbulenceModel, 6},

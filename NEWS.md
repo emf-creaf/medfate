@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.7.4
+- Reducing unused parameters for Sperry model
+
 # Version 2.7.3
 - Cleaning for CRAN
 - New article to prepare model inputs

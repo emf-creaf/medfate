@@ -9,8 +9,7 @@ Stomatal regulation
 Set of high-level functions used in the calculation of stomatal conductance and transpiration. Function \code{transp_profitMaximization} calculates gain and cost functions, as well as profit maximization from supply and photosynthesis input functions. Function \code{transp_stomatalRegulationPlot} produces a plot with the cohort supply functions against water potential and a plot with the cohort photosynthesis functions against water potential, both with the maximum profit values indicated.
 }
 \usage{
-transp_profitMaximization(supplyFunction, photosynthesisFunction, Gswmin, Gswmax, 
-                          gainModifier = 1.0, costModifier = 1.0, costWater = "dEdP")
+transp_profitMaximization(supplyFunction, photosynthesisFunction, Gswmin, Gswmax)
 transp_stomatalRegulationPlot(x, meteo, day, timestep, 
                               latitude, elevation, slope = NA, aspect = NA,
                               type="E")
@@ -19,8 +18,6 @@ transp_stomatalRegulationPlot(x, meteo, day, timestep,
   \item{supplyFunction}{Water supply function (see \code{\link{hydraulics_supplyFunctionNetwork}}).}
   \item{photosynthesisFunction}{Function returned by \code{photo_photosynthesisFunction()}.}
   \item{Gswmin, Gswmax}{Minimum and maximum stomatal conductance to water vapour (mol·m-2·s-1).}
-  \item{gainModifier, costModifier}{Modifiers (exponents) of the gain and cost functions defined in Sperry et al. (2017).}
-  \item{costWater}{Cost water function, either "dEdP" (default) or "kterm" (experimental).}
   \item{x}{An object of class \code{\link{spwbInput}} built using the 'Sperry' transpiration mode.}
   \item{meteo}{A data frame with daily meteorological data series:
    \itemize{

@@ -26,9 +26,6 @@ defaultControl<-function(transpirationMode = "Granier") {
     capacitance = FALSE,
     taper = TRUE,
     multiLayerBalance = FALSE,
-    gainModifier = 1, 
-    costModifier = 1, 
-    costWater = "dEdP",
     klatstem = 0.01, # stem symplastic-apoplastic lateral conductance
     klatleaf = 0.01, # leaf symplastic-apoplastic lateral conductance
     numericParams=list(maxNsteps = 400, ntrial = 200, psiTol = 0.0001, ETol = 0.0000001),

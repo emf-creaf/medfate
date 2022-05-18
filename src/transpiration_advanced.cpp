@@ -23,8 +23,7 @@ const double eps_xylem = 1e3; // xylem elastic modulus (1 GPa = 1000 MPa)
 
 
 // [[Rcpp::export("transp_profitMaximization")]]
-List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax, 
-                        double gainModifier = 1.0, double costModifier = 1.0, String costWater = "dEdP") {
+List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax) {
   NumericVector supplyE = supplyFunction["E"];
   NumericVector supplydEdp = supplyFunction["dEdP"];
   NumericVector Ag = photosynthesisFunction["GrossPhotosynthesis"];
@@ -39,21 +38,9 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, d
   //Find valid limits according to stomatal conductance
   int ini = 0, fin = nsteps-1;
  
-  // mindEdp = 0.0; 
-  // int imaxdEdp = 0;
-  // maxdEdp = supplydEdp[0];
   for(int i=ini;i<fin;i++) {
-    // if(supplydEdp[i] > maxdEdp) {
-    //   maxdEdp = supplydEdp[i];
-    //   imaxdEdp = i;
-    // }
-    if(costWater=="dEdP") {
-      mindEdp = std::min(mindEdp, supplydEdp[i]);
-      maxdEdp = std::max(maxdEdp, supplydEdp[i]);
-    } else {
-      minKterm = std::min(minKterm, supplyKterm[i]);
-      maxKterm = std::max(maxKterm, supplyKterm[i]);
-    }
+    mindEdp = std::min(mindEdp, supplydEdp[i]);
+    maxdEdp = std::max(maxdEdp, supplydEdp[i]);
     Agmax = std::max(Agmax, Ag[i]);
   }
   
@@ -62,12 +49,8 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, d
   NumericVector cost(nsteps, NA_REAL);
   NumericVector gain(nsteps, NA_REAL);
   for(int i=ini;i<fin;i++) {
-    gain[i] = pow(Ag[i]/Agmax, gainModifier);
-    if(costWater=="dEdP") {
-      cost[i] = pow((maxdEdp-supplydEdp[i])/(maxdEdp-mindEdp), costModifier); 
-    }  else {
-      cost[i] = pow((maxKterm-supplyKterm[i])/(maxKterm-minKterm), costModifier);
-    }
+    gain[i] = Ag[i]/Agmax;
+    cost[i] = (maxdEdp-supplydEdp[i])/(maxdEdp-mindEdp); 
     profit[i] = gain[i]-cost[i];
   }
   
@@ -169,9 +152,6 @@ List transpirationSperry(List x, NumericVector meteovec,
   double klatstem = control["klatstem"];
   int ntimesteps = control["ndailysteps"];
   int nsubsteps = control["nsubsteps"];
-  String costWater = control["costWater"];
-  double costModifier = control["costModifier"];
-  double gainModifier = control["gainModifier"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   double verticalLayerSize = control["verticalLayerSize"];
@@ -824,8 +804,8 @@ List transpirationSperry(List x, NumericVector meteovec,
           int iPMSunlit = 0, iPMShade = 0;
           
           if(!cochard) { //Pure Sperry model
-            PMSunlit = profitMaximization(sFunctionAbove, photoSunlit,  Gswmin[c], Gswmax[c], gainModifier, costModifier, costWater);
-            PMShade = profitMaximization(sFunctionAbove, photoShade,  Gswmin[c],Gswmax[c], gainModifier, costModifier, costWater);
+            PMSunlit = profitMaximization(sFunctionAbove, photoSunlit,  Gswmin[c], Gswmax[c]);
+            PMShade = profitMaximization(sFunctionAbove, photoShade,  Gswmin[c],Gswmax[c]);
             iPMSunlit = PMSunlit["iMaxProfit"];
             iPMShade = PMShade["iMaxProfit"];
           } else {
@@ -835,8 +815,8 @@ List transpirationSperry(List x, NumericVector meteovec,
               for(int j=0;j<(GswSunlit.size()-1);j++) if(GswSunlit[j]<Gswmin[c]) iPMSunlit++;
               for(int j=0;j<(GswShade.size()-1);j++) if(GswShade[j]<Gswmin[c]) iPMShade++;
             } else {
-              PMSunlit = profitMaximization(sFunctionAbove, photoSunlit,  Gswmin[c], Gswmax[c], gainModifier, costModifier, costWater);
-              PMShade = profitMaximization(sFunctionAbove, photoShade,  Gswmin[c],Gswmax[c], gainModifier, costModifier, costWater);
+              PMSunlit = profitMaximization(sFunctionAbove, photoSunlit,  Gswmin[c], Gswmax[c]);
+              PMShade = profitMaximization(sFunctionAbove, photoShade,  Gswmin[c],Gswmax[c]);
               iPMSunlit = PMSunlit["iMaxProfit"];
               iPMShade = PMShade["iMaxProfit"];
             }

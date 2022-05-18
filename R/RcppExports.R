@@ -937,8 +937,8 @@ moisture_tissueRWC <- function(psiSym, pi0, epsilon, psiApo, c, d, af, femb = 0.
     .Call(`_medfate_tissueRelativeWaterContent`, psiSym, pi0, epsilon, psiApo, c, d, af, femb)
 }
 
-transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gswmin, Gswmax, gainModifier = 1.0, costModifier = 1.0, costWater = "dEdP") {
-    .Call(`_medfate_profitMaximization`, supplyFunction, photosynthesisFunction, Gswmin, Gswmax, gainModifier, costModifier, costWater)
+transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gswmin, Gswmax) {
+    .Call(`_medfate_profitMaximization`, supplyFunction, photosynthesisFunction, Gswmin, Gswmax)
 }
 
 transp_transpirationSperry <- function(x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, stepFunctions = NA_integer_, modifyInput = TRUE) {
