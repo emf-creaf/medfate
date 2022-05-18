@@ -91,23 +91,26 @@ List profitMaximization2(List supplyFunction, int initialPos,
       profitNext = profitAgMax;
     }
     bool selDecr = ((profitPrev >= profitCurrent) && (photoPrev["Gsw"] >= Gswmin)) || (photoCurrent["Gsw"]>Gswmax);
-    selDecr = selDecr && (prevStep<=0);
+    selDecr = selDecr && (prevStep<=0) && (iPos>0);
     bool selIncr = ((profitNext > profitCurrent) && (photoNext["Gsw"] <= Gswmax)) || (photoCurrent["Gsw"]<Gswmin);
-    selIncr = selIncr && (prevStep>=0);
+    selIncr = selIncr && (prevStep>=0) && (iPos<(nsteps-1));
     if(selDecr) {
       profitCurrent = profitPrev;
       photoCurrent = photoPrev;
       iPos = iPos-1;
       prevStep = -1;
+      // Rcout <<"-";
     } else if(selIncr) {
       profitCurrent = profitNext;
       photoCurrent = photoNext;
       iPos = iPos+1;
+      // Rcout <<"+";
       prevStep = 1;
     } else {
       cont = false;
     }
   }
+  // Rcout <<"\n";
   // Rcout<< " finalPos " << iPos<< " final profit "<< profitCurrent <<"\n"; 
   
   return(List::create(Named("photosynthesisFunction") = photoCurrent,
