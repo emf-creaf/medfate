@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.4</span>
       </span>
     </div>
 
@@ -56,8 +56,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">transp_profitMaximization</span><span class="op">(</span><span class="va">supplyFunction</span>, <span class="va">photosynthesisFunction</span>, <span class="va">Gswmin</span>, <span class="va">Gswmax</span>, 
-                          gainModifier <span class="op">=</span> <span class="fl">1.0</span>, costModifier <span class="op">=</span> <span class="fl">1.0</span>, costWater <span class="op">=</span> <span class="st">"dEdP"</span><span class="op">)</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">transp_profitMaximization</span><span class="op">(</span><span class="va">supplyFunction</span>, <span class="va">photosynthesisFunction</span>, <span class="va">Gswmin</span>, <span class="va">Gswmax</span><span class="op">)</span>
 <span class="fu">transp_stomatalRegulationPlot</span><span class="op">(</span><span class="va">x</span>, <span class="va">meteo</span>, <span class="va">day</span>, <span class="va">timestep</span>, 
                               <span class="va">latitude</span>, <span class="va">elevation</span>, slope <span class="op">=</span> <span class="cn">NA</span>, aspect <span class="op">=</span> <span class="cn">NA</span>,
                               type<span class="op">=</span><span class="st">"E"</span><span class="op">)</span></code></pre></div>
@@ -71,10 +70,6 @@
 <dd><p>Function returned by <code>photo_photosynthesisFunction()</code>.</p></dd>
 <dt>Gswmin, Gswmax</dt>
 <dd><p>Minimum and maximum stomatal conductance to water vapour (mol·m-2·s-1).</p></dd>
-<dt>gainModifier, costModifier</dt>
-<dd><p>Modifiers (exponents) of the gain and cost functions defined in Sperry et al. (2017).</p></dd>
-<dt>costWater</dt>
-<dd><p>Cost water function, either "dEdP" (default) or "kterm" (experimental).</p></dd>
 <dt>x</dt>
 <dd><p>An object of class <code><a href="modelInput.html">spwbInput</a></code> built using the 'Sperry' transpiration mode.</p></dd>
 <dt>meteo</dt>

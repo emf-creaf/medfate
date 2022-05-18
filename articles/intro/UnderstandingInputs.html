@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.4</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-05-12</h4>
+            <h4 data-toc-skip class="date">2022-05-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>UnderstandingInputs.Rmd</code></div>
@@ -83,7 +83,7 @@ Caceres</h4>
     
     
 <div class="section level2">
-<h2 id="about-this-vignette">About this vignette<a class="anchor" aria-label="anchor" href="#about-this-vignette"></a>
+<h2 id="about-this-article">About this article<a class="anchor" aria-label="anchor" href="#about-this-article"></a>
 </h2>
 <p>Any process-based model of forest functioning and dynamics needs
 information on <strong>climate</strong>, <strong>vegetation</strong> and
@@ -91,9 +91,9 @@ information on <strong>climate</strong>, <strong>vegetation</strong> and
 since <code>medfate</code> allows simulating cohorts belonging to
 different species, <strong>species-specific parameters</strong> are also
 needed. Finally, <strong>simulation control parameters</strong> may need
-to be changed, depending on the goals of the simulation. This vignette
+to be changed, depending on the goals of the simulation. This article
 explains data structures required as input to run simulations using the
-package so that the user can understand them. A companion vignette <a href="https://emf-creaf.github.io/medfate/articles/intro/PreparingInputs.html" class="external-link"><em>Preparing
+package so that the user can understand them. A companion article <a href="https://emf-creaf.github.io/medfate/articles/intro/PreparingInputs.html" class="external-link"><em>Preparing
 model inputs</em></a> provides a practical example to illustrate how to
 create model inputs and some common problems encountered.</p>
 </div>
@@ -1247,34 +1247,32 @@ parameterization is obtained using function
 <span class="co">## [11] "rhizosphereOverlap"                  "unfoldingDD"                        </span>
 <span class="co">## [13] "verticalLayerSize"                   "windMeasurementHeight"              </span>
 <span class="co">## [15] "cavitationRefill"                    "ndailysteps"                        </span>
-<span class="co">## [17] "nsubsteps"                           "cochard"                            </span>
-<span class="co">## [19] "capacitance"                         "taper"                              </span>
-<span class="co">## [21] "multiLayerBalance"                   "gainModifier"                       </span>
-<span class="co">## [23] "costModifier"                        "costWater"                          </span>
-<span class="co">## [25] "klatstem"                            "klatleaf"                           </span>
-<span class="co">## [27] "numericParams"                       "fracLeafResistance"                 </span>
-<span class="co">## [29] "fracRootResistance"                  "averageFracRhizosphereResistance"   </span>
-<span class="co">## [31] "Catm"                                "thermalCapacityLAI"                 </span>
-<span class="co">## [33] "boundaryLayerSize"                   "refillMaximumRate"                  </span>
-<span class="co">## [35] "allowDessication"                    "allowStarvation"                    </span>
-<span class="co">## [37] "allowDefoliation"                    "sinkLimitation"                     </span>
-<span class="co">## [39] "shrubDynamics"                       "allocationStrategy"                 </span>
-<span class="co">## [41] "nonStomatalPhotosynthesisLimitation" "phloemConductanceFactor"            </span>
-<span class="co">## [43] "nonSugarConcentration"               "equilibriumOsmoticConcentration"    </span>
-<span class="co">## [45] "minimumRelativeStarchForGrowth"      "constructionCosts"                  </span>
-<span class="co">## [47] "senescenceRates"                     "maximumRelativeGrowthRates"         </span>
-<span class="co">## [49] "mortalityMode"                       "mortalityBaselineRate"              </span>
-<span class="co">## [51] "mortalityRelativeSugarThreshold"     "mortalityRWCThreshold"              </span>
-<span class="co">## [53] "allowRecruitment"                    "recruitmentMode"                    </span>
-<span class="co">## [55] "removeEmptyCohorts"                  "minimumCohortDensity"               </span>
-<span class="co">## [57] "seedRain"                            "seedProductionTreeHeight"           </span>
-<span class="co">## [59] "seedProductionShrubHeight"           "probRecr"                           </span>
-<span class="co">## [61] "minTempRecr"                         "minMoistureRecr"                    </span>
-<span class="co">## [63] "minFPARRecr"                         "recrTreeDBH"                        </span>
-<span class="co">## [65] "recrTreeDensity"                     "recrTreeHeight"                     </span>
-<span class="co">## [67] "recrShrubCover"                      "recrShrubHeight"                    </span>
-<span class="co">## [69] "recrTreeZ50"                         "recrShrubZ50"                       </span>
-<span class="co">## [71] "recrTreeZ95"                         "recrShrubZ95"</span></code></pre>
+<span class="co">## [17] "nsubsteps"                           "capacitance"                        </span>
+<span class="co">## [19] "taper"                               "multiLayerBalance"                  </span>
+<span class="co">## [21] "klatstem"                            "klatleaf"                           </span>
+<span class="co">## [23] "numericParams"                       "fracLeafResistance"                 </span>
+<span class="co">## [25] "fracRootResistance"                  "averageFracRhizosphereResistance"   </span>
+<span class="co">## [27] "Catm"                                "thermalCapacityLAI"                 </span>
+<span class="co">## [29] "boundaryLayerSize"                   "refillMaximumRate"                  </span>
+<span class="co">## [31] "allowDessication"                    "allowStarvation"                    </span>
+<span class="co">## [33] "allowDefoliation"                    "sinkLimitation"                     </span>
+<span class="co">## [35] "shrubDynamics"                       "allocationStrategy"                 </span>
+<span class="co">## [37] "nonStomatalPhotosynthesisLimitation" "phloemConductanceFactor"            </span>
+<span class="co">## [39] "nonSugarConcentration"               "equilibriumOsmoticConcentration"    </span>
+<span class="co">## [41] "minimumRelativeStarchForGrowth"      "constructionCosts"                  </span>
+<span class="co">## [43] "senescenceRates"                     "maximumRelativeGrowthRates"         </span>
+<span class="co">## [45] "mortalityMode"                       "mortalityBaselineRate"              </span>
+<span class="co">## [47] "mortalityRelativeSugarThreshold"     "mortalityRWCThreshold"              </span>
+<span class="co">## [49] "allowRecruitment"                    "recruitmentMode"                    </span>
+<span class="co">## [51] "removeEmptyCohorts"                  "minimumCohortDensity"               </span>
+<span class="co">## [53] "seedRain"                            "seedProductionTreeHeight"           </span>
+<span class="co">## [55] "seedProductionShrubHeight"           "probRecr"                           </span>
+<span class="co">## [57] "minTempRecr"                         "minMoistureRecr"                    </span>
+<span class="co">## [59] "minFPARRecr"                         "recrTreeDBH"                        </span>
+<span class="co">## [61] "recrTreeDensity"                     "recrTreeHeight"                     </span>
+<span class="co">## [63] "recrShrubCover"                      "recrShrubHeight"                    </span>
+<span class="co">## [65] "recrTreeZ50"                         "recrShrubZ50"                       </span>
+<span class="co">## [67] "recrTreeZ95"                         "recrShrubZ95"</span></code></pre>
 <p>Control parameters should normally be left to their default value
 until their effect on simulations is fully understood.</p>
 </div>
@@ -1294,7 +1292,7 @@ this additional step is handy because cohort-level parameters and state
 variables initialized can then be modified by the user (or an automated
 calibration algorithm) before calling the actual simulation functions.
 The input objects for functions <code><a href="../../reference/spwb.html">spwb()</a></code> and
-<code><a href="../../reference/growth.html">growth()</a></code> are presented in more detail in vignettes <a href="https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html" class="external-link"><em>Basic
+<code><a href="../../reference/growth.html">growth()</a></code> are presented in more detail in articles <a href="https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html" class="external-link"><em>Basic
 water balance</em></a> and <a href="https://emf-creaf.github.io/medfate/articles/runmodels/ForestGrowth.html" class="external-link"><em>Forest
 growth</em></a>, respectively.</p>
 <p>Function <code><a href="../../reference/fordyn.html">fordyn()</a></code> is different from the other two
