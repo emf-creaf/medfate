@@ -207,9 +207,8 @@
 <span class="r-in"><span class="co">#Initialize vegetation input</span></span>
 <span class="r-in"><span class="va">x2</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co">#Call simulation function (11 days)</span></span>
-<span class="r-in"><span class="va">d</span> <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">110</span></span>
-<span class="r-in"><span class="va">G2</span><span class="op">&lt;-</span><span class="fu">growth</span><span class="op">(</span><span class="va">x2</span>, <span class="va">examplemeteo</span><span class="op">[</span><span class="va">d</span>,<span class="op">]</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
+<span class="r-in"><span class="co">#Call simulation function</span></span>
+<span class="r-in"><span class="va">G2</span><span class="op">&lt;-</span><span class="fu">growth</span><span class="op">(</span><span class="va">x2</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 </code></pre></div>
     </div>
