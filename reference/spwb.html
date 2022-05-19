@@ -301,18 +301,17 @@
 <span class="r-in"><span class="co">#Initialize input</span></span>
 <span class="r-in"><span class="va">x2</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co">#Call simulation function (11 days)</span></span>
-<span class="r-in"><span class="va">d</span> <span class="op">=</span> <span class="fl">100</span><span class="op">:</span><span class="fl">110</span></span>
-<span class="r-in"><span class="va">S2</span><span class="op">&lt;-</span><span class="fu">spwb</span><span class="op">(</span><span class="va">x2</span>, <span class="va">examplemeteo</span><span class="op">[</span><span class="va">d</span>,<span class="op">]</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
+<span class="r-in"><span class="co">#Call simulation function</span></span>
+<span class="r-in"><span class="va">S2</span><span class="op">&lt;-</span><span class="fu">spwb</span><span class="op">(</span><span class="va">x2</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Run the model with 'Sperry' transpiration mode using the water balance of </span></span>
 <span class="r-in"><span class="co"># simulated with the 'Granier' model</span></span>
 <span class="r-in"><span class="va">WS</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">S1</span><span class="op">$</span><span class="va">Soil</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"W.1"</span>, <span class="st">"W.2"</span>, <span class="st">"W.3"</span>, <span class="st">"W.4"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">P2</span><span class="op">&lt;-</span><span class="fu">pwb</span><span class="op">(</span><span class="va">x2</span>, <span class="va">examplemeteo</span><span class="op">[</span><span class="va">d</span>,<span class="op">]</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, </span>
-<span class="r-in">        W <span class="op">=</span> <span class="va">WS</span><span class="op">[</span><span class="va">d</span>,<span class="op">]</span>,</span>
-<span class="r-in">        canopyEvaporation <span class="op">=</span> <span class="va">S1</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">Interception</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>,</span>
-<span class="r-in">        snowMelt <span class="op">=</span> <span class="va">S1</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">Snowmelt</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>,</span>
-<span class="r-in">        soilEvaporation <span class="op">=</span> <span class="va">S1</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">SoilEvaporation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">P2</span><span class="op">&lt;-</span><span class="fu">pwb</span><span class="op">(</span><span class="va">x2</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, </span>
+<span class="r-in">        W <span class="op">=</span> <span class="va">WS</span>,</span>
+<span class="r-in">        canopyEvaporation <span class="op">=</span> <span class="va">S1</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">Interception</span>,</span>
+<span class="r-in">        snowMelt <span class="op">=</span> <span class="va">S1</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">Snowmelt</span>,</span>
+<span class="r-in">        soilEvaporation <span class="op">=</span> <span class="va">S1</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">SoilEvaporation</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">}</span></span>
 <span class="r-in"></span>
 </code></pre></div>
