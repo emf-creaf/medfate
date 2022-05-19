@@ -35,10 +35,13 @@ List profitMaximization2(List supplyFunction, int initialPos,
   
   double maxdEdp = 0.0, mindEdp = 99999999.0;
 
+  int valid = 1;
   for(int i=0;i<nsteps-1;i++) {
+    if((i>0) && (E[i] > E[i-1])) valid++; 
     mindEdp = std::min(mindEdp, dEdP[i]);
     maxdEdp = std::max(maxdEdp, dEdP[i]);
   }
+  nsteps = valid;
   
   //Evaluate photosynthesis and profit at Agmax
   NumericVector photoAgMax = leafPhotosynthesisOneFunction2(E[nsteps-1], leafPsi[nsteps - 1], Catm, Patm, Tair, vpa, u, 
