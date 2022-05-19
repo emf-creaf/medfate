@@ -190,18 +190,17 @@ control = defaultControl("Sperry")
 #Initialize input
 x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
-#Call simulation function (11 days)
-d = 100:110
-S2<-spwb(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
+#Call simulation function
+S2<-spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 
 # Run the model with 'Sperry' transpiration mode using the water balance of 
 # simulated with the 'Granier' model
 WS = as.matrix(S1$Soil[, c("W.1", "W.2", "W.3", "W.4")])
-P2<-pwb(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100, 
-        W = WS[d,],
-        canopyEvaporation = S1$WaterBalance$Interception[d],
-        snowMelt = S1$WaterBalance$Snowmelt[d],
-        soilEvaporation = S1$WaterBalance$SoilEvaporation[d])
+P2<-pwb(x2, examplemeteo, latitude = 41.82592, elevation = 100, 
+        W = WS,
+        canopyEvaporation = S1$WaterBalance$Interception,
+        snowMelt = S1$WaterBalance$Snowmelt,
+        soilEvaporation = S1$WaterBalance$SoilEvaporation)
 }
 
 }

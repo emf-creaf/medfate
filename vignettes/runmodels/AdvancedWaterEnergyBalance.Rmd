@@ -3,7 +3,7 @@ title: "Advanced water and energy balance"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::html_vignette:
+  rmarkdown::html_document:
     toc: TRUE
 ---
 
@@ -296,9 +296,9 @@ x$soil$W
 x$soil$Temp
 x$canopy
 ```
-Now we are ready to call function `spwb()`. In this example, we only simulate 61 days to save computational time:
+Now we are ready to call function `spwb()`:
 ```{r}
-S = spwb(x, examplemeteo[110:170,], latitude = 41.82592, elevation = 100)
+S = spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 Function `spwb()` returns an object of class *spwb*. If we inspect its elements, we realize that the output is arranged differently than in `spwb_day()`:
 ```{r}

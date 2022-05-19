@@ -3,7 +3,7 @@ title: "Water pools and species interactions"
 author: "Miquel De Caceres (CREAF)"
 date: "`r Sys.Date()`"
 output:
-  rmarkdown::html_vignette:
+  rmarkdown::html_document:
     toc: yes
 ---
 
