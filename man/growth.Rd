@@ -136,8 +136,7 @@ control = defaultControl("Sperry")
 #Initialize vegetation input
 x2 = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
-#Call simulation function (11 days)
-d = 100:110
-G2<-growth(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
+#Call simulation function
+G2<-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 }
 }
