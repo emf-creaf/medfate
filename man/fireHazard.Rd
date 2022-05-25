@@ -12,9 +12,9 @@ fireHazard(x, SpParams, forest = NULL, standardConditions = FALSE,
            freq="days", fun = "max")
 }
 \arguments{
-  \item{x}{An object of class \code{\link{spwb}}, \code{\link{pwb}}, \code{\link{growth}} or \code{\link{fordyn}}.}
+  \item{x}{An object of class \code{\link{spwb}}, \code{\link{spwb_day}}, \code{\link{pwb}}, \code{\link{growth}}, \code{\link{growth_day}} or \code{\link{fordyn}}.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsDefinition}} and \code{\link{SpParamsMED}}).}
-  \item{forest}{An object of class \code{\link{forest}} (needed if \code{x} is of class \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{growth}}).}
+  \item{forest}{An object of class \code{\link{forest}} (needed if \code{x} is not of class \code{\link{fordyn}}).}
   \item{standardConditions}{A flag to indicate that standard fire weather conditions are to be used (instead of deriving fuel moisture and windspeed from \code{x}).}
   \item{freq}{Frequency of summary statistics (see \code{\link{cut.Date}}).}
   \item{fun}{Summary function (by default, maximum values).}
@@ -33,4 +33,32 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
 \code{\link{spwb}}, \code{\link{fuel_FCCS}}, \code{\link{fire_FCCS}}
+}
+\examples{
+
+\dontrun{
+#Load example daily meteorological data
+data(examplemeteo)
+
+#Load example plot plant data
+data(exampleforestMED)
+
+#Default species parameterization
+data(SpParamsMED)
+
+#Initialize soil with default soil params (4 layers)
+examplesoil = soil(defaultSoilParams(4))
+
+#Initialize control parameters
+control = defaultControl("Granier")
+
+#Initialize input
+x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+
+#Call simulation function
+S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
+
+#Evaluate fire hazard
+F1 <-fireHazard(S1, SpParamsMED, exampleforestMED)
+}
 }

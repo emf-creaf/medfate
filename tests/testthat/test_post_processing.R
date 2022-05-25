@@ -13,6 +13,7 @@ test_that("Can produce all basic spwb plots and summaries",{
   expect_s3_class(x1, "spwbInput")
   S1<-spwb(x1, examplemeteo[d,], latitude = 41.82592, elevation = 100)
   expect_s3_class(S1, "spwb")
+  expect_type(fireHazard(S1, SpParamsMED, exampleforestMED), "double")
   expect_s3_class(plot(S1, "PET_Precipitation"), "ggplot")
   expect_s3_class(plot(S1, "PET_NetRain"), "ggplot")
   expect_s3_class(plot(S1, "Snow"), "ggplot")
@@ -57,6 +58,7 @@ test_that("Can produce all advanced spwb plots and summaries",{
   expect_s3_class(x2, "spwbInput")
   S2<-spwb(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
   expect_s3_class(S2, "spwb")
+  expect_type(fireHazard(S2, SpParamsMED, exampleforestMED), "double")
   expect_s3_class(plot(S2, "HydraulicRedistribution"), "ggplot")
   expect_s3_class(plot(S2, "SoilPlantConductance"), "ggplot")
   expect_s3_class(plot(S2, "LeafPsiMin"), "ggplot")
@@ -202,6 +204,7 @@ test_that("Can produce all advanced spwb_day plots",{
                 latitude = 41.82592, elevation = 100, slope=0, aspect=0,
                 prec = examplemeteo$Precipitation[d1])
   expect_s3_class(sd2, "spwb_day")
+  expect_type(fireHazard(sd2, SpParamsMED, exampleforestMED), "double")
   expect_s3_class(plot(sd2, "LeafPsi"), "ggplot")
   expect_s3_class(plot(sd2, "LeafPsiAverage"), "ggplot")
   expect_s3_class(plot(sd2, "RootPsi"), "ggplot")
@@ -245,6 +248,7 @@ test_that("Can produce all basic growth plots and summaries",{
   G1<-growth(x1, examplemeteo[d,], latitude = 41.82592, elevation = 100)
   expect_s3_class(G1, "growth")
   
+  expect_type(fireHazard(G1, SpParamsMED, exampleforestMED), "double")
   expect_s3_class(plot(G1, "BiomassBalance"), "ggplot")
   expect_s3_class(plot(G1, "GrossPhotosynthesis"), "ggplot")
   expect_s3_class(plot(G1, "MaintenanceRespiration"), "ggplot")
@@ -299,6 +303,7 @@ test_that("Can produce all advanced growth plots and summaries",{
   expect_s3_class(x2, "growthInput")
   G2<-growth(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
   expect_s3_class(G2, "growth")
+  expect_type(fireHazard(G2, SpParamsMED, exampleforestMED), "double")
   expect_s3_class(plot(G2, "FineRootArea"), "ggplot")
   expect_s3_class(plot(G2, "FRAgrowth"), "ggplot")
   expect_s3_class(plot(G2, "RootAreaLeafArea"), "ggplot")
@@ -358,6 +363,7 @@ test_that("Can produce all advanced growth_day plots",{
                 latitude = 41.82592, elevation = 100, slope=0, aspect=0,
                 prec = examplemeteo$Precipitation[d1])
   expect_s3_class(sd2, "growth_day")
+  expect_type(fireHazard(sd2, SpParamsMED, exampleforestMED), "double")
   expect_s3_class(plot(sd2, "GrossPhotosynthesis"), "ggplot")
   expect_s3_class(plot(sd2, "MaintenanceRespiration"), "ggplot")
   expect_s3_class(plot(sd2, "RootExudation"), "ggplot")

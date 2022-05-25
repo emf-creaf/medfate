@@ -33,7 +33,7 @@ List spwbDay(List x, CharacterVector date, double tmin, double tmax,
              double latitude, double elevation, double slope, double aspect,  
              double prec, double runon=0.0, bool modifyInput = true);
 List spwbDay1(List x, NumericVector meteovec, 
-              double elevation = NA_REAL, 
+              double elevation, double slope, double aspect, 
               double runon=0.0, bool verbose=false);
 List spwbDay2(List x, NumericVector meteovec, 
               double latitude, double elevation, double slope, double aspect,

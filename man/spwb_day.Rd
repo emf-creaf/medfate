@@ -36,6 +36,8 @@ Function \code{spwb_day()} returns a list of class \code{spwb_day} with the foll
 
 \itemize{
   \item{\code{"cohorts"}: A data frame with cohort information, copied from \code{\link{spwbInput}}.}
+  \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.} 
+  \item{\code{"weather"}: A vector with the input weather.}
   \item{\code{"WaterBalance"}: A vector of water balance components (rain, snow, net rain, infiltration, ...) for the simulated day, equivalent to one row of 'WaterBalance' object given in \code{\link{spwb}}.}
   \item{\code{"Soil"}: A data frame with results for each soil layer:
     \itemize{

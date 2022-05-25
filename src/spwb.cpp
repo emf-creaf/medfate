@@ -19,7 +19,7 @@ using namespace Rcpp;
 
 // Soil water balance with simple hydraulic model
 List spwbDay1(List x, NumericVector meteovec, 
-              double elevation = NA_REAL, 
+              double elevation, double slope, double aspect,
               double runon=0.0, bool verbose = false) {
 
   //Control parameters
@@ -146,6 +146,9 @@ List spwbDay1(List x, NumericVector meteovec,
   
   NumericVector psiVec = psi(soil, soilFunctions); //Calculate current soil water potential for output
   
+  NumericVector topo = NumericVector::create(elevation, slope, aspect);
+  topo.attr("names") = CharacterVector::create("elevation", "slope", "aspect");
+  
   NumericVector DB = NumericVector::create(_["PET"] = pet, 
                                            _["Rain"] = hydroInputs["Rain"], _["Snow"] = hydroInputs["Snow"], 
                                            _["NetRain"] = hydroInputs["NetRain"], _["Snowmelt"] = hydroInputs["Snowmelt"],
@@ -159,6 +162,8 @@ List spwbDay1(List x, NumericVector meteovec,
                                    _["PlantExtraction"] = ExtractionVec, 
                                    _["psi"] = psiVec);
   List l = List::create(_["cohorts"] = clone(cohorts),
+                        _["topography"] = topo,
+                        _["weather"] = clone(meteovec),
                         _["WaterBalance"] = DB, 
                         _["Soil"] = SB,
                         _["Stand"] = Stand,
@@ -323,6 +328,9 @@ List spwbDay2(List x, NumericVector meteovec,
   }
   NumericVector psiVec = psi(soil, soilFunctions); //Calculate current soil water potential for output
   
+  NumericVector topo = NumericVector::create(elevation, slope, aspect);
+  topo.attr("names") = CharacterVector::create("elevation", "slope", "aspect");
+  
   NumericVector DB = NumericVector::create(_["PET"] = pet,
                                            _["Rain"] = hydroInputs["Rain"],_["Snow"] = hydroInputs["Snow"],_["NetRain"] = hydroInputs["NetRain"], _["Snowmelt"] = hydroInputs["Snowmelt"],
                                            _["Runon"] = hydroInputs["Runon"], 
@@ -341,6 +349,8 @@ List spwbDay2(List x, NumericVector meteovec,
                                    _["psi"] = psiVec);
   
   List l = List::create(_["cohorts"] = clone(cohorts),
+                        _["topography"] = topo,
+                        _["weather"] = clone(meteovec),
                         _["WaterBalance"] = DB, 
                         _["EnergyBalance"] = EnergyBalance,
                         _["Soil"] = SB, 
@@ -415,10 +425,11 @@ List spwbDay(List x, CharacterVector date, double tmin, double tmax, double rhmi
       Named("rhmin") = rhmin, 
       Named("rhmax") = rhmax, 
       Named("rad") = rad, 
+      Named("wind") = wind, 
       Named("pet") = pet,
       Named("er") = er);
     s = spwbDay1(x, meteovec,
-                 elevation, 
+                 elevation, slope, aspect, 
                  runon, verbose);
   } else {
     NumericVector meteovec = NumericVector::create(

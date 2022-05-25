@@ -5,6 +5,7 @@
 # Version 2.7.4
 - Reducing unused parameters for Sperry model
 - Reducing computational time for Sperry model
+- Function fireHazard now accepts objects spwb_day and growth_day
 
 # Version 2.7.3
 - Cleaning for CRAN

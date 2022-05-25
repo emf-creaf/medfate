@@ -1309,6 +1309,8 @@ List growthDayInner(List x, NumericVector meteovec,
   List l;
   if(transpirationMode=="Granier"){
        l = List::create(_["cohorts"] = clone(cohorts),
+                        _["topography"] = spwbOut["topography"],
+                        _["weather"] = spwbOut["weather"],
                         _["WaterBalance"] = spwbOut["WaterBalance"], 
                         _["Soil"] = spwbOut["Soil"], 
                         _["Stand"] = spwbOut["Stand"], 
@@ -1319,6 +1321,8 @@ List growthDayInner(List x, NumericVector meteovec,
                         _["GrowthMortality"] = growthMortality);
   } else {
          l = List::create(_["cohorts"] = clone(cohorts),
+                          _["topography"] = spwbOut["topography"],
+                          _["weather"] = spwbOut["weather"],
                           _["WaterBalance"] = spwbOut["WaterBalance"], 
                           _["EnergyBalance"] = spwbOut["EnergyBalance"],
                           _["Soil"] = spwbOut["Soil"], 
@@ -1335,9 +1339,9 @@ List growthDayInner(List x, NumericVector meteovec,
                           _["PlantsInst"] = spwbOut["PlantsInst"],
                           _["SunlitLeavesInst"] = spwbOut["SunlitLeavesInst"],
                           _["ShadeLeavesInst"] = spwbOut["ShadeLeavesInst"],
-                          _["LabileCarbonBalanceInst"] = labileCBInst,
-                          _["LightExtinction"] = spwbOut["LightExtinction"],
-                          _["CanopyTurbulence"] = spwbOut["CanopyTurbulence"]);
+                          _["LabileCarbonBalanceInst"] = labileCBInst);
+    l.push_back(spwbOut["LightExtinction"], "LightExtinction");
+    l.push_back(spwbOut["CanopyTurbulence"], "CanopyTurbulence");
   }
   l.attr("class") = CharacterVector::create("growth_day","list");
   return(l);
