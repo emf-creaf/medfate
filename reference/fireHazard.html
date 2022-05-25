@@ -63,11 +63,11 @@
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
-<dd><p>An object of class <code><a href="spwb.html">spwb</a></code>, <code><a href="spwb.html">pwb</a></code>, <code><a href="growth.html">growth</a></code> or <code><a href="fordyn.html">fordyn</a></code>.</p></dd>
+<dd><p>An object of class <code><a href="spwb.html">spwb</a></code>, <code><a href="spwb_day.html">spwb_day</a></code>, <code><a href="spwb.html">pwb</a></code>, <code><a href="growth.html">growth</a></code>, <code><a href="spwb_day.html">growth_day</a></code> or <code><a href="fordyn.html">fordyn</a></code>.</p></dd>
 <dt>SpParams</dt>
 <dd><p>A data frame with species parameters (see <code><a href="SpParams.html">SpParamsDefinition</a></code> and <code><a href="SpParams.html">SpParamsMED</a></code>).</p></dd>
 <dt>forest</dt>
-<dd><p>An object of class <code><a href="forest.html">forest</a></code> (needed if <code>x</code> is of class <code><a href="spwb.html">spwb</a></code>, <code><a href="spwb.html">pwb</a></code> or <code><a href="growth.html">growth</a></code>).</p></dd>
+<dd><p>An object of class <code><a href="forest.html">forest</a></code> (needed if <code>x</code> is not of class <code><a href="fordyn.html">fordyn</a></code>).</p></dd>
 <dt>standardConditions</dt>
 <dd><p>A flag to indicate that standard fire weather conditions are to be used (instead of deriving fuel moisture and windspeed from <code>x</code>).</p></dd>
 <dt>freq</dt>
@@ -96,6 +96,36 @@
     <div class="dont-index"><p><code><a href="spwb.html">spwb</a></code>, <code><a href="fuel_properties.html">fuel_FCCS</a></code>, <code><a href="fire_behaviour.html">fire_FCCS</a></code></p></div>
     </div>
 
+    <div id="ref-examples">
+    <h2>Examples</h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
+<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
+<span class="r-in"><span class="co">#Load example daily meteorological data</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co">#Load example plot plant data</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co">#Default species parameterization</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co">#Initialize soil with default soil params (4 layers)</span></span>
+<span class="r-in"><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co">#Initialize control parameters</span></span>
+<span class="r-in"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co">#Initialize input</span></span>
+<span class="r-in"><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co">#Call simulation function</span></span>
+<span class="r-in"><span class="va">S1</span><span class="op">&lt;-</span><span class="fu"><a href="spwb.html">spwb</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co">#Evaluate fire hazard</span></span>
+<span class="r-in"><span class="va">F1</span> <span class="op">&lt;-</span><span class="fu">fireHazard</span><span class="op">(</span><span class="va">S1</span>, <span class="va">SpParamsMED</span>, <span class="va">exampleforestMED</span><span class="op">)</span></span>
+<span class="r-in"><span class="op">}</span></span>
+</code></pre></div>
+    </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top"><h2 data-toc-skip>Contents</h2>

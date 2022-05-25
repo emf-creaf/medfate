@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-05-19</h4>
+            <h4 data-toc-skip class="date">2022-05-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/BasicWaterBalance.Rmd" class="external-link"><code>vignettes/runmodels/BasicWaterBalance.Rmd</code></a></small>
       <div class="hidden name"><code>BasicWaterBalance.Rmd</code></div>
@@ -259,7 +259,8 @@ variables are required. The output of <code><a href="../../reference/spwb_day.ht
 with five elements:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sd1</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] "cohorts"      "WaterBalance" "Soil"         "Stand"        "Plants"</span></code></pre>
+<pre><code><span class="co">## [1] "cohorts"      "topography"   "weather"      "WaterBalance" "Soil"        </span>
+<span class="co">## [6] "Stand"        "Plants"</span></code></pre>
 <ul>
 <li>
 <strong>cohorts</strong>: Table with the species code and species
@@ -287,6 +288,16 @@ leaves), canopy water retention capacity and the proportion of light
 <span class="co">## T1_148 148  Pinus halepensis</span>
 <span class="co">## T2_168 168      Quercus ilex</span>
 <span class="co">## S1_165 165 Quercus coccifera</span>
+<span class="co">## </span>
+<span class="co">## $topography</span>
+<span class="co">## elevation     slope    aspect </span>
+<span class="co">##       100         0         0 </span>
+<span class="co">## </span>
+<span class="co">## $weather</span>
+<span class="co">##       tday       prec       tmin       tmax      rhmin      rhmax        rad </span>
+<span class="co">##  6.2323731  0.0000000  0.3881289 10.0320962 42.0207334 82.3036989 28.7201692 </span>
+<span class="co">##       wind        pet         er </span>
+<span class="co">##  3.3228840  5.0233468  0.1395374 </span>
 <span class="co">## </span>
 <span class="co">## $WaterBalance</span>
 <span class="co">##             PET            Rain            Snow         NetRain        Snowmelt </span>
