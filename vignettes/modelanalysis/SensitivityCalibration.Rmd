@@ -94,11 +94,11 @@ parNames
 ```{r}
 #Parameter minimum and maximum values
 parMin = c(0.1,0.1,0.1,
-           100,100,100,
-           -7,-7,-7,
+           100,100,50,
+           -5,-5,-5,
            25,25)
 parMax = c(2,2,2,
-           1000,1000,1000,
+           500,500,300,
            -1,-1,-1,
            75,75)
 ```
@@ -223,7 +223,7 @@ print(sa_transp)
 `mu.star` values inform about the mean of elementary effects of each $i$ factor and can be used to rank all the input factors, whereas `sigma` inform about the degree of interaction of the $i$-th factor with others. According to the result of this sensitivity analysis, leaf area index (`LAI_live`) parameters are the most relevant to determine total transpiration, much more than fine root distribution (`Z50`), the rock fragment content in the soil and the water potentials corresponding to whole-plant conductance reduction (i.e. `Psi_Extract`).
 
 ```{r, fig.width=5, fig.height = 5, fig.align="center"}
-plot(sa_transp, xlim=c(0,200))
+plot(sa_transp, xlim=c(0,150))
 ```
 
 We can run the same sensitivity analysis but focusing on the input factors relevant for predicted plant drought stress (i.e. using `of_stress` as model output function):
@@ -274,7 +274,7 @@ print(sa_eval)
 Contrary to the previous cases, the contribution of LAI parameters is similar to that of parameters of fine root distribution (`Z50`), which appear as more relevant than the water potentials corresponding to whole-plant conductance reduction (i.e. `Psi_Extract`). 
 
 ```{r, fig.width=5, fig.height = 5, fig.align="center"}
-plot(sa_eval, xlim=c(0,100))
+plot(sa_eval, xlim=c(0,15))
 ```
 
 ## Calibration
@@ -289,8 +289,8 @@ To simplify our analysis and avoid problems of parameter identifiability, we foc
 #Parameter names of interest
 parNames = c(paste0(PH_coh,"/Z50"), paste0(QI_coh,"/Z50"), paste0(QC_coh,"/Z50"))
 #Parameter minimum and maximum values
-parMin = c(100,100,100)
-parMax = c(1000,1000,1000)
+parMin = c(50,50,50)
+parMax = c(500,500,300)
 parIni = x1$below$Z50
 ```
 
@@ -328,7 +328,7 @@ The calibration result is the following:
 print(opt_cal)
 ```
 
-Note that the optimized parameters are close to those of `Z50` in the original `x1`. 
+Note that the optimized parameters are relatively close to those of `Z50` in the original `x1`. 
 ```{r}
 cbind( x1$below[,"Z50", drop = FALSE], opt_cal$par)
 ```
@@ -348,7 +348,7 @@ mcmc_setup <- createBayesianSetup(likelihood = of_eval,
                                   prior = prior, 
                                   names = parNames)
 ```
-Function `createBayesianSetup()` automatically creates the posterior and various convenience functions for the Markov Chain Monte Carlo (MCMC) samplers. The `runMCMC()` function is the main wrapper for all other implemented MCMC functions. Here we call it with three chains of 3000 iterations each.
+Function `createBayesianSetup()` automatically creates the posterior and various convenience functions for the Markov Chain Monte Carlo (MCMC) samplers. The `runMCMC()` function is the main wrapper for all other implemented MCMC functions. Here we call it with nine chains of 1000 iterations each.
 ```{r, eval = params$complete_rebuild}
 mcmc_out <- runMCMC(
   bayesianSetup = mcmc_setup, 
@@ -385,9 +385,9 @@ correlationPlot(mcmc_out)
 ```
  Here it can be observed the large correlation between `Z50` of the two tree cohorts. Since their LAI values are similar, a similar  effect on soil water depletion can be obtained to some extent by exchanging their fine root distribution.
 
-Posterior model prediction distributions can be obtained if we take samples from the Markov chains and use them to perform simulations (here we use sample size of 99 but a larger value is preferred).
+Posterior model prediction distributions can be obtained if we take samples from the Markov chains and use them to perform simulations (here we use sample size of 100 but a larger value is preferred).
 ```{r}
-s = getSample(mcmc_out, numSamples = 99)
+s = getSample(mcmc_out, numSamples = 100)
 head(s)
 ```
 To this aim, **medfate** includes function `multiple_runs()` that allows running a simulation model with a matrix of parameter values. For example, the following code runs `spwb()` with all combinations of fine root distribution specified in `s`.
@@ -409,7 +409,7 @@ plot(density(unlist(lapply(MS, sf_stress))),
 
 Finally, we can use object `prior` to generate another sample under the prior parameter distribution, perform simulations: 
 ```{r}
-s_prior = prior$sampler(99)
+s_prior = prior$sampler(100)
 colnames(s_prior)<- parNames
 MS_prior = multiple_runs(s_prior, x = x1, meteo = examplemeteo,
                          latitude = 41.82592, elevation = 100, verbose = FALSE)
@@ -419,7 +419,7 @@ and compare the prior prediction uncertainty with the posterior prediction uncer
 ```{r, fig.height=4, fig.width=5}
 plot(density(unlist(lapply(MS_prior, sf_transp))), main = "Transpiration", 
      xlab = "Total transpiration (mm)",
-     xlim = c(320,345), ylim = c(0,0.5))
+     xlim = c(340,360), ylim = c(0,5))
 lines(density(unlist(lapply(MS, sf_transp))), col = "red")
 legend("topleft", legend = c("Prior", "Posterior"), 
        col = c("black", "red"), lty=1, bty="n")
@@ -428,7 +428,7 @@ legend("topleft", legend = c("Prior", "Posterior"),
 ```{r, fig.height=4, fig.width=5}
 plot(density(unlist(lapply(MS_prior, sf_stress))), main = "Plant stress", 
      xlab = "Average plant stress",
-     xlim = c(0,30), ylim = c(0,0.3))
+     xlim = c(0,30), ylim = c(0,2))
 lines(density(unlist(lapply(MS, sf_stress))), col = "red")
 legend("topleft", legend = c("Prior", "Posterior"), col = c("black", "red"), lty=1, bty="n")
 ```
