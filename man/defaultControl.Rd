@@ -59,7 +59,7 @@ A list, with the following options (default values in parentheses):
    \item{\code{capacitance (=FALSE)}: Whether the effect of plant water compartments is considered in simulations.}
    \item{\code{multiLayerBalance (=FALSE)}: Flag to indicate multiple canopy energy balance. If \code{FALSE}, canopy is considered a single layer for energy balance.}
    \item{\code{taper (= TRUE)}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
-   \item{\code{gainModifier, costModifier (= 1)}: Modifiers (exponents) of the gain and cost functions defined in Sperry et al. (2016).}
+   \item{\code{maximumStemConductance (= 10)}: Maximum allowed value for the stem maximum hydraulic conductance (in mmol·s-1·m-2·MPa-1). Introduced to avoid excessive hydraulic redistribution caused by species with small size (i.e. very large stem conductance).}
    \item{\code{klatstem (= 0.01)}: Stem symplastic-apoplastic lateral conductance (in mmol·s-1·m-2·MPa-1). Only relevant when \code{capacitance = TRUE}.}
    \item{\code{klatleaf (= 0.01)}: Leaf symplastic-apoplastic lateral conductance (in mmol·s-1·m-2·MPa-1). Only relevant when \code{capacitance = TRUE}.}
    \item{\code{numericParams}: A list with the following elements:

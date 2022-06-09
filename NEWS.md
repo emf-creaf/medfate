@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.7.5
+- Maximum stem conductance to avoid overestimation of stem conductance in small shrubs
+
 # Version 2.7.4
 - Reducing unused parameters for Sperry model
 - Reducing computational time for Sperry model

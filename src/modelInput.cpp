@@ -198,6 +198,8 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
   int numCohorts = SP.size();
+  
+  double maximumStemConductance = control["maximumStemConductance"];
   double fracRootResistance = control["fracRootResistance"];
   double fracLeafResistance = control["fracLeafResistance"];
   String transpirationMode = control["transpirationMode"];
@@ -233,7 +235,8 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
   for(int c=0;c<numCohorts;c++){
     //Stem maximum conductance (in mmol·m-2·s-1·MPa-1)
     VCstem_kmax[c]=maximumStemHydraulicConductance(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c],control["taper"]); 
-  
+    VCstem_kmax[c]=std::min(VCstem_kmax[c], maximumStemConductance);
+    
     //Root maximum conductance
     double rstem = (1.0/VCstem_kmax[c]);
     double rleaf = (1.0/VCleaf_kmax[c]);
