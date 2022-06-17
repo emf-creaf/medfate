@@ -73,7 +73,7 @@ We can now replace the empty `treeData` in `pobl_ctl` using functions `subset()`
 
 ```{r}
 pobl_ctl$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_CTL"), 
-                                           mapping = mapping, SpParams = SpParamsMED)
+                                         mapping_x = mapping, SpParams = SpParamsMED)
 ```
 
 We can inspect the result using:
@@ -94,12 +94,12 @@ The values of stand density and stand basal area are too low for such a dense fo
 sampled_area = pi*15^2
 ```
 
-and use this information to map the tree data again, where we specify parameter `plot.size`:
+and use this information to map the tree data again, where we specify parameter `plot_size_x`:
 
 ```{r}
 pobl_ctl$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_CTL"),
-                                           mapping = mapping, SpParams = SpParamsMED, 
-                                           plot.size = sampled_area)
+                                         mapping_x = mapping, SpParams = SpParamsMED, 
+                                         plot_size_x = sampled_area)
 ```
 
 We run again the summary:
@@ -127,8 +127,8 @@ and rerun the tree data mapping:
 
 ```{r}
 pobl_ctl$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_CTL"),
-                                           mapping = mapping, SpParams = SpParamsMED, 
-                                           plot.size = sampled_area)
+                                         mapping_x = mapping, SpParams = SpParamsMED, 
+                                         plot_size_x = sampled_area)
 ```
 
 Now the summary of the control forest stand looks like:
@@ -146,8 +146,8 @@ Here we can repeat our mapping for the managed forest plot, which has two codes 
 ```{r}
 pobl_thi_bef = emptyforest()
 pobl_thi_bef$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_THI_BEF"),
-                                               mapping = mapping, SpParams = SpParamsMED, 
-                                               plot.size = sampled_area)
+                                             mapping_x = mapping, SpParams = SpParamsMED, 
+                                             plot_size_x = sampled_area)
 summary(pobl_thi_bef$treeData)
 ```
 
@@ -173,8 +173,8 @@ Now we repeat our mapping:
 
 ```{r}
 pobl_thi_bef$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_THI_BEF"),
-                                               mapping = mapping, SpParams = SpParamsMED, 
-                                               plot.size = sampled_area)
+                                             mapping_x = mapping, SpParams = SpParamsMED, 
+                                             plot_size_x = sampled_area)
 
 summary(pobl_thi_bef, SpParamsMED)
 ```
@@ -184,8 +184,8 @@ Like the control plot, these statistics indicate a dense oak forest. We can repe
 ```{r}
 pobl_thi_aft = emptyforest("POBL_THI_AFT")
 pobl_thi_aft$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_THI_AFT"),
-                                               mapping = mapping, SpParams = SpParamsMED, 
-                                               plot.size = sampled_area)
+                                             mapping_x = mapping, SpParams = SpParamsMED, 
+                                             plot_size_x = sampled_area)
 summary(pobl_thi_aft, SpParamsMED)
 ```
 
