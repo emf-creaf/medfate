@@ -103,6 +103,7 @@ processing his/her own data.</p>
 <span class="co">#&gt; Registered S3 method overwritten by 'ape':</span>
 <span class="co">#&gt;   method   from </span>
 <span class="co">#&gt;   plot.mst spdep</span>
+<span class="co">#&gt; Package 'medfateutils' [ver. 0.1.4]</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/meteoland/index.html" class="external-link">meteoland</a></span><span class="op">)</span>
 <span class="co">#&gt; Loading required package: sp</span></code></pre></div>
 </div>
@@ -190,7 +191,7 @@ variable names in <code>poblet_trees</code>:</p>
 <strong>medfateutils</strong>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pobl_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span><span class="op">)</span>, 
-                                           mapping <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span><span class="op">)</span></code></pre></div>
+                                         mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span><span class="op">)</span></code></pre></div>
 <p>We can inspect the result using:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_ctl</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
@@ -232,7 +233,7 @@ using:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sampled_area</span> <span class="op">=</span> <span class="va">pi</span><span class="op">*</span><span class="fl">15</span><span class="op">^</span><span class="fl">2</span></code></pre></div>
 <p>and use this information to map the tree data again, where we specify
-parameter <code>plot.size</code>:</p>
+parameter <code>plot_size_x</code>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pobl_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span><span class="op">)</span>,
                                          mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
