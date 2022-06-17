@@ -4,6 +4,7 @@
 
 # Version 2.7.5
 - Maximum stem conductance to avoid overestimation of stem conductance in small shrubs
+- Bug correction in summary.forest
 
 # Version 2.7.4
 - Reducing unused parameters for Sperry model

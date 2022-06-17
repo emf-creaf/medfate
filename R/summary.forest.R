@@ -60,7 +60,7 @@ summary.forest<-function(object, SpParams, mode = "MED", detailed = FALSE, ...) 
   }
   summaryFuel<-function(x, SpParams) {
     ntree = nrow(x$treeData)
-    nshrub = nrow(x$treeData)
+    nshrub = nrow(x$shrubData)
     Fuelc = plant_fuel(x, SpParams, mode= mode)
     Fuelt = 0
     Fuelsh = 0
@@ -72,7 +72,8 @@ summary.forest<-function(object, SpParams, mode = "MED", detailed = FALSE, ...) 
     else return(c(Fuel= (Fuelt+Fuelsh), Fuel_trees = Fuelt,
                   Fuel_shrubs = Fuelsh))
   }
-  s = c(summaryNumber(object, SpParams),
+  s = list(ID = object$ID)
+  s = c(s, summaryNumber(object, SpParams),
         summaryBasalArea(object, SpParams),
         summaryCover(object, SpParams),
         summaryLAI(object,SpParams),
@@ -84,13 +85,14 @@ summary.forest<-function(object, SpParams, mode = "MED", detailed = FALSE, ...) 
   return(s)
 }
 print.summary.forest<-function(x, digits=getOption("digits"),...) {
-  cat(paste("Tree density (ind/ha):", x["N"],"\n"))
-  cat(paste("Tree BA (m2/ha):", round(x["BA"],digits),"\n"))
-  cat(paste("Cover (%) trees (open ground):", round(x["Tree_cover"],digits), " shrubs:", round(x["Shrub_cover"],digits),"\n"))
-  cat(paste("Shrub crown phytovolume (m3/m2):", round(x["Phytovolume"],digits),"\n"))
-  cat(paste("LAI (m2/m2) total:", round(x["LAI"], digits)," trees:", round(x["LAI_trees"], digits),
-            " shrubs:", round(x["LAI_shrubs"], digits),"\n"))
-  cat(paste("Live fine fuel (kg/m2) total:", round(x["Fuel"], digits)," trees:", round(x["Fuel_trees"], digits),
-            " shrubs:", round(x["Fuel_shrubs"], digits),"\n"))
-  cat(paste("PAR ground (%):", round(x["PARground"],digits)," SWR ground (%):", round(x["SWRground"],digits),"\n"))
+  if(x[["ID"]]!="") cat(paste("ID:", x[["ID"]],"\n"))
+  cat(paste("Tree density (ind/ha):", x[["N"]],"\n"))
+  cat(paste("Tree BA (m2/ha):", round(x[["BA"]],digits),"\n"))
+  cat(paste("Cover (%) trees (open ground):", round(x[["Tree_cover"]],digits), " shrubs:", round(x[["Shrub_cover"]],digits),"\n"))
+  cat(paste("Shrub crown phytovolume (m3/m2):", round(x[["Phytovolume"]],digits),"\n"))
+  cat(paste("LAI (m2/m2) total:", round(x[["LAI"]], digits)," trees:", round(x[["LAI_trees"]], digits),
+            " shrubs:", round(x[["LAI_shrubs"]], digits),"\n"))
+  cat(paste("Live fine fuel (kg/m2) total:", round(x[["Fuel"]], digits)," trees:", round(x[["Fuel_trees"]], digits),
+            " shrubs:", round(x[["Fuel_shrubs"]], digits),"\n"))
+  cat(paste("PAR ground (%):", round(x[["PARground"]],digits)," SWR ground (%):", round(x[["SWRground"]],digits),"\n"))
 }
