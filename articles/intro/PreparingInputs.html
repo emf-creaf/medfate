@@ -215,6 +215,7 @@ of the <code>forest</code> object using the <code>summary</code>
 function defined in <strong>medfate</strong> for this object class:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
+<span class="co">#&gt; ID: POBL_CTL </span>
 <span class="co">#&gt; Tree density (ind/ha): 267 </span>
 <span class="co">#&gt; Tree BA (m2/ha): 3.0179815 </span>
 <span class="co">#&gt; Cover (%) trees (open ground): 42.1205627  shrubs: 0 </span>
@@ -241,6 +242,7 @@ parameter <code>plot_size_x</code>:</p>
 <p>We run again the summary:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
+<span class="co">#&gt; ID: POBL_CTL </span>
 <span class="co">#&gt; Tree density (ind/ha): 3777.27731604765 </span>
 <span class="co">#&gt; Tree BA (m2/ha): 42.6957047 </span>
 <span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span>
@@ -273,6 +275,7 @@ defined, we can include them in our mapping:</p>
 <p>Now the summary of the control forest stand looks like:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
+<span class="co">#&gt; ID: POBL_CTL </span>
 <span class="co">#&gt; Tree density (ind/ha): 3777.27731604765 </span>
 <span class="co">#&gt; Tree BA (m2/ha): 42.6957047 </span>
 <span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span>
@@ -355,6 +358,7 @@ thinning intervention:</p>
                                              mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
                                              plot_size_x <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_thi_aft</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
+<span class="co">#&gt; ID: POBL_THI_AFT </span>
 <span class="co">#&gt; Tree density (ind/ha): 2673.80304394384 </span>
 <span class="co">#&gt; Tree BA (m2/ha): 31.6162035 </span>
 <span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span>
@@ -401,6 +405,7 @@ tree cohorts using again:</p>
 <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> function:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_thi_aft</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
+<span class="co">#&gt; ID: POBL_THI_AFT </span>
 <span class="co">#&gt; Tree density (ind/ha): 2673.80304394384 </span>
 <span class="co">#&gt; Tree BA (m2/ha): 31.6162035 </span>
 <span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span>

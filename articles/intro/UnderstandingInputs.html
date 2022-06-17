@@ -1239,41 +1239,41 @@ parameterization is obtained using function
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">control</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##  [1] "fillMissingSpParams"                 "verbose"                            </span>
-<span class="co">##  [3] "subdailyResults"                     "transpirationMode"                  </span>
-<span class="co">##  [5] "soilFunctions"                       "defaultWindSpeed"                   </span>
-<span class="co">##  [7] "snowpack"                            "leafPhenology"                      </span>
-<span class="co">##  [9] "rockyLayerDrainage"                  "unlimitedSoilWater"                 </span>
-<span class="co">## [11] "rhizosphereOverlap"                  "unfoldingDD"                        </span>
-<span class="co">## [13] "verticalLayerSize"                   "windMeasurementHeight"              </span>
-<span class="co">## [15] "cavitationRefill"                    "ndailysteps"                        </span>
-<span class="co">## [17] "nsubsteps"                           "capacitance"                        </span>
-<span class="co">## [19] "taper"                               "multiLayerBalance"                  </span>
-<span class="co">## [21] "maximumStemConductance"              "klatstem"                           </span>
-<span class="co">## [23] "klatleaf"                            "numericParams"                      </span>
-<span class="co">## [25] "fracLeafResistance"                  "fracRootResistance"                 </span>
-<span class="co">## [27] "averageFracRhizosphereResistance"    "Catm"                               </span>
-<span class="co">## [29] "thermalCapacityLAI"                  "boundaryLayerSize"                  </span>
-<span class="co">## [31] "refillMaximumRate"                   "allowDessication"                   </span>
-<span class="co">## [33] "allowStarvation"                     "allowDefoliation"                   </span>
-<span class="co">## [35] "sinkLimitation"                      "shrubDynamics"                      </span>
-<span class="co">## [37] "allocationStrategy"                  "nonStomatalPhotosynthesisLimitation"</span>
-<span class="co">## [39] "phloemConductanceFactor"             "nonSugarConcentration"              </span>
-<span class="co">## [41] "equilibriumOsmoticConcentration"     "minimumRelativeStarchForGrowth"     </span>
-<span class="co">## [43] "constructionCosts"                   "senescenceRates"                    </span>
-<span class="co">## [45] "maximumRelativeGrowthRates"          "mortalityMode"                      </span>
-<span class="co">## [47] "mortalityBaselineRate"               "mortalityRelativeSugarThreshold"    </span>
-<span class="co">## [49] "mortalityRWCThreshold"               "allowRecruitment"                   </span>
-<span class="co">## [51] "recruitmentMode"                     "removeEmptyCohorts"                 </span>
-<span class="co">## [53] "minimumCohortDensity"                "seedRain"                           </span>
-<span class="co">## [55] "seedProductionTreeHeight"            "seedProductionShrubHeight"          </span>
-<span class="co">## [57] "probRecr"                            "minTempRecr"                        </span>
-<span class="co">## [59] "minMoistureRecr"                     "minFPARRecr"                        </span>
-<span class="co">## [61] "recrTreeDBH"                         "recrTreeDensity"                    </span>
-<span class="co">## [63] "recrTreeHeight"                      "recrShrubCover"                     </span>
-<span class="co">## [65] "recrShrubHeight"                     "recrTreeZ50"                        </span>
-<span class="co">## [67] "recrShrubZ50"                        "recrTreeZ95"                        </span>
-<span class="co">## [69] "recrShrubZ95"</span></code></pre>
+<pre><code><span class="co">##  [1] "fillMissingRootParams"               "fillMissingSpParams"                </span>
+<span class="co">##  [3] "verbose"                             "subdailyResults"                    </span>
+<span class="co">##  [5] "transpirationMode"                   "soilFunctions"                      </span>
+<span class="co">##  [7] "defaultWindSpeed"                    "snowpack"                           </span>
+<span class="co">##  [9] "leafPhenology"                       "rockyLayerDrainage"                 </span>
+<span class="co">## [11] "unlimitedSoilWater"                  "rhizosphereOverlap"                 </span>
+<span class="co">## [13] "unfoldingDD"                         "verticalLayerSize"                  </span>
+<span class="co">## [15] "windMeasurementHeight"               "cavitationRefill"                   </span>
+<span class="co">## [17] "ndailysteps"                         "nsubsteps"                          </span>
+<span class="co">## [19] "capacitance"                         "taper"                              </span>
+<span class="co">## [21] "multiLayerBalance"                   "maximumStemConductance"             </span>
+<span class="co">## [23] "klatstem"                            "klatleaf"                           </span>
+<span class="co">## [25] "numericParams"                       "fracLeafResistance"                 </span>
+<span class="co">## [27] "fracRootResistance"                  "averageFracRhizosphereResistance"   </span>
+<span class="co">## [29] "Catm"                                "thermalCapacityLAI"                 </span>
+<span class="co">## [31] "boundaryLayerSize"                   "refillMaximumRate"                  </span>
+<span class="co">## [33] "allowDessication"                    "allowStarvation"                    </span>
+<span class="co">## [35] "allowDefoliation"                    "sinkLimitation"                     </span>
+<span class="co">## [37] "shrubDynamics"                       "allocationStrategy"                 </span>
+<span class="co">## [39] "nonStomatalPhotosynthesisLimitation" "phloemConductanceFactor"            </span>
+<span class="co">## [41] "nonSugarConcentration"               "equilibriumOsmoticConcentration"    </span>
+<span class="co">## [43] "minimumRelativeStarchForGrowth"      "constructionCosts"                  </span>
+<span class="co">## [45] "senescenceRates"                     "maximumRelativeGrowthRates"         </span>
+<span class="co">## [47] "mortalityMode"                       "mortalityBaselineRate"              </span>
+<span class="co">## [49] "mortalityRelativeSugarThreshold"     "mortalityRWCThreshold"              </span>
+<span class="co">## [51] "allowRecruitment"                    "recruitmentMode"                    </span>
+<span class="co">## [53] "removeEmptyCohorts"                  "minimumCohortDensity"               </span>
+<span class="co">## [55] "seedRain"                            "seedProductionTreeHeight"           </span>
+<span class="co">## [57] "seedProductionShrubHeight"           "probRecr"                           </span>
+<span class="co">## [59] "minTempRecr"                         "minMoistureRecr"                    </span>
+<span class="co">## [61] "minFPARRecr"                         "recrTreeDBH"                        </span>
+<span class="co">## [63] "recrTreeDensity"                     "recrTreeHeight"                     </span>
+<span class="co">## [65] "recrShrubCover"                      "recrShrubHeight"                    </span>
+<span class="co">## [67] "recrTreeZ50"                         "recrShrubZ50"                       </span>
+<span class="co">## [69] "recrTreeZ95"                         "recrShrubZ95"</span></code></pre>
 <p>Control parameters should normally be left to their default value
 until their effect on simulations is fully understood.</p>
 </div>
