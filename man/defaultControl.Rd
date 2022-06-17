@@ -21,6 +21,7 @@ A list, with the following options (default values in parentheses):
 \bold{General}:
 \itemize{
    \item{\code{verbose (=TRUE)}: Boolean flag to indicate console output during calculations. In function \code{fordyn} \code{verbose} is always set to FALSE.}
+   \item{\code{fillMissingRootParams (=TRUE)}: Boolean flag to indicate that functions \code{\link{spwbInput}} and \code{\link{growthInput}} should provide estimates for Z50 and Z95 if these are lacking in the forest data. Note that if \code{fillMissingRootParams} is set to \code{FALSE} then simulations may fail if the user does not provide values for Z50 and Z95 in tree or shrub data.}
    \item{\code{fillMissingSpParams (=TRUE)}: Boolean flag to indicate that functions \code{\link{spwbInput}} and \code{\link{growthInput}} should provide estimates for functional parameters if these are lacking in the species parameter table \code{\link{SpParams}}. Note that if \code{fillMissingSpParams} is set to \code{FALSE} then simulations may fail if the user does not provide values for required parameters.}
    \item{\code{subdailyResults (=FALSE)}: Boolean flag to force subdaily results to be stored (as a list called 'subdaily' of \code{\link{spwb_day}} objects, one by simulated date) in calls to \code{\link{spwb}}. In function \code{fordyn} \code{subdailyResults} is always set to FALSE.}
 }

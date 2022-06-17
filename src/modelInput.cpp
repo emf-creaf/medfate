@@ -968,51 +968,58 @@ List cloneInput(List input) {
   return(clone(input));
 }
 
-// [[Rcpp::export("forest2spwbInput")]]
-List forest2spwbInput(List x, List soil, DataFrame SpParams, List control, String mode = "MED") {
+List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootParams){
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   int ntree = treeData.nrows();
   int nshrub = shrubData.nrows();
-  NumericVector treeZ95 = treeData["Z95"];
-  NumericVector shrubZ95 = shrubData["Z95"];  
-  NumericVector treeZ50 = treeData["Z50"];
-  NumericVector shrubZ50 = shrubData["Z50"];  
   NumericVector Z95(ntree+nshrub), Z50(ntree+nshrub);
+
+  NumericVector treeZ95 = treeData["Z95"];
+  NumericVector treeZ50 = treeData["Z50"];
+  IntegerVector treeSP = treeData["Species"];
+  NumericVector treeSPZ50 = speciesNumericParameter(treeSP, SpParams, "Z50");
+  NumericVector treeSPZ95 = speciesNumericParameter(treeSP, SpParams, "Z95");
   for(int i=0;i<ntree;i++) {
-    Z95[i] = treeZ95[i];
     Z50[i] = treeZ50[i];
+    Z95[i] = treeZ95[i];
+    if(fillMissingRootParams) {
+      if(NumericVector::is_na(Z50[i])) Z50[i] = treeSPZ50[i];
+      if(NumericVector::is_na(Z95[i])) Z95[i] = treeSPZ95[i];
+      if(NumericVector::is_na(Z50[i]) && !NumericVector::is_na(Z95[i])) Z50[i] = exp(log(Z95[i])/1.4);
+    }
   }
+  NumericVector shrubZ95 = shrubData["Z95"];  
+  NumericVector shrubZ50 = shrubData["Z50"];  
+  IntegerVector shrubSP = shrubData["Species"];
+  NumericVector shrubSPZ50 = speciesNumericParameter(shrubSP, SpParams, "Z50");
+  NumericVector shrubSPZ95 = speciesNumericParameter(shrubSP, SpParams, "Z95");
   for(int i=0;i<nshrub;i++) {
-    Z95[ntree+i] = shrubZ95[i]; 
     Z50[ntree+i] = shrubZ50[i]; 
+    Z95[ntree+i] = shrubZ95[i]; 
+    if(fillMissingRootParams) {
+      if(NumericVector::is_na(Z50[ntree+i])) Z50[ntree+i] = shrubSPZ50[i];
+      if(NumericVector::is_na(Z95[ntree+i])) Z95[ntree+i] = shrubSPZ95[i];
+      if(NumericVector::is_na(Z50[ntree+i]) && !NumericVector::is_na(Z95[ntree+i])) Z50[ntree+i] = exp(log(Z95[ntree+i])/1.4);
+    }
   }
+
+  return(List::create(_["Z50"] = Z50, _["Z95"] = Z95));  
+}
+
+// [[Rcpp::export("forest2spwbInput")]]
+List forest2spwbInput(List x, List soil, DataFrame SpParams, List control, String mode = "MED") {
+  List rdc = rootDistributionComplete(x, SpParams, control["fillMissingRootParams"]);
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL, mode);
-  return(spwbInput(above, Z50, Z95, soil, SpParams, control));
+  return(spwbInput(above, rdc["Z50"], rdc["Z95"], soil, SpParams, control));
 }
 
 
 // [[Rcpp::export("forest2growthInput")]]
 List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
-  DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
-  DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
-  int ntree = treeData.nrows();
-  int nshrub = shrubData.nrows();
-  NumericVector treeZ95 = treeData["Z95"];
-  NumericVector shrubZ95 = shrubData["Z95"];  
-  NumericVector treeZ50 = treeData["Z50"];
-  NumericVector shrubZ50 = shrubData["Z50"];  
-  NumericVector Z95(ntree+nshrub), Z50(ntree+nshrub);
-  for(int i=0;i<ntree;i++) {
-    Z95[i] = treeZ95[i];
-    Z50[i] = treeZ50[i];
-  }
-  for(int i=0;i<nshrub;i++) {
-    Z95[ntree+i] = shrubZ95[i]; 
-    Z50[ntree+i] = shrubZ50[i]; 
-  }
+  List rdc = rootDistributionComplete(x, SpParams, control["fillMissingRootParams"]);
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL);
-  return(growthInput(above,  Z50, Z95, soil, SpParams, control));
+  return(growthInput(above,  rdc["Z50"], rdc["Z95"], soil, SpParams, control));
 }
 
 // [[Rcpp::export("resetInputs")]]

@@ -1,6 +1,7 @@
 defaultControl<-function(transpirationMode = "Granier") {
   return(list(
     #For all functions
+    fillMissingRootParams = TRUE,
     fillMissingSpParams = TRUE,
     verbose = TRUE,
     subdailyResults = FALSE,
