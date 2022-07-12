@@ -346,7 +346,8 @@ List growthDayInner(List x, NumericVector meteovec,
   List equilibriumOsmoticConcentration  = control["equilibriumOsmoticConcentration"];
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
   double equilibriumSapwoodTotalConc = equilibriumOsmoticConcentration["sapwood"];
-
+  double maximumStemConductance = control["maximumStemConductance"];
+  
   //Soil-plant water balance
   List spwbOut;
   if(transpirationMode=="Granier") {
@@ -1062,6 +1063,7 @@ List growthDayInner(List x, NumericVector meteovec,
           
           Al2As[j] = (LAlive)/(SA[j]/10000.0);
           VCstem_kmax[j]=maximumStemHydraulicConductance(Kmax_stemxylem[j], Hmed[j], Al2As[j] ,H[j], taper); 
+          VCstem_kmax[j]=std::min(VCstem_kmax[j], maximumStemConductance);
           
           //Update rhizosphere maximum conductance
           NumericVector VGrhizo_new = rhizosphereMaximumConductance(Ksat, newFRB, LAI_live[j], N[j],
