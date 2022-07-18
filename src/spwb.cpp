@@ -1236,6 +1236,16 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
       if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
       
+      
+      double Catm = CO2[i];
+      if(NumericVector::is_na(Catm)) {
+        Catm = control["Catm"];
+        double Catm_end = control["Catm_end"];
+        if(!NumericVector::is_na(Catm_end)) {
+          Catm = Catm + (Catm_end - Catm)*(((double) i)/((double)(numDays - 1.0)));
+        }
+      }
+      
       //If DOY == 1 reset PLC (Growth assumed)
       if(cavitationRefill=="annual") {
         if(DOY[i]==1) {
@@ -1255,13 +1265,14 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
         updatePhenology(x, DOY[i], Photoperiod[i], MeanTemperature[i]);
         updateLeaves(x, wind, false);
       }
-      
+
       //2. Water balance and photosynthesis
       if(transpirationMode=="Granier") {
         NumericVector meteovec = NumericVector::create(
           Named("tday") = MeanTemperature[i], Named("tmax") = MaxTemperature[i],Named("tmin") = MinTemperature[i],
           Named("prec") = Precipitation[i], Named("rhmin") = MinRelativeHumidity[i], Named("rhmax") = MaxRelativeHumidity[i],
           Named("rad") = Radiation[i], 
+          Named("Catm") = Catm,
           Named("pet") = PET[i],
           Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
         try{
@@ -1300,8 +1311,6 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
         double rhmin = MinRelativeHumidity[i];
         double rhmax = MaxRelativeHumidity[i];
         double rad = Radiation[i];
-        double Catm = CO2[i];
-        if(NumericVector::is_na(Catm)) Catm = control["Catm"];
         PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
         NumericVector meteovec = NumericVector::create(
           Named("tmin") = tmin, 
@@ -1566,6 +1575,16 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
     if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
     
+    
+    double Catm = CO2[i];
+    if(NumericVector::is_na(Catm)) {
+      Catm = control["Catm"];
+      double Catm_end = control["Catm_end"];
+      if(!NumericVector::is_na(Catm_end)) {
+        Catm = Catm + (Catm_end - Catm)*(((double) i)/((double)(numDays - 1.0)));
+      }
+    }
+    
     //0. Soil moisture
     soil["W"] = W(i,_);
     Wdays(i,_) = W(i,_);
@@ -1600,7 +1619,8 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       NumericVector meteovec = NumericVector::create(
         Named("tday") = MeanTemperature[i], Named("tmax") = MaxTemperature[i],Named("tmin") = MinTemperature[i],
         Named("prec") = Precipitation[i], Named("rhmin") = MinRelativeHumidity[i], Named("rhmax") = MaxRelativeHumidity[i],
-        Named("tday") = MeanTemperature[i], 
+        Named("tday") = MeanTemperature[i],
+        Named("Catm") = Catm,
         Named("pet") = PET[i]);
       try{
         s = transpirationGranier(x, meteovec, 
@@ -1634,7 +1654,6 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       double rhmax = MaxRelativeHumidity[i];
       double rad = Radiation[i];
       double prec = Precipitation[i];
-      double Catm = CO2[i];
       NumericVector meteovec = NumericVector::create(
         Named("tmin") = tmin, 
         Named("tmax") = tmax,

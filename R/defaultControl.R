@@ -34,6 +34,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     fracRootResistance = 0.4,
     averageFracRhizosphereResistance = 0.15,
     Catm = 386,
+    Catm_end = NA,
     thermalCapacityLAI = 1000000,
     boundaryLayerSize = 2000,
     refillMaximumRate = 0.05,

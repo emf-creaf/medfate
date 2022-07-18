@@ -7,10 +7,24 @@
   dates = as.Date(row.names(weather))
   ndays = length(dates)
   
+  #Calculate FCCS without FMC
+  fccs = fuel_FCCS(forest, SpParams)
+  cohLoading = plant_fuel(forest, SpParams)
+  cohHeight = plant_height(forest)
+  cohHeight[is.na(cohHeight)] = 0
+  cohCR = plant_crownRatio(forest,SpParams)
+  cohCR[is.na(cohCR)] = 0
+  
   fb_vec = vector("list", ndays)
   for(i in 1:ndays){
+    cohortFMC = x$Plants$LFMC[i,]
+    if(fccs$w[1]>0) fccs$ActFMC[1] = .layerFuelAverageParameter(200.0, 10000.0, cohortFMC, cohLoading, cohHeight, cohCR)
+    else fccs$ActFMC[1] = NA
+    if(fccs$w[2]>0.0) fccs$ActFMC[2] = .layerFuelAverageParameter(0.0, 200.0, cohortFMC, cohLoading, cohHeight, cohCR)
+    else fccs$ActFMC[1] = NA
+    
+    
     windSpeed = weather$WindSpeed[i]
-    fccs = fuel_FCCS(forest, SpParams, cohortFMC = fmc[i,])
     vp = meteoland::utils_averageDailyVP(Tmin = weather$MinTemperature[i], Tmax = weather$MaxTemperature[i],
                                          RHmin = weather$MinRelativeHumidity[i], RHmax = weather$MaxRelativeHumidity[i])
     D = max(0, meteoland::utils_saturationVP(weather$MaxTemperature[i]) - vp)
