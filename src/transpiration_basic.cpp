@@ -95,6 +95,7 @@ List transpirationGranier(List x, NumericVector meteovec,
   double rhmin = meteovec["rhmin"];
   double tmax = meteovec["tmax"];
   double tmin = meteovec["tmin"];
+  double Catm = meteovec["Catm"];
   //Daily average water vapor pressure at the atmosphere (kPa)
   double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin,rhmax);
   //Atmospheric pressure (kPa)
@@ -137,7 +138,8 @@ List transpirationGranier(List x, NumericVector meteovec,
   NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
   NumericVector Psi_Critic = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Critic"]);
   NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
-  NumericVector WUE_decay(numCohorts, 0.2812);
+  NumericVector WUE_par(numCohorts, 0.2812);
+  NumericVector WUE_co2(numCohorts, 0.0025);
   NumericVector Tmax_LAI(numCohorts, 0.134);
   NumericVector Tmax_LAIsq(numCohorts, -0.006);
   if(paramsTransp.containsElementNamed("Tmax_LAI")) {
@@ -145,7 +147,7 @@ List transpirationGranier(List x, NumericVector meteovec,
     Tmax_LAIsq = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Tmax_LAIsq"]);
   }
   if(paramsTransp.containsElementNamed("WUE_decay")) {
-    WUE_decay = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_decay"]);
+    WUE_par = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_decay"]);
   }
   
   //Water storage parameters
@@ -329,7 +331,9 @@ List transpirationGranier(List x, NumericVector meteovec,
     }
     
     //Photosynthesis
-    Agplant[c] = WUE[c]*Eplant[c]*std::min(1.0, pow(PARcohort[c]/100.0,WUE_decay[c]));
+    double fpar = std::min(1.0, pow(PARcohort[c]/100.0,WUE_par[c]));
+    double fco2 = 1.615465*(1.0 - exp(-1*WUE_co2[c]*Catm));
+    Agplant[c] = WUE[c]*Eplant[c]*fpar*fco2;
   }
   
   //Plant water status (StemPLC, RWC, DDS)
