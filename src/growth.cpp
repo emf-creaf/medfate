@@ -1723,6 +1723,16 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
     if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
     
+    double Catm = CO2[i];
+    if(NumericVector::is_na(Catm)) {
+      Catm = control["Catm"];
+      double Catm_end = control["Catm_end"];
+      if(!NumericVector::is_na(Catm_end)) {
+        Catm = Catm + (Catm_end - Catm)*(((double) i)/((double)(numDays - 1.0)));
+      }
+    }
+    
+    
     if(unlimitedSoilWater) {
       NumericVector W = soil["W"];
       for(int h=0;h<W.size();h++) W[h] = 1.0;
@@ -1763,6 +1773,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
         Named("prec") = Precipitation[i], Named("rhmin") = rhmin, Named("rhmax") = rhmax,
         Named("rad") = rad, 
         Named("pet") = PET[i],
+        Named("Catm") = Catm,
         Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
       try{
         s = growthDayInner(x, meteovec,  
@@ -1782,8 +1793,6 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
         tminPrev = MinTemperature[i-1];
       }
       if(i<(numDays-1)) tminNext = MinTemperature[i+1]; 
-      double Catm = CO2[i];
-      if(NumericVector::is_na(Catm)) Catm = control["Catm"];
       PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
       NumericVector meteovec = NumericVector::create(
         Named("tday") = tday,

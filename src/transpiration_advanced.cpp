@@ -270,9 +270,7 @@ List transpirationSperry(List x, NumericVector meteovec,
   double rad = meteovec["rad"];
   double wind = meteovec["wind"];
   double Catm = meteovec["Catm"];
-  //If daily Catm is missing, take parameter control value instead
-  if(NumericVector::is_na(Catm)) Catm = control["Catm"];
-  
+
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
@@ -310,8 +308,12 @@ List transpirationSperry(List x, NumericVector meteovec,
   NumericVector Cair = canopyParams["Cair"];
   int ncanlayers = Tair.size(); //Number of canopy layers
   for(int l=0;l<ncanlayers;l++) { //If canopy layers have missing values, then initialize with Catm
-    if(NumericVector::is_na(Cair[l])) Cair[l] = Catm;
+    if(!multiLayerBalance) Cair[l] = Catm;
+    else {
+      if(NumericVector::is_na(Cair[l])) Cair[l] = Catm; 
+    }
   }
+  if(multiLayerBalance) Cair[ncanlayers-1] = Catm;
   
   //Root distribution input
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);

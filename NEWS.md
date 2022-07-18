@@ -6,6 +6,7 @@
 - Maximum stem conductance to avoid overestimation of stem conductance in small shrubs
 - Bug correction in summary.forest
 - Allows filling missing Z50/Z95 values from SpParams when creating model inputs
+- New control parameter 'Catm_end' to specify linear increase in CO2 concentration from 'Catm'
 
 # Version 2.7.4
 - Reducing unused parameters for Sperry model

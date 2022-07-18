@@ -1036,7 +1036,7 @@ void resetInputs(List x) {
     int ncanlayers = can.nrow();
     for(int i=0;i<ncanlayers;i++) {
       Tair[i] = NA_REAL;
-      Cair[i] = control["Catm"];
+      Cair[i] = NA_REAL;
       VPair[i] = NA_REAL;
     }
   }
