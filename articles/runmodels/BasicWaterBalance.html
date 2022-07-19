@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.6</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-06-29</h4>
+            <h4 data-toc-skip class="date">2022-07-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/BasicWaterBalance.Rmd" class="external-link"><code>vignettes/runmodels/BasicWaterBalance.Rmd</code></a></small>
       <div class="hidden name"><code>BasicWaterBalance.Rmd</code></div>
@@ -294,10 +294,10 @@ leaves), canopy water retention capacity and the proportion of light
 <span class="co">##       100         0         0 </span>
 <span class="co">## </span>
 <span class="co">## $weather</span>
-<span class="co">##       tday       prec       tmin       tmax      rhmin      rhmax        rad </span>
-<span class="co">##  6.2323731  0.0000000  0.3881289 10.0320962 42.0207334 82.3036989 28.7201692 </span>
-<span class="co">##       wind        pet         er </span>
-<span class="co">##  3.3228840  5.0233468  0.1395374 </span>
+<span class="co">##        tday        prec        tmin        tmax       rhmin       rhmax </span>
+<span class="co">##   6.2323731   0.0000000   0.3881289  10.0320962  42.0207334  82.3036989 </span>
+<span class="co">##         rad        wind        Catm         pet          er </span>
+<span class="co">##  28.7201692   3.3228840 386.0000000   5.0233468   0.1395374 </span>
 <span class="co">## </span>
 <span class="co">## $WaterBalance</span>
 <span class="co">##             PET            Rain            Snow         NetRain        Snowmelt </span>
@@ -326,9 +326,9 @@ leaves), canopy water retention capacity and the proportion of light
 <span class="co">## T2_168 0.86167321 0.86167321 68.57818           33.914024    0.44205280</span>
 <span class="co">## S1_165 0.03928201 0.03928201 38.32242            2.627371    0.04082999</span>
 <span class="co">##        GrossPhotosynthesis    PlantPsi          DDS   StemRWC   LeafRWC</span>
-<span class="co">## T1_148           4.3783154 -0.03408425 2.247008e-06 0.9998293 0.9979011</span>
-<span class="co">## T2_168           3.0559739 -0.03363964 3.483005e-06 0.9997451 0.9986541</span>
-<span class="co">## S1_165           0.1558893 -0.03386253 2.820438e-06 0.9983257 0.9986872</span>
+<span class="co">## T1_148           4.3591626 -0.03408425 2.247008e-06 0.9998293 0.9979011</span>
+<span class="co">## T2_168           3.0073253 -0.03363964 3.483005e-06 0.9997451 0.9986541</span>
+<span class="co">## S1_165           0.1559303 -0.03386253 2.820438e-06 0.9983257 0.9986872</span>
 <span class="co">##             LFMC      StemPLC  WaterBalance</span>
 <span class="co">## T1_148 125.88539 2.021145e-07 -6.787675e-05</span>
 <span class="co">## T2_168  93.07302 7.809369e-08 -1.044718e-05</span>
@@ -641,18 +641,18 @@ species parameter <code>WUE</code>:</p>
 <div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../../reference/waterUseEfficiency.html">waterUseEfficiency</a></span><span class="op">(</span><span class="va">S</span>, type <span class="op">=</span> <span class="st">"Stand Ag/E"</span>, freq <span class="op">=</span> <span class="st">"months"</span>, draw<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##            Stand Ag/E</span>
-<span class="co">## 2001-01-01   6.088166</span>
-<span class="co">## 2001-02-01   6.088166</span>
-<span class="co">## 2001-03-01   6.088166</span>
-<span class="co">## 2001-04-01   6.088166</span>
-<span class="co">## 2001-05-01   6.088166</span>
-<span class="co">## 2001-06-01   6.088170</span>
-<span class="co">## 2001-07-01   6.088128</span>
-<span class="co">## 2001-08-01   6.088160</span>
-<span class="co">## 2001-09-01   6.088161</span>
-<span class="co">## 2001-10-01   6.088161</span>
-<span class="co">## 2001-11-01   6.088164</span>
-<span class="co">## 2001-12-01   6.088166</span></code></pre>
+<span class="co">## 2001-01-01   6.033815</span>
+<span class="co">## 2001-02-01   6.033815</span>
+<span class="co">## 2001-03-01   6.033815</span>
+<span class="co">## 2001-04-01   6.033815</span>
+<span class="co">## 2001-05-01   6.033814</span>
+<span class="co">## 2001-06-01   6.033819</span>
+<span class="co">## 2001-07-01   6.033780</span>
+<span class="co">## 2001-08-01   6.033809</span>
+<span class="co">## 2001-09-01   6.033810</span>
+<span class="co">## 2001-10-01   6.033810</span>
+<span class="co">## 2001-11-01   6.033813</span>
+<span class="co">## 2001-12-01   6.033815</span></code></pre>
 </div>
 </div>
   </div>

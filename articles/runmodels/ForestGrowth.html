@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.6</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-06-29</h4>
+            <h4 data-toc-skip class="date">2022-07-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -319,9 +319,9 @@ model sink limitations on wood formation.</p>
 <span class="co">## </span>
 <span class="co">##  [Year 2001]: ....................................</span>
 <span class="co">## </span>
-<span class="co">## Final plant biomass (g/m2): 7347.27</span>
-<span class="co">## Change in plant biomass (g/m2): 238.004</span>
-<span class="co">## Plant biomass balance result (g/m2): 238.004</span>
+<span class="co">## Final plant biomass (g/m2): 7347.21</span>
+<span class="co">## Change in plant biomass (g/m2): 237.942</span>
+<span class="co">## Plant biomass balance result (g/m2): 237.942</span>
 <span class="co">## Plant biomass balance components:</span>
 <span class="co">##   Structural balance (g/m2) 147 Labile balance (g/m2) 117</span>
 <span class="co">##   Plant individual balance (g/m2) 264 Mortality loss (g/m2) 26</span>
@@ -460,9 +460,9 @@ relationship:</p>
 <code class="sourceCode R"><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, 
                  temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span>
-<span class="co">## 12.00000000 -0.06622203 -7.35231796  0.10432221 11.58240068  0.98533974 </span>
+<span class="co">##  12.0000000  -0.1242163 -12.9568752   0.1242163  12.9568752   0.9965688 </span>
 <span class="co">##         NSE     NSE.abs </span>
-<span class="co">##  0.96085838  0.84864074</span></code></pre>
+<span class="co">##   0.9575069   0.8281695</span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series

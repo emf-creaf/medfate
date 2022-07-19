@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.6</span>
       </span>
     </div>
 
@@ -74,7 +74,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-06-29</h4>
+            <h4 data-toc-skip class="date">2022-07-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/Metamodelling.Rmd" class="external-link"><code>vignettes/parametrization/Metamodelling.Rmd</code></a></small>
       <div class="hidden name"><code>Metamodelling.Rmd</code></div>
@@ -117,8 +117,8 @@ between forests dominated by different species.</li>
 C of gross assimilation / l H2O transpired) under conditions of high
 photosynthetically active radiation (PAR) and no water deficit.</li>
 <li>
-<code>WUE_decay</code>, which is the exponent of the function
-specifying the decrease in relative WUE for lower (shadier) positions
+<code>WUE_par</code>, which is the exponent of the function
+specifying the decrease in photosynthesis for lower (shadier) positions
 within the canopy, due to the decrease of available PAR. This rate of
 decay should again be species-specific, according to its degree of shade
 tolerance, and should be influenced by parameters regulating plant
@@ -137,7 +137,7 @@ advanced water balance model, depending on multiple parameters
 thus estimate <code>WUE</code> values using simulations with high light
 levels and no water deficit. The decrease of WUE for plant cohorts in
 progressively shadier environments with respect to WUE under full light
-can provide us with an estimate of <code>WUE_decay</code>, which again
+can provide us with an estimate of <code>WUE_par</code>, which again
 will depend on multiple plant traits.</p>
 </div>
 <div class="section level3">
@@ -1249,7 +1249,10 @@ Tmax_LAIsq
 WUE
 </th>
 <th style="text-align:right;">
-WUE_decay
+WUE_par
+</th>
+<th style="text-align:right;">
+WUE_co2
 </th>
 </tr></thead>
 <tbody>
@@ -1264,27 +1267,13 @@ Abies alba
 -0.0043281
 </td>
 <td style="text-align:right;">
-10.848377
+13.144553
 </td>
 <td style="text-align:right;">
 0.2160795
 </td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Castanea sativa
-</td>
 <td style="text-align:right;">
-0.1083855
-</td>
-<td style="text-align:right;">
--0.0048531
-</td>
-<td style="text-align:right;">
-8.131958
-</td>
-<td style="text-align:right;">
-0.3023892
+0.0044447
 </td>
 </tr>
 <tr>
@@ -1298,10 +1287,13 @@ Fagus sylvatica
 -0.0073766
 </td>
 <td style="text-align:right;">
-6.684038
+10.877800
 </td>
 <td style="text-align:right;">
-0.2137352
+0.3238768
+</td>
+<td style="text-align:right;">
+0.0024094
 </td>
 </tr>
 <tr>
@@ -1315,10 +1307,13 @@ Pinus halepensis
 -0.0078404
 </td>
 <td style="text-align:right;">
-6.107080
+9.782173
 </td>
 <td style="text-align:right;">
 0.6831032
+</td>
+<td style="text-align:right;">
+0.0025175
 </td>
 </tr>
 <tr>
@@ -1332,10 +1327,13 @@ Pinus nigra
 -0.0076255
 </td>
 <td style="text-align:right;">
-6.103085
+9.130429
 </td>
 <td style="text-align:right;">
 0.2810988
+</td>
+<td style="text-align:right;">
+0.0028325
 </td>
 </tr>
 <tr>
@@ -1349,10 +1347,13 @@ Pinus pinea
 -0.0101288
 </td>
 <td style="text-align:right;">
-5.527546
+8.284689
 </td>
 <td style="text-align:right;">
 0.6318872
+</td>
+<td style="text-align:right;">
+0.0028287
 </td>
 </tr>
 <tr>
@@ -1366,10 +1367,13 @@ Pinus sylvestris
 -0.0072098
 </td>
 <td style="text-align:right;">
-7.366076
+10.740113
 </td>
 <td style="text-align:right;">
 0.3226476
+</td>
+<td style="text-align:right;">
+0.0029659
 </td>
 </tr>
 <tr>
@@ -1383,10 +1387,13 @@ Pinus uncinata
 -0.0080673
 </td>
 <td style="text-align:right;">
-7.084242
+9.198522
 </td>
 <td style="text-align:right;">
 0.2562851
+</td>
+<td style="text-align:right;">
+0.0037615
 </td>
 </tr>
 <tr>
@@ -1400,10 +1407,13 @@ Quercus faginea
 -0.0069888
 </td>
 <td style="text-align:right;">
-5.499381
+9.703742
 </td>
 <td style="text-align:right;">
 0.3312228
+</td>
+<td style="text-align:right;">
+0.0021415
 </td>
 </tr>
 <tr>
@@ -1417,10 +1427,13 @@ Quercus ilex
 -0.0050326
 </td>
 <td style="text-align:right;">
-7.564588
+11.538571
 </td>
 <td style="text-align:right;">
-0.2387449
+0.2579857
+</td>
+<td style="text-align:right;">
+0.0027187
 </td>
 </tr>
 <tr>
@@ -1434,10 +1447,13 @@ Quercus pubescens
 -0.0064798
 </td>
 <td style="text-align:right;">
-4.978091
+9.781923
 </td>
 <td style="text-align:right;">
-0.3123234
+0.3333330
+</td>
+<td style="text-align:right;">
+0.0018260
 </td>
 </tr>
 <tr>
@@ -1451,10 +1467,13 @@ Quercus suber
 -0.0059200
 </td>
 <td style="text-align:right;">
-7.012321
+13.511390
 </td>
 <td style="text-align:right;">
 0.3841765
+</td>
+<td style="text-align:right;">
+0.0018839
 </td>
 </tr>
 </tbody>

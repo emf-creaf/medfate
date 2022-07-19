@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.6</span>
       </span>
     </div>
 
@@ -150,7 +150,7 @@
 <li><p><code>Psi_Extract</code>: Water potential corresponding to 50% relative conductance (in MPa).</p></li>
 <li><p><code>Psi_Critic</code>: Water potential corresponding to 50% of stem cavitation (in MPa).</p></li>
 <li><p><code>WUE</code>: Water use efficiency for carbon assimilation (g C/mm water).</p></li>
-<li><p><code>WUE_decay</code>: Exponential decay coeffient of WUE with PAR.</p></li>
+<li><p><code>WUE_par</code>: Exponential decay coeffient of WUE with PAR.</p></li>
 </ul>
     If <code>control$transpirationMode = "Sperry"</code> columns are:
     <ul><li><p><code>Gswmin</code>: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).</p></li>
@@ -349,6 +349,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$Catm</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 386</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$Catm_end</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$thermalCapacityLAI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1e+06</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -610,14 +613,14 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.55 0.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsTranspiration</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Psi_Critic      WUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.003086667 0.1751014 -0.007840361   -2.303000   -5.14000 6.107080</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.004473333 0.1123937 -0.005032554   -1.964000   -6.96500 7.564588</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.010455247 0.1340000 -0.006000000   -2.121073   -6.95092 5.000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        WUE_decay</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.6831032</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.2387449</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.2812000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Psi_Critic       WUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.003086667 0.1751014 -0.007840361   -2.303000   -5.14000  9.782173</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.004473333 0.1123937 -0.005032554   -1.964000   -6.96500 11.538571</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.010455247 0.1340000 -0.006000000   -2.121073   -6.95092  7.570000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          WUE_par     WUE_co2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.6831032 0.002517462</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.2579857 0.002718667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.2812000 0.002800000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsWaterStorage</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           maxFMC   LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS</span>
@@ -746,6 +749,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$Catm</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 386</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$Catm_end</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$thermalCapacityLAI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1e+06</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -1007,14 +1013,14 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.55 0.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsTranspiration</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Psi_Critic      WUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.003086667 0.1751014 -0.007840361   -2.303000   -5.14000 6.107080</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.004473333 0.1123937 -0.005032554   -1.964000   -6.96500 7.564588</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.010455247 0.1340000 -0.006000000   -2.121073   -6.95092 5.000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        WUE_decay</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.6831032</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.2387449</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.2812000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Psi_Critic       WUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.003086667 0.1751014 -0.007840361   -2.303000   -5.14000  9.782173</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.004473333 0.1123937 -0.005032554   -1.964000   -6.96500 11.538571</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.010455247 0.1340000 -0.006000000   -2.121073   -6.95092  7.570000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          WUE_par     WUE_co2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.6831032 0.002517462</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.2579857 0.002718667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.2812000 0.002800000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsWaterStorage</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           maxFMC   LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS</span>
@@ -1143,6 +1149,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$Catm</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 386</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$Catm_end</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$thermalCapacityLAI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1e+06</span>
