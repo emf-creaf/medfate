@@ -91,14 +91,15 @@ Cáceres</h4>
 </h3>
 <p>This document presents a meta-modelling exercise between basic
 (Granier’s) and advanced (Sperry’s) versions of the soil plant water
-balance model. The goal is to make predictions produced by the basic
-water balance model as similar as possible to those produced by the
-advanced model which, given its greater process detail and physical
-basis, is assumed to provide more realistic and accurate predictions
-when appropriate functional traits are supplied. The meta-modelling
-results should benefit not only water balance simulations (function
-<code>spwb</code>) but also simulations of forest growth
-(<code>growth</code>) and dynamics (<code>fordyn</code>).</p>
+balance model. The goal is to make transpiration and photosynthesis
+predictions produced by the basic water balance model as similar as
+possible to those produced by the advanced model which, given its
+greater process detail and physical basis, is assumed to provide more
+realistic and accurate predictions when appropriate functional traits
+are supplied. The meta-modelling results should benefit not only water
+balance simulations (function <code>spwb</code>) but also simulations of
+forest growth (<code>growth</code>) and dynamics
+(<code>fordyn</code>).</p>
 </div>
 <div class="section level3">
 <h3 id="target-parameters">Target parameters<a class="anchor" aria-label="anchor" href="#target-parameters"></a>
@@ -113,32 +114,37 @@ a given LAI. An empirical function with these parameters was derived by
 Granier (1999) for European temperate forests, without distinguishing
 between forests dominated by different species.</li>
 <li>
-<code>WUE</code>, which represents the daily Water Use Efficiency (g
+<code>WUE</code>, which represents the daily water use efficiency (g
 C of gross assimilation / l H2O transpired) under conditions of high
-photosynthetically active radiation (PAR) and no water deficit.</li>
+photosynthetically active radiation (PAR), no water deficit and no air
+CO2 limitations.</li>
 <li>
 <code>WUE_par</code>, which is the exponent of the function
 specifying the decrease in photosynthesis for lower (shadier) positions
-within the canopy, due to the decrease of available PAR. This rate of
-decay should again be species-specific, according to its degree of shade
-tolerance, and should be influenced by parameters regulating plant
-hydraulics, photosynthesis and light extinction.</li>
+within the canopy, due to the decrease of available PAR.</li>
+<li>
+<code>WUE_co2</code>, which regulates the dependency of gross
+photosynthesis on air CO2 concentration.</li>
 </ul>
 <p>As stated above, the general idea is to use simulation results issued
-by the advanced water balance model to obtain appropriate estimates of
-the previous parameters, so that simulations with the basic water
-balance model (which is faster) produce an output similar that of the
-advanced model (which is slower). In the case of <code>Tmax_LAI</code>
-and <code>Tmax_LAIsp</code> we aim to determine a species-specific
-factor that can be used to modify the empirical coefficients obtained by
-Granier (1999). Water use efficiency is an emergent property of the
-advanced water balance model, depending on multiple parameters
-(hydraulics, photosynthetic capacity, stomatal conductance, etc). We can
-thus estimate <code>WUE</code> values using simulations with high light
-levels and no water deficit. The decrease of WUE for plant cohorts in
-progressively shadier environments with respect to WUE under full light
-can provide us with an estimate of <code>WUE_par</code>, which again
-will depend on multiple plant traits.</p>
+by the advanced water balance model to obtain appropriate species-level
+estimates of the previous parameters, so that simulations with the basic
+water balance model (which is faster) produce an output similar that of
+the advanced model (which is slower). In the case of
+<code>Tmax_LAI</code> and <code>Tmax_LAIsp</code> we aim to determine a
+species-specific factor that can be used to modify the empirical
+coefficients obtained by Granier (1999). Water use efficiency is an
+emergent property of the advanced water balance model, depending on
+multiple parameters (hydraulics, photosynthetic capacity, stomatal
+conductance, etc). We can thus estimate <code>WUE</code> values (for
+[CO2] = 386) using simulations with high light levels and no water
+deficit. The decrease of WUE for plant cohorts in progressively shadier
+environments with respect to WUE under full light can provide us with an
+estimate of <code>WUE_par</code>, which again will depend on multiple
+plant traits. Finally, we can use additional simulations of the complex
+model under increasing [CO2] values to model the relationship between
+gross photosynthesis at a given [CO2] compared to [CO2] = 386 for each
+species.</p>
 </div>
 <div class="section level3">
 <h3 id="target-species">Target species<a class="anchor" aria-label="anchor" href="#target-species"></a>
@@ -148,8 +154,7 @@ but we focused on the main tree species in Catalonia: <em>Pinus
 halepensis</em>, <em>Pinus sylvestris</em>, <em>Pinus nigra</em>,
 <em>Pinus uncinata</em>, <em>Pinus pinea</em>, <em>Quercus faginea</em>,
 <em>Quercus ilex</em>, <em>Quercus pubescens</em>, <em>Quercus
-suber</em>, <em>Fagus sylvatica</em>, <em>Castanea sativa</em> and
-<em>Abies alba</em>.</p>
+suber</em>, <em>Fagus sylvatica</em> and <em>Abies alba</em>.</p>
 For each of those species, we first revised the values of the most
 important parameters in the advanced water balance model (parameters of
 the hydraulic vulnerability curve are omitted as they should not be
@@ -537,6 +542,12 @@ in the shade were still affected by the lower PAR, however). For each
 plant cohort in each simulated plot we recorded the percentage of PAR
 available to the plant cohort, the annual transpiration and annual
 photosynthesis produced by each model.</p>
+<p>Additional simulations with increasing carbon dioxide concentration
+were conducted using the Sperry transpiration mode and [CO2] values
+increasing from 350 ppm to 900 ppm. We also avoided soil water
+limitations using <code>control$unlimitedSoilWater = TRUE</code>. For
+each plot we recorded the annual gross photosynthesis per leaf area
+averaged across plant cohorts using their LAI as weights.</p>
 </div>
 </div>
 <div class="section level2">
@@ -609,29 +620,6 @@ Abies alba
 </td>
 <td style="text-align:right;">
 -0.0043281
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Castanea sativa
-</td>
-<td style="text-align:right;">
-1132
-</td>
-<td style="text-align:right;">
-0.8088474
-</td>
-<td style="text-align:right;">
-0.1732457
-</td>
-<td style="text-align:right;">
-0.0051492
-</td>
-<td style="text-align:right;">
-0.1083855
-</td>
-<td style="text-align:right;">
--0.0048531
 </td>
 </tr>
 <tr>
@@ -868,7 +856,7 @@ Quercus suber
 </table>
 </div>
 <div class="section level2">
-<h2 id="water-use-efficiency">Water use efficiency<a class="anchor" aria-label="anchor" href="#water-use-efficiency"></a>
+<h2 id="water-use-efficiency-co2-386">Water use efficiency ([CO2] = 386)<a class="anchor" aria-label="anchor" href="#water-use-efficiency-co2-386"></a>
 </h2>
 <div class="section level3">
 <h3 id="wue-and-relative-wue">WUE and relative WUE<a class="anchor" aria-label="anchor" href="#wue-and-relative-wue"></a>
@@ -908,9 +896,6 @@ relationships, i.e. relative WUEg as a function of FPAR:</p>
 <p><img src="Metamodelling_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>Note that there are substantial differences in the decay coefficients
 among species.</p>
-<pre><code><span class="co">## Warning: Removed 36 rows containing missing values (geom_point).</span></code></pre>
-<pre><code><span class="co">## `geom_smooth()` using formula 'y ~ x'</span></code></pre>
-<pre><code><span class="co">## Warning: Removed 36 rows containing missing values (geom_point).</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="maximum-wue-per-species">Maximum WUE per species<a class="anchor" aria-label="anchor" href="#maximum-wue-per-species"></a>
@@ -920,7 +905,7 @@ conditions of high PAR and no water deficit). We can use the fitted
 model to estimate the maximum WUE that would be expected if PAR was 100%
 for any given plant cohort, i.e. <code>WUEg_max</code>. The mean values
 of <code>WUEg_max</code> for each species can be used as estimates for
-parameter <code>WUE</code> in medfate:
+parameter <code>WUE</code> under [CO2] = 386 ppm:
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -936,7 +921,7 @@ PAR_max_obs
 WUEg_max_obs
 </th>
 <th style="text-align:right;">
-WUE
+WUE_386
 </th>
 <th style="text-align:right;">
 WUEg_max_sd
@@ -1178,29 +1163,6 @@ Quercus suber
 </tr>
 <tr>
 <td style="text-align:left;">
-Castanea sativa
-</td>
-<td style="text-align:right;">
-1132
-</td>
-<td style="text-align:right;">
-55.14280
-</td>
-<td style="text-align:right;">
-6.055623
-</td>
-<td style="text-align:right;">
-8.131958
-</td>
-<td style="text-align:right;">
-1.7628324
-</td>
-<td style="text-align:right;">
-0.0523948
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 Fagus sylvatica
 </td>
 <td style="text-align:right;">
@@ -1225,6 +1187,22 @@ Fagus sylvatica
 </tbody>
 </table>
 </div>
+</div>
+<div class="section level2">
+<h2 id="dependency-of-photosynthesis-on-co2">Dependency of photosynthesis on [CO2]<a class="anchor" aria-label="anchor" href="#dependency-of-photosynthesis-on-co2"></a>
+</h2>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">g3</span><span class="op">&lt;-</span><span class="fu">ggplot</span><span class="op">(</span><span class="va">df_co2</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Catm</span>, y <span class="op">=</span> <span class="va">Ag_rel</span><span class="op">)</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>col <span class="op">=</span> <span class="va">Name</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">0.3</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x<span class="op">=</span><span class="va">Catm</span>, y<span class="op">=</span><span class="va">Pred</span>, col <span class="op">=</span> <span class="va">Name</span><span class="op">)</span>, size<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu">ylab</span><span class="op">(</span><span class="st">"% Ag/Ag_386"</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu">xlab</span><span class="op">(</span><span class="st">"Atmospheric CO2 concentration (ppm)"</span><span class="op">)</span><span class="op">+</span>
+  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span>
+<span class="va">g3</span></code></pre></div>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<pre><code><span class="co">## Warning: Removed 36 rows containing missing values (geom_point).</span></code></pre>
+<pre><code><span class="co">## `geom_smooth()` using formula 'y ~ x'</span></code></pre>
+<pre><code><span class="co">## Warning: Removed 36 rows containing missing values (geom_point).</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="similarity-in-e-and-ag-estimates">Similarity in E and Ag estimates<a class="anchor" aria-label="anchor" href="#similarity-in-e-and-ag-estimates"></a>
@@ -1489,7 +1467,7 @@ water balance model on all the forest plots but using the estimated
 parameters instead of the default values.</p>
 <p>The following plots show the effect of the new parameters on annual E
 and annual Ag for plant cohorts of the plots included in the study:</p>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-14-1.png" width="960"></p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-16-1.png" width="960"></p>
 <!-- ```{r, echo = FALSE} -->
 <!-- sel_E = (df$E_sperry < 300) -->
 <!-- m = lm(E_sperry~-1+E_granier, data = df[sel_E,]) -->
