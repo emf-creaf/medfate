@@ -426,6 +426,7 @@ List spwbDay(List x, CharacterVector date, double tmin, double tmax, double rhmi
       Named("rhmax") = rhmax, 
       Named("rad") = rad, 
       Named("wind") = wind, 
+      Named("Catm") = Catm,
       Named("pet") = pet,
       Named("er") = er);
     s = spwbDay1(x, meteovec,
