@@ -533,11 +533,11 @@ List growthDayInner(List x, NumericVector meteovec,
   
   //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
-  NumericVector Psi_Extract, WUE_decay, Kmax_stemxylem, Plant_kmax, VCleaf_kmax, VCleaf_c, VCleaf_d;
+  NumericVector Psi_Extract, WUE_par, Kmax_stemxylem, Plant_kmax, VCleaf_kmax, VCleaf_c, VCleaf_d;
   NumericVector VCstem_kmax, VCstem_c, VCstem_d, VCroot_kmaxVEC, VCroot_c, VCroot_d, VGrhizo_kmaxVEC;
   if(transpirationMode=="Granier") {
     Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
-    WUE_decay = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_decay"]);
+    WUE_par = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_par"]);
   } else {
     Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
     Plant_kmax= paramsTransp["Plant_kmax"];
@@ -663,7 +663,7 @@ List growthDayInner(List x, NumericVector meteovec,
         double B_resp_fineroots = fineRootBiomass[j];
         double QR = qResp(tday);
         if(LAexpanded>0.0) {
-          leafRespDay = B_resp_leaves*RERleaf[j]*QR*std::min(1.0, pow(PARcohort[j]/100.0,WUE_decay[j]));
+          leafRespDay = B_resp_leaves*RERleaf[j]*QR*std::min(1.0, pow(PARcohort[j]/100.0,WUE_par[j]));
         }
         sapwoodResp = B_resp_sapwood*RERsapwood[j]*QR;
         finerootResp = B_resp_fineroots*RERfineroot[j]*QR*(LAexpanded/LAlive);

@@ -29,7 +29,6 @@ for(i in 1:nrow(customParamsSpecies)) customParamsSpecies$SpIndex[i] = SpParamsM
 SpParamsMED = medfate::modifySpParams(SpParamsMED, customParamsSpecies, subsetSpecies = FALSE)
 # Results of meta-modelling exercise
 metamodellingParamsSpecies = readRDS(paste0(MFWdir,"Metamodelling_TR_WUE/Rdata/metamodelling_params.rds"))
-metamodellingParamsSpecies$Ar2Al = NA # Do not trust metamodeling estimates for Ar2Al
 SpParamsMED = medfate::modifySpParams(SpParamsMED, metamodellingParamsSpecies, subsetSpecies = FALSE)
 # Load growth calibration results
 RGRcambiummaxTrees = readRDS(paste0(MFWdir,"GrowthCalibration/Rdata/RGRcambiummax_trees.rds"))

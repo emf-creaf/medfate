@@ -611,7 +611,7 @@ NumericVector WUEWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector WUE = speciesNumericParameter(SP, SpParams, "WUE");
   for(int c=0;c<WUE.size();c++) {
     if(NumericVector::is_na(WUE[c])) {
-      WUE[c] = 5.0; //default value
+      WUE[c] = 7.57; //default value (gives WUE = 5 for Catm = 386)
     }
   }
   //Access internal data frame "trait_family_means"
@@ -648,14 +648,23 @@ NumericVector WUEWithImputation(IntegerVector SP, DataFrame SpParams) {
   // }
   return(WUE);
 }
-NumericVector WUEDecayWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector WUE_decay = speciesNumericParameter(SP, SpParams, "WUE_decay");
-  for(int c=0;c<WUE_decay.size();c++) {
-    if(NumericVector::is_na(WUE_decay[c])) {
-      WUE_decay[c] = 0.2812; //default value
+NumericVector WUEPARWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector WUE_par = speciesNumericParameter(SP, SpParams, "WUE_par");
+  for(int c=0;c<WUE_par.size();c++) {
+    if(NumericVector::is_na(WUE_par[c])) {
+      WUE_par[c] = 0.2812; //default value
     }
   }
-  return(WUE_decay);
+  return(WUE_par);
+}
+NumericVector WUECO2WithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector WUE_co2 = speciesNumericParameter(SP, SpParams, "WUE_co2");
+  for(int c=0;c<WUE_co2.size();c++) {
+    if(NumericVector::is_na(WUE_co2[c])) {
+      WUE_co2[c] = 0.0028; //default value
+    }
+  }
+  return(WUE_co2);
 }
 NumericVector psi50Imputation(NumericVector psi50, IntegerVector SP, DataFrame SpParams) {
   CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
@@ -1298,7 +1307,8 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "Tmax_LAI") return(TmaxLAIWithImputation(SP, SpParams));
     else if(parName == "Tmax_LAIsq") return(TmaxLAIsqWithImputation(SP, SpParams));
     else if(parName == "WUE") return(WUEWithImputation(SP, SpParams));
-    else if(parName == "WUE_decay") return(WUEDecayWithImputation(SP, SpParams));
+    else if(parName == "WUE_par") return(WUEPARWithImputation(SP, SpParams));
+    else if(parName == "WUE_co2") return(WUECO2WithImputation(SP, SpParams));
     else if(parName == "Psi_Critic") return(psiCriticWithImputation(SP, SpParams));
     else if(parName == "Psi_Extract") return(psiExtractWithImputation(SP, SpParams));
     else if(parName == "Kmax_stemxylem") return(KmaxStemXylemWithImputation(SP, SpParams));

@@ -2,12 +2,16 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.7.6
+- New control parameter 'Catm_end' to specify linear increase in CO2 concentration from 'Catm'
+- Sensitivity of photosynthesis to Catm under Granier's model
+- New species parameter 'WUE_co2' to regulate the effect of CO2 concentration under Granier's model
+- Species parameter 'WUE_decay' renamed 'WUE_par'
+
 # Version 2.7.5
 - Maximum stem conductance to avoid overestimation of stem conductance in small shrubs
 - Bug correction in summary.forest
 - Allows filling missing Z50/Z95 values from SpParams when creating model inputs
-- New control parameter 'Catm_end' to specify linear increase in CO2 concentration from 'Catm'
-- Sensitivity of photosynthesis to Catm under Granier's model
 
 # Version 2.7.4
 - Reducing unused parameters for Sperry model

@@ -139,17 +139,19 @@ List transpirationGranier(List x, NumericVector meteovec,
   NumericVector Psi_Critic = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Critic"]);
   NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
   NumericVector WUE_par(numCohorts, 0.2812);
-  NumericVector WUE_co2(numCohorts, 0.0025);
+  NumericVector WUE_co2(numCohorts, 0.0028);
   NumericVector Tmax_LAI(numCohorts, 0.134);
   NumericVector Tmax_LAIsq(numCohorts, -0.006);
   if(paramsTransp.containsElementNamed("Tmax_LAI")) {
     Tmax_LAI = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Tmax_LAI"]);
     Tmax_LAIsq = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Tmax_LAIsq"]);
   }
-  if(paramsTransp.containsElementNamed("WUE_decay")) {
-    WUE_par = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_decay"]);
+  if(paramsTransp.containsElementNamed("WUE_par")) {
+    WUE_par = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_par"]);
   }
-  
+  if(paramsTransp.containsElementNamed("WUE_co2")) {
+    WUE_co2 = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_co2"]);
+  }
   //Water storage parameters
   DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
   NumericVector maxFMC = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxFMC"]);
@@ -332,7 +334,7 @@ List transpirationGranier(List x, NumericVector meteovec,
     
     //Photosynthesis
     double fpar = std::min(1.0, pow(PARcohort[c]/100.0,WUE_par[c]));
-    double fco2 = 1.615465*(1.0 - exp(-1*WUE_co2[c]*Catm));
+    double fco2 = (1.0 - exp(-1*WUE_co2[c]*Catm));
     Agplant[c] = WUE[c]*Eplant[c]*fpar*fco2;
   }
   

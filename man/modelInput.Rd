@@ -114,7 +114,7 @@ Functions \code{forest2spwbInput()} and \code{spwbInput()} return a list of clas
        \item{\code{Psi_Extract}: Water potential corresponding to 50\% relative conductance (in MPa).}
        \item{\code{Psi_Critic}: Water potential corresponding to 50\% of stem cavitation (in MPa).}
        \item{\code{WUE}: Water use efficiency for carbon assimilation (g C/mm water).}
-       \item{\code{WUE_decay}: Exponential decay coeffient of WUE with PAR.}
+       \item{\code{WUE_par}: Exponential decay coeffient of WUE with PAR.}
     }
     If \code{control$transpirationMode = "Sperry"} columns are:
     \itemize{

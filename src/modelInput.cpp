@@ -178,7 +178,8 @@ DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool 
   NumericVector Tmax_LAI = speciesNumericParameterWithImputation(SP, SpParams, "Tmax_LAI", true);
   NumericVector Tmax_LAIsq = speciesNumericParameterWithImputation(SP, SpParams, "Tmax_LAIsq", true);
   NumericVector WUE = speciesNumericParameterWithImputation(SP, SpParams, "WUE", fillMissingSpParams);
-  NumericVector WUE_decay = speciesNumericParameterWithImputation(SP, SpParams, "WUE_decay", true);
+  NumericVector WUE_par = speciesNumericParameterWithImputation(SP, SpParams, "WUE_par", true);
+  NumericVector WUE_co2 = speciesNumericParameterWithImputation(SP, SpParams, "WUE_co2", true);
   NumericVector Psi_Critic = speciesNumericParameterWithImputation(SP, SpParams, "Psi_Critic", fillMissingSpParams);
   NumericVector Psi_Extract = speciesNumericParameterWithImputation(SP, SpParams, "Psi_Extract", fillMissingSpParams);
   NumericVector Gswmin = speciesNumericParameterWithImputation(SP, SpParams, "Gswmin", fillMissingSpParams);
@@ -189,7 +190,8 @@ DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool 
                                                       _["Psi_Extract"]=Psi_Extract,
                                                       _["Psi_Critic"] = Psi_Critic,
                                                       _["WUE"] = WUE, 
-                                                      _["WUE_decay"] = WUE_decay);
+                                                      _["WUE_par"] = WUE_par, 
+                                                      _["WUE_co2"] = WUE_co2);
   paramsTranspirationdf.attr("row.names") = above.attr("row.names");
   return(paramsTranspirationdf);
 }
