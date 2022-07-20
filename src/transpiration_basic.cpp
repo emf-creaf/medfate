@@ -417,6 +417,7 @@ List transpirationGranier(List x, NumericVector meteovec,
 // [[Rcpp::export("transp_transpirationGranier")]]
 List transpirationGranier(List x, DataFrame meteo, int day,
                           double elevation, bool modifyInput = true) {
+  List control = x["control"];
   if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
   NumericVector MinTemperature = meteo["MinTemperature"];
   if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
@@ -429,19 +430,24 @@ List transpirationGranier(List x, DataFrame meteo, int day,
   NumericVector MeanTemperature = meteo["MeanTemperature"];
   if(!meteo.containsElementNamed("PET")) stop("Please include variable 'PET' in weather input.");
   NumericVector PET = meteo["PET"];
+  NumericVector CO2(MinTemperature.length(), NA_REAL);
+  if(meteo.containsElementNamed("CO2")) CO2 = meteo["CO2"];
   double pet = PET[day-1];
   double tday = MeanTemperature[day-1];
   double tmin = MinTemperature[day-1];
   double tmax = MaxTemperature[day-1];
   double rhmax = MaxRelativeHumidity[day-1];
   double rhmin = MinRelativeHumidity[day-1];
+  double Catm = CO2[day-1];
+  if(NumericVector::is_na(Catm)) Catm = control["defaultCO2"];
   NumericVector meteovec = NumericVector::create(
     Named("tmax") = tmax,
     Named("tmin") = tmin,
     Named("rhmin") = rhmin, 
     Named("rhmax") = rhmax,
     Named("tday") = tday, 
-    Named("pet") = pet);
+    Named("pet") = pet,
+    Named("Catm") = Catm);
   return(transpirationGranier(x, meteovec, elevation, modifyInput));
 } 
 

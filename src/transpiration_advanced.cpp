@@ -1628,6 +1628,7 @@ List transpirationSperry(List x, DataFrame meteo, int day,
                         double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
                         int stepFunctions = NA_INTEGER, 
                         bool modifyInput = true) {
+  List control = x["control"];
   if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
   NumericVector MinTemperature = meteo["MinTemperature"];
   if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
@@ -1662,6 +1663,7 @@ List transpirationSperry(List x, DataFrame meteo, int day,
   double rhmin = MinRelativeHumidity[day-1];
   double wind = WindSpeed[day-1];
   double Catm = CO2[day-1];
+  if(NumericVector::is_na(Catm)) Catm = control["defaultCO2"];
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
   double delta = meteoland::radiation_solarDeclination(J);
   double solarConstant = meteoland::radiation_solarConstant(J);

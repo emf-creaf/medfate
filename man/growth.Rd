@@ -6,7 +6,9 @@
 Function \code{growth} is a process-based model that performs energy, water and carbon balances; and determines changes in water/carbon pools, functional variables (leaf area, sapwood area, root area) and structural ones (tree diameter, tree height, shrub cover) for woody plant cohorts in a given forest stand during a period specified in the input climatic data. 
 }
 \usage{
-growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA) 
+growth(x, meteo,  latitude, 
+       elevation = NA, slope = NA, aspect = NA,
+       CO2ByYear = numeric(0)) 
 }
 \arguments{
   \item{x}{An object of class \code{\link{growthInput}}.}

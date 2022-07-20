@@ -8,11 +8,11 @@ Function \code{spwb_day} performs water balance for a single day and \code{growt
 }
 \usage{
 spwb_day(x, date, tmin, tmax, rhmin, rhmax, rad, wind, 
-         latitude, elevation, slope, aspect, prec, runon = 0.0,
-         modifyInput = TRUE)
+         latitude, elevation, slope, aspect, prec, CO2 = NA, 
+         runon = 0.0, modifyInput = TRUE)
 growth_day(x, date, tmin, tmax, rhmin, rhmax, rad, wind, 
-           latitude, elevation, slope, aspect, prec, runon = 0.0,
-           modifyInput = TRUE)
+           latitude, elevation, slope, aspect, prec, CO2 = NA,
+           runon = 0.0, modifyInput = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -25,6 +25,7 @@ growth_day(x, date, tmin, tmax, rhmin, rhmax, rad, wind,
   \item{prec}{Precipitation (in mm).}
   \item{latitude}{Latitude (in degrees). Required when using the 'Sperry' transpiration mode.}
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Sperry' transpiration mode.}
+  \item{CO2}{Atmospheric CO2 concentration (in ppm). If missing, default value is drawn from control parameter 'defaultCO2' in \code{x}.}
   \item{runon}{Surface water amount running on the target area from upslope (in mm).}
   \item{modifyInput}{Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.}
 }
