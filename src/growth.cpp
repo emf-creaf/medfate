@@ -1715,10 +1715,10 @@ List growth(List x, DataFrame meteo, double latitude,
   std::string yearString;
   int iyear = 0;
   for(int i=0;i<numDays;i++) {
+    std::string c = as<std::string>(dateStrings[i]);
+    yearString = c.substr(0, 4);
     if(verbose) {
       if(DOY[i]==1 || i==0) {
-        std::string c = as<std::string>(dateStrings[i]);
-        yearString = c.substr(0, 4);
         Rcout<<"\n Year "<< yearString<< ":";
       } 
       else if(i%10 == 0) Rcout<<".";//<<i;
