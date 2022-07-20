@@ -33,6 +33,7 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
   }
   \item{latitude}{Latitude (in degrees). Required when \code{x$TranspirationMode = "Sperry"}.}
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when \code{x$TranspirationMode = "Sperry"}. Elevation is also required for 'Granier' if snowpack dynamics are simulated.}
+  \item{CO2ByYear}{A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}.}
 }
 \details{
   Detailed model description is available in the vignettes section. Simulations using the 'Sperry' transpiration mode are computationally much more expensive than those using the simple transpiration mode. 

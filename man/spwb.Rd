@@ -8,11 +8,11 @@
 Function \code{spwb()} is a water balance model that determines changes in soil moisture, soil water potentials, plant transpiration and drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Function \code{pwb()} performs plant water balance only (i.e. soil moisture dynamics is an input) at daily steps for a given forest stand during a period specified in the input climatic data. On both simulation functions plant transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
 }
 \usage{
-spwb(x, meteo,  latitude , elevation = NA, slope = NA, aspect = NA)
+spwb(x, meteo,  latitude , elevation = NA, slope = NA, aspect = NA,
+     CO2ByYear = numeric(0))
 pwb(x, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
-    canopyEvaporation = numeric(0), 
-    snowMelt = numeric(0), 
-    soilEvaporation = numeric(0))
+    canopyEvaporation = numeric(0), snowMelt = numeric(0), 
+    soilEvaporation = numeric(0), CO2ByYear = numeric(0))
 }
 \arguments{
   \item{x}{An object of class \code{\link{spwbInput}}.}
@@ -39,6 +39,7 @@ pwb(x, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
   \item{W}{A matrix with the same number of rows as \code{meteo} and as many columns as soil layers, containing the soil moisture of each layer as proportion of field capacity.}
   \item{latitude}{Latitude (in degrees).}
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Sperry' transpiration mode. Elevation is also required for 'Granier' if snowpack dynamics are simulated.}
+  \item{CO2ByYear}{A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}.}
   \item{canopyEvaporation}{A vector of daily canopy evaporation (from interception) values (mm). The length should match the number of rows in \code{meteo}.}
   \item{soilEvaporation}{A vector of daily bare soil evaporation values (mm). The length should match the number of rows in \code{meteo}.}
   \item{snowMelt}{A vector of daily snow melt values (mm). The length should match the number of rows in \code{meteo}.}

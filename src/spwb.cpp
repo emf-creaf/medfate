@@ -373,14 +373,15 @@ List spwbDay2(List x, NumericVector meteovec,
 // [[Rcpp::export("spwb_day")]]
 List spwbDay(List x, CharacterVector date, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
             double latitude, double elevation, double slope, double aspect,  
-            double prec, double runon=0.0, bool modifyInput = true) {
+            double prec, double CO2 = NA_REAL, double runon=0.0, bool modifyInput = true) {
   //Control parameters
   List control = x["control"];
   bool verbose = control["verbose"];
   
   bool leafPhenology = control["leafPhenology"];
   String transpirationMode = control["transpirationMode"];
-  double Catm = control["Catm"];
+  double Catm = CO2;
+  if(NumericVector::is_na(Catm)) Catm = control["defaultCO2"];
   
   //Will not modify input x 
   if(!modifyInput) {
@@ -1084,7 +1085,8 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL,
 }
 
 // [[Rcpp::export("spwb")]]
-List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
+List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL,
+          NumericVector CO2ByYear = NumericVector(0)) {
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
@@ -1224,11 +1226,13 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   if(verbose) Rcout << "Performing daily simulations\n";
   NumericVector Eplanttot(numDays,0.0);
   List s;
+  std::string yearString;
   for(int i=0;(i<numDays) && (!error_occurence);i++) {
       if(verbose) {
         if(DOY[i]==1 || i==0) {
           std::string c = as<std::string>(dateStrings[i]);
-          Rcout<<"\n [Year "<< c.substr(0, 4)<< "]:";
+          yearString = c.substr(0, 4);
+          Rcout<<"\n [Year "<< yearString << "]:";
         } 
         else if(i%10 == 0) Rcout<<".";//<<i;
       } 
@@ -1239,12 +1243,13 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       
       
       double Catm = CO2[i];
+      //If missing, use
       if(NumericVector::is_na(Catm)) {
-        Catm = control["Catm"];
-        double Catm_end = control["Catm_end"];
-        if(!NumericVector::is_na(Catm_end)) {
-          Catm = Catm + (Catm_end - Catm)*(((double) i)/((double)(numDays - 1.0)));
-        }
+        if(CO2ByYear.attr("names") != R_NilValue) Catm = CO2ByYear[yearString];
+      }
+      //If still missing, use default control value
+      if(NumericVector::is_na(Catm)) {
+        Catm = control["defaultCO2"];
       }
       
       //If DOY == 1 reset PLC (Growth assumed)
@@ -1419,10 +1424,11 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
 
 // [[Rcpp::export("pwb")]]
 List pwb(List x, DataFrame meteo, NumericMatrix W,
-            double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL, 
-            NumericVector canopyEvaporation = NumericVector(0), 
-            NumericVector snowMelt = NumericVector(0), 
-            NumericVector soilEvaporation = NumericVector(0)) {
+         double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL, 
+         NumericVector canopyEvaporation = NumericVector(0), 
+         NumericVector snowMelt = NumericVector(0), 
+         NumericVector soilEvaporation = NumericVector(0),
+         NumericVector CO2ByYear = NumericVector(0)) {
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
@@ -1564,11 +1570,13 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   if(verbose) Rcout << "Performing daily simulations ";
   NumericVector Eplanttot(numDays,0.0);
   List s;
+  std::string yearString;
   for(int i=0;i<numDays;i++) {
     if(verbose) {
       if(DOY[i]==1 || i==0) {
         std::string c = as<std::string>(dateStrings[i]);
-        Rcout<<"\n Year "<< c.substr(0, 4)<< ":";
+        yearString = c.substr(0, 4);
+        Rcout<<"\n Year "<< yearString<< ":";
       } 
       else if(i%10 == 0) Rcout<<".";//<<i;
     } 
@@ -1578,13 +1586,16 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     
     
     double Catm = CO2[i];
+    //If missing, use
     if(NumericVector::is_na(Catm)) {
-      Catm = control["Catm"];
-      double Catm_end = control["Catm_end"];
-      if(!NumericVector::is_na(Catm_end)) {
-        Catm = Catm + (Catm_end - Catm)*(((double) i)/((double)(numDays - 1.0)));
-      }
+      if(CO2ByYear.attr("names") != R_NilValue) Catm = CO2ByYear[yearString];
     }
+    //If still missing, use default control value
+    if(NumericVector::is_na(Catm)) {
+      Catm = control["defaultCO2"];
+    }
+    
+    
     
     //0. Soil moisture
     soil["W"] = W(i,_);

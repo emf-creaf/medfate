@@ -301,12 +301,12 @@ mortality_dailyProbability <- function(basalMortalityRate, stressValue, stressTh
     .Call(`_medfate_dailyMortalityProbability`, basalMortalityRate, stressValue, stressThreshold, minValue, exponent)
 }
 
-growth_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon = 0.0, modifyInput = TRUE) {
-    .Call(`_medfate_growthDay`, x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon, modifyInput)
+growth_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, CO2 = NA_real_, runon = 0.0, modifyInput = TRUE) {
+    .Call(`_medfate_growthDay`, x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, CO2, runon, modifyInput)
 }
 
-growth <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
-    .Call(`_medfate_growth`, x, meteo, latitude, elevation, slope, aspect)
+growth <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0)) {
+    .Call(`_medfate_growth`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear)
 }
 
 hydraulics_psi2K <- function(psi, Psi_extract, ws = 3.0) {
@@ -893,16 +893,16 @@ soil_thermalConductivity <- function(soil, model = "SX") {
     .Call(`_medfate_thermalConductivity`, soil, model)
 }
 
-spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon = 0.0, modifyInput = TRUE) {
-    .Call(`_medfate_spwbDay`, x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon, modifyInput)
+spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, CO2 = NA_real_, runon = 0.0, modifyInput = TRUE) {
+    .Call(`_medfate_spwbDay`, x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, CO2, runon, modifyInput)
 }
 
-spwb <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
-    .Call(`_medfate_spwb`, x, meteo, latitude, elevation, slope, aspect)
+spwb <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0)) {
+    .Call(`_medfate_spwb`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear)
 }
 
-pwb <- function(x, meteo, W, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_, canopyEvaporation = numeric(0), snowMelt = numeric(0), soilEvaporation = numeric(0)) {
-    .Call(`_medfate_pwb`, x, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation)
+pwb <- function(x, meteo, W, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_, canopyEvaporation = numeric(0), snowMelt = numeric(0), soilEvaporation = numeric(0), CO2ByYear = numeric(0)) {
+    .Call(`_medfate_pwb`, x, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, CO2ByYear)
 }
 
 moisture_sapwoodWaterCapacity <- function(Al2As, height, V, L, wd) {

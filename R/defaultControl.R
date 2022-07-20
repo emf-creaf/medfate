@@ -10,6 +10,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     transpirationMode = transpirationMode,
     soilFunctions = ifelse(transpirationMode=="Sperry", "VG", "SX"),
     defaultWindSpeed = 2.5, #m/s
+    defaultCO2 = 386, #ppm
     snowpack = TRUE,
     leafPhenology = TRUE,
     rockyLayerDrainage = TRUE,
@@ -33,8 +34,6 @@ defaultControl<-function(transpirationMode = "Granier") {
     fracLeafResistance = NA,
     fracRootResistance = 0.4,
     averageFracRhizosphereResistance = 0.15,
-    Catm = 386,
-    Catm_end = NA,
     thermalCapacityLAI = 1000000,
     boundaryLayerSize = 2000,
     refillMaximumRate = 0.05,

@@ -1357,14 +1357,15 @@ List growthDayInner(List x, NumericVector meteovec,
 List growthDay(List x, CharacterVector date, double tmin, double tmax, double rhmin, 
                double rhmax, double rad, double wind, 
                double latitude, double elevation, double slope, double aspect,  
-               double prec, double runon=0.0, bool modifyInput = true) {
+               double prec, double CO2 = NA_REAL, double runon=0.0, bool modifyInput = true) {
   //Control parameters
   List control = x["control"];
   bool verbose = control["verbose"];
   
   bool leafPhenology = control["leafPhenology"];
   String transpirationMode = control["transpirationMode"];
-  double Catm = control["Catm"];
+  double Catm = CO2;
+  if(NumericVector::is_na(Catm)) Catm = control["defaultCO2"];
   
   //Will not modify input x 
   if(!modifyInput) {
@@ -1503,7 +1504,9 @@ void checkgrowthInput(List x, String transpirationMode, String soilFunctions) {
 }
 
 // [[Rcpp::export("growth")]]
-List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
+List growth(List x, DataFrame meteo, double latitude, 
+            double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL,
+            NumericVector CO2ByYear = NumericVector(0)) {
 
   //Control params 
   List control =x["control"];  
@@ -1709,12 +1712,14 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   bool error_occurence = false;
   if(verbose) Rcout << "Performing daily simulations\n";
   List s;
+  std::string yearString;
   int iyear = 0;
   for(int i=0;i<numDays;i++) {
     if(verbose) {
       if(DOY[i]==1 || i==0) {
         std::string c = as<std::string>(dateStrings[i]);
-        Rcout<<"\n [Year "<< c.substr(0, 4)<< "]: ";
+        yearString = c.substr(0, 4);
+        Rcout<<"\n Year "<< yearString<< ":";
       } 
       else if(i%10 == 0) Rcout<<".";//<<i;
     } 
@@ -1724,12 +1729,13 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
     
     double Catm = CO2[i];
+    //If missing, use
     if(NumericVector::is_na(Catm)) {
-      Catm = control["Catm"];
-      double Catm_end = control["Catm_end"];
-      if(!NumericVector::is_na(Catm_end)) {
-        Catm = Catm + (Catm_end - Catm)*(((double) i)/((double)(numDays - 1.0)));
-      }
+      if(CO2ByYear.attr("names") != R_NilValue) Catm = CO2ByYear[yearString];
+    }
+    //If still missing, use default control value
+    if(NumericVector::is_na(Catm)) {
+      Catm = control["defaultCO2"];
     }
     
     
