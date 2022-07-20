@@ -56,11 +56,11 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">spwb</span><span class="op">(</span><span class="va">x</span>, <span class="va">meteo</span>,  <span class="va">latitude</span> , elevation <span class="op">=</span> <span class="cn">NA</span>, slope <span class="op">=</span> <span class="cn">NA</span>, aspect <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">spwb</span><span class="op">(</span><span class="va">x</span>, <span class="va">meteo</span>,  <span class="va">latitude</span> , elevation <span class="op">=</span> <span class="cn">NA</span>, slope <span class="op">=</span> <span class="cn">NA</span>, aspect <span class="op">=</span> <span class="cn">NA</span>,
+     CO2ByYear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span>
 <span class="fu">pwb</span><span class="op">(</span><span class="va">x</span>, <span class="va">meteo</span>, <span class="va">W</span>, <span class="va">latitude</span>, elevation <span class="op">=</span> <span class="cn">NA</span>, slope <span class="op">=</span> <span class="cn">NA</span>, aspect <span class="op">=</span> <span class="cn">NA</span>,
-    canopyEvaporation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, 
-    snowMelt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, 
-    soilEvaporation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+    canopyEvaporation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, snowMelt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, 
+    soilEvaporation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, CO2ByYear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -88,6 +88,8 @@
 <dd><p>Latitude (in degrees).</p></dd>
 <dt>elevation, slope, aspect</dt>
 <dd><p>Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Sperry' transpiration mode. Elevation is also required for 'Granier' if snowpack dynamics are simulated.</p></dd>
+<dt>CO2ByYear</dt>
+<dd><p>A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in <code>meteo</code>).</p></dd>
 <dt>canopyEvaporation</dt>
 <dd><p>A vector of daily canopy evaporation (from interception) values (mm). The length should match the number of rows in <code>meteo</code>.</p></dd>
 <dt>soilEvaporation</dt>

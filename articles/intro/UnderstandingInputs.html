@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-07-19</h4>
+            <h4 data-toc-skip class="date">2022-07-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>UnderstandingInputs.Rmd</code></div>
@@ -1250,39 +1250,38 @@ parameterization is obtained using function
 <pre><code><span class="co">##  [1] "fillMissingRootParams"               "fillMissingSpParams"                </span>
 <span class="co">##  [3] "verbose"                             "subdailyResults"                    </span>
 <span class="co">##  [5] "transpirationMode"                   "soilFunctions"                      </span>
-<span class="co">##  [7] "defaultWindSpeed"                    "snowpack"                           </span>
-<span class="co">##  [9] "leafPhenology"                       "rockyLayerDrainage"                 </span>
-<span class="co">## [11] "unlimitedSoilWater"                  "rhizosphereOverlap"                 </span>
-<span class="co">## [13] "unfoldingDD"                         "verticalLayerSize"                  </span>
-<span class="co">## [15] "windMeasurementHeight"               "cavitationRefill"                   </span>
-<span class="co">## [17] "ndailysteps"                         "nsubsteps"                          </span>
-<span class="co">## [19] "capacitance"                         "taper"                              </span>
-<span class="co">## [21] "multiLayerBalance"                   "maximumStemConductance"             </span>
-<span class="co">## [23] "klatstem"                            "klatleaf"                           </span>
-<span class="co">## [25] "numericParams"                       "fracLeafResistance"                 </span>
-<span class="co">## [27] "fracRootResistance"                  "averageFracRhizosphereResistance"   </span>
-<span class="co">## [29] "Catm"                                "Catm_end"                           </span>
-<span class="co">## [31] "thermalCapacityLAI"                  "boundaryLayerSize"                  </span>
-<span class="co">## [33] "refillMaximumRate"                   "allowDessication"                   </span>
-<span class="co">## [35] "allowStarvation"                     "allowDefoliation"                   </span>
-<span class="co">## [37] "sinkLimitation"                      "shrubDynamics"                      </span>
-<span class="co">## [39] "allocationStrategy"                  "nonStomatalPhotosynthesisLimitation"</span>
-<span class="co">## [41] "phloemConductanceFactor"             "nonSugarConcentration"              </span>
-<span class="co">## [43] "equilibriumOsmoticConcentration"     "minimumRelativeStarchForGrowth"     </span>
-<span class="co">## [45] "constructionCosts"                   "senescenceRates"                    </span>
-<span class="co">## [47] "maximumRelativeGrowthRates"          "mortalityMode"                      </span>
-<span class="co">## [49] "mortalityBaselineRate"               "mortalityRelativeSugarThreshold"    </span>
-<span class="co">## [51] "mortalityRWCThreshold"               "allowRecruitment"                   </span>
-<span class="co">## [53] "recruitmentMode"                     "removeEmptyCohorts"                 </span>
-<span class="co">## [55] "minimumCohortDensity"                "seedRain"                           </span>
-<span class="co">## [57] "seedProductionTreeHeight"            "seedProductionShrubHeight"          </span>
-<span class="co">## [59] "probRecr"                            "minTempRecr"                        </span>
-<span class="co">## [61] "minMoistureRecr"                     "minFPARRecr"                        </span>
-<span class="co">## [63] "recrTreeDBH"                         "recrTreeDensity"                    </span>
-<span class="co">## [65] "recrTreeHeight"                      "recrShrubCover"                     </span>
-<span class="co">## [67] "recrShrubHeight"                     "recrTreeZ50"                        </span>
-<span class="co">## [69] "recrShrubZ50"                        "recrTreeZ95"                        </span>
-<span class="co">## [71] "recrShrubZ95"</span></code></pre>
+<span class="co">##  [7] "defaultWindSpeed"                    "defaultCO2"                         </span>
+<span class="co">##  [9] "snowpack"                            "leafPhenology"                      </span>
+<span class="co">## [11] "rockyLayerDrainage"                  "unlimitedSoilWater"                 </span>
+<span class="co">## [13] "rhizosphereOverlap"                  "unfoldingDD"                        </span>
+<span class="co">## [15] "verticalLayerSize"                   "windMeasurementHeight"              </span>
+<span class="co">## [17] "cavitationRefill"                    "ndailysteps"                        </span>
+<span class="co">## [19] "nsubsteps"                           "capacitance"                        </span>
+<span class="co">## [21] "taper"                               "multiLayerBalance"                  </span>
+<span class="co">## [23] "maximumStemConductance"              "klatstem"                           </span>
+<span class="co">## [25] "klatleaf"                            "numericParams"                      </span>
+<span class="co">## [27] "fracLeafResistance"                  "fracRootResistance"                 </span>
+<span class="co">## [29] "averageFracRhizosphereResistance"    "thermalCapacityLAI"                 </span>
+<span class="co">## [31] "boundaryLayerSize"                   "refillMaximumRate"                  </span>
+<span class="co">## [33] "allowDessication"                    "allowStarvation"                    </span>
+<span class="co">## [35] "allowDefoliation"                    "sinkLimitation"                     </span>
+<span class="co">## [37] "shrubDynamics"                       "allocationStrategy"                 </span>
+<span class="co">## [39] "nonStomatalPhotosynthesisLimitation" "phloemConductanceFactor"            </span>
+<span class="co">## [41] "nonSugarConcentration"               "equilibriumOsmoticConcentration"    </span>
+<span class="co">## [43] "minimumRelativeStarchForGrowth"      "constructionCosts"                  </span>
+<span class="co">## [45] "senescenceRates"                     "maximumRelativeGrowthRates"         </span>
+<span class="co">## [47] "mortalityMode"                       "mortalityBaselineRate"              </span>
+<span class="co">## [49] "mortalityRelativeSugarThreshold"     "mortalityRWCThreshold"              </span>
+<span class="co">## [51] "allowRecruitment"                    "recruitmentMode"                    </span>
+<span class="co">## [53] "removeEmptyCohorts"                  "minimumCohortDensity"               </span>
+<span class="co">## [55] "seedRain"                            "seedProductionTreeHeight"           </span>
+<span class="co">## [57] "seedProductionShrubHeight"           "probRecr"                           </span>
+<span class="co">## [59] "minTempRecr"                         "minMoistureRecr"                    </span>
+<span class="co">## [61] "minFPARRecr"                         "recrTreeDBH"                        </span>
+<span class="co">## [63] "recrTreeDensity"                     "recrTreeHeight"                     </span>
+<span class="co">## [65] "recrShrubCover"                      "recrShrubHeight"                    </span>
+<span class="co">## [67] "recrTreeZ50"                         "recrShrubZ50"                       </span>
+<span class="co">## [69] "recrTreeZ95"                         "recrShrubZ95"</span></code></pre>
 <p>Control parameters should normally be left to their default value
 until their effect on simulations is fully understood.</p>
 </div>

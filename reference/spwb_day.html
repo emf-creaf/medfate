@@ -57,11 +57,11 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">spwb_day</span><span class="op">(</span><span class="va">x</span>, <span class="va">date</span>, <span class="va">tmin</span>, <span class="va">tmax</span>, <span class="va">rhmin</span>, <span class="va">rhmax</span>, <span class="va">rad</span>, <span class="va">wind</span>, 
-         <span class="va">latitude</span>, <span class="va">elevation</span>, <span class="va">slope</span>, <span class="va">aspect</span>, <span class="va">prec</span>, runon <span class="op">=</span> <span class="fl">0.0</span>,
-         modifyInput <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+         <span class="va">latitude</span>, <span class="va">elevation</span>, <span class="va">slope</span>, <span class="va">aspect</span>, <span class="va">prec</span>, CO2 <span class="op">=</span> <span class="cn">NA</span>, 
+         runon <span class="op">=</span> <span class="fl">0.0</span>, modifyInput <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="fu">growth_day</span><span class="op">(</span><span class="va">x</span>, <span class="va">date</span>, <span class="va">tmin</span>, <span class="va">tmax</span>, <span class="va">rhmin</span>, <span class="va">rhmax</span>, <span class="va">rad</span>, <span class="va">wind</span>, 
-           <span class="va">latitude</span>, <span class="va">elevation</span>, <span class="va">slope</span>, <span class="va">aspect</span>, <span class="va">prec</span>, runon <span class="op">=</span> <span class="fl">0.0</span>,
-           modifyInput <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+           <span class="va">latitude</span>, <span class="va">elevation</span>, <span class="va">slope</span>, <span class="va">aspect</span>, <span class="va">prec</span>, CO2 <span class="op">=</span> <span class="cn">NA</span>,
+           runon <span class="op">=</span> <span class="fl">0.0</span>, modifyInput <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -84,6 +84,8 @@
 <dd><p>Latitude (in degrees). Required when using the 'Sperry' transpiration mode.</p></dd>
 <dt>elevation, slope, aspect</dt>
 <dd><p>Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Sperry' transpiration mode.</p></dd>
+<dt>CO2</dt>
+<dd><p>Atmospheric CO2 concentration (in ppm). If missing, default value is drawn from control parameter 'defaultCO2' in <code>x</code>.</p></dd>
 <dt>runon</dt>
 <dd><p>Surface water amount running on the target area from upslope (in mm).</p></dd>
 <dt>modifyInput</dt>

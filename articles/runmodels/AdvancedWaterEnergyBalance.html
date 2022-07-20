@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-07-19</h4>
+            <h4 data-toc-skip class="date">2022-07-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/AdvancedWaterEnergyBalance.Rmd" class="external-link"><code>vignettes/runmodels/AdvancedWaterEnergyBalance.Rmd</code></a></small>
       <div class="hidden name"><code>AdvancedWaterEnergyBalance.Rmd</code></div>
@@ -492,7 +492,7 @@ day only. This is done using function <code><a href="../../reference/spwb_day.ht
 following code we select the same day as before from the meteorological
 input data and perform soil water balance for that day only:</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sd1</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/spwb_day.html">spwb_day</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>,  
+<code class="sourceCode R"><span class="va">sd1</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/spwb_day.html">spwb_day</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>,  
              <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, 
              <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, 
              <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Radiation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">WindSpeed</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, 
@@ -522,7 +522,7 @@ flows of the day (precipitation, infiltration, transpiration, …)</p>
 <span class="co">##            Infiltration                  Runoff            DeepDrainage </span>
 <span class="co">##              0.00000000              0.00000000              0.00000000 </span>
 <span class="co">##         SoilEvaporation         PlantExtraction           Transpiration </span>
-<span class="co">##              0.02432124              0.68021918              0.68021918 </span>
+<span class="co">##              0.02432124              0.67987403              0.67987403 </span>
 <span class="co">## HydraulicRedistribution </span>
 <span class="co">##              0.00000000</span></code></pre>
 <p>And <code>Soil</code> contains water evaporated from each soil layer,
@@ -531,10 +531,10 @@ potential:</p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sd1</span><span class="op">$</span><span class="va">Soil</span></code></pre></div>
 <pre><code><span class="co">##   SoilEvaporation HydraulicInput HydraulicOutput PlantExtraction         psi</span>
-<span class="co">## 1    2.432124e-02              0     0.453187376     0.453187376 -0.03424223</span>
-<span class="co">## 2    7.439925e-09              0     0.202095873     0.202095873 -0.03327197</span>
-<span class="co">## 3    4.690960e-24              0     0.021619241     0.021619241 -0.03304465</span>
-<span class="co">## 4    9.047688e-46              0     0.003316686     0.003316686 -0.03301712</span></code></pre>
+<span class="co">## 1    2.432124e-02              0     0.452928155     0.452928155 -0.03424155</span>
+<span class="co">## 2    7.439925e-09              0     0.202020078     0.202020078 -0.03327187</span>
+<span class="co">## 3    4.690960e-24              0     0.021610705     0.021610705 -0.03304464</span>
+<span class="co">## 4    9.047688e-46              0     0.003315094     0.003315094 -0.03301711</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="soil-and-canopy-energy-balance">Soil and canopy energy balance<a class="anchor" aria-label="anchor" href="#soil-and-canopy-energy-balance"></a>
@@ -570,19 +570,19 @@ Several output variables can be inspected in this element.</p>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sd1</span><span class="op">$</span><span class="va">Plants</span></code></pre></div>
 <pre><code><span class="co">##               LAI    LAIlive Extraction Transpiration GrossPhotosynthesis</span>
-<span class="co">## T1_148 0.96734365 0.96734365 0.43878999    0.43878999          2.18442242</span>
-<span class="co">## T2_168 0.86167321 0.86167321 0.22263546    0.22263546          1.57690296</span>
-<span class="co">## S1_165 0.03928201 0.03928201 0.01879373    0.01879373          0.06426056</span>
+<span class="co">## T1_148 0.96734365 0.96734365 0.43844484    0.43844484           2.1802499</span>
+<span class="co">## T2_168 0.86167321 0.86167321 0.22263546    0.22263546           1.5760041</span>
+<span class="co">## S1_165 0.03928201 0.03928201 0.01879373    0.01879373           0.0642033</span>
 <span class="co">##        NetPhotosynthesis    RootPsi    StemPsi      StemPLC LeafPsiMin</span>
-<span class="co">## T1_148        2.03293255 -0.6361581 -0.9749927 1.267805e-10 -1.5416304</span>
-<span class="co">## T2_168        1.42595375 -0.4015139 -0.5892032 2.701118e-05 -0.9691248</span>
-<span class="co">## S1_165        0.05856163 -0.2745368 -0.3960773 6.465653e-05 -0.6400052</span>
+<span class="co">## T1_148        2.02971824 -0.6361581 -0.9749927 1.267805e-10 -1.5416304</span>
+<span class="co">## T2_168        1.42598485 -0.4015139 -0.5892032 2.701118e-05 -0.9691248</span>
+<span class="co">## S1_165        0.05854232 -0.2745368 -0.3960773 6.465653e-05 -0.6400052</span>
 <span class="co">##         LeafPsiMax      dEdP         DDS   StemRWC   LeafRWC      LFMC</span>
-<span class="co">## T1_148 -0.05394872 0.4058600 0.001984787 0.9976002 0.9537053 122.91176</span>
-<span class="co">## T2_168 -0.06521589 0.4438289 0.050540139 0.9980396 0.9686140  91.45255</span>
-<span class="co">## S1_165 -0.05688104 1.2456415 0.010799239 0.9910170 0.9847731  95.40397</span>
+<span class="co">## T1_148 -0.05394872 0.4058600 0.001984787 0.9976020 0.9537388 122.91401</span>
+<span class="co">## T2_168 -0.06521589 0.4438289 0.050540139 0.9980396 0.9686138  91.45254</span>
+<span class="co">## S1_165 -0.05688104 1.2456415 0.010799239 0.9910167 0.9847728  95.40395</span>
 <span class="co">##         WaterBalance</span>
-<span class="co">## T1_148 -1.799776e-17</span>
+<span class="co">## T1_148 -1.756408e-17</span>
 <span class="co">## T2_168 -6.071532e-18</span>
 <span class="co">## S1_165 -1.097755e-18</span></code></pre>
 <p>While <code>Plants</code> contains one value per cohort and variable
@@ -615,23 +615,23 @@ cohort, can be accessed via:</p>
 <div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sd1</span><span class="op">$</span><span class="va">SunlitLeaves</span></code></pre></div>
 <pre><code><span class="co">##                LAI  Vmax298  Jmax298 LeafPsiMin  LeafPsiMax      GSWMin</span>
-<span class="co">## T1_148 0.433114873 56.53370 97.23111  -1.692356 -0.05394872 0.003110142</span>
-<span class="co">## T2_168 0.278983354 52.42554 90.89024  -1.733990 -0.06521589 0.004561289</span>
-<span class="co">## S1_165 0.008674735 43.95439 82.92856  -1.418346 -0.05688104 0.010459623</span>
-<span class="co">##            GSWMax  TempMin  TempMax</span>
-<span class="co">## T1_148 0.19756049 3.452226 13.13488</span>
-<span class="co">## T2_168 0.06951395 2.973221 20.76057</span>
-<span class="co">## S1_165 0.13045942 3.376609 20.55733</span></code></pre>
+<span class="co">## T1_148 0.433114873 56.53370 97.23111  -1.692356 -0.05394872 0.003143245</span>
+<span class="co">## T2_168 0.278983354 52.42554 90.89024  -1.733990 -0.06521589 0.004576098</span>
+<span class="co">## S1_165 0.008674735 43.95439 82.92856  -1.418346 -0.05688104 0.010692135</span>
+<span class="co">##           GSWMax  TempMin  TempMax</span>
+<span class="co">## T1_148 0.2010570 3.358524 13.09739</span>
+<span class="co">## T2_168 0.0705089 2.878521 20.71583</span>
+<span class="co">## S1_165 0.1324161 3.277072 20.50921</span></code></pre>
 <div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sd1</span><span class="op">$</span><span class="va">ShadeLeaves</span></code></pre></div>
 <pre><code><span class="co">##               LAI  Vmax298  Jmax298 LeafPsiMin  LeafPsiMax      GSWMin</span>
-<span class="co">## T1_148 0.53422877 47.55677 81.79188 -1.4414259 -0.05394872 0.003131647</span>
-<span class="co">## T2_168 0.58268986 47.23645 81.89390 -0.6646563 -0.06521589 0.004505817</span>
-<span class="co">## S1_165 0.03060728 43.95439 82.92856 -0.4365966 -0.05688104 0.010459623</span>
+<span class="co">## T1_148 0.53422877 47.55677 81.79188 -1.4414259 -0.05394872 0.003105168</span>
+<span class="co">## T2_168 0.58268986 47.23645 81.89390 -0.6646563 -0.06521589 0.004615958</span>
+<span class="co">## S1_165 0.03060728 43.95439 82.92856 -0.4365966 -0.05688104 0.010692135</span>
 <span class="co">##            GSWMax  TempMin  TempMax</span>
-<span class="co">## T1_148 0.19308340 3.076228 11.35011</span>
-<span class="co">## T2_168 0.05108492 2.868661 11.06359</span>
-<span class="co">## S1_165 0.11166592 2.972165 11.00273</span></code></pre>
+<span class="co">## T1_148 0.19652956 2.991321 11.31505</span>
+<span class="co">## T2_168 0.05149131 2.782115 11.02711</span>
+<span class="co">## S1_165 0.11286893 2.882137 10.96402</span></code></pre>
 <p>Instantaneous values are also stored for sunlit and shade leaves. We
 can also use the <code>plot</code> function for objects of class
 <code>spwb_day</code> to draw instantaneous variations in temperature
@@ -682,43 +682,43 @@ modified the input objects. In particular, the soil moisture at the end
 of the simulation was:</p>
 <div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">W</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.9925576 0.9982675 0.9997146 0.9998905</span></code></pre>
+<pre><code><span class="co">## [1] 0.9925617 0.9982682 0.9997147 0.9998906</span></code></pre>
 <p>And the temperature of soil layers:</p>
 <div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">Temp</span></code></pre></div>
-<pre><code><span class="co">## [1] 9.486719 6.241497 3.083244 2.560323</span></code></pre>
+<pre><code><span class="co">## [1] 9.430811 6.146820 3.059295 2.559102</span></code></pre>
 <p>We can also see the current state of canopy variables:</p>
 <div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">canopy</span></code></pre></div>
 <pre><code><span class="co">##    zlow zmid  zup     Tair Cair     VPair</span>
-<span class="co">## 1     0   50  100 6.562429  386 0.5170718</span>
-<span class="co">## 2   100  150  200 6.562429  386 0.5170718</span>
-<span class="co">## 3   200  250  300 6.562429  386 0.5170718</span>
-<span class="co">## 4   300  350  400 6.562429  386 0.5170718</span>
-<span class="co">## 5   400  450  500 6.562429  386 0.5170718</span>
-<span class="co">## 6   500  550  600 6.562429  386 0.5170718</span>
-<span class="co">## 7   600  650  700 6.562429  386 0.5170718</span>
-<span class="co">## 8   700  750  800 6.562429  386 0.5170718</span>
-<span class="co">## 9   800  850  900 6.562429  386 0.5170718</span>
-<span class="co">## 10  900  950 1000 6.562429  386 0.5170718</span>
-<span class="co">## 11 1000 1050 1100 6.562429  386 0.5170718</span>
-<span class="co">## 12 1100 1150 1200 6.562429  386 0.5170718</span>
-<span class="co">## 13 1200 1250 1300 6.562429  386 0.5170718</span>
-<span class="co">## 14 1300 1350 1400 6.562429  386 0.5170718</span>
-<span class="co">## 15 1400 1450 1500 6.562429  386 0.5170718</span>
-<span class="co">## 16 1500 1550 1600 6.562429  386 0.5170718</span>
-<span class="co">## 17 1600 1650 1700 6.562429  386 0.5170718</span>
-<span class="co">## 18 1700 1750 1800 6.562429  386 0.5170718</span>
-<span class="co">## 19 1800 1850 1900 6.562429  386 0.5170718</span>
-<span class="co">## 20 1900 1950 2000 6.562429  386 0.5170718</span>
-<span class="co">## 21 2000 2050 2100 6.562429  386 0.5170718</span>
-<span class="co">## 22 2100 2150 2200 6.562429  386 0.5170718</span>
-<span class="co">## 23 2200 2250 2300 6.562429  386 0.5170718</span>
-<span class="co">## 24 2300 2350 2400 6.562429  386 0.5170718</span>
-<span class="co">## 25 2400 2450 2500 6.562429  386 0.5170718</span>
-<span class="co">## 26 2500 2550 2600 6.562429  386 0.5170718</span>
-<span class="co">## 27 2600 2650 2700 6.562429  386 0.5170718</span>
-<span class="co">## 28 2700 2750 2800 6.562429  386 0.5170718</span></code></pre>
+<span class="co">## 1     0   50  100 6.543247  386 0.5170718</span>
+<span class="co">## 2   100  150  200 6.543247  386 0.5170718</span>
+<span class="co">## 3   200  250  300 6.543247  386 0.5170718</span>
+<span class="co">## 4   300  350  400 6.543247  386 0.5170718</span>
+<span class="co">## 5   400  450  500 6.543247  386 0.5170718</span>
+<span class="co">## 6   500  550  600 6.543247  386 0.5170718</span>
+<span class="co">## 7   600  650  700 6.543247  386 0.5170718</span>
+<span class="co">## 8   700  750  800 6.543247  386 0.5170718</span>
+<span class="co">## 9   800  850  900 6.543247  386 0.5170718</span>
+<span class="co">## 10  900  950 1000 6.543247  386 0.5170718</span>
+<span class="co">## 11 1000 1050 1100 6.543247  386 0.5170718</span>
+<span class="co">## 12 1100 1150 1200 6.543247  386 0.5170718</span>
+<span class="co">## 13 1200 1250 1300 6.543247  386 0.5170718</span>
+<span class="co">## 14 1300 1350 1400 6.543247  386 0.5170718</span>
+<span class="co">## 15 1400 1450 1500 6.543247  386 0.5170718</span>
+<span class="co">## 16 1500 1550 1600 6.543247  386 0.5170718</span>
+<span class="co">## 17 1600 1650 1700 6.543247  386 0.5170718</span>
+<span class="co">## 18 1700 1750 1800 6.543247  386 0.5170718</span>
+<span class="co">## 19 1800 1850 1900 6.543247  386 0.5170718</span>
+<span class="co">## 20 1900 1950 2000 6.543247  386 0.5170718</span>
+<span class="co">## 21 2000 2050 2100 6.543247  386 0.5170718</span>
+<span class="co">## 22 2100 2150 2200 6.543247  386 0.5170718</span>
+<span class="co">## 23 2200 2250 2300 6.543247  386 0.5170718</span>
+<span class="co">## 24 2300 2350 2400 6.543247  386 0.5170718</span>
+<span class="co">## 25 2400 2450 2500 6.543247  386 0.5170718</span>
+<span class="co">## 26 2500 2550 2600 6.543247  386 0.5170718</span>
+<span class="co">## 27 2600 2650 2700 6.543247  386 0.5170718</span>
+<span class="co">## 28 2700 2750 2800 6.543247  386 0.5170718</span></code></pre>
 <p>We simply use function <code><a href="../../reference/resetInputs.html">resetInputs()</a></code> to reset state
 variables to their default values, so that the new simulation is not
 affected by the end state of the previous simulation:</p>

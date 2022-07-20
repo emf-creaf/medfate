@@ -77,6 +77,7 @@
 </ul><p><b>Water balance</b> (functions <code><a href="spwb.html">spwb</a></code>, <code><a href="spwb.html">pwb</a></code> or <code><a href="spwb_day.html">spwb_day</a></code>):</p><ul><li><p><code>transpirationMode (="Granier")</code>: Transpiration model (either 'Granier' or 'Sperry'). See <code><a href="modelInput.html">spwbInput</a></code>.</p></li>
 <li><p><code>soilFunctions (="SX")</code>: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten). If <code>transpirationMode = "Sperry"</code> then soilFunctions is set by default to <code>'VG'</code>.</p></li>
 <li><p><code>defaultWindSpeed (= 2.5)</code>: Default wind speed value (in m/s) to be used when missing from data.</p></li>
+<li><p><code>defaultCO2 (= 386)</code>: Default atmospheric (abovecanopy) CO2 concentration (in micromol·mol-1 = ppm). This value will be used whenever CO2 concentration is not specified in the weather input.</p></li>
 <li><p><code>snowpack (=TRUE)</code>: Boolean flag to indicate the simulation of snow accumulation and melting.</p></li>
 <li><p><code>leafPhenology (=TRUE)</code>: Boolean flag to indicate the simulation of leaf phenology for winter-deciduous species.</p></li>
 <li><p><code>rockyLayerDrainage (=TRUE)</code>: Boolean flag to indicate the simulation of drainage from rocky layers (&gt; 95% of rocks).</p></li>
@@ -110,8 +111,6 @@
 <li><p><code>ETol (= 0.0001)</code>: Tolerance value for flow.</p></li>
 </ul></li>
 <li><p><code>thermalCapacityLAI (=1000000)</code>: Thermal canopy capacitance per LAI unit.</p></li>
-<li><p><code>Catm (= 386)</code>: Default atmospheric (abovecanopy) CO2 concentration (in micromol·mol-1 = ppm). This value will be used whenever CO2 concentration is not specified in the weather input.</p></li>
-<li><p><code>Catm_end (= NA)</code>: Atmospheric (abovecanopy) CO2 concentration (in micromol·mol-1 = ppm) at the end of the simulation. This value can be used to specify a linear increase from <code>Catm</code> to <code>Catm_end</code> during the simulation.</p></li>
 <li><p><code>fracLeafResistance (= NA)</code>: Fraction of plant total resistance (leaf+stem+root) that corresponds to leaves. This fraction is used if <code>VCleaf_kmax = NA</code>.</p></li>
 <li><p><code>fracRootResistance (= 0.40)</code>: Fraction of plant total resistance (leaf+stem+root) that corresponds to root system.</p></li>
 <li><p><code>averageFracRhizosphereResistance (=0.15)</code>: Fraction to total continuum (leaf+stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).</p></li>
