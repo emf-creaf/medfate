@@ -99,6 +99,7 @@ recruitment<-function(forest, SpParams, control,
 fordyn<-function(forest, soil, SpParams,
                  meteo, control,
                  latitude , elevation = NA, slope = NA, aspect = NA,
+                 CO2ByYear = numeric(0),
                  management_function = NULL, management_args = NULL) {
   
   # Modify control parameters
@@ -159,7 +160,9 @@ fordyn<-function(forest, soil, SpParams,
     monthsYear = months[years==year]
     # 1.1 Calls growth model
     if(verboseDyn) cat(paste0(" (a) Growth/mortality"))
-    Gi = growth(xi, meteoYear, latitude = latitude, elevation = elevation, slope = slope, aspect = aspect)
+    Gi = growth(xi, meteoYear, latitude = latitude, 
+                elevation = elevation, slope = slope, aspect = aspect,
+                CO2ByYear = CO2ByYear)
     
     # 1.2 Store growth results
     growthResults[[iYear]] = Gi

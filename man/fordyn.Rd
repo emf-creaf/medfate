@@ -8,6 +8,7 @@ Function \code{fordyn} implements a forest dynamics model that simulates growth,
 \usage{
 fordyn(forest, soil, SpParams, meteo, control,
        latitude , elevation = NA, slope = NA, aspect = NA,
+       CO2ByYear = numeric(0),
        management_function = NULL, management_args = NULL) 
 }
 \arguments{
@@ -18,6 +19,7 @@ fordyn(forest, soil, SpParams, meteo, control,
   \item{control}{A list with default control parameters (see \code{\link{defaultControl}}).}
   \item{latitude}{Latitude (in degrees). Required when \code{x$TranspirationMode = "Sperry"}.}
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when \code{x$TranspirationMode = "Sperry"}. Elevation is also required for 'Granier' if snowpack dynamics are simulated.}
+  \item{CO2ByYear}{A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).}
   \item{management_function}{A function that implements forest management actions (see details).}
   \item{management_args}{A list of additional arguments to be passed to the \code{management_function}.}
 }
