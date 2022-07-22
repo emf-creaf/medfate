@@ -666,6 +666,15 @@ NumericVector WUECO2WithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(WUE_co2);
 }
+NumericVector WUEVPDWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector WUE_vpd = speciesNumericParameter(SP, SpParams, "WUE_vpd");
+  for(int c=0;c<WUE_vpd.size();c++) {
+    if(NumericVector::is_na(WUE_vpd[c])) {
+      WUE_vpd[c] = -0.45; //default value
+    }
+  }
+  return(WUE_vpd);
+}
 NumericVector psi50Imputation(NumericVector psi50, IntegerVector SP, DataFrame SpParams) {
   CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
   CharacterVector GrowthForm = speciesCharacterParameter(SP, SpParams, "GrowthForm");
@@ -1309,6 +1318,7 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "WUE") return(WUEWithImputation(SP, SpParams));
     else if(parName == "WUE_par") return(WUEPARWithImputation(SP, SpParams));
     else if(parName == "WUE_co2") return(WUECO2WithImputation(SP, SpParams));
+    else if(parName == "WUE_vpd") return(WUEVPDWithImputation(SP, SpParams));
     else if(parName == "Psi_Critic") return(psiCriticWithImputation(SP, SpParams));
     else if(parName == "Psi_Extract") return(psiExtractWithImputation(SP, SpParams));
     else if(parName == "Kmax_stemxylem") return(KmaxStemXylemWithImputation(SP, SpParams));

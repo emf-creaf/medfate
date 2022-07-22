@@ -97,7 +97,9 @@ List transpirationGranier(List x, NumericVector meteovec,
   double tmin = meteovec["tmin"];
   double Catm = meteovec["Catm"];
   //Daily average water vapor pressure at the atmosphere (kPa)
-  double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin,rhmax);
+  double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmax, rhmin);
+  double vpd = std::max(0.0, meteoland::utils_saturationVP((tmin+tmax)/2.0) - vpatm);
+    
   //Atmospheric pressure (kPa)
   double Patm = meteoland::utils_atmosphericPressure(elevation);
   
@@ -140,6 +142,7 @@ List transpirationGranier(List x, NumericVector meteovec,
   NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
   NumericVector WUE_par(numCohorts, 0.2812);
   NumericVector WUE_co2(numCohorts, 0.0028);
+  NumericVector WUE_vpd(numCohorts, -0.45);
   NumericVector Tmax_LAI(numCohorts, 0.134);
   NumericVector Tmax_LAIsq(numCohorts, -0.006);
   if(paramsTransp.containsElementNamed("Tmax_LAI")) {
@@ -151,6 +154,9 @@ List transpirationGranier(List x, NumericVector meteovec,
   }
   if(paramsTransp.containsElementNamed("WUE_co2")) {
     WUE_co2 = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_co2"]);
+  }
+  if(paramsTransp.containsElementNamed("WUE_vpd")) {
+    WUE_vpd = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_vpd"]);
   }
   //Water storage parameters
   DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
@@ -293,9 +299,9 @@ List transpirationGranier(List x, NumericVector meteovec,
     //Cuticular transpiration    
     double lvp_tmax = leafVapourPressure(tmax,  PlantPsi[c]);
     double lvp_tmin = leafVapourPressure(tmin,  PlantPsi[c]);
-    double vpd_tmax = std::max(0.0, lvp_tmax - vpatm);
-    double vpd_tmin = std::max(0.0, lvp_tmin - vpatm);
-    double E_gmin = Gswmin[c]*(vpd_tmin+vpd_tmax)/(2.0*Patm); // mol·s-1·m-2
+    double lvpd_tmax = std::max(0.0, lvp_tmax - vpatm);
+    double lvpd_tmin = std::max(0.0, lvp_tmin - vpatm);
+    double E_gmin = Gswmin[c]*(lvpd_tmin+lvpd_tmax)/(2.0*Patm); // mol·s-1·m-2
     double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
 
     double oldVol = plantVol(PlantPsi[c], parsVol); 
@@ -331,11 +337,12 @@ List transpirationGranier(List x, NumericVector meteovec,
         Extraction(c,l) = sum(ExtractionPoolsCoh(_,l)); // Sum extraction from all pools (layer l)
       }
     }
-    
     //Photosynthesis
     double fpar = std::min(1.0, pow(PARcohort[c]/100.0,WUE_par[c]));
     double fco2 = (1.0 - exp(-1*WUE_co2[c]*Catm));
-    Agplant[c] = WUE[c]*Eplant[c]*fpar*fco2;
+    double fvpd = std::min(5.0, pow(vpd, WUE_vpd[c]));
+    // Rcout<<fpar<<" "<< fco2 << " "<< fvpd<< " "<< WUE[c]*fpar*fco2*fvpd<<"\n";
+    Agplant[c] = WUE[c]*Eplant[c]*fpar*fco2*fvpd;
   }
   
   //Plant water status (StemPLC, RWC, DDS)

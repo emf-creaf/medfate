@@ -4,8 +4,8 @@
 
 # Version 2.7.6
 - New simulation parameter 'CO2ByYear' to specify year by year variations in atmospheric CO2
-- Sensitivity of photosynthesis to CO2 concentration under Granier's model
-- New species parameter 'WUE_co2' to regulate the effect of CO2 concentration under Granier's model
+- Sensitivity of photosynthesis to VPD and CO2 concentration under Granier's model
+- New species parameters 'WUE_co2', 'WUE_vpd' to regulate the effect of CO2 concentration and VPD under Granier's model
 - Species parameter 'WUE_decay' renamed 'WUE_par'
 - Control parameter 'Catm' renamed 'defaultCO2'
 
