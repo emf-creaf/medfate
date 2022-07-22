@@ -339,8 +339,9 @@ List transpirationGranier(List x, NumericVector meteovec,
     }
     //Photosynthesis
     double fpar = std::min(1.0, pow(PARcohort[c]/100.0,WUE_par[c]));
-    double fco2 = (1.0 - exp(-1*WUE_co2[c]*Catm));
-    double fvpd = std::min(2.5, pow(vpd, WUE_vpd[c]));
+    double fco2 = (1.0 - exp((-1.0)*WUE_co2[c]*Catm));
+    double fvpd = pow(vpd, WUE_vpd[c]);
+    if(vpd < 0.25) fvpd = 2.5 - (2.5 - pow(0.25, WUE_vpd[c]))*(vpd/0.25);
     // Rcout<<fpar<<" "<< fco2 << " "<< fvpd<< " "<< WUE[c]*fpar*fco2*fvpd<<"\n";
     Agplant[c] = WUE[c]*Eplant[c]*fpar*fco2*fvpd;
   }
