@@ -97,7 +97,7 @@ List transpirationGranier(List x, NumericVector meteovec,
   double tmin = meteovec["tmin"];
   double Catm = meteovec["Catm"];
   //Daily average water vapor pressure at the atmosphere (kPa)
-  double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmax, rhmin);
+  double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
   double vpd = std::max(0.0, meteoland::utils_saturationVP((tmin+tmax)/2.0) - vpatm);
     
   //Atmospheric pressure (kPa)
