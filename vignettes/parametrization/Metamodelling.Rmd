@@ -31,9 +31,10 @@ This document presents a meta-modelling exercise between basic (Granier's) and a
 The following parameters are used in the basic model, that cannot easily be parameterized from available information (see https://emf-creaf.github.io/medfatebook/index.html):
 
  + `Tmax_LAI` and `Tmax_LAIsp`, which determine the ratio of maximum transpiration over potential evapotranspiration for a given LAI. An empirical function with these parameters was derived by Granier (1999) for European temperate forests, without distinguishing between forests dominated by different species. 
- + `WUE`, which represents the daily water use efficiency (g C of gross assimilation / l H2O transpired) under conditions of high photosynthetically active radiation (PAR), no water deficit and no air CO2 limitations. 
- + `WUE_par`, which is the exponent of the function specifying the decrease in photosynthesis for lower (shadier) positions within the canopy, due to the decrease of available PAR. 
- + `WUE_co2`, which regulates the dependency of gross photosynthesis on air CO2 concentration. 
+ + `WUE`, which represents the daily water use efficiency (g C of gross assimilation / l H2O transpired) under conditions of VPD = 1kPa, high photosynthetically active radiation (PAR) and no air CO2 limitations. 
+ + `WUE_par`, which specifies the dependency of WUE on PAR. 
+ + `WUE_co2`, which specifies the dependency of WUE on air CO2 concentration. 
+ + `WUE_vpd`, which specifies the dependency of WUE on vapor pressure deficit (VPD). 
 
 
 As stated above, the general idea is to use simulation results issued by the advanced water balance model to obtain appropriate species-level estimates of the previous parameters, so that simulations with the basic water balance model (which is faster) produce an output similar that of the advanced model (which is slower). In the case of `Tmax_LAI` and `Tmax_LAIsp` we aim to determine a species-specific factor that can be used to modify the empirical coefficients obtained by Granier (1999). Water use efficiency is an emergent property of the advanced water balance model, depending on multiple parameters (hydraulics, photosynthetic capacity, stomatal conductance, etc). We can thus estimate `WUE` values (for [CO2] = 386) using simulations with high light levels and no water deficit. The decrease of WUE for plant cohorts in progressively shadier environments with respect to WUE under full light can provide us with an estimate of `WUE_par`, which again will depend on multiple plant traits. Finally, we can use additional simulations of the complex model under increasing [CO2] values to model the relationship between gross photosynthesis at a given [CO2] compared to [CO2] = 386 for each species.
@@ -57,6 +58,7 @@ Ideally, the transpiration and photosynthesis predictions of the advanced water 
 ```{r, echo = FALSE}
 df = readRDS("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Rdata/metamodelling_results.rds")
 df_co2 = readRDS("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Rdata/metamodelling_co2_results.rds")
+df_vpd = readRDS("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Rdata/metamodelling_vpd_results.rds")
 target_spp = sort(unique(as.numeric(df$SP)))
 ```
 
@@ -104,7 +106,7 @@ TR_sp %>%
 ```
 
 ## Water use efficiency ([CO2] = 386)
-### WUE and relative WUE
+### Relationship between WUE and PAR
 
 We estimated WUEg as the ratio between annual gross photosynthesis (Ag) and annual transpiration (E), both estimated using the advanced transpiration model. WUE values thus depend on the species identity (via functional traits) and on plot environmental factors (e.g. climatic conditions), as well as on the position of the plant within the canopy. We then estimate the maximum PAR and maximum WUE across cohorts for each plot, and calculate the relative WUE for each cohort as the ratio between WUE and the plot maximum value.
 ```{r, echo = FALSE}
@@ -113,8 +115,6 @@ df = df %>%
   group_by(SP, PL) %>% 
   mutate(WUEg_max = max(WUEg), PAR_max = max(PAR), WUEg_rel = 100*WUEg/WUEg_max) 
 ```
-
-### Model fitting of the relative WUE reduction
 
 We want to build a model of the relative WUE as a function of available PAR, so that we can reduce species-level maximum WUE values for cohorts in the shadow. To fit such model we need good estimates of relative WUE, because this implies that the maximum WUE values correspond to high PAR. With this aim, we focus on those records corresponding to plots/species where at least 90% of PAR was available for at least one cohort of the species in the plot.
 ```{r, echo = FALSE}
@@ -172,24 +172,46 @@ g2
 
 Note that there are substantial differences in the decay coefficients among species.
 
+### Relationship between WUE and VPD
 
-### Maximum WUE per species
+```{r, echo = FALSE}
+# Model
+fvpd<-function(vpd, a, limit = 0.25) {
+  res = numeric(length(vpd))
+  for(i in 1:length(vpd)) {
+    if(vpd[i]<limit) res[i] = 2.5 - (2.5 - limit^a)*(vpd[i]/limit)
+    else res[i] = vpd[i]^a
+  }
+  return(res)
+}
+df_vpd$WUEg_rel = NA
+a_vpd = rep(NA, length(target_spp))
+df_pred = data.frame(SP = numeric(0), SPN = character(0), vpd = numeric(0), WUEg = numeric(0))
+for(i in 1:length(target_spp)) {
+  df_vpd_i = df_vpd[df_vpd$SP==target_spp[i],]
+  mWUEg_vpd_1kpa = mean(df_vpd_i$WUEg[df_vpd_i$vpd > 0.85 & df_vpd_i$vpd < 1.15])
+  df_vpd$WUEg_rel[df_vpd$SP==target_spp[i]] = df_vpd$WUEg[df_vpd$SP==target_spp[i]]/mWUEg_vpd_1kpa
+  df_vpd_rel = data.frame(vpd = df_vpd_i$vpd, WUEg_rel = df_vpd_i$WUEg/mWUEg_vpd_1kpa)
+  df_vpd_rel = df_vpd_rel[df_vpd_rel$WUEg_rel<3,]
+  m_vpd_i = nls(WUEg_rel ~ fvpd(vpd,a), data = df_vpd_rel, start=list(a=-0.3))
+  a_vpd[i]<- coefficients(m_vpd_i)[["a"]]
+  df_pred_i = data.frame(SP = target_spp[i], SPN = df_vpd_i$SPN[1], vpd = seq(0,4, by=0.01))
+  df_pred_i$WUEg = fvpd(df_pred_i$vpd,a = a_vpd[i])
+  df_pred = rbind(df_pred, df_pred_i)
+}
 
-We can now go back to the original aim of estimating maximum WUE (under conditions of high PAR and no water deficit). We can use the fitted model to estimate the maximum WUE that would be expected if PAR was 100% for any given plant cohort, i.e. `WUEg_max`. The mean values of `WUEg_max` for each species can be used as estimates for parameter `WUE` under [CO2] = 386 ppm:
+```
+
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
-WUE_sp <- df %>% 
-  mutate(PAR50 = as.numeric(PAR>50)) %>%
-  group_by(SP, Name) %>%
-  summarize(nWUE = n(), 
-            PAR_max_obs = mean(PAR_max),
-            WUEg_max_obs = mean(WUEg_max), 
-            WUE_386 = mean(WUEg_max_pred), 
-            WUEg_max_sd = sd(WUEg_max_pred)) %>%
-  mutate(WUEg_max_se = WUEg_max_sd/sqrt(nWUE)) 
-
-WUE_sp[,-1] %>%
-  kbl() %>%
-  kable_styling()
+g3<-ggplot(df_vpd, aes(x = vpd, y = WUEg_rel))+
+  geom_point(aes(col = SPN), size = 0.1, alpha = 0.3)+
+  geom_line(aes(x=vpd, y=WUEg, col = SPN), data = df_pred, size = 1)+
+  ylim(c(0.3,3))+
+  ylab("WUEg/WUEg(1kPa)")+
+  xlab("VPD (kPa)")+
+  scale_color_discrete("")+
+  theme_bw()
+g3
 ```
 
 ## Dependency of photosynthesis on [CO2]
@@ -209,24 +231,17 @@ for(i in 1:length(target_spp)) {
 df_co2$Pred = Pred
 ```
 
-```{r}
-g3<-ggplot(df_co2, aes(x = Catm, y = Ag_rel))+
+```{r, echo = FALSE}
+g4<-ggplot(df_co2, aes(x = Catm, y = Ag_rel))+
   geom_point(aes(col = Name), size=0.3)+
   geom_line(aes(x=Catm, y=Pred, col = Name), size=1)+
-  ylab("% Ag/Ag_386")+
+  ylab("Ag/Ag([CO2]=386ppm)")+
   xlab("Atmospheric CO2 concentration (ppm)")+
   theme_bw()
-g3
+g4
 ```
 
-```{r, echo = FALSE}
-l = get_legend(g2)
-g <- plot_grid(g1 + theme(legend.position = "none"), 
-               g2 + theme(legend.position = "none"), 
-               g3 + theme(legend.position = "none"), 
-               l, labels = c("a)","b)", "c)", ""), nrow=2, ncol=2)
-# ggsave2("meta_fit.png", g, width = 9, height = 9)
-```
+
 
 
 ## Similarity in E and Ag estimates
@@ -248,13 +263,13 @@ Here we evaluated whether the estimated parameters indeed increased the similari
 The following plots show the effect of the new parameters on annual E and annual Ag for plant cohorts of the plots included in the study:
 
 ```{r, echo = FALSE, fig.width=10, fig.height=9, warning=FALSE}
-g1<-ggplot(df, aes(x=E_granier, y = E_sperry))+
+g5<-ggplot(df, aes(x=E_granier, y = E_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
   ylim(c(0,350))+ xlim(c(0,350))+
   xlab("Annual E (basic; default parameters)")+ ylab("Annual E (advanced)")+
   theme_bw()+theme(legend.position = "none")
-g2<-ggplot(df, aes(x=E_granier_meta, y = E_sperry))+
+g6<-ggplot(df, aes(x=E_granier_meta, y = E_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
   scale_color_discrete("")+
@@ -262,27 +277,34 @@ g2<-ggplot(df, aes(x=E_granier_meta, y = E_sperry))+
   xlab("Annual E (basic; new parameters)")+ ylab("Annual E (advanced)")+
   theme_bw()
 l <- get_legend(g2)
-g2<- g2 +theme(legend.position = "none")
-g3<-ggplot(df, aes(x=Ag_granier, y = Ag_sperry))+
+g6<- g6 +theme(legend.position = "none")
+g7<-ggplot(df, aes(x=Ag_granier, y = Ag_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
   ylim(c(0,1500))+ xlim(c(0,1500))+
   xlab("Annual Ag (basic; default parameters)")+ ylab("Annual Ag (advanced)")+
   theme_bw()+theme(legend.position = "none")
-g4<-ggplot(df, aes(x=Ag_granier_meta, y = Ag_sperry))+
+g8<-ggplot(df, aes(x=Ag_granier_meta, y = Ag_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
   scale_color_discrete("")+
   ylim(c(0,1500))+ xlim(c(0,1500))+
   xlab("Annual Ag (basic; new parameters)")+ ylab("Annual Ag (advanced)")+
   theme_bw()+theme(legend.position = "none")
-g0<-plot_grid(g1,g2,g3,g4, ncol=2)
+g0<-plot_grid(g5,g6,g7,g8, ncol=2)
 g<-plot_grid(g0,l, ncol=2, rel_widths = c(1,0.2))
-# ggsave("meta_eval.png", plot_grid(g3,g4,l, ncol=3, rel_widths = c(1,1,0.5)), width=9, height = 4)
 g
 ```
 
-
+```{r, echo = FALSE}
+# g <- plot_grid(g1 + theme(legend.position = "none"), 
+#                g2 + theme(legend.position = "none"), 
+#                g3 + theme(legend.position = c(0.73,0.62)),
+#                g4 + theme(legend.position = "none"),
+#                g7,g8,
+#                labels = c("a)","b)", "c)", "d)", "e)","f)"), nrow=3, ncol=2)
+# ggsave2("meta_fit_eval.png", g, width = 9, height = 13.5)
+```
 <!-- ```{r, echo = FALSE} -->
 <!-- sel_E = (df$E_sperry < 300) -->
 <!-- m = lm(E_sperry~-1+E_granier, data = df[sel_E,]) -->

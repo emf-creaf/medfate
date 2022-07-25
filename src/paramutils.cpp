@@ -611,7 +611,7 @@ NumericVector WUEWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector WUE = speciesNumericParameter(SP, SpParams, "WUE");
   for(int c=0;c<WUE.size();c++) {
     if(NumericVector::is_na(WUE[c])) {
-      WUE[c] = 7.57; //default value (gives WUE = 5 for Catm = 386)
+      WUE[c] = 7.9; 
     }
   }
   //Access internal data frame "trait_family_means"
@@ -652,7 +652,7 @@ NumericVector WUEPARWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector WUE_par = speciesNumericParameter(SP, SpParams, "WUE_par");
   for(int c=0;c<WUE_par.size();c++) {
     if(NumericVector::is_na(WUE_par[c])) {
-      WUE_par[c] = 0.2812; //default value
+      WUE_par[c] = 0.3643; //default value
     }
   }
   return(WUE_par);
@@ -661,7 +661,7 @@ NumericVector WUECO2WithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector WUE_co2 = speciesNumericParameter(SP, SpParams, "WUE_co2");
   for(int c=0;c<WUE_co2.size();c++) {
     if(NumericVector::is_na(WUE_co2[c])) {
-      WUE_co2[c] = 0.0028; //default value
+      WUE_co2[c] = 0.002757;
     }
   }
   return(WUE_co2);
@@ -670,7 +670,7 @@ NumericVector WUEVPDWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector WUE_vpd = speciesNumericParameter(SP, SpParams, "WUE_vpd");
   for(int c=0;c<WUE_vpd.size();c++) {
     if(NumericVector::is_na(WUE_vpd[c])) {
-      WUE_vpd[c] = -0.45; //default value
+      WUE_vpd[c] = -0.4636;
     }
   }
   return(WUE_vpd);

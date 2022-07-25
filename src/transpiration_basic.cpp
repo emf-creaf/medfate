@@ -140,9 +140,9 @@ List transpirationGranier(List x, NumericVector meteovec,
   NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
   NumericVector Psi_Critic = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Critic"]);
   NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
-  NumericVector WUE_par(numCohorts, 0.2812);
-  NumericVector WUE_co2(numCohorts, 0.0028);
-  NumericVector WUE_vpd(numCohorts, -0.45);
+  NumericVector WUE_par(numCohorts, 0.3643);
+  NumericVector WUE_co2(numCohorts, 0.002757);
+  NumericVector WUE_vpd(numCohorts, -0.4636);
   NumericVector Tmax_LAI(numCohorts, 0.134);
   NumericVector Tmax_LAIsq(numCohorts, -0.006);
   if(paramsTransp.containsElementNamed("Tmax_LAI")) {
