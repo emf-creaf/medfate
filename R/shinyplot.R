@@ -77,14 +77,14 @@
     cohorts_out = row.names(out$spwbInput$cohorts)
     cohorts_sp_out = paste0(row.names(out$spwbInput$cohorts), 
                             " (",out$spwbInput$cohorts$Name, ")")
-    dates_out = as.Date(names(out$subdaily))
+    dates_out = as.Date(row.names(out$WaterBalance))
   } else if(type_out=="growth") {
     transpirationMode = out$growthInput$control$transpirationMode
     cohorts_out = row.names(out$growthInput$cohorts)
     cohorts_sp_out = paste0(row.names(out$growthInput$cohorts), 
                             " (",out$growthInput$cohorts$Name, ")")
     subdaily_out = out$growthInput$control$subdailyResults
-    dates_out = as.Date(names(out$subdaily))
+    dates_out = as.Date(row.names(out$WaterBalance))
   } else { # fordyn
     out_1 = out$GrowthResults[[1]]
     transpirationMode = out_1$growthInput$control$transpirationMode
@@ -107,8 +107,8 @@
     subdaily_out = FALSE
     dates_out = NULL
     for(i in 1:length(out$GrowthResults)) {
-      if(is.null(dates_out)) dates_out = as.Date(names(out$GrowthResults[[i]]$subdaily))
-      else dates_out = c(dates_out, as.Date(names(out$GrowthResults[[i]]$subdaily)))
+      if(is.null(dates_out)) dates_out = as.Date(row.names(out$GrowthResults[[i]]$WaterBalance))
+      else dates_out = c(dates_out, as.Date(row.names(out$GrowthResults[[i]]$WaterBalance)))
     }
   }
   cohort_choices = cohorts_out

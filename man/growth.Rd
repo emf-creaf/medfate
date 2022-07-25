@@ -50,6 +50,7 @@ growth(x, meteo,  latitude,
   \item{\code{"growthOutput"}: An copy of the final state of the object \code{x} of class \code{\link{growthInput}}.}
   \item{\code{"WaterBalance"}: A data frame where different water balance variables (see \code{\link{spwb}}).}
   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
+  \item{\code{"CarbonBalance"}: A data frame where different stand-level carbon balance components, all in g C · m-2.}
   \item{\code{"BiomassBalance"}: A data frame with the daily values of biomass balance components.}
   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
   \item{\code{"Soil"}: A data frame where different soil variables  (see \code{\link{spwb}}).}
