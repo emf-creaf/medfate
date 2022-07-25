@@ -58,40 +58,53 @@ Function <code>pheno_updateLeaves</code> updates the status of expanded leaves a
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">pheno_leafDevelopmentStatus</span><span class="op">(</span><span class="va">Sgdd</span>, <span class="va">gdd</span>, unfoldingDD <span class="op">=</span> <span class="fl">300</span><span class="op">)</span>
-<span class="fu">pheno_leafSenescenceStatus</span><span class="op">(</span><span class="va">Ssen</span>, <span class="va">sen</span><span class="op">)</span>
-<span class="fu">pheno_updatePhenology</span><span class="op">(</span><span class="va">x</span>, <span class="va">doy</span>, <span class="va">photoperiod</span>, <span class="va">tmean</span><span class="op">)</span>
-<span class="fu">pheno_updateLeaves</span><span class="op">(</span><span class="va">x</span>, <span class="va">wind</span>, <span class="va">fromGrowthModel</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pheno_leafDevelopmentStatus</span><span class="op">(</span><span class="va">Sgdd</span>, <span class="va">gdd</span>, unfoldingDD <span class="op">=</span> <span class="fl">300</span><span class="op">)</span></span>
+<span><span class="fu">pheno_leafSenescenceStatus</span><span class="op">(</span><span class="va">Ssen</span>, <span class="va">sen</span><span class="op">)</span></span>
+<span><span class="fu">pheno_updatePhenology</span><span class="op">(</span><span class="va">x</span>, <span class="va">doy</span>, <span class="va">photoperiod</span>, <span class="va">tmean</span><span class="op">)</span></span>
+<span><span class="fu">pheno_updateLeaves</span><span class="op">(</span><span class="va">x</span>, <span class="va">wind</span>, <span class="va">fromGrowthModel</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>Sgdd</dt>
 <dd><p>Degree days required for leaf budburst (in Celsius).</p></dd>
-<dt>gdd</dt>
+
+  <dt>gdd</dt>
 <dd><p>Cumulative degree days (in Celsius)</p></dd>
-<dt>unfoldingDD</dt>
+
+  <dt>unfoldingDD</dt>
 <dd><p>Degree-days for complete leaf unfolding after budburst has occurred.</p></dd>
-<dt>Ssen</dt>
+
+  <dt>Ssen</dt>
 <dd><p>Threshold to start leaf senescence.</p></dd>
-<dt>sen</dt>
+
+  <dt>sen</dt>
 <dd><p>Cumulative senescence variable.</p></dd>
-<dt>x</dt>
+
+  <dt>x</dt>
 <dd><p>An object of class <code><a href="modelInput.html">spwbInput</a></code>.</p></dd>
-<dt>doy</dt>
+
+  <dt>doy</dt>
 <dd><p>Day of the year.</p></dd>
-<dt>photoperiod</dt>
+
+  <dt>photoperiod</dt>
 <dd><p>Day length (in hours).</p></dd>
-<dt>tmean</dt>
+
+  <dt>tmean</dt>
 <dd><p>Average day temperature (in Celsius).</p></dd>
-<dt>wind</dt>
+
+  <dt>wind</dt>
 <dd><p>Average day wind speed (in m/s).</p></dd>
-<dt>fromGrowthModel</dt>
+
+  <dt>fromGrowthModel</dt>
 <dd><p>Boolean flag to indicate that routine is called from <code><a href="growth.html">growth</a></code> simulation function.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Function <code>pheno_leafDevelopmentStatus</code> returns a vector of values between 0 and 1, whereas function <code>pheno_leafSenescenceStatus</code> returns a vector of 0 (senescent) and 1 (expanded) values. The other two functions do not return any value (see details).</p>
+    
+
+<p>Function <code>pheno_leafDevelopmentStatus</code> returns a vector of values between 0 and 1, whereas function <code>pheno_leafSenescenceStatus</code> returns a vector of 0 (senescent) and 1 (expanded) values. The other two functions do not return any value (see details).</p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -124,7 +137,7 @@ models. Phenology: An Integrative Environmental Science. Springer, pp. 275–293
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

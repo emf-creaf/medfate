@@ -56,33 +56,39 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">evaluation_table</span><span class="op">(</span><span class="va">out</span>, <span class="va">measuredData</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, cohort <span class="op">=</span> <span class="cn">NULL</span>, 
-                 temporalResolution <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span>
-<span class="fu">evaluation_stats</span><span class="op">(</span><span class="va">out</span>, <span class="va">measuredData</span>, type<span class="op">=</span><span class="st">"SWC"</span>, cohort <span class="op">=</span> <span class="cn">NULL</span>, 
-                 temporalResolution <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span>
-<span class="fu">evaluation_plot</span><span class="op">(</span><span class="va">out</span>, <span class="va">measuredData</span>, type<span class="op">=</span><span class="st">"SWC"</span>, cohort <span class="op">=</span> <span class="cn">NULL</span>, 
-                temporalResolution <span class="op">=</span> <span class="st">"day"</span>, 
-                plotType <span class="op">=</span> <span class="st">"dynamics"</span><span class="op">)</span>
-<span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">out</span>, <span class="va">measuredData</span>, type<span class="op">=</span><span class="st">"SWC"</span>, cohort<span class="op">=</span><span class="cn">NULL</span>, 
-                  temporalResolution <span class="op">=</span> <span class="st">"day"</span>,
-                  metric <span class="op">=</span> <span class="st">"loglikelihood"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">evaluation_table</span><span class="op">(</span><span class="va">out</span>, <span class="va">measuredData</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, cohort <span class="op">=</span> <span class="cn">NULL</span>, </span>
+<span>                 temporalResolution <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span></span>
+<span><span class="fu">evaluation_stats</span><span class="op">(</span><span class="va">out</span>, <span class="va">measuredData</span>, type<span class="op">=</span><span class="st">"SWC"</span>, cohort <span class="op">=</span> <span class="cn">NULL</span>, </span>
+<span>                 temporalResolution <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span></span>
+<span><span class="fu">evaluation_plot</span><span class="op">(</span><span class="va">out</span>, <span class="va">measuredData</span>, type<span class="op">=</span><span class="st">"SWC"</span>, cohort <span class="op">=</span> <span class="cn">NULL</span>, </span>
+<span>                temporalResolution <span class="op">=</span> <span class="st">"day"</span>, </span>
+<span>                plotType <span class="op">=</span> <span class="st">"dynamics"</span><span class="op">)</span></span>
+<span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">out</span>, <span class="va">measuredData</span>, type<span class="op">=</span><span class="st">"SWC"</span>, cohort<span class="op">=</span><span class="cn">NULL</span>, </span>
+<span>                  temporalResolution <span class="op">=</span> <span class="st">"day"</span>,</span>
+<span>                  metric <span class="op">=</span> <span class="st">"loglikelihood"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>out</dt>
 <dd><p>An object of class <code><a href="spwb.html">spwb</a></code>, <code><a href="growth.html">growth</a></code> or <code><a href="spwb.html">pwb</a></code>.</p></dd>
-<dt>measuredData</dt>
+
+  <dt>measuredData</dt>
 <dd><p>A data frame with observed/measured values. Dates should be in row names, whereas columns should be named according to the type of output to be evaluated (see details).</p></dd>
-<dt>type</dt>
+
+  <dt>type</dt>
 <dd><p>A string with the kind of model output to be evaluated. Accepted values are <code>"SWC"</code> (soil moisture content), <code>"REW"</code> relative extractable water, <code>"ETR"</code> (total evapotranspiration), <code>"SE+TR"</code> (modelled soil evaporation + transpiration against observed total evapotranspiration), <code>"E"</code> (transpiration per leaf area), <code>"LFMC"</code> (Live fuel moisture content), <code>"WP"</code> (plant water potentials), <code>"BAI"</code> (basal area increment), <code>"DI"</code> (diameter increment), <code>"DBH"</code> (diameter at breast height) or <code>"Height"</code> (plant height).</p></dd>
-<dt>cohort</dt>
+
+  <dt>cohort</dt>
 <dd><p>A string of the cohort to be compared (e.g. "T1_68"). If <code>NULL</code> results for the first cohort will be evaluated.</p></dd>
-<dt>temporalResolution</dt>
+
+  <dt>temporalResolution</dt>
 <dd><p>A string to indicate the temporal resolution of the model evaluation, which can be "day", "week", "month" or "year". Observed and modelled values are aggregated temporally (using either means or sums) before comparison.</p></dd>
-<dt>plotType</dt>
+
+  <dt>plotType</dt>
 <dd><p>Plot type to draw, either <code>"dynamics"</code> or <code>"scatter"</code>.</p></dd>
-<dt>metric</dt>
+
+  <dt>metric</dt>
 <dd><p>An evaluation metric:</p><ul><li><p><code>"MAE"</code>: Mean absolute error.</p></li>
 <li><p><code>"MAE.rel"</code>: Mean absolute error in relative terms.</p></li>
 <li><p><code>"r"</code>: Pearson's linear correlation coefficient.</p></li>
@@ -90,6 +96,7 @@
 <li><p><code>"NSE.abs"</code>: Modified Nash-Sutcliffe model efficiency coefficient (L1 norm) (Legates &amp; McCabe 1999).</p></li>
 <li><p><code>"loglikelihood"</code>: Logarithm of the likelihood of observing the data given the model predictions, assuming independent Gaussian errors.</p></li>
 </ul><p></p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -107,7 +114,9 @@
     </div>
     <div id="value">
     <h2>Value</h2>
-    <ul><li><p>Function <code>evaluation_table</code> returns a data frame with dates, observed and predicted values.</p></li>
+    
+
+<ul><li><p>Function <code>evaluation_table</code> returns a data frame with dates, observed and predicted values.</p></li>
 <li><p>Function <code>evaluation_stats</code> returns evaluation statistics (a vector or a data frame depending on <code>type</code>):
     </p><ul><li><p><code>Bias</code>: Mean deviation (positive values correspond to model overestimations).</p></li>
 <li><p><code>Bias.rel</code>: Bias in relative terms (%).</p></li>
@@ -135,36 +144,36 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">#Load example daily meteorological data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Load example plot plant data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Default species parameterization</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Initialize soil with default soil params (4 layers)</span></span>
-<span class="r-in"><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Initialize control parameters</span></span>
-<span class="r-in"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Initialize input</span></span>
-<span class="r-in"><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Call simulation function</span></span>
-<span class="r-in"><span class="va">S1</span><span class="op">&lt;-</span><span class="fu"><a href="spwb.html">spwb</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Load example daily meteorological data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Load example plot plant data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Default species parameterization</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Initialize soil with default soil params (4 layers)</span></span></span>
+<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Initialize control parameters</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Initialize input</span></span></span>
+<span class="r-in"><span><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Call simulation function</span></span></span>
+<span class="r-in"><span><span class="va">S1</span><span class="op">&lt;-</span><span class="fu"><a href="spwb.html">spwb</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 291.257</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial snowpack content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 266.112</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 265.718</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -25.1443</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -25.1443</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -25.5391</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -25.5391</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
@@ -174,29 +183,29 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 408 Runoff (mm) 9 Deep drainage (mm) 67</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 17 Transpiration (mm) 350</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 350  Plant water balance (mm) -0</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Load observed data (in this case the same simulation results with some added error)  </span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Evaluation statistics for soil water content</span></span>
-<span class="r-in"><span class="fu">evaluation_stats</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Load observed data (in this case the same simulation results with some added error)  </span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Evaluation statistics for soil water content</span></span></span>
+<span class="r-in"><span><span class="fu">evaluation_stats</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             n          Bias      Bias.rel           MAE       MAE.rel </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 365.000000000  -0.005799769  -2.200688970   0.008422278   3.195784540 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 365.000000000  -0.005663786  -2.151325516   0.008590169   3.262879321 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             r           NSE       NSE.abs </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.959749344   0.869120601   0.634947504 </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#NSE only</span></span>
-<span class="r-in"><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span>, metric<span class="op">=</span><span class="st">"NSE"</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.8691206</span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Comparison of temporal dynamics</span></span>
-<span class="r-in"><span class="fu">evaluation_plot</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.961957632   0.880447980   0.635987833 </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#NSE only</span></span></span>
+<span class="r-in"><span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span>, metric<span class="op">=</span><span class="st">"NSE"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.880448</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Comparison of temporal dynamics</span></span></span>
+<span class="r-in"><span><span class="fu">evaluation_plot</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="evaluation-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Loglikelihood value</span></span>
-<span class="r-in"><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 920.8021</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Loglikelihood value</span></span></span>
+<span class="r-in"><span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 916.6039</span>
 </code></pre></div>
     </div>
   </div>
@@ -211,7 +220,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

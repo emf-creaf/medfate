@@ -56,87 +56,114 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">photo_GammaTemp</span><span class="op">(</span><span class="va">Tleaf</span><span class="op">)</span>
-<span class="fu">photo_KmTemp</span><span class="op">(</span><span class="va">Tleaf</span>, Oi <span class="op">=</span> <span class="fl">209</span><span class="op">)</span>
-<span class="fu">photo_VmaxTemp</span><span class="op">(</span><span class="va">Vmax298</span>, <span class="va">Tleaf</span><span class="op">)</span>
-<span class="fu">photo_JmaxTemp</span><span class="op">(</span><span class="va">Jmax298</span>, <span class="va">Tleaf</span><span class="op">)</span>
-<span class="fu">photo_electronLimitedPhotosynthesis</span><span class="op">(</span><span class="va">Q</span>, <span class="va">Ci</span>, <span class="va">GT</span>, <span class="va">Jmax</span><span class="op">)</span>
-<span class="fu">photo_rubiscoLimitedPhotosynthesis</span><span class="op">(</span><span class="va">Ci</span>, <span class="va">GT</span>, <span class="va">Km</span>, <span class="va">Vmax</span><span class="op">)</span>
-<span class="fu">photo_photosynthesis</span><span class="op">(</span><span class="va">Q</span>, <span class="va">Catm</span>, <span class="va">Gc</span>, <span class="va">Tleaf</span>, <span class="va">Vmax298</span>, <span class="va">Jmax298</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="fu">photo_leafPhotosynthesisFunction</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiLeaf</span>, <span class="va">Catm</span>, <span class="va">Patm</span>, <span class="va">Tair</span>, <span class="va">vpa</span>, <span class="va">u</span>, 
-                             <span class="va">absRad</span>, <span class="va">Q</span>, <span class="va">Vmax298</span>, <span class="va">Jmax298</span>,
-                             leafWidth <span class="op">=</span> <span class="fl">1.0</span>, refLeafArea <span class="op">=</span> <span class="fl">1</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="fu">photo_leafPhotosynthesisFunction2</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiLeaf</span>, <span class="va">Catm</span>, <span class="va">Patm</span>, <span class="va">Tair</span>, <span class="va">vpa</span>, <span class="va">u</span>, 
-                             <span class="va">SWRabs</span>, <span class="va">LWRnet</span>, <span class="va">Q</span>, <span class="va">Vmax298</span>, <span class="va">Jmax298</span>,
-                             leafWidth <span class="op">=</span> <span class="fl">1.0</span>, refLeafArea <span class="op">=</span> <span class="fl">1</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="fu">photo_sunshadePhotosynthesisFunction</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiLeaf</span>, <span class="va">Catm</span>, <span class="va">Patm</span>, <span class="va">Tair</span>, <span class="va">vpa</span>, 
-                                     <span class="va">SLarea</span>, <span class="va">SHarea</span>, <span class="va">u</span>, 
-                                     <span class="va">absRadSL</span>, <span class="va">absRadSH</span>, <span class="va">QSL</span>, <span class="va">QSH</span>, 
-                                     <span class="va">Vmax298SL</span>, <span class="va">Vmax298SH</span>, <span class="va">Jmax298SL</span>, <span class="va">Jmax298SH</span>, 
-                                     leafWidth <span class="op">=</span> <span class="fl">1.0</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="fu">photo_multilayerPhotosynthesisFunction</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiLeaf</span>, <span class="va">Catm</span>, <span class="va">Patm</span>, <span class="va">Tair</span>, <span class="va">vpa</span>, 
-                                      <span class="va">SLarea</span>, <span class="va">SHarea</span>, <span class="va">u</span>, 
-                                      <span class="va">absRadSL</span>, <span class="va">absRadSH</span>, <span class="va">QSL</span>, <span class="va">QSH</span>, 
-                                      <span class="va">Vmax298</span>, <span class="va">Jmax298</span>, leafWidth <span class="op">=</span> <span class="fl">1.0</span>, 
-                                      verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">photo_GammaTemp</span><span class="op">(</span><span class="va">Tleaf</span><span class="op">)</span></span>
+<span><span class="fu">photo_KmTemp</span><span class="op">(</span><span class="va">Tleaf</span>, Oi <span class="op">=</span> <span class="fl">209</span><span class="op">)</span></span>
+<span><span class="fu">photo_VmaxTemp</span><span class="op">(</span><span class="va">Vmax298</span>, <span class="va">Tleaf</span><span class="op">)</span></span>
+<span><span class="fu">photo_JmaxTemp</span><span class="op">(</span><span class="va">Jmax298</span>, <span class="va">Tleaf</span><span class="op">)</span></span>
+<span><span class="fu">photo_electronLimitedPhotosynthesis</span><span class="op">(</span><span class="va">Q</span>, <span class="va">Ci</span>, <span class="va">GT</span>, <span class="va">Jmax</span><span class="op">)</span></span>
+<span><span class="fu">photo_rubiscoLimitedPhotosynthesis</span><span class="op">(</span><span class="va">Ci</span>, <span class="va">GT</span>, <span class="va">Km</span>, <span class="va">Vmax</span><span class="op">)</span></span>
+<span><span class="fu">photo_photosynthesis</span><span class="op">(</span><span class="va">Q</span>, <span class="va">Catm</span>, <span class="va">Gc</span>, <span class="va">Tleaf</span>, <span class="va">Vmax298</span>, <span class="va">Jmax298</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">photo_leafPhotosynthesisFunction</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiLeaf</span>, <span class="va">Catm</span>, <span class="va">Patm</span>, <span class="va">Tair</span>, <span class="va">vpa</span>, <span class="va">u</span>, </span>
+<span>                             <span class="va">absRad</span>, <span class="va">Q</span>, <span class="va">Vmax298</span>, <span class="va">Jmax298</span>,</span>
+<span>                             leafWidth <span class="op">=</span> <span class="fl">1.0</span>, refLeafArea <span class="op">=</span> <span class="fl">1</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">photo_leafPhotosynthesisFunction2</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiLeaf</span>, <span class="va">Catm</span>, <span class="va">Patm</span>, <span class="va">Tair</span>, <span class="va">vpa</span>, <span class="va">u</span>, </span>
+<span>                             <span class="va">SWRabs</span>, <span class="va">LWRnet</span>, <span class="va">Q</span>, <span class="va">Vmax298</span>, <span class="va">Jmax298</span>,</span>
+<span>                             leafWidth <span class="op">=</span> <span class="fl">1.0</span>, refLeafArea <span class="op">=</span> <span class="fl">1</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">photo_sunshadePhotosynthesisFunction</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiLeaf</span>, <span class="va">Catm</span>, <span class="va">Patm</span>, <span class="va">Tair</span>, <span class="va">vpa</span>, </span>
+<span>                                     <span class="va">SLarea</span>, <span class="va">SHarea</span>, <span class="va">u</span>, </span>
+<span>                                     <span class="va">absRadSL</span>, <span class="va">absRadSH</span>, <span class="va">QSL</span>, <span class="va">QSH</span>, </span>
+<span>                                     <span class="va">Vmax298SL</span>, <span class="va">Vmax298SH</span>, <span class="va">Jmax298SL</span>, <span class="va">Jmax298SH</span>, </span>
+<span>                                     leafWidth <span class="op">=</span> <span class="fl">1.0</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">photo_multilayerPhotosynthesisFunction</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiLeaf</span>, <span class="va">Catm</span>, <span class="va">Patm</span>, <span class="va">Tair</span>, <span class="va">vpa</span>, </span>
+<span>                                      <span class="va">SLarea</span>, <span class="va">SHarea</span>, <span class="va">u</span>, </span>
+<span>                                      <span class="va">absRadSL</span>, <span class="va">absRadSH</span>, <span class="va">QSL</span>, <span class="va">QSH</span>, </span>
+<span>                                      <span class="va">Vmax298</span>, <span class="va">Jmax298</span>, leafWidth <span class="op">=</span> <span class="fl">1.0</span>, </span>
+<span>                                      verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>Tleaf</dt>
 <dd><p>Leaf temperature (in ºC).</p></dd>
-<dt>Oi</dt>
+
+  <dt>Oi</dt>
 <dd><p>Oxigen concentration (mmol*mol-1).</p></dd>
-<dt>Vmax298, Vmax298SL, Vmax298SH</dt>
+
+  <dt>Vmax298, Vmax298SL, Vmax298SH</dt>
 <dd><p>Maximum Rubisco carboxylation rate per leaf area at 298ºK (i.e. 25 ºC) (micromol*s-1*m-2) (for each canopy layer in the case of <code>photo_multilayerPhotosynthesisFunction</code>). 'SH' stands for shade leaves, whereas 'SL' stands for sunlit leaves.</p></dd>
-<dt>Jmax298, Jmax298SL, Jmax298SH</dt>
+
+  <dt>Jmax298, Jmax298SL, Jmax298SH</dt>
 <dd><p>Maximum electron transport rate per leaf area at 298ºK (i.e. 25 ºC) (micromol*s-1*m-2) (for each canopy layer in the case of <code>photo_multilayerPhotosynthesisFunction</code>). 'SH' stands for shade leaves, whereas 'SL' stands for sunlit leaves.</p></dd>
-<dt>Q</dt>
+
+  <dt>Q</dt>
 <dd><p>Active photon flux density (micromol * s-1 * m-2).</p></dd>
-<dt>Ci</dt>
+
+  <dt>Ci</dt>
 <dd><p>CO2 internal concentration (micromol * mol-1).</p></dd>
-<dt>GT</dt>
+
+  <dt>GT</dt>
 <dd><p>CO2 saturation point corrected by temperature (micromol * mol-1).</p></dd>
-<dt>Jmax</dt>
+
+  <dt>Jmax</dt>
 <dd><p>Maximum electron transport rate per leaf area (micromol*s-1*m-2).</p></dd>
-<dt>Km</dt>
+
+  <dt>Km</dt>
 <dd><p>Km = Kc*(1.0+(Oi/Ko)) - Michaelis-Menten term corrected by temperature (in micromol * mol-1).</p></dd>
-<dt>Vmax</dt>
+
+  <dt>Vmax</dt>
 <dd><p>Maximum Rubisco carboxylation rate per leaf area (micromol*s-1*m-2).</p></dd>
-<dt>Catm</dt>
+
+  <dt>Catm</dt>
 <dd><p>CO2 air concentration (micromol * mol-1).</p></dd>
-<dt>Gc</dt>
+
+  <dt>Gc</dt>
 <dd><p>CO2 leaf (stomatal) conductance (mol * s-1 * m-2).</p></dd>
-<dt>E</dt>
+
+  <dt>E</dt>
 <dd><p>Transpiration flow rate per leaf area (mmol*s-1*m-2).</p></dd>
-<dt>psiLeaf</dt>
+
+  <dt>psiLeaf</dt>
 <dd><p>Leaf water potential (MPa).</p></dd>
-<dt>Patm</dt>
+
+  <dt>Patm</dt>
 <dd><p>Atmospheric air pressure (in kPa).</p></dd>
-<dt>Tair</dt>
+
+  <dt>Tair</dt>
 <dd><p>Air temperature (in ºC).</p></dd>
-<dt>vpa</dt>
+
+  <dt>vpa</dt>
 <dd><p>Vapour pressure deficit (in kPa).</p></dd>
-<dt>u</dt>
+
+  <dt>u</dt>
 <dd><p>Wind speed above the leaf boundary (in m/s) (for each canopy layer in the case of <code>photo_multilayerPhotosynthesisFunction</code>).</p></dd>
-<dt>absRad</dt>
+
+  <dt>absRad</dt>
 <dd><p>Absorbed long- and short-wave radiation (in W*m^-2).</p></dd>
-<dt>SWRabs</dt>
+
+  <dt>SWRabs</dt>
 <dd><p>Absorbed short-wave radiation (in W·m-2).</p></dd>
-<dt>LWRnet</dt>
+
+  <dt>LWRnet</dt>
 <dd><p>Net long-wave radiation balance (in W·m-2).</p></dd>
-<dt>leafWidth</dt>
+
+  <dt>leafWidth</dt>
 <dd><p>Leaf width (in cm).</p></dd>
-<dt>refLeafArea</dt>
+
+  <dt>refLeafArea</dt>
 <dd><p>Leaf reference area.</p></dd>
-<dt>verbose</dt>
+
+  <dt>verbose</dt>
 <dd><p>Boolean flag to indicate console output.</p></dd>
-<dt>SLarea, SHarea</dt>
+
+  <dt>SLarea, SHarea</dt>
 <dd><p>Leaf area index of sunlit/shade leaves (for each canopy layer in the case of <code>photo_multilayerPhotosynthesisFunction</code>).</p></dd>
-<dt>absRadSL, absRadSH</dt>
+
+  <dt>absRadSL, absRadSH</dt>
 <dd><p>Instantaneous absorbed radiation (W·m-2) per unit of sunlit/shade leaf area (for each canopy layer in the case of <code>photo_multilayerPhotosynthesisFunction</code>).</p></dd>
-<dt>QSL, QSH</dt>
+
+  <dt>QSL, QSH</dt>
 <dd><p>Active photon flux density (micromol * s-1 * m-2) per unit of sunlit/shade leaf area (for each canopy layer in the case of <code>photo_multilayerPhotosynthesisFunction</code>).</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -144,7 +171,9 @@
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>Values returned for each function are:</p><ul><li><p><code>photo_GammaTemp</code>: CO2 compensation concentration (micromol * mol-1).</p></li>
+    
+
+<p>Values returned for each function are:</p><ul><li><p><code>photo_GammaTemp</code>: CO2 compensation concentration (micromol * mol-1).</p></li>
 <li><p><code>photo_KmTemp</code>: Michaelis-Menten coefficients of Rubisco for Carbon (micromol * mol-1) and Oxigen (mmol * mol-1).</p></li>
 <li><p><code>photo_VmaxTemp</code>: Temperature correction of Vmax298.</p></li>
 <li><p><code>photo_JmaxTemp</code>: Temperature correction of Jmax298.</p></li>
@@ -203,7 +232,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

@@ -56,23 +56,28 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">modifySpParams</span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">customParams</span>, subsetSpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu">modifyCohortParams</span><span class="op">(</span><span class="va">x</span>, <span class="va">customParams</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu">modifyInputParams</span><span class="op">(</span><span class="va">x</span>, <span class="va">customParams</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modifySpParams</span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">customParams</span>, subsetSpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">modifyCohortParams</span><span class="op">(</span><span class="va">x</span>, <span class="va">customParams</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">modifyInputParams</span><span class="op">(</span><span class="va">x</span>, <span class="va">customParams</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>A model input object of class <code><a href="modelInput.html">spwbInput</a></code> or <code><a href="modelInput.html">growthInput</a></code>.</p></dd>
-<dt>SpParams</dt>
+
+  <dt>SpParams</dt>
 <dd><p>A species parameter data frame, typically <code><a href="SpParams.html">SpParamsMED</a></code>.</p></dd>
-<dt>customParams</dt>
+
+  <dt>customParams</dt>
 <dd><p>A data frame or a named vector with new parameter values (see details).</p></dd>
-<dt>subsetSpecies</dt>
+
+  <dt>subsetSpecies</dt>
 <dd><p>A flag to indicate that the output data frame should include only those species mentioned in <code>customParams</code>.</p></dd>
-<dt>verbose</dt>
+
+  <dt>verbose</dt>
 <dd><p>A flag to indicate that messages should be printed on the console.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -82,8 +87,12 @@
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>Function <code>modifySpParams</code> returns a modified species parameter data frame. 
-Functions <code>modifyCohortParams</code> and <code>modifyInputParams</code> return a modified <code><a href="modelInput.html">spwbInput</a></code> or <code><a href="modelInput.html">growthInput</a></code> object. Note that modifications may affect other parameters beyond those indicated in <code>customParams</code>, as a result of parameter dependencies (see examples).</p>
+    
+
+<p>Function <code>modifySpParams</code> returns a modified species parameter data frame.</p>
+
+
+<p>Functions <code>modifyCohortParams</code> and <code>modifyInputParams</code> return a modified <code><a href="modelInput.html">spwbInput</a></code> or <code><a href="modelInput.html">growthInput</a></code> object. Note that modifications may affect other parameters beyond those indicated in <code>customParams</code>, as a result of parameter dependencies (see examples).</p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -96,63 +105,63 @@ Functions <code>modifyCohortParams</code> and <code>modifyInputParams</code> ret
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">#Load example daily meteorological data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Load example plot plant data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Default species parameterization</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Initialize soil with default soil params (4 layers)</span></span>
-<span class="r-in"><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Initialize control parameters</span></span>
-<span class="r-in"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Initialize input</span></span>
-<span class="r-in"><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Cohort name for Pinus halepensis</span></span>
-<span class="r-in"><span class="va">PH_coh</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"T1_"</span>, <span class="va">SpParamsMED</span><span class="op">$</span><span class="va">SpIndex</span><span class="op">[</span><span class="va">SpParamsMED</span><span class="op">$</span><span class="va">Name</span><span class="op">==</span><span class="st">"Pinus halepensis"</span><span class="op">]</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">PH_coh</span> </span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Load example daily meteorological data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Load example plot plant data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Default species parameterization</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Initialize soil with default soil params (4 layers)</span></span></span>
+<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Initialize control parameters</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Initialize input</span></span></span>
+<span class="r-in"><span><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Cohort name for Pinus halepensis</span></span></span>
+<span class="r-in"><span><span class="va">PH_coh</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"T1_"</span>, <span class="va">SpParamsMED</span><span class="op">$</span><span class="va">SpIndex</span><span class="op">[</span><span class="va">SpParamsMED</span><span class="op">$</span><span class="va">Name</span><span class="op">==</span><span class="st">"Pinus halepensis"</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">PH_coh</span> </span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "T1_148"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Modify Z50 and Z95 of Pinus halepensis cohort </span></span>
-<span class="r-in"><span class="va">customParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>,<span class="fl">2000</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">customParams</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">PH_coh</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"/Z50"</span>, <span class="st">"/Z95"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">x1m</span> <span class="op">&lt;-</span> <span class="fu">modifyInputParams</span><span class="op">(</span><span class="va">x1</span>, <span class="va">customParams</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Inspect original and modified objects </span></span>
-<span class="r-in"><span class="va">x1</span><span class="op">$</span><span class="va">below</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Modify Z50 and Z95 of Pinus halepensis cohort </span></span></span>
+<span class="r-in"><span><span class="va">customParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>,<span class="fl">2000</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">customParams</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">PH_coh</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"/Z50"</span>, <span class="st">"/Z95"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x1m</span> <span class="op">&lt;-</span> <span class="fu">modifyInputParams</span><span class="op">(</span><span class="va">x1</span>, <span class="va">customParams</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Inspect original and modified objects </span></span></span>
+<span class="r-in"><span><span class="va">x1</span><span class="op">$</span><span class="va">below</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 fineRootBiomass coarseRootSoilVolume</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600      1574.98321             4.381122</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000       667.64217             7.526346</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000        13.57757             5.544086</span>
-<span class="r-in"><span class="va">x1m</span><span class="op">$</span><span class="va">below</span></span>
+<span class="r-in"><span><span class="va">x1m</span><span class="op">$</span><span class="va">below</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 fineRootBiomass coarseRootSoilVolume</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 200 2000      1574.98321             5.887882</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000       667.64217             7.526346</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000        13.57757             5.544086</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Inspect dependencies: fine root distribution across soil layers</span></span>
-<span class="r-in"><span class="va">x1</span><span class="op">$</span><span class="va">belowLayers</span><span class="op">$</span><span class="va">V</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Inspect dependencies: fine root distribution across soil layers</span></span></span>
+<span class="r-in"><span><span class="va">x1</span><span class="op">$</span><span class="va">belowLayers</span><span class="op">$</span><span class="va">V</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                1         2          3           4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.8604899 0.1194556 0.01511005 0.004944476</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.5008953 0.4505941 0.04064831 0.007862284</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.6799879 0.2737911 0.03567632 0.010544678</span>
-<span class="r-in"><span class="va">x1m</span><span class="op">$</span><span class="va">belowLayers</span><span class="op">$</span><span class="va">V</span></span>
+<span class="r-in"><span><span class="va">x1m</span><span class="op">$</span><span class="va">belowLayers</span><span class="op">$</span><span class="va">V</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                1         2          3           4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.6402830 0.2655064 0.06472163 0.029488953</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.5008953 0.4505941 0.04064831 0.007862284</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.6799879 0.2737911 0.03567632 0.010544678</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Modify rock fragment content and sand proportion of soil layer 1</span></span>
-<span class="r-in"><span class="va">x1s</span> <span class="op">&lt;-</span> <span class="fu">modifyInputParams</span><span class="op">(</span><span class="va">x1</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rfc@1"</span> <span class="op">=</span> <span class="fl">5</span>, <span class="st">"sand@1"</span> <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Inspect original and modified soils </span></span>
-<span class="r-in"><span class="va">x1</span><span class="op">$</span><span class="va">soil</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Modify rock fragment content and sand proportion of soil layer 1</span></span></span>
+<span class="r-in"><span><span class="va">x1s</span> <span class="op">&lt;-</span> <span class="fu">modifyInputParams</span><span class="op">(</span><span class="va">x1</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rfc@1"</span> <span class="op">=</span> <span class="fl">5</span>, <span class="st">"sand@1"</span> <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Inspect original and modified soils </span></span></span>
+<span class="r-in"><span><span class="va">x1</span><span class="op">$</span><span class="va">soil</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Soil depth (mm): 4000 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Layer  1  [ 0  to  300 mm ] </span>
@@ -191,7 +200,7 @@ Functions <code>modifyCohortParams</code> and <code>modifyInputParams</code> ret
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snow pack water equivalent (mm): 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Soil water table depth (mm): 4000 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="va">x1s</span><span class="op">$</span><span class="va">soil</span></span>
+<span class="r-in"><span><span class="va">x1s</span><span class="op">$</span><span class="va">soil</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Soil depth (mm): 4000 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Layer  1  [ 0  to  300 mm ] </span>
@@ -230,14 +239,14 @@ Functions <code>modifyCohortParams</code> and <code>modifyInputParams</code> ret
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snow pack water equivalent (mm): 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Soil water table depth (mm): 4000 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># When modifying growth input objects dependencies increase</span></span>
-<span class="r-in"><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">customParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>,<span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">customParams</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">PH_coh</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"/Al2As"</span>, <span class="st">"/LAI_live"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">x1m</span> <span class="op">&lt;-</span> <span class="fu">modifyInputParams</span><span class="op">(</span><span class="va">x1</span>, <span class="va">customParams</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># When modifying growth input objects dependencies increase</span></span></span>
+<span class="r-in"><span><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">customParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>,<span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">customParams</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">PH_coh</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"/Al2As"</span>, <span class="st">"/LAI_live"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x1m</span> <span class="op">&lt;-</span> <span class="fu">modifyInputParams</span><span class="op">(</span><span class="va">x1</span>, <span class="va">customParams</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -252,7 +261,7 @@ Functions <code>modifyCohortParams</code> and <code>modifyInputParams</code> ret
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

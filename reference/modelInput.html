@@ -56,32 +56,40 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">forest2aboveground</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span>
-<span class="fu">forest2belowground</span><span class="op">(</span><span class="va">x</span>, <span class="va">soil</span><span class="op">)</span>
-<span class="fu">forest2growthInput</span><span class="op">(</span><span class="va">x</span>, <span class="va">soil</span>, <span class="va">SpParams</span>, <span class="va">control</span><span class="op">)</span>
-<span class="fu">forest2spwbInput</span><span class="op">(</span><span class="va">x</span>, <span class="va">soil</span>, <span class="va">SpParams</span>, <span class="va">control</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span>
-<span class="fu">growthInput</span><span class="op">(</span><span class="va">above</span>,  <span class="va">Z50</span>, <span class="va">Z95</span>, <span class="va">soil</span>, <span class="va">SpParams</span>, <span class="va">control</span><span class="op">)</span>
-<span class="fu">spwbInput</span><span class="op">(</span><span class="va">above</span>,  <span class="va">Z50</span>, <span class="va">Z95</span>, <span class="va">soil</span>, <span class="va">SpParams</span>, <span class="va">control</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">forest2aboveground</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">forest2belowground</span><span class="op">(</span><span class="va">x</span>, <span class="va">soil</span><span class="op">)</span></span>
+<span><span class="fu">forest2growthInput</span><span class="op">(</span><span class="va">x</span>, <span class="va">soil</span>, <span class="va">SpParams</span>, <span class="va">control</span><span class="op">)</span></span>
+<span><span class="fu">forest2spwbInput</span><span class="op">(</span><span class="va">x</span>, <span class="va">soil</span>, <span class="va">SpParams</span>, <span class="va">control</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">growthInput</span><span class="op">(</span><span class="va">above</span>,  <span class="va">Z50</span>, <span class="va">Z95</span>, <span class="va">soil</span>, <span class="va">SpParams</span>, <span class="va">control</span><span class="op">)</span></span>
+<span><span class="fu">spwbInput</span><span class="op">(</span><span class="va">above</span>,  <span class="va">Z50</span>, <span class="va">Z95</span>, <span class="va">soil</span>, <span class="va">SpParams</span>, <span class="va">control</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>An object of class <code><a href="forest.html">forest</a></code>.</p></dd>
-<dt>SpParams</dt>
+
+  <dt>SpParams</dt>
 <dd><p>A data frame with species parameters (see <code><a href="SpParams.html">SpParamsDefinition</a></code> and <code><a href="SpParams.html">SpParamsMED</a></code>).</p></dd>
-<dt>gdd</dt>
+
+  <dt>gdd</dt>
 <dd><p>Growth degree days to account for leaf phenology effects (in Celsius). This should be left <code>NA</code> in most applications.</p></dd>
-<dt>mode</dt>
+
+  <dt>mode</dt>
 <dd><p>Calculation mode, either "MED" or "US".</p></dd>
-<dt>soil</dt>
+
+  <dt>soil</dt>
 <dd><p>An object of class <code><a href="soil.html">soil</a></code>.</p></dd>
-<dt>control</dt>
+
+  <dt>control</dt>
 <dd><p>A list with default control parameters (see <code><a href="defaultControl.html">defaultControl</a></code>).</p></dd>
-<dt>above</dt>
+
+  <dt>above</dt>
 <dd><p>A data frame with aboveground plant information (see the return value of <code>forest2aboveground</code> below). In the case of <code>spwbInput</code> the variables should include <code>SP</code>, <code>N</code>, <code>LAI_live</code>, <code>LAI_dead</code>, <code>H</code> and <code>CR</code>. In the case of <code>growthInput</code> variables should include <code>DBH</code> and <code>Cover</code>.</p></dd>
-<dt>Z50, Z95</dt>
+
+  <dt>Z50, Z95</dt>
 <dd><p>Numeric vectors with cohort depths (in mm) corresponding to 50% and 95% of fine roots.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -89,7 +97,9 @@
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>Function <code>forest2aboveground()</code> returns a data frame with the following columns (rows are identified as specified by function <code><a href="plant_values.html">plant_ID</a></code>):</p><ul><li><p><code>SP</code>: Species identity (an integer) (first species is 0).</p></li>
+    
+
+<p>Function <code>forest2aboveground()</code> returns a data frame with the following columns (rows are identified as specified by function <code><a href="plant_values.html">plant_ID</a></code>):</p><ul><li><p><code>SP</code>: Species identity (an integer) (first species is 0).</p></li>
 <li><p><code>N</code>: Cohort density (ind/ha) (see function <code><a href="plant_values.html">plant_density</a></code>).</p></li>
 <li><p><code>DBH</code>: Tree diameter at breast height (cm).</p></li>
 <li><p><code>H</code>: Plant total height (cm).</p></li>
@@ -149,8 +159,10 @@
 <li><p><code>Tmax_LAIsq</code>: Coefficient relating squared LAI with the ratio of maximum transpiration over potential evapotranspiration.</p></li>
 <li><p><code>Psi_Extract</code>: Water potential corresponding to 50% relative conductance (in MPa).</p></li>
 <li><p><code>Psi_Critic</code>: Water potential corresponding to 50% of stem cavitation (in MPa).</p></li>
-<li><p><code>WUE</code>: Water use efficiency for carbon assimilation (g C/mm water).</p></li>
-<li><p><code>WUE_par</code>: Exponential decay coeffient of WUE with PAR.</p></li>
+<li><p><code>WUE</code>: Daily water use efficiency (gross photosynthesis over transpiration) under no light, water or CO2 limitations and VPD = 1kPa (g C/mm water).</p></li>
+<li><p><code>WUE_par</code>: Coefficient regulating the influence of % PAR on gross photosynthesis.</p></li>
+<li><p><code>WUE_par</code>: Coefficient regulating the influence of atmospheric CO2 concentration on gross photosynthesis.</p></li>
+<li><p><code>WUE_par</code>: Coefficient regulating the influence of vapor pressure deficit (VPD) on gross photosynthesis.</p></li>
 </ul>
     If <code>control$transpirationMode = "Sperry"</code> columns are:
     <ul><li><p><code>Gswmin</code>: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).</p></li>
@@ -224,32 +236,32 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">#Load example plot plant data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Default species parameterization</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Aboveground parameters</span></span>
-<span class="r-in"><span class="va">above</span> <span class="op">=</span> <span class="fu">forest2aboveground</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">above</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Load example plot plant data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Default species parameterization</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Aboveground parameters</span></span></span>
+<span class="r-in"><span><span class="va">above</span> <span class="op">=</span> <span class="fu">forest2aboveground</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">above</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         SP        N   DBH Cover   H        CR   LAI_live LAI_expanded LAI_dead</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 148 168.0000 37.55    NA 800 0.6605196 0.96734365   0.96734365        0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 168 384.0000 14.60    NA 660 0.6055642 0.86167321   0.86167321        0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 749.4923    NA  3.75  80 0.8032817 0.03928201   0.03928201        0</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Initialize soil with default soil params</span></span>
-<span class="r-in"><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Rooting depths</span></span>
-<span class="r-in"><span class="va">Z50</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">$</span><span class="va">treeData</span><span class="op">$</span><span class="va">Z50</span>, <span class="va">exampleforestMED</span><span class="op">$</span><span class="va">shrubData</span><span class="op">$</span><span class="va">Z50</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">Z95</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">$</span><span class="va">treeData</span><span class="op">$</span><span class="va">Z95</span>, <span class="va">exampleforestMED</span><span class="op">$</span><span class="va">shrubData</span><span class="op">$</span><span class="va">Z95</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Initialize control parameters</span></span>
-<span class="r-in"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Prepare spwb input</span></span>
-<span class="r-in"><span class="fu">spwbInput</span><span class="op">(</span><span class="va">above</span>, <span class="va">Z50</span>, <span class="va">Z95</span>, <span class="va">examplesoil</span>,<span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Initialize soil with default soil params</span></span></span>
+<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Rooting depths</span></span></span>
+<span class="r-in"><span><span class="va">Z50</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">$</span><span class="va">treeData</span><span class="op">$</span><span class="va">Z50</span>, <span class="va">exampleforestMED</span><span class="op">$</span><span class="va">shrubData</span><span class="op">$</span><span class="va">Z50</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Z95</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">$</span><span class="va">treeData</span><span class="op">$</span><span class="va">Z95</span>, <span class="va">exampleforestMED</span><span class="op">$</span><span class="va">shrubData</span><span class="op">$</span><span class="va">Z95</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Initialize control parameters</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Prepare spwb input</span></span></span>
+<span class="r-in"><span><span class="fu">spwbInput</span><span class="op">(</span><span class="va">above</span>, <span class="va">Z50</span>, <span class="va">Z95</span>, <span class="va">examplesoil</span>,<span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$fillMissingRootParams</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
@@ -610,14 +622,14 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.55 0.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsTranspiration</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Psi_Critic       WUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.003086667 0.1751014 -0.007840361   -2.303000   -5.14000  9.782173</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.004473333 0.1123937 -0.005032554   -1.964000   -6.96500 11.538571</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.010455247 0.1340000 -0.006000000   -2.121073   -6.95092  7.570000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          WUE_par     WUE_co2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.6831032 0.002517462</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.2579857 0.002718667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.2812000 0.002800000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Psi_Critic      WUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.003086667 0.1756248 -0.007863797   -2.303000   -5.14000 8.543861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.004473333 0.1121914 -0.005023494   -2.840000   -6.96500 8.605536</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.010455247 0.1340000 -0.006000000   -2.121073   -6.95092 7.900000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          WUE_par     WUE_co2    WUE_vpd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.6826373 0.002517464 -0.3032638</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.2572564 0.002718680 -0.5780737</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.3643000 0.002757000 -0.4636000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsWaterStorage</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           maxFMC   LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS</span>
@@ -643,10 +655,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "spwbInput" "list"     </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># When starting from an object of class 'forest' the whole process</span></span>
-<span class="r-in"><span class="co"># can be simplified:</span></span>
-<span class="r-in"><span class="fu">forest2spwbInput</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># When starting from an object of class 'forest' the whole process</span></span></span>
+<span class="r-in"><span><span class="co"># can be simplified:</span></span></span>
+<span class="r-in"><span><span class="fu">forest2spwbInput</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$fillMissingRootParams</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
@@ -1007,14 +1019,14 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.55 0.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsTranspiration</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Psi_Critic       WUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.003086667 0.1751014 -0.007840361   -2.303000   -5.14000  9.782173</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.004473333 0.1123937 -0.005032554   -1.964000   -6.96500 11.538571</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.010455247 0.1340000 -0.006000000   -2.121073   -6.95092  7.570000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          WUE_par     WUE_co2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.6831032 0.002517462</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.2579857 0.002718667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.2812000 0.002800000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Gswmin  Tmax_LAI   Tmax_LAIsq Psi_Extract Psi_Critic      WUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.003086667 0.1756248 -0.007863797   -2.303000   -5.14000 8.543861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.004473333 0.1121914 -0.005023494   -2.840000   -6.96500 8.605536</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.010455247 0.1340000 -0.006000000   -2.121073   -6.95092 7.900000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          WUE_par     WUE_co2    WUE_vpd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.6826373 0.002517464 -0.3032638</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.2572564 0.002718680 -0.5780737</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.3643000 0.002757000 -0.4636000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $paramsWaterStorage</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           maxFMC   LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS</span>
@@ -1040,11 +1052,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "spwbInput" "list"     </span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Prepare input for Sperry transpiration mode</span></span>
-<span class="r-in"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">forest2spwbInput</span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>,<span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Prepare input for Sperry transpiration mode</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">forest2spwbInput</span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>,<span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$fillMissingRootParams</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
@@ -1492,7 +1504,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "spwbInput" "list"     </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -1507,7 +1519,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

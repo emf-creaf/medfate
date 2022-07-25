@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-07-20</h4>
+            <h4 data-toc-skip class="date">2022-07-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/AdvancedWaterEnergyBalance.Rmd" class="external-link"><code>vignettes/runmodels/AdvancedWaterEnergyBalance.Rmd</code></a></small>
       <div class="hidden name"><code>AdvancedWaterEnergyBalance.Rmd</code></div>
@@ -109,74 +109,74 @@ with soil layers in rows and physical attributes in columns. Soil
 physical attributes can be initialized to default values, for a given
 number of layers, using function <code><a href="../../reference/defaultSoilParams.html">defaultSoilParams()</a></code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">spar</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">spar</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span></code></pre></div>
 <p>The soil input for water balance simulation is actually a list of
 class <code>soil</code> that is created using a function with the same
 name:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">spar</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">spar</span><span class="op">)</span></span></code></pre></div>
 <p>As explained in the package overview, models included in
 <code>medfate</code> were primarily designed to be ran on <strong>forest
 inventory plots</strong>. Here we use the example object provided with
 the package:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span>
-<span class="va">exampleforestMED</span></code></pre></div>
-<pre><code><span class="co">## $ID</span>
-<span class="co">## [1] "1"</span>
-<span class="co">## </span>
-<span class="co">## $patchsize</span>
-<span class="co">## [1] 10000</span>
-<span class="co">## </span>
-<span class="co">## $treeData</span>
-<span class="co">##   Species   N   DBH Height Z50  Z95</span>
-<span class="co">## 1     148 168 37.55    800 100  600</span>
-<span class="co">## 2     168 384 14.60    660 300 1000</span>
-<span class="co">## </span>
-<span class="co">## $shrubData</span>
-<span class="co">##   Species Cover Height Z50  Z95</span>
-<span class="co">## 1     165  3.75     80 200 1000</span>
-<span class="co">## </span>
-<span class="co">## $herbCover</span>
-<span class="co">## [1] 10</span>
-<span class="co">## </span>
-<span class="co">## $herbHeight</span>
-<span class="co">## [1] 20</span>
-<span class="co">## </span>
-<span class="co">## attr(,"class")</span>
-<span class="co">## [1] "forest" "list"</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
+<span><span class="va">exampleforestMED</span></span></code></pre></div>
+<pre><code><span><span class="co">## $ID</span></span>
+<span><span class="co">## [1] "1"</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $patchsize</span></span>
+<span><span class="co">## [1] 10000</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $treeData</span></span>
+<span><span class="co">##   Species   N   DBH Height Z50  Z95</span></span>
+<span><span class="co">## 1     148 168 37.55    800 100  600</span></span>
+<span><span class="co">## 2     168 384 14.60    660 300 1000</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $shrubData</span></span>
+<span><span class="co">##   Species Cover Height Z50  Z95</span></span>
+<span><span class="co">## 1     165  3.75     80 200 1000</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $herbCover</span></span>
+<span><span class="co">## [1] 10</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $herbHeight</span></span>
+<span><span class="co">## [1] 20</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## attr(,"class")</span></span>
+<span><span class="co">## [1] "forest" "list"</span></span></code></pre>
 <p>Advanced water and energy balance modeling requires daily
 precipitation, radiation, wind speed, min/max temparatures and relative
 humitidy as inputs:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##            MeanTemperature MinTemperature MaxTemperature Precipitation</span>
-<span class="co">## 2001-01-01      3.57668969     -0.5934215       6.287950      4.869109</span>
-<span class="co">## 2001-01-02      1.83695972     -2.3662458       4.569737      2.498292</span>
-<span class="co">## 2001-01-03      0.09462563     -3.8541036       2.661951      0.000000</span>
-<span class="co">## 2001-01-04      1.13866156     -1.8744860       3.097705      5.796973</span>
-<span class="co">## 2001-01-05      4.70578690      0.3288287       7.551532      1.884401</span>
-<span class="co">## 2001-01-06      4.57036721      0.5461322       7.186784     13.359801</span>
-<span class="co">##            MeanRelativeHumidity MinRelativeHumidity MaxRelativeHumidity</span>
-<span class="co">## 2001-01-01             78.73709            65.15411           100.00000</span>
-<span class="co">## 2001-01-02             69.70800            57.43761            94.71780</span>
-<span class="co">## 2001-01-03             70.69610            58.77432            94.66823</span>
-<span class="co">## 2001-01-04             76.89156            66.84256            95.80950</span>
-<span class="co">## 2001-01-05             76.67424            62.97656           100.00000</span>
-<span class="co">## 2001-01-06             89.01940            74.25754           100.00000</span>
-<span class="co">##            Radiation WindSpeed WindDirection       PET</span>
-<span class="co">## 2001-01-01  12.89251  2.000000           172 1.3212770</span>
-<span class="co">## 2001-01-02  13.03079  7.662544           278 2.2185985</span>
-<span class="co">## 2001-01-03  16.90722  2.000000           141 1.8045176</span>
-<span class="co">## 2001-01-04  11.07275  2.000000           172 0.9200627</span>
-<span class="co">## 2001-01-05  13.45205  7.581347           321 2.2914449</span>
-<span class="co">## 2001-01-06  12.84841  6.570501           141 1.7255058</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##            MeanTemperature MinTemperature MaxTemperature Precipitation</span></span>
+<span><span class="co">## 2001-01-01      3.57668969     -0.5934215       6.287950      4.869109</span></span>
+<span><span class="co">## 2001-01-02      1.83695972     -2.3662458       4.569737      2.498292</span></span>
+<span><span class="co">## 2001-01-03      0.09462563     -3.8541036       2.661951      0.000000</span></span>
+<span><span class="co">## 2001-01-04      1.13866156     -1.8744860       3.097705      5.796973</span></span>
+<span><span class="co">## 2001-01-05      4.70578690      0.3288287       7.551532      1.884401</span></span>
+<span><span class="co">## 2001-01-06      4.57036721      0.5461322       7.186784     13.359801</span></span>
+<span><span class="co">##            MeanRelativeHumidity MinRelativeHumidity MaxRelativeHumidity</span></span>
+<span><span class="co">## 2001-01-01             78.73709            65.15411           100.00000</span></span>
+<span><span class="co">## 2001-01-02             69.70800            57.43761            94.71780</span></span>
+<span><span class="co">## 2001-01-03             70.69610            58.77432            94.66823</span></span>
+<span><span class="co">## 2001-01-04             76.89156            66.84256            95.80950</span></span>
+<span><span class="co">## 2001-01-05             76.67424            62.97656           100.00000</span></span>
+<span><span class="co">## 2001-01-06             89.01940            74.25754           100.00000</span></span>
+<span><span class="co">##            Radiation WindSpeed WindDirection       PET</span></span>
+<span><span class="co">## 2001-01-01  12.89251  2.000000           172 1.3212770</span></span>
+<span><span class="co">## 2001-01-02  13.03079  7.662544           278 2.2185985</span></span>
+<span><span class="co">## 2001-01-03  16.90722  2.000000           141 1.8045176</span></span>
+<span><span class="co">## 2001-01-04  11.07275  2.000000           172 0.9200627</span></span>
+<span><span class="co">## 2001-01-05  13.45205  7.581347           321 2.2914449</span></span>
+<span><span class="co">## 2001-01-06  12.84841  6.570501           141 1.7255058</span></span></code></pre>
 <p>Finally, simulations in <code>medfate</code> require a data frame
 with species parameter values, which we load using defaults for
 Catalonia (NE Spain):</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpParamsMED"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"SpParamsMED"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="simulation-control">Simulation control<a class="anchor" aria-label="anchor" href="#simulation-control"></a>
@@ -186,7 +186,7 @@ controlled using a set of global parameters. The default
 parameterization is obtained using function
 <code><a href="../../reference/defaultControl.html">defaultControl()</a></code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></span></code></pre></div>
 <p>To use the complex soil water balance model we must change the values
 of <code>transpirationMode</code> (to switch from “Granier” to “Sperry”)
 and <code>soilFunctions</code> (to switch from Saxton’s retention curve,
@@ -205,50 +205,50 @@ values for each plant cohort. This is done by calling function
 the object can be generated more directly using function
 <code><a href="../../reference/modelInput.html">forest2spwbInput()</a></code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../../reference/modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../../reference/modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></code></pre></div>
 <p>The <code>spwbInput</code> object for advanced water and energy
 balance is similar to that of simple water balance simulations, but
 contains more elements. Information about the cohort species is found in
 element <code>cohorts</code> (i.e. code, species and name):</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">cohorts</span></code></pre></div>
-<pre><code><span class="co">##         SP              Name</span>
-<span class="co">## T1_148 148  Pinus halepensis</span>
-<span class="co">## T2_168 168      Quercus ilex</span>
-<span class="co">## S1_165 165 Quercus coccifera</span></code></pre>
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">cohorts</span></span></code></pre></div>
+<pre><code><span><span class="co">##         SP              Name</span></span>
+<span><span class="co">## T1_148 148  Pinus halepensis</span></span>
+<span><span class="co">## T2_168 168      Quercus ilex</span></span>
+<span><span class="co">## S1_165 165 Quercus coccifera</span></span></code></pre>
 <p>Element <code>canopy</code> contains state variables within the
 canopy:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">canopy</span></code></pre></div>
-<pre><code><span class="co">##    zlow zmid  zup Tair Cair VPair</span>
-<span class="co">## 1     0   50  100   NA   NA    NA</span>
-<span class="co">## 2   100  150  200   NA   NA    NA</span>
-<span class="co">## 3   200  250  300   NA   NA    NA</span>
-<span class="co">## 4   300  350  400   NA   NA    NA</span>
-<span class="co">## 5   400  450  500   NA   NA    NA</span>
-<span class="co">## 6   500  550  600   NA   NA    NA</span>
-<span class="co">## 7   600  650  700   NA   NA    NA</span>
-<span class="co">## 8   700  750  800   NA   NA    NA</span>
-<span class="co">## 9   800  850  900   NA   NA    NA</span>
-<span class="co">## 10  900  950 1000   NA   NA    NA</span>
-<span class="co">## 11 1000 1050 1100   NA   NA    NA</span>
-<span class="co">## 12 1100 1150 1200   NA   NA    NA</span>
-<span class="co">## 13 1200 1250 1300   NA   NA    NA</span>
-<span class="co">## 14 1300 1350 1400   NA   NA    NA</span>
-<span class="co">## 15 1400 1450 1500   NA   NA    NA</span>
-<span class="co">## 16 1500 1550 1600   NA   NA    NA</span>
-<span class="co">## 17 1600 1650 1700   NA   NA    NA</span>
-<span class="co">## 18 1700 1750 1800   NA   NA    NA</span>
-<span class="co">## 19 1800 1850 1900   NA   NA    NA</span>
-<span class="co">## 20 1900 1950 2000   NA   NA    NA</span>
-<span class="co">## 21 2000 2050 2100   NA   NA    NA</span>
-<span class="co">## 22 2100 2150 2200   NA   NA    NA</span>
-<span class="co">## 23 2200 2250 2300   NA   NA    NA</span>
-<span class="co">## 24 2300 2350 2400   NA   NA    NA</span>
-<span class="co">## 25 2400 2450 2500   NA   NA    NA</span>
-<span class="co">## 26 2500 2550 2600   NA   NA    NA</span>
-<span class="co">## 27 2600 2650 2700   NA   NA    NA</span>
-<span class="co">## 28 2700 2750 2800   NA   NA    NA</span></code></pre>
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">canopy</span></span></code></pre></div>
+<pre><code><span><span class="co">##    zlow zmid  zup Tair Cair VPair</span></span>
+<span><span class="co">## 1     0   50  100   NA   NA    NA</span></span>
+<span><span class="co">## 2   100  150  200   NA   NA    NA</span></span>
+<span><span class="co">## 3   200  250  300   NA   NA    NA</span></span>
+<span><span class="co">## 4   300  350  400   NA   NA    NA</span></span>
+<span><span class="co">## 5   400  450  500   NA   NA    NA</span></span>
+<span><span class="co">## 6   500  550  600   NA   NA    NA</span></span>
+<span><span class="co">## 7   600  650  700   NA   NA    NA</span></span>
+<span><span class="co">## 8   700  750  800   NA   NA    NA</span></span>
+<span><span class="co">## 9   800  850  900   NA   NA    NA</span></span>
+<span><span class="co">## 10  900  950 1000   NA   NA    NA</span></span>
+<span><span class="co">## 11 1000 1050 1100   NA   NA    NA</span></span>
+<span><span class="co">## 12 1100 1150 1200   NA   NA    NA</span></span>
+<span><span class="co">## 13 1200 1250 1300   NA   NA    NA</span></span>
+<span><span class="co">## 14 1300 1350 1400   NA   NA    NA</span></span>
+<span><span class="co">## 15 1400 1450 1500   NA   NA    NA</span></span>
+<span><span class="co">## 16 1500 1550 1600   NA   NA    NA</span></span>
+<span><span class="co">## 17 1600 1650 1700   NA   NA    NA</span></span>
+<span><span class="co">## 18 1700 1750 1800   NA   NA    NA</span></span>
+<span><span class="co">## 19 1800 1850 1900   NA   NA    NA</span></span>
+<span><span class="co">## 20 1900 1950 2000   NA   NA    NA</span></span>
+<span><span class="co">## 21 2000 2050 2100   NA   NA    NA</span></span>
+<span><span class="co">## 22 2100 2150 2200   NA   NA    NA</span></span>
+<span><span class="co">## 23 2200 2250 2300   NA   NA    NA</span></span>
+<span><span class="co">## 24 2300 2350 2400   NA   NA    NA</span></span>
+<span><span class="co">## 25 2400 2450 2500   NA   NA    NA</span></span>
+<span><span class="co">## 26 2500 2550 2600   NA   NA    NA</span></span>
+<span><span class="co">## 27 2600 2650 2700   NA   NA    NA</span></span>
+<span><span class="co">## 28 2700 2750 2800   NA   NA    NA</span></span></code></pre>
 <p>Canopy temperature, water vapour pressure and <span class="math inline">\(CO_2\)</span> concentration are state variables
 needed for canopy energy balance. If the canopy energy balance assumes a
 single canopy layer, the same values will be assumed through the canopy.
@@ -258,98 +258,98 @@ energy balance is used (see control parameter
 <p>As you may already known, element <code>above</code> contains the
 aboveground structure data that we already know:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">above</span></code></pre></div>
-<pre><code><span class="co">##          H        CR        N   LAI_live LAI_expanded LAI_dead</span>
-<span class="co">## T1_148 800 0.6605196 168.0000 0.96734365   0.96734365        0</span>
-<span class="co">## T2_168 660 0.6055642 384.0000 0.86167321   0.86167321        0</span>
-<span class="co">## S1_165  80 0.8032817 749.4923 0.03928201   0.03928201        0</span></code></pre>
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">above</span></span></code></pre></div>
+<pre><code><span><span class="co">##          H        CR        N   LAI_live LAI_expanded LAI_dead</span></span>
+<span><span class="co">## T1_148 800 0.6605196 168.0000 0.96734365   0.96734365        0</span></span>
+<span><span class="co">## T2_168 660 0.6055642 384.0000 0.86167321   0.86167321        0</span></span>
+<span><span class="co">## S1_165  80 0.8032817 749.4923 0.03928201   0.03928201        0</span></span></code></pre>
 <p>Belowground parameters can be seen in <code>below</code>:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">below</span></code></pre></div>
-<pre><code><span class="co">##        Z50  Z95 fineRootBiomass coarseRootSoilVolume</span>
-<span class="co">## T1_148 100  600       1838.0807            16.750000</span>
-<span class="co">## T2_168 300 1000       1942.5533            13.250000</span>
-<span class="co">## S1_165 200 1000        219.8371             0.171875</span></code></pre>
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">below</span></span></code></pre></div>
+<pre><code><span><span class="co">##        Z50  Z95 fineRootBiomass coarseRootSoilVolume</span></span>
+<span><span class="co">## T1_148 100  600       1838.0807            16.750000</span></span>
+<span><span class="co">## T2_168 300 1000       1942.5533            13.250000</span></span>
+<span><span class="co">## S1_165 200 1000        219.8371             0.171875</span></span></code></pre>
 <p>and in <code>belowLayers</code>:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">belowLayers</span></code></pre></div>
-<pre><code><span class="co">## $V</span>
-<span class="co">##                1         2          3           4</span>
-<span class="co">## T1_148 0.8604899 0.1194556 0.01511005 0.004944476</span>
-<span class="co">## T2_168 0.5008953 0.4505941 0.04064831 0.007862284</span>
-<span class="co">## S1_165 0.6799879 0.2737911 0.03567632 0.010544678</span>
-<span class="co">## </span>
-<span class="co">## $L</span>
-<span class="co">##                1        2        3        4</span>
-<span class="co">## T1_148 4815.5858 2286.191 2567.669 4513.443</span>
-<span class="co">## T2_168 3364.1867 3221.751 2828.103 4575.847</span>
-<span class="co">## S1_165  706.6219 1197.247 2088.359 4075.954</span>
-<span class="co">## </span>
-<span class="co">## $VGrhizo_kmax</span>
-<span class="co">##                1        2         3          4</span>
-<span class="co">## T1_148  27535774  1321053  167101.2   54680.68</span>
-<span class="co">## T2_168  67483373 22684370 2046368.0  395812.89</span>
-<span class="co">## S1_165 404209828 58944700 7680780.7 2270171.56</span>
-<span class="co">## </span>
-<span class="co">## $VCroot_kmax</span>
-<span class="co">##                1         2          3           4</span>
-<span class="co">## T1_148 1.1305113 0.3305767 0.03723103 0.006930914</span>
-<span class="co">## T2_168 0.8450863 0.7938304 0.08157959 0.009752397</span>
-<span class="co">## S1_165 3.7048382 0.8804217 0.06577032 0.009959998</span>
-<span class="co">## </span>
-<span class="co">## $Wpool</span>
-<span class="co">##        1 2 3 4</span>
-<span class="co">## T1_148 1 1 1 1</span>
-<span class="co">## T2_168 1 1 1 1</span>
-<span class="co">## S1_165 1 1 1 1</span>
-<span class="co">## </span>
-<span class="co">## $RhizoPsi</span>
-<span class="co">##             1      2      3      4</span>
-<span class="co">## T1_148 -0.033 -0.033 -0.033 -0.033</span>
-<span class="co">## T2_168 -0.033 -0.033 -0.033 -0.033</span>
-<span class="co">## S1_165 -0.033 -0.033 -0.033 -0.033</span></code></pre>
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">belowLayers</span></span></code></pre></div>
+<pre><code><span><span class="co">## $V</span></span>
+<span><span class="co">##                1         2          3           4</span></span>
+<span><span class="co">## T1_148 0.8604899 0.1194556 0.01511005 0.004944476</span></span>
+<span><span class="co">## T2_168 0.5008953 0.4505941 0.04064831 0.007862284</span></span>
+<span><span class="co">## S1_165 0.6799879 0.2737911 0.03567632 0.010544678</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $L</span></span>
+<span><span class="co">##                1        2        3        4</span></span>
+<span><span class="co">## T1_148 4815.5858 2286.191 2567.669 4513.443</span></span>
+<span><span class="co">## T2_168 3364.1867 3221.751 2828.103 4575.847</span></span>
+<span><span class="co">## S1_165  706.6219 1197.247 2088.359 4075.954</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $VGrhizo_kmax</span></span>
+<span><span class="co">##                1        2         3          4</span></span>
+<span><span class="co">## T1_148  27535774  1321053  167101.2   54680.68</span></span>
+<span><span class="co">## T2_168  67483373 22684370 2046368.0  395812.89</span></span>
+<span><span class="co">## S1_165 404209828 58944700 7680780.7 2270171.56</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $VCroot_kmax</span></span>
+<span><span class="co">##                1         2          3           4</span></span>
+<span><span class="co">## T1_148 1.1305113 0.3305767 0.03723103 0.006930914</span></span>
+<span><span class="co">## T2_168 0.8450863 0.7938304 0.08157959 0.009752397</span></span>
+<span><span class="co">## S1_165 3.7048382 0.8804217 0.06577032 0.009959998</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $Wpool</span></span>
+<span><span class="co">##        1 2 3 4</span></span>
+<span><span class="co">## T1_148 1 1 1 1</span></span>
+<span><span class="co">## T2_168 1 1 1 1</span></span>
+<span><span class="co">## S1_165 1 1 1 1</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $RhizoPsi</span></span>
+<span><span class="co">##             1      2      3      4</span></span>
+<span><span class="co">## T1_148 -0.033 -0.033 -0.033 -0.033</span></span>
+<span><span class="co">## T2_168 -0.033 -0.033 -0.033 -0.033</span></span>
+<span><span class="co">## S1_165 -0.033 -0.033 -0.033 -0.033</span></span></code></pre>
 <p>The <code>spwbInput</code>object also includes cohort parameter
 values for several kinds of traits. For example, plant anatomy
 parameters are described in <code>paramsAnatomy</code>:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsAnatomy</span></code></pre></div>
-<pre><code><span class="co">##        Hmed    Al2As      SLA LeafWidth LeafDensity WoodDensity FineRootDensity</span>
-<span class="co">## T1_148  850 1317.523 5.140523 0.1384772   0.2982842   0.6077016       0.2982842</span>
-<span class="co">## T2_168  500 3908.823 6.340000 1.7674359   0.4893392   0.9008264       0.4893392</span>
-<span class="co">## S1_165   80 4189.325 4.980084 1.3761085   0.3709679   0.4389106       0.3709679</span>
-<span class="co">##        conduit2sapwood      SRL RLD     r635</span>
-<span class="co">## T1_148       0.9236406 3172.572  10 1.964226</span>
-<span class="co">## T2_168       0.6238125 4398.812  10 1.805872</span>
-<span class="co">## S1_165       0.6238125 4398.812  10 2.289452</span></code></pre>
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">paramsAnatomy</span></span></code></pre></div>
+<pre><code><span><span class="co">##        Hmed    Al2As      SLA LeafWidth LeafDensity WoodDensity FineRootDensity</span></span>
+<span><span class="co">## T1_148  850 1317.523 5.140523 0.1384772   0.2982842   0.6077016       0.2982842</span></span>
+<span><span class="co">## T2_168  500 3908.823 6.340000 1.7674359   0.4893392   0.9008264       0.4893392</span></span>
+<span><span class="co">## S1_165   80 4189.325 4.980084 1.3761085   0.3709679   0.4389106       0.3709679</span></span>
+<span><span class="co">##        conduit2sapwood      SRL RLD     r635</span></span>
+<span><span class="co">## T1_148       0.9236406 3172.572  10 1.964226</span></span>
+<span><span class="co">## T2_168       0.6238125 4398.812  10 1.805872</span></span>
+<span><span class="co">## S1_165       0.6238125 4398.812  10 2.289452</span></span></code></pre>
 <p>Parameters related to plant transpiration and photosynthesis can be
 seen in <code>paramsTranspiration</code>:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsTranspiration</span></code></pre></div>
-<pre><code><span class="co">##             Gswmin    Gswmax  Vmax298  Jmax298 Kmax_stemxylem Kmax_rootxylem</span>
-<span class="co">## T1_148 0.003086667 0.2850000 72.19617 124.1687           0.15           0.60</span>
-<span class="co">## T2_168 0.004473333 0.2007222 68.51600 118.7863           0.40           1.60</span>
-<span class="co">## S1_165 0.010455247 0.2830167 62.78100 118.4486           0.29           1.16</span>
-<span class="co">##        VCleaf_kmax  VCleaf_c  VCleaf_d VCstem_kmax  VCstem_c  VCstem_d</span>
-<span class="co">## T1_148    4.000000 11.137051 -2.380849    1.339563 12.710000 -5.290000</span>
-<span class="co">## T2_168    4.000000  1.339370 -2.582279    1.620936  3.560000 -7.720000</span>
-<span class="co">## S1_165    9.579077  1.844224 -3.030130    4.599269  3.537784 -4.126512</span>
-<span class="co">##        VCroot_kmax  VCroot_c  VCroot_d VGrhizo_kmax Plant_kmax</span>
-<span class="co">## T1_148    1.505250 11.137051 -3.065569     29078608  0.6021000</span>
-<span class="co">## T2_168    1.730249  1.339370 -2.214081     92609924  0.6920994</span>
-<span class="co">## S1_165    4.660990  1.760307 -2.797092    473105480  1.8643961</span></code></pre>
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">paramsTranspiration</span></span></code></pre></div>
+<pre><code><span><span class="co">##             Gswmin    Gswmax  Vmax298  Jmax298 Kmax_stemxylem Kmax_rootxylem</span></span>
+<span><span class="co">## T1_148 0.003086667 0.2850000 72.19617 124.1687           0.15           0.60</span></span>
+<span><span class="co">## T2_168 0.004473333 0.2007222 68.51600 118.7863           0.40           1.60</span></span>
+<span><span class="co">## S1_165 0.010455247 0.2830167 62.78100 118.4486           0.29           1.16</span></span>
+<span><span class="co">##        VCleaf_kmax  VCleaf_c  VCleaf_d VCstem_kmax  VCstem_c  VCstem_d</span></span>
+<span><span class="co">## T1_148    4.000000 11.137051 -2.380849    1.339563 12.710000 -5.290000</span></span>
+<span><span class="co">## T2_168    4.000000  1.339370 -2.582279    1.620936  3.560000 -7.720000</span></span>
+<span><span class="co">## S1_165    9.579077  1.844224 -3.030130    4.599269  3.537784 -4.126512</span></span>
+<span><span class="co">##        VCroot_kmax  VCroot_c  VCroot_d VGrhizo_kmax Plant_kmax</span></span>
+<span><span class="co">## T1_148    1.505250 11.137051 -3.065569     29078608  0.6021000</span></span>
+<span><span class="co">## T2_168    1.730249  1.339370 -2.214081     92609924  0.6920994</span></span>
+<span><span class="co">## S1_165    4.660990  1.760307 -2.797092    473105480  1.8643961</span></span></code></pre>
 <p>Finally, parameters related to pressure-volume curves and water
 storage capacity of leaf and stem organs are in
 <code>paramsWaterStorage</code>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">paramsWaterStorage</span></code></pre></div>
-<pre><code><span class="co">##           maxFMC   LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS</span>
-<span class="co">## T1_148 126.03063 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355</span>
-<span class="co">## T2_168  93.15304 -1.483333 19.260000 0.1700 0.2199087 -3.227438 46.420610</span>
-<span class="co">## S1_165  96.53441 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155</span>
-<span class="co">##           StemAF Vsapwood</span>
-<span class="co">## T1_148 0.9236406 7.669572</span>
-<span class="co">## T2_168 0.6238125 1.623685</span>
-<span class="co">## S1_165 0.6238125 1.619915</span></code></pre>
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">paramsWaterStorage</span></span></code></pre></div>
+<pre><code><span><span class="co">##           maxFMC   LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS</span></span>
+<span><span class="co">## T1_148 126.03063 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355</span></span>
+<span><span class="co">## T2_168  93.15304 -1.483333 19.260000 0.1700 0.2199087 -3.227438 46.420610</span></span>
+<span><span class="co">## S1_165  96.53441 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155</span></span>
+<span><span class="co">##           StemAF Vsapwood</span></span>
+<span><span class="co">## T1_148 0.9236406 7.669572</span></span>
+<span><span class="co">## T2_168 0.6238125 1.623685</span></span>
+<span><span class="co">## S1_165 0.6238125 1.619915</span></span></code></pre>
 <p>Finally, remember that one can play with plant-specific parameters
 for soil water balance (instead of using species-level values) by
 modifying manually the parameter values in this object.</p>
@@ -375,16 +375,16 @@ a given segment changes with the water potential) for each plant cohort
 and each of the different segments of the soil-plant hydraulic network:
 rhizosphere, roots, stems and leaves:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"leaf"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"leaf"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-16-1.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"stem"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"stem"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-16-2.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"root"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"root"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-16-3.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"rhizo"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"rhizo"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-16-4.png" width="480" style="display: block; margin: auto;"></p>
 <p>The maximum values and shape of vulnerability curves for leaves and
 stems are regulated by parameters in <code>paramsTranspiration</code>.
@@ -409,16 +409,16 @@ the hydraulic network. Function
 <code><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot()</a></code> can be used to inspect any
 of this variables:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"E"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"E"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-1.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"ERhizo"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"ERhizo"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-2.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"dEdP"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"dEdP"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-3.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"StemPsi"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"StemPsi"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-4.png" width="480" style="display: block; margin: auto;"></p>
 <p>Calls to <code><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot()</a></code> always need
 both a <code>spwbInput</code> object and a <code>soil</code> object. The
@@ -441,41 +441,41 @@ supply and photosynthesis curves for sunlit and shade leaves, along with
 an indication of the values corresponding to the chosen stomatal
 aperture:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">d</span> <span class="op">=</span> <span class="fl">100</span>
-<span class="fu"><a href="../../reference/transp_stomatalregulation.html">transp_stomatalRegulationPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, day <span class="op">=</span> <span class="va">d</span>, timestep<span class="op">=</span><span class="fl">12</span>,
-                              latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, type<span class="op">=</span><span class="st">"E"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">d</span> <span class="op">=</span> <span class="fl">100</span></span>
+<span><span class="fu"><a href="../../reference/transp_stomatalregulation.html">transp_stomatalRegulationPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, day <span class="op">=</span> <span class="va">d</span>, timestep<span class="op">=</span><span class="fl">12</span>,</span>
+<span>                              latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, type<span class="op">=</span><span class="st">"E"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-18-1.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/transp_stomatalregulation.html">transp_stomatalRegulationPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, day <span class="op">=</span> <span class="va">d</span>, timestep<span class="op">=</span><span class="fl">12</span>,
-                              latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, type<span class="op">=</span><span class="st">"An"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/transp_stomatalregulation.html">transp_stomatalRegulationPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, day <span class="op">=</span> <span class="va">d</span>, timestep<span class="op">=</span><span class="fl">12</span>,</span>
+<span>                              latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, type<span class="op">=</span><span class="st">"An"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-18-2.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/transp_stomatalregulation.html">transp_stomatalRegulationPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, day <span class="op">=</span> <span class="va">d</span>, timestep<span class="op">=</span><span class="fl">12</span>,
-                              latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, type<span class="op">=</span><span class="st">"Gsw"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/transp_stomatalregulation.html">transp_stomatalRegulationPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, day <span class="op">=</span> <span class="va">d</span>, timestep<span class="op">=</span><span class="fl">12</span>,</span>
+<span>                              latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, type<span class="op">=</span><span class="st">"Gsw"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-18-3.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/transp_stomatalregulation.html">transp_stomatalRegulationPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, day <span class="op">=</span> <span class="va">d</span>, timestep<span class="op">=</span><span class="fl">12</span>,
-                              latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, type<span class="op">=</span><span class="st">"T"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/transp_stomatalregulation.html">transp_stomatalRegulationPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, day <span class="op">=</span> <span class="va">d</span>, timestep<span class="op">=</span><span class="fl">12</span>,</span>
+<span>                              latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, type<span class="op">=</span><span class="st">"T"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-18-4.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/transp_stomatalregulation.html">transp_stomatalRegulationPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, day <span class="op">=</span> <span class="va">d</span>, timestep<span class="op">=</span><span class="fl">12</span>,
-                              latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, type<span class="op">=</span><span class="st">"VPD"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/transp_stomatalregulation.html">transp_stomatalRegulationPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, day <span class="op">=</span> <span class="va">d</span>, timestep<span class="op">=</span><span class="fl">12</span>,</span>
+<span>                              latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, type<span class="op">=</span><span class="st">"VPD"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-18-5.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="pressure-volume-curves">Pressure volume curves<a class="anchor" aria-label="anchor" href="#pressure-volume-curves"></a>
 </h3>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/moisture.html">moisture_pressureVolumeCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, segment<span class="op">=</span><span class="st">"leaf"</span>, fraction<span class="op">=</span><span class="st">"symplastic"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/moisture.html">moisture_pressureVolumeCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, segment<span class="op">=</span><span class="st">"leaf"</span>, fraction<span class="op">=</span><span class="st">"symplastic"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-19-1.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/moisture.html">moisture_pressureVolumeCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, segment<span class="op">=</span><span class="st">"leaf"</span>, fraction<span class="op">=</span><span class="st">"apoplastic"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/moisture.html">moisture_pressureVolumeCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, segment<span class="op">=</span><span class="st">"leaf"</span>, fraction<span class="op">=</span><span class="st">"apoplastic"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-19-2.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/moisture.html">moisture_pressureVolumeCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, segment<span class="op">=</span><span class="st">"stem"</span>, fraction<span class="op">=</span><span class="st">"symplastic"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/moisture.html">moisture_pressureVolumeCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, segment<span class="op">=</span><span class="st">"stem"</span>, fraction<span class="op">=</span><span class="st">"symplastic"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-19-3.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/moisture.html">moisture_pressureVolumeCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, segment<span class="op">=</span><span class="st">"stem"</span>, fraction<span class="op">=</span><span class="st">"apoplastic"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/moisture.html">moisture_pressureVolumeCurvePlot</a></span><span class="op">(</span><span class="va">x</span>, segment<span class="op">=</span><span class="st">"stem"</span>, fraction<span class="op">=</span><span class="st">"apoplastic"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-19-4.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -492,21 +492,21 @@ day only. This is done using function <code><a href="../../reference/spwb_day.ht
 following code we select the same day as before from the meteorological
 input data and perform soil water balance for that day only:</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sd1</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/spwb_day.html">spwb_day</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>,  
-             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, 
-             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, 
-             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Radiation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">WindSpeed</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, 
-             latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, 
-             slope<span class="op">=</span> <span class="fl">0</span>, aspect <span class="op">=</span> <span class="fl">0</span>, prec <span class="op">=</span> <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Precipitation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">sd1</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/spwb_day.html">spwb_day</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>,  </span>
+<span>             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span>
+<span>             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span>
+<span>             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Radiation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">WindSpeed</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span>
+<span>             latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, </span>
+<span>             slope<span class="op">=</span> <span class="fl">0</span>, aspect <span class="op">=</span> <span class="fl">0</span>, prec <span class="op">=</span> <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Precipitation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p>The output of <code><a href="../../reference/spwb_day.html">spwb_day()</a></code> is a list with several
 elements:</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sd1</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##  [1] "cohorts"          "topography"       "weather"          "WaterBalance"    </span>
-<span class="co">##  [5] "EnergyBalance"    "Soil"             "Stand"            "Plants"          </span>
-<span class="co">##  [9] "RhizoPsi"         "SunlitLeaves"     "ShadeLeaves"      "ExtractionInst"  </span>
-<span class="co">## [13] "PlantsInst"       "SunlitLeavesInst" "ShadeLeavesInst"  "LightExtinction" </span>
-<span class="co">## [17] "LWRExtinction"    "CanopyTurbulence"</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sd1</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##  [1] "cohorts"          "topography"       "weather"          "WaterBalance"    </span></span>
+<span><span class="co">##  [5] "EnergyBalance"    "Soil"             "Stand"            "Plants"          </span></span>
+<span><span class="co">##  [9] "RhizoPsi"         "SunlitLeaves"     "ShadeLeaves"      "ExtractionInst"  </span></span>
+<span><span class="co">## [13] "PlantsInst"       "SunlitLeavesInst" "ShadeLeavesInst"  "LightExtinction" </span></span>
+<span><span class="co">## [17] "LWRExtinction"    "CanopyTurbulence"</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="water-balance-output">Water balance output<a class="anchor" aria-label="anchor" href="#water-balance-output"></a>
@@ -514,27 +514,27 @@ elements:</p>
 <p>Element <code>WaterBalance</code> contains the soil water balance
 flows of the day (precipitation, infiltration, transpiration, …)</p>
 <div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sd1</span><span class="op">$</span><span class="va">WaterBalance</span></code></pre></div>
-<pre><code><span class="co">##                     PET                    Rain                    Snow </span>
-<span class="co">##              5.02334675              0.00000000              0.00000000 </span>
-<span class="co">##                 NetRain                Snowmelt                   Runon </span>
-<span class="co">##              0.00000000              0.00000000              0.00000000 </span>
-<span class="co">##            Infiltration                  Runoff            DeepDrainage </span>
-<span class="co">##              0.00000000              0.00000000              0.00000000 </span>
-<span class="co">##         SoilEvaporation         PlantExtraction           Transpiration </span>
-<span class="co">##              0.02432124              0.67987403              0.67987403 </span>
-<span class="co">## HydraulicRedistribution </span>
-<span class="co">##              0.00000000</span></code></pre>
+<code class="sourceCode R"><span><span class="va">sd1</span><span class="op">$</span><span class="va">WaterBalance</span></span></code></pre></div>
+<pre><code><span><span class="co">##                     PET                    Rain                    Snow </span></span>
+<span><span class="co">##              5.02334675              0.00000000              0.00000000 </span></span>
+<span><span class="co">##                 NetRain                Snowmelt                   Runon </span></span>
+<span><span class="co">##              0.00000000              0.00000000              0.00000000 </span></span>
+<span><span class="co">##            Infiltration                  Runoff            DeepDrainage </span></span>
+<span><span class="co">##              0.00000000              0.00000000              0.00000000 </span></span>
+<span><span class="co">##         SoilEvaporation         PlantExtraction           Transpiration </span></span>
+<span><span class="co">##              0.02432124              0.67987403              0.67987403 </span></span>
+<span><span class="co">## HydraulicRedistribution </span></span>
+<span><span class="co">##              0.00000000</span></span></code></pre>
 <p>And <code>Soil</code> contains water evaporated from each soil layer,
 water transpired from each soil layer and the final soil water
 potential:</p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sd1</span><span class="op">$</span><span class="va">Soil</span></code></pre></div>
-<pre><code><span class="co">##   SoilEvaporation HydraulicInput HydraulicOutput PlantExtraction         psi</span>
-<span class="co">## 1    2.432124e-02              0     0.452928155     0.452928155 -0.03424155</span>
-<span class="co">## 2    7.439925e-09              0     0.202020078     0.202020078 -0.03327187</span>
-<span class="co">## 3    4.690960e-24              0     0.021610705     0.021610705 -0.03304464</span>
-<span class="co">## 4    9.047688e-46              0     0.003315094     0.003315094 -0.03301711</span></code></pre>
+<code class="sourceCode R"><span><span class="va">sd1</span><span class="op">$</span><span class="va">Soil</span></span></code></pre></div>
+<pre><code><span><span class="co">##   SoilEvaporation HydraulicInput HydraulicOutput PlantExtraction         psi</span></span>
+<span><span class="co">## 1    2.432124e-02              0     0.452928155     0.452928155 -0.03424155</span></span>
+<span><span class="co">## 2    7.439925e-09              0     0.202020078     0.202020078 -0.03327187</span></span>
+<span><span class="co">## 3    4.690960e-24              0     0.021610705     0.021610705 -0.03304464</span></span>
+<span><span class="co">## 4    9.047688e-46              0     0.003315094     0.003315094 -0.03301711</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="soil-and-canopy-energy-balance">Soil and canopy energy balance<a class="anchor" aria-label="anchor" href="#soil-and-canopy-energy-balance"></a>
@@ -543,9 +543,9 @@ potential:</p>
 atmosphere, canopy and soil temperatures, as well as canopy and soil
 energy balance components.</p>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sd1</span><span class="op">$</span><span class="va">EnergyBalance</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] "Temperature"         "CanopyEnergyBalance" "SoilEnergyBalance"  </span>
-<span class="co">## [4] "TemperatureLayers"   "VaporPressureLayers"</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sd1</span><span class="op">$</span><span class="va">EnergyBalance</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "Temperature"         "CanopyEnergyBalance" "SoilEnergyBalance"  </span></span>
+<span><span class="co">## [4] "TemperatureLayers"   "VaporPressureLayers"</span></span></code></pre>
 <p>Package <code>medfate</code> provides a <code>plot</code> function
 for objects of class <code>spwb_day</code> that can be used to inspect
 the results of the simulation. We use this function to display subdaily
@@ -553,13 +553,13 @@ dynamics in plant, soil and canopy variables. For example, we can use it
 to display temperature variations (only the temperature of the topmost
 soil layer is drawn):</p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"Temperature"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"Temperature"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-25-1.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"CanopyEnergyBalance"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"CanopyEnergyBalance"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-25-2.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"SoilEnergyBalance"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"SoilEnergyBalance"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-25-3.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -568,23 +568,23 @@ soil layer is drawn):</p>
 <p>Element <code>Plants</code> contains output values by plant cohort.
 Several output variables can be inspected in this element.</p>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sd1</span><span class="op">$</span><span class="va">Plants</span></code></pre></div>
-<pre><code><span class="co">##               LAI    LAIlive Extraction Transpiration GrossPhotosynthesis</span>
-<span class="co">## T1_148 0.96734365 0.96734365 0.43844484    0.43844484           2.1802499</span>
-<span class="co">## T2_168 0.86167321 0.86167321 0.22263546    0.22263546           1.5760041</span>
-<span class="co">## S1_165 0.03928201 0.03928201 0.01879373    0.01879373           0.0642033</span>
-<span class="co">##        NetPhotosynthesis    RootPsi    StemPsi      StemPLC LeafPsiMin</span>
-<span class="co">## T1_148        2.02971824 -0.6361581 -0.9749927 1.267805e-10 -1.5416304</span>
-<span class="co">## T2_168        1.42598485 -0.4015139 -0.5892032 2.701118e-05 -0.9691248</span>
-<span class="co">## S1_165        0.05854232 -0.2745368 -0.3960773 6.465653e-05 -0.6400052</span>
-<span class="co">##         LeafPsiMax      dEdP         DDS   StemRWC   LeafRWC      LFMC</span>
-<span class="co">## T1_148 -0.05394872 0.4058600 0.001984787 0.9976020 0.9537388 122.91401</span>
-<span class="co">## T2_168 -0.06521589 0.4438289 0.050540139 0.9980396 0.9686138  91.45254</span>
-<span class="co">## S1_165 -0.05688104 1.2456415 0.010799239 0.9910167 0.9847728  95.40395</span>
-<span class="co">##         WaterBalance</span>
-<span class="co">## T1_148 -1.756408e-17</span>
-<span class="co">## T2_168 -6.071532e-18</span>
-<span class="co">## S1_165 -1.097755e-18</span></code></pre>
+<code class="sourceCode R"><span><span class="va">sd1</span><span class="op">$</span><span class="va">Plants</span></span></code></pre></div>
+<pre><code><span><span class="co">##               LAI    LAIlive Extraction Transpiration GrossPhotosynthesis</span></span>
+<span><span class="co">## T1_148 0.96734365 0.96734365 0.43844484    0.43844484           2.1802499</span></span>
+<span><span class="co">## T2_168 0.86167321 0.86167321 0.22263546    0.22263546           1.5760041</span></span>
+<span><span class="co">## S1_165 0.03928201 0.03928201 0.01879373    0.01879373           0.0642033</span></span>
+<span><span class="co">##        NetPhotosynthesis    RootPsi    StemPsi      StemPLC LeafPsiMin</span></span>
+<span><span class="co">## T1_148        2.02971824 -0.6361581 -0.9749927 1.267805e-10 -1.5416304</span></span>
+<span><span class="co">## T2_168        1.42598485 -0.4015139 -0.5892032 2.701118e-05 -0.9691248</span></span>
+<span><span class="co">## S1_165        0.05854232 -0.2745368 -0.3960773 6.465653e-05 -0.6400052</span></span>
+<span><span class="co">##         LeafPsiMax      dEdP         DDS   StemRWC   LeafRWC      LFMC</span></span>
+<span><span class="co">## T1_148 -0.05394872 0.4058600 0.001984787 0.9976020 0.9537388 122.91401</span></span>
+<span><span class="co">## T2_168 -0.06521589 0.4438289 0.050540139 0.9980396 0.9686138  91.45254</span></span>
+<span><span class="co">## S1_165 -0.05688104 1.2456415 0.010799239 0.9910167 0.9847728  95.40395</span></span>
+<span><span class="co">##         WaterBalance</span></span>
+<span><span class="co">## T1_148 -1.756408e-17</span></span>
+<span><span class="co">## T2_168 -6.071532e-18</span></span>
+<span><span class="co">## S1_165 -1.097755e-18</span></span></code></pre>
 <p>While <code>Plants</code> contains one value per cohort and variable
 that summarizes the whole simulated day, information by disaggregated by
 time step can be accessed in <code>PlantsInst</code>. Moreover, we can
@@ -594,16 +594,16 @@ in L·m<span class="math inline">\(^{-2}\)</span>), plant net
 photosynthesis (in g C·m<span class="math inline">\(^{-2}\)</span>), and
 plant water potential (in MPa):</p>
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"PlantTranspiration"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"PlantTranspiration"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-27-1.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"TranspirationPerLeaf"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"TranspirationPerLeaf"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-27-2.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"NetPhotosynthesis"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"NetPhotosynthesis"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-27-3.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafPsiAverage"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafPsiAverage"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-27-4.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -613,58 +613,58 @@ plant water potential (in MPa):</p>
 regulation. Static properties of sunlit and shade leaves, for each
 cohort, can be accessed via:</p>
 <div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sd1</span><span class="op">$</span><span class="va">SunlitLeaves</span></code></pre></div>
-<pre><code><span class="co">##                LAI  Vmax298  Jmax298 LeafPsiMin  LeafPsiMax      GSWMin</span>
-<span class="co">## T1_148 0.433114873 56.53370 97.23111  -1.692356 -0.05394872 0.003143245</span>
-<span class="co">## T2_168 0.278983354 52.42554 90.89024  -1.733990 -0.06521589 0.004576098</span>
-<span class="co">## S1_165 0.008674735 43.95439 82.92856  -1.418346 -0.05688104 0.010692135</span>
-<span class="co">##           GSWMax  TempMin  TempMax</span>
-<span class="co">## T1_148 0.2010570 3.358524 13.09739</span>
-<span class="co">## T2_168 0.0705089 2.878521 20.71583</span>
-<span class="co">## S1_165 0.1324161 3.277072 20.50921</span></code></pre>
+<code class="sourceCode R"><span><span class="va">sd1</span><span class="op">$</span><span class="va">SunlitLeaves</span></span></code></pre></div>
+<pre><code><span><span class="co">##                LAI  Vmax298  Jmax298 LeafPsiMin  LeafPsiMax      GSWMin</span></span>
+<span><span class="co">## T1_148 0.433114873 56.53370 97.23111  -1.692356 -0.05394872 0.003143245</span></span>
+<span><span class="co">## T2_168 0.278983354 52.42554 90.89024  -1.733990 -0.06521589 0.004576098</span></span>
+<span><span class="co">## S1_165 0.008674735 43.95439 82.92856  -1.418346 -0.05688104 0.010692135</span></span>
+<span><span class="co">##           GSWMax  TempMin  TempMax</span></span>
+<span><span class="co">## T1_148 0.2010570 3.358524 13.09739</span></span>
+<span><span class="co">## T2_168 0.0705089 2.878521 20.71583</span></span>
+<span><span class="co">## S1_165 0.1324161 3.277072 20.50921</span></span></code></pre>
 <div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sd1</span><span class="op">$</span><span class="va">ShadeLeaves</span></code></pre></div>
-<pre><code><span class="co">##               LAI  Vmax298  Jmax298 LeafPsiMin  LeafPsiMax      GSWMin</span>
-<span class="co">## T1_148 0.53422877 47.55677 81.79188 -1.4414259 -0.05394872 0.003105168</span>
-<span class="co">## T2_168 0.58268986 47.23645 81.89390 -0.6646563 -0.06521589 0.004615958</span>
-<span class="co">## S1_165 0.03060728 43.95439 82.92856 -0.4365966 -0.05688104 0.010692135</span>
-<span class="co">##            GSWMax  TempMin  TempMax</span>
-<span class="co">## T1_148 0.19652956 2.991321 11.31505</span>
-<span class="co">## T2_168 0.05149131 2.782115 11.02711</span>
-<span class="co">## S1_165 0.11286893 2.882137 10.96402</span></code></pre>
+<code class="sourceCode R"><span><span class="va">sd1</span><span class="op">$</span><span class="va">ShadeLeaves</span></span></code></pre></div>
+<pre><code><span><span class="co">##               LAI  Vmax298  Jmax298 LeafPsiMin  LeafPsiMax      GSWMin</span></span>
+<span><span class="co">## T1_148 0.53422877 47.55677 81.79188 -1.4414259 -0.05394872 0.003105168</span></span>
+<span><span class="co">## T2_168 0.58268986 47.23645 81.89390 -0.6646563 -0.06521589 0.004615958</span></span>
+<span><span class="co">## S1_165 0.03060728 43.95439 82.92856 -0.4365966 -0.05688104 0.010692135</span></span>
+<span><span class="co">##            GSWMax  TempMin  TempMax</span></span>
+<span><span class="co">## T1_148 0.19652956 2.991321 11.31505</span></span>
+<span><span class="co">## T2_168 0.05149131 2.782115 11.02711</span></span>
+<span><span class="co">## S1_165 0.11286893 2.882137 10.96402</span></span></code></pre>
 <p>Instantaneous values are also stored for sunlit and shade leaves. We
 can also use the <code>plot</code> function for objects of class
 <code>spwb_day</code> to draw instantaneous variations in temperature
 for sunlit and shade leaves:</p>
 <div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafTemperature"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafTemperature"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-29-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Note that sunlit leaves of some species reach temperatures higher
 than the canopy. We can also plot variations in instantaneous gross and
 net photosynthesis rates:</p>
 <div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafGrossPhotosynthesis"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafGrossPhotosynthesis"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafNetPhotosynthesis"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafNetPhotosynthesis"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Or variations in stomatal conductance:</p>
 <div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafStomatalConductance"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafStomatalConductance"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Or variations in vapour pressure deficit:</p>
 <div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafVPD"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafVPD"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-33-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Or variations in leaf water potential:</p>
 <div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafPsi"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafPsi"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-34-1.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafCi"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafCi"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-35-1.png" width="720" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafIntrinsicWUE"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd1</span>, type <span class="op">=</span> <span class="st">"LeafIntrinsicWUE"</span>, bySpecies<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-36-1.png" width="720" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -681,171 +681,171 @@ meteorological data frame. However, running <code><a href="../../reference/spwb_
 modified the input objects. In particular, the soil moisture at the end
 of the simulation was:</p>
 <div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">W</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.9925617 0.9982682 0.9997147 0.9998906</span></code></pre>
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">W</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 0.9925617 0.9982682 0.9997147 0.9998906</span></span></code></pre>
 <p>And the temperature of soil layers:</p>
 <div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">Temp</span></code></pre></div>
-<pre><code><span class="co">## [1] 9.430811 6.146820 3.059295 2.559102</span></code></pre>
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">Temp</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 9.430811 6.146820 3.059295 2.559102</span></span></code></pre>
 <p>We can also see the current state of canopy variables:</p>
 <div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">canopy</span></code></pre></div>
-<pre><code><span class="co">##    zlow zmid  zup     Tair Cair     VPair</span>
-<span class="co">## 1     0   50  100 6.543247  386 0.5170718</span>
-<span class="co">## 2   100  150  200 6.543247  386 0.5170718</span>
-<span class="co">## 3   200  250  300 6.543247  386 0.5170718</span>
-<span class="co">## 4   300  350  400 6.543247  386 0.5170718</span>
-<span class="co">## 5   400  450  500 6.543247  386 0.5170718</span>
-<span class="co">## 6   500  550  600 6.543247  386 0.5170718</span>
-<span class="co">## 7   600  650  700 6.543247  386 0.5170718</span>
-<span class="co">## 8   700  750  800 6.543247  386 0.5170718</span>
-<span class="co">## 9   800  850  900 6.543247  386 0.5170718</span>
-<span class="co">## 10  900  950 1000 6.543247  386 0.5170718</span>
-<span class="co">## 11 1000 1050 1100 6.543247  386 0.5170718</span>
-<span class="co">## 12 1100 1150 1200 6.543247  386 0.5170718</span>
-<span class="co">## 13 1200 1250 1300 6.543247  386 0.5170718</span>
-<span class="co">## 14 1300 1350 1400 6.543247  386 0.5170718</span>
-<span class="co">## 15 1400 1450 1500 6.543247  386 0.5170718</span>
-<span class="co">## 16 1500 1550 1600 6.543247  386 0.5170718</span>
-<span class="co">## 17 1600 1650 1700 6.543247  386 0.5170718</span>
-<span class="co">## 18 1700 1750 1800 6.543247  386 0.5170718</span>
-<span class="co">## 19 1800 1850 1900 6.543247  386 0.5170718</span>
-<span class="co">## 20 1900 1950 2000 6.543247  386 0.5170718</span>
-<span class="co">## 21 2000 2050 2100 6.543247  386 0.5170718</span>
-<span class="co">## 22 2100 2150 2200 6.543247  386 0.5170718</span>
-<span class="co">## 23 2200 2250 2300 6.543247  386 0.5170718</span>
-<span class="co">## 24 2300 2350 2400 6.543247  386 0.5170718</span>
-<span class="co">## 25 2400 2450 2500 6.543247  386 0.5170718</span>
-<span class="co">## 26 2500 2550 2600 6.543247  386 0.5170718</span>
-<span class="co">## 27 2600 2650 2700 6.543247  386 0.5170718</span>
-<span class="co">## 28 2700 2750 2800 6.543247  386 0.5170718</span></code></pre>
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">canopy</span></span></code></pre></div>
+<pre><code><span><span class="co">##    zlow zmid  zup     Tair Cair     VPair</span></span>
+<span><span class="co">## 1     0   50  100 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 2   100  150  200 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 3   200  250  300 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 4   300  350  400 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 5   400  450  500 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 6   500  550  600 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 7   600  650  700 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 8   700  750  800 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 9   800  850  900 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 10  900  950 1000 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 11 1000 1050 1100 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 12 1100 1150 1200 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 13 1200 1250 1300 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 14 1300 1350 1400 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 15 1400 1450 1500 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 16 1500 1550 1600 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 17 1600 1650 1700 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 18 1700 1750 1800 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 19 1800 1850 1900 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 20 1900 1950 2000 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 21 2000 2050 2100 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 22 2100 2150 2200 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 23 2200 2250 2300 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 24 2300 2350 2400 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 25 2400 2450 2500 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 26 2500 2550 2600 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 27 2600 2650 2700 6.543247  386 0.5170718</span></span>
+<span><span class="co">## 28 2700 2750 2800 6.543247  386 0.5170718</span></span></code></pre>
 <p>We simply use function <code><a href="../../reference/resetInputs.html">resetInputs()</a></code> to reset state
 variables to their default values, so that the new simulation is not
 affected by the end state of the previous simulation:</p>
 <div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/resetInputs.html">resetInputs</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-<span class="va">x</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">W</span></code></pre></div>
-<pre><code><span class="co">## [1] 1 1 1 1</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/resetInputs.html">resetInputs</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="va">x</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">W</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 1 1 1 1</span></span></code></pre>
 <div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">Temp</span></code></pre></div>
-<pre><code><span class="co">## [1] NA NA NA NA</span></code></pre>
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">Temp</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] NA NA NA NA</span></span></code></pre>
 <div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">x</span><span class="op">$</span><span class="va">canopy</span></code></pre></div>
-<pre><code><span class="co">##    zlow zmid  zup Tair Cair VPair</span>
-<span class="co">## 1     0   50  100   NA   NA    NA</span>
-<span class="co">## 2   100  150  200   NA   NA    NA</span>
-<span class="co">## 3   200  250  300   NA   NA    NA</span>
-<span class="co">## 4   300  350  400   NA   NA    NA</span>
-<span class="co">## 5   400  450  500   NA   NA    NA</span>
-<span class="co">## 6   500  550  600   NA   NA    NA</span>
-<span class="co">## 7   600  650  700   NA   NA    NA</span>
-<span class="co">## 8   700  750  800   NA   NA    NA</span>
-<span class="co">## 9   800  850  900   NA   NA    NA</span>
-<span class="co">## 10  900  950 1000   NA   NA    NA</span>
-<span class="co">## 11 1000 1050 1100   NA   NA    NA</span>
-<span class="co">## 12 1100 1150 1200   NA   NA    NA</span>
-<span class="co">## 13 1200 1250 1300   NA   NA    NA</span>
-<span class="co">## 14 1300 1350 1400   NA   NA    NA</span>
-<span class="co">## 15 1400 1450 1500   NA   NA    NA</span>
-<span class="co">## 16 1500 1550 1600   NA   NA    NA</span>
-<span class="co">## 17 1600 1650 1700   NA   NA    NA</span>
-<span class="co">## 18 1700 1750 1800   NA   NA    NA</span>
-<span class="co">## 19 1800 1850 1900   NA   NA    NA</span>
-<span class="co">## 20 1900 1950 2000   NA   NA    NA</span>
-<span class="co">## 21 2000 2050 2100   NA   NA    NA</span>
-<span class="co">## 22 2100 2150 2200   NA   NA    NA</span>
-<span class="co">## 23 2200 2250 2300   NA   NA    NA</span>
-<span class="co">## 24 2300 2350 2400   NA   NA    NA</span>
-<span class="co">## 25 2400 2450 2500   NA   NA    NA</span>
-<span class="co">## 26 2500 2550 2600   NA   NA    NA</span>
-<span class="co">## 27 2600 2650 2700   NA   NA    NA</span>
-<span class="co">## 28 2700 2750 2800   NA   NA    NA</span></code></pre>
+<code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">canopy</span></span></code></pre></div>
+<pre><code><span><span class="co">##    zlow zmid  zup Tair Cair VPair</span></span>
+<span><span class="co">## 1     0   50  100   NA   NA    NA</span></span>
+<span><span class="co">## 2   100  150  200   NA   NA    NA</span></span>
+<span><span class="co">## 3   200  250  300   NA   NA    NA</span></span>
+<span><span class="co">## 4   300  350  400   NA   NA    NA</span></span>
+<span><span class="co">## 5   400  450  500   NA   NA    NA</span></span>
+<span><span class="co">## 6   500  550  600   NA   NA    NA</span></span>
+<span><span class="co">## 7   600  650  700   NA   NA    NA</span></span>
+<span><span class="co">## 8   700  750  800   NA   NA    NA</span></span>
+<span><span class="co">## 9   800  850  900   NA   NA    NA</span></span>
+<span><span class="co">## 10  900  950 1000   NA   NA    NA</span></span>
+<span><span class="co">## 11 1000 1050 1100   NA   NA    NA</span></span>
+<span><span class="co">## 12 1100 1150 1200   NA   NA    NA</span></span>
+<span><span class="co">## 13 1200 1250 1300   NA   NA    NA</span></span>
+<span><span class="co">## 14 1300 1350 1400   NA   NA    NA</span></span>
+<span><span class="co">## 15 1400 1450 1500   NA   NA    NA</span></span>
+<span><span class="co">## 16 1500 1550 1600   NA   NA    NA</span></span>
+<span><span class="co">## 17 1600 1650 1700   NA   NA    NA</span></span>
+<span><span class="co">## 18 1700 1750 1800   NA   NA    NA</span></span>
+<span><span class="co">## 19 1800 1850 1900   NA   NA    NA</span></span>
+<span><span class="co">## 20 1900 1950 2000   NA   NA    NA</span></span>
+<span><span class="co">## 21 2000 2050 2100   NA   NA    NA</span></span>
+<span><span class="co">## 22 2100 2150 2200   NA   NA    NA</span></span>
+<span><span class="co">## 23 2200 2250 2300   NA   NA    NA</span></span>
+<span><span class="co">## 24 2300 2350 2400   NA   NA    NA</span></span>
+<span><span class="co">## 25 2400 2450 2500   NA   NA    NA</span></span>
+<span><span class="co">## 26 2500 2550 2600   NA   NA    NA</span></span>
+<span><span class="co">## 27 2600 2650 2700   NA   NA    NA</span></span>
+<span><span class="co">## 28 2700 2750 2800   NA   NA    NA</span></span></code></pre>
 <p>Now we are ready to call function <code><a href="../../reference/spwb.html">spwb()</a></code>:</p>
 <div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">S</span> <span class="op">=</span> <span class="fu"><a href="../../reference/spwb.html">spwb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Initial soil water content (mm): 286.862</span>
-<span class="co">## Initial snowpack content (mm): 0</span>
-<span class="co">## Performing daily simulations</span>
-<span class="co">## </span>
-<span class="co">##  [Year 2001]:....................................</span>
-<span class="co">## </span>
-<span class="co">## Final soil water content (mm): 271.911</span>
-<span class="co">## Final snowpack content (mm): 0</span>
-<span class="co">## Change in soil water content (mm): -14.9511</span>
-<span class="co">## Soil water balance result (mm): -14.9511</span>
-<span class="co">## Change in snowpack water content (mm): 0</span>
-<span class="co">## Snowpack water balance result (mm): 0</span>
-<span class="co">## Water balance components:</span>
-<span class="co">##   Precipitation (mm) 513</span>
-<span class="co">##   Rain (mm) 462 Snow (mm) 51</span>
-<span class="co">##   Interception (mm) 114 Net rainfall (mm) 348</span>
-<span class="co">##   Infiltration (mm) 389 Runoff (mm) 10 Deep drainage (mm) 149</span>
-<span class="co">##   Soil evaporation (mm) 5 Transpiration (mm) 250</span>
-<span class="co">##   Plant extraction from soil (mm) 250  Plant water balance (mm) 0 Hydraulic redistribution (mm) 2</span></code></pre>
+<code class="sourceCode R"><span><span class="va">S</span> <span class="op">=</span> <span class="fu"><a href="../../reference/spwb.html">spwb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Initial soil water content (mm): 286.862</span></span>
+<span><span class="co">## Initial snowpack content (mm): 0</span></span>
+<span><span class="co">## Performing daily simulations</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##  [Year 2001]:....................................</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Final soil water content (mm): 271.911</span></span>
+<span><span class="co">## Final snowpack content (mm): 0</span></span>
+<span><span class="co">## Change in soil water content (mm): -14.9511</span></span>
+<span><span class="co">## Soil water balance result (mm): -14.9511</span></span>
+<span><span class="co">## Change in snowpack water content (mm): 0</span></span>
+<span><span class="co">## Snowpack water balance result (mm): 0</span></span>
+<span><span class="co">## Water balance components:</span></span>
+<span><span class="co">##   Precipitation (mm) 513</span></span>
+<span><span class="co">##   Rain (mm) 462 Snow (mm) 51</span></span>
+<span><span class="co">##   Interception (mm) 114 Net rainfall (mm) 348</span></span>
+<span><span class="co">##   Infiltration (mm) 389 Runoff (mm) 10 Deep drainage (mm) 149</span></span>
+<span><span class="co">##   Soil evaporation (mm) 5 Transpiration (mm) 250</span></span>
+<span><span class="co">##   Plant extraction from soil (mm) 250  Plant water balance (mm) 0 Hydraulic redistribution (mm) 2</span></span></code></pre>
 <p>Function <code><a href="../../reference/spwb.html">spwb()</a></code> returns an object of class
 <em>spwb</em>. If we inspect its elements, we realize that the output is
 arranged differently than in <code><a href="../../reference/spwb_day.html">spwb_day()</a></code>:</p>
 <div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##  [1] "latitude"          "topography"        "weather"          </span>
-<span class="co">##  [4] "spwbInput"         "spwbOutput"        "WaterBalance"     </span>
-<span class="co">##  [7] "EnergyBalance"     "Temperature"       "TemperatureLayers"</span>
-<span class="co">## [10] "Soil"              "Stand"             "Plants"           </span>
-<span class="co">## [13] "SunlitLeaves"      "ShadeLeaves"       "subdaily"</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##  [1] "latitude"          "topography"        "weather"          </span></span>
+<span><span class="co">##  [4] "spwbInput"         "spwbOutput"        "WaterBalance"     </span></span>
+<span><span class="co">##  [7] "EnergyBalance"     "Temperature"       "TemperatureLayers"</span></span>
+<span><span class="co">## [10] "Soil"              "Stand"             "Plants"           </span></span>
+<span><span class="co">## [13] "SunlitLeaves"      "ShadeLeaves"       "subdaily"</span></span></code></pre>
 <p>In particular, element <code>spwbInput</code> contains a copy of the
 input parameters that were used to run the model:</p>
 <div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/openxlsx/man/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">spwbInput</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##  [1] "control"             "soil"                "canopy"             </span>
-<span class="co">##  [4] "cohorts"             "above"               "below"              </span>
-<span class="co">##  [7] "belowLayers"         "paramsPhenology"     "paramsAnatomy"      </span>
-<span class="co">## [10] "paramsInterception"  "paramsTranspiration" "paramsWaterStorage" </span>
-<span class="co">## [13] "internalPhenology"   "internalWater"</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">spwbInput</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##  [1] "control"             "soil"                "canopy"             </span></span>
+<span><span class="co">##  [4] "cohorts"             "above"               "below"              </span></span>
+<span><span class="co">##  [7] "belowLayers"         "paramsPhenology"     "paramsAnatomy"      </span></span>
+<span><span class="co">## [10] "paramsInterception"  "paramsTranspiration" "paramsWaterStorage" </span></span>
+<span><span class="co">## [13] "internalPhenology"   "internalWater"</span></span></code></pre>
 <p>As before, <code>WaterBalance</code> contains water balance
 components, but in this case in form of a data frame with days in
 rows:</p>
 <div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##                  PET Precipitation      Rain Snow    NetRain Snowmelt</span>
-<span class="co">## 2001-01-01 1.3212770      4.869109  4.869109    0  3.2995949        0</span>
-<span class="co">## 2001-01-02 2.2185985      2.498292  2.498292    0  0.9716993        0</span>
-<span class="co">## 2001-01-03 1.8045176      0.000000  0.000000    0  0.0000000        0</span>
-<span class="co">## 2001-01-04 0.9200627      5.796973  5.796973    0  4.2498274        0</span>
-<span class="co">## 2001-01-05 2.2914449      1.884401  1.884401    0  0.3931983        0</span>
-<span class="co">## 2001-01-06 1.7255058     13.359801 13.359801    0 11.3385746        0</span>
-<span class="co">##            Infiltration Runoff DeepDrainage Evapotranspiration Interception</span>
-<span class="co">## 2001-01-01    3.2995949      0    2.6173741          1.8461331     1.569514</span>
-<span class="co">## 2001-01-02    0.9716993      0    1.0925316          1.8691003     1.526592</span>
-<span class="co">## 2001-01-03    0.0000000      0    0.2246121          0.3574466     0.000000</span>
-<span class="co">## 2001-01-04    4.2498274      0    2.8636239          1.8490231     1.547146</span>
-<span class="co">## 2001-01-05    0.3931983      0    0.6645192          1.7839759     1.491203</span>
-<span class="co">## 2001-01-06   11.3385746      0    8.8993788          2.2703389     2.021226</span>
-<span class="co">##            SoilEvaporation PlantExtraction Transpiration</span>
-<span class="co">## 2001-01-01     0.006397150       0.2702221     0.2702221</span>
-<span class="co">## 2001-01-02     0.010741659       0.3317664     0.3317664</span>
-<span class="co">## 2001-01-03     0.008736827       0.3487098     0.3487098</span>
-<span class="co">## 2001-01-04     0.004454614       0.2974230     0.2974230</span>
-<span class="co">## 2001-01-05     0.011094355       0.2816784     0.2816784</span>
-<span class="co">## 2001-01-06     0.008354280       0.2407587     0.2407587</span>
-<span class="co">##            HydraulicRedistribution</span>
-<span class="co">## 2001-01-01            0.000000e+00</span>
-<span class="co">## 2001-01-02            0.000000e+00</span>
-<span class="co">## 2001-01-03            0.000000e+00</span>
-<span class="co">## 2001-01-04            0.000000e+00</span>
-<span class="co">## 2001-01-05            5.769040e-06</span>
-<span class="co">## 2001-01-06            2.621645e-05</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##                  PET Precipitation      Rain Snow    NetRain Snowmelt</span></span>
+<span><span class="co">## 2001-01-01 1.3212770      4.869109  4.869109    0  3.2995949        0</span></span>
+<span><span class="co">## 2001-01-02 2.2185985      2.498292  2.498292    0  0.9716993        0</span></span>
+<span><span class="co">## 2001-01-03 1.8045176      0.000000  0.000000    0  0.0000000        0</span></span>
+<span><span class="co">## 2001-01-04 0.9200627      5.796973  5.796973    0  4.2498274        0</span></span>
+<span><span class="co">## 2001-01-05 2.2914449      1.884401  1.884401    0  0.3931983        0</span></span>
+<span><span class="co">## 2001-01-06 1.7255058     13.359801 13.359801    0 11.3385746        0</span></span>
+<span><span class="co">##            Infiltration Runoff DeepDrainage Evapotranspiration Interception</span></span>
+<span><span class="co">## 2001-01-01    3.2995949      0    2.6173741          1.8461331     1.569514</span></span>
+<span><span class="co">## 2001-01-02    0.9716993      0    1.0925316          1.8691003     1.526592</span></span>
+<span><span class="co">## 2001-01-03    0.0000000      0    0.2246121          0.3574466     0.000000</span></span>
+<span><span class="co">## 2001-01-04    4.2498274      0    2.8636239          1.8490231     1.547146</span></span>
+<span><span class="co">## 2001-01-05    0.3931983      0    0.6645192          1.7839759     1.491203</span></span>
+<span><span class="co">## 2001-01-06   11.3385746      0    8.8993788          2.2703389     2.021226</span></span>
+<span><span class="co">##            SoilEvaporation PlantExtraction Transpiration</span></span>
+<span><span class="co">## 2001-01-01     0.006397150       0.2702221     0.2702221</span></span>
+<span><span class="co">## 2001-01-02     0.010741659       0.3317664     0.3317664</span></span>
+<span><span class="co">## 2001-01-03     0.008736827       0.3487098     0.3487098</span></span>
+<span><span class="co">## 2001-01-04     0.004454614       0.2974230     0.2974230</span></span>
+<span><span class="co">## 2001-01-05     0.011094355       0.2816784     0.2816784</span></span>
+<span><span class="co">## 2001-01-06     0.008354280       0.2407587     0.2407587</span></span>
+<span><span class="co">##            HydraulicRedistribution</span></span>
+<span><span class="co">## 2001-01-01            0.000000e+00</span></span>
+<span><span class="co">## 2001-01-02            0.000000e+00</span></span>
+<span><span class="co">## 2001-01-03            0.000000e+00</span></span>
+<span><span class="co">## 2001-01-04            0.000000e+00</span></span>
+<span><span class="co">## 2001-01-05            5.769040e-06</span></span>
+<span><span class="co">## 2001-01-06            2.621645e-05</span></span></code></pre>
 <p>Elements <code>Plants</code> is itself a list with several elements
 that contain daily output results by plant cohorts, for example leaf
 minimum (midday) water potentials are:</p>
 <div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">Plants</span><span class="op">$</span><span class="va">LeafPsiMin</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##               T1_148     T2_168     S1_165</span>
-<span class="co">## 2001-01-01 -1.260004 -0.5801316 -0.3366231</span>
-<span class="co">## 2001-01-02 -1.325239 -0.5431568 -0.3533968</span>
-<span class="co">## 2001-01-03 -1.291696 -0.6085253 -0.4196040</span>
-<span class="co">## 2001-01-04 -1.179653 -0.4965650 -0.3122528</span>
-<span class="co">## 2001-01-05 -1.351147 -0.5721541 -0.3684640</span>
-<span class="co">## 2001-01-06 -1.251639 -0.4714254 -0.3274216</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">S</span><span class="op">$</span><span class="va">Plants</span><span class="op">$</span><span class="va">LeafPsiMin</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##               T1_148     T2_168     S1_165</span></span>
+<span><span class="co">## 2001-01-01 -1.260004 -0.5801316 -0.3366231</span></span>
+<span><span class="co">## 2001-01-02 -1.325239 -0.5431568 -0.3533968</span></span>
+<span><span class="co">## 2001-01-03 -1.291696 -0.6085253 -0.4196040</span></span>
+<span><span class="co">## 2001-01-04 -1.179653 -0.4965650 -0.3122528</span></span>
+<span><span class="co">## 2001-01-05 -1.351147 -0.5721541 -0.3684640</span></span>
+<span><span class="co">## 2001-01-06 -1.251639 -0.4714254 -0.3274216</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="plotting-and-summarizing-results">Plotting and summarizing results<a class="anchor" aria-label="anchor" href="#plotting-and-summarizing-results"></a>
@@ -856,21 +856,21 @@ the meteorological input. Additionally, it can also be used to draw soil
 and plant variables. In the code below we draw water fluxes, soil water
 potentials, plant transpiration and plant (mid-day) water potential:</p>
 <div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"Evapotranspiration"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"Evapotranspiration"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-46-1.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"SoilPsi"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"SoilPsi"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-46-2.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"PlantTranspiration"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"PlantTranspiration"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-46-3.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"LeafPsiMin"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S</span>, type<span class="op">=</span><span class="st">"LeafPsiMin"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-46-4.png" width="672" style="display: block; margin: auto;"></p>
 <p>Alternatively, one can interactively create plots using function
 <code>shinyplot</code>, e.g.:</p>
 <div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../../reference/shinyplot.html">shinyplot</a></span><span class="op">(</span><span class="va">S</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/shinyplot.html">shinyplot</a></span><span class="op">(</span><span class="va">S</span><span class="op">)</span></span></code></pre></div>
 <p>While the simulation model uses daily steps, users may be interested
 in outputs at larger time scales. The package provides a
 <code>summary</code> for objects of class <code>spwb</code>. This
@@ -878,90 +878,90 @@ function can be used to summarize the model’s output at different
 temporal steps (i.e. weekly, annual, …). For example, to obtain the
 average soil moisture and water potentials by months one can use:</p>
 <div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"Soil"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##                  W.1       W.2       W.3       W.4     ML.1     ML.2     ML.3</span>
-<span class="co">## 2001-01-01 0.9880204 0.9973533 0.9995563 1.0124392 63.39217 116.3442 75.71507</span>
-<span class="co">## 2001-02-01 0.9484962 0.9865582 0.9968585 0.9987849 60.85627 115.0849 75.51072</span>
-<span class="co">## 2001-03-01 0.9516549 0.9883315 0.9979661 1.0091158 61.05893 115.2918 75.59462</span>
-<span class="co">## 2001-04-01 0.8502731 0.9585885 0.9920082 0.9970872 54.55420 111.8222 75.14332</span>
-<span class="co">## 2001-05-01 0.8935900 0.9727773 0.9953339 0.9984408 57.33344 113.4774 75.39523</span>
-<span class="co">## 2001-06-01 0.6398283 0.8766471 0.9789837 0.9922695 41.05189 102.2635 74.15672</span>
-<span class="co">## 2001-07-01 0.8758805 0.9191791 0.9822569 0.9918929 56.19719 107.2250 74.40467</span>
-<span class="co">## 2001-08-01 0.8956209 0.9682702 0.9932654 0.9997036 57.46375 112.9516 75.23855</span>
-<span class="co">## 2001-09-01 0.9192945 0.9776296 0.9955920 0.9991988 58.98266 114.0434 75.41478</span>
-<span class="co">## 2001-10-01 0.9445301 0.9800030 0.9938230 1.0011506 60.60180 114.3203 75.28078</span>
-<span class="co">## 2001-11-01 0.9466905 0.9860687 0.9973455 1.0110763 60.74042 115.0278 75.54761</span>
-<span class="co">## 2001-12-01 0.9013622 0.9764976 0.9960564 0.9987621 57.83211 113.9113 75.44996</span>
-<span class="co">##                ML.4    MLTot      WTD        SWE PlantExt.1 PlantExt.2</span>
-<span class="co">## 2001-01-01 30.67637 286.1278 3937.390 1.93907163  0.2132898 0.08732831</span>
-<span class="co">## 2001-02-01 30.26266 281.7146 4000.000 0.36165721  0.2883880 0.12952883</span>
-<span class="co">## 2001-03-01 30.57568 282.5210 3951.833 0.01762496  0.3534212 0.15994471</span>
-<span class="co">## 2001-04-01 30.21122 271.7309 4000.000 0.60940966  0.3829123 0.19511021</span>
-<span class="co">## 2001-05-01 30.25223 276.4583 3999.234 0.00000000  0.5260005 0.26535015</span>
-<span class="co">## 2001-06-01 30.06524 247.5373 4000.000 0.00000000  0.4743151 0.52468538</span>
-<span class="co">## 2001-07-01 30.05383 267.8807 3994.805 0.00000000  0.6774456 0.36282731</span>
-<span class="co">## 2001-08-01 30.29049 275.9444 3990.092 0.00000000  0.7486650 0.36772957</span>
-<span class="co">## 2001-09-01 30.27520 278.7160 3997.185 0.00000000  0.4935420 0.23621344</span>
-<span class="co">## 2001-10-01 30.33434 280.5372 3980.564 0.00000000  0.4414583 0.20324272</span>
-<span class="co">## 2001-11-01 30.63508 281.9509 3940.342 3.60098969  0.2622389 0.11767068</span>
-<span class="co">## 2001-12-01 30.26196 277.4554 4000.000 0.00000000  0.2363051 0.11459065</span>
-<span class="co">##             PlantExt.3  PlantExt.4 HydraulicInput.1 HydraulicInput.2</span>
-<span class="co">## 2001-01-01 0.009460521 0.001539634     1.339287e-06     4.458059e-07</span>
-<span class="co">## 2001-02-01 0.014062448 0.002193793     8.931826e-06     0.000000e+00</span>
-<span class="co">## 2001-03-01 0.017300166 0.002700643     1.522601e-04     0.000000e+00</span>
-<span class="co">## 2001-04-01 0.021501353 0.003321184     2.036658e-03     0.000000e+00</span>
-<span class="co">## 2001-05-01 0.028824064 0.004388904     1.146021e-03     0.000000e+00</span>
-<span class="co">## 2001-06-01 0.059193690 0.008889452     5.530789e-02     0.000000e+00</span>
-<span class="co">## 2001-07-01 0.040752096 0.006145509     9.952426e-03     1.592155e-04</span>
-<span class="co">## 2001-08-01 0.039753833 0.006022060     3.628414e-04     0.000000e+00</span>
-<span class="co">## 2001-09-01 0.025557106 0.003899169     2.370366e-04     0.000000e+00</span>
-<span class="co">## 2001-10-01 0.022024857 0.003399586     2.942868e-05     0.000000e+00</span>
-<span class="co">## 2001-11-01 0.012823442 0.002033343     5.071394e-05     0.000000e+00</span>
-<span class="co">## 2001-12-01 0.012604930 0.001967612     1.637507e-04     0.000000e+00</span>
-<span class="co">##            HydraulicInput.3 HydraulicInput.4       psi.1       psi.2</span>
-<span class="co">## 2001-01-01     4.679846e-08                0 -0.03529086 -0.03346127</span>
-<span class="co">## 2001-02-01     0.000000e+00                0 -0.04363972 -0.03528955</span>
-<span class="co">## 2001-03-01     0.000000e+00                0 -0.04282657 -0.03489694</span>
-<span class="co">## 2001-04-01     0.000000e+00                0 -0.07432092 -0.04034323</span>
-<span class="co">## 2001-05-01     0.000000e+00                0 -0.06418347 -0.03784840</span>
-<span class="co">## 2001-06-01     0.000000e+00                0 -0.32322534 -0.06213353</span>
-<span class="co">## 2001-07-01     0.000000e+00                0 -0.09268709 -0.05138302</span>
-<span class="co">## 2001-08-01     0.000000e+00                0 -0.05952932 -0.03843600</span>
-<span class="co">## 2001-09-01     0.000000e+00                0 -0.05065763 -0.03669016</span>
-<span class="co">## 2001-10-01     0.000000e+00                0 -0.04464877 -0.03636277</span>
-<span class="co">## 2001-11-01     0.000000e+00                0 -0.04410024 -0.03523686</span>
-<span class="co">## 2001-12-01     0.000000e+00                0 -0.05664470 -0.03708783</span>
-<span class="co">##                  psi.3       psi.4</span>
-<span class="co">## 2001-01-01 -0.03307667 -0.03122726</span>
-<span class="co">## 2001-02-01 -0.03351882 -0.03320183</span>
-<span class="co">## 2001-03-01 -0.03331484 -0.03178868</span>
-<span class="co">## 2001-04-01 -0.03430923 -0.03347585</span>
-<span class="co">## 2001-05-01 -0.03374472 -0.03324322</span>
-<span class="co">## 2001-06-01 -0.03660398 -0.03428088</span>
-<span class="co">## 2001-07-01 -0.03582864 -0.03425984</span>
-<span class="co">## 2001-08-01 -0.03407457 -0.03307697</span>
-<span class="co">## 2001-09-01 -0.03370898 -0.03313943</span>
-<span class="co">## 2001-10-01 -0.03397024 -0.03290740</span>
-<span class="co">## 2001-11-01 -0.03340933 -0.03155983</span>
-<span class="co">## 2001-12-01 -0.03364955 -0.03320443</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"Soil"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##                  W.1       W.2       W.3       W.4     ML.1     ML.2     ML.3</span></span>
+<span><span class="co">## 2001-01-01 0.9880204 0.9973533 0.9995563 1.0124392 63.39217 116.3442 75.71507</span></span>
+<span><span class="co">## 2001-02-01 0.9484962 0.9865582 0.9968585 0.9987849 60.85627 115.0849 75.51072</span></span>
+<span><span class="co">## 2001-03-01 0.9516549 0.9883315 0.9979661 1.0091158 61.05893 115.2918 75.59462</span></span>
+<span><span class="co">## 2001-04-01 0.8502731 0.9585885 0.9920082 0.9970872 54.55420 111.8222 75.14332</span></span>
+<span><span class="co">## 2001-05-01 0.8935900 0.9727773 0.9953339 0.9984408 57.33344 113.4774 75.39523</span></span>
+<span><span class="co">## 2001-06-01 0.6398283 0.8766471 0.9789837 0.9922695 41.05189 102.2635 74.15672</span></span>
+<span><span class="co">## 2001-07-01 0.8758805 0.9191791 0.9822569 0.9918929 56.19719 107.2250 74.40467</span></span>
+<span><span class="co">## 2001-08-01 0.8956209 0.9682702 0.9932654 0.9997036 57.46375 112.9516 75.23855</span></span>
+<span><span class="co">## 2001-09-01 0.9192945 0.9776296 0.9955920 0.9991988 58.98266 114.0434 75.41478</span></span>
+<span><span class="co">## 2001-10-01 0.9445301 0.9800030 0.9938230 1.0011506 60.60180 114.3203 75.28078</span></span>
+<span><span class="co">## 2001-11-01 0.9466905 0.9860687 0.9973455 1.0110763 60.74042 115.0278 75.54761</span></span>
+<span><span class="co">## 2001-12-01 0.9013622 0.9764976 0.9960564 0.9987621 57.83211 113.9113 75.44996</span></span>
+<span><span class="co">##                ML.4    MLTot      WTD        SWE PlantExt.1 PlantExt.2</span></span>
+<span><span class="co">## 2001-01-01 30.67637 286.1278 3937.390 1.93907163  0.2132898 0.08732831</span></span>
+<span><span class="co">## 2001-02-01 30.26266 281.7146 4000.000 0.36165721  0.2883880 0.12952883</span></span>
+<span><span class="co">## 2001-03-01 30.57568 282.5210 3951.833 0.01762496  0.3534212 0.15994471</span></span>
+<span><span class="co">## 2001-04-01 30.21122 271.7309 4000.000 0.60940966  0.3829123 0.19511021</span></span>
+<span><span class="co">## 2001-05-01 30.25223 276.4583 3999.234 0.00000000  0.5260005 0.26535015</span></span>
+<span><span class="co">## 2001-06-01 30.06524 247.5373 4000.000 0.00000000  0.4743151 0.52468538</span></span>
+<span><span class="co">## 2001-07-01 30.05383 267.8807 3994.805 0.00000000  0.6774456 0.36282731</span></span>
+<span><span class="co">## 2001-08-01 30.29049 275.9444 3990.092 0.00000000  0.7486650 0.36772957</span></span>
+<span><span class="co">## 2001-09-01 30.27520 278.7160 3997.185 0.00000000  0.4935420 0.23621344</span></span>
+<span><span class="co">## 2001-10-01 30.33434 280.5372 3980.564 0.00000000  0.4414583 0.20324272</span></span>
+<span><span class="co">## 2001-11-01 30.63508 281.9509 3940.342 3.60098969  0.2622389 0.11767068</span></span>
+<span><span class="co">## 2001-12-01 30.26196 277.4554 4000.000 0.00000000  0.2363051 0.11459065</span></span>
+<span><span class="co">##             PlantExt.3  PlantExt.4 HydraulicInput.1 HydraulicInput.2</span></span>
+<span><span class="co">## 2001-01-01 0.009460521 0.001539634     1.339287e-06     4.458059e-07</span></span>
+<span><span class="co">## 2001-02-01 0.014062448 0.002193793     8.931826e-06     0.000000e+00</span></span>
+<span><span class="co">## 2001-03-01 0.017300166 0.002700643     1.522601e-04     0.000000e+00</span></span>
+<span><span class="co">## 2001-04-01 0.021501353 0.003321184     2.036658e-03     0.000000e+00</span></span>
+<span><span class="co">## 2001-05-01 0.028824064 0.004388904     1.146021e-03     0.000000e+00</span></span>
+<span><span class="co">## 2001-06-01 0.059193690 0.008889452     5.530789e-02     0.000000e+00</span></span>
+<span><span class="co">## 2001-07-01 0.040752096 0.006145509     9.952426e-03     1.592155e-04</span></span>
+<span><span class="co">## 2001-08-01 0.039753833 0.006022060     3.628414e-04     0.000000e+00</span></span>
+<span><span class="co">## 2001-09-01 0.025557106 0.003899169     2.370366e-04     0.000000e+00</span></span>
+<span><span class="co">## 2001-10-01 0.022024857 0.003399586     2.942868e-05     0.000000e+00</span></span>
+<span><span class="co">## 2001-11-01 0.012823442 0.002033343     5.071394e-05     0.000000e+00</span></span>
+<span><span class="co">## 2001-12-01 0.012604930 0.001967612     1.637507e-04     0.000000e+00</span></span>
+<span><span class="co">##            HydraulicInput.3 HydraulicInput.4       psi.1       psi.2</span></span>
+<span><span class="co">## 2001-01-01     4.679846e-08                0 -0.03529086 -0.03346127</span></span>
+<span><span class="co">## 2001-02-01     0.000000e+00                0 -0.04363972 -0.03528955</span></span>
+<span><span class="co">## 2001-03-01     0.000000e+00                0 -0.04282657 -0.03489694</span></span>
+<span><span class="co">## 2001-04-01     0.000000e+00                0 -0.07432092 -0.04034323</span></span>
+<span><span class="co">## 2001-05-01     0.000000e+00                0 -0.06418347 -0.03784840</span></span>
+<span><span class="co">## 2001-06-01     0.000000e+00                0 -0.32322534 -0.06213353</span></span>
+<span><span class="co">## 2001-07-01     0.000000e+00                0 -0.09268709 -0.05138302</span></span>
+<span><span class="co">## 2001-08-01     0.000000e+00                0 -0.05952932 -0.03843600</span></span>
+<span><span class="co">## 2001-09-01     0.000000e+00                0 -0.05065763 -0.03669016</span></span>
+<span><span class="co">## 2001-10-01     0.000000e+00                0 -0.04464877 -0.03636277</span></span>
+<span><span class="co">## 2001-11-01     0.000000e+00                0 -0.04410024 -0.03523686</span></span>
+<span><span class="co">## 2001-12-01     0.000000e+00                0 -0.05664470 -0.03708783</span></span>
+<span><span class="co">##                  psi.3       psi.4</span></span>
+<span><span class="co">## 2001-01-01 -0.03307667 -0.03122726</span></span>
+<span><span class="co">## 2001-02-01 -0.03351882 -0.03320183</span></span>
+<span><span class="co">## 2001-03-01 -0.03331484 -0.03178868</span></span>
+<span><span class="co">## 2001-04-01 -0.03430923 -0.03347585</span></span>
+<span><span class="co">## 2001-05-01 -0.03374472 -0.03324322</span></span>
+<span><span class="co">## 2001-06-01 -0.03660398 -0.03428088</span></span>
+<span><span class="co">## 2001-07-01 -0.03582864 -0.03425984</span></span>
+<span><span class="co">## 2001-08-01 -0.03407457 -0.03307697</span></span>
+<span><span class="co">## 2001-09-01 -0.03370898 -0.03313943</span></span>
+<span><span class="co">## 2001-10-01 -0.03397024 -0.03290740</span></span>
+<span><span class="co">## 2001-11-01 -0.03340933 -0.03155983</span></span>
+<span><span class="co">## 2001-12-01 -0.03364955 -0.03320443</span></span></code></pre>
 <p>Parameter <code>output</code> is used to indicate the element of the
 <code>spwb</code> object for which we desire summaries. Similarly, it is
 possible to calculate the average stress of plant cohorts by months:</p>
 <div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##                  T1_148     T2_168      S1_165</span>
-<span class="co">## 2001-01-01 0.0002176536 0.01800541 0.003042265</span>
-<span class="co">## 2001-02-01 0.0006569856 0.03060009 0.005799472</span>
-<span class="co">## 2001-03-01 0.0009089783 0.03638947 0.007149672</span>
-<span class="co">## 2001-04-01 0.0013507907 0.04585598 0.010040405</span>
-<span class="co">## 2001-05-01 0.0029266350 0.06181563 0.014934975</span>
-<span class="co">## 2001-06-01 0.0163923655 0.11029599 0.040539214</span>
-<span class="co">## 2001-07-01 0.0063477059 0.08460740 0.023102744</span>
-<span class="co">## 2001-08-01 0.0050996009 0.07935362 0.021313625</span>
-<span class="co">## 2001-09-01 0.0023288391 0.05426642 0.012711253</span>
-<span class="co">## 2001-10-01 0.0015990047 0.04327041 0.009529631</span>
-<span class="co">## 2001-11-01 0.0004802351 0.02591405 0.004832608</span>
-<span class="co">## 2001-12-01 0.0005172042 0.02663737 0.005103817</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##                  T1_148     T2_168      S1_165</span></span>
+<span><span class="co">## 2001-01-01 0.0002176536 0.01800541 0.003042265</span></span>
+<span><span class="co">## 2001-02-01 0.0006569856 0.03060009 0.005799472</span></span>
+<span><span class="co">## 2001-03-01 0.0009089783 0.03638947 0.007149672</span></span>
+<span><span class="co">## 2001-04-01 0.0013507907 0.04585598 0.010040405</span></span>
+<span><span class="co">## 2001-05-01 0.0029266350 0.06181563 0.014934975</span></span>
+<span><span class="co">## 2001-06-01 0.0163923655 0.11029599 0.040539214</span></span>
+<span><span class="co">## 2001-07-01 0.0063477059 0.08460740 0.023102744</span></span>
+<span><span class="co">## 2001-08-01 0.0050996009 0.07935362 0.021313625</span></span>
+<span><span class="co">## 2001-09-01 0.0023288391 0.05426642 0.012711253</span></span>
+<span><span class="co">## 2001-10-01 0.0015990047 0.04327041 0.009529631</span></span>
+<span><span class="co">## 2001-11-01 0.0004802351 0.02591405 0.004832608</span></span>
+<span><span class="co">## 2001-12-01 0.0005172042 0.02663737 0.005103817</span></span></code></pre>
 <p>The <code>summary</code> function can be also used to aggregate the
 output by species. In this case, the values of plant cohorts belonging
 to the same species will be averaged using LAI values as weights. For
@@ -969,31 +969,31 @@ example, we may average the daily drought stress across cohorts of the
 same species (here there is only one cohort by species, so this does not
 modify the output):</p>
 <div class="sourceCode" id="cb104"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"day"</span>, output<span class="op">=</span><span class="st">"PlantStress"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##            Pinus halepensis Quercus coccifera Quercus ilex</span>
-<span class="co">## 2001-01-01     8.872759e-05       0.002323625   0.01698460</span>
-<span class="co">## 2001-01-02     2.274614e-04       0.002909037   0.01728085</span>
-<span class="co">## 2001-01-03     2.367351e-04       0.003750981   0.02164632</span>
-<span class="co">## 2001-01-04     8.153374e-05       0.002478745   0.01594871</span>
-<span class="co">## 2001-01-05     2.128910e-04       0.002796208   0.01655958</span>
-<span class="co">## 2001-01-06     1.187555e-04       0.002168162   0.01402214</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"day"</span>, output<span class="op">=</span><span class="st">"PlantStress"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##            Pinus halepensis Quercus coccifera Quercus ilex</span></span>
+<span><span class="co">## 2001-01-01     8.872759e-05       0.002323625   0.01698460</span></span>
+<span><span class="co">## 2001-01-02     2.274614e-04       0.002909037   0.01728085</span></span>
+<span><span class="co">## 2001-01-03     2.367351e-04       0.003750981   0.02164632</span></span>
+<span><span class="co">## 2001-01-04     8.153374e-05       0.002478745   0.01594871</span></span>
+<span><span class="co">## 2001-01-05     2.128910e-04       0.002796208   0.01655958</span></span>
+<span><span class="co">## 2001-01-06     1.187555e-04       0.002168162   0.01402214</span></span></code></pre>
 <p>Or we can combine the aggregation by species with a temporal
 aggregation (here monthly averages):</p>
 <div class="sourceCode" id="cb106"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"month"</span>, FUN <span class="op">=</span> <span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">##            Pinus halepensis Quercus coccifera Quercus ilex</span>
-<span class="co">## 2001-01-01     0.0002176536       0.003042265   0.01800541</span>
-<span class="co">## 2001-02-01     0.0006569856       0.005799472   0.03060009</span>
-<span class="co">## 2001-03-01     0.0009089783       0.007149672   0.03638947</span>
-<span class="co">## 2001-04-01     0.0013507907       0.010040405   0.04585598</span>
-<span class="co">## 2001-05-01     0.0029266350       0.014934975   0.06181563</span>
-<span class="co">## 2001-06-01     0.0163923655       0.040539214   0.11029599</span>
-<span class="co">## 2001-07-01     0.0063477059       0.023102744   0.08460740</span>
-<span class="co">## 2001-08-01     0.0050996009       0.021313625   0.07935362</span>
-<span class="co">## 2001-09-01     0.0023288391       0.012711253   0.05426642</span>
-<span class="co">## 2001-10-01     0.0015990047       0.009529631   0.04327041</span>
-<span class="co">## 2001-11-01     0.0004802351       0.004832608   0.02591405</span>
-<span class="co">## 2001-12-01     0.0005172042       0.005103817   0.02663737</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S</span>, freq<span class="op">=</span><span class="st">"month"</span>, FUN <span class="op">=</span> <span class="va">mean</span>, output<span class="op">=</span><span class="st">"PlantStress"</span>, bySpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##            Pinus halepensis Quercus coccifera Quercus ilex</span></span>
+<span><span class="co">## 2001-01-01     0.0002176536       0.003042265   0.01800541</span></span>
+<span><span class="co">## 2001-02-01     0.0006569856       0.005799472   0.03060009</span></span>
+<span><span class="co">## 2001-03-01     0.0009089783       0.007149672   0.03638947</span></span>
+<span><span class="co">## 2001-04-01     0.0013507907       0.010040405   0.04585598</span></span>
+<span><span class="co">## 2001-05-01     0.0029266350       0.014934975   0.06181563</span></span>
+<span><span class="co">## 2001-06-01     0.0163923655       0.040539214   0.11029599</span></span>
+<span><span class="co">## 2001-07-01     0.0063477059       0.023102744   0.08460740</span></span>
+<span><span class="co">## 2001-08-01     0.0050996009       0.021313625   0.07935362</span></span>
+<span><span class="co">## 2001-09-01     0.0023288391       0.012711253   0.05426642</span></span>
+<span><span class="co">## 2001-10-01     0.0015990047       0.009529631   0.04327041</span></span>
+<span><span class="co">## 2001-11-01     0.0004802351       0.004832608   0.02591405</span></span>
+<span><span class="co">## 2001-12-01     0.0005172042       0.005103817   0.02663737</span></span></code></pre>
 </div>
 </div>
   </div>
@@ -1015,7 +1015,7 @@ aggregation (here monthly averages):</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

@@ -56,40 +56,52 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">spwb_day</span><span class="op">(</span><span class="va">x</span>, <span class="va">date</span>, <span class="va">tmin</span>, <span class="va">tmax</span>, <span class="va">rhmin</span>, <span class="va">rhmax</span>, <span class="va">rad</span>, <span class="va">wind</span>, 
-         <span class="va">latitude</span>, <span class="va">elevation</span>, <span class="va">slope</span>, <span class="va">aspect</span>, <span class="va">prec</span>, CO2 <span class="op">=</span> <span class="cn">NA</span>, 
-         runon <span class="op">=</span> <span class="fl">0.0</span>, modifyInput <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu">growth_day</span><span class="op">(</span><span class="va">x</span>, <span class="va">date</span>, <span class="va">tmin</span>, <span class="va">tmax</span>, <span class="va">rhmin</span>, <span class="va">rhmax</span>, <span class="va">rad</span>, <span class="va">wind</span>, 
-           <span class="va">latitude</span>, <span class="va">elevation</span>, <span class="va">slope</span>, <span class="va">aspect</span>, <span class="va">prec</span>, CO2 <span class="op">=</span> <span class="cn">NA</span>,
-           runon <span class="op">=</span> <span class="fl">0.0</span>, modifyInput <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">spwb_day</span><span class="op">(</span><span class="va">x</span>, <span class="va">date</span>, <span class="va">tmin</span>, <span class="va">tmax</span>, <span class="va">rhmin</span>, <span class="va">rhmax</span>, <span class="va">rad</span>, <span class="va">wind</span>, </span>
+<span>         <span class="va">latitude</span>, <span class="va">elevation</span>, <span class="va">slope</span>, <span class="va">aspect</span>, <span class="va">prec</span>, CO2 <span class="op">=</span> <span class="cn">NA</span>, </span>
+<span>         runon <span class="op">=</span> <span class="fl">0.0</span>, modifyInput <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">growth_day</span><span class="op">(</span><span class="va">x</span>, <span class="va">date</span>, <span class="va">tmin</span>, <span class="va">tmax</span>, <span class="va">rhmin</span>, <span class="va">rhmax</span>, <span class="va">rad</span>, <span class="va">wind</span>, </span>
+<span>           <span class="va">latitude</span>, <span class="va">elevation</span>, <span class="va">slope</span>, <span class="va">aspect</span>, <span class="va">prec</span>, CO2 <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>           runon <span class="op">=</span> <span class="fl">0.0</span>, modifyInput <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>An object of class <code><a href="modelInput.html">spwbInput</a></code> or <code><a href="modelInput.html">growthInput</a></code>.</p></dd>
-<dt>date</dt>
+
+  <dt>date</dt>
 <dd><p>Date as string "yyyy-mm-dd".</p></dd>
-<dt>tmin, tmax</dt>
+
+  <dt>tmin, tmax</dt>
 <dd><p>Minimum and maximum temperature (in degrees Celsius).</p></dd>
-<dt>rhmin, rhmax</dt>
+
+  <dt>rhmin, rhmax</dt>
 <dd><p>Minimum and maximum relative humidity (in percent).</p></dd>
-<dt>rad</dt>
+
+  <dt>rad</dt>
 <dd><p>Solar radiation (in MJ/m2/day).</p></dd>
-<dt>wind</dt>
+
+  <dt>wind</dt>
 <dd><p>Wind speed (in m/s).</p></dd>
-<dt>prec</dt>
+
+  <dt>prec</dt>
 <dd><p>Precipitation (in mm).</p></dd>
-<dt>latitude</dt>
+
+  <dt>latitude</dt>
 <dd><p>Latitude (in degrees). Required when using the 'Sperry' transpiration mode.</p></dd>
-<dt>elevation, slope, aspect</dt>
+
+  <dt>elevation, slope, aspect</dt>
 <dd><p>Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Sperry' transpiration mode.</p></dd>
-<dt>CO2</dt>
+
+  <dt>CO2</dt>
 <dd><p>Atmospheric CO2 concentration (in ppm). If missing, default value is drawn from control parameter 'defaultCO2' in <code>x</code>.</p></dd>
-<dt>runon</dt>
+
+  <dt>runon</dt>
 <dd><p>Surface water amount running on the target area from upslope (in mm).</p></dd>
-<dt>modifyInput</dt>
+
+  <dt>modifyInput</dt>
 <dd><p>Boolean flag to indicate that the input <code>x</code> object is allowed to be modified during the simulation.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -97,7 +109,12 @@
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>Function <code>spwb_day()</code> returns a list of class <code>spwb_day</code> with the following elements:</p><ul><li><p><code>"cohorts"</code>: A data frame with cohort information, copied from <code><a href="modelInput.html">spwbInput</a></code>.</p></li>
+    
+
+<p>Function <code>spwb_day()</code> returns a list of class <code>spwb_day</code> with the following elements:</p>
+
+
+<ul><li><p><code>"cohorts"</code>: A data frame with cohort information, copied from <code><a href="modelInput.html">spwbInput</a></code>.</p></li>
 <li><p><code>"topography"</code>: Vector with elevation, slope and aspect given as input.</p></li>
 <li><p><code>"weather"</code>: A vector with the input weather.</p></li>
 <li><p><code>"WaterBalance"</code>: A vector of water balance components (rain, snow, net rain, infiltration, ...) for the simulated day, equivalent to one row of 'WaterBalance' object given in <code><a href="spwb.html">spwb</a></code>.</p></li>
@@ -135,57 +152,57 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">#Load example daily meteorological data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Load example plot plant data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Default species parameterization</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Initialize control parameters</span></span>
-<span class="r-in"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Day to be simulated</span></span>
-<span class="r-in"><span class="va">d</span> <span class="op">=</span> <span class="fl">100</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Simulate water balance one day only (Granier)</span></span>
-<span class="r-in"><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">sd1</span><span class="op">&lt;-</span><span class="fu">spwb_day</span><span class="op">(</span><span class="va">x1</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>,  </span>
-<span class="r-in">             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span>
-<span class="r-in">             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span>
-<span class="r-in">             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Radiation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">WindSpeed</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span>
-<span class="r-in">             latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, slope<span class="op">=</span><span class="fl">0</span>, aspect<span class="op">=</span><span class="fl">0</span>,</span>
-<span class="r-in">             prec <span class="op">=</span> <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Precipitation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Simulate water balance for one day only (Sperry's mode)</span></span>
-<span class="r-in"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">x2</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">sd2</span><span class="op">&lt;-</span><span class="fu">spwb_day</span><span class="op">(</span><span class="va">x2</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>,</span>
-<span class="r-in">             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span>
-<span class="r-in">             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span>
-<span class="r-in">             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Radiation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">WindSpeed</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span>
-<span class="r-in">             latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, slope<span class="op">=</span><span class="fl">0</span>, aspect<span class="op">=</span><span class="fl">0</span>,</span>
-<span class="r-in">             prec <span class="op">=</span> <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Precipitation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Plot plant transpiration (see function 'plot.swb.day()')</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd2</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Load example daily meteorological data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Load example plot plant data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Default species parameterization</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Initialize control parameters</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Day to be simulated</span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">=</span> <span class="fl">100</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Simulate water balance one day only (Granier)</span></span></span>
+<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sd1</span><span class="op">&lt;-</span><span class="fu">spwb_day</span><span class="op">(</span><span class="va">x1</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>,  </span></span>
+<span class="r-in"><span>             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span></span>
+<span class="r-in"><span>             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span></span>
+<span class="r-in"><span>             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Radiation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">WindSpeed</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span></span>
+<span class="r-in"><span>             latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, slope<span class="op">=</span><span class="fl">0</span>, aspect<span class="op">=</span><span class="fl">0</span>,</span></span>
+<span class="r-in"><span>             prec <span class="op">=</span> <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Precipitation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Simulate water balance for one day only (Sperry's mode)</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x2</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sd2</span><span class="op">&lt;-</span><span class="fu">spwb_day</span><span class="op">(</span><span class="va">x2</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span></span>
+<span class="r-in"><span>             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span></span>
+<span class="r-in"><span>             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Radiation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">WindSpeed</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span></span>
+<span class="r-in"><span>             latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, slope<span class="op">=</span><span class="fl">0</span>, aspect<span class="op">=</span><span class="fl">0</span>,</span></span>
+<span class="r-in"><span>             prec <span class="op">=</span> <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Precipitation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Plot plant transpiration (see function 'plot.swb.day()')</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd2</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="spwb_day-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Simulate water and carbon balance for one day only</span></span>
-<span class="r-in"><span class="va">x3</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">sd3</span><span class="op">&lt;-</span><span class="fu">growth_day</span><span class="op">(</span><span class="va">x3</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>,</span>
-<span class="r-in">             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span>
-<span class="r-in">             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span>
-<span class="r-in">             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Radiation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">WindSpeed</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span>
-<span class="r-in">             latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, slope<span class="op">=</span><span class="fl">0</span>, aspect<span class="op">=</span><span class="fl">0</span>,</span>
-<span class="r-in">             prec <span class="op">=</span> <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Precipitation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span><span class="op">)</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Simulate water and carbon balance for one day only</span></span></span>
+<span class="r-in"><span><span class="va">x3</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sd3</span><span class="op">&lt;-</span><span class="fu">growth_day</span><span class="op">(</span><span class="va">x3</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxTemperature</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span></span>
+<span class="r-in"><span>             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MinRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">MaxRelativeHumidity</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span></span>
+<span class="r-in"><span>             <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Radiation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, <span class="va">examplemeteo</span><span class="op">$</span><span class="va">WindSpeed</span><span class="op">[</span><span class="va">d</span><span class="op">]</span>, </span></span>
+<span class="r-in"><span>             latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, slope<span class="op">=</span><span class="fl">0</span>, aspect<span class="op">=</span><span class="fl">0</span>,</span></span>
+<span class="r-in"><span>             prec <span class="op">=</span> <span class="va">examplemeteo</span><span class="op">$</span><span class="va">Precipitation</span><span class="op">[</span><span class="va">d</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -200,7 +217,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

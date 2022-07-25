@@ -56,61 +56,81 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">carbon_leafStarchCapacity</span><span class="op">(</span><span class="va">LAI</span>, <span class="va">N</span>, <span class="va">SLA</span>, <span class="va">leafDensity</span><span class="op">)</span>
-<span class="fu">carbon_leafStructuralBiomass</span><span class="op">(</span><span class="va">LAI</span>, <span class="va">N</span>, <span class="va">SLA</span><span class="op">)</span>
-<span class="fu">carbon_sapwoodStarchCapacity</span><span class="op">(</span><span class="va">SA</span>, <span class="va">H</span>, <span class="va">L</span>, <span class="va">V</span>, <span class="va">woodDensity</span>, <span class="va">conduit2sapwood</span><span class="op">)</span>
-<span class="fu">carbon_sapwoodStructuralBiomass</span><span class="op">(</span><span class="va">SA</span>, <span class="va">H</span>, <span class="va">L</span>, <span class="va">V</span>, <span class="va">woodDensity</span><span class="op">)</span>
-<span class="fu">carbon_sapwoodStructuralLivingBiomass</span><span class="op">(</span><span class="va">SA</span>, <span class="va">H</span>, <span class="va">L</span>, <span class="va">V</span>, <span class="va">woodDensity</span>, <span class="va">conduit2sapwood</span><span class="op">)</span>
-<span class="fu">carbon_sugarConcentration</span><span class="op">(</span><span class="va">osmoticWP</span>, <span class="va">temp</span>, <span class="va">nonSugarConc</span><span class="op">)</span>
-<span class="fu">carbon_osmoticWaterPotential</span><span class="op">(</span><span class="va">sugarConc</span>, <span class="va">temp</span>, <span class="va">nonSugarConc</span><span class="op">)</span>
-<span class="fu">carbon_relativeSapViscosity</span><span class="op">(</span><span class="va">sugarConc</span>, <span class="va">temp</span><span class="op">)</span>
-<span class="fu">carbon_sugarStarchDynamicsLeaf</span><span class="op">(</span><span class="va">sugarConc</span>, <span class="va">starchConc</span>, <span class="va">eqSugarConc</span><span class="op">)</span>
-<span class="fu">carbon_sugarStarchDynamicsStem</span><span class="op">(</span><span class="va">sugarConc</span>, <span class="va">starchConc</span>, <span class="va">eqSugarConc</span><span class="op">)</span>
-<span class="fu">carbon_carbonCompartments</span><span class="op">(</span><span class="va">x</span>, biomassUnits <span class="op">=</span> <span class="st">"g_m2"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">carbon_leafStarchCapacity</span><span class="op">(</span><span class="va">LAI</span>, <span class="va">N</span>, <span class="va">SLA</span>, <span class="va">leafDensity</span><span class="op">)</span></span>
+<span><span class="fu">carbon_leafStructuralBiomass</span><span class="op">(</span><span class="va">LAI</span>, <span class="va">N</span>, <span class="va">SLA</span><span class="op">)</span></span>
+<span><span class="fu">carbon_sapwoodStarchCapacity</span><span class="op">(</span><span class="va">SA</span>, <span class="va">H</span>, <span class="va">L</span>, <span class="va">V</span>, <span class="va">woodDensity</span>, <span class="va">conduit2sapwood</span><span class="op">)</span></span>
+<span><span class="fu">carbon_sapwoodStructuralBiomass</span><span class="op">(</span><span class="va">SA</span>, <span class="va">H</span>, <span class="va">L</span>, <span class="va">V</span>, <span class="va">woodDensity</span><span class="op">)</span></span>
+<span><span class="fu">carbon_sapwoodStructuralLivingBiomass</span><span class="op">(</span><span class="va">SA</span>, <span class="va">H</span>, <span class="va">L</span>, <span class="va">V</span>, <span class="va">woodDensity</span>, <span class="va">conduit2sapwood</span><span class="op">)</span></span>
+<span><span class="fu">carbon_sugarConcentration</span><span class="op">(</span><span class="va">osmoticWP</span>, <span class="va">temp</span>, <span class="va">nonSugarConc</span><span class="op">)</span></span>
+<span><span class="fu">carbon_osmoticWaterPotential</span><span class="op">(</span><span class="va">sugarConc</span>, <span class="va">temp</span>, <span class="va">nonSugarConc</span><span class="op">)</span></span>
+<span><span class="fu">carbon_relativeSapViscosity</span><span class="op">(</span><span class="va">sugarConc</span>, <span class="va">temp</span><span class="op">)</span></span>
+<span><span class="fu">carbon_sugarStarchDynamicsLeaf</span><span class="op">(</span><span class="va">sugarConc</span>, <span class="va">starchConc</span>, <span class="va">eqSugarConc</span><span class="op">)</span></span>
+<span><span class="fu">carbon_sugarStarchDynamicsStem</span><span class="op">(</span><span class="va">sugarConc</span>, <span class="va">starchConc</span>, <span class="va">eqSugarConc</span><span class="op">)</span></span>
+<span><span class="fu">carbon_carbonCompartments</span><span class="op">(</span><span class="va">x</span>, biomassUnits <span class="op">=</span> <span class="st">"g_m2"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>LAI</dt>
 <dd><p>Leaf area index.</p></dd>
-<dt>N</dt>
+
+  <dt>N</dt>
 <dd><p>Density (ind·ha-1).</p></dd>
-<dt>SLA</dt>
+
+  <dt>SLA</dt>
 <dd><p>Specific leaf area (mm2/mg = m2/kg).</p></dd>
-<dt>leafDensity</dt>
+
+  <dt>leafDensity</dt>
 <dd><p>Density of leaf tissue (dry weight over volume).</p></dd>
-<dt>SA</dt>
+
+  <dt>SA</dt>
 <dd><p>Sapwood area (cm2).</p></dd>
-<dt>H</dt>
+
+  <dt>H</dt>
 <dd><p>Plant height (cm).</p></dd>
-<dt>L</dt>
+
+  <dt>L</dt>
 <dd><p>Coarse root length (mm) for each soil layer.</p></dd>
-<dt>V</dt>
+
+  <dt>V</dt>
 <dd><p>Proportion of fine roots in each soil layer.</p></dd>
-<dt>woodDensity</dt>
+
+  <dt>woodDensity</dt>
 <dd><p>Wood density (dry weight over volume).</p></dd>
-<dt>conduit2sapwood</dt>
+
+  <dt>conduit2sapwood</dt>
 <dd><p>Proportion of sapwood corresponding to conducive elements (vessels or tracheids) as opposed to parenchymatic tissue.</p></dd>
-<dt>osmoticWP</dt>
+
+  <dt>osmoticWP</dt>
 <dd><p>Osmotic water potential (MPa).</p></dd>
-<dt>temp</dt>
+
+  <dt>temp</dt>
 <dd><p>Temperature (degrees Celsius).</p></dd>
-<dt>nonSugarConc</dt>
+
+  <dt>nonSugarConc</dt>
 <dd><p>Concentration of inorganic solutes (mol/l).</p></dd>
-<dt>sugarConc</dt>
+
+  <dt>sugarConc</dt>
 <dd><p>Concentration of soluble sugars (mol/l).</p></dd>
-<dt>starchConc</dt>
+
+  <dt>starchConc</dt>
 <dd><p>Concentration of starch (mol/l)</p></dd>
-<dt>eqSugarConc</dt>
+
+  <dt>eqSugarConc</dt>
 <dd><p>Equilibrium concentration of soluble sugars (mol/l).</p></dd>
-<dt>x</dt>
+
+  <dt>x</dt>
 <dd><p>An object of class <code><a href="modelInput.html">growthInput</a></code>.</p></dd>
-<dt>biomassUnits</dt>
+
+  <dt>biomassUnits</dt>
 <dd><p>A string for output biomass units, either "g_ind" (g per individual) or "g_m2" (g per square meter).</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Values returned for each function are:</p><ul><li><p><code>carbon_leafStarchCapacity</code>: Capacity of storing starch in the leaf compartment (mol gluc/ind.).</p></li>
+    
+
+<p>Values returned for each function are:</p><ul><li><p><code>carbon_leafStarchCapacity</code>: Capacity of storing starch in the leaf compartment (mol gluc/ind.).</p></li>
 <li><p><code>carbon_leafStructuralBiomass</code>: Leaf structural biomass (g dry/ind.)</p></li>
 <li><p><code>carbon_sapwoodStarchCapacity</code>: Capacity of storing starch in the sapwood compartment (mol gluc/ind.).</p></li>
 <li><p><code>carbon_sapwoodStructuralBiomass</code>: Sapwood structural biomass (g dry/ind.)</p></li>
@@ -143,7 +163,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

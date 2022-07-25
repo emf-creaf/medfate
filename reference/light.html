@@ -56,82 +56,109 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">light_layerIrradianceFraction</span><span class="op">(</span><span class="va">LAIme</span>, <span class="va">LAImd</span>, <span class="va">LAImx</span>, <span class="va">k</span>, <span class="va">alpha</span>, 
-                              trunkExtinctionFraction <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>
-<span class="fu">light_layerIrradianceFractionBottomUp</span><span class="op">(</span><span class="va">LAIme</span>, <span class="va">LAImd</span>, <span class="va">LAImx</span>, <span class="va">k</span>, <span class="va">alpha</span>, 
-                              trunkExtinctionFraction <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>
-<span class="fu">light_layerSunlitFraction</span><span class="op">(</span><span class="va">LAIme</span>, <span class="va">LAImd</span>, <span class="va">kb</span><span class="op">)</span>
-<span class="fu">light_cohortSunlitShadeAbsorbedRadiation</span><span class="op">(</span><span class="va">Ib0</span>, <span class="va">Id0</span>, <span class="va">Ibf</span>, <span class="va">Idf</span>, <span class="va">beta</span>,
-                                         <span class="va">LAIme</span>, <span class="va">LAImd</span>,
-                                         <span class="va">kb</span>, <span class="va">kd</span>, <span class="va">alpha</span>, <span class="va">gamma</span><span class="op">)</span>
-<span class="fu">light_instantaneousLightExtinctionAbsortion</span><span class="op">(</span><span class="va">LAIme</span>, <span class="va">LAImd</span>, <span class="va">LAImx</span>,
-                                            <span class="va">kPAR</span>, <span class="va">alphaSWR</span>, <span class="va">gammaSWR</span>,
-                                            <span class="va">ddd</span>, ntimesteps <span class="op">=</span> <span class="fl">24</span>, 
-                                            trunkExtinctionFraction <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>
-<span class="fu">light_longwaveRadiationSHAW</span><span class="op">(</span><span class="va">LAIme</span>, <span class="va">LAImd</span>, <span class="va">LAImx</span>, 
-                            <span class="va">LWRatm</span>, <span class="va">Tsoil</span>, <span class="va">Tair</span>, trunkExtinctionFraction <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>
-<span class="fu">light_cohortAbsorbedSWRFraction</span><span class="op">(</span><span class="va">z</span>, <span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>
-<span class="fu">light_PARground</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span>
-<span class="fu">light_SWRground</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span>
-<span class="fu">light_PARcohort</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">light_layerIrradianceFraction</span><span class="op">(</span><span class="va">LAIme</span>, <span class="va">LAImd</span>, <span class="va">LAImx</span>, <span class="va">k</span>, <span class="va">alpha</span>, </span>
+<span>                              trunkExtinctionFraction <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
+<span><span class="fu">light_layerIrradianceFractionBottomUp</span><span class="op">(</span><span class="va">LAIme</span>, <span class="va">LAImd</span>, <span class="va">LAImx</span>, <span class="va">k</span>, <span class="va">alpha</span>, </span>
+<span>                              trunkExtinctionFraction <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
+<span><span class="fu">light_layerSunlitFraction</span><span class="op">(</span><span class="va">LAIme</span>, <span class="va">LAImd</span>, <span class="va">kb</span><span class="op">)</span></span>
+<span><span class="fu">light_cohortSunlitShadeAbsorbedRadiation</span><span class="op">(</span><span class="va">Ib0</span>, <span class="va">Id0</span>, <span class="va">Ibf</span>, <span class="va">Idf</span>, <span class="va">beta</span>,</span>
+<span>                                         <span class="va">LAIme</span>, <span class="va">LAImd</span>,</span>
+<span>                                         <span class="va">kb</span>, <span class="va">kd</span>, <span class="va">alpha</span>, <span class="va">gamma</span><span class="op">)</span></span>
+<span><span class="fu">light_instantaneousLightExtinctionAbsortion</span><span class="op">(</span><span class="va">LAIme</span>, <span class="va">LAImd</span>, <span class="va">LAImx</span>,</span>
+<span>                                            <span class="va">kPAR</span>, <span class="va">alphaSWR</span>, <span class="va">gammaSWR</span>,</span>
+<span>                                            <span class="va">ddd</span>, ntimesteps <span class="op">=</span> <span class="fl">24</span>, </span>
+<span>                                            trunkExtinctionFraction <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
+<span><span class="fu">light_longwaveRadiationSHAW</span><span class="op">(</span><span class="va">LAIme</span>, <span class="va">LAImd</span>, <span class="va">LAImx</span>, </span>
+<span>                            <span class="va">LWRatm</span>, <span class="va">Tsoil</span>, <span class="va">Tair</span>, trunkExtinctionFraction <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
+<span><span class="fu">light_cohortAbsorbedSWRFraction</span><span class="op">(</span><span class="va">z</span>, <span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
+<span><span class="fu">light_PARground</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">light_SWRground</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">light_PARcohort</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>LAIme</dt>
 <dd><p>A numeric matrix of live expanded LAI values per vegetation layer (row) and cohort (column).</p></dd>
-<dt>LAImd</dt>
+
+  <dt>LAImd</dt>
 <dd><p>A numeric matrix of dead LAI values per vegetation layer (row) and cohort (column).</p></dd>
-<dt>LAImx</dt>
+
+  <dt>LAImx</dt>
 <dd><p>A numeric matrix of maximum LAI values per vegetation layer (row) and cohort (column).</p></dd>
-<dt>k</dt>
+
+  <dt>k</dt>
 <dd><p>A vector of light extinction coefficients.</p></dd>
-<dt>kb</dt>
+
+  <dt>kb</dt>
 <dd><p>A vector of direct light extinction coefficients.</p></dd>
-<dt>kd</dt>
+
+  <dt>kd</dt>
 <dd><p>A vector of diffuse light extinction coefficients.</p></dd>
-<dt>Ib0</dt>
+
+  <dt>Ib0</dt>
 <dd><p>Above-canopy direct incident radiation.</p></dd>
-<dt>Id0</dt>
+
+  <dt>Id0</dt>
 <dd><p>Above-canopy diffuse incident radiation.</p></dd>
-<dt>Ibf</dt>
+
+  <dt>Ibf</dt>
 <dd><p>Fraction of above-canopy direct radiation reaching each vegetation layer.</p></dd>
-<dt>Idf</dt>
+
+  <dt>Idf</dt>
 <dd><p>Fraction of above-canopy diffuse radiation reaching each vegetation layer.</p></dd>
-<dt>alpha</dt>
+
+  <dt>alpha</dt>
 <dd><p>A vecfor of leaf absorbance by species.</p></dd>
-<dt>beta</dt>
+
+  <dt>beta</dt>
 <dd><p>Solar elevation (in radians).</p></dd>
-<dt>gamma</dt>
+
+  <dt>gamma</dt>
 <dd><p>Vector of canopy reflectance values.</p></dd>
-<dt>kPAR</dt>
+
+  <dt>kPAR</dt>
 <dd><p>A vector of visible light extinction coefficients for each cohort.</p></dd>
-<dt>alphaSWR</dt>
+
+  <dt>alphaSWR</dt>
 <dd><p>A vecfor of hort-wave absorbance coefficients for each cohort.</p></dd>
-<dt>gammaSWR</dt>
+
+  <dt>gammaSWR</dt>
 <dd><p>A vector of short-wave reflectance coefficients (albedo) for each cohort.</p></dd>
-<dt>ddd</dt>
+
+  <dt>ddd</dt>
 <dd><p>A dataframe with direct and diffuse radiation for different subdaily time steps (see function <code>radiation_directDiffuseDay</code> in package meteoland).</p></dd>
-<dt>ntimesteps</dt>
+
+  <dt>ntimesteps</dt>
 <dd><p>Number of subdaily time steps.</p></dd>
-<dt>trunkExtinctionFraction</dt>
+
+  <dt>trunkExtinctionFraction</dt>
 <dd><p>Fraction of extinction due to trunks (for winter deciduous forests).</p></dd>
-<dt>LWRatm</dt>
+
+  <dt>LWRatm</dt>
 <dd><p>Atmospheric downward long-wave radiation (W/m2).</p></dd>
-<dt>Tsoil</dt>
+
+  <dt>Tsoil</dt>
 <dd><p>Soil temperature (Celsius).</p></dd>
-<dt>Tair</dt>
+
+  <dt>Tair</dt>
 <dd><p>Canopy layer air temperature vector (Celsius).</p></dd>
-<dt>x</dt>
+
+  <dt>x</dt>
 <dd><p>An object of class <code><a href="forest.html">forest</a></code></p></dd>
-<dt>SpParams</dt>
+
+  <dt>SpParams</dt>
 <dd><p>A data frame with species parameters (see <code><a href="SpParams.html">SpParamsMED</a></code>).</p></dd>
-<dt>z</dt>
+
+  <dt>z</dt>
 <dd><p>A numeric vector with height values.</p></dd>
-<dt>gdd</dt>
+
+  <dt>gdd</dt>
 <dd><p>Growth degree days.</p></dd>
-<dt>mode</dt>
+
+  <dt>mode</dt>
 <dd><p>Calculation mode, either "MED" or "US".</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -139,7 +166,9 @@
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>Functions <code>light_layerIrradianceFraction</code>, <code>light_layerIrradianceFractionBottomUp</code>  and <code>light_layerSunlitFraction</code> return a numeric vector of length equal to the number of vegetation layers. Function <code>light_cohortSunlitShadeAbsorbedRadiation</code> returns a list with two elements (matrices): <code>I_sunlit</code> and <code>I_shade</code>.</p>
+    
+
+<p>Functions <code>light_layerIrradianceFraction</code>, <code>light_layerIrradianceFractionBottomUp</code>  and <code>light_layerSunlitFraction</code> return a numeric vector of length equal to the number of vegetation layers. Function <code>light_cohortSunlitShadeAbsorbedRadiation</code> returns a list with two elements (matrices): <code>I_sunlit</code> and <code>I_shade</code>.</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -157,68 +186,68 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">LAI</span> <span class="op">=</span> <span class="fl">2</span></span>
-<span class="r-in"><span class="va">nlayer</span> <span class="op">=</span> <span class="fl">10</span></span>
-<span class="r-in"><span class="va">LAIlayerlive</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">LAI</span><span class="op">/</span><span class="va">nlayer</span>,<span class="va">nlayer</span><span class="op">)</span>,<span class="va">nlayer</span>,<span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">LAIlayerdead</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>,<span class="va">nlayer</span>,<span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">kb</span> <span class="op">=</span> <span class="fl">0.8</span></span>
-<span class="r-in"><span class="va">kd_PAR</span> <span class="op">=</span> <span class="fl">0.5</span></span>
-<span class="r-in"><span class="va">kd_SWR</span> <span class="op">=</span> <span class="va">kd_PAR</span><span class="op">/</span><span class="fl">1.35</span></span>
-<span class="r-in"><span class="va">alpha_PAR</span> <span class="op">=</span> <span class="fl">0.9</span></span>
-<span class="r-in"><span class="va">gamma_PAR</span> <span class="op">=</span> <span class="fl">0.04</span></span>
-<span class="r-in"><span class="va">gamma_SWR</span> <span class="op">=</span> <span class="fl">0.05</span></span>
-<span class="r-in"><span class="va">alpha_SWR</span> <span class="op">=</span> <span class="fl">0.7</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">Ibfpar</span> <span class="op">=</span> <span class="fu">light_layerIrradianceFraction</span><span class="op">(</span><span class="va">LAIlayerlive</span>,<span class="va">LAIlayerdead</span>,<span class="va">LAIlayerlive</span>,<span class="va">kb</span>, <span class="va">alpha_PAR</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">Idfpar</span> <span class="op">=</span> <span class="fu">light_layerIrradianceFraction</span><span class="op">(</span><span class="va">LAIlayerlive</span>,<span class="va">LAIlayerdead</span>,<span class="va">LAIlayerlive</span>,<span class="va">kd_PAR</span>, <span class="va">alpha_PAR</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">Ibfswr</span> <span class="op">=</span> <span class="fu">light_layerIrradianceFraction</span><span class="op">(</span><span class="va">LAIlayerlive</span>,<span class="va">LAIlayerdead</span>,<span class="va">LAIlayerlive</span>,<span class="va">kb</span>, <span class="va">alpha_SWR</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">Idfswr</span> <span class="op">=</span> <span class="fu">light_layerIrradianceFraction</span><span class="op">(</span><span class="va">LAIlayerlive</span>,<span class="va">LAIlayerdead</span>,<span class="va">LAIlayerlive</span>,<span class="va">kd_SWR</span>, <span class="va">alpha_SWR</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">fsunlit</span> <span class="op">=</span> <span class="fu">light_layerSunlitFraction</span><span class="op">(</span><span class="va">LAIlayerlive</span>, <span class="va">LAIlayerdead</span>, <span class="va">kb</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">SHarea</span> <span class="op">=</span> <span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">fsunlit</span><span class="op">)</span><span class="op">*</span><span class="va">LAIlayerlive</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span> </span>
-<span class="r-in"><span class="va">SLarea</span> <span class="op">=</span> <span class="va">fsunlit</span><span class="op">*</span><span class="va">LAIlayerlive</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>, mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">Ibfpar</span><span class="op">*</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>,type<span class="op">=</span><span class="st">"l"</span>, ylab<span class="op">=</span><span class="st">"Layer"</span>, </span>
-<span class="r-in">     xlab<span class="op">=</span><span class="st">"Percentage of irradiance"</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">100</span><span class="op">)</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="va">nlayer</span><span class="op">)</span>, col<span class="op">=</span><span class="st">"dark green"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">Idfpar</span><span class="op">*</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>, col<span class="op">=</span><span class="st">"dark green"</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">Ibfswr</span><span class="op">*</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>, col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">Idfswr</span><span class="op">*</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>, col<span class="op">=</span><span class="st">"red"</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fsunlit</span><span class="op">*</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>,type<span class="op">=</span><span class="st">"l"</span>, ylab<span class="op">=</span><span class="st">"Layer"</span>, </span>
-<span class="r-in">     xlab<span class="op">=</span><span class="st">"Percentage of leaves"</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">100</span><span class="op">)</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="va">nlayer</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">fsunlit</span><span class="op">)</span><span class="op">*</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">LAI</span> <span class="op">=</span> <span class="fl">2</span></span></span>
+<span class="r-in"><span><span class="va">nlayer</span> <span class="op">=</span> <span class="fl">10</span></span></span>
+<span class="r-in"><span><span class="va">LAIlayerlive</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">LAI</span><span class="op">/</span><span class="va">nlayer</span>,<span class="va">nlayer</span><span class="op">)</span>,<span class="va">nlayer</span>,<span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">LAIlayerdead</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>,<span class="va">nlayer</span>,<span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">kb</span> <span class="op">=</span> <span class="fl">0.8</span></span></span>
+<span class="r-in"><span><span class="va">kd_PAR</span> <span class="op">=</span> <span class="fl">0.5</span></span></span>
+<span class="r-in"><span><span class="va">kd_SWR</span> <span class="op">=</span> <span class="va">kd_PAR</span><span class="op">/</span><span class="fl">1.35</span></span></span>
+<span class="r-in"><span><span class="va">alpha_PAR</span> <span class="op">=</span> <span class="fl">0.9</span></span></span>
+<span class="r-in"><span><span class="va">gamma_PAR</span> <span class="op">=</span> <span class="fl">0.04</span></span></span>
+<span class="r-in"><span><span class="va">gamma_SWR</span> <span class="op">=</span> <span class="fl">0.05</span></span></span>
+<span class="r-in"><span><span class="va">alpha_SWR</span> <span class="op">=</span> <span class="fl">0.7</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">Ibfpar</span> <span class="op">=</span> <span class="fu">light_layerIrradianceFraction</span><span class="op">(</span><span class="va">LAIlayerlive</span>,<span class="va">LAIlayerdead</span>,<span class="va">LAIlayerlive</span>,<span class="va">kb</span>, <span class="va">alpha_PAR</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Idfpar</span> <span class="op">=</span> <span class="fu">light_layerIrradianceFraction</span><span class="op">(</span><span class="va">LAIlayerlive</span>,<span class="va">LAIlayerdead</span>,<span class="va">LAIlayerlive</span>,<span class="va">kd_PAR</span>, <span class="va">alpha_PAR</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Ibfswr</span> <span class="op">=</span> <span class="fu">light_layerIrradianceFraction</span><span class="op">(</span><span class="va">LAIlayerlive</span>,<span class="va">LAIlayerdead</span>,<span class="va">LAIlayerlive</span>,<span class="va">kb</span>, <span class="va">alpha_SWR</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Idfswr</span> <span class="op">=</span> <span class="fu">light_layerIrradianceFraction</span><span class="op">(</span><span class="va">LAIlayerlive</span>,<span class="va">LAIlayerdead</span>,<span class="va">LAIlayerlive</span>,<span class="va">kd_SWR</span>, <span class="va">alpha_SWR</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fsunlit</span> <span class="op">=</span> <span class="fu">light_layerSunlitFraction</span><span class="op">(</span><span class="va">LAIlayerlive</span>, <span class="va">LAIlayerdead</span>, <span class="va">kb</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">SHarea</span> <span class="op">=</span> <span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">fsunlit</span><span class="op">)</span><span class="op">*</span><span class="va">LAIlayerlive</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span> </span></span>
+<span class="r-in"><span><span class="va">SLarea</span> <span class="op">=</span> <span class="va">fsunlit</span><span class="op">*</span><span class="va">LAIlayerlive</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span> </span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>, mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">Ibfpar</span><span class="op">*</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>,type<span class="op">=</span><span class="st">"l"</span>, ylab<span class="op">=</span><span class="st">"Layer"</span>, </span></span>
+<span class="r-in"><span>     xlab<span class="op">=</span><span class="st">"Percentage of irradiance"</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">100</span><span class="op">)</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="va">nlayer</span><span class="op">)</span>, col<span class="op">=</span><span class="st">"dark green"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">Idfpar</span><span class="op">*</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>, col<span class="op">=</span><span class="st">"dark green"</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">Ibfswr</span><span class="op">*</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>, col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">Idfswr</span><span class="op">*</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>, col<span class="op">=</span><span class="st">"red"</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fsunlit</span><span class="op">*</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>,type<span class="op">=</span><span class="st">"l"</span>, ylab<span class="op">=</span><span class="st">"Layer"</span>, </span></span>
+<span class="r-in"><span>     xlab<span class="op">=</span><span class="st">"Percentage of leaves"</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">100</span><span class="op">)</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="va">nlayer</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">fsunlit</span><span class="op">)</span><span class="op">*</span><span class="fl">100</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="light-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">solarElevation</span> <span class="op">=</span> <span class="fl">0.67</span></span>
-<span class="r-in"><span class="va">SWR_direct</span> <span class="op">=</span> <span class="fl">1100</span></span>
-<span class="r-in"><span class="va">SWR_diffuse</span> <span class="op">=</span> <span class="fl">300</span></span>
-<span class="r-in"><span class="va">PAR_direct</span> <span class="op">=</span> <span class="fl">550</span></span>
-<span class="r-in"><span class="va">PAR_diffuse</span> <span class="op">=</span> <span class="fl">150</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">abs_PAR</span> <span class="op">=</span> <span class="fu">light_cohortSunlitShadeAbsorbedRadiation</span><span class="op">(</span><span class="va">PAR_direct</span>, <span class="va">PAR_diffuse</span>,</span>
-<span class="r-in">                        <span class="va">Ibfpar</span>, <span class="va">Idfpar</span>, beta <span class="op">=</span> <span class="va">solarElevation</span>, </span>
-<span class="r-in">                        <span class="va">LAIlayerlive</span>, <span class="va">LAIlayerdead</span>, <span class="va">kb</span>, <span class="va">kd_PAR</span>, <span class="va">alpha_PAR</span>, <span class="va">gamma_PAR</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">abs_SWR</span> <span class="op">=</span> <span class="fu">light_cohortSunlitShadeAbsorbedRadiation</span><span class="op">(</span><span class="va">SWR_direct</span>, <span class="va">SWR_diffuse</span>,</span>
-<span class="r-in">                        <span class="va">Ibfswr</span>, <span class="va">Idfswr</span>, beta <span class="op">=</span> <span class="va">solarElevation</span>, </span>
-<span class="r-in">                        <span class="va">LAIlayerlive</span>, <span class="va">LAIlayerdead</span>, <span class="va">kb</span>, <span class="va">kd_SWR</span>, <span class="va">alpha_SWR</span>, <span class="va">gamma_SWR</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>, mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">absRadSL</span> <span class="op">=</span> <span class="va">abs_SWR</span><span class="op">$</span><span class="va">I_sunlit</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
-<span class="r-in"><span class="va">absRadSH</span> <span class="op">=</span> <span class="va">abs_SWR</span><span class="op">$</span><span class="va">I_shade</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span>
-<span class="r-in"><span class="va">lambda</span> <span class="op">=</span> <span class="fl">546.6507</span></span>
-<span class="r-in"><span class="va">QSL</span> <span class="op">=</span> <span class="va">abs_PAR</span><span class="op">$</span><span class="va">I_sunlit</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">*</span><span class="va">lambda</span><span class="op">*</span><span class="fl">0.836</span><span class="op">*</span><span class="fl">0.01</span></span>
-<span class="r-in"><span class="va">QSH</span> <span class="op">=</span> <span class="va">abs_PAR</span><span class="op">$</span><span class="va">I_shade</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">*</span><span class="va">lambda</span><span class="op">*</span><span class="fl">0.836</span><span class="op">*</span><span class="fl">0.01</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">QSL</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>,type<span class="op">=</span><span class="st">"l"</span>, ylab<span class="op">=</span><span class="st">"Layer"</span>, </span>
-<span class="r-in">     xlab<span class="op">=</span><span class="st">"Absorbed PAR quantum flux per leaf area"</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="va">nlayer</span><span class="op">)</span>, col<span class="op">=</span><span class="st">"dark green"</span>, </span>
-<span class="r-in">     xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">QSL</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">QSH</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>, col<span class="op">=</span><span class="st">"dark green"</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">absRadSL</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>,type<span class="op">=</span><span class="st">"l"</span>, ylab<span class="op">=</span><span class="st">"Layer"</span>, </span>
-<span class="r-in">     xlab<span class="op">=</span><span class="st">"Absorbed SWR per leaf area (W/m2)"</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="va">nlayer</span><span class="op">)</span>, col<span class="op">=</span><span class="st">"red"</span>, </span>
-<span class="r-in">     xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">absRadSL</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">absRadSH</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>, col<span class="op">=</span><span class="st">"red"</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">solarElevation</span> <span class="op">=</span> <span class="fl">0.67</span></span></span>
+<span class="r-in"><span><span class="va">SWR_direct</span> <span class="op">=</span> <span class="fl">1100</span></span></span>
+<span class="r-in"><span><span class="va">SWR_diffuse</span> <span class="op">=</span> <span class="fl">300</span></span></span>
+<span class="r-in"><span><span class="va">PAR_direct</span> <span class="op">=</span> <span class="fl">550</span></span></span>
+<span class="r-in"><span><span class="va">PAR_diffuse</span> <span class="op">=</span> <span class="fl">150</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">abs_PAR</span> <span class="op">=</span> <span class="fu">light_cohortSunlitShadeAbsorbedRadiation</span><span class="op">(</span><span class="va">PAR_direct</span>, <span class="va">PAR_diffuse</span>,</span></span>
+<span class="r-in"><span>                        <span class="va">Ibfpar</span>, <span class="va">Idfpar</span>, beta <span class="op">=</span> <span class="va">solarElevation</span>, </span></span>
+<span class="r-in"><span>                        <span class="va">LAIlayerlive</span>, <span class="va">LAIlayerdead</span>, <span class="va">kb</span>, <span class="va">kd_PAR</span>, <span class="va">alpha_PAR</span>, <span class="va">gamma_PAR</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">abs_SWR</span> <span class="op">=</span> <span class="fu">light_cohortSunlitShadeAbsorbedRadiation</span><span class="op">(</span><span class="va">SWR_direct</span>, <span class="va">SWR_diffuse</span>,</span></span>
+<span class="r-in"><span>                        <span class="va">Ibfswr</span>, <span class="va">Idfswr</span>, beta <span class="op">=</span> <span class="va">solarElevation</span>, </span></span>
+<span class="r-in"><span>                        <span class="va">LAIlayerlive</span>, <span class="va">LAIlayerdead</span>, <span class="va">kb</span>, <span class="va">kd_SWR</span>, <span class="va">alpha_SWR</span>, <span class="va">gamma_SWR</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>, mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">absRadSL</span> <span class="op">=</span> <span class="va">abs_SWR</span><span class="op">$</span><span class="va">I_sunlit</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">absRadSH</span> <span class="op">=</span> <span class="va">abs_SWR</span><span class="op">$</span><span class="va">I_shade</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">lambda</span> <span class="op">=</span> <span class="fl">546.6507</span></span></span>
+<span class="r-in"><span><span class="va">QSL</span> <span class="op">=</span> <span class="va">abs_PAR</span><span class="op">$</span><span class="va">I_sunlit</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">*</span><span class="va">lambda</span><span class="op">*</span><span class="fl">0.836</span><span class="op">*</span><span class="fl">0.01</span></span></span>
+<span class="r-in"><span><span class="va">QSH</span> <span class="op">=</span> <span class="va">abs_PAR</span><span class="op">$</span><span class="va">I_shade</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span><span class="op">*</span><span class="va">lambda</span><span class="op">*</span><span class="fl">0.836</span><span class="op">*</span><span class="fl">0.01</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">QSL</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>,type<span class="op">=</span><span class="st">"l"</span>, ylab<span class="op">=</span><span class="st">"Layer"</span>, </span></span>
+<span class="r-in"><span>     xlab<span class="op">=</span><span class="st">"Absorbed PAR quantum flux per leaf area"</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="va">nlayer</span><span class="op">)</span>, col<span class="op">=</span><span class="st">"dark green"</span>, </span></span>
+<span class="r-in"><span>     xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">QSL</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">QSH</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>, col<span class="op">=</span><span class="st">"dark green"</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">absRadSL</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>,type<span class="op">=</span><span class="st">"l"</span>, ylab<span class="op">=</span><span class="st">"Layer"</span>, </span></span>
+<span class="r-in"><span>     xlab<span class="op">=</span><span class="st">"Absorbed SWR per leaf area (W/m2)"</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="va">nlayer</span><span class="op">)</span>, col<span class="op">=</span><span class="st">"red"</span>, </span></span>
+<span class="r-in"><span>     xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">absRadSL</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">absRadSH</span>, <span class="fl">1</span><span class="op">:</span><span class="va">nlayer</span>, col<span class="op">=</span><span class="st">"red"</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="light-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -233,7 +262,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

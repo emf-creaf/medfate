@@ -56,78 +56,101 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">hydraulics_maximumSoilPlantConductance</span><span class="op">(</span><span class="va">krhizomax</span>, <span class="va">krootmax</span>, 
-                                       <span class="va">kstemmax</span>, <span class="va">kleafmax</span><span class="op">)</span>
-<span class="fu">hydraulics_soilPlantResistances</span><span class="op">(</span><span class="va">psiSoil</span>, <span class="va">psiRhizo</span>, 
-                                <span class="va">psiStem</span>, <span class="va">PLCstem</span>, <span class="va">psiLeaf</span>, 
-                                <span class="va">krhizomax</span>, <span class="va">n</span>, <span class="va">alpha</span>,
-                                <span class="va">krootmax</span>, <span class="va">rootc</span>, <span class="va">rootd</span>, 
-                                <span class="va">kstemmax</span>, <span class="va">stemc</span>, <span class="va">stemd</span>,
-                                <span class="va">kleafmax</span>, <span class="va">leafc</span>, <span class="va">leafd</span><span class="op">)</span>
-<span class="fu">hydraulics_averageRhizosphereResistancePercent</span><span class="op">(</span><span class="va">krhizomax</span>, <span class="va">n</span>, <span class="va">alpha</span>,
-                                               <span class="va">krootmax</span>, <span class="va">rootc</span>, <span class="va">rootd</span>,
-                                               <span class="va">kstemmax</span>, <span class="va">stemc</span>, <span class="va">stemd</span>, 
-                                               <span class="va">kleafmax</span>, <span class="va">leafc</span>, <span class="va">leafd</span>, psiStep <span class="op">=</span> <span class="op">-</span><span class="fl">0.01</span><span class="op">)</span>
-<span class="fu">hydraulics_findRhizosphereMaximumConductance</span><span class="op">(</span><span class="va">averageResistancePercent</span>, <span class="va">n</span>, <span class="va">alpha</span>,
-                                             <span class="va">krootmax</span>, <span class="va">rootc</span>, <span class="va">rootd</span>,
-                                             <span class="va">kstemmax</span>, <span class="va">stemc</span>, <span class="va">stemd</span>,
-                                             <span class="va">kleafmax</span>, <span class="va">leafc</span>, <span class="va">leafd</span>, initialValue <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> 
-<span class="fu">hydraulics_maximumStemHydraulicConductance</span><span class="op">(</span><span class="va">xylemConductivity</span>, <span class="va">refheight</span>, <span class="va">Al2As</span>, <span class="va">height</span>, 
-                                           taper <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="fu">hydraulics_rootxylemConductanceProportions</span><span class="op">(</span><span class="va">L</span>, <span class="va">V</span><span class="op">)</span>
-<span class="fu">hydraulics_referenceConductivityHeightFactor</span><span class="op">(</span><span class="va">refheight</span>, <span class="va">height</span><span class="op">)</span>
-<span class="fu">hydraulics_terminalConduitRadius</span><span class="op">(</span><span class="va">height</span><span class="op">)</span>
-<span class="fu">hydraulics_taperFactorSavage</span><span class="op">(</span><span class="va">height</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hydraulics_maximumSoilPlantConductance</span><span class="op">(</span><span class="va">krhizomax</span>, <span class="va">krootmax</span>, </span>
+<span>                                       <span class="va">kstemmax</span>, <span class="va">kleafmax</span><span class="op">)</span></span>
+<span><span class="fu">hydraulics_soilPlantResistances</span><span class="op">(</span><span class="va">psiSoil</span>, <span class="va">psiRhizo</span>, </span>
+<span>                                <span class="va">psiStem</span>, <span class="va">PLCstem</span>, <span class="va">psiLeaf</span>, </span>
+<span>                                <span class="va">krhizomax</span>, <span class="va">n</span>, <span class="va">alpha</span>,</span>
+<span>                                <span class="va">krootmax</span>, <span class="va">rootc</span>, <span class="va">rootd</span>, </span>
+<span>                                <span class="va">kstemmax</span>, <span class="va">stemc</span>, <span class="va">stemd</span>,</span>
+<span>                                <span class="va">kleafmax</span>, <span class="va">leafc</span>, <span class="va">leafd</span><span class="op">)</span></span>
+<span><span class="fu">hydraulics_averageRhizosphereResistancePercent</span><span class="op">(</span><span class="va">krhizomax</span>, <span class="va">n</span>, <span class="va">alpha</span>,</span>
+<span>                                               <span class="va">krootmax</span>, <span class="va">rootc</span>, <span class="va">rootd</span>,</span>
+<span>                                               <span class="va">kstemmax</span>, <span class="va">stemc</span>, <span class="va">stemd</span>, </span>
+<span>                                               <span class="va">kleafmax</span>, <span class="va">leafc</span>, <span class="va">leafd</span>, psiStep <span class="op">=</span> <span class="op">-</span><span class="fl">0.01</span><span class="op">)</span></span>
+<span><span class="fu">hydraulics_findRhizosphereMaximumConductance</span><span class="op">(</span><span class="va">averageResistancePercent</span>, <span class="va">n</span>, <span class="va">alpha</span>,</span>
+<span>                                             <span class="va">krootmax</span>, <span class="va">rootc</span>, <span class="va">rootd</span>,</span>
+<span>                                             <span class="va">kstemmax</span>, <span class="va">stemc</span>, <span class="va">stemd</span>,</span>
+<span>                                             <span class="va">kleafmax</span>, <span class="va">leafc</span>, <span class="va">leafd</span>, initialValue <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> </span>
+<span><span class="fu">hydraulics_maximumStemHydraulicConductance</span><span class="op">(</span><span class="va">xylemConductivity</span>, <span class="va">refheight</span>, <span class="va">Al2As</span>, <span class="va">height</span>, </span>
+<span>                                           taper <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">hydraulics_rootxylemConductanceProportions</span><span class="op">(</span><span class="va">L</span>, <span class="va">V</span><span class="op">)</span></span>
+<span><span class="fu">hydraulics_referenceConductivityHeightFactor</span><span class="op">(</span><span class="va">refheight</span>, <span class="va">height</span><span class="op">)</span></span>
+<span><span class="fu">hydraulics_terminalConduitRadius</span><span class="op">(</span><span class="va">height</span><span class="op">)</span></span>
+<span><span class="fu">hydraulics_taperFactorSavage</span><span class="op">(</span><span class="va">height</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>psiSoil</dt>
 <dd><p>Soil water potential (in MPa). A scalar or a vector depending on the function.</p></dd>
-<dt>psiRhizo</dt>
+
+  <dt>psiRhizo</dt>
 <dd><p>Water potential (in MPa) in the rhizosphere (root surface).</p></dd>
-<dt>psiStem</dt>
+
+  <dt>psiStem</dt>
 <dd><p>Water potential (in MPa) in the stem.</p></dd>
-<dt>psiLeaf</dt>
+
+  <dt>psiLeaf</dt>
 <dd><p>Water potential (in MPa) in the leaf.</p></dd>
-<dt>PLCstem</dt>
+
+  <dt>PLCstem</dt>
 <dd><p>Percent loss of conductance (in %) in the stem.</p></dd>
-<dt>L</dt>
+
+  <dt>L</dt>
 <dd><p>Vector with the length of coarse roots (mm) for each soil layer.</p></dd>
-<dt>V</dt>
+
+  <dt>V</dt>
 <dd><p>Vector with the proportion [0-1] of fine roots within each soil layer.</p></dd>
-<dt>krhizomax</dt>
+
+  <dt>krhizomax</dt>
 <dd><p>Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).</p></dd>
-<dt>kleafmax</dt>
+
+  <dt>kleafmax</dt>
 <dd><p>Maximum leaf hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).</p></dd>
-<dt>kstemmax</dt>
+
+  <dt>kstemmax</dt>
 <dd><p>Maximum stem xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).</p></dd>
-<dt>krootmax</dt>
+
+  <dt>krootmax</dt>
 <dd><p>Maximum root xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).</p></dd>
-<dt>psiStep</dt>
+
+  <dt>psiStep</dt>
 <dd><p>Water potential precision (in MPa).</p></dd>
-<dt>rootc, rootd</dt>
+
+  <dt>rootc, rootd</dt>
 <dd><p>Parameters of the Weibull function for roots (root xylem vulnerability curve).</p></dd>
-<dt>stemc, stemd</dt>
+
+  <dt>stemc, stemd</dt>
 <dd><p>Parameters of the Weibull function for stems (stem xylem vulnerability curve).</p></dd>
-<dt>leafc, leafd</dt>
+
+  <dt>leafc, leafd</dt>
 <dd><p>Parameters of the Weibull function for leaves (leaf vulnerability curve).</p></dd>
-<dt>n, alpha</dt>
+
+  <dt>n, alpha</dt>
 <dd><p>Parameters of the Van Genuchten function (rhizosphere vulnerability curve).</p></dd>
-<dt>averageResistancePercent</dt>
+
+  <dt>averageResistancePercent</dt>
 <dd><p>Average (across water potential values) resistance percent of the rhizosphere, with respect to total resistance (rhizosphere + root xylem + stem xylem).</p></dd>
-<dt>initialValue</dt>
+
+  <dt>initialValue</dt>
 <dd><p>Initial value of rhizosphere conductance.</p></dd>
-<dt>xylemConductivity</dt>
+
+  <dt>xylemConductivity</dt>
 <dd><p>Xylem conductivity as flow per length of conduit and pressure drop (in kg·m-1·s-1·MPa-1).</p></dd>
-<dt>Al2As</dt>
+
+  <dt>Al2As</dt>
 <dd><p>Leaf area to sapwood area (in m2·m-2).</p></dd>
-<dt>height</dt>
+
+  <dt>height</dt>
 <dd><p>Plant height (in cm).</p></dd>
-<dt>refheight</dt>
+
+  <dt>refheight</dt>
 <dd><p>Reference plant height of measurement of xylem conductivity (in cm).</p></dd>
-<dt>taper</dt>
+
+  <dt>taper</dt>
 <dd><p>A boolean flag to indicate correction by taper of xylem conduits (Christoffersen et al. 2017).</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -135,7 +158,9 @@
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>Values returned for each function are:</p><ul><li><p><code>hydraulics_maximumSoilPlantConductance</code>: The maximum soil-plant conductance, in the same units as the input segment conductances.</p></li>
+    
+
+<p>Values returned for each function are:</p><ul><li><p><code>hydraulics_maximumSoilPlantConductance</code>: The maximum soil-plant conductance, in the same units as the input segment conductances.</p></li>
 <li><p><code>hydraulics_averageRhizosphereResistancePercent</code>: The average percentage of resistance due to the rhizosphere, calculated across water potential values.</p></li>
 <li><p><code>hydraulics_findRhizosphereMaximumConductance</code>: The maximum rhizosphere conductance value given an average rhizosphere resistance and the vulnerability curves of rhizosphere, root and stem elements.</p></li>
 <li><p><code>hydraulics_taperFactorSavage</code>: Taper factor according to Savage et al. (2010).</p></li>
@@ -157,10 +182,10 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">kstemmax</span> <span class="op">=</span> <span class="fl">4</span> <span class="co"># in mmol·m-2·s-1·MPa-1</span></span>
-<span class="r-in"><span class="va">stemc</span> <span class="op">=</span> <span class="fl">3</span> </span>
-<span class="r-in"><span class="va">stemd</span> <span class="op">=</span> <span class="op">-</span><span class="fl">4</span> <span class="co"># in MPa</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">kstemmax</span> <span class="op">=</span> <span class="fl">4</span> <span class="co"># in mmol·m-2·s-1·MPa-1</span></span></span>
+<span class="r-in"><span><span class="va">stemc</span> <span class="op">=</span> <span class="fl">3</span> </span></span>
+<span class="r-in"><span><span class="va">stemd</span> <span class="op">=</span> <span class="op">-</span><span class="fl">4</span> <span class="co"># in MPa</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -175,7 +200,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

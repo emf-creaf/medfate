@@ -56,26 +56,33 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">resistances</span><span class="op">(</span><span class="va">x</span>, <span class="va">cohort</span>, relative <span class="op">=</span> <span class="cn">FALSE</span>, draw <span class="op">=</span> <span class="cn">FALSE</span>, 
-            cumulative <span class="op">=</span> <span class="cn">FALSE</span>, xlab <span class="op">=</span> <span class="cn">NULL</span>, ylab <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">resistances</span><span class="op">(</span><span class="va">x</span>, <span class="va">cohort</span>, relative <span class="op">=</span> <span class="cn">FALSE</span>, draw <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>            cumulative <span class="op">=</span> <span class="cn">FALSE</span>, xlab <span class="op">=</span> <span class="cn">NULL</span>, ylab <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>An object of class <code><a href="spwb.html">spwb</a></code>, <code><a href="spwb.html">pwb</a></code>, <code><a href="growth.html">growth</a></code> or <code><a href="fordyn.html">fordyn</a></code>. The function only works with the result of simulations with <code>transpirationMode = "Sperry"</code>.</p></dd>
-<dt>cohort</dt>
+
+  <dt>cohort</dt>
 <dd><p>An string indicating the cohort for which resistances are desired.</p></dd>
-<dt>relative</dt>
+
+  <dt>relative</dt>
 <dd><p>A boolean flag to indicate that relative percentages are desired as output</p></dd>
-<dt>draw</dt>
+
+  <dt>draw</dt>
 <dd><p>A boolean flag to indicate that a plot should be drawn.</p></dd>
-<dt>cumulative</dt>
+
+  <dt>cumulative</dt>
 <dd><p>A flag to indicate that drawn series should be cumulative.</p></dd>
-<dt>xlab</dt>
+
+  <dt>xlab</dt>
 <dd><p>x-axis label.</p></dd>
-<dt>ylab</dt>
+
+  <dt>ylab</dt>
 <dd><p>y-axis label.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -83,7 +90,9 @@
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data frame with dates in rows and resistance segments in columns (Rhizosphere, Root, Stem and Leaf). Values depend on whether <code>relative = TRUE</code> (percentages) or <code>relative = FALSE</code> (absolute resistance values). If <code>draw = TRUE</code> then a plot object is returned.</p>
+    
+
+<p>A data frame with dates in rows and resistance segments in columns (Rhizosphere, Root, Stem and Leaf). Values depend on whether <code>relative = TRUE</code> (percentages) or <code>relative = FALSE</code> (absolute resistance values). If <code>draw = TRUE</code> then a plot object is returned.</p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -106,7 +115,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

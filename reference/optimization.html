@@ -56,67 +56,82 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">multiple_runs</span><span class="op">(</span><span class="va">parMatrix</span>, <span class="va">x</span>,
-              <span class="va">meteo</span>, <span class="va">latitude</span>,
-              elevation <span class="op">=</span> <span class="cn">NA</span>, slope <span class="op">=</span> <span class="cn">NA</span>, aspect <span class="op">=</span> <span class="cn">NA</span>, 
-              summary_function <span class="op">=</span> <span class="cn">NULL</span>, args <span class="op">=</span> <span class="cn">NULL</span>, 
-              verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu">optimization_function</span><span class="op">(</span><span class="va">parNames</span>, <span class="va">x</span>, 
-                      <span class="va">meteo</span>, <span class="va">latitude</span>,
-                      elevation <span class="op">=</span> <span class="cn">NA</span>, slope <span class="op">=</span> <span class="cn">NA</span>, aspect <span class="op">=</span> <span class="cn">NA</span>, 
-                      <span class="va">summary_function</span>, args<span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-<span class="fu">optimization_evaluation_function</span><span class="op">(</span><span class="va">parNames</span>, <span class="va">x</span>, 
-                      <span class="va">meteo</span>, <span class="va">latitude</span>,
-                      elevation <span class="op">=</span> <span class="cn">NA</span>, slope <span class="op">=</span> <span class="cn">NA</span>, aspect <span class="op">=</span> <span class="cn">NA</span>, 
-                      <span class="va">measuredData</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, cohorts <span class="op">=</span> <span class="cn">NULL</span>, 
-                      temporalResolution <span class="op">=</span> <span class="st">"day"</span>,
-                      metric <span class="op">=</span> <span class="st">"loglikelihood"</span><span class="op">)</span>
-<span class="fu">optimization_multicohort_function</span><span class="op">(</span><span class="va">cohortParNames</span>, <span class="va">cohortNames</span>, <span class="va">x</span>, 
-                      <span class="va">meteo</span>, <span class="va">latitude</span>, 
-                      otherParNames <span class="op">=</span> <span class="cn">NULL</span>,
-                      elevation <span class="op">=</span> <span class="cn">NA</span>, slope <span class="op">=</span> <span class="cn">NA</span>, aspect <span class="op">=</span> <span class="cn">NA</span>, 
-                      <span class="va">summary_function</span>, args<span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-<span class="fu">optimization_evaluation_multicohort_function</span><span class="op">(</span><span class="va">cohortParNames</span>, <span class="va">cohortNames</span>, <span class="va">x</span>, 
-                      <span class="va">meteo</span>, <span class="va">latitude</span>,
-                      otherParNames <span class="op">=</span> <span class="cn">NULL</span>,
-                      elevation <span class="op">=</span> <span class="cn">NA</span>, slope <span class="op">=</span> <span class="cn">NA</span>, aspect <span class="op">=</span> <span class="cn">NA</span>, 
-                      <span class="va">measuredData</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, cohorts <span class="op">=</span> <span class="va">cohortNames</span>,
-                      temporalResolution <span class="op">=</span> <span class="st">"day"</span>, 
-                      metric <span class="op">=</span> <span class="st">"loglikelihood"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">multiple_runs</span><span class="op">(</span><span class="va">parMatrix</span>, <span class="va">x</span>,</span>
+<span>              <span class="va">meteo</span>, <span class="va">latitude</span>,</span>
+<span>              elevation <span class="op">=</span> <span class="cn">NA</span>, slope <span class="op">=</span> <span class="cn">NA</span>, aspect <span class="op">=</span> <span class="cn">NA</span>, </span>
+<span>              summary_function <span class="op">=</span> <span class="cn">NULL</span>, args <span class="op">=</span> <span class="cn">NULL</span>, </span>
+<span>              verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">optimization_function</span><span class="op">(</span><span class="va">parNames</span>, <span class="va">x</span>, </span>
+<span>                      <span class="va">meteo</span>, <span class="va">latitude</span>,</span>
+<span>                      elevation <span class="op">=</span> <span class="cn">NA</span>, slope <span class="op">=</span> <span class="cn">NA</span>, aspect <span class="op">=</span> <span class="cn">NA</span>, </span>
+<span>                      <span class="va">summary_function</span>, args<span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">optimization_evaluation_function</span><span class="op">(</span><span class="va">parNames</span>, <span class="va">x</span>, </span>
+<span>                      <span class="va">meteo</span>, <span class="va">latitude</span>,</span>
+<span>                      elevation <span class="op">=</span> <span class="cn">NA</span>, slope <span class="op">=</span> <span class="cn">NA</span>, aspect <span class="op">=</span> <span class="cn">NA</span>, </span>
+<span>                      <span class="va">measuredData</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, cohorts <span class="op">=</span> <span class="cn">NULL</span>, </span>
+<span>                      temporalResolution <span class="op">=</span> <span class="st">"day"</span>,</span>
+<span>                      metric <span class="op">=</span> <span class="st">"loglikelihood"</span><span class="op">)</span></span>
+<span><span class="fu">optimization_multicohort_function</span><span class="op">(</span><span class="va">cohortParNames</span>, <span class="va">cohortNames</span>, <span class="va">x</span>, </span>
+<span>                      <span class="va">meteo</span>, <span class="va">latitude</span>, </span>
+<span>                      otherParNames <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                      elevation <span class="op">=</span> <span class="cn">NA</span>, slope <span class="op">=</span> <span class="cn">NA</span>, aspect <span class="op">=</span> <span class="cn">NA</span>, </span>
+<span>                      <span class="va">summary_function</span>, args<span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">optimization_evaluation_multicohort_function</span><span class="op">(</span><span class="va">cohortParNames</span>, <span class="va">cohortNames</span>, <span class="va">x</span>, </span>
+<span>                      <span class="va">meteo</span>, <span class="va">latitude</span>,</span>
+<span>                      otherParNames <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>                      elevation <span class="op">=</span> <span class="cn">NA</span>, slope <span class="op">=</span> <span class="cn">NA</span>, aspect <span class="op">=</span> <span class="cn">NA</span>, </span>
+<span>                      <span class="va">measuredData</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, cohorts <span class="op">=</span> <span class="va">cohortNames</span>,</span>
+<span>                      temporalResolution <span class="op">=</span> <span class="st">"day"</span>, </span>
+<span>                      metric <span class="op">=</span> <span class="st">"loglikelihood"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>parMatrix</dt>
 <dd><p>A matrix of parameter values with runs in rows and parameters in columns. Column names should follow parameter modification naming rules (see examples and naming rules in <code><a href="modifySpParams.html">modifyInputParams</a></code>).</p></dd>
-<dt>parNames</dt>
+
+  <dt>parNames</dt>
 <dd><p>A string vector of parameter names (see examples and naming rules in <code><a href="modifySpParams.html">modifyInputParams</a></code>).</p></dd>
-<dt>x</dt>
+
+  <dt>x</dt>
 <dd><p>An object of class <code><a href="modelInput.html">spwbInput</a></code> or <code><a href="modelInput.html">growthInput</a></code>.</p></dd>
-<dt>meteo, latitude, elevation, slope, aspect</dt>
+
+  <dt>meteo, latitude, elevation, slope, aspect</dt>
 <dd><p>Additional parameters to simulation functions <code><a href="spwb.html">spwb</a></code> or <code><a href="growth.html">growth</a></code>.</p></dd>
-<dt>verbose</dt>
+
+  <dt>verbose</dt>
 <dd><p>A flag to indicate extra console output.</p></dd>
-<dt>measuredData</dt>
+
+  <dt>measuredData</dt>
 <dd><p>A data frame with observed/measured values. Dates should be in row names, whereas columns should be named according to the type of output to be evaluated (see details).</p></dd>
-<dt>type</dt>
+
+  <dt>type</dt>
 <dd><p>A string with the kind of model output to be evaluated. Accepted values are <code>"SWC"</code> (soil moisture content), <code>"REW"</code> relative extractable water, <code>"ETR"</code> (total evapotranspiration), <code>"E"</code> (transpiration per leaf area), <code>"LFMC"</code> (live fuel moisture content) and <code>"WP"</code> (plant water potentials).</p></dd>
-<dt>cohorts</dt>
+
+  <dt>cohorts</dt>
 <dd><p>A string or a vector of strings with the cohorts to be compared (e.g. "T1_68"). If several cohort names are provided, the function <code>optimization_cohorts_function</code> evaluates the performance for each one and provides the mean value. If <code>NULL</code> results for the first cohort will be evaluated.</p></dd>
-<dt>temporalResolution</dt>
+
+  <dt>temporalResolution</dt>
 <dd><p>A string to indicate the temporal resolution of the model evaluation, which can be "day", "week", "month" or "year". Observed and modelled values are aggregated temporally (using either means or sums) before comparison.</p></dd>
-<dt>metric</dt>
+
+  <dt>metric</dt>
 <dd><p>An evaluation metric (see <code><a href="evaluation.html">evaluation_metric</a></code>).</p></dd>
-<dt>summary_function</dt>
+
+  <dt>summary_function</dt>
 <dd><p>A function whose input is the result of <code><a href="spwb.html">spwb</a></code> or <code><a href="growth.html">growth</a></code>. The function must return a numeric scalar in the case of <code>optimization_function</code>, but is not restricted in the case of <code>multiple_runs</code>.</p></dd>
-<dt>args</dt>
+
+  <dt>args</dt>
 <dd><p>A list of additional arguments of <code>optimization_function</code>.</p></dd>
-<dt>cohortParNames</dt>
+
+  <dt>cohortParNames</dt>
 <dd><p>A string vector of vegetation parameter names for cohorts (e.g. 'Z95' or 'psiExtract').</p></dd>
-<dt>cohortNames</dt>
+
+  <dt>cohortNames</dt>
 <dd><p>A string vector of cohort names. All cohorts will be given the same parameter values for each parameter in 'cohortParNames'.</p></dd>
-<dt>otherParNames</dt>
+
+  <dt>otherParNames</dt>
 <dd><p>A string vector of parameter names (see examples and naming rules in <code><a href="modifySpParams.html">modifyInputParams</a></code>) for non-vegetation parameters (i.e. control parameters and soil parameters).</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -126,11 +141,23 @@
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>Function <code>multiple_runs</code> returns a list, whose elements are either the result of calling simulation models or the result of calling <code>summary_function</code> afterwards. 
-Function <code>optimization_function</code> returns a function whose parameters are parameter values and whose return is a prediction scalar (e.g. total transpiration).
-Function <code>optimization_evaluation_function</code> returns a function whose parameters are parameter values and whose return is an evaluation metric (e.g. loglikelihood of the data observations given model predictions). If evaluation data contains information for different cohorts (e.g. plant water potentials or transpiration rates) then the evaluation is performed for each cohort and the metrics are averaged. 
-Function <code>optimization_multicohorts_function</code> returns a function whose parameters are parameter values and whose return is a prediction scalar (e.g. total transpiration). The difference with <code>optimization_function</code> is that multiple cohorts are set to the same parameter values.
-Function <code>optimization_evaluation_multicohort_function</code> returns a function whose parameters are parameter values and whose return is an evaluation metric (e.g. loglikelihood of the data observations given model predictions). If evaluation data contains information for different cohorts (e.g. plant water potentials or transpiration rates) then the evaluation is performed for each cohort and the metrics are averaged. The difference with <code>optimization_evaluation_function</code> is that multiple cohorts are set to the same parameter values.</p>
+    
+
+<p>Function <code>multiple_runs</code> returns a list, whose elements are either the result of calling simulation models or the result of calling <code>summary_function</code> afterwards.</p>
+
+
+<p>Function <code>optimization_function</code> returns a function whose parameters are parameter values and whose return is a prediction scalar (e.g. total transpiration).</p>
+
+
+<p>Function <code>optimization_evaluation_function</code> returns a function whose parameters are parameter values and whose return is an evaluation metric (e.g. loglikelihood of the data observations given model predictions). If evaluation data contains information for different cohorts (e.g. plant water potentials or transpiration rates) then the evaluation is performed for each cohort and the metrics are averaged.</p>
+
+
+<p>Function <code>optimization_multicohorts_function</code> returns a function whose parameters are parameter values and whose return is a prediction scalar (e.g. total transpiration). The difference with <code>optimization_function</code> is that multiple cohorts are set to the same parameter values.</p>
+
+
+<p>Function <code>optimization_evaluation_multicohort_function</code> returns a function whose parameters are parameter values and whose return is an evaluation metric (e.g. loglikelihood of the data observations given model predictions). If evaluation data contains information for different cohorts (e.g. plant water potentials or transpiration rates) then the evaluation is performed for each cohort and the metrics are averaged. The difference with <code>optimization_evaluation_function</code> is that multiple cohorts are set to the same parameter values.</p>
+
+
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -143,71 +170,71 @@ Function <code>optimization_evaluation_multicohort_function</code> returns a fun
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co">#Load example daily meteorological data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Load example plot plant data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Default species parameterization</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Initialize soil with default soil params (4 layers)</span></span>
-<span class="r-in"><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Initialize control parameters</span></span>
-<span class="r-in"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Initialize input</span></span>
-<span class="r-in"><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Cohort name for Pinus halepensis</span></span>
-<span class="r-in"><span class="va">PH_coh</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"T1_"</span>, <span class="va">SpParamsMED</span><span class="op">$</span><span class="va">SpIndex</span><span class="op">[</span><span class="va">SpParamsMED</span><span class="op">$</span><span class="va">Name</span><span class="op">==</span><span class="st">"Pinus halepensis"</span><span class="op">]</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">PH_coh</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Parameter names of interest</span></span>
-<span class="r-in"><span class="va">parNames</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">PH_coh</span>,<span class="st">"/Z50"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">PH_coh</span>,<span class="st">"/Z95"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Specify parameter matrix</span></span>
-<span class="r-in"><span class="va">parMatrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>,<span class="fl">300</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500</span>,<span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">parMatrix</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">parNames</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Define a summary function as the total transpiration over the simulated period</span></span>
-<span class="r-in"><span class="va">sf</span><span class="op">&lt;-</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">Transpiration</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Perform two runs and evaluate the summary function</span></span>
-<span class="r-in"><span class="fu">multiple_runs</span><span class="op">(</span><span class="va">parMatrix</span>, </span>
-<span class="r-in">              <span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">42</span>, elevation <span class="op">=</span> <span class="fl">100</span>,</span>
-<span class="r-in">              summary_function <span class="op">=</span> <span class="va">sf</span><span class="op">)</span></span>
-<span class="r-in">              </span>
-<span class="r-in"><span class="co">#Load observed data (in this case the same simulation results with some added error)  </span></span>
-<span class="r-in"><span class="co"># Generate a prediction function for total transpiration over the simulated period</span></span>
-<span class="r-in"><span class="co"># as a function of parameters "Z50" and "Z95" for Pinus halepensis cohort </span></span>
-<span class="r-in"><span class="va">of</span><span class="op">&lt;-</span><span class="fu">optimization_function</span><span class="op">(</span>parNames <span class="op">=</span> <span class="va">parNames</span>,</span>
-<span class="r-in">                          x <span class="op">=</span> <span class="va">x1</span>,</span>
-<span class="r-in">                          meteo <span class="op">=</span> <span class="va">examplemeteo</span>, </span>
-<span class="r-in">                          latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>,</span>
-<span class="r-in">                          summary_function <span class="op">=</span> <span class="va">sf</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Evaluate for the values of the parameter matrix</span></span>
-<span class="r-in"><span class="fu">of</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">of</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Generate a loglikelihood function for soil water content</span></span>
-<span class="r-in"><span class="co"># as a function of parameters "Z50" and "Z95" for Pinus halepensis cohort </span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">oef</span><span class="op">&lt;-</span><span class="fu">optimization_evaluation_function</span><span class="op">(</span>parNames <span class="op">=</span> <span class="va">parNames</span>,</span>
-<span class="r-in">                x <span class="op">=</span> <span class="va">x1</span>,</span>
-<span class="r-in">                meteo <span class="op">=</span> <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>,</span>
-<span class="r-in">                measuredData <span class="op">=</span> <span class="va">exampleobs</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, </span>
-<span class="r-in">                metric <span class="op">=</span> <span class="st">"loglikelihood"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Loglikelihood for the values of the parameter matrix</span></span>
-<span class="r-in"><span class="fu">oef</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">oef</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co">#Load example daily meteorological data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Load example plot plant data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Default species parameterization</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Initialize soil with default soil params (4 layers)</span></span></span>
+<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Initialize control parameters</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Initialize input</span></span></span>
+<span class="r-in"><span><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Cohort name for Pinus halepensis</span></span></span>
+<span class="r-in"><span><span class="va">PH_coh</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"T1_"</span>, <span class="va">SpParamsMED</span><span class="op">$</span><span class="va">SpIndex</span><span class="op">[</span><span class="va">SpParamsMED</span><span class="op">$</span><span class="va">Name</span><span class="op">==</span><span class="st">"Pinus halepensis"</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">PH_coh</span> </span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Parameter names of interest</span></span></span>
+<span class="r-in"><span><span class="va">parNames</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">PH_coh</span>,<span class="st">"/Z50"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">PH_coh</span>,<span class="st">"/Z95"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Specify parameter matrix</span></span></span>
+<span class="r-in"><span><span class="va">parMatrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>,<span class="fl">300</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">500</span>,<span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">parMatrix</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">parNames</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Define a summary function as the total transpiration over the simulated period</span></span></span>
+<span class="r-in"><span><span class="va">sf</span><span class="op">&lt;-</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">Transpiration</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Perform two runs and evaluate the summary function</span></span></span>
+<span class="r-in"><span><span class="fu">multiple_runs</span><span class="op">(</span><span class="va">parMatrix</span>, </span></span>
+<span class="r-in"><span>              <span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">42</span>, elevation <span class="op">=</span> <span class="fl">100</span>,</span></span>
+<span class="r-in"><span>              summary_function <span class="op">=</span> <span class="va">sf</span><span class="op">)</span></span></span>
+<span class="r-in"><span>              </span></span>
+<span class="r-in"><span><span class="co">#Load observed data (in this case the same simulation results with some added error)  </span></span></span>
+<span class="r-in"><span><span class="co"># Generate a prediction function for total transpiration over the simulated period</span></span></span>
+<span class="r-in"><span><span class="co"># as a function of parameters "Z50" and "Z95" for Pinus halepensis cohort </span></span></span>
+<span class="r-in"><span><span class="va">of</span><span class="op">&lt;-</span><span class="fu">optimization_function</span><span class="op">(</span>parNames <span class="op">=</span> <span class="va">parNames</span>,</span></span>
+<span class="r-in"><span>                          x <span class="op">=</span> <span class="va">x1</span>,</span></span>
+<span class="r-in"><span>                          meteo <span class="op">=</span> <span class="va">examplemeteo</span>, </span></span>
+<span class="r-in"><span>                          latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>,</span></span>
+<span class="r-in"><span>                          summary_function <span class="op">=</span> <span class="va">sf</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Evaluate for the values of the parameter matrix</span></span></span>
+<span class="r-in"><span><span class="fu">of</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">of</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Generate a loglikelihood function for soil water content</span></span></span>
+<span class="r-in"><span><span class="co"># as a function of parameters "Z50" and "Z95" for Pinus halepensis cohort </span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">oef</span><span class="op">&lt;-</span><span class="fu">optimization_evaluation_function</span><span class="op">(</span>parNames <span class="op">=</span> <span class="va">parNames</span>,</span></span>
+<span class="r-in"><span>                x <span class="op">=</span> <span class="va">x1</span>,</span></span>
+<span class="r-in"><span>                meteo <span class="op">=</span> <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>,</span></span>
+<span class="r-in"><span>                measuredData <span class="op">=</span> <span class="va">exampleobs</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, </span></span>
+<span class="r-in"><span>                metric <span class="op">=</span> <span class="st">"loglikelihood"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Loglikelihood for the values of the parameter matrix</span></span></span>
+<span class="r-in"><span><span class="fu">oef</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">oef</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -222,7 +249,7 @@ Function <code>optimization_evaluation_multicohort_function</code> returns a fun
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

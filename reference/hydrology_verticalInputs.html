@@ -56,45 +56,60 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">hydrology_soilWaterInputs</span><span class="op">(</span><span class="va">soil</span>, <span class="va">soilFunctions</span>, <span class="va">prec</span>, <span class="va">er</span>, <span class="va">tday</span>, <span class="va">rad</span>,
-                          <span class="va">elevation</span>, <span class="va">Cm</span>, <span class="va">LgroundPAR</span>, <span class="va">LgroundSWR</span>, runon <span class="op">=</span> <span class="fl">0</span>,
-                          snowpack <span class="op">=</span> <span class="cn">TRUE</span>, modifySoil <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu">hydrology_soilInfiltrationPercolation</span><span class="op">(</span><span class="va">soil</span>, <span class="va">soilFunctions</span>, <span class="va">waterInput</span>,
-                                      rockyLayerDrainage <span class="op">=</span> <span class="cn">TRUE</span>, modifySoil <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hydrology_soilWaterInputs</span><span class="op">(</span><span class="va">soil</span>, <span class="va">soilFunctions</span>, <span class="va">prec</span>, <span class="va">er</span>, <span class="va">tday</span>, <span class="va">rad</span>,</span>
+<span>                          <span class="va">elevation</span>, <span class="va">Cm</span>, <span class="va">LgroundPAR</span>, <span class="va">LgroundSWR</span>, runon <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>                          snowpack <span class="op">=</span> <span class="cn">TRUE</span>, modifySoil <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">hydrology_soilInfiltrationPercolation</span><span class="op">(</span><span class="va">soil</span>, <span class="va">soilFunctions</span>, <span class="va">waterInput</span>,</span>
+<span>                                      rockyLayerDrainage <span class="op">=</span> <span class="cn">TRUE</span>, modifySoil <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>soil</dt>
 <dd><p>A list containing the description of the soil (see <code><a href="soil.html">soil</a></code>).</p></dd>
-<dt>soilFunctions</dt>
+
+  <dt>soilFunctions</dt>
 <dd><p>Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).</p></dd>
-<dt>prec</dt>
+
+  <dt>prec</dt>
 <dd><p>Precipitation for a given day (mm)</p></dd>
-<dt>waterInput</dt>
+
+  <dt>waterInput</dt>
 <dd><p>Soil water input for a given day (mm).</p></dd>
-<dt>er</dt>
+
+  <dt>er</dt>
 <dd><p>The ratio of evaporation rate to rainfall rate.</p></dd>
-<dt>tday</dt>
+
+  <dt>tday</dt>
 <dd><p>Average day temperature (ºC).</p></dd>
-<dt>rad</dt>
+
+  <dt>rad</dt>
 <dd><p>Solar radiation (in MJ/m2/day).</p></dd>
-<dt>elevation</dt>
+
+  <dt>elevation</dt>
 <dd><p>Altitude above sea level (m).</p></dd>
-<dt>Cm</dt>
+
+  <dt>Cm</dt>
 <dd><p>Canopy water storage capacity.</p></dd>
-<dt>LgroundPAR</dt>
+
+  <dt>LgroundPAR</dt>
 <dd><p>Percentage of photosynthetically-acvive radiation (PAR) reaching the ground.</p></dd>
-<dt>LgroundSWR</dt>
+
+  <dt>LgroundSWR</dt>
 <dd><p>Percentage of short-wave radiation (SWR) reaching the ground.</p></dd>
-<dt>runon</dt>
+
+  <dt>runon</dt>
 <dd><p>Surface water amount running on the target area from upslope (in mm).</p></dd>
-<dt>snowpack</dt>
+
+  <dt>snowpack</dt>
 <dd><p>Boolean flag to indicate the simulation of snow accumulation and melting.</p></dd>
-<dt>rockyLayerDrainage</dt>
+
+  <dt>rockyLayerDrainage</dt>
 <dd><p>Boolean flag to indicate the simulation of drainage from rocky layers (&gt; 95% of rocks).</p></dd>
-<dt>modifySoil</dt>
+
+  <dt>modifySoil</dt>
 <dd><p>Boolean flag to indicate that the input <code>soil</code> object should be modified during the simulation.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -102,28 +117,41 @@
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>Function <code>hydrology_soilWaterInputs</code> returns a named vector with the following elements, all in mm:</p>
+    
+
+<p>Function <code>hydrology_soilWaterInputs</code> returns a named vector with the following elements, all in mm:</p>
 <dl><dt>Rain</dt>
 <dd><p>Precipitation as rainfall.</p></dd>
+
 <dt>Snow</dt>
 <dd><p>Precipitation as snow.</p></dd>
+
 <dt>Interception</dt>
 <dd><p>Rainfall water intercepted by the canopy and evaporated.</p></dd>
+
 <dt>NetRain</dt>
 <dd><p>Rainfall reaching the ground.</p></dd>
+
 <dt>Snowmelt</dt>
 <dd><p>Snow melted during the day, and added to the water infiltrated.</p></dd>
+
 <dt>Runon</dt>
 <dd><p>Surface water amount running on the target area from upslope.</p></dd>
+
 <dt>Input</dt>
 <dd><p>Total soil input, including runon, snowmelt and net rain.</p></dd>
+
+
 </dl><p>Function <code>hydrology_soilInfiltrationPercolation</code> returns a named vector with the following elements, all in mm:</p>
 <dl><dt>Infiltration</dt>
 <dd><p>Water infiltrated into the soil (i.e. throughfall + runon + snowmelt - runoff).</p></dd>
+
 <dt>Runoff</dt>
 <dd><p>Surface water leaving the target area.</p></dd>
+
 <dt>DeepDrainage</dt>
 <dd><p>Water leaving the target soil towards the water table.</p></dd>
+
 </dl></div>
     <div id="author">
     <h2>Author</h2>
@@ -146,7 +174,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

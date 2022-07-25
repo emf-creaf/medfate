@@ -56,39 +56,52 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">hydrology_rainInterception</span><span class="op">(</span><span class="va">Rainfall</span>, <span class="va">Cm</span>, <span class="va">p</span>, ER<span class="op">=</span><span class="fl">0.05</span>, method<span class="op">=</span><span class="st">"Gash1995"</span><span class="op">)</span> 
-<span class="fu">hydrology_erFactor</span><span class="op">(</span><span class="va">doy</span>, <span class="va">pet</span>, <span class="va">prec</span>, Rconv <span class="op">=</span> <span class="fl">5.6</span>, Rsyn <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span>
-<span class="fu">hydrology_interceptionPlot</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, ER <span class="op">=</span> <span class="fl">0.05</span>, gdd <span class="op">=</span> <span class="cn">NA</span>, throughfall <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hydrology_rainInterception</span><span class="op">(</span><span class="va">Rainfall</span>, <span class="va">Cm</span>, <span class="va">p</span>, ER<span class="op">=</span><span class="fl">0.05</span>, method<span class="op">=</span><span class="st">"Gash1995"</span><span class="op">)</span> </span>
+<span><span class="fu">hydrology_erFactor</span><span class="op">(</span><span class="va">doy</span>, <span class="va">pet</span>, <span class="va">prec</span>, Rconv <span class="op">=</span> <span class="fl">5.6</span>, Rsyn <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
+<span><span class="fu">hydrology_interceptionPlot</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, ER <span class="op">=</span> <span class="fl">0.05</span>, gdd <span class="op">=</span> <span class="cn">NA</span>, throughfall <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>Rainfall</dt>
 <dd><p>A numeric vector of (daily) rainfall.</p></dd>
-<dt>Cm</dt>
+
+  <dt>Cm</dt>
 <dd><p>Canopy water storage capacity.</p></dd>
-<dt>p</dt>
+
+  <dt>p</dt>
 <dd><p>Proportion of throughfall (normally 1 - c, where c is the canopy cover).</p></dd>
-<dt>ER</dt>
+
+  <dt>ER</dt>
 <dd><p>The ratio of evaporation rate to rainfall rate.</p></dd>
-<dt>method</dt>
+
+  <dt>method</dt>
 <dd><p>Rainfall interception method (either <code>"Gash1995"</code> or <code>"Liu2001"</code>).</p></dd>
-<dt>doy</dt>
+
+  <dt>doy</dt>
 <dd><p>Day of the year.</p></dd>
-<dt>pet</dt>
+
+  <dt>pet</dt>
 <dd><p>Potential evapotranspiration for a given day (mm).</p></dd>
-<dt>prec</dt>
+
+  <dt>prec</dt>
 <dd><p>Precipitation for a given day (mm).</p></dd>
-<dt>Rconv, Rsyn</dt>
+
+  <dt>Rconv, Rsyn</dt>
 <dd><p>Rainfall rate for convective storms and synoptic storms, respectively, in mm/h.</p></dd>
-<dt>x</dt>
+
+  <dt>x</dt>
 <dd><p>An object of class <code><a href="modelInput.html">spwbInput</a></code>.</p></dd>
-<dt>SpParams</dt>
+
+  <dt>SpParams</dt>
 <dd><p>A data frame with species parameters (see <code><a href="SpParams.html">SpParamsMED</a></code> and <code><a href="SpParams.html">SpParamsMED</a></code>).</p></dd>
-<dt>gdd</dt>
+
+  <dt>gdd</dt>
 <dd><p>Growth degree days (in Celsius).</p></dd>
-<dt>throughfall</dt>
+
+  <dt>throughfall</dt>
 <dd><p>Boolean flag to plot relative throughfall instead of percentage of intercepted rainfall.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -97,7 +110,9 @@
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>Function <code>hydrology_rainInterception</code> returns a vector of the same length as <code>Rainfall</code> containing intercepted rain values. Function <code>hydrology_erFactor</code> returns a scalar with the evaporation-to-rainfall ratio.</p>
+    
+
+<p>Function <code>hydrology_rainInterception</code> returns a vector of the same length as <code>Rainfall</code> containing intercepted rain values. Function <code>hydrology_erFactor</code> returns a scalar with the evaporation-to-rainfall ratio.</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -117,14 +132,14 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">#Load example plot plant data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Default species parameterization</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Draw rainfall interception for two values of the E/R ratio</span></span>
-<span class="r-in"><span class="fu">hydrology_interceptionPlot</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span>, ER <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.2</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Load example plot plant data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Default species parameterization</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Draw rainfall interception for two values of the E/R ratio</span></span></span>
+<span class="r-in"><span><span class="fu">hydrology_interceptionPlot</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span>, ER <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">0.2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="hydrology_raininterception-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
@@ -140,7 +155,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

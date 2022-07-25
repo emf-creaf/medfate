@@ -56,57 +56,69 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># S3 method for spwb</span>
-<span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"PET_Precipitation"</span>, 
-                    cohorts <span class="op">=</span> <span class="cn">NULL</span>, bySpecies <span class="op">=</span> <span class="cn">FALSE</span>,
-                    dates <span class="op">=</span> <span class="cn">NULL</span>, subdaily <span class="op">=</span> <span class="cn">FALSE</span>,
-                    xlim <span class="op">=</span> <span class="cn">NULL</span>, ylim<span class="op">=</span><span class="cn">NULL</span>, xlab<span class="op">=</span><span class="cn">NULL</span>, ylab<span class="op">=</span><span class="cn">NULL</span>,
-                    summary.freq <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pwb</span>
-<span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"PlantTranspiration"</span>, 
-                   cohorts <span class="op">=</span> <span class="cn">NULL</span>, bySpecies <span class="op">=</span> <span class="cn">FALSE</span>,
-                   dates <span class="op">=</span> <span class="cn">NULL</span>, subdaily <span class="op">=</span> <span class="cn">FALSE</span>,
-                   xlim <span class="op">=</span> <span class="cn">NULL</span>, ylim<span class="op">=</span><span class="cn">NULL</span>, xlab<span class="op">=</span><span class="cn">NULL</span>, ylab<span class="op">=</span><span class="cn">NULL</span>, 
-                   summary.freq <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for growth</span>
-<span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"PET_Precipitation"</span>, 
-                      cohorts <span class="op">=</span> <span class="cn">NULL</span>, bySpecies <span class="op">=</span> <span class="cn">FALSE</span>, 
-                      dates <span class="op">=</span> <span class="cn">NULL</span>, subdaily <span class="op">=</span> <span class="cn">FALSE</span>,
-                      xlim <span class="op">=</span> <span class="cn">NULL</span>, ylim<span class="op">=</span><span class="cn">NULL</span>, xlab<span class="op">=</span><span class="cn">NULL</span>, ylab<span class="op">=</span><span class="cn">NULL</span>, 
-                      summary.freq <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for fordyn</span>
-<span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"StandBasalArea"</span>,
-                      cohorts <span class="op">=</span> <span class="cn">NULL</span>, bySpecies <span class="op">=</span> <span class="cn">FALSE</span>, dates <span class="op">=</span> <span class="cn">NULL</span>, 
-                      xlim <span class="op">=</span> <span class="cn">NULL</span>, ylim<span class="op">=</span><span class="cn">NULL</span>, xlab<span class="op">=</span><span class="cn">NULL</span>, ylab<span class="op">=</span><span class="cn">NULL</span>, 
-                      summary.freq <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for spwb</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"PET_Precipitation"</span>, </span>
+<span>                    cohorts <span class="op">=</span> <span class="cn">NULL</span>, bySpecies <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                    dates <span class="op">=</span> <span class="cn">NULL</span>, subdaily <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                    xlim <span class="op">=</span> <span class="cn">NULL</span>, ylim<span class="op">=</span><span class="cn">NULL</span>, xlab<span class="op">=</span><span class="cn">NULL</span>, ylab<span class="op">=</span><span class="cn">NULL</span>,</span>
+<span>                    summary.freq <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pwb</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"PlantTranspiration"</span>, </span>
+<span>                   cohorts <span class="op">=</span> <span class="cn">NULL</span>, bySpecies <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                   dates <span class="op">=</span> <span class="cn">NULL</span>, subdaily <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                   xlim <span class="op">=</span> <span class="cn">NULL</span>, ylim<span class="op">=</span><span class="cn">NULL</span>, xlab<span class="op">=</span><span class="cn">NULL</span>, ylab<span class="op">=</span><span class="cn">NULL</span>, </span>
+<span>                   summary.freq <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for growth</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"PET_Precipitation"</span>, </span>
+<span>                      cohorts <span class="op">=</span> <span class="cn">NULL</span>, bySpecies <span class="op">=</span> <span class="cn">FALSE</span>, </span>
+<span>                      dates <span class="op">=</span> <span class="cn">NULL</span>, subdaily <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>                      xlim <span class="op">=</span> <span class="cn">NULL</span>, ylim<span class="op">=</span><span class="cn">NULL</span>, xlab<span class="op">=</span><span class="cn">NULL</span>, ylab<span class="op">=</span><span class="cn">NULL</span>, </span>
+<span>                      summary.freq <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for fordyn</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"StandBasalArea"</span>,</span>
+<span>                      cohorts <span class="op">=</span> <span class="cn">NULL</span>, bySpecies <span class="op">=</span> <span class="cn">FALSE</span>, dates <span class="op">=</span> <span class="cn">NULL</span>, </span>
+<span>                      xlim <span class="op">=</span> <span class="cn">NULL</span>, ylim<span class="op">=</span><span class="cn">NULL</span>, xlab<span class="op">=</span><span class="cn">NULL</span>, ylab<span class="op">=</span><span class="cn">NULL</span>, </span>
+<span>                      summary.freq <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>An object of class <code>spwb</code>, <code>pwb</code>, <code>growth</code> or <code>fordyn</code>.</p></dd>
-<dt>type</dt>
+
+  <dt>type</dt>
 <dd><p>The information to be plotted (see details)</p></dd>
-<dt>cohorts</dt>
+
+  <dt>cohorts</dt>
 <dd><p>An integer, boolean or character vector to select the plant cohorts to be plotted. If <code>cohorts = "T"</code> (resp. <code>cohorts = "S"</code>) then all tree (resp. shrub) cohorts will be displayed.</p></dd>
-<dt>bySpecies</dt>
+
+  <dt>bySpecies</dt>
 <dd><p>Allows aggregating output by species, before drawing plots (only has an effect with some values of <code>type</code>). Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential), where LAI values are those of <code>LAIlive</code>.</p></dd>
-<dt>dates</dt>
+
+  <dt>dates</dt>
 <dd><p>A Date vector with a subset of dates to be plotted.</p></dd>
-<dt>subdaily</dt>
+
+  <dt>subdaily</dt>
 <dd><p>Whether subdaily results should be shown, only for simulations using <code>transpirationMode = "Sperry"</code> and having set <code>subdailyResults = TRUE</code> in the simulation control object. If <code>subdaily = TRUE</code>, then the valid strings for <code>type</code> are listed in <code><a href="plot.spwb_day.html">plot.spwb_day</a></code>.</p></dd>
-<dt>xlim</dt>
+
+  <dt>xlim</dt>
 <dd><p>Range of values for x.</p></dd>
-<dt>ylim</dt>
+
+  <dt>ylim</dt>
 <dd><p>Range of values for y.</p></dd>
-<dt>xlab</dt>
+
+  <dt>xlab</dt>
 <dd><p>x-axis label.</p></dd>
-<dt>ylab</dt>
+
+  <dt>ylab</dt>
 <dd><p>y-axis label.</p></dd>
-<dt>summary.freq</dt>
+
+  <dt>summary.freq</dt>
 <dd><p>Frequency of summary statistics (see <code><a href="https://rdrr.io/r/base/cut.POSIXt.html" class="external-link">cut.Date</a></code>).</p></dd>
-<dt>...</dt>
+
+  <dt>...</dt>
 <dd><p>Additional parameters for function <code>plot</code> (not used).</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -215,50 +227,50 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">#Load example daily meteorological data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Load example plot plant data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Default species parameterization</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Initialize soil with default soil params (2 layers)</span></span>
-<span class="r-in"><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Initialize control parameters</span></span>
-<span class="r-in"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Initialize input</span></span>
-<span class="r-in"><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Call simulation function</span></span>
-<span class="r-in"><span class="va">S1</span><span class="op">&lt;-</span><span class="fu"><a href="spwb.html">spwb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Load example daily meteorological data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Load example plot plant data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Default species parameterization</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Initialize soil with default soil params (2 layers)</span></span></span>
+<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Initialize control parameters</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Initialize input</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Call simulation function</span></span></span>
+<span class="r-in"><span><span class="va">S1</span><span class="op">&lt;-</span><span class="fu"><a href="spwb.html">spwb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 185.069</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial snowpack content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 162.687</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 162.655</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -22.3827</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -22.3827</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -22.4148</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -22.4148</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 96 Net rainfall (mm) 366</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 408 Runoff (mm) 9 Deep drainage (mm) 70</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 13 Transpiration (mm) 348</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 348  Plant water balance (mm) -0</span>
-<span class="r-in">        </span>
-<span class="r-in"><span class="co">#Plot results</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 408 Runoff (mm) 9 Deep drainage (mm) 69</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 13 Transpiration (mm) 349</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 349  Plant water balance (mm) -0</span>
+<span class="r-in"><span>        </span></span>
+<span class="r-in"><span><span class="co">#Plot results</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.spwb-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -273,7 +285,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

@@ -56,50 +56,66 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">biophysics_irradianceToPhotonFlux</span><span class="op">(</span><span class="va">I</span>, <span class="va">lambda</span><span class="op">)</span>
-<span class="fu">biophysics_leafTemperature</span><span class="op">(</span><span class="va">absRad</span>, <span class="va">airTemperature</span>, <span class="va">u</span>, <span class="va">E</span>, leafWidth <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span>
-<span class="fu">biophysics_leafTemperature2</span><span class="op">(</span><span class="va">SWRabs</span>, <span class="va">LWRnet</span>, <span class="va">airTemperature</span>, <span class="va">u</span>, <span class="va">E</span>, leafWidth <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span>
-<span class="fu">biophysics_leafVapourPressure</span><span class="op">(</span><span class="va">leafTemp</span>, <span class="va">leafPsi</span><span class="op">)</span>
-<span class="fu">biophysics_radiationDiurnalPattern</span><span class="op">(</span><span class="va">t</span>, <span class="va">daylength</span><span class="op">)</span>
-<span class="fu">biophysics_temperatureDiurnalPattern</span><span class="op">(</span><span class="va">t</span>, <span class="va">tmin</span>, <span class="va">tmax</span>, 
-                                     <span class="va">tminPrev</span>, <span class="va">tmaxPrev</span>, <span class="va">tminNext</span>, <span class="va">daylength</span><span class="op">)</span>
-<span class="fu">biophysics_waterDynamicViscosity</span><span class="op">(</span><span class="va">temp</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">biophysics_irradianceToPhotonFlux</span><span class="op">(</span><span class="va">I</span>, <span class="va">lambda</span><span class="op">)</span></span>
+<span><span class="fu">biophysics_leafTemperature</span><span class="op">(</span><span class="va">absRad</span>, <span class="va">airTemperature</span>, <span class="va">u</span>, <span class="va">E</span>, leafWidth <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span></span>
+<span><span class="fu">biophysics_leafTemperature2</span><span class="op">(</span><span class="va">SWRabs</span>, <span class="va">LWRnet</span>, <span class="va">airTemperature</span>, <span class="va">u</span>, <span class="va">E</span>, leafWidth <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span></span>
+<span><span class="fu">biophysics_leafVapourPressure</span><span class="op">(</span><span class="va">leafTemp</span>, <span class="va">leafPsi</span><span class="op">)</span></span>
+<span><span class="fu">biophysics_radiationDiurnalPattern</span><span class="op">(</span><span class="va">t</span>, <span class="va">daylength</span><span class="op">)</span></span>
+<span><span class="fu">biophysics_temperatureDiurnalPattern</span><span class="op">(</span><span class="va">t</span>, <span class="va">tmin</span>, <span class="va">tmax</span>, </span>
+<span>                                     <span class="va">tminPrev</span>, <span class="va">tmaxPrev</span>, <span class="va">tminNext</span>, <span class="va">daylength</span><span class="op">)</span></span>
+<span><span class="fu">biophysics_waterDynamicViscosity</span><span class="op">(</span><span class="va">temp</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>I</dt>
 <dd><p>Irradiance (in W*m-2).</p></dd>
-<dt>lambda</dt>
+
+  <dt>lambda</dt>
 <dd><p>Wavelength (in nm).</p></dd>
-<dt>u</dt>
+
+  <dt>u</dt>
 <dd><p>Wind speed above the leaf boundary layer (in m/s).</p></dd>
-<dt>airTemperature</dt>
+
+  <dt>airTemperature</dt>
 <dd><p>Air temperature (in ºC).</p></dd>
-<dt>tmin, tmax</dt>
+
+  <dt>tmin, tmax</dt>
 <dd><p>Minimum and maximum daily temperature (ºC).</p></dd>
-<dt>tminPrev, tmaxPrev, tminNext</dt>
+
+  <dt>tminPrev, tmaxPrev, tminNext</dt>
 <dd><p>Maximum and minimum daily temperatures of the previous and following day (ºC).</p></dd>
-<dt>absRad</dt>
+
+  <dt>absRad</dt>
 <dd><p>Absorbed long- and short-wave radiation (in W·m-2).</p></dd>
-<dt>SWRabs</dt>
+
+  <dt>SWRabs</dt>
 <dd><p>Absorbed short-wave radiation (in W·m-2).</p></dd>
-<dt>LWRnet</dt>
+
+  <dt>LWRnet</dt>
 <dd><p>Net long-wave radiation balance (in W·m-2).</p></dd>
-<dt>E</dt>
+
+  <dt>E</dt>
 <dd><p>Transpiration flow (in mmol H20·m-2·s-1) per one sided leaf area basis.</p></dd>
-<dt>leafWidth</dt>
+
+  <dt>leafWidth</dt>
 <dd><p>Leaf width (in cm).</p></dd>
-<dt>t</dt>
+
+  <dt>t</dt>
 <dd><p>Time of the day (in seconds).</p></dd>
-<dt>daylength</dt>
+
+  <dt>daylength</dt>
 <dd><p>Day length (in seconds).</p></dd>
-<dt>temp</dt>
+
+  <dt>temp</dt>
 <dd><p>Temperature (ºC).</p></dd>
-<dt>leafTemp</dt>
+
+  <dt>leafTemp</dt>
 <dd><p>Leaf temperature (ºC).</p></dd>
-<dt>leafPsi</dt>
+
+  <dt>leafPsi</dt>
 <dd><p>Leaf water potential (MPa).</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -107,7 +123,9 @@
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>Values returned for each function are:</p><ul><li><p><code>biophysics_leafTemperature</code>: leaf temperature (in ºC)</p></li>
+    
+
+<p>Values returned for each function are:</p><ul><li><p><code>biophysics_leafTemperature</code>: leaf temperature (in ºC)</p></li>
 <li><p><code>biophysics_leafVapourPressure</code>: leaf vapour pressure (in kPa)</p></li>
 <li><p><code>biophysics_radiationDiurnalPattern</code>: the proportion of daily radiation corresponding to the input time in seconds after sunrise.</p></li>
 <li><p><code>biophysics_temperatureDiurnalPattern</code>: diurnal pattern of temperature.</p></li>
@@ -141,7 +159,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

@@ -56,49 +56,66 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">input</span>, <span class="va">Ssoil</span><span class="op">)</span> 
-<span class="fu">hydrology_infiltrationRepartition</span><span class="op">(</span><span class="va">I</span>, <span class="va">dVec</span>, <span class="va">macro</span>, a <span class="op">=</span> <span class="op">-</span><span class="fl">0.005</span>, b <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>
-<span class="fu">hydrology_soilEvaporationAmount</span><span class="op">(</span><span class="va">DEF</span>,<span class="va">PETs</span>, <span class="va">Gsoil</span><span class="op">)</span>
-<span class="fu">hydrology_soilEvaporation</span><span class="op">(</span><span class="va">soil</span>, <span class="va">soilFunctions</span>, <span class="va">pet</span>, <span class="va">LgroundSWR</span>, modifySoil <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu">hydrology_snowMelt</span><span class="op">(</span><span class="va">tday</span>, <span class="va">rad</span>, <span class="va">LgroundSWR</span>, <span class="va">elevation</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">input</span>, <span class="va">Ssoil</span><span class="op">)</span> </span>
+<span><span class="fu">hydrology_infiltrationRepartition</span><span class="op">(</span><span class="va">I</span>, <span class="va">dVec</span>, <span class="va">macro</span>, a <span class="op">=</span> <span class="op">-</span><span class="fl">0.005</span>, b <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="fu">hydrology_soilEvaporationAmount</span><span class="op">(</span><span class="va">DEF</span>,<span class="va">PETs</span>, <span class="va">Gsoil</span><span class="op">)</span></span>
+<span><span class="fu">hydrology_soilEvaporation</span><span class="op">(</span><span class="va">soil</span>, <span class="va">soilFunctions</span>, <span class="va">pet</span>, <span class="va">LgroundSWR</span>, modifySoil <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">hydrology_snowMelt</span><span class="op">(</span><span class="va">tday</span>, <span class="va">rad</span>, <span class="va">LgroundSWR</span>, <span class="va">elevation</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>input</dt>
 <dd><p>A numeric vector of (daily) water input (in mm of water).</p></dd>
-<dt>Ssoil</dt>
+
+  <dt>Ssoil</dt>
 <dd><p>Soil water storage capacity (can be referred to topsoil) (in mm of water).</p></dd>
-<dt>DEF</dt>
+
+  <dt>DEF</dt>
 <dd><p>Water deficit in the (topsoil) layer.</p></dd>
-<dt>PETs</dt>
+
+  <dt>PETs</dt>
 <dd><p>Potential evapotranspiration at the soil surface.</p></dd>
-<dt>Gsoil</dt>
+
+  <dt>Gsoil</dt>
 <dd><p>Gamma parameter (maximum daily evaporation).</p></dd>
-<dt>I</dt>
+
+  <dt>I</dt>
 <dd><p>Soil infiltration (in mm of water).</p></dd>
-<dt>dVec</dt>
+
+  <dt>dVec</dt>
 <dd><p>Width of soil layers (in mm).</p></dd>
-<dt>macro</dt>
+
+  <dt>macro</dt>
 <dd><p>Macroporosity of soil layers (in %).</p></dd>
-<dt>soil</dt>
+
+  <dt>soil</dt>
 <dd><p>An object of class <code><a href="soil.html">soil</a></code>.</p></dd>
-<dt>soilFunctions</dt>
+
+  <dt>soilFunctions</dt>
 <dd><p>Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).</p></dd>
-<dt>pet</dt>
+
+  <dt>pet</dt>
 <dd><p>Potential evapotranspiration for a given day (mm)</p></dd>
-<dt>LgroundSWR</dt>
+
+  <dt>LgroundSWR</dt>
 <dd><p>Percentage of short-wave radiation (SWR) reaching the ground.</p></dd>
-<dt>modifySoil</dt>
+
+  <dt>modifySoil</dt>
 <dd><p>Boolean flag to indicate that the input <code>soil</code> object should be modified during the simulation.</p></dd>
-<dt>tday</dt>
+
+  <dt>tday</dt>
 <dd><p>Average day temperature (ºC).</p></dd>
-<dt>rad</dt>
+
+  <dt>rad</dt>
 <dd><p>Solar radiation (in MJ/m2/day).</p></dd>
-<dt>elevation</dt>
+
+  <dt>elevation</dt>
 <dd><p>Altitude above sea level (m).</p></dd>
-<dt>a,b</dt>
+
+  <dt>a,b</dt>
 <dd><p>Parameters of the extinction function used for water infitration.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -106,7 +123,9 @@
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>Function <code>hydrology_infiltrationAmount</code> a vector of the same length as <code>input</code> containing the daily amount of water that infiltrates into the soil (in mm of water). Function <code>hydrology_infiltrationRepartition</code> estimates the amount of infiltrated water that reaches each soil layer. Function <code>hydrology_soilEvaporationAmount</code> returns the amount of water evaporated from the soil. Function <code>hydrology_soilEvaporation</code> returns a vector of water evaporated from each soil layer.</p>
+    
+
+<p>Function <code>hydrology_infiltrationAmount</code> a vector of the same length as <code>input</code> containing the daily amount of water that infiltrates into the soil (in mm of water). Function <code>hydrology_infiltrationRepartition</code> estimates the amount of infiltrated water that reaches each soil layer. Function <code>hydrology_soilEvaporationAmount</code> returns the amount of water evaporated from the soil. Function <code>hydrology_soilEvaporation</code> returns a vector of water evaporated from each soil layer.</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -126,57 +145,57 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">SoilDepth</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>,<span class="fl">400</span>,<span class="fl">800</span>,<span class="fl">1200</span>,<span class="fl">1500</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#TOPSOIL LAYERS</span></span>
-<span class="r-in"><span class="va">d1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="va">SoilDepth</span>, <span class="fl">300</span><span class="op">)</span> <span class="co">#&lt;300</span></span>
-<span class="r-in"><span class="co">#SUBSOIL LAYERS</span></span>
-<span class="r-in"><span class="va">d2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="va">SoilDepth</span><span class="op">-</span><span class="fl">300</span>,<span class="fl">1200</span><span class="op">)</span><span class="op">)</span> <span class="co">#300-1500 mm</span></span>
-<span class="r-in"><span class="co">#ROCK LAYER</span></span>
-<span class="r-in"><span class="va">d3</span> <span class="op">=</span> <span class="fl">4000</span><span class="op">-</span><span class="op">(</span><span class="va">d1</span><span class="op">+</span><span class="va">d2</span><span class="op">)</span> <span class="co">#From SoilDepth down to 4.0 m</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">TS_clay</span> <span class="op">=</span> <span class="fl">15</span></span>
-<span class="r-in"><span class="va">TS_sand</span> <span class="op">=</span> <span class="fl">25</span></span>
-<span class="r-in"><span class="va">SS_clay</span> <span class="op">=</span> <span class="fl">15</span></span>
-<span class="r-in"><span class="va">SS_sand</span> <span class="op">=</span> <span class="fl">25</span></span>
-<span class="r-in"><span class="va">RL_clay</span> <span class="op">=</span> <span class="fl">15</span></span>
-<span class="r-in"><span class="va">RL_sand</span> <span class="op">=</span> <span class="fl">25</span></span>
-<span class="r-in"><span class="va">TS_gravel</span> <span class="op">=</span> <span class="fl">20</span></span>
-<span class="r-in"><span class="va">SS_gravel</span> <span class="op">=</span> <span class="fl">40</span></span>
-<span class="r-in"><span class="va">RL_gravel</span> <span class="op">=</span> <span class="fl">95</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">Theta_FC1</span><span class="op">=</span><span class="fu"><a href="soil_texture.html">soil_psi2thetaSX</a></span><span class="op">(</span><span class="va">TS_clay</span>, <span class="va">TS_sand</span>, <span class="op">-</span><span class="fl">33</span><span class="op">)</span> <span class="co">#in m3/m3</span></span>
-<span class="r-in"><span class="va">Theta_FC2</span><span class="op">=</span><span class="fu"><a href="soil_texture.html">soil_psi2thetaSX</a></span><span class="op">(</span><span class="va">SS_clay</span>, <span class="va">SS_sand</span>, <span class="op">-</span><span class="fl">33</span><span class="op">)</span> <span class="co">#in m3/m3</span></span>
-<span class="r-in"><span class="va">Theta_FC3</span><span class="op">=</span><span class="fu"><a href="soil_texture.html">soil_psi2thetaSX</a></span><span class="op">(</span><span class="va">RL_clay</span>, <span class="va">RL_sand</span>, <span class="op">-</span><span class="fl">33</span><span class="op">)</span> <span class="co">#in m3/m3</span></span>
-<span class="r-in"><span class="va">pcTS_gravel</span> <span class="op">=</span> <span class="fl">1</span><span class="op">-</span><span class="op">(</span><span class="va">TS_gravel</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">pcSS_gravel</span> <span class="op">=</span> <span class="fl">1</span><span class="op">-</span><span class="op">(</span><span class="va">SS_gravel</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">pcRL_gravel</span> <span class="op">=</span> <span class="fl">1</span><span class="op">-</span><span class="op">(</span><span class="va">RL_gravel</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">MaxVol1</span> <span class="op">=</span> <span class="op">(</span><span class="va">d1</span><span class="op">*</span><span class="va">Theta_FC1</span><span class="op">*</span><span class="va">pcTS_gravel</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">MaxVol2</span> <span class="op">=</span> <span class="op">(</span><span class="va">d2</span><span class="op">*</span><span class="va">Theta_FC2</span><span class="op">*</span><span class="va">pcSS_gravel</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">MaxVol3</span> <span class="op">=</span> <span class="op">(</span><span class="va">d3</span><span class="op">*</span><span class="va">Theta_FC3</span><span class="op">*</span><span class="va">pcRL_gravel</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">V</span> <span class="op">=</span> <span class="va">MaxVol1</span><span class="op">+</span><span class="va">MaxVol2</span><span class="op">+</span><span class="va">MaxVol3</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">5</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>, mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">NP</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">60</span>, by<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">NP</span>,<span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, type<span class="op">=</span><span class="st">"l"</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">60</span><span class="op">)</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">60</span><span class="op">)</span>, </span>
-<span class="r-in">     ylab<span class="op">=</span><span class="st">"Infiltration (mm)"</span>, xlab<span class="op">=</span><span class="st">"Net rainfall (mm)"</span>, frame<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">NP</span>,<span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">NP</span>,<span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">NP</span>,<span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">4</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">NP</span>,<span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, bty<span class="op">=</span><span class="st">"n"</span>, lty<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, </span>
-<span class="r-in">       legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"d ="</span>, <span class="va">SoilDepth</span>, <span class="st">"Vsoil ="</span>,<span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">V</span><span class="op">)</span>,<span class="st">"mm"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">NP</span>,<span class="va">NP</span><span class="op">-</span><span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, type<span class="op">=</span><span class="st">"l"</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">60</span><span class="op">)</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">60</span><span class="op">)</span>, </span>
-<span class="r-in">     ylab<span class="op">=</span><span class="st">"Runoff (mm)"</span>, xlab<span class="op">=</span><span class="st">"Net rainfall (mm)"</span>, frame<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">NP</span>,<span class="va">NP</span><span class="op">-</span><span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">NP</span>,<span class="va">NP</span><span class="op">-</span><span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">NP</span>,<span class="va">NP</span><span class="op">-</span><span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">4</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">NP</span>,<span class="va">NP</span><span class="op">-</span><span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, bty<span class="op">=</span><span class="st">"n"</span>, lty<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, </span>
-<span class="r-in">       legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"d ="</span>, <span class="va">SoilDepth</span>,<span class="st">"Vsoil ="</span>,<span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">V</span><span class="op">)</span>,<span class="st">"mm"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">SoilDepth</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">200</span>,<span class="fl">400</span>,<span class="fl">800</span>,<span class="fl">1200</span>,<span class="fl">1500</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#TOPSOIL LAYERS</span></span></span>
+<span class="r-in"><span><span class="va">d1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="va">SoilDepth</span>, <span class="fl">300</span><span class="op">)</span> <span class="co">#&lt;300</span></span></span>
+<span class="r-in"><span><span class="co">#SUBSOIL LAYERS</span></span></span>
+<span class="r-in"><span><span class="va">d2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="va">SoilDepth</span><span class="op">-</span><span class="fl">300</span>,<span class="fl">1200</span><span class="op">)</span><span class="op">)</span> <span class="co">#300-1500 mm</span></span></span>
+<span class="r-in"><span><span class="co">#ROCK LAYER</span></span></span>
+<span class="r-in"><span><span class="va">d3</span> <span class="op">=</span> <span class="fl">4000</span><span class="op">-</span><span class="op">(</span><span class="va">d1</span><span class="op">+</span><span class="va">d2</span><span class="op">)</span> <span class="co">#From SoilDepth down to 4.0 m</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">TS_clay</span> <span class="op">=</span> <span class="fl">15</span></span></span>
+<span class="r-in"><span><span class="va">TS_sand</span> <span class="op">=</span> <span class="fl">25</span></span></span>
+<span class="r-in"><span><span class="va">SS_clay</span> <span class="op">=</span> <span class="fl">15</span></span></span>
+<span class="r-in"><span><span class="va">SS_sand</span> <span class="op">=</span> <span class="fl">25</span></span></span>
+<span class="r-in"><span><span class="va">RL_clay</span> <span class="op">=</span> <span class="fl">15</span></span></span>
+<span class="r-in"><span><span class="va">RL_sand</span> <span class="op">=</span> <span class="fl">25</span></span></span>
+<span class="r-in"><span><span class="va">TS_gravel</span> <span class="op">=</span> <span class="fl">20</span></span></span>
+<span class="r-in"><span><span class="va">SS_gravel</span> <span class="op">=</span> <span class="fl">40</span></span></span>
+<span class="r-in"><span><span class="va">RL_gravel</span> <span class="op">=</span> <span class="fl">95</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">Theta_FC1</span><span class="op">=</span><span class="fu"><a href="soil_texture.html">soil_psi2thetaSX</a></span><span class="op">(</span><span class="va">TS_clay</span>, <span class="va">TS_sand</span>, <span class="op">-</span><span class="fl">33</span><span class="op">)</span> <span class="co">#in m3/m3</span></span></span>
+<span class="r-in"><span><span class="va">Theta_FC2</span><span class="op">=</span><span class="fu"><a href="soil_texture.html">soil_psi2thetaSX</a></span><span class="op">(</span><span class="va">SS_clay</span>, <span class="va">SS_sand</span>, <span class="op">-</span><span class="fl">33</span><span class="op">)</span> <span class="co">#in m3/m3</span></span></span>
+<span class="r-in"><span><span class="va">Theta_FC3</span><span class="op">=</span><span class="fu"><a href="soil_texture.html">soil_psi2thetaSX</a></span><span class="op">(</span><span class="va">RL_clay</span>, <span class="va">RL_sand</span>, <span class="op">-</span><span class="fl">33</span><span class="op">)</span> <span class="co">#in m3/m3</span></span></span>
+<span class="r-in"><span><span class="va">pcTS_gravel</span> <span class="op">=</span> <span class="fl">1</span><span class="op">-</span><span class="op">(</span><span class="va">TS_gravel</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pcSS_gravel</span> <span class="op">=</span> <span class="fl">1</span><span class="op">-</span><span class="op">(</span><span class="va">SS_gravel</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pcRL_gravel</span> <span class="op">=</span> <span class="fl">1</span><span class="op">-</span><span class="op">(</span><span class="va">RL_gravel</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">MaxVol1</span> <span class="op">=</span> <span class="op">(</span><span class="va">d1</span><span class="op">*</span><span class="va">Theta_FC1</span><span class="op">*</span><span class="va">pcTS_gravel</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">MaxVol2</span> <span class="op">=</span> <span class="op">(</span><span class="va">d2</span><span class="op">*</span><span class="va">Theta_FC2</span><span class="op">*</span><span class="va">pcSS_gravel</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">MaxVol3</span> <span class="op">=</span> <span class="op">(</span><span class="va">d3</span><span class="op">*</span><span class="va">Theta_FC3</span><span class="op">*</span><span class="va">pcRL_gravel</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">V</span> <span class="op">=</span> <span class="va">MaxVol1</span><span class="op">+</span><span class="va">MaxVol2</span><span class="op">+</span><span class="va">MaxVol3</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">5</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>, mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">NP</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">60</span>, by<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">NP</span>,<span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, type<span class="op">=</span><span class="st">"l"</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">60</span><span class="op">)</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">60</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span>     ylab<span class="op">=</span><span class="st">"Infiltration (mm)"</span>, xlab<span class="op">=</span><span class="st">"Net rainfall (mm)"</span>, frame<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">NP</span>,<span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">NP</span>,<span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">NP</span>,<span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">NP</span>,<span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, bty<span class="op">=</span><span class="st">"n"</span>, lty<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, </span></span>
+<span class="r-in"><span>       legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"d ="</span>, <span class="va">SoilDepth</span>, <span class="st">"Vsoil ="</span>,<span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">V</span><span class="op">)</span>,<span class="st">"mm"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">NP</span>,<span class="va">NP</span><span class="op">-</span><span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>, type<span class="op">=</span><span class="st">"l"</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">60</span><span class="op">)</span>, ylim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">60</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span>     ylab<span class="op">=</span><span class="st">"Runoff (mm)"</span>, xlab<span class="op">=</span><span class="st">"Net rainfall (mm)"</span>, frame<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">NP</span>,<span class="va">NP</span><span class="op">-</span><span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">NP</span>,<span class="va">NP</span><span class="op">-</span><span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">NP</span>,<span class="va">NP</span><span class="op">-</span><span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">NP</span>,<span class="va">NP</span><span class="op">-</span><span class="fu">hydrology_infiltrationAmount</span><span class="op">(</span><span class="va">NP</span>, <span class="va">V</span><span class="op">[</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, bty<span class="op">=</span><span class="st">"n"</span>, lty<span class="op">=</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, </span></span>
+<span class="r-in"><span>       legend<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"d ="</span>, <span class="va">SoilDepth</span>,<span class="st">"Vsoil ="</span>,<span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">V</span><span class="op">)</span>,<span class="st">"mm"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="hydrology_soil-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -191,7 +210,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

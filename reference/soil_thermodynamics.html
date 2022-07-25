@@ -56,36 +56,47 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">soil_thermalConductivity</span><span class="op">(</span><span class="va">soil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span>
-<span class="fu">soil_thermalCapacity</span><span class="op">(</span><span class="va">soil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span>
-<span class="fu">soil_temperatureChange</span><span class="op">(</span><span class="va">dVec</span>, <span class="va">Temp</span>, <span class="va">sand</span>, <span class="va">clay</span>, <span class="va">W</span>, <span class="va">Theta_FC</span>, <span class="va">Gdown</span><span class="op">)</span>
-<span class="fu">soil_temperatureGradient</span><span class="op">(</span><span class="va">dVec</span>, <span class="va">Temp</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">soil_thermalConductivity</span><span class="op">(</span><span class="va">soil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span></span>
+<span><span class="fu">soil_thermalCapacity</span><span class="op">(</span><span class="va">soil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span></span>
+<span><span class="fu">soil_temperatureChange</span><span class="op">(</span><span class="va">dVec</span>, <span class="va">Temp</span>, <span class="va">sand</span>, <span class="va">clay</span>, <span class="va">W</span>, <span class="va">Theta_FC</span>, <span class="va">Gdown</span><span class="op">)</span></span>
+<span><span class="fu">soil_temperatureGradient</span><span class="op">(</span><span class="va">dVec</span>, <span class="va">Temp</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>soil</dt>
 <dd><p>Soil object (returned by function <code><a href="soil.html">soil</a></code>).</p></dd>
-<dt>model</dt>
+
+  <dt>model</dt>
 <dd><p>Either 'SX' or 'VG' for Saxton's or Van Genuchten's pedotransfer models.</p></dd>
-<dt>dVec</dt>
+
+  <dt>dVec</dt>
 <dd><p>Width of soil layers (in mm).</p></dd>
-<dt>Temp</dt>
+
+  <dt>Temp</dt>
 <dd><p>Temperature (in ºC) for each soil layer.</p></dd>
-<dt>clay</dt>
+
+  <dt>clay</dt>
 <dd><p>Percentage of clay (in percent weight) for each layer.</p></dd>
-<dt>sand</dt>
+
+  <dt>sand</dt>
 <dd><p>Percentage of sand (in percent weight) for each layer.</p></dd>
-<dt>W</dt>
+
+  <dt>W</dt>
 <dd><p>Soil moisture (in percent of field capacity) for each layer.</p></dd>
-<dt>Theta_FC</dt>
+
+  <dt>Theta_FC</dt>
 <dd><p>Relative water content (in percent volume) at field capacity for each layer.</p></dd>
-<dt>Gdown</dt>
+
+  <dt>Gdown</dt>
 <dd><p>Downward heat flux from canopy to soil (in W·m-2).</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Function <code>soil_thermalConductivity</code> returns a vector with values of thermal conductivity (W/m/ºK) for each soil layer. Function <code>soil_thermalCapacity</code> returns a vector with values of heat storage capacity (J/m3/ºK) for each soil layer. Function <code>soil_temperatureGradient</code> returns a vector with values of temperature gradient between consecutive soil layers. Function <code>soil_temperatureChange</code> returns a vector with values of instantaneous temperature change (ºC/s) for each soil layer.</p>
+    
+
+<p>Function <code>soil_thermalConductivity</code> returns a vector with values of thermal conductivity (W/m/ºK) for each soil layer. Function <code>soil_thermalCapacity</code> returns a vector with values of heat storage capacity (J/m3/ºK) for each soil layer. Function <code>soil_temperatureGradient</code> returns a vector with values of temperature gradient between consecutive soil layers. Function <code>soil_temperatureChange</code> returns a vector with values of instantaneous temperature change (ºC/s) for each soil layer.</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -103,17 +114,17 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">soil_thermalConductivity</span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">soil_thermalConductivity</span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.2 2.2 2.2 2.2</span>
-<span class="r-in"><span class="fu">soil_thermalCapacity</span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">soil_thermalCapacity</span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2486214 2486214 2486214 2486214</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Values change when altering water content (drier layers have lower conductivity and capacity)</span></span>
-<span class="r-in"><span class="va">examplesoil</span><span class="op">$</span><span class="va">W</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.4</span>, <span class="fl">0.7</span>, <span class="fl">1.0</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">soil_thermalConductivity</span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Values change when altering water content (drier layers have lower conductivity and capacity)</span></span></span>
+<span class="r-in"><span><span class="va">examplesoil</span><span class="op">$</span><span class="va">W</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.4</span>, <span class="fl">0.7</span>, <span class="fl">1.0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">soil_thermalConductivity</span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4266171 1.4943000 1.9252995 2.2000000</span>
-<span class="r-in"><span class="fu">soil_thermalCapacity</span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">soil_thermalCapacity</span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1342121 1723486 2104850 2486214</span>
 </code></pre></div>
     </div>
@@ -129,7 +140,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

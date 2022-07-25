@@ -56,25 +56,31 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">transp_maximumTranspirationModel</span><span class="op">(</span><span class="va">x</span>, <span class="va">meteo</span>, <span class="va">latitude</span>, <span class="va">elevation</span>, <span class="va">slope</span>, <span class="va">aspect</span>, 
-                                 LAI_seq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">10</span>, by <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span>,
-                                 draw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">transp_maximumTranspirationModel</span><span class="op">(</span><span class="va">x</span>, <span class="va">meteo</span>, <span class="va">latitude</span>, <span class="va">elevation</span>, <span class="va">slope</span>, <span class="va">aspect</span>, </span>
+<span>                                 LAI_seq <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">10</span>, by <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                                 draw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>An object of class <code><a href="modelInput.html">spwbInput</a></code>, built using the 'Sperry' transpiration mode.</p></dd>
-<dt>meteo</dt>
+
+  <dt>meteo</dt>
 <dd><p>A data frame with daily meteorological data series.</p></dd>
-<dt>latitude</dt>
+
+  <dt>latitude</dt>
 <dd><p>Latitude (in degrees).</p></dd>
-<dt>elevation, slope, aspect</dt>
+
+  <dt>elevation, slope, aspect</dt>
 <dd><p>Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).</p></dd>
-<dt>LAI_seq</dt>
+   
+  <dt>LAI_seq</dt>
 <dd><p>Sequence of stand LAI values to be tested.</p></dd>
-<dt>draw</dt>
+
+  <dt>draw</dt>
 <dd><p>Boolean flag to indicate plotting of results.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -84,7 +90,9 @@
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>Returns a list with as many elements as plant cohorts, each element being a <code><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></code> model.</p>
+    
+
+<p>Returns a list with as many elements as plant cohorts, each element being a <code><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></code> model.</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -101,34 +109,34 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co">#Load example daily meteorological data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Load example plot plant data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Load default species parameters</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Initialize soil with default soil params</span></span>
-<span class="r-in"><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Initialize control parameters for 'Sperry' transpiration mode</span></span>
-<span class="r-in"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span>transpirationMode<span class="op">=</span><span class="st">"Sperry"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Initialize input</span></span>
-<span class="r-in"><span class="va">x2</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Estimate maximum transpiration ratio models for each cohort</span></span>
-<span class="r-in"><span class="va">m</span> <span class="op">=</span> <span class="fu">transp_maximumTranspirationModel</span><span class="op">(</span><span class="va">x2</span>, <span class="va">examplemeteo</span>, </span>
-<span class="r-in">                                     <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, </span>
-<span class="r-in">                                     slope <span class="op">=</span> <span class="fl">0</span>, aspect <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Inspect the model for first cohort</span></span>
-<span class="r-in"><span class="va">m</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co">#Load example daily meteorological data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Load example plot plant data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Load default species parameters</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Initialize soil with default soil params</span></span></span>
+<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Initialize control parameters for 'Sperry' transpiration mode</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span>transpirationMode<span class="op">=</span><span class="st">"Sperry"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Initialize input</span></span></span>
+<span class="r-in"><span><span class="va">x2</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Estimate maximum transpiration ratio models for each cohort</span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">=</span> <span class="fu">transp_maximumTranspirationModel</span><span class="op">(</span><span class="va">x2</span>, <span class="va">examplemeteo</span>, </span></span>
+<span class="r-in"><span>                                     <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, </span></span>
+<span class="r-in"><span>                                     slope <span class="op">=</span> <span class="fl">0</span>, aspect <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Inspect the model for first cohort</span></span></span>
+<span class="r-in"><span><span class="va">m</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -143,7 +151,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

@@ -56,74 +56,93 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">soil_psi2thetaSX</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, <span class="va">psi</span>, om <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>
-<span class="fu">soil_psi2thetaVG</span><span class="op">(</span><span class="va">n</span>, <span class="va">alpha</span>, <span class="va">theta_res</span>, <span class="va">theta_sat</span>, <span class="va">psi</span><span class="op">)</span>
-<span class="fu">soil_theta2psiSX</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, <span class="va">theta</span>, om <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>
-<span class="fu">soil_theta2psiVG</span><span class="op">(</span><span class="va">n</span>, <span class="va">alpha</span>, <span class="va">theta_res</span>, <span class="va">theta_sat</span>, <span class="va">theta</span><span class="op">)</span>
-<span class="fu">soil_saturatedConductivitySX</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, om <span class="op">=</span> <span class="cn">NA</span>, mmol <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu">soil_unsaturatedConductivitySX</span><span class="op">(</span><span class="va">theta</span>, <span class="va">clay</span>, <span class="va">sand</span>, om <span class="op">=</span> <span class="cn">NA</span>, mmol <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu">soil_USDAType</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span><span class="op">)</span>
-<span class="fu">soil_vanGenuchtenParamsCarsel</span><span class="op">(</span><span class="va">soilType</span><span class="op">)</span>
-<span class="fu">soil_vanGenuchtenParamsToth</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, <span class="va">om</span>, <span class="va">bd</span>, <span class="va">topsoil</span><span class="op">)</span>
-<span class="fu">soil_psi</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span>
-<span class="fu">soil_theta</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span>
-<span class="fu">soil_conductivity</span><span class="op">(</span><span class="va">soil</span><span class="op">)</span>
-<span class="fu">soil_water</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span>
-<span class="fu">soil_waterFC</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span>
-<span class="fu">soil_waterWP</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span>
-<span class="fu">soil_waterSAT</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span>
-<span class="fu">soil_waterExtractable</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span>, minPsi <span class="op">=</span> <span class="op">-</span><span class="fl">5.0</span><span class="op">)</span>
-<span class="fu">soil_thetaFC</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span>
-<span class="fu">soil_thetaWP</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span>
-<span class="fu">soil_thetaSAT</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span>
-<span class="fu">soil_thetaSATSX</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, om <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>
-<span class="fu">soil_waterTableDepth</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span>
-<span class="fu">soil_rockWeight2Volume</span><span class="op">(</span><span class="va">pWeight</span>, <span class="va">bulkDensity</span>, rockDensity <span class="op">=</span> <span class="fl">2.3</span><span class="op">)</span>
-<span class="fu">soil_retentionCurvePlot</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span>, layer <span class="op">=</span> <span class="fl">1</span>, 
-                        psi <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="op">-</span><span class="fl">6.0</span>, by<span class="op">=</span><span class="op">-</span><span class="fl">0.01</span><span class="op">)</span>,
-                        relative <span class="op">=</span> <span class="cn">TRUE</span>, to <span class="op">=</span> <span class="st">"SAT"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">soil_psi2thetaSX</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, <span class="va">psi</span>, om <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
+<span><span class="fu">soil_psi2thetaVG</span><span class="op">(</span><span class="va">n</span>, <span class="va">alpha</span>, <span class="va">theta_res</span>, <span class="va">theta_sat</span>, <span class="va">psi</span><span class="op">)</span></span>
+<span><span class="fu">soil_theta2psiSX</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, <span class="va">theta</span>, om <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
+<span><span class="fu">soil_theta2psiVG</span><span class="op">(</span><span class="va">n</span>, <span class="va">alpha</span>, <span class="va">theta_res</span>, <span class="va">theta_sat</span>, <span class="va">theta</span><span class="op">)</span></span>
+<span><span class="fu">soil_saturatedConductivitySX</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, om <span class="op">=</span> <span class="cn">NA</span>, mmol <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">soil_unsaturatedConductivitySX</span><span class="op">(</span><span class="va">theta</span>, <span class="va">clay</span>, <span class="va">sand</span>, om <span class="op">=</span> <span class="cn">NA</span>, mmol <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">soil_USDAType</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span><span class="op">)</span></span>
+<span><span class="fu">soil_vanGenuchtenParamsCarsel</span><span class="op">(</span><span class="va">soilType</span><span class="op">)</span></span>
+<span><span class="fu">soil_vanGenuchtenParamsToth</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, <span class="va">om</span>, <span class="va">bd</span>, <span class="va">topsoil</span><span class="op">)</span></span>
+<span><span class="fu">soil_psi</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span></span>
+<span><span class="fu">soil_theta</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span></span>
+<span><span class="fu">soil_conductivity</span><span class="op">(</span><span class="va">soil</span><span class="op">)</span></span>
+<span><span class="fu">soil_water</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span></span>
+<span><span class="fu">soil_waterFC</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span></span>
+<span><span class="fu">soil_waterWP</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span></span>
+<span><span class="fu">soil_waterSAT</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span></span>
+<span><span class="fu">soil_waterExtractable</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span>, minPsi <span class="op">=</span> <span class="op">-</span><span class="fl">5.0</span><span class="op">)</span></span>
+<span><span class="fu">soil_thetaFC</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span></span>
+<span><span class="fu">soil_thetaWP</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span></span>
+<span><span class="fu">soil_thetaSAT</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span></span>
+<span><span class="fu">soil_thetaSATSX</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, om <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
+<span><span class="fu">soil_waterTableDepth</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span><span class="op">)</span></span>
+<span><span class="fu">soil_rockWeight2Volume</span><span class="op">(</span><span class="va">pWeight</span>, <span class="va">bulkDensity</span>, rockDensity <span class="op">=</span> <span class="fl">2.3</span><span class="op">)</span></span>
+<span><span class="fu">soil_retentionCurvePlot</span><span class="op">(</span><span class="va">soil</span>, model<span class="op">=</span><span class="st">"SX"</span>, layer <span class="op">=</span> <span class="fl">1</span>, </span>
+<span>                        psi <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="op">-</span><span class="fl">6.0</span>, by<span class="op">=</span><span class="op">-</span><span class="fl">0.01</span><span class="op">)</span>,</span>
+<span>                        relative <span class="op">=</span> <span class="cn">TRUE</span>, to <span class="op">=</span> <span class="st">"SAT"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>clay</dt>
 <dd><p>Percentage of clay (in percent weight).</p></dd>
-<dt>sand</dt>
+
+  <dt>sand</dt>
 <dd><p>Percentage of sand (in percent weight).</p></dd>
-<dt>n, alpha, theta_res, theta_sat</dt>
+
+  <dt>n, alpha, theta_res, theta_sat</dt>
 <dd><p>Parameters of the Van Genuchten-Mualem model (m = 1 - 1/n).</p></dd>
-<dt>psi</dt>
+
+  <dt>psi</dt>
 <dd><p>Water potential (in MPa).</p></dd>
-<dt>theta</dt>
+
+  <dt>theta</dt>
 <dd><p>Relative water content (in percent volume).</p></dd>
-<dt>om</dt>
+
+  <dt>om</dt>
 <dd><p>Percentage of organic matter (optional, in percent weight).</p></dd>
-<dt>mmol</dt>
+
+  <dt>mmol</dt>
 <dd><p>Boolean flag to indicate that saturated conductivity units should be returned in mmol/m/s/MPa. If <code>mmol = FALSE</code> then units are cm/day.</p></dd>
-<dt>bd</dt>
+
+  <dt>bd</dt>
 <dd><p>Bulk density (in g/cm3).</p></dd>
-<dt>topsoil</dt>
+
+  <dt>topsoil</dt>
 <dd><p>A boolean flag to indicate topsoil layer.</p></dd>
-<dt>soilType</dt>
+
+  <dt>soilType</dt>
 <dd><p>A string indicating the soil type.</p></dd>
-<dt>soil</dt>
+
+  <dt>soil</dt>
 <dd><p>Soil object (returned by function <code><a href="soil.html">soil</a></code>).</p></dd>
-<dt>model</dt>
+
+  <dt>model</dt>
 <dd><p>Either 'SX' or 'VG' for Saxton's or Van Genuchten's water retention models; or 'both' to plot both retention models.</p></dd>
-<dt>layer</dt>
+
+  <dt>layer</dt>
 <dd><p>Soil layer to be plotted.</p></dd>
-<dt>relative</dt>
+
+  <dt>relative</dt>
 <dd><p>Boolean flag to indicate that retention curve should be relative to field capacity or saturation.</p></dd>
-<dt>to</dt>
+
+  <dt>to</dt>
 <dd><p>Either 'SAT' (saturation) or 'FC' (field capacity).</p></dd>
-<dt>minPsi</dt>
+
+  <dt>minPsi</dt>
 <dd><p>Minimum water potential (in MPa) to calculate the amount of extractable water.</p></dd>
-<dt>pWeight</dt>
+
+  <dt>pWeight</dt>
 <dd><p>Percentage of corresponding to rocks, in weight.</p></dd>
-<dt>bulkDensity</dt>
+
+  <dt>bulkDensity</dt>
 <dd><p>Bulk density of the soil fraction (g/cm3).</p></dd>
-<dt>rockDensity</dt>
+
+  <dt>rockDensity</dt>
 <dd><p>Rock density (g/cm3).</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -149,7 +168,9 @@
 </ul></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Depends on the function (see details).</p>
+    
+
+<p>Depends on the function (see details).</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -170,25 +191,25 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
-<span class="r-in"><span class="co">#Determine USDA soil texture type</span></span>
-<span class="r-in"><span class="va">type</span> <span class="op">=</span> <span class="fu">soil_USDAType</span><span class="op">(</span>clay<span class="op">=</span><span class="fl">40</span>, sand<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">type</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Determine USDA soil texture type</span></span></span>
+<span class="r-in"><span><span class="va">type</span> <span class="op">=</span> <span class="fu">soil_USDAType</span><span class="op">(</span>clay<span class="op">=</span><span class="fl">40</span>, sand<span class="op">=</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">type</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Silty clay"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Van Genuchten's params (bulk density = 1.3 g/cm)</span></span>
-<span class="r-in"><span class="va">vg</span> <span class="op">=</span> <span class="fu">soil_vanGenuchtenParamsToth</span><span class="op">(</span><span class="fl">40</span>,<span class="fl">10</span>,<span class="fl">1</span>,<span class="fl">1.3</span>,<span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">vg</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Van Genuchten's params (bulk density = 1.3 g/cm)</span></span></span>
+<span class="r-in"><span><span class="va">vg</span> <span class="op">=</span> <span class="fu">soil_vanGenuchtenParamsToth</span><span class="op">(</span><span class="fl">40</span>,<span class="fl">10</span>,<span class="fl">1</span>,<span class="fl">1.3</span>,<span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">vg</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     alpha         n theta_res theta_sat </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 92.643194  1.249553  0.041000  0.484241 </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Initialize soil object with default params</span></span>
-<span class="r-in"><span class="va">s</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Plot Saxton's and Van Genuchten's water retention curves</span></span>
-<span class="r-in"><span class="fu">soil_retentionCurvePlot</span><span class="op">(</span><span class="va">s</span>, model<span class="op">=</span><span class="st">"both"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Initialize soil object with default params</span></span></span>
+<span class="r-in"><span><span class="va">s</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Plot Saxton's and Van Genuchten's water retention curves</span></span></span>
+<span class="r-in"><span><span class="fu">soil_retentionCurvePlot</span><span class="op">(</span><span class="va">s</span>, model<span class="op">=</span><span class="st">"both"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="soil_texture-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -203,7 +224,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

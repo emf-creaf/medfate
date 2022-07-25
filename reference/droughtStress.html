@@ -56,21 +56,26 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">droughtStress</span><span class="op">(</span><span class="va">x</span>, index <span class="op">=</span> <span class="st">"NDD"</span>, freq <span class="op">=</span> <span class="st">"years"</span>, bySpecies <span class="op">=</span> <span class="cn">FALSE</span>, draw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">droughtStress</span><span class="op">(</span><span class="va">x</span>, index <span class="op">=</span> <span class="st">"NDD"</span>, freq <span class="op">=</span> <span class="st">"years"</span>, bySpecies <span class="op">=</span> <span class="cn">FALSE</span>, draw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>An object of class <code><a href="spwb.html">spwb</a></code>, <code><a href="spwb.html">pwb</a></code>, <code><a href="growth.html">growth</a></code> or <code><a href="fordyn.html">fordyn</a></code>.</p></dd>
-<dt>index</dt>
+
+  <dt>index</dt>
 <dd><p>A string with the index to be calculated, either <code>"DI"</code>, <code>"NDD"</code>, <code>"ADS"</code>, <code>"MDS"</code> or <code>"WSI"</code> (see details).</p></dd>
-<dt>freq</dt>
+
+  <dt>freq</dt>
 <dd><p>Frequency of stress statistics (see <code><a href="https://rdrr.io/r/base/cut.POSIXt.html" class="external-link">cut.Date</a></code>). Normally, either <code>"years"</code> or <code>"months"</code> for yearly-based or monthly-based indices.</p></dd>
-<dt>bySpecies</dt>
+
+  <dt>bySpecies</dt>
 <dd><p>Allows aggregating output by species.</p></dd>
-<dt>draw</dt>
+
+  <dt>draw</dt>
 <dd><p>A boolean flag to indicate that a plot should be returned.</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -82,7 +87,9 @@
 </ul></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data frame with periods (e.g., years or months) in rows and plant cohorts (or species) in columns. Values are the calculated stress index. If <code>draw=TRUE</code> a ggplot is returned instead.</p>
+    
+
+<p>A data frame with periods (e.g., years or months) in rows and plant cohorts (or species) in columns. Values are the calculated stress index. If <code>draw=TRUE</code> a ggplot is returned instead.</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -110,7 +117,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

@@ -60,45 +60,60 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fire_FCCS</span><span class="op">(</span><span class="va">FCCSpropsSI</span>, MliveSI <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">90</span>, <span class="fl">90</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span>, 
-          MdeadSI <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span>, 
-          slope <span class="op">=</span> <span class="fl">0</span>, windSpeedSI <span class="op">=</span> <span class="fl">11</span><span class="op">)</span>
-<span class="fu">fire_Rothermel</span><span class="op">(</span><span class="va">modeltype</span>, <span class="va">wSI</span>, <span class="va">sSI</span>, <span class="va">delta</span>, <span class="va">mx_dead</span>,
-               <span class="va">hSI</span>, <span class="va">mSI</span>, <span class="va">u</span>, <span class="va">windDir</span>, <span class="va">slope</span>, <span class="va">aspect</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fire_FCCS</span><span class="op">(</span><span class="va">FCCSpropsSI</span>, MliveSI <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">90</span>, <span class="fl">90</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>          MdeadSI <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>          slope <span class="op">=</span> <span class="fl">0</span>, windSpeedSI <span class="op">=</span> <span class="fl">11</span><span class="op">)</span></span>
+<span><span class="fu">fire_Rothermel</span><span class="op">(</span><span class="va">modeltype</span>, <span class="va">wSI</span>, <span class="va">sSI</span>, <span class="va">delta</span>, <span class="va">mx_dead</span>,</span>
+<span>               <span class="va">hSI</span>, <span class="va">mSI</span>, <span class="va">u</span>, <span class="va">windDir</span>, <span class="va">slope</span>, <span class="va">aspect</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>FCCSpropsSI</dt>
 <dd><p>A data frame describing the properties of five fuel strata (canopy, shrub, herbs, dead woody and litter) returned by <code><a href="fuel_properties.html">fuel_FCCS</a></code>.</p></dd>
-<dt>MliveSI</dt>
+
+  <dt>MliveSI</dt>
 <dd><p>Moisture of live fuels (in percent of dry weight) for canopy, shrub, and herb strata. Live moisture values are drawn from column <code>ActFCM</code> in <code>FCCSpropsSI</code> if available (see <code><a href="fuel_properties.html">fuel_FCCS</a></code>). Otherwise, moisture values supplied for <code>MliveSI</code> are used.</p></dd>
-<dt>MdeadSI</dt>
+
+  <dt>MdeadSI</dt>
 <dd><p>Moisture of dead fuels (in percent of dry weight) for canopy, shrub, herb, woody and litter strata.</p></dd>
-<dt>slope</dt>
+
+  <dt>slope</dt>
 <dd><p>Slope (in degrees).</p></dd>
-<dt>windSpeedSI</dt>
+
+  <dt>windSpeedSI</dt>
 <dd><p>Wind speed (in m/s) at 20 ft (6 m) over vegetation (default 11 m/s = 40 km/h)</p></dd>
-<dt>modeltype</dt>
+
+  <dt>modeltype</dt>
 <dd><p>'S'(tatic) or 'D'(ynamic)</p></dd>
-<dt>wSI</dt>
+
+  <dt>wSI</dt>
 <dd><p>A vector of fuel load (t/ha) for five fuel classes.</p></dd>
-<dt>sSI</dt>
+
+  <dt>sSI</dt>
 <dd><p>A vector of surface-to-volume ratio (m2/m3) for five fuel classes.</p></dd>
-<dt>delta</dt>
+
+  <dt>delta</dt>
 <dd><p>A value of fuel bed depth (cm).</p></dd>
-<dt>mx_dead</dt>
+
+  <dt>mx_dead</dt>
 <dd><p>A value of dead fuel moisture of extinction (percent).</p></dd>
-<dt>hSI</dt>
+
+  <dt>hSI</dt>
 <dd><p>A vector of heat content (kJ/kg) for five fuel classes.</p></dd>
-<dt>mSI</dt>
+
+  <dt>mSI</dt>
 <dd><p>A vector of percent moisture on a dry weight basis (percent) for five fuel classes.</p></dd>
-<dt>u</dt>
+
+ <dt>u</dt>
 <dd><p>A value of windspeed (m/s) at midflame height.</p></dd>
-<dt>windDir</dt>
+
+ <dt>windDir</dt>
 <dd><p>Wind direction (in degrees from north). North means blowing from north to south.</p></dd>
-<dt>aspect</dt>
+
+ <dt>aspect</dt>
 <dd><p>Aspect (in degrees from north).</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -106,7 +121,9 @@
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>Both functions return list with fire behavior variables. In the case of <code>fire_FCCS</code>, the function returns the variables in three blocks (lists <code>SurfaceFire</code>, <code>CrownFire</code> and <code>FirePotentials</code>), and the values are:</p><ul><li><p><code>SurfaceFire$`midflame_WindSpeed [m/s]`</code>: Midflame wind speed in the surface fire.</p></li>
+    
+
+<p>Both functions return list with fire behavior variables. In the case of <code>fire_FCCS</code>, the function returns the variables in three blocks (lists <code>SurfaceFire</code>, <code>CrownFire</code> and <code>FirePotentials</code>), and the values are:</p><ul><li><p><code>SurfaceFire$`midflame_WindSpeed [m/s]`</code>: Midflame wind speed in the surface fire.</p></li>
 <li><p><code>SurfaceFire$phi_wind</code>: Spread rate modifier due to wind.</p></li>
 <li><p><code>SurfaceFire$phi_slope</code>: Spread rate modifier due to slope.</p></li>
 <li><p><code>SurfaceFire$`I_R_surf [kJ/m2/min]`</code>: Intensity of the surface fire reaction.</p></li>
@@ -162,17 +179,17 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">#Load example plot plant data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Default species parameterization</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Calculate fuel properties according to FCCS</span></span>
-<span class="r-in"><span class="va">fccs</span> <span class="op">=</span> <span class="fu"><a href="fuel_properties.html">fuel_FCCS</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Calculate fire behavior according to FCCS</span></span>
-<span class="r-in"><span class="fu">fire_FCCS</span><span class="op">(</span><span class="va">fccs</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Load example plot plant data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Default species parameterization</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Calculate fuel properties according to FCCS</span></span></span>
+<span class="r-in"><span><span class="va">fccs</span> <span class="op">=</span> <span class="fu"><a href="fuel_properties.html">fuel_FCCS</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Calculate fire behavior according to FCCS</span></span></span>
+<span class="r-in"><span><span class="fu">fire_FCCS</span><span class="op">(</span><span class="va">fccs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $SurfaceFire</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $SurfaceFire$`midflame_WindSpeed [m/s]`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.188184</span>
@@ -281,26 +298,26 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5.87568</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Load fuel model parameter data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SFM_metric</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Fuel stratification (returns heights in cm)</span></span>
-<span class="r-in"><span class="va">fs</span> <span class="op">=</span> <span class="fu"><a href="fuel_properties.html">fuel_stratification</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Correct windspeed (transform heights to m)</span></span>
-<span class="r-in"><span class="va">u</span> <span class="op">=</span> <span class="fl">11</span> <span class="co">#m/s</span></span>
-<span class="r-in"><span class="va">umf</span> <span class="op">=</span> <span class="va">u</span><span class="op">*</span><span class="fu"><a href="fuel_properties.html">fuel_windAdjustmentFactor</a></span><span class="op">(</span><span class="va">fs</span><span class="op">$</span><span class="va">surfaceLayerTopHeight</span><span class="op">/</span><span class="fl">100</span>, <span class="va">fs</span><span class="op">$</span><span class="va">canopyBaseHeight</span><span class="op">/</span><span class="fl">100</span>, </span>
-<span class="r-in">                                  <span class="va">fs</span><span class="op">$</span><span class="va">canopyTopHeight</span><span class="op">/</span><span class="fl">100</span>, <span class="fl">60</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Call Rothermel function using fuel model 'A6'</span></span>
-<span class="r-in"><span class="fu">fire_Rothermel</span><span class="op">(</span>modeltype<span class="op">=</span><span class="st">"D"</span>, wSI <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">SFM_metric</span><span class="op">[</span><span class="st">"A6"</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span>, </span>
-<span class="r-in">                    sSI <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">SFM_metric</span><span class="op">[</span><span class="st">"A6"</span>,<span class="fl">7</span><span class="op">:</span><span class="fl">11</span><span class="op">]</span><span class="op">)</span>, </span>
-<span class="r-in">                    delta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">SFM_metric</span><span class="op">[</span><span class="st">"A6"</span>,<span class="fl">12</span><span class="op">]</span><span class="op">)</span>,</span>
-<span class="r-in">                    mx_dead <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">SFM_metric</span><span class="op">[</span><span class="st">"A6"</span>,<span class="fl">13</span><span class="op">]</span><span class="op">)</span>,</span>
-<span class="r-in">                    hSI <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">SFM_metric</span><span class="op">[</span><span class="st">"A6"</span>,<span class="fl">14</span><span class="op">:</span><span class="fl">18</span><span class="op">]</span><span class="op">)</span>,</span>
-<span class="r-in">                    mSI <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">10</span>,<span class="fl">10</span>,<span class="fl">30</span>,<span class="fl">60</span><span class="op">)</span>,</span>
-<span class="r-in">                    u<span class="op">=</span><span class="va">umf</span>, windDir<span class="op">=</span><span class="fl">0</span>, slope<span class="op">=</span><span class="fl">0</span>, aspect<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Load fuel model parameter data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SFM_metric</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Fuel stratification (returns heights in cm)</span></span></span>
+<span class="r-in"><span><span class="va">fs</span> <span class="op">=</span> <span class="fu"><a href="fuel_properties.html">fuel_stratification</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Correct windspeed (transform heights to m)</span></span></span>
+<span class="r-in"><span><span class="va">u</span> <span class="op">=</span> <span class="fl">11</span> <span class="co">#m/s</span></span></span>
+<span class="r-in"><span><span class="va">umf</span> <span class="op">=</span> <span class="va">u</span><span class="op">*</span><span class="fu"><a href="fuel_properties.html">fuel_windAdjustmentFactor</a></span><span class="op">(</span><span class="va">fs</span><span class="op">$</span><span class="va">surfaceLayerTopHeight</span><span class="op">/</span><span class="fl">100</span>, <span class="va">fs</span><span class="op">$</span><span class="va">canopyBaseHeight</span><span class="op">/</span><span class="fl">100</span>, </span></span>
+<span class="r-in"><span>                                  <span class="va">fs</span><span class="op">$</span><span class="va">canopyTopHeight</span><span class="op">/</span><span class="fl">100</span>, <span class="fl">60</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Call Rothermel function using fuel model 'A6'</span></span></span>
+<span class="r-in"><span><span class="fu">fire_Rothermel</span><span class="op">(</span>modeltype<span class="op">=</span><span class="st">"D"</span>, wSI <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">SFM_metric</span><span class="op">[</span><span class="st">"A6"</span>,<span class="fl">2</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span>                    sSI <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">SFM_metric</span><span class="op">[</span><span class="st">"A6"</span>,<span class="fl">7</span><span class="op">:</span><span class="fl">11</span><span class="op">]</span><span class="op">)</span>, </span></span>
+<span class="r-in"><span>                    delta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">SFM_metric</span><span class="op">[</span><span class="st">"A6"</span>,<span class="fl">12</span><span class="op">]</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    mx_dead <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">SFM_metric</span><span class="op">[</span><span class="st">"A6"</span>,<span class="fl">13</span><span class="op">]</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    hSI <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">SFM_metric</span><span class="op">[</span><span class="st">"A6"</span>,<span class="fl">14</span><span class="op">:</span><span class="fl">18</span><span class="op">]</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    mSI <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">10</span>,<span class="fl">10</span>,<span class="fl">30</span>,<span class="fl">60</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                    u<span class="op">=</span><span class="va">umf</span>, windDir<span class="op">=</span><span class="fl">0</span>, slope<span class="op">=</span><span class="fl">0</span>, aspect<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`Characteristic dead fuel moisture [%]`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -369,7 +386,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

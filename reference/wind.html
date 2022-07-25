@@ -56,35 +56,46 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">wind_canopyTurbulenceModel</span><span class="op">(</span><span class="va">zm</span>, <span class="va">Cx</span>, <span class="va">hm</span>, <span class="va">d0</span>, <span class="va">z0</span>, model <span class="op">=</span> <span class="st">"k-epsilon"</span><span class="op">)</span>
-<span class="fu">wind_canopyTurbulence</span><span class="op">(</span><span class="va">zmid</span>, <span class="va">LAD</span>, <span class="va">canopyHeight</span>, 
-                      <span class="va">u</span>, windMeasurementHeight <span class="op">=</span> <span class="fl">200</span>, model <span class="op">=</span> <span class="st">"k-epsilon"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">wind_canopyTurbulenceModel</span><span class="op">(</span><span class="va">zm</span>, <span class="va">Cx</span>, <span class="va">hm</span>, <span class="va">d0</span>, <span class="va">z0</span>, model <span class="op">=</span> <span class="st">"k-epsilon"</span><span class="op">)</span></span>
+<span><span class="fu">wind_canopyTurbulence</span><span class="op">(</span><span class="va">zmid</span>, <span class="va">LAD</span>, <span class="va">canopyHeight</span>, </span>
+<span>                      <span class="va">u</span>, windMeasurementHeight <span class="op">=</span> <span class="fl">200</span>, model <span class="op">=</span> <span class="st">"k-epsilon"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>zm</dt>
 <dd><p>A numeric vector with height values (m).</p></dd>
-<dt>Cx</dt>
+
+  <dt>Cx</dt>
 <dd><p>Effective drag = Cd x leaf area density.</p></dd>
-<dt>hm</dt>
+
+  <dt>hm</dt>
 <dd><p>Canopy height (m).</p></dd>
-<dt>d0</dt>
+
+  <dt>d0</dt>
 <dd><p>Zero displacement height (m).</p></dd>
-<dt>z0</dt>
+
+  <dt>z0</dt>
 <dd><p>Momentum roughness height (m).</p></dd>
-<dt>zmid</dt>
+
+  <dt>zmid</dt>
 <dd><p>A numeric vector of mid-point heights (in cm) for canopy layers.</p></dd>
-<dt>LAD</dt>
+
+  <dt>LAD</dt>
 <dd><p>A numeric vector of leaf area density values (m3/m2).</p></dd>
-<dt>canopyHeight</dt>
+
+  <dt>canopyHeight</dt>
 <dd><p>Canopy height (in cm).</p></dd>
-<dt>u</dt>
+
+  <dt>u</dt>
 <dd><p>Measured wind speed (m/s).</p></dd>
-<dt>windMeasurementHeight</dt>
+
+  <dt>windMeasurementHeight</dt>
 <dd><p>Height of wind speed measurement with respect to canopy height (cm).</p></dd>
-<dt>model</dt>
+
+  <dt>model</dt>
 <dd><p>Closure model.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -121,31 +132,31 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">#Default species parameterization</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Load example plot plant data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Canopy height (in m)</span></span>
-<span class="r-in"><span class="va">h</span><span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">$</span><span class="va">treeData</span><span class="op">$</span><span class="va">Height</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span> </span>
-<span class="r-in"><span class="va">d0</span> <span class="op">=</span> <span class="fl">0.67</span><span class="op">*</span><span class="va">h</span></span>
-<span class="r-in"><span class="va">z0</span> <span class="op">=</span> <span class="fl">0.08</span><span class="op">*</span><span class="va">h</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">#Height values (cm)</span></span>
-<span class="r-in"><span class="va">z</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">50</span>,<span class="fl">1000</span>, by<span class="op">=</span><span class="fl">50</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">zm</span> <span class="op">=</span> <span class="va">z</span><span class="op">/</span><span class="fl">100</span> <span class="co"># (in m)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Leaf area density</span></span>
-<span class="r-in"><span class="va">lad</span> <span class="op">=</span> <span class="fu"><a href="VerticalProfiles.html">vprofile_leafAreaDensity</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span>, draw <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span class="r-in">                               z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="va">z</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Effective drag</span></span>
-<span class="r-in"><span class="va">Cd</span> <span class="op">=</span> <span class="fl">0.2</span></span>
-<span class="r-in"><span class="va">Cx</span> <span class="op">=</span> <span class="va">Cd</span><span class="op">*</span><span class="va">lad</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># canopy turbulence model</span></span>
-<span class="r-in"><span class="fu">wind_canopyTurbulenceModel</span><span class="op">(</span><span class="va">zm</span>, <span class="va">Cx</span>,<span class="va">h</span>,<span class="va">d0</span>,<span class="va">z0</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Default species parameterization</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Load example plot plant data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Canopy height (in m)</span></span></span>
+<span class="r-in"><span><span class="va">h</span><span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">$</span><span class="va">treeData</span><span class="op">$</span><span class="va">Height</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span> </span></span>
+<span class="r-in"><span><span class="va">d0</span> <span class="op">=</span> <span class="fl">0.67</span><span class="op">*</span><span class="va">h</span></span></span>
+<span class="r-in"><span><span class="va">z0</span> <span class="op">=</span> <span class="fl">0.08</span><span class="op">*</span><span class="va">h</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Height values (cm)</span></span></span>
+<span class="r-in"><span><span class="va">z</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">50</span>,<span class="fl">1000</span>, by<span class="op">=</span><span class="fl">50</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">zm</span> <span class="op">=</span> <span class="va">z</span><span class="op">/</span><span class="fl">100</span> <span class="co"># (in m)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Leaf area density</span></span></span>
+<span class="r-in"><span><span class="va">lad</span> <span class="op">=</span> <span class="fu"><a href="VerticalProfiles.html">vprofile_leafAreaDensity</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span>, draw <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>                               z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="va">z</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Effective drag</span></span></span>
+<span class="r-in"><span><span class="va">Cd</span> <span class="op">=</span> <span class="fl">0.2</span></span></span>
+<span class="r-in"><span><span class="va">Cx</span> <span class="op">=</span> <span class="va">Cd</span><span class="op">*</span><span class="va">lad</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># canopy turbulence model</span></span></span>
+<span class="r-in"><span><span class="fu">wind_canopyTurbulenceModel</span><span class="op">(</span><span class="va">zm</span>, <span class="va">Cx</span>,<span class="va">h</span>,<span class="va">d0</span>,<span class="va">z0</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      z1        U1        dU1    epsilon1        k1          uw1 Lmix1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   0.5 0.7431863 0.01611031 0.002243710 0.1650870 -0.002732151 1.056</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   1.0 0.7504359 0.01611031 0.002875687 0.1733220 -0.002732151 1.056</span>
@@ -181,7 +192,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

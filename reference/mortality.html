@@ -56,27 +56,34 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mortality_dailyProbability</span><span class="op">(</span><span class="va">basalMortalityRate</span>, <span class="va">stressValue</span>, 
-                           <span class="va">stressThreshold</span>, minValue <span class="op">=</span> <span class="fl">0.0</span>,
-                           exponent <span class="op">=</span> <span class="fl">10.0</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mortality_dailyProbability</span><span class="op">(</span><span class="va">basalMortalityRate</span>, <span class="va">stressValue</span>, </span>
+<span>                           <span class="va">stressThreshold</span>, minValue <span class="op">=</span> <span class="fl">0.0</span>,</span>
+<span>                           exponent <span class="op">=</span> <span class="fl">10.0</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>basalMortalityRate</dt>
 <dd><p>Basal daily mortality rate per individual.</p></dd>
-<dt>stressValue</dt>
+
+  <dt>stressValue</dt>
 <dd><p>Current value of the stress variable (lower values indicate stronger stress).</p></dd>
-<dt>stressThreshold</dt>
+
+  <dt>stressThreshold</dt>
 <dd><p>Threshold to indicate that lower values increase mortality likelihood.</p></dd>
-<dt>minValue</dt>
+
+  <dt>minValue</dt>
 <dd><p>Minimum value of the stress variable (i.e. maximum stress), corresponding to probability of mortality equal to 1.</p></dd>
-<dt>exponent</dt>
+
+  <dt>exponent</dt>
 <dd><p>Coefficient modulating the steepness of the relationship.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Returns a probability (between 0 and 1).</p>
+    
+
+<p>Returns a probability (between 0 and 1).</p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -99,7 +106,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

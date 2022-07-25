@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-07-20</h4>
+            <h4 data-toc-skip class="date">2022-07-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/PreparingInputs.Rmd" class="external-link"><code>vignettes/intro/PreparingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>PreparingInputs.Rmd</code></div>
@@ -97,15 +97,15 @@ processing his/her own data.</p>
 <p>We begin by loading packages <strong>medfate</strong>,
 <strong>medfateutils</strong> and <strong>meteoland</strong>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/" class="external-link">medfate</a></span><span class="op">)</span>
-<span class="co">#&gt; Package 'medfate' [ver. 2.7.6]</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">medfateutils</span><span class="op">)</span>
-<span class="co">#&gt; Registered S3 method overwritten by 'ape':</span>
-<span class="co">#&gt;   method   from </span>
-<span class="co">#&gt;   plot.mst spdep</span>
-<span class="co">#&gt; Package 'medfateutils' [ver. 0.1.4]</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/meteoland/index.html" class="external-link">meteoland</a></span><span class="op">)</span>
-<span class="co">#&gt; Loading required package: sp</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/" class="external-link">medfate</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Package 'medfate' [ver. 2.7.6]</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">medfateutils</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Registered S3 method overwritten by 'ape':</span></span>
+<span><span class="co">#&gt;   method   from </span></span>
+<span><span class="co">#&gt;   plot.mst spdep</span></span>
+<span><span class="co">#&gt; Package 'medfateutils' [ver. 0.1.4]</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/meteoland/index.html" class="external-link">meteoland</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Loading required package: sp</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="buildingmanipulating-forest-objects">Building/manipulating forest objects<a class="anchor" aria-label="anchor" href="#buildingmanipulating-forest-objects"></a>
@@ -122,24 +122,24 @@ tree data, corresponding to a dense holm oak forest in Poblet
 exploitation, there is a high density of stems per individual.</p>
 <p>We begin by loading the tree data from Poblet:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"poblet_trees"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"poblet_trees"</span><span class="op">)</span></span></code></pre></div>
 <p>and we inspect its content, for example using:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">)</span>
-<span class="co">#&gt;   Plot.Code            Indv.Ref       Species           Diameter.cm   </span>
-<span class="co">#&gt;  Length:717         Min.   :  1.0   Length:717         Min.   : 7.50  </span>
-<span class="co">#&gt;  Class :character   1st Qu.: 45.0   Class :character   1st Qu.: 9.10  </span>
-<span class="co">#&gt;  Mode  :character   Median : 97.0   Mode  :character   Median :11.10  </span>
-<span class="co">#&gt;                     Mean   :103.4                      Mean   :11.62  </span>
-<span class="co">#&gt;                     3rd Qu.:156.0                      3rd Qu.:13.40  </span>
-<span class="co">#&gt;                     Max.   :261.0                      Max.   :26.00</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   Plot.Code            Indv.Ref       Species           Diameter.cm   </span></span>
+<span><span class="co">#&gt;  Length:717         Min.   :  1.0   Length:717         Min.   : 7.50  </span></span>
+<span><span class="co">#&gt;  Class :character   1st Qu.: 45.0   Class :character   1st Qu.: 9.10  </span></span>
+<span><span class="co">#&gt;  Mode  :character   Median : 97.0   Mode  :character   Median :11.10  </span></span>
+<span><span class="co">#&gt;                     Mean   :103.4                      Mean   :11.62  </span></span>
+<span><span class="co">#&gt;                     3rd Qu.:156.0                      3rd Qu.:13.40  </span></span>
+<span><span class="co">#&gt;                     Max.   :261.0                      Max.   :26.00</span></span></code></pre></div>
 <p>The data frame includes tree data corresponding to three forest
 inventories:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     POBL_CTL POBL_THI_AFT POBL_THI_BEF </span>
-<span class="co">#&gt;          267          189          261</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Plot.Code</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     POBL_CTL POBL_THI_AFT POBL_THI_BEF </span></span>
+<span><span class="co">#&gt;          267          189          261</span></span></code></pre></div>
 <p><code>POBL_CTL</code> corresponds to an oak forest where no treatment
 was done (control), whereas <code>POBL_THI_BEF</code> and
 <code>POBL_THI_AFT</code> are two forest inventories conducted on the
@@ -152,30 +152,30 @@ number of stems.</p>
 <p>We initialize an empty forest object using function
 <code><a href="../../reference/forest.html">emptyforest()</a></code> from package <strong>medfate</strong>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pobl_ctl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest.html">emptyforest</a></span><span class="op">(</span><span class="st">"POBL_CTL"</span><span class="op">)</span>
-<span class="va">pobl_ctl</span>
-<span class="co">#&gt; $ID</span>
-<span class="co">#&gt; [1] "POBL_CTL"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $patchsize</span>
-<span class="co">#&gt; [1] 10000</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $treeData</span>
-<span class="co">#&gt; [1] Species DBH     Height  N       Z50     Z95    </span>
-<span class="co">#&gt; &lt;0 rows&gt; (or 0-length row.names)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $shrubData</span>
-<span class="co">#&gt; [1] Species Height  Cover   Z50     Z95    </span>
-<span class="co">#&gt; &lt;0 rows&gt; (or 0-length row.names)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $herbCover</span>
-<span class="co">#&gt; [1] 0</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $herbHeight</span>
-<span class="co">#&gt; [1] 0</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; attr(,"class")</span>
-<span class="co">#&gt; [1] "forest" "list"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_ctl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest.html">emptyforest</a></span><span class="op">(</span><span class="st">"POBL_CTL"</span><span class="op">)</span></span>
+<span><span class="va">pobl_ctl</span></span>
+<span><span class="co">#&gt; $ID</span></span>
+<span><span class="co">#&gt; [1] "POBL_CTL"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $patchsize</span></span>
+<span><span class="co">#&gt; [1] 10000</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $treeData</span></span>
+<span><span class="co">#&gt; [1] Species DBH     Height  N       Z50     Z95    </span></span>
+<span><span class="co">#&gt; &lt;0 rows&gt; (or 0-length row.names)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $shrubData</span></span>
+<span><span class="co">#&gt; [1] Species Height  Cover   Z50     Z95    </span></span>
+<span><span class="co">#&gt; &lt;0 rows&gt; (or 0-length row.names)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $herbCover</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $herbHeight</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; attr(,"class")</span></span>
+<span><span class="co">#&gt; [1] "forest" "list"</span></span></code></pre></div>
 <p>Now we will fill in data for element <code>treeData</code> in the
 <code>forest</code> object. For that, we need to define a mapping from
 column names in <code>poblet_trees</code> to variables in
@@ -184,45 +184,45 @@ string vector</strong>, i.e. a vector where element names are variable
 names in <code>treeData</code> and vector elements are strings of the
 variable names in <code>poblet_trees</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mapping</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species.name"</span> <span class="op">=</span> <span class="st">"Species"</span>, <span class="st">"DBH"</span> <span class="op">=</span> <span class="st">"Diameter.cm"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mapping</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species.name"</span> <span class="op">=</span> <span class="st">"Species"</span>, <span class="st">"DBH"</span> <span class="op">=</span> <span class="st">"Diameter.cm"</span><span class="op">)</span></span></code></pre></div>
 <p>We can now replace the empty <code>treeData</code> in
 <code>pobl_ctl</code> using functions <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset()</a></code> and
 <code><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable()</a></code>, the latter from
 <strong>medfateutils</strong>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pobl_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span><span class="op">)</span>, 
-                                         mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span><span class="op">)</span>, </span>
+<span>                                         mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span><span class="op">)</span></span></code></pre></div>
 <p>We can inspect the result using:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_ctl</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
-<span class="co">#&gt;     Species            N      Height             DBH          Z50         </span>
-<span class="co">#&gt;  Min.   :  4.0   Min.   :1   Mode:logical   Min.   : 7.50   Mode:logical  </span>
-<span class="co">#&gt;  1st Qu.: 19.0   1st Qu.:1   NA's:267       1st Qu.: 9.00   NA's:267      </span>
-<span class="co">#&gt;  Median :168.0   Median :1                  Median :10.70                 </span>
-<span class="co">#&gt;  Mean   :105.3   Mean   :1                  Mean   :11.53                 </span>
-<span class="co">#&gt;  3rd Qu.:168.0   3rd Qu.:1                  3rd Qu.:13.30                 </span>
-<span class="co">#&gt;  Max.   :168.0   Max.   :1                  Max.   :26.00                 </span>
-<span class="co">#&gt;    Z95         </span>
-<span class="co">#&gt;  Mode:logical  </span>
-<span class="co">#&gt;  NA's:267      </span>
-<span class="co">#&gt;                </span>
-<span class="co">#&gt;                </span>
-<span class="co">#&gt;                </span>
-<span class="co">#&gt; </span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_ctl</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     Species            N      Height             DBH          Z50         </span></span>
+<span><span class="co">#&gt;  Min.   :  4.0   Min.   :1   Mode:logical   Min.   : 7.50   Mode:logical  </span></span>
+<span><span class="co">#&gt;  1st Qu.: 19.0   1st Qu.:1   NA's:267       1st Qu.: 9.00   NA's:267      </span></span>
+<span><span class="co">#&gt;  Median :168.0   Median :1                  Median :10.70                 </span></span>
+<span><span class="co">#&gt;  Mean   :105.3   Mean   :1                  Mean   :11.53                 </span></span>
+<span><span class="co">#&gt;  3rd Qu.:168.0   3rd Qu.:1                  3rd Qu.:13.30                 </span></span>
+<span><span class="co">#&gt;  Max.   :168.0   Max.   :1                  Max.   :26.00                 </span></span>
+<span><span class="co">#&gt;    Z95         </span></span>
+<span><span class="co">#&gt;  Mode:logical  </span></span>
+<span><span class="co">#&gt;  NA's:267      </span></span>
+<span><span class="co">#&gt;                </span></span>
+<span><span class="co">#&gt;                </span></span>
+<span><span class="co">#&gt;                </span></span>
+<span><span class="co">#&gt; </span></span></code></pre></div>
 <p>Some data are missing, but we will not worry about it now. One way to
 evaluate if the tree data is correctly specified is to display a summary
 of the <code>forest</code> object using the <code>summary</code>
 function defined in <strong>medfate</strong> for this object class:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
-<span class="co">#&gt; ID: POBL_CTL </span>
-<span class="co">#&gt; Tree density (ind/ha): 267 </span>
-<span class="co">#&gt; Tree BA (m2/ha): 3.0179815 </span>
-<span class="co">#&gt; Cover (%) trees (open ground): 42.1205627  shrubs: 0 </span>
-<span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span>
-<span class="co">#&gt; LAI (m2/m2) total: 0.530447  trees: 0.530447  shrubs: 0 </span>
-<span class="co">#&gt; Live fine fuel (kg/m2) total: 0.1372838  trees: 0.1372838  shrubs: 0 </span>
-<span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ID: POBL_CTL </span></span>
+<span><span class="co">#&gt; Tree density (ind/ha): 267 </span></span>
+<span><span class="co">#&gt; Tree BA (m2/ha): 3.0179815 </span></span>
+<span><span class="co">#&gt; Cover (%) trees (open ground): 42.1205627  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span></span>
+<span><span class="co">#&gt; LAI (m2/m2) total: 0.530447  trees: 0.530447  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Live fine fuel (kg/m2) total: 0.1372838  trees: 0.1372838  shrubs: 0 </span></span>
+<span><span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></span></code></pre></div>
 <p>The values of stand density and stand basal area are too low for such
 a dense forest, which indicates that something needs to be corrected. At
 this point, it is important to remember that <code>forest</code> objects
@@ -232,24 +232,24 @@ sampled plot. We are told that forest stand sampling was done using a
 circular plot whose radius was 15 m. We can calculate the sampled area
 using:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sampled_area</span> <span class="op">=</span> <span class="va">pi</span><span class="op">*</span><span class="fl">15</span><span class="op">^</span><span class="fl">2</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">sampled_area</span> <span class="op">=</span> <span class="va">pi</span><span class="op">*</span><span class="fl">15</span><span class="op">^</span><span class="fl">2</span></span></code></pre></div>
 <p>and use this information to map the tree data again, where we specify
 parameter <code>plot_size_x</code>:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pobl_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span><span class="op">)</span>,
-                                         mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
-                                         plot_size_x <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span><span class="op">)</span>,</span>
+<span>                                         mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, </span>
+<span>                                         plot_size_x <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></span></code></pre></div>
 <p>We run again the summary:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
-<span class="co">#&gt; ID: POBL_CTL </span>
-<span class="co">#&gt; Tree density (ind/ha): 3777.27731604765 </span>
-<span class="co">#&gt; Tree BA (m2/ha): 42.6957047 </span>
-<span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span>
-<span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span>
-<span class="co">#&gt; LAI (m2/m2) total: 6.7141704  trees: 6.7141704  shrubs: 0 </span>
-<span class="co">#&gt; Live fine fuel (kg/m2) total: 1.7424533  trees: 1.7424533  shrubs: 0 </span>
-<span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ID: POBL_CTL </span></span>
+<span><span class="co">#&gt; Tree density (ind/ha): 3777.27731604765 </span></span>
+<span><span class="co">#&gt; Tree BA (m2/ha): 42.6957047 </span></span>
+<span><span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span></span>
+<span><span class="co">#&gt; LAI (m2/m2) total: 6.7141704  trees: 6.7141704  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Live fine fuel (kg/m2) total: 1.7424533  trees: 1.7424533  shrubs: 0 </span></span>
+<span><span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></span></code></pre></div>
 <p>which results in a much higher basal area and density, as should be
 expected for a dense oak forest resulting from an abandoned old
 coppice.</p>
@@ -259,30 +259,30 @@ medfate cannot calculate the light extinction profile, in our case
 because tree heights are missing. Thus, we should somehow estimate tree
 heights, for example using an allometric relationship:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Height.cm</span> <span class="op">=</span> <span class="fl">100</span> <span class="op">*</span> <span class="fl">1.806</span><span class="op">*</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Diameter.cm</span><span class="op">^</span><span class="fl">0.518</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Height.cm</span><span class="op">)</span>
-<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="co">#&gt;   512.9   566.9   628.3   638.0   692.7   976.5</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Height.cm</span> <span class="op">=</span> <span class="fl">100</span> <span class="op">*</span> <span class="fl">1.806</span><span class="op">*</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Diameter.cm</span><span class="op">^</span><span class="fl">0.518</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Height.cm</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></span>
+<span><span class="co">#&gt;   512.9   566.9   628.3   638.0   692.7   976.5</span></span></code></pre></div>
 <p>So trees are between 5 and 10 m height. Once tree heights are
 defined, we can include them in our mapping:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mapping</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species.name"</span> <span class="op">=</span> <span class="st">"Species"</span>, <span class="st">"DBH"</span> <span class="op">=</span> <span class="st">"Diameter.cm"</span>, <span class="st">"Height"</span> <span class="op">=</span> <span class="st">"Height.cm"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mapping</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species.name"</span> <span class="op">=</span> <span class="st">"Species"</span>, <span class="st">"DBH"</span> <span class="op">=</span> <span class="st">"Diameter.cm"</span>, <span class="st">"Height"</span> <span class="op">=</span> <span class="st">"Height.cm"</span><span class="op">)</span></span></code></pre></div>
 <p>and rerun the tree data mapping:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pobl_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span><span class="op">)</span>,
-                                         mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
-                                         plot_size_x <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_ctl</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_CTL"</span><span class="op">)</span>,</span>
+<span>                                         mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, </span>
+<span>                                         plot_size_x <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></span></code></pre></div>
 <p>Now the summary of the control forest stand looks like:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
-<span class="co">#&gt; ID: POBL_CTL </span>
-<span class="co">#&gt; Tree density (ind/ha): 3777.27731604765 </span>
-<span class="co">#&gt; Tree BA (m2/ha): 42.6957047 </span>
-<span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span>
-<span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span>
-<span class="co">#&gt; LAI (m2/m2) total: 6.7141704  trees: 6.7141704  shrubs: 0 </span>
-<span class="co">#&gt; Live fine fuel (kg/m2) total: 1.7424533  trees: 1.7424533  shrubs: 0 </span>
-<span class="co">#&gt; PAR ground (%): 2.4902336  SWR ground (%): 6.4867878</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ID: POBL_CTL </span></span>
+<span><span class="co">#&gt; Tree density (ind/ha): 3777.27731604765 </span></span>
+<span><span class="co">#&gt; Tree BA (m2/ha): 42.6957047 </span></span>
+<span><span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span></span>
+<span><span class="co">#&gt; LAI (m2/m2) total: 6.7141704  trees: 6.7141704  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Live fine fuel (kg/m2) total: 1.7424533  trees: 1.7424533  shrubs: 0 </span></span>
+<span><span class="co">#&gt; PAR ground (%): 2.4902336  SWR ground (%): 6.4867878</span></span></code></pre></div>
 <p>The fraction of PAR/SWR reaching the ground is low, as would be
 expected for a dense forest.</p>
 </div>
@@ -293,79 +293,79 @@ expected for a dense forest.</p>
 two codes corresponding to before and after the thinning intervention.
 Let us first address the pre-thinning state:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pobl_thi_bef</span> <span class="op">=</span> <span class="fu"><a href="../../reference/forest.html">emptyforest</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">pobl_thi_bef</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_BEF"</span><span class="op">)</span>,
-                                             mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
-                                             plot_size_x <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_thi_bef</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
-<span class="co">#&gt;     Species            N             Height           DBH          Z50         </span>
-<span class="co">#&gt;  Min.   :  4.0   Min.   :14.15   Min.   :512.9   Min.   : 7.50   Mode:logical  </span>
-<span class="co">#&gt;  1st Qu.: 19.0   1st Qu.:14.15   1st Qu.:563.7   1st Qu.: 9.00   NA's:261      </span>
-<span class="co">#&gt;  Median :168.0   Median :14.15   Median :628.3   Median :11.10                 </span>
-<span class="co">#&gt;  Mean   :114.5   Mean   :14.15   Mean   :635.5   Mean   :11.51                 </span>
-<span class="co">#&gt;  3rd Qu.:168.0   3rd Qu.:14.15   3rd Qu.:681.9   3rd Qu.:13.00                 </span>
-<span class="co">#&gt;  Max.   :168.0   Max.   :14.15   Max.   :944.9   Max.   :24.40                 </span>
-<span class="co">#&gt;  NA's   :2                                                                     </span>
-<span class="co">#&gt;    Z95         </span>
-<span class="co">#&gt;  Mode:logical  </span>
-<span class="co">#&gt;  NA's:261      </span>
-<span class="co">#&gt;                </span>
-<span class="co">#&gt;                </span>
-<span class="co">#&gt;                </span>
-<span class="co">#&gt;                </span>
-<span class="co">#&gt; </span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_thi_bef</span> <span class="op">=</span> <span class="fu"><a href="../../reference/forest.html">emptyforest</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">pobl_thi_bef</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_BEF"</span><span class="op">)</span>,</span>
+<span>                                             mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, </span>
+<span>                                             plot_size_x <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_thi_bef</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span></span>
+<span><span class="co">#&gt;     Species            N             Height           DBH          Z50         </span></span>
+<span><span class="co">#&gt;  Min.   :  4.0   Min.   :14.15   Min.   :512.9   Min.   : 7.50   Mode:logical  </span></span>
+<span><span class="co">#&gt;  1st Qu.: 19.0   1st Qu.:14.15   1st Qu.:563.7   1st Qu.: 9.00   NA's:261      </span></span>
+<span><span class="co">#&gt;  Median :168.0   Median :14.15   Median :628.3   Median :11.10                 </span></span>
+<span><span class="co">#&gt;  Mean   :114.5   Mean   :14.15   Mean   :635.5   Mean   :11.51                 </span></span>
+<span><span class="co">#&gt;  3rd Qu.:168.0   3rd Qu.:14.15   3rd Qu.:681.9   3rd Qu.:13.00                 </span></span>
+<span><span class="co">#&gt;  Max.   :168.0   Max.   :14.15   Max.   :944.9   Max.   :24.40                 </span></span>
+<span><span class="co">#&gt;  NA's   :2                                                                     </span></span>
+<span><span class="co">#&gt;    Z95         </span></span>
+<span><span class="co">#&gt;  Mode:logical  </span></span>
+<span><span class="co">#&gt;  NA's:261      </span></span>
+<span><span class="co">#&gt;                </span></span>
+<span><span class="co">#&gt;                </span></span>
+<span><span class="co">#&gt;                </span></span>
+<span><span class="co">#&gt;                </span></span>
+<span><span class="co">#&gt; </span></span></code></pre></div>
 <p>Note that the <code>Species</code> variable contains two missing
 values. This will normally happen when some species cannot be
 identified. We can verify if this happens for other parts of the Poblet
 tree data:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Species</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">SpParamsMED</span><span class="op">$</span><span class="va">Name</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; [1] 4</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">!</span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Species</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">SpParamsMED</span><span class="op">$</span><span class="va">Name</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 4</span></span></code></pre></div>
 <p>If we display species counts we can identify which species is not
 being parsed:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Acer monspessulanum       Arbutus unedo Phillyrea latifolia     Quercus humilis </span>
-<span class="co">#&gt;                   2                 265                   6                   4 </span>
-<span class="co">#&gt;        Quercus ilex </span>
-<span class="co">#&gt;                 440</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Acer monspessulanum       Arbutus unedo Phillyrea latifolia     Quercus humilis </span></span>
+<span><span class="co">#&gt;                   2                 265                   6                   4 </span></span>
+<span><span class="co">#&gt;        Quercus ilex </span></span>
+<span><span class="co">#&gt;                 440</span></span></code></pre></div>
 <p>In this case, the name used for the downy oak (<em>Quercus
 humilis</em>) is a synonym and needs to be replaced by its accepted name
 (<em>Quercus pubescens</em>), which we can do:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Species</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Species</span><span class="op">==</span><span class="st">"Quercus humilis"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Quercus pubescens"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Species</span><span class="op">[</span><span class="va">poblet_trees</span><span class="op">$</span><span class="va">Species</span><span class="op">==</span><span class="st">"Quercus humilis"</span><span class="op">]</span> <span class="op">=</span> <span class="st">"Quercus pubescens"</span></span></code></pre></div>
 <p>Now we repeat our mapping:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pobl_thi_bef</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_BEF"</span><span class="op">)</span>,
-                                             mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
-                                             plot_size_x <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_thi_bef</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
-<span class="co">#&gt; Tree density (ind/ha): 3692.39467973197 </span>
-<span class="co">#&gt; Tree BA (m2/ha): 40.9224267 </span>
-<span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span>
-<span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span>
-<span class="co">#&gt; LAI (m2/m2) total: 6.5530107  trees: 6.5530107  shrubs: 0 </span>
-<span class="co">#&gt; Live fine fuel (kg/m2) total: 1.6994566  trees: 1.6994566  shrubs: 0 </span>
-<span class="co">#&gt; PAR ground (%): 2.7210404  SWR ground (%): 6.9269881</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_thi_bef</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_BEF"</span><span class="op">)</span>,</span>
+<span>                                             mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, </span>
+<span>                                             plot_size_x <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_thi_bef</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Tree density (ind/ha): 3692.39467973197 </span></span>
+<span><span class="co">#&gt; Tree BA (m2/ha): 40.9224267 </span></span>
+<span><span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span></span>
+<span><span class="co">#&gt; LAI (m2/m2) total: 6.5530107  trees: 6.5530107  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Live fine fuel (kg/m2) total: 1.6994566  trees: 1.6994566  shrubs: 0 </span></span>
+<span><span class="co">#&gt; PAR ground (%): 2.7210404  SWR ground (%): 6.9269881</span></span></code></pre></div>
 <p>Like the control plot, these statistics indicate a dense oak forest.
 We can repeat the same operations with the forest plot after the
 thinning intervention:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pobl_thi_aft</span> <span class="op">=</span> <span class="fu"><a href="../../reference/forest.html">emptyforest</a></span><span class="op">(</span><span class="st">"POBL_THI_AFT"</span><span class="op">)</span>
-<span class="va">pobl_thi_aft</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_AFT"</span><span class="op">)</span>,
-                                             mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, 
-                                             plot_size_x <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_thi_aft</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
-<span class="co">#&gt; ID: POBL_THI_AFT </span>
-<span class="co">#&gt; Tree density (ind/ha): 2673.80304394384 </span>
-<span class="co">#&gt; Tree BA (m2/ha): 31.6162035 </span>
-<span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span>
-<span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span>
-<span class="co">#&gt; LAI (m2/m2) total: 5.0833939  trees: 5.0833939  shrubs: 0 </span>
-<span class="co">#&gt; Live fine fuel (kg/m2) total: 1.3224411  trees: 1.3224411  shrubs: 0 </span>
-<span class="co">#&gt; PAR ground (%): 6.1061933  SWR ground (%): 12.6058106</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_thi_aft</span> <span class="op">=</span> <span class="fu"><a href="../../reference/forest.html">emptyforest</a></span><span class="op">(</span><span class="st">"POBL_THI_AFT"</span><span class="op">)</span></span>
+<span><span class="va">pobl_thi_aft</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_AFT"</span><span class="op">)</span>,</span>
+<span>                                             mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, </span>
+<span>                                             plot_size_x <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_thi_aft</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ID: POBL_THI_AFT </span></span>
+<span><span class="co">#&gt; Tree density (ind/ha): 2673.80304394384 </span></span>
+<span><span class="co">#&gt; Tree BA (m2/ha): 31.6162035 </span></span>
+<span><span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span></span>
+<span><span class="co">#&gt; LAI (m2/m2) total: 5.0833939  trees: 5.0833939  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Live fine fuel (kg/m2) total: 1.3224411  trees: 1.3224411  shrubs: 0 </span></span>
+<span><span class="co">#&gt; PAR ground (%): 6.1061933  SWR ground (%): 12.6058106</span></span></code></pre></div>
 <p>Note the decrease in tree density and basal area, and the increase in
 light reaching the ground, despite the estimated leaf area index is
 still high.</p>
@@ -377,42 +377,42 @@ still high.</p>
 a woody cohort. We can check the number of tree cohorts in each
 <code>forest</code> structure using:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pobl_ctl</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
-<span class="co">#&gt; [1] 267</span>
-<span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pobl_thi_bef</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
-<span class="co">#&gt; [1] 261</span>
-<span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pobl_thi_aft</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
-<span class="co">#&gt; [1] 189</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pobl_ctl</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 267</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pobl_thi_bef</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 261</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pobl_thi_aft</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 189</span></span></code></pre></div>
 <p>This large amount of cohorts can slow done simulations considerably.
 Hence, it is advisable to lump them into coarser woody cohorts. One way
 of doing this is via function <code><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees()</a></code> from
 package <strong>medfate</strong>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pobl_ctl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees</a></span><span class="op">(</span><span class="va">pobl_ctl</span><span class="op">)</span>
-<span class="va">pobl_thi_bef</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees</a></span><span class="op">(</span><span class="va">pobl_thi_bef</span><span class="op">)</span>
-<span class="va">pobl_thi_aft</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees</a></span><span class="op">(</span><span class="va">pobl_thi_aft</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_ctl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees</a></span><span class="op">(</span><span class="va">pobl_ctl</span><span class="op">)</span></span>
+<span><span class="va">pobl_thi_bef</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees</a></span><span class="op">(</span><span class="va">pobl_thi_bef</span><span class="op">)</span></span>
+<span><span class="va">pobl_thi_aft</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees</a></span><span class="op">(</span><span class="va">pobl_thi_aft</span><span class="op">)</span></span></code></pre></div>
 <p>By default, the function will pool tree cohorts of the same species
 and diameter class (defined every 5 cm). We can check the new number of
 tree cohorts using again:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pobl_ctl</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
-<span class="co">#&gt; [1] 9</span>
-<span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pobl_thi_bef</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
-<span class="co">#&gt; [1] 11</span>
-<span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pobl_thi_aft</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span>
-<span class="co">#&gt; [1] 8</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pobl_ctl</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 9</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pobl_thi_bef</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 11</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pobl_thi_aft</span><span class="op">$</span><span class="va">treeData</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 8</span></span></code></pre></div>
 <p>We can check whether stand properties were altered using the
 <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> function:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_thi_aft</span>, <span class="va">SpParamsMED</span><span class="op">)</span>
-<span class="co">#&gt; ID: POBL_THI_AFT </span>
-<span class="co">#&gt; Tree density (ind/ha): 2673.80304394384 </span>
-<span class="co">#&gt; Tree BA (m2/ha): 31.6162035 </span>
-<span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span>
-<span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span>
-<span class="co">#&gt; LAI (m2/m2) total: 5.1144373  trees: 5.1144373  shrubs: 0 </span>
-<span class="co">#&gt; Live fine fuel (kg/m2) total: 1.3298915  trees: 1.3298915  shrubs: 0 </span>
-<span class="co">#&gt; PAR ground (%): 6.0028221  SWR ground (%): 12.4473851</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_thi_aft</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ID: POBL_THI_AFT </span></span>
+<span><span class="co">#&gt; Tree density (ind/ha): 2673.80304394384 </span></span>
+<span><span class="co">#&gt; Tree BA (m2/ha): 31.6162035 </span></span>
+<span><span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span></span>
+<span><span class="co">#&gt; LAI (m2/m2) total: 5.1144373  trees: 5.1144373  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Live fine fuel (kg/m2) total: 1.3298915  trees: 1.3298915  shrubs: 0 </span></span>
+<span><span class="co">#&gt; PAR ground (%): 6.0028221  SWR ground (%): 12.4473851</span></span></code></pre></div>
 <p>Function <code><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees()</a></code> will preserve the stand
 density and basal area that the stand description had before merging
 cohorts. Other properties like leaf area index may be slightly
@@ -435,57 +435,57 @@ function <code><a href="https://rdrr.io/pkg/medfateutils/man/soilgridsParams.htm
 first create an object <code>SpatialPoints</code> (see package
 <strong>sp</strong>):</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">cc</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">1.0219</span>, <span class="fl">41.3443</span><span class="op">)</span>
-<span class="va">coords_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sp/man/SpatialPoints.html" class="external-link">SpatialPoints</a></span><span class="op">(</span><span class="va">cc</span>, <span class="fu"><a href="https://rdrr.io/pkg/sp/man/CRS-class.html" class="external-link">CRS</a></span><span class="op">(</span>SRS_string <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">cc</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">1.0219</span>, <span class="fl">41.3443</span><span class="op">)</span></span>
+<span><span class="va">coords_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sp/man/SpatialPoints.html" class="external-link">SpatialPoints</a></span><span class="op">(</span><span class="va">cc</span>, <span class="fu"><a href="https://rdrr.io/pkg/sp/man/CRS-class.html" class="external-link">CRS</a></span><span class="op">(</span>SRS_string <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>This object can be used to query SoilGrids using
 <code><a href="https://rdrr.io/pkg/medfateutils/man/soilgridsParams.html" class="external-link">soilgridsParams()</a></code>:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pobl_soil_props</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/soilgridsParams.html" class="external-link">soilgridsParams</a></span><span class="op">(</span><span class="va">coords_sp</span>, widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300</span>, <span class="fl">700</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_soil_props</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/soilgridsParams.html" class="external-link">soilgridsParams</a></span><span class="op">(</span><span class="va">coords_sp</span>, widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300</span>, <span class="fl">700</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>This function returns a data frame of soil properties:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pobl_soil_props</span>
-<span class="co">#&gt;   widths     clay     sand       om       bd  rfc</span>
-<span class="co">#&gt; 1    300 26.43333 31.06667 4.133333 1.166667 18.0</span>
-<span class="co">#&gt; 2    700 30.40000 29.75000 0.900000 1.440000 19.2</span>
-<span class="co">#&gt; 3   1000 31.60000 29.60000 0.610000 1.500000 20.9</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_soil_props</span></span>
+<span><span class="co">#&gt;   widths     clay     sand       om       bd  rfc</span></span>
+<span><span class="co">#&gt; 1    300 26.43333 31.06667 4.133333 1.166667 18.0</span></span>
+<span><span class="co">#&gt; 2    700 30.40000 29.75000 0.900000 1.440000 19.2</span></span>
+<span><span class="co">#&gt; 3   1000 31.60000 29.60000 0.610000 1.500000 20.9</span></span></code></pre></div>
 <p>This data frame is a physical description of the soil. Remember that
 the soil data structure for <strong>medfate</strong> simulations is
 built using function <code><a href="../../reference/soil.html">soil()</a></code>:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pobl_soil</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">pobl_soil_props</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_soil</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">pobl_soil_props</span><span class="op">)</span></span></code></pre></div>
 <p>We can inspect the soil definition using:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pobl_soil</span><span class="op">)</span>
-<span class="co">#&gt; Soil depth (mm): 2000 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Layer  1  [ 0  to  300 mm ] </span>
-<span class="co">#&gt;     clay (%): 26 silt (%): 38 sand (%): 31 organic matter (%): 4 [ Loam ]</span>
-<span class="co">#&gt;     Rock fragment content (%): 18 Macroporosity (%): 22 </span>
-<span class="co">#&gt;     Theta WP (%): 18 Theta FC (%): 34 Theta SAT (%): 51 Theta current (%) 34 </span>
-<span class="co">#&gt;     Vol. WP (mm): 44 Vol. FC (mm): 83 Vol. SAT (mm): 125 Vol. current (mm): 83 </span>
-<span class="co">#&gt;     Temperature (Celsius): NA </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Layer  2  [ 300  to  1000 mm ] </span>
-<span class="co">#&gt;     clay (%): 30 silt (%): 39 sand (%): 30 organic matter (%): 1 [ Clay loam ]</span>
-<span class="co">#&gt;     Rock fragment content (%): 19 Macroporosity (%): 9 </span>
-<span class="co">#&gt;     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 </span>
-<span class="co">#&gt;     Vol. WP (mm): 106 Vol. FC (mm): 186 Vol. SAT (mm): 250 Vol. current (mm): 186 </span>
-<span class="co">#&gt;     Temperature (Celsius): NA </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Layer  3  [ 1000  to  2000 mm ] </span>
-<span class="co">#&gt;     clay (%): 32 silt (%): 38 sand (%): 30 organic matter (%): 1 [ Clay loam ]</span>
-<span class="co">#&gt;     Rock fragment content (%): 21 Macroporosity (%): 6 </span>
-<span class="co">#&gt;     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 </span>
-<span class="co">#&gt;     Vol. WP (mm): 152 Vol. FC (mm): 263 Vol. SAT (mm): 347 Vol. current (mm): 263 </span>
-<span class="co">#&gt;     Temperature (Celsius): NA </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Total soil saturated capacity (mm): 723 </span>
-<span class="co">#&gt; Total soil water holding capacity (mm): 532 </span>
-<span class="co">#&gt; Total soil extractable water (mm): 280 </span>
-<span class="co">#&gt; Total soil current Volume (mm): 532 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Snow pack water equivalent (mm): 0 </span>
-<span class="co">#&gt; Soil water table depth (mm): 2000</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pobl_soil</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Soil depth (mm): 2000 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Layer  1  [ 0  to  300 mm ] </span></span>
+<span><span class="co">#&gt;     clay (%): 26 silt (%): 38 sand (%): 31 organic matter (%): 4 [ Loam ]</span></span>
+<span><span class="co">#&gt;     Rock fragment content (%): 18 Macroporosity (%): 22 </span></span>
+<span><span class="co">#&gt;     Theta WP (%): 18 Theta FC (%): 34 Theta SAT (%): 51 Theta current (%) 34 </span></span>
+<span><span class="co">#&gt;     Vol. WP (mm): 44 Vol. FC (mm): 83 Vol. SAT (mm): 125 Vol. current (mm): 83 </span></span>
+<span><span class="co">#&gt;     Temperature (Celsius): NA </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Layer  2  [ 300  to  1000 mm ] </span></span>
+<span><span class="co">#&gt;     clay (%): 30 silt (%): 39 sand (%): 30 organic matter (%): 1 [ Clay loam ]</span></span>
+<span><span class="co">#&gt;     Rock fragment content (%): 19 Macroporosity (%): 9 </span></span>
+<span><span class="co">#&gt;     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 </span></span>
+<span><span class="co">#&gt;     Vol. WP (mm): 106 Vol. FC (mm): 186 Vol. SAT (mm): 250 Vol. current (mm): 186 </span></span>
+<span><span class="co">#&gt;     Temperature (Celsius): NA </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Layer  3  [ 1000  to  2000 mm ] </span></span>
+<span><span class="co">#&gt;     clay (%): 32 silt (%): 38 sand (%): 30 organic matter (%): 1 [ Clay loam ]</span></span>
+<span><span class="co">#&gt;     Rock fragment content (%): 21 Macroporosity (%): 6 </span></span>
+<span><span class="co">#&gt;     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 </span></span>
+<span><span class="co">#&gt;     Vol. WP (mm): 152 Vol. FC (mm): 263 Vol. SAT (mm): 347 Vol. current (mm): 263 </span></span>
+<span><span class="co">#&gt;     Temperature (Celsius): NA </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Total soil saturated capacity (mm): 723 </span></span>
+<span><span class="co">#&gt; Total soil water holding capacity (mm): 532 </span></span>
+<span><span class="co">#&gt; Total soil extractable water (mm): 280 </span></span>
+<span><span class="co">#&gt; Total soil current Volume (mm): 532 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Snow pack water equivalent (mm): 0 </span></span>
+<span><span class="co">#&gt; Soil water table depth (mm): 2000</span></span></code></pre></div>
 <p>It is important to remember that SoilGrids may underestimate the
 amount of rocks in the soil. This is because soil samples (which were
 used to generate the global database) do not normally contain large
@@ -494,43 +494,43 @@ water holding capacity by increasing the column <code>rfc</code>. For
 example, here we will assume that the third layer contains 80% of
 rocks:</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pobl_soil_props</span><span class="op">$</span><span class="va">rfc</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">=</span> <span class="fl">80</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_soil_props</span><span class="op">$</span><span class="va">rfc</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">=</span> <span class="fl">80</span></span></code></pre></div>
 <p>If we rebuild the soil object and inspect its properties we will see
 the effect on the soil water holding capacity and soil extractable
 water:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pobl_soil</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">pobl_soil_props</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pobl_soil</span><span class="op">)</span>
-<span class="co">#&gt; Soil depth (mm): 2000 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Layer  1  [ 0  to  300 mm ] </span>
-<span class="co">#&gt;     clay (%): 26 silt (%): 38 sand (%): 31 organic matter (%): 4 [ Loam ]</span>
-<span class="co">#&gt;     Rock fragment content (%): 18 Macroporosity (%): 22 </span>
-<span class="co">#&gt;     Theta WP (%): 18 Theta FC (%): 34 Theta SAT (%): 51 Theta current (%) 34 </span>
-<span class="co">#&gt;     Vol. WP (mm): 44 Vol. FC (mm): 83 Vol. SAT (mm): 125 Vol. current (mm): 83 </span>
-<span class="co">#&gt;     Temperature (Celsius): NA </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Layer  2  [ 300  to  1000 mm ] </span>
-<span class="co">#&gt;     clay (%): 30 silt (%): 39 sand (%): 30 organic matter (%): 1 [ Clay loam ]</span>
-<span class="co">#&gt;     Rock fragment content (%): 19 Macroporosity (%): 9 </span>
-<span class="co">#&gt;     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 </span>
-<span class="co">#&gt;     Vol. WP (mm): 106 Vol. FC (mm): 186 Vol. SAT (mm): 250 Vol. current (mm): 186 </span>
-<span class="co">#&gt;     Temperature (Celsius): NA </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Layer  3  [ 1000  to  2000 mm ] </span>
-<span class="co">#&gt;     clay (%): 32 silt (%): 38 sand (%): 30 organic matter (%): 1 [ Clay loam ]</span>
-<span class="co">#&gt;     Rock fragment content (%): 80 Macroporosity (%): 6 </span>
-<span class="co">#&gt;     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 </span>
-<span class="co">#&gt;     Vol. WP (mm): 38 Vol. FC (mm): 67 Vol. SAT (mm): 88 Vol. current (mm): 67 </span>
-<span class="co">#&gt;     Temperature (Celsius): NA </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Total soil saturated capacity (mm): 463 </span>
-<span class="co">#&gt; Total soil water holding capacity (mm): 336 </span>
-<span class="co">#&gt; Total soil extractable water (mm): 179 </span>
-<span class="co">#&gt; Total soil current Volume (mm): 336 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Snow pack water equivalent (mm): 0 </span>
-<span class="co">#&gt; Soil water table depth (mm): 2000</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_soil</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">pobl_soil_props</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pobl_soil</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Soil depth (mm): 2000 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Layer  1  [ 0  to  300 mm ] </span></span>
+<span><span class="co">#&gt;     clay (%): 26 silt (%): 38 sand (%): 31 organic matter (%): 4 [ Loam ]</span></span>
+<span><span class="co">#&gt;     Rock fragment content (%): 18 Macroporosity (%): 22 </span></span>
+<span><span class="co">#&gt;     Theta WP (%): 18 Theta FC (%): 34 Theta SAT (%): 51 Theta current (%) 34 </span></span>
+<span><span class="co">#&gt;     Vol. WP (mm): 44 Vol. FC (mm): 83 Vol. SAT (mm): 125 Vol. current (mm): 83 </span></span>
+<span><span class="co">#&gt;     Temperature (Celsius): NA </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Layer  2  [ 300  to  1000 mm ] </span></span>
+<span><span class="co">#&gt;     clay (%): 30 silt (%): 39 sand (%): 30 organic matter (%): 1 [ Clay loam ]</span></span>
+<span><span class="co">#&gt;     Rock fragment content (%): 19 Macroporosity (%): 9 </span></span>
+<span><span class="co">#&gt;     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 </span></span>
+<span><span class="co">#&gt;     Vol. WP (mm): 106 Vol. FC (mm): 186 Vol. SAT (mm): 250 Vol. current (mm): 186 </span></span>
+<span><span class="co">#&gt;     Temperature (Celsius): NA </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Layer  3  [ 1000  to  2000 mm ] </span></span>
+<span><span class="co">#&gt;     clay (%): 32 silt (%): 38 sand (%): 30 organic matter (%): 1 [ Clay loam ]</span></span>
+<span><span class="co">#&gt;     Rock fragment content (%): 80 Macroporosity (%): 6 </span></span>
+<span><span class="co">#&gt;     Theta WP (%): 19 Theta FC (%): 33 Theta SAT (%): 44 Theta current (%) 33 </span></span>
+<span><span class="co">#&gt;     Vol. WP (mm): 38 Vol. FC (mm): 67 Vol. SAT (mm): 88 Vol. current (mm): 67 </span></span>
+<span><span class="co">#&gt;     Temperature (Celsius): NA </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Total soil saturated capacity (mm): 463 </span></span>
+<span><span class="co">#&gt; Total soil water holding capacity (mm): 336 </span></span>
+<span><span class="co">#&gt; Total soil extractable water (mm): 179 </span></span>
+<span><span class="co">#&gt; Total soil current Volume (mm): 336 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Snow pack water equivalent (mm): 0 </span></span>
+<span><span class="co">#&gt; Soil water table depth (mm): 2000</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="interpolating-weather">Interpolating weather<a class="anchor" aria-label="anchor" href="#interpolating-weather"></a>
@@ -542,12 +542,12 @@ Here we illustrate one way of obtaining such data using package
 <code>SpatialPointsTopography</code>, which contains both the
 coordinates of our site as well as topographic variables.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pobl_spt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meteoland/man/SpatialPointsTopography.html" class="external-link">SpatialPointsTopography</a></span><span class="op">(</span><span class="va">coords_sp</span>,
-                                    elevation <span class="op">=</span> <span class="fl">850</span>, slope <span class="op">=</span> <span class="fl">15.1</span>, aspect <span class="op">=</span> <span class="fl">15</span><span class="op">)</span>
-<span class="va">pobl_spt</span>
-<span class="co">#&gt; Object of class SpatialPointsTopography</span>
-<span class="co">#&gt;         coordinates elevation slope aspect</span>
-<span class="co">#&gt; 1 (1.0219, 41.3443)       850  15.1     15</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_spt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meteoland/man/SpatialPointsTopography.html" class="external-link">SpatialPointsTopography</a></span><span class="op">(</span><span class="va">coords_sp</span>,</span>
+<span>                                    elevation <span class="op">=</span> <span class="fl">850</span>, slope <span class="op">=</span> <span class="fl">15.1</span>, aspect <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
+<span><span class="va">pobl_spt</span></span>
+<span><span class="co">#&gt; Object of class SpatialPointsTopography</span></span>
+<span><span class="co">#&gt;         coordinates elevation slope aspect</span></span>
+<span><span class="co">#&gt; 1 (1.0219, 41.3443)       850  15.1     15</span></span></code></pre></div>
 <p>The more difficult part of using package <strong>meteoland</strong>
 is to assemble weather data from surface weather stations into an object
 of class <code>MeteorologyInterpolationData</code>. Please see the <a href="https://emf-creaf.github.io/meteoland/index.html" class="external-link">meteoland
@@ -555,22 +555,22 @@ package documentation</a> to learn how to do that. Here we will assume
 that such an object is already available, by using the example object
 provided in the <strong>meteoland</strong> package.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"exampleinterpolationdata"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">exampleinterpolationdata</span><span class="op">)</span>
-<span class="co">#&gt; [1] "MeteorologyInterpolationData"</span>
-<span class="co">#&gt; attr(,"package")</span>
-<span class="co">#&gt; [1] "meteoland"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"exampleinterpolationdata"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">exampleinterpolationdata</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "MeteorologyInterpolationData"</span></span>
+<span><span class="co">#&gt; attr(,"package")</span></span>
+<span><span class="co">#&gt; [1] "meteoland"</span></span></code></pre></div>
 <p>Once we have this interpolator, obtaining interpolated weather for a
 set of target points is rather straightforward using function
 <code><a href="https://rdrr.io/pkg/meteoland/man/interpolationpoints.html" class="external-link">interpolationpoints()</a></code> from <strong>meteoland</strong>:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">meteo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meteoland/man/interpolationpoints.html" class="external-link">interpolationpoints</a></span><span class="op">(</span><span class="va">exampleinterpolationdata</span>, <span class="va">pobl_spt</span><span class="op">)</span>
-<span class="co">#&gt; Warning in interpolationpoints(exampleinterpolationdata, pobl_spt): CRS</span>
-<span class="co">#&gt; projection of 'points' adapted to that of 'object'.</span>
-<span class="co">#&gt; Processing point '1' (1/1) -</span>
-<span class="co">#&gt; Warning in interpolationpoints(exampleinterpolationdata, pobl_spt): Point '1'</span>
-<span class="co">#&gt; outside the boundary box of interpolation data object.</span>
-<span class="co">#&gt;  done.</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">meteo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meteoland/man/interpolationpoints.html" class="external-link">interpolationpoints</a></span><span class="op">(</span><span class="va">exampleinterpolationdata</span>, <span class="va">pobl_spt</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning in interpolationpoints(exampleinterpolationdata, pobl_spt): CRS</span></span>
+<span><span class="co">#&gt; projection of 'points' adapted to that of 'object'.</span></span>
+<span><span class="co">#&gt; Processing point '1' (1/1) -</span></span>
+<span><span class="co">#&gt; Warning in interpolationpoints(exampleinterpolationdata, pobl_spt): Point '1'</span></span>
+<span><span class="co">#&gt; outside the boundary box of interpolation data object.</span></span>
+<span><span class="co">#&gt;  done.</span></span></code></pre></div>
 <p>Note that a warning was raised, because the boundary box of the
 interpolator does not include the location of the Poblet forests. In
 this case, the result of the interpolation is not reliable and should
@@ -578,60 +578,60 @@ not be used. The output of function <code><a href="https://rdrr.io/pkg/meteoland
 is an object of class <code>SpatialPointsMeteorology</code>, whose
 structure is:</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">meteo</span><span class="op">)</span>
-<span class="co">#&gt; Formal class 'SpatialPointsMeteorology' [package "meteoland"] with 5 slots</span>
-<span class="co">#&gt;   ..@ dates      : Date[1:1461], format: "2000-01-01" "2000-01-02" ...</span>
-<span class="co">#&gt;   ..@ data       :List of 1</span>
-<span class="co">#&gt;   .. ..$ 1:'data.frame': 1461 obs. of  12 variables:</span>
-<span class="co">#&gt;   .. .. ..$ DOY                 : num [1:1461] 1 2 3 4 5 6 7 8 9 10 ...</span>
-<span class="co">#&gt;   .. .. ..$ MeanTemperature     : num [1:1461] 5.56 6.71 7.34 4.46 8.08 ...</span>
-<span class="co">#&gt;   .. .. ..$ MinTemperature      : num [1:1461] -0.1435 -0.0685 0.3771 0.1058 -2.7598 ...</span>
-<span class="co">#&gt;   .. .. ..$ MaxTemperature      : num [1:1461] 9.26 11.11 11.86 7.3 15.13 ...</span>
-<span class="co">#&gt;   .. .. ..$ Precipitation       : num [1:1461] 0 0 0 0 0 0 0 0 0 0 ...</span>
-<span class="co">#&gt;   .. .. ..$ MeanRelativeHumidity: num [1:1461] 86.5 82.2 79.1 77.6 56.6 ...</span>
-<span class="co">#&gt;   .. .. ..$ MinRelativeHumidity : num [1:1461] 67.1 61 58.3 63.8 35.5 ...</span>
-<span class="co">#&gt;   .. .. ..$ MaxRelativeHumidity : num [1:1461] 100 100 100 100 100 100 100 NaN NaN NaN ...</span>
-<span class="co">#&gt;   .. .. ..$ Radiation           : num [1:1461] 2.29 2.49 2.56 2.11 2.87 ...</span>
-<span class="co">#&gt;   .. .. ..$ WindSpeed           : num [1:1461] 0.833 0.833 0 1.111 0 ...</span>
-<span class="co">#&gt;   .. .. ..$ WindDirection       : num [1:1461] 230 170 0 220 0 ...</span>
-<span class="co">#&gt;   .. .. ..$ PET                 : num [1:1461] 0.218 0.285 0.182 0.247 0.348 ...</span>
-<span class="co">#&gt;   ..@ coords     : num [1, 1:2] 1.02 41.34</span>
-<span class="co">#&gt;   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="co">#&gt;   .. .. ..$ : chr "1"</span>
-<span class="co">#&gt;   .. .. ..$ : chr [1:2] "coords.x1" "coords.x2"</span>
-<span class="co">#&gt;   ..@ bbox       : num [1:2, 1:2] 1.02 41.34 1.02 41.34</span>
-<span class="co">#&gt;   .. ..- attr(*, "dimnames")=List of 2</span>
-<span class="co">#&gt;   .. .. ..$ : chr [1:2] "coords.x1" "coords.x2"</span>
-<span class="co">#&gt;   .. .. ..$ : chr [1:2] "min" "max"</span>
-<span class="co">#&gt;   ..@ proj4string:Formal class 'CRS' [package "sp"] with 1 slot</span>
-<span class="co">#&gt;   .. .. ..@ projargs: chr "+proj=longlat +datum=WGS84 +no_defs"</span>
-<span class="co">#&gt;   .. .. ..$ comment: chr "GEOGCRS[\"WGS 84 (with axis order normalized for visualization)\",\n    DATUM[\"World Geodetic System 1984\",\n"| __truncated__</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">meteo</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Formal class 'SpatialPointsMeteorology' [package "meteoland"] with 5 slots</span></span>
+<span><span class="co">#&gt;   ..@ dates      : Date[1:1461], format: "2000-01-01" "2000-01-02" ...</span></span>
+<span><span class="co">#&gt;   ..@ data       :List of 1</span></span>
+<span><span class="co">#&gt;   .. ..$ 1:'data.frame': 1461 obs. of  12 variables:</span></span>
+<span><span class="co">#&gt;   .. .. ..$ DOY                 : num [1:1461] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
+<span><span class="co">#&gt;   .. .. ..$ MeanTemperature     : num [1:1461] 5.56 6.71 7.34 4.46 8.08 ...</span></span>
+<span><span class="co">#&gt;   .. .. ..$ MinTemperature      : num [1:1461] -0.1435 -0.0685 0.3771 0.1058 -2.7598 ...</span></span>
+<span><span class="co">#&gt;   .. .. ..$ MaxTemperature      : num [1:1461] 9.26 11.11 11.86 7.3 15.13 ...</span></span>
+<span><span class="co">#&gt;   .. .. ..$ Precipitation       : num [1:1461] 0 0 0 0 0 0 0 0 0 0 ...</span></span>
+<span><span class="co">#&gt;   .. .. ..$ MeanRelativeHumidity: num [1:1461] 86.5 82.2 79.1 77.6 56.6 ...</span></span>
+<span><span class="co">#&gt;   .. .. ..$ MinRelativeHumidity : num [1:1461] 67.1 61 58.3 63.8 35.5 ...</span></span>
+<span><span class="co">#&gt;   .. .. ..$ MaxRelativeHumidity : num [1:1461] 100 100 100 100 100 100 100 NaN NaN NaN ...</span></span>
+<span><span class="co">#&gt;   .. .. ..$ Radiation           : num [1:1461] 2.29 2.49 2.56 2.11 2.87 ...</span></span>
+<span><span class="co">#&gt;   .. .. ..$ WindSpeed           : num [1:1461] 0.833 0.833 0 1.111 0 ...</span></span>
+<span><span class="co">#&gt;   .. .. ..$ WindDirection       : num [1:1461] 230 170 0 220 0 ...</span></span>
+<span><span class="co">#&gt;   .. .. ..$ PET                 : num [1:1461] 0.218 0.285 0.182 0.247 0.348 ...</span></span>
+<span><span class="co">#&gt;   ..@ coords     : num [1, 1:2] 1.02 41.34</span></span>
+<span><span class="co">#&gt;   .. ..- attr(*, "dimnames")=List of 2</span></span>
+<span><span class="co">#&gt;   .. .. ..$ : chr "1"</span></span>
+<span><span class="co">#&gt;   .. .. ..$ : chr [1:2] "coords.x1" "coords.x2"</span></span>
+<span><span class="co">#&gt;   ..@ bbox       : num [1:2, 1:2] 1.02 41.34 1.02 41.34</span></span>
+<span><span class="co">#&gt;   .. ..- attr(*, "dimnames")=List of 2</span></span>
+<span><span class="co">#&gt;   .. .. ..$ : chr [1:2] "coords.x1" "coords.x2"</span></span>
+<span><span class="co">#&gt;   .. .. ..$ : chr [1:2] "min" "max"</span></span>
+<span><span class="co">#&gt;   ..@ proj4string:Formal class 'CRS' [package "sp"] with 1 slot</span></span>
+<span><span class="co">#&gt;   .. .. ..@ projargs: chr "+proj=longlat +datum=WGS84 +no_defs"</span></span>
+<span><span class="co">#&gt;   .. .. ..$ comment: chr "GEOGCRS[\"WGS 84 (with axis order normalized for visualization)\",\n    DATUM[\"World Geodetic System 1984\",\n"| __truncated__</span></span></code></pre></div>
 <p>We can access the weather data frame by subsetting the appropriate
 element of slot <code>data</code>:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pobl_weather</span> <span class="op">&lt;-</span> <span class="va">meteo</span><span class="op">@</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pobl_weather</span><span class="op">)</span>
-<span class="co">#&gt;            DOY MeanTemperature MinTemperature MaxTemperature Precipitation</span>
-<span class="co">#&gt; 2000-01-01   1        5.555184     -0.1435010       9.260269             0</span>
-<span class="co">#&gt; 2000-01-02   2        6.707019     -0.0685338      11.112247             0</span>
-<span class="co">#&gt; 2000-01-03   3        7.338177      0.3771072      11.864021             0</span>
-<span class="co">#&gt; 2000-01-04   4        4.464909      0.1058438       7.299021             0</span>
-<span class="co">#&gt; 2000-01-05   5        8.079838     -2.7597730      15.127374             0</span>
-<span class="co">#&gt; 2000-01-06   6        4.403091     -3.2647648       9.388462             0</span>
-<span class="co">#&gt;            MeanRelativeHumidity MinRelativeHumidity MaxRelativeHumidity</span>
-<span class="co">#&gt; 2000-01-01             86.51313            67.13659                 100</span>
-<span class="co">#&gt; 2000-01-02             82.20012            61.02807                 100</span>
-<span class="co">#&gt; 2000-01-03             79.07784            58.33286                 100</span>
-<span class="co">#&gt; 2000-01-04             77.59076            63.75526                 100</span>
-<span class="co">#&gt; 2000-01-05             56.60804            35.51277                 100</span>
-<span class="co">#&gt; 2000-01-06             68.22612            48.43355                 100</span>
-<span class="co">#&gt;            Radiation WindSpeed WindDirection       PET</span>
-<span class="co">#&gt; 2000-01-01  2.285965 0.8333333           230 0.2183801</span>
-<span class="co">#&gt; 2000-01-02  2.494350 0.8333333           170 0.2846305</span>
-<span class="co">#&gt; 2000-01-03  2.557200 0.0000000             0 0.1821787</span>
-<span class="co">#&gt; 2000-01-04  2.114212 1.1111111           220 0.2465335</span>
-<span class="co">#&gt; 2000-01-05  2.865159 0.0000000             0 0.3480644</span>
-<span class="co">#&gt; 2000-01-06  2.815494 0.5555556           240 0.3108101</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_weather</span> <span class="op">&lt;-</span> <span class="va">meteo</span><span class="op">@</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pobl_weather</span><span class="op">)</span></span>
+<span><span class="co">#&gt;            DOY MeanTemperature MinTemperature MaxTemperature Precipitation</span></span>
+<span><span class="co">#&gt; 2000-01-01   1        5.555184     -0.1435010       9.260269             0</span></span>
+<span><span class="co">#&gt; 2000-01-02   2        6.707019     -0.0685338      11.112247             0</span></span>
+<span><span class="co">#&gt; 2000-01-03   3        7.338177      0.3771072      11.864021             0</span></span>
+<span><span class="co">#&gt; 2000-01-04   4        4.464909      0.1058438       7.299021             0</span></span>
+<span><span class="co">#&gt; 2000-01-05   5        8.079838     -2.7597730      15.127374             0</span></span>
+<span><span class="co">#&gt; 2000-01-06   6        4.403091     -3.2647648       9.388462             0</span></span>
+<span><span class="co">#&gt;            MeanRelativeHumidity MinRelativeHumidity MaxRelativeHumidity</span></span>
+<span><span class="co">#&gt; 2000-01-01             86.51313            67.13659                 100</span></span>
+<span><span class="co">#&gt; 2000-01-02             82.20012            61.02807                 100</span></span>
+<span><span class="co">#&gt; 2000-01-03             79.07784            58.33286                 100</span></span>
+<span><span class="co">#&gt; 2000-01-04             77.59076            63.75526                 100</span></span>
+<span><span class="co">#&gt; 2000-01-05             56.60804            35.51277                 100</span></span>
+<span><span class="co">#&gt; 2000-01-06             68.22612            48.43355                 100</span></span>
+<span><span class="co">#&gt;            Radiation WindSpeed WindDirection       PET</span></span>
+<span><span class="co">#&gt; 2000-01-01  2.285965 0.8333333           230 0.2183801</span></span>
+<span><span class="co">#&gt; 2000-01-02  2.494350 0.8333333           170 0.2846305</span></span>
+<span><span class="co">#&gt; 2000-01-03  2.557200 0.0000000             0 0.1821787</span></span>
+<span><span class="co">#&gt; 2000-01-04  2.114212 1.1111111           220 0.2465335</span></span>
+<span><span class="co">#&gt; 2000-01-05  2.865159 0.0000000             0 0.3480644</span></span>
+<span><span class="co">#&gt; 2000-01-06  2.815494 0.5555556           240 0.3108101</span></span></code></pre></div>
 <p>As we indicated above, the daily weather data is not valid in this
 case because of the mismatch between the boundaries of the interpolator
 data set and the location of our plots. Nevertheless, the process for
@@ -656,7 +656,7 @@ obtaining weather data would be similar in other cases.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
