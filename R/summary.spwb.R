@@ -41,7 +41,7 @@
     found = FALSE
     object_names_search = object_names
     object_names_search = object_names_search[!(object_names_search %in% c("Soil", "Stand", "Temperature",
-                                                                           "WaterBalance", "EnergyBalance", "BiomassBalance"))]
+                                                                            "CarbonBalance", "WaterBalance", "EnergyBalance", "BiomassBalance"))]
     for(nm in object_names_search) {
       if(!found) {
         if(output_vec[1] %in% names(object[[nm]])) {
@@ -60,7 +60,7 @@
   }
   
   if(output_vec[1] %in% c("Soil", "Stand", "Temperature", 
-                          "WaterBalance", "EnergyBalance", "BiomassBalance")) {
+                           "CarbonBalance", "WaterBalance", "EnergyBalance", "BiomassBalance")) {
     OM = object[[output_vec[1]]]
   } else if(output_vec[1]=="Plants" && output_vec[2]=="LAI") {
     OM = object$Plants$LAI

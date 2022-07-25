@@ -1397,8 +1397,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
                      Named("WaterBalance")=DWB, 
                      Named("Soil")=SWB,
                      Named("Stand")=Stand, 
-                     Named("Plants") = plantDWOL,
-                     Named("subdaily") =  subdailyRes);
+                     Named("Plants") = plantDWOL);
   } else {
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
@@ -1413,10 +1412,10 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
                      Named("Stand")=Stand, 
                      Named("Plants") = plantDWOL,
                      Named("SunlitLeaves") =  sunlitDO,
-                     Named("ShadeLeaves") =  shadeDO,
-                     Named("subdaily") =  subdailyRes);
+                     Named("ShadeLeaves") =  shadeDO);
     if(multiLayerBalance) l["TemperatureLayers"] = DLT;
   }
+  if(subdailyResults) l.push_back(subdailyRes,"subdaily");
   l.attr("class") = CharacterVector::create("spwb","list");
   return(l);
 }
@@ -1783,8 +1782,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
                      Named("WaterBalance")=DWB, 
                      Named("Soil")=SWB,
                      Named("Stand") =Stand,
-                     Named("Plants") = plantDWOL,
-                     Named("subdaily") =  subdailyRes);
+                     Named("Plants") = plantDWOL);
   } else {
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
@@ -1799,10 +1797,10 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
                      Named("Stand") =Stand,
                      Named("Plants") = plantDWOL,
                      Named("SunlitLeaves") = sunlitDO,
-                     Named("ShadeLeaves") = shadeDO,
-                     Named("subdaily") =  subdailyRes);
+                     Named("ShadeLeaves") = shadeDO);
     if(multiLayerBalance) l["TemperatureLayers"] = DLT;
   }
+  if(subdailyResults) l.push_back(subdailyRes,"subdaily");
   l.attr("class") = CharacterVector::create("pwb","list");
   return(l);                    
 }

@@ -8,6 +8,7 @@
 - New species parameters 'WUE_co2', 'WUE_vpd' to regulate the effect of CO2 concentration and VPD under Granier's model
 - Species parameter 'WUE_decay' renamed 'WUE_par'
 - Control parameter 'Catm' renamed 'defaultCO2'
+- New output data frame 'CarbonBalance' for growth 
 
 # Version 2.7.5
 - Maximum stem conductance to avoid overestimation of stem conductance in small shrubs
