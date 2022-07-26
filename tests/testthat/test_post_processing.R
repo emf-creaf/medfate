@@ -249,6 +249,7 @@ test_that("Can produce all basic growth plots and summaries",{
   expect_s3_class(G1, "growth")
   
   expect_type(fireHazard(G1, SpParamsMED, exampleforestMED), "double")
+  expect_s3_class(plot(G1, "CarbonBalance"), "ggplot")
   expect_s3_class(plot(G1, "BiomassBalance"), "ggplot")
   expect_s3_class(plot(G1, "GrossPhotosynthesis"), "ggplot")
   expect_s3_class(plot(G1, "MaintenanceRespiration"), "ggplot")
