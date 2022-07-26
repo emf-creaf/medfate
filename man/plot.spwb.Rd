@@ -112,6 +112,7 @@ The following plots are currently available for \code{\link{spwb}} (most of them
   }
 In addition to the former, the following plots are available for objects \code{\link{growth}} or \code{\link{fordyn}}:
  \itemize{
+    \item{\code{"CarbonBalance"}:  Stand-level carbon balance components.}
     \item{\code{"BiomassBalance"}:  Stand-level biomass balance components.}
     \item{\code{"GrossPhotosynthesis"}:  Gross photosynthesis rate per dry weight.}
     \item{\code{"MaintenanceRespiration"}:  Maintenance respiration cost per dry weight.}
