@@ -305,25 +305,7 @@ g
 #                labels = c("a)","b)", "c)", "d)", "e)","f)"), nrow=3, ncol=2)
 # ggsave2("meta_fit_eval.png", g, width = 9, height = 13.5)
 ```
-<!-- ```{r, echo = FALSE} -->
-<!-- sel_E = (df$E_sperry < 300) -->
-<!-- m = lm(E_sperry~-1+E_granier, data = df[sel_E,]) -->
-<!-- summary(m) -->
-<!-- ``` -->
 
-<!-- ```{r, echo = FALSE} -->
-<!-- m = lm(E_sperry~-1+E_granier_meta, data = df[sel_E,]) -->
-<!-- summary(m) -->
-<!-- ``` -->
-
-<!-- # ```{r, echo = FALSE} -->
-<!-- # m = lm(Ag_sperry~-1+Ag_granier, data = df) -->
-<!-- # summary(m) -->
-<!-- # ``` -->
-<!-- # ```{r, echo = FALSE} -->
-<!-- # m = lm(Ag_sperry~-1+Ag_granier_meta, data = df) -->
-<!-- # summary(m) -->
-<!-- # ``` -->
 
 ## References
 

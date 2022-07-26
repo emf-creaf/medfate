@@ -218,6 +218,12 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
                        xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                        summary.freq = summary.freq, ...))
   }
+  else if(type == "CarbonBalance") {
+    return(.plot_carbon(CarbonBalance= x$CarbonBalance,
+                         type = type, dates = dates, 
+                         xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                         summary.freq = summary.freq, ...))
+  }
   else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration",  "GrowthCosts", 
                       "LabileCarbonBalance", 
                       "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport", "RootExudation",
@@ -373,6 +379,13 @@ plot.fordyn<-function(x, type="StandBasalArea",
       if(type=="BiomassBalance") {
         OM = summary(x, freq = "days", output = "BiomassBalance")
         return(.plot_biomass(OM, type,  
+                             dates = dates, 
+                             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
+                             summary.freq = summary.freq, ...))
+      }
+      if(type=="CarbonBalance") {
+        OM = summary(x, freq = "days", output = "CarbonBalance")
+        return(.plot_carbon(OM, type,  
                              dates = dates, 
                              xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                              summary.freq = summary.freq, ...))

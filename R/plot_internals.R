@@ -29,6 +29,7 @@
             "Ground-level irradiance" = "GroundIrradiance")
   if(model %in% c("growth", "fordyn")) {
     TYPES = c(TYPES, 
+              "Carbon balance" = "CarbonBalance",
               "Biomass balance" = "BiomassBalance")
   }
   return(TYPES)
@@ -187,7 +188,8 @@
 }
 
 .getUniqueDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){
-  TYPES = c("Biomass balance" = "BiomassBalance",
+  TYPES = c("Carbon balance" = "CarbonBalance",
+            "Biomass balance" = "BiomassBalance",
             .getLabileGROWTHPlotTypes(transpirationMode),
             .getCohortBiomassBalanceGROWTHPlotTypes(transpirationMode),
             .getStructuralGROWTHPlotTypes(transpirationMode),
@@ -796,6 +798,19 @@
   names(df)<-c("Structural balance", "Labile balance","Plant individual balance", "Mortality loss",
                "Cohort balance")
   if(is.null(ylab))  ylab = expression(g%.%m^{-2})    
+  if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
+  if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
+  return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
+}
+.plot_carbon<-function(CarbonBalance, type,  
+                        dates = NULL, 
+                        xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
+                        summary.freq = NULL, ...) {
+  df<-as.data.frame(CarbonBalance)
+  df[,2] = - df[,2]
+  df[,3] = - df[,3]
+  names(df)<-c("Gross primary production", "Maintenance respiration","Synthesis respiration", "Net primary production")
+  if(is.null(ylab))  ylab = expression(gC%.%m^{-2})    
   if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
   if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
   return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
