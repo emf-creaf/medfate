@@ -273,6 +273,7 @@ test_that("Can produce all basic growth plots and summaries",{
   expect_s3_class(plot(G1, "SAgrowth"), "ggplot")
   expect_s3_class(plot(G1, "LAgrowth"), "ggplot")
   expect_s3_class(plot(G1, "HuberValue"), "ggplot")
+  expect_type(summary(G1, output = "CarbonBalance"), "double")
   expect_type(summary(G1, output = "LabileCarbonBalance$GrossPhotosynthesis"), "double")
   expect_type(summary(G1, output = "MaintenanceRespiration"), "double")
   expect_type(summary(G1, output = "GrowthCosts"), "double")
