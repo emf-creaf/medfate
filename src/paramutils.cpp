@@ -485,6 +485,15 @@ NumericVector maxFMCWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(maxFMC);
 }
+NumericVector minFMCWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector minFMC = speciesNumericParameter(SP, SpParams, "minFMC");
+  for(int c=0;c<minFMC.size();c++) {
+    if(NumericVector::is_na(minFMC[c])) {
+      minFMC[c] = 80.0; //To be improved
+    }
+  }
+  return(minFMC);
+}
 NumericVector stemPI0WithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector WoodDensity = woodDensityWithImputation(SP, SpParams);
   NumericVector StemPI0 = speciesNumericParameter(SP, SpParams, "StemPI0");
@@ -1307,6 +1316,7 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "RLD") return(rootLengthDensityWithImputation(SP, SpParams));
     else if(parName == "conduit2sapwood") return(conduit2sapwoodWithImputation(SP, SpParams));
     else if(parName == "maxFMC") return(maxFMCWithImputation(SP, SpParams));
+    else if(parName == "minFMC") return(minFMCWithImputation(SP, SpParams));
     else if(parName == "StemPI0") return(stemPI0WithImputation(SP, SpParams));
     else if(parName == "StemEPS") return(stemEPSWithImputation(SP, SpParams));
     else if(parName == "StemAF") return(stemAFWithImputation(SP, SpParams));

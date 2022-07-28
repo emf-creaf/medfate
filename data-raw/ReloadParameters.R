@@ -130,3 +130,9 @@ names(exampleobs)[3:10] = c(paste0("E_",PH_cohName), paste0("E_",QI_cohName),
 usethis::use_data(exampleobs, overwrite = T)
 
 #Rebuild!!!
+
+
+# Check missing
+apply(SpParamsMED,2, function(x) round(100*sum(is.na(x))/length(x),1))
+apply(SpParamsMED[SpParamsMED$GrowthForm %in% c("Tree","Tree/Shrub"), ],2, function(x) round(100*sum(is.na(x))/length(x),1))
+apply(SpParamsMED[SpParamsMED$GrowthForm %in% c("Shrub","Tree/Shrub"), ],2, function(x) round(100*sum(is.na(x))/length(x),1))
