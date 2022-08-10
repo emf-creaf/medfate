@@ -37,6 +37,10 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
       LAI_expanded[j] = 0.0; //Set initial LAI to zero, assuming simulations start at Jan 1st
       if(phenoType[j] == "winter-semideciduous") LAI_dead[j] = LAI_live[j];
     }
+    if(phenoType[j]=="oneflush-evergreen") {
+      //Do not allow flushing all leaves at once (i.e. limit leaf duration to 1.25 yrs)
+      leafDuration[j] = std::max(leafDuration[j], 1.25);
+    }
   } 
   DataFrame paramsPhenologydf = DataFrame::create(
     _["PhenologyType"] = phenoType,

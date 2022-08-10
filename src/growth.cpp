@@ -959,10 +959,10 @@ List growthDayInner(List x, NumericVector meteovec,
       double propLeafSenescence = 0.0;
       //Leaf senescence due to age (Ca+ accumulation) only in evergreen species
       if(phenoType[j] == "progressive-evergreen") {
-        propLeafSenescence = (LAexpanded/(365.25*LAlive*leafDuration[j]));
+        propLeafSenescence = std::min(1.0,(LAexpanded/(365.25*LAlive*leafDuration[j])));
       }
       else if((phenoType[j] == "oneflush-evergreen") && (leafSenescence[j])) {
-        propLeafSenescence = (LAexpanded/(LAlive*leafDuration[j])); // Fraction of old leaves that die
+        propLeafSenescence = std::min(1.0,(LAexpanded/(LAlive*leafDuration[j]))); // Fraction of old leaves that die
         leafSenescence[j] = false; //To prevent further loss
       }
       else if(((phenoType[j] == "winter-deciduous") || (phenoType[j] == "winter-semideciduous")) && leafSenescence[j]) {
@@ -1015,6 +1015,8 @@ List growthDayInner(List x, NumericVector meteovec,
       }
       double senescenceFinerootLoss = sum(deltaFRBsenescence);
       
+      // if(j==(numCohorts-1)) Rcout<< j << " before translocation "<< sugarLeaf[j]<< " "<< starchLeaf[j]<<"\n";
+      
 
       //TRANSLOCATION (in mol gluc) of labile carbon
       double translocationSugarLeaf = propLeafSenescence*Volume_leaves[j]*sugarLeaf[j];
@@ -1024,11 +1026,14 @@ List growthDayInner(List x, NumericVector meteovec,
         if(starchLeaf[j] > Starch_max_leaves[j]) { // Add excess leaf starch to translocation
           translocationStarchLeaf += ((starchLeaf[j] - Starch_max_leaves[j])*Volume_leaves[j]);
         }
+        // if(j==(numCohorts-1)) Rcout<< j << " translocation "<< propLeafSenescence<< " "<< translocationSugarLeaf<<"\n";
         sugarLeaf[j] = ((sugarLeaf[j]*Volume_leaves[j]) - translocationSugarLeaf)/Volume_leaves[j]; 
         starchLeaf[j] = ((starchLeaf[j]*Volume_leaves[j]) - translocationStarchLeaf)/Volume_leaves[j]; 
       }
       sugarSapwood[j] = ((sugarSapwood[j]*Volume_sapwood[j]) - translocationSugarSapwood)/Volume_sapwood[j]; 
       starchSapwood[j] = ((starchSapwood[j]*Volume_sapwood[j]) + translocationSugarLeaf + translocationStarchLeaf + translocationSugarSapwood)/Volume_sapwood[j]; 
+      
+      // if(j==(numCohorts-1)) Rcout<< j << " after translocation " << sugarLeaf[j]<< " "<< starchLeaf[j]<<"\n";
       
       //ROOT EXUDATION and close carbon balance (Granier)
       if(transpirationMode=="Granier") {
@@ -1240,6 +1245,7 @@ List growthDayInner(List x, NumericVector meteovec,
     }
     sugarSapwood[j] = sugarSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood);
     starchSapwood[j] = starchSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood); 
+    // if(j==(numCohorts-1)) Rcout<< j << " after recalculation "<< sugarLeaf[j]<< " "<< starchLeaf[j]<<"\n";
     
     //OUTPUT VARIABLES
     PlantSugarLeaf[j] = sugarLeaf[j];
