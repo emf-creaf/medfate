@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-07-25</h4>
+            <h4 data-toc-skip class="date">2022-08-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -319,16 +319,16 @@ model sink limitations on wood formation.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Year 2001:....................................</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant biomass (g/m2): 7349.91</span></span>
-<span><span class="co">## Change in plant biomass (g/m2): 240.639</span></span>
-<span><span class="co">## Plant biomass balance result (g/m2): 240.639</span></span>
+<span><span class="co">## Final plant biomass (g/m2): 7349.77</span></span>
+<span><span class="co">## Change in plant biomass (g/m2): 240.504</span></span>
+<span><span class="co">## Plant biomass balance result (g/m2): 240.504</span></span>
 <span><span class="co">## Plant biomass balance components:</span></span>
 <span><span class="co">##   Structural balance (g/m2) 147 Labile balance (g/m2) 120</span></span>
 <span><span class="co">##   Plant individual balance (g/m2) 267 Mortality loss (g/m2) 26</span></span>
-<span><span class="co">## Final soil water content (mm): 268.661</span></span>
+<span><span class="co">## Final soil water content (mm): 268.656</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in soil water content (mm): -22.5956</span></span>
-<span><span class="co">## Soil water balance result (mm): -22.5956</span></span>
+<span><span class="co">## Change in soil water content (mm): -22.6011</span></span>
+<span><span class="co">## Soil water balance result (mm): -22.6011</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
 <span><span class="co">## Snowpack water balance result (mm): 7.10543e-15</span></span>
 <span><span class="co">## Water balance components:</span></span>
@@ -352,9 +352,9 @@ as returned by <code><a href="../../reference/spwb.html">spwb()</a></code>:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">G1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "latitude"            "topography"          "weather"            </span></span>
 <span><span class="co">##  [4] "growthInput"         "growthOutput"        "WaterBalance"       </span></span>
-<span><span class="co">##  [7] "BiomassBalance"      "Soil"                "Stand"              </span></span>
-<span><span class="co">## [10] "Plants"              "LabileCarbonBalance" "PlantBiomassBalance"</span></span>
-<span><span class="co">## [13] "PlantStructure"      "GrowthMortality"     "subdaily"</span></span></code></pre>
+<span><span class="co">##  [7] "CarbonBalance"       "BiomassBalance"      "Soil"               </span></span>
+<span><span class="co">## [10] "Stand"               "Plants"              "LabileCarbonBalance"</span></span>
+<span><span class="co">## [13] "PlantBiomassBalance" "PlantStructure"      "GrowthMortality"</span></span></code></pre>
 <p>Some elements are common with the output of <code><a href="../../reference/spwb.html">spwb()</a></code>. In
 particular, <code>growthInput</code> contains a copy of the input
 object, whereas <code>growthOutput</code> contains the same object, but
@@ -460,9 +460,9 @@ relationship:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                 temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span></span>
-<span><span class="co">##  12.0000000  -0.1238120 -12.9227650   0.1395905  14.5696335   0.9944887 </span></span>
+<span><span class="co">##  12.0000000  -0.1238199 -12.9235899   0.1395997  14.5705931   0.9944883 </span></span>
 <span><span class="co">##         NSE     NSE.abs </span></span>
-<span><span class="co">##   0.9422827   0.8175553</span></span></code></pre>
+<span><span class="co">##   0.9422746   0.8175432</span></span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series
