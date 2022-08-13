@@ -413,7 +413,8 @@ List transpirationSperry(List x, NumericVector meteovec,
   
   //1. Leaf Phenology: Adjusted leaf area index
   NumericVector Phe(numCohorts);
-  double LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0, canopyHeight = 0.0;
+  double LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0;
+  double canopyHeight = 100.0; //Minimum canopy height of 1 m
   for(int c=0;c<numCohorts;c++) {
     Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
     if(LAIlive[c]==0.0) Phe[c] = 0.0;
