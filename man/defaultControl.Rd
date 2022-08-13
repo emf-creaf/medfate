@@ -83,7 +83,7 @@ A list, with the following options (default values in parentheses):
 \itemize{
    \item{\code{allowDessication (=TRUE)}: Boolean flag to indicate that mortality by dessication is allowed.}
    \item{\code{allowStarvation (=TRUE)}: Boolean flag to indicate that mortality by starvation is allowed.}
-   \item{\code{allowDefoliation (=TRUE)}: Boolean flag to indicate that complete drought-driven defoliation is allowed.}
+   \item{\code{allowDefoliation (=FALSE)}: Boolean flag to indicate that complete drought-driven defoliation due to low leaf relative water potential is allowed (only for transpirationMode = "Sperry").}
    \item{\code{sinkLimitation (=TRUE): Boolean flag to indicate that temperature and turgor limitations to growth are applied.}}
    \item{\code{ shrubDynamics [= TRUE]}: Boolean flag to allow the application of demographic processes to shrubs.}
    \item{\code{allocationStrategy (="Plant_kmax")}: Strategy for allocation (either "Plant_kmax", for constant maximum plant conductance, or "Al2As" for constant Huber value).}

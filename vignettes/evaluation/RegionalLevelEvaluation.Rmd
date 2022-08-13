@@ -79,7 +79,9 @@ dfbai$Submodel <- factor(dfbai$Submodel, levels =c("Basic","Advanced"))
 dfbadead$Submodel <- factor(dfbadead$Submodel, levels =c("Basic","Advanced"))
 dfbarecr$Submodel <- factor(dfbarecr$Submodel, levels =c("Basic","Advanced"))
 dfbai_all$Submodel <- factor(dfbai_all$Submodel, levels =c("Basic","Advanced"))
-  
+ 
+dfdbh$Province = substr(dfdbh$ID, 1, nchar(dfdbh$ID)-4)
+ 
 load("~/OneDrive/Datasets/Limits/Products/Catalonia/catalonia.rdata")
 cat_sfc = sf::st_as_sfc(cat.contour)
 ```
@@ -272,8 +274,9 @@ Comparison of growth of trees (DBH >= 7.5) that survived in both observed and si
 
 Overall predictive capacity:
 ```{r, echo = FALSE}
-dfdbh %>% group_by(Submodel) %>% 
-  summarize(Name = "All", 
+res1<-dfdbh %>% group_by(Submodel) %>% 
+  summarize(Province = "All",
+            Name = "All", 
             n = n(),
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
@@ -281,7 +284,19 @@ dfdbh %>% group_by(Submodel) %>%
             Biasrel = 100*Bias/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
-            R2 = cor(obs,pred)^2) %>% 
+            R2 = cor(obs,pred)^2, .groups="drop") 
+# res2<-dfdbh %>% group_by(Province,Submodel) %>% 
+#   summarize(Name = "All", 
+#             n = n(),
+#             Obs = mean(obs, na.rm=TRUE),
+#             Pred = mean(pred, na.rm=TRUE),
+#             Bias = mean(error, na.rm=TRUE),
+#             Biasrel = 100*Bias/abs(Obs),
+#             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+#             RMSQrel = 100*RMSQ/abs(Obs),
+#             R2 = cor(obs,pred)^2, .groups="drop")
+# res <-bind_rows(res1,res2)
+res1[,-c(2,3)] %>% 
   kbl() %>%
   kable_styling()
 ```

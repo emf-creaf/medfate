@@ -41,7 +41,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     # growth/mortality
     allowDessication = TRUE,
     allowStarvation = TRUE,
-    allowDefoliation = TRUE,
+    allowDefoliation = FALSE,
     sinkLimitation = TRUE,
     shrubDynamics = TRUE,
     allocationStrategy = "Plant_kmax",
