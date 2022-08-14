@@ -72,6 +72,7 @@ dfh <- rbind(dfh_bas, dfh_adv)
 dfbai <- rbind(dfbai_bas, dfbai_adv)
 dfbadead <- rbind(dfbadead_bas, dfbadead_adv)
 dfbarecr <- rbind(dfbarecr_bas, dfbarecr_adv)
+dfbai_all_bas <-dfbai_all_bas[dfbai_all_bas$ID %in% dfbai_all_adv$ID,]
 dfbai_all <- rbind(dfbai_all_bas, dfbai_all_adv)
 dfdbh$Submodel <- factor(dfdbh$Submodel, levels =c("Basic","Advanced"))
 dfh$Submodel <- factor(dfh$Submodel, levels =c("Basic","Advanced"))
@@ -661,17 +662,17 @@ ggsave(paste0(evalDIR,"/Plots/BAtot_eval.png"),p0, width = 8, height=10)
 Spatial distribution of errors:
 
 ```{r, echo = FALSE, fig.width=9, fig.height=4, warning=FALSE, message=FALSE}
-
-mapdata_bac = mapdata_bas
-mapdata_bac$error = dfbai_all_bas$error[dfbai_all_bas$Name=="0-All"]
-p1<-bai_error_map(mapdata_bac)+labs(title="Basic")
-mapdata_bac = mapdata_adv
-mapdata_bac$error = dfbai_all_adv$error[dfbai_all_adv$Name=="0-All"]
-p2<-bai_error_map(mapdata_bac)+labs(title="Advanced")
-pm<-plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "none"),
-          get_legend(p1),nrow=1, rel_widths = c(1,1,0.25))
-ggsave(paste0(evalDIR,"/Plots/BAtot_error_map.png"),pm, width = 6, height=6)
-pm
+# 
+# mapdata_bac = mapdata_bas
+# mapdata_bac$error = dfbai_all_bas$error[dfbai_all_bas$Name=="0-All"]
+# p1<-bai_error_map(mapdata_bac)+labs(title="Basic")
+# mapdata_bac = mapdata_adv
+# mapdata_bac$error = dfbai_all_adv$error[dfbai_all_adv$Name=="0-All"]
+# p2<-bai_error_map(mapdata_bac)+labs(title="Advanced")
+# pm<-plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "none"),
+#           get_legend(p1),nrow=1, rel_widths = c(1,1,0.25))
+# ggsave(paste0(evalDIR,"/Plots/BAtot_error_map.png"),pm, width = 6, height=6)
+# pm
 ```
 
 
@@ -686,7 +687,7 @@ dfbai_all[dfbai_all$Name!="0-All",] %>% group_by(Name, Submodel) %>%
             Biasrel = 100*Bias/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
-            R2 = cor(obs,pred)^2, .groups = "drop") %>% 
+            R2 = cor(obs,pred)^2, .groups = "drop") %>%
   filter(n>=params$minPlotRecords) %>%
   kbl() %>%
   kable_styling()

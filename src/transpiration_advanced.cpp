@@ -42,6 +42,8 @@ List profitMaximization2(List supplyFunction, int initialPos,
     maxdEdp = std::max(maxdEdp, dEdP[i]);
   }
   nsteps = valid;
+  // initial pos cannot be over the valid steps
+  initialPos = std::min(initialPos, nsteps-1);
   
   //Evaluate photosynthesis and profit at Agmax
   NumericVector photoAgMax = leafPhotosynthesisOneFunction2(E[nsteps-1], leafPsi[nsteps - 1], Catm, Patm, Tair, vpa, u, 
@@ -51,7 +53,7 @@ List profitMaximization2(List supplyFunction, int initialPos,
   double profitAgMax = (1.0 - ((maxdEdp - dEdP[nsteps-1])/(maxdEdp - mindEdp))); 
   
 
-  //Profit maximization
+  //Photosynthesis and profit maximization at current value of initialPos
   NumericVector photoInitial = leafPhotosynthesisOneFunction2(E[initialPos], leafPsi[initialPos], Catm, Patm, Tair, vpa, u, 
                                                            SWRabs, LWRnet, Q, Vmax298, Jmax298, 
                                                            leafWidth, refLeafArea, false);

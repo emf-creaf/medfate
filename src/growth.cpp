@@ -696,7 +696,7 @@ List growthDayInner(List x, NumericVector meteovec,
         
         
         if(leafUnfolding[j]) {
-          double deltaLApheno = std::max(leafAreaTarget[j] - LAexpanded, 0.0);
+          double deltaLApheno = std::max(leafAreaTarget[j]*(1.0 - StemPLC[j]) - LAexpanded, 0.0);
           double deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]*(rleafcell/rcellmax));
           if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
           double deltaLAavailable = 0.0;
@@ -823,7 +823,7 @@ List growthDayInner(List x, NumericVector meteovec,
           
           //Leaf growth
           if(leafUnfolding[j]) {
-            double deltaLApheno = std::max(leafAreaTarget[j] - LAexpanded, 0.0);
+            double deltaLApheno = std::max(leafAreaTarget[j]*(1.0 - StemPLC[j]) - LAexpanded, 0.0);
             double deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]*(rleafcell/rcellmax));
             if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
             //Grow at expense of stem sugar
@@ -985,7 +985,7 @@ List growthDayInner(List x, NumericVector meteovec,
       if(PLCinc>0.0) {
         double LAplc = std::min(LAexpanded, (1.0-StemPLC[j])*leafAreaTarget[j]);
         if(LAplc<LAexpanded) {
-          propLeafSenescence = std::max((LAexpanded-LAplc)/LAexpanded, propLeafSenescence); 
+          propLeafSenescence = std::max((LAexpanded-LAplc)/LAexpanded, propLeafSenescence);
         }
       }
       if(transpirationMode=="Sperry") {
