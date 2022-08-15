@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-08-12</h4>
+            <h4 data-toc-skip class="date">2022-08-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>UnderstandingInputs.Rmd</code></div>
@@ -1210,36 +1210,27 @@ water balance, the user can choose among the two models (see
 <h2 id="meteorological-forcing">Meteorological forcing<a class="anchor" aria-label="anchor" href="#meteorological-forcing"></a>
 </h2>
 <p>All simulations in the package require daily weather inputs. The
-weather variables that are required depend on the complexity of model we
-are using. In the simplest case, only mean temperature, precipitation
-and potential evapotranspiration is required, but the more complex
-simulation model also requires radiation, wind speed, min/max
-temparature and relative humidity.</p>
-<p>Here we show an example of meteorological forcing data.</p>
+minimum weather variables that are required are minimum/maximum
+temperature, minimum/maximum relative humidity, precipitation and
+radiation. Other variables like wind speed are recommended but not
+required. Here we show an example of meteorological forcing data.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##            MeanTemperature MinTemperature MaxTemperature Precipitation</span></span>
-<span><span class="co">## 2001-01-01      3.57668969     -0.5934215       6.287950      4.869109</span></span>
-<span><span class="co">## 2001-01-02      1.83695972     -2.3662458       4.569737      2.498292</span></span>
-<span><span class="co">## 2001-01-03      0.09462563     -3.8541036       2.661951      0.000000</span></span>
-<span><span class="co">## 2001-01-04      1.13866156     -1.8744860       3.097705      5.796973</span></span>
-<span><span class="co">## 2001-01-05      4.70578690      0.3288287       7.551532      1.884401</span></span>
-<span><span class="co">## 2001-01-06      4.57036721      0.5461322       7.186784     13.359801</span></span>
-<span><span class="co">##            MeanRelativeHumidity MinRelativeHumidity MaxRelativeHumidity</span></span>
-<span><span class="co">## 2001-01-01             78.73709            65.15411           100.00000</span></span>
-<span><span class="co">## 2001-01-02             69.70800            57.43761            94.71780</span></span>
-<span><span class="co">## 2001-01-03             70.69610            58.77432            94.66823</span></span>
-<span><span class="co">## 2001-01-04             76.89156            66.84256            95.80950</span></span>
-<span><span class="co">## 2001-01-05             76.67424            62.97656           100.00000</span></span>
-<span><span class="co">## 2001-01-06             89.01940            74.25754           100.00000</span></span>
-<span><span class="co">##            Radiation WindSpeed WindDirection       PET</span></span>
-<span><span class="co">## 2001-01-01  12.89251  2.000000           172 1.3212770</span></span>
-<span><span class="co">## 2001-01-02  13.03079  7.662544           278 2.2185985</span></span>
-<span><span class="co">## 2001-01-03  16.90722  2.000000           141 1.8045176</span></span>
-<span><span class="co">## 2001-01-04  11.07275  2.000000           172 0.9200627</span></span>
-<span><span class="co">## 2001-01-05  13.45205  7.581347           321 2.2914449</span></span>
-<span><span class="co">## 2001-01-06  12.84841  6.570501           141 1.7255058</span></span></code></pre>
+<pre><code><span><span class="co">##            MinTemperature MaxTemperature Precipitation MinRelativeHumidity</span></span>
+<span><span class="co">## 2001-01-01     -0.5934215       6.287950      4.869109            65.15411</span></span>
+<span><span class="co">## 2001-01-02     -2.3662458       4.569737      2.498292            57.43761</span></span>
+<span><span class="co">## 2001-01-03     -3.8541036       2.661951      0.000000            58.77432</span></span>
+<span><span class="co">## 2001-01-04     -1.8744860       3.097705      5.796973            66.84256</span></span>
+<span><span class="co">## 2001-01-05      0.3288287       7.551532      1.884401            62.97656</span></span>
+<span><span class="co">## 2001-01-06      0.5461322       7.186784     13.359801            74.25754</span></span>
+<span><span class="co">##            MaxRelativeHumidity Radiation WindSpeed</span></span>
+<span><span class="co">## 2001-01-01           100.00000  12.89251  2.000000</span></span>
+<span><span class="co">## 2001-01-02            94.71780  13.03079  7.662544</span></span>
+<span><span class="co">## 2001-01-03            94.66823  16.90722  2.000000</span></span>
+<span><span class="co">## 2001-01-04            95.80950  11.07275  2.000000</span></span>
+<span><span class="co">## 2001-01-05           100.00000  13.45205  7.581347</span></span>
+<span><span class="co">## 2001-01-06           100.00000  12.84841  6.570501</span></span></code></pre>
 <p>Simulation models in <strong>medfate</strong> have been designed to
 work along with data generated from package <a href="https://emf-creaf.github.io/meteoland/" class="external-link">meteoland</a>. The user is
 strongly recommended to resort to this package to obtain suitable

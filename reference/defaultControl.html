@@ -121,10 +121,10 @@
 <li><p><code>refillMaximumRate (= 0.05)</code>: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).</p></li>
 </ul><p><b>Forest growth</b> (functions <code><a href="growth.html">growth</a></code> or <code><a href="spwb_day.html">growth_day</a></code>):</p><ul><li><p><code>allowDessication (=TRUE)</code>: Boolean flag to indicate that mortality by dessication is allowed.</p></li>
 <li><p><code>allowStarvation (=TRUE)</code>: Boolean flag to indicate that mortality by starvation is allowed.</p></li>
-<li><p><code>allowDefoliation (=TRUE)</code>: Boolean flag to indicate that complete drought-driven defoliation is allowed.</p></li>
+<li><p><code>allowDefoliation (=FALSE)</code>: Boolean flag to indicate that complete drought-driven defoliation due to low leaf relative water potential is allowed (only for transpirationMode = "Sperry").</p></li>
 <li><p><code>sinkLimitation (=TRUE): Boolean flag to indicate that temperature and turgor limitations to growth are applied.</code></p></li>
 <li><p><code> shrubDynamics [= TRUE]</code>: Boolean flag to allow the application of demographic processes to shrubs.</p></li>
-<li><p><code>allocationStrategy (="Plant_kmax")</code>: Strategy for allocation (either "Plant_kmax", for constant maximum plant conductance, or "Al2As" for constant Huber value).</p></li>
+<li><p><code>allocationStrategy (="Al2As")</code>: Strategy for allocation (either "Plant_kmax", for constant maximum plant conductance, or "Al2As" for constant Huber value).</p></li>
 <li><p><code>nonStomatalPhotosynthesisLimitation (=TRUE)</code>: A flag to apply limitations of pho-tosynthesis when leaf sugar levels become too high.</p></li>
 <li><p><code>phloemConductanceFactor (= 0.2))</code>: Factor to transform stem xylem conductance to stem phloem conductance (only for transpirationMode = "Sperry").</p></li>
 <li><p><code>nonSugarConcentration (= 0.25)</code>: Non-sugar (inorganic) solute concentration  (mol·l-1) in cells.</p></li>

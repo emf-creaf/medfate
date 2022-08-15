@@ -67,18 +67,12 @@
 <dd><p>An object of class <code><a href="modelInput.html">growthInput</a></code>.</p></dd>
 
   <dt>meteo</dt>
-<dd><p>A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see <code><a href="https://rdrr.io/r/base/Dates.html" class="external-link">Date</a></code>). When  <code>x$TranspirationMode = "Granier"</code> the following columns are required:</p><ul><li><p><code>MeanTemperature</code>: Mean temperature (in degrees Celsius).</p></li>
-<li><p><code>Precipitation</code>: Precipitation (in mm).</p></li>
-<li><p><code>Radiation</code>: Solar radiation (in MJ/m2/day), required only if <code>snowpack = TRUE</code>.</p></li>
-<li><p><code>PET</code>: Potential evapotranspiration (in mm).</p></li>
-<li><p><code>WindSpeed</code>: Wind speed (in m/s). If not available, this column can be left with <code>NA</code> values.</p></li>
-</ul><p>When <code>x$TranspirationMode = "Sperry"</code> the following columns are required:</p><ul><li><p><code>MeanTemperature</code>: Mean temperature(in degrees Celsius).</p></li>
-<li><p><code>MinTemperature</code>: Minimum temperature (in degrees Celsius).</p></li>
+<dd><p>A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see <code><a href="https://rdrr.io/r/base/Dates.html" class="external-link">Date</a></code>).The following columns are required:</p><ul><li><p><code>MinTemperature</code>: Minimum temperature (in degrees Celsius).</p></li>
 <li><p><code>MaxTemperature</code>: Maximum temperature (in degrees Celsius).</p></li>
 <li><p><code>MinRelativeHumidity</code>: Minimum relative humidity (in percent).</p></li>
 <li><p><code>MaxRelativeHumidity</code>: Maximum relative humidity (in percent).</p></li>
 <li><p><code>Precipitation</code>: Precipitation (in mm).</p></li>
-<li><p><code>Radiation</code>: Solar radiation (in MJ/m2/day).</p></li>
+<li><p><code>Radiation</code>: Solar radiation (in MJ/m2/day), required only if <code>snowpack = TRUE</code>.</p></li>
 <li><p><code>WindSpeed</code>: Wind speed (in m/s). If not available, this column can be left with <code>NA</code> values.</p></li>
 <li><p><code>CO2</code>: Atmospheric (abovecanopy) CO2 concentration (in ppm). This column may not exist, or can be left with <code>NA</code> values. In both cases simulations will assume a constant value specified in <code><a href="defaultControl.html">defaultControl</a></code>.</p></li>
 </ul><p></p></dd>
@@ -194,18 +188,18 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Year 2001:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant biomass (g/m2): 7349.77</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant biomass (g/m2): 240.504</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance result (g/m2): 240.504</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant biomass (g/m2): 7349.94</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant biomass (g/m2): 240.675</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance result (g/m2): 240.675</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Structural balance (g/m2) 147 Labile balance (g/m2) 120</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Plant individual balance (g/m2) 267 Mortality loss (g/m2) 26</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 268.656</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -22.6011</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -22.6011</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -22.6012</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -22.6012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 7.10543e-15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
