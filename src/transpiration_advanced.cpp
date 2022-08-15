@@ -440,6 +440,7 @@ List transpirationSperry(List x, NumericVector meteovec,
   NumericVector lad = 100.0*(LAIpe + LAIpd)/verticalLayerSize;
   //3. Wind extinction profile
   if(NumericVector::is_na(wind)) wind = defaultWindSpeed; //set to default if missing
+  wind = std::min(10.0, std::max(wind, 0.1)); //Bound between 0.1 m/s (0.36 km/h)  and 10 m/s (36 km/h)
   DataFrame canopyTurbulence = NA_REAL;
   NumericVector zWind(ncanlayers,wind), dU(ncanlayers, 0.0), uw(ncanlayers, 0.0);
   if(canopyHeight>0.0) {
