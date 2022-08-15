@@ -129,6 +129,19 @@ fordyn<-function(forest, soil, SpParams,
       forest$treeData = forest$treeData[,c("Species","DBH", "Height","N","Z50","Z95")]
       forest$shrubData = forest$shrubData[,c("Species","Height","Cover", "Z50","Z95")]
     }
+    #Fill missing root params
+    if(control$fillMissingRootParams) {
+      treeSPZ95 = species_parameter(forest$treeData$Species, SpParams, "Z95")
+      treeSPZ50 = species_parameter(forest$treeData$Species, SpParams, "Z50")
+      treeSPZ50[is.na(treeSPZ50)] = exp(log(treeSPZ95[is.na(treeSPZ50)])/1.4)
+      shrubSPZ50 = species_parameter(forest$shrubData$Species, SpParams, "Z50")
+      shrubSPZ95 = species_parameter(forest$shrubData$Species, SpParams, "Z95")
+      shrubSPZ50[is.na(shrubSPZ50)] = exp(log(shrubSPZ95[is.na(shrubSPZ50)])/1.4)
+      forest$treeData$Z50[is.na(forest$treeData$Z50)] = treeSPZ50[is.na(forest$treeData$Z50)]
+      forest$treeData$Z95[is.na(forest$treeData$Z95)] = treeSPZ95[is.na(forest$treeData$Z95)]
+      forest$shrubData$Z50[is.na(forest$shrubData$Z50)] = shrubSPZ50[is.na(forest$shrubData$Z50)]
+      forest$shrubData$Z95[is.na(forest$shrubData$Z95)] = shrubSPZ95[is.na(forest$shrubData$Z95)]
+    }
     xi = forest2growthInput(forest, soil, SpParams, control)
   }
   forestStructures[[1]] = forest
