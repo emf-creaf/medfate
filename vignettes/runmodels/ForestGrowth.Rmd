@@ -41,7 +41,7 @@ data(exampleforestMED)
 exampleforestMED
 ```
 
-Weather input needs to be in form of a `data.frame` with days in rows and variables in columns. Here we will also use the default data included in the package:
+Importantly, a data frame with daily weather for the period to be simulated is required. Here we use the default data frame included with the package: 
 
 ```{r}
 data(examplemeteo)
