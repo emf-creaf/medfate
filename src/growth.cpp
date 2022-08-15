@@ -988,6 +988,7 @@ List growthDayInner(List x, NumericVector meteovec,
           propLeafSenescence = std::max((LAexpanded-LAplc)/LAexpanded, propLeafSenescence);
         }
       }
+
       if(transpirationMode=="Sperry") {
         //Complete defoliation if RWCsymp < 0.5
         double leafSympRWC = sum(LeafSympRWCInst(j,_))/((double) numSteps);
@@ -1002,8 +1003,8 @@ List growthDayInner(List x, NumericVector meteovec,
       double senescenceLeafLoss = deltaLAsenescence*(1000.0/SLA[j]);
 
       //Define sapwood senescense
-      double propSASenescence = SRsapwood[j]/(1.0+15.0*exp(-0.01*H[j]));
-      double deltaSASenescence = propSASenescence*SA[j]*std::max(0.0,(tday-5.0)/20.0);
+      double propSASenescence = SRsapwood[j]*std::max(0.0,(tday-5.0)/20.0)/(1.0+15.0*exp(-0.01*H[j]));
+      double deltaSASenescence = propSASenescence*SA[j];
       
       //FRB SENESCENCE
       NumericVector deltaFRBsenescence(numLayers, 0.0);
@@ -1152,7 +1153,7 @@ List growthDayInner(List x, NumericVector meteovec,
           if(allowStarvation) starvationRate[j] = dailyMortalityProbability(basalMortalityRate, sugarSapwood[j], mortalitySugarThreshold, 0.0);
           if(allowDessication) dessicationRate[j] = dailyMortalityProbability(basalMortalityRate, stemSympRWC, mortalityRWCThreshold, 0.0);
           mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));
-          
+          // Rcout<< j << " "<< stemSympRWC<< " "<< dessicationRate[j]<<"\n";
           if(mortalityMode =="density/deterministic") {
             Ndead_day = N[j]*mortalityRate[j];
           } else if(mortalityMode =="whole-cohort/stochastic") {
@@ -1237,14 +1238,14 @@ List growthDayInner(List x, NumericVector meteovec,
     double newVolumeSapwood = sapwoodStorageVolume(SA[j], H[j], L(j,_),V(j,_),WoodDensity[j], conduit2sapwood[j]);
     double newVolumeLeaves = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
     if(newVolumeLeaves > 0.0) {
-      sugarLeaf[j] = sugarLeaf[j]*(Volume_leaves[j]/newVolumeLeaves);
-      starchLeaf[j] = starchLeaf[j]*(Volume_leaves[j]/newVolumeLeaves); 
+      sugarLeaf[j] = std::max(0.0, sugarLeaf[j]*(Volume_leaves[j]/newVolumeLeaves));
+      starchLeaf[j] = std::max(0.0, starchLeaf[j]*(Volume_leaves[j]/newVolumeLeaves)); 
     } else {
       sugarLeaf[j] = 0.0;
       starchLeaf[j] = 0.0;
     }
-    sugarSapwood[j] = sugarSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood);
-    starchSapwood[j] = starchSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood); 
+    sugarSapwood[j] = std::max(0.0, sugarSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood));
+    starchSapwood[j] = std::max(0.0, starchSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood)); 
     // if(j==(numCohorts-1)) Rcout<< j << " after recalculation "<< sugarLeaf[j]<< " "<< starchLeaf[j]<<"\n";
     
     //OUTPUT VARIABLES

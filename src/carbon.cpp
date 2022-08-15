@@ -59,6 +59,7 @@ double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double eqSug
  */
 // [[Rcpp::export("carbon_osmoticWaterPotential")]]
 double osmoticWaterPotential(double sugarConc, double temp, double nonSugarConc) {
+  sugarConc = std::max(0.0, sugarConc); // To avoid positive osmotic water potential
   return(- (sugarConc + nonSugarConc)*Rn*(temp + 273.15));
 }
 // [[Rcpp::export("carbon_sugarConcentration")]]
