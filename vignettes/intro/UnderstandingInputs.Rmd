@@ -144,9 +144,7 @@ Low-level functions, such as `soil_psi2thetaSX()` and `soil_psi2thetaVG()` (and 
 
 ## Meteorological forcing
 
-All simulations in the package require daily weather inputs. The weather variables that are required depend on the complexity of model we are using. In the simplest case, only mean temperature, precipitation and potential evapotranspiration is required, but the more complex simulation model also requires radiation, wind speed, min/max temparature and relative humidity. 
-
-Here we show an example of meteorological forcing data. 
+All simulations in the package require daily weather inputs. The minimum weather variables that are required are minimum/maximum temperature, minimum/maximum relative humidity, precipitation and radiation. Other variables like wind speed are recommended but not required. Here we show an example of meteorological forcing data. 
 ```{r}
 data(examplemeteo)
 head(examplemeteo)
