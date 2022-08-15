@@ -19,19 +19,7 @@ transp_stomatalRegulationPlot(x, meteo, day, timestep,
   \item{photosynthesisFunction}{Function returned by \code{photo_photosynthesisFunction()}.}
   \item{Gswmin, Gswmax}{Minimum and maximum stomatal conductance to water vapour (mol·m-2·s-1).}
   \item{x}{An object of class \code{\link{spwbInput}} built using the 'Sperry' transpiration mode.}
-  \item{meteo}{A data frame with daily meteorological data series:
-   \itemize{
-     \item{\code{DOY}: Day of the year (Julian day).}
-     \item{\code{Precipitation}: Precipitation (in mm).}
-     \item{\code{MeanTemperature}: Mean temperature (in degrees Celsius).}
-     \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
-     \item{\code{MaxTemperature}: Maximum temperature (in degrees Celsius).}
-     \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
-     \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
-     \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
-     \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
-    }
-  }  
+  \item{meteo}{A data frame with daily meteorological data series.}
   \item{day}{An integer to identify a day within \code{meteo}.}
   \item{timestep}{An integer between 1 and \code{ndailysteps} specified in \code{x} (see \code{\link{defaultControl}}).}
   \item{latitude}{Latitude (in degrees).}

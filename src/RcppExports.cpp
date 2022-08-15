@@ -4550,17 +4550,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // transpirationGranier
-List transpirationGranier(List x, DataFrame meteo, int day, double elevation, bool modifyInput);
-RcppExport SEXP _medfate_transpirationGranier(SEXP xSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP elevationSEXP, SEXP modifyInputSEXP) {
+List transpirationGranier(List x, DataFrame meteo, int day, double latitude, double elevation, double slope, double aspect, bool modifyInput);
+RcppExport SEXP _medfate_transpirationGranier(SEXP xSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP modifyInputSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type meteo(meteoSEXP);
     Rcpp::traits::input_parameter< int >::type day(daySEXP);
+    Rcpp::traits::input_parameter< double >::type latitude(latitudeSEXP);
     Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
+    Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
+    Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
     Rcpp::traits::input_parameter< bool >::type modifyInput(modifyInputSEXP);
-    rcpp_result_gen = Rcpp::wrap(transpirationGranier(x, meteo, day, elevation, modifyInput));
+    rcpp_result_gen = Rcpp::wrap(transpirationGranier(x, meteo, day, latitude, elevation, slope, aspect, modifyInput));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5075,7 +5078,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 8},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 4},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 12},
-    {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 5},
+    {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 8},
     {"_medfate_windCanopyTurbulenceModel", (DL_FUNC) &_medfate_windCanopyTurbulenceModel, 6},
     {"_medfate_windCanopyTurbulence", (DL_FUNC) &_medfate_windCanopyTurbulence, 6},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},

@@ -10,7 +10,8 @@ High-level sub-models to represent transpiration, plant hydraulics and water rel
 }
 \usage{
 transp_transpirationGranier(x, meteo, day, 
-                            elevation, modifyInput = TRUE)
+                            latitude, elevation, slope, aspect, 
+                            modifyInput = TRUE)
 transp_transpirationSperry(x, meteo, day,
                            latitude, elevation, slope, aspect, 
                            canopyEvaporation = 0, snowMelt = 0, soilEvaporation = 0, 
@@ -24,7 +25,6 @@ transp_transpirationSperry(x, meteo, day,
    \itemize{
      \item{\code{DOY}: Day of the year (Julian day).}
      \item{\code{Precipitation}: Precipitation (in mm).}
-     \item{\code{MeanTemperature}: Mean temperature (in degrees Celsius).}
      \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
      \item{\code{MaxTemperature}: Maximum temperature (in degrees Celsius).}
      \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
@@ -170,7 +170,8 @@ x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 # Transpiration according to Granier's model, plant water potential 
 # and plant stress for a given day
 t1 = transp_transpirationGranier(x1, examplemeteo, 1, 
-                                 elevation = 100, modifyInput = FALSE)
+                                 latitude = 41.82592, elevation = 100, slope = 0, aspect = 0, 
+                                 modifyInput = FALSE)
 
 #Switch to 'Sperry' transpiration mode
 control = defaultControl("Sperry")

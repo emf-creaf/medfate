@@ -12,23 +12,14 @@ growth(x, meteo,  latitude,
 }
 \arguments{
   \item{x}{An object of class \code{\link{growthInput}}.}
-  \item{meteo}{A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}). When  \code{x$TranspirationMode = "Granier"} the following columns are required:
+  \item{meteo}{A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}).The following columns are required:
    \itemize{
-     \item{\code{MeanTemperature}: Mean temperature (in degrees Celsius).}
-     \item{\code{Precipitation}: Precipitation (in mm).}
-     \item{\code{Radiation}: Solar radiation (in MJ/m2/day), required only if \code{snowpack = TRUE}.}
-     \item{\code{PET}: Potential evapotranspiration (in mm).}
-     \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
-    }
-  When \code{x$TranspirationMode = "Sperry"} the following columns are required:
-   \itemize{
-     \item{\code{MeanTemperature}: Mean temperature(in degrees Celsius).}
      \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
      \item{\code{MaxTemperature}: Maximum temperature (in degrees Celsius).}
      \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
      \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
      \item{\code{Precipitation}: Precipitation (in mm).}
-     \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
+     \item{\code{Radiation}: Solar radiation (in MJ/m2/day), required only if \code{snowpack = TRUE}.}
      \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
      \item{\code{CO2}: Atmospheric (abovecanopy) CO2 concentration (in ppm). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
     }

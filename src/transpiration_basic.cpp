@@ -424,7 +424,8 @@ List transpirationGranier(List x, NumericVector meteovec,
 
 // [[Rcpp::export("transp_transpirationGranier")]]
 List transpirationGranier(List x, DataFrame meteo, int day,
-                          double elevation, bool modifyInput = true) {
+                          double latitude, double elevation, double slope, double aspect,
+                          bool modifyInput = true) {
   List control = x["control"];
   if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
   NumericVector MinTemperature = meteo["MinTemperature"];
@@ -434,19 +435,38 @@ List transpirationGranier(List x, DataFrame meteo, int day,
   NumericVector MinRelativeHumidity = meteo["MinRelativeHumidity"];
   if(!meteo.containsElementNamed("MaxRelativeHumidity")) stop("Please include variable 'MaxRelativeHumidity' in weather input.");
   NumericVector MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
-  if(!meteo.containsElementNamed("MeanTemperature")) stop("Please include variable 'MeanTemperature' in weather input.");
-  NumericVector MeanTemperature = meteo["MeanTemperature"];
-  if(!meteo.containsElementNamed("PET")) stop("Please include variable 'PET' in weather input.");
-  NumericVector PET = meteo["PET"];
+  if(!meteo.containsElementNamed("Radiation")) stop("Please include variable 'Radiation' in weather input.");
+  NumericVector Radiation = meteo["Radiation"];
+  NumericVector WindSpeed(MinTemperature.length(), NA_REAL);
+  if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
   NumericVector CO2(MinTemperature.length(), NA_REAL);
   if(meteo.containsElementNamed("CO2")) CO2 = meteo["CO2"];
-  double pet = PET[day-1];
-  double tday = MeanTemperature[day-1];
+  
+  if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
+  double latrad = latitude * (M_PI/180.0);
+  if(NumericVector::is_na(aspect)) aspect = 0.0;
+  if(NumericVector::is_na(slope)) slope = 0.0;
+  double asprad = aspect * (M_PI/180.0);
+  double slorad = slope * (M_PI/180.0);
+  
+  CharacterVector dateStrings = meteo.attr("row.names");
+  std::string c = as<std::string>(dateStrings[day-1]);
+  int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+  double delta = meteoland::radiation_solarDeclination(J);
+  double solarConstant = meteoland::radiation_solarConstant(J);
+  
   double tmin = MinTemperature[day-1];
   double tmax = MaxTemperature[day-1];
+  double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
   double rhmax = MaxRelativeHumidity[day-1];
   double rhmin = MinRelativeHumidity[day-1];
+  double rad = Radiation[day-1];
+  double wind = WindSpeed[day-1];
   double Catm = CO2[day-1];
+  
+  double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, 
+                             tmin, tmax, rhmin, rhmax, rad, wind);
+  
   if(NumericVector::is_na(Catm)) Catm = control["defaultCO2"];
   NumericVector meteovec = NumericVector::create(
     Named("tmax") = tmax,

@@ -264,7 +264,9 @@ fordyn<-function(forest, soil, SpParams,
     # 3. Simulate species recruitment
     if(control$allowRecruitment) {
       if(verboseDyn) cat(paste0(", (b) Recruitment"))
-      monthlyTemp = tapply(meteoYear$MeanTemperature, monthsYear, FUN="mean", na.rm=TRUE)
+      monthlyMinTemp = tapply(meteoYear$MinTemperature, monthsYear, FUN="mean", na.rm=TRUE)
+      monthlyMaxTemp = tapply(meteoYear$MaxTemperature, monthsYear, FUN="mean", na.rm=TRUE)
+      monthlyTemp = 0.606*monthlyMaxTemp + 0.394*monthlyMinTemp
       minMonthTemp = min(monthlyTemp, na.rm=TRUE)
       moistureIndex = sum(meteoYear$Precipitation, na.rm=TRUE)/sum(meteoYear$PET, na.rm=TRUE)
       # if(verboseDyn) cat(paste0("       Coldest month mean temp. (Celsius): ", round(minMonthTemp,2), "   Moisture index: ", round(moistureIndex,2), "   FPAR (%): ", round(PARperc,1), "\n"))

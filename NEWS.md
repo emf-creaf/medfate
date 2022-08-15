@@ -3,6 +3,9 @@
 -------------------------------
 
 # Version 2.7.6
+- MeanTemperature not longer an input to medfate. It is calculated from minimum and maximum temperature.
+- MeanRelativeHumidity not longer an input to medfate. 
+- PET not longer an input to medfate. It is calculated internally.
 - New simulation parameter 'CO2ByYear' to specify year by year variations in atmospheric CO2
 - Sensitivity of photosynthesis to VPD and CO2 concentration under Granier's model
 - New species parameters 'WUE_co2', 'WUE_vpd' to regulate the effect of CO2 concentration and VPD under Granier's model

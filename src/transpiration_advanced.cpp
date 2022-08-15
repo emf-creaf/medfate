@@ -1644,12 +1644,17 @@ List transpirationSperry(List x, DataFrame meteo, int day,
   NumericVector Radiation = meteo["Radiation"];
   if(!meteo.containsElementNamed("Precipitation")) stop("Please include variable 'Precipitation' in weather input.");
   NumericVector Precipitation = meteo["Precipitation"];
-  CharacterVector dateStrings = meteo.attr("row.names");
   NumericVector WindSpeed(Precipitation.length(), NA_REAL);
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
   NumericVector CO2(Precipitation.length(), NA_REAL);
   if(meteo.containsElementNamed("CO2")) CO2 = meteo["CO2"];
+  
+  CharacterVector dateStrings = meteo.attr("row.names");
   std::string c = as<std::string>(dateStrings[day-1]);
+  int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+  double delta = meteoland::radiation_solarDeclination(J);
+  double solarConstant = meteoland::radiation_solarConstant(J);
+  
   double prec = Precipitation[day-1];
   double rad = Radiation[day-1];
   double tmax = MaxTemperature[day-1];
@@ -1667,9 +1672,6 @@ List transpirationSperry(List x, DataFrame meteo, int day,
   double wind = WindSpeed[day-1];
   double Catm = CO2[day-1];
   if(NumericVector::is_na(Catm)) Catm = control["defaultCO2"];
-  int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
-  double delta = meteoland::radiation_solarDeclination(J);
-  double solarConstant = meteoland::radiation_solarConstant(J);
 
   NumericVector meteovec = NumericVector::create(
     Named("tmin") = tmin, 

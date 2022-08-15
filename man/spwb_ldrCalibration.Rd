@@ -22,14 +22,7 @@ spwb_ldrCalibration(x, meteo, calibVar, obs,
 
 \arguments{
   \item{x}{An object of class \code{\link{spwbInput}}.}
-  \item{meteo}{A data frame with daily meteorological data series. When using the 'Granier' transpiration mode the following columns are required:
-   \itemize{
-     \item{\code{DOY}: Day of the year (Julian day).}
-     \item{\code{Precipitation}: Precipitation (in mm).}
-     \item{\code{MeanTemperature}: Mean temperature (in degrees Celsius).}
-     \item{\code{PET}: Potential evapotranspiration (in mm).}
-    }
-  }
+  \item{meteo}{A data frame with daily meteorological data series.}
   \item{calibVar}{A character string indicating the calibration variable to be used.
                   It can be one of the following: \code{SWC}, \code{Eplanttot}
                   or \code{Cohorts}.}

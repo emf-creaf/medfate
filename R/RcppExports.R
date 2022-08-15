@@ -945,8 +945,8 @@ transp_transpirationSperry <- function(x, meteo, day, latitude, elevation, slope
     .Call(`_medfate_transpirationSperry`, x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, stepFunctions, modifyInput)
 }
 
-transp_transpirationGranier <- function(x, meteo, day, elevation, modifyInput = TRUE) {
-    .Call(`_medfate_transpirationGranier`, x, meteo, day, elevation, modifyInput)
+transp_transpirationGranier <- function(x, meteo, day, latitude, elevation, slope, aspect, modifyInput = TRUE) {
+    .Call(`_medfate_transpirationGranier`, x, meteo, day, latitude, elevation, slope, aspect, modifyInput)
 }
 
 wind_canopyTurbulenceModel <- function(zm, Cx, hm, d0, z0, model = "k-epsilon") {
