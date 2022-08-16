@@ -597,6 +597,7 @@ List transpirationSperry(List x, NumericVector meteovec,
           layerConnected(c,l) = false;
         }
       }
+      // Rcout<<c<<" "<< nlayerscon[c]<<"\n";
       if(nlayerscon[c]==0) stop("Plant cohort not connected to any soil layer!");
       
       // Copy values from connected layers

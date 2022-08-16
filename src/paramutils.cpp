@@ -994,11 +994,13 @@ NumericVector VCrootDWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector VCstem_c = VCstemCWithImputation(SP, SpParams);
   for(int c=0;c<VCroot_d.size();c++) {
     if(NumericVector::is_na(VCroot_d[c])) {
-      double psi50stem = VCstem_d[c]*pow(0.6931472,1.0/VCstem_c[c]);
-      double psi50root = 0.742*psi50stem + 0.4892; //Regression using data from Bartlett et al. 2016
-      double psi88root = 1.2593*psi50root - 1.4264; //Regression using data from Choat et al. 2012
+      double psi50stem = std::min(-0.25, VCstem_d[c]*pow(0.6931472,1.0/VCstem_c[c]));
+      double psi50root = std::min(-0.25, 0.742*psi50stem + 0.4892); //Regression using data from Bartlett et al. 2016
+      double psi88root = std::min(-0.5, 1.2593*psi50root - 1.4264); //Regression using data from Choat et al. 2012
       NumericVector par = psi2Weibull(psi50root, psi88root);
       VCroot_d[c] = par["d"];
+      VCroot_d[c] = std::min(-0.25, VCroot_d[c]);
+      // Rcout<< c<< " d: "<< VCroot_d[c]<<"\n";
     }
   }
   return(VCroot_d);
@@ -1009,11 +1011,12 @@ NumericVector VCrootCWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector VCstem_c = VCstemCWithImputation(SP, SpParams);
   for(int c=0;c<VCroot_c.size();c++) {
     if(NumericVector::is_na(VCroot_c[c])) {
-      double psi50stem = VCstem_d[c]*pow(0.6931472,1.0/VCstem_c[c]);
-      double psi50root = 0.742*psi50stem + 0.4892; //Regression using data from Bartlett et al. 2016
-      double psi88root = 1.2593*psi50root - 1.4264; //Regression using data from Choat et al. 2012
+      double psi50stem = std::min(-0.25, VCstem_d[c]*pow(0.6931472,1.0/VCstem_c[c]));
+      double psi50root = std::min(-0.25, 0.742*psi50stem + 0.4892); //Regression using data from Bartlett et al. 2016
+      double psi88root = std::min(-0.5, 1.2593*psi50root - 1.4264); //Regression using data from Choat et al. 2012
       NumericVector par = psi2Weibull(psi50root, psi88root);
       VCroot_c[c] = par["c"];
+      // Rcout<< c<< " c: "<< VCroot_c[c]<<"\n";
     }
   }
   return(VCroot_c);
