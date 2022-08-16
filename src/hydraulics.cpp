@@ -2284,21 +2284,27 @@ double findRhizosphereMaximumConductance(double averageResistancePercent, double
                                          double initialValue = 0.0) {
   double step = 1.0;
   double fTol = 0.1;
+  // Rcout<<exp(initialValue)<<"\n";
   double krhizomaxlog = initialValue;
+  int nsteps = 0;
+  int max_nsteps = 100;
   double f = averageRhizosphereResistancePercent(exp(krhizomaxlog), n,alpha,krootmax, rootc, rootd,
                                                  kstemmax, stemc,stemd,
                                                  kleafmax, leafc,leafd);
-  while(std::abs(f-averageResistancePercent)>fTol) {
+  while((std::abs(f-averageResistancePercent)>fTol) && (nsteps < max_nsteps)) {
+    // Rcout<< nsteps<< " "<<exp(krhizomaxlog) << " "<< f << " "<< averageResistancePercent<< " "<< step<<"\n";
     if(f>averageResistancePercent) {
-      krhizomaxlog += step; 
+      if(step < 0) step = -step/2.0;
     } else {
-      krhizomaxlog -= step;
-      step = step/2.0;
+      if(step > 0) step = -step/2.0;
     }
+    krhizomaxlog += step; 
     f = averageRhizosphereResistancePercent(exp(krhizomaxlog), n,alpha,krootmax, rootc, rootd,
                                             kstemmax, stemc,stemd,
                                             kleafmax, leafc,leafd);
+    nsteps++;
   }
+  // Rcout<< nsteps<< " "<<exp(krhizomaxlog) << " "<< f << " "<< averageResistancePercent<< " "<< step<<"\n";
   return(exp(krhizomaxlog));
 }
 

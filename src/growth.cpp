@@ -946,6 +946,7 @@ List growthDayInner(List x, NumericVector meteovec,
           // Rcout<<j<<" LeafTLP "<< turgorLossPoint(LeafPI0[j], LeafEPS[j])<< " Leaf PI "<< osmoticWaterPotential(sugarLeaf[j], tday)<< " Conc "<< sugarLeaf[j]<< " TLPconc"<< tlpConcLeaf<<"\n";
         }
       }
+
       double leafBiomassIncrement = deltaLAgrowth[j]*(1000.0/SLA[j]);
       double finerootBiomassIncrement = sum(deltaFRBgrowth);
       
@@ -1020,6 +1021,7 @@ List growthDayInner(List x, NumericVector meteovec,
       
 
       //TRANSLOCATION (in mol gluc) of labile carbon
+      // Rcout<<"-translocation";
       double translocationSugarLeaf = propLeafSenescence*Volume_leaves[j]*sugarLeaf[j];
       double translocationStarchLeaf = propLeafSenescence*Volume_leaves[j]*starchLeaf[j];
       double translocationSugarSapwood = propSASenescence*Volume_sapwood[j]*starchSapwood[j];
@@ -1049,6 +1051,7 @@ List growthDayInner(List x, NumericVector meteovec,
       
         
       //UPDATE LEAF AREA, SAPWOOD AREA, FINE ROOT BIOMASS AND CONCENTRATION IN LABILE POOLS
+      // Rcout<<"-update";
       double LAprev = LAexpanded;
       LAexpanded += deltaLAgrowth[j] - deltaLAsenescence;
       if(LAexpanded < 0.0) {
@@ -1071,6 +1074,7 @@ List growthDayInner(List x, NumericVector meteovec,
 
       
       //UPDATE DERIVED QUANTITIES (individual level)   
+      // Rcout<<"-updatederived";
       if(transpirationMode=="Granier") {
         //Update Huber value
         if(LAlive>0.0) {
@@ -1130,6 +1134,7 @@ List growthDayInner(List x, NumericVector meteovec,
       FineRootBiomassBalance[j] = finerootBiomassIncrement - senescenceFinerootLoss;
       
       //MORTALITY Death by carbon starvation or dessication
+      // Rcout<<"-mortality";
       double Nprev = N[j]; //Store initial density (for biomass balance)
       double Ndead_day = 0.0;
       bool dynamicCohort = true;
@@ -1187,6 +1192,7 @@ List growthDayInner(List x, NumericVector meteovec,
       
 
       //UPDATE TARGETS
+      // Rcout<<"-updatetargets";
       //Set target leaf area if bud formation is allowed
       if(budFormation[j]) {
         if(allocationStrategy == "Plant_kmax") {
@@ -1203,6 +1209,7 @@ List growthDayInner(List x, NumericVector meteovec,
         } else {
           NumericVector VGrhizo_target(numLayers,0.0);
           for(int s=0;s<numLayers;s++) {
+            // Rcout<<VCroot_kmaxVEC[j]<< " "<<VCstem_kmax[j]<<"\n";
             VGrhizo_target[s] = V(j,s)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0,
                                                    VG_n[s], VG_alpha[s],
                                                    VCroot_kmaxVEC[j], VCroot_c[j], VCroot_d[j],
@@ -1217,6 +1224,7 @@ List growthDayInner(List x, NumericVector meteovec,
       }
       
       //Output variables
+      // Rcout<<"-output";
       SapwoodArea[j] = SA[j];
       FineRootArea[j] = fineRootBiomass[j]*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4;
       SapwoodBiomass[j] = sapwoodStructuralBiomass(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j]);
