@@ -533,11 +533,17 @@ List growthDayInner(List x, NumericVector meteovec,
   
   //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
-  NumericVector Psi_Extract, WUE_par, Kmax_stemxylem, Plant_kmax, VCleaf_kmax, VCleaf_c, VCleaf_d;
+  NumericVector Psi_Extract, Kmax_stemxylem, Plant_kmax, VCleaf_kmax, VCleaf_c, VCleaf_d;
   NumericVector VCstem_kmax, VCstem_c, VCstem_d, VCroot_kmaxVEC, VCroot_c, VCroot_d, VGrhizo_kmaxVEC;
+  NumericVector WUE_par(numCohorts, 0.3643);
   if(transpirationMode=="Granier") {
     Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
-    WUE_par = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_par"]);
+    if(paramsTransp.containsElementNamed("WUE_par")) {
+      WUE_par = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_par"]);
+    }
+    if(paramsTransp.containsElementNamed("WUE_decay")) { //For compatibility with previous versions (2.7.5)
+      WUE_par = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_decay"]);
+    }
   } else {
     Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
     Plant_kmax= paramsTransp["Plant_kmax"];

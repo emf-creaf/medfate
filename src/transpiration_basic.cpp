@@ -152,6 +152,9 @@ List transpirationGranier(List x, NumericVector meteovec,
   if(paramsTransp.containsElementNamed("WUE_par")) {
     WUE_par = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_par"]);
   }
+  if(paramsTransp.containsElementNamed("WUE_decay")) { //For compatibility with previous versions (2.7.5)
+    WUE_par = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_decay"]);
+  }
   if(paramsTransp.containsElementNamed("WUE_co2")) {
     WUE_co2 = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE_co2"]);
   }
