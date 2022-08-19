@@ -2,6 +2,10 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.7.7
+- Dynamic modification of LeafPI0 and StemPI0 removed
+- Non-stomatal limitations to photosynthesis removed
+
 # Version 2.7.6
 - MeanTemperature not longer an input to medfate. It is calculated from minimum and maximum temperature.
 - MeanRelativeHumidity not longer an input to medfate. 

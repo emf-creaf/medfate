@@ -83,11 +83,9 @@ A list, with the following options (default values in parentheses):
 \itemize{
    \item{\code{allowDessication (=TRUE)}: Boolean flag to indicate that mortality by dessication is allowed.}
    \item{\code{allowStarvation (=TRUE)}: Boolean flag to indicate that mortality by starvation is allowed.}
-   \item{\code{allowDefoliation (=FALSE)}: Boolean flag to indicate that complete drought-driven defoliation due to low leaf relative water potential is allowed (only for transpirationMode = "Sperry").}
    \item{\code{sinkLimitation (=TRUE): Boolean flag to indicate that temperature and turgor limitations to growth are applied.}}
    \item{\code{ shrubDynamics [= TRUE]}: Boolean flag to allow the application of demographic processes to shrubs.}
    \item{\code{allocationStrategy (="Al2As")}: Strategy for allocation (either "Plant_kmax", for constant maximum plant conductance, or "Al2As" for constant Huber value).}
-   \item{\code{nonStomatalPhotosynthesisLimitation (=TRUE)}: A flag to apply limitations of pho-tosynthesis when leaf sugar levels become too high.}
    \item{\code{phloemConductanceFactor (= 0.2))}: Factor to transform stem xylem conductance to stem phloem conductance (only for transpirationMode = "Sperry").}
    \item{\code{nonSugarConcentration (= 0.25)}: Non-sugar (inorganic) solute concentration  (mol·l-1) in cells.}
    \item{\code{equilibriumOsmoticConcentration [=  c(leaf = 0.8, sapwood = 0.6)]}: Equilibrium osmotic concentrations (mol·l-1) for leaf and sapwood cells. The difference between leaf and sapwood values helps maintaining phloem transport. The equilibrium sugar concentration is \code{equilibriumOsmoticConcentration - nonSugarConcentration} defaults to \code{[= c(leaf = 0.55, sapwood = 0.35)]}. }

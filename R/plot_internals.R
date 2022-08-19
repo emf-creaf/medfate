@@ -160,11 +160,6 @@
            "Sapwood starch concentration" = "StarchSapwood",
            "Sugar transport" = "SugarTransport",
            "Root exudation" = "RootExudation")
-  if(transpirationMode=="Sperry") {
-    TYPES = c(TYPES,
-              "Leaf osmotic potential at full turgor" = "LeafPI0",
-              "Stem osmotic potential at full turgor" = "StemPI0")
-  }
   return(TYPES)
 }
 

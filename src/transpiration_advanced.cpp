@@ -386,8 +386,7 @@ List transpirationSperry(List x, NumericVector meteovec,
   NumericVector RootCrownPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
   NumericMatrix RhizoPsiMAT = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["RhizoPsi"]);
   NumericVector EinstVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
-  NumericVector NSPLVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["NSPL"]);
-  
+
   if(NumericVector::is_na(aspect)) aspect = 0.0;
   if(NumericVector::is_na(slope)) slope = 0.0;
   double latrad = latitude * (M_PI/180.0);
@@ -717,14 +716,7 @@ List transpirationSperry(List x, NumericVector meteovec,
     }
   }
   
-  
-  //Sugar conc in sapwood and leaf of each cohort
-  NumericVector sugarLeaf(numCohorts, 0.0);
-  NumericVector sugarSapwood(numCohorts, 0.0);
-  for(int c=0;c<numCohorts;c++) {
-    sugarLeaf[c] = sugarConcentration(LeafPI0[c],20.0, nonSugarConcentration);
-    sugarSapwood[c] = sugarConcentration(StemPI0[c],20.0, nonSugarConcentration);
-  }
+
   
   //Transpiration and photosynthesis
   NumericMatrix K(numCohorts, nlayers);
@@ -806,10 +798,6 @@ List transpirationSperry(List x, NumericVector meteovec,
     NumericMatrix absSWR_SH_ML = abs_SWR_SH_ML_list[n];
 
     for(int c=0;c<numCohorts;c++) { //Plant cohort loop
-      //Current osmotic potentials
-      double leafpi0 = osmoticWaterPotential(sugarLeaf[c], Tair[iLayerCohort[c]], nonSugarConcentration);
-      double stempi0 = osmoticWaterPotential(sugarSapwood[c], Tair[iLayerCohort[c]], nonSugarConcentration);
-      
       
       //default values
       dEdPInst(c,n) = 0.0;
@@ -862,7 +850,7 @@ List transpirationSperry(List x, NumericVector meteovec,
         }
 
         //Determine turgor loss point (as proxy of stomatal closure)
-        double psiTlp = turgorLossPoint(leafpi0, LeafEPS[c]);
+        double psiTlp = turgorLossPoint(LeafPI0[c], LeafEPS[c]);
         
         //Retrieve transpiration, LeafPsi and dEdP vectors
         fittedE = sFunctionAbove["E"];
@@ -878,7 +866,7 @@ List transpirationSperry(List x, NumericVector meteovec,
                                           Cair[iLayerSunlit[c]], Patm,
                                           Tair[iLayerSunlit[c]], VPair[iLayerSunlit[c]], zWind[iLayerSunlit[c]], 
                                           SWR_SL(c,n), LWR_SL(c,n), irradianceToPhotonFlux(PAR_SL(c,n)), 
-                                          NSPLVEC[c]*Vmax298SL[c], NSPLVEC[c]*Jmax298SL[c], leafWidth[c], LAI_SL[c],
+                                          Vmax298SL[c], Jmax298SL[c], leafWidth[c], LAI_SL[c],
                                           Gswmin[c], Gswmax[c]);
           NumericVector photoSunlit = PMSunlit["photosynthesisFunction"];
           iPMSunlit[c] = PMSunlit["iMaxProfit"];
@@ -886,7 +874,7 @@ List transpirationSperry(List x, NumericVector meteovec,
                                              Cair[iLayerShade[c]], Patm,
                                              Tair[iLayerShade[c]], VPair[iLayerShade[c]], zWind[iLayerShade[c]], 
                                              SWR_SH(c,n), LWR_SH(c,n), irradianceToPhotonFlux(PAR_SH(c,n)), 
-                                             NSPLVEC[c]*Vmax298SH[c], NSPLVEC[c]*Jmax298SH[c], leafWidth[c], LAI_SH[c],
+                                             Vmax298SH[c], Jmax298SH[c], leafWidth[c], LAI_SH[c],
                                              Gswmin[c], Gswmax[c]);          
           NumericVector photoShade = PMShade["photosynthesisFunction"];
           iPMShade[c] = PMShade["iMaxProfit"];
@@ -901,16 +889,16 @@ List transpirationSperry(List x, NumericVector meteovec,
                                                               zWind[iLayerSunlit[c]], 
                                                               SWR_SL(c,n), LWR_SL(c,n), 
                                                               irradianceToPhotonFlux(PAR_SL(c,n)), 
-                                                              NSPLVEC[c]*Vmax298SL[c], 
-                                                              NSPLVEC[c]*Jmax298SL[c], 
+                                                              Vmax298SL[c], 
+                                                              Jmax298SL[c], 
                                                               leafWidth[c], LAI_SL[c]);
               outPhotoShade[c] = leafPhotosynthesisFunction2(fittedE, LeafPsi, Cair[iLayerShade[c]], Patm,
                                                              Tair[iLayerShade[c]], VPair[iLayerShade[c]], 
                                                              zWind[iLayerShade[c]], 
                                                              SWR_SH(c,n), LWR_SH(c,n), 
                                                              irradianceToPhotonFlux(PAR_SH(c,n)),
-                                                             NSPLVEC[c]*Vmax298SH[c], 
-                                                             NSPLVEC[c]*Jmax298SH[c], 
+                                                             Vmax298SH[c], 
+                                                             Jmax298SH[c], 
                                                              leafWidth[c], LAI_SH[c]);
               outPMSunlit[c] = PMSunlit;
               outPMShade[c] = PMShade;
@@ -1022,8 +1010,8 @@ List transpirationSperry(List x, NumericVector meteovec,
             double VStemSymp_mmolmax = 1000.0*((Vsapwood[c]*(1.0-StemAF[c]))/0.018); //mmol·m-2
             //Substract from maximum apoplastic compartment embolized conduits
             double VStemApo_mmolmax = 1000.0*((Vsapwood[c]*StemAF[c])/0.018); //mmol·m-2
-            double RWCLeafSymp = symplasticRelativeWaterContent(LeafSympPsiVEC[c], leafpi0, LeafEPS[c]); //mmol·m-2
-            double RWCStemSymp = symplasticRelativeWaterContent(StemSympPsiVEC[c], stempi0, StemEPS[c]); //mmol·m-2
+            double RWCLeafSymp = symplasticRelativeWaterContent(LeafSympPsiVEC[c], LeafPI0[c], LeafEPS[c]); //mmol·m-2
+            double RWCStemSymp = symplasticRelativeWaterContent(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]); //mmol·m-2
             double VLeafSymp_mmol = VLeafSymp_mmolmax * RWCLeafSymp;
             double VStemSymp_mmol = VStemSymp_mmolmax * RWCStemSymp;
             double Vcav = 0.0;
@@ -1058,13 +1046,13 @@ List transpirationSperry(List x, NumericVector meteovec,
               //Leaf symplastic water balance
               VLeafSymp_mmol += (-Flatleaf);
               RWCLeafSymp = VLeafSymp_mmol/VLeafSymp_mmolmax;
-              LeafSympPsiVEC[c] = symplasticWaterPotential(std::min(1.0,RWCLeafSymp), leafpi0, LeafEPS[c]);
+              LeafSympPsiVEC[c] = symplasticWaterPotential(std::min(1.0,RWCLeafSymp), LeafPI0[c], LeafEPS[c]);
               if(NumericVector::is_na(LeafSympPsiVEC[c]))  LeafSympPsiVEC[c] = -40.0;
               
               //Stem symplastic water balance
               VStemSymp_mmol += (-Flatstem);
               RWCStemSymp = VStemSymp_mmol/VStemSymp_mmolmax;
-              StemSympPsiVEC[c] = symplasticWaterPotential(std::min(1.0,RWCStemSymp), stempi0, StemEPS[c]);
+              StemSympPsiVEC[c] = symplasticWaterPotential(std::min(1.0,RWCStemSymp), StemPI0[c], StemEPS[c]);
               if(NumericVector::is_na(StemSympPsiVEC[c]))  StemSympPsiVEC[c] = -40.0;
               
               //Stem apoplastic water balance
@@ -1178,8 +1166,8 @@ List transpirationSperry(List x, NumericVector meteovec,
       if(N[c]>0.0) {
         //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
         PLC(c,n) = StemPLCVEC[c];
-        StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], stempi0, StemEPS[c]);
-        LeafSympRWCInst(c,n) = symplasticRelativeWaterContent(LeafSympPsiVEC[c], leafpi0, LeafEPS[c]);
+        StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]);
+        LeafSympRWCInst(c,n) = symplasticRelativeWaterContent(LeafSympPsiVEC[c], LeafPI0[c], LeafEPS[c]);
         StemRWCInst(c,n) = StemSympRWCInst(c,n)*(1.0 - StemAF[c]) + apoplasticRelativeWaterContent(Stem1PsiVEC[c], VCstem_c[c], VCstem_d[c])*StemAF[c];
         LeafRWCInst(c,n) = LeafSympRWCInst(c,n)*(1.0 - LeafAF[c]) + apoplasticRelativeWaterContent(LeafPsiVEC[c], VCleaf_c[c], VCleaf_d[c])*LeafAF[c];
         StemPsiInst(c,n) = Stem1PsiVEC[c]; 

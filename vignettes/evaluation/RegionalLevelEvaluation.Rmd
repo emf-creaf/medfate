@@ -252,7 +252,7 @@ Soil physical properties were drawn from SoilGrids (Hengl 2016), complemented by
 
 Default species-specific parameters were modified using the results of the [meta-modelling exercise](https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html) and the [growth calibration exercise](https://emf-creaf.github.io/medfate/articles/parametrization/GrowthCalibration.html). These two exercises do not provide values for all the main species included here, so it is expected that evaluation results are worse for those species not included in those exercises.
 
-Simulations were done for both the **basic** and **advanced** transpiration/photosynthesis sub-models. On a server with 20 parallel threads, computational times are around **5 hours** (i.e. 2 min/plot) for the **basic** sub-model, versus around **10 days** (i.e. 1.6 hrs/plot) for the **advanced** submodel. The average number of tree cohorts per plot is **`r round(nrow(dfdbh_bas)/length(unique(dfdbh_bas$ID)))`**.
+Simulations were done for both the **basic** and **advanced** transpiration/photosynthesis sub-models. On a server with 20 parallel threads, computational times are around **5 hours** (i.e. 2 min/plot) for the **basic** sub-model, versus around **6 days** (i.e. 1 hr/plot) for the **advanced** submodel. The average number of tree cohorts per plot is **`r round(nrow(dfdbh_bas)/length(unique(dfdbh_bas$ID)))`**.
 
 ```{r, echo = FALSE}
 # 
@@ -327,7 +327,7 @@ plot_cov_clim_dbh(dfdbh_adv, points = TRUE)
 
 Predictive capacity by species (for species with > `r params$minTreeRecords` tree records):
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, warning=FALSE, message=FALSE}
 dfdbh %>% group_by(Name,Submodel) %>%
   summarize(n = n(),
             Obs = mean(obs, na.rm=TRUE),
@@ -345,7 +345,7 @@ dfdbh %>% group_by(Name,Submodel) %>%
 ### Annual height increment (cm/yr)
 
 Overall predictive capacity:
-```{r, echo = FALSE}
+```{r, echo = FALSE, warning=FALSE, message=FALSE}
 dfh %>% group_by(Submodel) %>% 
   summarize(Name = "All",
             n = n(),
@@ -362,7 +362,7 @@ dfh %>% group_by(Submodel) %>%
 
 Predictive capacity by species (for species with > `r params$minTreeRecords` tree records):
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, warning=FALSE, message=FALSE}
 dfh %>% group_by(Name, Submodel) %>%
   summarize(n = n(),
             Obs = mean(obs, na.rm=TRUE),

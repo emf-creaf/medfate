@@ -41,11 +41,9 @@ defaultControl<-function(transpirationMode = "Granier") {
     # growth/mortality
     allowDessication = TRUE,
     allowStarvation = TRUE,
-    allowDefoliation = FALSE,
     sinkLimitation = TRUE,
     shrubDynamics = TRUE,
     allocationStrategy = "Al2As",
-    nonStomatalPhotosynthesisLimitation = TRUE,
     phloemConductanceFactor = 0.2, # phloem conductance per leaf area basis (l*m-2*MPa-1*s-1)
     nonSugarConcentration = 0.25, # mol · l-1
     equilibriumOsmoticConcentration = list(leaf = 0.8, sapwood = 0.6),  # (Paljakka et al. 2017)

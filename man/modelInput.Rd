@@ -134,7 +134,7 @@ Functions \code{forest2spwbInput()} and \code{spwbInput()} return a list of clas
        \item{\code{Plant_kmax}: Maximum whole-plant conductance.}
     }
   }
-  \item{\code{paramsWaterStorage}: A data frame with plant water storage parameters for each cohort (only if \code{control$transpirationMode = "Sperry"}):
+  \item{\code{paramsWaterStorage}: A data frame with plant water storage parameters for each cohort:
      \itemize{
        \item{\code{LeafPI0}: Osmotic potential at full turgor of leaves (MPa).}
        \item{\code{LeafEPS}: Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of leaves (MPa).}

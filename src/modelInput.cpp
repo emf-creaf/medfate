@@ -715,8 +715,7 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
                            Named("LeafPsi") = NumericVector(numCohorts, -0.033),
                            Named("StemSympPsi") = NumericVector(numCohorts, -0.033),
                            Named("LeafSympPsi") = NumericVector(numCohorts, -0.033),
-                           Named("StemPLC") = NumericVector(numCohorts, 0.0),
-                           Named("NSPL") = NumericVector(numCohorts, 1.0));
+                           Named("StemPLC") = NumericVector(numCohorts, 0.0));
   }
   df.attr("row.names") = above.attr("row.names");
   return(df);
@@ -1077,7 +1076,6 @@ void resetInputs(List x) {
     NumericVector LeafSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
     NumericVector LeafPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
     NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
-    NumericVector NSPL = Rcpp::as<Rcpp::NumericVector>(internalWater["NSPL"]);
     for(int i=0;i<LeafPsi.size();i++) {
       Einst[i] = 0.0;
       RootCrownPsi[i] = -0.033;
@@ -1087,7 +1085,6 @@ void resetInputs(List x) {
       LeafSympPsi[i] = -0.033;
       StemSympPsi[i] = -0.033;
       StemPLC[i] = 0.0;
-      NSPL[i] = 1.0;
       for(int j=0;j<RhizoPsi.ncol();j++) RhizoPsi(i,j) = -0.033;
     }
   } else {

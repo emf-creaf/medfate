@@ -226,8 +226,7 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
   }
   else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration",  "GrowthCosts", 
                       "LabileCarbonBalance", 
-                      "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport", "RootExudation",
-                      "LeafPI0", "StemPI0")) {
+                      "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport", "RootExudation")) {
       OM = x$LabileCarbonBalance[[type]][,cohorts,drop=FALSE]
   } 
   else if(type == "PhotosynthesisMaintenanceRatio") {
@@ -392,8 +391,7 @@ plot.fordyn<-function(x, type="StandBasalArea",
       }
       if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration",  "GrowthCosts", 
                      "LabileCarbonBalance", 
-                     "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport", "RootExudation",
-                     "LeafPI0", "StemPI0")) {
+                     "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport", "RootExudation")) {
         OM = summary(x, freq = "days", output = paste0("LabileCarbonBalance$",type))[,cohorts,drop=FALSE]
       } 
       if(type =="PhotosynthesisMaintenanceRatio") {

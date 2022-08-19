@@ -124,8 +124,6 @@ In addition to the former, the following plots are available for objects \code{\
     \item{\code{"SugarSapwood"}:  Sugar concentration in sapwood.}
     \item{\code{"StarchSapwood"}:  Starch concentration in sapwood.}
     \item{\code{"SugarTransport"}:  Phloem sugar transport rate.}
-    \item{\code{"LeafPI0"}:  Leaf osmotic concentration at full turgor.}
-    \item{\code{"StemPI0"}:  Sapwood osmotic concentration at full turgor.}
     \item{\code{"StructuralBiomassBalance"}:  Daily structural biomass balance (g dry · ind-2).}
     \item{\code{"LabileBiomassBalance"}:  Daily labile biomass balance (g dry · ind-2).}
     \item{\code{"PlantBiomassBalance"}:  Daily plant biomass balance, i.e. labile change + structural change (g dry · ind-2).}
