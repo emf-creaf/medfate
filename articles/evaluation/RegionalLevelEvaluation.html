@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.7</span>
       </span>
     </div>
 
@@ -75,7 +75,7 @@ with forest inventory data</h1>
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-08-16</h4>
+            <h4 data-toc-skip class="date">2022-08-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/evaluation/RegionalLevelEvaluation.Rmd" class="external-link"><code>vignettes/evaluation/RegionalLevelEvaluation.Rmd</code></a></small>
       <div class="hidden name"><code>RegionalLevelEvaluation.Rmd</code></div>
@@ -99,7 +99,8 @@ large set of permanent plots. The evaluation focuses first on the growth
 (in diameter and height) of surviving trees, then turning the attention
 to the basal area of dead trees and overall changes in basal area.</p>
 <p>This evaluation was conducted using <strong>medfate</strong> package
-version <strong>2.7.6</strong>.</p>
+version <strong>2.7.6</strong> for the basic model and
+<strong>2.7.7</strong> for the advanced model.</p>
 </div>
 <div class="section level3">
 <h3 id="simulation-procedure">Simulation procedure<a class="anchor" aria-label="anchor" href="#simulation-procedure"></a>
@@ -124,9 +125,9 @@ results are worse for those species not included in those exercises.</p>
 <strong>advanced</strong> transpiration/photosynthesis sub-models. On a
 server with 20 parallel threads, computational times are around
 <strong>5 hours</strong> (i.e. 2 min/plot) for the
-<strong>basic</strong> sub-model, versus around <strong>10 days</strong>
-(i.e. 1.6 hrs/plot) for the <strong>advanced</strong> submodel. The
-average number of tree cohorts per plot is <strong>17</strong>.</p>
+<strong>basic</strong> sub-model, versus around <strong>6 days</strong>
+(i.e. 1 hr/plot) for the <strong>advanced</strong> submodel. The average
+number of tree cohorts per plot is <strong>17</strong>.</p>
 <p>In the following sections, we provide the bias, mean absolute error
 (both in absolute and relative terms) and R-squared of growth and
 mortality predictions at the tree-level and stand-level obtained by
@@ -211,28 +212,28 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-13994
+7119
 </td>
 <td style="text-align:right;">
-0.2193130
+0.2244351
 </td>
 <td style="text-align:right;">
-0.1902528
+0.2651587
 </td>
 <td style="text-align:right;">
--0.0290603
+0.0407236
 </td>
 <td style="text-align:right;">
--13.250586
+18.144931
 </td>
 <td style="text-align:right;">
-0.1914753
+0.1852807
 </td>
 <td style="text-align:right;">
-87.30683
+82.55426
 </td>
 <td style="text-align:right;">
-0.0923867
+0.1093250
 </td>
 </tr>
 </tbody>
@@ -322,28 +323,28 @@ Abies alba
 Advanced
 </td>
 <td style="text-align:right;">
-615
+300
 </td>
 <td style="text-align:right;">
-0.3895917
+0.3911584
 </td>
 <td style="text-align:right;">
-0.3889876
+0.4149362
 </td>
 <td style="text-align:right;">
--0.0006041
+0.0237777
 </td>
 <td style="text-align:right;">
--0.1550632
+6.0787974
 </td>
 <td style="text-align:right;">
-0.3147501
+0.2516964
 </td>
 <td style="text-align:right;">
-80.78974
+64.34641
 </td>
 <td style="text-align:right;">
-0.0880233
+0.1448564
 </td>
 </tr>
 <tr>
@@ -412,38 +413,6 @@ Basic
 </tr>
 <tr>
 <td style="text-align:left;">
-Betula spp.
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-206
-</td>
-<td style="text-align:right;">
-0.1321442
-</td>
-<td style="text-align:right;">
-0.1507235
-</td>
-<td style="text-align:right;">
-0.0185794
-</td>
-<td style="text-align:right;">
-14.0599092
-</td>
-<td style="text-align:right;">
-0.1448039
-</td>
-<td style="text-align:right;">
-109.58024
-</td>
-<td style="text-align:right;">
-0.0005372
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 Castanea sativa
 </td>
 <td style="text-align:left;">
@@ -504,38 +473,6 @@ Basic
 </td>
 <td style="text-align:right;">
 0.0708216
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Fagus sylvatica
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-578
-</td>
-<td style="text-align:right;">
-0.2732079
-</td>
-<td style="text-align:right;">
-0.1597148
-</td>
-<td style="text-align:right;">
--0.1134930
-</td>
-<td style="text-align:right;">
--41.5409032
-</td>
-<td style="text-align:right;">
-0.2380275
-</td>
-<td style="text-align:right;">
-87.12324
-</td>
-<td style="text-align:right;">
-0.0151340
 </td>
 </tr>
 <tr>
@@ -610,28 +547,28 @@ Pinus halepensis
 Advanced
 </td>
 <td style="text-align:right;">
-1555
+1034
 </td>
 <td style="text-align:right;">
-0.2958590
+0.2844624
 </td>
 <td style="text-align:right;">
-0.2129701
+0.3359146
 </td>
 <td style="text-align:right;">
--0.0828889
+0.0514521
 </td>
 <td style="text-align:right;">
--28.0163591
+18.0875014
 </td>
 <td style="text-align:right;">
-0.1882051
+0.1747802
 </td>
 <td style="text-align:right;">
-63.61309
+61.44229
 </td>
 <td style="text-align:right;">
-0.0473317
+0.0891656
 </td>
 </tr>
 <tr>
@@ -674,28 +611,28 @@ Pinus nigra
 Advanced
 </td>
 <td style="text-align:right;">
-1519
+824
 </td>
 <td style="text-align:right;">
-0.1964264
+0.1990554
 </td>
 <td style="text-align:right;">
-0.1698154
+0.2476900
 </td>
 <td style="text-align:right;">
--0.0266110
+0.0486346
 </td>
 <td style="text-align:right;">
--13.5475590
+24.4326933
 </td>
 <td style="text-align:right;">
-0.1707150
+0.2032144
 </td>
 <td style="text-align:right;">
-86.91040
+102.08936
 </td>
 <td style="text-align:right;">
-0.0218372
+0.0428353
 </td>
 </tr>
 <tr>
@@ -764,38 +701,6 @@ Basic
 </tr>
 <tr>
 <td style="text-align:left;">
-Pinus pinea
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-344
-</td>
-<td style="text-align:right;">
-0.3003518
-</td>
-<td style="text-align:right;">
-0.2552960
-</td>
-<td style="text-align:right;">
--0.0450558
-</td>
-<td style="text-align:right;">
--15.0010235
-</td>
-<td style="text-align:right;">
-0.2140068
-</td>
-<td style="text-align:right;">
-71.25205
-</td>
-<td style="text-align:right;">
-0.0293800
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 Pinus sylvestris
 </td>
 <td style="text-align:left;">
@@ -834,28 +739,28 @@ Pinus sylvestris
 Advanced
 </td>
 <td style="text-align:right;">
-2978
+1843
 </td>
 <td style="text-align:right;">
-0.2295668
+0.2374330
 </td>
 <td style="text-align:right;">
-0.2540284
+0.2863850
 </td>
 <td style="text-align:right;">
-0.0244617
+0.0489520
 </td>
 <td style="text-align:right;">
-10.6555753
+20.6171868
 </td>
 <td style="text-align:right;">
-0.1786566
+0.1893547
 </td>
 <td style="text-align:right;">
-77.82339
+79.75077
 </td>
 <td style="text-align:right;">
-0.0002310
+0.0046081
 </td>
 </tr>
 <tr>
@@ -898,28 +803,28 @@ Pinus uncinata
 Advanced
 </td>
 <td style="text-align:right;">
-1519
+918
 </td>
 <td style="text-align:right;">
-0.1963526
+0.1904534
 </td>
 <td style="text-align:right;">
-0.2082378
+0.2342117
 </td>
 <td style="text-align:right;">
-0.0118852
+0.0437582
 </td>
 <td style="text-align:right;">
-6.0529803
+22.9758144
 </td>
 <td style="text-align:right;">
-0.1482316
+0.1488428
 </td>
 <td style="text-align:right;">
-75.49256
+78.15182
 </td>
 <td style="text-align:right;">
-0.0032393
+0.0000106
 </td>
 </tr>
 <tr>
@@ -988,38 +893,6 @@ Basic
 </tr>
 <tr>
 <td style="text-align:left;">
-Quercus faginea
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-232
-</td>
-<td style="text-align:right;">
-0.1901164
-</td>
-<td style="text-align:right;">
-0.1075773
-</td>
-<td style="text-align:right;">
--0.0825391
-</td>
-<td style="text-align:right;">
--43.4150544
-</td>
-<td style="text-align:right;">
-0.1483514
-</td>
-<td style="text-align:right;">
-78.03187
-</td>
-<td style="text-align:right;">
-0.0297315
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 Quercus ilex
 </td>
 <td style="text-align:left;">
@@ -1058,28 +931,28 @@ Quercus ilex
 Advanced
 </td>
 <td style="text-align:right;">
-1931
+757
 </td>
 <td style="text-align:right;">
-0.1340874
+0.1544389
 </td>
 <td style="text-align:right;">
-0.0698679
+0.1719865
 </td>
 <td style="text-align:right;">
--0.0642196
+0.0175476
 </td>
 <td style="text-align:right;">
--47.8937882
+11.3621791
 </td>
 <td style="text-align:right;">
-0.1363111
+0.1429261
 </td>
 <td style="text-align:right;">
-101.65836
+92.54540
 </td>
 <td style="text-align:right;">
-0.0808396
+0.0438252
 </td>
 </tr>
 <tr>
@@ -1112,38 +985,6 @@ Basic
 </td>
 <td style="text-align:right;">
 0.0129909
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Quercus petraea
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-230
-</td>
-<td style="text-align:right;">
-0.1878277
-</td>
-<td style="text-align:right;">
-0.0985066
-</td>
-<td style="text-align:right;">
--0.0893210
-</td>
-<td style="text-align:right;">
--47.5547818
-</td>
-<td style="text-align:right;">
-0.1896325
-</td>
-<td style="text-align:right;">
-100.96091
-</td>
-<td style="text-align:right;">
-0.0343548
 </td>
 </tr>
 <tr>
@@ -1186,28 +1027,28 @@ Quercus pubescens
 Advanced
 </td>
 <td style="text-align:right;">
-778
+203
 </td>
 <td style="text-align:right;">
-0.1761588
+0.1544798
 </td>
 <td style="text-align:right;">
-0.1124026
+0.1857469
 </td>
 <td style="text-align:right;">
--0.0637562
+0.0312671
 </td>
 <td style="text-align:right;">
--36.1924587
+20.2402501
 </td>
 <td style="text-align:right;">
-0.1454587
+0.1239925
 </td>
 <td style="text-align:right;">
-82.57250
+80.26453
 </td>
 <td style="text-align:right;">
-0.0333238
+0.0246301
 </td>
 </tr>
 <tr>
@@ -1250,28 +1091,28 @@ Quercus suber
 Advanced
 </td>
 <td style="text-align:right;">
-675
+269
 </td>
 <td style="text-align:right;">
-0.1600965
+0.1306005
 </td>
 <td style="text-align:right;">
-0.0934365
+0.2120650
 </td>
 <td style="text-align:right;">
--0.0666601
+0.0814646
 </td>
 <td style="text-align:right;">
--41.6374128
+62.3769275
 </td>
 <td style="text-align:right;">
-0.1683253
+0.1389418
 </td>
 <td style="text-align:right;">
-105.13989
+106.38691
 </td>
 <td style="text-align:right;">
-0.0246265
+0.0338240
 </td>
 </tr>
 </tbody>
@@ -1341,7 +1182,7 @@ All
 13.65716
 </td>
 <td style="text-align:right;">
-141.1740
+141.174
 </td>
 <td style="text-align:right;">
 0.0539771
@@ -1355,35 +1196,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-13994
+7119
 </td>
 <td style="text-align:right;">
-10.171223
+11.106073
 </td>
 <td style="text-align:right;">
-8.773740
+12.444699
 </td>
 <td style="text-align:right;">
--1.3974825
+1.3386259
 </td>
 <td style="text-align:right;">
--13.739572
+12.053098
 </td>
 <td style="text-align:right;">
-13.90866
+13.83605
 </td>
 <td style="text-align:right;">
-136.7452
+124.581
 </td>
 <td style="text-align:right;">
-0.0636635
+0.0563627
 </td>
 </tr>
 </tbody>
 </table>
 <p>Predictive capacity by species (for species with &gt; 200 tree
 records):</p>
-<pre><code><span><span class="co">## Warning in cor(obs, pred): the standard deviation is zero</span></span></code></pre>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -1458,28 +1298,28 @@ Abies alba
 Advanced
 </td>
 <td style="text-align:right;">
-615
+300
 </td>
 <td style="text-align:right;">
-17.237380
+22.716483
 </td>
 <td style="text-align:right;">
-12.521246
+13.826520
 </td>
 <td style="text-align:right;">
--4.7161342
+-8.8899628
 </td>
 <td style="text-align:right;">
--27.359924
+-39.134415
 </td>
 <td style="text-align:right;">
-22.731430
+23.468756
 </td>
 <td style="text-align:right;">
-131.87288
+103.31157
 </td>
 <td style="text-align:right;">
-0.1690146
+0.1423933
 </td>
 </tr>
 <tr>
@@ -1548,38 +1388,6 @@ Basic
 </tr>
 <tr>
 <td style="text-align:left;">
-Betula spp.
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-206
-</td>
-<td style="text-align:right;">
-9.879441
-</td>
-<td style="text-align:right;">
-8.966090
-</td>
-<td style="text-align:right;">
--0.9133508
-</td>
-<td style="text-align:right;">
--9.244964
-</td>
-<td style="text-align:right;">
-17.436494
-</td>
-<td style="text-align:right;">
-176.49272
-</td>
-<td style="text-align:right;">
-0.0000037
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 Castanea sativa
 </td>
 <td style="text-align:left;">
@@ -1640,38 +1448,6 @@ Basic
 </td>
 <td style="text-align:right;">
 0.0010925
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Fagus sylvatica
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-578
-</td>
-<td style="text-align:right;">
-16.676008
-</td>
-<td style="text-align:right;">
-6.847284
-</td>
-<td style="text-align:right;">
--9.8287235
-</td>
-<td style="text-align:right;">
--58.939307
-</td>
-<td style="text-align:right;">
-22.331485
-</td>
-<td style="text-align:right;">
-133.91386
-</td>
-<td style="text-align:right;">
-0.0064143
 </td>
 </tr>
 <tr>
@@ -1746,28 +1522,28 @@ Pinus halepensis
 Advanced
 </td>
 <td style="text-align:right;">
-1555
+1034
 </td>
 <td style="text-align:right;">
-13.252384
+13.231214
 </td>
 <td style="text-align:right;">
-8.967642
+13.953425
 </td>
 <td style="text-align:right;">
--4.2847423
+0.7222116
 </td>
 <td style="text-align:right;">
--32.331860
+5.458393
 </td>
 <td style="text-align:right;">
-12.284289
+12.210444
 </td>
 <td style="text-align:right;">
-92.69493
+92.28514
 </td>
 <td style="text-align:right;">
-0.0061094
+0.0062411
 </td>
 </tr>
 <tr>
@@ -1810,28 +1586,28 @@ Pinus nigra
 Advanced
 </td>
 <td style="text-align:right;">
-1519
+824
 </td>
 <td style="text-align:right;">
-11.881956
+12.620038
 </td>
 <td style="text-align:right;">
-9.934938
+14.726550
 </td>
 <td style="text-align:right;">
--1.9470185
+2.1065119
 </td>
 <td style="text-align:right;">
--16.386346
+16.691803
 </td>
 <td style="text-align:right;">
-11.410111
+10.779387
 </td>
 <td style="text-align:right;">
-96.02890
+85.41485
 </td>
 <td style="text-align:right;">
-0.0176603
+0.0251170
 </td>
 </tr>
 <tr>
@@ -1900,38 +1676,6 @@ Basic
 </tr>
 <tr>
 <td style="text-align:left;">
-Pinus pinea
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-344
-</td>
-<td style="text-align:right;">
-13.510473
-</td>
-<td style="text-align:right;">
-10.923915
-</td>
-<td style="text-align:right;">
--2.5865580
-</td>
-<td style="text-align:right;">
--19.144838
-</td>
-<td style="text-align:right;">
-12.851386
-</td>
-<td style="text-align:right;">
-95.12166
-</td>
-<td style="text-align:right;">
-0.0269977
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 Pinus sylvestris
 </td>
 <td style="text-align:left;">
@@ -1970,28 +1714,28 @@ Pinus sylvestris
 Advanced
 </td>
 <td style="text-align:right;">
-2978
+1843
 </td>
 <td style="text-align:right;">
-12.236409
+11.465603
 </td>
 <td style="text-align:right;">
-13.344424
+15.165135
 </td>
 <td style="text-align:right;">
-1.1080157
+3.6995319
 </td>
 <td style="text-align:right;">
-9.055073
+32.266353
 </td>
 <td style="text-align:right;">
-13.257764
+13.740216
 </td>
 <td style="text-align:right;">
-108.34686
+119.83858
 </td>
 <td style="text-align:right;">
-0.0144007
+0.0293620
 </td>
 </tr>
 <tr>
@@ -2034,28 +1778,28 @@ Pinus uncinata
 Advanced
 </td>
 <td style="text-align:right;">
-1519
+918
 </td>
 <td style="text-align:right;">
-10.192545
+11.380933
 </td>
 <td style="text-align:right;">
-10.031588
+12.026722
 </td>
 <td style="text-align:right;">
--0.1609575
+0.6457894
 </td>
 <td style="text-align:right;">
--1.579169
+5.674310
 </td>
 <td style="text-align:right;">
-10.301574
+10.739066
 </td>
 <td style="text-align:right;">
-101.06969
+94.36016
 </td>
 <td style="text-align:right;">
-0.0900448
+0.0857786
 </td>
 </tr>
 <tr>
@@ -2124,38 +1868,6 @@ Basic
 </tr>
 <tr>
 <td style="text-align:left;">
-Quercus faginea
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-232
-</td>
-<td style="text-align:right;">
-6.162094
-</td>
-<td style="text-align:right;">
-3.846969
-</td>
-<td style="text-align:right;">
--2.3151252
-</td>
-<td style="text-align:right;">
--37.570429
-</td>
-<td style="text-align:right;">
-10.385413
-</td>
-<td style="text-align:right;">
-168.53707
-</td>
-<td style="text-align:right;">
-0.0123788
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 Quercus ilex
 </td>
 <td style="text-align:left;">
@@ -2194,28 +1906,28 @@ Quercus ilex
 Advanced
 </td>
 <td style="text-align:right;">
-1931
+757
 </td>
 <td style="text-align:right;">
-4.193478
+5.641259
 </td>
 <td style="text-align:right;">
-2.204251
+5.302897
 </td>
 <td style="text-align:right;">
--1.9892270
+-0.3383621
 </td>
 <td style="text-align:right;">
--47.436211
+-5.997989
 </td>
 <td style="text-align:right;">
-9.131025
+10.374970
 </td>
 <td style="text-align:right;">
-217.74350
+183.91231
 </td>
 <td style="text-align:right;">
-0.0182352
+0.0097279
 </td>
 </tr>
 <tr>
@@ -2248,38 +1960,6 @@ Basic
 </td>
 <td style="text-align:right;">
 0.0091231
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Quercus petraea
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-230
-</td>
-<td style="text-align:right;">
-4.329320
-</td>
-<td style="text-align:right;">
-4.927475
-</td>
-<td style="text-align:right;">
-0.5981547
-</td>
-<td style="text-align:right;">
-13.816367
-</td>
-<td style="text-align:right;">
-14.804488
-</td>
-<td style="text-align:right;">
-341.95874
-</td>
-<td style="text-align:right;">
-0.0044622
 </td>
 </tr>
 <tr>
@@ -2322,28 +2002,28 @@ Quercus pubescens
 Advanced
 </td>
 <td style="text-align:right;">
-778
+203
 </td>
 <td style="text-align:right;">
-4.033806
+3.227639
 </td>
 <td style="text-align:right;">
-3.691691
+7.522649
 </td>
 <td style="text-align:right;">
--0.3421155
+4.2950100
 </td>
 <td style="text-align:right;">
--8.481208
+133.069718
 </td>
 <td style="text-align:right;">
-13.414174
+10.514468
 </td>
 <td style="text-align:right;">
-332.54383
+325.76347
 </td>
 <td style="text-align:right;">
-0.0926238
+0.0822467
 </td>
 </tr>
 <tr>
@@ -2386,28 +2066,28 @@ Quercus suber
 Advanced
 </td>
 <td style="text-align:right;">
-675
+269
 </td>
 <td style="text-align:right;">
-3.390674
+2.792262
 </td>
 <td style="text-align:right;">
-2.981520
+7.458531
 </td>
 <td style="text-align:right;">
--0.4091538
+4.6662683
 </td>
 <td style="text-align:right;">
--12.067033
+167.114261
 </td>
 <td style="text-align:right;">
-9.744616
+9.410636
 </td>
 <td style="text-align:right;">
-287.39464
+337.02552
 </td>
 <td style="text-align:right;">
-0.0038142
+0.0113671
 </td>
 </tr>
 </tbody>
@@ -2496,28 +2176,28 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-840
+430
 </td>
 <td style="text-align:right;">
-4.711206
+4.717601
 </td>
 <td style="text-align:right;">
-3.873544
+5.637871
 </td>
 <td style="text-align:right;">
--0.8376622
+0.9202696
 </td>
 <td style="text-align:right;">
--17.780207
+19.507151
 </td>
 <td style="text-align:right;">
-2.683921
+3.016629
 </td>
 <td style="text-align:right;">
-56.96887
+63.94414
 </td>
 <td style="text-align:right;">
-0.5263263
+0.5639695
 </td>
 </tr>
 </tbody>
@@ -2671,28 +2351,28 @@ Pinus halepensis
 Advanced
 </td>
 <td style="text-align:right;">
-172
+109
 </td>
 <td style="text-align:right;">
-3.4098484
+3.5462508
 </td>
 <td style="text-align:right;">
-2.4027957
+4.3533947
 </td>
 <td style="text-align:right;">
--1.0070526
+0.8071439
 </td>
 <td style="text-align:right;">
--29.533649
+22.760485
 </td>
 <td style="text-align:right;">
-1.8275640
+2.0980189
 </td>
 <td style="text-align:right;">
-53.59664
+59.16160
 </td>
 <td style="text-align:right;">
-0.7244916
+0.7811700
 </td>
 </tr>
 <tr>
@@ -2725,38 +2405,6 @@ Basic
 </td>
 <td style="text-align:right;">
 0.6379645
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pinus nigra
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-162
-</td>
-<td style="text-align:right;">
-2.4023945
-</td>
-<td style="text-align:right;">
-2.0349037
-</td>
-<td style="text-align:right;">
--0.3674908
-</td>
-<td style="text-align:right;">
--15.296856
-</td>
-<td style="text-align:right;">
-1.5734451
-</td>
-<td style="text-align:right;">
-65.49487
-</td>
-<td style="text-align:right;">
-0.6581009
 </td>
 </tr>
 <tr>
@@ -2831,28 +2479,28 @@ Pinus sylvestris
 Advanced
 </td>
 <td style="text-align:right;">
-224
+132
 </td>
 <td style="text-align:right;">
-3.7148587
+3.9379612
 </td>
 <td style="text-align:right;">
-4.1497345
+4.8333277
 </td>
 <td style="text-align:right;">
-0.4348758
+0.8953665
 </td>
 <td style="text-align:right;">
-11.706390
+22.736804
 </td>
 <td style="text-align:right;">
-2.7680072
+3.0845161
 </td>
 <td style="text-align:right;">
-74.51178
+78.32774
 </td>
 <td style="text-align:right;">
-0.5436448
+0.5767092
 </td>
 </tr>
 <tr>
@@ -2959,28 +2607,28 @@ Quercus ilex
 Advanced
 </td>
 <td style="text-align:right;">
-235
+100
 </td>
 <td style="text-align:right;">
-1.9400378
+1.9951609
 </td>
 <td style="text-align:right;">
-0.9759437
+2.2631773
 </td>
 <td style="text-align:right;">
--0.9640940
+0.2680163
 </td>
 <td style="text-align:right;">
--49.694602
+13.433320
 </td>
 <td style="text-align:right;">
-1.6225588
+1.6530197
 </td>
 <td style="text-align:right;">
-83.63542
+82.85145
 </td>
 <td style="text-align:right;">
-0.5853749
+0.4344516
 </td>
 </tr>
 <tr>
@@ -3045,38 +2693,6 @@ Basic
 </td>
 <td style="text-align:right;">
 0.5890804
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Quercus pubescens
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-130
-</td>
-<td style="text-align:right;">
-1.4004979
-</td>
-<td style="text-align:right;">
-0.8694931
-</td>
-<td style="text-align:right;">
--0.5310048
-</td>
-<td style="text-align:right;">
--37.915428
-</td>
-<td style="text-align:right;">
-1.0611879
-</td>
-<td style="text-align:right;">
-75.77219
-</td>
-<td style="text-align:right;">
-0.6973458
 </td>
 </tr>
 <tr>
@@ -3175,7 +2791,7 @@ All
 -0.0996380
 </td>
 <td style="text-align:right;">
--11.002272
+-11.00227
 </td>
 <td style="text-align:right;">
 1.738353
@@ -3195,28 +2811,28 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-840
+430
 </td>
 <td style="text-align:right;">
-0.9423504
+0.9174291
 </td>
 <td style="text-align:right;">
-0.9875512
+1.5132778
 </td>
 <td style="text-align:right;">
-0.0452008
+0.5958488
 </td>
 <td style="text-align:right;">
-4.796598
+64.94767
 </td>
 <td style="text-align:right;">
-1.891700
+2.798826
 </td>
 <td style="text-align:right;">
-200.7427
+305.0728
 </td>
 <td style="text-align:right;">
-0.0901716
+0.0400631
 </td>
 </tr>
 </tbody>
@@ -3403,28 +3019,28 @@ Pinus halepensis
 Advanced
 </td>
 <td style="text-align:right;">
-182
+128
 </td>
 <td style="text-align:right;">
-0.5077268
+0.5596928
 </td>
 <td style="text-align:right;">
-0.9255538
+1.2857462
 </td>
 <td style="text-align:right;">
-0.4178270
+0.7260533
 </td>
 <td style="text-align:right;">
-82.2936540
+129.7235321
 </td>
 <td style="text-align:right;">
-2.1277951
+2.4266708
 </td>
 <td style="text-align:right;">
-419.0827
+433.5719
 </td>
 <td style="text-align:right;">
-0.0118317
+0.0078909
 </td>
 </tr>
 <tr>
@@ -3457,38 +3073,6 @@ Basic
 </td>
 <td style="text-align:right;">
 0.0239165
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pinus nigra
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-163
-</td>
-<td style="text-align:right;">
-0.3314109
-</td>
-<td style="text-align:right;">
-0.1952873
-</td>
-<td style="text-align:right;">
--0.1361236
-</td>
-<td style="text-align:right;">
--41.0739573
-</td>
-<td style="text-align:right;">
-0.8997443
-</td>
-<td style="text-align:right;">
-271.4891
-</td>
-<td style="text-align:right;">
-0.2163808
 </td>
 </tr>
 <tr>
@@ -3563,28 +3147,28 @@ Pinus sylvestris
 Advanced
 </td>
 <td style="text-align:right;">
-230
+140
 </td>
 <td style="text-align:right;">
-0.7597411
+0.7803586
 </td>
 <td style="text-align:right;">
-0.7307712
+0.9189770
 </td>
 <td style="text-align:right;">
--0.0289699
+0.1386184
 </td>
 <td style="text-align:right;">
--3.8131304
+17.7634245
 </td>
 <td style="text-align:right;">
-1.1086484
+1.7487239
 </td>
 <td style="text-align:right;">
-145.9245
+224.0924
 </td>
 <td style="text-align:right;">
-0.2787062
+0.0739529
 </td>
 </tr>
 <tr>
@@ -3691,28 +3275,28 @@ Quercus ilex
 Advanced
 </td>
 <td style="text-align:right;">
-238
+101
 </td>
 <td style="text-align:right;">
-0.2099362
+0.1188055
 </td>
 <td style="text-align:right;">
-0.0695309
+0.0586557
 </td>
 <td style="text-align:right;">
--0.1404054
+-0.0601498
 </td>
 <td style="text-align:right;">
--66.8800041
+-50.6288152
 </td>
 <td style="text-align:right;">
-0.8286553
+0.4413579
 </td>
 <td style="text-align:right;">
-394.7176
+371.4963
 </td>
 <td style="text-align:right;">
-0.0086352
+0.0161819
 </td>
 </tr>
 <tr>
@@ -3777,38 +3361,6 @@ Basic
 </td>
 <td style="text-align:right;">
 0.0594814
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Quercus pubescens
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-131
-</td>
-<td style="text-align:right;">
-0.1269307
-</td>
-<td style="text-align:right;">
-0.0000007
-</td>
-<td style="text-align:right;">
--0.1269300
-</td>
-<td style="text-align:right;">
--99.9994302
-</td>
-<td style="text-align:right;">
-0.3718183
-</td>
-<td style="text-align:right;">
-292.9302
-</td>
-<td style="text-align:right;">
-0.0017127
 </td>
 </tr>
 <tr>
@@ -3916,7 +3468,7 @@ All
 197.6960
 </td>
 <td style="text-align:right;">
-0.0057360
+0.005736
 </td>
 </tr>
 <tr>
@@ -3927,28 +3479,28 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-840
+430
 </td>
 <td style="text-align:right;">
-1.216391
+1.199790
 </td>
 <td style="text-align:right;">
-1.368054
+1.351683
 </td>
 <td style="text-align:right;">
-0.1516630
+0.1518933
 </td>
 <td style="text-align:right;">
-12.46828
+12.65998
 </td>
 <td style="text-align:right;">
-2.525563
+2.298663
 </td>
 <td style="text-align:right;">
-207.6276
+191.5888
 </td>
 <td style="text-align:right;">
-0.0001656
+0.010650
 </td>
 </tr>
 </tbody>
@@ -4019,7 +3571,7 @@ Basic
 1.0394803
 </td>
 <td style="text-align:right;">
-166.6994962
+166.699496
 </td>
 <td style="text-align:right;">
 2.1305338
@@ -4051,7 +3603,7 @@ Basic
 0.1978640
 </td>
 <td style="text-align:right;">
-46.4998652
+46.499865
 </td>
 <td style="text-align:right;">
 1.6802289
@@ -4083,7 +3635,7 @@ Basic
 1.1066466
 </td>
 <td style="text-align:right;">
-125.3633013
+125.363301
 </td>
 <td style="text-align:right;">
 2.8573247
@@ -4115,7 +3667,7 @@ Basic
 0.8308908
 </td>
 <td style="text-align:right;">
-447.3803824
+447.380382
 </td>
 <td style="text-align:right;">
 1.4161237
@@ -4147,7 +3699,7 @@ Basic
 0.0061554
 </td>
 <td style="text-align:right;">
-1.4284993
+1.428499
 </td>
 <td style="text-align:right;">
 1.3464977
@@ -4179,7 +3731,7 @@ Basic
 -0.0583080
 </td>
 <td style="text-align:right;">
--8.3031059
+-8.303106
 </td>
 <td style="text-align:right;">
 1.8774226
@@ -4199,28 +3751,28 @@ Pinus halepensis
 Advanced
 </td>
 <td style="text-align:right;">
-194
+124
 </td>
 <td style="text-align:right;">
-0.6665369
+0.6921474
 </td>
 <td style="text-align:right;">
-0.5698038
+0.6155257
 </td>
 <td style="text-align:right;">
--0.0967330
+-0.0766217
 </td>
 <td style="text-align:right;">
--14.5127831
+-11.070141
 </td>
 <td style="text-align:right;">
-1.6232373
+1.6204658
 </td>
 <td style="text-align:right;">
-243.5330
+234.1215
 </td>
 <td style="text-align:right;">
-0.0294695
+0.0003181
 </td>
 </tr>
 <tr>
@@ -4243,7 +3795,7 @@ Basic
 0.3165864
 </td>
 <td style="text-align:right;">
-88.9039063
+88.903906
 </td>
 <td style="text-align:right;">
 1.4627280
@@ -4253,38 +3805,6 @@ Basic
 </td>
 <td style="text-align:right;">
 0.0013411
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pinus nigra
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-167
-</td>
-<td style="text-align:right;">
-0.3563018
-</td>
-<td style="text-align:right;">
-0.6511023
-</td>
-<td style="text-align:right;">
-0.2948005
-</td>
-<td style="text-align:right;">
-82.7389994
-</td>
-<td style="text-align:right;">
-1.3799282
-</td>
-<td style="text-align:right;">
-387.2920
-</td>
-<td style="text-align:right;">
-0.0011408
 </td>
 </tr>
 <tr>
@@ -4307,7 +3827,7 @@ Basic
 0.0731079
 </td>
 <td style="text-align:right;">
-105.4931805
+105.493180
 </td>
 <td style="text-align:right;">
 0.5537123
@@ -4339,7 +3859,7 @@ Basic
 0.2500100
 </td>
 <td style="text-align:right;">
-57.3543456
+57.354346
 </td>
 <td style="text-align:right;">
 1.5599726
@@ -4359,28 +3879,28 @@ Pinus sylvestris
 Advanced
 </td>
 <td style="text-align:right;">
-235
+137
 </td>
 <td style="text-align:right;">
-0.4538723
+0.3510843
 </td>
 <td style="text-align:right;">
-0.7254906
+0.4518647
 </td>
 <td style="text-align:right;">
-0.2716183
+0.1007804
 </td>
 <td style="text-align:right;">
-59.8446376
+28.705470
 </td>
 <td style="text-align:right;">
-1.8939485
+1.2953446
 </td>
 <td style="text-align:right;">
-417.2866
+368.9554
 </td>
 <td style="text-align:right;">
-0.0002647
+0.0102239
 </td>
 </tr>
 <tr>
@@ -4403,7 +3923,7 @@ Basic
 0.2021400
 </td>
 <td style="text-align:right;">
-32.0430336
+32.043034
 </td>
 <td style="text-align:right;">
 1.8911489
@@ -4435,7 +3955,7 @@ Basic
 0.4221928
 </td>
 <td style="text-align:right;">
-191.1660407
+191.166041
 </td>
 <td style="text-align:right;">
 1.1789846
@@ -4467,7 +3987,7 @@ Basic
 -0.2841135
 </td>
 <td style="text-align:right;">
--23.9328579
+-23.932858
 </td>
 <td style="text-align:right;">
 2.1469400
@@ -4487,28 +4007,28 @@ Quercus ilex
 Advanced
 </td>
 <td style="text-align:right;">
-262
+115
 </td>
 <td style="text-align:right;">
-1.0889956
+1.1107185
 </td>
 <td style="text-align:right;">
-0.8037807
+0.9116232
 </td>
 <td style="text-align:right;">
--0.2852149
+-0.1990953
 </td>
 <td style="text-align:right;">
--26.1906365
+-17.924910
 </td>
 <td style="text-align:right;">
-2.0652979
+2.0207154
 </td>
 <td style="text-align:right;">
-189.6516
+181.9287
 </td>
 <td style="text-align:right;">
-0.0003840
+0.0002040
 </td>
 </tr>
 <tr>
@@ -4531,7 +4051,7 @@ Basic
 -0.0253957
 </td>
 <td style="text-align:right;">
--9.0393423
+-9.039342
 </td>
 <td style="text-align:right;">
 1.0894029
@@ -4563,7 +4083,7 @@ Basic
 0.0894166
 </td>
 <td style="text-align:right;">
-17.0602376
+17.060238
 </td>
 <td style="text-align:right;">
 1.5387680
@@ -4573,38 +4093,6 @@ Basic
 </td>
 <td style="text-align:right;">
 0.0006396
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Quercus pubescens
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-147
-</td>
-<td style="text-align:right;">
-0.5293233
-</td>
-<td style="text-align:right;">
-0.5311722
-</td>
-<td style="text-align:right;">
-0.0018489
-</td>
-<td style="text-align:right;">
-0.3493033
-</td>
-<td style="text-align:right;">
-1.3709962
-</td>
-<td style="text-align:right;">
-259.0092
-</td>
-<td style="text-align:right;">
-0.0417737
 </td>
 </tr>
 <tr>
@@ -4627,7 +4115,7 @@ Basic
 -0.1914593
 </td>
 <td style="text-align:right;">
--54.4735905
+-54.473591
 </td>
 <td style="text-align:right;">
 1.1021009
@@ -4659,7 +4147,7 @@ Basic
 0.2014189
 </td>
 <td style="text-align:right;">
-56.3503028
+56.350303
 </td>
 <td style="text-align:right;">
 1.2037520
@@ -4756,28 +4244,28 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-840
+430
 </td>
 <td style="text-align:right;">
-4.985246
+4.999962
 </td>
 <td style="text-align:right;">
-4.254047
+5.476276
 </td>
 <td style="text-align:right;">
--0.7311999
+0.4763141
 </td>
 <td style="text-align:right;">
--14.667276
+9.526354
 </td>
 <td style="text-align:right;">
-4.212371
+4.789764
 </td>
 <td style="text-align:right;">
-84.49674
+95.79600
 </td>
 <td style="text-align:right;">
-0.1656448
+0.2427837
 </td>
 </tr>
 </tbody>
@@ -5028,28 +4516,28 @@ Pinus halepensis
 Advanced
 </td>
 <td style="text-align:right;">
-194
+121
 </td>
 <td style="text-align:right;">
-3.2165164
+3.3442919
 </td>
 <td style="text-align:right;">
-2.0989085
+3.5713694
 </td>
 <td style="text-align:right;">
--1.1176079
+0.2270775
 </td>
 <td style="text-align:right;">
--34.7459110
+6.7900026
 </td>
 <td style="text-align:right;">
-2.656841
+3.661006
 </td>
 <td style="text-align:right;">
-82.59995
+109.47028
 </td>
 <td style="text-align:right;">
-0.3073987
+0.3375247
 </td>
 </tr>
 <tr>
@@ -5082,38 +4570,6 @@ Basic
 </td>
 <td style="text-align:right;">
 0.4459931
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pinus nigra
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-166
-</td>
-<td style="text-align:right;">
-2.3789016
-</td>
-<td style="text-align:right;">
-2.4493378
-</td>
-<td style="text-align:right;">
-0.0704362
-</td>
-<td style="text-align:right;">
-2.9608715
-</td>
-<td style="text-align:right;">
-2.437612
-</td>
-<td style="text-align:right;">
-102.46797
-</td>
-<td style="text-align:right;">
-0.3552388
 </td>
 </tr>
 <tr>
@@ -5188,28 +4644,28 @@ Pinus sylvestris
 Advanced
 </td>
 <td style="text-align:right;">
-235
+136
 </td>
 <td style="text-align:right;">
-3.2624999
+3.4045026
 </td>
 <td style="text-align:right;">
-3.9663877
+4.3523518
 </td>
 <td style="text-align:right;">
-0.7038878
+0.9478493
 </td>
 <td style="text-align:right;">
-21.5751063
+27.8410506
 </td>
 <td style="text-align:right;">
-3.545550
+3.555255
 </td>
 <td style="text-align:right;">
-108.67586
+104.42802
 </td>
 <td style="text-align:right;">
-0.2981179
+0.3987361
 </td>
 </tr>
 <tr>
@@ -5316,28 +4772,28 @@ Quercus ilex
 Advanced
 </td>
 <td style="text-align:right;">
-262
+115
 </td>
 <td style="text-align:right;">
-2.6400883
+2.7451443
 </td>
 <td style="text-align:right;">
-1.6159885
+2.8280884
 </td>
 <td style="text-align:right;">
--1.0240998
+0.0829442
 </td>
 <td style="text-align:right;">
--38.7903623
+3.0214869
 </td>
 <td style="text-align:right;">
-2.814998
+2.540458
 </td>
 <td style="text-align:right;">
-106.62514
+92.54370
 </td>
 <td style="text-align:right;">
-0.1453273
+0.2020807
 </td>
 </tr>
 <tr>
@@ -5402,38 +4858,6 @@ Basic
 </td>
 <td style="text-align:right;">
 0.1663755
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Quercus pubescens
-</td>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-147
-</td>
-<td style="text-align:right;">
-1.6577975
-</td>
-<td style="text-align:right;">
-1.3001111
-</td>
-<td style="text-align:right;">
--0.3576864
-</td>
-<td style="text-align:right;">
--21.5760007
-</td>
-<td style="text-align:right;">
-1.673886
-</td>
-<td style="text-align:right;">
-100.97046
-</td>
-<td style="text-align:right;">
-0.2786542
 </td>
 </tr>
 <tr>

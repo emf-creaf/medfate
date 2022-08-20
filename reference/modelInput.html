@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.7</span>
       </span>
     </div>
 
@@ -178,7 +178,7 @@
 <li><p><code>VCroot_c</code>, <code>VCroot_d</code>: Parameters of the root xylem vulnerability curve.</p></li>
 <li><p><code>Plant_kmax</code>: Maximum whole-plant conductance.</p></li>
 </ul></li>
-<li><p><code>paramsWaterStorage</code>: A data frame with plant water storage parameters for each cohort (only if <code>control$transpirationMode = "Sperry"</code>):
+<li><p><code>paramsWaterStorage</code>: A data frame with plant water storage parameters for each cohort:
      </p><ul><li><p><code>LeafPI0</code>: Osmotic potential at full turgor of leaves (MPa).</p></li>
 <li><p><code>LeafEPS</code>: Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of leaves (MPa).</p></li>
 <li><p><code>LeafAF</code>: Apoplastic fraction (proportion of water outside the living cells) in leaves.</p></li>
@@ -376,9 +376,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$allowStarvation</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$allowDefoliation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$sinkLimitation</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -387,9 +384,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$allocationStrategy</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Al2As"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$nonStomatalPhotosynthesisLimitation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$phloemConductanceFactor</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.2</span>
@@ -773,9 +767,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$allowStarvation</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$allowDefoliation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$sinkLimitation</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -784,9 +775,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$allocationStrategy</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Al2As"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$nonStomatalPhotosynthesisLimitation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$phloemConductanceFactor</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.2</span>
@@ -1171,9 +1159,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$allowStarvation</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$allowDefoliation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$sinkLimitation</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -1182,9 +1167,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$allocationStrategy</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Al2As"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$nonStomatalPhotosynthesisLimitation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$phloemConductanceFactor</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.2</span>
@@ -1497,10 +1479,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148     0       -0.033   -0.033   -0.033  -0.033      -0.033      -0.033</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168     0       -0.033   -0.033   -0.033  -0.033      -0.033      -0.033</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165     0       -0.033   -0.033   -0.033  -0.033      -0.033      -0.033</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        StemPLC NSPL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148       0    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168       0    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165       0    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        StemPLC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "spwbInput" "list"     </span>
