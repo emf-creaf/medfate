@@ -91,7 +91,7 @@ cat_sfc = sf::st_as_sfc(cat.contour)
 
 The aim of this article is to provide an assessment of the performance of `fordyn` for the prediction of forest dynamics in Catalonia (NE of Spain). To this aim, we simulate forest dynamics between two surveys of the Spanish National Forest Inventory and compare the model predictions of forest growth against inventory data for a large set of permanent plots. The evaluation focuses first on the growth (in diameter and height) of surviving trees, then turning the attention to the basal area of dead trees and overall changes in basal area.
 
-This evaluation was conducted using **medfate** package version **`r medfate_ver_bas`**.
+This evaluation was conducted using **medfate** package version **`r medfate_ver_bas`** for the basic model and **`r medfate_ver_adv`** for the advanced model.
 
 
 
