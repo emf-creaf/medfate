@@ -1044,11 +1044,22 @@ NumericVector SapwoodRespirationRateWithImputation(IntegerVector SP, DataFrame S
       // double RER_nmolCO2_g_s = pow(10.0, 1.024 + 1.344*log10(Nsapwood_mmol_g)); //nmol CO2·g-1·s-1
       // RERsapwood[c] = 24.0*3600.0*(RER_nmolCO2_g_s/6.0)*(1e-9)*180.156; // nmol CO2·g-1·s-1 to g gluc·g-1·d-1
       // ESTIMATES ARE TOO HIGH
-      RERsapwood[c] = 5.18e-05;
+      RERsapwood[c] = 4.655e-05;
     }
   }
   return(RERsapwood);
 }
+NumericVector SapwoodSenescenceRateWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector SRsapwood = speciesNumericParameter(SP, SpParams, "SRsapwood");
+  NumericVector RGRcambiummax = speciesNumericParameter(SP, SpParams, "RGRcambiummax");
+  for(int c=0;c<SRsapwood.size();c++) {
+    if(NumericVector::is_na(SRsapwood[c])) {
+      if(!NumericVector::is_na(RGRcambiummax[c])) SRsapwood[c] = 7.096e-05 + 1.889e-02*RGRcambiummax[c];
+    }
+  }
+  return(SRsapwood);
+}
+
 NumericVector FinerootRespirationRateWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector RERfineroot = speciesNumericParameter(SP, SpParams, "RERfineroot");
   NumericVector Nfineroot = NsapwoodWithImputation(SP, SpParams);
@@ -1345,6 +1356,7 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "RERleaf") return(LeafRespirationRateWithImputation(SP, SpParams));
     else if(parName == "RERsapwood") return(SapwoodRespirationRateWithImputation(SP, SpParams));
     else if(parName == "RERfineroot") return(FinerootRespirationRateWithImputation(SP, SpParams));
+    else if(parName == "SRsapwood") return(SapwoodSenescenceRateWithImputation(SP, SpParams));
     else if(parName == "Vmax298") return(Vmax298WithImputation(SP, SpParams));
     else if(parName == "Jmax298") return(Jmax298WithImputation(SP, SpParams));
     else if(parName == "VCstem_c") return(VCstemCWithImputation(SP, SpParams));

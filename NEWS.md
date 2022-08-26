@@ -3,6 +3,7 @@
 -------------------------------
 
 # Version 2.7.7
+- Imputation relationship between RGRcambiummax and SRsapwood
 - Dynamic modification of LeafPI0 and StemPI0 removed
 - Non-stomatal limitations to photosynthesis removed
 
