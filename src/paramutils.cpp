@@ -1054,7 +1054,7 @@ NumericVector SapwoodSenescenceRateWithImputation(IntegerVector SP, DataFrame Sp
   NumericVector RGRcambiummax = speciesNumericParameter(SP, SpParams, "RGRcambiummax");
   for(int c=0;c<SRsapwood.size();c++) {
     if(NumericVector::is_na(SRsapwood[c])) {
-      if(!NumericVector::is_na(RGRcambiummax[c])) SRsapwood[c] = 7.096e-05 + 1.889e-02*RGRcambiummax[c];
+      if(!NumericVector::is_na(RGRcambiummax[c])) SRsapwood[c] = 0.03686*RGRcambiummax[c];
     }
   }
   return(SRsapwood);
