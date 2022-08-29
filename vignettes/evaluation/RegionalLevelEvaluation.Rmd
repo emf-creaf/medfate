@@ -521,7 +521,7 @@ dfbadead[dfbadead$Name!="0-All",] %>% group_by(Name, Submodel) %>%
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2, .groups = "drop") %>% 
-  filter(n>=params$minPlotRecords) %>%
+  # filter(n>=params$minPlotRecords) %>%
   kbl() %>%
   kable_styling()
 ```
