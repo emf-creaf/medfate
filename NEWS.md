@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.8.0
+- New control parameter 'subdailyCarbonBalance', applying to growth simulations with transpiration = "Sperry"
+
 # Version 2.7.7
 - Imputation relationship between RGRcambiummax and SRsapwood
 - Dynamic modification of LeafPI0 and StemPI0 removed

@@ -326,6 +326,7 @@ List growthDayInner(List x, NumericVector meteovec,
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
   String mortalityMode = control["mortalityMode"];
+  bool subdailyCarbonBalance = control["subdailyCarbonBalance"];
   double mortalityRelativeSugarThreshold= control["mortalityRelativeSugarThreshold"];
   double mortalityRWCThreshold= control["mortalityRWCThreshold"];
   bool allowDessication = control["allowDessication"];
@@ -460,11 +461,11 @@ List growthDayInner(List x, NumericVector meteovec,
   
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(spwbOut["Plants"]);
   List PlantsInst;
-  NumericVector Ag, PARcohort;
+  NumericVector Ag = Plants["GrossPhotosynthesis"];
+  NumericVector PARcohort;
   NumericMatrix AgStep, AnStep;
   int numSteps = 1;
   if(transpirationMode=="Granier") {
-    Ag = Plants["GrossPhotosynthesis"];
     PARcohort= Plants["FPAR"];
   } else {
     PlantsInst = spwbOut["PlantsInst"];
@@ -642,7 +643,7 @@ List growthDayInner(List x, NumericVector meteovec,
       
       //Estimate phloem conductance as a factor of stem conductance
       double k_phloem = NA_REAL;
-      if(transpirationMode=="Sperry") k_phloem = VCstem_kmax[j]*phloemConductanceFactor*(0.018/1000.0);
+      if(subdailyCarbonBalance) k_phloem = VCstem_kmax[j]*phloemConductanceFactor*(0.018/1000.0);
       
       //Xylogenesis
       // List ring = ringList[j];
@@ -661,7 +662,7 @@ List growthDayInner(List x, NumericVector meteovec,
         for(int s=0;s<numLayers;s++) rfineroot[s] = relative_expansion_rate(RhizoPsi(j,s) ,tday, -1.0, 0.5,0.05,5.0);
         // if(j==0) Rcout<<j<< " Psi:"<< psiSympStem[j]<< " pi0:"<< " r:"<< rcambiumcell<<"\n";
       }
-      if(transpirationMode=="Granier") {
+      if(!subdailyCarbonBalance) {
         //MAINTENANCE RESPIRATION
         //Respiratory biomass (g dw · ind-1)
         double leafSugarMass = sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass);
@@ -998,8 +999,8 @@ List growthDayInner(List x, NumericVector meteovec,
       
       // if(j==(numCohorts-1)) Rcout<< j << " after translocation " << sugarLeaf[j]<< " "<< starchLeaf[j]<<"\n";
       
-      //ROOT EXUDATION and close carbon balance (Granier)
-      if(transpirationMode=="Granier") {
+      //ROOT EXUDATION and close carbon balance (non-subdaily carbon balance)
+      if(!subdailyCarbonBalance) {
         //Excess sapwood starch carbon is lost as root exudation
         if(starchSapwood[j] > Starch_max_sapwood[j]) {
           RootExudation[j] += ((starchSapwood[j] - Starch_max_sapwood[j])*(Volume_sapwood[j]*glucoseMolarMass)/TotalLivingBiomass[j]);
@@ -1234,7 +1235,7 @@ List growthDayInner(List x, NumericVector meteovec,
   
 
   List labileCBInst;
-  if(transpirationMode=="Sperry") {
+  if(subdailyCarbonBalance) {
     GrossPhotosynthesisInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
     MaintenanceRespirationInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
     LabileCarbonBalanceInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
@@ -1333,7 +1334,7 @@ List growthDayInner(List x, NumericVector meteovec,
                           _["PlantsInst"] = spwbOut["PlantsInst"],
                           _["SunlitLeavesInst"] = spwbOut["SunlitLeavesInst"],
                           _["ShadeLeavesInst"] = spwbOut["ShadeLeavesInst"]);
-    l.push_back(labileCBInst,"LabileCarbonBalanceInst");
+    if(subdailyCarbonBalance) l.push_back(labileCBInst,"LabileCarbonBalanceInst");
     l.push_back(spwbOut["LightExtinction"], "LightExtinction");
     l.push_back(spwbOut["CanopyTurbulence"], "CanopyTurbulence");
   }

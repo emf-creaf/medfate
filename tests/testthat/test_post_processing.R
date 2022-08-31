@@ -319,6 +319,7 @@ test_that("Can produce all advanced subdaily growth plots",{
   control = defaultControl("Sperry")
   control$verbose = FALSE
   control$subdailyResults = TRUE
+  control$subdailyCarbonBalance = TRUE
   x2 = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
   expect_s3_class(x2, "growthInput")
   G2<-growth(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
@@ -351,6 +352,7 @@ test_that("Can produce all advanced subdaily growth plots",{
 test_that("Can produce all advanced growth_day plots",{
   control = defaultControl("Sperry")
   control$verbose = FALSE
+  control$subdailyCarbonBalance = TRUE
   x2 = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
   expect_s3_class(x2, "growthInput")
   d1 = d[1]

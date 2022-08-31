@@ -39,6 +39,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     refillMaximumRate = 0.05,
     
     # growth/mortality
+    subdailyCarbonBalance = FALSE,
     allowDessication = TRUE,
     allowStarvation = TRUE,
     sinkLimitation = TRUE,

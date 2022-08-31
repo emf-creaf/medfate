@@ -42,6 +42,7 @@ List profitMaximization2(List supplyFunction, int initialPos,
     maxdEdp = std::max(maxdEdp, dEdP[i]);
   }
   nsteps = valid;
+  // Rcout<< valid<< " "<< maxdEdp << " "<<mindEdp<< " "<< mindEdp/maxdEdp<<"\n";
   // initial pos cannot be over the valid steps
   initialPos = std::min(initialPos, nsteps-1);
   

@@ -26,8 +26,8 @@ evalDIR = "~/OneDrive/Professional/MedfateWorks/RegionalLevelEvaluation"
 ## Introduction
 
 ```{r, echo = FALSE}
-eval_res_basic <- readRDS(paste0(evalDIR, "/Rdata/IFNeval_results_basic.rds"))
-eval_res_advanced <- readRDS(paste0(evalDIR, "/Rdata/IFNeval_results_advanced.rds"))
+eval_res_basic <- readRDS(paste0(evalDIR, "/Rdata/IFNeval_results_basic_SX.rds"))
+eval_res_advanced <- readRDS(paste0(evalDIR, "/Rdata/IFNeval_results_basic_VG.rds"))
 
 SpParams_bas = eval_res_basic$SpParams
 target_spp_bas = eval_res_basic$target_spp
@@ -73,6 +73,7 @@ dfbai <- rbind(dfbai_bas, dfbai_adv)
 dfbadead <- rbind(dfbadead_bas, dfbadead_adv)
 dfbarecr <- rbind(dfbarecr_bas, dfbarecr_adv)
 # dfbai_all_bas <-dfbai_all_bas[dfbai_all_bas$ID %in% dfbai_all_adv$ID,]
+# dfbai_all_adv <-dfbai_all_adv[dfbai_all_adv$ID %in% dfbai_all_bas$ID,]
 dfbai_all <- rbind(dfbai_all_bas, dfbai_all_adv)
 dfdbh$Submodel <- factor(dfdbh$Submodel, levels =c("Basic","Advanced"))
 dfh$Submodel <- factor(dfh$Submodel, levels =c("Basic","Advanced"))
@@ -521,7 +522,7 @@ dfbadead[dfbadead$Name!="0-All",] %>% group_by(Name, Submodel) %>%
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2, .groups = "drop") %>% 
-  # filter(n>=params$minPlotRecords) %>%
+  filter(n>=params$minPlotRecords) %>%
   kbl() %>%
   kable_styling()
 ```
@@ -662,7 +663,6 @@ ggsave(paste0(evalDIR,"/Plots/BAtot_eval.png"),p0, width = 8, height=10)
 Spatial distribution of errors:
 
 ```{r, echo = FALSE, fig.width=9, fig.height=4, warning=FALSE, message=FALSE}
-
 mapdata_bac = mapdata_bas
 mapdata_bac$error = dfbai_all_bas$error[dfbai_all_bas$Name=="0-All"]
 p1<-bai_error_map(mapdata_bac)+labs(title="Basic")
