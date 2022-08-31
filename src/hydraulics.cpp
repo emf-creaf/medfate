@@ -409,11 +409,17 @@ void lubksb(NumericMatrix a, int n, IntegerVector indx, NumericVector b) {
 
 
 // [[Rcpp::export("hydraulics_E2psiBelowground")]]
-List E2psiBelowground(double E, NumericVector psiSoil, 
-                  NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
-                  NumericVector krootmax, double rootc, double rootd, 
+List E2psiBelowground(double E, List hydraulicNetwork, 
                   NumericVector psiIni = NumericVector::create(0),
                   int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
+  NumericVector psiSoil = hydraulicNetwork["psisoil"]; 
+  NumericVector krhizomax = hydraulicNetwork["krhizomax"]; 
+  NumericVector nsoil = hydraulicNetwork["nsoil"]; 
+  NumericVector alphasoil = hydraulicNetwork["alphasoil"]; 
+  NumericVector krootmax = hydraulicNetwork["krootmax"];
+  double rootc = hydraulicNetwork["rootc"];
+  double rootd  = hydraulicNetwork["rootd"]; 
+  
   int nlayers = psiSoil.length();
   //Initialize
   NumericVector x(nlayers+1);
@@ -530,9 +536,15 @@ List E2psiBelowground(double E, NumericVector psiSoil,
 
 // [[Rcpp::export("hydraulics_E2psiAboveground")]]
 List E2psiAboveground(double E, double psiRootCrown, 
-                  double kstemmax, double stemc, double stemd,
-                  double kleafmax, double leafc, double leafd,
-                  NumericVector PLCstem) {
+                      List hydraulicNetwork) {
+  double kstemmax = hydraulicNetwork["kstemmax"];
+  double stemc = hydraulicNetwork["stemc"];
+  double stemd = hydraulicNetwork["stemd"];
+  double kleafmax = hydraulicNetwork["kleafmax"];
+  double leafc = hydraulicNetwork["leafc"];
+  double leafd = hydraulicNetwork["leafd"];
+  NumericVector PLCstem = hydraulicNetwork["PLCstem"];
+  
   int nStemSegments = PLCstem.size();
   NumericVector psiStem(nStemSegments, 0.0), psiPLCStem(nStemSegments, 0.0);
   double kxsegmax = kstemmax*((double) nStemSegments);
@@ -902,20 +914,28 @@ List E2psiNetworkStem1(double E, NumericVector psiSoil,
 } 
 
 // [[Rcpp::export("hydraulics_E2psiNetwork")]]
-List E2psiNetwork(double E, NumericVector psiSoil, 
-                  NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
-                  NumericVector krootmax, double rootc, double rootd, 
-                  double kstemmax, double stemc, double stemd,
-                  double kleafmax, double leafc, double leafd,
-                  NumericVector PLCstem,
+List E2psiNetwork(double E, List hydraulicNetwork,
                   NumericVector psiIni = NumericVector::create(0),
                   int ntrial = 10, 
                   double psiTol = 0.0001, double ETol = 0.0001) {
   
+  // NumericVector psiSoil = hydraulicNetwork["psisoil"]; 
+  // NumericVector krhizomax = hydraulicNetwork["krhizomax"]; 
+  // NumericVector nsoil = hydraulicNetwork["nsoil"]; 
+  // NumericVector alphasoil = hydraulicNetwork["alphasoil"]; 
+  // NumericVector krootmax = hydraulicNetwork["krootmax"];
+  // double rootc = hydraulicNetwork["rootc"];
+  // double rootd  = hydraulicNetwork["rootd"]; 
+  // double kstemmax = hydraulicNetwork["kstemmax"];
+  // double stemc = hydraulicNetwork["stemc"];
+  // double stemd = hydraulicNetwork["stemd"];
+  // double kleafmax = hydraulicNetwork["kleafmax"];
+  // double leafc = hydraulicNetwork["leafc"];
+  // double leafd = hydraulicNetwork["leafd"];
+  NumericVector PLCstem = hydraulicNetwork["PLCstem"];
+  
   int nStemSegments = PLCstem.size();
-  List E2psiRS = E2psiBelowground(E, psiSoil, 
-                                 krhizomax, nsoil, alphasoil,
-                                 krootmax, rootc, rootd, 
+  List E2psiRS = E2psiBelowground(E, hydraulicNetwork, 
                                  psiIni,
                                  ntrial, psiTol, ETol);
   
@@ -929,10 +949,7 @@ List E2psiNetwork(double E, NumericVector psiSoil,
   double psiLeaf = NA_REAL;
   double kterm = NA_REAL;
   if(!NumericVector::is_na(psiRootCrown)) {
-    List E2psiAG = E2psiAboveground(E, psiRootCrown, 
-                                    kstemmax, stemc, stemd,
-                                    kleafmax, leafc, leafd,
-                                    PLCstem);
+    List E2psiAG = E2psiAboveground(E, psiRootCrown, hydraulicNetwork);
     kterm = E2psiAG["kterm"];
     psiLeaf = E2psiAG["psiLeaf"];
     psiStem = E2psiAG["psiStem"];
@@ -1372,10 +1389,12 @@ List supplyFunctionBelowground(NumericVector psiSoil,
 
 // [[Rcpp::export("hydraulics_supplyFunctionAboveground")]]
 List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCrown, 
-                               double kstemmax, double stemc, double stemd,
-                               double kleafmax, double leafc, double leafd,
-                               NumericVector PLCstem) {
+                               List hydraulicNetwork) {
 
+  
+
+  NumericVector PLCstem = hydraulicNetwork["PLCstem"];
+  
   int nStemSegments = PLCstem.size();
   int maxNsteps = Erootcrown.size();
   NumericVector supplyE(maxNsteps);
@@ -1389,9 +1408,7 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCr
   int Nsteps = 0;
   for(int i=0;i<maxNsteps;i++) {
     List sol = E2psiAboveground(Erootcrown[i], psiRootCrown[i],                        
-                                kstemmax, stemc, stemd,
-                                kleafmax, leafc, leafd,
-                                PLCstem);
+                                hydraulicNetwork);
     NumericVector solPsiStem = sol["psiStem"];
     supplyPsiStem(i,_) = solPsiStem; 
     supplyPsiLeaf[i] = sol["psiLeaf"];

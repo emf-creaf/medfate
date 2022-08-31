@@ -623,12 +623,13 @@ List transpirationSperry(List x, NumericVector meteovec,
       
       //Build supply function networks 
       if(!capacitance) {
-        supply[c] = supplyFunctionNetwork(psic,
-                                          VGrhizo_kmaxc,VG_nc,VG_alphac,
-                                          VCroot_kmaxc, VCroot_c[c], VCroot_d[c],
-                                          sapFluidityDay*VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                          sapFluidityDay*VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                          NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]),
+        List hydraulicNetwork = List::create(_["psisoil"] = psic,
+                                 _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
+                                 _["krootmax"] = VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
+                                 _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
+                                 _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
+                                 _["PLCstem"] = NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]));
+        supply[c] = supplyFunctionNetwork(hydraulicNetwork,
                                           0.0, maxNsteps,
                                           ntrial, psiTol, ETol, 0.001); 
       } else {
