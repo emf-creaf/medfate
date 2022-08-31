@@ -389,12 +389,12 @@ hydraulics_E2psiAboveground <- function(E, psiRootCrown, hydraulicNetwork) {
     .Call(`_medfate_E2psiAboveground`, E, psiRootCrown, hydraulicNetwork)
 }
 
-hydraulics_E2psiFineRootLeaf <- function(E, psiFineRoot, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem) {
-    .Call(`_medfate_E2psiFineRootLeaf`, E, psiFineRoot, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem)
+hydraulics_E2psiFineRootLeaf <- function(E, psiFineRoot, hydraulicNetwork) {
+    .Call(`_medfate_E2psiFineRootLeaf`, E, psiFineRoot, hydraulicNetwork)
 }
 
-hydraulics_E2psiNetworkStem1 <- function(E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, PLCstem, psiIni = as.numeric( c(0)), ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
-    .Call(`_medfate_E2psiNetworkStem1`, E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, PLCstem, psiIni, ntrial, psiTol, ETol)
+hydraulics_E2psiNetworkStem1 <- function(E, hydraulicNetwork, psiIni = as.numeric( c(0)), ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
+    .Call(`_medfate_E2psiNetworkStem1`, E, hydraulicNetwork, psiIni, ntrial, psiTol, ETol)
 }
 
 hydraulics_E2psiNetwork <- function(E, hydraulicNetwork, psiIni = as.numeric( c(0)), ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
@@ -413,24 +413,24 @@ hydraulics_supplyFunctionThreeElements <- function(Emax, psiSoil, krhizomax, kxy
     .Call(`_medfate_supplyFunctionThreeElements`, Emax, psiSoil, krhizomax, kxylemmax, kleafmax, n, alpha, stemc, stemd, leafc, leafd, psiCav, dE, psiMax)
 }
 
-hydraulics_supplyFunctionBelowground <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, minFlow = 0.0, maxNsteps = 400L, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001) {
-    .Call(`_medfate_supplyFunctionBelowground`, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit)
+hydraulics_supplyFunctionBelowground <- function(hydraulicNetwork, minFlow = 0.0, maxNsteps = 400L, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001) {
+    .Call(`_medfate_supplyFunctionBelowground`, hydraulicNetwork, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit)
 }
 
 hydraulics_supplyFunctionAboveground <- function(Erootcrown, psiRootCrown, hydraulicNetwork) {
     .Call(`_medfate_supplyFunctionAboveground`, Erootcrown, psiRootCrown, hydraulicNetwork)
 }
 
-hydraulics_supplyFunctionFineRootLeaf <- function(psiFineRoot, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow = 0.0, maxNsteps = 400L, ETol = 0.0001, pCrit = 0.001) {
-    .Call(`_medfate_supplyFunctionFineRootLeaf`, psiFineRoot, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow, maxNsteps, ETol, pCrit)
+hydraulics_supplyFunctionFineRootLeaf <- function(psiFineRoot, hydraulicNetwork, minFlow = 0.0, maxNsteps = 400L, ETol = 0.0001, pCrit = 0.001) {
+    .Call(`_medfate_supplyFunctionFineRootLeaf`, psiFineRoot, hydraulicNetwork, minFlow, maxNsteps, ETol, pCrit)
 }
 
-hydraulics_supplyFunctionNetworkStem1 <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, PLCstem, minFlow = 0.0, maxNsteps = 400L, ntrial = 200L, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001) {
-    .Call(`_medfate_supplyFunctionNetworkStem1`, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, PLCstem, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit)
+hydraulics_supplyFunctionNetworkStem1 <- function(hydraulicNetwork, minFlow = 0.0, maxNsteps = 400L, ntrial = 200L, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001) {
+    .Call(`_medfate_supplyFunctionNetworkStem1`, hydraulicNetwork, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit)
 }
 
-hydraulics_supplyFunctionNetwork <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow = 0.0, maxNsteps = 400L, ntrial = 200L, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001) {
-    .Call(`_medfate_supplyFunctionNetwork`, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit)
+hydraulics_supplyFunctionNetwork <- function(hydraulicNetwork, minFlow = 0.0, maxNsteps = 400L, ntrial = 200L, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001) {
+    .Call(`_medfate_supplyFunctionNetwork`, hydraulicNetwork, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit)
 }
 
 hydraulics_regulatedPsiXylem <- function(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01) {

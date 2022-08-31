@@ -74,16 +74,9 @@ List E2psiAbovegroundCapacitanceDisconnected(double E,
                                              double tstep = 3600.0);
 
 List E2psiFineRootLeaf(double E, double psiFineRoot, 
-                       double krootmax, double rootc, double rootd,
-                       double kstemmax, double stemc, double stemd,
-                       double kleafmax, double leafc, double leafd,
-                       double PLCstem);
+                       List hydraulicNetwork);
 
-List E2psiNetworkStem1(double E, NumericVector psiSoil, 
-                       NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
-                       NumericVector krootmax, double rootc, double rootd, 
-                       double kstemmax, double stemc, double stemd,
-                       double PLCstem,
+List E2psiNetworkStem1(double E, List hydraulicNetwork,
                        NumericVector psiIni = NumericVector::create(0),
                        int ntrial = 10, 
                        double psiTol = 0.0001, double ETol = 0.0001);
@@ -110,9 +103,7 @@ List E2psiNetworkCapacitance(double E, NumericVector psiSoil,
 
 
 List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCrown, 
-                               double kstemmax, double stemc, double stemd,
-                               double kleafmax, double leafc, double leafd,
-                               NumericVector PLCstem);
+                               List hydraulicNetwork);
 
 List supplyFunctionAbovegroundCapacitance(NumericVector Erootcrown, NumericVector psiRootCrown,
                                           NumericVector psiStemPrev, NumericVector PLCstemPrev,
@@ -124,36 +115,22 @@ List supplyFunctionAbovegroundCapacitance(NumericVector Erootcrown, NumericVecto
                                           double tstep = 3600.0);
 
 
-List supplyFunctionBelowground(NumericVector psiSoil,
-                              NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
-                              NumericVector krootmax, double rootc, double rootd,
+List supplyFunctionBelowground(List hydraulicNetwork,
                               double minFlow = 0.0, int maxNsteps=400,
                               int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001,
                               double pCrit = 0.001);
 
 
 List supplyFunctionFineRootLeaf(double psiFineRoot,
-                                double krootmax, double rootc, double rootd,
-                                double kstemmax, double stemc, double stemd,
-                                double kleafmax, double leafc, double leafd,
-                                double PLCstem,
+                                List hydraulicNetwork,
                                 double minFlow = 0.0, int maxNsteps=400, 
                                 double ETol = 0.0001, double pCrit = 0.001);
-List supplyFunctionNetworkStem1(NumericVector psiSoil, 
-                                NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
-                                NumericVector krootmax, double rootc, double rootd, 
-                                double kstemmax, double stemc, double stemd,
-                                double PLCstem,
+List supplyFunctionNetworkStem1(List hydraulicNetwork,
                                 double minFlow = 0.0, int maxNsteps=400, 
                                 int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001,
                                 double pCrit = 0.001);
 
-List supplyFunctionNetwork(NumericVector psiSoil, 
-                           NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
-                           NumericVector krootmax, double rootc, double rootd, 
-                           double kstemmax, double stemc, double stemd,
-                           double kleafmax, double leafc, double leafd,
-                           NumericVector PLCstem,
+List supplyFunctionNetwork(List hydraulicNetwork,
                            double minFlow = 0.0, int maxNsteps=400, 
                            int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001,
                            double pCrit = 0.001);

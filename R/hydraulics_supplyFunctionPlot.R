@@ -1,12 +1,12 @@
 #Draws the supply function (E vs PlantPsi) for the current soil state and plant hydraulic parameters
-hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesNames = FALSE, ylim=NULL) {
+hydraulics_supplyFunctionPlot<-function(x, draw = TRUE, type="E", speciesNames = FALSE, ylim=NULL) {
   
   TYPES = c("E","dEdP","StemPsi","RootPsi","RhizoPsi", "ERhizo")
   type = match.arg(type,TYPES)  
   
-  psiSoil = soil_psi(soil, model="VG")
-  VG_nc = soil$VG_n
-  VG_alphac = soil$VG_alpha
+  psiSoil = soil_psi(x$soil, model="VG")
+  VG_nc = x$soil$VG_n
+  VG_alphac = x$soil$VG_alpha
   VCroot_kmax = x$belowLayers$VCroot_kmax
   VGrhizo_kmax = x$belowLayers$VGrhizo_kmax
   StemPLC = x$internalWater$StemPLC
@@ -35,12 +35,13 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
     psic = psiSoil[VGrhizo_kmaxc>0]
     VGrhizo_kmaxc = VGrhizo_kmaxc[VGrhizo_kmaxc>0]
     VCroot_kmaxc = VCroot_kmaxc[VCroot_kmaxc>0]
-    l[[i]] = hydraulics_supplyFunctionNetwork(psic,
-                                          VGrhizo_kmaxc,VG_nc,VG_alphac,
-                                          VCroot_kmaxc, VCroot_c[i],VCroot_d[i],
-                                          VCstem_kmax[i], VCstem_c[i],VCstem_d[i], 
-                                          VCleaf_kmax[i], VCleaf_c[i],VCleaf_d[i],
-                                          PLCstem = StemPLC,
+    hn = list("psisoil" = psiSoil,
+               "krhizomax" = VGrhizo_kmaxc, "nsoil" = VG_nc, "alphasoil" = VG_alphac,
+               "krootmax" = VCroot_kmaxc, "rootc" = VCroot_c[i], "rootd" = VCroot_d[i],
+               "kstemmax" = VCstem_kmax[i], "stemc" = VCstem_c[i], "stemd" = VCstem_d[i], 
+               "kleafmax" = VCleaf_kmax[i], "leafc" = VCleaf_c[i], "leafd" = VCleaf_d[i],
+               "PLCstem" = c(StemPLC[i], StemPLC[i]))
+    l[[i]] = hydraulics_supplyFunctionNetwork(hn,
                                           minFlow = 0.0, maxNsteps = numericParams$maxNsteps, 
                                           ntrial = numericParams$ntrial,
                                           psiTol = numericParams$psiTol, ETol = numericParams$ETol)

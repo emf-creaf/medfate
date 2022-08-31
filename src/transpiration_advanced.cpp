@@ -581,6 +581,7 @@ List transpirationSperry(List x, NumericVector meteovec,
   double sapFluidityDay = 1.0/waterDynamicViscosity((tmin+tmax)/2.0);
   
   //Hydraulics: supply functions
+  List hydraulicNetwork(numCohorts);
   List supply(numCohorts);
   List supplyAboveground(numCohorts);
   supply.attr("names") = above.attr("row.names");
@@ -623,21 +624,22 @@ List transpirationSperry(List x, NumericVector meteovec,
       
       //Build supply function networks 
       if(!capacitance) {
-        List hydraulicNetwork = List::create(_["psisoil"] = psic,
+        hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
                                  _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
-                                 _["krootmax"] = VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
+                                 _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
                                  _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
                                  _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
                                  _["PLCstem"] = NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]));
-        supply[c] = supplyFunctionNetwork(hydraulicNetwork,
+        supply[c] = supplyFunctionNetwork(hydraulicNetwork[c],
                                           0.0, maxNsteps,
                                           ntrial, psiTol, ETol, 0.001); 
       } else {
-        supply[c] = supplyFunctionNetworkStem1(psic,
-                                               VGrhizo_kmaxc,VG_nc,VG_alphac,
-                                               sapFluidityDay*VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
-                                               sapFluidityDay*VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                               0.0, //StemPLCVEC[c],
+        hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
+                                           _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
+                                           _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
+                                           _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
+                                           _["PLCstem"] = NumericVector::create(0.0));
+        supply[c] = supplyFunctionNetworkStem1(hydraulicNetwork[c],
                                                0.0, maxNsteps,
                                                ntrial, psiTol, ETol, 0.001); 
       }
@@ -698,20 +700,22 @@ List transpirationSperry(List x, NumericVector meteovec,
       
       //Build supply function networks 
       if(!capacitance) {
-        supply[c] = supplyFunctionNetwork(psic,
-                                          VGrhizo_kmaxc,VG_nc,VG_alphac,
-                                          VCroot_kmaxc, VCroot_c[c], VCroot_d[c],
-                                          sapFluidityDay*VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                          sapFluidityDay*VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                          NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]),
+        hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
+                                           _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
+                                           _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
+                                           _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
+                                           _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
+                                           _["PLCstem"] = NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]));
+        supply[c] = supplyFunctionNetwork(hydraulicNetwork[c],
                                           0.0, maxNsteps,
                                           ntrial, psiTol, ETol, 0.001); 
       } else {
-        supply[c] = supplyFunctionNetworkStem1(psic,
-                                               VGrhizo_kmaxc,VG_nc,VG_alphac,
-                                               sapFluidityDay*VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
-                                               sapFluidityDay*VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                               0.0, //StemPLCVEC[c],
+        hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
+                                           _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
+                                           _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
+                                           _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
+                                           _["PLCstem"] = NumericVector::create(0.0));
+        supply[c] = supplyFunctionNetworkStem1(hydraulicNetwork[c],
                                                0.0, maxNsteps,
                                                ntrial, psiTol, ETol, 0.001); 
       }
@@ -840,11 +844,12 @@ List transpirationSperry(List x, NumericVector meteovec,
           // sFunctionAbove = supplyAboveground[c];
           double sapFluidityBelow = 1.0/waterDynamicViscosity(Tsoil[0]);
           double sapFluidityAbove = 1.0/waterDynamicViscosity(Tair[iLayerCohort[c]]);
-          sFunctionAbove = supplyFunctionFineRootLeaf(psiFineRootFake,
-                                                      sapFluidityBelow*VCroot_kmax_sum[c], VCroot_c[c], VCroot_d[c],
-                                                      sapFluidityAbove*VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                                      sapFluidityAbove*VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                                      StemPLCVEC[c], 
+          List hn = List::create(_["krootmax"] = NumericVector::create(sapFluidityBelow*VCroot_kmax_sum[c]), _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
+                                 _["kstemmax"] = sapFluidityAbove*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
+                                 _["kleafmax"] = sapFluidityAbove*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
+                                 _["PLCstem"] = NumericVector::create(StemPLCVEC[c]));
+          
+          sFunctionAbove = supplyFunctionFineRootLeaf(psiFineRootFake, hn, 
                                                       0.0, maxNsteps, 
                                                       ETol, 0.001);
           
