@@ -88,8 +88,7 @@ hydraulics_supplyFunctionFineRootLeaf(psiFineRoot,
                     hydraulicNetwork,
                     minFlow = 0.0, maxNsteps=400, 
                     ETol = 0.0001, pCrit = 0.001)
-hydraulics_supplyFunctionNetworkStem1(psiSoil, 
-                    hydraulicNetwork,
+hydraulics_supplyFunctionNetworkStem1(hydraulicNetwork,
                     minFlow = 0.0, maxNsteps=400, 
                     ntrial = 200, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001)
 hydraulics_supplyFunctionNetwork(hydraulicNetwork, 
@@ -109,7 +108,6 @@ hydraulics_regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha
   \item{kxylemmax}{Maximum xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
   \item{kleafmax}{Maximum leaf hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
   \item{kstemmax}{Maximum stem xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
-  \item{krootmax}{Maximum root xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
   \item{E}{Flow per surface unit.}
   \item{Emax}{Maximum flow per surface unit.}
   \item{Erootcrown}{Flow per surface unit at the root crown.}
@@ -120,6 +118,7 @@ hydraulics_regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha
   \item{psiCav}{Minimum water potential (in MPa) experienced (for irreversible cavitation).}
   \item{minFlow}{Minimum flow in supply function.}
   \item{psiPlant}{Plant water potential (in MPa).}
+  \item{hydraulicNetwork}{List with the hydraulic characteristics of nodes in the hydraulic network.}
   \item{psiFineRoot}{Water potential (in MPa) inside fine roots.}
   \item{psiSoil}{Soil water potential (in MPa). A scalar or a vector depending on the function.}
   \item{psiRhizo}{Soil water potential (in MPa) in the rhizosphere (root surface).}
@@ -129,7 +128,6 @@ hydraulics_regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha
   \item{psiIni}{Vector of initial water potential values (in MPa).}
   \item{psiMax}{Minimum (maximum in absolute value) water potential to be considered (in MPa).}
   \item{pCrit}{Critical water potential (in MPa).}
-  \item{PLCstem}{Proportion of loss conductance in the stem [0-1].}
   \item{PLCprev}{Previous proportion of loss conductance [0-1].}
   \item{V}{Capacity of the compartment per leaf area (in L/m2).}
   \item{fapo}{Apoplastic fraction (proportion) in the segment.}
@@ -138,16 +136,13 @@ hydraulics_regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha
   \item{dE}{Increment of flow per surface unit.}
   \item{ETol}{Precision for water flow per surface unit.}
   \item{c, d}{Parameters of the Weibull function (generic xylem vulnerability curve).}
-  \item{rootc, rootd}{Parameters of the Weibull function for roots (root xylem vulnerability curve).}
   \item{stemc, stemd}{Parameters of the Weibull function for stems (stem xylem vulnerability curve).}
   \item{leafc, leafd}{Parameters of the Weibull function for leaves (leaf vulnerability curve).}
   \item{n, alpha, l}{Parameters of the Van Genuchten function (rhizosphere vulnerability curve).}
-  \item{nsoil, alphasoil}{Parameter vectors of the Van Genuchten function (rhizosphere vulnerability curve) with one value for each soil layer.}
   \item{allowNegativeFlux}{A boolean to indicate wether negative flux (i.e. from plant to soil) is allowed.}
   \item{maxNsteps}{Maximum number of steps in the construction of supply functions.}
   \item{ntrial}{Maximum number of steps in Newton-Raphson optimization.}
   \item{x}{An object of class \code{\link{spwbInput}}.}
-  \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{type}{Plot type for \code{hydraulics_supplyFunctionPlot}, either \code{"E"}, \code{"ERhizo"}, \code{"psiStem"}, \code{"psiRoot"}, \code{"psiRhizo"} or \code{"dEdP"}).}
   \item{draw}{A flag to indicate whether the supply function should be drawn or just returned.}
   \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
