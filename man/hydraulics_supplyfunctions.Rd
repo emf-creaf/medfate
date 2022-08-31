@@ -51,33 +51,17 @@ hydraulics_E2psiVanGenuchten(E, psiSoil, krhizomax, n, alpha,
 hydraulics_E2psiTwoElements(E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, 
                       psiCav = 0, psiStep = -1e-04, psiMax = -10.0)
 hydraulics_E2psiFineRootLeaf(E, psiFineRoot, 
-                      krootmax, rootc, rootd,
-                      kstemmax, stemc, stemd,
-                      kleafmax, leafc, leafd,
-                      PLCstem)
-hydraulics_E2psiBelowground(E, psiSoil, 
-                      krhizomax, nsoil, alphasoil,
-                      krootmax, rootc, rootd, 
+                      hydraulicNetwork)
+hydraulics_E2psiBelowground(E, hydraulicNetwork, 
                       psiIni = as.numeric(c(0)),
                       ntrial = 10, psiTol = 0.0001, ETol = 0.0001)
 hydraulics_E2psiAboveground(E, psiRootCrown, 
-                      kstemmax, stemc, stemd,
-                      kleafmax, leafc, leafd,
-                      PLCstem)  
-hydraulics_E2psiNetwork(E, psiSoil, 
-                  krhizomax, nsoil, alphasoil,
-                  krootmax, rootc, rootd, 
-                  kstemmax, stemc, stemd,
-                  kleafmax, leafc, leafd,
-                  PLCstem,
+                      hydraulicNetwork)  
+hydraulics_E2psiNetwork(E, hydraulicNetwork,
                   psiIni = as.numeric(c(0)),
                   ntrial = 10, 
                   psiTol = 0.0001, ETol = 0.0001)
-hydraulics_E2psiNetworkStem1(E, psiSoil, 
-                  krhizomax, nsoil, alphasoil,
-                  krootmax, rootc, rootd, 
-                  kstemmax, stemc, stemd,
-                  PLCstem,
+hydraulics_E2psiNetworkStem1(E, hydraulicNetwork,
                   psiIni = as.numeric(c(0)),
                   ntrial = 10, 
                   psiTol = 0.0001, ETol = 0.0001)
@@ -93,40 +77,26 @@ hydraulics_supplyFunctionThreeElements(Emax, psiSoil,
                   psiCav = 0, dE = 0.1, psiMax = -10.0)
                           
                           
-hydraulics_supplyFunctionBelowground(psiSoil, 
-                  krhizomax, nsoil, alphasoil,
-                  krootmax, rootc, rootd, 
+hydraulics_supplyFunctionBelowground(hydraulicNetwork, 
                   minFlow = 0.0, maxNsteps=400,  
                   ntrial = 10, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001)
 
 hydraulics_supplyFunctionAboveground(Erootcrown, psiRootCrown, 
-                  kstemmax, stemc, stemd,
-                  kleafmax, leafc, leafd,
-                  PLCstem)
+                  hydraulicNetwork)
 
 hydraulics_supplyFunctionFineRootLeaf(psiFineRoot,
-                    krootmax, rootc, rootd,
-                    kstemmax, stemc, stemd,
-                    kleafmax, leafc, leafd,
-                    PLCstem,
+                    hydraulicNetwork,
                     minFlow = 0.0, maxNsteps=400, 
                     ETol = 0.0001, pCrit = 0.001)
 hydraulics_supplyFunctionNetworkStem1(psiSoil, 
-                    krhizomax, nsoil, alphasoil,
-                    krootmax, rootc, rootd, 
-                    kstemmax, stemc, stemd,
-                    PLCstem,
+                    hydraulicNetwork,
                     minFlow = 0.0, maxNsteps=400, 
                     ntrial = 200, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001)
-hydraulics_supplyFunctionNetwork(psiSoil, 
-                  krhizomax, nsoil, alphasoil,
-                  krootmax, rootc, rootd, 
-                  kstemmax, stemc, stemd,
-                  kleafmax, leafc, leafd,
-                  PLCstem, minFlow = 0.0, maxNsteps=400,
+hydraulics_supplyFunctionNetwork(hydraulicNetwork, 
+                  minFlow = 0.0, maxNsteps=400,
                   ntrial = 200, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001)
                            
-hydraulics_supplyFunctionPlot(x, soil, draw = TRUE, type = "E",
+hydraulics_supplyFunctionPlot(x, draw = TRUE, type = "E",
                               speciesNames = FALSE, ylim=NULL)   
 hydraulics_regulatedPsiXylem(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01)
 hydraulics_regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, 

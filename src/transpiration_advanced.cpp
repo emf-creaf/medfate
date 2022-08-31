@@ -612,7 +612,7 @@ List transpirationSperry(List x, NumericVector meteovec,
       for(int l=0;l<nlayers;l++) {
         if(layerConnected(c,l)) {
           Vc[cnt] = V(c,l);
-          VCroot_kmaxc[cnt] = sapFluidityDay*VCroot_kmax(c,l);
+          VCroot_kmaxc[cnt] = VCroot_kmax(c,l);
           VGrhizo_kmaxc[cnt] = VGrhizo_kmax(c,l);
           psic[cnt] = psiSoil[l];
           VG_nc[cnt] = VG_n[l];
@@ -688,7 +688,7 @@ List transpirationSperry(List x, NumericVector meteovec,
         for(int l=0;l<nlayers;l++) {
           if(layerConnectedCoh(j,l)) {
             Vc[cnt] = V(c,l)*RHOPcoh(j,l);
-            VCroot_kmaxc[cnt] = sapFluidityDay*VCroot_kmax(c,l)*RHOPcoh(j,l);
+            VCroot_kmaxc[cnt] = VCroot_kmax(c,l)*RHOPcoh(j,l);
             VGrhizo_kmaxc[cnt] = VGrhizo_kmax(c,l)*RHOPcoh(j,l);
             psic[cnt] = psiSoilM(j,l);
             VG_nc[cnt] = VG_n[l];
