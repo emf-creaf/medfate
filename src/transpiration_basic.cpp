@@ -218,7 +218,7 @@ List transpirationGranier(List x, NumericVector meteovec,
   //Actual plant transpiration
   int nlayers = Wpool.ncol();
   NumericMatrix Extraction(numCohorts, nlayers); // this is final extraction of each cohort from each layer
-  NumericMatrix ExtractionPoolsCoh(numCohorts, nlayers); //this is used to store extraction of a SINGLE plant cohort from all pools
+  List ExtractionPools(numCohorts);
   
   NumericVector Eplant(numCohorts, 0.0), Agplant(numCohorts, 0.0);
   NumericVector DDS(numCohorts, 0.0), LFMC(numCohorts, 0.0);
@@ -231,6 +231,7 @@ List transpirationGranier(List x, NumericVector meteovec,
   //Calculate soil water potential
   NumericVector psiSoil = psi(soil,soilFunctions);
 
+  NumericMatrix WaterM(numCohorts, nlayers);
   NumericMatrix KunsatM(numCohorts, nlayers);
   NumericMatrix psiSoilM(numCohorts, nlayers);
   if(plantWaterPools) {
@@ -243,10 +244,14 @@ List transpirationGranier(List x, NumericVector meteovec,
       KunsatM(j,_) = conductivity(soil_pool);
       //Calculate soil water potential
       psiSoilM(j,_) = psi(soil_pool, soilFunctions);
+      //Calculate available water
+      WaterM(j,_) = water(soil_pool, soilFunctions);
     }
   }
   
   for(int c=0;c<numCohorts;c++) {
+    NumericMatrix ExtractionPoolsCoh(numCohorts, nlayers); //this is used to store extraction of a SINGLE plant cohort from all pools
+    
     NumericVector parsVol = NumericVector::create(_["psi_critic"] = Psi_Critic[c], _["stem_plc"] = StemPLC[c],
                                                   _["leafpi0"] = LeafPI0[c], _["leafeps"] = LeafEPS[c],
                                                                                                    _["leafaf"] = LeafAF[c],_["stempi0"] = StemPI0[c],_["stemeps"] = StemEPS[c],
@@ -347,6 +352,9 @@ List transpirationGranier(List x, NumericVector meteovec,
     if(vpd < 0.25) fvpd = 2.5 - (2.5 - pow(0.25, WUE_vpd[c]))*(vpd/0.25);
     // Rcout<<fpar<<" "<< fco2 << " "<< fvpd<< " "<< WUE[c]*fpar*fco2*fvpd<<"\n";
     Agplant[c] = WUE[c]*Eplant[c]*fpar*fco2*fvpd;
+    
+    //Store extractionPool
+    ExtractionPools[c] = ExtractionPoolsCoh;
   }
   
   //Plant water status (StemPLC, RWC, DDS)
@@ -408,19 +416,45 @@ List transpirationGranier(List x, NumericVector meteovec,
         // Rcout<< "\n";
       }
     } else {
-      
+      for(int c=0;c<numCohorts;c++) {
+        NumericMatrix ExtractionPoolsCoh = ExtractionPools[c];
+        for(int j=0;j<numCohorts;j++) {
+          double redAmount = sum(ExtractionPoolsCoh(j,_))*hydraulicRedistributionFraction;
+          NumericVector Ws = Wpool(j,_);
+          NumericVector SW = WaterM(j,_);
+          double soilRWC = sum(Ws*SW)/sum(SW);
+          NumericVector WDiff = Ws - soilRWC; 
+          NumericVector DonorDiff = pmax(0.0, WDiff);
+          NumericVector ReceiverDiff = pmax(0.0, -WDiff);
+          NumericVector HD(nlayers,0.0);
+          if(sum(DonorDiff)>0.0) {
+            for(int l=0;l<nlayers;l++) {
+              if(WDiff[l]>0.0) {
+                HD[l] = redAmount*DonorDiff[l]/sum(DonorDiff);
+              } else{
+                HD[l] = -redAmount*ReceiverDiff[l]/sum(ReceiverDiff);
+              }
+              Extraction(c,l) += HD[l];
+              ExtractionPoolsCoh(j,l) += HD[l];
+            }
+          }
+        }
+      }
     }
   }
   //Modifies input soil
   if(modifyInput) {
     NumericVector Ws = soil["W"];
     for(int l=0;l<nlayers;l++) Ws[l] = Ws[l] - (sum(Extraction(_,l))/Water_FC[l]); 
-    for(int j=0;j<numCohorts;j++) {
+    for(int c=0;c<numCohorts;c++) {
       for(int l=0;l<nlayers;l++) {
         if(!plantWaterPools){ //copy soil to the pools of all cohorts
-          Wpool(j,l) = Ws[l];
+          Wpool(c,l) = Ws[l];
         } else {//Applies pool extraction by each plant cohort
-          Wpool(j,l) = Wpool(j,l) - (ExtractionPoolsCoh(j,l)/(Water_FC[l]*poolProportions[j])); //Apply extraction from pools
+          NumericMatrix ExtractionPoolsCoh = ExtractionPools[c];
+          for(int j=0;j<numCohorts;j++) {
+            Wpool(c,l) = Wpool(c,l) - (ExtractionPoolsCoh(j,l)/(Water_FC[l]*poolProportions[c])); //Apply extraction from pools
+          }
         }
       }
     } 
