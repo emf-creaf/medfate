@@ -57,6 +57,7 @@ The following plots are currently available for \code{\link{spwb}} (most of them
     \item{\code{"SoilTheta"}:}{ Soil moisture water content (in percent volume).}
     \item{\code{"SoilVol"}:}{ Soil water volumetric content (in mm).}
     \item{\code{"PlantExtraction"}:}{ Water extracted by plants from each soil layer.}
+    \item{\code{"HydraulicRedistribution"}: Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network.}
     \item{\code{"WTD"}:}{ Water table depth.}
     \item{\code{"LAI"}:}{ Expanded and dead leaf area index of the whole stand.}
     \item{\code{"PlantLAI"}:}{ Plant cohort leaf area index (expanded leaves).}
@@ -78,7 +79,6 @@ The following plots are currently available for \code{\link{spwb}} (most of them
   }
   The following plots are available for \code{\link{spwb}} and \code{\link{pwb}} \emph{only if} \code{transpirationMode = "Sperry"}:
   \itemize{
-    \item{\code{"HydraulicRedistribution"}: Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network.}
     \item{\code{"SoilPlantConductance"}: Average instantaneous overall soil plant conductance (calculated as the derivative of the supply function).}
     \item{\code{"LeafPsiMin"}:  Midday leaf water potential.}
     \item{\code{"LeafPsiMax"}:  Pre-dawn leaf water potential.}

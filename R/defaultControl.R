@@ -21,6 +21,9 @@ defaultControl<-function(transpirationMode = "Granier") {
     windMeasurementHeight = 200,
     cavitationRefill = "total",
     
+    #spwb with granier
+    hydraulicRedistributionFraction = 0.1,
+    
     #spwb with sperry
     ndailysteps = 24,
     nsubsteps = 3600,

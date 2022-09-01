@@ -17,11 +17,8 @@
               "Water table depth" = "WTD")
   }
   TYPES = c(TYPES, 
-            "Plant extraction from soil"= "PlantExtraction")
-  if(transpirationMode=="Sperry") {
-    TYPES = c(TYPES, 
-              "Hydraulic redistribution" = "HydraulicRedistribution")
-  }
+            "Plant extraction from soil"= "PlantExtraction",
+            "Hydraulic redistribution" = "HydraulicRedistribution")
   return(TYPES)
 }
 .getStandPlotTypes<-function(model = "pwb") {

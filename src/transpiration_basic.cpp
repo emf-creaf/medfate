@@ -83,6 +83,7 @@ List transpirationGranier(List x, NumericVector meteovec,
   double verticalLayerSize = control["verticalLayerSize"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
+  double hydraulicRedistributionFraction = control["hydraulicRedistributionFraction"];
   
   //Soil water at field capacity
   List soil = x["soil"];
@@ -334,7 +335,6 @@ List transpirationGranier(List x, NumericVector meteovec,
       } else { // recalculate also extraction from soil pools
         for(int j = 0;j<numCohorts;j++) {
           if(ext_sum>0.0) ExtractionPoolsCoh(j,l) += (volDiff+corr_extraction)*(ExtractionPoolsCoh(j,l)/ext_sum);
-          if(modifyInput) Wpool(j,l) = Wpool(j,l) - (ExtractionPoolsCoh(j,l)/(Water_FC[l]*poolProportions[j])); //Apply extraction from pools
         }
         //Recalculate extraction from soil layers
         Extraction(c,l) = sum(ExtractionPoolsCoh(_,l)); // Sum extraction from all pools (layer l)
@@ -381,23 +381,58 @@ List transpirationGranier(List x, NumericVector meteovec,
     internalWater["StemPLC"] = StemPLC;
     internalWater["PlantPsi"] = PlantPsi;
   }
+  //Atempt to implement hydraulic redistribution
+  if(hydraulicRedistributionFraction > 0.0) {
+    if(!plantWaterPools) {
+      for(int c=0;c<numCohorts;c++) {
+        double redAmount = Eplant[c]*hydraulicRedistributionFraction;
+        // Rcout<<c<< "red amount"<< redAmount;
+        NumericVector Ws = soil["W"];
+        NumericVector SW = water(soil, soilFunctions);
+        double soilRWC = sum(Ws*SW)/sum(SW);
+        NumericVector WDiff = Ws - soilRWC; 
+        NumericVector DonorDiff = pmax(0.0, WDiff);
+        NumericVector ReceiverDiff = pmax(0.0, -WDiff);
+        NumericVector HD(nlayers,0.0);
+        if(sum(DonorDiff)>0.0) {
+          for(int l=0;l<nlayers;l++) {
+            if(WDiff[l]>0.0) {
+              HD[l] = redAmount*DonorDiff[l]/sum(DonorDiff);
+            } else{
+              HD[l] = -redAmount*ReceiverDiff[l]/sum(ReceiverDiff);
+            }
+            // Rcout<<" "<<l<<" "<<HD[l];
+            Extraction(c,l) += HD[l];
+          }
+        }
+        // Rcout<< "\n";
+      }
+    } else {
+      
+    }
+  }
   //Modifies input soil
   if(modifyInput) {
     NumericVector Ws = soil["W"];
     for(int l=0;l<nlayers;l++) Ws[l] = Ws[l] - (sum(Extraction(_,l))/Water_FC[l]); 
-    if(!plantWaterPools){ //copy soil to the pools of all cohorts
-      for(int j=0;j<numCohorts;j++) {
-        for(int l=0;l<nlayers;l++) {
+    for(int j=0;j<numCohorts;j++) {
+      for(int l=0;l<nlayers;l++) {
+        if(!plantWaterPools){ //copy soil to the pools of all cohorts
           Wpool(j,l) = Ws[l];
+        } else {//Applies pool extraction by each plant cohort
+          Wpool(j,l) = Wpool(j,l) - (ExtractionPoolsCoh(j,l)/(Water_FC[l]*poolProportions[j])); //Apply extraction from pools
         }
       }
-    }
+    } 
   }
   
   //Copy LAIexpanded for output
   NumericVector LAIcohort(numCohorts);
-  for(int c=0;c<numCohorts;c++) LAIcohort[c]= LAIphe[c];
-  
+  NumericVector SoilExtractCoh(numCohorts,0.0);
+  for(int c=0;c<numCohorts;c++) {
+    LAIcohort[c]= LAIphe[c];
+    SoilExtractCoh[c] =  sum(Extraction(c,_));
+  }
   NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell,
                                               _["LAIlive"] = LAIcelllive, 
                                               _["LAIexpanded"] = LAIcellexpanded, 
@@ -407,6 +442,7 @@ List transpirationGranier(List x, NumericVector meteovec,
                                        _["LAIlive"] = clone(LAIlive),
                                        _["FPAR"] = PARcohort,
                                        _["AbsorbedSWRFraction"] = 100.0*CohASWRF, 
+                                       _["Extraction"] = SoilExtractCoh,
                                        _["Transpiration"] = Eplant, 
                                        _["GrossPhotosynthesis"] = Agplant,
                                        _["PlantPsi"] = PlantPsi, 

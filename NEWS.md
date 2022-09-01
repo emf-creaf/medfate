@@ -4,6 +4,7 @@
 
 # Version 2.8.0
 - New control parameter 'subdailyCarbonBalance', applying to growth simulations with transpiration = "Sperry"
+- Hydraulic redistribution implemented for transpiration = "Granier"
 
 # Version 2.7.7
 - Imputation relationship between RGRcambiummax and SRsapwood

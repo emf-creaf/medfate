@@ -26,8 +26,8 @@ evalDIR = "~/OneDrive/Professional/MedfateWorks/RegionalLevelEvaluation"
 ## Introduction
 
 ```{r, echo = FALSE}
-eval_res_basic <- readRDS(paste0(evalDIR, "/Rdata/IFNeval_results_basic_SX.rds"))
-eval_res_advanced <- readRDS(paste0(evalDIR, "/Rdata/IFNeval_results_basic_VG.rds"))
+eval_res_basic <- readRDS(paste0(evalDIR, "/Rdata/IFNeval_results_basic_VG.rds"))
+eval_res_advanced <- readRDS(paste0(evalDIR, "/Rdata/IFNeval_results_advanced.rds"))
 
 SpParams_bas = eval_res_basic$SpParams
 target_spp_bas = eval_res_basic$target_spp

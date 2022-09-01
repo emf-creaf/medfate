@@ -6,6 +6,7 @@ data(SpParamsMED)
 d = 100:105
 examplesoil = soil(defaultSoilParams(4))
 
+
 test_that("Can produce all basic spwb plots and summaries",{
   control = defaultControl("Granier")
   control$verbose = FALSE
@@ -25,6 +26,7 @@ test_that("Can produce all basic spwb plots and summaries",{
   expect_s3_class(plot(S1, "SoilTheta"), "ggplot")
   expect_s3_class(plot(S1, "SoilVol"), "ggplot")
   expect_s3_class(plot(S1, "PlantExtraction"), "ggplot")
+  expect_s3_class(plot(S1, "HydraulicRedistribution"), "ggplot")
   expect_s3_class(plot(S1, "LAI"), "ggplot")
   expect_s3_class(plot(S1, "PlantLAI"), "ggplot")
   expect_s3_class(plot(S1, "PlantLAIlive"), "ggplot")
@@ -59,7 +61,6 @@ test_that("Can produce all advanced spwb plots and summaries",{
   S2<-spwb(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
   expect_s3_class(S2, "spwb")
   expect_type(fireHazard(S2, SpParamsMED, exampleforestMED), "double")
-  expect_s3_class(plot(S2, "HydraulicRedistribution"), "ggplot")
   expect_s3_class(plot(S2, "SoilPlantConductance"), "ggplot")
   expect_s3_class(plot(S2, "LeafPsiMin"), "ggplot")
   expect_s3_class(plot(S2, "LeafPsiMax"), "ggplot")
