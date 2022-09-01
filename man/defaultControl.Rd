@@ -54,6 +54,11 @@ A list, with the following options (default values in parentheses):
     }
   }
 }
+\bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Granier"}):
+\itemize{
+   \item{\code{hydraulicRedistributionFraction (= 0.1)}: Fraction of plant transpiration corresponding to hydraulic redistribution.}
+}
+
 \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Sperry"}):
 \itemize{
    \item{\code{ndailysteps (= 24)}: Number of steps into which each day is divided for determination of stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).}
