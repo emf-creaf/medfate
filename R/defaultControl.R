@@ -58,7 +58,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     senescenceRates = list(sapwood = 0.000135, # day-1 Equivalent to annual 4.8% 1-(1-0.048)^(1.0/365)
                       fineroot = 0.001897231), #day-1 Equivalent to annual 50% 1-(1-0.5)^(1.0/365)
     maximumRelativeGrowthRates = list(leaf = 0.03, # m2 leaf ·cm-2 sapwood· day-1
-                                      cambium = 0.0035, # cm2 sapwood ·cm-1 cambium· day-1
+                                      cambium = 0.0025, # cm2 sapwood ·cm-1 cambium· day-1
                                       sapwood = 0.002, # cm2 sapwood ·cm-2 sapwood· day-1
                                       fineroot = 0.1), # g dw · g dw -1 · day -1
     mortalityMode = "density/deterministic",
