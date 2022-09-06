@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.0</span>
       </span>
     </div>
 
@@ -99,6 +99,7 @@
 <li><p>"rate" - following a rate of new sapwood formation.</p></li>
 <li><p>"total" - instantaneous complete refilling.</p></li>
 </ul></li>
+</ul><p><b>Water balance</b> (functions <code><a href="spwb.html">spwb</a></code>, <code><a href="spwb.html">pwb</a></code> or <code><a href="spwb_day.html">spwb_day</a></code> when <code>traspirationMode = "Granier"</code>):</p><ul><li><p><code>hydraulicRedistributionFraction (= 0.1)</code>: Fraction of plant transpiration corresponding to hydraulic redistribution.</p></li>
 </ul><p><b>Water balance</b> (functions <code><a href="spwb.html">spwb</a></code>, <code><a href="spwb.html">pwb</a></code> or <code><a href="spwb_day.html">spwb_day</a></code> when <code>traspirationMode = "Sperry"</code>):</p><ul><li><p><code>ndailysteps (= 24)</code>: Number of steps into which each day is divided for determination of stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).</p></li>
 <li><p><code>nsubsteps (= 3600)</code>: Number of substeps into which each step is divided for multi-layer canopy energy balance solving.</p></li>
 <li><p><code>capacitance (=FALSE)</code>: Whether the effect of plant water compartments is considered in simulations.</p></li>
@@ -119,7 +120,8 @@
 <li><p><code>averageFracRhizosphereResistance (=0.15)</code>: Fraction to total continuum (leaf+stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).</p></li>
 <li><p><code>boundaryLayerSize (= 2000)</code>: Size of the boundary layer (in cm) over the canopy (relevant for multi-layer canopy energy balance).</p></li>
 <li><p><code>refillMaximumRate (= 0.05)</code>: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).</p></li>
-</ul><p><b>Forest growth</b> (functions <code><a href="growth.html">growth</a></code> or <code><a href="spwb_day.html">growth_day</a></code>):</p><ul><li><p><code>allowDessication (=TRUE)</code>: Boolean flag to indicate that mortality by dessication is allowed.</p></li>
+</ul><p><b>Forest growth</b> (functions <code><a href="growth.html">growth</a></code> or <code><a href="spwb_day.html">growth_day</a></code>):</p><ul><li><p><code>subdailyCarbonBalance (=FALSE)</code>: Boolean flag to indicate that labile carbon balance should be conducted at sub-daily steps (applies only to transpirationMode = "Sperry").</p></li>
+<li><p><code>allowDessication (=TRUE)</code>: Boolean flag to indicate that mortality by dessication is allowed.</p></li>
 <li><p><code>allowStarvation (=TRUE)</code>: Boolean flag to indicate that mortality by starvation is allowed.</p></li>
 <li><p><code>sinkLimitation (=TRUE): Boolean flag to indicate that temperature and turgor limitations to growth are applied.</code></p></li>
 <li><p><code> shrubDynamics [= TRUE]</code>: Boolean flag to allow the application of demographic processes to shrubs.</p></li>

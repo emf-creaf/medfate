@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.0</span>
       </span>
     </div>
 
@@ -170,19 +170,19 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 265.718</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 265.781</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -25.5391</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -25.5391</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -25.4761</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -25.4761</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 96 Net rainfall (mm) 366</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 408 Runoff (mm) 9 Deep drainage (mm) 67</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 408 Runoff (mm) 9 Deep drainage (mm) 66</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 17 Transpiration (mm) 350</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 350  Plant water balance (mm) -0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 350  Plant water balance (mm) -0 Hydraulic redistribution (mm) 10</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Load observed data (in this case the same simulation results with some added error)  </span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span></span>
@@ -190,13 +190,13 @@
 <span class="r-in"><span><span class="co">#Evaluation statistics for soil water content</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_stats</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             n          Bias      Bias.rel           MAE       MAE.rel </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 365.000000000  -0.005663786  -2.151325516   0.008590169   3.262879321 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 365.000000000  -0.003369394  -1.285026012   0.008684958   3.312285595 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             r           NSE       NSE.abs </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.961957632   0.880447980   0.635987833 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.943031030   0.871877761   0.634006817 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#NSE only</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span>, metric<span class="op">=</span><span class="st">"NSE"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.880448</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.8718778</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Comparison of temporal dynamics</span></span></span>
@@ -205,7 +205,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Loglikelihood value</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 916.6039</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 912.602</span>
 </code></pre></div>
     </div>
   </div>

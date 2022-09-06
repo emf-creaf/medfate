@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.0</span>
       </span>
     </div>
 
@@ -132,6 +132,7 @@
 <li><p><code>"SoilTheta"</code>: Soil moisture water content (in percent volume).</p></li>
 <li><p><code>"SoilVol"</code>: Soil water volumetric content (in mm).</p></li>
 <li><p><code>"PlantExtraction"</code>: Water extracted by plants from each soil layer.</p></li>
+<li><p><code>"HydraulicRedistribution"</code>: Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network.</p></li>
 <li><p><code>"WTD"</code>: Water table depth.</p></li>
 <li><p><code>"LAI"</code>: Expanded and dead leaf area index of the whole stand.</p></li>
 <li><p><code>"PlantLAI"</code>: Plant cohort leaf area index (expanded leaves).</p></li>
@@ -147,8 +148,7 @@
 </ul><p>The following plots are available for <code><a href="spwb.html">spwb</a></code> and <code><a href="spwb.html">pwb</a></code> <em>only if</em> <code>transpirationMode = "Granier"</code>:</p><ul><li><p><code>"PlantPsi"</code>: Plant cohort water potential.</p></li>
 <li><p><code>"FPAR"</code>: Fraction of PAR at the canopy level of each plant cohort.</p></li>
 <li><p><code>"AbsorbedSWRFraction"</code>: Fraction of SWR absorbed by each plant cohort.</p></li>
-</ul><p>The following plots are available for <code><a href="spwb.html">spwb</a></code> and <code><a href="spwb.html">pwb</a></code> <em>only if</em> <code>transpirationMode = "Sperry"</code>:</p><ul><li><p><code>"HydraulicRedistribution"</code>: Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network.</p></li>
-<li><p><code>"SoilPlantConductance"</code>: Average instantaneous overall soil plant conductance (calculated as the derivative of the supply function).</p></li>
+</ul><p>The following plots are available for <code><a href="spwb.html">spwb</a></code> and <code><a href="spwb.html">pwb</a></code> <em>only if</em> <code>transpirationMode = "Sperry"</code>:</p><ul><li><p><code>"SoilPlantConductance"</code>: Average instantaneous overall soil plant conductance (calculated as the derivative of the supply function).</p></li>
 <li><p><code>"LeafPsiMin"</code>:  Midday leaf water potential.</p></li>
 <li><p><code>"LeafPsiMax"</code>:  Pre-dawn leaf water potential.</p></li>
 <li><p><code>"LeafPsiRange"</code>:  Range of leaf water potential.</p></li>
@@ -252,19 +252,19 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 162.655</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 162.619</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -22.4148</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -22.4148</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -22.4502</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -22.4502</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 96 Net rainfall (mm) 366</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 408 Runoff (mm) 9 Deep drainage (mm) 69</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 13 Transpiration (mm) 349</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 349  Plant water balance (mm) -0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 408 Runoff (mm) 9 Deep drainage (mm) 68</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 14 Transpiration (mm) 349</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 349  Plant water balance (mm) -0 Hydraulic redistribution (mm) 4</span>
 <span class="r-in"><span>        </span></span>
 <span class="r-in"><span><span class="co">#Plot results</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></span></span>

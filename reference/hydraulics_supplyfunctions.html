@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.0</span>
       </span>
     </div>
 
@@ -75,33 +75,17 @@
 <span><span class="fu">hydraulics_E2psiTwoElements</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiSoil</span>, <span class="va">krhizomax</span>, <span class="va">kxylemmax</span>, <span class="va">n</span>, <span class="va">alpha</span>, <span class="va">c</span>, <span class="va">d</span>, </span>
 <span>                      psiCav <span class="op">=</span> <span class="fl">0</span>, psiStep <span class="op">=</span> <span class="op">-</span><span class="fl">1e-04</span>, psiMax <span class="op">=</span> <span class="op">-</span><span class="fl">10.0</span><span class="op">)</span></span>
 <span><span class="fu">hydraulics_E2psiFineRootLeaf</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiFineRoot</span>, </span>
-<span>                      <span class="va">krootmax</span>, <span class="va">rootc</span>, <span class="va">rootd</span>,</span>
-<span>                      <span class="va">kstemmax</span>, <span class="va">stemc</span>, <span class="va">stemd</span>,</span>
-<span>                      <span class="va">kleafmax</span>, <span class="va">leafc</span>, <span class="va">leafd</span>,</span>
-<span>                      <span class="va">PLCstem</span><span class="op">)</span></span>
-<span><span class="fu">hydraulics_E2psiBelowground</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiSoil</span>, </span>
-<span>                      <span class="va">krhizomax</span>, <span class="va">nsoil</span>, <span class="va">alphasoil</span>,</span>
-<span>                      <span class="va">krootmax</span>, <span class="va">rootc</span>, <span class="va">rootd</span>, </span>
+<span>                      <span class="va">hydraulicNetwork</span><span class="op">)</span></span>
+<span><span class="fu">hydraulics_E2psiBelowground</span><span class="op">(</span><span class="va">E</span>, <span class="va">hydraulicNetwork</span>, </span>
 <span>                      psiIni <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                      ntrial <span class="op">=</span> <span class="fl">10</span>, psiTol <span class="op">=</span> <span class="fl">0.0001</span>, ETol <span class="op">=</span> <span class="fl">0.0001</span><span class="op">)</span></span>
 <span><span class="fu">hydraulics_E2psiAboveground</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiRootCrown</span>, </span>
-<span>                      <span class="va">kstemmax</span>, <span class="va">stemc</span>, <span class="va">stemd</span>,</span>
-<span>                      <span class="va">kleafmax</span>, <span class="va">leafc</span>, <span class="va">leafd</span>,</span>
-<span>                      <span class="va">PLCstem</span><span class="op">)</span>  </span>
-<span><span class="fu">hydraulics_E2psiNetwork</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiSoil</span>, </span>
-<span>                  <span class="va">krhizomax</span>, <span class="va">nsoil</span>, <span class="va">alphasoil</span>,</span>
-<span>                  <span class="va">krootmax</span>, <span class="va">rootc</span>, <span class="va">rootd</span>, </span>
-<span>                  <span class="va">kstemmax</span>, <span class="va">stemc</span>, <span class="va">stemd</span>,</span>
-<span>                  <span class="va">kleafmax</span>, <span class="va">leafc</span>, <span class="va">leafd</span>,</span>
-<span>                  <span class="va">PLCstem</span>,</span>
+<span>                      <span class="va">hydraulicNetwork</span><span class="op">)</span>  </span>
+<span><span class="fu">hydraulics_E2psiNetwork</span><span class="op">(</span><span class="va">E</span>, <span class="va">hydraulicNetwork</span>,</span>
 <span>                  psiIni <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                  ntrial <span class="op">=</span> <span class="fl">10</span>, </span>
 <span>                  psiTol <span class="op">=</span> <span class="fl">0.0001</span>, ETol <span class="op">=</span> <span class="fl">0.0001</span><span class="op">)</span></span>
-<span><span class="fu">hydraulics_E2psiNetworkStem1</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiSoil</span>, </span>
-<span>                  <span class="va">krhizomax</span>, <span class="va">nsoil</span>, <span class="va">alphasoil</span>,</span>
-<span>                  <span class="va">krootmax</span>, <span class="va">rootc</span>, <span class="va">rootd</span>, </span>
-<span>                  <span class="va">kstemmax</span>, <span class="va">stemc</span>, <span class="va">stemd</span>,</span>
-<span>                  <span class="va">PLCstem</span>,</span>
+<span><span class="fu">hydraulics_E2psiNetworkStem1</span><span class="op">(</span><span class="va">E</span>, <span class="va">hydraulicNetwork</span>,</span>
 <span>                  psiIni <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                  ntrial <span class="op">=</span> <span class="fl">10</span>, </span>
 <span>                  psiTol <span class="op">=</span> <span class="fl">0.0001</span>, ETol <span class="op">=</span> <span class="fl">0.0001</span><span class="op">)</span></span>
@@ -117,40 +101,25 @@
 <span>                  psiCav <span class="op">=</span> <span class="fl">0</span>, dE <span class="op">=</span> <span class="fl">0.1</span>, psiMax <span class="op">=</span> <span class="op">-</span><span class="fl">10.0</span><span class="op">)</span></span>
 <span>                          </span>
 <span>                          </span>
-<span><span class="fu">hydraulics_supplyFunctionBelowground</span><span class="op">(</span><span class="va">psiSoil</span>, </span>
-<span>                  <span class="va">krhizomax</span>, <span class="va">nsoil</span>, <span class="va">alphasoil</span>,</span>
-<span>                  <span class="va">krootmax</span>, <span class="va">rootc</span>, <span class="va">rootd</span>, </span>
+<span><span class="fu">hydraulics_supplyFunctionBelowground</span><span class="op">(</span><span class="va">hydraulicNetwork</span>, </span>
 <span>                  minFlow <span class="op">=</span> <span class="fl">0.0</span>, maxNsteps<span class="op">=</span><span class="fl">400</span>,  </span>
 <span>                  ntrial <span class="op">=</span> <span class="fl">10</span>, psiTol <span class="op">=</span> <span class="fl">0.0001</span>, ETol <span class="op">=</span> <span class="fl">0.0001</span>, pCrit <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">hydraulics_supplyFunctionAboveground</span><span class="op">(</span><span class="va">Erootcrown</span>, <span class="va">psiRootCrown</span>, </span>
-<span>                  <span class="va">kstemmax</span>, <span class="va">stemc</span>, <span class="va">stemd</span>,</span>
-<span>                  <span class="va">kleafmax</span>, <span class="va">leafc</span>, <span class="va">leafd</span>,</span>
-<span>                  <span class="va">PLCstem</span><span class="op">)</span></span>
+<span>                  <span class="va">hydraulicNetwork</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">hydraulics_supplyFunctionFineRootLeaf</span><span class="op">(</span><span class="va">psiFineRoot</span>,</span>
-<span>                    <span class="va">krootmax</span>, <span class="va">rootc</span>, <span class="va">rootd</span>,</span>
-<span>                    <span class="va">kstemmax</span>, <span class="va">stemc</span>, <span class="va">stemd</span>,</span>
-<span>                    <span class="va">kleafmax</span>, <span class="va">leafc</span>, <span class="va">leafd</span>,</span>
-<span>                    <span class="va">PLCstem</span>,</span>
+<span>                    <span class="va">hydraulicNetwork</span>,</span>
 <span>                    minFlow <span class="op">=</span> <span class="fl">0.0</span>, maxNsteps<span class="op">=</span><span class="fl">400</span>, </span>
 <span>                    ETol <span class="op">=</span> <span class="fl">0.0001</span>, pCrit <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span></span>
-<span><span class="fu">hydraulics_supplyFunctionNetworkStem1</span><span class="op">(</span><span class="va">psiSoil</span>, </span>
-<span>                    <span class="va">krhizomax</span>, <span class="va">nsoil</span>, <span class="va">alphasoil</span>,</span>
-<span>                    <span class="va">krootmax</span>, <span class="va">rootc</span>, <span class="va">rootd</span>, </span>
-<span>                    <span class="va">kstemmax</span>, <span class="va">stemc</span>, <span class="va">stemd</span>,</span>
-<span>                    <span class="va">PLCstem</span>,</span>
+<span><span class="fu">hydraulics_supplyFunctionNetworkStem1</span><span class="op">(</span><span class="va">hydraulicNetwork</span>,</span>
 <span>                    minFlow <span class="op">=</span> <span class="fl">0.0</span>, maxNsteps<span class="op">=</span><span class="fl">400</span>, </span>
 <span>                    ntrial <span class="op">=</span> <span class="fl">200</span>, psiTol <span class="op">=</span> <span class="fl">0.0001</span>, ETol <span class="op">=</span> <span class="fl">0.0001</span>, pCrit <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span></span>
-<span><span class="fu">hydraulics_supplyFunctionNetwork</span><span class="op">(</span><span class="va">psiSoil</span>, </span>
-<span>                  <span class="va">krhizomax</span>, <span class="va">nsoil</span>, <span class="va">alphasoil</span>,</span>
-<span>                  <span class="va">krootmax</span>, <span class="va">rootc</span>, <span class="va">rootd</span>, </span>
-<span>                  <span class="va">kstemmax</span>, <span class="va">stemc</span>, <span class="va">stemd</span>,</span>
-<span>                  <span class="va">kleafmax</span>, <span class="va">leafc</span>, <span class="va">leafd</span>,</span>
-<span>                  <span class="va">PLCstem</span>, minFlow <span class="op">=</span> <span class="fl">0.0</span>, maxNsteps<span class="op">=</span><span class="fl">400</span>,</span>
+<span><span class="fu">hydraulics_supplyFunctionNetwork</span><span class="op">(</span><span class="va">hydraulicNetwork</span>, </span>
+<span>                  minFlow <span class="op">=</span> <span class="fl">0.0</span>, maxNsteps<span class="op">=</span><span class="fl">400</span>,</span>
 <span>                  ntrial <span class="op">=</span> <span class="fl">200</span>, psiTol <span class="op">=</span> <span class="fl">0.0001</span>, ETol <span class="op">=</span> <span class="fl">0.0001</span>, pCrit <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span></span>
 <span>                           </span>
-<span><span class="fu">hydraulics_supplyFunctionPlot</span><span class="op">(</span><span class="va">x</span>, <span class="va">soil</span>, draw <span class="op">=</span> <span class="cn">TRUE</span>, type <span class="op">=</span> <span class="st">"E"</span>,</span>
+<span><span class="fu">hydraulics_supplyFunctionPlot</span><span class="op">(</span><span class="va">x</span>, draw <span class="op">=</span> <span class="cn">TRUE</span>, type <span class="op">=</span> <span class="st">"E"</span>,</span>
 <span>                              speciesNames <span class="op">=</span> <span class="cn">FALSE</span>, ylim<span class="op">=</span><span class="cn">NULL</span><span class="op">)</span>   </span>
 <span><span class="fu">hydraulics_regulatedPsiXylem</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiUpstream</span>, <span class="va">kxylemmax</span>, <span class="va">c</span>, <span class="va">d</span>, psiStep <span class="op">=</span> <span class="op">-</span><span class="fl">0.01</span><span class="op">)</span></span>
 <span><span class="fu">hydraulics_regulatedPsiTwoElements</span><span class="op">(</span><span class="va">Emax</span>, <span class="va">psiSoil</span>, <span class="va">krhizomax</span>, <span class="va">kxylemmax</span>, <span class="va">n</span>, <span class="va">alpha</span>, </span>
@@ -173,9 +142,6 @@
 
   <dt>kstemmax</dt>
 <dd><p>Maximum stem xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).</p></dd>
-
-  <dt>krootmax</dt>
-<dd><p>Maximum root xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).</p></dd>
 
   <dt>E</dt>
 <dd><p>Flow per surface unit.</p></dd>
@@ -207,6 +173,9 @@
   <dt>psiPlant</dt>
 <dd><p>Plant water potential (in MPa).</p></dd>
 
+  <dt>hydraulicNetwork</dt>
+<dd><p>List with the hydraulic characteristics of nodes in the hydraulic network.</p></dd>
+
   <dt>psiFineRoot</dt>
 <dd><p>Water potential (in MPa) inside fine roots.</p></dd>
 
@@ -234,9 +203,6 @@
   <dt>pCrit</dt>
 <dd><p>Critical water potential (in MPa).</p></dd>
 
-  <dt>PLCstem</dt>
-<dd><p>Proportion of loss conductance in the stem [0-1].</p></dd>
-
   <dt>PLCprev</dt>
 <dd><p>Previous proportion of loss conductance [0-1].</p></dd>
 
@@ -261,9 +227,6 @@
   <dt>c, d</dt>
 <dd><p>Parameters of the Weibull function (generic xylem vulnerability curve).</p></dd>
 
-  <dt>rootc, rootd</dt>
-<dd><p>Parameters of the Weibull function for roots (root xylem vulnerability curve).</p></dd>
-
   <dt>stemc, stemd</dt>
 <dd><p>Parameters of the Weibull function for stems (stem xylem vulnerability curve).</p></dd>
 
@@ -272,9 +235,6 @@
 
   <dt>n, alpha, l</dt>
 <dd><p>Parameters of the Van Genuchten function (rhizosphere vulnerability curve).</p></dd>
-
-  <dt>nsoil, alphasoil</dt>
-<dd><p>Parameter vectors of the Van Genuchten function (rhizosphere vulnerability curve) with one value for each soil layer.</p></dd>
 
   <dt>allowNegativeFlux</dt>
 <dd><p>A boolean to indicate wether negative flux (i.e. from plant to soil) is allowed.</p></dd>
@@ -287,9 +247,6 @@
 
   <dt>x</dt>
 <dd><p>An object of class <code><a href="modelInput.html">spwbInput</a></code>.</p></dd>
-
-  <dt>soil</dt>
-<dd><p>A list containing the description of the soil (see <code><a href="soil.html">soil</a></code>).</p></dd>
 
   <dt>type</dt>
 <dd><p>Plot type for <code>hydraulics_supplyFunctionPlot</code>, either <code>"E"</code>, <code>"ERhizo"</code>, <code>"psiStem"</code>, <code>"psiRoot"</code>, <code>"psiRhizo"</code> or <code>"dEdP"</code>).</p></dd>

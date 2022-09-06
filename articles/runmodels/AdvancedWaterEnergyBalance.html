@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.7.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.0</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-08-20</h4>
+            <h4 data-toc-skip class="date">2022-09-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/AdvancedWaterEnergyBalance.Rmd" class="external-link"><code>vignettes/runmodels/AdvancedWaterEnergyBalance.Rmd</code></a></small>
       <div class="hidden name"><code>AdvancedWaterEnergyBalance.Rmd</code></div>
@@ -402,16 +402,16 @@ the hydraulic network. Function
 <code><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot()</a></code> can be used to inspect any
 of this variables:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"E"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"E"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-1.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"ERhizo"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"ERhizo"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-2.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"dEdP"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"dEdP"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-3.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplesoil</span>, type<span class="op">=</span><span class="st">"StemPsi"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span><span class="op">(</span><span class="va">x</span>, type<span class="op">=</span><span class="st">"StemPsi"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-4.png" width="480" style="display: block; margin: auto;"></p>
 <p>Calls to <code><a href="../../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot()</a></code> always need
 both a <code>spwbInput</code> object and a <code>soil</code> object. The
