@@ -338,9 +338,9 @@ Detailed results of growth evaluation by species are provided in the last sectio
 
 Comparison of growth of trees (DBH >= 7.5) that survived in both observed and simulated data.
 
-### Annual diameter increment (cm/yr)
+### Annual diameter increment
 
-Overall predictive capacity:
+Overall predictive capacity to predict diameter increase (cm/yr):
 ```{r, echo = FALSE}
 res1<-dfdbh %>% group_by(Submodel) %>% 
   summarize(Province = "All",
@@ -353,17 +353,6 @@ res1<-dfdbh %>% group_by(Submodel) %>%
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2, .groups="drop") 
-# res2<-dfdbh %>% group_by(Province,Submodel) %>% 
-#   summarize(Name = "All", 
-#             n = n(),
-#             Obs = mean(obs, na.rm=TRUE),
-#             Pred = mean(pred, na.rm=TRUE),
-#             Bias = mean(error, na.rm=TRUE),
-#             Biasrel = 100*Bias/abs(Obs),
-#             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-#             RMSQrel = 100*RMSQ/abs(Obs),
-#             R2 = cor(obs,pred)^2, .groups="drop")
-# res <-bind_rows(res1,res2)
 res1[,-c(2,3)] %>% 
   kbl() %>%
   kable_styling()
@@ -384,26 +373,10 @@ Relationship between diameter increase and climatic variables (MAT, P/PET and av
 plot_cov_clim_dbh(dfdbh_bas, dfdbh_adv, points = TRUE)
 ```
 
-Predictive capacity by species (for species with > `r params$minTreeRecords` tree records):
 
-```{r, echo = FALSE, warning=FALSE, message=FALSE}
-dfdbh %>% group_by(Name,Submodel) %>%
-  summarize(n = n(),
-            Obs = mean(obs, na.rm=TRUE),
-            Pred = mean(pred, na.rm=TRUE),
-            Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Obs),
-            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Obs),
-            R2 = cor(obs,pred)^2, .groups = "drop") %>% 
-  filter(n>=params$minTreeRecords) %>%
-  kbl() %>%
-  kable_styling()
-```
+### Annual height increment
 
-### Annual height increment (cm/yr)
-
-Overall predictive capacity:
+Overall predictive capacity to predict height increase (cm/yr):
 ```{r, echo = FALSE, warning=FALSE, message=FALSE}
 dfh %>% group_by(Submodel) %>% 
   summarize(Name = "All",
@@ -419,27 +392,10 @@ dfh %>% group_by(Submodel) %>%
   kable_styling()
 ```
 
-Predictive capacity by species (for species with > `r params$minTreeRecords` tree records):
 
-```{r, echo = FALSE, warning=FALSE, message=FALSE}
-dfh %>% group_by(Name, Submodel) %>%
-  summarize(n = n(),
-            Obs = mean(obs, na.rm=TRUE),
-            Pred = mean(pred, na.rm=TRUE),
-            Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Obs),
-            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Obs),
-            R2 = cor(obs,pred)^2, .groups = "drop")%>% 
-  filter(n>=params$minTreeRecords) %>%
-  kbl() %>%
-  kable_styling()
-```
+### Stand-level basal area increment
 
-
-### Stand-level basal area increment (m2/ha)
-
-This comparison does not take into account changes in density. In other words, densities from IFN3 are used to calculate stand-level basal area of surviving trees. It is meant to evaluate the effect of diameter increment of surviving trees in terms of stand basal area increments.
+This comparison does not take into account changes in density. In other words, densities from IFN3 are used to calculate stand-level basal area of surviving trees. It is meant to evaluate the effect of diameter increment of surviving trees in terms of stand basal area increments (m2/ha) for the period evaluated.
 
 
 Predictive capacity table:
@@ -485,25 +441,10 @@ plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "none"),
 ```
 
 
-Predictive capacity by species (occurring in more than `r params$minPlotRecords` plots):
-```{r, echo = FALSE}
-dfbai[dfbai$Name!="0-All",] %>% group_by(Name, Submodel) %>%
-  summarize(n = n(),
-            Obs = mean(obs, na.rm=TRUE),
-            Pred = mean(pred, na.rm=TRUE),
-            Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Obs),
-            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Obs),
-            R2 = cor(obs,pred)^2, .groups = "drop") %>% 
-  filter(n>=params$minPlotRecords) %>%
-  kbl() %>%
-  kable_styling()
-```
 
-## Mortality (m2/ha)
+## Mortality
 
-Reduction of basal area due to trees (DBH >= 7.5) that died during the IFN3-IFN4 period against model's mortality prediction.
+Reduction of basal area (m2/ha) due to trees (DBH >= 7.5) that died during the IFN3-IFN4 period against model's mortality prediction.
 
 
 Overall predictive capacity:
@@ -552,30 +493,14 @@ plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "none"),
           get_legend(p1),nrow=1, rel_widths = c(1,1,0.25))
 ```
 
-Predictive capacity by species (occurring in more than `r params$minPlotRecords` plots):
-
-```{r, echo = FALSE, warning=FALSE}
-dfbadead[dfbadead$Name!="0-All",] %>% group_by(Name, Submodel) %>%
-  summarize(n = n(),
-            Obs = mean(obs, na.rm=TRUE),
-            Pred = mean(pred, na.rm=TRUE),
-            Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Obs),
-            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Obs),
-            R2 = cor(obs,pred)^2, .groups = "drop") %>% 
-  filter(n>=params$minPlotRecords) %>%
-  kbl() %>%
-  kable_styling()
-```
 
 
-## Ingrowth (m2/ha)
+## Ingrowth
 
-Increase of basal area due to ingrowth of trees with diameters between 7.5 cm and 12.5 cm during the IFN3-IFN4 period against model's ingrowth prediction.
+Increase of basal area (m2/ha) due to ingrowth of trees with diameters between 7.5 cm and 12.5 cm during the IFN3-IFN4 period against model's ingrowth prediction.
 
 
-Overall predictive capacity:
+Predictive capacity:
 
 ```{r, echo = FALSE, warning=FALSE}
 dfbarecr[dfbarecr$Name=="0-All",] %>% group_by(Submodel) %>% 
@@ -621,28 +546,10 @@ plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "none"),
 ```
 
 
-Predictive capacity by species (occurring in more than `r params$minPlotRecords` plots):
 
-```{r, echo = FALSE, warning=FALSE}
-dfbarecr[dfbarecr$Name!="0-All",] %>% group_by(Name, Submodel) %>%
-  summarize(n = n(),
-            Obs = mean(obs, na.rm=TRUE),
-            Pred = mean(pred, na.rm=TRUE),
-            Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Obs),
-            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Obs),
-            R2 = cor(obs,pred)^2, .groups = "drop") %>% 
-  filter(n>=params$minPlotRecords) %>%
-  kbl() %>%
-  kable_styling()
-```
+## Overall stand-level basal area change
 
-
-## Overall stand-level basal area change (m2/ha)
-
-This includes growth of surviving trees, mortality reductions and ingrowth (increase in trees with DBH>5) due to sapling growth (in the observed data, this includes also incorporation of trees into large diameter classes due to sampling design).
-
+This includes changes in basal area (m2/ha) due to growth of surviving trees, mortality reductions and ingrowth (increase in trees with DBH>5) derived from sapling growth. In the observed data, basal area changes include also the incorporation of trees into large diameter classes that results from the variable-radius sampling design.
 
 Overall predictive capacity:
 
@@ -700,33 +607,18 @@ pm
 ```
 
 
-Predictive capacity by species (occurring in more than `r params$minPlotRecords` plots):
-
-```{r, echo = FALSE, warning=FALSE}
-dfbai_all[dfbai_all$Name!="0-All",] %>% group_by(Name, Submodel) %>%
-  summarize(n = n(),
-            Obs = mean(obs, na.rm=TRUE),
-            Pred = mean(pred, na.rm=TRUE),
-            Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Obs),
-            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Obs),
-            R2 = cor(obs,pred)^2, .groups = "drop") %>%
-  filter(n>=params$minPlotRecords) %>%
-  kbl() %>%
-  kable_styling()
-```
-
-
 ## Detailed evaluation by species
 
-In the following we provide detailed evaluation results for the most important species (those occurring in more than `r params$minPlotRecordsDetailed` plots).
+In the following we provide detailed evaluation results for the most important species.
 
 
 ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
-sp_n <- dfbai_all_bas[dfbai_all_bas$Name!="0-All",] %>% group_by(Name) %>%
-    summarize(n = n())
-sp100 = sp_n$Name[sp_n$n>params$minPlotRecordsDetailed]
+# sp_n <- dfbai_all_bas[dfbai_all_bas$Name!="0-All",] %>% group_by(Name) %>%
+#     summarize(n = n())
+# sp100 = sp_n$Name[sp_n$n>params$minPlotRecordsDetailed]
+sp100 = c("Abies alba", "Fagus sylvatica", "Pinus halepensis", "Pinus nigra",
+          "Pinus sylvestris", "Pinus uncinata", "Quercus faginea", "Quercus ilex",
+          "Quercus pubescens", "Quercus suber")
 target_spp = target_spp_bas[names(target_spp_bas) %in% sp100]
 for(i in 1:length(target_spp)) {
 

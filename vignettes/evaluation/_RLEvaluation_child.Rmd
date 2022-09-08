@@ -1,32 +1,177 @@
 ### `r name`
 
 ```{r, echo = FALSE}
+sel = dfbai$SP==sp
+sel[is.na(sel)] = FALSE
+sel_bas = dfbai_bas$SP==sp
+sel_bas[is.na(sel_bas)] = FALSE
+sel_adv = dfbai_adv$SP==sp
+sel_adv[is.na(sel_adv)] = FALSE
+
+dfbaiSP = dfbai[sel,]
+dfbaiSP_bas = dfbai_bas[sel_bas,]
+dfbaiSP_adv = dfbai_adv[sel_adv,]
+
+sel = dfbai_all$SP==sp
+sel[is.na(sel)] = FALSE
 sel_bas = dfbai_all_bas$SP==sp
 sel_bas[is.na(sel_bas)] = FALSE
 sel_adv = dfbai_all_adv$SP==sp
 sel_adv[is.na(sel_adv)] = FALSE
-dfbaiSP_bas = dfbai_all_bas[sel_bas,]
-dfbaiSP_adv = dfbai_all_adv[sel_adv,]
+
+dfbaiSP_all = dfbai_all[sel,]
+dfbaiSP_all_bas = dfbai_all_bas[sel_bas,]
+dfbaiSP_all_adv = dfbai_all_adv[sel_adv,]
+
+sel = dfbarecr$SP==sp
+sel[is.na(sel)] = FALSE
+sel_bas = dfbarecr_bas$SP==sp
+sel_bas[is.na(sel_bas)] = FALSE
+sel_adv = dfbarecr_adv$SP==sp
+sel_adv[is.na(sel_adv)] = FALSE
+
+dfbarecrSP = dfbarecr[sel,]
+dfbarecrSP_bas = dfbarecr_bas[sel_bas,]
+dfbarecrSP_adv = dfbarecr_adv[sel_adv,]
+
+sel = (dfbadead$SP==sp)
+sel[is.na(sel)] = FALSE
+sel_bas = dfbadead_bas$SP==sp
+sel_bas[is.na(sel_bas)] = FALSE
+sel_adv = dfbadead_adv$SP==sp
+sel_adv[is.na(sel_adv)] = FALSE
+
+dfbadeadSP = dfbadead[sel,]
+dfbadeadSP_bas = dfbadead_bas[sel_bas,]
+dfbadeadSP_adv = dfbadead_adv[sel_adv,]
+
+sel = dfdbh$SP==sp
+sel[is.na(sel)] = FALSE
 sel_bas = dfdbh_bas$SP==sp
 sel_bas[is.na(sel_bas)] = FALSE
 sel_adv = dfdbh_adv$SP==sp
 sel_adv[is.na(sel_adv)] = FALSE
+dfdbh_SP = dfdbh[sel,]
 dfdbhSP_bas = dfdbh_bas[sel_bas,]
 dfdbhSP_adv = dfdbh_adv[sel_adv,]
+dfh_SP = dfh[sel,]
+dfhSP_bas = dfh_bas[sel_bas,]
+dfhSP_adv = dfh_adv[sel_adv,]
 ```
 
-Prediction ability for **diameter increase** of surviving trees:
+#### Annual diameter increment
 
-```{r, echo = FALSE, fig.width=8, fig.height = 4, warning=FALSE, message=FALSE}
-plot_scatter_dbh(dfdbhSP_bas, dfdbhSP_adv, points = TRUE)
+Prediction ability for **diameter increase** (cm/yr) of surviving trees:
+```{r, echo = FALSE}
+dfdbh_SP %>% group_by(Submodel) %>% 
+  summarize(n = n(),
+            Obs = mean(obs, na.rm=TRUE),
+            Pred = mean(pred, na.rm=TRUE),
+            Bias = mean(error, na.rm=TRUE),
+            Biasrel = 100*Bias/abs(Obs),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Obs),
+            R2 = cor(obs,pred)^2, .groups="drop") %>% 
+  kbl() %>%
+  kable_styling()
 ```
 
-Relationship between **diameter increase** and climatic variables (MAT, P/PET and available PAR):
-```{r, echo = FALSE, fig.width=8, fig.height = 12, warning=FALSE, message=FALSE}
-plot_cov_clim_dbh(dfdbhSP_bas, dfdbhSP_adv, points = TRUE)
+#### Annual height increment
+
+Prediction ability for **height increase** (cm/yr) of surviving trees:
+
+```{r, echo = FALSE}
+dfh_SP %>% group_by(Submodel) %>% 
+  summarize(n = n(),
+            Obs = mean(obs, na.rm=TRUE),
+            Pred = mean(pred, na.rm=TRUE),
+            Bias = mean(error, na.rm=TRUE),
+            Biasrel = 100*Bias/abs(Obs),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Obs),
+            R2 = cor(obs,pred)^2, .groups="drop") %>% 
+  kbl() %>%
+  kable_styling()
 ```
 
-Prediction ability for **stand-level basal area changes** (including growth, mortality and ingrowth):
+#### Growth basal area increment
+
+Prediction ability for **basal area increase due to growth** (m2/ha) of surviving trees: 
+
+```{r, echo = FALSE}
+dfbaiSP %>% group_by(Submodel) %>% 
+  summarize(n = n(),
+            Obs = mean(obs, na.rm=TRUE),
+            Pred = mean(pred, na.rm=TRUE),
+            Bias = mean(error, na.rm=TRUE),
+            Biasrel = 100*Bias/abs(Obs),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Obs),
+            R2 = cor(obs,pred)^2) %>% 
+  kbl() %>%
+  kable_styling()
+```
+
+#### Mortality
+
+Prediction ability for **basal area decrease due to mortality** (m2/ha): 
+
+```{r, echo = FALSE, warning=FALSE}
+dfbadeadSP %>% group_by(Submodel) %>% 
+  summarize(Name = "All",
+            n = n(),
+            Obs = mean(obs, na.rm=TRUE),
+            Pred = mean(pred, na.rm=TRUE),
+            Bias = mean(error, na.rm=TRUE),
+            Biasrel = 100*Bias/abs(Obs),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Obs),
+            R2 = cor(obs,pred)^2) %>% 
+  kbl() %>%
+  kable_styling()
+```
+
+#### Ingrowth
+
+
+Prediction ability for **basal area increase due to ingrowth** (m2/ha): 
+
+```{r, echo = FALSE, warning=FALSE}
+dfbarecrSP %>% group_by(Submodel) %>% 
+  summarize(Name = "All",
+            n = n(),
+            Obs = mean(obs, na.rm=TRUE),
+            Pred = mean(pred, na.rm=TRUE),
+            Bias = mean(error, na.rm=TRUE),
+            Biasrel = 100*Bias/abs(Obs),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Obs),
+            R2 = cor(obs,pred)^2) %>% 
+  kbl() %>%
+  kable_styling()
+```
+
+
+#### Overall basal area changes
+
+Prediction ability for **overall basal area changes** (including growth, mortality and ingrowth):
+
+```{r, echo = FALSE, warning=FALSE}
+dfbaiSP_all %>% group_by(Submodel) %>% 
+  summarize(n = n(),
+            Obs = mean(obs, na.rm=TRUE),
+            Pred = mean(pred, na.rm=TRUE),
+            Bias = mean(error, na.rm=TRUE),
+            Biasrel = 100*Bias/abs(Obs),
+            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+            RMSQrel = 100*RMSQ/abs(Obs),
+            R2 = cor(obs,pred)^2) %>% 
+  kbl() %>%
+  kable_styling()
+```
+
+
+Predictive capacity plots:
 
 ```{r, echo = FALSE, fig.width=8, fig.height = 4, warning=FALSE, message=FALSE}
 plot_scatter_bai(dfbaiSP_bas, dfbaiSP_adv)
@@ -37,7 +182,7 @@ Relationship between **basal area changes** and climatic variables (MAT and P/PE
 plot_cov_clim_bai(dfbaiSP_bas, dfbaiSP_adv, quantity = "Basal area change", ylim = c(-5,20), errorlim = c(-20,20))
 ```
 
-Spatial distribution of errors in **basal area changes**: 
+Spatial distribution of errors: 
 ```{r, echo = FALSE, fig.height=4, fig.width=9}
 mapdata_sp = mapdata_bas
 mapdata_sp$error = NA
