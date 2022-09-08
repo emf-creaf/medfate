@@ -1,36 +1,52 @@
 ### `r name`
 
 ```{r, echo = FALSE}
-dfbaiSP = dfbai_all[dfbai_all$SP==sp,]
-dfdbhSP = dfdbh[dfdbh$SP==sp,]
+sel_bas = dfbai_all_bas$SP==sp
+sel_bas[is.na(sel_bas)] = FALSE
+sel_adv = dfbai_all_adv$SP==sp
+sel_adv[is.na(sel_adv)] = FALSE
+dfbaiSP_bas = dfbai_all_bas[sel_bas,]
+dfbaiSP_adv = dfbai_all_adv[sel_adv,]
+sel_bas = dfdbh_bas$SP==sp
+sel_bas[is.na(sel_bas)] = FALSE
+sel_adv = dfdbh_adv$SP==sp
+sel_adv[is.na(sel_adv)] = FALSE
+dfdbhSP_bas = dfdbh_bas[sel_bas,]
+dfdbhSP_adv = dfdbh_adv[sel_adv,]
 ```
 
 Prediction ability for **diameter increase** of surviving trees:
 
 ```{r, echo = FALSE, fig.width=8, fig.height = 4, warning=FALSE, message=FALSE}
-plot_scatter_dbh(dfdbhSP, points = TRUE)
+plot_scatter_dbh(dfdbhSP_bas, dfdbhSP_adv, points = TRUE)
 ```
 
 Relationship between **diameter increase** and climatic variables (MAT, P/PET and available PAR):
 ```{r, echo = FALSE, fig.width=8, fig.height = 12, warning=FALSE, message=FALSE}
-plot_cov_clim_dbh(dfdbhSP, points = TRUE)
+plot_cov_clim_dbh(dfdbhSP_bas, dfdbhSP_adv, points = TRUE)
 ```
 
 Prediction ability for **stand-level basal area changes** (including growth, mortality and ingrowth):
 
 ```{r, echo = FALSE, fig.width=8, fig.height = 4, warning=FALSE, message=FALSE}
-plot_scatter_bai(dfbaiSP)
+plot_scatter_bai(dfbaiSP_bas, dfbaiSP_adv)
 ```
 
 Relationship between **basal area changes** and climatic variables (MAT and P/PET):
 ```{r, echo = FALSE, fig.width=8, fig.height = 8, warning=FALSE, message=FALSE}
-plot_cov_clim_bai(dfbaiSP)
+plot_cov_clim_bai(dfbaiSP_bas, dfbaiSP_adv, quantity = "Basal area change", ylim = c(-5,20), errorlim = c(-20,20))
 ```
 
 Spatial distribution of errors in **basal area changes**: 
-```{r, echo = FALSE, fig.height=7, fig.width=7}
-mapdata_sp = mapdata
+```{r, echo = FALSE, fig.height=4, fig.width=9}
+mapdata_sp = mapdata_bas
 mapdata_sp$error = NA
-mapdata_sp[dfbai_all$ID[dfbai_all$Name==name], "error"] = dfbai_all$error[dfbai_all$Name==name]
-bai_error_map(mapdata_sp)
+mapdata_sp[dfbai_all_bas$ID[dfbai_all_bas$Name==name], "error"] = dfbai_all_bas$error[dfbai_all_bas$Name==name]
+p1<-bai_error_map(mapdata_sp)+labs(title="Basic sub-model")
+mapdata_sp = mapdata_adv
+mapdata_sp[dfbai_all_adv$ID[dfbai_all_adv$Name==name], "error"] = dfbai_all_adv$error[dfbai_all_adv$Name==name]
+p2<-bai_error_map(mapdata_sp)+labs(title="Advanced sub-model")
+pm<-plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "none"),
+          get_legend(p1),nrow=1, rel_widths = c(1,1,0.25))
+pm
 ```
