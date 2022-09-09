@@ -75,7 +75,7 @@ with forest inventory data</h1>
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-09-08</h4>
+            <h4 data-toc-skip class="date">2022-09-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/evaluation/RegionalLevelEvaluation.Rmd" class="external-link"><code>vignettes/evaluation/RegionalLevelEvaluation.Rmd</code></a></small>
       <div class="hidden name"><code>RegionalLevelEvaluation.Rmd</code></div>
@@ -128,8 +128,10 @@ server with 20 parallel threads, computational times are around
 <strong>basic</strong> sub-model, versus around <strong>6 days</strong>
 (i.e. 1 hr/plot) for the <strong>advanced</strong> submodel. The average
 number of tree cohorts per plot is <strong>17</strong>.</p>
-<p>In the following sections, we provide the bias, mean absolute error
-(both in absolute and relative terms) and R-squared of growth and
+<p>In the following sections, we provide the <strong>bias</strong>,
+<strong>mean absolute error</strong> (in absolute and relative terms),
+<strong>root mean squared error</strong> (in absolute and relative
+terms) and <strong>explained variance (R-squared)</strong> of growth and
 mortality predictions at the tree-level and stand-level obtained by
 simulations with both sub-models. Scatter plots are provided to
 represent the relationship between predicted and observed values, as
@@ -169,6 +171,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -199,6 +207,12 @@ Basic
 -4.064143
 </td>
 <td style="text-align:right;">
+0.1214179
+</td>
+<td style="text-align:right;">
+56.97076
+</td>
+<td style="text-align:right;">
 0.1809223
 </td>
 <td style="text-align:right;">
@@ -213,28 +227,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-36213
+47311
 </td>
 <td style="text-align:right;">
-0.2136217
+0.2132037
 </td>
 <td style="text-align:right;">
-0.2264435
+0.2283963
 </td>
 <td style="text-align:right;">
-0.0128218
+0.0151926
 </td>
 <td style="text-align:right;">
-6.002100
+7.125865
 </td>
 <td style="text-align:right;">
-0.1955805
+0.1370576
 </td>
 <td style="text-align:right;">
-91.55457
+64.28482
 </td>
 <td style="text-align:right;">
-0.0570763
+0.1940439
+</td>
+<td style="text-align:right;">
+91.01339
+</td>
+<td style="text-align:right;">
+0.0615343
 </td>
 </tr>
 </tbody>
@@ -254,9 +274,6 @@ Overall predictive capacity to predict height increase (cm/yr):
 <th style="text-align:left;">
 Submodel
 </th>
-<th style="text-align:left;">
-Name
-</th>
 <th style="text-align:right;">
 n
 </th>
@@ -273,6 +290,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -286,9 +309,6 @@ R2
 <tr>
 <td style="text-align:left;">
 Basic
-</td>
-<td style="text-align:left;">
-All
 </td>
 <td style="text-align:right;">
 51081
@@ -306,6 +326,12 @@ All
 -3.954529
 </td>
 <td style="text-align:right;">
+9.564328
+</td>
+<td style="text-align:right;">
+98.90137
+</td>
+<td style="text-align:right;">
 13.71894
 </td>
 <td style="text-align:right;">
@@ -319,32 +345,35 @@ All
 <td style="text-align:left;">
 Advanced
 </td>
-<td style="text-align:left;">
-All
+<td style="text-align:right;">
+47311
 </td>
 <td style="text-align:right;">
-36213
+9.748315
 </td>
 <td style="text-align:right;">
-9.837516
+10.313103
 </td>
 <td style="text-align:right;">
-10.224803
+0.5647874
 </td>
 <td style="text-align:right;">
-0.3872872
+5.793692
 </td>
 <td style="text-align:right;">
-3.936840
+9.868952
 </td>
 <td style="text-align:right;">
-14.13702
+101.23751
 </td>
 <td style="text-align:right;">
-143.7052
+13.98914
 </td>
 <td style="text-align:right;">
-0.0462112
+143.5032
+</td>
+<td style="text-align:right;">
+0.0511575
 </td>
 </tr>
 </tbody>
@@ -364,9 +393,6 @@ Predictive capacity table:
 <th style="text-align:left;">
 Submodel
 </th>
-<th style="text-align:left;">
-Name
-</th>
 <th style="text-align:right;">
 n
 </th>
@@ -383,6 +409,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -396,9 +428,6 @@ R2
 <tr>
 <td style="text-align:left;">
 Basic
-</td>
-<td style="text-align:left;">
-All
 </td>
 <td style="text-align:right;">
 3150
@@ -416,6 +445,12 @@ All
 -6.297823
 </td>
 <td style="text-align:right;">
+1.809297
+</td>
+<td style="text-align:right;">
+39.32491
+</td>
+<td style="text-align:right;">
 3.326956
 </td>
 <td style="text-align:right;">
@@ -429,32 +464,35 @@ All
 <td style="text-align:left;">
 Advanced
 </td>
-<td style="text-align:left;">
-All
+<td style="text-align:right;">
+2907
 </td>
 <td style="text-align:right;">
-2211
+4.626847
 </td>
 <td style="text-align:right;">
-4.638083
+5.021126
 </td>
 <td style="text-align:right;">
-4.951369
+0.3942786
 </td>
 <td style="text-align:right;">
-0.3132865
+8.521539
 </td>
 <td style="text-align:right;">
-6.754655
+2.348754
 </td>
 <td style="text-align:right;">
-4.004274
+50.76361
 </td>
 <td style="text-align:right;">
-86.33469
+3.912692
 </td>
 <td style="text-align:right;">
-0.3166453
+84.56498
+</td>
+<td style="text-align:right;">
+0.3280494
 </td>
 </tr>
 </tbody>
@@ -480,9 +518,6 @@ prediction.</p>
 <th style="text-align:left;">
 Submodel
 </th>
-<th style="text-align:left;">
-Name
-</th>
 <th style="text-align:right;">
 n
 </th>
@@ -499,6 +534,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -513,9 +554,6 @@ R2
 <td style="text-align:left;">
 Basic
 </td>
-<td style="text-align:left;">
-All
-</td>
 <td style="text-align:right;">
 3150
 </td>
@@ -523,13 +561,19 @@ All
 0.9056131
 </td>
 <td style="text-align:right;">
-0.8334660
+0.833466
 </td>
 <td style="text-align:right;">
 -0.0721471
 </td>
 <td style="text-align:right;">
 -7.966659
+</td>
+<td style="text-align:right;">
+0.9445439
+</td>
+<td style="text-align:right;">
+104.29883
 </td>
 <td style="text-align:right;">
 2.406881
@@ -545,32 +589,35 @@ All
 <td style="text-align:left;">
 Advanced
 </td>
-<td style="text-align:left;">
-All
+<td style="text-align:right;">
+2907
 </td>
 <td style="text-align:right;">
-2211
+0.9107999
 </td>
 <td style="text-align:right;">
-0.9092374
+0.719447
 </td>
 <td style="text-align:right;">
-0.7308893
+-0.1913528
 </td>
 <td style="text-align:right;">
--0.1783481
+-21.009318
 </td>
 <td style="text-align:right;">
--19.615127
+0.8609544
 </td>
 <td style="text-align:right;">
-1.525367
+94.52728
 </td>
 <td style="text-align:right;">
-167.7634
+1.543258
 </td>
 <td style="text-align:right;">
-0.1140023
+169.4399
+</td>
+<td style="text-align:right;">
+0.1112297
 </td>
 </tr>
 </tbody>
@@ -595,9 +642,6 @@ model’s ingrowth prediction.</p>
 <th style="text-align:left;">
 Submodel
 </th>
-<th style="text-align:left;">
-Name
-</th>
 <th style="text-align:right;">
 n
 </th>
@@ -614,6 +658,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -627,9 +677,6 @@ R2
 <tr>
 <td style="text-align:left;">
 Basic
-</td>
-<td style="text-align:left;">
-All
 </td>
 <td style="text-align:right;">
 3150
@@ -647,6 +694,12 @@ All
 17.53505
 </td>
 <td style="text-align:right;">
+1.768639
+</td>
+<td style="text-align:right;">
+136.6675
+</td>
+<td style="text-align:right;">
 2.597489
 </td>
 <td style="text-align:right;">
@@ -660,32 +713,35 @@ All
 <td style="text-align:left;">
 Advanced
 </td>
-<td style="text-align:left;">
-All
+<td style="text-align:right;">
+2907
 </td>
 <td style="text-align:right;">
-2211
+1.287212
 </td>
 <td style="text-align:right;">
-1.241241
+1.499885
 </td>
 <td style="text-align:right;">
-1.483345
+0.2126733
 </td>
 <td style="text-align:right;">
-0.2421037
+16.52201
 </td>
 <td style="text-align:right;">
-19.50497
+1.785401
 </td>
 <td style="text-align:right;">
-2.589399
+138.7030
 </td>
 <td style="text-align:right;">
-208.6137
+2.599445
 </td>
 <td style="text-align:right;">
-0.0002742
+201.9439
+</td>
+<td style="text-align:right;">
+0.0011738
 </td>
 </tr>
 </tbody>
@@ -712,9 +768,6 @@ classes that results from the variable-radius sampling design.</p>
 <th style="text-align:left;">
 Submodel
 </th>
-<th style="text-align:left;">
-Name
-</th>
 <th style="text-align:right;">
 n
 </th>
@@ -731,6 +784,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -744,9 +803,6 @@ R2
 <tr>
 <td style="text-align:left;">
 Basic
-</td>
-<td style="text-align:left;">
-All
 </td>
 <td style="text-align:right;">
 3150
@@ -764,6 +820,12 @@ All
 0.1867001
 </td>
 <td style="text-align:right;">
+3.079468
+</td>
+<td style="text-align:right;">
+61.72025
+</td>
+<td style="text-align:right;">
 4.793306
 </td>
 <td style="text-align:right;">
@@ -777,32 +839,35 @@ All
 <td style="text-align:left;">
 Advanced
 </td>
-<td style="text-align:left;">
-All
+<td style="text-align:right;">
+2907
 </td>
 <td style="text-align:right;">
-2211
+5.003259
 </td>
 <td style="text-align:right;">
-4.970086
+5.801564
 </td>
 <td style="text-align:right;">
-5.703824
+0.7983047
 </td>
 <td style="text-align:right;">
-0.7337382
+15.9556950
 </td>
 <td style="text-align:right;">
-14.7630879
+3.504225
 </td>
 <td style="text-align:right;">
-5.114963
+70.03885
 </td>
 <td style="text-align:right;">
-102.91497
+5.072230
 </td>
 <td style="text-align:right;">
-0.1445979
+101.37853
+</td>
+<td style="text-align:right;">
+0.1524298
 </td>
 </tr>
 </tbody>
@@ -849,6 +914,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -879,6 +950,12 @@ Basic
 -52.68033
 </td>
 <td style="text-align:right;">
+0.2156502
+</td>
+<td style="text-align:right;">
+62.24089
+</td>
+<td style="text-align:right;">
 0.3324431
 </td>
 <td style="text-align:right;">
@@ -893,28 +970,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-1178
+1268
 </td>
 <td style="text-align:right;">
-0.3335016
+0.3365004
 </td>
 <td style="text-align:right;">
-0.1988626
+0.1993283
 </td>
 <td style="text-align:right;">
--0.1346390
+-0.1371721
 </td>
 <td style="text-align:right;">
--40.37132
+-40.76433
 </td>
 <td style="text-align:right;">
-0.3085606
+0.1935722
 </td>
 <td style="text-align:right;">
-92.52147
+57.52511
 </td>
 <td style="text-align:right;">
-0.1363772
+0.3053994
+</td>
+<td style="text-align:right;">
+90.75753
+</td>
+<td style="text-align:right;">
+0.1294383
 </td>
 </tr>
 </tbody>
@@ -944,6 +1027,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -976,6 +1065,12 @@ Basic
 -63.41327
 </td>
 <td style="text-align:right;">
+18.21978
+</td>
+<td style="text-align:right;">
+100.59006
+</td>
+<td style="text-align:right;">
 24.17032
 </td>
 <td style="text-align:right;">
@@ -990,28 +1085,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-1178
+1268
 </td>
 <td style="text-align:right;">
-17.09247
+17.34421
 </td>
 <td style="text-align:right;">
-8.068755
+8.142550
 </td>
 <td style="text-align:right;">
--9.023719
+-9.201663
 </td>
 <td style="text-align:right;">
--52.79352
+-53.05322
 </td>
 <td style="text-align:right;">
-22.96948
+16.85159
 </td>
 <td style="text-align:right;">
-134.3836
+97.15971
 </td>
 <td style="text-align:right;">
-0.1472095
+22.84145
+</td>
+<td style="text-align:right;">
+131.6949
+</td>
+<td style="text-align:right;">
+0.1554370
 </td>
 </tr>
 </tbody>
@@ -1041,6 +1142,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -1073,6 +1180,12 @@ Basic
 -58.22454
 </td>
 <td style="text-align:right;">
+3.269063
+</td>
+<td style="text-align:right;">
+59.29070
+</td>
+<td style="text-align:right;">
 4.763292
 </td>
 <td style="text-align:right;">
@@ -1087,28 +1200,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-73
+84
 </td>
 <td style="text-align:right;">
-5.798088
+5.495897
 </td>
 <td style="text-align:right;">
-3.125933
+2.953895
 </td>
 <td style="text-align:right;">
--2.672155
+-2.542002
 </td>
 <td style="text-align:right;">
--46.08683
+-46.25272
 </td>
 <td style="text-align:right;">
-4.273849
+2.712820
 </td>
 <td style="text-align:right;">
-73.71135
+49.36081
 </td>
 <td style="text-align:right;">
-0.4697951
+4.085270
+</td>
+<td style="text-align:right;">
+74.33308
+</td>
+<td style="text-align:right;">
+0.5097260
 </td>
 </tr>
 </tbody>
@@ -1141,6 +1260,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -1176,6 +1301,12 @@ All
 175.88472
 </td>
 <td style="text-align:right;">
+2.906157
+</td>
+<td style="text-align:right;">
+323.8412
+</td>
+<td style="text-align:right;">
 8.143000
 </td>
 <td style="text-align:right;">
@@ -1193,28 +1324,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-73
+84
 </td>
 <td style="text-align:right;">
-0.9165605
+0.9088585
 </td>
 <td style="text-align:right;">
-0.3515508
+0.3146726
 </td>
 <td style="text-align:right;">
--0.5650097
+-0.5941859
 </td>
 <td style="text-align:right;">
--61.64456
+-65.37716
 </td>
 <td style="text-align:right;">
-2.170574
+1.033923
 </td>
 <td style="text-align:right;">
-236.8173
+113.7607
 </td>
 <td style="text-align:right;">
-0.0000025
+2.132686
+</td>
+<td style="text-align:right;">
+234.6554
+</td>
+<td style="text-align:right;">
+0.0000128
 </td>
 </tr>
 </tbody>
@@ -1247,6 +1384,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -1282,6 +1425,12 @@ All
 -7.79018
 </td>
 <td style="text-align:right;">
+1.13664
+</td>
+<td style="text-align:right;">
+145.3404
+</td>
+<td style="text-align:right;">
 1.954677
 </td>
 <td style="text-align:right;">
@@ -1299,28 +1448,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-78
+90
 </td>
 <td style="text-align:right;">
-0.7169696
+0.7820539
 </td>
 <td style="text-align:right;">
-0.5582863
+0.5351389
 </td>
 <td style="text-align:right;">
--0.1586832
+-0.2469150
 </td>
 <td style="text-align:right;">
--22.13249
+-31.57263
 </td>
 <td style="text-align:right;">
-1.930351
+1.19078
 </td>
 <td style="text-align:right;">
-269.2375
+152.2632
 </td>
 <td style="text-align:right;">
-0.0462187
+2.009106
+</td>
+<td style="text-align:right;">
+256.9013
+</td>
+<td style="text-align:right;">
+0.0541409
 </td>
 </tr>
 </tbody>
@@ -1350,6 +1505,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -1382,6 +1543,12 @@ Basic
 -63.13184
 </td>
 <td style="text-align:right;">
+3.962019
+</td>
+<td style="text-align:right;">
+79.94181
+</td>
+<td style="text-align:right;">
 6.771658
 </td>
 <td style="text-align:right;">
@@ -1396,28 +1563,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-78
+90
 </td>
 <td style="text-align:right;">
-5.285578
+5.063290
 </td>
 <td style="text-align:right;">
-3.154824
+2.998413
 </td>
 <td style="text-align:right;">
--2.130755
+-2.064877
 </td>
 <td style="text-align:right;">
--40.31261
+-40.78132
 </td>
 <td style="text-align:right;">
-4.777529
+3.047716
 </td>
 <td style="text-align:right;">
-90.38801
+60.19241
 </td>
 <td style="text-align:right;">
-0.2248185
+4.660330
+</td>
+<td style="text-align:right;">
+92.04153
+</td>
+<td style="text-align:right;">
+0.2347855
 </td>
 </tr>
 </tbody>
@@ -1460,6 +1633,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -1490,6 +1669,12 @@ Basic
 -19.36175
 </td>
 <td style="text-align:right;">
+0.1484288
+</td>
+<td style="text-align:right;">
+56.95572
+</td>
+<td style="text-align:right;">
 0.2246270
 </td>
 <td style="text-align:right;">
@@ -1504,28 +1689,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-1263
+1598
 </td>
 <td style="text-align:right;">
-0.2743492
+0.2607557
 </td>
 <td style="text-align:right;">
-0.2447490
+0.2350480
 </td>
 <td style="text-align:right;">
--0.0296002
+-0.0257077
 </td>
 <td style="text-align:right;">
--10.78925
+-9.85892
 </td>
 <td style="text-align:right;">
-0.2454361
+0.1586582
 </td>
 <td style="text-align:right;">
-89.46120
+60.84554
 </td>
 <td style="text-align:right;">
-0.0078138
+0.2345381
+</td>
+<td style="text-align:right;">
+89.94553
+</td>
+<td style="text-align:right;">
+0.0149598
 </td>
 </tr>
 </tbody>
@@ -1555,6 +1746,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -1587,6 +1784,12 @@ Basic
 -36.73409
 </td>
 <td style="text-align:right;">
+14.83643
+</td>
+<td style="text-align:right;">
+100.2364
+</td>
+<td style="text-align:right;">
 20.54185
 </td>
 <td style="text-align:right;">
@@ -1601,28 +1804,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-1263
+1598
 </td>
 <td style="text-align:right;">
-15.93704
+14.46620
 </td>
 <td style="text-align:right;">
-10.502939
+10.279092
 </td>
 <td style="text-align:right;">
--5.434101
+-4.187111
 </td>
 <td style="text-align:right;">
--34.09731
+-28.94409
 </td>
 <td style="text-align:right;">
-20.58411
+14.84817
 </td>
 <td style="text-align:right;">
-129.1589
+102.6404
 </td>
 <td style="text-align:right;">
-0.0000001
+20.45226
+</td>
+<td style="text-align:right;">
+141.3796
+</td>
+<td style="text-align:right;">
+0.0001539
 </td>
 </tr>
 </tbody>
@@ -1652,6 +1861,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -1684,6 +1899,12 @@ Basic
 -17.687242
 </td>
 <td style="text-align:right;">
+1.343670
+</td>
+<td style="text-align:right;">
+39.20023
+</td>
+<td style="text-align:right;">
 1.850432
 </td>
 <td style="text-align:right;">
@@ -1698,28 +1919,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-111
+140
 </td>
 <td style="text-align:right;">
-3.548258
+3.419086
 </td>
 <td style="text-align:right;">
-3.323442
+3.252026
 </td>
 <td style="text-align:right;">
--0.2248153
+-0.1670592
 </td>
 <td style="text-align:right;">
--6.335935
+-4.886077
 </td>
 <td style="text-align:right;">
-2.271097
+1.631249
 </td>
 <td style="text-align:right;">
-64.00598
+47.71010
 </td>
 <td style="text-align:right;">
-0.6526929
+2.269776
+</td>
+<td style="text-align:right;">
+66.38546
+</td>
+<td style="text-align:right;">
+0.6231171
 </td>
 </tr>
 </tbody>
@@ -1752,6 +1979,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -1787,6 +2020,12 @@ All
 -16.02919
 </td>
 <td style="text-align:right;">
+0.4091806
+</td>
+<td style="text-align:right;">
+128.2632
+</td>
+<td style="text-align:right;">
 0.7150787
 </td>
 <td style="text-align:right;">
@@ -1804,28 +2043,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-111
+140
 </td>
 <td style="text-align:right;">
-0.3274925
+0.3306770
 </td>
 <td style="text-align:right;">
-0.2535799
+0.2521532
 </td>
 <td style="text-align:right;">
--0.0739126
+-0.0785237
 </td>
 <td style="text-align:right;">
--22.56925
+-23.74636
 </td>
 <td style="text-align:right;">
-0.7560072
+0.4091956
 </td>
 <td style="text-align:right;">
-230.8472
+123.7448
 </td>
 <td style="text-align:right;">
-0.0916515
+0.7199788
+</td>
+<td style="text-align:right;">
+217.7287
+</td>
+<td style="text-align:right;">
+0.1299469
 </td>
 </tr>
 </tbody>
@@ -1860,6 +2105,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -1881,7 +2132,7 @@ All
 157
 </td>
 <td style="text-align:right;">
-0.428158
+0.4281580
 </td>
 <td style="text-align:right;">
 0.6404503
@@ -1891,6 +2142,12 @@ All
 </td>
 <td style="text-align:right;">
 49.58271
+</td>
+<td style="text-align:right;">
+0.8897473
+</td>
+<td style="text-align:right;">
+207.8082
 </td>
 <td style="text-align:right;">
 1.464098
@@ -1910,28 +2167,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-116
+148
 </td>
 <td style="text-align:right;">
-0.392730
+0.4172998
 </td>
 <td style="text-align:right;">
-0.6504282
+0.6568972
 </td>
 <td style="text-align:right;">
-0.2576982
+0.2395974
 </td>
 <td style="text-align:right;">
-65.61715
+57.41613
 </td>
 <td style="text-align:right;">
-1.419909
+0.8884294
 </td>
 <td style="text-align:right;">
-361.5483
+212.8995
 </td>
 <td style="text-align:right;">
-0.0070358
+1.454894
+</td>
+<td style="text-align:right;">
+348.6448
+</td>
+<td style="text-align:right;">
+0.0013043
 </td>
 </tr>
 </tbody>
@@ -1961,6 +2224,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -1993,6 +2262,12 @@ Basic
 -9.153382
 </td>
 <td style="text-align:right;">
+1.830032
+</td>
+<td style="text-align:right;">
+55.17109
+</td>
+<td style="text-align:right;">
 2.429291
 </td>
 <td style="text-align:right;">
@@ -2007,28 +2282,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-116
+148
 </td>
 <td style="text-align:right;">
-3.474669
+3.338767
 </td>
 <td style="text-align:right;">
-3.587969
+3.494615
 </td>
 <td style="text-align:right;">
-0.1133000
+0.1558477
 </td>
 <td style="text-align:right;">
-3.260741
+4.667821
 </td>
 <td style="text-align:right;">
-2.648610
+1.991809
 </td>
 <td style="text-align:right;">
-76.22625
+59.65702
 </td>
 <td style="text-align:right;">
-0.5134952
+2.620211
+</td>
+<td style="text-align:right;">
+78.47840
+</td>
+<td style="text-align:right;">
+0.4859364
 </td>
 </tr>
 </tbody>
@@ -2071,6 +2352,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -2101,6 +2388,12 @@ Basic
 -4.517692
 </td>
 <td style="text-align:right;">
+0.1458099
+</td>
+<td style="text-align:right;">
+51.30100
+</td>
+<td style="text-align:right;">
 0.1916954
 </td>
 <td style="text-align:right;">
@@ -2115,28 +2408,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-4857
+6179
 </td>
 <td style="text-align:right;">
-0.2750856
+0.2808623
 </td>
 <td style="text-align:right;">
-0.2422316
+0.2474365
 </td>
 <td style="text-align:right;">
--0.0328540
+-0.0334258
 </td>
 <td style="text-align:right;">
--11.943190
+-11.901120
 </td>
 <td style="text-align:right;">
-0.1976615
+0.1522109
 </td>
 <td style="text-align:right;">
-71.85455
+54.19413
 </td>
 <td style="text-align:right;">
-0.0669358
+0.2024476
+</td>
+<td style="text-align:right;">
+72.08072
+</td>
+<td style="text-align:right;">
+0.0611727
 </td>
 </tr>
 </tbody>
@@ -2166,6 +2465,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -2198,6 +2503,12 @@ Basic
 -1.254235
 </td>
 <td style="text-align:right;">
+9.688192
+</td>
+<td style="text-align:right;">
+83.16441
+</td>
+<td style="text-align:right;">
 12.76811
 </td>
 <td style="text-align:right;">
@@ -2212,28 +2523,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-4857
+6179
 </td>
 <td style="text-align:right;">
-11.38812
+11.52497
 </td>
 <td style="text-align:right;">
-10.11414
+10.15904
 </td>
 <td style="text-align:right;">
--1.2739813
+-1.3659303
 </td>
 <td style="text-align:right;">
--11.186930
+-11.851925
 </td>
 <td style="text-align:right;">
-11.97607
+9.242248
 </td>
 <td style="text-align:right;">
-105.1628
+80.19328
 </td>
 <td style="text-align:right;">
-0.0127479
+12.38114
+</td>
+<td style="text-align:right;">
+107.4289
+</td>
+<td style="text-align:right;">
+0.0086119
 </td>
 </tr>
 </tbody>
@@ -2263,6 +2580,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -2295,6 +2618,12 @@ Basic
 -4.967132
 </td>
 <td style="text-align:right;">
+1.378714
+</td>
+<td style="text-align:right;">
+40.91402
+</td>
+<td style="text-align:right;">
 2.060672
 </td>
 <td style="text-align:right;">
@@ -2309,28 +2638,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-556
+711
 </td>
 <td style="text-align:right;">
-3.261183
+3.335012
 </td>
 <td style="text-align:right;">
-2.831250
+2.895540
 </td>
 <td style="text-align:right;">
--0.4299332
+-0.4394720
 </td>
 <td style="text-align:right;">
--13.183349
+-13.177522
 </td>
 <td style="text-align:right;">
-2.330842
+1.556484
 </td>
 <td style="text-align:right;">
-71.47227
+46.67100
 </td>
 <td style="text-align:right;">
-0.5010211
+2.382979
+</td>
+<td style="text-align:right;">
+71.45340
+</td>
+<td style="text-align:right;">
+0.4862288
 </td>
 </tr>
 </tbody>
@@ -2365,6 +2700,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -2395,7 +2736,13 @@ All
 -0.0196604
 </td>
 <td style="text-align:right;">
--3.1962536
+-3.196254
+</td>
+<td style="text-align:right;">
+0.6146783
+</td>
+<td style="text-align:right;">
+99.93046
 </td>
 <td style="text-align:right;">
 0.9793669
@@ -2415,28 +2762,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-561
+722
 </td>
 <td style="text-align:right;">
-0.5841173
+0.6222529
 </td>
 <td style="text-align:right;">
-0.5886832
+0.5892063
 </td>
 <td style="text-align:right;">
-0.0045659
+-0.0330466
 </td>
 <td style="text-align:right;">
-0.7816723
+-5.310803
 </td>
 <td style="text-align:right;">
-0.9267306
+0.6210328
 </td>
 <td style="text-align:right;">
-158.6549
+99.80391
 </td>
 <td style="text-align:right;">
-0.2711528
+0.9887408
+</td>
+<td style="text-align:right;">
+158.8969
+</td>
+<td style="text-align:right;">
+0.2800819
 </td>
 </tr>
 </tbody>
@@ -2469,6 +2822,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -2504,6 +2863,12 @@ All
 -17.59064
 </td>
 <td style="text-align:right;">
+1.025850
+</td>
+<td style="text-align:right;">
+145.2366
+</td>
+<td style="text-align:right;">
 1.826438
 </td>
 <td style="text-align:right;">
@@ -2521,28 +2886,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-618
+804
 </td>
 <td style="text-align:right;">
-0.7010165
+0.7357199
 </td>
 <td style="text-align:right;">
-0.5928494
+0.5941385
 </td>
 <td style="text-align:right;">
--0.1081671
+-0.1415814
 </td>
 <td style="text-align:right;">
--15.43004
+-19.24393
 </td>
 <td style="text-align:right;">
-1.740636
+1.078057
 </td>
 <td style="text-align:right;">
-248.3017
+146.5309
 </td>
 <td style="text-align:right;">
-0.0039408
+1.879338
+</td>
+<td style="text-align:right;">
+255.4420
+</td>
+<td style="text-align:right;">
+0.0020124
 </td>
 </tr>
 </tbody>
@@ -2572,6 +2943,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -2604,6 +2981,12 @@ Basic
 -8.637745
 </td>
 <td style="text-align:right;">
+2.006672
+</td>
+<td style="text-align:right;">
+63.41475
+</td>
+<td style="text-align:right;">
 2.838976
 </td>
 <td style="text-align:right;">
@@ -2618,28 +3001,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-617
+802
 </td>
 <td style="text-align:right;">
-3.122404
+3.152201
 </td>
 <td style="text-align:right;">
-2.611004
+2.633786
 </td>
 <td style="text-align:right;">
--0.5114004
+-0.5184151
 </td>
 <td style="text-align:right;">
--16.378418
+-16.446129
 </td>
 <td style="text-align:right;">
-3.127672
+2.219711
 </td>
 <td style="text-align:right;">
-100.16872
+70.41779
 </td>
 <td style="text-align:right;">
-0.2076230
+3.172179
+</td>
+<td style="text-align:right;">
+100.63378
+</td>
+<td style="text-align:right;">
+0.2042585
 </td>
 </tr>
 </tbody>
@@ -2682,6 +3071,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -2712,6 +3107,12 @@ Basic
 11.20913
 </td>
 <td style="text-align:right;">
+0.1143679
+</td>
+<td style="text-align:right;">
+55.50639
+</td>
+<td style="text-align:right;">
 0.1549298
 </td>
 <td style="text-align:right;">
@@ -2726,28 +3127,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-3643
+4839
 </td>
 <td style="text-align:right;">
-0.2028310
+0.2052477
 </td>
 <td style="text-align:right;">
-0.2429654
+0.2386536
 </td>
 <td style="text-align:right;">
-0.0401344
+0.0334059
 </td>
 <td style="text-align:right;">
-19.78713
+16.27591
 </td>
 <td style="text-align:right;">
-0.1707449
+0.1256945
 </td>
 <td style="text-align:right;">
-84.18085
+61.24043
 </td>
 <td style="text-align:right;">
-0.0352615
+0.1671476
+</td>
+<td style="text-align:right;">
+81.43703
+</td>
+<td style="text-align:right;">
+0.0327018
 </td>
 </tr>
 </tbody>
@@ -2779,6 +3186,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -2806,13 +3219,19 @@ Basic
 1.395790
 </td>
 <td style="text-align:right;">
-11.8921
+11.89210
+</td>
+<td style="text-align:right;">
+9.246124
+</td>
+<td style="text-align:right;">
+78.77679
 </td>
 <td style="text-align:right;">
 11.78307
 </td>
 <td style="text-align:right;">
-100.3915
+100.39153
 </td>
 <td style="text-align:right;">
 0.0051152
@@ -2823,28 +3242,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-3643
+4839
 </td>
 <td style="text-align:right;">
-11.69225
+11.71388
 </td>
 <td style="text-align:right;">
-13.92247
+13.69920
 </td>
 <td style="text-align:right;">
-2.230215
+1.985318
 </td>
 <td style="text-align:right;">
-19.0743
+16.94842
 </td>
 <td style="text-align:right;">
-11.84935
+9.110786
 </td>
 <td style="text-align:right;">
-101.3436
+77.77770
 </td>
 <td style="text-align:right;">
-0.0459711
+11.67798
+</td>
+<td style="text-align:right;">
+99.69354
+</td>
+<td style="text-align:right;">
+0.0486585
 </td>
 </tr>
 </tbody>
@@ -2874,6 +3299,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -2906,6 +3337,12 @@ Basic
 10.86031
 </td>
 <td style="text-align:right;">
+1.151358
+</td>
+<td style="text-align:right;">
+43.74428
+</td>
+<td style="text-align:right;">
 1.765676
 </td>
 <td style="text-align:right;">
@@ -2920,28 +3357,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-366
+488
 </td>
 <td style="text-align:right;">
-2.580912
+2.601248
 </td>
 <td style="text-align:right;">
-3.120435
+3.063179
 </td>
 <td style="text-align:right;">
-0.5395226
+0.4619305
 </td>
 <td style="text-align:right;">
-20.90434
+17.75803
 </td>
 <td style="text-align:right;">
-2.407768
+1.418258
 </td>
 <td style="text-align:right;">
-93.29138
+54.52220
 </td>
 <td style="text-align:right;">
-0.6271130
+2.359775
+</td>
+<td style="text-align:right;">
+90.71703
+</td>
+<td style="text-align:right;">
+0.6155767
 </td>
 </tr>
 </tbody>
@@ -2974,6 +3417,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -3009,6 +3458,12 @@ All
 -9.224735
 </td>
 <td style="text-align:right;">
+0.3645854
+</td>
+<td style="text-align:right;">
+136.0656
+</td>
+<td style="text-align:right;">
 0.7730861
 </td>
 <td style="text-align:right;">
@@ -3026,28 +3481,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-370
+493
 </td>
 <td style="text-align:right;">
-0.2763271
+0.2647576
 </td>
 <td style="text-align:right;">
-0.2153244
+0.2155883
 </td>
 <td style="text-align:right;">
--0.0610027
+-0.0491693
 </td>
 <td style="text-align:right;">
--22.076270
+-18.571445
 </td>
 <td style="text-align:right;">
-0.7009099
+0.3421726
 </td>
 <td style="text-align:right;">
-253.6523
+129.2400
 </td>
 <td style="text-align:right;">
-0.1666978
+0.6645669
+</td>
+<td style="text-align:right;">
+251.0096
+</td>
+<td style="text-align:right;">
+0.1493280
 </td>
 </tr>
 </tbody>
@@ -3080,6 +3541,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -3115,6 +3582,12 @@ All
 91.41411
 </td>
 <td style="text-align:right;">
+0.8794537
+</td>
+<td style="text-align:right;">
+247.8698
+</td>
+<td style="text-align:right;">
 1.429575
 </td>
 <td style="text-align:right;">
@@ -3132,28 +3605,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-376
+500
 </td>
 <td style="text-align:right;">
-0.3524868
+0.3763604
 </td>
 <td style="text-align:right;">
-0.7329493
+0.6975261
 </td>
 <td style="text-align:right;">
-0.3804625
+0.3211657
 </td>
 <td style="text-align:right;">
-107.93665
+85.33464
 </td>
 <td style="text-align:right;">
-1.466409
+0.8596704
 </td>
 <td style="text-align:right;">
-416.0180
+228.4168
 </td>
 <td style="text-align:right;">
-0.0001396
+1.452653
+</td>
+<td style="text-align:right;">
+385.9740
+</td>
+<td style="text-align:right;">
+0.0012034
 </td>
 </tr>
 </tbody>
@@ -3183,6 +3662,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -3215,6 +3700,12 @@ Basic
 24.11343
 </td>
 <td style="text-align:right;">
+1.736776
+</td>
+<td style="text-align:right;">
+65.87723
+</td>
+<td style="text-align:right;">
 2.392362
 </td>
 <td style="text-align:right;">
@@ -3229,28 +3720,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-375
+499
 </td>
 <td style="text-align:right;">
-2.607181
+2.667161
 </td>
 <td style="text-align:right;">
-3.568267
+3.481838
 </td>
 <td style="text-align:right;">
-0.9610855
+0.8146767
 </td>
 <td style="text-align:right;">
-36.86301
+30.54471
 </td>
 <td style="text-align:right;">
-3.130169
+1.935965
 </td>
 <td style="text-align:right;">
-120.05952
+72.58523
 </td>
 <td style="text-align:right;">
-0.4167153
+3.001313
+</td>
+<td style="text-align:right;">
+112.52836
+</td>
+<td style="text-align:right;">
+0.4144369
 </td>
 </tr>
 </tbody>
@@ -3293,6 +3790,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -3323,6 +3826,12 @@ Basic
 -0.5775441
 </td>
 <td style="text-align:right;">
+0.1224696
+</td>
+<td style="text-align:right;">
+53.13473
+</td>
+<td style="text-align:right;">
 0.1659479
 </td>
 <td style="text-align:right;">
@@ -3337,28 +3846,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-7781
+10411
 </td>
 <td style="text-align:right;">
-0.2262389
+0.2298738
 </td>
 <td style="text-align:right;">
-0.2562019
+0.2607035
 </td>
 <td style="text-align:right;">
-0.0299630
+0.0308297
 </td>
 <td style="text-align:right;">
-13.2439816
+13.4115940
 </td>
 <td style="text-align:right;">
-0.1832936
+0.1390952
 </td>
 <td style="text-align:right;">
-81.01773
+60.50939
 </td>
 <td style="text-align:right;">
-0.0017738
+0.1833236
+</td>
+<td style="text-align:right;">
+79.74966
+</td>
+<td style="text-align:right;">
+0.0010496
 </td>
 </tr>
 </tbody>
@@ -3388,6 +3903,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -3420,13 +3941,19 @@ Basic
 6.66615
 </td>
 <td style="text-align:right;">
+9.520179
+</td>
+<td style="text-align:right;">
+84.05858
+</td>
+<td style="text-align:right;">
 12.59013
 </td>
 <td style="text-align:right;">
 111.1647
 </td>
 <td style="text-align:right;">
-0.026392
+0.0263920
 </td>
 </tr>
 <tr>
@@ -3434,28 +3961,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-7781
+10411
 </td>
 <td style="text-align:right;">
-11.16884
+11.30610
 </td>
 <td style="text-align:right;">
-13.46613
+13.63088
 </td>
 <td style="text-align:right;">
-2.2972930
+2.3247776
 </td>
 <td style="text-align:right;">
-20.56877
+20.56215
 </td>
 <td style="text-align:right;">
-12.91904
+10.014827
 </td>
 <td style="text-align:right;">
-115.6704
+88.57896
 </td>
 <td style="text-align:right;">
-0.028867
+13.11796
+</td>
+<td style="text-align:right;">
+116.0255
+</td>
+<td style="text-align:right;">
+0.0276254
 </td>
 </tr>
 </tbody>
@@ -3485,6 +4018,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -3517,6 +4056,12 @@ Basic
 -3.235965
 </td>
 <td style="text-align:right;">
+1.493594
+</td>
+<td style="text-align:right;">
+40.40402
+</td>
+<td style="text-align:right;">
 2.416755
 </td>
 <td style="text-align:right;">
@@ -3531,28 +4076,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-577
+781
 </td>
 <td style="text-align:right;">
-3.693451
+3.719273
 </td>
 <td style="text-align:right;">
-4.164244
+4.220426
 </td>
 <td style="text-align:right;">
-0.4707923
+0.5011533
 </td>
 <td style="text-align:right;">
-12.746677
+13.474495
 </td>
 <td style="text-align:right;">
-3.047334
+1.896047
 </td>
 <td style="text-align:right;">
-82.50641
+50.97898
 </td>
 <td style="text-align:right;">
-0.5172135
+3.044182
+</td>
+<td style="text-align:right;">
+81.84883
+</td>
+<td style="text-align:right;">
+0.5278317
 </td>
 </tr>
 </tbody>
@@ -3585,6 +4136,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -3620,6 +4177,12 @@ All
 2.519042
 </td>
 <td style="text-align:right;">
+0.7672208
+</td>
+<td style="text-align:right;">
+107.2735
+</td>
+<td style="text-align:right;">
 1.632713
 </td>
 <td style="text-align:right;">
@@ -3637,28 +4200,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-598
+806
 </td>
 <td style="text-align:right;">
-0.7711892
+0.7286512
 </td>
 <td style="text-align:right;">
-0.7165939
+0.7025957
 </td>
 <td style="text-align:right;">
--0.0545952
+-0.0260555
 </td>
 <td style="text-align:right;">
--7.079357
+-3.575857
 </td>
 <td style="text-align:right;">
-1.179688
+0.7331337
 </td>
 <td style="text-align:right;">
-152.9699
+100.6152
 </td>
 <td style="text-align:right;">
-0.2093497
+1.144818
+</td>
+<td style="text-align:right;">
+157.1147
+</td>
+<td style="text-align:right;">
+0.2000277
 </td>
 </tr>
 </tbody>
@@ -3691,6 +4260,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -3726,6 +4301,12 @@ All
 50.56508
 </td>
 <td style="text-align:right;">
+0.8851721
+</td>
+<td style="text-align:right;">
+201.8642
+</td>
+<td style="text-align:right;">
 1.565375
 </td>
 <td style="text-align:right;">
@@ -3743,28 +4324,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-595
+801
 </td>
 <td style="text-align:right;">
-0.4050945
+0.4389782
 </td>
 <td style="text-align:right;">
-0.5944201
+0.6284304
 </td>
 <td style="text-align:right;">
-0.1893255
+0.1894521
 </td>
 <td style="text-align:right;">
-46.73614
+43.15752
 </td>
 <td style="text-align:right;">
-1.571269
+0.8755369
 </td>
 <td style="text-align:right;">
-387.8772
+199.4488
 </td>
 <td style="text-align:right;">
-0.0024087
+1.611536
+</td>
+<td style="text-align:right;">
+367.1107
+</td>
+<td style="text-align:right;">
+0.0001459
 </td>
 </tr>
 </tbody>
@@ -3794,6 +4381,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -3826,6 +4419,12 @@ Basic
 3.041967
 </td>
 <td style="text-align:right;">
+2.217433
+</td>
+<td style="text-align:right;">
+66.26746
+</td>
+<td style="text-align:right;">
 3.215696
 </td>
 <td style="text-align:right;">
@@ -3840,28 +4439,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-595
+801
 </td>
 <td style="text-align:right;">
-3.238008
+3.354860
 </td>
 <td style="text-align:right;">
-3.914004
+4.037815
 </td>
 <td style="text-align:right;">
-0.6759963
+0.6829547
 </td>
 <td style="text-align:right;">
-20.876923
+20.357175
 </td>
 <td style="text-align:right;">
-3.721316
+2.555313
 </td>
 <td style="text-align:right;">
-114.92611
+76.16749
 </td>
 <td style="text-align:right;">
-0.3094538
+3.720986
+</td>
+<td style="text-align:right;">
+110.91330
+</td>
+<td style="text-align:right;">
+0.3192790
 </td>
 </tr>
 </tbody>
@@ -3904,6 +4509,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -3934,13 +4545,19 @@ Basic
 -35.94039
 </td>
 <td style="text-align:right;">
+0.1183818
+</td>
+<td style="text-align:right;">
+61.72438
+</td>
+<td style="text-align:right;">
 0.1712831
 </td>
 <td style="text-align:right;">
-89.3072
+89.30720
 </td>
 <td style="text-align:right;">
-0.0007600
+7.60e-04
 </td>
 </tr>
 <tr>
@@ -3948,28 +4565,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-3477
+4415
 </td>
 <td style="text-align:right;">
-0.1919678
+0.1919439
 </td>
 <td style="text-align:right;">
-0.1331062
+0.1343622
 </td>
 <td style="text-align:right;">
--0.0588615
+-0.0575817
 </td>
 <td style="text-align:right;">
--30.66219
+-29.99924
 </td>
 <td style="text-align:right;">
-0.1679574
+0.1158353
 </td>
 <td style="text-align:right;">
-87.4925
+60.34850
 </td>
 <td style="text-align:right;">
-0.0002501
+0.1667946
+</td>
+<td style="text-align:right;">
+86.89756
+</td>
+<td style="text-align:right;">
+2.41e-05
 </td>
 </tr>
 </tbody>
@@ -3999,6 +4622,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -4031,6 +4660,12 @@ Basic
 -46.12011
 </td>
 <td style="text-align:right;">
+9.318743
+</td>
+<td style="text-align:right;">
+81.95456
+</td>
+<td style="text-align:right;">
 12.42222
 </td>
 <td style="text-align:right;">
@@ -4045,28 +4680,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-3477
+4415
 </td>
 <td style="text-align:right;">
-11.08179
+11.41822
 </td>
 <td style="text-align:right;">
-6.633034
+6.742092
 </td>
 <td style="text-align:right;">
--4.448757
+-4.676128
 </td>
 <td style="text-align:right;">
--40.14475
+-40.95321
 </td>
 <td style="text-align:right;">
-11.96709
+9.112650
 </td>
 <td style="text-align:right;">
-107.9888
+79.80797
 </td>
 <td style="text-align:right;">
-0.0666265
+12.14108
+</td>
+<td style="text-align:right;">
+106.3308
+</td>
+<td style="text-align:right;">
+0.0674546
 </td>
 </tr>
 </tbody>
@@ -4096,6 +4737,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -4128,6 +4775,12 @@ Basic
 -40.79357
 </td>
 <td style="text-align:right;">
+1.858314
+</td>
+<td style="text-align:right;">
+47.26133
+</td>
+<td style="text-align:right;">
 3.222521
 </td>
 <td style="text-align:right;">
@@ -4142,28 +4795,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-195
+250
 </td>
 <td style="text-align:right;">
-4.021227
+4.027892
 </td>
 <td style="text-align:right;">
-2.589964
+2.627323
 </td>
 <td style="text-align:right;">
--1.431263
+-1.400570
 </td>
 <td style="text-align:right;">
--35.59269
+-34.77177
 </td>
 <td style="text-align:right;">
-3.269911
+1.768225
 </td>
 <td style="text-align:right;">
-81.31624
+43.89952
 </td>
 <td style="text-align:right;">
-0.4237226
+3.116640
+</td>
+<td style="text-align:right;">
+77.37646
+</td>
+<td style="text-align:right;">
+0.4325109
 </td>
 </tr>
 </tbody>
@@ -4198,6 +4857,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -4219,7 +4884,7 @@ All
 254
 </td>
 <td style="text-align:right;">
-1.0035738
+1.003574
 </td>
 <td style="text-align:right;">
 1.2021046
@@ -4229,6 +4894,12 @@ All
 </td>
 <td style="text-align:right;">
 19.78239
+</td>
+<td style="text-align:right;">
+1.3076841
+</td>
+<td style="text-align:right;">
+130.30274
 </td>
 <td style="text-align:right;">
 3.650141
@@ -4248,28 +4919,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-196
+251
 </td>
 <td style="text-align:right;">
-0.9717845
+1.013298
 </td>
 <td style="text-align:right;">
-0.7374448
+0.7300735
 </td>
 <td style="text-align:right;">
--0.2343397
+-0.2832242
 </td>
 <td style="text-align:right;">
--24.11437
+-27.95074
 </td>
 <td style="text-align:right;">
-1.357354
+0.8906707
 </td>
 <td style="text-align:right;">
-139.6765
+87.89822
 </td>
 <td style="text-align:right;">
-0.2995398
+1.396477
+</td>
+<td style="text-align:right;">
+137.8150
+</td>
+<td style="text-align:right;">
+0.2681817
 </td>
 </tr>
 </tbody>
@@ -4302,6 +4979,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -4337,6 +5020,12 @@ All
 11.46138
 </td>
 <td style="text-align:right;">
+1.105175
+</td>
+<td style="text-align:right;">
+171.7425
+</td>
+<td style="text-align:right;">
 1.758112
 </td>
 <td style="text-align:right;">
@@ -4354,28 +5043,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-197
+252
 </td>
 <td style="text-align:right;">
-0.5405060
+0.6358459
 </td>
 <td style="text-align:right;">
-0.8315703
+0.8083057
 </td>
 <td style="text-align:right;">
-0.2910643
+0.1724598
 </td>
 <td style="text-align:right;">
-53.85034
+27.12289
 </td>
 <td style="text-align:right;">
-1.823282
+1.109617
 </td>
 <td style="text-align:right;">
-337.3287
+174.5103
 </td>
 <td style="text-align:right;">
-0.0001180
+1.799613
+</td>
+<td style="text-align:right;">
+283.0265
+</td>
+<td style="text-align:right;">
+0.0001548
 </td>
 </tr>
 </tbody>
@@ -4405,6 +5100,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -4437,6 +5138,12 @@ Basic
 -41.13155
 </td>
 <td style="text-align:right;">
+2.806669
+</td>
+<td style="text-align:right;">
+78.53141
+</td>
+<td style="text-align:right;">
 4.584514
 </td>
 <td style="text-align:right;">
@@ -4451,28 +5158,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-197
+252
 </td>
 <td style="text-align:right;">
-3.554057
+3.622494
 </td>
 <td style="text-align:right;">
-2.661539
+2.687600
 </td>
 <td style="text-align:right;">
--0.8925179
+-0.9348939
 </td>
 <td style="text-align:right;">
--25.11265
+-25.80802
 </td>
 <td style="text-align:right;">
-3.919103
+2.573651
 </td>
 <td style="text-align:right;">
-110.2713
+71.04639
 </td>
 <td style="text-align:right;">
-0.1700817
+3.783161
+</td>
+<td style="text-align:right;">
+104.4352
+</td>
+<td style="text-align:right;">
+0.1817871
 </td>
 </tr>
 </tbody>
@@ -4515,6 +5228,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -4545,6 +5264,12 @@ Basic
 1.267451
 </td>
 <td style="text-align:right;">
+0.0839109
+</td>
+<td style="text-align:right;">
+51.96708
+</td>
+<td style="text-align:right;">
 0.1162573
 </td>
 <td style="text-align:right;">
@@ -4559,28 +5284,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-715
+808
 </td>
 <td style="text-align:right;">
-0.1654321
+0.1629079
 </td>
 <td style="text-align:right;">
-0.2066379
+0.2042756
 </td>
 <td style="text-align:right;">
-0.0412058
+0.0413677
 </td>
 <td style="text-align:right;">
-24.908001
+25.393291
 </td>
 <td style="text-align:right;">
-0.1231909
+0.0952097
 </td>
 <td style="text-align:right;">
-74.46617
+58.44384
 </td>
 <td style="text-align:right;">
-0.0467135
+0.1216721
+</td>
+<td style="text-align:right;">
+74.68762
+</td>
+<td style="text-align:right;">
+0.0535419
 </td>
 </tr>
 </tbody>
@@ -4610,6 +5341,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -4642,6 +5379,12 @@ Basic
 22.84762
 </td>
 <td style="text-align:right;">
+7.132362
+</td>
+<td style="text-align:right;">
+158.9173
+</td>
+<td style="text-align:right;">
 9.543106
 </td>
 <td style="text-align:right;">
@@ -4656,28 +5399,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-715
+808
 </td>
 <td style="text-align:right;">
-4.841913
+4.769096
 </td>
 <td style="text-align:right;">
-7.333573
+7.223416
 </td>
 <td style="text-align:right;">
-2.491660
+2.454320
 </td>
 <td style="text-align:right;">
-51.46024
+51.46300
 </td>
 <td style="text-align:right;">
-10.013340
+7.463143
 </td>
 <td style="text-align:right;">
-206.8054
+156.4897
 </td>
 <td style="text-align:right;">
-0.0394766
+9.813448
+</td>
+<td style="text-align:right;">
+205.7717
+</td>
+<td style="text-align:right;">
+0.0382507
 </td>
 </tr>
 </tbody>
@@ -4707,6 +5456,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -4739,6 +5494,12 @@ Basic
 0.9680181
 </td>
 <td style="text-align:right;">
+0.4386018
+</td>
+<td style="text-align:right;">
+41.80787
+</td>
+<td style="text-align:right;">
 0.7953556
 </td>
 <td style="text-align:right;">
@@ -4753,28 +5514,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-161
+197
 </td>
 <td style="text-align:right;">
-1.127315
+1.039852
 </td>
 <td style="text-align:right;">
-1.510688
+1.393576
 </td>
 <td style="text-align:right;">
-0.3833726
+0.3537248
 </td>
 <td style="text-align:right;">
-34.0075753
+34.0168575
 </td>
 <td style="text-align:right;">
-1.1388751
+0.5906765
 </td>
 <td style="text-align:right;">
-101.02543
+56.80392
 </td>
 <td style="text-align:right;">
-0.6963843
+1.0707099
+</td>
+<td style="text-align:right;">
+102.96757
+</td>
+<td style="text-align:right;">
+0.7063138
 </td>
 </tr>
 </tbody>
@@ -4809,6 +5576,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -4833,13 +5606,19 @@ All
 0.1005152
 </td>
 <td style="text-align:right;">
-0.0948380
+0.094838
 </td>
 <td style="text-align:right;">
 -0.0056772
 </td>
 <td style="text-align:right;">
 -5.648091
+</td>
+<td style="text-align:right;">
+0.1633640
+</td>
+<td style="text-align:right;">
+162.5267
 </td>
 <td style="text-align:right;">
 0.5282231
@@ -4859,28 +5638,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-164
+200
 </td>
 <td style="text-align:right;">
-0.1234347
+0.1012164
 </td>
 <td style="text-align:right;">
-0.0534773
+0.049568
 </td>
 <td style="text-align:right;">
--0.0699574
+-0.0516484
 </td>
 <td style="text-align:right;">
--56.675631
+-51.027710
 </td>
 <td style="text-align:right;">
-0.4946117
+0.1318501
 </td>
 <td style="text-align:right;">
-400.7072
+130.2655
 </td>
 <td style="text-align:right;">
-0.0628250
+0.4482864
+</td>
+<td style="text-align:right;">
+442.8987
+</td>
+<td style="text-align:right;">
+0.0649849
 </td>
 </tr>
 </tbody>
@@ -4913,6 +5698,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -4948,6 +5739,12 @@ All
 232.3039
 </td>
 <td style="text-align:right;">
+0.8139165
+</td>
+<td style="text-align:right;">
+382.6500
+</td>
+<td style="text-align:right;">
 1.242894
 </td>
 <td style="text-align:right;">
@@ -4965,28 +5762,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-184
+226
 </td>
 <td style="text-align:right;">
-0.2196512
+0.2238759
 </td>
 <td style="text-align:right;">
-0.6848737
+0.7338984
 </td>
 <td style="text-align:right;">
-0.4652224
+0.5100225
 </td>
 <td style="text-align:right;">
-211.8005
+227.8148
 </td>
 <td style="text-align:right;">
-1.392743
+0.8627888
 </td>
 <td style="text-align:right;">
-634.0702
+385.3871
 </td>
 <td style="text-align:right;">
-0.0081047
+1.426648
+</td>
+<td style="text-align:right;">
+637.2498
+</td>
+<td style="text-align:right;">
+0.0013429
 </td>
 </tr>
 </tbody>
@@ -5016,6 +5819,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -5048,6 +5857,12 @@ Basic
 49.94285
 </td>
 <td style="text-align:right;">
+1.105275
+</td>
+<td style="text-align:right;">
+108.8820
+</td>
+<td style="text-align:right;">
 1.577071
 </td>
 <td style="text-align:right;">
@@ -5062,28 +5877,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-184
+226
 </td>
 <td style="text-align:right;">
-1.130647
+1.068904
 </td>
 <td style="text-align:right;">
-1.959563
+1.905196
 </td>
 <td style="text-align:right;">
-0.8289152
+0.8362921
 </td>
 <td style="text-align:right;">
-73.31333
+78.23830
 </td>
 <td style="text-align:right;">
-1.973928
+1.315191
 </td>
 <td style="text-align:right;">
-174.5839
+123.0411
 </td>
 <td style="text-align:right;">
-0.2858855
+1.952392
+</td>
+<td style="text-align:right;">
+182.6537
+</td>
+<td style="text-align:right;">
+0.3064005
 </td>
 </tr>
 </tbody>
@@ -5126,6 +5947,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -5156,6 +5983,12 @@ Basic
 8.50454
 </td>
 <td style="text-align:right;">
+0.0842201
+</td>
+<td style="text-align:right;">
+62.50958
+</td>
+<td style="text-align:right;">
 0.1361650
 </td>
 <td style="text-align:right;">
@@ -5170,28 +6003,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-5676
+7906
 </td>
 <td style="text-align:right;">
-0.1387688
+0.1337694
 </td>
 <td style="text-align:right;">
-0.2026036
+0.2031645
 </td>
 <td style="text-align:right;">
-0.0638349
+0.0693952
 </td>
 <td style="text-align:right;">
-46.00090
+51.87673
 </td>
 <td style="text-align:right;">
-0.1639439
+0.1112000
 </td>
 <td style="text-align:right;">
-118.1418
+83.12816
 </td>
 <td style="text-align:right;">
-0.0765978
+0.1555531
+</td>
+<td style="text-align:right;">
+116.2845
+</td>
+<td style="text-align:right;">
+0.0689133
 </td>
 </tr>
 </tbody>
@@ -5221,6 +6060,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -5253,6 +6098,12 @@ Basic
 -6.656117
 </td>
 <td style="text-align:right;">
+6.928896
+</td>
+<td style="text-align:right;">
+144.4606
+</td>
+<td style="text-align:right;">
 12.47331
 </td>
 <td style="text-align:right;">
@@ -5267,28 +6118,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-5676
+7906
 </td>
 <td style="text-align:right;">
-5.218784
+4.763430
 </td>
 <td style="text-align:right;">
-6.458517
+6.515085
 </td>
 <td style="text-align:right;">
-1.2397326
+1.7516550
 </td>
 <td style="text-align:right;">
-23.755199
+36.772979
 </td>
 <td style="text-align:right;">
-13.97382
+7.596440
 </td>
 <td style="text-align:right;">
-267.7601
+159.4742
 </td>
 <td style="text-align:right;">
-0.0026958
+12.94246
+</td>
+<td style="text-align:right;">
+271.7047
+</td>
+<td style="text-align:right;">
+0.0032397
 </td>
 </tr>
 </tbody>
@@ -5318,6 +6175,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -5350,6 +6213,12 @@ Basic
 4.571978
 </td>
 <td style="text-align:right;">
+0.9306422
+</td>
+<td style="text-align:right;">
+44.75818
+</td>
+<td style="text-align:right;">
 2.583190
 </td>
 <td style="text-align:right;">
@@ -5364,28 +6233,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-641
+872
 </td>
 <td style="text-align:right;">
-2.167121
+2.133552
 </td>
 <td style="text-align:right;">
-3.173686
+3.291137
 </td>
 <td style="text-align:right;">
-1.0065648
+1.1575847
 </td>
 <td style="text-align:right;">
-46.447091
+54.256217
 </td>
 <td style="text-align:right;">
-3.512944
+1.6638520
 </td>
 <td style="text-align:right;">
-162.1018
+77.98506
 </td>
 <td style="text-align:right;">
-0.2752546
+3.340453
+</td>
+<td style="text-align:right;">
+156.5677
+</td>
+<td style="text-align:right;">
+0.3030294
 </td>
 </tr>
 </tbody>
@@ -5418,6 +6293,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -5453,6 +6334,12 @@ All
 -21.16325
 </td>
 <td style="text-align:right;">
+0.3052043
+</td>
+<td style="text-align:right;">
+130.8912
+</td>
+<td style="text-align:right;">
 0.7347872
 </td>
 <td style="text-align:right;">
@@ -5470,28 +6357,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-648
+881
 </td>
 <td style="text-align:right;">
-0.2397266
+0.2377417
 </td>
 <td style="text-align:right;">
-0.1063396
+0.1095455
 </td>
 <td style="text-align:right;">
--0.1333870
+-0.1281962
 </td>
 <td style="text-align:right;">
--55.64130
+-53.92248
 </td>
 <td style="text-align:right;">
-0.6488442
+0.2745435
 </td>
 <td style="text-align:right;">
-270.6601
+115.4797
 </td>
 <td style="text-align:right;">
-0.1036754
+0.6255395
+</td>
+<td style="text-align:right;">
+263.1173
+</td>
+<td style="text-align:right;">
+0.1066495
 </td>
 </tr>
 </tbody>
@@ -5526,6 +6419,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -5556,7 +6455,13 @@ All
 -0.2254574
 </td>
 <td style="text-align:right;">
--19.158590
+-19.15859
+</td>
+<td style="text-align:right;">
+1.483403
+</td>
+<td style="text-align:right;">
+126.0545
 </td>
 <td style="text-align:right;">
 2.176882
@@ -5576,28 +6481,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-756
+1018
 </td>
 <td style="text-align:right;">
-1.128190
+1.184778
 </td>
 <td style="text-align:right;">
-1.0306060
+1.0477682
 </td>
 <td style="text-align:right;">
--0.0975842
+-0.1370094
 </td>
 <td style="text-align:right;">
--8.649622
+-11.56415
 </td>
 <td style="text-align:right;">
-2.266219
+1.564440
 </td>
 <td style="text-align:right;">
-200.8721
+132.0450
 </td>
 <td style="text-align:right;">
-0.0044278
+2.254963
+</td>
+<td style="text-align:right;">
+190.3279
+</td>
+<td style="text-align:right;">
+0.0001577
 </td>
 </tr>
 </tbody>
@@ -5627,6 +6538,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -5659,6 +6576,12 @@ Basic
 -3.832542
 </td>
 <td style="text-align:right;">
+1.911976
+</td>
+<td style="text-align:right;">
+69.10828
+</td>
+<td style="text-align:right;">
 3.206160
 </td>
 <td style="text-align:right;">
@@ -5673,28 +6596,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-755
+1017
 </td>
 <td style="text-align:right;">
-2.767475
+2.812056
 </td>
 <td style="text-align:right;">
-3.635258
+3.775857
 </td>
 <td style="text-align:right;">
-0.8677826
+0.9638012
 </td>
 <td style="text-align:right;">
-31.356470
+34.273899
 </td>
 <td style="text-align:right;">
-3.816393
+2.349021
 </td>
 <td style="text-align:right;">
-137.9016
+83.53395
 </td>
 <td style="text-align:right;">
-0.2140379
+3.716831
+</td>
+<td style="text-align:right;">
+132.1749
+</td>
+<td style="text-align:right;">
+0.2353460
 </td>
 </tr>
 </tbody>
@@ -5737,6 +6666,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -5767,6 +6702,12 @@ Basic
 0.081802
 </td>
 <td style="text-align:right;">
+0.0919947
+</td>
+<td style="text-align:right;">
+54.05067
+</td>
+<td style="text-align:right;">
 0.1371836
 </td>
 <td style="text-align:right;">
@@ -5781,28 +6722,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-2027
+2675
 </td>
 <td style="text-align:right;">
-0.1676111
+0.1664596
 </td>
 <td style="text-align:right;">
-0.2254639
+0.2200260
 </td>
 <td style="text-align:right;">
-0.0578528
+0.0535663
 </td>
 <td style="text-align:right;">
-34.516092
+32.179770
 </td>
 <td style="text-align:right;">
-0.1463337
+0.1108394
 </td>
 <td style="text-align:right;">
-87.30551
+66.58635
 </td>
 <td style="text-align:right;">
-0.0445457
+0.1451741
+</td>
+<td style="text-align:right;">
+87.21276
+</td>
+<td style="text-align:right;">
+0.0402423
 </td>
 </tr>
 </tbody>
@@ -5832,6 +6779,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -5864,6 +6817,12 @@ Basic
 27.97555
 </td>
 <td style="text-align:right;">
+9.400323
+</td>
+<td style="text-align:right;">
+191.9576
+</td>
+<td style="text-align:right;">
 12.95649
 </td>
 <td style="text-align:right;">
@@ -5878,28 +6837,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-2027
+2675
 </td>
 <td style="text-align:right;">
-4.568672
+4.749913
 </td>
 <td style="text-align:right;">
-8.314910
+8.384400
 </td>
 <td style="text-align:right;">
-3.746238
+3.634487
 </td>
 <td style="text-align:right;">
-81.99841
+76.51692
 </td>
 <td style="text-align:right;">
-13.33932
+9.965264
 </td>
 <td style="text-align:right;">
-291.9737
+209.7989
 </td>
 <td style="text-align:right;">
-0.0487599
+13.28720
+</td>
+<td style="text-align:right;">
+279.7357
+</td>
+<td style="text-align:right;">
+0.0320130
 </td>
 </tr>
 </tbody>
@@ -5929,6 +6894,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -5961,6 +6932,12 @@ Basic
 -2.559112
 </td>
 <td style="text-align:right;">
+0.5491849
+</td>
+<td style="text-align:right;">
+39.94716
+</td>
+<td style="text-align:right;">
 0.9977829
 </td>
 <td style="text-align:right;">
@@ -5975,28 +6952,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-335
+456
 </td>
 <td style="text-align:right;">
-1.412146
+1.395863
 </td>
 <td style="text-align:right;">
-1.988177
+1.925218
 </td>
 <td style="text-align:right;">
-0.5760307
+0.5293547
 </td>
 <td style="text-align:right;">
-40.791157
+37.923114
 </td>
 <td style="text-align:right;">
-1.4834613
+0.8328728
 </td>
 <td style="text-align:right;">
-105.05013
+59.66724
 </td>
 <td style="text-align:right;">
-0.6490187
+1.5158110
+</td>
+<td style="text-align:right;">
+108.59311
+</td>
+<td style="text-align:right;">
+0.5923872
 </td>
 </tr>
 </tbody>
@@ -6029,6 +7012,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -6064,6 +7053,12 @@ All
 -17.15380
 </td>
 <td style="text-align:right;">
+0.2512881
+</td>
+<td style="text-align:right;">
+134.2105
+</td>
+<td style="text-align:right;">
 0.6750984
 </td>
 <td style="text-align:right;">
@@ -6081,28 +7076,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-341
+463
 </td>
 <td style="text-align:right;">
-0.1752108
+0.1998304
 </td>
 <td style="text-align:right;">
-0.0764531
+0.0762754
 </td>
 <td style="text-align:right;">
--0.0987577
+-0.1235549
 </td>
 <td style="text-align:right;">
--56.36506
+-61.82991
 </td>
 <td style="text-align:right;">
-0.4219215
+0.2207691
 </td>
 <td style="text-align:right;">
-240.8080
+110.4783
 </td>
 <td style="text-align:right;">
-0.0721632
+0.4846635
+</td>
+<td style="text-align:right;">
+242.5375
+</td>
+<td style="text-align:right;">
+0.1137761
 </td>
 </tr>
 </tbody>
@@ -6135,6 +7136,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -6170,6 +7177,12 @@ All
 21.42996
 </td>
 <td style="text-align:right;">
+0.9178905
+</td>
+<td style="text-align:right;">
+180.3889
+</td>
+<td style="text-align:right;">
 1.555536
 </td>
 <td style="text-align:right;">
@@ -6187,28 +7200,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-377
+517
 </td>
 <td style="text-align:right;">
-0.5545957
+0.5305643
 </td>
 <td style="text-align:right;">
-0.6505133
+0.6437081
 </td>
 <td style="text-align:right;">
-0.0959176
+0.1131439
 </td>
 <td style="text-align:right;">
-17.29505
+21.32520
 </td>
 <td style="text-align:right;">
-1.588392
+0.9349667
 </td>
 <td style="text-align:right;">
-286.4055
+176.2212
 </td>
 <td style="text-align:right;">
-0.0011475
+1.535233
+</td>
+<td style="text-align:right;">
+289.3585
+</td>
+<td style="text-align:right;">
+0.0011057
 </td>
 </tr>
 </tbody>
@@ -6238,6 +7257,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -6270,6 +7295,12 @@ Basic
 6.542132
 </td>
 <td style="text-align:right;">
+1.282198
+</td>
+<td style="text-align:right;">
+83.01154
+</td>
+<td style="text-align:right;">
 1.909225
 </td>
 <td style="text-align:right;">
@@ -6284,28 +7315,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-377
+517
 </td>
 <td style="text-align:right;">
-1.660288
+1.591053
 </td>
 <td style="text-align:right;">
-2.348185
+2.273591
 </td>
 <td style="text-align:right;">
-0.6878970
+0.6825378
 </td>
 <td style="text-align:right;">
-41.432383
+42.898483
 </td>
 <td style="text-align:right;">
-2.203278
+1.459070
 </td>
 <td style="text-align:right;">
-132.7046
+91.70466
 </td>
 <td style="text-align:right;">
-0.3088411
+2.183095
+</td>
+<td style="text-align:right;">
+137.2106
+</td>
+<td style="text-align:right;">
+0.3011921
 </td>
 </tr>
 </tbody>
@@ -6348,6 +7385,12 @@ Bias
 Biasrel
 </th>
 <th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
+</th>
+<th style="text-align:right;">
 RMSQ
 </th>
 <th style="text-align:right;">
@@ -6378,6 +7421,12 @@ Basic
 8.403459
 </td>
 <td style="text-align:right;">
+0.1173741
+</td>
+<td style="text-align:right;">
+70.68346
+</td>
+<td style="text-align:right;">
 0.1767974
 </td>
 <td style="text-align:right;">
@@ -6392,28 +7441,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-1457
+1780
 </td>
 <td style="text-align:right;">
-0.1677834
+0.1723969
 </td>
 <td style="text-align:right;">
-0.2100691
+0.2171489
 </td>
 <td style="text-align:right;">
-0.0422858
+0.0447520
 </td>
 <td style="text-align:right;">
-25.202587
+25.958730
 </td>
 <td style="text-align:right;">
-0.1749489
+0.1448607
 </td>
 <td style="text-align:right;">
-104.2707
+84.02749
 </td>
 <td style="text-align:right;">
-0.0004472
+0.2015402
+</td>
+<td style="text-align:right;">
+116.9048
+</td>
+<td style="text-align:right;">
+0.0037935
 </td>
 </tr>
 </tbody>
@@ -6443,6 +7498,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -6475,6 +7536,12 @@ Basic
 94.64746
 </td>
 <td style="text-align:right;">
+7.101080
+</td>
+<td style="text-align:right;">
+240.3033
+</td>
+<td style="text-align:right;">
 9.714266
 </td>
 <td style="text-align:right;">
@@ -6489,28 +7556,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-1457
+1780
 </td>
 <td style="text-align:right;">
-2.991700
+2.998405
 </td>
 <td style="text-align:right;">
-6.703632
+7.008338
 </td>
 <td style="text-align:right;">
-3.711932
+4.009934
 </td>
 <td style="text-align:right;">
-124.07432
+133.73558
 </td>
 <td style="text-align:right;">
-10.178891
+8.083181
 </td>
 <td style="text-align:right;">
-340.2377
+269.5827
 </td>
 <td style="text-align:right;">
-0.0036392
+10.735378
+</td>
+<td style="text-align:right;">
+358.0363
+</td>
+<td style="text-align:right;">
+0.0043588
 </td>
 </tr>
 </tbody>
@@ -6540,6 +7613,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -6572,6 +7651,12 @@ Basic
 1.081337
 </td>
 <td style="text-align:right;">
+0.9468262
+</td>
+<td style="text-align:right;">
+47.16822
+</td>
+<td style="text-align:right;">
 2.112874
 </td>
 <td style="text-align:right;">
@@ -6586,28 +7671,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-153
+197
 </td>
 <td style="text-align:right;">
-2.121755
+2.138207
 </td>
 <td style="text-align:right;">
-2.584382
+2.528278
 </td>
 <td style="text-align:right;">
-0.4626267
+0.3900709
 </td>
 <td style="text-align:right;">
-21.803966
+18.242897
 </td>
 <td style="text-align:right;">
-2.133671
+1.4371319
 </td>
 <td style="text-align:right;">
-100.5616
+67.21201
 </td>
 <td style="text-align:right;">
-0.4369139
+2.670111
+</td>
+<td style="text-align:right;">
+124.8762
+</td>
+<td style="text-align:right;">
+0.3306840
 </td>
 </tr>
 </tbody>
@@ -6640,6 +7731,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -6675,6 +7772,12 @@ All
 -32.04420
 </td>
 <td style="text-align:right;">
+0.5636781
+</td>
+<td style="text-align:right;">
+113.5611
+</td>
+<td style="text-align:right;">
 1.055582
 </td>
 <td style="text-align:right;">
@@ -6692,28 +7795,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-153
+197
 </td>
 <td style="text-align:right;">
-0.5245305
+0.4827775
 </td>
 <td style="text-align:right;">
-0.3572165
+0.3304461
 </td>
 <td style="text-align:right;">
--0.1673140
+-0.1523314
 </td>
 <td style="text-align:right;">
--31.89785
+-31.55312
 </td>
 <td style="text-align:right;">
-1.048509
+0.5362475
 </td>
 <td style="text-align:right;">
-199.8948
+111.0755
 </td>
 <td style="text-align:right;">
-0.1199660
+0.991318
+</td>
+<td style="text-align:right;">
+205.3364
+</td>
+<td style="text-align:right;">
+0.1064188
 </td>
 </tr>
 </tbody>
@@ -6746,6 +7855,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -6781,6 +7896,12 @@ All
 -51.45882
 </td>
 <td style="text-align:right;">
+0.4799677
+</td>
+<td style="text-align:right;">
+136.5594
+</td>
+<td style="text-align:right;">
 1.076343
 </td>
 <td style="text-align:right;">
@@ -6798,28 +7919,34 @@ Advanced
 All
 </td>
 <td style="text-align:right;">
-158
+204
 </td>
 <td style="text-align:right;">
-0.4619063
+0.3984446
 </td>
 <td style="text-align:right;">
-0.0964147
+0.1077617
 </td>
 <td style="text-align:right;">
--0.3654917
+-0.2906829
 </td>
 <td style="text-align:right;">
--79.12679
+-72.95440
 </td>
 <td style="text-align:right;">
-1.320607
+0.4597473
 </td>
 <td style="text-align:right;">
-285.9037
+115.3855
 </td>
 <td style="text-align:right;">
-0.0011990
+1.188862
+</td>
+<td style="text-align:right;">
+298.3758
+</td>
+<td style="text-align:right;">
+0.0014821
 </td>
 </tr>
 </tbody>
@@ -6849,6 +7976,12 @@ Bias
 </th>
 <th style="text-align:right;">
 Biasrel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAErel
 </th>
 <th style="text-align:right;">
 RMSQ
@@ -6881,6 +8014,12 @@ Basic
 -0.2716298
 </td>
 <td style="text-align:right;">
+1.403803
+</td>
+<td style="text-align:right;">
+77.05069
+</td>
+<td style="text-align:right;">
 2.550204
 </td>
 <td style="text-align:right;">
@@ -6895,28 +8034,34 @@ Basic
 Advanced
 </td>
 <td style="text-align:right;">
-158
+204
 </td>
 <td style="text-align:right;">
-2.008586
+1.997070
 </td>
 <td style="text-align:right;">
-2.253100
+2.230178
 </td>
 <td style="text-align:right;">
-0.2445142
+0.2331075
 </td>
 <td style="text-align:right;">
-12.1734517
+11.6724768
 </td>
 <td style="text-align:right;">
-2.753520
+1.795611
 </td>
 <td style="text-align:right;">
-137.0875
+89.91226
 </td>
 <td style="text-align:right;">
-0.1802941
+3.051008
+</td>
+<td style="text-align:right;">
+152.7742
+</td>
+<td style="text-align:right;">
+0.2298045
 </td>
 </tr>
 </tbody>
