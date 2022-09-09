@@ -148,9 +148,9 @@ g2<-ggplot(dfbai_bas, aes(x = ini, y= error))+
   geom_point( aes(x = ini, y= error), size=0.3, col="orange", alpha = 0.3, data = dfbai_bas)+
   geom_point( aes(x = ini, y= error), size=0.3, col="light blue", alpha = 0.3, data = dfbai_adv)+
   geom_abline(intercept = 0, slope = 0, col ="black")+
-  geom_smooth(method=NULL, formula = y ~ x, 
+  geom_smooth(method="loess", formula = y ~ x, 
               col="red", data = dfbai_bas)+
-  geom_smooth(method=NULL, formula = y ~ x, 
+  geom_smooth(method="loess", formula = y ~ x, 
               col="blue", data = dfbai_adv)+
   xlab("Initial basal area (m2/ha)")+
   ylab(paste0("Error ", quantity," (m2/ha)"))+
@@ -330,7 +330,7 @@ Default species-specific parameters were modified using the results of the [meta
 
 Simulations were done for both the **basic** and **advanced** transpiration/photosynthesis sub-models. On a server with 20 parallel threads, computational times are around **5 hours** (i.e. 2 min/plot) for the **basic** sub-model, versus around **6 days** (i.e. 1 hr/plot) for the **advanced** submodel. The average number of tree cohorts per plot is **`r round(nrow(dfdbh_bas)/length(unique(dfdbh_bas$ID)))`**.
 
-In the following sections, we provide the bias, mean absolute error (both in absolute and relative terms) and R-squared of growth and mortality predictions at the tree-level and stand-level obtained by simulations with both sub-models. Scatter plots are provided to represent the relationship between predicted and observed values, as well as the factors that may influence the direction and magnitude of prediction error (i.e. initial values, environmental conditions, ...).  
+In the following sections, we provide the **bias**, **mean absolute error** (in absolute and relative terms), **root mean squared error** (in absolute and relative terms) and **explained variance (R-squared)** of growth and mortality predictions at the tree-level and stand-level obtained by simulations with both sub-models. Scatter plots are provided to represent the relationship between predicted and observed values, as well as the factors that may influence the direction and magnitude of prediction error (i.e. initial values, environmental conditions, ...).  
 
 Detailed results of growth evaluation by species are provided in the last section.
 
@@ -342,18 +342,17 @@ Comparison of growth of trees (DBH >= 7.5) that survived in both observed and si
 
 Overall predictive capacity to predict diameter increase (cm/yr):
 ```{r, echo = FALSE}
-res1<-dfdbh %>% group_by(Submodel) %>% 
-  summarize(Province = "All",
-            Name = "All", 
-            n = n(),
+dfdbh %>% group_by(Submodel) %>% 
+  summarize(n = n(),
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
             Biasrel = 100*Bias/abs(Obs),
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
-            R2 = cor(obs,pred)^2, .groups="drop") 
-res1[,-c(2,3)] %>% 
+            R2 = cor(obs,pred)^2, .groups="drop") %>% 
   kbl() %>%
   kable_styling()
 ```
@@ -379,12 +378,13 @@ plot_cov_clim_dbh(dfdbh_bas, dfdbh_adv, points = TRUE)
 Overall predictive capacity to predict height increase (cm/yr):
 ```{r, echo = FALSE, warning=FALSE, message=FALSE}
 dfh %>% group_by(Submodel) %>% 
-  summarize(Name = "All",
-            n = n(),
+  summarize(n = n(),
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
             Biasrel = 100*Bias/abs(Obs),
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>%
@@ -401,12 +401,13 @@ This comparison does not take into account changes in density. In other words, d
 Predictive capacity table:
 ```{r, echo = FALSE}
 dfbai[dfbai$Name=="0-All",] %>% group_by(Submodel) %>% 
-  summarize(Name = "All",
-            n = n(),
+  summarize(n = n(),
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
             Biasrel = 100*Bias/abs(Obs),
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 
@@ -451,12 +452,13 @@ Overall predictive capacity:
 
 ```{r, echo = FALSE, warning=FALSE}
 dfbadead[dfbadead$Name=="0-All",] %>% group_by(Submodel) %>% 
-  summarize(Name = "All",
-            n = n(),
+  summarize(n = n(),
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
             Biasrel = 100*Bias/abs(Obs),
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 
@@ -504,12 +506,13 @@ Predictive capacity:
 
 ```{r, echo = FALSE, warning=FALSE}
 dfbarecr[dfbarecr$Name=="0-All",] %>% group_by(Submodel) %>% 
-  summarize(Name = "All",
-            n = n(),
+  summarize(n = n(),
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
             Biasrel = 100*Bias/abs(Obs),
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 
@@ -555,12 +558,13 @@ Overall predictive capacity:
 
 ```{r, echo = FALSE, warning=FALSE}
 dfbai_all[dfbai_all$Name=="0-All",] %>% group_by(Submodel) %>% 
-  summarize(Name = "All",
-            n = n(),
+  summarize(n = n(),
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
             Biasrel = 100*Bias/abs(Obs),
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 

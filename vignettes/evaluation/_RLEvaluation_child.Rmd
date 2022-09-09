@@ -69,6 +69,8 @@ dfdbh_SP %>% group_by(Submodel) %>%
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
             Biasrel = 100*Bias/abs(Obs),
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2, .groups="drop") %>% 
@@ -87,6 +89,8 @@ dfh_SP %>% group_by(Submodel) %>%
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
             Biasrel = 100*Bias/abs(Obs),
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2, .groups="drop") %>% 
@@ -105,6 +109,8 @@ dfbaiSP %>% group_by(Submodel) %>%
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
             Biasrel = 100*Bias/abs(Obs),
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 
@@ -124,6 +130,8 @@ dfbadeadSP %>% group_by(Submodel) %>%
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
             Biasrel = 100*Bias/abs(Obs),
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 
@@ -144,6 +152,8 @@ dfbarecrSP %>% group_by(Submodel) %>%
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
             Biasrel = 100*Bias/abs(Obs),
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 
@@ -163,6 +173,8 @@ dfbaiSP_all %>% group_by(Submodel) %>%
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
             Biasrel = 100*Bias/abs(Obs),
+            MAE = mean(abs(error), na.rm=TRUE),
+            MAErel = 100*MAE/abs(Obs),
             RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
             RMSQrel = 100*RMSQ/abs(Obs),
             R2 = cor(obs,pred)^2) %>% 
