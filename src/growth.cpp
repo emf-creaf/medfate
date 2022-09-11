@@ -480,7 +480,6 @@ List growthDayInner(List x, NumericVector meteovec,
   List eb;
   double tcan_day = NA_REAL;
   if(transpirationMode=="Sperry") {
-    tcan_day = meteoland::utils_averageDaylightTemperature(min(Tcan), max(Tcan));
     StemSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympPsi"]);
     LeafSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympPsi"]);
     StemSympRWCInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympRWC"]);
@@ -489,6 +488,7 @@ List growthDayInner(List x, NumericVector meteovec,
     eb = spwbOut["EnergyBalance"];  
     DataFrame tempDF =  Rcpp::as<Rcpp::DataFrame>(eb["Temperature"]);
     Tcan = Rcpp::as<Rcpp::NumericVector>(tempDF["Tcan"]);
+    tcan_day = meteoland::utils_averageDaylightTemperature(min(Tcan), max(Tcan));
   }
   
 
