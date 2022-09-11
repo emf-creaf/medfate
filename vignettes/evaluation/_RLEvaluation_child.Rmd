@@ -124,8 +124,7 @@ Prediction ability for **basal area decrease due to mortality** (m2/ha):
 
 ```{r, echo = FALSE, warning=FALSE}
 dfbadeadSP %>% group_by(Submodel) %>% 
-  summarize(Name = "All",
-            n = n(),
+  summarize(n = n(),
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),
@@ -146,8 +145,7 @@ Prediction ability for **basal area increase due to ingrowth** (m2/ha):
 
 ```{r, echo = FALSE, warning=FALSE}
 dfbarecrSP %>% group_by(Submodel) %>% 
-  summarize(Name = "All",
-            n = n(),
+  summarize(n = n(),
             Obs = mean(obs, na.rm=TRUE),
             Pred = mean(pred, na.rm=TRUE),
             Bias = mean(error, na.rm=TRUE),

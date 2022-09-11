@@ -478,7 +478,9 @@ List growthDayInner(List x, NumericVector meteovec,
   NumericVector Tcan;
   NumericMatrix StemSympPsiInst, LeafSympPsiInst, StemSympRWCInst, LeafSympRWCInst;
   List eb;
+  double tcan_day = NA_REAL;
   if(transpirationMode=="Sperry") {
+    tcan_day = meteoland::utils_averageDaylightTemperature(min(Tcan), max(Tcan));
     StemSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympPsi"]);
     LeafSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympPsi"]);
     StemSympRWCInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympRWC"]);
@@ -653,13 +655,12 @@ List growthDayInner(List x, NumericVector meteovec,
         // grow_ring(ring, PlantPsi[j] ,tday, 10.0);
         rleafcell = std::min(rcellmax, relative_expansion_rate(PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
         rcambiumcell = std::min(rcellmax, relative_expansion_rate(PlantPsi[j] ,tday, -1.0, 0.5,0.05,5.0));
-        for(int s=0;s<numLayers;s++) rfineroot[s] = relative_expansion_rate(psiSoil[s] ,tday, -1.0 ,0.5,0.05,5.0);
+        for(int l=0;l<numLayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate(psiSoil[l] ,tday, -1.0 ,0.5,0.05,5.0));
         // if(j==0) Rcout<<j<< " Psi:"<< PlantPsi[j]<< " r:"<< rcambiumcell<<"\n";
       } else {
-        // grow_ring(ringList[j], psiSympStem[j] ,tday, 10.0);
-        rleafcell = std::min(rcellmax, relative_expansion_rate(psiSympLeaf[j] ,tday, -1.0, 0.5,0.05,5.0));
-        rcambiumcell = std::min(rcellmax, relative_expansion_rate(psiSympStem[j] ,tday, -1.0, 0.5,0.05,5.0));
-        for(int s=0;s<numLayers;s++) rfineroot[s] = relative_expansion_rate(RhizoPsi(j,s) ,tday, -1.0, 0.5,0.05,5.0);
+        rleafcell = std::min(rcellmax, relative_expansion_rate(psiSympLeaf[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
+        rcambiumcell = std::min(rcellmax, relative_expansion_rate(psiSympStem[j] ,tcan_day, -1.0, 0.5,0.05,5.0));
+        for(int l=0;l<numLayers;l++) rfineroot[l] = std::min(rcellmax, relative_expansion_rate(RhizoPsi(j,l) ,Tsoil[l], -1.0, 0.5,0.05,5.0));
         // if(j==0) Rcout<<j<< " Psi:"<< psiSympStem[j]<< " pi0:"<< " r:"<< rcambiumcell<<"\n";
       }
       if(!subdailyCarbonBalance) {
@@ -825,14 +826,14 @@ List growthDayInner(List x, NumericVector meteovec,
           }
           //fine root growth
           if(fineRootBiomass[j] < fineRootBiomassTarget[j]) {
-            for(int s = 0;s<numLayers;s++) {
+            for(int l = 0;l<numLayers;l++) {
               double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
-              double deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[s]/rcellmax);
-              if(!sinkLimitation) deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
+              double deltaFRBsink = (1.0/((double) numSteps))*(V(j,l)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[l]/rcellmax);
+              if(!sinkLimitation) deltaFRBsink = (1.0/((double) numSteps))*(V(j,l)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
               double deltaFRBavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/CCfineroot[j]);
               double deltaFRBgrowthStep = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
               growthCostFRBStep += deltaFRBgrowthStep*CCfineroot[j];
-              deltaFRBgrowth[s] += deltaFRBgrowthStep;
+              deltaFRBgrowth[l] += deltaFRBgrowthStep;
               synthesisRespFRB += deltaFRBgrowthStep*(CCfineroot[j] - 1.0)/CCfineroot[j];
             }
           }
@@ -970,11 +971,11 @@ List growthDayInner(List x, NumericVector meteovec,
       
       //FRB SENESCENCE
       NumericVector deltaFRBsenescence(numLayers, 0.0);
-      for(int s=0;s<numLayers;s++) {
+      for(int l=0;l<numLayers;l++) {
         double daySenescence = NA_REAL;
         if(transpirationMode=="Granier") daySenescence = SRfineroot[j]*std::max(0.0,(tday-5.0)/20.0);
-        else daySenescence = SRfineroot[j]*std::max(0.0,(Tsoil[s]-5.0)/20.0);
-        deltaFRBsenescence[s] = fineRootBiomass[j]*V(j,s)*daySenescence;
+        else daySenescence = SRfineroot[j]*std::max(0.0,(Tsoil[l]-5.0)/20.0);
+        deltaFRBsenescence[l] = fineRootBiomass[j]*V(j,l)*daySenescence;
       }
       double senescenceFinerootLoss = sum(deltaFRBsenescence);
       
