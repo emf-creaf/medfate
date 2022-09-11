@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-09-09</h4>
+            <h4 data-toc-skip class="date">2022-09-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestDynamics.Rmd" class="external-link"><code>vignettes/runmodels/ForestDynamics.Rmd</code></a></small>
       <div class="hidden name"><code>ForestDynamics.Rmd</code></div>
@@ -254,8 +254,8 @@ access stand-level statistics using:</p>
 <span><span class="co">## 7     6              2              2               1               1</span></span>
 <span><span class="co">## 8     7              2              2               1               1</span></span>
 <span><span class="co">## 9     8              2              2               1               1</span></span>
-<span><span class="co">## 10    9              2              2               1               1</span></span>
-<span><span class="co">## 11   10              2              2               1               1</span></span>
+<span><span class="co">## 10    9              2              3               1               1</span></span>
+<span><span class="co">## 11   10              2              3               1               1</span></span>
 <span><span class="co">##    TreeDensityLive TreeBasalAreaLive DominantTreeHeight DominantTreeDiameter</span></span>
 <span><span class="co">## 1         552.0000          25.03330           800.0000             37.55000</span></span>
 <span><span class="co">## 2         550.7451          25.26335           812.8738             37.78808</span></span>
@@ -266,8 +266,8 @@ access stand-level statistics using:</p>
 <span><span class="co">## 7         544.5391          26.38659           874.4301             38.96092</span></span>
 <span><span class="co">## 8         543.3128          26.59613           885.8386             39.18490</span></span>
 <span><span class="co">## 9         542.0879          26.79878           896.9072             39.40431</span></span>
-<span><span class="co">## 10        540.8709          26.99308           907.5717             39.61771</span></span>
-<span><span class="co">## 11        539.6652          27.16527           917.3552             39.81525</span></span>
+<span><span class="co">## 10        902.8709          28.59235           907.5717             39.61771</span></span>
+<span><span class="co">## 11        901.2961          28.71048           914.4648             39.75638</span></span>
 <span><span class="co">##    QuadraticMeanTreeDiameter HartBeckingIndex ShrubCoverLive BasalAreaDead</span></span>
 <span><span class="co">## 1                   24.02949         53.20353       3.750000     0.0000000</span></span>
 <span><span class="co">## 2                   24.16714         52.42054       2.809561     0.1032718</span></span>
@@ -278,8 +278,8 @@ access stand-level statistics using:</p>
 <span><span class="co">## 7                   24.83889         49.00725       4.205692     0.1072133</span></span>
 <span><span class="co">## 8                   24.96545         48.43066       4.540641     0.1079368</span></span>
 <span><span class="co">## 9                   25.08868         47.88700       4.895212     0.1089296</span></span>
-<span><span class="co">## 10                  25.20777         47.37751       5.264739     0.1092914</span></span>
-<span><span class="co">## 11                  25.31628         46.92457       5.631664     0.1092602</span></span>
+<span><span class="co">## 10                  20.08016         36.66960       5.264739     0.1092914</span></span>
+<span><span class="co">## 11                  20.13917         36.42497       5.531990     0.1105965</span></span>
 <span><span class="co">##    ShrubCoverDead BasalAreaCut ShrubCoverCut</span></span>
 <span><span class="co">## 1     0.000000000            0             0</span></span>
 <span><span class="co">## 2     0.004142114            0             0</span></span>
@@ -291,7 +291,7 @@ access stand-level statistics using:</p>
 <span><span class="co">## 8     0.006680973            0             0</span></span>
 <span><span class="co">## 9     0.007229198            0             0</span></span>
 <span><span class="co">## 10    0.007764488            0             0</span></span>
-<span><span class="co">## 11    0.008284639            0             0</span></span></code></pre>
+<span><span class="co">## 11    0.008227620            0             0</span></span></code></pre>
 <p>Species-level analogous statistics are shown using:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fd</span><span class="op">$</span><span class="va">SpeciesSummary</span></span></code></pre></div>
@@ -325,10 +325,10 @@ access stand-level statistics using:</p>
 <span><span class="co">## 27    8     168      Quercus ilex          1        380.8595          7.137187</span></span>
 <span><span class="co">## 28    9     148  Pinus halepensis          1        160.4019         19.773249</span></span>
 <span><span class="co">## 29    9     165 Quercus coccifera          1              NA                NA</span></span>
-<span><span class="co">## 30    9     168      Quercus ilex          1        380.4690          7.219836</span></span>
-<span><span class="co">## 31   10     148  Pinus halepensis          1        159.5841         19.869120</span></span>
+<span><span class="co">## 30    9     168      Quercus ilex          2        742.4690          8.819103</span></span>
+<span><span class="co">## 31   10     148  Pinus halepensis          1        159.5841         19.810405</span></span>
 <span><span class="co">## 32   10     165 Quercus coccifera          1              NA                NA</span></span>
-<span><span class="co">## 33   10     168      Quercus ilex          1        380.0811          7.296149</span></span>
+<span><span class="co">## 33   10     168      Quercus ilex          2        741.7120          8.900074</span></span>
 <span><span class="co">##    ShrubCoverLive BasalAreaDead ShrubCoverDead BasalAreaCut ShrubCoverCut</span></span>
 <span><span class="co">## 1              NA   0.000000000             NA            0            NA</span></span>
 <span><span class="co">## 2        3.750000            NA    0.000000000           NA             0</span></span>
@@ -360,9 +360,9 @@ access stand-level statistics using:</p>
 <span><span class="co">## 28             NA   0.101881509             NA            0            NA</span></span>
 <span><span class="co">## 29       5.264739            NA    0.007764488           NA             0</span></span>
 <span><span class="co">## 30             NA   0.007409863             NA            0            NA</span></span>
-<span><span class="co">## 31             NA   0.101813089             NA            0            NA</span></span>
-<span><span class="co">## 32       5.631664            NA    0.008284639           NA             0</span></span>
-<span><span class="co">## 33             NA   0.007447133             NA            0            NA</span></span></code></pre>
+<span><span class="co">## 31             NA   0.101512222             NA            0            NA</span></span>
+<span><span class="co">## 32       5.531990            NA    0.008227620           NA             0</span></span>
+<span><span class="co">## 33             NA   0.009084249             NA            0            NA</span></span></code></pre>
 <p>Package <code>medfate</code> provides a simple <code>plot</code>
 function for objects of class <code>fordyn</code>. For example, we can
 show the interannual variation in stand-level basal area using:</p>
@@ -378,29 +378,31 @@ format with cohort structural information (i.e. DBH, height, density,
 etc) for each time step:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fd</span><span class="op">$</span><span class="va">TreeTable</span></span></code></pre></div>
-<pre><code><span><span class="co">##    Step Year Cohort Species             Name        N      DBH   Height Z50</span></span>
-<span><span class="co">## 1     0   NA T1_148     148 Pinus halepensis 168.0000 37.55000 800.0000 100</span></span>
-<span><span class="co">## 2     0   NA T2_168     168     Quercus ilex 384.0000 14.60000 660.0000 300</span></span>
-<span><span class="co">## 3     1 2001 T1_148     148 Pinus halepensis 167.1388 37.78808 812.8738 100</span></span>
-<span><span class="co">## 4     1 2001 T2_168     168     Quercus ilex 383.6063 14.70935 663.5544 300</span></span>
-<span><span class="co">## 5     2 2002 T1_148     148 Pinus halepensis 166.2821 38.02774 825.7031 100</span></span>
-<span><span class="co">## 6     2 2002 T2_168     168     Quercus ilex 383.2130 14.81908 667.1400 300</span></span>
-<span><span class="co">## 7     3 2003 T1_148     148 Pinus halepensis 165.4297 38.26572 838.3135 100</span></span>
-<span><span class="co">## 8     3 2003 T2_168     168     Quercus ilex 382.8201 14.92782 670.7111 300</span></span>
-<span><span class="co">## 9     4 2004 T1_148     148 Pinus halepensis 164.5794 38.50108 850.6606 100</span></span>
-<span><span class="co">## 10    4 2004 T2_168     168     Quercus ilex 382.4265 15.03522 674.2541 300</span></span>
-<span><span class="co">## 11    5 2005 T1_148     148 Pinus halepensis 163.7357 38.73280 862.6968 100</span></span>
-<span><span class="co">## 12    5 2005 T2_168     168     Quercus ilex 382.0344 15.14086 677.7537 300</span></span>
-<span><span class="co">## 13    6 2006 T1_148     148 Pinus halepensis 162.8964 38.96092 874.4301 100</span></span>
-<span><span class="co">## 14    6 2006 T2_168     168     Quercus ilex 381.6428 15.24481 681.2092 300</span></span>
-<span><span class="co">## 15    7 2007 T1_148     148 Pinus halepensis 162.0614 39.18490 885.8386 100</span></span>
-<span><span class="co">## 16    7 2007 T2_168     168     Quercus ilex 381.2515 15.34682 684.6107 300</span></span>
-<span><span class="co">## 17    8 2008 T1_148     148 Pinus halepensis 161.2284 39.40431 896.9072 100</span></span>
-<span><span class="co">## 18    8 2008 T2_168     168     Quercus ilex 380.8595 15.44672 687.9501 300</span></span>
-<span><span class="co">## 19    9 2009 T1_148     148 Pinus halepensis 160.4019 39.61771 907.5717 100</span></span>
-<span><span class="co">## 20    9 2009 T2_168     168     Quercus ilex 380.4690 15.54387 691.2045 300</span></span>
-<span><span class="co">## 21   10 2010 T1_148     148 Pinus halepensis 159.5841 39.81525 917.3552 100</span></span>
-<span><span class="co">## 22   10 2010 T2_168     168     Quercus ilex 380.0811 15.63377 694.2211 300</span></span>
+<pre><code><span><span class="co">##    Step Year Cohort Species             Name        N       DBH   Height Z50</span></span>
+<span><span class="co">## 1     0   NA T1_148     148 Pinus halepensis 168.0000 37.550000 800.0000 100</span></span>
+<span><span class="co">## 2     0   NA T2_168     168     Quercus ilex 384.0000 14.600000 660.0000 300</span></span>
+<span><span class="co">## 3     1 2001 T1_148     148 Pinus halepensis 167.1388 37.788076 812.8738 100</span></span>
+<span><span class="co">## 4     1 2001 T2_168     168     Quercus ilex 383.6063 14.709350 663.5544 300</span></span>
+<span><span class="co">## 5     2 2002 T1_148     148 Pinus halepensis 166.2821 38.027743 825.7031 100</span></span>
+<span><span class="co">## 6     2 2002 T2_168     168     Quercus ilex 383.2130 14.819084 667.1400 300</span></span>
+<span><span class="co">## 7     3 2003 T1_148     148 Pinus halepensis 165.4297 38.265716 838.3135 100</span></span>
+<span><span class="co">## 8     3 2003 T2_168     168     Quercus ilex 382.8201 14.927823 670.7111 300</span></span>
+<span><span class="co">## 9     4 2004 T1_148     148 Pinus halepensis 164.5794 38.501076 850.6606 100</span></span>
+<span><span class="co">## 10    4 2004 T2_168     168     Quercus ilex 382.4265 15.035216 674.2541 300</span></span>
+<span><span class="co">## 11    5 2005 T1_148     148 Pinus halepensis 163.7357 38.732795 862.6968 100</span></span>
+<span><span class="co">## 12    5 2005 T2_168     168     Quercus ilex 382.0344 15.140859 677.7537 300</span></span>
+<span><span class="co">## 13    6 2006 T1_148     148 Pinus halepensis 162.8964 38.960921 874.4301 100</span></span>
+<span><span class="co">## 14    6 2006 T2_168     168     Quercus ilex 381.6428 15.244807 681.2092 300</span></span>
+<span><span class="co">## 15    7 2007 T1_148     148 Pinus halepensis 162.0614 39.184903 885.8386 100</span></span>
+<span><span class="co">## 16    7 2007 T2_168     168     Quercus ilex 381.2515 15.346822 684.6107 300</span></span>
+<span><span class="co">## 17    8 2008 T1_148     148 Pinus halepensis 161.2284 39.404306 896.9072 100</span></span>
+<span><span class="co">## 18    8 2008 T2_168     168     Quercus ilex 380.8595 15.446716 687.9501 300</span></span>
+<span><span class="co">## 19    9 2009 T1_148     148 Pinus halepensis 160.4019 39.617706 907.5717 100</span></span>
+<span><span class="co">## 20    9 2009 T2_168     168     Quercus ilex 380.4690 15.543866 691.2045 300</span></span>
+<span><span class="co">## 21    9 2009 T3_168     168     Quercus ilex 362.0000  7.500000 472.3629 100</span></span>
+<span><span class="co">## 22   10 2010 T1_148     148 Pinus halepensis 159.5841 39.756381 914.4648 100</span></span>
+<span><span class="co">## 23   10 2010 T2_168     168     Quercus ilex 380.0811 15.606937 693.3338 300</span></span>
+<span><span class="co">## 24   10 2010 T3_168     168     Quercus ilex 361.6309  7.573143 476.5100 100</span></span>
 <span><span class="co">##     Z95</span></span>
 <span><span class="co">## 1   600</span></span>
 <span><span class="co">## 2  1000</span></span>
@@ -422,32 +424,35 @@ etc) for each time step:</p>
 <span><span class="co">## 18 1000</span></span>
 <span><span class="co">## 19  600</span></span>
 <span><span class="co">## 20 1000</span></span>
-<span><span class="co">## 21  600</span></span>
-<span><span class="co">## 22 1000</span></span></code></pre>
+<span><span class="co">## 21 1000</span></span>
+<span><span class="co">## 22  600</span></span>
+<span><span class="co">## 23 1000</span></span>
+<span><span class="co">## 24 1000</span></span></code></pre>
 <p>The same can be shown for dead trees:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fd</span><span class="op">$</span><span class="va">DeadTreeTable</span></span></code></pre></div>
-<pre><code><span><span class="co">##    Step Year Cohort Species             Name         N      DBH   Height Z50</span></span>
-<span><span class="co">## 1     1 2001 T1_148     148 Pinus halepensis 0.8611814 37.78808 812.8738 100</span></span>
-<span><span class="co">## 2     1 2001 T2_168     168     Quercus ilex 0.3937029 14.70935 663.5544 300</span></span>
-<span><span class="co">## 3     2 2002 T1_148     148 Pinus halepensis 0.8567669 38.02774 825.7031 100</span></span>
-<span><span class="co">## 4     2 2002 T2_168     168     Quercus ilex 0.3932992 14.81908 667.1400 300</span></span>
-<span><span class="co">## 5     3 2003 T1_148     148 Pinus halepensis 0.8523751 38.26572 838.3135 100</span></span>
-<span><span class="co">## 6     3 2003 T2_168     168     Quercus ilex 0.3928960 14.92782 670.7111 300</span></span>
-<span><span class="co">## 7     4 2004 T1_148     148 Pinus halepensis 0.8503231 38.50108 850.6606 100</span></span>
-<span><span class="co">## 8     4 2004 T2_168     168     Quercus ilex 0.3935679 15.03522 674.2541 300</span></span>
-<span><span class="co">## 9     5 2005 T1_148     148 Pinus halepensis 0.8436469 38.73280 862.6968 100</span></span>
-<span><span class="co">## 10    5 2005 T2_168     168     Quercus ilex 0.3920897 15.14086 677.7537 300</span></span>
-<span><span class="co">## 11    6 2006 T1_148     148 Pinus halepensis 0.8393223 38.96092 874.4301 100</span></span>
-<span><span class="co">## 12    6 2006 T2_168     168     Quercus ilex 0.3916877 15.24481 681.2092 300</span></span>
-<span><span class="co">## 13    7 2007 T1_148     148 Pinus halepensis 0.8350199 39.18490 885.8386 100</span></span>
-<span><span class="co">## 14    7 2007 T2_168     168     Quercus ilex 0.3912861 15.34682 684.6107 300</span></span>
-<span><span class="co">## 15    8 2008 T1_148     148 Pinus halepensis 0.8330097 39.40431 896.9072 100</span></span>
-<span><span class="co">## 16    8 2008 T2_168     168     Quercus ilex 0.3919553 15.44672 687.9501 300</span></span>
-<span><span class="co">## 17    9 2009 T1_148     148 Pinus halepensis 0.8264694 39.61771 907.5717 100</span></span>
-<span><span class="co">## 18    9 2009 T2_168     168     Quercus ilex 0.3904830 15.54387 691.2045 300</span></span>
-<span><span class="co">## 19   10 2010 T1_148     148 Pinus halepensis 0.8177390 39.81525 917.3552 100</span></span>
-<span><span class="co">## 20   10 2010 T2_168     168     Quercus ilex 0.3879463 15.63377 694.2211 300</span></span>
+<pre><code><span><span class="co">##    Step Year Cohort Species             Name         N       DBH   Height Z50</span></span>
+<span><span class="co">## 1     1 2001 T1_148     148 Pinus halepensis 0.8611814 37.788076 812.8738 100</span></span>
+<span><span class="co">## 2     1 2001 T2_168     168     Quercus ilex 0.3937029 14.709350 663.5544 300</span></span>
+<span><span class="co">## 3     2 2002 T1_148     148 Pinus halepensis 0.8567669 38.027743 825.7031 100</span></span>
+<span><span class="co">## 4     2 2002 T2_168     168     Quercus ilex 0.3932992 14.819084 667.1400 300</span></span>
+<span><span class="co">## 5     3 2003 T1_148     148 Pinus halepensis 0.8523751 38.265716 838.3135 100</span></span>
+<span><span class="co">## 6     3 2003 T2_168     168     Quercus ilex 0.3928960 14.927823 670.7111 300</span></span>
+<span><span class="co">## 7     4 2004 T1_148     148 Pinus halepensis 0.8503231 38.501076 850.6606 100</span></span>
+<span><span class="co">## 8     4 2004 T2_168     168     Quercus ilex 0.3935679 15.035216 674.2541 300</span></span>
+<span><span class="co">## 9     5 2005 T1_148     148 Pinus halepensis 0.8436469 38.732795 862.6968 100</span></span>
+<span><span class="co">## 10    5 2005 T2_168     168     Quercus ilex 0.3920897 15.140859 677.7537 300</span></span>
+<span><span class="co">## 11    6 2006 T1_148     148 Pinus halepensis 0.8393223 38.960921 874.4301 100</span></span>
+<span><span class="co">## 12    6 2006 T2_168     168     Quercus ilex 0.3916877 15.244807 681.2092 300</span></span>
+<span><span class="co">## 13    7 2007 T1_148     148 Pinus halepensis 0.8350199 39.184903 885.8386 100</span></span>
+<span><span class="co">## 14    7 2007 T2_168     168     Quercus ilex 0.3912861 15.346822 684.6107 300</span></span>
+<span><span class="co">## 15    8 2008 T1_148     148 Pinus halepensis 0.8330097 39.404306 896.9072 100</span></span>
+<span><span class="co">## 16    8 2008 T2_168     168     Quercus ilex 0.3919553 15.446716 687.9501 300</span></span>
+<span><span class="co">## 17    9 2009 T1_148     148 Pinus halepensis 0.8264694 39.617706 907.5717 100</span></span>
+<span><span class="co">## 18    9 2009 T2_168     168     Quercus ilex 0.3904830 15.543866 691.2045 300</span></span>
+<span><span class="co">## 19   10 2010 T1_148     148 Pinus halepensis 0.8177390 39.756381 914.4648 100</span></span>
+<span><span class="co">## 20   10 2010 T2_168     168     Quercus ilex 0.3879463 15.606937 693.3338 300</span></span>
+<span><span class="co">## 21   10 2010 T3_168     168     Quercus ilex 0.3691143  7.573143 476.5100 100</span></span>
 <span><span class="co">##     Z95</span></span>
 <span><span class="co">## 1   600</span></span>
 <span><span class="co">## 2  1000</span></span>
@@ -468,7 +473,8 @@ etc) for each time step:</p>
 <span><span class="co">## 17  600</span></span>
 <span><span class="co">## 18 1000</span></span>
 <span><span class="co">## 19  600</span></span>
-<span><span class="co">## 20 1000</span></span></code></pre>
+<span><span class="co">## 20 1000</span></span>
+<span><span class="co">## 21 1000</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="accessing-the-output-from-function-growth">Accessing the output from function growth()<a class="anchor" aria-label="anchor" href="#accessing-the-output-from-function-growth"></a>
