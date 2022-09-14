@@ -59,6 +59,7 @@ dfhSP_bas = dfh_bas[sel_bas,]
 dfhSP_adv = dfh_adv[sel_adv,]
 ```
 
+
 #### Annual diameter increment
 
 Prediction ability for **diameter increase** (cm/yr) of surviving trees:
@@ -77,6 +78,19 @@ dfdbh_SP %>% group_by(Submodel) %>%
   kbl() %>%
   kable_styling()
 ```
+
+
+Predictive capacity plots:
+
+```{r, echo = FALSE, fig.width=8, fig.height = 4, warning=FALSE, message=FALSE}
+plot_scatter_dbh(dfdbhSP_bas, dfdbhSP_adv,  points = TRUE)
+```
+
+Relationship between **diameter increment** and climatic variables (MAT and P/PET):
+```{r, echo = FALSE, fig.width=8, fig.height = 12, warning=FALSE, message=FALSE}
+plot_cov_clim_dbh(dfdbhSP_bas, dfdbhSP_adv,  points = TRUE)
+```
+
 
 #### Annual height increment
 
