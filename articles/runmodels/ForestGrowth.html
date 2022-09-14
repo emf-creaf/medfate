@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-09-11</h4>
+            <h4 data-toc-skip class="date">2022-09-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -305,6 +305,7 @@ model sink limitations on wood formation.</p>
 <code><a href="../../reference/spwb.html">spwb()</a></code>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">G1</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Package 'meteoland' [ver. 1.0.3]</span></span></code></pre>
 <pre><code><span><span class="co">## Initial plant cohort biomass (g/m2): 7109.27</span></span>
 <span><span class="co">## Initial soil water content (mm): 291.257</span></span>
 <span><span class="co">## Initial snowpack content (mm): 0</span></span>
@@ -336,12 +337,12 @@ displays information regarding the carbon and water balance, which is
 mostly useful to check that balances are closed.</p>
 <p>Function <code><a href="../../reference/growth.html">growth()</a></code> returns an object of class with the
 same name, actually a list:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">G1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "growth" "list"</span></span></code></pre>
 <p>If we inspect its elements, we realize that some of them are the same
 as returned by <code><a href="../../reference/spwb.html">spwb()</a></code>:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">G1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "latitude"            "topography"          "weather"            </span></span>
 <span><span class="co">##  [4] "growthInput"         "growthOutput"        "WaterBalance"       </span></span>
@@ -374,23 +375,23 @@ subsections:</p>
 <p>To inspect components of the plant carbon balance we can first
 display daily gross photosynthesis expressed as the carbon fixation
 relative to dry biomass:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"GrossPhotosynthesis"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-18-1.png" width="672">
 Then we can draw the maintenance respiration costs (which include the
 sum of leaf, sapwood and fine root respiration) in the same units:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"MaintenanceRespiration"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-19-1.png" width="672">
 Finally we can display the daily negative or positive balance of the
 plant storage, which determines changes in plant carbon pools:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"LabileCarbonBalance"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-20-1.png" width="672"></p>
 <p>Carbon assimilation and respiration rates define the dynamics of
 stored carbon. The most important storage compartment is sapwood starch,
 whose dynamics can be shown using:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"StarchSapwood"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-21-1.png" width="672"></p>
 </div>
@@ -399,20 +400,20 @@ whose dynamics can be shown using:</p>
 </h3>
 <p>Leaf and sapwood area dynamics arising from the interplay between
 growth and senescence of tissues can be inspected using:</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"LeafArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-22-1.png" width="672"></p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"SapwoodArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-22-2.png" width="672">
 Even if one year is a short period for tree growth, we can display the
 resulting dynamics in diameter at breast height (DBH) or plant
 height:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"DBH"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning: Removed 365 row(s) containing missing values (geom_path).</span></span></code></pre>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-23-1.png" width="672"></p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"Height"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-23-2.png" width="672"></p>
 </div>
@@ -421,7 +422,7 @@ height:</p>
 </h3>
 <p>Finally, recall that one can interactively create plots using
 function <code>shinyplot</code>, e.g.:</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/shinyplot.html">shinyplot</a></span><span class="op">(</span><span class="va">G1</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -434,7 +435,7 @@ increment at a given temporal resolution.</p>
 <p>Here, we illustrate the evaluation functions included in the package
 using a fake data set, consisting on the predicted values and some added
 error.</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span></code></pre></div>
 <p>Normally growth evaluations will be at annual scale, but here we only
 have one year of simulated growth. Assuming we want to evaluate the
@@ -442,14 +443,14 @@ predictive capacity of the model in terms of monthly basal area
 increment for the pine cohort, we can plot the relationship between
 observed and predicted values using function
 <code><a href="../../reference/evaluation.html">evaluation_plot()</a></code>:</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                temporalResolution <span class="op">=</span> <span class="st">"month"</span>, plotType <span class="op">=</span> <span class="st">"scatter"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## `geom_smooth()` using formula 'y ~ x'</span></span></code></pre>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-26-1.png" width="384"></p>
 <p>And the following would help us quantifying the strength of the
 relationship:</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                 temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span></span>
@@ -460,7 +461,7 @@ relationship:</p>
 good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series
 together:</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"DI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                temporalResolution <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-28-1.png" width="672"></p>
@@ -468,7 +469,7 @@ together:</p>
 resolution. For convenience, function <code><a href="../../reference/shinyplot.html">shinyplot()</a></code> also
 accepts an observed data frame as second argument, which allows
 performing model evaluation interactively:</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/shinyplot.html">shinyplot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></code></pre></div>
 </div>
   </div>
