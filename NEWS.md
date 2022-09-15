@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.8.1
+- New meta-modelling parameters
+
 # Version 2.8.0
 - New control parameter 'subdailyCarbonBalance', applying to growth simulations with transpiration = "Sperry"
 - Hydraulic redistribution implemented for transpiration = "Granier"

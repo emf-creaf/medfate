@@ -1,5 +1,5 @@
 ---
-title: "Growth calibration"
+title: "Calibration of growth and senescence parameters"
 author: "Miquel De Cáceres"
 date: "`r Sys.Date()`"
 output: 
