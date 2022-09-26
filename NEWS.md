@@ -4,6 +4,7 @@
 
 # Version 2.8.1
 - New meta-modelling parameters
+- New growth/senescence parameters
 
 # Version 2.8.0
 - New control parameter 'subdailyCarbonBalance', applying to growth simulations with transpiration = "Sperry"

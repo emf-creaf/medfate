@@ -119,6 +119,7 @@ p1<-ggplot(df)+
   labs(x="", y="Relative MAE (%)")+
   scale_fill_discrete(NULL)+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   panel.grid = element_blank(),
                    legend.position = "none")
 
 ggsave(paste0(base_calibration,"Plots/relMAE.png"), p1, width=3.5, height = 3.5)
@@ -142,15 +143,15 @@ p3<-ggplot(dfpar)+
   ylim(c(1e-6, 1e-4))+
   labs(x="", y="RER sapwood (g gluc/g dry/day)")+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
-                   legend.position = "none")
+                   panel.grid = element_blank(), legend.position = "none")
 p4<-ggplot(dfpar)+
   geom_boxplot(aes(x=Species, y=RGRcambiummax_cal, fill = Species))+
   geom_hline(yintercept=0.0001, col="gray", linetype = "dashed")+
-  geom_hline(yintercept=0.02, col="gray", linetype = "dashed")+
-  ylim(c(0.0001,0.02))+
+  geom_hline(yintercept=0.01, col="gray", linetype = "dashed")+
+  ylim(c(0.0001,0.01))+
   labs(x="", y="RGR cambium (cm2/cm/day)")+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
-                   legend.position = "none")
+                   panel.grid = element_blank(),legend.position = "none")
 p5<-ggplot(dfpar)+
   geom_boxplot(aes(x=Species, y=SRsapwood_cal, fill = Species))+
   geom_hline(yintercept=0.00001, col="gray", linetype = "dashed")+
@@ -159,7 +160,7 @@ p5<-ggplot(dfpar)+
   labs(x="", y="Sapwood senescence rate (day-1)")+
   scale_fill_discrete("")+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
-                   legend.position = "none")
+                   panel.grid = element_blank(),legend.position = "none")
 p6<-ggplot(dfpar)+
   geom_boxplot(aes(x=Species, y=rfc_cal, fill = Species))+
   geom_hline(yintercept=25, col="gray", linetype = "dashed")+
@@ -167,7 +168,7 @@ p6<-ggplot(dfpar)+
   ylim(c(25,95))+
   labs(x="", y="Rock content (%)")+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
-                   legend.position = "none")
+                   panel.grid = element_blank(),legend.position = "none")
 p<-plot_grid(p3,p4, p5, p6, labels=c("a", "b", "c","d"), nrow=2)
 ggsave(paste0(base_calibration,"Plots/parameter_distribution.png"), p, width=7, height = 8)
 p

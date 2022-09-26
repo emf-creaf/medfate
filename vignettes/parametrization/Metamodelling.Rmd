@@ -86,7 +86,7 @@ g1<-ggplot(df, aes(x = PAR, y = E_ratio))+
   geom_smooth(method = "loess", aes(group = Name, col = Name))+
   ylab("E (advanced) / E (basic)")+xlab("FPAR (%)")+
   scale_color_discrete("")+
-  theme_bw()
+  theme_bw()+theme(panel.grid = element_blank())
 g1
 ```
 
@@ -126,7 +126,7 @@ ggplot(df2, aes(x = PAR, y = WUEg))+
   geom_point(aes(col = Name), size=0.3)+
   xlab("FPAR (%)")+ ylab("WUE (g C/L H20)")+
   theme(legend.position = "none")+
-  theme_bw()
+  theme_bw()+ theme(panel.grid = element_blank())
 ```
 
 where we see that the relationship is species-specific. WUE is known to decrease for parts of the canopy receiving less light (e.g. Medrano et al. 2012). We can now plot relative WUE in relationship to FPAR:
@@ -135,7 +135,7 @@ where we see that the relationship is species-specific. WUE is known to decrease
 ggplot(df2, aes(x = PAR, y = WUEg_rel))+
   geom_point(aes(col = Name), size = 0.3)+
   xlab("FPAR (%)")+ ylab("% WUEg/WUEg_max")+
-  theme_bw()
+  theme_bw()+ theme(panel.grid = element_blank())
 ```
 
 Note that the relationship between relative WUE and PAR is less noisy than the relationship between absolute WUE and FPAR. For each species, we fit a non-linear model where relative WUE is a power function of FPAR:
@@ -166,7 +166,7 @@ g2<-ggplot(df2, aes(x = PAR, y = WUEg_rel))+
   ylab("WUEg/max(WUEg) (%)")+
   xlab("FPAR (%)")+
   scale_color_discrete("")+
-  theme_bw()
+  theme_bw()+ theme(panel.grid = element_blank())
 g2
 ```
 
@@ -210,7 +210,7 @@ g3<-ggplot(df_vpd, aes(x = vpd, y = WUEg_rel))+
   ylab("WUEg/WUEg(1kPa)")+
   xlab("VPD (kPa)")+
   scale_color_discrete("")+
-  theme_bw()
+  theme_bw()+ theme(panel.grid = element_blank())
 g3
 ```
 
@@ -237,7 +237,7 @@ g4<-ggplot(df_co2, aes(x = Catm, y = Ag_rel))+
   geom_line(aes(x=Catm, y=Pred, col = Name), size=1)+
   ylab("Ag/Ag([CO2]=386ppm)")+
   xlab("Atmospheric CO2 concentration (ppm)")+
-  theme_bw()
+  theme_bw()+ theme(panel.grid = element_blank())
 g4
 ```
 
@@ -268,14 +268,14 @@ g5<-ggplot(df, aes(x=E_granier, y = E_sperry))+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
   ylim(c(0,350))+ xlim(c(0,350))+
   xlab("Annual E (basic; default parameters)")+ ylab("Annual E (advanced)")+
-  theme_bw()+theme(legend.position = "none")
+  theme_bw()+theme(legend.position = "none")+ theme(panel.grid = element_blank())
 g6<-ggplot(df, aes(x=E_granier_meta, y = E_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
   scale_color_discrete("")+
   ylim(c(0,350))+ xlim(c(0,350))+
   xlab("Annual E (basic; new parameters)")+ ylab("Annual E (advanced)")+
-  theme_bw()
+  theme_bw()+ theme(panel.grid = element_blank())
 l <- get_legend(g2)
 g6<- g6 +theme(legend.position = "none")
 g7<-ggplot(df, aes(x=Ag_granier, y = Ag_sperry))+
@@ -283,27 +283,27 @@ g7<-ggplot(df, aes(x=Ag_granier, y = Ag_sperry))+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
   ylim(c(0,1500))+ xlim(c(0,1500))+
   xlab("Annual Ag (basic; default parameters)")+ ylab("Annual Ag (advanced)")+
-  theme_bw()+theme(legend.position = "none")
+  theme_bw()+theme(legend.position = "none")+ theme(panel.grid = element_blank())
 g8<-ggplot(df, aes(x=Ag_granier_meta, y = Ag_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
   scale_color_discrete("")+
   ylim(c(0,1500))+ xlim(c(0,1500))+
   xlab("Annual Ag (basic; new parameters)")+ ylab("Annual Ag (advanced)")+
-  theme_bw()+theme(legend.position = "none")
+  theme_bw()+theme(legend.position = "none")+ theme(panel.grid = element_blank())
 g0<-plot_grid(g5,g6,g7,g8, ncol=2)
 g<-plot_grid(g0,l, ncol=2, rel_widths = c(1,0.2))
 g
 ```
 
 ```{r, echo = FALSE}
-# g <- plot_grid(g1 + theme(legend.position = "none"), 
-#                g2 + theme(legend.position = "none"), 
-#                g3 + theme(legend.position = c(0.73,0.62)),
-#                g4 + theme(legend.position = "none"),
-#                g7,g8,
-#                labels = c("a)","b)", "c)", "d)", "e)","f)"), nrow=3, ncol=2)
-# ggsave2("meta_fit_eval.png", g, width = 9, height = 13.5)
+g <- plot_grid(g1 + theme(legend.position = "none"),
+               g2 + theme(legend.position = "none"),
+               g3 + theme(legend.position = c(0.73,0.62)),
+               g4 + theme(legend.position = "none"),
+               g7,g8,
+               labels = c("a)","b)", "c)", "d)", "e)","f)"), nrow=3, ncol=2)
+ggsave2("meta_fit_eval.png", g, width = 9, height = 13.5)
 ```
 
 
