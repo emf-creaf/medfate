@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-09-15</h4>
+            <h4 data-toc-skip class="date">2022-09-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/modelanalysis/SensitivityCalibration.Rmd" class="external-link"><code>vignettes/modelanalysis/SensitivityCalibration.Rmd</code></a></small>
       <div class="hidden name"><code>SensitivityCalibration.Rmd</code></div>
@@ -357,19 +357,19 @@ as reference:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                  SWC       ETR  E_T1_148   E_T2_168 FMC_T1_148 FMC_T2_168</span></span>
-<span><span class="co">## 2001-01-01 0.3073606 2.1416489 0.0954831 0.08051451   125.8684   93.06497</span></span>
-<span><span class="co">## 2001-01-02 0.3063147 2.2468104 0.1974840 0.15472510   125.8747   93.08323</span></span>
-<span><span class="co">## 2001-01-03 0.2957746 0.3797806 0.2359996 0.10435303   125.8977   93.07670</span></span>
-<span><span class="co">## 2001-01-04 0.2935805 1.9134702 0.1213010 0.07056455   125.8527   93.06485</span></span>
-<span><span class="co">## 2001-01-05 0.3027904 2.0379522 0.2610050 0.14877248   125.8588   93.07896</span></span>
-<span><span class="co">## 2001-01-06 0.2935060 2.4370462 0.2154483 0.14678125   125.9002   93.07002</span></span>
+<span><span class="co">## 2001-01-01 0.3009053 2.2054247 0.1711617 0.06695091   125.9066   93.07276</span></span>
+<span><span class="co">## 2001-01-02 0.3076413 2.5557696 0.3175461 0.18441164   125.8891   93.08217</span></span>
+<span><span class="co">## 2001-01-03 0.2989029 0.3980793 0.2382994 0.15495709   125.9559   93.04333</span></span>
+<span><span class="co">## 2001-01-04 0.2990861 2.1872094 0.2401646 0.06797015   125.9230   93.08681</span></span>
+<span><span class="co">## 2001-01-05 0.2983757 2.0845804 0.3581563 0.20087113   125.9423   93.07786</span></span>
+<span><span class="co">## 2001-01-06 0.3091887 2.6123669 0.2162016 0.18102197   125.8079   93.09805</span></span>
 <span><span class="co">##              BAI_T1_148 BAI_T2_168    DI_T1_148 DI_T2_168</span></span>
-<span><span class="co">## 2001-01-01 1.854476e-05          0 2.360553e-07         0</span></span>
-<span><span class="co">## 2001-01-02 1.232419e-09          0 2.502701e-11         0</span></span>
-<span><span class="co">## 2001-01-03 4.295760e-13          0 0.000000e+00         0</span></span>
-<span><span class="co">## 2001-01-04 2.986302e-11          0 5.874934e-13         0</span></span>
-<span><span class="co">## 2001-01-05 3.356552e-03          0 7.401749e-05         0</span></span>
-<span><span class="co">## 2001-01-06 1.663285e-03          0 3.428017e-05         0</span></span></code></pre>
+<span><span class="co">## 2001-01-01 2.215983e-05          0 7.789547e-08         0</span></span>
+<span><span class="co">## 2001-01-02 1.080928e-09          0 1.184562e-11         0</span></span>
+<span><span class="co">## 2001-01-03 2.365990e-13          0 0.000000e+00         0</span></span>
+<span><span class="co">## 2001-01-04 3.576960e-11          0 4.580590e-13         0</span></span>
+<span><span class="co">## 2001-01-05 8.143438e-03          0 4.887803e-05         0</span></span>
+<span><span class="co">## 2001-01-06 1.964227e-03          0 2.176945e-05         0</span></span></code></pre>
 <p>where soil water content dynamics is in column <code>SWC</code>. The
 model fit to observed data can be measured using the Nash-Sutcliffe
 coefficient, which we calculate for the initial run using function
@@ -377,7 +377,7 @@ coefficient, which we calculate for the initial run using function
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_metric</a></span><span class="op">(</span><span class="va">S1</span>, measuredData <span class="op">=</span> <span class="va">exampleobs</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, </span>
 <span>                  metric <span class="op">=</span> <span class="st">"NSE"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.9172163</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 0.9250517</span></span></code></pre>
 <p>A call to <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code> provides the coefficient
 given a model simulation result, but is not a model output function as
 we defined above. Analogously to the measures of total transpiration and
@@ -396,10 +396,10 @@ simulation results, so that we only need to provide values for the input
 factors:</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] -0.04288627</span></span></code></pre>
+<pre><code><span><span class="co">## [1] -0.009689445</span></span></code></pre>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] -10.084</span></span></code></pre>
+<pre><code><span><span class="co">## [1] -9.33656</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="global-sensitivity-analyses">Global sensitivity analyses<a class="anchor" aria-label="anchor" href="#global-sensitivity-analyses"></a>
