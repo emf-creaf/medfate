@@ -10,6 +10,7 @@ params:
   minTreeRecords: 200
   minPlotRecords: 100
   minPlotRecordsDetailed: 100
+  IPM: FALSE
 ---
 
 ```{r setup, include=FALSE}
@@ -21,6 +22,7 @@ library(ggplot2)
 library(cowplot)
 library(tidyverse)
 evalDIR = "~/OneDrive/Professional/MedfateWorks/RegionalLevelEvaluation"
+ipmDIR = "~/OneDrive/Professional/KnowledgeTransfer/CREAF/FORESFuture/Rdata/ipm/"
 ```
 
 ## Introduction
@@ -67,6 +69,18 @@ dfbai_all_adv$Submodel = "Advanced"
 mapdata_adv = eval_res_advanced$mapdata
 medfate_ver_adv = eval_res_advanced$package.version
 
+if(params$IPM) {
+  df_IPM = readRDS(paste0(ipmDIR, "IPM_evaluation_table.rds"))
+  IDs_IPM = row.names(df_IPM)
+  dfbai_all_bas <-dfbai_all_bas[dfbai_all_bas$ID %in% IDs_IPM,]
+  dfbai_all_adv <-dfbai_all_adv[dfbai_all_adv$ID %in% IDs_IPM,]
+  dfbai_bas <-dfbai_bas[dfbai_bas$ID %in% IDs_IPM,]
+  dfbai_adv <-dfbai_adv[dfbai_adv$ID %in% IDs_IPM,]
+  dfbarecr_bas <-dfbarecr_bas[dfbarecr_bas$ID %in% IDs_IPM,]
+  dfbarecr_adv <-dfbarecr_adv[dfbarecr_adv$ID %in% IDs_IPM,]
+  dfbadead_bas <-dfbadead_bas[dfbadead_bas$ID %in% IDs_IPM,]
+  dfbadead_adv <-dfbadead_adv[dfbadead_adv$ID %in% IDs_IPM,]
+}
 # dfbai_all_bas <-dfbai_all_bas[dfbai_all_bas$ID %in% dfbai_all_adv$ID,]
 # dfbai_all_adv <-dfbai_all_adv[dfbai_all_adv$ID %in% dfbai_all_bas$ID,]
 # dfbai_bas <-dfbai_bas[dfbai_bas$ID %in% dfbai_adv$ID,]
@@ -115,7 +129,8 @@ g1 <- g1 +  geom_abline(intercept = 0, slope = 1, col ="black")+
   xlab("Predicted (basic) diameter increment (cm/yr)")+
   ylab("Observed diameter increment (cm/yr)")+
   xlim(c(0,1.5))+ ylim(c(0,1.5))+
-  theme_bw()
+  theme_bw()+
+    theme(panel.grid = element_blank())
 
 g2<-ggplot(dfdbh_bas, aes(x = DBH3, y= error))
 if(points) {
@@ -130,7 +145,8 @@ g2 <- g2 +  geom_abline(intercept = 0, slope = 0, col ="black")+
   xlab("Initial diameter (cm)")+
   ylab("Error diameter increment (cm/yr)")+
   ylim(c(-1.0,1.0))+xlim(c(0,50))+
-  theme_bw()
+  theme_bw()+
+    theme(panel.grid = element_blank())
 plot_grid(g1, g2,nrow=1)
 }
 
@@ -142,7 +158,8 @@ g1<-ggplot(dfbai_bas, aes(x = pred, y= obs))+
   xlab(paste0("Predicted ", quantity," (m2/ha)"))+
   ylab(paste0("Observed ", quantity," (m2/ha)"))+
   xlim(xylim)+ ylim(xylim)+
-  theme_bw()
+  theme_bw()+
+    theme(panel.grid = element_blank())
 
 g2<-ggplot(dfbai_bas, aes(x = ini, y= error))+
   geom_point( aes(x = ini, y= error), size=0.3, col="orange", alpha = 0.3, data = dfbai_bas)+
@@ -155,7 +172,8 @@ g2<-ggplot(dfbai_bas, aes(x = ini, y= error))+
   xlab("Initial basal area (m2/ha)")+
   ylab(paste0("Error ", quantity," (m2/ha)"))+
   xlim(c(0,30))+ylim(errorlim)+
-  theme_bw()
+  theme_bw()+
+    theme(panel.grid = element_blank())
 plot_grid(g1, g2, nrow=1)
 }
 
@@ -179,7 +197,9 @@ plot_cov_clim_dbh<-function(dfdbh_bas, dfdbh_adv, points = TRUE){
     ylab("Annual diameter increment (cm/yr)")+ ylim(c(0,1.0))+
     xlab("Moisture index (P/PET)")+
     theme_bw()+
-    theme(legend.position = c(0.75,0.85), legend.background = element_blank())
+    theme(legend.position = c(0.75,0.85), 
+          legend.background = element_blank(),
+          panel.grid = element_blank())
   
   g2<-ggplot(dfdbh_bas, aes(x = PPET, y=error))
   if(points) {
@@ -191,7 +211,8 @@ plot_cov_clim_dbh<-function(dfdbh_bas, dfdbh_adv, points = TRUE){
     geom_abline(intercept = 0, slope = 0, col ="black")+
     ylab("Annual diameter increment error (cm)")+ylim(c(-1.0,1.0))+
     xlab("Moisture index (P/PET)")+
-    theme_bw()
+    theme_bw()+
+    theme(panel.grid = element_blank())
   
   g3<-ggplot(dfbas, aes(x = MAT, y=value))
   if(points) {
@@ -206,7 +227,9 @@ plot_cov_clim_dbh<-function(dfdbh_bas, dfdbh_adv, points = TRUE){
     ylab("Annual diameter increment (cm/yr)")+ylim(c(0,1.0))+
     xlab("Mean annual temperature (ºC)")+
     theme_bw()+
-    theme(legend.position = c(0.75,0.85), legend.background = element_blank())
+    theme(legend.position = c(0.75,0.85), 
+          legend.background = element_blank(),
+          panel.grid = element_blank())
   
   g4<-ggplot(dfdbh_bas, aes(x = MAT, y=error))
   if(points) {
@@ -218,7 +241,8 @@ plot_cov_clim_dbh<-function(dfdbh_bas, dfdbh_adv, points = TRUE){
     geom_abline(intercept = 0, slope = 0, col ="black")+
     ylab("Annual diameter increment error (cm)")+ylim(c(-1.0,1.0))+
     xlab("Mean annual temperature (ºC)")+
-    theme_bw()
+    theme_bw()+
+    theme(panel.grid = element_blank())
   
   g5<-ggplot(dfbas, aes(x = PAR, y=value))
   if(points) {
@@ -233,7 +257,9 @@ plot_cov_clim_dbh<-function(dfdbh_bas, dfdbh_adv, points = TRUE){
     ylab("Annual diameter increment (cm/yr)")+ylim(c(0,1.0))+
     xlab("Available PAR (%)")+
     theme_bw()+
-    theme(legend.position = c(0.75,0.85), legend.background = element_blank())
+    theme(legend.position = c(0.75,0.85), 
+          legend.background = element_blank(),
+          panel.grid = element_blank())
   
   g6<-ggplot(dfdbh_bas, aes(x = light, y=error))
   if(points) {
@@ -245,7 +271,8 @@ plot_cov_clim_dbh<-function(dfdbh_bas, dfdbh_adv, points = TRUE){
     geom_abline(intercept = 0, slope = 0, col ="black")+
     ylab("Annual diameter increment error (cm)")+ylim(c(-1.0,1.0))+
     xlab("Available PAR (%)")+
-    theme_bw()
+    theme_bw()+
+    theme(panel.grid = element_blank())
   plot_grid(g1, g2, g3, g4, g5,g6, nrow=3)
 }
 
@@ -267,7 +294,9 @@ plot_cov_clim_bai<-function(dfbai_bas, dfbai_adv, quantity = "Basal area increme
     ylab(paste0(quantity," (m2/ha)"))+ ylim(ylim)+
     xlab("Moisture index (P/PET)")+
     theme_bw()+
-    theme(legend.position = c(0.75,0.85), legend.background = element_blank())
+    theme(legend.position = c(0.75,0.85), 
+          legend.background = element_blank(),
+          panel.grid = element_blank())
   
   g2<-ggplot(dfbai_bas, aes(x = PPET, y=error))+
     geom_point(aes(x = PPET, y= error), size=0.3, col="orange", alpha = 0.3, data = dfbai_bas)+
@@ -277,7 +306,8 @@ plot_cov_clim_bai<-function(dfbai_bas, dfbai_adv, quantity = "Basal area increme
     geom_abline(intercept = 0, slope = 0, col ="black")+
     ylab(paste0(quantity," error (m2/ha)"))+ylim(errorlim)+
     xlab("Moisture index (P/PET)")+
-    theme_bw()
+    theme_bw()+
+    theme(panel.grid = element_blank())
   
   g3<-ggplot(dfbai_bas, aes(x = MAT, y=value))+
     geom_point(aes(x = MAT, y= value), size=0.3, col="gray", alpha = 0.3, data = dfbas[dfbas$type=="Observed", ])+
@@ -289,7 +319,9 @@ plot_cov_clim_bai<-function(dfbai_bas, dfbai_adv, quantity = "Basal area increme
     ylab(paste0(quantity," (m2/ha)"))+ ylim(ylim)+
     xlab("Mean annual temperature (ºC)")+
     theme_bw()+
-    theme(legend.position = c(0.75,0.85), legend.background = element_blank())
+    theme(legend.position = c(0.75,0.85), 
+          legend.background = element_blank(),
+          panel.grid = element_blank())
     
   g4<-ggplot(dfbai_bas, aes(x = MAT, y=error))+
     geom_point(aes(x = MAT, y= error), size=0.3, col="orange", alpha = 0.3, data = dfbai_bas)+
@@ -299,7 +331,8 @@ plot_cov_clim_bai<-function(dfbai_bas, dfbai_adv, quantity = "Basal area increme
     geom_abline(intercept = 0, slope = 0, col ="black")+
     ylab(paste0(quantity," error (m2/ha)"))+ ylim(errorlim)+
     xlab("Mean annual temperature (ºC)")+
-    theme_bw()
+    theme_bw()+
+    theme(panel.grid = element_blank())
   plot_grid(g1, g2, g3, g4, nrow=2)
 }
 
