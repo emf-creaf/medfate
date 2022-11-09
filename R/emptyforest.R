@@ -1,7 +1,5 @@
-emptyforest<-function(ID="", patchsize=10000, ntree = 0, nshrub = 0) {
+emptyforest<-function(ntree = 0, nshrub = 0) {
   l = list()
-  l$ID = ID
-  l$patchsize=10000
   l$treeData = data.frame(Species=numeric(ntree),DBH=numeric(ntree), 
                          Height=numeric(ntree), N=numeric(ntree),
                          Z50 = numeric(ntree), Z95=numeric(ntree))

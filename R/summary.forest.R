@@ -72,7 +72,7 @@ summary.forest<-function(object, SpParams, mode = "MED", detailed = FALSE, ...) 
     else return(c(Fuel= (Fuelt+Fuelsh), Fuel_trees = Fuelt,
                   Fuel_shrubs = Fuelsh))
   }
-  s = list(ID = object$ID)
+  s = list()
   s = c(s, summaryNumber(object, SpParams),
         summaryBasalArea(object, SpParams),
         summaryCover(object, SpParams),
@@ -85,7 +85,6 @@ summary.forest<-function(object, SpParams, mode = "MED", detailed = FALSE, ...) 
   return(s)
 }
 print.summary.forest<-function(x, digits=getOption("digits"),...) {
-  if(x[["ID"]]!="") cat(paste("ID:", x[["ID"]],"\n"))
   cat(paste("Tree density (ind/ha):", x[["N"]],"\n"))
   cat(paste("Tree BA (m2/ha):", round(x[["BA"]],digits),"\n"))
   cat(paste("Cover (%) trees (open ground):", round(x[["Tree_cover"]],digits), " shrubs:", round(x[["Shrub_cover"]],digits),"\n"))

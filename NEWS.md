@@ -4,6 +4,7 @@
 
 # Version 2.8.2
 - Function 'redefineSoilLayers' moved to package 'medfateutils'
+- Elements 'ID' and 'patchsize' removed from 'forest'
 
 # Version 2.8.1
 - New meta-modelling parameters
