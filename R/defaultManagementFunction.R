@@ -9,7 +9,17 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
   
   Ntotal = sum(x$treeData$N, na.rm=TRUE)
   BAtotal = stand_basalArea(x)
-  meanDBH = sum(x$treeData$N * x$treeData$DBH, na.rm=TRUE)/sum(x$treeData$N, na.rm=TRUE)
+  
+  if(length(args$targetTreeSpecies)==0) args$targetTreeSpecies = "all"
+    
+  if(args$targetTreeSpecies[1] == "all") {
+    isTarget = rep(TRUE, ntree)
+  } else {
+    isTarget = (x$treeData$Species %in% args$targetTreeSpecies)
+  }
+  
+  # Calculate mean DBH (of target species if specified)
+  meanDBH = sum(x$treeData$N[isTarget] * x$treeData$DBH[isTarget], na.rm=TRUE)/sum(x$treeData$N[isTarget], na.rm=TRUE)
   
   action = "none"
 
@@ -55,25 +65,35 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
     else {
       stop(paste0("Non-recognized thinning metric '", args$thinningMetric,"'.\n"))
     }
-    if(thin) {
-      BA2remove = BAtotal*(args$thinningPerc/100)
+    if(thin && (sum(isTarget)>0)) {
+      
+      
+      #DBH, N and N_cut of target trees
+      dbhTarget = x$treeData$DBH[isTarget]
+      nTarget = x$treeData$N[isTarget]
+      nCutTarget = N_tree_cut[isTarget]
+      
+      BAtarget = sum(pi*(dbhTarget/200)^2*nTarget)
+      
+      # Cannot remove more than BA of target species
+      BA2remove = min(BAtarget, BAtotal*(args$thinningPerc/100))
       BAremoved = 0
       args$yearsSinceThinning = 1
       
-      if(verbose) cat(paste0(", type: ",args$thinning,", BA to extract: ", round(BA2remove,1)))
+      if(verbose) cat(paste0(", type: ",args$thinning,", BA to extract: ", round(BA2remove,1), ", target cohorts: ", sum(isTarget)))
       
       if(args$thinning %in% c("below", "above")) {
-        o = order(x$treeData$DBH, decreasing = (args$thinning=="above"))
+        o = order(dbhTarget, decreasing = (args$thinning=="above"))
         cohort = 1
         while(BA2remove > 0) {
-          r = (x$treeData$DBH[o[cohort]]/200)
-          n = x$treeData$N[o[cohort]]
+          r = (dbhTarget[o[cohort]]/200)
+          n = nTarget[o[cohort]]
           BAcohort = pi*(r^2)*n
           if(BAcohort > BA2remove) {
-            N_tree_cut[o[cohort]] = BA2remove/(pi*(r^2))
+            nCutTarget[o[cohort]] = BA2remove/(pi*(r^2))
             BA2remove = 0
           } else {
-            N_tree_cut[o[cohort]] = n
+            nCutTarget[o[cohort]] = n
             BA2remove = BA2remove - BAcohort
           }
           cohort = cohort + 1
@@ -81,44 +101,48 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
       }
       else if (args$thinning%in% c("below-systematic", "above-systematic")) { #Cut half of target BA from below/above and the other half using trees from all diameters (keep current distribution)
         # Remove half as systematic
-        sec = pi*(x$treeData$DBH/200)^2
-        propN  = x$treeData$N/sum(x$treeData$N)
+        sec = pi*(dbhTarget/200)^2
+        propN  = nTarget/sum(nTarget)
         HalfBA2remove = BA2remove/2
         while(HalfBA2remove > 0) {
           if(sum(sec*propN)> HalfBA2remove) { # Correct to avoid cutting above existences
             propN = propN*(HalfBA2remove/sum(sec*propN))
           }
-          Nremoved = Nremoved + propN
+          nCutTarget = nCutTarget + propN
           HalfBA2remove = HalfBA2remove - sum(sec*propN)
         }
         BA2remove = BA2remove/2
         #Remove remaining as below/above
-        o = order(x$treeData$DBH, decreasing = (args$thinning=="above-systematic"))
+        o = order(dbhTarget, decreasing = (args$thinning=="above-systematic"))
         cohort = 1
         while(BA2remove > 0) {
-          r = (x$treeData$DBH[o[cohort]]/200)
-          n = x$treeData$N[o[cohort]] - N_tree_cut[o[cohort]]
+          r = (dbhTarget[o[cohort]]/200)
+          n = nTarget[o[cohort]] - nCutTarget[o[cohort]]
           BAcohort = pi*(r^2)*n
           if(BAcohort > BA2remove) {
-            N_tree_cut[o[cohort]] =  N_tree_cut[o[cohort]] + BA2remove/(pi*(r^2))
+            nCutTarget[o[cohort]] =  nCutTarget[o[cohort]] + BA2remove/(pi*(r^2))
             BA2remove = 0
           } else {
-            N_tree_cut[o[cohort]] = N_tree_cut[o[cohort]]+n
+            nCutTarget[o[cohort]] = nCutTarget[o[cohort]]+n
             BA2remove = BA2remove - BAcohort
           }
           cohort = cohort + 1
         }
+        #Copy cut vector of target trees to overall cut vector
+        N_tree_cut[isTarget] = nCutTarget
       }
       else if (args$thinning=="systematic") { #Cut trees from all diameters (keep current distribution)
-        sec = pi*(x$treeData$DBH/200)^2
-        propN  = x$treeData$N/sum(x$treeData$N)
+        sec = pi*(dbhTarget/200)^2
+        propN  = nTarget/sum(nTarget)
         while(BA2remove > 0) {
           if(sum(sec*propN)> BA2remove) { # Correct to avoid cutting above existences
             propN = propN*(BA2remove/sum(sec*propN))
           }
-          N_tree_cut = N_tree_cut + propN
+          nCutTarget = nCutTarget + propN
           BA2remove = BA2remove - sum(sec*propN)
         }
+        #Copy cut vector of target trees to overall cut vector
+        N_tree_cut[isTarget] = nCutTarget
       }
       else {
         s = strsplit(args$thinning,"/")[[1]]
@@ -131,18 +155,18 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
           breaks[i] = as.numeric(s2[1])
           props[i] = as.numeric(s2[2])
         }
-        breaks[ncl] = max(breaks[ncl], max(x$treeData$DBH)+1) # To include largest trees
+        breaks[ncl] = max(breaks[ncl], max(dbhTarget)+1) # To include largest trees
         breaks = c(0, breaks)
         # print(breaks)
         props = props/sum(props)
-        cl = as.numeric(cut(x$treeData$DBH, breaks))
-        propNmat = matrix(0, ntree, ncol = ncl)
-        sec = pi*(x$treeData$DBH/200)^2
+        cl = as.numeric(cut(dbhTarget, breaks))
+        propNmat = matrix(0, sum(isTarget), ncol = ncl)
+        sec = pi*(dbhTarget/200)^2
         BAcl = rep(0, ncl)
         for(i in 1:ncl) {
           # print(sum(cl==i))
-          propNmat[cl==i,i] = x$treeData$N[cl==i]/sum(x$treeData$N[cl==i])
-          BAcl[i] = sum(sec[cl==i]*x$treeData$N[cl==i])
+          propNmat[cl==i,i] = nTarget[cl==i]/sum(nTarget[cl==i])
+          BAcl[i] = sum(sec[cl==i]*nTarget[cl==i])
         }
         # print(propNmat)
         BA2removecl = BA2remove*props
@@ -154,11 +178,14 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
             if(sum(sec*propN)> BA2removecl[i]) { # Correct to avoid cutting above existences
               propN = propN*(BA2removecl[i]/sum(sec*propN))
             }
-            N_tree_cut = N_tree_cut + propN
+            nCutTarget = nCutTarget + propN
             BA2removecl[i] = BA2removecl[i] - sum(sec*propN)
           }
         }
       }
+      
+      #Copy cut vector of target trees to overall cut vector
+      N_tree_cut[isTarget] = nCutTarget
     }
     else {
       action = "none"
@@ -227,6 +254,7 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
 defaultManagementArguments<-function(){
   return(list(
     type = "irregular",
+    targetTreeSpecies = "all",
     thinning = "below", 
     thinningMetric = "BA", 
     thinningThreshold = 20,

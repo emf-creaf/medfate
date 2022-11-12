@@ -43,6 +43,7 @@ Function \code{defaultManagementFunction} returns a list with the following item
 Function \code{defaultManagementArguments} returns a list with default arguments:
  \itemize{
      \item{\code{"type"}: Management model, either 'regular' or 'irregular'.}
+     \item{\code{"targetTreeSpecies"}: Either \code{"all"} for unspecific cuttings or a numeric vector of target tree species to be selected for cutting operations.}
      \item{\code{"thinning"}: Kind of thinning to be applied in irregular models or in regular models before the final cuts. Options are 'below', 'above', 'systematic', 'below-systematic', 'above-systematic' or a string with the proportion of cuts to be applied to different diameter sizes (see details).}
      \item{\code{"thinningMetric"}: The stand-level metric used to decide whether thinning is applied, either 'BA' (basal area), 'N' (density) or 'HB' (Hart-Becking index).} 
      \item{\code{"thinningThreshold"}: The threshold value of the stand-level metric causing the thinning decision.}
@@ -70,4 +71,26 @@ Jose-Ramon Gonzalez Olabarria, CTFC
 }
 \seealso{
 \code{\link{fordyn}}
+}
+\examples{
+# Load example forest object
+data(exampleforestMED)
+
+# Define arguments
+args = defaultManagementArguments()
+
+# Call management function
+f = defaultManagementFunction(exampleforestMED, args)
+
+#list names
+names(f)
+
+# Action performed
+f$action
+
+# Number of trees cut for each cohort
+f$N_tree_cut
+
+# Percent covet of shrubs removed
+f$Cover_shrub_cut
 }

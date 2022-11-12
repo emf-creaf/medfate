@@ -5,6 +5,8 @@
 # Version 2.8.2
 - Function 'redefineSoilLayers' moved to package 'medfateutils'
 - Elements 'ID' and 'patchsize' removed from 'forest'
+- Bug correction in defaultManagementFunction for 'above-systematic' and 'below-systematic'
+- New management option 'targetTreeSpecies'
 
 # Version 2.8.1
 - New meta-modelling parameters
