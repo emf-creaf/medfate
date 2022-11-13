@@ -1,3 +1,74 @@
+#' Forest description
+#' 
+#' Description of a forest stand
+#' 
+#' @param object An object of class \code{forest} has the following structure:
+#' \itemize{
+#'   \item{\code{treeData}: A data frame of tree cohorts (in rows) and the following columns:
+#'       \itemize{
+#'         \item{\code{Species}: Non-negative integer for tree species identity (i.e., 0,1,2,...).}
+#'         \item{\code{Height}: Total height (in cm).}
+#'         \item{\code{DBH}: Diameter at breast height (in cm).}
+#'         \item{\code{N}: Density (number of individuals/hectare).}
+#'         \item{\code{Z50}: Depth (in mm) corresponding to 50\% of fine roots.}
+#'         \item{\code{Z95}: Depth (in mm) corresponding to 95\% of fine roots.}
+#'      }
+#'   }
+#'   \item{\code{shrubData}: A data frame of shrub cohorts (in rows) and the following columns:
+#'       \itemize{
+#'         \item{\code{Species}: Non-negative integer for shrub species identity (i.e., 0,1,2,...).}
+#'         \item{\code{Height}: Total height (in cm).}
+#'         \item{\code{Cover}: Percent cover.}
+#'         \item{\code{Z50}: Depth (in mm) corresponding to 50\% of fine roots.}
+#'         \item{\code{Z95}: Depth (in mm) corresponding to 95\% of fine roots.}
+#'       }
+#'   }
+#'   \item{\code{herbCover}: Percent cover of the herb layer.}
+#'   \item{\code{herbHeight}: Mean height (in cm) of the herb layer.}
+#' }
+#' 
+#' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
+#' @param mode Calculation mode, either "MED" or "US".
+#' @param detailed A logical flag to indicate that a detailed summary is desired.
+#' @param x The object returned by \code{summary.forest}.
+#' @param digits Minimal number of significant digits.
+#' @param ... Additional parameters for functions \code{\link{summary}} and \code{\link{print}}.
+#' @param ntree,nshrub Number of tree and shrub cohorts, respectively.
+#' 
+#' @details Function \code{summary.forest} can be used to summarize a \code{forest} object in the console. 
+#' Function \code{emptyforest} creates an empty \code{forest} object.
+#' 
+#' @return Function \code{summary.forest} returns a list with several structural attributes, such as the basal area and LAI of the forest. 
+#' Function \code{emptyforest} returns an empty \code{forest} object.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{exampleforestMED}}, \code{\link{forest_mergeTrees}},  \code{\link{plot.forest}}
+#' 
+#' @examples 
+#' data(exampleforestMED)
+#' data(SpParamsMED)
+#' 
+#' summary(exampleforestMED, SpParamsMED)
+#' 
+#' @name forest
+
+#' @rdname forest
+emptyforest<-function(ntree = 0, nshrub = 0) {
+  l = list()
+  l$treeData = data.frame(Species=numeric(ntree),DBH=numeric(ntree), 
+                          Height=numeric(ntree), N=numeric(ntree),
+                          Z50 = numeric(ntree), Z95=numeric(ntree))
+  l$shrubData = data.frame(Species=numeric(nshrub), Height=numeric(nshrub), 
+                           Cover = numeric(nshrub), 
+                           Z50 = numeric(nshrub), Z95=numeric(nshrub))
+  l$herbCover = 0;
+  l$herbHeight = 0;
+  class(l)<-c("forest","list")
+  return(l)
+}
+
+#' @rdname forest
 summary.forest<-function(object, SpParams, mode = "MED", detailed = FALSE, ...) {
   summaryBasalArea<-function(x, SpParams) {
     treeSpecies = SpParams$SpIndex[SpParams$GrowthForm=="Tree"]    
@@ -84,6 +155,8 @@ summary.forest<-function(object, SpParams, mode = "MED", detailed = FALSE, ...) 
   class(s)<-c("summary.forest","list")
   return(s)
 }
+
+#' @rdname forest
 print.summary.forest<-function(x, digits=getOption("digits"),...) {
   cat(paste("Tree density (ind/ha):", x[["N"]],"\n"))
   cat(paste("Tree BA (m2/ha):", round(x[["BA"]],digits),"\n"))
