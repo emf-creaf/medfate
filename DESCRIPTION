@@ -27,7 +27,7 @@ Suggests:
 LinkingTo: Rcpp, meteoland
 Encoding: UTF-8
 NeedsCompilation: yes
-RoxygenNote: 6.1.1
+RoxygenNote: 7.2.1
 BugReports: https://github.com/emf-creaf/medfate/issues
 Config/testthat/edition: 3
 LazyData: true

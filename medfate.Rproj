@@ -17,3 +17,4 @@ PackageUseDevtools: Yes
 PackageCleanBeforeInstall: No
 PackageInstallArgs: --no-multiarch --with-keep.source
 PackageCheckArgs: --as-cran --timings
+PackageRoxygenize: rd,collate
