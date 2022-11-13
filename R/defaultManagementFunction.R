@@ -67,7 +67,6 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
     }
     if(thin && (sum(isTarget)>0)) {
       
-      
       #DBH, N and N_cut of target trees
       dbhTarget = x$treeData$DBH[isTarget]
       nTarget = x$treeData$N[isTarget]
@@ -194,34 +193,49 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
     }
   }
   else if(action=="finalcut") {
+    
+    #DBH, N and N_cut of target trees
+    dbhTarget = x$treeData$DBH[isTarget]
+    nTarget = x$treeData$N[isTarget]
+    nCutTarget = N_tree_cut[isTarget]
+    
+    BAtarget = sum(pi*(dbhTarget/200)^2*nTarget)
+    
     #Proportions in different stages
     if(verbose) cat(paste0(", previous stage: ",args$finalPreviousStage))
     args$finalPreviousStage = args$finalPreviousStage + 1
     args$finalYearsToCut = args$finalYearsBetweenCuts
     props = as.numeric(strsplit(args$finalPerc,"-")[[1]])/100
-    BA2remove = BAtotal*props[args$finalPreviousStage]
+    
+    #BA to extract
+    BA2remove = BAtarget*props[args$finalPreviousStage]
+    
     if(verbose) cat(paste0(", % to extract: ", round(props[args$finalPreviousStage]*100),", BA to extract: ", round(BA2remove,1)))
     BAremoved = 0
     #Cut from above in final cuts
-    o = order(x$treeData$DBH, decreasing = TRUE)
+    o = order(dbhTarget, decreasing = TRUE)
     cohort = 1
     while((BA2remove > 0) && (cohort<=length(o))) {
       # print(BA2remove)
-      d = x$treeData$DBH[o[cohort]]
+      d = dbhTarget[o[cohort]]
       r = (d/200)
-      n = x$treeData$N[o[cohort]]
+      n = nTarget[o[cohort]]
       if((d > 12.5) || (!is.na(args$plantingSpecies))) { # Do not cut regeneration if there is no planting
         BAcohort = pi*(r^2)*n
         if(BAcohort > BA2remove) {
-          N_tree_cut[o[cohort]] = BA2remove/(pi*(r^2))
+          nCutTarget[o[cohort]] = BA2remove/(pi*(r^2))
           BA2remove = 0
         } else {
-          N_tree_cut[o[cohort]] = n
+          nCutTarget[o[cohort]] = n
           BA2remove = BA2remove - BAcohort
         }
       }
       cohort = cohort + 1
     }
+    
+    #Copy cut vector of target trees to overall cut vector
+    N_tree_cut[isTarget] = nCutTarget
+    
     if(args$finalPreviousStage==length(props)) {
       args$finalPreviousStage = 0
       if(!is.na(args$plantingSpecies)) planting = TRUE
