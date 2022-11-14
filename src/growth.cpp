@@ -1346,7 +1346,7 @@ List growthDayInner(List x, NumericVector meteovec,
 
 
 
-
+//' @rdname spwb_day
 // [[Rcpp::export("growth_day")]]
 List growthDay(List x, CharacterVector date, double tmin, double tmax, double rhmin, 
                double rhmax, double rad, double wind, 
