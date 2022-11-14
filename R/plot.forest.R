@@ -2,6 +2,30 @@
   c("LeafAreaDensity", "RootDistribution", "FuelBulkDensity",
     "PARExtinction", "SWRExtinction", "WindExtinction")
 }
+
+#' Plot forest attributes
+#'
+#' Convenient wrappers for vertical forest profiles (see \code{\link{vprofile_leafAreaDensity}}).
+#'
+#' @param x An object of class \code{\link{forest}}.
+#' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
+#' @param type A string of the plot type: "LeafAreaDensity", "RootDistribution", "FuelBulkDensity", "PARExtinction", "SWRExtinction" or "WindExtinction". 
+#' @param byCohorts A logical flag to separate profiles for each cohort.
+#' @param bySpecies A logical flag to aggregate results by species.
+#' @param \dots Additional parameters to vertical profiles
+#' 
+#' @return A ggplot or a shiny application, depending on the function.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{vprofile_leafAreaDensity}}
+#' 
+#' @examples 
+#' data(exampleforestMED)
+#' data(SpParamsMED)
+#' plot(exampleforestMED, SpParamsMED)
+#' 
+#' @name plot.forest
 plot.forest<-function(x, SpParams, type = "LeafAreaDensity", byCohorts = FALSE, bySpecies = FALSE, ...) {
   type = match.arg(type, .forest_plot_choices())
   if(type=="LeafAreaDensity") return(vprofile_leafAreaDensity(x, SpParams = SpParams, draw = TRUE, 
@@ -15,6 +39,7 @@ plot.forest<-function(x, SpParams, type = "LeafAreaDensity", byCohorts = FALSE, 
 }
 
 
+#' @rdname plot.forest
 shinyplot.forest<-function(x, SpParams, ...){
   plot_main_choices = .forest_plot_choices()
 

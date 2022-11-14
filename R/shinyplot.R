@@ -1,4 +1,3 @@
-
 .shinyplot_day<-function(out){
   if(inherits(out, c("spwb_day", "pwb_day"))) {
     transpirationMode = out$spwbInput$control$transpirationMode
@@ -192,10 +191,10 @@
                             ),
                             tabPanel("Plants",
                                      radioButtons(inputId = "plant_group_selection",
-                                                 label = "Plant group",
-                                                 choices = c("all", "trees", "shrubs"),
-                                                 selected = "all",
-                                                 inline = TRUE),
+                                                  label = "Plant group",
+                                                  choices = c("all", "trees", "shrubs"),
+                                                  selected = "all",
+                                                  inline = TRUE),
                                      selectInput(
                                        inputId = "cohort_selection",
                                        label = "Plant cohorts",
@@ -401,29 +400,93 @@
   shinyApp(ui = ui, server = server)
 }
 
-shinyplot.growth<-function(x, measuredData = NULL, ...) {
-  .shinyplot_sim(x, measuredData = measuredData)
-}
-shinyplot.spwb<-function(x, measuredData = NULL, ...) {
-  .shinyplot_sim(x, measuredData = measuredData)
-}
-shinyplot.pwb<-function(x, measuredData = NULL, ...) {
-  .shinyplot_sim(x, measuredData = measuredData)
-}
-shinyplot.fordyn<-function(x, measuredData = NULL, ...) {
-  .shinyplot_sim(x, measuredData = measuredData)
-}
-shinyplot.growth_day<-function(x, ...) {
-  .shinyplot_day(x)
-}
-shinyplot.spwb_day<-function(x, ...) {
-  .shinyplot_day(x)
-}
-shinyplot.pwb_day<-function(x, ...) {
-  .shinyplot_day(x)
-}
+
+#' Shiny app with interactive plots
+#' 
+#' Creates a shiny app with interactive plots for simulation results and evaluation
+#' 
+#' @param x An object of the right class.
+#' @param measuredData A data frame with observed/measured values (see \code{\link{evaluation_plot}}).
+#' @param ... Additional parameters.
+#' 
+#' @details Only run this function in interactive mode. When \code{measuredData} is not \code{NULL}, an additional panel is shown for evaluation plots.
+#' 
+#' @return An object that represents the shiny app
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{plot.spwb}}, \code{\link{evaluation_plot}}
+#' 
+#' @examples 
+#' ## Only run this example in interactive R sessions
+#' \dontrun{
+#'   #Load example daily meteorological data
+#'   data(examplemeteo)
+#'   
+#'   #Load example plot plant data
+#'   data(exampleforestMED)
+#'   
+#'   #Default species parameterization
+#'   data(SpParamsMED)
+#'   
+#'   #Initialize soil with default soil params (4 layers)
+#'   examplesoil = soil(defaultSoilParams(4))
+#'   
+#'   #Initialize control parameters
+#'   control = defaultControl("Granier")
+#'   
+#'   #Initialize input
+#'   x1 = forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
+#'   
+#'   #Call simulation function
+#'   S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
+#'   
+#'   #Load observed data (in this case the same simulation results with some added error)  
+#'   data(exampleobs)
+#'   
+#'   #Call interactive plot shiny app
+#'   shinyplot(S1, exampleobs)
+#' }
+#' 
+#' @name shinyplot
 shinyplot<-function(x, ...) {
   UseMethod("shinyplot", x)
 }
+
+#' @rdname shinyplot 
+shinyplot.growth<-function(x, measuredData = NULL, ...) {
+  .shinyplot_sim(x, measuredData = measuredData)
+}
+
+#' @rdname shinyplot
+shinyplot.spwb<-function(x, measuredData = NULL, ...) {
+  .shinyplot_sim(x, measuredData = measuredData)
+}
+
+#' @rdname shinyplot
+shinyplot.pwb<-function(x, measuredData = NULL, ...) {
+  .shinyplot_sim(x, measuredData = measuredData)
+}
+
+#' @rdname shinyplot
+shinyplot.fordyn<-function(x, measuredData = NULL, ...) {
+  .shinyplot_sim(x, measuredData = measuredData)
+}
+
+#' @rdname shinyplot
+shinyplot.growth_day<-function(x, ...) {
+  .shinyplot_day(x)
+}
+
+#' @rdname shinyplot
+shinyplot.spwb_day<-function(x, ...) {
+  .shinyplot_day(x)
+}
+
+#' @rdname shinyplot
+shinyplot.pwb_day<-function(x, ...) {
+  .shinyplot_day(x)
+}
+
 
 

@@ -1,3 +1,111 @@
+#' Plots simulation results for one day
+#' 
+#' Functions to plot the subdaily simulation results of \code{\link{spwb_day}}, \code{\link{growth_day}} 
+#' or the transpiration calculations of \code{\link{transp_transpirationSperry}}.
+#'
+#' @param x An object of class \code{spwb_day}, \code{growth_day} or \code{pwb_day}.
+#' @param type The information to be plotted (see details).
+#' @param bySpecies Allows aggregating output by species, before drawing plots. Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).
+#' @param xlim Range of values for x.
+#' @param ylim Range of values for y.
+#' @param xlab x-axis label.
+#' @param ylab y-axis label.
+#' @param ... Additional parameters for function \code{plot}.
+#' 
+#' @details The following plots are available for \code{spwb_day} and \code{pwb_day}:
+#' \itemize{
+#'   \item{\code{"LeafPsi"}:}{Leaf water potential (for shade and sunlit leaves).}
+#'   \item{\code{"LeafPsiAverage"}:}{Average leaf water potential.}
+#'   \item{\code{"RootPsi"}:}{Root crown water potential.}
+#'   \item{\code{"StemPsi"}:}{(Upper) stem water potential.}
+#'   \item{\code{"StemPLC"}:}{(Average) percentage of loss conductance in the stem conduits.}
+#'   \item{\code{"StemRWC"}:}{(Average) relative water content in the stem.}
+#'   \item{\code{"LeafRWC"}:}{Relative water content in the leaf.}
+#'   \item{\code{"StemSympRWC"}:}{(Average) relative water content in the stem symplasm.}
+#'   \item{\code{"LeafSympRWC"}:}{Relative water content in the leaf symplasm.}
+#'   \item{\code{"SoilPlantConductance"}:}{Overall soil plant conductance (calculated as the derivative of the supply function).}
+#'   \item{\code{"PlantExtraction"}:}{ Water extracted from each soil layer.}
+#'   \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration per ground area.}
+#'   \item{\code{"TranspirationPerLeaf"}:}{ Plant cohort transpiration per leaf area.}
+#'   \item{\code{"PlantGrossPhotosynthesis"}:}{ Plant cohort gross photosynthesis per ground area.}
+#'   \item{\code{"GrossPhotosynthesisPerLeaf"}:}{ Plant cohort gross photosynthesis per leaf area.}
+#'   \item{\code{"PlantNetPhotosynthesis"}:}{ Plant cohort net photosynthesis per ground area.}
+#'   \item{\code{"NetPhotosynthesisPerLeaf"}:}{ Plant cohort net photosynthesis per leaf area.}
+#'   \item{\code{"LeafTranspiration"}:}{ Instantaneous transpiration per leaf area (differentiates sunlit and shade leaves).}
+#'   \item{\code{"LeafGrossPhotosynthesis"}:}{ Instantaneous gross photosynthesis per leaf area (differentiates sunlit and shade leaves).}
+#'   \item{\code{"LeafNetPhotosynthesis"}:}{ Instantaneous net photosynthesis per leaf area (differentiates sunlit and shade leaves).}
+#'   \item{\code{"LeafAbsorbedSWR"}:}{ Absorbed short wave radiation per leaf area (differentiates sunlit and shade leaves).}
+#'   \item{\code{"LeafNetLWR"}:}{ Net long wave radiation per leaf area (differentiates sunlit and shade leaves).}
+#'   \item{\code{"LeafCi"}:}{ Leaf intercellular CO2 concentration (differentiates sunlit and shade leaves).}
+#'   \item{\code{"LeafIntrinsicWUE"}:}{ Leaf intrinsic water use efficiency, i.e. the ratio between instantaneous photosynthesis and stomatal conductance (differentiates sunlit and shade leaves).}
+#'   \item{\code{"LeafVPD"}:}{ Leaf vapour pressure deficit (differentiates sunlit and shade leaves).}
+#'   \item{\code{"LeafStomatalConductance"}:}{ Leaf stomatal conductance to water vapour (differentiates sunlit and shade leaves).}
+#'   \item{\code{"LeafTemperature"}:}{ Leaf temperature (differentiates sunlit and shade leaves).}
+#'   \item{\code{"Temperature"}:}{ Above-canopy, inside-canopy and soil temperature.}
+#'   \item{\code{"CanopyEnergyBalance"}:}{ Canopy energy balance components.}
+#'   \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components.}
+#'   \item{\code{"PlantWaterBalance"}:}{ Difference between water extraction from the soil and transpired water per ground area.}
+#'   \item{\code{"WaterBalancePerLeaf"}:}{ Difference between water extraction from the soil and transpired water per leaf area.}
+#' }
+#' And the following plots are additionally available for \code{growth_day}:
+#'   \itemize{
+#'     \item{\code{"GrossPhotosynthesis"}:}{ Gross photosynthesis rate per dry weight.}
+#'     \item{\code{"MaintenanceRespiration"}:}{ Maintenance respiration cost per dry weight.}
+#'     \item{\code{"RootExudation"}:}{ Root exudation rate per dry weight.}
+#'     \item{\code{"LabileCarbonBalance"}:}{ Labile carbon balance per dry weight.}
+#'     \item{\code{"SugarLeaf"}:}{ Sugar concentration in leaves.}
+#'     \item{\code{"StarchLeaf"}:}{ Starch concentration in leaves.}
+#'     \item{\code{"SugarSapwood"}:}{ Sugar concentration in sapwood.}
+#'     \item{\code{"StarchSapwood"}:}{ Starch concentration in sapwood.}
+#'     \item{\code{"SugarTransport"}:}{ Phloem sugar transport rate.}
+#'   }
+#'   
+#' @note Only for soil plant water balance simulations using \code{transpirationMode = "Sperry"}. This function can be used to display subdaily dynamics of corresponding to single days on \code{\link{spwb}} runs, if control option \code{subdailyResults} is set to \code{TRUE}. See also option \code{subdaily} in \code{\link{plot.spwb}}.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso  \code{\link{spwb_day}}, \code{\link{plot.spwb}}
+#' 
+#' @examples 
+#' #Load example daily meteorological data
+#' data(examplemeteo)
+#' 
+#' #Load example plot plant data
+#' data(exampleforestMED)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' #Initialize control parameters
+#' control = defaultControl("Granier")
+#' control$ndailysteps = 24  
+#' 
+#' #Initialize soil with default soil params (2 layers)
+#' examplesoil = soil(defaultSoilParams(2), W=c(0.5,0.5))
+#' 
+#' #Switch to 'Sperry' transpiration mode
+#' control = defaultControl("Sperry")
+#' 
+#' #Simulate one day only
+#' x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' d = 100
+#' sd2<-spwb_day(x2, rownames(examplemeteo)[d], 
+#'               examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
+#'               examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
+#'               examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
+#'               latitude = 41.82592, elevation = 100, 
+#'               slope= 0, aspect = 0, prec = examplemeteo$Precipitation[d])
+#' 
+#' #Display transpiration for subdaily steps
+#' plot(sd2, "PlantTranspiration")
+#' 
+#' @name plot.spwb_day
+plot.spwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, 
+                        xlim = NULL, ylim=NULL, xlab = NULL, ylab = NULL, ...) {
+  plot.pwb_day(x, type, bySpecies, xlim, ylim, xlab, ylab,...)
+}
+
+#' @rdname plot.spwb_day
 plot.growth_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, 
                           xlim = NULL, ylim=NULL, xlab = NULL, ylab = NULL, ...) {
   GROWTH_TYPES = .getSubdailyGROWTHPlotTypes()
@@ -13,12 +121,7 @@ plot.growth_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   }
 }
 
-plot.spwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, 
-                        xlim = NULL, ylim=NULL, xlab = NULL, ylab = NULL, ...) {
-  plot.pwb_day(x, type, bySpecies, xlim, ylim, xlab, ylab,...)
-}
-
-
+#' @rdname plot.spwb_day
 plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, 
                        xlim = NULL, ylim=NULL, xlab = NULL, ylab = NULL, ...) {
   if(!("EnergyBalance" %in% names(x))) stop("Plotting function available for transpirationMode = 'Sperry' only.")
