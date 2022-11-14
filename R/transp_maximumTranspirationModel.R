@@ -5,7 +5,7 @@
 #' @param x An object of class \code{\link{spwbInput}}, built using the 'Sperry' transpiration mode.
 #' @param meteo A data frame with daily meteorological data series.
 #' @param latitude Latitude (in degrees).
-#' @param elevation, slope, aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). }  
+#' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
 #' @param LAI_seq Sequence of stand LAI values to be tested.
 #' @param draw Logical flag to indicate plotting of results.
 #' 

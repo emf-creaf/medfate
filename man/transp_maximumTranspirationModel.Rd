@@ -22,6 +22,8 @@ transp_maximumTranspirationModel(
 
 \item{latitude}{Latitude (in degrees).}
 
+\item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).}
+
 \item{LAI_seq}{Sequence of stand LAI values to be tested.}
 
 \item{draw}{Logical flag to indicate plotting of results.}
