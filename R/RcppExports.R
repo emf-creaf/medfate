@@ -29,46 +29,102 @@ biophysics_waterDynamicViscosity <- function(temp) {
     .Call(`_medfate_waterDynamicViscosity`, temp)
 }
 
+#' Carbon-related functions
+#' 
+#' Low-level functions used in the calculation of carbon balance.
+#' 
+#' @param LAI Leaf area index.
+#' @param N Density (ind·ha-1).
+#' @param SLA Specific leaf area (mm2/mg = m2/kg).
+#' @param leafDensity  Density of leaf tissue (dry weight over volume).
+#' @param SA Sapwood area (cm2).
+#' @param H Plant height (cm).
+#' @param L Coarse root length (mm) for each soil layer.
+#' @param V Proportion of fine roots in each soil layer.
+#' @param woodDensity Wood density (dry weight over volume).
+#' @param conduit2sapwood Proportion of sapwood corresponding to conducive elements (vessels or tracheids) as opposed to parenchymatic tissue.
+#' @param osmoticWP Osmotic water potential (MPa).
+#' @param temp Temperature (degrees Celsius).
+#' @param nonSugarConc Concentration of inorganic solutes (mol/l).
+#' @param sugarConc Concentration of soluble sugars (mol/l).
+#' @param starchConc Concentration of starch (mol/l)
+#' @param eqSugarConc Equilibrium concentration of soluble sugars (mol/l).
+#' 
+#' @return Values returned for each function are:
+#' \itemize{
+#'   \item{\code{carbon_leafStarchCapacity}: Capacity of storing starch in the leaf compartment (mol gluc/ind.).}
+#'   \item{\code{carbon_leafStructuralBiomass}: Leaf structural biomass (g dry/ind.)}
+#'   \item{\code{carbon_sapwoodStarchCapacity}: Capacity of storing starch in the sapwood compartment (mol gluc/ind.).}
+#'   \item{\code{carbon_sapwoodStructuralBiomass}: Sapwood structural biomass (g dry/ind.)}
+#'   \item{\code{carbon_sapwoodStructuralLivingBiomass}: Living sapwood (parenchyma) structural biomass (g dry/ind.)}
+#'   \item{\code{carbon_sugarConcentration}: Sugar concentration (mol gluc/l)}
+#'   \item{\code{carbon_osmoticWaterPotential}: Osmotic component of water potential (MPa)}
+#'   \item{\code{carbon_relativeSapViscosity}: Relative viscosity of sapwood with respect to pure water (according to Forst et al. (2002)).}
+#'   \item{\code{carbon_sugarStarchDynamicsLeaf}: Rate of conversion from sugar to starch in leaf (mol gluc/l/s).}
+#'   \item{\code{carbon_sugarStarchDynamicsStem}: Rate of conversion from sugar to starch in leaf (mol gluc/l/s).}
+#'   \item{\code{carbon_carbonCompartments}: A data frame with the size of compartments for each plant cohort, in the specified units.}
+#' }
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @references
+#' Forst P, Wermer F, Delgado A (2002). On the pressure dependence of the viscosity of aqueous sugar solutions. Rheol Acta 41: 369–374 DOI 10.1007/s00397-002-0238-y
+#' 
+#' @seealso \code{\link{growth}}
+#' 
+#' @name carbon
 carbon_sugarStarchDynamicsLeaf <- function(sugarConc, starchConc, eqSugarConc) {
     .Call(`_medfate_sugarStarchDynamicsLeaf`, sugarConc, starchConc, eqSugarConc)
 }
 
+#' @rdname carbon
 carbon_sugarStarchDynamicsStem <- function(sugarConc, starchConc, eqSugarConc) {
     .Call(`_medfate_sugarStarchDynamicsStem`, sugarConc, starchConc, eqSugarConc)
 }
 
+#' @rdname carbon
 carbon_osmoticWaterPotential <- function(sugarConc, temp, nonSugarConc) {
     .Call(`_medfate_osmoticWaterPotential`, sugarConc, temp, nonSugarConc)
 }
 
+#' @rdname carbon
 carbon_sugarConcentration <- function(osmoticWP, temp, nonSugarConc) {
     .Call(`_medfate_sugarConcentration`, osmoticWP, temp, nonSugarConc)
 }
 
+#' @rdname carbon
 carbon_relativeSapViscosity <- function(sugarConc, temp) {
     .Call(`_medfate_relativeSapViscosity`, sugarConc, temp)
 }
 
+#' @rdname carbon
 carbon_leafStructuralBiomass <- function(LAI, N, SLA) {
     .Call(`_medfate_leafStructuralBiomass`, LAI, N, SLA)
 }
 
+#' @rdname carbon
 carbon_leafStarchCapacity <- function(LAI, N, SLA, leafDensity) {
     .Call(`_medfate_leafStarchCapacity`, LAI, N, SLA, leafDensity)
 }
 
+#' @rdname carbon
 carbon_sapwoodStructuralBiomass <- function(SA, H, L, V, woodDensity) {
     .Call(`_medfate_sapwoodStructuralBiomass`, SA, H, L, V, woodDensity)
 }
 
+#' @rdname carbon
 carbon_sapwoodStructuralLivingBiomass <- function(SA, H, L, V, woodDensity, conduit2sapwood) {
     .Call(`_medfate_sapwoodStructuralLivingBiomass`, SA, H, L, V, woodDensity, conduit2sapwood)
 }
 
+#' @rdname carbon
 carbon_sapwoodStarchCapacity <- function(SA, H, L, V, woodDensity, conduit2sapwood) {
     .Call(`_medfate_sapwoodStarchCapacity`, SA, H, L, V, woodDensity, conduit2sapwood)
 }
 
+#' @rdname carbon
+#' @param x An object of class \code{\link{growthInput}}.
+#' @param biomassUnits A string for output biomass units, either "g_ind" (g per individual) or "g_m2" (g per square meter).
 carbon_carbonCompartments <- function(x, biomassUnits = "g_m2") {
     .Call(`_medfate_carbonCompartments`, x, biomassUnits)
 }
