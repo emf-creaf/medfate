@@ -49,12 +49,13 @@ double shelteredMidflameWindSpeed(double wind20H, double crownFillProportion, do
 /**
  * Midflame windspeed (for surface fire) adjustment factor
  * Andrews, P.L., 2012. Modeling wind adjustment factor and midflame wind speed for Rothermel’s surface fire spread model. USDA For. Serv. - Gen. Tech. Rep. RMRS-GTR 1–39.
- * topShrubHeight: canopy height of shrub stratum (m)
- * topCanopyHeight: top canopy height (m)
- * bottomCanopyHeight: bottom canopy height (m)
- * canopyCover: canopy cover (%)
- * 
  */
+//' @rdname fuel_properties
+//' 
+//' @param topShrubHeight Shrub stratum top height (in m).
+//' @param bottomCanopyHeight Canopy base height (in m).
+//' @param topCanopyHeight Canopy top height (in m).
+//' @param canopyCover Canopy percent cover.
 // [[Rcpp::export("fuel_windAdjustmentFactor")]]
 double windAdjustmentFactor(double topShrubHeight, double bottomCanopyHeight, double topCanopyHeight, double canopyCover){
   double crownFillProportion = ((topCanopyHeight-bottomCanopyHeight)/topCanopyHeight)*(canopyCover/300.0);

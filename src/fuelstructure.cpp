@@ -159,6 +159,89 @@ double layerFuelAverageCrownLength(double minHeight, double maxHeight, NumericVe
   return(0.0);
 }
 
+//' Fuel stratification and fuel characteristics
+//' 
+//' Function \code{fuel_stratification} provides a stratification of the stand into understory and canopy strata. 
+//' Function \code{fuel_FCCS} calculates fuel characteristics from a \code{forest} object 
+//' following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013). 
+//' Function \code{fuel_windAdjustmentFactor} determines the adjustment factor of wind for surface fires, according to Andrews (2012). 
+//' 
+//' @param object An object of class \code{\link{forest}}
+//' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
+//' @param cohortFMC A numeric vector of (actual) fuel moisture content by cohort.
+//' @param gdd Growth degree-days.
+//' @param mode Calculation mode, either "MED" or "US".
+//' @param heightProfileStep Precision for the fuel bulk density profile.
+//' @param maxHeightProfile Maximum height for the fuel bulk density profile.
+//' 
+//' @return 
+//' Function \code{fuel_FCCS} returns a data frame with five rows corresponding to  fuel layers: 
+//' \code{canopy}, \code{shrub}, \code{herb}, \code{woody} and \code{litter}. Columns correspond fuel properties:
+//' \itemize{
+//'   \item{\code{w}: Fine fuel loading (in kg/m2).}
+//'   \item{\code{cover}: Percent cover.}
+//'   \item{\code{hbc}: Height to base of crowns (in m).}
+//'   \item{\code{htc}: Height to top of crowns (in m).}
+//'   \item{\code{delta}: Fuel depth (in m).}
+//'   \item{\code{rhob}: Fuel bulk density (in kg/m3).}
+//'   \item{\code{rhop}: Fuel particle density (in kg/m3).}
+//'   \item{\code{PV}: Particle volume (in m3/m2).}
+//'   \item{\code{beta}: Packing ratio (unitless).}
+//'   \item{\code{betarel}: Relative packing ratio (unitless).}
+//'   \item{\code{etabetarel}: Reaction efficiency (unitless).}
+//'   \item{\code{sigma}: Surface area-to-volume ratio (m2/m3).}
+//'   \item{\code{pDead}: Proportion of dead fuels.}
+//'   \item{\code{FAI}: Fuel area index (unitless).}
+//'   \item{\code{h}: High heat content (in kJ/kg).}
+//'   \item{\code{RV}: Reactive volume (in m3/m2).}
+//'   \item{\code{MinFMC}: Minimum fuel moisture content (as percent over dry weight).}
+//'   \item{\code{MaxFMC}: Maximum fuel moisture content (as percent over dry weight).}
+//'   \item{\code{ActFMC}: Actual fuel moisture content (as percent over dry weight). These are set to \code{NA} if parameter \code{cohortFMC} is empty.}
+//' }
+//' 
+//' Function \code{fuel_stratification} returns a list with the following items:
+//'   \itemize{
+//'     \item{\code{surfaceLayerBaseHeight}: Base height of crowns of shrubs in the surface layer (in cm).}
+//'     \item{\code{surfaceLayerTopHeight}: Top height of crowns of shrubs in the surface layer (in cm).}
+//'     \item{\code{understoryLAI}: Cumulated LAI of the understory layer (i.e. leaf area comprised between surface layer base and top heights).}
+//'     \item{\code{canopyBaseHeight}: Base height of tree crowns in the canopy (in cm).}
+//'     \item{\code{canopyTopHeight}: Top height of tree crowns in the canopy (in cm).}
+//'     \item{\code{canopyLAI}: Cumulated LAI of the canopy (i.e. leaf area comprised between canopy base and top heights).}
+//'   }
+//'   
+//' Function \code{fuel_cohortFineFMC} returns a list with three matrices (for leaves, twigs and fine fuels). 
+//' Each of them contains live moisture content values for each day (in rows) and plant cohort (in columns).
+//' 
+//' Function \code{fuel_windAdjustmentFactor} returns a value between 0 and 1.
+//' 
+//' @references
+//' Andrews, P. L. 2012. Modeling wind adjustment factor and midflame wind speed for Rothermel’s surface fire spread model. USDA Forest Service - General Technical Report RMRS-GTR:1–39.
+//' 
+//' Prichard, S. J., D. V Sandberg, R. D. Ottmar, E. Eberhardt, A. Andreu, P. Eagle, and K. Swedin. 2013. Classification System Version 3.0: Technical Documentation.
+//' 
+//' Reinhardt, E., D. Lutes, and J. Scott. 2006. FuelCalc: A method for estimating fuel characteristics. Pages 273–282.
+//' 
+//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+//' 
+//' @seealso \code{\link{fire_FCCS}}, \code{\link{spwb}}
+//' 
+//' @examples
+//' #Load example plot plant data
+//' data(exampleforestMED)
+//' 
+//' #Default species parameterization
+//' data(SpParamsMED)
+//' 
+//' #Show stratification of fuels
+//' fuel_stratification(exampleforestMED, SpParamsMED)
+//'   
+//' #Calculate fuel properties according to FCCS
+//' fccs = fuel_FCCS(exampleforestMED, SpParamsMED)
+//' fccs
+//' 
+//' fuel_windAdjustmentFactor(fccs$htc[2], fccs$hbc[1], fccs$htc[1], fccs$cover[1])
+//' 
+//' @name fuel_properties
 // [[Rcpp::export("fuel_stratification")]]
 List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED", 
                             double heightProfileStep = 10.0, double maxHeightProfile = 5000.0,double bulkDensityThreshold = 0.05) {
@@ -256,9 +339,15 @@ CharacterVector leafLitterFuelType(List object, DataFrame SpParams) {
 }
 
 
-/**
- * FCCS fuel definition
- */
+//' @rdname fuel_properties
+//' 
+//' @param bulkDensityThreshold Minimum fuel bulk density to delimit fuel strata.
+//' @param depthMode Specifies how fuel depth (and therefore canopy and understory bulk density) should be estimated: 
+//'   \itemize{
+//'     \item{\code{"crownaverage"}: As weighed average of crown lengths using loadings as weights.}
+//'     \item{\code{"profile"}: As the difference of base and top heights in bulk density profiles.}  
+//'     \item{\code{"absoluteprofile"}: As the difference of absolute base and absolute top heights in bulk density profiles.}  
+//'   }
 // [[Rcpp::export("fuel_FCCS")]]
 DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFMC = NumericVector::create(), 
                          double gdd = NA_REAL, String mode = "MED", 
@@ -578,72 +667,72 @@ DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFM
 *  delta: a value of fuel bed depth (cm)
 *  hSI: a vector of heat content (kJ/kg) for five fuel classes
 */
-List rothermelFuelComplex(NumericVector wSI, NumericVector sSI, double delta, NumericVector hSI) {
-  //Rescale variables to units of rothermel model
-  NumericVector w = wSI*0.02048161; //from t/ha to lbs/ft2
-  NumericVector s = sSI/3.281; //from m-1 to ft-1
-  delta = delta*0.0328084; //from cm to feet
-  NumericVector h = hSI*0.429922614; //from kJ/kg to ?
-  //Constants 
-  double rhop= 32.0; // = 513*0.0624279606 Scott and Burgan (2005)
-  
-  //Area fractions
-  NumericVector a = s*w;
-  a = a/rhop;
-  double a_dead=a[0]+a[1]+a[2];
-  double a_live=a[3]+a[4];
-  double a_tot=(a_dead+a_live);
-  NumericVector f = NumericVector::create(a[0]/a_dead,a[1]/a_dead,a[2]/a_dead,a[3]/a_live,a[4]/a_live);
-  if(a_live==0.0) {
-    f[3] = 0.0;
-    f[4] = 0.0;
-  }
-  if(a_dead==0.0) {
-    f[0] = 0.0;
-    f[1] = 0.0;
-    f[2] = 0.0;
-  }
-  double f_dead=a_dead/a_tot;
-  double f_live=a_live/a_tot;
-  if(a_tot==0.0) {
-    f_dead = 0.0;
-    f_live = 0.0;
-  }
-  
-  //weighted SAV ratio
-  double sigma_dead=f[0]*s[0]+f[1]*s[1]+f[2]*s[2];
-  double sigma_live=f[3]*s[3]+f[4]*s[4];
-  double sigma_tot=(f_dead*sigma_dead+f_live*sigma_live); //characteristic SAV
-  //weighted heat content for fuel complex
-  double h_dead=f[0]*h[0]+f[1]*h[1]+f[2]*h[2];
-  double h_live=f[3]*h[3]+f[4]*h[4];
-  //mean packing ratio for fuel complex
-  double beta=(1.0/delta)*(w[0]/rhop+w[1]/rhop+w[2]/rhop+w[3]/rhop+w[4]/rhop);
-  if(delta==0.0) beta = 0.0;
-  
-  // Andrews 2013 pag.E
-  //optimum packing ratio
-  double beta_op=3.348*pow(sigma_tot,-0.8189);
-  if(sigma_tot==0.0) beta_op = 0.0;
-  //  Rcout<<beta_op<<"\n";
-  
-  //relative packing ratio
-  double rpr=beta/beta_op; 
-  if(beta_op==0.0) rpr = 0.0;
-  
-  //for heat sink (denominator ROS)
-  double rhob=(w[0]+w[1]+w[2]+w[3]+w[4])/delta; 
-  if(delta==0.0) rhob = 0.0;
-  
-  //return values for rothermel function
-  List output=List::create(Named("Characteristic SAV [m2/m3]")=sigma_tot*3.281,
-                           Named("Bulk density [kg/m3]") = rhob*16.0184634,
-                           Named("Packing ratio [dimensionless]")=beta,
-                           Named("Relative packing ratio [dimensionless]")=rpr,
-                           Named("Dead heat content [kJ/kg]")=h_dead,
-                           Named("Live heat content [kJ/kg]")=h_live);
-  return(output);
-}
+// List rothermelFuelComplex(NumericVector wSI, NumericVector sSI, double delta, NumericVector hSI) {
+//   //Rescale variables to units of rothermel model
+//   NumericVector w = wSI*0.02048161; //from t/ha to lbs/ft2
+//   NumericVector s = sSI/3.281; //from m-1 to ft-1
+//   delta = delta*0.0328084; //from cm to feet
+//   NumericVector h = hSI*0.429922614; //from kJ/kg to ?
+//   //Constants 
+//   double rhop= 32.0; // = 513*0.0624279606 Scott and Burgan (2005)
+//   
+//   //Area fractions
+//   NumericVector a = s*w;
+//   a = a/rhop;
+//   double a_dead=a[0]+a[1]+a[2];
+//   double a_live=a[3]+a[4];
+//   double a_tot=(a_dead+a_live);
+//   NumericVector f = NumericVector::create(a[0]/a_dead,a[1]/a_dead,a[2]/a_dead,a[3]/a_live,a[4]/a_live);
+//   if(a_live==0.0) {
+//     f[3] = 0.0;
+//     f[4] = 0.0;
+//   }
+//   if(a_dead==0.0) {
+//     f[0] = 0.0;
+//     f[1] = 0.0;
+//     f[2] = 0.0;
+//   }
+//   double f_dead=a_dead/a_tot;
+//   double f_live=a_live/a_tot;
+//   if(a_tot==0.0) {
+//     f_dead = 0.0;
+//     f_live = 0.0;
+//   }
+//   
+//   //weighted SAV ratio
+//   double sigma_dead=f[0]*s[0]+f[1]*s[1]+f[2]*s[2];
+//   double sigma_live=f[3]*s[3]+f[4]*s[4];
+//   double sigma_tot=(f_dead*sigma_dead+f_live*sigma_live); //characteristic SAV
+//   //weighted heat content for fuel complex
+//   double h_dead=f[0]*h[0]+f[1]*h[1]+f[2]*h[2];
+//   double h_live=f[3]*h[3]+f[4]*h[4];
+//   //mean packing ratio for fuel complex
+//   double beta=(1.0/delta)*(w[0]/rhop+w[1]/rhop+w[2]/rhop+w[3]/rhop+w[4]/rhop);
+//   if(delta==0.0) beta = 0.0;
+//   
+//   // Andrews 2013 pag.E
+//   //optimum packing ratio
+//   double beta_op=3.348*pow(sigma_tot,-0.8189);
+//   if(sigma_tot==0.0) beta_op = 0.0;
+//   //  Rcout<<beta_op<<"\n";
+//   
+//   //relative packing ratio
+//   double rpr=beta/beta_op; 
+//   if(beta_op==0.0) rpr = 0.0;
+//   
+//   //for heat sink (denominator ROS)
+//   double rhob=(w[0]+w[1]+w[2]+w[3]+w[4])/delta; 
+//   if(delta==0.0) rhob = 0.0;
+//   
+//   //return values for rothermel function
+//   List output=List::create(Named("Characteristic SAV [m2/m3]")=sigma_tot*3.281,
+//                            Named("Bulk density [kg/m3]") = rhob*16.0184634,
+//                            Named("Packing ratio [dimensionless]")=beta,
+//                            Named("Relative packing ratio [dimensionless]")=rpr,
+//                            Named("Dead heat content [kJ/kg]")=h_dead,
+//                            Named("Live heat content [kJ/kg]")=h_live);
+//   return(output);
+// }
 
 /**
  * Calculates fuel biomass (in tons/hectare) for five fuel classes:

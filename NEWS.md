@@ -7,6 +7,7 @@
 - Elements 'ID' and 'patchsize' removed from 'forest'
 - Bug correction in defaultManagementFunction for 'above-systematic' and 'below-systematic'
 - New management option 'targetTreeSpecies'
+- Fire hazard estimation includes dead canopy fuels (Ruffault et al. 2023)
 
 # Version 2.8.1
 - New meta-modelling parameters

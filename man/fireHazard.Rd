@@ -61,11 +61,14 @@ S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 
 #Evaluate fire hazard
 F1 <-fireHazard(S1, SpParamsMED, exampleforestMED)
-
 }
 }
 \references{
 Resco de Dios, V., A. W. Fellows, R. H. Nolan, M. M. Boer, R. A. Bradstock, F. Domingo, and M. L. Goulden. 2015. A semi-mechanistic model for predicting the moisture content of fine litter. Agricultural and Forest Meteorology 203:64–73.
+
+Ruffault J, Limousin JM, Pimont F, Dupuy JL, De Cáceres M, Cochard H, Mouillot F, Blackman C, Torres-Ruiz JM, Parsons R, 
+Moreno M, Delzon S, Jansen S, Olioso A, Choat B, Martin-StPaul N. 2023. Plant hydraulic modelling of leaf and canopy fuel moisture content reveals increasing vulnerability of a Mediterranean forest to wildfires under extreme drought. 
+New Phytologist. (10.1111/nph.18614).
 }
 \seealso{
 \code{\link{spwb}}, \code{\link{fuel_FCCS}}, \code{\link{fire_FCCS}}
