@@ -43,6 +43,7 @@ NumericVector speciesNumericParameter(IntegerVector SP, DataFrame SpParams, Stri
   return(par);
 }
 
+//' @rdname species_values
 // [[Rcpp::export("species_characterParameter")]]
 CharacterVector speciesCharacterParameter(IntegerVector SP, DataFrame SpParams, String parName){
   CharacterVector par(SP.size(), NA_STRING);
@@ -1306,7 +1307,7 @@ NumericVector treeAllometricCoefficientWithImputation(IntegerVector SP, DataFram
 
 
 
-
+//' @rdname species_values
 // [[Rcpp::export("species_parameter")]]
 NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame SpParams, String parName, bool fillMissing = true){
   if(fillMissing) {

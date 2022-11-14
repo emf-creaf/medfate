@@ -62,8 +62,3 @@ IntegerVector uniqueSpp(IntegerVector sp);
 
 double shrubCover(List x, double excludeMinHeight = 0.0);
 
-void deleteTreeCohort(List x, int treeCohort);
-void deleteShrubCohort(List x, int shrubCohort);
-
-int minDBHTreeCohort(List x, double excludeMin = 0.0);
-

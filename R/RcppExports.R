@@ -105,16 +105,8 @@ plant_basalArea <- function(x) {
     .Call(`_medfate_cohortBasalArea`, x)
 }
 
-species_basalArea <- function(x, SpParams) {
-    .Call(`_medfate_speciesBasalArea`, x, SpParams)
-}
-
 plant_largerTreeBasalArea <- function(x) {
     .Call(`_medfate_cohortLargerTreeBasalArea`, x)
-}
-
-stand_basalArea <- function(x, minDBH = 7.5) {
-    .Call(`_medfate_standBasalArea`, x, minDBH)
 }
 
 plant_individualArea <- function(x, SpParams, mode = "MED") {
@@ -123,10 +115,6 @@ plant_individualArea <- function(x, SpParams, mode = "MED") {
 
 plant_density <- function(x, SpParams, mode = "MED") {
     .Call(`_medfate_cohortDensity`, x, SpParams, mode)
-}
-
-species_density <- function(x, SpParams, mode = "MED") {
-    .Call(`_medfate_speciesDensity`, x, SpParams, mode)
 }
 
 plant_height <- function(x) {
@@ -153,24 +141,12 @@ plant_foliarBiomass <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_cohortFoliarBiomass`, x, SpParams, gdd, mode)
 }
 
-species_foliarBiomass <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_speciesFoliarBiomass`, x, SpParams, gdd, mode)
-}
-
-stand_foliarBiomass <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_standFoliarBiomass`, x, SpParams, gdd, mode)
-}
-
 .shrubCover <- function(x, excludeMinHeight = 0.0) {
     .Call(`_medfate_shrubCover`, x, excludeMinHeight)
 }
 
 plant_cover <- function(x, SpParams, mode = "MED") {
     .Call(`_medfate_cohortCover`, x, SpParams, mode)
-}
-
-species_cover <- function(x, SpParams, mode = "MED") {
-    .Call(`_medfate_speciesCover`, x, SpParams, mode)
 }
 
 .shrubPhytovolume <- function(SP, Cover, H, CR, SpParams) {
@@ -181,24 +157,8 @@ plant_phytovolume <- function(x, SpParams) {
     .Call(`_medfate_cohortPhytovolume`, x, SpParams)
 }
 
-species_phytovolume <- function(x, SpParams) {
-    .Call(`_medfate_speciesPhytovolume`, x, SpParams)
-}
-
-stand_phytovolume <- function(x, SpParams) {
-    .Call(`_medfate_standPhytovolume`, x, SpParams)
-}
-
 plant_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED") {
     .Call(`_medfate_cohortFuel`, x, SpParams, gdd, includeDead, mode)
-}
-
-species_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED") {
-    .Call(`_medfate_speciesFuel`, x, SpParams, gdd, includeDead, mode)
-}
-
-stand_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED") {
-    .Call(`_medfate_standFuel`, x, SpParams, gdd, includeDead, mode)
 }
 
 plant_equilibriumLeafLitter <- function(x, SpParams, AET = 800, mode = "MED") {
@@ -211,14 +171,6 @@ plant_equilibriumSmallBranchLitter <- function(x, SpParams, smallBranchDecomposi
 
 plant_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_cohortLAI`, x, SpParams, gdd, mode)
-}
-
-species_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_speciesLAI`, x, SpParams, gdd, mode)
-}
-
-stand_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_standLAI`, x, SpParams, gdd, mode)
 }
 
 .LAIdistributionVectors <- function(z, LAI, H, CR) {
@@ -235,6 +187,110 @@ stand_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
 
 .LAIprofile <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_LAIprofile`, z, x, SpParams, gdd, mode)
+}
+
+#' Species description functions
+#'
+#' Functions to calculate attributes of a \code{\link{forest}} object by species or to extract species parameters from a species parameter table (\code{\link{SpParamsMED}}).
+#' 
+#' @param x An object of class \code{\link{forest}}.
+#' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
+#' @param gdd Growth degree days (to account for leaf phenology effects).
+#' @param includeDead A flag to indicate that standing dead fuels (dead branches) are included.
+#' @param mode Calculation mode, either "MED" or "US".
+#' @param SP An integer vector of species codes.
+#' @param parName A string with a parameter name.
+#' @param fillMissing A boolean flag to try imputation on missing values.
+#' 
+#' @return
+#' A vector with values for each species in \code{SpParams}:
+#' \itemize{
+#'   \item{\code{species_basalArea}: Species basal area (m2/ha).}
+#'   \item{\code{species_cover}: Shrub cover (in percent).}
+#'   \item{\code{species_density}: Plant density (ind/ha). Tree density is directly taken from the forest object, while the shrub density is estimated from cover and height by calculating the area of a single individual.}
+#'   \item{\code{species_foliarBiomass}: Standing biomass of leaves (in kg/m2).}
+#'   \item{\code{species_fuel}: Fine fuel load (in kg/m2).}
+#'   \item{\code{species_LAI}: Leaf area index (m2/m2).}
+#'   \item{\code{species_phytovolume}: Shrub phytovolume (m3/m2).}
+#'   \item{\code{species_parameter}: A numeric vector with the parameter values of each input species.}
+#'   \item{\code{species_characterParameter}: A character vector with the parameter values of each input species.}
+#' }
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{spwb}}, \code{\link{forest}}, \code{\link{plant_basalArea}}, \code{\link{summary.forest}}
+#' 
+#' @examples
+#' # Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' # Load example plot
+#' data(exampleforestMED)
+#' 
+#' # Species basal area in the forest plot
+#' species_basalArea(exampleforestMED, SpParamsMED)
+#'   
+#' # Value of parameter "Psi_Extract" for species 157 (Pinus halepensis)
+#' # and 176 (Quercus ilex)
+#' species_parameter(c(157,176), SpParamsMED, "Psi_Extract")
+#'     
+#' @name species_values
+species_basalArea <- function(x, SpParams) {
+    .Call(`_medfate_speciesBasalArea`, x, SpParams)
+}
+
+#' @rdname species_values
+species_cover <- function(x, SpParams, mode = "MED") {
+    .Call(`_medfate_speciesCover`, x, SpParams, mode)
+}
+
+#' @rdname species_values
+species_density <- function(x, SpParams, mode = "MED") {
+    .Call(`_medfate_speciesDensity`, x, SpParams, mode)
+}
+
+#' @rdname species_values
+species_foliarBiomass <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_speciesFoliarBiomass`, x, SpParams, gdd, mode)
+}
+
+#' @rdname species_values
+species_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED") {
+    .Call(`_medfate_speciesFuel`, x, SpParams, gdd, includeDead, mode)
+}
+
+#' @rdname species_values
+species_phytovolume <- function(x, SpParams) {
+    .Call(`_medfate_speciesPhytovolume`, x, SpParams)
+}
+
+#' @rdname stand_values
+stand_basalArea <- function(x, minDBH = 7.5) {
+    .Call(`_medfate_standBasalArea`, x, minDBH)
+}
+
+#' @rdname stand_values
+stand_foliarBiomass <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_standFoliarBiomass`, x, SpParams, gdd, mode)
+}
+
+#' @rdname stand_values
+stand_phytovolume <- function(x, SpParams) {
+    .Call(`_medfate_standPhytovolume`, x, SpParams)
+}
+
+#' @rdname stand_values
+stand_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED") {
+    .Call(`_medfate_standFuel`, x, SpParams, gdd, includeDead, mode)
+}
+
+species_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_speciesLAI`, x, SpParams, gdd, mode)
+}
+
+#' @rdname stand_values
+stand_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_standLAI`, x, SpParams, gdd, mode)
 }
 
 forest2aboveground <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
@@ -633,6 +689,7 @@ resetInputs <- function(x) {
     invisible(.Call(`_medfate_checkSpeciesParameters`, SpParams, params))
 }
 
+#' @rdname species_values
 species_characterParameter <- function(SP, SpParams, parName) {
     .Call(`_medfate_speciesCharacterParameter`, SP, SpParams, parName)
 }
@@ -641,6 +698,7 @@ plant_characterParameter <- function(x, SpParams, parName) {
     .Call(`_medfate_cohortCharacterParameter`, x, SpParams, parName)
 }
 
+#' @rdname species_values
 species_parameter <- function(SP, SpParams, parName, fillMissing = TRUE) {
     .Call(`_medfate_speciesNumericParameterWithImputation`, SP, SpParams, parName, fillMissing)
 }
