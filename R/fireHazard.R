@@ -50,6 +50,56 @@
   } 
   return(fbm)
 }
+
+#' Fire hazard
+#' 
+#' Estimates potential fire behaviour at each daily step of a simulation
+#' 
+#' @param x An object of class \code{\link{spwb}}, \code{\link{spwb_day}}, \code{\link{pwb}}, \code{\link{growth}}, \code{\link{growth_day}} or \code{\link{fordyn}}.
+#' @param SpParams A data frame with species parameters (see \code{\link{SpParamsDefinition}} and \code{\link{SpParamsMED}}).
+#' @param forest An object of class \code{\link{forest}} (needed if \code{x} is not of class \code{\link{fordyn}}).
+#' @param standardConditions A logical flag to indicate that standard fire weather conditions are to be used (instead of deriving fuel moisture and windspeed from \code{x}).
+#' @param freq Frequency of summary statistics (see \code{\link{cut.Date}}).
+#' @param fun Summary function (by default, maximum values).
+#' 
+#' @details Live fuel moisture of shrub and canopy layers is estimated from plant water status. 
+#' Dead fuel moisture is estimated following Resco-de-Dios et al. (2015).
+#' 
+#' @return A matrix with fire behaviour variables (columns) for each simulated day (rows) or coarser time steps if summaries are requested.
+#' 
+#' @references Resco de Dios, V., A. W. Fellows, R. H. Nolan, M. M. Boer, R. A. Bradstock, F. Domingo, and M. L. Goulden. 2015. A semi-mechanistic model for predicting the moisture content of fine litter. Agricultural and Forest Meteorology 203:64–73.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{spwb}}, \code{\link{fuel_FCCS}}, \code{\link{fire_FCCS}}
+#' 
+#' @examples 
+#' \dontrun{
+#' #Load example daily meteorological data
+#' data(examplemeteo)
+#' 
+#' #Load example plot plant data
+#' data(exampleforestMED)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' #Initialize soil with default soil params (4 layers)
+#' examplesoil = soil(defaultSoilParams(4))
+#' 
+#' #Initialize control parameters
+#' control = defaultControl("Granier")
+#' 
+#' #Initialize input
+#' x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' 
+#' #Call simulation function
+#' S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
+#' 
+#' #Evaluate fire hazard
+#' F1 <-fireHazard(S1, SpParamsMED, exampleforestMED)
+#' 
+#' }
 fireHazard<-function(x, SpParams, forest = NULL, standardConditions = FALSE,
                      freq="days", fun = "max") {
   if(!inherits(x, c("spwb","pwb","growth", "fordyn", "spwb_day", "growth_day"))) {

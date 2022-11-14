@@ -1,3 +1,23 @@
+#' Extracts subdaily output
+#' 
+#' Given the result of simulations, this function extracts subdaily output corresponding to each simulated day and returns it as a data frame.
+#' 
+#' @param  x An object returned by simulation functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{growth}}.
+#' @param output See options in section details.
+#' @param dates A date vector indicating the subset of simulated days for which subdaily output is desired.
+#' 
+#' @details This function only works when simulations have been carried using control option 'subdailyResults = TRUE' (see \code{\link{defaultControl}}). Subdaily simulation results will then be stored as elements of the a list called 'subdaily' in the simulation output. Function \code{extractSubdaily} will assemble subdaily results from this list and return them as a data frame. Options for parameter 'output' are the following:
+#' \itemize{
+#'   \item{Functions pwb() and spwb(): "E","Ag","An","dEdP","RootPsi","StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC","PWB", "Temperature", "ExtractionInst".}
+#'   \item{Additional options for shade and sunlit leaves in pwb() and spbw(): Either "SunlitLeaves$x" or "ShadeLeaves$x" where 'x' is one of the following: "Abs_SWR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE".}
+#'   \item{Additional options for function growth(): "GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "LabileCarbonBalance","SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport".}
+#' }
+#' 
+#' @details A data frame with a column 'datetime' and as many columns as plant cohorts.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{summary.spwb}}
 extractSubdaily<-function(x, output = "E", dates = NULL)  {
   leafTypes= c("Abs_SWR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE")  
   sunlitTypes = paste("SunlitLeaves",leafTypes, sep="$")
