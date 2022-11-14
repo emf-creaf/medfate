@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
       </span>
     </div>
 
@@ -47,7 +47,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Physical and biophysical utility functions</h1>
-    
+    <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/R/RcppExports.R" class="external-link"><code>R/RcppExports.R</code></a></small>
     <div class="hidden name"><code>biophysics.Rd</code></div>
     </div>
 
@@ -56,95 +56,133 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">biophysics_irradianceToPhotonFlux</span><span class="op">(</span><span class="va">I</span>, <span class="va">lambda</span><span class="op">)</span></span>
-<span><span class="fu">biophysics_leafTemperature</span><span class="op">(</span><span class="va">absRad</span>, <span class="va">airTemperature</span>, <span class="va">u</span>, <span class="va">E</span>, leafWidth <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span></span>
-<span><span class="fu">biophysics_leafTemperature2</span><span class="op">(</span><span class="va">SWRabs</span>, <span class="va">LWRnet</span>, <span class="va">airTemperature</span>, <span class="va">u</span>, <span class="va">E</span>, leafWidth <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">biophysics_radiationDiurnalPattern</span><span class="op">(</span><span class="va">t</span>, <span class="va">daylength</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">biophysics_temperatureDiurnalPattern</span><span class="op">(</span></span>
+<span>  <span class="va">t</span>,</span>
+<span>  <span class="va">tmin</span>,</span>
+<span>  <span class="va">tmax</span>,</span>
+<span>  <span class="va">tminPrev</span>,</span>
+<span>  <span class="va">tmaxPrev</span>,</span>
+<span>  <span class="va">tminNext</span>,</span>
+<span>  <span class="va">daylength</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">biophysics_leafTemperature</span><span class="op">(</span><span class="va">absRad</span>, <span class="va">airTemperature</span>, <span class="va">u</span>, <span class="va">E</span>, leafWidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">biophysics_leafTemperature2</span><span class="op">(</span></span>
+<span>  <span class="va">SWRabs</span>,</span>
+<span>  <span class="va">LWRnet</span>,</span>
+<span>  <span class="va">airTemperature</span>,</span>
+<span>  <span class="va">u</span>,</span>
+<span>  <span class="va">E</span>,</span>
+<span>  leafWidth <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">biophysics_leafVapourPressure</span><span class="op">(</span><span class="va">leafTemp</span>, <span class="va">leafPsi</span><span class="op">)</span></span>
-<span><span class="fu">biophysics_radiationDiurnalPattern</span><span class="op">(</span><span class="va">t</span>, <span class="va">daylength</span><span class="op">)</span></span>
-<span><span class="fu">biophysics_temperatureDiurnalPattern</span><span class="op">(</span><span class="va">t</span>, <span class="va">tmin</span>, <span class="va">tmax</span>, </span>
-<span>                                     <span class="va">tminPrev</span>, <span class="va">tmaxPrev</span>, <span class="va">tminNext</span>, <span class="va">daylength</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">biophysics_irradianceToPhotonFlux</span><span class="op">(</span><span class="va">I</span>, lambda <span class="op">=</span> <span class="fl">546.6507</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">biophysics_waterDynamicViscosity</span><span class="op">(</span><span class="va">temp</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>I</dt>
-<dd><p>Irradiance (in W*m-2).</p></dd>
-
-  <dt>lambda</dt>
-<dd><p>Wavelength (in nm).</p></dd>
-
-  <dt>u</dt>
-<dd><p>Wind speed above the leaf boundary layer (in m/s).</p></dd>
-
-  <dt>airTemperature</dt>
-<dd><p>Air temperature (in ºC).</p></dd>
-
-  <dt>tmin, tmax</dt>
-<dd><p>Minimum and maximum daily temperature (ºC).</p></dd>
-
-  <dt>tminPrev, tmaxPrev, tminNext</dt>
-<dd><p>Maximum and minimum daily temperatures of the previous and following day (ºC).</p></dd>
-
-  <dt>absRad</dt>
-<dd><p>Absorbed long- and short-wave radiation (in W·m-2).</p></dd>
-
-  <dt>SWRabs</dt>
-<dd><p>Absorbed short-wave radiation (in W·m-2).</p></dd>
-
-  <dt>LWRnet</dt>
-<dd><p>Net long-wave radiation balance (in W·m-2).</p></dd>
-
-  <dt>E</dt>
-<dd><p>Transpiration flow (in mmol H20·m-2·s-1) per one sided leaf area basis.</p></dd>
-
-  <dt>leafWidth</dt>
-<dd><p>Leaf width (in cm).</p></dd>
-
-  <dt>t</dt>
+    <dl><dt>t</dt>
 <dd><p>Time of the day (in seconds).</p></dd>
 
-  <dt>daylength</dt>
+
+<dt>daylength</dt>
 <dd><p>Day length (in seconds).</p></dd>
 
-  <dt>temp</dt>
-<dd><p>Temperature (ºC).</p></dd>
 
-  <dt>leafTemp</dt>
+<dt>tmin, tmax</dt>
+<dd><p>Minimum and maximum daily temperature (ºC).</p></dd>
+
+
+<dt>tminPrev, tmaxPrev, tminNext</dt>
+<dd><p>Maximum and minimum daily temperatures of the previous and following day (ºC).</p></dd>
+
+
+<dt>absRad</dt>
+<dd><p>Absorbed long- and short-wave radiation (in W·m-2).</p></dd>
+
+
+<dt>airTemperature</dt>
+<dd><p>Air temperature (in ºC).</p></dd>
+
+
+<dt>u</dt>
+<dd><p>Wind speed above the leaf boundary layer (in m/s).</p></dd>
+
+
+<dt>E</dt>
+<dd><p>Transpiration flow (in mmol H20·m-2·s-1) per one sided leaf area basis.</p></dd>
+
+
+<dt>leafWidth</dt>
+<dd><p>Leaf width (in cm).</p></dd>
+
+
+<dt>SWRabs</dt>
+<dd><p>Absorbed short-wave radiation (in W·m-2).</p></dd>
+
+
+<dt>LWRnet</dt>
+<dd><p>Net long-wave radiation balance (in W·m-2).</p></dd>
+
+
+<dt>leafTemp</dt>
 <dd><p>Leaf temperature (ºC).</p></dd>
 
-  <dt>leafPsi</dt>
+
+<dt>leafPsi</dt>
 <dd><p>Leaf water potential (MPa).</p></dd>
 
+
+<dt>I</dt>
+<dd><p>Irradiance (in W*m-2).</p></dd>
+
+
+<dt>lambda</dt>
+<dd><p>Wavelength (in nm).</p></dd>
+
+
+<dt>temp</dt>
+<dd><p>Temperature (ºC).</p></dd>
+
 </dl></div>
-    <div id="details">
-    <h2>Details</h2>
-    <p>Function <code>biophysics_leafTemperature</code> calculates leaf temperature according to energy balance equation given in Campbell and Norman (1988). Function <code>biophysics_radiationDiurnalPattern</code> follows the equations given in Liu and Jordan (1960). Function <code>biophysics_temperatureDiurnalPattern</code> determines diurnal temperature pattern assuming a sinusoidal pattern with T = Tmin at sunrise and T = (Tmin+Tmax)/2 at sunset and a linear change in temperature between sunset and Tmin of the day after (McMurtrie et al. 1990). Function <code>biophysics_waterDynamicViscosity</code> calculates water dynamic viscosity following the Vogel (1921) equation.</p>
-    </div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>Values returned for each function are:</p><ul><li><p><code>biophysics_leafTemperature</code>: leaf temperature (in ºC)</p></li>
+<p>Values returned for each function are:</p><ul><li><p><code>biophysics_leafTemperature</code> and <code>biophysics_leafTemperature2</code>: leaf temperature (in ºC)</p></li>
 <li><p><code>biophysics_leafVapourPressure</code>: leaf vapour pressure (in kPa)</p></li>
 <li><p><code>biophysics_radiationDiurnalPattern</code>: the proportion of daily radiation corresponding to the input time in seconds after sunrise.</p></li>
 <li><p><code>biophysics_temperatureDiurnalPattern</code>: diurnal pattern of temperature.</p></li>
 <li><p><code>biophysics_waterDynamicViscosity</code>: Water dynamic viscosity relative to 20ºC.</p></li>
 </ul></div>
+    <div id="details">
+    <h2>Details</h2>
+    <p>Functions <code>biophysics_leafTemperature</code> and <code>biophysics_leafTemperature2</code> calculate leaf temperature according to energy balance equation given in Campbell and Norman (1988).</p>
+<p>Function <code>biophysics_radiationDiurnalPattern</code> follows the equations given in Liu and Jordan (1960).</p>
+<p>Function <code>biophysics_temperatureDiurnalPattern</code> determines diurnal temperature pattern assuming a sinusoidal pattern with T = Tmin at sunrise and T = (Tmin+Tmax)/2 at sunset and a linear change in temperature between sunset and Tmin of the day after (McMurtrie et al. 1990).</p>
+<p>Function <code>biophysics_waterDynamicViscosity</code> calculates water dynamic viscosity following the Vogel (1921) equation.</p>
+    </div>
     <div id="references">
     <h2>References</h2>
-    <p>Campbell, G. S., and J. M. Norman. 1998. An introduction to environmental biophysics: 2nd edition. (eqns. 14.1 &amp; 14.3)</p>
-<p>B. Y. H. Liu and R. C. Jordan, “The interrelationship and characteristic distribution of direct, diffuse and total solar radiation,” Solar Energy, vol. 4, no. 3, pp. 1–19, 1960.</p> 
+    <p>Campbell, G. S., and J. M. Norman. 1998. An introduction to environmental biophysics: 2nd edition. (eqns. 14.1 &amp; 14.3)</p>  
+<p>B. Y. H. Liu and R. C. Jordan, “The interrelationship and characteristic distribution of direct, diffuse and total solar radiation,” Solar Energy, vol. 4, no. 3, pp. 1–19, 1960.</p>
 <p>McMurtrie, R. E., D. A. Rook, and F. M. Kelliher. 1990. Modelling the yield of Pinus radiata on a site limited by water and nitrogen. Forest Ecology and Management 30:381–413.</p>
 <p>H. Vogel, "Das Temperaturabhangigkeitsgesetz der Viskositat von Flussigkeiten", Physikalische Zeitschrift, vol. 22, pp. 645–646, 1921.</p>
-    </div>
-    <div id="author">
-    <h2>Author</h2>
-    <p>Miquel De Cáceres Ainsa, CREAF</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="spwb.html">spwb</a></code></p></div>
+    </div>
+    <div id="author">
+    <h2>Author</h2>
+    <p>Miquel De Cáceres Ainsa, CREAF</p>
     </div>
 
   </div>

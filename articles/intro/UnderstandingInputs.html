@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-09-27</h4>
+            <h4 data-toc-skip class="date">2022-11-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>UnderstandingInputs.Rmd</code></div>
@@ -959,13 +959,7 @@ trees) and <code>shrubData</code> (for shrubs):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
 <span><span class="va">exampleforestMED</span></span></code></pre></div>
-<pre><code><span><span class="co">## $ID</span></span>
-<span><span class="co">## [1] "1"</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## $patchsize</span></span>
-<span><span class="co">## [1] 10000</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## $treeData</span></span>
+<pre><code><span><span class="co">## $treeData</span></span>
 <span><span class="co">##   Species   N   DBH Height Z50  Z95</span></span>
 <span><span class="co">## 1     148 168 37.55    800 100  600</span></span>
 <span><span class="co">## 2     168 384 14.60    660 300 1000</span></span>
@@ -1031,12 +1025,12 @@ the user only needs to worry to calculate the values for
 leaf phenology of species.</p>
 <p>Aboveground leaf area distribution (with or without distinguishing
 among cohorts) can be examined by calling function
-<code><a href="../../reference/VerticalProfiles.html">vprofile_leafAreaDensity()</a></code>:</p>
+<code><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_leafAreaDensity()</a></code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../../reference/VerticalProfiles.html">vprofile_leafAreaDensity</a></span><span class="op">(</span><span class="va">above</span>, byCohorts <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_leafAreaDensity</a></span><span class="op">(</span><span class="va">above</span>, byCohorts <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></code></pre></div>
 <p><img src="UnderstandingInputs_files/figure-html/unnamed-chunk-6-1.png" width="384" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../../reference/VerticalProfiles.html">vprofile_leafAreaDensity</a></span><span class="op">(</span><span class="va">above</span>, byCohorts <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_leafAreaDensity</a></span><span class="op">(</span><span class="va">above</span>, byCohorts <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="UnderstandingInputs_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>Regarding <strong>belowground</strong> information, we need vectors
 with depths corresponding to 50% and 95% of fine roots, which we simply
@@ -1047,9 +1041,9 @@ concatenate from our forest data:</p>
 <p>These parameters specify a continuous distribution of fine roots.
 Users can visually inspect the distribution of fine roots of
 <code>forest</code> objects by calling function
-<code><a href="../../reference/VerticalProfiles.html">vprofile_rootDistribution()</a></code>:</p>
+<code><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_rootDistribution()</a></code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../../reference/VerticalProfiles.html">vprofile_rootDistribution</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_rootDistribution</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></code></pre></div>
 <p><img src="UnderstandingInputs_files/figure-html/unnamed-chunk-9-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 </div>

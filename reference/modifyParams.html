@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
       </span>
     </div>
 
@@ -47,8 +47,8 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Modify parameters</h1>
-    
-    <div class="hidden name"><code>modifySpParams.Rd</code></div>
+    <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/R/modifySpParams.R" class="external-link"><code>R/modifySpParams.R</code></a></small>
+    <div class="hidden name"><code>modifyParams.Rd</code></div>
     </div>
 
     <div class="ref-description">
@@ -57,34 +57,34 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">modifySpParams</span><span class="op">(</span><span class="va">SpParams</span>, <span class="va">customParams</span>, subsetSpecies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">modifyCohortParams</span><span class="op">(</span><span class="va">x</span>, <span class="va">customParams</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">modifyInputParams</span><span class="op">(</span><span class="va">x</span>, <span class="va">customParams</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>x</dt>
-<dd><p>A model input object of class <code><a href="modelInput.html">spwbInput</a></code> or <code><a href="modelInput.html">growthInput</a></code>.</p></dd>
-
-  <dt>SpParams</dt>
+    <dl><dt>SpParams</dt>
 <dd><p>A species parameter data frame, typically <code><a href="SpParams.html">SpParamsMED</a></code>.</p></dd>
 
-  <dt>customParams</dt>
+
+<dt>customParams</dt>
 <dd><p>A data frame or a named vector with new parameter values (see details).</p></dd>
 
-  <dt>subsetSpecies</dt>
-<dd><p>A flag to indicate that the output data frame should include only those species mentioned in <code>customParams</code>.</p></dd>
 
-  <dt>verbose</dt>
-<dd><p>A flag to indicate that messages should be printed on the console.</p></dd>
+<dt>subsetSpecies</dt>
+<dd><p>A logical flag to indicate that the output data frame should include only those species mentioned in <code>customParams</code>.</p></dd>
+
+
+<dt>x</dt>
+<dd><p>A model input object of class <code><a href="modelInput.html">spwbInput</a></code> or <code><a href="modelInput.html">growthInput</a></code>.</p></dd>
+
+
+<dt>verbose</dt>
+<dd><p>A logical flag to indicate that messages should be printed on the console.</p></dd>
 
 </dl></div>
-    <div id="details">
-    <h2>Details</h2>
-    <p>When calling function <code>modifySpParams</code>, <code>customParams</code> should be a data frame with as many rows as species and as many columns as parameters to modify, plus a column called 'SpIndex' to match species between the two tables.</p>
-<p>When calling <code>modifyCohortParams</code>, <code>customParams</code> can be a data frame with as many rows as cohorts and as many columns as parameters to modify, plus a column called 'Cohort' which will be matched with the cohort names given by <code><a href="modelInput.html">spwbInput</a></code> or <code><a href="modelInput.html">growthInput</a></code>. Alternatively, <code>customParams</code> can be a named list or named numeric vector as for <code>modifyInputParams</code>.</p>
-<p>When calling <code>modifyInputParams</code>, <code>customParams</code> must be either a named list or a named numeric vector. Cohort parameters are specified using the syntax "&lt;cohortName&gt;/&lt;paramName&gt;" for names (e.g. "T2_176/Z50" to modify parameter 'Z50' of cohort 'T2_176'). Soil layer parameters are specified using the syntax "&lt;paramName&gt;@#layer" for names, where #layer is the layer index (e.g. "rfc@1" will modify the rock fragment content of soil layer 1). Control parameters are specified using either "&lt;paramName&gt;" (e.g "phloemConductanceFactor") or "&lt;paramName&gt;$&lt;subParamName&gt;" (e.g "maximumRelativeGrowthRates$leaf"). It may seem unnecessary to modify soil or control parameters via a function, but <code>modifyInputParams</code> is called from optimization functions (see <code><a href="optimization.html">optimization</a></code>).</p>
-    </div>
     <div id="value">
     <h2>Value</h2>
     
@@ -94,13 +94,27 @@
 
 <p>Functions <code>modifyCohortParams</code> and <code>modifyInputParams</code> return a modified <code><a href="modelInput.html">spwbInput</a></code> or <code><a href="modelInput.html">growthInput</a></code> object. Note that modifications may affect other parameters beyond those indicated in <code>customParams</code>, as a result of parameter dependencies (see examples).</p>
     </div>
-    <div id="author">
-    <h2>Author</h2>
-    <p>Miquel De Cáceres Ainsa, CREAF</p>
+    <div id="details">
+    <h2>Details</h2>
+    <p>When calling function <code>modifySpParams</code>, <code>customParams</code> should be a data frame with as many rows as species 
+and as many columns as parameters to modify, plus a column called 'SpIndex' to match species between the two tables.</p>
+<p>When calling <code>modifyCohortParams</code>, <code>customParams</code> can be a data frame with as many rows as cohorts 
+and as many columns as parameters to modify, plus a column called 'Cohort' which will be matched with the cohort names 
+given by <code><a href="modelInput.html">spwbInput</a></code> or <code><a href="modelInput.html">growthInput</a></code>. 
+Alternatively, <code>customParams</code> can be a named list or named numeric vector as for <code>modifyInputParams</code>.</p>
+<p>When calling <code>modifyInputParams</code>, <code>customParams</code> must be either a named list or a named numeric vector. 
+Cohort parameters are specified using the syntax "&lt;cohortName&gt;/&lt;paramName&gt;" for names (e.g. "T2_176/Z50" to modify parameter 'Z50' of cohort 'T2_176'). 
+Soil layer parameters are specified using the syntax "&lt;paramName&gt;@#layer" for names, where #layer is the layer index (e.g. "rfc@1" will modify the rock fragment content of soil layer 1). 
+Control parameters are specified using either "&lt;paramName&gt;" (e.g "phloemConductanceFactor") or "&lt;paramName&gt;$&lt;subParamName&gt;" (e.g "maximumRelativeGrowthRates$leaf"). 
+It may seem unnecessary to modify soil or control parameters via a function, but <code>modifyInputParams</code> is called from optimization functions (see <code><a href="optimization.html">optimization</a></code>).</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="modelInput.html">spwbInput</a></code>, <code><a href="SpParams.html">SpParamsMED</a></code>, <code><a href="optimization.html">optimization</a></code></p></div>
+    </div>
+    <div id="author">
+    <h2>Author</h2>
+    <p>Miquel De Cáceres Ainsa, CREAF</p>
     </div>
 
     <div id="ref-examples">
@@ -245,7 +259,6 @@
 <span class="r-in"><span><span class="va">customParams</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>,<span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">customParams</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">PH_coh</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"/Al2As"</span>, <span class="st">"/LAI_live"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x1m</span> <span class="op">&lt;-</span> <span class="fu">modifyInputParams</span><span class="op">(</span><span class="va">x1</span>, <span class="va">customParams</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

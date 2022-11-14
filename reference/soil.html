@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
       </span>
     </div>
 
@@ -47,7 +47,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Soil initialization</h1>
-    
+    <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/R/RcppExports.R" class="external-link"><code>R/RcppExports.R</code></a>, <a href="https://github.com/emf-creaf/medfate/blob/HEAD/R/print.soil.R" class="external-link"><code>R/print.soil.R</code></a></small>
     <div class="hidden name"><code>soil.Rd</code></div>
     </div>
 
@@ -57,9 +57,9 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">soil</span><span class="op">(</span><span class="va">SoilParams</span>, VG_PTF <span class="op">=</span> <span class="st">"Toth"</span>, W <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>, SWE <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># S3 method for soil</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, model<span class="op">=</span><span class="st">"SX"</span>, <span class="va">...</span><span class="op">)</span></span>
-<span><span class="fu">redefineSoilLayers</span><span class="op">(</span><span class="va">SoilParams</span>, widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300</span>, <span class="fl">700</span>, <span class="fl">1000</span>, <span class="fl">2000</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, model <span class="op">=</span> <span class="st">"SX"</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -67,32 +67,31 @@
     <dl><dt>SoilParams</dt>
 <dd><p>A data frame of soil parameters (see an example in <code><a href="defaultSoilParams.html">defaultSoilParams</a></code>).</p></dd>
 
-  <dt>VG_PTF</dt>
+
+<dt>VG_PTF</dt>
 <dd><p>Pedotransfer functions to obtain parameters for the van Genuchten-Mualem equations. Either <code>"Carsel"</code> (Carsel and Parrish 1988) or <code>"Toth"</code> (Toth et al. 2015).</p></dd>
 
-  <dt>W</dt>
+
+<dt>W</dt>
 <dd><p>A numerical vector with the initial relative water content of each soil layer.</p></dd>
 
-  <dt>SWE</dt>
+
+<dt>SWE</dt>
 <dd><p>Initial snow water equivalent of the snow pack on the soil surface (mm).</p></dd>
 
-  <dt>x</dt>
+
+<dt>x</dt>
 <dd><p>An object of class <code>soil</code>.</p></dd>
 
-  <dt>model</dt>
+
+<dt>model</dt>
 <dd><p>Either 'SX' or 'VG' for Saxton or Van Genuchten pedotransfer models.</p></dd>
 
-  <dt>widths</dt>
-<dd><p>A numeric vector indicating the desired layer widths, in <em>mm</em>.</p></dd>
 
-  <dt>...</dt>
+<dt>...</dt>
 <dd><p>Additional parameters to <code>print</code>.</p></dd>
 
 </dl></div>
-    <div id="details">
-    <h2>Details</h2>
-    <p>Function <code>print</code> prompts a description of soil characteristics and state variables (water content and temperature) according to a water retention curve (either Saxton's or Van Genuchten's). Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa. Parameter <code>Temp</code> is initialized as missing for all soil layers. Function <code>redefineSoilLayers</code> allows redefining soil layer widths of an input data frame of soil parameters.</p>
-    </div>
     <div id="value">
     <h2>Value</h2>
     
@@ -112,9 +111,12 @@
 <li><p><code>rfc</code>: Percentage of rock fragment content for each layer.</p></li>
 <li><p><code>Kdrain</code>: Saturated vertical hydraulic conductivity (mm/day) (i.e. how easy is deep drainage towards groundwater). Function <code>soil</code> estimates it as a function of soil saturated hydraulic conductivity, but should be parametrized as a function of bedrock material.</p></li>
 </ul></div>
-    <div id="author">
-    <h2>Author</h2>
-    <p>Miquel De Cáceres Ainsa, CREAF</p>
+    <div id="details">
+    <h2>Details</h2>
+    <p>Function <code>print</code> prompts a description of soil characteristics and state variables (water content and temperature) 
+according to a water retention curve (either Saxton's or Van Genuchten's). 
+Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa. 
+Parameter <code>Temp</code> is initialized as missing for all soil layers.</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -125,6 +127,10 @@
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="soil_texture.html">soil_psi2thetaSX</a></code>, <code><a href="soil_texture.html">soil_psi2thetaVG</a></code>, <code><a href="spwb.html">spwb</a></code>, <code><a href="defaultSoilParams.html">defaultSoilParams</a></code></p></div>
+    </div>
+    <div id="author">
+    <h2>Author</h2>
+    <p>Miquel De Cáceres Ainsa, CREAF</p>
     </div>
 
     <div id="ref-examples">

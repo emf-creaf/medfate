@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
       </span>
     </div>
 
@@ -47,7 +47,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Water use efficiency</h1>
-    
+    <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/R/waterUseEfficiency.R" class="external-link"><code>R/waterUseEfficiency.R</code></a></small>
     <div class="hidden name"><code>waterUseEfficiency.Rd</code></div>
     </div>
 
@@ -56,8 +56,14 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">waterUseEfficiency</span><span class="op">(</span><span class="va">x</span>, type <span class="op">=</span> <span class="st">"Plant Ag/E"</span>, leaves <span class="op">=</span> <span class="st">"average"</span>, freq <span class="op">=</span> <span class="st">"days"</span>, </span>
-<span>                        draw <span class="op">=</span> <span class="cn">TRUE</span>, ylim <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">waterUseEfficiency</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"Plant Ag/E"</span>,</span>
+<span>  leaves <span class="op">=</span> <span class="st">"average"</span>,</span>
+<span>  freq <span class="op">=</span> <span class="st">"days"</span>,</span>
+<span>  draw <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  ylim <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -65,45 +71,57 @@
     <dl><dt>x</dt>
 <dd><p>An object of class <code><a href="spwb.html">spwb</a></code>, <code><a href="spwb.html">pwb</a></code>, <code><a href="growth.html">growth</a></code> or <code><a href="fordyn.html">fordyn</a></code>.</p></dd>
 
-  <dt>type</dt>
+
+<dt>type</dt>
 <dd><p>A string to indicate the scale of WUE calculation. Either:</p><ul><li><p><code>"Leaf iWUE"</code>: Leaf intrinsic WUE, i.e. instantaneous ratio between photosynthesis and stomatal conductance (only for simulations with <code>transpirationMode = "Sperry"</code> and <code>subdailyResults = TRUE</code>).</p></li>
 <li><p><code>"Leaf Ci"</code>: Leaf intercellular CO2 concentration (only for simulations with <code>transpirationMode = "Sperry"</code> and <code>subdailyResults = TRUE</code>).</p></li>
 <li><p><code>"Plant An/E"</code>: Plant (cohort) net photosynthesis over plant transpiration (only for simulations with <code>transpirationMode = "Sperry"</code>)</p></li>
 <li><p><code>"Stand An/E"</code>: Stand net photosynthesis over stand transpiration (only for simulations with <code>transpirationMode = "Sperry"</code>)</p></li>
 <li><p><code>"Plant Ag/E"</code>: Plant (cohort) gross photosynthesis over plant transpiration</p></li>
 <li><p><code>"Stand Ag/E"</code>: Stand gross photosynthesis over stand transpiration</p></li>
-</ul><p></p></dd>
+</ul></dd>
 
-  <dt>leaves</dt>
+
+<dt>leaves</dt>
 <dd><p>Either <code>"sunlit"</code>, <code>"shade"</code> or <code>"average"</code>. Refers to the WUE of different leaf types or the average (with weights according to the LAI of sunlit and shade leaves). Only relevant for <code>type = "iWUE"</code>.</p></dd>
 
-  <dt>freq</dt>
+
+<dt>freq</dt>
 <dd><p>Frequency of summary statistics (see <code><a href="https://rdrr.io/r/base/cut.POSIXt.html" class="external-link">cut.Date</a></code>).</p></dd>
 
-  <dt>draw</dt>
+
+<dt>draw</dt>
 <dd><p>A boolean flag to indicate that a plot should be returned.</p></dd>
 
-  <dt>ylim</dt>
+
+<dt>ylim</dt>
 <dd><p>Range of values for y.</p></dd>
 
 </dl></div>
-    <div id="details">
-    <h2>Details</h2>
-    <p>Temporal aggregation of WUE values is done differently depending on the value of <code>type</code>. For <code>type = "Plant Ag/E"</code>, <code>type = "Stand Ag/E"</code>, <code>type = "Plant An/E"</code> and <code>type = "Stand An/E"</code> sums or daily photosynthesis and transpiration are first calculated at the desired temporal scale and the ratio is calculated afterwards. For <code>type = "Leaf iWUE"</code> intrinsic WUE values are first calculated at the daily scale (as averages of instantaneous An/gs ratios weighted by An) and then they are aggregated to the desired scale by calculating weighted averages, where weights are given by daily photosynthesis.</p>
-    </div>
     <div id="value">
     <h2>Value</h2>
     
 
-<p>If <code>draw=TRUE</code> a plot is returned. Otherwise, the function returns a matrix with WUE values, where rows are dates (at the desired temporal scale), and columns are plant cohorts. In the case of <code>type = "Plant Ag/E"</code>, <code>type = "Stand Ag/E"</code>, <code>type = "Plant An/E"</code> and <code>type = "Stand An/E"</code> values are in gC/L. In the case of <code>type = "Leaf iWUE"</code> values are in micromol of carbon per mmol of water.</p>
+<p>If <code>draw=TRUE</code> a plot is returned. Otherwise, the function returns a matrix with WUE values, 
+where rows are dates (at the desired temporal scale), and columns are plant cohorts. 
+In the case of <code>type = "Plant Ag/E"</code>, <code>type = "Stand Ag/E"</code>, <code>type = "Plant An/E"</code> and <code>type = "Stand An/E"</code> values are in gC/L. 
+In the case of <code>type = "Leaf iWUE"</code> values are in micromol of carbon per mmol of water.</p>
     </div>
-    <div id="author">
-    <h2>Author</h2>
-    <p>Miquel De Cáceres Ainsa, CREAF</p>
+    <div id="details">
+    <h2>Details</h2>
+    <p>Temporal aggregation of WUE values is done differently depending on the value of <code>type</code>. 
+For <code>type = "Plant Ag/E"</code>, <code>type = "Stand Ag/E"</code>, <code>type = "Plant An/E"</code> and <code>type = "Stand An/E"</code> sums 
+or daily photosynthesis and transpiration are first calculated at the desired temporal scale and the ratio is calculated afterwards. 
+For <code>type = "Leaf iWUE"</code> intrinsic WUE values are first calculated at the daily scale (as averages of instantaneous An/gs ratios weighted by An) 
+and then they are aggregated to the desired scale by calculating weighted averages, where weights are given by daily photosynthesis.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="droughtStress.html">droughtStress</a></code></p></div>
+    </div>
+    <div id="author">
+    <h2>Author</h2>
+    <p>Miquel De Cáceres Ainsa, CREAF</p>
     </div>
 
   </div>

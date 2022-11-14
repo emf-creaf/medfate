@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
       </span>
     </div>
 
@@ -47,7 +47,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Plant recruitment</h1>
-    
+    <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/R/fordyn.R" class="external-link"><code>R/fordyn.R</code></a></small>
     <div class="hidden name"><code>recruitment.Rd</code></div>
     </div>
 
@@ -64,34 +64,42 @@
     <dl><dt>forest</dt>
 <dd><p>An object of class <code><a href="forest.html">forest</a></code>.</p></dd>
 
-  <dt>SpParams</dt>
+
+<dt>SpParams</dt>
 <dd><p>A data frame with species parameters (see <code><a href="SpParams.html">SpParamsMED</a></code> and <code><a href="SpParams.html">SpParamsDefinition</a></code>).</p></dd>
 
-  <dt>control</dt>
+
+<dt>control</dt>
 <dd><p>A list with default control parameters (see <code><a href="defaultControl.html">defaultControl</a></code>).</p></dd>
 
-  <dt>minMonthTemp</dt>
+
+<dt>minMonthTemp</dt>
 <dd><p>Minimum month temperature.</p></dd>
 
-  <dt>moistureIndex</dt>
+
+<dt>moistureIndex</dt>
 <dd><p>Moisture index (annual precipitation over annual potential evapotranspiration).</p></dd>
 
 </dl></div>
-    <div id="details">
-    <h2>Details</h2>
-    <p>Species can recruit if adults (sufficiently tall individuals) are present (seed rain can also be specified in a control parameter). Minimum month temperature and moisture index values are used to determine if recruitment was successful. Species also require a minimum amount of light at the ground level.</p>
-    </div>
     <div id="value">
     <h2>Value</h2>
-    <p>An object of class <code><a href="forest.html">forest</a></code> with the new plant cohorts.</p>
+    
+
+<p>An object of class <code><a href="forest.html">forest</a></code> with the new plant cohorts.</p>
     </div>
-    <div id="author">
-    <h2>Author</h2>
-    <p>Miquel De Cáceres Ainsa, CREAF</p>
+    <div id="details">
+    <h2>Details</h2>
+    <p>Species can recruit if adults (sufficiently tall individuals) are present (seed rain can also be specified in a control parameter). 
+Minimum month temperature and moisture index values are used to determine if recruitment was successful. 
+Species also require a minimum amount of light at the ground level.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="fordyn.html">fordyn</a></code></p></div>
+    </div>
+    <div id="author">
+    <h2>Author</h2>
+    <p>Miquel De Cáceres Ainsa, CREAF</p>
     </div>
 
     <div id="ref-examples">
@@ -115,12 +123,6 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Compare recruitment outcomes</span></span></span>
 <span class="r-in"><span><span class="fu">recruitment</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span>, <span class="fl">0</span>, <span class="fl">0.25</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ID</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $patchsize</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $treeData</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] Species DBH     Height  N       Z50     Z95    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;0 rows&gt; (or 0-length row.names)</span>
@@ -138,12 +140,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "forest" "list"  </span>
 <span class="r-in"><span><span class="fu">recruitment</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span>, <span class="fl">3</span>, <span class="fl">0.25</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ID</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $patchsize</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $treeData</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] Species DBH     Height  N       Z50     Z95    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;0 rows&gt; (or 0-length row.names)</span>

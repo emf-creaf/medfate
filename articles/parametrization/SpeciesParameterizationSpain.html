@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-09-27</h4>
+            <h4 data-toc-skip class="date">2022-11-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/SpeciesParameterizationSpain.Rmd" class="external-link"><code>vignettes/parametrization/SpeciesParameterizationSpain.Rmd</code></a></small>
       <div class="hidden name"><code>SpeciesParameterizationSpain.Rmd</code></div>
@@ -222,7 +222,8 @@ allometric databases.</li>
 source data for parameter filling. Source data includes forest inventory
 (i.e. IFN) data as well as plant trait and allometric data bases:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">IFN_path</span> <span class="op">=</span> <span class="st">"/home/miquel/OneDrive/Datasets/IFN/"</span></span>
+<code class="sourceCode R"><span><span class="va">IFN_path</span> <span class="op">=</span> <span class="st">"/home/miquel/OneDrive/EMFDatasets/ForestInventories/IFN/"</span></span>
+<span><span class="va">IFN_out_path</span> <span class="op">=</span> <span class="st">"/home/miquel/OneDrive/EMFProducts/MEDFATE_Initialisation/IFN/"</span></span>
 <span><span class="va">DB_path</span> <span class="op">=</span> <span class="st">"/home/miquel/OneDrive/Professional/MedfateWorks/MedfateSpeciesParametrization/"</span></span></code></pre></div>
 </div>
 </div>
@@ -2751,7 +2752,7 @@ use this information to create forest lists:</p>
 <div class="sourceCode" id="cb399"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">IFN2_forestlist</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/IFN2forest.html" class="external-link">IFN2forestlist</a></span><span class="op">(</span><span class="va">treeDataIFN2</span>, <span class="va">shrubDataIFN2</span>, <span class="va">SpParams</span>, </span>
 <span>                                 setDefaults <span class="op">=</span> <span class="cn">TRUE</span>, filterWrongRecords <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">IFN2_forestlist</span>, file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">IFN2_forestlist</span>, file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">IFN_out_path</span>,<span class="st">"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Some of the shrub/tree records may not be parsed if they have not
 been included in the species definition of <code>SpParams</code>. The
 number of plots parsed is:</p>
@@ -2788,7 +2789,7 @@ number of plots parsed is:</p>
 <div class="sourceCode" id="cb404"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">IFN3_forestlist</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/IFN2forest.html" class="external-link">IFN2forestlist</a></span><span class="op">(</span><span class="va">treeDataIFN3</span>, <span class="va">shrubDataIFN3</span>, <span class="va">SpParams</span>, </span>
 <span>                                 setDefaults <span class="op">=</span> <span class="cn">TRUE</span>, filterWrongRecords <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">IFN3_forestlist</span>, file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">IFN3_forestlist</span>, file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">IFN_out_path</span>,<span class="st">"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Again, some of the shrub/tree records may not be parsed if they have
 not been included in the species definition of <code>SpParams</code>.
 The number of plots parsed is now:</p>
@@ -2799,7 +2800,7 @@ The number of plots parsed is now:</p>
 <div class="sourceCode" id="cb407"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">IFN4_forestlist</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/IFN2forest.html" class="external-link">IFN2forestlist</a></span><span class="op">(</span><span class="va">treeDataIFN4</span>, <span class="va">shrubDataIFN4</span>, <span class="va">SpParams</span>, </span>
 <span>                                 setDefaults <span class="op">=</span> <span class="cn">TRUE</span>, filterWrongRecords <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">IFN4_forestlist</span>, file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">IFN_path</span>,<span class="st">"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">IFN4_forestlist</span>, file<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">IFN_out_path</span>,<span class="st">"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>The number of plots parsed is lower than the previous two, as IFN4 is
 not yet completed for all Spanish provinces:</p>
 <div class="sourceCode" id="cb408"><pre class="downlit sourceCode r">

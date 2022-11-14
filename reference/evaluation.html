@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
       </span>
     </div>
 
@@ -47,7 +47,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Evaluation of simulations results</h1>
-    
+    <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/R/evaluation.R" class="external-link"><code>R/evaluation.R</code></a></small>
     <div class="hidden name"><code>evaluation.Rd</code></div>
     </div>
 
@@ -56,16 +56,39 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">evaluation_table</span><span class="op">(</span><span class="va">out</span>, <span class="va">measuredData</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, cohort <span class="op">=</span> <span class="cn">NULL</span>, </span>
-<span>                 temporalResolution <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span></span>
-<span><span class="fu">evaluation_stats</span><span class="op">(</span><span class="va">out</span>, <span class="va">measuredData</span>, type<span class="op">=</span><span class="st">"SWC"</span>, cohort <span class="op">=</span> <span class="cn">NULL</span>, </span>
-<span>                 temporalResolution <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span></span>
-<span><span class="fu">evaluation_plot</span><span class="op">(</span><span class="va">out</span>, <span class="va">measuredData</span>, type<span class="op">=</span><span class="st">"SWC"</span>, cohort <span class="op">=</span> <span class="cn">NULL</span>, </span>
-<span>                temporalResolution <span class="op">=</span> <span class="st">"day"</span>, </span>
-<span>                plotType <span class="op">=</span> <span class="st">"dynamics"</span><span class="op">)</span></span>
-<span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">out</span>, <span class="va">measuredData</span>, type<span class="op">=</span><span class="st">"SWC"</span>, cohort<span class="op">=</span><span class="cn">NULL</span>, </span>
-<span>                  temporalResolution <span class="op">=</span> <span class="st">"day"</span>,</span>
-<span>                  metric <span class="op">=</span> <span class="st">"loglikelihood"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">evaluation_table</span><span class="op">(</span></span>
+<span>  <span class="va">out</span>,</span>
+<span>  <span class="va">measuredData</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"SWC"</span>,</span>
+<span>  cohort <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  temporalResolution <span class="op">=</span> <span class="st">"day"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">evaluation_stats</span><span class="op">(</span></span>
+<span>  <span class="va">out</span>,</span>
+<span>  <span class="va">measuredData</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"SWC"</span>,</span>
+<span>  cohort <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  temporalResolution <span class="op">=</span> <span class="st">"day"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">evaluation_plot</span><span class="op">(</span></span>
+<span>  <span class="va">out</span>,</span>
+<span>  <span class="va">measuredData</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"SWC"</span>,</span>
+<span>  cohort <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  temporalResolution <span class="op">=</span> <span class="st">"day"</span>,</span>
+<span>  plotType <span class="op">=</span> <span class="st">"dynamics"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">evaluation_metric</span><span class="op">(</span></span>
+<span>  <span class="va">out</span>,</span>
+<span>  <span class="va">measuredData</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"SWC"</span>,</span>
+<span>  cohort <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  temporalResolution <span class="op">=</span> <span class="st">"day"</span>,</span>
+<span>  metric <span class="op">=</span> <span class="st">"loglikelihood"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -73,45 +96,40 @@
     <dl><dt>out</dt>
 <dd><p>An object of class <code><a href="spwb.html">spwb</a></code>, <code><a href="growth.html">growth</a></code> or <code><a href="spwb.html">pwb</a></code>.</p></dd>
 
-  <dt>measuredData</dt>
+
+<dt>measuredData</dt>
 <dd><p>A data frame with observed/measured values. Dates should be in row names, whereas columns should be named according to the type of output to be evaluated (see details).</p></dd>
 
-  <dt>type</dt>
-<dd><p>A string with the kind of model output to be evaluated. Accepted values are <code>"SWC"</code> (soil moisture content), <code>"REW"</code> relative extractable water, <code>"ETR"</code> (total evapotranspiration), <code>"SE+TR"</code> (modelled soil evaporation + transpiration against observed total evapotranspiration), <code>"E"</code> (transpiration per leaf area), <code>"LFMC"</code> (Live fuel moisture content), <code>"WP"</code> (plant water potentials), <code>"BAI"</code> (basal area increment), <code>"DI"</code> (diameter increment), <code>"DBH"</code> (diameter at breast height) or <code>"Height"</code> (plant height).</p></dd>
 
-  <dt>cohort</dt>
+<dt>type</dt>
+<dd><p>A string with the kind of model output to be evaluated. Accepted values are <code>"SWC"</code> (soil moisture content), <code>"REW"</code> relative extractable water, <code>"ETR"</code> (total evapotranspiration), 
+<code>"SE+TR"</code> (modelled soil evaporation + transpiration against observed total evapotranspiration), <code>"E"</code> (transpiration per leaf area), <code>"LFMC"</code> (Live fuel moisture content), <code>"WP"</code> (plant water potentials), 
+<code>"BAI"</code> (basal area increment), <code>"DI"</code> (diameter increment), 
+<code>"DBH"</code> (diameter at breast height) or <code>"Height"</code> (plant height).</p></dd>
+
+
+<dt>cohort</dt>
 <dd><p>A string of the cohort to be compared (e.g. "T1_68"). If <code>NULL</code> results for the first cohort will be evaluated.</p></dd>
 
-  <dt>temporalResolution</dt>
+
+<dt>temporalResolution</dt>
 <dd><p>A string to indicate the temporal resolution of the model evaluation, which can be "day", "week", "month" or "year". Observed and modelled values are aggregated temporally (using either means or sums) before comparison.</p></dd>
 
-  <dt>plotType</dt>
+
+<dt>plotType</dt>
 <dd><p>Plot type to draw, either <code>"dynamics"</code> or <code>"scatter"</code>.</p></dd>
 
-  <dt>metric</dt>
+
+<dt>metric</dt>
 <dd><p>An evaluation metric:</p><ul><li><p><code>"MAE"</code>: Mean absolute error.</p></li>
 <li><p><code>"MAE.rel"</code>: Mean absolute error in relative terms.</p></li>
 <li><p><code>"r"</code>: Pearson's linear correlation coefficient.</p></li>
 <li><p><code>"NSE"</code>: Nash-Sutcliffe model efficiency coefficient.</p></li>
 <li><p><code>"NSE.abs"</code>: Modified Nash-Sutcliffe model efficiency coefficient (L1 norm) (Legates &amp; McCabe 1999).</p></li>
 <li><p><code>"loglikelihood"</code>: Logarithm of the likelihood of observing the data given the model predictions, assuming independent Gaussian errors.</p></li>
-</ul><p></p></dd>
+</ul></dd>
 
 </dl></div>
-    <div id="details">
-    <h2>Details</h2>
-    <p>Users should provide the appropriate columns in <code>measuredData</code>, depending on the type of output to be evaluated:</p><ul><li><p><code>"SWC" or "REW"</code>: A column named <code>"SWC"</code> should be present, containing soil moisture content in percent volume. When <code>type="REW"</code>, observed values are divided by the 90% quantile, which is assumed to be the moisture content at field capacity.</p></li>
-<li><p><code>"ETR"</code> or <code>"SE+TR"</code>: A column named <code>"ETR"</code> should be present, containing stand's evapotranspiration in mm/day (or mm/week, mm/month, etc, depending on the temporal resolution). If <code>type="ETR"</code> observed values will be compared against modelled evapotranspiration (i.e. sum of transpiration, soil evaporation and interception loss), whereas if <code>type= "SE+TR"</code> observed values will be compared against the sum of transpiration and soil evaporation only.</p></li>
-<li><p><code>"E"</code>: For each plant cohort whose transpiration is to be evaluated, a column starting with <code>"E_"</code> and continuing with a cohort name (e.g. <code>"E_T1_68"</code>) with transpiration in L/m2/day on a leaf area basis (or L/m2/week, L/m2/month, etc, depending on the temporal resolution).</p></li>
-<li><p><code>"LFMC"</code>: For each plant cohort whose transpiration is to be evaluated, a column starting with <code>"FCM_"</code> and continuing with a cohort name (e.g. <code>"FMC_T1_68"</code>) with fuel moisture content as percent of dry weight.</p></li>
-<li><p><code>"WP"</code>: For each plant cohort whose transpiration is to be evaluated, two columns, one starting with <code>"PD_"</code> (for pre-dawn) and the other with <code>"MD_"</code> (for midday), and continuing with a cohort name (e.g. <code>"PD_T1_68"</code>). They should contain leaf water potential values in MPa. These are compared against sunlit water potentials.</p></li>
-<li><p><code>"BAI"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"BAI_"</code> and continuing with a cohort name (e.g. <code>"BAI_T1_68"</code>) with basal area increment in cm2/day, cm2/week, cm2/month or cm2/year, depending on the temporal resolution.</p></li>
-<li><p><code>"DI"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"DI_"</code> and continuing with a cohort name (e.g. <code>"DI_T1_68"</code>) with basal area increment in cm/day, cm/week, cm/month or cm/year, depending on the temporal resolution.</p></li>
-<li><p><code>"DBH"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"DBH_"</code> and continuing with a cohort name (e.g. <code>"DBH_T1_68"</code>) with DBH values in cm.</p></li>
-<li><p><code>"Height"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"Height_"</code> and continuing with a cohort name (e.g. <code>"Height_T1_68"</code>) with Height values in cm.</p></li>
-</ul><p>Additional columns may exist with the standard error of measured quantities. These should be named as the referred quantity, followed by <code>"_err"</code> (e.g. <code>"PD_T1_68_err"</code>), and are used to draw confidence intervals around observations.</p>   
-<p>Row names in <code>measuredData</code> indicate the date of measurement (in the case of days). If measurements refer to months or years, row names should also be in a "year-month-day" format, although with "01" for days and/or months (e.g. "2001-02-01" for february 2001, or "2001-01-01" for year 2001).</p>
-    </div>
     <div id="value">
     <h2>Value</h2>
     
@@ -129,9 +147,19 @@
 <li><p>Function <code>evaluation_plot</code> returns a ggplot object.</p></li>
 <li><p>Function <code>evaluation_metric</code> returns a scalar with the desired metric.</p></li>
 </ul></div>
-    <div id="author">
-    <h2>Author</h2>
-    <p>Miquel De Cáceres Ainsa, CREAF</p>
+    <div id="details">
+    <h2>Details</h2>
+    <p>Users should provide the appropriate columns in <code>measuredData</code>, depending on the type of output to be evaluated:</p><ul><li><p><code>"SWC" or "REW"</code>: A column named <code>"SWC"</code> should be present, containing soil moisture content in percent volume. When <code>type="REW"</code>, observed values are divided by the 90% quantile, which is assumed to be the moisture content at field capacity.</p></li>
+<li><p><code>"ETR"</code> or <code>"SE+TR"</code>: A column named <code>"ETR"</code> should be present, containing stand's evapotranspiration in mm/day (or mm/week, mm/month, etc, depending on the temporal resolution). If <code>type="ETR"</code> observed values will be compared against modelled evapotranspiration (i.e. sum of transpiration, soil evaporation and interception loss), whereas if <code>type= "SE+TR"</code> observed values will be compared against the sum of transpiration and soil evaporation only.</p></li>
+<li><p><code>"E"</code>: For each plant cohort whose transpiration is to be evaluated, a column starting with <code>"E_"</code> and continuing with a cohort name (e.g. <code>"E_T1_68"</code>) with transpiration in L/m2/day on a leaf area basis (or L/m2/week, L/m2/month, etc, depending on the temporal resolution).</p></li>
+<li><p><code>"LFMC"</code>: For each plant cohort whose transpiration is to be evaluated, a column starting with <code>"FCM_"</code> and continuing with a cohort name (e.g. <code>"FMC_T1_68"</code>) with fuel moisture content as percent of dry weight.</p></li>
+<li><p><code>"WP"</code>: For each plant cohort whose transpiration is to be evaluated, two columns, one starting with <code>"PD_"</code> (for pre-dawn) and the other with <code>"MD_"</code> (for midday), and continuing with a cohort name (e.g. <code>"PD_T1_68"</code>). They should contain leaf water potential values in MPa. These are compared against sunlit water potentials.</p></li>
+<li><p><code>"BAI"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"BAI_"</code> and continuing with a cohort name (e.g. <code>"BAI_T1_68"</code>) with basal area increment in cm2/day, cm2/week, cm2/month or cm2/year, depending on the temporal resolution.</p></li>
+<li><p><code>"DI"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"DI_"</code> and continuing with a cohort name (e.g. <code>"DI_T1_68"</code>) with basal area increment in cm/day, cm/week, cm/month or cm/year, depending on the temporal resolution.</p></li>
+<li><p><code>"DBH"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"DBH_"</code> and continuing with a cohort name (e.g. <code>"DBH_T1_68"</code>) with DBH values in cm.</p></li>
+<li><p><code>"Height"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"Height_"</code> and continuing with a cohort name (e.g. <code>"Height_T1_68"</code>) with Height values in cm.</p></li>
+</ul><p>Additional columns may exist with the standard error of measured quantities. These should be named as the referred quantity, followed by <code>"_err"</code> (e.g. <code>"PD_T1_68_err"</code>), and are used to draw confidence intervals around observations.</p> 
+<p>Row names in <code>measuredData</code> indicate the date of measurement (in the case of days). If measurements refer to months or years, row names should also be in a "year-month-day" format, although with "01" for days and/or months (e.g. "2001-02-01" for february 2001, or "2001-01-01" for year 2001).</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -140,6 +168,10 @@
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="spwb.html">spwb</a></code>, <code><a href="growth.html">growth</a></code>, <code><a href="optimization.html">optimization</a></code>, <code><a href="exampleobs.html">exampleobs</a></code></p></div>
+    </div>
+    <div id="author">
+    <h2>Author</h2>
+    <p>Miquel De Cáceres Ainsa, CREAF</p>
     </div>
 
     <div id="ref-examples">
@@ -164,7 +196,6 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Call simulation function</span></span></span>
 <span class="r-in"><span><span class="va">S1</span><span class="op">&lt;-</span><span class="fu"><a href="spwb.html">spwb</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Package 'meteoland' [ver. 1.0.3]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 291.257</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial snowpack content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations</span>
@@ -199,7 +230,6 @@
 <span class="r-in"><span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span>, metric<span class="op">=</span><span class="st">"NSE"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.9250517</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Comparison of temporal dynamics</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_plot</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="evaluation-1.png" alt="" width="700" height="433"></span>
@@ -207,6 +237,7 @@
 <span class="r-in"><span><span class="co">#Loglikelihood value</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1014.709</span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>

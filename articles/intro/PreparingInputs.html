@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-09-27</h4>
+            <h4 data-toc-skip class="date">2022-11-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/PreparingInputs.Rmd" class="external-link"><code>vignettes/intro/PreparingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>PreparingInputs.Rmd</code></div>
@@ -98,15 +98,14 @@ processing his/her own data.</p>
 <strong>medfateutils</strong> and <strong>meteoland</strong>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/" class="external-link">medfate</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Package 'medfate' [ver. 2.8.1]</span></span>
+<span><span class="co">#&gt; Package 'medfate' [ver. 2.8.2]</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">medfateutils</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Registered S3 method overwritten by 'ape':</span></span>
 <span><span class="co">#&gt;   method   from </span></span>
 <span><span class="co">#&gt;   plot.mst spdep</span></span>
-<span><span class="co">#&gt; Package 'medfateutils' [ver. 0.1.4]</span></span>
+<span><span class="co">#&gt; Package 'medfateutils' [ver. 0.1.5]</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/meteoland/index.html" class="external-link">meteoland</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required package: sp</span></span>
-<span><span class="co">#&gt; Package 'meteoland' [ver. 1.0.3]</span></span></code></pre></div>
+<span><span class="co">#&gt; Loading required package: sp</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="buildingmanipulating-forest-objects">Building/manipulating forest objects<a class="anchor" aria-label="anchor" href="#buildingmanipulating-forest-objects"></a>
@@ -153,14 +152,8 @@ number of stems.</p>
 <p>We initialize an empty forest object using function
 <code><a href="../../reference/forest.html">emptyforest()</a></code> from package <strong>medfate</strong>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pobl_ctl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest.html">emptyforest</a></span><span class="op">(</span><span class="st">"POBL_CTL"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">pobl_ctl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/forest.html">emptyforest</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pobl_ctl</span></span>
-<span><span class="co">#&gt; $ID</span></span>
-<span><span class="co">#&gt; [1] "POBL_CTL"</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $patchsize</span></span>
-<span><span class="co">#&gt; [1] 10000</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $treeData</span></span>
 <span><span class="co">#&gt; [1] Species DBH     Height  N       Z50     Z95    </span></span>
 <span><span class="co">#&gt; &lt;0 rows&gt; (or 0-length row.names)</span></span>
@@ -216,7 +209,6 @@ of the <code>forest</code> object using the <code>summary</code>
 function defined in <strong>medfate</strong> for this object class:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ID: POBL_CTL </span></span>
 <span><span class="co">#&gt; Tree density (ind/ha): 267 </span></span>
 <span><span class="co">#&gt; Tree BA (m2/ha): 3.0179815 </span></span>
 <span><span class="co">#&gt; Cover (%) trees (open ground): 42.1205627  shrubs: 0 </span></span>
@@ -243,7 +235,6 @@ parameter <code>plot_size_x</code>:</p>
 <p>We run again the summary:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ID: POBL_CTL </span></span>
 <span><span class="co">#&gt; Tree density (ind/ha): 3777.27731604765 </span></span>
 <span><span class="co">#&gt; Tree BA (m2/ha): 42.6957047 </span></span>
 <span><span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span></span>
@@ -276,7 +267,6 @@ defined, we can include them in our mapping:</p>
 <p>Now the summary of the control forest stand looks like:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_ctl</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ID: POBL_CTL </span></span>
 <span><span class="co">#&gt; Tree density (ind/ha): 3777.27731604765 </span></span>
 <span><span class="co">#&gt; Tree BA (m2/ha): 42.6957047 </span></span>
 <span><span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span></span>
@@ -354,12 +344,11 @@ humilis</em>) is a synonym and needs to be replaced by its accepted name
 We can repeat the same operations with the forest plot after the
 thinning intervention:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pobl_thi_aft</span> <span class="op">=</span> <span class="fu"><a href="../../reference/forest.html">emptyforest</a></span><span class="op">(</span><span class="st">"POBL_THI_AFT"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">pobl_thi_aft</span> <span class="op">=</span> <span class="fu"><a href="../../reference/forest.html">emptyforest</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pobl_thi_aft</span><span class="op">$</span><span class="va">treeData</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/forest_mapWoodyTables.html" class="external-link">forest_mapTreeTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">poblet_trees</span>, <span class="va">Plot.Code</span><span class="op">==</span><span class="st">"POBL_THI_AFT"</span><span class="op">)</span>,</span>
 <span>                                             mapping_x <span class="op">=</span> <span class="va">mapping</span>, SpParams <span class="op">=</span> <span class="va">SpParamsMED</span>, </span>
 <span>                                             plot_size_x <span class="op">=</span> <span class="va">sampled_area</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_thi_aft</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ID: POBL_THI_AFT </span></span>
 <span><span class="co">#&gt; Tree density (ind/ha): 2673.80304394384 </span></span>
 <span><span class="co">#&gt; Tree BA (m2/ha): 31.6162035 </span></span>
 <span><span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span></span>
@@ -406,7 +395,6 @@ tree cohorts using again:</p>
 <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> function:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pobl_thi_aft</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ID: POBL_THI_AFT </span></span>
 <span><span class="co">#&gt; Tree density (ind/ha): 2673.80304394384 </span></span>
 <span><span class="co">#&gt; Tree BA (m2/ha): 31.6162035 </span></span>
 <span><span class="co">#&gt; Cover (%) trees (open ground): 100  shrubs: 0 </span></span>
@@ -433,15 +421,14 @@ SoilGrids.org.</p>
 <p>Retrieval of soil properties from SoilGrids can be done using
 function <code><a href="https://rdrr.io/pkg/medfateutils/man/soilgridsParams.html" class="external-link">soilgridsParams()</a></code> from package
 <strong>medfateutils</strong>. Assuming we know the plot coordinates, we
-first create an object <code>SpatialPoints</code> (see package
-<strong>sp</strong>):</p>
+first create an object <code>sf</code> (see package
+<strong>sf</strong>):</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cc</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fl">1.0219</span>, <span class="fl">41.3443</span><span class="op">)</span></span>
-<span><span class="va">coords_sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sp/man/SpatialPoints.html" class="external-link">SpatialPoints</a></span><span class="op">(</span><span class="va">cc</span>, <span class="fu"><a href="https://rdrr.io/pkg/sp/man/CRS-class.html" class="external-link">CRS</a></span><span class="op">(</span>SRS_string <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">sf_pt</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.0219</span>, <span class="fl">41.3443</span><span class="op">)</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span></code></pre></div>
 <p>This object can be used to query SoilGrids using
 <code><a href="https://rdrr.io/pkg/medfateutils/man/soilgridsParams.html" class="external-link">soilgridsParams()</a></code>:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pobl_soil_props</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/soilgridsParams.html" class="external-link">soilgridsParams</a></span><span class="op">(</span><span class="va">coords_sp</span>, widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300</span>, <span class="fl">700</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_soil_props</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medfateutils/man/soilgridsParams.html" class="external-link">soilgridsParams</a></span><span class="op">(</span><span class="va">sf_pt</span>, widths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">300</span>, <span class="fl">700</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>This function returns a data frame of soil properties:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pobl_soil_props</span></span>
@@ -543,7 +530,8 @@ Here we illustrate one way of obtaining such data using package
 <code>SpatialPointsTopography</code>, which contains both the
 coordinates of our site as well as topographic variables.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pobl_spt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meteoland/man/SpatialPointsTopography.html" class="external-link">SpatialPointsTopography</a></span><span class="op">(</span><span class="va">coords_sp</span>,</span>
+<code class="sourceCode R"><span><span class="va">coords_sp</span> <span class="op">&lt;-</span> <span class="fu">as</span><span class="op">(</span><span class="va">sf_pt</span>, <span class="st">"Spatial"</span><span class="op">)</span></span>
+<span><span class="va">pobl_spt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meteoland/man/SpatialPointsTopography.html" class="external-link">SpatialPointsTopography</a></span><span class="op">(</span><span class="va">coords_sp</span>,</span>
 <span>                                    elevation <span class="op">=</span> <span class="fl">850</span>, slope <span class="op">=</span> <span class="fl">15.1</span>, aspect <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
 <span><span class="va">pobl_spt</span></span>
 <span><span class="co">#&gt; Object of class SpatialPointsTopography</span></span>
@@ -591,7 +579,7 @@ structure is:</p>
 <span><span class="co">#&gt;   .. .. ..$ Precipitation       : num [1:1461] 0 0 0 0 0 0 0 0 0 0 ...</span></span>
 <span><span class="co">#&gt;   .. .. ..$ MeanRelativeHumidity: num [1:1461] 86.5 82.2 79.1 77.6 56.6 ...</span></span>
 <span><span class="co">#&gt;   .. .. ..$ MinRelativeHumidity : num [1:1461] 67.1 61 58.3 63.8 35.5 ...</span></span>
-<span><span class="co">#&gt;   .. .. ..$ MaxRelativeHumidity : num [1:1461] 100 100 100 100 100 100 100 NA NA NA ...</span></span>
+<span><span class="co">#&gt;   .. .. ..$ MaxRelativeHumidity : num [1:1461] 100 100 100 100 100 100 100 NaN NaN NaN ...</span></span>
 <span><span class="co">#&gt;   .. .. ..$ Radiation           : num [1:1461] 2.29 2.49 2.56 2.11 2.87 ...</span></span>
 <span><span class="co">#&gt;   .. .. ..$ WindSpeed           : num [1:1461] 0.833 0.833 0 1.111 0 ...</span></span>
 <span><span class="co">#&gt;   .. .. ..$ WindDirection       : num [1:1461] 230 170 0 220 0 ...</span></span>
@@ -606,7 +594,7 @@ structure is:</p>
 <span><span class="co">#&gt;   .. .. ..$ : chr [1:2] "min" "max"</span></span>
 <span><span class="co">#&gt;   ..@ proj4string:Formal class 'CRS' [package "sp"] with 1 slot</span></span>
 <span><span class="co">#&gt;   .. .. ..@ projargs: chr "+proj=longlat +datum=WGS84 +no_defs"</span></span>
-<span><span class="co">#&gt;   .. .. ..$ comment: chr "GEOGCRS[\"WGS 84 (with axis order normalized for visualization)\",\n    ENSEMBLE[\"World Geodetic System 1984 e"| __truncated__</span></span></code></pre></div>
+<span><span class="co">#&gt;   .. .. ..$ comment: chr "GEOGCRS[\"WGS 84\",\n    ENSEMBLE[\"World Geodetic System 1984 ensemble\",\n        MEMBER[\"World Geodetic Sys"| __truncated__</span></span></code></pre></div>
 <p>We can access the weather data frame by subsetting the appropriate
 element of slot <code>data</code>:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
