@@ -444,131 +444,6 @@ namespace medfate {
         return Rcpp::as<String >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_vanGenuchtenParamsCarsel(String soilType) {
-        typedef SEXP(*Ptr_soil_vanGenuchtenParamsCarsel)(SEXP);
-        static Ptr_soil_vanGenuchtenParamsCarsel p_soil_vanGenuchtenParamsCarsel = NULL;
-        if (p_soil_vanGenuchtenParamsCarsel == NULL) {
-            validateSignature("NumericVector(*soil_vanGenuchtenParamsCarsel)(String)");
-            p_soil_vanGenuchtenParamsCarsel = (Ptr_soil_vanGenuchtenParamsCarsel)R_GetCCallable("medfate", "_medfate_soil_vanGenuchtenParamsCarsel");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_soil_vanGenuchtenParamsCarsel(Shield<SEXP>(Rcpp::wrap(soilType)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<NumericVector >(rcpp_result_gen);
-    }
-
-    inline NumericVector soil_vanGenuchtenParamsToth(double clay, double sand, double om, double bd, bool topsoil) {
-        typedef SEXP(*Ptr_soil_vanGenuchtenParamsToth)(SEXP,SEXP,SEXP,SEXP,SEXP);
-        static Ptr_soil_vanGenuchtenParamsToth p_soil_vanGenuchtenParamsToth = NULL;
-        if (p_soil_vanGenuchtenParamsToth == NULL) {
-            validateSignature("NumericVector(*soil_vanGenuchtenParamsToth)(double,double,double,double,bool)");
-            p_soil_vanGenuchtenParamsToth = (Ptr_soil_vanGenuchtenParamsToth)R_GetCCallable("medfate", "_medfate_soil_vanGenuchtenParamsToth");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_soil_vanGenuchtenParamsToth(Shield<SEXP>(Rcpp::wrap(clay)), Shield<SEXP>(Rcpp::wrap(sand)), Shield<SEXP>(Rcpp::wrap(om)), Shield<SEXP>(Rcpp::wrap(bd)), Shield<SEXP>(Rcpp::wrap(topsoil)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<NumericVector >(rcpp_result_gen);
-    }
-
-    inline NumericVector soil_temperatureGradient(NumericVector dVec, NumericVector Temp) {
-        typedef SEXP(*Ptr_soil_temperatureGradient)(SEXP,SEXP);
-        static Ptr_soil_temperatureGradient p_soil_temperatureGradient = NULL;
-        if (p_soil_temperatureGradient == NULL) {
-            validateSignature("NumericVector(*soil_temperatureGradient)(NumericVector,NumericVector)");
-            p_soil_temperatureGradient = (Ptr_soil_temperatureGradient)R_GetCCallable("medfate", "_medfate_soil_temperatureGradient");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_soil_temperatureGradient(Shield<SEXP>(Rcpp::wrap(dVec)), Shield<SEXP>(Rcpp::wrap(Temp)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<NumericVector >(rcpp_result_gen);
-    }
-
-    inline NumericVector soil_temperatureChange(NumericVector dVec, NumericVector Temp, NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC, double Gdown) {
-        typedef SEXP(*Ptr_soil_temperatureChange)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
-        static Ptr_soil_temperatureChange p_soil_temperatureChange = NULL;
-        if (p_soil_temperatureChange == NULL) {
-            validateSignature("NumericVector(*soil_temperatureChange)(NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,double)");
-            p_soil_temperatureChange = (Ptr_soil_temperatureChange)R_GetCCallable("medfate", "_medfate_soil_temperatureChange");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_soil_temperatureChange(Shield<SEXP>(Rcpp::wrap(dVec)), Shield<SEXP>(Rcpp::wrap(Temp)), Shield<SEXP>(Rcpp::wrap(sand)), Shield<SEXP>(Rcpp::wrap(clay)), Shield<SEXP>(Rcpp::wrap(W)), Shield<SEXP>(Rcpp::wrap(Theta_FC)), Shield<SEXP>(Rcpp::wrap(Gdown)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<NumericVector >(rcpp_result_gen);
-    }
-
-    inline List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = NumericVector::create(1.0), double SWE = 0.0) {
-        typedef SEXP(*Ptr_soil)(SEXP,SEXP,SEXP,SEXP);
-        static Ptr_soil p_soil = NULL;
-        if (p_soil == NULL) {
-            validateSignature("List(*soil)(DataFrame,String,NumericVector,double)");
-            p_soil = (Ptr_soil)R_GetCCallable("medfate", "_medfate_soil");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_soil(Shield<SEXP>(Rcpp::wrap(SoilParams)), Shield<SEXP>(Rcpp::wrap(VG_PTF)), Shield<SEXP>(Rcpp::wrap(W)), Shield<SEXP>(Rcpp::wrap(SWE)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<List >(rcpp_result_gen);
-    }
-
-    inline void _modifySoilLayerParam(List soil, String paramName, int layer, double newValue, String VG_PTF = "Toth") {
-        typedef SEXP(*Ptr__modifySoilLayerParam)(SEXP,SEXP,SEXP,SEXP,SEXP);
-        static Ptr__modifySoilLayerParam p__modifySoilLayerParam = NULL;
-        if (p__modifySoilLayerParam == NULL) {
-            validateSignature("void(*_modifySoilLayerParam)(List,String,int,double,String)");
-            p__modifySoilLayerParam = (Ptr__modifySoilLayerParam)R_GetCCallable("medfate", "_medfate__modifySoilLayerParam");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p__modifySoilLayerParam(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(paramName)), Shield<SEXP>(Rcpp::wrap(layer)), Shield<SEXP>(Rcpp::wrap(newValue)), Shield<SEXP>(Rcpp::wrap(VG_PTF)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-    }
-
     inline NumericVector soil_thetaFC(List soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_thetaFC)(SEXP,SEXP);
         static Ptr_soil_thetaFC p_soil_thetaFC = NULL;
@@ -842,6 +717,89 @@ namespace medfate {
         return Rcpp::as<double >(rcpp_result_gen);
     }
 
+    inline NumericVector soil_vanGenuchtenParamsCarsel(String soilType) {
+        typedef SEXP(*Ptr_soil_vanGenuchtenParamsCarsel)(SEXP);
+        static Ptr_soil_vanGenuchtenParamsCarsel p_soil_vanGenuchtenParamsCarsel = NULL;
+        if (p_soil_vanGenuchtenParamsCarsel == NULL) {
+            validateSignature("NumericVector(*soil_vanGenuchtenParamsCarsel)(String)");
+            p_soil_vanGenuchtenParamsCarsel = (Ptr_soil_vanGenuchtenParamsCarsel)R_GetCCallable("medfate", "_medfate_soil_vanGenuchtenParamsCarsel");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_soil_vanGenuchtenParamsCarsel(Shield<SEXP>(Rcpp::wrap(soilType)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<NumericVector >(rcpp_result_gen);
+    }
+
+    inline NumericVector soil_vanGenuchtenParamsToth(double clay, double sand, double om, double bd, bool topsoil) {
+        typedef SEXP(*Ptr_soil_vanGenuchtenParamsToth)(SEXP,SEXP,SEXP,SEXP,SEXP);
+        static Ptr_soil_vanGenuchtenParamsToth p_soil_vanGenuchtenParamsToth = NULL;
+        if (p_soil_vanGenuchtenParamsToth == NULL) {
+            validateSignature("NumericVector(*soil_vanGenuchtenParamsToth)(double,double,double,double,bool)");
+            p_soil_vanGenuchtenParamsToth = (Ptr_soil_vanGenuchtenParamsToth)R_GetCCallable("medfate", "_medfate_soil_vanGenuchtenParamsToth");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_soil_vanGenuchtenParamsToth(Shield<SEXP>(Rcpp::wrap(clay)), Shield<SEXP>(Rcpp::wrap(sand)), Shield<SEXP>(Rcpp::wrap(om)), Shield<SEXP>(Rcpp::wrap(bd)), Shield<SEXP>(Rcpp::wrap(topsoil)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<NumericVector >(rcpp_result_gen);
+    }
+
+    inline List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = NumericVector::create(1.0), double SWE = 0.0) {
+        typedef SEXP(*Ptr_soil)(SEXP,SEXP,SEXP,SEXP);
+        static Ptr_soil p_soil = NULL;
+        if (p_soil == NULL) {
+            validateSignature("List(*soil)(DataFrame,String,NumericVector,double)");
+            p_soil = (Ptr_soil)R_GetCCallable("medfate", "_medfate_soil");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_soil(Shield<SEXP>(Rcpp::wrap(SoilParams)), Shield<SEXP>(Rcpp::wrap(VG_PTF)), Shield<SEXP>(Rcpp::wrap(W)), Shield<SEXP>(Rcpp::wrap(SWE)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<List >(rcpp_result_gen);
+    }
+
+    inline void _modifySoilLayerParam(List soil, String paramName, int layer, double newValue, String VG_PTF = "Toth") {
+        typedef SEXP(*Ptr__modifySoilLayerParam)(SEXP,SEXP,SEXP,SEXP,SEXP);
+        static Ptr__modifySoilLayerParam p__modifySoilLayerParam = NULL;
+        if (p__modifySoilLayerParam == NULL) {
+            validateSignature("void(*_modifySoilLayerParam)(List,String,int,double,String)");
+            p__modifySoilLayerParam = (Ptr__modifySoilLayerParam)R_GetCCallable("medfate", "_medfate__modifySoilLayerParam");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p__modifySoilLayerParam(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(paramName)), Shield<SEXP>(Rcpp::wrap(layer)), Shield<SEXP>(Rcpp::wrap(newValue)), Shield<SEXP>(Rcpp::wrap(VG_PTF)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+    }
+
     inline NumericVector soil_thermalCapacity(List soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_thermalCapacity)(SEXP,SEXP);
         static Ptr_soil_thermalCapacity p_soil_thermalCapacity = NULL;
@@ -874,6 +832,48 @@ namespace medfate {
         {
             RNGScope RCPP_rngScope_gen;
             rcpp_result_gen = p_soil_thermalConductivity(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(model)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<NumericVector >(rcpp_result_gen);
+    }
+
+    inline NumericVector soil_temperatureGradient(NumericVector dVec, NumericVector Temp) {
+        typedef SEXP(*Ptr_soil_temperatureGradient)(SEXP,SEXP);
+        static Ptr_soil_temperatureGradient p_soil_temperatureGradient = NULL;
+        if (p_soil_temperatureGradient == NULL) {
+            validateSignature("NumericVector(*soil_temperatureGradient)(NumericVector,NumericVector)");
+            p_soil_temperatureGradient = (Ptr_soil_temperatureGradient)R_GetCCallable("medfate", "_medfate_soil_temperatureGradient");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_soil_temperatureGradient(Shield<SEXP>(Rcpp::wrap(dVec)), Shield<SEXP>(Rcpp::wrap(Temp)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<NumericVector >(rcpp_result_gen);
+    }
+
+    inline NumericVector soil_temperatureChange(NumericVector dVec, NumericVector Temp, NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC, double Gdown) {
+        typedef SEXP(*Ptr_soil_temperatureChange)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
+        static Ptr_soil_temperatureChange p_soil_temperatureChange = NULL;
+        if (p_soil_temperatureChange == NULL) {
+            validateSignature("NumericVector(*soil_temperatureChange)(NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,double)");
+            p_soil_temperatureChange = (Ptr_soil_temperatureChange)R_GetCCallable("medfate", "_medfate_soil_temperatureChange");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_soil_temperatureChange(Shield<SEXP>(Rcpp::wrap(dVec)), Shield<SEXP>(Rcpp::wrap(Temp)), Shield<SEXP>(Rcpp::wrap(sand)), Shield<SEXP>(Rcpp::wrap(clay)), Shield<SEXP>(Rcpp::wrap(W)), Shield<SEXP>(Rcpp::wrap(Theta_FC)), Shield<SEXP>(Rcpp::wrap(Gdown)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

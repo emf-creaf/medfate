@@ -1,3 +1,9 @@
+#' @rdname soil_texture
+#' 
+#' @param layer Soil layer to be plotted.
+#' @param relative Boolean flag to indicate that retention curve should be relative to field capacity or saturation.
+#' @param to Either 'SAT' (saturation) or 'FC' (field capacity).
+#'
 soil_retentionCurvePlot<-function(soil, model="SX", layer = 1, 
                                   psi = seq(0, -6.0, by=-0.01),
                                   relative = TRUE, to = "SAT") {

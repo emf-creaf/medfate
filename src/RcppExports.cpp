@@ -3436,227 +3436,6 @@ RcppExport SEXP _medfate_USDAType(SEXP claySEXP, SEXP sandSEXP) {
     UNPROTECT(1);
     return rcpp_result_gen;
 }
-// vanGenuchtenParamsCarsel
-NumericVector vanGenuchtenParamsCarsel(String soilType);
-static SEXP _medfate_vanGenuchtenParamsCarsel_try(SEXP soilTypeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< String >::type soilType(soilTypeSEXP);
-    rcpp_result_gen = Rcpp::wrap(vanGenuchtenParamsCarsel(soilType));
-    return rcpp_result_gen;
-END_RCPP_RETURN_ERROR
-}
-RcppExport SEXP _medfate_vanGenuchtenParamsCarsel(SEXP soilTypeSEXP) {
-    SEXP rcpp_result_gen;
-    {
-        Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_vanGenuchtenParamsCarsel_try(soilTypeSEXP));
-    }
-    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
-    if (rcpp_isInterrupt_gen) {
-        UNPROTECT(1);
-        Rf_onintr();
-    }
-    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
-    if (rcpp_isLongjump_gen) {
-        Rcpp::internal::resumeJump(rcpp_result_gen);
-    }
-    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
-    if (rcpp_isError_gen) {
-        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
-        UNPROTECT(1);
-        Rf_error(CHAR(rcpp_msgSEXP_gen));
-    }
-    UNPROTECT(1);
-    return rcpp_result_gen;
-}
-// vanGenuchtenParamsToth
-NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double bd, bool topsoil);
-static SEXP _medfate_vanGenuchtenParamsToth_try(SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP, SEXP bdSEXP, SEXP topsoilSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< double >::type clay(claySEXP);
-    Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
-    Rcpp::traits::input_parameter< double >::type om(omSEXP);
-    Rcpp::traits::input_parameter< double >::type bd(bdSEXP);
-    Rcpp::traits::input_parameter< bool >::type topsoil(topsoilSEXP);
-    rcpp_result_gen = Rcpp::wrap(vanGenuchtenParamsToth(clay, sand, om, bd, topsoil));
-    return rcpp_result_gen;
-END_RCPP_RETURN_ERROR
-}
-RcppExport SEXP _medfate_vanGenuchtenParamsToth(SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP, SEXP bdSEXP, SEXP topsoilSEXP) {
-    SEXP rcpp_result_gen;
-    {
-        Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_vanGenuchtenParamsToth_try(claySEXP, sandSEXP, omSEXP, bdSEXP, topsoilSEXP));
-    }
-    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
-    if (rcpp_isInterrupt_gen) {
-        UNPROTECT(1);
-        Rf_onintr();
-    }
-    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
-    if (rcpp_isLongjump_gen) {
-        Rcpp::internal::resumeJump(rcpp_result_gen);
-    }
-    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
-    if (rcpp_isError_gen) {
-        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
-        UNPROTECT(1);
-        Rf_error(CHAR(rcpp_msgSEXP_gen));
-    }
-    UNPROTECT(1);
-    return rcpp_result_gen;
-}
-// temperatureGradient
-NumericVector temperatureGradient(NumericVector dVec, NumericVector Temp);
-static SEXP _medfate_temperatureGradient_try(SEXP dVecSEXP, SEXP TempSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type dVec(dVecSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type Temp(TempSEXP);
-    rcpp_result_gen = Rcpp::wrap(temperatureGradient(dVec, Temp));
-    return rcpp_result_gen;
-END_RCPP_RETURN_ERROR
-}
-RcppExport SEXP _medfate_temperatureGradient(SEXP dVecSEXP, SEXP TempSEXP) {
-    SEXP rcpp_result_gen;
-    {
-        Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_temperatureGradient_try(dVecSEXP, TempSEXP));
-    }
-    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
-    if (rcpp_isInterrupt_gen) {
-        UNPROTECT(1);
-        Rf_onintr();
-    }
-    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
-    if (rcpp_isLongjump_gen) {
-        Rcpp::internal::resumeJump(rcpp_result_gen);
-    }
-    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
-    if (rcpp_isError_gen) {
-        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
-        UNPROTECT(1);
-        Rf_error(CHAR(rcpp_msgSEXP_gen));
-    }
-    UNPROTECT(1);
-    return rcpp_result_gen;
-}
-// temperatureChange
-NumericVector temperatureChange(NumericVector dVec, NumericVector Temp, NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC, double Gdown);
-static SEXP _medfate_temperatureChange_try(SEXP dVecSEXP, SEXP TempSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP WSEXP, SEXP Theta_FCSEXP, SEXP GdownSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type dVec(dVecSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type Temp(TempSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type sand(sandSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type clay(claySEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type W(WSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type Theta_FC(Theta_FCSEXP);
-    Rcpp::traits::input_parameter< double >::type Gdown(GdownSEXP);
-    rcpp_result_gen = Rcpp::wrap(temperatureChange(dVec, Temp, sand, clay, W, Theta_FC, Gdown));
-    return rcpp_result_gen;
-END_RCPP_RETURN_ERROR
-}
-RcppExport SEXP _medfate_temperatureChange(SEXP dVecSEXP, SEXP TempSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP WSEXP, SEXP Theta_FCSEXP, SEXP GdownSEXP) {
-    SEXP rcpp_result_gen;
-    {
-        Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_temperatureChange_try(dVecSEXP, TempSEXP, sandSEXP, claySEXP, WSEXP, Theta_FCSEXP, GdownSEXP));
-    }
-    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
-    if (rcpp_isInterrupt_gen) {
-        UNPROTECT(1);
-        Rf_onintr();
-    }
-    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
-    if (rcpp_isLongjump_gen) {
-        Rcpp::internal::resumeJump(rcpp_result_gen);
-    }
-    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
-    if (rcpp_isError_gen) {
-        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
-        UNPROTECT(1);
-        Rf_error(CHAR(rcpp_msgSEXP_gen));
-    }
-    UNPROTECT(1);
-    return rcpp_result_gen;
-}
-// soil
-List soil(DataFrame SoilParams, String VG_PTF, NumericVector W, double SWE);
-static SEXP _medfate_soil_try(SEXP SoilParamsSEXP, SEXP VG_PTFSEXP, SEXP WSEXP, SEXP SWESEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< DataFrame >::type SoilParams(SoilParamsSEXP);
-    Rcpp::traits::input_parameter< String >::type VG_PTF(VG_PTFSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type W(WSEXP);
-    Rcpp::traits::input_parameter< double >::type SWE(SWESEXP);
-    rcpp_result_gen = Rcpp::wrap(soil(SoilParams, VG_PTF, W, SWE));
-    return rcpp_result_gen;
-END_RCPP_RETURN_ERROR
-}
-RcppExport SEXP _medfate_soil(SEXP SoilParamsSEXP, SEXP VG_PTFSEXP, SEXP WSEXP, SEXP SWESEXP) {
-    SEXP rcpp_result_gen;
-    {
-        Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_soil_try(SoilParamsSEXP, VG_PTFSEXP, WSEXP, SWESEXP));
-    }
-    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
-    if (rcpp_isInterrupt_gen) {
-        UNPROTECT(1);
-        Rf_onintr();
-    }
-    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
-    if (rcpp_isLongjump_gen) {
-        Rcpp::internal::resumeJump(rcpp_result_gen);
-    }
-    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
-    if (rcpp_isError_gen) {
-        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
-        UNPROTECT(1);
-        Rf_error(CHAR(rcpp_msgSEXP_gen));
-    }
-    UNPROTECT(1);
-    return rcpp_result_gen;
-}
-// modifySoilLayerParam
-void modifySoilLayerParam(List soil, String paramName, int layer, double newValue, String VG_PTF);
-static SEXP _medfate_modifySoilLayerParam_try(SEXP soilSEXP, SEXP paramNameSEXP, SEXP layerSEXP, SEXP newValueSEXP, SEXP VG_PTFSEXP) {
-BEGIN_RCPP
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
-    Rcpp::traits::input_parameter< String >::type paramName(paramNameSEXP);
-    Rcpp::traits::input_parameter< int >::type layer(layerSEXP);
-    Rcpp::traits::input_parameter< double >::type newValue(newValueSEXP);
-    Rcpp::traits::input_parameter< String >::type VG_PTF(VG_PTFSEXP);
-    modifySoilLayerParam(soil, paramName, layer, newValue, VG_PTF);
-    return R_NilValue;
-END_RCPP_RETURN_ERROR
-}
-RcppExport SEXP _medfate_modifySoilLayerParam(SEXP soilSEXP, SEXP paramNameSEXP, SEXP layerSEXP, SEXP newValueSEXP, SEXP VG_PTFSEXP) {
-    SEXP rcpp_result_gen;
-    {
-        Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_modifySoilLayerParam_try(soilSEXP, paramNameSEXP, layerSEXP, newValueSEXP, VG_PTFSEXP));
-    }
-    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
-    if (rcpp_isInterrupt_gen) {
-        UNPROTECT(1);
-        Rf_onintr();
-    }
-    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
-    if (rcpp_isLongjump_gen) {
-        Rcpp::internal::resumeJump(rcpp_result_gen);
-    }
-    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
-    if (rcpp_isError_gen) {
-        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
-        UNPROTECT(1);
-        Rf_error(CHAR(rcpp_msgSEXP_gen));
-    }
-    UNPROTECT(1);
-    return rcpp_result_gen;
-}
 // thetaFC
 NumericVector thetaFC(List soil, String model);
 static SEXP _medfate_thetaFC_try(SEXP soilSEXP, SEXP modelSEXP) {
@@ -4113,6 +3892,152 @@ RcppExport SEXP _medfate_waterTableDepth(SEXP soilSEXP, SEXP modelSEXP) {
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// vanGenuchtenParamsCarsel
+NumericVector vanGenuchtenParamsCarsel(String soilType);
+static SEXP _medfate_vanGenuchtenParamsCarsel_try(SEXP soilTypeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< String >::type soilType(soilTypeSEXP);
+    rcpp_result_gen = Rcpp::wrap(vanGenuchtenParamsCarsel(soilType));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_vanGenuchtenParamsCarsel(SEXP soilTypeSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_vanGenuchtenParamsCarsel_try(soilTypeSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
+// vanGenuchtenParamsToth
+NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double bd, bool topsoil);
+static SEXP _medfate_vanGenuchtenParamsToth_try(SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP, SEXP bdSEXP, SEXP topsoilSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< double >::type clay(claySEXP);
+    Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
+    Rcpp::traits::input_parameter< double >::type om(omSEXP);
+    Rcpp::traits::input_parameter< double >::type bd(bdSEXP);
+    Rcpp::traits::input_parameter< bool >::type topsoil(topsoilSEXP);
+    rcpp_result_gen = Rcpp::wrap(vanGenuchtenParamsToth(clay, sand, om, bd, topsoil));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_vanGenuchtenParamsToth(SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP, SEXP bdSEXP, SEXP topsoilSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_vanGenuchtenParamsToth_try(claySEXP, sandSEXP, omSEXP, bdSEXP, topsoilSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
+// soil
+List soil(DataFrame SoilParams, String VG_PTF, NumericVector W, double SWE);
+static SEXP _medfate_soil_try(SEXP SoilParamsSEXP, SEXP VG_PTFSEXP, SEXP WSEXP, SEXP SWESEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< DataFrame >::type SoilParams(SoilParamsSEXP);
+    Rcpp::traits::input_parameter< String >::type VG_PTF(VG_PTFSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type W(WSEXP);
+    Rcpp::traits::input_parameter< double >::type SWE(SWESEXP);
+    rcpp_result_gen = Rcpp::wrap(soil(SoilParams, VG_PTF, W, SWE));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_soil(SEXP SoilParamsSEXP, SEXP VG_PTFSEXP, SEXP WSEXP, SEXP SWESEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_soil_try(SoilParamsSEXP, VG_PTFSEXP, WSEXP, SWESEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
+// modifySoilLayerParam
+void modifySoilLayerParam(List soil, String paramName, int layer, double newValue, String VG_PTF);
+static SEXP _medfate_modifySoilLayerParam_try(SEXP soilSEXP, SEXP paramNameSEXP, SEXP layerSEXP, SEXP newValueSEXP, SEXP VG_PTFSEXP) {
+BEGIN_RCPP
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< String >::type paramName(paramNameSEXP);
+    Rcpp::traits::input_parameter< int >::type layer(layerSEXP);
+    Rcpp::traits::input_parameter< double >::type newValue(newValueSEXP);
+    Rcpp::traits::input_parameter< String >::type VG_PTF(VG_PTFSEXP);
+    modifySoilLayerParam(soil, paramName, layer, newValue, VG_PTF);
+    return R_NilValue;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_modifySoilLayerParam(SEXP soilSEXP, SEXP paramNameSEXP, SEXP layerSEXP, SEXP newValueSEXP, SEXP VG_PTFSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_modifySoilLayerParam_try(soilSEXP, paramNameSEXP, layerSEXP, newValueSEXP, VG_PTFSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
 // thermalCapacity
 NumericVector thermalCapacity(List soil, String model);
 static SEXP _medfate_thermalCapacity_try(SEXP soilSEXP, SEXP modelSEXP) {
@@ -4164,6 +4089,81 @@ RcppExport SEXP _medfate_thermalConductivity(SEXP soilSEXP, SEXP modelSEXP) {
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
         rcpp_result_gen = PROTECT(_medfate_thermalConductivity_try(soilSEXP, modelSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
+// temperatureGradient
+NumericVector temperatureGradient(NumericVector dVec, NumericVector Temp);
+static SEXP _medfate_temperatureGradient_try(SEXP dVecSEXP, SEXP TempSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type dVec(dVecSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Temp(TempSEXP);
+    rcpp_result_gen = Rcpp::wrap(temperatureGradient(dVec, Temp));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_temperatureGradient(SEXP dVecSEXP, SEXP TempSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_temperatureGradient_try(dVecSEXP, TempSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
+// temperatureChange
+NumericVector temperatureChange(NumericVector dVec, NumericVector Temp, NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC, double Gdown);
+static SEXP _medfate_temperatureChange_try(SEXP dVecSEXP, SEXP TempSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP WSEXP, SEXP Theta_FCSEXP, SEXP GdownSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type dVec(dVecSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Temp(TempSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type sand(sandSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type clay(claySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type W(WSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Theta_FC(Theta_FCSEXP);
+    Rcpp::traits::input_parameter< double >::type Gdown(GdownSEXP);
+    rcpp_result_gen = Rcpp::wrap(temperatureChange(dVec, Temp, sand, clay, W, Theta_FC, Gdown));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_temperatureChange(SEXP dVecSEXP, SEXP TempSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP WSEXP, SEXP Theta_FCSEXP, SEXP GdownSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_temperatureChange_try(dVecSEXP, TempSEXP, sandSEXP, claySEXP, WSEXP, Theta_FCSEXP, GdownSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -4675,12 +4675,6 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("double(*soil_psi2thetaVG)(double,double,double,double,double)");
         signatures.insert("double(*soil_theta2psiVG)(double,double,double,double,double)");
         signatures.insert("String(*soil_USDAType)(double,double)");
-        signatures.insert("NumericVector(*soil_vanGenuchtenParamsCarsel)(String)");
-        signatures.insert("NumericVector(*soil_vanGenuchtenParamsToth)(double,double,double,double,bool)");
-        signatures.insert("NumericVector(*soil_temperatureGradient)(NumericVector,NumericVector)");
-        signatures.insert("NumericVector(*soil_temperatureChange)(NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,double)");
-        signatures.insert("List(*soil)(DataFrame,String,NumericVector,double)");
-        signatures.insert("void(*.modifySoilLayerParam)(List,String,int,double,String)");
         signatures.insert("NumericVector(*soil_thetaFC)(List,String)");
         signatures.insert("NumericVector(*soil_thetaWP)(List,String)");
         signatures.insert("NumericVector(*soil_thetaSAT)(List,String)");
@@ -4694,8 +4688,14 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("NumericVector(*soil_psi)(List,String)");
         signatures.insert("NumericVector(*soil_conductivity)(List)");
         signatures.insert("double(*soil_waterTableDepth)(List,String)");
+        signatures.insert("NumericVector(*soil_vanGenuchtenParamsCarsel)(String)");
+        signatures.insert("NumericVector(*soil_vanGenuchtenParamsToth)(double,double,double,double,bool)");
+        signatures.insert("List(*soil)(DataFrame,String,NumericVector,double)");
+        signatures.insert("void(*.modifySoilLayerParam)(List,String,int,double,String)");
         signatures.insert("NumericVector(*soil_thermalCapacity)(List,String)");
         signatures.insert("NumericVector(*soil_thermalConductivity)(List,String)");
+        signatures.insert("NumericVector(*soil_temperatureGradient)(NumericVector,NumericVector)");
+        signatures.insert("NumericVector(*soil_temperatureChange)(NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,double)");
         signatures.insert("List(*spwb_day)(List,CharacterVector,double,double,double,double,double,double,double,double,double,double,double,double,double,bool)");
         signatures.insert("List(*spwb)(List,DataFrame,double,double,double,double,NumericVector)");
         signatures.insert("List(*pwb)(List,DataFrame,NumericMatrix,double,double,double,double,NumericVector,NumericVector,NumericVector,NumericVector)");
@@ -4725,12 +4725,6 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_soil_psi2thetaVG", (DL_FUNC)_medfate_psi2thetaVanGenuchten_try);
     R_RegisterCCallable("medfate", "_medfate_soil_theta2psiVG", (DL_FUNC)_medfate_theta2psiVanGenuchten_try);
     R_RegisterCCallable("medfate", "_medfate_soil_USDAType", (DL_FUNC)_medfate_USDAType_try);
-    R_RegisterCCallable("medfate", "_medfate_soil_vanGenuchtenParamsCarsel", (DL_FUNC)_medfate_vanGenuchtenParamsCarsel_try);
-    R_RegisterCCallable("medfate", "_medfate_soil_vanGenuchtenParamsToth", (DL_FUNC)_medfate_vanGenuchtenParamsToth_try);
-    R_RegisterCCallable("medfate", "_medfate_soil_temperatureGradient", (DL_FUNC)_medfate_temperatureGradient_try);
-    R_RegisterCCallable("medfate", "_medfate_soil_temperatureChange", (DL_FUNC)_medfate_temperatureChange_try);
-    R_RegisterCCallable("medfate", "_medfate_soil", (DL_FUNC)_medfate_soil_try);
-    R_RegisterCCallable("medfate", "_medfate_.modifySoilLayerParam", (DL_FUNC)_medfate_modifySoilLayerParam_try);
     R_RegisterCCallable("medfate", "_medfate_soil_thetaFC", (DL_FUNC)_medfate_thetaFC_try);
     R_RegisterCCallable("medfate", "_medfate_soil_thetaWP", (DL_FUNC)_medfate_thetaWP_try);
     R_RegisterCCallable("medfate", "_medfate_soil_thetaSAT", (DL_FUNC)_medfate_thetaSAT_try);
@@ -4744,8 +4738,14 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_soil_psi", (DL_FUNC)_medfate_psi_try);
     R_RegisterCCallable("medfate", "_medfate_soil_conductivity", (DL_FUNC)_medfate_conductivity_try);
     R_RegisterCCallable("medfate", "_medfate_soil_waterTableDepth", (DL_FUNC)_medfate_waterTableDepth_try);
+    R_RegisterCCallable("medfate", "_medfate_soil_vanGenuchtenParamsCarsel", (DL_FUNC)_medfate_vanGenuchtenParamsCarsel_try);
+    R_RegisterCCallable("medfate", "_medfate_soil_vanGenuchtenParamsToth", (DL_FUNC)_medfate_vanGenuchtenParamsToth_try);
+    R_RegisterCCallable("medfate", "_medfate_soil", (DL_FUNC)_medfate_soil_try);
+    R_RegisterCCallable("medfate", "_medfate_.modifySoilLayerParam", (DL_FUNC)_medfate_modifySoilLayerParam_try);
     R_RegisterCCallable("medfate", "_medfate_soil_thermalCapacity", (DL_FUNC)_medfate_thermalCapacity_try);
     R_RegisterCCallable("medfate", "_medfate_soil_thermalConductivity", (DL_FUNC)_medfate_thermalConductivity_try);
+    R_RegisterCCallable("medfate", "_medfate_soil_temperatureGradient", (DL_FUNC)_medfate_temperatureGradient_try);
+    R_RegisterCCallable("medfate", "_medfate_soil_temperatureChange", (DL_FUNC)_medfate_temperatureChange_try);
     R_RegisterCCallable("medfate", "_medfate_spwb_day", (DL_FUNC)_medfate_spwbDay_try);
     R_RegisterCCallable("medfate", "_medfate_spwb", (DL_FUNC)_medfate_spwb_try);
     R_RegisterCCallable("medfate", "_medfate_pwb", (DL_FUNC)_medfate_pwb_try);
@@ -4956,12 +4956,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_psi2thetaVanGenuchten", (DL_FUNC) &_medfate_psi2thetaVanGenuchten, 5},
     {"_medfate_theta2psiVanGenuchten", (DL_FUNC) &_medfate_theta2psiVanGenuchten, 5},
     {"_medfate_USDAType", (DL_FUNC) &_medfate_USDAType, 2},
-    {"_medfate_vanGenuchtenParamsCarsel", (DL_FUNC) &_medfate_vanGenuchtenParamsCarsel, 1},
-    {"_medfate_vanGenuchtenParamsToth", (DL_FUNC) &_medfate_vanGenuchtenParamsToth, 5},
-    {"_medfate_temperatureGradient", (DL_FUNC) &_medfate_temperatureGradient, 2},
-    {"_medfate_temperatureChange", (DL_FUNC) &_medfate_temperatureChange, 7},
-    {"_medfate_soil", (DL_FUNC) &_medfate_soil, 4},
-    {"_medfate_modifySoilLayerParam", (DL_FUNC) &_medfate_modifySoilLayerParam, 5},
     {"_medfate_thetaFC", (DL_FUNC) &_medfate_thetaFC, 2},
     {"_medfate_thetaWP", (DL_FUNC) &_medfate_thetaWP, 2},
     {"_medfate_thetaSAT", (DL_FUNC) &_medfate_thetaSAT, 2},
@@ -4975,8 +4969,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_psi", (DL_FUNC) &_medfate_psi, 2},
     {"_medfate_conductivity", (DL_FUNC) &_medfate_conductivity, 1},
     {"_medfate_waterTableDepth", (DL_FUNC) &_medfate_waterTableDepth, 2},
+    {"_medfate_vanGenuchtenParamsCarsel", (DL_FUNC) &_medfate_vanGenuchtenParamsCarsel, 1},
+    {"_medfate_vanGenuchtenParamsToth", (DL_FUNC) &_medfate_vanGenuchtenParamsToth, 5},
+    {"_medfate_soil", (DL_FUNC) &_medfate_soil, 4},
+    {"_medfate_modifySoilLayerParam", (DL_FUNC) &_medfate_modifySoilLayerParam, 5},
     {"_medfate_thermalCapacity", (DL_FUNC) &_medfate_thermalCapacity, 2},
     {"_medfate_thermalConductivity", (DL_FUNC) &_medfate_thermalConductivity, 2},
+    {"_medfate_temperatureGradient", (DL_FUNC) &_medfate_temperatureGradient, 2},
+    {"_medfate_temperatureChange", (DL_FUNC) &_medfate_temperatureChange, 7},
     {"_medfate_spwbDay", (DL_FUNC) &_medfate_spwbDay, 16},
     {"_medfate_spwb", (DL_FUNC) &_medfate_spwb, 7},
     {"_medfate_pwb", (DL_FUNC) &_medfate_pwb, 11},

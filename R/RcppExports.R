@@ -1726,52 +1726,194 @@ root_horizontalProportions <- function(poolProportions, VolInd, N, V, d, rfc) {
     .Call(`_medfate_horizontalProportions`, poolProportions, VolInd, N, V, d, rfc)
 }
 
+#' Soil texture and hydraulics
+#' 
+#' Low-level functions relating soil texture with soil hydraulics and soil water content.
+#'
+#' @param clay Percentage of clay (in percent weight).
+#' @param sand Percentage of sand (in percent weight).
+#' @param n,alpha,theta_res,theta_sat Parameters of the Van Genuchten-Mualem model (m = 1 - 1/n).
+#' @param psi Water potential (in MPa).
+#' @param theta Relative water content (in percent volume).
+#' @param om Percentage of organic matter (optional, in percent weight).
+#' @param mmol Boolean flag to indicate that saturated conductivity units should be returned in mmol/m/s/MPa. If \code{mmol = FALSE} then units are cm/day.
+#' @param bd Bulk density (in g/cm3).
+#' @param topsoil A boolean flag to indicate topsoil layer.
+#' @param soilType A string indicating the soil type.
+#' @param soil Soil object (returned by function \code{\link{soil}}).
+#' @param model Either 'SX' or 'VG' for Saxton's or Van Genuchten's water retention models; or 'both' to plot both retention models.
+#' @param minPsi Minimum water potential (in MPa) to calculate the amount of extractable water.
+#' @param pWeight Percentage of corresponding to rocks, in weight.
+#' @param bulkDensity Bulk density of the soil fraction (g/cm3).
+#' @param rockDensity Rock density (g/cm3).
+#' 
+#' @details
+#' \itemize{
+#' \item{\code{soil_psi2thetaSX()} and \code{soil_theta2psiSX()} calculate water potentials (MPa) and water contents (theta) using texture data the formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available.}
+#' \item{\code{soil_psi2thetaVG()} and \code{soil_theta2psiVG()} to the same calculations as before, but using the Van Genuchten - Mualem equations (\enc{Wösten}{Wosten} & van Genuchten 1988). }
+#' \item{\code{soil_saturatedConductivitySX()} returns the saturated conductivity of the soil (in cm/day or mmol/m/s/MPa), estimated from formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available.}
+#' \item{\code{soil_unsaturatedConductivitySX()} returns the unsaturated conductivity of the soil (in cm/day or mmol/m/s/MPa), estimated from formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available.}
+#' \item{\code{soil_USDAType()} returns the USDA type (a string) for a given texture.}
+#' \item{\code{soil_vanGenuchtenParamsCarsel()} gives parameters for van Genuchten-Mualem equations (alpha, n, theta_res and theta_sat, where alpha is in MPa-1) for a given texture type (Leij et al. 1996) }
+#' \item{\code{soil_vanGenuchtenParamsToth()} gives parameters for van Genuchten-Mualem equations (alpha, n, theta_res and theta_sat, where alpha is in MPa-1) for a given texture, organic matter and bulk density (Toth et al. 2015).}
+#' \item{\code{soil_psi()} returns the water potential (MPa) of each soil layer, according to its water retention model.}
+#' \item{\code{soil_theta()} returns the moisture content (as percent of soil volume) of each soil layer, according to its water retention model.}
+#' \item{\code{soil_water()} returns the water volume (mm) of each soil layer, according to its water retention model.}
+#' \item{\code{soil_conductivity()} returns the conductivity of each soil layer (mmol/m/s/MPa), according the Saxton model.}
+#' \item{\code{soil_waterExtractable()} returns the water volume (mm) extractable from the soil according to its water retention curves and up to a given soil water potential.}
+#' \item{\code{soil_waterFC()} and \code{soil_thetaFC()} calculate the water volume (in mm) and moisture content (as percent of soil volume) of each soil layer at field capacity, respectively.}
+#' \item{\code{soil_waterWP()} and \code{soil_thetaWP()} calculate the water volume (in mm) and moisture content (as percent of soil volume) of each soil layer at wilting point (-1.5 MPa), respectively. }
+#' \item{\code{soil_waterSAT()}, \code{soil_thetaSATSX()} and \code{soil_thetaSAT()} calculate the saturated water volume (in mm) and moisture content (as percent of soil volume) of each soil layer.}
+#' \item{\code{soil_waterTableDepth()} returns water table depth in mm from surface.}
+#' \item{\code{soil_rockWeight2Volume()} transforms rock percentage from weight to volume basis.}
+#' \item{\code{soil_retentionCurvePlot()} allows ploting the water retention curve of a given soil layer.}
+#' }
+#' 
+#' @return Depends on the function (see details).
+#' 
+#' @references
+#' Leij, F.J., Alves, W.J., Genuchten, M.T. Van, Williams, J.R., 1996. The UNSODA Unsaturated Soil Hydraulic Database User’s Manual Version 1.0.
+#' 
+#' Saxton, K.E., Rawls, W.J., Romberger, J.S., Papendick, R.I., 1986. Estimating generalized soil-water characteristics from texture. Soil Sci. Soc. Am. J. 50, 1031–1036.
+#' 
+#' Saxton, K.E., Rawls, W.J., 2006. Soil water characteristic estimates by texture and organic matter for hydrologic solutions. Soil Sci. Soc. Am. J. 70, 1569. doi:10.2136/sssaj2005.0117
+#' 
+#' \enc{Wösten}{Wosten}, J.H.M., & van Genuchten, M.T. 1988. Using texture and other soil properties to predict the unsaturated soil hydraulic functions. Soil Science Society of America Journal 52: 1762–1770.
+#' 
+#' \enc{Tóth}{Toth}, B., Weynants, M., Nemes, A., \enc{Makó}{Mako}, A., Bilas, G., and \enc{Tóth}{Toth}, G. 2015. New generation of hydraulic pedotransfer functions for Europe. European Journal of Soil Science 66: 226–238.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso  \code{\link{soil}}
+#' 
+#' @examples
+#' #Determine USDA soil texture type
+#' type = soil_USDAType(clay=40, sand=10)
+#' type
+#' 
+#' #Van Genuchten's params (bulk density = 1.3 g/cm)
+#' vg = soil_vanGenuchtenParamsToth(40,10,1,1.3,TRUE)
+#' vg
+#' 
+#' # Initialize soil object with default params
+#' s = soil(defaultSoilParams())
+#' 
+#' # Plot Saxton's and Van Genuchten's water retention curves
+#' soil_retentionCurvePlot(s, model="both")
+#' 
+#' @name soil_texture
 soil_saturatedConductivitySX <- function(clay, sand, om = NA_real_, mmol = TRUE) {
     .Call(`_medfate_saturatedConductivitySaxton`, clay, sand, om, mmol)
 }
 
+#' @rdname soil_texture
 soil_unsaturatedConductivitySX <- function(theta, clay, sand, om = NA_real_, mmol = TRUE) {
     .Call(`_medfate_unsaturatedConductivitySaxton`, theta, clay, sand, om, mmol)
 }
 
+#' @rdname soil_texture
 soil_thetaSATSX <- function(clay, sand, om = NA_real_) {
     .Call(`_medfate_thetaSATSaxton`, clay, sand, om)
 }
 
+#' @rdname soil_texture
 soil_theta2psiSX <- function(clay, sand, theta, om = NA_real_) {
     .Call(`_medfate_theta2psiSaxton`, clay, sand, theta, om)
 }
 
+#' @rdname soil_texture
 soil_psi2thetaSX <- function(clay, sand, psi, om = NA_real_) {
     .Call(`_medfate_psi2thetaSaxton`, clay, sand, psi, om)
 }
 
+#' @rdname soil_texture
 soil_psi2thetaVG <- function(n, alpha, theta_res, theta_sat, psi) {
     .Call(`_medfate_psi2thetaVanGenuchten`, n, alpha, theta_res, theta_sat, psi)
 }
 
+#' @rdname soil_texture
 soil_theta2psiVG <- function(n, alpha, theta_res, theta_sat, theta) {
     .Call(`_medfate_theta2psiVanGenuchten`, n, alpha, theta_res, theta_sat, theta)
 }
 
+#' @rdname soil_texture
 soil_USDAType <- function(clay, sand) {
     .Call(`_medfate_USDAType`, clay, sand)
 }
 
+#' @rdname soil_texture
+soil_thetaFC <- function(soil, model = "SX") {
+    .Call(`_medfate_thetaFC`, soil, model)
+}
+
+#' @rdname soil_texture
+soil_thetaWP <- function(soil, model = "SX") {
+    .Call(`_medfate_thetaWP`, soil, model)
+}
+
+#' @rdname soil_texture
+soil_thetaSAT <- function(soil, model = "SX") {
+    .Call(`_medfate_thetaSAT`, soil, model)
+}
+
+#' @rdname soil_texture
+soil_waterFC <- function(soil, model = "SX") {
+    .Call(`_medfate_waterFC`, soil, model)
+}
+
+#' @rdname soil_texture
+soil_waterSAT <- function(soil, model = "SX") {
+    .Call(`_medfate_waterSAT`, soil, model)
+}
+
+#' @rdname soil_texture
+soil_waterWP <- function(soil, model = "SX") {
+    .Call(`_medfate_waterWP`, soil, model)
+}
+
+#' @rdname soil_texture
+soil_waterExtractable <- function(soil, model = "SX", minPsi = -5.0) {
+    .Call(`_medfate_waterExtractable`, soil, model, minPsi)
+}
+
+#' @rdname soil_texture
+soil_theta <- function(soil, model = "SX") {
+    .Call(`_medfate_theta`, soil, model)
+}
+
+#' @rdname soil_texture
+soil_water <- function(soil, model = "SX") {
+    .Call(`_medfate_water`, soil, model)
+}
+
+#' @rdname soil_texture
+soil_rockWeight2Volume <- function(pWeight, bulkDensity, rockDensity = 2.3) {
+    .Call(`_medfate_rockWeight2Volume`, pWeight, bulkDensity, rockDensity)
+}
+
+#' @rdname soil_texture
+soil_psi <- function(soil, model = "SX") {
+    .Call(`_medfate_psi`, soil, model)
+}
+
+#' @rdname soil_texture
+soil_conductivity <- function(soil) {
+    .Call(`_medfate_conductivity`, soil)
+}
+
+#' @rdname soil_texture
+soil_waterTableDepth <- function(soil, model = "SX") {
+    .Call(`_medfate_waterTableDepth`, soil, model)
+}
+
+#' @rdname soil_texture
 soil_vanGenuchtenParamsCarsel <- function(soilType) {
     .Call(`_medfate_vanGenuchtenParamsCarsel`, soilType)
 }
 
+#' @rdname soil_texture
 soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
     .Call(`_medfate_vanGenuchtenParamsToth`, clay, sand, om, bd, topsoil)
-}
-
-soil_temperatureGradient <- function(dVec, Temp) {
-    .Call(`_medfate_temperatureGradient`, dVec, Temp)
-}
-
-soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
-    .Call(`_medfate_temperatureChange`, dVec, Temp, sand, clay, W, Theta_FC, Gdown)
 }
 
 #' Soil initialization
@@ -1838,64 +1980,69 @@ soil <- function(SoilParams, VG_PTF = "Toth", W = as.numeric( c(1.0)), SWE = 0.0
     invisible(.Call(`_medfate_modifySoilLayerParam`, soil, paramName, layer, newValue, VG_PTF))
 }
 
-soil_thetaFC <- function(soil, model = "SX") {
-    .Call(`_medfate_thetaFC`, soil, model)
-}
-
-soil_thetaWP <- function(soil, model = "SX") {
-    .Call(`_medfate_thetaWP`, soil, model)
-}
-
-soil_thetaSAT <- function(soil, model = "SX") {
-    .Call(`_medfate_thetaSAT`, soil, model)
-}
-
-soil_waterFC <- function(soil, model = "SX") {
-    .Call(`_medfate_waterFC`, soil, model)
-}
-
-soil_waterSAT <- function(soil, model = "SX") {
-    .Call(`_medfate_waterSAT`, soil, model)
-}
-
-soil_waterWP <- function(soil, model = "SX") {
-    .Call(`_medfate_waterWP`, soil, model)
-}
-
-soil_waterExtractable <- function(soil, model = "SX", minPsi = -5.0) {
-    .Call(`_medfate_waterExtractable`, soil, model, minPsi)
-}
-
-soil_theta <- function(soil, model = "SX") {
-    .Call(`_medfate_theta`, soil, model)
-}
-
-soil_water <- function(soil, model = "SX") {
-    .Call(`_medfate_water`, soil, model)
-}
-
-soil_rockWeight2Volume <- function(pWeight, bulkDensity, rockDensity = 2.3) {
-    .Call(`_medfate_rockWeight2Volume`, pWeight, bulkDensity, rockDensity)
-}
-
-soil_psi <- function(soil, model = "SX") {
-    .Call(`_medfate_psi`, soil, model)
-}
-
-soil_conductivity <- function(soil) {
-    .Call(`_medfate_conductivity`, soil)
-}
-
-soil_waterTableDepth <- function(soil, model = "SX") {
-    .Call(`_medfate_waterTableDepth`, soil, model)
-}
-
+#' Soil thermodynamic functions
+#' 
+#' Functions \code{soil_thermalConductivity} and \code{soil_thermalCapacity} calculate thermal conductivity and thermal capacity 
+#' for each soil layer, given its texture and water content. Functions \code{soil_temperatureGradient} and \code{soil_temperatureChange} 
+#' are used to calculate soil temperature gradients (in ºC/m) and temporal temperature change (in ºC/s) 
+#' given soil layer texture and water content (and possibly including heat flux from above).
+#' 
+#' @param soil Soil object (returned by function \code{\link{soil}}).
+#' @param model Either 'SX' or 'VG' for Saxton's or Van Genuchten's pedotransfer models.
+#' @param dVec Width of soil layers (in mm).
+#' @param Temp Temperature (in ºC) for each soil layer.
+#' @param clay Percentage of clay (in percent weight) for each layer.
+#' @param sand Percentage of sand (in percent weight) for each layer.
+#' @param W Soil moisture (in percent of field capacity) for each layer.
+#' @param Theta_FC Relative water content (in percent volume) at field capacity for each layer.
+#' @param Gdown Downward heat flux from canopy to soil (in W·m-2).
+#' 
+#' @return 
+#' Function \code{soil_thermalConductivity} returns a vector with values of thermal conductivity (W/m/ºK) for each soil layer. 
+#' 
+#' Function \code{soil_thermalCapacity} returns a vector with values of heat storage capacity (J/m3/ºK) for each soil layer. 
+#' 
+#' Function \code{soil_temperatureGradient} returns a vector with values of temperature gradient between consecutive soil layers. 
+#' 
+#' Function \code{soil_temperatureChange} returns a vector with values of instantaneous temperature change (ºC/s) for each soil layer.
+#' 
+#' @references
+#' Cox, P.M., Betts, R.A., Bunton, C.B., Essery, R.L.H., Rowntree, P.R., and Smith, J. 1999. The impact of new land surface physics on the GCM simulation of climate and climate sensitivity. Climate Dynamics 15: 183–203.
+#' 
+#' Dharssi, I., Vidale, P.L., Verhoef, A., MacPherson, B., Jones, C., and Best, M. 2009. New soil physical properties implemented in the Unified Model at PS18. 9–12.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{soil}}
+#' 
+#' @examples
+#' examplesoil = soil(defaultSoilParams())
+#' soil_thermalConductivity(examplesoil)
+#' soil_thermalCapacity(examplesoil)
+#' 
+#' #Values change when altering water content (drier layers have lower conductivity and capacity)
+#' examplesoil$W = c(0.1, 0.4, 0.7, 1.0)
+#' soil_thermalConductivity(examplesoil)
+#' soil_thermalCapacity(examplesoil)
+#' 
+#' @name soil_thermodynamics
 soil_thermalCapacity <- function(soil, model = "SX") {
     .Call(`_medfate_thermalCapacity`, soil, model)
 }
 
+#' @rdname soil_thermodynamics
 soil_thermalConductivity <- function(soil, model = "SX") {
     .Call(`_medfate_thermalConductivity`, soil, model)
+}
+
+#' @name soil_thermodynamics
+soil_temperatureGradient <- function(dVec, Temp) {
+    .Call(`_medfate_temperatureGradient`, dVec, Temp)
+}
+
+#' @name soil_thermodynamics
+soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
+    .Call(`_medfate_temperatureChange`, dVec, Temp, sand, clay, W, Theta_FC, Gdown)
 }
 
 #' Single day simulation
