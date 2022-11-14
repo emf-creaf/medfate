@@ -85,108 +85,177 @@ fire_Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, win
     .Call(`_medfate_rothermel`, modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, windDir, slope, aspect)
 }
 
-plant_ID <- function(x, treeOffset = 0L, shrubOffset = 0L) {
-    .Call(`_medfate_cohortIDs`, x, treeOffset, shrubOffset)
-}
-
-plant_species <- function(x) {
-    .Call(`_medfate_cohortSpecies`, x)
-}
-
-plant_speciesName <- function(x, SpParams) {
-    .Call(`_medfate_cohortSpeciesName`, x, SpParams)
-}
-
 .treeBasalArea <- function(N, dbh) {
     .Call(`_medfate_treeBasalArea`, N, dbh)
-}
-
-plant_basalArea <- function(x) {
-    .Call(`_medfate_cohortBasalArea`, x)
-}
-
-plant_largerTreeBasalArea <- function(x) {
-    .Call(`_medfate_cohortLargerTreeBasalArea`, x)
-}
-
-plant_individualArea <- function(x, SpParams, mode = "MED") {
-    .Call(`_medfate_individualArea`, x, SpParams, mode)
-}
-
-plant_density <- function(x, SpParams, mode = "MED") {
-    .Call(`_medfate_cohortDensity`, x, SpParams, mode)
-}
-
-plant_height <- function(x) {
-    .Call(`_medfate_cohortHeight`, x)
 }
 
 .shrubCrownRatio <- function(SP, SpParams) {
     .Call(`_medfate_shrubCrownRatio`, SP, SpParams)
 }
 
-plant_crownRatio <- function(x, SpParams, mode = "MED") {
-    .Call(`_medfate_cohortCrownRatio`, x, SpParams, mode)
-}
-
-plant_crownBaseHeight <- function(x, SpParams, mode = "MED") {
-    .Call(`_medfate_cohortCrownBaseHeight`, x, SpParams, mode)
-}
-
-plant_crownLength <- function(x, SpParams, mode = "MED") {
-    .Call(`_medfate_cohortCrownLength`, x, SpParams, mode)
-}
-
-plant_foliarBiomass <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_cohortFoliarBiomass`, x, SpParams, gdd, mode)
-}
-
 .shrubCover <- function(x, excludeMinHeight = 0.0) {
     .Call(`_medfate_shrubCover`, x, excludeMinHeight)
-}
-
-plant_cover <- function(x, SpParams, mode = "MED") {
-    .Call(`_medfate_cohortCover`, x, SpParams, mode)
 }
 
 .shrubPhytovolume <- function(SP, Cover, H, CR, SpParams) {
     .Call(`_medfate_shrubPhytovolume`, SP, Cover, H, CR, SpParams)
 }
 
-plant_phytovolume <- function(x, SpParams) {
-    .Call(`_medfate_cohortPhytovolume`, x, SpParams)
+#' Plant description functions
+#'
+#' Functions to calculate attributes of plants in a \code{\link{forest}} object.
+#' 
+#' @param x An object of class \code{\link{forest}}.
+#' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
+#' @param parName A string with a parameter name.
+#' @param mode Calculation mode, either "MED" or "US".
+#' @param gdd Growth degree days (to account for leaf phenology effects).
+#' @param AET Actual annual evapotranspiration (in mm).
+#' @param smallBranchDecompositionRate Decomposition rate of small branches.
+#' @param includeDead A flag to indicate that standing dead fuels (dead branches) are included.
+#' @param treeOffset,shrubOffset Integers to offset cohort IDs.
+#' @param fillMissing A boolean flag to try imputation on missing values.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @return
+#' A vector with values for each plant of the input \code{\link{forest}} object:
+#' \itemize{
+#'   \item{\code{plant_basalArea}: Tree basal area (m2/ha).}
+#'   \item{\code{plant_largerTreeBasalArea}: Basal area (m2/ha) of trees larger (in diameter) than the tree. Half of the trees of the same record are included.}
+#'   \item{\code{plant_characterParameter}: The parameter values of each plant, as strings.}
+#'   \item{\code{plant_cover}: Shrub cover (in percent).}
+#'   \item{\code{plant_crownBaseHeight}: The height corresponding to the start of the crown (in cm).}
+#'   \item{\code{plant_crownLength}: The difference between crown base height and total height (in cm).}
+#'   \item{\code{plant_crownRatio}: The ratio between crown length and total height (between 0 and 1).}
+#'   \item{\code{plant_density}: Plant density (ind/ha). Tree density is directly taken from the forest object, while the shrub density is estimated from cover and height by calculating the area of a single individual.}
+#'   \item{\code{plant_equilibriumLeafLitter}: Litter biomass of leaves at equilibrium (in kg/m2).}
+#'   \item{\code{plant_equilibriumSmallBranchLitter}: Litter biomass of small branches (< 6.35 mm diameter) at equilibrium (in kg/m2).}
+#'   \item{\code{plant_foliarBiomass}: Standing biomass of leaves (in kg/m2).}
+#'   \item{\code{plant_fuel}: Fine fuel load (in kg/m2).}
+#'   \item{\code{plant_height}: Total height (in cm).}
+#'   \item{\code{plant_ID}: Cohort coding for simulation functions (concatenation of 'T' (Trees) or 'S' (Shrub), cohort index and species index).}
+#'   \item{\code{plant_LAI}: Leaf area index (m2/m2).}
+#'   \item{\code{plant_individualArea}: Area (m2) occupied by a shrub individual.}
+#'   \item{\code{plant_parameter}: The parameter values of each plant, as numeric.}
+#'   \item{\code{plant_phytovolume}: Shrub phytovolume (m3/m2).}
+#'   \item{\code{plant_species}: Species identity integer (indices start with 0).}
+#'   \item{\code{plant_speciesName}: String with species taxonomic name (or a functional group).}
+#' }
+#' 
+#' @seealso  \code{\link{spwb}}, \code{\link{forest}}, \code{\link{summary.forest}}
+#'
+#' @examples
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' #Load example plot
+#' data(exampleforestMED)
+#' 
+#' #A short way to obtain total basal area
+#' sum(plant_basalArea(exampleforestMED), na.rm=TRUE)
+#' 
+#' #The same forest level function for LAI
+#' sum(plant_LAI(exampleforestMED, SpParamsMED))
+#'   
+#' #The same forest level function for fuel loading
+#' sum(plant_fuel(exampleforestMED, SpParamsMED))
+#'       
+#' #Summary function for 'forest' objects can be also used
+#' summary(exampleforestMED, SpParamsMED)
+#' 
+#' plant_speciesName(exampleforestMED, SpParamsMED)
+#' 
+#' plant_ID(exampleforestMED)
+#'       
+#' @name plant_values
+plant_ID <- function(x, treeOffset = 0L, shrubOffset = 0L) {
+    .Call(`_medfate_cohortIDs`, x, treeOffset, shrubOffset)
 }
 
+#' @rdname plant_values
+plant_basalArea <- function(x) {
+    .Call(`_medfate_cohortBasalArea`, x)
+}
+
+#' @rdname plant_values
+plant_largerTreeBasalArea <- function(x) {
+    .Call(`_medfate_cohortLargerTreeBasalArea`, x)
+}
+
+#' @rdname plant_values
+plant_cover <- function(x, SpParams, mode = "MED") {
+    .Call(`_medfate_cohortCover`, x, SpParams, mode)
+}
+
+#' @rdname plant_values
+plant_species <- function(x) {
+    .Call(`_medfate_cohortSpecies`, x)
+}
+
+#' @rdname plant_values
+plant_speciesName <- function(x, SpParams) {
+    .Call(`_medfate_cohortSpeciesName`, x, SpParams)
+}
+
+#' @rdname plant_values
+plant_density <- function(x, SpParams, mode = "MED") {
+    .Call(`_medfate_cohortDensity`, x, SpParams, mode)
+}
+
+#' @rdname plant_values
+plant_height <- function(x) {
+    .Call(`_medfate_cohortHeight`, x)
+}
+
+#' @rdname plant_values
+plant_individualArea <- function(x, SpParams, mode = "MED") {
+    .Call(`_medfate_cohortIndividualArea`, x, SpParams, mode)
+}
+
+#' @rdname plant_values
+plant_crownRatio <- function(x, SpParams, mode = "MED") {
+    .Call(`_medfate_cohortCrownRatio`, x, SpParams, mode)
+}
+
+#' @rdname plant_values
+plant_crownBaseHeight <- function(x, SpParams, mode = "MED") {
+    .Call(`_medfate_cohortCrownBaseHeight`, x, SpParams, mode)
+}
+
+#' @rdname plant_values
+plant_crownLength <- function(x, SpParams, mode = "MED") {
+    .Call(`_medfate_cohortCrownLength`, x, SpParams, mode)
+}
+
+#' @rdname plant_values
+plant_foliarBiomass <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_cohortFoliarBiomass`, x, SpParams, gdd, mode)
+}
+
+#' @rdname plant_values
 plant_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED") {
     .Call(`_medfate_cohortFuel`, x, SpParams, gdd, includeDead, mode)
 }
 
+#' @rdname plant_values
 plant_equilibriumLeafLitter <- function(x, SpParams, AET = 800, mode = "MED") {
     .Call(`_medfate_cohortEquilibriumLeafLitter`, x, SpParams, AET, mode)
 }
 
+#' @rdname plant_values
 plant_equilibriumSmallBranchLitter <- function(x, SpParams, smallBranchDecompositionRate = 0.81, mode = "MED") {
     .Call(`_medfate_cohortEquilibriumSmallBranchLitter`, x, SpParams, smallBranchDecompositionRate, mode)
 }
 
+#' @rdname plant_values
+plant_phytovolume <- function(x, SpParams) {
+    .Call(`_medfate_cohortPhytovolume`, x, SpParams)
+}
+
+#' @rdname plant_values
 plant_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_cohortLAI`, x, SpParams, gdd, mode)
-}
-
-.LAIdistributionVectors <- function(z, LAI, H, CR) {
-    .Call(`_medfate_LAIdistributionVectors`, z, LAI, H, CR)
-}
-
-.LAIdistribution <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_LAIdistribution`, z, x, SpParams, gdd, mode)
-}
-
-.LAIprofileVectors <- function(z, LAI, H, CR) {
-    .Call(`_medfate_LAIprofileVectors`, z, LAI, H, CR)
-}
-
-.LAIprofile <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_LAIprofile`, z, x, SpParams, gdd, mode)
 }
 
 #' Species description functions
@@ -291,6 +360,22 @@ species_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
 #' @rdname stand_values
 stand_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_standLAI`, x, SpParams, gdd, mode)
+}
+
+.LAIdistributionVectors <- function(z, LAI, H, CR) {
+    .Call(`_medfate_LAIdistributionVectors`, z, LAI, H, CR)
+}
+
+.LAIdistribution <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_LAIdistribution`, z, x, SpParams, gdd, mode)
+}
+
+.LAIprofileVectors <- function(z, LAI, H, CR) {
+    .Call(`_medfate_LAIprofileVectors`, z, LAI, H, CR)
+}
+
+.LAIprofile <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_LAIprofile`, z, x, SpParams, gdd, mode)
 }
 
 forest2aboveground <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
@@ -694,6 +779,7 @@ species_characterParameter <- function(SP, SpParams, parName) {
     .Call(`_medfate_speciesCharacterParameter`, SP, SpParams, parName)
 }
 
+#' @rdname plant_values
 plant_characterParameter <- function(x, SpParams, parName) {
     .Call(`_medfate_cohortCharacterParameter`, x, SpParams, parName)
 }
@@ -703,6 +789,7 @@ species_parameter <- function(SP, SpParams, parName, fillMissing = TRUE) {
     .Call(`_medfate_speciesNumericParameterWithImputation`, SP, SpParams, parName, fillMissing)
 }
 
+#' @rdname plant_values
 plant_parameter <- function(x, SpParams, parName, fillMissing = TRUE) {
     .Call(`_medfate_cohortNumericParameterWithImputation`, x, SpParams, parName, fillMissing)
 }

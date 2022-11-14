@@ -77,6 +77,7 @@ NumericVector cohortNumericParameter(List x, DataFrame SpParams, String parName)
   return(par);
 }
 
+//' @rdname plant_values
 // [[Rcpp::export("plant_characterParameter")]]
 CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parName){
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -1388,6 +1389,7 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
 }
 
 
+//' @rdname plant_values
 // [[Rcpp::export("plant_parameter")]]
 NumericVector cohortNumericParameterWithImputation(List x, DataFrame SpParams, String parName, bool fillMissing = true){
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
