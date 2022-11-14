@@ -1281,18 +1281,72 @@ fuel_windAdjustmentFactor <- function(topShrubHeight, bottomCanopyHeight, topCan
     .Call(`_medfate_windExtinctionProfile`, z, wind20H, LAIc, canopyHeight)
 }
 
+#' Wood formation
+#' 
+#' Functions to initialize and expand a ring of tracheids to simulate secondary growth.
+#' 
+#' @param ring An object of class \code{\link{ring}} returned by function \code{woodformation_initRing}.
+#' @param psi Water potential (in MPa).
+#' @param Tc Temperature in Celsius.
+#' @param Nc Number of active cells in the cambium.
+#' @param phi0 Initial value of cell extensibility (in MPa-1 day-1)
+#' @param pi0 Initial value of cell osmotic potential (in MPa)
+#' @param CRD0 Initial value of cell radial diameter
+#' @param Y_P Turgor pressure yield threshold (in MPa)
+#' @param Y_T Temperature yield threshold (in Celsius)
+#' @param h Cell wall hardening coefficient (in day-1)
+#' @param s Cell wall softening coefficient (unitless)
+#' @param pi Osmotic potential (in MPa)
+#' @param phi Cell extensibility (in MPa-1 day-1)
+#' @param DHa,DSd,DHd Enthalpy of activation, enthalpy difference and entropy difference between the catalytically active and inactive states of the enzymatic system (Parent et al. 2010).
+#'
+#' @return 
+#' Function \code{woodformation_initRing()} returns a list of class 'ring', 
+#' that is a list containing a data frame \code{cells} and two vectors: \code{P} and \code{SA}. 
+#' Dataframe \code{cells} contains the columns "formation_date", "phi", "pi" and "CRD" and as many rows as dates processed. 
+#' Vectors \code{P} and \code{SA} contain, respectively, the number of cells produced and the sapwood area 
+#' corresponding to the ring of cells (assuming a tangencial radius of 20 micrometers). 
+#' 
+#' Function \code{woodformation_growRing()} modifies the input 'ring' object according to the environmental conditions given as input.
+#' 
+#' Function \code{woodformation_relativeExpansionRate()} returns a numeric scalar with the relative expansion rate. 
+#' 
+#' Function \code{woodformation_temperatureEffect()} returns a scalar between 0 and 1 reflecting the temperature effect on tissue formation rate. 
+#' 
+#' Function \code{woodformation_relativeGrowthRate} returns the annual growth rate, relative to cambium perimeter, estimated from initial and final diameter values.
+#' 
+#' @note Code modified from package xylomod by Antoine Cabon, available at GitHub
+#' 
+#' @author
+#' Antoine Cabon, CTFC
+#' 
+#' Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @references
+#' Cabon A, \enc{Fernández-de-Uña}{Fernandez-de-Una} L, Gea-Izquierdo G, Meinzer FC, Woodruff DR, \enc{Martínez-Vilalta}{Martinez-Vilalta} J, De \enc{Cáceres}{Caceres} M. 2020a. Water potential control of turgor-driven tracheid enlargement in Scots pine at its xeric distribution edge. New Phytologist 225: 209–221.
+#' 
+#' Cabon A, Peters RL, Fonti P, \enc{Martínez-Vilalta}{Martinez-Vilalta}  J, De \enc{Cáceres}{Caceres} M. 2020b. Temperature and water potential co-limit stem cambial activity along a steep elevational gradient. New Phytologist: nph.16456.
+#' 
+#' Parent, B., O. Turc, Y. Gibon, M. Stitt, and F. Tardieu. 2010. Modelling temperature-compensated physiological rates, based on the co-ordination of responses to temperature of developmental processes. Journal of Experimental Botany 61:2057–2069.
+#' 
+#' @seealso \code{\link{growth}}
+#' 
+#' @name woodformation
 woodformation_initRing <- function() {
     .Call(`_medfate_initialize_ring`)
 }
 
+#' @rdname woodformation
 woodformation_temperatureEffect <- function(Tc, Y_T = 5.0, DHa = 87.5e3, DSd = 1.09e3, DHd = 333e3) {
     .Call(`_medfate_temperature_function`, Tc, Y_T, DHa, DSd, DHd)
 }
 
+#' @rdname woodformation
 woodformation_relativeExpansionRate <- function(psi, Tc, pi, phi, Y_P, Y_T) {
     .Call(`_medfate_relative_expansion_rate`, psi, Tc, pi, phi, Y_P, Y_T)
 }
 
+#' @rdname woodformation
 woodformation_growRing <- function(ring, psi, Tc, Nc = 8.85, phi0 = 0.13, pi0 = -0.8, CRD0 = 8.3, Y_P = 0.05, Y_T = 5.0, h = 0.043*1.8, s = 1.8) {
     invisible(.Call(`_medfate_grow_ring`, ring, psi, Tc, Nc, phi0, pi0, CRD0, Y_P, Y_T, h, s))
 }

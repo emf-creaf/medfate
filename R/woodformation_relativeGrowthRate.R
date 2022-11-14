@@ -1,3 +1,7 @@
+#' @rdname woodformation
+#' @param dbh1,dbh2 Initial and final diameter at breast height.
+#' @param yeardiff Interval between dbh measurements, in years.
+#' @param lower,upper Lower and upper bounds for root finding.
 woodformation_relativeGrowthRate<-function(dbh1, dbh2, yeardiff, lower = -2, upper = 8){
   grow<-function(dbh1, x, ny = 10) {
     dbh = dbh1
