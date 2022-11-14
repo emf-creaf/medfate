@@ -4,10 +4,18 @@
 #include "soil.h"
 #include <meteoland.h>
 using namespace Rcpp;
+
 //Old defaults
 //ERconv=0.05, ERsyn = 0.2
 //New defaults
 //Rconv = 5.6, Rsyn = 1.5
+
+//' @param doy Day of the year.
+//' @param pet Potential evapotranspiration for a given day (mm).
+//' @param prec Precipitation for a given day (mm).
+//' @param Rconv,Rsyn Rainfall rate for convective storms and synoptic storms, respectively, in mm/h.
+//' 
+//' @rdname hydrology_interception
 // [[Rcpp::export("hydrology_erFactor")]]
 double erFactor(int doy, double pet, double prec, double Rconv = 5.6, double Rsyn = 1.5){
   double Ri = 0.0; //mm/h
@@ -20,6 +28,20 @@ double erFactor(int doy, double pet, double prec, double Rconv = 5.6, double Rsy
   return(Ei/Ri);
 }
 
+// [[Rcpp::export(".hydrology_interceptionGashDay")]]
+double interceptionGashDay(double Precipitation, double Cm, double p, double ER=0.05) {
+  double I = 0.0;
+  double PG = (-Cm/(ER*(1.0-p)))*log(1.0-ER); //Precipitation need to saturate the canopy
+  if(Cm==0.0 || p==1.0) PG = 0.0; //Avoid NAs
+  if(Precipitation>PG) {
+    I = (1-p)*PG + (1-p)*ER*(Precipitation-PG);
+  } else {
+    I = (1-p)*Precipitation;
+  }
+  return(I);
+}
+
+
 // [[Rcpp::export("hydrology_soilEvaporationAmount")]]
 double soilEvaporationAmount(double DEF,double PETs, double Gsoil){
   double t = pow(DEF/Gsoil, 2.0);
@@ -27,6 +49,8 @@ double soilEvaporationAmount(double DEF,double PETs, double Gsoil){
   Esoil = std::min(Gsoil*(sqrt(t+1)-sqrt(t)), PETs);
   return(Esoil);
 }
+
+
 
 // [[Rcpp::export("hydrology_soilEvaporation")]]
 NumericVector soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR,
@@ -93,18 +117,6 @@ NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVecto
 }
 
 
-// [[Rcpp::export(".hydrology_interceptionGashDay")]]
-double interceptionGashDay(double Precipitation, double Cm, double p, double ER=0.05) {
-  double I = 0.0;
-  double PG = (-Cm/(ER*(1.0-p)))*log(1.0-ER); //Precipitation need to saturate the canopy
-  if(Cm==0.0 || p==1.0) PG = 0.0; //Avoid NAs
-  if(Precipitation>PG) {
-    I = (1-p)*PG + (1-p)*ER*(Precipitation-PG);
-  } else {
-    I = (1-p)*Precipitation;
-  }
-  return(I);
-}
 
 
 // [[Rcpp::export("hydrology_snowMelt")]]

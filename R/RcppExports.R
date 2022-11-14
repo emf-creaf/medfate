@@ -740,8 +740,18 @@ hydraulics_rootxylemConductanceProportions <- function(L, V) {
     .Call(`_medfate_rootxylemConductanceProportions`, L, V)
 }
 
+#' @param doy Day of the year.
+#' @param pet Potential evapotranspiration for a given day (mm).
+#' @param prec Precipitation for a given day (mm).
+#' @param Rconv,Rsyn Rainfall rate for convective storms and synoptic storms, respectively, in mm/h.
+#' 
+#' @rdname hydrology_interception
 hydrology_erFactor <- function(doy, pet, prec, Rconv = 5.6, Rsyn = 1.5) {
     .Call(`_medfate_erFactor`, doy, pet, prec, Rconv, Rsyn)
+}
+
+.hydrology_interceptionGashDay <- function(Precipitation, Cm, p, ER = 0.05) {
+    .Call(`_medfate_interceptionGashDay`, Precipitation, Cm, p, ER)
 }
 
 hydrology_soilEvaporationAmount <- function(DEF, PETs, Gsoil) {
@@ -758,10 +768,6 @@ hydrology_soilEvaporation <- function(soil, soilFunctions, pet, LgroundSWR, modi
 
 hydrology_infiltrationRepartition <- function(I, dVec, macro, a = -0.005, b = 3.0) {
     .Call(`_medfate_infiltrationRepartition`, I, dVec, macro, a, b)
-}
-
-.hydrology_interceptionGashDay <- function(Precipitation, Cm, p, ER = 0.05) {
-    .Call(`_medfate_interceptionGashDay`, Precipitation, Cm, p, ER)
 }
 
 hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
