@@ -82,7 +82,8 @@ The following sections describe different steps that we used to obtain the speci
 
 Befores starting, we define file paths (in my computer) to access source data for parameter filling. Source data includes forest inventory (i.e. IFN) data as well as plant trait and allometric data bases:
 ```{r paths}
-IFN_path = "/home/miquel/OneDrive/Datasets/IFN/"
+IFN_path = "/home/miquel/OneDrive/EMFDatasets/ForestInventories/IFN/"
+IFN_out_path = "/home/miquel/OneDrive/EMFProducts/MEDFATE_Initialisation/IFN/"
 DB_path = "/home/miquel/OneDrive/Professional/MedfateWorks/MedfateSpeciesParametrization/"
 ```
 
@@ -1815,15 +1816,15 @@ rm(mc)
 ```
 
 ```{r IFN4_CAT, eval = params$IFN_rebuild, include = FALSE}
-treeDataIFN4CAT = readRDS(file=paste0(IFN_path,"Products/IFN4/Rdata/treeDataIFN4_Catalunya.rds"))
+treeDataIFN4CAT = readRDS(file=paste0(IFN_out_path,"Products/IFN4/Rdata/treeDataIFN4_Catalunya.rds"))
 treeDataIFN4CAT = treeDataIFN4CAT[!(treeDataIFN4CAT$OIF4 %in% c("888","999")),] # remove dead trees
-regDataIFN4CAT = readRDS(file=paste0(IFN_path,"Products/IFN4/Rdata/regDataIFN4_Catalunya.rds"))
+regDataIFN4CAT = readRDS(file=paste0(IFN_out_path,"Products/IFN4/Rdata/regDataIFN4_Catalunya.rds"))
 regTreeDataIFN4CAT = IFNread::extractRegTreeData(regDataIFN4CAT, subsetVars=T)
 treeDataIFN4CAT = rbind(treeDataIFN4CAT[,c("ID","Species","DBH","H","N")],
                      regTreeDataIFN4CAT[,c("ID","Species","DBH","H","N")])
-shrubDataIFN4CAT = readRDS(file=paste0(IFN_path,"Products/IFN4/Rdata/shrubDataIFN4_Catalunya.rds"))
+shrubDataIFN4CAT = readRDS(file=paste0(IFN_out_path,"Products/IFN4/Rdata/shrubDataIFN4_Catalunya.rds"))
 IFN4_forestlist_CAT = IFN2forestlist(treeDataIFN4CAT, shrubDataIFN4CAT, SpParams)
-saveRDS(IFN4_forestlist_CAT, file=paste0(IFN_path,"Products/IFN4/Rdata/forestlist_IFN4_Catalunya.rds"))
+saveRDS(IFN4_forestlist_CAT, file=paste0(IFN_out_path,"Products/IFN4/Rdata/forestlist_IFN4_Catalunya.rds"))
 rm(IFN4_forestlist_CAT)
 rm(treeDataIFN4CAT)
 rm(regDataIFN4CAT)

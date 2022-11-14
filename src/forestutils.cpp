@@ -1153,6 +1153,12 @@ NumericVector speciesPhytovolume(List x, DataFrame SpParams) {
   return(sumBySpecies(cp, cohortSpecies(x), SpParams));
 }
 
+//' @rdname species_values
+// [[Rcpp::export("species_LAI")]]
+NumericVector speciesLAI(List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED") {
+  NumericVector cl = cohortLAI(x, SpParams, gdd, mode);
+  return(sumBySpecies(cl, cohortSpecies(x), SpParams));
+}
 
 //' @rdname stand_values
 // [[Rcpp::export("stand_basalArea")]]
@@ -1194,11 +1200,6 @@ double standFuel(List x, DataFrame SpParams, double gdd = NA_REAL, bool includeD
   return(tf);
 }
 
-// [[Rcpp::export("species_LAI")]]
-NumericVector speciesLAI(List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED") {
-  NumericVector cl = cohortLAI(x, SpParams, gdd, mode);
-  return(sumBySpecies(cl, cohortSpecies(x), SpParams));
-}
 
 
 //' @rdname stand_values

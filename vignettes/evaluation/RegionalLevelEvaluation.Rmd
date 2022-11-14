@@ -106,7 +106,7 @@ dfbai_all$Submodel <- factor(dfbai_all$Submodel, levels =c("Basic","Advanced"))
  
 dfdbh$Province = substr(dfdbh$ID, 1, nchar(dfdbh$ID)-4)
  
-load("~/OneDrive/Datasets/Limits/Products/Catalonia/catalonia.rdata")
+load("~/OneDrive/EMFDatasets/PoliticalBoundaries/Products/Catalunya/catalonia.rdata")
 cat_sfc = sf::st_as_sfc(cat.contour)
 ```
 

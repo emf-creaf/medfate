@@ -8,6 +8,7 @@
 \alias{species_foliarBiomass}
 \alias{species_fuel}
 \alias{species_phytovolume}
+\alias{species_LAI}
 \alias{species_characterParameter}
 \alias{species_parameter}
 \title{Species description functions}
@@ -23,6 +24,8 @@ species_foliarBiomass(x, SpParams, gdd = NA_real_, mode = "MED")
 species_fuel(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED")
 
 species_phytovolume(x, SpParams)
+
+species_LAI(x, SpParams, gdd = NA_real_, mode = "MED")
 
 species_characterParameter(SP, SpParams, parName)
 

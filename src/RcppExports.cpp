@@ -666,6 +666,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// speciesLAI
+NumericVector speciesLAI(List x, DataFrame SpParams, double gdd, String mode);
+RcppExport SEXP _medfate_speciesLAI(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(speciesLAI(x, SpParams, gdd, mode));
+    return rcpp_result_gen;
+END_RCPP
+}
 // standBasalArea
 double standBasalArea(List x, double minDBH);
 RcppExport SEXP _medfate_standBasalArea(SEXP xSEXP, SEXP minDBHSEXP) {
@@ -716,20 +730,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type includeDead(includeDeadSEXP);
     Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
     rcpp_result_gen = Rcpp::wrap(standFuel(x, SpParams, gdd, includeDead, mode));
-    return rcpp_result_gen;
-END_RCPP
-}
-// speciesLAI
-NumericVector speciesLAI(List x, DataFrame SpParams, double gdd, String mode);
-RcppExport SEXP _medfate_speciesLAI(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
-    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
-    rcpp_result_gen = Rcpp::wrap(speciesLAI(x, SpParams, gdd, mode));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4803,11 +4803,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_speciesFoliarBiomass", (DL_FUNC) &_medfate_speciesFoliarBiomass, 4},
     {"_medfate_speciesFuel", (DL_FUNC) &_medfate_speciesFuel, 5},
     {"_medfate_speciesPhytovolume", (DL_FUNC) &_medfate_speciesPhytovolume, 2},
+    {"_medfate_speciesLAI", (DL_FUNC) &_medfate_speciesLAI, 4},
     {"_medfate_standBasalArea", (DL_FUNC) &_medfate_standBasalArea, 2},
     {"_medfate_standFoliarBiomass", (DL_FUNC) &_medfate_standFoliarBiomass, 4},
     {"_medfate_standPhytovolume", (DL_FUNC) &_medfate_standPhytovolume, 2},
     {"_medfate_standFuel", (DL_FUNC) &_medfate_standFuel, 5},
-    {"_medfate_speciesLAI", (DL_FUNC) &_medfate_speciesLAI, 4},
     {"_medfate_standLAI", (DL_FUNC) &_medfate_standLAI, 4},
     {"_medfate_LAIdistributionVectors", (DL_FUNC) &_medfate_LAIdistributionVectors, 4},
     {"_medfate_LAIdistribution", (DL_FUNC) &_medfate_LAIdistribution, 5},

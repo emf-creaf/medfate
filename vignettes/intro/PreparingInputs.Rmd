@@ -59,7 +59,7 @@ table(poblet_trees$Plot.Code)
 We initialize an empty forest object using function `emptyforest()` from package **medfate**:
 
 ```{r}
-pobl_ctl <- emptyforest("POBL_CTL")
+pobl_ctl <- emptyforest()
 pobl_ctl
 ```
 
@@ -182,7 +182,7 @@ summary(pobl_thi_bef, SpParamsMED)
 Like the control plot, these statistics indicate a dense oak forest. We can repeat the same operations with the forest plot after the thinning intervention:
 
 ```{r}
-pobl_thi_aft = emptyforest("POBL_THI_AFT")
+pobl_thi_aft = emptyforest()
 pobl_thi_aft$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_THI_AFT"),
                                              mapping_x = mapping, SpParams = SpParamsMED, 
                                              plot_size_x = sampled_area)
@@ -231,16 +231,15 @@ In general, it is advisable to reduce the number of woody cohorts before running
 
 Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via SoilGrids.org.
 
-Retrieval of soil properties from SoilGrids can be done using function `soilgridsParams()` from package **medfateutils**. Assuming we know the plot coordinates, we first create an object `SpatialPoints` (see package **sp**):
+Retrieval of soil properties from SoilGrids can be done using function `soilgridsParams()` from package **medfateutils**. Assuming we know the plot coordinates, we first create an object `sf` (see package **sf**):
 ```{r}
-cc = cbind(1.0219, 41.3443)
-coords_sp <- SpatialPoints(cc, CRS(SRS_string = "EPSG:4326"))
+sf_pt = sf::st_sfc(sf::st_point(c(1.0219, 41.3443)), crs = 4326)
 ```
 
 This object can be used to query SoilGrids using `soilgridsParams()`:
 
 ```{r}
-pobl_soil_props <- soilgridsParams(coords_sp, widths = c(300, 700, 1000))
+pobl_soil_props <- soilgridsParams(sf_pt, widths = c(300, 700, 1000))
 ```
 
 This function returns a data frame of soil properties:
@@ -277,6 +276,7 @@ print(pobl_soil)
 While soil information is often scarce and uncertain, obtaining daily weather data suitable for simulations is not straightforward either. Here we illustrate one way of obtaining such data using package **meteoland**. We begin by building an object of class `SpatialPointsTopography`, which contains both the coordinates of our site as well as topographic variables.
 
 ```{r}
+coords_sp <- as(sf_pt, "Spatial")
 pobl_spt <- SpatialPointsTopography(coords_sp,
                                     elevation = 850, slope = 15.1, aspect = 15)
 pobl_spt

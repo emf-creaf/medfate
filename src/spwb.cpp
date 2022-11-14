@@ -459,21 +459,25 @@ List spwbDay2(List x, NumericVector meteovec,
 //' data(SpParamsMED)
 //' 
 //' #Initialize control parameters
-//' control = defaultControl("Granier")
+//' control <- defaultControl("Granier")
 //' 
 //' # Day to be simulated
-//' d = 100
+//' d <- 100
 //' 
 //' #Simulate water balance one day only (Granier)
-//' examplesoil = soil(defaultSoilParams(4))
-//' x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-//' sd1<-spwb_day(x1, rownames(examplemeteo)[d],  
-//'               examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
+//' examplesoil <- soil(defaultSoilParams(4))
+//' x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' sd1 <- spwb_day(x1, rownames(examplemeteo)[d],  
+//'                 examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
+//'                 examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
+//'                 examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
+//'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0,
+//'                 prec = examplemeteo$Precipitation[d]) 
 //' 
-//' #Simulate water balance for one day only (Sperry's mode)
-//' control = defaultControl("Sperry")
-//' x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-//' sd2<-spwb_day(x2, rownames(examplemeteo)[d],
+//' #Simulate water balance for one day only (Sperry mode)
+//' control <- defaultControl("Sperry")
+//' x2 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
+//' sd2 <-spwb_day(x2, rownames(examplemeteo)[d],
 //'               examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
 //'               examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
 //'               examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
@@ -482,10 +486,10 @@ List spwbDay2(List x, NumericVector meteovec,
 //' 
 //' #Plot plant transpiration (see function 'plot.swb.day()')
 //' plot(sd2)
-//'               
+//' 
 //' #Simulate water and carbon balance for one day only
-//' x3 = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
-//' sd3<-growth_day(x3, rownames(examplemeteo)[d],
+//' x3  <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' sd3 <- growth_day(x3, rownames(examplemeteo)[d],
 //'                 examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
 //'                 examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
 //'                 examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
