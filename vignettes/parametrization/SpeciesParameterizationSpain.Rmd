@@ -1713,14 +1713,14 @@ If we have a species parameter table with taxonomic information, growth forms an
 ```{r IFN2_spain, eval = params$IFN_rebuild}
 IFN2_forestlist = IFN2forestlist(treeDataIFN2, shrubDataIFN2, SpParams, 
                                  setDefaults = TRUE, filterWrongRecords = TRUE)
-saveRDS(IFN2_forestlist, file=paste0(IFN_path,"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"))
+saveRDS(IFN2_forestlist, file=paste0(IFN_out_path,"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"))
 ```
 
 ```{r include = FALSE, echo = FALSE}
 if(params$IFN_rebuild) {
-  saveRDS(IFN2_forestlist, file=paste0(IFN_path,"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"))
+  saveRDS(IFN2_forestlist, file=paste0(IFN_out_path,"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"))
 } else {
-  IFN2_forestlist = readRDS(paste0(IFN_path,"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"))
+  IFN2_forestlist = readRDS(paste0(IFN_out_path,"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"))
 }
 ```
 Some of the shrub/tree records may not be parsed if they have not been included in the species definition of `SpParams`. The number of plots parsed is:
@@ -1736,15 +1736,15 @@ We can repeat the same operation for IFN3:
 ```{r IFN3_Spain, eval = params$IFN_rebuild}
 IFN3_forestlist = IFN2forestlist(treeDataIFN3, shrubDataIFN3, SpParams, 
                                  setDefaults = TRUE, filterWrongRecords = TRUE)
-saveRDS(IFN3_forestlist, file=paste0(IFN_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
+saveRDS(IFN3_forestlist, file=paste0(IFN_out_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
 
 ```
 
 ```{r include = FALSE, echo = FALSE}
 if(params$IFN_rebuild) {
-  saveRDS(IFN3_forestlist, file=paste0(IFN_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
+  saveRDS(IFN3_forestlist, file=paste0(IFN_out_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
 } else {
-    IFN3_forestlist = readRDS(paste0(IFN_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
+    IFN3_forestlist = readRDS(paste0(IFN_out_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
 
 }
 ```
@@ -1757,14 +1757,14 @@ Finally, we repeat the operation for IFN4:
 ```{r IFN4_Spain, eval = params$IFN_rebuild}
 IFN4_forestlist = IFN2forestlist(treeDataIFN4, shrubDataIFN4, SpParams, 
                                  setDefaults = TRUE, filterWrongRecords = TRUE)
-saveRDS(IFN4_forestlist, file=paste0(IFN_path,"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"))
+saveRDS(IFN4_forestlist, file=paste0(IFN_out_path,"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"))
 ```
 
 ```{r include = FALSE, echo = FALSE}
 if(params$IFN_rebuild) {
-saveRDS(IFN4_forestlist, file=paste0(IFN_path,"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"))
+saveRDS(IFN4_forestlist, file=paste0(IFN_out_path,"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"))
 } else {
-    IFN4_forestlist = readRDS(paste0(IFN_path,"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"))
+    IFN4_forestlist = readRDS(paste0(IFN_out_path,"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"))
 
 }
 ```
@@ -1781,7 +1781,7 @@ piesMenoresDataIFN2CAT = readRDS(file=paste0(IFN_path,"Products/IFN2/Rdata/piesM
 treeDataIFN2CAT = rbind(piesMayoresDataIFN2CAT, piesMenoresDataIFN2CAT) # Add pies menores
 shrubDataIFN2CAT = readRDS(file=paste0(IFN_path,"Products/IFN2/Rdata/shrubDataIFN2_Catalunya.rds"))
 IFN2_forestlist_CAT = IFN2forestlist(treeDataIFN2CAT, shrubDataIFN2CAT, SpParams)
-saveRDS(IFN2_forestlist_CAT, file=paste0(IFN_path,"Products/IFN2/Rdata/forestlist_IFN2_Catalunya.rds"))
+saveRDS(IFN2_forestlist_CAT, file=paste0(IFN_out_path,"Products/IFN2/Rdata/forestlist_IFN2_Catalunya.rds"))
 rm(IFN2_forestlist_CAT)
 rm(treeDataIFN2CAT)
 rm(shrubDataIFN2CAT)
@@ -1805,7 +1805,7 @@ treeDataIFN3CAT = rbind(treeDataIFN3CAT[,c("ID","Species","DBH","H","N")],
 shrubDataIFN3CAT = readRDS(file=paste0(IFN_path,"Products/IFN3/Rdata/shrubDataIFN3_Catalunya.rds"))
 IFN3_forestlist_CAT = IFN2forestlist(treeDataIFN3CAT, shrubDataIFN3CAT, SpParams, 
                                  IFNherbData = herbData)
-saveRDS(IFN3_forestlist_CAT, file=paste0(IFN_path,"Products/IFN3/Rdata/forestlist_IFN3_Catalunya.rds"))
+saveRDS(IFN3_forestlist_CAT, file=paste0(IFN_out_path,"Products/IFN3/Rdata/forestlist_IFN3_Catalunya.rds"))
 rm(IFN3_forestlist_CAT)
 rm(treeDataIFN3CAT)
 rm(regDataIFN3CAT)
