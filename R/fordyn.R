@@ -1,3 +1,41 @@
+#' Plant recruitment
+#'
+#' Annual plant recruitment observed in a forest stand
+#' 
+#' @param forest An object of class \code{\link{forest}}.
+#' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsDefinition}}).
+#' @param control A list with default control parameters (see \code{\link{defaultControl}}).
+#' @param minMonthTemp Minimum month temperature.
+#' @param moistureIndex Moisture index (annual precipitation over annual potential evapotranspiration).
+#' 
+#' @details Species can recruit if adults (sufficiently tall individuals) are present (seed rain can also be specified in a control parameter). 
+#' Minimum month temperature and moisture index values are used to determine if recruitment was successful. 
+#' Species also require a minimum amount of light at the ground level.
+#' 
+#' @return An object of class \code{\link{forest}} with the new plant cohorts.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{fordyn}}
+#' 
+#' @examples 
+#' #Load example plot plant data
+#' data(exampleforestMED)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' #Initialize control parameters
+#' control = defaultControl("Granier")
+#' 
+#' #Recruitment limits
+#' plant_parameter(exampleforestMED, SpParamsMED, "MinTempRecr")
+#' plant_parameter(exampleforestMED, SpParamsMED, "MinMoistureRecr")
+#' 
+#' #Compare recruitment outcomes
+#' recruitment(exampleforestMED, SpParamsMED, control, 0, 0.25)
+#' recruitment(exampleforestMED, SpParamsMED, control, 3, 0.25)
+#' 
 recruitment<-function(forest, SpParams, control,
                       minMonthTemp, moistureIndex) {
   if((nrow(forest$treeData)>0) || (nrow(forest$shrubData)>0)) {
@@ -96,6 +134,112 @@ recruitment<-function(forest, SpParams, control,
   return(recr_forest)
 }
 
+
+#' Forest dynamics
+#' 
+#' Function \code{fordyn} implements a forest dynamics model that simulates 
+#' growth, mortality, recruitment and (optionally) management actions in a given forest stand 
+#' during a period specified in the input climatic data.
+#' 
+#' @param forest An object of class \code{\link{forest}}. Alternatively, the output of a previous run, if continuing a previous simulation.
+#' @param soil An object of class \code{\link{soil}}.
+#' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsDefinition}}).
+#' @param meteo A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}).
+#' @param control A list with default control parameters (see \code{\link{defaultControl}}).
+#' @param latitude Latitude (in degrees). Required when \code{x$TranspirationMode = "Sperry"}.
+#' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when \code{x$TranspirationMode = "Sperry"}. Elevation is also required for 'Granier' if snowpack dynamics are simulated.
+#' @param CO2ByYear A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).
+#' @param management_function A function that implements forest management actions (see details).
+#' @param management_args A list of additional arguments to be passed to the \code{management_function}.
+#' 
+#' @details Function \code{fordyn} simulates forest dynamics for annual time steps, building on other simulation functions. For each simulated year, the function performs the following steps:
+#' \enumerate{
+#'   \item{Calls function \code{\link{growth}} to simulate daily water/carbon balance, growth and mortality processes and update the forest object.}
+#'   \item{If required, calls function \code{management_function}, using as parameters the forest object and \code{management_args}, which may result in a density reduction for existing plant cohorts and/or a set of new planted cohorts.}
+#'   \item{Simulate natural recruitment (for species present in the stand or given in a seed rain input).}
+#'   \item{Prepares the input of function \code{\link{growth}} for the next annual time step.}
+#'   \item{Store forest status, management arguments, and summaries.}
+#' }
+#' 
+#' To enable forest management, the user needs to provide a function that implements it, which is passed to \code{fordyn} via its argument \code{management_function}. Such function should have  the following arguments:
+#'   \itemize{
+#'     \item{\code{"x"}: the \code{\link{forest}} object representing the stand to be managed.}
+#'     \item{\code{"args"}: a list of parameters regulating the behavior of the management function.} 
+#'     \item{\code{"verbose"}: a logical flag to enable console output during the execution of the management function.}
+#'   }
+#' and return a list with the following elements:
+#'   \itemize{
+#'     \item{\code{"action"}: A string identifying the action performed (e.g. "thinning").}
+#'     \item{\code{"N_tree_cut"}: A vector with the density of trees removed.}
+#'     \item{\code{"Cover_shrub_cut"}: A vector with the cover of shrubs removed.} 
+#'     \item{\code{"planted_forest"}: An object of class \code{\link{forest}} with the new plant cohorts resulting from tree/shrub planting.}
+#'     \item{\code{"management_args"}: A list of management arguments to be used in the next call to the management function.}
+#'   }
+#' 
+#' An example of management function is provided in \code{\link{defaultManagementFunction}}.
+#' 
+#' @return A list of class 'fordyn' with the following elements:
+#' \itemize{
+#'   \item{\code{"StandSummary"}: A data frame with stand-level summaries (tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
+#'   \item{\code{"SpeciesSummary"}: A data frame with species-level summaries (tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
+#'   \item{\code{"CohortSummary"}: A data frame with cohort-level summaries (tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
+#'   \item{\code{"TreeTable"}: A data frame with tree-cohort data (species, density, diameter, height, etc.) at the beginning of the simulation (if any) and after each simulated year.}
+#'   \item{\code{"DeadTreeTable"}: A data frame with dead tree-cohort data (species, density, diameter, height, etc.) at the beginning of the simulation and after each simulated year.}
+#'   \item{\code{"CutTreeTable"}: A data frame with cut tree data (species, density, diameter, height, etc.) after each simulated year.}
+#'   \item{\code{"ShrubTable"}: A data frame with shrub-cohort data (species, density, cover, height, etc.) at the beginning of the simulation and after each simulated year.}
+#'   \item{\code{"DeadShrubTable"}: A data frame with dead shrub-cohort data (species, density, cover, height, etc.) at the beginning of the simulation (if any) and after each simulated year.}
+#'   \item{\code{"CutShrubTable"}: A data frame with cut shrub data (species, density, cover, height, etc.) after each simulated year.}
+#'   \item{\code{"ForestStructures"}: A list with the \code{\link{forest}} object of the stand at the beginning of the simulation and after each simulated year.}
+#'   \item{\code{"GrowthResults"}: A list with the results of calling function \code{\link{growth}} for each simulated year.}
+#'   \item{\code{"ManagementArgs"}: A list of management arguments to be used in another call to \code{fordyn}.}
+#'   \item{\code{"NextInputObject"}: An object of class \code{growthInput} to be used in a subsequent simulation.}
+#'   \item{\code{"NextForestObject"}: An object of class \code{forest} to be used in a subsequent simulation.}
+#' }
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{growth}}, \code{\link{recruitment}}, \code{\link{plot.growth}}, \code{\link{defaultManagementFunction}}
+#' 
+#' @examples 
+#' \dontrun{
+#' #Load example daily meteorological data
+#' data(examplemeteo)
+#' #Prepare a two-year meteorological data with half precipitation during 
+#' #the second year
+#' meteo2001 = examplemeteo
+#' meteo2002 = examplemeteo
+#' meteo2002$Precipitation = meteo2002$Precipitation/2
+#' row.names(meteo2002) = seq(as.Date("2002-01-01"), 
+#'                            as.Date("2002-12-31"), by="day")
+#' meteo_01_02 = rbind(meteo2001, meteo2002)
+#' 
+#' #Load example plot plant data
+#' data(exampleforestMED)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' #Initialize control parameters
+#' control = defaultControl("Granier")
+#' 
+#' #Initialize soil with default soil params (4 layers)
+#' examplesoil = soil(defaultSoilParams(4))
+#' 
+#' #Call simulation function
+#' fd<-fordyn(exampleforestMED, examplesoil, 
+#'            SpParamsMED, meteo_01_02, control,
+#'            latitude = 41.82592, elevation = 100)
+#' 
+#' #Stand-level summaries
+#' fd$StandSummary
+#' 
+#' #Tree table by annual steps
+#' fd$TreeTable
+#' 
+#' #Dead tree table by annual steps
+#' fd$DeadTreeTable
+#' }
+#' 
 fordyn<-function(forest, soil, SpParams,
                  meteo, control,
                  latitude , elevation = NA, slope = NA, aspect = NA,

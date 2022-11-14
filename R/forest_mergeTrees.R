@@ -1,3 +1,21 @@
+#' Forest merge functions
+#' 
+#' Functions to merge cohorts of a \code{\link{forest}} object.
+#' 
+#' @param x An object of class \code{\link{forest}}.
+#' @param byDBHclass Logical flag to indicate that 5-cm tree DBH classes should be kept separated.
+#' 
+#' @details Tree DBH classes are defined in 5-cm intervals, whereas shrub height classes are defined in 10-cm intervals.
+#' Tree DBH and shrub height classes are defined up to a specific size (i.e. larger plants are not merged) 
+#' corresponding to 52.5 cm and 90 cm, respectively.
+#' 
+#' @return Another \code{\link{forest}} object with merged trees or shrubs, depending on the function.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{spwb}}, \code{\link{forest}},  \code{\link{fordyn}}, \code{\link{summary.forest}}
+#' 
+#' @name forest_mergeTrees
 forest_mergeTrees<-function(x, byDBHclass = TRUE) {
   mergeTreesSize<-function(x) {
     ntree = nrow(x)
@@ -65,6 +83,11 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE) {
   }
   return(x2)
 }
+
+#' @rdname forest_mergeTrees
+#' 
+#' @param byHeightclass Boolean flag to indicate that 10-cm shrub height classes should be kept separated.
+#' 
 forest_mergeShrubs<-function(x, byHeightclass = TRUE) {
   mergeShrubsSize<-function(x) {
     nshrub = nrow(x)
