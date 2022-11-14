@@ -1,3 +1,87 @@
+#' Modify parameters
+#' 
+#' Routines to modify species parameter table or model input objects
+#' 
+#' @param x A model input object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.
+#' @param SpParams A species parameter data frame, typically \code{\link{SpParamsMED}}.
+#' @param customParams A data frame or a named vector with new parameter values (see details).
+#' @param subsetSpecies A logical flag to indicate that the output data frame should include only those species mentioned in \code{customParams}.
+#' @param verbose A logical flag to indicate that messages should be printed on the console.
+#' 
+#' @details When calling function \code{modifySpParams}, \code{customParams} should be a data frame with as many rows as species 
+#' and as many columns as parameters to modify, plus a column called 'SpIndex' to match species between the two tables.
+#' 
+#' When calling \code{modifyCohortParams}, \code{customParams} can be a data frame with as many rows as cohorts 
+#' and as many columns as parameters to modify, plus a column called 'Cohort' which will be matched with the cohort names 
+#' given by \code{\link{spwbInput}} or \code{\link{growthInput}}. 
+#' Alternatively, \code{customParams} can be a named list or named numeric vector as for \code{modifyInputParams}.
+#' 
+#' When calling \code{modifyInputParams}, \code{customParams} must be either a named list or a named numeric vector. 
+#' Cohort parameters are specified using the syntax "<cohortName>/<paramName>" for names (e.g. "T2_176/Z50" to modify parameter 'Z50' of cohort 'T2_176'). 
+#' Soil layer parameters are specified using the syntax "<paramName>@#layer" for names, where #layer is the layer index (e.g. "rfc@1" will modify the rock fragment content of soil layer 1). 
+#' Control parameters are specified using either "<paramName>" (e.g "phloemConductanceFactor") or "<paramName>$<subParamName>" (e.g "maximumRelativeGrowthRates$leaf"). 
+#' It may seem unnecessary to modify soil or control parameters via a function, but \code{modifyInputParams} is called from optimization functions (see \code{\link{optimization}}).
+#'  
+#' @return Function \code{modifySpParams} returns a modified species parameter data frame. 
+#' 
+#' Functions \code{modifyCohortParams} and \code{modifyInputParams} return a modified \code{\link{spwbInput}} or \code{\link{growthInput}} object. Note that modifications may affect other parameters beyond those indicated in \code{customParams}, as a result of parameter dependencies (see examples).
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{spwbInput}}, \code{\link{SpParamsMED}}, \code{\link{optimization}}
+#' 
+#' @examples 
+#' #Load example daily meteorological data
+#' data(examplemeteo)
+#' 
+#' #Load example plot plant data
+#' data(exampleforestMED)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' #Initialize soil with default soil params (4 layers)
+#' examplesoil = soil(defaultSoilParams(4))
+#' 
+#' #Initialize control parameters
+#' control = defaultControl("Granier")
+#' 
+#' #Initialize input
+#' x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' 
+#' # Cohort name for Pinus halepensis
+#' PH_coh = paste0("T1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"])
+#' PH_coh 
+#' 
+#' # Modify Z50 and Z95 of Pinus halepensis cohort 
+#' customParams <- c(200,2000)
+#' names(customParams) <- paste0(PH_coh,c("/Z50", "/Z95"))
+#' x1m <- modifyInputParams(x1, customParams)
+#' 
+#' # Inspect original and modified objects 
+#' x1$below
+#' x1m$below
+#' 
+#' # Inspect dependencies: fine root distribution across soil layers
+#' x1$belowLayers$V
+#' x1m$belowLayers$V
+#' 
+#' # Modify rock fragment content and sand proportion of soil layer 1
+#' x1s <- modifyInputParams(x1, c("rfc@1" = 5, "sand@1" = 10))
+#' 
+#' # Inspect original and modified soils 
+#' x1$soil
+#' x1s$soil
+#' 
+#' # When modifying growth input objects dependencies increase
+#' x1 = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' customParams <- c(2000,2)
+#' names(customParams) <- paste0(PH_coh,c("/Al2As", "/LAI_live"))
+#' x1m <- modifyInputParams(x1, customParams)
+#' 
+#' @name modifyParams
+
+#' @rdname modifyParams
 modifySpParams<-function(SpParams, customParams, subsetSpecies = TRUE) {
   
   # check if customParams exists, if not return SpParams without modification
@@ -34,6 +118,7 @@ modifySpParams<-function(SpParams, customParams, subsetSpecies = TRUE) {
   return(SpParams)
 }
 
+#' @rdname modifyParams
 modifyCohortParams<-function(x, customParams, verbose = TRUE) {
   
   # check if customParams exists, if not return x without modification
@@ -103,6 +188,7 @@ modifyCohortParams<-function(x, customParams, verbose = TRUE) {
   return(x)
 }
 
+#' @rdname modifyParams
 modifyInputParams<-function(x, customParams, verbose = TRUE) {
   # check class of customParams
   if((!inherits(customParams, "numeric")) && (!inherits(customParams, "list"))) {
