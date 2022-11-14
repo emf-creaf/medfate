@@ -42,6 +42,12 @@ double interceptionGashDay(double Precipitation, double Cm, double p, double ER=
 }
 
 
+//' @rdname hydrology_soil
+//' 
+//' @param DEF Water deficit in the (topsoil) layer.
+//' @param PETs Potential evapotranspiration at the soil surface.
+//' @param Gsoil Gamma parameter (maximum daily evaporation).
+//' 
 // [[Rcpp::export("hydrology_soilEvaporationAmount")]]
 double soilEvaporationAmount(double DEF,double PETs, double Gsoil){
   double t = pow(DEF/Gsoil, 2.0);
@@ -50,8 +56,14 @@ double soilEvaporationAmount(double DEF,double PETs, double Gsoil){
   return(Esoil);
 }
 
-
-
+//' @rdname hydrology_soil
+//' 
+//' @param soil An object of class \code{\link{soil}}.
+//' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
+//' @param pet Potential evapotranspiration for a given day (mm)
+//' @param LgroundSWR Percentage of short-wave radiation (SWR) reaching the ground.
+//' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
+//' 
 // [[Rcpp::export("hydrology_soilEvaporation")]]
 NumericVector soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR,
                               bool modifySoil = true) {
@@ -94,6 +106,13 @@ double infiltrationAmount(double input, double Ssoil) {
 /**
  * Calculates infiltrated water that goes to each layer
  */
+//' @rdname hydrology_soil
+//' 
+//' @param I Soil infiltration (in mm of water).
+//' @param dVec Width of soil layers (in mm).
+//' @param macro Macroporosity of soil layers (in \%).
+//' @param a,b Parameters of the extinction function used for water infitration.
+//' 
 // [[Rcpp::export("hydrology_infiltrationRepartition")]]
 NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro, 
                                       double a = -0.005, double b = 3.0) {
@@ -116,9 +135,12 @@ NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVecto
   return(Ivec);
 }
 
-
-
-
+//' @rdname hydrology_soil
+//' 
+//' @param tday Average day temperature (ºC).
+//' @param rad Solar radiation (in MJ/m2/day).
+//' @param elevation Altitude above sea level (m).
+//' 
 // [[Rcpp::export("hydrology_snowMelt")]]
 double snowMelt(double tday, double rad, double LgroundSWR, double elevation) {
   if(NumericVector::is_na(rad)) stop("Missing radiation data for snow melt!");
@@ -176,6 +198,7 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, double prec, doub
                                            _["Input"] = runon+melt+NetRain);
   return(WI);
 }
+
 // [[Rcpp::export("hydrology_soilInfiltrationPercolation")]]
 NumericVector soilInfiltrationPercolation(List soil, String soilFunctions, 
                                           double waterInput,

@@ -1093,10 +1093,24 @@ hydrology_erFactor <- function(doy, pet, prec, Rconv = 5.6, Rsyn = 1.5) {
     .Call(`_medfate_interceptionGashDay`, Precipitation, Cm, p, ER)
 }
 
+#' @rdname hydrology_soil
+#' 
+#' @param DEF Water deficit in the (topsoil) layer.
+#' @param PETs Potential evapotranspiration at the soil surface.
+#' @param Gsoil Gamma parameter (maximum daily evaporation).
+#' 
 hydrology_soilEvaporationAmount <- function(DEF, PETs, Gsoil) {
     .Call(`_medfate_soilEvaporationAmount`, DEF, PETs, Gsoil)
 }
 
+#' @rdname hydrology_soil
+#' 
+#' @param soil An object of class \code{\link{soil}}.
+#' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
+#' @param pet Potential evapotranspiration for a given day (mm)
+#' @param LgroundSWR Percentage of short-wave radiation (SWR) reaching the ground.
+#' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
+#' 
 hydrology_soilEvaporation <- function(soil, soilFunctions, pet, LgroundSWR, modifySoil = TRUE) {
     .Call(`_medfate_soilEvaporation`, soil, soilFunctions, pet, LgroundSWR, modifySoil)
 }
@@ -1105,10 +1119,23 @@ hydrology_soilEvaporation <- function(soil, soilFunctions, pet, LgroundSWR, modi
     .Call(`_medfate_infiltrationAmount`, input, Ssoil)
 }
 
+#' @rdname hydrology_soil
+#' 
+#' @param I Soil infiltration (in mm of water).
+#' @param dVec Width of soil layers (in mm).
+#' @param macro Macroporosity of soil layers (in \%).
+#' @param a,b Parameters of the extinction function used for water infitration.
+#' 
 hydrology_infiltrationRepartition <- function(I, dVec, macro, a = -0.005, b = 3.0) {
     .Call(`_medfate_infiltrationRepartition`, I, dVec, macro, a, b)
 }
 
+#' @rdname hydrology_soil
+#' 
+#' @param tday Average day temperature (ºC).
+#' @param rad Solar radiation (in MJ/m2/day).
+#' @param elevation Altitude above sea level (m).
+#' 
 hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
     .Call(`_medfate_snowMelt`, tday, rad, LgroundSWR, elevation)
 }
