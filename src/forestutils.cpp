@@ -1304,6 +1304,7 @@ NumericVector LAIprofile(NumericVector z, List x, DataFrame SpParams, double gdd
 
 
 
+//' @rdname modelInput
 // [[Rcpp::export("forest2aboveground")]]
 DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED") {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -1352,6 +1353,7 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, S
 }
 
 
+//' @rdname modelInput
 // [[Rcpp::export("forest2belowground")]]
 NumericMatrix forest2belowground(List x, List soil) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);

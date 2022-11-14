@@ -614,10 +614,12 @@ stand_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_LAIprofile`, z, x, SpParams, gdd, mode)
 }
 
+#' @rdname modelInput
 forest2aboveground <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_forest2aboveground`, x, SpParams, gdd, mode)
 }
 
+#' @rdname modelInput
 forest2belowground <- function(x, soil) {
     .Call(`_medfate_forest2belowground`, x, soil)
 }
@@ -1140,10 +1142,60 @@ hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
     .Call(`_medfate_snowMelt`, tday, rad, LgroundSWR, elevation)
 }
 
+#' Soil vertical inputs
+#' 
+#' High-level functions for hydrological processes. Function \code{hydrology_soilWaterInputs} performs 
+#' canopy water interception and snow accumulation/melt. Function \code{hydrology_soilInfiltrationPercolation} 
+#' performs soil infiltration and percolation from the input given by the previous function.
+#' 
+#' @param soil A list containing the description of the soil (see \code{\link{soil}}).
+#' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
+#' @param prec Precipitation for a given day (mm)
+#' @param er The ratio of evaporation rate to rainfall rate.
+#' @param tday Average day temperature (ºC).
+#' @param rad Solar radiation (in MJ/m2/day).
+#' @param elevation Altitude above sea level (m).
+#' @param Cm Canopy water storage capacity.
+#' @param LgroundPAR Percentage of photosynthetically-acvive radiation (PAR) reaching the ground.
+#' @param LgroundSWR Percentage of short-wave radiation (SWR) reaching the ground.
+#' @param runon Surface water amount running on the target area from upslope (in mm).
+#' @param snowpack Boolean flag to indicate the simulation of snow accumulation and melting.
+#' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
+#' 
+#' @details 
+#' The function simulates different vertical hydrological processes, which are described separately in other functions. 
+#' If \code{modifySoil = TRUE} the function will modify the \code{soil} object (including both soil moisture and 
+#' the snowpack on its surface) as a result of simulating hydrological processes.
+#' 
+#' @return 
+#' Function \code{hydrology_soilWaterInputs} returns a named vector with the following elements, all in mm:
+#' \item{Rain}{Precipitation as rainfall.}
+#' \item{Snow}{Precipitation as snow.}
+#' \item{Interception}{Rainfall water intercepted by the canopy and evaporated.}
+#' \item{NetRain}{Rainfall reaching the ground.}
+#' \item{Snowmelt}{Snow melted during the day, and added to the water infiltrated.}
+#' \item{Runon}{Surface water amount running on the target area from upslope.}
+#' \item{Input}{Total soil input, including runon, snowmelt and net rain.}
+#' 
+#' Function \code{hydrology_soilInfiltrationPercolation} returns a named vector with the following elements, all in mm:
+#' \item{Infiltration}{Water infiltrated into the soil (i.e. throughfall + runon + snowmelt - runoff).}
+#' \item{Runoff}{Surface water leaving the target area.}
+#' \item{DeepDrainage}{Water leaving the target soil towards the water table.}
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{spwb_day}}, \code{\link{hydrology_rainInterception}}, \code{\link{hydrology_soilEvaporation}}
+#' 
+#' @name hydrology_verticalInputs
 hydrology_soilWaterInputs <- function(soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon = 0.0, snowpack = TRUE, modifySoil = TRUE) {
     .Call(`_medfate_soilWaterInputs`, soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon, snowpack, modifySoil)
 }
 
+#' @rdname hydrology_verticalInputs
+#' 
+#' @param waterInput Soil water input for a given day (mm).
+#' @param rockyLayerDrainage Boolean flag to indicate the simulation of drainage from rocky layers (> 95\% of rocks).
+#' 
 hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInput, rockyLayerDrainage = TRUE, modifySoil = TRUE) {
     .Call(`_medfate_soilInfiltrationPercolation`, soil, soilFunctions, waterInput, rockyLayerDrainage, modifySoil)
 }
@@ -1224,10 +1276,233 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
     .Call(`_medfate_paramsBelow`, above, Z50, Z95, soil, paramsAnatomydf, paramsTranspirationdf, control)
 }
 
+#' Input for simulation models
+#'
+#' Functions \code{forest2spwbInput} and \code{forest2growthInput} take an object of class \code{\link{forest}} 
+#' and calculate input data for functions \code{\link{spwb}}, \code{\link{pwb}} and \code{\link{growth}}, respectively. 
+#' Functions \code{spwbInput} and \code{growthInput} do the same but starting from different input data. 
+#' Function \code{forest2aboveground} calculates aboveground variables that may be used in \code{spwbInput} and \code{growthInput} functions. 
+#' Function \code{forest2belowground} calculates belowground variables such as fine root distribution.
+#' 
+#' @param x An object of class \code{\link{forest}}.
+#' @param SpParams A data frame with species parameters (see \code{\link{SpParamsDefinition}} and \code{\link{SpParamsMED}}).
+#' @param gdd Growth degree days to account for leaf phenology effects (in Celsius). This should be left \code{NA} in most applications.
+#' @param mode Calculation mode, either "MED" or "US".
+#' @param soil An object of class \code{\link{soil}}.
+#' @param control A list with default control parameters (see \code{\link{defaultControl}}).
+#' @param above A data frame with aboveground plant information (see the return value of \code{forest2aboveground} below). In the case of \code{spwbInput} the variables should include \code{SP}, \code{N}, \code{LAI_live}, \code{LAI_dead}, \code{H} and \code{CR}. In the case of \code{growthInput} variables should include \code{DBH} and \code{Cover}.
+#' @param Z50,Z95 Numeric vectors with cohort depths (in mm) corresponding to 50\% and 95\% of fine roots.
+#' 
+#' @details
+#' Functions \code{forest2spwbInput} and \code{forest2abovegroundInput} extracts height and species identity from plant cohorts of \code{x}, 
+#' and calculate leaf area index and crown ratio. Function \code{forest2spwbInput} also calculates the distribution of fine roots 
+#' across soil. Both \code{forest2spwbInput} and \code{spwbInput} find parameter values for each plant cohort 
+#' according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Sperry"} 
+#' the functions also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
+#' 
+#' @return 
+#' Function \code{forest2aboveground()} returns a data frame with the following columns (rows are identified as specified by function \code{\link{plant_ID}}):
+#' \itemize{
+#'   \item{\code{SP}: Species identity (an integer) (first species is 0).}
+#'   \item{\code{N}: Cohort density (ind/ha) (see function \code{\link{plant_density}}).}
+#'   \item{\code{DBH}: Tree diameter at breast height (cm).}
+#'   \item{\code{H}: Plant total height (cm).}
+#'   \item{\code{CR}: Crown ratio (crown length to total height) (between 0 and 1).}
+#'   \item{\code{LAI_live}: Live leaf area index (m2/m2) (one-side leaf area relative to plot area), includes leaves in winter dormant buds.}
+#'   \item{\code{LAI_expanded}: Leaf area index of expanded leaves (m2/m2) (one-side leaf area relative to plot area).}
+#'   \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
+#' }
+#' 
+#' Functions \code{forest2spwbInput()} and \code{spwbInput()} return a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
+#'   \itemize{
+#'     \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
+#'     \item{\code{canopy}: A list of stand-level state variables.}
+#'     \item{\code{cohorts}: A data frame with cohort information, with columns \code{SP} and \code{Name}.}
+#'     \item{\code{above}: A data frame with columns  \code{H}, \code{CR} and \code{LAI} (see function \code{forest2aboveground}).}
+#'     \item{\code{below}: A data frame with columns \code{Z50}, \code{Z95}.  If \code{control$transpirationMode = "Sperry"} additional columns are \code{fineRootBiomass} and \code{coarseRootSoilVolume}.}
+#'     \item{\code{belowLayers}: A list. If \code{control$transpirationMode = "Granier"} it contains elements: 
+#'       \itemize{
+#'         \item{\code{V}: A matrix with the proportion of fine roots of each cohort (in rows) in each soil layer (in columns).}
+#'         \item{\code{L}: A matrix with the length of coarse roots of each cohort (in rows) in each soil layer (in columns).}
+#'         \item{\code{Wpool}: A matrix with the soil moisture relative to field capacity around the rhizosphere of each cohort (in rows) in each soil layer (in columns).}
+#'       }
+#'       If \code{control$transpirationMode = "Sperry"} there are the following additional elements:
+#'       \itemize{
+#'         \item{\code{VGrhizo_kmax}: A matrix with maximum rhizosphere conductance values of each cohort (in rows) in each soil layer (in columns).}
+#'         \item{\code{VGroot_kmax}: A matrix with maximum root xylem conductance values of each cohort (in rows) in each soil layer (in columns).}
+#'         \item{\code{RhizoPsi}: A matrix with the water potential around the rhizosphere of each cohort (in rows) in each soil layer (in columns).}
+#'       }
+#'     }
+#'     \item{\code{paramsPhenology}: A data frame with leaf phenology parameters:
+#'       \itemize{
+#'         \item{\code{PhenologyType}: Leaf phenology type.}
+#'         \item{\code{LeafDuration}: Leaf duration (in years).}
+#'         \item{\code{Sgdd}: Degree days needed for leaf budburst (for winter decideous species).}
+#'         \item{\code{Tbgdd}: Base temperature for the calculation of degree days to leaf budburst.}
+#'         \item{\code{Ssen}: Degree days corresponding to leaf senescence.}
+#'         \item{\code{Phsen}: Photoperiod corresponding to start counting senescence degree-days.}
+#'         \item{\code{Tbsen}: Base temperature for the calculation of degree days to leaf senescence.}
+#'       }
+#'     }
+#'     \item{\code{paramsAnatomy}: A data frame with plant anatomy parameters for each cohort:
+#'       \itemize{
+#'         \item{\code{Hmax}: Maximum plant height (cm).}
+#'         \item{\code{Hmed}: Median plant height (cm).}
+#'         \item{\code{Al2As}: Leaf area to sapwood area ratio (in m2·m-2).}
+#'         \item{\code{Ar2Al}: Fine root area to leaf area ratio (in m2·m-2).}
+#'         \item{\code{SLA}: Specific leaf area (mm2/mg = m2/kg).}
+#'         \item{\code{LeafWidth}: Leaf width (in cm).}
+#'         \item{\code{LeafDensity}: Density of leaf tissue (dry weight over volume).}
+#'         \item{\code{WoodDensity}: Density of wood tissue (dry weight over volume).}
+#'         \item{\code{FineRootDensity}: Density of fine root tissue (dry weight over volume).}
+#'         \item{\code{SRL}: Specific Root length (cm·g-1).}
+#'         \item{\code{RLD}: Root length density (cm·cm-3).}
+#'         \item{\code{r635}: Ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm.}
+#'       }
+#'     }
+#'     \item{\code{paramsInterception}: A data frame with rain interception and light extinction parameters for each cohort:
+#'       \itemize{
+#'         \item{\code{kPAR}: PAR extinction coefficient.}
+#'         \item{\code{g}: Canopy water retention capacity per LAI unit (mm/LAI).}
+#'       }
+#'     If \code{control$transpirationMode = "Sperry"} additional columns are:
+#'       \itemize{
+#'         \item{\code{gammaSWR}: Reflectance (albedo) coefficient for SWR .}
+#'         \item{\code{alphaSWR}: Absorbance coefficient for SWR .}
+#'       }
+#'     }
+#'     \item{\code{paramsTranspiration}: A data frame with parameters for transpiration and photosynthesis. If \code{control$transpirationMode = "Granier"}, columns are:
+#'       \itemize{
+#'         \item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
+#'         \item{\code{Tmax_LAI}: Coefficient relating LAI with the ratio of maximum transpiration over potential evapotranspiration.}
+#'         \item{\code{Tmax_LAIsq}: Coefficient relating squared LAI with the ratio of maximum transpiration over potential evapotranspiration.}
+#'         \item{\code{Psi_Extract}: Water potential corresponding to 50\% relative conductance (in MPa).}
+#'         \item{\code{Psi_Critic}: Water potential corresponding to 50\% of stem cavitation (in MPa).}
+#'         \item{\code{WUE}: Daily water use efficiency (gross photosynthesis over transpiration) under no light, water or CO2 limitations and VPD = 1kPa (g C/mm water).}
+#'         \item{\code{WUE_par}: Coefficient regulating the influence of \% PAR on gross photosynthesis.}
+#'         \item{\code{WUE_par}: Coefficient regulating the influence of atmospheric CO2 concentration on gross photosynthesis.}
+#'         \item{\code{WUE_par}: Coefficient regulating the influence of vapor pressure deficit (VPD) on gross photosynthesis.}
+#'       }
+#'     If \code{control$transpirationMode = "Sperry"} columns are:
+#'       \itemize{
+#'         \item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
+#'         \item{\code{Gswmax}: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
+#'         \item{\code{Vmax298}: Maximum Rubisco carboxilation rate at 25ºC (in micromol CO2·s-1·m-2).}
+#'         \item{\code{Jmax298}: Maximum rate of electron transport at 25ºC (in micromol photons·s-1·m-2).}
+#'         \item{\code{Kmax_stemxylem}: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-2).}
+#'         \item{\code{Kmax_rootxylem}: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-2).}
+#'         \item{\code{VCleaf_kmax}: Maximum leaf hydraulic conductance.}
+#'         \item{\code{VCleaf_c}, \code{VCleaf_d}: Parameters of the leaf vulnerability curve.}
+#'         \item{\code{VCstem_kmax}: Maximum stem xylem conductance.}
+#'         \item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve.}
+#'         \item{\code{VCroot_c}, \code{VCroot_d}: Parameters of the root xylem vulnerability curve.}
+#'         \item{\code{Plant_kmax}: Maximum whole-plant conductance.}
+#'       }
+#'     }
+#'     \item{\code{paramsWaterStorage}: A data frame with plant water storage parameters for each cohort:
+#'       \itemize{
+#'         \item{\code{LeafPI0}: Osmotic potential at full turgor of leaves (MPa).}
+#'         \item{\code{LeafEPS}: Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of leaves (MPa).}
+#'         \item{\code{LeafAF}: Apoplastic fraction (proportion of water outside the living cells) in leaves.}
+#'         \item{\code{Vleaf}: Storage water capacity in leaves, per leaf area (L/m2).}
+#'         \item{\code{StemPI0}: Osmotic potential at full turgor of symplastic xylem tissue (MPa).}
+#'         \item{\code{StemEPS}: Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of symplastic xylem tissue (Mpa).}
+#'         \item{\code{StemAF}: Apoplastic fraction (proportion of water outside the living cells) in stem xylem.}
+#'         \item{\code{Vstem}: Storage water capacity in sapwood, per leaf area (L/m2).}
+#'       }
+#'     }
+#'     \item{\code{internalPhenology} and \code{internalWater}: data frames to store internal state variables.}
+#'   }
+#' Functions \code{forest2growthInput} and \code{growthInput} return a list of class \code{growthInput} with the same elements as \code{spwbInput}, but with additional information. 
+#' \itemize{
+#' \item{Element \code{above} includes the following additional columns:
+#'     \itemize{
+#'       \item{\code{LA_live}: Live leaf area per individual (m2/ind).}
+#'       \item{\code{LA_dead}: Dead leaf area per individual (m2/ind).}
+#'       \item{\code{SA}: Live sapwood area per individual (cm2/ind).} 
+#'   }
+#'   }
+#'   \item{\code{paramsGrowth}: A data frame with growth parameters for each cohort:
+#'     \itemize{
+#'       \item{\code{RERleaf}: Maintenance respiration rates (at 20ºC) for leaves (in g gluc·g dry-1·day-1).}
+#'       \item{\code{RERsapwood}: Maintenance respiration rates (at 20ºC) for sapwood (in g gluc·g dry-1·day-1).}
+#'       \item{\code{RERfineroot}: Maintenance respiration rates (at 20ºC) for fine roots (in g gluc·g dry-1·day-1).}
+#'       \item{\code{CCleaf}: Leaf construction costs (in g gluc·g dry-1).}
+#'       \item{\code{CCsapwood}: Sapwood construction costs (in g gluc·g dry-1).}
+#'       \item{\code{CCfineroot}: Fine root construction costs (in g gluc·g dry-1).}
+#'       \item{\code{RGRleafmax}: Maximum leaf relative growth rate (in m2·cm-2·day-1).}
+#'       \item{\code{RGRsapwoodmax}: Maximum sapwood relative growth rate (in cm2·cm-2·day-1).}
+#'       \item{\code{RGRfinerootmax}: Maximum fine root relative growth rate (in g dry·g dry-1·day-1).}
+#'       \item{\code{SRsapwood}: Sapwood daily senescence rate (in day-1).}
+#'       \item{\code{SRfineroot}: Fine root daily senescence rate (in day-1).}
+#'       \item{\code{RSSG}: Minimum relative starch for sapwood growth (proportion).}
+#'       \item{\code{fHDmin}: Minimum value of the height-to-diameter ratio (dimensionless).}
+#'       \item{\code{fHDmax}: Maximum value of the height-to-diameter ratio (dimensionless).}
+#'       \item{\code{WoodC}: Wood carbon content per dry weight (g C /g dry).}
+#'       \item{\code{MortalityBaselineRate}: Deterministic proportion or probability specifying the baseline reduction of cohort's density occurring in a year.}
+#'     }
+#'   }
+#'   \item{\code{paramsAllometry}: A data frame with allometric parameters for each cohort:
+#'     \itemize{
+#'       \item{\code{Aash}: Regression coefficient relating the square of shrub height with shrub area.}
+#'       \item{\code{Absh}, \code{Bbsh}: Allometric coefficients relating phytovolume with dry weight of shrub individuals.}
+#'       \item{\code{Acr}, \code{B1cr}, \code{B2cr}, \code{B3cr}, \code{C1cr}, \code{C2cr}: Regression coefficients used to calculate crown ratio of trees.}
+#'       \item{\code{Acw}, \code{Bcw}: Regression coefficients used to calculated crown width of trees.}
+#'     }
+#'   }
+#'   \item {\code{internalAllocation}: A data frame with internal allocation variables for each cohort:
+#'     \itemize{
+#'       \item{\code{allocationTarget}: Value of the allocation target variable.}
+#'       \item{\code{leafAreaTarget}: Target leaf area (m2) per individual.}
+#'       \item{\code{fineRootBiomassTarget}: Target fine root biomass (g dry) per individual (only if \code{transpirationMode = "Sperry"}).}
+#'     }
+#'   }
+#'   \item{\code{internalCarbon} and \code{internalRings}: data structures to store other internal state variables.}
+#' }
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{resetInputs}}, \code{\link{spwb}}, \code{\link{soil}},  
+#' \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant_ID}}
+#' 
+#' @examples
+#' #Load example plot plant data
+#' data(exampleforestMED)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' # Aboveground parameters
+#' above = forest2aboveground(exampleforestMED, SpParamsMED)
+#' above
+#' 
+#' # Initialize soil with default soil params
+#' examplesoil = soil(defaultSoilParams())
+#' 
+#' # Rooting depths
+#' Z50 = c(exampleforestMED$treeData$Z50, exampleforestMED$shrubData$Z50)
+#' Z95 = c(exampleforestMED$treeData$Z95, exampleforestMED$shrubData$Z95)
+#' 
+#' # Initialize control parameters
+#' control = defaultControl("Granier")
+#' 
+#' # Prepare spwb input
+#' spwbInput(above, Z50, Z95, examplesoil,SpParamsMED, control)
+#' 
+#' # When starting from an object of class 'forest' the whole process
+#' # can be simplified:
+#' forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
+#'                 
+#' # Prepare input for Sperry transpiration mode
+#' control = defaultControl("Sperry")
+#' forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
+#' 
+#' @name modelInput
 spwbInput <- function(above, Z50, Z95, soil, SpParams, control) {
     .Call(`_medfate_spwbInput`, above, Z50, Z95, soil, SpParams, control)
 }
 
+#' @rdname modelInput
 growthInput <- function(above, Z50, Z95, soil, SpParams, control) {
     .Call(`_medfate_growthInput`, above, Z50, Z95, soil, SpParams, control)
 }
@@ -1236,10 +1511,12 @@ growthInput <- function(above, Z50, Z95, soil, SpParams, control) {
     .Call(`_medfate_cloneInput`, input)
 }
 
+#' @rdname modelInput
 forest2spwbInput <- function(x, soil, SpParams, control, mode = "MED") {
     .Call(`_medfate_forest2spwbInput`, x, soil, SpParams, control, mode)
 }
 
+#' @rdname modelInput
 forest2growthInput <- function(x, soil, SpParams, control) {
     .Call(`_medfate_forest2growthInput`, x, soil, SpParams, control)
 }
@@ -1497,6 +1774,62 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
     .Call(`_medfate_temperatureChange`, dVec, Temp, sand, clay, W, Theta_FC, Gdown)
 }
 
+#' Soil initialization
+#'
+#' Initializes soil parameters and state variables for its use in simulations.
+#' 
+#' @param SoilParams A data frame of soil parameters (see an example in \code{\link{defaultSoilParams}}).
+#' @param VG_PTF Pedotransfer functions to obtain parameters for the van Genuchten-Mualem equations. Either \code{"Carsel"} (Carsel and Parrish 1988) or \code{"Toth"} (Toth et al. 2015).
+#' @param W A numerical vector with the initial relative water content of each soil layer.
+#' @param SWE Initial snow water equivalent of the snow pack on the soil surface (mm).
+#' 
+#' @details 
+#' Function \code{print} prompts a description of soil characteristics and state variables (water content and temperature) 
+#' according to a water retention curve (either Saxton's or Van Genuchten's). 
+#' Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa. 
+#' Parameter \code{Temp} is initialized as missing for all soil layers. 
+#' 
+#' @return
+#' Function \code{soil} returns a list of class \code{soil} with the following elements:
+#' \itemize{
+#'   \item{\code{SoilDepth}: Soil depth (in mm).}
+#'   \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
+#'   \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
+#'   \item{\code{Ksoil}: Kappa parameter for infiltration.}
+#'   \item{\code{Gsoil}: Gamma parameter for infiltration.}
+#'   \item{\code{dVec}: Width of soil layers (in mm).}
+#'   \item{\code{sand}: Sand percentage for each layer (in percent volume).}
+#'   \item{\code{clay}: Clay percentage for each layer (in percent volume).}
+#'   \item{\code{om}: Organic matter percentage for each layer (in percent volume).}
+#'   \item{\code{VG_alpha}, \code{VG_n}, \code{VG_theta_res}, \code{VG_theta_sat}: Parameters for van Genuchten's pedotransfer functions, for each layer, corresponding to the USDA texture type.}
+#'   \item{\code{Ksat}: Saturated soil conductivity for each layer (estimated using function \code{\link{soil_saturatedConductivitySX}}.}
+#'   \item{\code{macro}: Macroporosity for each layer (estimated using Stolf et al. 2011).}
+#'   \item{\code{rfc}: Percentage of rock fragment content for each layer.}
+#'   \item{\code{Kdrain}: Saturated vertical hydraulic conductivity (mm/day) (i.e. how easy is deep drainage towards groundwater). Function \code{soil} estimates it as a function of soil saturated hydraulic conductivity, but should be parametrized as a function of bedrock material. }
+#' }
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @references
+#' Carsel, R.F., and Parrish, R.S. 1988. Developing joint probability distributions of soil water retention characteristics. Water Resources Research 24: 755–769.
+#' 
+#' \enc{Tóth}{Toth}, B., Weynants, M., Nemes, A., \enc{Makó}{Mako}, A., Bilas, G., and \enc{Tóth}{Toth}, G. 2015. New generation of hydraulic pedotransfer functions for Europe. European Journal of Soil Science 66: 226–238.
+#' 
+#' Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
+#' 
+#' @seealso   \code{\link{soil_psi2thetaSX}}, \code{\link{soil_psi2thetaVG}}, \code{\link{spwb}}, \code{\link{defaultSoilParams}}
+#' 
+#' @examples
+#' # Initializes soil
+#' s = soil(defaultSoilParams())
+#' 
+#' # Prints soil characteristics according to Saxton's water retention curve
+#' print(s, model="SX")
+#' 
+#' # Prints soil characteristics according to Van Genuchten's water retention curve
+#' print(s, model="VG")
+#' 
+#' @name soil
 soil <- function(SoilParams, VG_PTF = "Toth", W = as.numeric( c(1.0)), SWE = 0.0) {
     .Call(`_medfate_soil`, SoilParams, VG_PTF, W, SWE)
 }

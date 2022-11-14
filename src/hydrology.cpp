@@ -152,6 +152,53 @@ double snowMelt(double tday, double rad, double LgroundSWR, double elevation) {
   return(melt);
 }
 
+
+
+//' Soil vertical inputs
+//' 
+//' High-level functions for hydrological processes. Function \code{hydrology_soilWaterInputs} performs 
+//' canopy water interception and snow accumulation/melt. Function \code{hydrology_soilInfiltrationPercolation} 
+//' performs soil infiltration and percolation from the input given by the previous function.
+//' 
+//' @param soil A list containing the description of the soil (see \code{\link{soil}}).
+//' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
+//' @param prec Precipitation for a given day (mm)
+//' @param er The ratio of evaporation rate to rainfall rate.
+//' @param tday Average day temperature (ºC).
+//' @param rad Solar radiation (in MJ/m2/day).
+//' @param elevation Altitude above sea level (m).
+//' @param Cm Canopy water storage capacity.
+//' @param LgroundPAR Percentage of photosynthetically-acvive radiation (PAR) reaching the ground.
+//' @param LgroundSWR Percentage of short-wave radiation (SWR) reaching the ground.
+//' @param runon Surface water amount running on the target area from upslope (in mm).
+//' @param snowpack Boolean flag to indicate the simulation of snow accumulation and melting.
+//' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
+//' 
+//' @details 
+//' The function simulates different vertical hydrological processes, which are described separately in other functions. 
+//' If \code{modifySoil = TRUE} the function will modify the \code{soil} object (including both soil moisture and 
+//' the snowpack on its surface) as a result of simulating hydrological processes.
+//' 
+//' @return 
+//' Function \code{hydrology_soilWaterInputs} returns a named vector with the following elements, all in mm:
+//' \item{Rain}{Precipitation as rainfall.}
+//' \item{Snow}{Precipitation as snow.}
+//' \item{Interception}{Rainfall water intercepted by the canopy and evaporated.}
+//' \item{NetRain}{Rainfall reaching the ground.}
+//' \item{Snowmelt}{Snow melted during the day, and added to the water infiltrated.}
+//' \item{Runon}{Surface water amount running on the target area from upslope.}
+//' \item{Input}{Total soil input, including runon, snowmelt and net rain.}
+//' 
+//' Function \code{hydrology_soilInfiltrationPercolation} returns a named vector with the following elements, all in mm:
+//' \item{Infiltration}{Water infiltrated into the soil (i.e. throughfall + runon + snowmelt - runoff).}
+//' \item{Runoff}{Surface water leaving the target area.}
+//' \item{DeepDrainage}{Water leaving the target soil towards the water table.}
+//' 
+//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+//' 
+//' @seealso \code{\link{spwb_day}}, \code{\link{hydrology_rainInterception}}, \code{\link{hydrology_soilEvaporation}}
+//' 
+//' @name hydrology_verticalInputs
 // [[Rcpp::export("hydrology_soilWaterInputs")]]
 NumericVector soilWaterInputs(List soil, String soilFunctions, double prec, double er, double tday, double rad, double elevation,
                              double Cm, double LgroundPAR, double LgroundSWR, 
@@ -199,6 +246,11 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, double prec, doub
   return(WI);
 }
 
+//' @rdname hydrology_verticalInputs
+//' 
+//' @param waterInput Soil water input for a given day (mm).
+//' @param rockyLayerDrainage Boolean flag to indicate the simulation of drainage from rocky layers (> 95\% of rocks).
+//' 
 // [[Rcpp::export("hydrology_soilInfiltrationPercolation")]]
 NumericVector soilInfiltrationPercolation(List soil, String soilFunctions, 
                                           double waterInput,

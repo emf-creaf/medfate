@@ -1,3 +1,9 @@
+#' @rdname soil
+#' 
+#' @param x An object of class \code{soil}.
+#' @param model Either 'SX' or 'VG' for Saxton or Van Genuchten pedotransfer models.
+#' @param ... Additional parameters to \code{print}.
+#' 
 print.soil<-function(x, model="SX",...) {
   #Depth
   cat(paste("Soil depth (mm):", round(x$SoilDepth, digits=0),"\n"))
