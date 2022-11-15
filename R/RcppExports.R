@@ -2426,6 +2426,59 @@ moisture_tissueRWC <- function(psiSym, pi0, epsilon, psiApo, c, d, af, femb = 0.
     .Call(`_medfate_tissueRelativeWaterContent`, psiSym, pi0, epsilon, psiApo, c, d, af, femb)
 }
 
+#' Stomatal regulation
+#' 
+#' Set of high-level functions used in the calculation of stomatal conductance and transpiration. 
+#' Function \code{transp_profitMaximization} calculates gain and cost functions, 
+#' as well as profit maximization from supply and photosynthesis input functions. 
+#' Function \code{transp_stomatalRegulationPlot} produces a plot with the cohort supply functions against water potential 
+#' and a plot with the cohort photosynthesis functions against water potential, both with the maximum profit values indicated.
+#' 
+#' @param supplyFunction Water supply function (see \code{\link{hydraulics_supplyFunctionNetwork}}).
+#' @param photosynthesisFunction Function returned by \code{photo_photosynthesisFunction()}.
+#' @param Gswmin,Gswmax Minimum and maximum stomatal conductance to water vapour (mol·m-2·s-1).
+#' 
+#' @return
+#' Function \code{transp_profitMaximization} returns a list with the following elements:
+#' \itemize{
+#'   \item{\code{Cost}: Cost function [0-1].}
+#'   \item{\code{Gain}: Gain function [0-1].}
+#'   \item{\code{Profit}: Profit function [0-1].}
+#'   \item{\code{iMaxProfit}: Index corresponding to maximum profit (starting from 0).}
+#' }
+#' 
+#' @references
+#' Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2017. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment 40, 816-830 (doi: 10.1111/pce.12852).
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso
+#' \code{\link{transp_transpirationSperry}}, \code{\link{hydraulics_supplyFunctionNetwork}}, \code{\link{biophysics_leafTemperature}}, \code{\link{photo_photosynthesis}}, \code{\link{spwb_day}}, \code{\link{plot.spwb_day}}
+#' 
+#' @examples
+#' #Load example daily meteorological data
+#' data(examplemeteo)
+#' 
+#' #Load example plot plant data
+#' data(exampleforestMED)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' #Initialize soil with default soil params (4 layers)
+#' examplesoil = soil(defaultSoilParams(4))
+#' 
+#' #Initialize control parameters
+#' control = defaultControl(transpirationMode="Sperry")
+#' 
+#' #Initialize input
+#' x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' 
+#' # Stomatal VPD curve and chosen value for the 12th time step at day 100
+#' transp_stomatalRegulationPlot(x2, examplemeteo, day=100, timestep = 12,
+#'                               latitude = 41.82592, elevation = 100, type="VPD")
+#'  
+#' @name transp_stomatalregulation
 transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gswmin, Gswmax) {
     .Call(`_medfate_profitMaximization`, supplyFunction, photosynthesisFunction, Gswmin, Gswmax)
 }
