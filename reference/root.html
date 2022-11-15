@@ -47,7 +47,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Root functions</h1>
-    
+    <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/R/RcppExports.R" class="external-link"><code>R/RcppExports.R</code></a></small>
     <div class="hidden name"><code>root.Rd</code></div>
     </div>
 
@@ -57,91 +57,149 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">root_conicDistribution</span><span class="op">(</span><span class="va">Zcone</span>, <span class="va">d</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">root_ldrDistribution</span><span class="op">(</span><span class="va">Z50</span>, <span class="va">Z95</span>, <span class="va">d</span><span class="op">)</span></span>
-<span><span class="fu">root_coarseRootLengths</span><span class="op">(</span><span class="va">v</span>, <span class="va">d</span>, depthWidthRatio <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span></span>
-<span><span class="fu">root_coarseRootLengthsFromVolume</span><span class="op">(</span><span class="va">VolInd</span>, <span class="va">v</span>, <span class="va">d</span>, <span class="va">rfc</span><span class="op">)</span></span>
-<span><span class="fu">root_coarseRootSoilVolume</span><span class="op">(</span><span class="va">v</span>, <span class="va">d</span>, depthWidthRatio <span class="op">=</span> <span class="fl">1.0</span><span class="op">)</span></span>
-<span><span class="fu">root_coarseRootSoilVolumeFromConductance</span><span class="op">(</span><span class="va">Kmax_rootxylem</span>, <span class="va">VCroot_kmax</span>, <span class="va">Al2As</span>,</span>
-<span>                                         <span class="va">v</span>, <span class="va">d</span>, <span class="va">rfc</span><span class="op">)</span></span>
-<span><span class="fu">root_fineRootRadius</span><span class="op">(</span><span class="va">specificRootLength</span>, <span class="va">rootTissueDensity</span><span class="op">)</span></span>
-<span><span class="fu">root_fineRootHalfDistance</span><span class="op">(</span><span class="va">rootLengthDensity</span><span class="op">)</span></span>
-<span><span class="fu">root_fineRootAreaIndex</span><span class="op">(</span><span class="va">Ksoil</span>, <span class="va">krhizo</span>, <span class="va">lai</span>,</span>
-<span>                       <span class="va">specificRootLength</span>, <span class="va">rootTissueDensity</span>,  </span>
-<span>                       <span class="va">rootLengthDensity</span><span class="op">)</span></span>
-<span><span class="fu">root_fineRootBiomass</span><span class="op">(</span><span class="va">Ksoil</span>, <span class="va">krhizo</span>, <span class="va">lai</span>, <span class="va">N</span>, </span>
-<span>                     <span class="va">specificRootLength</span>, <span class="va">rootTissueDensity</span>, <span class="va">rootLengthDensity</span><span class="op">)</span></span>
-<span><span class="fu">root_rhizosphereMaximumConductance</span><span class="op">(</span><span class="va">Ksoil</span>, <span class="va">fineRootBiomass</span>, <span class="va">lai</span>, <span class="va">N</span>,</span>
-<span>                                   <span class="va">specificRootLength</span>, <span class="va">rootTissueDensity</span>,  </span>
-<span>                                   <span class="va">rootLengthDensity</span><span class="op">)</span></span>
-<span><span class="fu">root_fineRootSoilVolume</span><span class="op">(</span><span class="va">fineRootBiomass</span>, <span class="va">specificRootLength</span>, <span class="va">rootLengthDensity</span><span class="op">)</span></span>
-<span><span class="fu">root_specificRootSurfaceArea</span><span class="op">(</span><span class="va">specificRootLength</span>, <span class="va">rootTissueDensity</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">root_individualRootedGroundArea</span><span class="op">(</span><span class="va">VolInd</span>, <span class="va">V</span>, <span class="va">d</span>, <span class="va">rfc</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">root_specificRootSurfaceArea</span><span class="op">(</span><span class="va">specificRootLength</span>, <span class="va">rootTissueDensity</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">root_fineRootRadius</span><span class="op">(</span><span class="va">specificRootLength</span>, <span class="va">rootTissueDensity</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">root_fineRootHalfDistance</span><span class="op">(</span><span class="va">rootLengthDensity</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">root_fineRootAreaIndex</span><span class="op">(</span></span>
+<span>  <span class="va">Ksoil</span>,</span>
+<span>  <span class="va">krhizo</span>,</span>
+<span>  <span class="va">lai</span>,</span>
+<span>  <span class="va">specificRootLength</span>,</span>
+<span>  <span class="va">rootTissueDensity</span>,</span>
+<span>  <span class="va">rootLengthDensity</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">root_fineRootBiomass</span><span class="op">(</span></span>
+<span>  <span class="va">Ksoil</span>,</span>
+<span>  <span class="va">krhizo</span>,</span>
+<span>  <span class="va">lai</span>,</span>
+<span>  <span class="va">N</span>,</span>
+<span>  <span class="va">specificRootLength</span>,</span>
+<span>  <span class="va">rootTissueDensity</span>,</span>
+<span>  <span class="va">rootLengthDensity</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">root_rhizosphereMaximumConductance</span><span class="op">(</span></span>
+<span>  <span class="va">Ksoil</span>,</span>
+<span>  <span class="va">fineRootBiomass</span>,</span>
+<span>  <span class="va">lai</span>,</span>
+<span>  <span class="va">N</span>,</span>
+<span>  <span class="va">specificRootLength</span>,</span>
+<span>  <span class="va">rootTissueDensity</span>,</span>
+<span>  <span class="va">rootLengthDensity</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">root_fineRootSoilVolume</span><span class="op">(</span><span class="va">fineRootBiomass</span>, <span class="va">specificRootLength</span>, <span class="va">rootLengthDensity</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">root_coarseRootSoilVolumeFromConductance</span><span class="op">(</span></span>
+<span>  <span class="va">Kmax_rootxylem</span>,</span>
+<span>  <span class="va">VCroot_kmax</span>,</span>
+<span>  <span class="va">Al2As</span>,</span>
+<span>  <span class="va">v</span>,</span>
+<span>  <span class="va">d</span>,</span>
+<span>  <span class="va">rfc</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">root_coarseRootLengthsFromVolume</span><span class="op">(</span><span class="va">VolInd</span>, <span class="va">v</span>, <span class="va">d</span>, <span class="va">rfc</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">root_coarseRootLengths</span><span class="op">(</span><span class="va">v</span>, <span class="va">d</span>, depthWidthRatio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">root_coarseRootSoilVolume</span><span class="op">(</span><span class="va">v</span>, <span class="va">d</span>, depthWidthRatio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">root_horizontalProportions</span><span class="op">(</span><span class="va">poolProportions</span>, <span class="va">VolInd</span>, <span class="va">N</span>, <span class="va">V</span>, <span class="va">d</span>, <span class="va">rfc</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>Z50</dt>
-<dd><p>A vector of depths (in mm) corresponding to 50% of roots.</p></dd>
-
-  <dt>Z95</dt>
-<dd><p>A vector of depths (in mm) corresponding to 95% of roots.</p></dd>
-
-  <dt>Zcone</dt>
+    <dl><dt>Zcone</dt>
 <dd><p>A vector of depths (in mm) corresponding to the root cone tip.</p></dd>
 
-  <dt>d</dt>
+
+<dt>d</dt>
 <dd><p>The width (in mm) corresponding to each soil layer.</p></dd>
 
-  <dt>v</dt>
-<dd><p>Vector of proportions of fine roots in each soil layer.</p></dd>
 
-  <dt>depthWidthRatio</dt>
-<dd><p>Ratio between radius of the soil layer with the largest radius and maximum rooting depth.</p></dd>
+<dt>Z50</dt>
+<dd><p>A vector of depths (in mm) corresponding to 50% of roots.</p></dd>
 
-  <dt>rfc</dt>
-<dd><p>Percentage of rock fragment content (volume basis) for each layer.</p></dd>
 
-  <dt>Kmax_rootxylem</dt>
-<dd><p>Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).</p></dd>
+<dt>Z95</dt>
+<dd><p>A vector of depths (in mm) corresponding to 95% of roots.</p></dd>
 
-  <dt>VCroot_kmax</dt>
-<dd><p>Root xylem maximum conductance per leaf area (mmol·m-2·s-1·MPa-1).</p></dd>
 
-  <dt>Al2As</dt>
-<dd><p>Leaf area to sapwood area ratio (in m2·m-2).</p></dd>
-
-  <dt>specificRootLength</dt>
-<dd><p>Specific fine root length (length of fine roots over weight).</p></dd>
-
-  <dt>rootTissueDensity</dt>
-<dd><p>Fine root tissue density (weight over volume at turgidity).</p></dd>
-
-  <dt>Ksoil</dt>
-<dd><p>Soil saturated conductivity (mmol·m-1·s-1·MPa-1).</p></dd>
-
-  <dt>krhizo</dt>
-<dd><p>Rhizosphere maximum conductance per leaf area (mmol·m-2·s-1·MPa-1).</p></dd>
-
-  <dt>lai</dt>
-<dd><p>Leaf area index.</p></dd>
-
-  <dt>rootLengthDensity</dt>
-<dd><p>Fine root length density (length of fine roots over soil volume; cm/cm3)</p></dd>
-
-  <dt>fineRootBiomass</dt>
-<dd><p>Biomass of fine roots (g).</p></dd>
-
-  <dt>V</dt>
-<dd><p>Matrix of proportions of fine roots (cohorts x soil layers).</p></dd>
-
-  <dt>VolInd</dt>
+<dt>VolInd</dt>
 <dd><p>Volume of soil (in m3) occupied by coarse roots per individual.</p></dd>
 
-  <dt>N</dt>
+
+<dt>V</dt>
+<dd><p>Matrix of proportions of fine roots (cohorts x soil layers).</p></dd>
+
+
+<dt>rfc</dt>
+<dd><p>Percentage of rock fragment content (volume basis) for each layer.</p></dd>
+
+
+<dt>specificRootLength</dt>
+<dd><p>Specific fine root length (length of fine roots over weight).</p></dd>
+
+
+<dt>rootTissueDensity</dt>
+<dd><p>Fine root tissue density (weight over volume at turgidity).</p></dd>
+
+
+<dt>rootLengthDensity</dt>
+<dd><p>Fine root length density (length of fine roots over soil volume; cm/cm3)</p></dd>
+
+
+<dt>Ksoil</dt>
+<dd><p>Soil saturated conductivity (mmol·m-1·s-1·MPa-1).</p></dd>
+
+
+<dt>krhizo</dt>
+<dd><p>Rhizosphere maximum conductance per leaf area (mmol·m-2·s-1·MPa-1).</p></dd>
+
+
+<dt>lai</dt>
+<dd><p>Leaf area index.</p></dd>
+
+
+<dt>N</dt>
 <dd><p>Density of individuals per hectare.</p></dd>
 
-  <dt>poolProportions</dt>
+
+<dt>fineRootBiomass</dt>
+<dd><p>Biomass of fine roots (g).</p></dd>
+
+
+<dt>Kmax_rootxylem</dt>
+<dd><p>Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).</p></dd>
+
+
+<dt>VCroot_kmax</dt>
+<dd><p>Root xylem maximum conductance per leaf area (mmol·m-2·s-1·MPa-1).</p></dd>
+
+
+<dt>Al2As</dt>
+<dd><p>Leaf area to sapwood area ratio (in m2·m-2).</p></dd>
+
+
+<dt>v</dt>
+<dd><p>Vector of proportions of fine roots in each soil layer.</p></dd>
+
+
+<dt>depthWidthRatio</dt>
+<dd><p>Ratio between radius of the soil layer with the largest radius and maximum rooting depth.</p></dd>
+
+
+<dt>poolProportions</dt>
 <dd><p>Division of the stand area among plant cohorts (proportions).</p></dd>
 
 </dl></div>
@@ -167,13 +225,13 @@
     <p>Schenk, H., Jackson, R., 2002. The global biogeography of roots. Ecol. Monogr. 72, 311–328.</p>
 <p>Sperry, J. S., Y. Wang, B. T. Wolfe, D. S. Mackay, W. R. L. Anderegg, N. G. Mcdowell, and W. T. Pockman. 2016. Pragmatic hydraulic theory predicts stomatal responses to climatic water deficits. New Phytologist 212, 577–589.</p>
     </div>
-    <div id="author">
-    <h2>Author</h2>
-    <p>Miquel De Cáceres Ainsa, CREAF</p>
-    </div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="spwb.html">spwb</a></code>, <code><a href="spwb_ldrOptimization.html">spwb_ldrOptimization</a></code>, <code><a href="modelInput.html">forest2spwbInput</a></code>, <code><a href="soil.html">soil</a></code></p></div>
+    </div>
+    <div id="author">
+    <h2>Author</h2>
+    <p>Miquel De Cáceres Ainsa, CREAF</p>
     </div>
 
     <div id="ref-examples">
@@ -195,14 +253,15 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>          [,1]     [,2]  [,3] [,4]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 0.385875 0.489125 0.125    0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 0.385875 0.489125 0.125    0</span>
-<span class="r-in"><span></span></span>
+<span class="r-in"><span>     </span></span>
 <span class="r-in"><span><span class="co">#Calculate LDR root system for trees (Schenck &amp; Jackson 2002)</span></span></span>
 <span class="r-in"><span><span class="va">V2</span> <span class="op">=</span> <span class="fu">root_ldrDistribution</span><span class="op">(</span>Z50 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">200</span>,<span class="va">ntree</span><span class="op">)</span>, </span></span>
-<span class="r-in"><span>          Z95 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1000</span>,<span class="va">ntree</span><span class="op">)</span>, <span class="va">S</span><span class="op">$</span><span class="va">dVec</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                          Z95 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1000</span>,<span class="va">ntree</span><span class="op">)</span>, <span class="va">S</span><span class="op">$</span><span class="va">dVec</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">V2</span><span class="op">)</span>     </span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           [,1]      [,2]       [,3]       [,4]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 0.6799879 0.2737911 0.03567632 0.01054468</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 0.6799879 0.2737911 0.03567632 0.01054468</span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
