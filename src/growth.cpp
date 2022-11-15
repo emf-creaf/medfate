@@ -17,6 +17,22 @@
 #include <meteoland.h>
 using namespace Rcpp;
 
+//' Mortality
+//' 
+//' A simple function to determine a daily mortality likelihood according to the value of a stress variable.
+//'
+//' @param basalMortalityRate Basal daily mortality rate per individual.
+//' @param stressValue Current value of the stress variable (lower values indicate stronger stress).
+//' @param stressThreshold Threshold to indicate that lower values increase mortality likelihood.
+//' @param minValue Minimum value of the stress variable (i.e. maximum stress), corresponding to probability of mortality equal to 1.
+//' @param exponent Coefficient modulating the steepness of the relationship.
+//' 
+//' @return Returns a probability (between 0 and 1).
+//' 
+//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+//' 
+//' @seealso \code{\link{growth}}, \code{\link{recruitment}}
+//' 
 // [[Rcpp::export("mortality_dailyProbability")]]
 double dailyMortalityProbability(double basalMortalityRate, double stressValue, double stressThreshold,
                                  double minValue = 0.0, double exponent=10.0) {

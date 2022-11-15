@@ -769,6 +769,22 @@ fuel_FCCS <- function(object, SpParams, cohortFMC = as.numeric( c()), gdd = NA_r
     .Call(`_medfate_FCCSproperties`, object, SpParams, cohortFMC, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold, depthMode)
 }
 
+#' Mortality
+#' 
+#' A simple function to determine a daily mortality likelihood according to the value of a stress variable.
+#'
+#' @param basalMortalityRate Basal daily mortality rate per individual.
+#' @param stressValue Current value of the stress variable (lower values indicate stronger stress).
+#' @param stressThreshold Threshold to indicate that lower values increase mortality likelihood.
+#' @param minValue Minimum value of the stress variable (i.e. maximum stress), corresponding to probability of mortality equal to 1.
+#' @param exponent Coefficient modulating the steepness of the relationship.
+#' 
+#' @return Returns a probability (between 0 and 1).
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{growth}}, \code{\link{recruitment}}
+#' 
 mortality_dailyProbability <- function(basalMortalityRate, stressValue, stressThreshold, minValue = 0.0, exponent = 10.0) {
     .Call(`_medfate_dailyMortalityProbability`, basalMortalityRate, stressValue, stressThreshold, minValue, exponent)
 }
@@ -1522,6 +1538,18 @@ forest2growthInput <- function(x, soil, SpParams, control) {
     .Call(`_medfate_forest2growthInput`, x, soil, SpParams, control)
 }
 
+#' Reset simulation inputs
+#' 
+#' Function \code{resetInputs()} allows resetting state variables in \code{x} to their defaults.
+#' 
+#' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.
+#' 
+#' @return Does not return any value. Instead, it modifies input object \code{x}.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{spwbInput}}, \code{\link{growthInput}}, \code{\link{spwb}}
+#' 
 resetInputs <- function(x) {
     invisible(.Call(`_medfate_resetInputs`, x))
 }

@@ -1249,6 +1249,18 @@ List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   return(growthInput(above,  rdc["Z50"], rdc["Z95"], soil, SpParams, control));
 }
 
+//' Reset simulation inputs
+//' 
+//' Function \code{resetInputs()} allows resetting state variables in \code{x} to their defaults.
+//' 
+//' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.
+//' 
+//' @return Does not return any value. Instead, it modifies input object \code{x}.
+//' 
+//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+//' 
+//' @seealso \code{\link{spwbInput}}, \code{\link{growthInput}}, \code{\link{spwb}}
+//' 
 // [[Rcpp::export("resetInputs")]]
 void resetInputs(List x) {
   List control = x["control"];
