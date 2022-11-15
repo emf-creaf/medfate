@@ -1,4 +1,12 @@
 #Draws the supply function (E vs PlantPsi) for the current soil state and plant hydraulic parameters
+#' @rdname hydraulics_supplyfunctions
+#' 
+#' @param x An object of class \code{\link{spwbInput}}.
+#' @param type Plot type for \code{hydraulics_supplyFunctionPlot}, either \code{"E"}, \code{"ERhizo"}, \code{"psiStem"}, \code{"psiRoot"}, \code{"psiRhizo"} or \code{"dEdP"}).
+#' @param draw A flag to indicate whether the supply function should be drawn or just returned.
+#' @param speciesNames A flag to indicate the use of species names instead of cohort names in plots.
+#' @param ylim Graphical parameter to override function defaults.
+#' 
 hydraulics_supplyFunctionPlot<-function(x, draw = TRUE, type="E", speciesNames = FALSE, ylim=NULL) {
   
   TYPES = c("E","dEdP","StemPsi","RootPsi","RhizoPsi", "ERhizo")

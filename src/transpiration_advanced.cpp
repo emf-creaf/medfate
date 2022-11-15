@@ -1675,6 +1675,13 @@ List transpirationSperry(List x, NumericVector meteovec,
   return(l);
 }
 
+//' @rdname transp_modes
+//' 
+//' @param canopyEvaporation Canopy evaporation (from interception) for \code{day} (mm).
+//' @param soilEvaporation Bare soil evaporation for \code{day} (mm).
+//' @param snowMelt Snow melt values  for \code{day} (mm).
+//' @param stepFunctions An integer to indicate a simulation step for which photosynthesis and profit maximization functions are desired.
+//' 
 // [[Rcpp::export("transp_transpirationSperry")]]
 List transpirationSperry(List x, DataFrame meteo, int day,
                         double latitude, double elevation, double slope, double aspect,

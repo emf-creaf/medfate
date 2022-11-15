@@ -926,36 +926,127 @@ growth <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, a
     .Call(`_medfate_growth`, x, meteo, latitude, elevation, slope, aspect, CO2ByYear)
 }
 
+#' Hydraulic confuctance functions
+#' 
+#' Set of functions used in the calculation of soil and plant hydraulic conductance.
+#'
+#' @param psi A scalar (or a vector, depending on the function) with water potential (in MPa).
+#' @param K Whole-plant relative conductance (0-1).
+#' @param Psi_extract Soil water potential (in MPa) corresponding to 50\% whole-plant relative conductance.
+#' @param ws Exponent of the whole-plant relative conductance Weibull function.
+#' @param v Proportion of fine roots within each soil layer.
+#' @param krhizomax Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
+#' @param kxylemmax Maximum xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
+#' @param c,d Parameters of the Weibull function (generic xylem vulnerability curve).
+#' @param n,alpha Parameters of the Van Genuchten function (rhizosphere vulnerability curve).
+#' @param kxylem Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).
+#' @param pCrit Proportion of maximum conductance considered critical for hydraulic functioning.
+#' @param psi50,psi88,psi12 Water potentials (in MPa) corresponding to 50\%, 88\% and 12\% percent conductance loss.
+#' @param temp Temperature (in degrees Celsius).
+#' 
+#' @details Details of plant hydraulic models are given the medfate book. 
+#' Function \code{hydraulics_vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.
+#' 
+#' @return
+#' Values returned for each function are:
+#' \itemize{
+#'   \item{\code{hydraulics_psi2K}: Whole-plant relative conductance (0-1).}
+#'   \item{\code{hydraulics_K2Psi}: Soil water potential (in MPa) corresponding to the given whole-plant relative conductance value (inverse of \code{hydraulics_psi2K()}).}
+#'   \item{\code{hydraulics_averagePsi}: The average water potential (in MPa) across soil layers.}
+#'   \item{\code{hydraulics_vanGenuchtenConductance}: Rhizosphere conductance corresponding to an input water potential (soil vulnerability curve).}
+#'   \item{\code{hydraulics_xylemConductance}: Xylem conductance (flow rate per pressure drop) corresponding to an input water potential (plant vulnerability curve).}
+#'   \item{\code{hydraulics_xylemPsi}: Xylem water potential (in MPa) corresponding to an input xylem conductance (flow rate per pressure drop).}
+#'   \item{\code{hydraulics_psi2Weibull}: Parameters of the Weibull vulnerability curve that goes through the supplied psi50 and psi88 values.}
+#' }
+#' 
+#' @references
+#' Sperry, J. S., F. R. Adler, G. S. Campbell, and J. P. Comstock. 1998. Limitation of plant water use by rhizosphere and xylem conductance: results from a model. Plant, Cell and Environment 21:347–359.
+#' 
+#' Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about responses to climate-change droughts. New Phytologist 207:14–27.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso
+#' \code{\link{hydraulics_supplyFunctionPlot}}, \code{\link{hydraulics_maximumStemHydraulicConductance}}, \code{\link{spwb}}, \code{\link{soil}}
+#' 
+#' @examples
+#' 
+#' #Manual display of vulnerability curve
+#' kstemmax = 4 # in mmol·m-2·s-1·MPa-1
+#' stemc = 3 
+#' stemd = -4 # in MPa
+#' psiVec = seq(-0.1, -7.0, by =-0.01)
+#' kstem = unlist(lapply(psiVec, hydraulics_xylemConductance, kstemmax, stemc, stemd))
+#' plot(-psiVec, kstem, type="l",ylab="Xylem conductance (mmol·m-2·s-1·MPa-1)", 
+#'      xlab="Canopy pressure (-MPa)", lwd=1.5,ylim=c(0,kstemmax))
+#' 
+#' #Load example dataset
+#' data(exampleforestMED)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' #Initialize soil with default soil params (2 layers)
+#' examplesoil = soil(defaultSoilParams(2)) 
+#' 
+#' #Initialize control parameters
+#' control = defaultControl("Granier")
+#' 
+#' #Switch to 'Sperry' transpiration mode
+#' control = defaultControl("Sperry")
+#' 
+#' #Initialize input
+#' x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' 
+#' #Leaf vulnerability curves
+#' hydraulics_vulnerabilityCurvePlot(x, type="leaf")
+#' 
+#' #Stem vulnerability curves
+#' hydraulics_vulnerabilityCurvePlot(x, type="stem")
+#'              
+#' @name hydraulics_conductancefunctions
 hydraulics_psi2K <- function(psi, Psi_extract, ws = 3.0) {
     .Call(`_medfate_Psi2K`, psi, Psi_extract, ws)
 }
 
+#' @rdname hydraulics_conductancefunctions
 hydraulics_K2Psi <- function(K, Psi_extract, ws = 3.0) {
     .Call(`_medfate_K2Psi`, K, Psi_extract, ws)
 }
 
+#' @rdname hydraulics_conductancefunctions
 hydraulics_averagePsi <- function(psi, v, c, d) {
     .Call(`_medfate_averagePsi`, psi, v, c, d)
 }
 
+#' @rdname hydraulics_conductancefunctions
 hydraulics_xylemConductance <- function(psi, kxylemmax, c, d) {
     .Call(`_medfate_xylemConductance`, psi, kxylemmax, c, d)
 }
 
+#' @rdname hydraulics_conductancefunctions
 hydraulics_xylemPsi <- function(kxylem, kxylemmax, c, d) {
     .Call(`_medfate_xylemPsi`, kxylem, kxylemmax, c, d)
 }
 
+#' @rdname hydraulics_conductancefunctions
 hydraulics_psiCrit <- function(c, d, pCrit = 0.001) {
     .Call(`_medfate_psiCrit`, c, d, pCrit)
 }
 
+#' @rdname hydraulics_conductancefunctions
 hydraulics_vanGenuchtenConductance <- function(psi, krhizomax, n, alpha) {
     .Call(`_medfate_vanGenuchtenConductance`, psi, krhizomax, n, alpha)
 }
 
+#' @rdname hydraulics_conductancefunctions
 hydraulics_correctConductanceForViscosity <- function(kxylem, temp) {
     .Call(`_medfate_correctConductanceForViscosity`, kxylem, temp)
+}
+
+#' @rdname hydraulics_conductancefunctions
+hydraulics_psi2Weibull <- function(psi50, psi88 = NA_real_, psi12 = NA_real_) {
+    .Call(`_medfate_psi2Weibull`, psi50, psi88, psi12)
 }
 
 .Egamma <- function(psi, kxylemmax, c, d, psiCav = 0.0) {
@@ -966,134 +1057,309 @@ hydraulics_correctConductanceForViscosity <- function(kxylem, temp) {
     .Call(`_medfate_Egammainv`, Eg, kxylemmax, c, d, psiCav)
 }
 
+#' Hydraulic supply functions
+#' 
+#' Set of functions used in the implementation of hydraulic supply functions (Sperry and Love 2015).
+#'
+#' @param v Proportion of fine roots within each soil layer.
+#' @param krhizomax Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
+#' @param kxylemmax Maximum xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
+#' @param kleafmax Maximum leaf hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
+#' @param kstemmax Maximum stem xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
+#' @param E Flow per surface unit.
+#' @param Emax Maximum flow per surface unit.
+#' @param Erootcrown Flow per surface unit at the root crown.
+#' @param psi Water potential (in MPa).
+#' @param psiPrev Water potential (in MPa) in the previous time step.
+#' @param psiDownstream Water potential upstream (in MPa).
+#' @param psiUpstream Water potential upstream (in MPa). In a one-component model corresponds to soil potential. In a two-component model corresponds to the potential inside the roots.
+#' @param psiCav Minimum water potential (in MPa) experienced (for irreversible cavitation).
+#' @param minFlow Minimum flow in supply function.
+#' @param psiPlant Plant water potential (in MPa).
+#' @param hydraulicNetwork List with the hydraulic characteristics of nodes in the hydraulic network.
+#' @param psiFineRoot Water potential (in MPa) inside fine roots.
+#' @param psiSoil Soil water potential (in MPa). A scalar or a vector depending on the function.
+#' @param psiRhizo Soil water potential (in MPa) in the rhizosphere (root surface).
+#' @param psiRootCrown Soil water potential (in MPa) at the root crown.
+#' @param psiStep Water potential precision (in MPa).
+#' @param psiTol Precision for water potential estimates (in MPa).
+#' @param psiIni Vector of initial water potential values (in MPa).
+#' @param psiMax Minimum (maximum in absolute value) water potential to be considered (in MPa).
+#' @param pCrit Critical water potential (in MPa).
+#' @param PLCprev Previous proportion of loss conductance [0-1].
+#' @param V Capacity of the compartment per leaf area (in L/m2).
+#' @param fapo Apoplastic fraction (proportion) in the segment.
+#' @param pi0 Full turgor osmotic potential (MPa).
+#' @param eps Bulk modulus of elasticity (MPa).
+#' @param dE Increment of flow per surface unit.
+#' @param ETol Precision for water flow per surface unit.
+#' @param c,d Parameters of the Weibull function (generic xylem vulnerability curve).
+#' @param stemc,stemd Parameters of the Weibull function for stems (stem xylem vulnerability curve).
+#' @param leafc,leafd Parameters of the Weibull function for leaves (leaf vulnerability curve).
+#' @param n,alpha,l Parameters of the Van Genuchten function (rhizosphere vulnerability curve).
+#' @param allowNegativeFlux A boolean to indicate wether negative flux (i.e. from plant to soil) is allowed.
+#' @param maxNsteps Maximum number of steps in the construction of supply functions.
+#' @param ntrial Maximum number of steps in Newton-Raphson optimization.
+#' @param timestep Time step in seconds.
+#' 
+#' @details 
+#' Function \code{hydraulics_supplyFunctionPlot} draws a plot of the supply function for the given \code{soil} object and network properties of each plant cohort in \code{x}. Function \code{hydraulics_vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.
+#' 
+#' @return
+#' Values returned for each function are:
+#' \itemize{
+#'   \item{\code{hydraulics_E2psiXylem}: The plant (leaf) water potential (in MPa) corresponding to the input flow, according to the xylem supply function and given an upstream (soil or root) water potential.}
+#'   \item{\code{hydraulics_E2psiVanGenuchten}: The root water potential (in MPa) corresponding to the input flow, according to the rhizosphere supply function and given a soil water potential.}
+#'   \item{\code{hydraulics_E2psiTwoElements}: The plant (leaf) water potential (in MPa) corresponding to the input flow, according to the rhizosphere and plant supply functions and given an input soil water potential.}
+#'   \item{\code{hydraulics_E2psiNetwork}: The rhizosphere, root crown and plant (leaf water potential (in MPa) corresponding to the input flow, according to the vulnerability curves of rhizosphere, root and stem elements in a network.}
+#'   \item{\code{hydraulics_Ecrit}: The critical flow according to the xylem supply function and given an input soil water potential.}
+#'   \item{\code{hydraulics_EVanGenuchten}: The flow (integral of the vulnerability curve) according to the rhizosphere supply function and given an input drop in water potential (soil and rhizosphere).}
+#'   \item{\code{hydraulics_EXylem}: The flow (integral of the vulnerability curve) according to the xylem supply function and given an input drop in water potential (rhizosphere and plant).}
+#'   \item{\code{hydraulics_supplyFunctionOneXylem}, \code{hydraulics_supplyFunctionTwoElements} and
+#'     \code{hydraulics_supplyFunctionNetwork}: A list with different numeric vectors with information of the two-element supply function:
+#'     \itemize{
+#'       \item{\code{E}: Flow values (supply values).}
+#'       \item{\code{FittedE}: Fitted flow values (for \code{hydraulics_supplyFunctionTwoElements}).}
+#'       \item{\code{Elayers}: Flow values across the roots of each soil layer (only for \code{hydraulics_supplyFunctionNetwork}).}
+#'       \item{\code{PsiRhizo}: Water potential values at the root surface (only for \code{hydraulics_supplyFunctionNetwork}).}
+#'       \item{\code{PsiRoot}: Water potential values inside the root crown (not for \code{hydraulics_supplyFunctionOneXylem}).}
+#'       \item{\code{PsiPlant}: Water potential values at the canopy (leaf).}
+#'       \item{\code{dEdP}: Derivatives of the supply function.}
+#'     }
+#'   }
+#'   \item{\code{hydraulics_supplyFunctionPlot}: If \code{draw = FALSE} a list with the result of calling \code{hydraulics_supplyFunctionNetwork} for each cohort. }
+#'   \item{\code{hydraulics_regulatedPsiXylem}: Plant water potential after regulation (one-element loss function) given an input water potential.}
+#'   \item{\code{hydraulics_regulatedPsiTwoElements}: Plant water potential after regulation (two-element loss function) given an input soil water potential.}
+#' }
+#' 
+#' @references
+#' Sperry, J. S., F. R. Adler, G. S. Campbell, and J. P. Comstock. 1998. Limitation of plant water use by rhizosphere and xylem conductance: results from a model. Plant, Cell and Environment 21:347–359.
+#' 
+#' Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about responses to climate-change droughts. New Phytologist 207:14–27.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso
+#' \code{\link{hydraulics_psi2K}}, \code{\link{hydraulics_maximumStemHydraulicConductance}}, \code{\link{spwb}}, \code{\link{soil}}
+#' 
+#' @examples
+#' kstemmax = 4 # in mmol·m-2·s-1·MPa-1
+#' stemc = 3 
+#' stemd = -4 # in MPa
+#' psiVec = seq(-0.1, -7.0, by =-0.01)
+#' 
+#' #Vulnerability curve
+#' kstem = unlist(lapply(psiVec, hydraulics_xylemConductance, kstemmax, stemc, stemd))
+#' plot(-psiVec, kstem, type="l",ylab="Xylem conductance (mmol·m-2·s-1·MPa-1)", 
+#'      xlab="Canopy pressure (-MPa)", lwd=1.5,ylim=c(0,kstemmax))
+#' 
+#' @name hydraulics_supplyfunctions
 hydraulics_EXylem <- function(psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux = TRUE, psiCav = 0.0) {
     .Call(`_medfate_EXylem`, psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux, psiCav)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_E2psiXylem <- function(E, psiUpstream, kxylemmax, c, d, psiCav = 0.0) {
     .Call(`_medfate_E2psiXylem`, E, psiUpstream, kxylemmax, c, d, psiCav)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_E2psiXylemUp <- function(E, psiDownstream, kxylemmax, c, d, psiCav = 0.0) {
     .Call(`_medfate_E2psiXylemUp`, E, psiDownstream, kxylemmax, c, d, psiCav)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_EVanGenuchten <- function(psiRhizo, psiSoil, krhizomax, n, alpha, l = 0.5) {
     .Call(`_medfate_EVanGenuchten`, psiRhizo, psiSoil, krhizomax, n, alpha, l)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_ECrit <- function(psiUpstream, kxylemmax, c, d, pCrit = 0.001) {
     .Call(`_medfate_ECrit`, psiUpstream, kxylemmax, c, d, pCrit)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_ECapacitance <- function(psi, psiPrev, PLCprev, V, fapo, c, d, pi0, eps, timestep) {
     .Call(`_medfate_ECapacitance`, psi, psiPrev, PLCprev, V, fapo, c, d, pi0, eps, timestep)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_E2psiVanGenuchten <- function(E, psiSoil, krhizomax, n, alpha, psiStep = -0.0001, psiMax = -10.0) {
     .Call(`_medfate_E2psiVanGenuchten`, E, psiSoil, krhizomax, n, alpha, psiStep, psiMax)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_E2psiTwoElements <- function(E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, psiCav = 0.0, psiStep = -0.0001, psiMax = -10.0) {
     .Call(`_medfate_E2psiTwoElements`, E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, psiCav, psiStep, psiMax)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_E2psiBelowground <- function(E, hydraulicNetwork, psiIni = as.numeric( c(0)), ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
     .Call(`_medfate_E2psiBelowground`, E, hydraulicNetwork, psiIni, ntrial, psiTol, ETol)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_E2psiAboveground <- function(E, psiRootCrown, hydraulicNetwork) {
     .Call(`_medfate_E2psiAboveground`, E, psiRootCrown, hydraulicNetwork)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_E2psiFineRootLeaf <- function(E, psiFineRoot, hydraulicNetwork) {
     .Call(`_medfate_E2psiFineRootLeaf`, E, psiFineRoot, hydraulicNetwork)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_E2psiNetworkStem1 <- function(E, hydraulicNetwork, psiIni = as.numeric( c(0)), ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
     .Call(`_medfate_E2psiNetworkStem1`, E, hydraulicNetwork, psiIni, ntrial, psiTol, ETol)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_E2psiNetwork <- function(E, hydraulicNetwork, psiIni = as.numeric( c(0)), ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
     .Call(`_medfate_E2psiNetwork`, E, hydraulicNetwork, psiIni, ntrial, psiTol, ETol)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_supplyFunctionOneXylem <- function(psiSoil, v, kstemmax, stemc, stemd, psiCav = 0.0, maxNsteps = 200L, dE = 0.01) {
     .Call(`_medfate_supplyFunctionOneXylem`, psiSoil, v, kstemmax, stemc, stemd, psiCav, maxNsteps, dE)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_supplyFunctionTwoElements <- function(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, psiCav = 0.0, dE = 0.1, psiMax = -10.0) {
     .Call(`_medfate_supplyFunctionTwoElements`, Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, psiCav, dE, psiMax)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_supplyFunctionThreeElements <- function(Emax, psiSoil, krhizomax, kxylemmax, kleafmax, n, alpha, stemc, stemd, leafc, leafd, psiCav = 0.0, dE = 0.1, psiMax = -10.0) {
     .Call(`_medfate_supplyFunctionThreeElements`, Emax, psiSoil, krhizomax, kxylemmax, kleafmax, n, alpha, stemc, stemd, leafc, leafd, psiCav, dE, psiMax)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_supplyFunctionBelowground <- function(hydraulicNetwork, minFlow = 0.0, maxNsteps = 400L, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001) {
     .Call(`_medfate_supplyFunctionBelowground`, hydraulicNetwork, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_supplyFunctionAboveground <- function(Erootcrown, psiRootCrown, hydraulicNetwork) {
     .Call(`_medfate_supplyFunctionAboveground`, Erootcrown, psiRootCrown, hydraulicNetwork)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_supplyFunctionFineRootLeaf <- function(psiFineRoot, hydraulicNetwork, minFlow = 0.0, maxNsteps = 400L, ETol = 0.0001, pCrit = 0.001) {
     .Call(`_medfate_supplyFunctionFineRootLeaf`, psiFineRoot, hydraulicNetwork, minFlow, maxNsteps, ETol, pCrit)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_supplyFunctionNetworkStem1 <- function(hydraulicNetwork, minFlow = 0.0, maxNsteps = 400L, ntrial = 200L, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001) {
     .Call(`_medfate_supplyFunctionNetworkStem1`, hydraulicNetwork, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_supplyFunctionNetwork <- function(hydraulicNetwork, minFlow = 0.0, maxNsteps = 400L, ntrial = 200L, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001) {
     .Call(`_medfate_supplyFunctionNetwork`, hydraulicNetwork, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_regulatedPsiXylem <- function(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01) {
     .Call(`_medfate_regulatedPsiXylem`, E, psiUpstream, kxylemmax, c, d, psiStep)
 }
 
+#' @rdname hydraulics_supplyfunctions
 hydraulics_regulatedPsiTwoElements <- function(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, dE = 0.1, psiMax = -10.0) {
     .Call(`_medfate_regulatedPsiTwoElements`, Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, dE, psiMax)
 }
 
-hydraulics_psi2Weibull <- function(psi50, psi88 = NA_real_, psi12 = NA_real_) {
-    .Call(`_medfate_psi2Weibull`, psi50, psi88, psi12)
-}
-
+#' Scaling from conductivity to conductance
+#' 
+#' Functions used to scale from tissue conductivity to conductance of different elements of the continuum.
+#' 
+#' @param psiSoil Soil water potential (in MPa). A scalar or a vector depending on the function.
+#' @param psiRhizo Water potential (in MPa) in the rhizosphere (root surface).
+#' @param psiStem Water potential (in MPa) in the stem.
+#' @param psiLeaf Water potential (in MPa) in the leaf.
+#' @param PLCstem Percent loss of conductance (in \%) in the stem.
+#' @param L Vector with the length of coarse roots (mm) for each soil layer.
+#' @param V Vector with the proportion [0-1] of fine roots within each soil layer.
+#' @param krhizomax Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
+#' @param kleafmax Maximum leaf hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
+#' @param kstemmax Maximum stem xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
+#' @param krootmax Maximum root xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
+#' @param psiStep Water potential precision (in MPa).
+#' @param rootc,rootd Parameters of the Weibull function for roots (root xylem vulnerability curve).
+#' @param stemc,stemd Parameters of the Weibull function for stems (stem xylem vulnerability curve).
+#' @param leafc,leafd Parameters of the Weibull function for leaves (leaf vulnerability curve).
+#' @param n,alpha Parameters of the Van Genuchten function (rhizosphere vulnerability curve).
+#' @param averageResistancePercent Average (across water potential values) resistance percent of the rhizosphere, with respect to total resistance (rhizosphere + root xylem + stem xylem).
+#' @param initialValue Initial value of rhizosphere conductance.
+#' @param xylemConductivity Xylem conductivity as flow per length of conduit and pressure drop (in kg·m-1·s-1·MPa-1).
+#' @param Al2As Leaf area to sapwood area (in m2·m-2).
+#' @param height Plant height (in cm).
+#' @param refheight Reference plant height of measurement of xylem conductivity (in cm).
+#' @param taper A boolean flag to indicate correction by taper of xylem conduits (Christoffersen et al. 2017).
+#' 
+#' @details Details of the hydraulic model are given in the medfate book
+#' 
+#' @return
+#' Values returned for each function are:
+#' \itemize{
+#'   \item{\code{hydraulics_maximumSoilPlantConductance}: The maximum soil-plant conductance, in the same units as the input segment conductances.}
+#'   \item{\code{hydraulics_averageRhizosphereResistancePercent}: The average percentage of resistance due to the rhizosphere, calculated across water potential values.}
+#'   \item{\code{hydraulics_findRhizosphereMaximumConductance}: The maximum rhizosphere conductance value given an average rhizosphere resistance and the vulnerability curves of rhizosphere, root and stem elements.}
+#'   \item{\code{hydraulics_taperFactorSavage}: Taper factor according to Savage et al. (2010).}
+#' }
+#' 
+#' @references
+#' Christoffersen, B. O., M. Gloor, S. Fauset, N. M. Fyllas, D. R. Galbraith, T. R. Baker, L. Rowland, R. A. Fisher, O. J. Binks, S. A. Sevanto, C. Xu, S. Jansen, B. Choat, M. Mencuccini, N. G. McDowell, and P. Meir. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 9: 4227–4255.
+#' 
+#' Savage, V. M., L. P. Bentley, B. J. Enquist, J. S. Sperry, D. D. Smith, P. B. Reich, and E. I. von Allmen. 2010. Hydraulic trade-offs and space filling enable better predictions of vascular structure and function in plants. Proceedings of the National Academy of Sciences of the United States of America 107:22722–7.
+#' 
+#' Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., \enc{León-Gómez}{Leon-Gomez}, C., \enc{Alvarado-Cárdenas}{Alvarado-Cardenas}, L.O., and Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso
+#' \code{\link{hydraulics_psi2K}}, \code{\link{hydraulics_supplyFunctionPlot}}, \code{\link{spwb}}, \code{\link{soil}}
+#' 
+#' @name hydraulics_scalingconductance
 hydraulics_maximumSoilPlantConductance <- function(krhizomax, krootmax, kstemmax, kleafmax) {
     .Call(`_medfate_maximumSoilPlantConductance`, krhizomax, krootmax, kstemmax, kleafmax)
 }
 
+#' @rdname hydraulics_scalingconductance
 hydraulics_soilPlantResistances <- function(psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd) {
     .Call(`_medfate_soilPlantResistances`, psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd)
 }
 
+#' @rdname hydraulics_scalingconductance
 hydraulics_averageRhizosphereResistancePercent <- function(krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep = -0.01) {
     .Call(`_medfate_averageRhizosphereResistancePercent`, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep)
 }
 
+#' @rdname hydraulics_scalingconductance
 hydraulics_findRhizosphereMaximumConductance <- function(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue = 0.0) {
     .Call(`_medfate_findRhizosphereMaximumConductance`, averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue)
 }
 
+#' @rdname hydraulics_scalingconductance
 hydraulics_taperFactorSavage <- function(height) {
     .Call(`_medfate_taperFactorSavage`, height)
 }
 
+#' @rdname hydraulics_scalingconductance
 hydraulics_terminalConduitRadius <- function(height) {
     .Call(`_medfate_terminalConduitRadius`, height)
 }
 
+#' @rdname hydraulics_scalingconductance
 hydraulics_referenceConductivityHeightFactor <- function(refheight, height) {
     .Call(`_medfate_referenceConductivityHeightFactor`, refheight, height)
 }
 
+#' @rdname hydraulics_scalingconductance
 hydraulics_maximumStemHydraulicConductance <- function(xylemConductivity, refheight, Al2As, height, taper = FALSE) {
     .Call(`_medfate_maximumStemHydraulicConductance`, xylemConductivity, refheight, Al2As, height, taper)
 }
 
+#' @rdname hydraulics_scalingconductance
 hydraulics_rootxylemConductanceProportions <- function(L, V) {
     .Call(`_medfate_rootxylemConductanceProportions`, L, V)
 }
@@ -2539,10 +2805,179 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gs
     .Call(`_medfate_profitMaximization`, supplyFunction, photosynthesisFunction, Gswmin, Gswmax)
 }
 
+#' @rdname transp_modes
+#' 
+#' @param canopyEvaporation Canopy evaporation (from interception) for \code{day} (mm).
+#' @param soilEvaporation Bare soil evaporation for \code{day} (mm).
+#' @param snowMelt Snow melt values  for \code{day} (mm).
+#' @param stepFunctions An integer to indicate a simulation step for which photosynthesis and profit maximization functions are desired.
+#' 
 transp_transpirationSperry <- function(x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, stepFunctions = NA_integer_, modifyInput = TRUE) {
     .Call(`_medfate_transpirationSperry`, x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, stepFunctions, modifyInput)
 }
 
+#' Transpiration modes
+#' 
+#' High-level sub-models to represent transpiration, plant hydraulics and water relations 
+#' within plants. The two submodels represent a very different degree of complexity, 
+#' and correspond to Granier et al. (1999) or Sperry et al. (2017).
+#' 
+#' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}, built using the 'Granier' or 'Sperry' transpiration modes, depending on the function to be called.
+#' @param meteo A data frame with daily meteorological data series:
+#'   \itemize{
+#'     \item{\code{DOY}: Day of the year (Julian day).}
+#'     \item{\code{Precipitation}: Precipitation (in mm).}
+#'     \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
+#'     \item{\code{MaxTemperature}: Maximum temperature (in degrees Celsius).}
+#'     \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
+#'     \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
+#'     \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
+#'     \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
+#'   }
+#' @param day An integer to identify a day within \code{meteo}.
+#' @param latitude Latitude (in degrees).
+#' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).
+#' @param modifyInput Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.
+#' 
+#' @return
+#' Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry} return a list with the following elements:
+#' \itemize{
+#'   \item{\code{"cohorts"}: A data frame with cohort information, copied from \code{\link{spwbInput}}.}
+#'   \item{\code{"Stand"}: A vector of stand-level variables.}
+#'   \item{\code{"Plants"}: A data frame of results for each plant cohort. When using \code{transp_transpirationGranier}, element \code{"Plants"} includes:
+#'     \itemize{
+#'       \item{\code{"LAI"}: Leaf area index of the plant cohort.}
+#'       \item{\code{"LAIlive"}: Leaf area index of the plant cohort, assuming all leaves are unfolded.}
+#'       \item{\code{"AbsorbedSWRFraction"}: Fraction of SWR absorbed by each cohort.}
+#'       \item{\code{"Transpiration"}: Transpirated water (in mm) corresponding to each cohort.}
+#'       \item{\code{"GrossPhotosynthesis"}: Gross photosynthesis (in gC/m2) corresponding to each cohort.}
+#'       \item{\code{"psi"}: Water potential (in MPa) of the plant cohort (average over soil layers).}
+#'       \item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
+#'     }
+#'   When using \code{transp_transpirationSperry}, element \code{"Plants"} includes:
+#'     \itemize{
+#'       \item{\code{"LAI"}: Leaf area index of the plant cohort.}
+#'       \item{\code{"LAIlive"}: Leaf area index of the plant cohort, assuming all leaves are unfolded.}
+#'       \item{\code{"Extraction"}: Water extracted from the soil (in mm) for each cohort.}
+#'       \item{\code{"Transpiration"}: Transpirated water (in mm) corresponding to each cohort.}
+#'       \item{\code{"GrossPhotosynthesis"}: Gross photosynthesis (in gC/m2) corresponding to each cohort.}
+#'       \item{\code{"NetPhotosynthesis"}: Net photosynthesis (in gC/m2) corresponding to each cohort.}
+#'       \item{\code{"RootPsi"}: Minimum water potential (in MPa) at the root collar.}
+#'       \item{\code{"StemPsi"}: Minimum water potential (in MPa) at the stem.}
+#'       \item{\code{"StemPLC"}: Proportion of conductance loss in stem.}
+#'       \item{\code{"LeafPsiMin"}: Minimum (predawn) water potential (in MPa) at the leaf (representing an average leaf).}
+#'       \item{\code{"LeafPsiMax"}: Maximum (midday) water potential (in MPa) at the leaf (representing an average leaf).}
+#'       \item{\code{"LeafPsiMin_SL"}: Minimum (predawn) water potential (in MPa) at sunlit leaves.}
+#'       \item{\code{"LeafPsiMax_SL"}: Maximum (midday) water potential (in MPa) at sunlit leaves.}
+#'       \item{\code{"LeafPsiMin_SH"}: Minimum (predawn) water potential (in MPa) at shade leaves.}
+#'       \item{\code{"LeafPsiMax_SH"}: Maximum (midday) water potential (in MPa) at shade leaves.}
+#'       \item{\code{"dEdP"}: Overall soil-plant conductance (derivative of the supply function).}
+#'       \item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
+#'       \item{\code{"StemRWC"}: Relative water content of stem tissue (including symplasm and apoplasm).}
+#'       \item{\code{"LeafRWC"}: Relative water content of leaf tissue (including symplasm and apoplasm).}
+#'       \item{\code{"LFMC"}: Live fuel moisture content (in percent of dry weight).}
+#'       \item{\code{"WaterBalance"}: Plant water balance (extraction - transpiration).}
+#'     }
+#'   }
+#'   \item{\code{"Extraction"}: A data frame with mm of water extracted from each soil layer (in columns) by each cohort (in rows).}
+#' 
+#'   The remaining items are only given by \code{transp_transpirationSperry}:
+#'   \item{\code{"EnergyBalance"}: When using the 'Sperry' transpiration mode, the model performs energy balance of the stand and 'EnergyBalance' is a list with the following:
+#'     \itemize{
+#'       \item{\code{"Temperature"}: A data frame with the temperature of the atmosphere ('Tatm'), canopy ('Tcan') and soil ('Tsoil.1', 'Tsoil.2', ...) for each time step.}
+#'       \item{\code{"CanopyEnergyBalance"}: A data frame with the components of the canopy energy balance (in W/m2) for each time step.}
+#'       \item{\code{"SoilEnergyBalance"}: A data frame with the components of the soil energy balance (in W/m2) for each time step.}
+#'     }  
+#'   }
+#'   \item{\code{"RhizoPsi"}: Minimum water potential (in MPa) inside roots, after crossing rhizosphere, per cohort and soil layer.}
+#'   \item{\code{"Sunlitleaves"} and \code{"ShadeLeaves"}: Data frames for sunlit leaves and shade leaves and the following columns per cohort:
+#'     \itemize{
+#'       \item{\code{"LAI"}: Cumulative leaf area index of sunlit/shade leaves.}
+#'       \item{\code{"Vmax298"}: Average maximum carboxilation rate for sunlit/shade leaves.}
+#'       \item{\code{"Jmax298"}: Average maximum electron transport rate for sunlit/shade leaves.}
+#'     }  
+#'   }
+#'   \item{\code{"ExtractionInst"}: Water extracted by each plant cohort during each time step.}
+#'   \item{\code{"PlantsInst"}: A list with instantaneous (per time step) results for each plant cohort:
+#'     \itemize{
+#'       \item{\code{"E"}: A data frame with the cumulative transpiration (mm) for each plant cohort during each time step. }
+#'       \item{\code{"Ag"}: A data frame with the cumulative gross photosynthesis (gC/m2) for each plant cohort during each time step. }
+#'       \item{\code{"An"}: A data frame with the cumulative net photosynthesis (gC/m2) for each plant cohort during each time step. }
+#'       \item{\code{"Sunlitleaves"} and \code{"ShadeLeaves"}: Lists with instantaneous (for each time step) results for sunlit leaves and shade leaves and the following items:
+#'         \itemize{
+#'           \item{\code{"Abs_SWR"}: A data frame with instantaneous absorbed short-wave radiation (SWR).} 
+#'           \item{\code{"Net_LWR"}: A data frame with instantaneous net long-wave radiation (LWR).} 
+#'           \item{\code{"An"}: A data frame with instantaneous net photosynthesis (in micromol/m2/s). }
+#'           \item{\code{"Ci"}: A data frame with instantaneous intercellular CO2 concentration (in ppm). }
+#'           \item{\code{"GW"}: A data frame with instantaneous stomatal conductance (in mol/m2/s). }
+#'           \item{\code{"VPD"}: A data frame with instantaneous vapour pressure deficit (in kPa). }
+#'           \item{\code{"Temp"}: A data frame with leaf temperature (in degrees Celsius). }
+#'           \item{\code{"Psi"}: A data frame with leaf water potential (in MPa). }
+#'         }
+#'       }
+#'       \item{\code{"dEdP"}: A data frame with the slope of the plant supply function (an estimation of whole-plant conductance).}
+#'       \item{\code{"RootPsi"}: A data frame with root crown water potential (in MPa) for each plant cohort during each time step.}
+#'       \item{\code{"StemPsi"}: A data frame with stem water potential (in MPa) for each plant cohort during each time step.}
+#'       \item{\code{"LeafPsi"}: A data frame with leaf (average) water potential (in MPa) for each plant cohort during each time step. }
+#'       \item{\code{"StemPLC"}: A data frame with the proportion loss of conductance [0-1] for each plant cohort during each time step. }
+#'       \item{\code{"StemRWC"}: A data frame with the (average) relative water content of stem tissue [0-1] for each plant cohort during each time step. }
+#'       \item{\code{"LeafRWC"}: A data frame with the relative water content of leaf tissue [0-1] for each plant cohort during each time step. }
+#'       \item{\code{"StemSympRWC"}: A data frame with the (average) relative water content of symplastic stem tissue [0-1] for each plant cohort during each time step. }
+#'       \item{\code{"LeafSympRWC"}: A data frame with the relative water content of symplastic leaf tissue [0-1] for each plant cohort during each time step. }
+#'       \item{\code{"PWB"}: A data frame with plant water balance (extraction - transpiration).}
+#'     }
+#'   }
+#'   \item{\code{"LightExtinction"}: A list of information regarding radiation balance through the canopy, as returned by function \code{\link{light_instantaneousLightExtinctionAbsortion}}.}
+#'   \item{\code{"CanopyTurbulence"}: Canopy turbulence (see \code{\link{wind_canopyTurbulence}}).}
+#'   \item{\code{"SupplyFunctions"}: If \code{stepFunctions} is not missing, a list of supply functions, photosynthesis functions and profit maximization functions.}
+#' }
+#' 
+#' @references
+#' Granier A, \enc{Bréda}{Breda} N, Biron P, Villette S (1999) A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands. Ecol Modell 116:269–283. https://doi.org/10.1016/S0304-3800(98)00205-1.
+#' 
+#' Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2017. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment 40, 816-830 (doi: 10.1111/pce.12852).
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{spwb_day}}, \code{\link{plot.spwb_day}}
+#' 
+#' @examples
+#' #Load example daily meteorological data
+#' data(examplemeteo)
+#' 
+#' #Load example plot plant data
+#' data(exampleforestMED)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' #Initialize soil with default soil params (4 layers)
+#' examplesoil = soil(defaultSoilParams(4))
+#' 
+#' #Initialize control parameters
+#' control = defaultControl("Granier")
+#' 
+#' #Initialize input
+#' x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' 
+#' # Transpiration according to Granier's model, plant water potential 
+#' # and plant stress for a given day
+#' t1 = transp_transpirationGranier(x1, examplemeteo, 1, 
+#'                                  latitude = 41.82592, elevation = 100, slope = 0, aspect = 0, 
+#'                                  modifyInput = FALSE)
+#' 
+#' #Switch to 'Sperry' transpiration mode
+#' control = defaultControl("Sperry")
+#' 
+#' #Initialize input
+#' x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' 
+#' # Transpiration according to Sperry's model
+#' t2 = transp_transpirationSperry(x2, examplemeteo, 1, 
+#'                                 latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
+#'                                 modifyInput = FALSE)
+#'                                 
+#' @name transp_modes
 transp_transpirationGranier <- function(x, meteo, day, latitude, elevation, slope, aspect, modifyInput = TRUE) {
     .Call(`_medfate_transpirationGranier`, x, meteo, day, latitude, elevation, slope, aspect, modifyInput)
 }
