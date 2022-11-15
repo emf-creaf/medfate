@@ -93,6 +93,81 @@ NumericVector conicRS_one(double Zcone, NumericVector d){
   return(Vd);
 }
 
+//' Root functions
+//' 
+//' Functions to calculate properties of fine/coarse roots within the soil, given root system parameters and soil layer definition.
+//' 
+//' @param Z50 A vector of depths (in mm) corresponding to 50\% of roots.
+//' @param Z95 A vector of depths (in mm) corresponding to 95\% of roots.
+//' @param Zcone A vector of depths (in mm) corresponding to the root cone tip.
+//' @param d The width (in mm) corresponding to each soil layer.
+//' @param v Vector of proportions of fine roots in each soil layer.
+//' @param depthWidthRatio Ratio between radius of the soil layer with the largest radius and maximum rooting depth.
+//' @param rfc Percentage of rock fragment content (volume basis) for each layer.
+//' @param Kmax_rootxylem Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).
+//' @param VCroot_kmax Root xylem maximum conductance per leaf area (mmol·m-2·s-1·MPa-1). 
+//' @param Al2As Leaf area to sapwood area ratio (in m2·m-2).
+//' @param specificRootLength Specific fine root length (length of fine roots over weight).
+//' @param rootTissueDensity Fine root tissue density (weight over volume at turgidity).
+//' @param Ksoil Soil saturated conductivity (mmol·m-1·s-1·MPa-1).
+//' @param krhizo Rhizosphere maximum conductance per leaf area (mmol·m-2·s-1·MPa-1).
+//' @param lai Leaf area index.
+//' @param rootLengthDensity Fine root length density (length of fine roots over soil volume; cm/cm3)
+//' @param fineRootBiomass Biomass of fine roots (g).
+//' @param V Matrix of proportions of fine roots (cohorts x soil layers).
+//' @param VolInd Volume of soil (in m3) occupied by coarse roots per individual. 
+//' @param N Density of individuals per hectare.
+//' @param poolProportions Division of the stand area among plant cohorts (proportions).
+//' 
+//' @details
+//' \itemize{
+//'   \item{\code{root_conicDistribution()} assumes a (vertical) conic distribution of fine roots, whereas \code{root_ldrDistribution()} distributes fine roots according to the linear dose response model of Schenck & Jackson (2002). Return a matrix of fine root proportions in each layer with as many rows as elements in \code{Z} (or \code{Z50}) and as many columns as soil layers.}
+//'   \item{\code{root_coarseRootLengths()} and \code{root_coarseRootLengthsFromVolume()} estimate the length of coarse roots (mm) for each soil layer, including axial and radial lengths.}
+//'   \item{\code{root_coarseRootSoilVolume} estimates the soil volume (m3) occupied by coarse roots of an individual.}
+//'   \item{\code{root_coarseRootSoilVolumeFromConductance} estimates the soil volume (m3) occupied by coarse roots of an individual from root xylem conductance.}
+//'   \item{\code{root_fineRootHalfDistance()} calculates the half distance (cm) between neighbouring fine roots.}
+//'   \item{\code{root_fineRootRadius()} calculates the radius of fine roots (cm).}
+//'   \item{\code{root_fineRootAreaIndex()} estimates the fine root area index for a given soil conductivity and maximum rhizosphere conductance.}
+//'   \item{\code{root_fineRootBiomass()} estimates the biomass of fine roots (g dry/individual) for a given soil conductivity and maximum rhizosphere conductance.}
+//'   \item{\code{root_rhizosphereMaximumConductance()} is the inverse of the preceeding function, i.e. it estimates rhizosphere conductance from soil conductivity and fine root biomass.}
+//'   \item{\code{root_fineRootSoilVolume()} calculates the soil volume (m3) occupied with fine roots.}
+//'   \item{\code{root_specificRootSurfaceArea()} returns the specific fine root area (cm2/g).}
+//'   \item{\code{root_individualRootedGroundArea()} calculates the area (m2) covered by roots of an individual, for each soil layer.}
+//'   \item{\code{root_horizontalProportions()} calculates the (horizontal) proportion of roots of each cohort in the water pool corresponding to itself and that of other cohorts, for each soil layer. Returns a list (with as many elements as cohorts) with each element being a matrix.}
+//'   }
+//' 
+//' @references
+//' Schenk, H., Jackson, R., 2002. The global biogeography of roots. Ecol. Monogr. 72, 311–328.
+//' 
+//' Sperry, J. S., Y. Wang, B. T. Wolfe, D. S. Mackay, W. R. L. Anderegg, N. G. Mcdowell, and W. T. Pockman. 2016. Pragmatic hydraulic theory predicts stomatal responses to climatic water deficits. New Phytologist 212, 577–589.
+//' 
+//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+//' 
+//' @seealso
+//'  \code{\link{spwb}}, \code{\link{spwb_ldrOptimization}}, \code{\link{forest2spwbInput}}, \code{\link{soil}}
+//'
+//' @examples
+//' #Load example plot plant data
+//' data(exampleforestMED)
+//' 
+//' #Default species parameterization
+//' data(SpParamsMED)
+//' 
+//' ntree = nrow(exampleforestMED$treeData)
+//' 
+//' #Initialize soil with default soil params
+//' S = soil(defaultSoilParams())
+//' 
+//' #Calculate conic root system for trees
+//' V1 = root_conicDistribution(Z=rep(2000,ntree), S$dVec)            
+//' print(V1)
+//'      
+//' #Calculate LDR root system for trees (Schenck & Jackson 2002)
+//' V2 = root_ldrDistribution(Z50 = rep(200,ntree), 
+//'                           Z95 = rep(1000,ntree), S$dVec)
+//' print(V2)     
+//' 
+//' @name root
 // [[Rcpp::export("root_conicDistribution")]]
 NumericMatrix conicDistribution(NumericVector Zcone, NumericVector d) {
   int numCohorts = Zcone.size();
@@ -109,6 +184,7 @@ NumericMatrix conicDistribution(NumericVector Zcone, NumericVector d) {
  * 
  * Schenk, H., Jackson, R., 2002. The global biogeography of roots. Ecol. Monogr. 72, 311–328.
  */
+//' @rdname root
 // [[Rcpp::export("root_ldrDistribution")]]
 NumericMatrix ldrDistribution(NumericVector Z50, NumericVector Z95, NumericVector d) {
   int numCohorts = Z50.size();
@@ -181,6 +257,7 @@ NumericMatrix rootDistribution(NumericVector z, List x) {
  * Calculates root ground area for each layer of the root system of 
  * an individual with a given total fine root volume (in m3) and fine root proportions
  */
+//' @rdname root
 // [[Rcpp::export("root_individualRootedGroundArea")]]
 NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, NumericVector d, 
                                          NumericVector rfc) {
@@ -206,21 +283,27 @@ NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, 
  *    . specific root length (SRL; cm/g) e.g. 3870 cm/g
  *    . root tissue density (RTD; g/cm3) e.g. 0.165 g/cm3
  */
+//' @rdname root
 // [[Rcpp::export("root_specificRootSurfaceArea")]]
 double specificRootSurfaceArea(double specificRootLength, double rootTissueDensity) {
   return(2.0*sqrt(M_PI*specificRootLength/rootTissueDensity));
 }
+
 /**
  * Fine root radius in cm
  */
+//' @rdname root
 // [[Rcpp::export("root_fineRootRadius")]]
 double fineRootRadius(double specificRootLength, double rootTissueDensity) {
   return(sqrt(1.0/(M_PI*specificRootLength*rootTissueDensity)));
 }
+
+//' @rdname root
 // [[Rcpp::export("root_fineRootHalfDistance")]]
 double fineRootHalfDistance(double rootLengthDensity) {
   return(1.0/sqrt(M_PI*rootLengthDensity));
 }
+
 /**
  * Derivation of fine root length per ground area (m·m-2) 
  * from the conductance factor for cylindrical flow geometry of the rhizosphere
@@ -243,6 +326,7 @@ double fineRootMaximumConductance(double Ksoil, double fineRootLengthPerArea, do
   return((fineRootLengthPerArea*Ksoil*4.0*M_PI)/(lai*log(pow(rmax,2.0)/pow(radius,2.0))));
 }
 
+//' @rdname root
 // [[Rcpp::export("root_fineRootAreaIndex")]]
 double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
                                     double specificRootLength, double rootTissueDensity,  
@@ -260,6 +344,7 @@ double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
 /**
  * Fine root biomass in g dry · ind-1
  */
+//' @rdname root
 // [[Rcpp::export("root_fineRootBiomass")]]
 double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo, double lai, double N,
                                     double specificRootLength, double rootTissueDensity,  
@@ -275,6 +360,7 @@ double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo, d
   return(frb);
 }
 
+//' @rdname root
 // [[Rcpp::export("root_rhizosphereMaximumConductance")]]
 NumericVector rhizosphereMaximumConductance(NumericVector Ksoil, NumericVector fineRootBiomass, double lai, double N,
                                     double specificRootLength, double rootTissueDensity,  
@@ -296,6 +382,7 @@ NumericVector rhizosphereMaximumConductance(NumericVector Ksoil, NumericVector f
  *    . specific root length (SRL; cm/g) e.g. 3870 cm/g
  *    . root length density (RLD; cm/cm3) e.g. 10 cm/cm3 = 0.1 mm/mm3
  */
+//' @rdname root
 // [[Rcpp::export("root_fineRootSoilVolume")]]
 double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity) {
   return(fineRootBiomass*(specificRootLength/rootLengthDensity)*1e-6);
@@ -317,6 +404,7 @@ double frv(double vol, double B, NumericVector v, NumericVector ax, NumericVecto
  *    . sapwood area (cm2)
  *    . rooting depth (cm)
  */
+//' @rdname root
 // [[Rcpp::export("root_coarseRootSoilVolumeFromConductance")]]
 double coarseRootSoilVolumeFromConductance(double Kmax_rootxylem, double VCroot_kmax, double Al2As,
                                    NumericVector v, NumericVector d, NumericVector rfc) {
@@ -363,6 +451,7 @@ double coarseRootSoilVolumeFromConductance(double Kmax_rootxylem, double VCroot_
  * Returs: coarse root length in mm (same units as d)
  * 
  */
+//' @rdname root
 // [[Rcpp::export("root_coarseRootLengthsFromVolume")]]
 NumericVector coarseRootLengthsFromVolume(double VolInd, NumericVector v, NumericVector d, NumericVector rfc) {
   int nlayers = v.size();
@@ -415,6 +504,7 @@ List coarseRootRadialAxialLengths(NumericVector v, NumericVector d, double depth
   return(List::create(_["radial"] = rl, _["axial"] = vl));
 }
 
+//' @rdname root
 // [[Rcpp::export("root_coarseRootLengths")]]
 NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
   List radax = coarseRootRadialAxialLengths(v, d, depthWidthRatio);
@@ -428,6 +518,7 @@ NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWi
   return(l);
 }
 
+//' @rdname root
 // [[Rcpp::export("root_coarseRootSoilVolume")]]
 double coarseRootSoilVolume(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
   List radax = coarseRootRadialAxialLengths(v, d, depthWidthRatio);
@@ -484,6 +575,7 @@ List nonoverlapHorizontalProportions(NumericMatrix V) {
   l.attr("names") = rownames(V);
   return(l);
 }
+//' @rdname root
 // [[Rcpp::export("root_horizontalProportions")]]
 List horizontalProportions(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, 
                            NumericVector d, NumericVector rfc) {

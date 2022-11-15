@@ -37,6 +37,123 @@ NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, Num
   return(parcohortC(H,LAI,LAI_dead,kPAR,CR));
 }
 
+//' Radiation transfer functions
+//' 
+//' Functions \code{light_layerIrradianceFraction} and \code{light_layerIrradianceFractionBottomUp} calculate 
+//' the fraction of above-canopy irradiance (and the soil irradiance, respectively) reaching each vegetation layer. 
+//' Function \code{light_layerSunlitFraction} calculates the proportion of sunlit leaves in each vegetation layer. 
+//' Function \code{light_cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorved 
+//' by cohort and vegetation layers, while differentiating between sunlit and shade leaves.
+//' 
+//' @param LAIme A numeric matrix of live expanded LAI values per vegetation layer (row) and cohort (column).
+//' @param LAImd A numeric matrix of dead LAI values per vegetation layer (row) and cohort (column).
+//' @param LAImx A numeric matrix of maximum LAI values per vegetation layer (row) and cohort (column).
+//' @param k A vector of light extinction coefficients.
+//' @param kb A vector of direct light extinction coefficients.
+//' @param kd A vector of diffuse light extinction coefficients.
+//' @param Ib0 Above-canopy direct incident radiation.
+//' @param Id0 Above-canopy diffuse incident radiation.
+//' @param Ibf Fraction of above-canopy direct radiation reaching each vegetation layer.
+//' @param Idf Fraction of above-canopy diffuse radiation reaching each vegetation layer.
+//' @param alpha A vecfor of leaf absorbance by species.
+//' @param beta Solar elevation (in radians).
+//' @param gamma Vector of canopy reflectance values.
+//' @param kPAR A vector of visible light extinction coefficients for each cohort.
+//' @param alphaSWR A vecfor of hort-wave absorbance coefficients for each cohort.
+//' @param gammaSWR A vector of short-wave reflectance coefficients (albedo) for each cohort.
+//' @param ddd A dataframe with direct and diffuse radiation for different subdaily time steps (see function \code{radiation_directDiffuseDay} in package meteoland).
+//' @param ntimesteps Number of subdaily time steps.
+//' @param trunkExtinctionFraction Fraction of extinction due to trunks (for winter deciduous forests).
+//' @param LWRatm Atmospheric downward long-wave radiation (W/m2).
+//' @param Tsoil Soil temperature (Celsius).
+//' @param Tair Canopy layer air temperature vector (Celsius).
+//' @param x An object of class \code{\link{forest}}
+//' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
+//' @param z A numeric vector with height values.
+//' @param gdd Growth degree days.
+//' @param mode Calculation mode, either "MED" or "US".
+//' 
+//' @details
+//' Functions for short-wave radiation are adapted from Anten & Bastiaans (2016), 
+//' whereas long-wave radiation balance follows Flerchinger et al. (2009). 
+//' Vegetation layers are assumed to be ordered from bottom to top.
+//' 
+//' @return
+//' Functions \code{light_layerIrradianceFraction}, \code{light_layerIrradianceFractionBottomUp}  and \code{light_layerSunlitFraction} 
+//' return a numeric vector of length equal to the number of vegetation layers. 
+//' 
+//' Function \code{light_cohortSunlitShadeAbsorbedRadiation} returns a list with 
+//' two elements (matrices): \code{I_sunlit} and \code{I_shade}.
+//' 
+//' @references
+//' Anten, N.P.R., Bastiaans, L., 2016. The use of canopy models to analyze light competition among plants, in: Hikosaka, K., Niinemets, U., Anten, N.P.R. (Eds.), Canopy Photosynthesis: From Basics to Application. Springer, pp. 379–398.
+//' 
+//' Flerchinger, G. N., Xiao, W., Sauer, T. J., Yu, Q. 2009. Simulation of within-canopy radiation exchange. NJAS - Wageningen Journal of Life Sciences 57 (1): 5–15. https://doi.org/10.1016/j.njas.2009.07.004.
+//' 
+//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+//' 
+//' @seealso  \code{\link{spwb}}
+//' 
+//' @examples
+//' LAI = 2
+//' nlayer = 10
+//' LAIlayerlive = matrix(rep(LAI/nlayer,nlayer),nlayer,1)
+//' LAIlayerdead = matrix(0,nlayer,1)
+//' kb = 0.8
+//' kd_PAR = 0.5
+//' kd_SWR = kd_PAR/1.35
+//' alpha_PAR = 0.9
+//' gamma_PAR = 0.04
+//' gamma_SWR = 0.05
+//' alpha_SWR = 0.7
+//' 
+//' Ibfpar = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kb, alpha_PAR)
+//' Idfpar = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kd_PAR, alpha_PAR)
+//' Ibfswr = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kb, alpha_SWR)
+//' Idfswr = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kd_SWR, alpha_SWR)
+//' fsunlit = light_layerSunlitFraction(LAIlayerlive, LAIlayerdead, kb)
+//' SHarea = (1-fsunlit)*LAIlayerlive[,1] 
+//' SLarea = fsunlit*LAIlayerlive[,1] 
+//' 
+//' par(mar=c(4,4,1,1), mfrow=c(1,2))
+//' plot(Ibfpar*100, 1:nlayer,type="l", ylab="Layer", 
+//'      xlab="Percentage of irradiance", xlim=c(0,100), ylim=c(1,nlayer), col="dark green")
+//' lines(Idfpar*100, 1:nlayer, col="dark green", lty=2)
+//' lines(Ibfswr*100, 1:nlayer, col="red")
+//' lines(Idfswr*100, 1:nlayer, col="red", lty=2)
+//'   
+//' plot(fsunlit*100, 1:nlayer,type="l", ylab="Layer", 
+//'      xlab="Percentage of leaves", xlim=c(0,100), ylim=c(1,nlayer))
+//' lines((1-fsunlit)*100, 1:nlayer, lty=2)
+//'   
+//' solarElevation = 0.67
+//' SWR_direct = 1100
+//' SWR_diffuse = 300
+//' PAR_direct = 550
+//' PAR_diffuse = 150
+//' 
+//' abs_PAR = light_cohortSunlitShadeAbsorbedRadiation(PAR_direct, PAR_diffuse,
+//'                         Ibfpar, Idfpar, beta = solarElevation, 
+//'                         LAIlayerlive, LAIlayerdead, kb, kd_PAR, alpha_PAR, gamma_PAR)
+//' abs_SWR = light_cohortSunlitShadeAbsorbedRadiation(SWR_direct, SWR_diffuse,
+//'                          Ibfswr, Idfswr, beta = solarElevation, 
+//'                          LAIlayerlive, LAIlayerdead, kb, kd_SWR, alpha_SWR, gamma_SWR)
+//' par(mar=c(4,4,1,1), mfrow=c(1,2))
+//' absRadSL = abs_SWR$I_sunlit[,1]
+//' absRadSH = abs_SWR$I_shade[,1]
+//' lambda = 546.6507
+//' QSL = abs_PAR$I_sunlit[,1]*lambda*0.836*0.01
+//' QSH = abs_PAR$I_shade[,1]*lambda*0.836*0.01
+//' plot(QSL, 1:nlayer,type="l", ylab="Layer", 
+//'    xlab="Absorbed PAR quantum flux per leaf area", ylim=c(1,nlayer), col="dark green", 
+//'    xlim=c(0,max(QSL)))
+//' lines(QSH, 1:nlayer, col="dark green", lty=2)
+//' plot(absRadSL, 1:nlayer,type="l", ylab="Layer", 
+//'    xlab="Absorbed SWR per leaf area (W/m2)", ylim=c(1,nlayer), col="red", 
+//'    xlim=c(0,max(absRadSL)))
+//' lines(absRadSH, 1:nlayer, col="red", lty=2)
+//'   
+//' @name light
 // [[Rcpp::export("light_PARcohort")]]
 NumericVector PARcohort(List x, DataFrame SpParams, double gdd = NA_REAL,
                         String mode = "MED") {
@@ -81,6 +198,8 @@ NumericVector parheight(NumericVector z, List x, DataFrame SpParams, double gdd 
   NumericVector CR = above["CR"];
   return(parheight(z, SP, H, CR, LAI, SpParams));
 }
+
+//' @rdname light
 // [[Rcpp::export("light_PARground")]]
 NumericVector PARground(List x, DataFrame SpParams, double gdd = NA_REAL,
                         String mode = "MED") {
@@ -96,6 +215,8 @@ NumericVector swrheight(NumericVector z, List x, DataFrame SpParams, double gdd 
   NumericVector CR = above["CR"];
   return(swrheight(z, SP, H, CR, LAI, SpParams));
 }
+
+//' @rdname light
 // [[Rcpp::export("light_SWRground")]]
 NumericVector SWRground(List x, DataFrame SpParams, double gdd = NA_REAL,
                         String mode = "MED") {
@@ -194,7 +315,7 @@ NumericVector cohortAbsorbedSWRFraction(NumericVector z, NumericVector LAI_expan
   return(cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR));
 }
 
-
+//' @rdname light
 // [[Rcpp::export("light_cohortAbsorbedSWRFraction")]]
 NumericVector cohortAbsorbedSWRFraction(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL) {
   NumericMatrix LAIme =  LAIdistribution(z, x, SpParams, gdd);
@@ -210,6 +331,7 @@ NumericVector cohortAbsorbedSWRFraction(NumericVector z, List x, DataFrame SpPar
   return(caswrf);
 }
 
+//' @rdname light
 // [[Rcpp::export("light_layerIrradianceFraction")]]
 NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, NumericVector k, NumericVector alpha, double trunkExtinctionFraction = 0.1) {
   int nlayer = LAIme.nrow();
@@ -225,6 +347,7 @@ NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,N
   return(Ifraction);
 }
 
+//' @rdname light
 // [[Rcpp::export("light_layerIrradianceFractionBottomUp")]]
 NumericVector layerIrradianceFractionBottomUp(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, NumericVector k, NumericVector alpha, double trunkExtinctionFraction = 0.1) {
   int nlayer = LAIme.nrow();
@@ -307,6 +430,7 @@ NumericMatrix cohortScatteredAbsorbedRadiation(double Ib0, NumericVector Ibf, Nu
  * I_{SU,ij}
  * I_{SH,ij}
  */
+//' @rdname light
 // [[Rcpp::export("light_cohortSunlitShadeAbsorbedRadiation")]]
 List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ibf, NumericVector Idf, double beta,
                              NumericMatrix LAIme, NumericMatrix LAImd, 
@@ -334,6 +458,7 @@ List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ib
  *  Sunlit leaf fraction per layer
  *  f_{SL, ij}
  */
+//' @rdname light
 // [[Rcpp::export("light_layerSunlitFraction")]]
 NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb) {
   int ncoh = kb.size();
@@ -354,6 +479,7 @@ NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, Nume
 /*
  * Calculates the amount of radiation absorved by each cohort
  */
+//' @rdname light
 // [[Rcpp::export("light_instantaneousLightExtinctionAbsortion")]]
 List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
                                            NumericVector kPAR, NumericVector alphaSWR, NumericVector gammaSWR,
@@ -495,6 +621,7 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
  *  Ma Y, Liu H (2019) An Advanced Multiple-Layer Canopy Model in the WRF Model With Large-Eddy Simulations to Simulate Canopy Flows and Scalar Transport Under Different Stability Conditions. J Adv Model Earth Syst 11:2330–2351. https://doi.org/10.1029/2018MS001347
  *  Flerchinger GN, Xiao W, Sauer TJ, Yu Q (2009) Simulation of within-canopy radiation exchange. NJAS - Wageningen J Life Sci 57:5–15. https://doi.org/10.1016/j.njas.2009.07.004
  */
+//' @rdname light
 // [[Rcpp::export("light_longwaveRadiationSHAW")]]
 List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
                            double LWRatm, double Tsoil, NumericVector Tair, double trunkExtinctionFraction = 0.1) {

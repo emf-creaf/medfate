@@ -1499,6 +1499,123 @@ hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInpu
     .Call(`_medfate_parcohort`, SP, H, CR, LAI, SpParams)
 }
 
+#' Radiation transfer functions
+#' 
+#' Functions \code{light_layerIrradianceFraction} and \code{light_layerIrradianceFractionBottomUp} calculate 
+#' the fraction of above-canopy irradiance (and the soil irradiance, respectively) reaching each vegetation layer. 
+#' Function \code{light_layerSunlitFraction} calculates the proportion of sunlit leaves in each vegetation layer. 
+#' Function \code{light_cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorved 
+#' by cohort and vegetation layers, while differentiating between sunlit and shade leaves.
+#' 
+#' @param LAIme A numeric matrix of live expanded LAI values per vegetation layer (row) and cohort (column).
+#' @param LAImd A numeric matrix of dead LAI values per vegetation layer (row) and cohort (column).
+#' @param LAImx A numeric matrix of maximum LAI values per vegetation layer (row) and cohort (column).
+#' @param k A vector of light extinction coefficients.
+#' @param kb A vector of direct light extinction coefficients.
+#' @param kd A vector of diffuse light extinction coefficients.
+#' @param Ib0 Above-canopy direct incident radiation.
+#' @param Id0 Above-canopy diffuse incident radiation.
+#' @param Ibf Fraction of above-canopy direct radiation reaching each vegetation layer.
+#' @param Idf Fraction of above-canopy diffuse radiation reaching each vegetation layer.
+#' @param alpha A vecfor of leaf absorbance by species.
+#' @param beta Solar elevation (in radians).
+#' @param gamma Vector of canopy reflectance values.
+#' @param kPAR A vector of visible light extinction coefficients for each cohort.
+#' @param alphaSWR A vecfor of hort-wave absorbance coefficients for each cohort.
+#' @param gammaSWR A vector of short-wave reflectance coefficients (albedo) for each cohort.
+#' @param ddd A dataframe with direct and diffuse radiation for different subdaily time steps (see function \code{radiation_directDiffuseDay} in package meteoland).
+#' @param ntimesteps Number of subdaily time steps.
+#' @param trunkExtinctionFraction Fraction of extinction due to trunks (for winter deciduous forests).
+#' @param LWRatm Atmospheric downward long-wave radiation (W/m2).
+#' @param Tsoil Soil temperature (Celsius).
+#' @param Tair Canopy layer air temperature vector (Celsius).
+#' @param x An object of class \code{\link{forest}}
+#' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
+#' @param z A numeric vector with height values.
+#' @param gdd Growth degree days.
+#' @param mode Calculation mode, either "MED" or "US".
+#' 
+#' @details
+#' Functions for short-wave radiation are adapted from Anten & Bastiaans (2016), 
+#' whereas long-wave radiation balance follows Flerchinger et al. (2009). 
+#' Vegetation layers are assumed to be ordered from bottom to top.
+#' 
+#' @return
+#' Functions \code{light_layerIrradianceFraction}, \code{light_layerIrradianceFractionBottomUp}  and \code{light_layerSunlitFraction} 
+#' return a numeric vector of length equal to the number of vegetation layers. 
+#' 
+#' Function \code{light_cohortSunlitShadeAbsorbedRadiation} returns a list with 
+#' two elements (matrices): \code{I_sunlit} and \code{I_shade}.
+#' 
+#' @references
+#' Anten, N.P.R., Bastiaans, L., 2016. The use of canopy models to analyze light competition among plants, in: Hikosaka, K., Niinemets, U., Anten, N.P.R. (Eds.), Canopy Photosynthesis: From Basics to Application. Springer, pp. 379–398.
+#' 
+#' Flerchinger, G. N., Xiao, W., Sauer, T. J., Yu, Q. 2009. Simulation of within-canopy radiation exchange. NJAS - Wageningen Journal of Life Sciences 57 (1): 5–15. https://doi.org/10.1016/j.njas.2009.07.004.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso  \code{\link{spwb}}
+#' 
+#' @examples
+#' LAI = 2
+#' nlayer = 10
+#' LAIlayerlive = matrix(rep(LAI/nlayer,nlayer),nlayer,1)
+#' LAIlayerdead = matrix(0,nlayer,1)
+#' kb = 0.8
+#' kd_PAR = 0.5
+#' kd_SWR = kd_PAR/1.35
+#' alpha_PAR = 0.9
+#' gamma_PAR = 0.04
+#' gamma_SWR = 0.05
+#' alpha_SWR = 0.7
+#' 
+#' Ibfpar = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kb, alpha_PAR)
+#' Idfpar = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kd_PAR, alpha_PAR)
+#' Ibfswr = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kb, alpha_SWR)
+#' Idfswr = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kd_SWR, alpha_SWR)
+#' fsunlit = light_layerSunlitFraction(LAIlayerlive, LAIlayerdead, kb)
+#' SHarea = (1-fsunlit)*LAIlayerlive[,1] 
+#' SLarea = fsunlit*LAIlayerlive[,1] 
+#' 
+#' par(mar=c(4,4,1,1), mfrow=c(1,2))
+#' plot(Ibfpar*100, 1:nlayer,type="l", ylab="Layer", 
+#'      xlab="Percentage of irradiance", xlim=c(0,100), ylim=c(1,nlayer), col="dark green")
+#' lines(Idfpar*100, 1:nlayer, col="dark green", lty=2)
+#' lines(Ibfswr*100, 1:nlayer, col="red")
+#' lines(Idfswr*100, 1:nlayer, col="red", lty=2)
+#'   
+#' plot(fsunlit*100, 1:nlayer,type="l", ylab="Layer", 
+#'      xlab="Percentage of leaves", xlim=c(0,100), ylim=c(1,nlayer))
+#' lines((1-fsunlit)*100, 1:nlayer, lty=2)
+#'   
+#' solarElevation = 0.67
+#' SWR_direct = 1100
+#' SWR_diffuse = 300
+#' PAR_direct = 550
+#' PAR_diffuse = 150
+#' 
+#' abs_PAR = light_cohortSunlitShadeAbsorbedRadiation(PAR_direct, PAR_diffuse,
+#'                         Ibfpar, Idfpar, beta = solarElevation, 
+#'                         LAIlayerlive, LAIlayerdead, kb, kd_PAR, alpha_PAR, gamma_PAR)
+#' abs_SWR = light_cohortSunlitShadeAbsorbedRadiation(SWR_direct, SWR_diffuse,
+#'                          Ibfswr, Idfswr, beta = solarElevation, 
+#'                          LAIlayerlive, LAIlayerdead, kb, kd_SWR, alpha_SWR, gamma_SWR)
+#' par(mar=c(4,4,1,1), mfrow=c(1,2))
+#' absRadSL = abs_SWR$I_sunlit[,1]
+#' absRadSH = abs_SWR$I_shade[,1]
+#' lambda = 546.6507
+#' QSL = abs_PAR$I_sunlit[,1]*lambda*0.836*0.01
+#' QSH = abs_PAR$I_shade[,1]*lambda*0.836*0.01
+#' plot(QSL, 1:nlayer,type="l", ylab="Layer", 
+#'    xlab="Absorbed PAR quantum flux per leaf area", ylim=c(1,nlayer), col="dark green", 
+#'    xlim=c(0,max(QSL)))
+#' lines(QSH, 1:nlayer, col="dark green", lty=2)
+#' plot(absRadSL, 1:nlayer,type="l", ylab="Layer", 
+#'    xlab="Absorbed SWR per leaf area (W/m2)", ylim=c(1,nlayer), col="red", 
+#'    xlim=c(0,max(absRadSL)))
+#' lines(absRadSH, 1:nlayer, col="red", lty=2)
+#'   
+#' @name light
 light_PARcohort <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_PARcohort`, x, SpParams, gdd, mode)
 }
@@ -1507,6 +1624,7 @@ light_PARcohort <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_parheight`, z, x, SpParams, gdd, mode)
 }
 
+#' @rdname light
 light_PARground <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_PARground`, x, SpParams, gdd, mode)
 }
@@ -1515,6 +1633,7 @@ light_PARground <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_swrheight`, z, x, SpParams, gdd, mode)
 }
 
+#' @rdname light
 light_SWRground <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_SWRground`, x, SpParams, gdd, mode)
 }
@@ -1527,30 +1646,37 @@ light_SWRground <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_swrExtinctionProfile`, z, x, SpParams, gdd, mode)
 }
 
+#' @rdname light
 light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_cohortAbsorbedSWRFraction`, z, x, SpParams, gdd)
 }
 
+#' @rdname light
 light_layerIrradianceFraction <- function(LAIme, LAImd, LAImx, k, alpha, trunkExtinctionFraction = 0.1) {
     .Call(`_medfate_layerIrradianceFraction`, LAIme, LAImd, LAImx, k, alpha, trunkExtinctionFraction)
 }
 
+#' @rdname light
 light_layerIrradianceFractionBottomUp <- function(LAIme, LAImd, LAImx, k, alpha, trunkExtinctionFraction = 0.1) {
     .Call(`_medfate_layerIrradianceFractionBottomUp`, LAIme, LAImd, LAImx, k, alpha, trunkExtinctionFraction)
 }
 
+#' @rdname light
 light_cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma) {
     .Call(`_medfate_cohortSunlitShadeAbsorbedRadiation`, Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma)
 }
 
+#' @rdname light
 light_layerSunlitFraction <- function(LAIme, LAImd, kb) {
     .Call(`_medfate_layerSunlitFraction`, LAIme, LAImd, kb)
 }
 
+#' @rdname light
 light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, kPAR, alphaSWR, gammaSWR, ddd, ntimesteps = 24L, trunkExtinctionFraction = 0.1) {
     .Call(`_medfate_instantaneousLightExtinctionAbsortion`, LAIme, LAImd, LAImx, kPAR, alphaSWR, gammaSWR, ddd, ntimesteps, trunkExtinctionFraction)
 }
 
+#' @rdname light
 light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction = 0.1) {
     .Call(`_medfate_longwaveRadiationSHAW`, LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction)
 }
@@ -1913,54 +2039,231 @@ pheno_updateLeaves <- function(x, wind, fromGrowthModel) {
     invisible(.Call(`_medfate_updateLeaves`, x, wind, fromGrowthModel))
 }
 
+#' Photosynthesis submodel functions
+#' 
+#' Set of functions used in the calculation of photosynthesis
+#' 
+#' @param Tleaf Leaf temperature (in ºC).
+#' @param Oi Oxigen concentration (mmol*mol-1).
+#' @param Vmax298,Vmax298SL,Vmax298SH Maximum Rubisco carboxylation rate per leaf area at 298ºK (i.e. 25 ºC) (micromol*s-1*m-2) (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}). 'SH' stands for shade leaves, whereas 'SL' stands for sunlit leaves.
+#' @param Jmax298,Jmax298SL,Jmax298SH Maximum electron transport rate per leaf area at 298ºK (i.e. 25 ºC) (micromol*s-1*m-2) (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}). 'SH' stands for shade leaves, whereas 'SL' stands for sunlit leaves.
+#' @param Q Active photon flux density (micromol * s-1 * m-2).
+#' @param Ci CO2 internal concentration (micromol * mol-1).
+#' @param GT CO2 saturation point corrected by temperature (micromol * mol-1).
+#' @param Jmax Maximum electron transport rate per leaf area (micromol*s-1*m-2).
+#' @param Km Km = Kc*(1.0+(Oi/Ko)) - Michaelis-Menten term corrected by temperature (in micromol * mol-1).
+#' @param Vmax Maximum Rubisco carboxylation rate per leaf area (micromol*s-1*m-2).
+#' @param Catm CO2 air concentration (micromol * mol-1).
+#' @param Gc CO2 leaf (stomatal) conductance (mol * s-1 * m-2).
+#' @param E Transpiration flow rate per leaf area (mmol*s-1*m-2).
+#' @param psiLeaf Leaf water potential (MPa).
+#' @param Patm Atmospheric air pressure (in kPa).
+#' @param Tair Air temperature (in ºC).
+#' @param vpa Vapour pressure deficit (in kPa).
+#' @param u Wind speed above the leaf boundary (in m/s) (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).
+#' @param absRad Absorbed long- and short-wave radiation (in W*m^-2).
+#' @param SWRabs Absorbed short-wave radiation (in W·m-2).
+#' @param LWRnet Net long-wave radiation balance (in W·m-2).
+#' @param leafWidth Leaf width (in cm).
+#' @param refLeafArea Leaf reference area.
+#' @param verbose Boolean flag to indicate console output.
+#' @param SLarea,SHarea Leaf area index of sunlit/shade leaves (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).
+#' @param absRadSL,absRadSH Instantaneous absorbed radiation (W·m-2) per unit of sunlit/shade leaf area (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).
+#' @param QSL,QSH Active photon flux density (micromol * s-1 * m-2) per unit of sunlit/shade leaf area (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).
+#' 
+#' @details Details of the photosynthesis submodel are given in the medfate book
+#' 
+#' @return
+#' Values returned for each function are:
+#' \itemize{
+#'   \item{\code{photo_GammaTemp}: CO2 compensation concentration (micromol * mol-1).}
+#'   \item{\code{photo_KmTemp}: Michaelis-Menten coefficients of Rubisco for Carbon (micromol * mol-1) and Oxigen (mmol * mol-1).}
+#'   \item{\code{photo_VmaxTemp}: Temperature correction of Vmax298.}
+#'   \item{\code{photo_JmaxTemp}: Temperature correction of Jmax298.}
+#'   \item{\code{photo_electronLimitedPhotosynthesis}: Electron-limited photosynthesis (micromol*s-1*m-2) following Farquhar et al. (1980).}
+#'   \item{\code{photo_rubiscoLimitedPhotosynthesis}: Rubisco-limited photosynthesis (micromol*s-1*m-2) following Farquhar et al. (1980).}
+#'   \item{\code{photo_photosynthesis}: Calculates gross photosynthesis (micromol*s-1*m-2) following (Farquhar et al. (1980) and Collatz et al (1991).}
+#'   \item{\code{photo_leafPhotosynthesisFunction}: Returns a data frame with the following columns:
+#'     \itemize{
+#'       \item{\code{LeafTemperature}: Leaf temperature (ºC).}
+#'       \item{\code{LeafVPD}: Leaf vapor pressure deficit (kPa).}
+#'       \item{\code{LeafCi}: Internal CO2 concentration (micromol * mol-1).}
+#'       \item{\code{Gsw}: Leaf stomatal conductance to water vapor (mol * s-1 * m-2).}
+#'       \item{\code{GrossPhotosynthesis}: Gross photosynthesis (micromol*s-1*m-2).}
+#'       \item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).}
+#'     }
+#'   }
+#'   \item{\code{photo_sunshadePhotosynthesisFunction}: Returns a data frame with the following columns:
+#'     \itemize{
+#'       \item{\code{GrossPhotosynthesis}: Gross photosynthesis (micromol*s-1*m-2).}
+#'       \item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).}
+#'       \item{\code{LeafCiSL}: Sunlit leaf internal CO2 concentration (micromol * mol-1).}
+#'       \item{\code{LeafCiSH}: Shade leaf internal CO2 concentration (micromol * mol-1).}
+#'       \item{\code{LeafTempSL}: Sunlit leaf temperature (ºC).}
+#'       \item{\code{LeafTempSH}: Shade leaf temperature (ºC).}
+#'       \item{\code{LeafVPDSL}: Sunlit leaf vapor pressure deficit (kPa).}
+#'       \item{\code{LeafVPDSH}: Shade leaf vapor pressure deficit (kPa).}
+#'     }
+#'   }
+#'   \item{\code{photo_multilayerPhotosynthesisFunction}: Return a data frame with the following columns:
+#'     \itemize{
+#'       \item{\code{GrossPhotosynthesis}: Gross photosynthesis (micromol*s-1*m-2).}
+#'       \item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).}
+#'     }
+#'   }
+#' }
+#' 
+#' @references
+#' Bernacchi, C. J., E. L. Singsaas, C. Pimentel, A. R. Portis, and S. P. Long. 2001. Improved temperature response functions for models of Rubisco-limited photosynthesis. Plant, Cell and Environment 24:253–259.
+#' 
+#' Collatz, G. J., J. T. Ball, C. Grivet, and J. A. Berry. 1991. Physiological and environmental regulation of stomatal conductance, photosynthesis and transpiration: a model that includes a laminar boundary layer. Agricultural and Forest Meteorology 54:107–136.
+#' 
+#' Farquhar, G. D., S. von Caemmerer, and J. A. Berry. 1980. A biochemical model of photosynthetic CO2 assimilation in leaves of C3 species. Planta 149:78–90.
+#' 
+#' Leuning, R. 2002. Temperature dependence of two parameters in a photosynthesis model. Plant, Cell and Environment 25:1205–1210.
+#' 
+#' Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2016. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso
+#' \code{\link{hydraulics_supplyFunctionNetwork}}, \code{\link{biophysics_leafTemperature}}, \code{\link{spwb}}
+#' 
+#' @name photo
 photo_GammaTemp <- function(Tleaf) {
     .Call(`_medfate_gammaTemp`, Tleaf)
 }
 
+#' @rdname photo
 photo_KmTemp <- function(Tleaf, Oi = 209.0) {
     .Call(`_medfate_KmTemp`, Tleaf, Oi)
 }
 
+#' @rdname photo
 photo_VmaxTemp <- function(Vmax298, Tleaf) {
     .Call(`_medfate_VmaxTemp`, Vmax298, Tleaf)
 }
 
+#' @rdname photo
 photo_JmaxTemp <- function(Jmax298, Tleaf) {
     .Call(`_medfate_JmaxTemp`, Jmax298, Tleaf)
 }
 
+#' @rdname photo
 photo_electronLimitedPhotosynthesis <- function(Q, Ci, GT, Jmax) {
     .Call(`_medfate_electronLimitedPhotosynthesis`, Q, Ci, GT, Jmax)
 }
 
+#' @rdname photo
 photo_rubiscoLimitedPhotosynthesis <- function(Ci, GT, Km, Vmax) {
     .Call(`_medfate_rubiscoLimitedPhotosynthesis`, Ci, GT, Km, Vmax)
 }
 
+#' @rdname photo
 photo_photosynthesis <- function(Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose = FALSE) {
     .Call(`_medfate_leafphotosynthesis`, Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose)
 }
 
+#' @rdname photo
 photo_leafPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth = 1.0, refLeafArea = 1.0, verbose = FALSE) {
     .Call(`_medfate_leafPhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth, refLeafArea, verbose)
 }
 
+#' @rdname photo
 photo_leafPhotosynthesisFunction2 <- function(E, psiLeaf, Catm, Patm, Tair, vpa, u, SWRabs, LWRnet, Q, Vmax298, Jmax298, leafWidth = 1.0, refLeafArea = 1.0, verbose = FALSE) {
     .Call(`_medfate_leafPhotosynthesisFunction2`, E, psiLeaf, Catm, Patm, Tair, vpa, u, SWRabs, LWRnet, Q, Vmax298, Jmax298, leafWidth, refLeafArea, verbose)
 }
 
+#' @rdname photo
 photo_sunshadePhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, leafWidth = 1.0, verbose = FALSE) {
     .Call(`_medfate_sunshadePhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, leafWidth, verbose)
 }
 
+#' @rdname photo
 photo_multilayerPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, leafWidth = 1.0, verbose = FALSE) {
     .Call(`_medfate_multilayerPhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, leafWidth, verbose)
 }
 
+#' Root functions
+#' 
+#' Functions to calculate properties of fine/coarse roots within the soil, given root system parameters and soil layer definition.
+#' 
+#' @param Z50 A vector of depths (in mm) corresponding to 50\% of roots.
+#' @param Z95 A vector of depths (in mm) corresponding to 95\% of roots.
+#' @param Zcone A vector of depths (in mm) corresponding to the root cone tip.
+#' @param d The width (in mm) corresponding to each soil layer.
+#' @param v Vector of proportions of fine roots in each soil layer.
+#' @param depthWidthRatio Ratio between radius of the soil layer with the largest radius and maximum rooting depth.
+#' @param rfc Percentage of rock fragment content (volume basis) for each layer.
+#' @param Kmax_rootxylem Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).
+#' @param VCroot_kmax Root xylem maximum conductance per leaf area (mmol·m-2·s-1·MPa-1). 
+#' @param Al2As Leaf area to sapwood area ratio (in m2·m-2).
+#' @param specificRootLength Specific fine root length (length of fine roots over weight).
+#' @param rootTissueDensity Fine root tissue density (weight over volume at turgidity).
+#' @param Ksoil Soil saturated conductivity (mmol·m-1·s-1·MPa-1).
+#' @param krhizo Rhizosphere maximum conductance per leaf area (mmol·m-2·s-1·MPa-1).
+#' @param lai Leaf area index.
+#' @param rootLengthDensity Fine root length density (length of fine roots over soil volume; cm/cm3)
+#' @param fineRootBiomass Biomass of fine roots (g).
+#' @param V Matrix of proportions of fine roots (cohorts x soil layers).
+#' @param VolInd Volume of soil (in m3) occupied by coarse roots per individual. 
+#' @param N Density of individuals per hectare.
+#' @param poolProportions Division of the stand area among plant cohorts (proportions).
+#' 
+#' @details
+#' \itemize{
+#'   \item{\code{root_conicDistribution()} assumes a (vertical) conic distribution of fine roots, whereas \code{root_ldrDistribution()} distributes fine roots according to the linear dose response model of Schenck & Jackson (2002). Return a matrix of fine root proportions in each layer with as many rows as elements in \code{Z} (or \code{Z50}) and as many columns as soil layers.}
+#'   \item{\code{root_coarseRootLengths()} and \code{root_coarseRootLengthsFromVolume()} estimate the length of coarse roots (mm) for each soil layer, including axial and radial lengths.}
+#'   \item{\code{root_coarseRootSoilVolume} estimates the soil volume (m3) occupied by coarse roots of an individual.}
+#'   \item{\code{root_coarseRootSoilVolumeFromConductance} estimates the soil volume (m3) occupied by coarse roots of an individual from root xylem conductance.}
+#'   \item{\code{root_fineRootHalfDistance()} calculates the half distance (cm) between neighbouring fine roots.}
+#'   \item{\code{root_fineRootRadius()} calculates the radius of fine roots (cm).}
+#'   \item{\code{root_fineRootAreaIndex()} estimates the fine root area index for a given soil conductivity and maximum rhizosphere conductance.}
+#'   \item{\code{root_fineRootBiomass()} estimates the biomass of fine roots (g dry/individual) for a given soil conductivity and maximum rhizosphere conductance.}
+#'   \item{\code{root_rhizosphereMaximumConductance()} is the inverse of the preceeding function, i.e. it estimates rhizosphere conductance from soil conductivity and fine root biomass.}
+#'   \item{\code{root_fineRootSoilVolume()} calculates the soil volume (m3) occupied with fine roots.}
+#'   \item{\code{root_specificRootSurfaceArea()} returns the specific fine root area (cm2/g).}
+#'   \item{\code{root_individualRootedGroundArea()} calculates the area (m2) covered by roots of an individual, for each soil layer.}
+#'   \item{\code{root_horizontalProportions()} calculates the (horizontal) proportion of roots of each cohort in the water pool corresponding to itself and that of other cohorts, for each soil layer. Returns a list (with as many elements as cohorts) with each element being a matrix.}
+#'   }
+#' 
+#' @references
+#' Schenk, H., Jackson, R., 2002. The global biogeography of roots. Ecol. Monogr. 72, 311–328.
+#' 
+#' Sperry, J. S., Y. Wang, B. T. Wolfe, D. S. Mackay, W. R. L. Anderegg, N. G. Mcdowell, and W. T. Pockman. 2016. Pragmatic hydraulic theory predicts stomatal responses to climatic water deficits. New Phytologist 212, 577–589.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso
+#'  \code{\link{spwb}}, \code{\link{spwb_ldrOptimization}}, \code{\link{forest2spwbInput}}, \code{\link{soil}}
+#'
+#' @examples
+#' #Load example plot plant data
+#' data(exampleforestMED)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' ntree = nrow(exampleforestMED$treeData)
+#' 
+#' #Initialize soil with default soil params
+#' S = soil(defaultSoilParams())
+#' 
+#' #Calculate conic root system for trees
+#' V1 = root_conicDistribution(Z=rep(2000,ntree), S$dVec)            
+#' print(V1)
+#'      
+#' #Calculate LDR root system for trees (Schenck & Jackson 2002)
+#' V2 = root_ldrDistribution(Z50 = rep(200,ntree), 
+#'                           Z95 = rep(1000,ntree), S$dVec)
+#' print(V2)     
+#' 
+#' @name root
 root_conicDistribution <- function(Zcone, d) {
     .Call(`_medfate_conicDistribution`, Zcone, d)
 }
 
+#' @rdname root
 root_ldrDistribution <- function(Z50, Z95, d) {
     .Call(`_medfate_ldrDistribution`, Z50, Z95, d)
 }
@@ -1969,54 +2272,67 @@ root_ldrDistribution <- function(Z50, Z95, d) {
     .Call(`_medfate_rootDistribution`, z, x)
 }
 
+#' @rdname root
 root_individualRootedGroundArea <- function(VolInd, V, d, rfc) {
     .Call(`_medfate_individualRootedGroundArea`, VolInd, V, d, rfc)
 }
 
+#' @rdname root
 root_specificRootSurfaceArea <- function(specificRootLength, rootTissueDensity) {
     .Call(`_medfate_specificRootSurfaceArea`, specificRootLength, rootTissueDensity)
 }
 
+#' @rdname root
 root_fineRootRadius <- function(specificRootLength, rootTissueDensity) {
     .Call(`_medfate_fineRootRadius`, specificRootLength, rootTissueDensity)
 }
 
+#' @rdname root
 root_fineRootHalfDistance <- function(rootLengthDensity) {
     .Call(`_medfate_fineRootHalfDistance`, rootLengthDensity)
 }
 
+#' @rdname root
 root_fineRootAreaIndex <- function(Ksoil, krhizo, lai, specificRootLength, rootTissueDensity, rootLengthDensity) {
     .Call(`_medfate_fineRootAreaIndex`, Ksoil, krhizo, lai, specificRootLength, rootTissueDensity, rootLengthDensity)
 }
 
+#' @rdname root
 root_fineRootBiomass <- function(Ksoil, krhizo, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity) {
     .Call(`_medfate_fineRootBiomassPerIndividual`, Ksoil, krhizo, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity)
 }
 
+#' @rdname root
 root_rhizosphereMaximumConductance <- function(Ksoil, fineRootBiomass, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity) {
     .Call(`_medfate_rhizosphereMaximumConductance`, Ksoil, fineRootBiomass, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity)
 }
 
+#' @rdname root
 root_fineRootSoilVolume <- function(fineRootBiomass, specificRootLength, rootLengthDensity) {
     .Call(`_medfate_fineRootSoilVolume`, fineRootBiomass, specificRootLength, rootLengthDensity)
 }
 
+#' @rdname root
 root_coarseRootSoilVolumeFromConductance <- function(Kmax_rootxylem, VCroot_kmax, Al2As, v, d, rfc) {
     .Call(`_medfate_coarseRootSoilVolumeFromConductance`, Kmax_rootxylem, VCroot_kmax, Al2As, v, d, rfc)
 }
 
+#' @rdname root
 root_coarseRootLengthsFromVolume <- function(VolInd, v, d, rfc) {
     .Call(`_medfate_coarseRootLengthsFromVolume`, VolInd, v, d, rfc)
 }
 
+#' @rdname root
 root_coarseRootLengths <- function(v, d, depthWidthRatio = 1.0) {
     .Call(`_medfate_coarseRootLengths`, v, d, depthWidthRatio)
 }
 
+#' @rdname root
 root_coarseRootSoilVolume <- function(v, d, depthWidthRatio = 1.0) {
     .Call(`_medfate_coarseRootSoilVolume`, v, d, depthWidthRatio)
 }
 
+#' @rdname root
 root_horizontalProportions <- function(poolProportions, VolInd, N, V, d, rfc) {
     .Call(`_medfate_horizontalProportions`, poolProportions, VolInd, N, V, d, rfc)
 }

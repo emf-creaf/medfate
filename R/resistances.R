@@ -58,6 +58,30 @@
   }
   return(resmat)
 }
+
+#' Soil-plant resistances
+#'
+#' Calculates and draws rhizosphere, root, stem and leaf resistances for simulation time steps
+#' 
+#' @param x An object of class \code{\link{spwb}}, \code{\link{pwb}}, \code{\link{growth}} or \code{\link{fordyn}}. The function only works with the result of simulations with \code{transpirationMode = "Sperry"}.
+#' @param cohort An string indicating the cohort for which resistances are desired.
+#' @param relative A boolean flag to indicate that relative percentages are desired as output
+#' @param draw A boolean flag to indicate that a plot should be drawn.
+#' @param cumulative A flag to indicate that drawn series should be cumulative.
+#' @param xlab x-axis label.
+#' @param ylab y-axis label.
+#' 
+#' @details
+#' The function makes internal calls to \code{\link{hydraulics_soilPlantResistances}}.
+#' 
+#' @return 
+#' A data frame with dates in rows and resistance segments in columns (Rhizosphere, Root, Stem and Leaf). 
+#' Values depend on whether \code{relative = TRUE} (percentages) or \code{relative = FALSE} (absolute resistance values). 
+#' If \code{draw = TRUE} then a plot object is returned.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{waterUseEfficiency}}, \code{\link{droughtStress}}
 resistances<-function(x, cohort, relative = FALSE, draw = FALSE, 
                       cumulative = FALSE, xlab = NULL, ylab=NULL) {
   
