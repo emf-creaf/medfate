@@ -74,38 +74,38 @@ transp_stomatalRegulationPlot<-function(x, meteo, day, timestep, latitude, eleva
   df = rbind(df_sunlit, df_shade)
   df$leaf = factor(df$leaf, levels = c("sunlit", "shade"))
   df_PM = df[df$PM,]
-  g<-ggplot(df, aes_string(x="psi"))+
+  g<-ggplot(df, aes(x=.data$psi))+
     xlab("Leaf pressure (-MPa)")+
     facet_wrap(~leaf)+
     theme_bw()
   if(type=="E") {
-    g<- g + geom_path(aes_string(y = "E", col = "cohort"))+
-      geom_point(data = df_PM, aes_string(y="E", col = "cohort"))+
+    g<- g + geom_path(aes(y = .data$E, col = .data$cohort))+
+      geom_point(data = df_PM, aes(y=.data$E, col = .data$cohort))+
       ylab(expression(paste("Flow rate "(mmol%.%s^{-1}%.%m^{-2}))))
   } 
   else if(type=="Ag") {
-    g<- g + geom_path(aes_string(y = "Ag", col = "cohort"))+
-      geom_point(data = df_PM, aes_string(y="Ag", col = "cohort"))+
+    g<- g + geom_path(aes(y = .data$Ag, col = .data$cohort))+
+      geom_point(data = df_PM, aes(y=.data$Ag, col = .data$cohort))+
       ylab(expression(paste("Gross photosynthesis "(mu*mol*C%.%s^{-1}%.%m^{-2}))))
   } 
   else if(type=="An") {
-    g<- g + geom_path(aes_string(y = "An", col = "cohort"))+
-      geom_point(data = df_PM, aes_string(y="An", col = "cohort"))+
+    g<- g + geom_path(aes(y = .data$An, col = .data$cohort))+
+      geom_point(data = df_PM, aes(y=.data$An, col = .data$cohort))+
       ylab(expression(paste("Net photosynthesis "(mu*mol*C%.%s^{-1}%.%m^{-2}))))
   } 
   else if(type=="Gsw") {
-    g<- g + geom_path(aes_string(y = "Gsw", col = "cohort"))+
-      geom_point(data = df_PM, aes_string(y="Gsw", col = "cohort"))+
+    g<- g + geom_path(aes(y = .data$Gsw, col = .data$cohort))+
+      geom_point(data = df_PM, aes(y=.data$Gsw, col = .data$cohort))+
       ylab(expression(paste("Stomatal conductance "(mol%.%s^{-1}%.%m^{-2}))))
   } 
   else if(type=="T") {
-    g<- g + geom_path(aes_string(y = "Temp", col = "cohort"))+
-      geom_point(data = df_PM, aes_string(y="Temp", col = "cohort"))+
+    g<- g + geom_path(aes(y = .data$Temp, col = .data$cohort))+
+      geom_point(data = df_PM, aes(y=.data$Temp, col = .data$cohort))+
       ylab("Temperature (degrees C)")
   } 
   else if(type=="VPD") {
-    g<- g + geom_path(aes_string(y = "VPD", col = "cohort"))+
-      geom_point(data = df_PM, aes_string(y="VPD", col = "cohort"))+
+    g<- g + geom_path(aes(y = .data$VPD, col = .data$cohort))+
+      geom_point(data = df_PM, aes(y=.data$VPD, col = .data$cohort))+
       ylab("Vapour pressure deficit (kPa)")
   } 
   g <- g + scale_color_discrete(name="")

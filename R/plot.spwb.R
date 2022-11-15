@@ -640,9 +640,9 @@ plot.fordyn<-function(x, type="StandBasalArea",
     df$group = paste0(as.character(out[["Cohort"]]), " (", as.character(out[["Name"]]),")")
   }
   df = df[!is.na(df$y),]
-  g<-ggplot(df, aes_string(x="Step", y="y"))
+  g<-ggplot(df, aes(x=.data$Step, y=.data$y))
   if("group" %in% names(df)) {
-    g <- g+ geom_line(aes_string(col="group"))+
+    g <- g+ geom_line(aes(col=.data$group))+
       scale_color_discrete(name="")
   } else {
     g <- g+ geom_line()

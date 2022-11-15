@@ -1,3 +1,11 @@
+#' @rdname moisture
+#' 
+#' @param x An object of class \code{\link{spwbInput}}.
+#' @param segment Segment whose relative water content curve to plot, either \code{"stem"} or \code{"leaf"}.
+#' @param fraction  Tissue fraction, either \code{"symplastic"}, \code{"apoplastic"} or \code{"all"}.
+#' @param psiVec Vector of water potential values to evaluate for the pressure-volume curve.
+#' @param speciesNames A flag to indicate the use of species names instead of cohort names in plots.
+#' 
 moisture_pressureVolumeCurvePlot<-function(x, segment="leaf", 
                                            fraction = "all",
                                            psiVec =  seq(-0.1, -8.0, by =-0.01),

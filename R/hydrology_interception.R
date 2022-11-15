@@ -101,13 +101,13 @@ hydrology_interceptionPlot<-function(x, SpParams, ER = 0.05, gdd = NA, throughfa
   xlab="Gross rainfall (mm)"
   ylim=c(0,100)
   df = data.frame(P = precipitation, RT = rt, ER = paste0("ER = ",er))
-  g<-ggplot(df, aes_string(x="P", y="RT"))+
+  g<-ggplot(df, aes(x=.data$P, y=.data$RT))+
     xlab(xlab)+ylab(ylab)+ylim(ylim)+
     theme_bw()
   if(length(ER)==1) {
     g<-g + geom_path()
   } else {
-    g<-g + geom_path(aes_string(col="ER", linetype="ER"))+
+    g<-g + geom_path(aes(col=.data$ER, linetype=.data$ER))+
       scale_color_discrete(name="")+
       scale_linetype_discrete(name="")
   }

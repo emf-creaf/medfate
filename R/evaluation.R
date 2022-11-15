@@ -387,15 +387,15 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
                           temporalResolution = "day",
                           plotType = "dynamics") {
   scatterplot<-function(df, xlab="", ylab="", title=NULL, err = FALSE) {
-    g<-ggplot(df, aes_string(x="Modelled"))
+    g<-ggplot(df, aes(x=.data$Modelled))
     if(err) {
       g<-g+
-        geom_pointrange(aes_string(y = "Observed", ymin = "obs_lower", ymax = "obs_upper"),cex=0.5)
+        geom_pointrange(aes(y = .data$Observed, ymin = .data$obs_lower, ymax = .data$obs_upper),cex=0.5)
     }
     g<-g + 
-      geom_point(aes_string(y = "Observed"), cex=0.5)+
+      geom_point(aes(y = .data$Observed), cex=0.5)+
       geom_abline(intercept=0, slope=1, col="black")+
-      geom_smooth(aes_string(y = "Observed"), method="lm", se = FALSE, col="gray", linetype="dashed")+
+      geom_smooth(aes(y = .data$Observed), method="lm", se = FALSE, col="gray", linetype="dashed")+
       xlab(xlab)+
       ylab(ylab)+
       theme_bw()
@@ -404,15 +404,15 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
   }
   dynamicsplot<-function(df, xlab="", ylab="", title=NULL, err = FALSE,
                          str_obs = "Observed", str_mod = "Modelled") {
-    g<-ggplot(df, aes_string(x="Dates"))
+    g<-ggplot(df, aes(x=.data$Dates))
     if(err) {
       g <- g +          
-        geom_ribbon(aes_(ymin=~obs_lower, ymax=~obs_upper), 
+        geom_ribbon(aes(ymin=.data$obs_lower, ymax=.data$obs_upper), 
                     col="gray", alpha= 0.5)
     }
     g<-g+       
-      geom_path(aes_(y=~Observed, col="Observed"))+
-      geom_path(aes_(y=~Modelled, col="Modelled"))+
+      geom_path(aes(y=.data$Observed, col="Observed"))+
+      geom_path(aes(y=.data$Modelled, col="Modelled"))+
       xlab(xlab)+
       ylab(ylab)+
       scale_color_manual(name="", 
@@ -622,10 +622,10 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     
     if(plotType=="dynamics"){
       g<-ggplot(df)+
-        geom_path(aes_(x=~Dates, y=~PD_mod, col="Predawn", linetype="Predawn"))+
-        geom_path(aes_(x=~Dates, y=~MD_mod, col="Midday", linetype="Midday"))+
-        geom_pointrange(aes_(x = ~Dates, y = ~PD_obs, ymin = ~PD_obs_lower, ymax = ~PD_obs_upper, col="Predawn", linetype="Predawn"))+
-        geom_pointrange(aes_(x = ~Dates, y = ~MD_obs, ymin = ~MD_obs_lower, ymax = ~MD_obs_upper, col="Midday",linetype="Midday"))+
+        geom_path(aes(x=.data$Dates, y=.data$PD_mod, col="Predawn", linetype="Predawn"))+
+        geom_path(aes(x=.data$Dates, y=.data$MD_mod, col="Midday", linetype="Midday"))+
+        geom_pointrange(aes(x = .data$Dates, y = .data$PD_obs, ymin = .data$PD_obs_lower, ymax = .data$PD_obs_upper, col="Predawn", linetype="Predawn"))+
+        geom_pointrange(aes(x = .data$Dates, y = .data$MD_obs, ymin = .data$MD_obs_lower, ymax = .data$MD_obs_upper, col="Midday",linetype="Midday"))+
         scale_color_manual(name="", values=c("Predawn"="blue", "Midday"= "red"))+
         scale_linetype_manual(name="", values=c("Predawn"="dashed", "Midday"= "solid"))+
         labs(title=paste0(cohort , " (",spnames[icoh],")"))+
@@ -635,10 +635,10 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     } else {
       g<-ggplot(df)+
         geom_abline(intercept=0, slope=1, col="black")+
-        geom_pointrange(aes_(x = ~PD_mod, y = ~PD_obs, ymin = ~PD_obs_lower, ymax = ~PD_obs_upper, col="Predawn"))+
-        geom_pointrange(aes_(x = ~MD_mod, y = ~MD_obs, ymin = ~MD_obs_lower, ymax = ~MD_obs_upper,col="Midday"))+
-        geom_smooth(aes_(x = ~PD_mod, y = ~PD_obs, col="Predawn"), method="lm", se = FALSE, linetype="dashed")+
-        geom_smooth(aes_(x = ~MD_mod, y = ~MD_obs, col="Midday"), method="lm", se = FALSE, linetype="dashed")+
+        geom_pointrange(aes(x = .data$PD_mod, y = .data$PD_obs, ymin = .data$PD_obs_lower, ymax = .data$PD_obs_upper, col="Predawn"))+
+        geom_pointrange(aes(x = .data$MD_mod, y = .data$MD_obs, ymin = .data$MD_obs_lower, ymax = .data$MD_obs_upper,col="Midday"))+
+        geom_smooth(aes(x = .data$PD_mod, y = .data$PD_obs, col="Predawn"), method="lm", se = FALSE, linetype="dashed")+
+        geom_smooth(aes(x = .data$MD_mod, y = .data$MD_obs, col="Midday"), method="lm", se = FALSE, linetype="dashed")+
         scale_color_manual(name="", values=c("Predawn"="blue", "Midday"= "red"))+
         labs(title=paste0(cohort , " (",spnames[icoh],")"))+
         xlab("Modelled leaf water potential (MPa)")+

@@ -12,12 +12,13 @@ forest functioning and dynamics, using cohort-based description of
 forest stands. The package provides functions to simulate the following
 processes:
 
--   Soil water balance (De Cáceres et al. 2015)
--   Plant hydraulics, transpiration and photosynthesis (De Cáceres et
-    al. 2021)
--   Carbon balance, plant growth, senescence and mortality (in
-    preparation)
--   Forest dynamics (in preparation)
+- Soil water balance (De Cáceres et al. 2015)
+- Plant hydraulics, transpiration and photosynthesis (De Cáceres et
+  al. 2021)
+- Carbon balance, plant growth, senescence and mortality (De Cáceres et
+  al. under review)
+- Forest dynamics, including recruitment and management (De Cáceres et
+  al. under review)
 
 The models are parameterized for species of the Mediterranean region
 (particularly for Catalonia, NE Spain), but forests with different
@@ -55,32 +56,37 @@ During the development of **medfate** some functions have been
 originally placed there and then moved to more specialized packages
 which evolve together with **medfate**:
 
--   Package [**meteoland**](https://github.com/emf-creaf/meteoland)
-    allows generating daily weather input for simulation models in
-    **medfate**.
--   Package [**medfateland**](https://github.com/emf-creaf/medfateland)
-    extends **medfate** by allowing simulations to be performed in a
-    spatially explicit context.
--   Package
-    [**medfateutils**](https://github.com/emf-creaf/medfateutils)
-    provides functions to help initializing vegetation, soil and species
-    parameter inputs for **medfate** simulation functions.
+- Package [**meteoland**](https://github.com/emf-creaf/meteoland) allows
+  generating daily weather input for simulation models in **medfate**.
+- Package [**medfateland**](https://github.com/emf-creaf/medfateland)
+  extends **medfate** by allowing simulations to be performed in a
+  spatially explicit context.
+- Package [**medfateutils**](https://github.com/emf-creaf/medfateutils)
+  provides functions to help initializing vegetation, soil and species
+  parameter inputs for **medfate** simulation functions.
 
 The set of R packages are developed and maintained by the [*Ecosystem
 Modelling Facility*](https://emf.creaf.cat) at CREAF (Spain).
 
 ## References
 
--   De Cáceres M, Martínez-Vilalta J, Coll L, Llorens P, Casals P,
-    Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance
-    model with forest inventory data to predict drought stress: the role
-    of forest structural changes vs. climate changes. Agricultural and
-    Forest Meteorology 213: 77-90
-    (<https://doi.org/10.1016/j.agrformet.2015.06.012>).
+- De Cáceres M, Martínez-Vilalta J, Coll L, Llorens P, Casals P, Poyatos
+  R, Pausas JG, Brotons L. (2015) Coupling a water balance model with
+  forest inventory data to predict drought stress: the role of forest
+  structural changes vs. climate changes. Agricultural and Forest
+  Meteorology 213: 77-90
+  (<https://doi.org/10.1016/j.agrformet.2015.06.012>).
 
--   De Cáceres M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L,
-    Poyatos R, Cabon A, Granda V, Forner A, Valladares F,
-    Martínez-Vilalta J (2021) Unravelling the effect of species mixing
-    on water use and drought stress in holm oak forests: a modelling
-    approach. Agricultural and Forest Meteorology 296
-    (<https://doi.org/10.1016/j.agrformet.2020.108233>).
+- De Cáceres M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L,
+  Poyatos R, Cabon A, Granda V, Forner A, Valladares F, Martínez-Vilalta
+  J (2021) Unravelling the effect of species mixing on water use and
+  drought stress in holm oak forests: a modelling approach. Agricultural
+  and Forest Meteorology 296
+  (<https://doi.org/10.1016/j.agrformet.2020.108233>).
+
+- De Cáceres M, Molowny-Horas R, Cabon A, Martínez-Vilalta J, Mencuccini
+  M, García-Valdés R, Nadal-Sala D, Sabaté S, Martin-StPaul N, Morin N,
+  Batllori E, Améztegui A (under review) MEDFATE 2.8.1: A trait-enabled
+  model to simulate Mediterranean forest function and dynamics at
+  regional scales. Geophysical Model Development
+  (<https://doi.org/10.5194/gmd-2022-243>).

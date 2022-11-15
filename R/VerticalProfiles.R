@@ -70,7 +70,7 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, mode 
     lai = 100*lai/w
     if(draw) {
       df = data.frame("lai" = c(0,lai), "z" = z)
-      g<-ggplot(df, aes_string(x="lai", y="z"))+
+      g<-ggplot(df, aes(x=.data$lai, y=.data$z))+
         geom_path()+
         xlab("Leaf Area Density (m2/m3)")+
         ylab("Height (cm)")+
@@ -89,8 +89,8 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, mode 
       lai = rbind(rep(0, ncol(lai)),lai)
       df = data.frame("lai" = as.vector(lai), "z" = z,
                       "Cohort" = gl(length(cohortnames), nrow(lai), labels=cohortnames))
-      g<-ggplot(df, aes_string(x="lai", y="z"))+
-        geom_path(aes_string(col="Cohort", linetype = "Cohort"))+
+      g<-ggplot(df, aes(x=.data$lai, y=.data$z))+
+        geom_path(aes(col=.data$Cohort, linetype = .data$Cohort))+
         xlab("Leaf Area Density (m2/m3)")+
         ylab("Height (cm)")+
         scale_color_discrete(name="")+
@@ -138,7 +138,7 @@ vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA, mode = "MED"
   wfp = .woodyFuelProfile(z,x, SpParams, gdd, mode = mode)
   df = data.frame("BD" = c(0,wfp), "Z" = z)
   if(draw) {
-    g<-ggplot(df, aes_string(x="BD", y="Z"))+
+    g<-ggplot(df, aes(x=.data$BD, y=.data$Z))+
       geom_path()+
       xlab("Bulk density (kg/m3)")+
       ylab("Height (cm)")+
@@ -156,7 +156,7 @@ vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, mode = "MED",
   pep = .parExtinctionProfile(z,x, SpParams, gdd, mode = mode)
   df = data.frame("PEP" = pep, "Z" = z)
   if(draw) {
-    g<-ggplot(df, aes_string(x="PEP", y="Z"))+
+    g<-ggplot(df, aes(x=.data$PEP, y=.data$Z))+
       geom_path()+
       xlab("Available PAR (%)")+
       ylab("Height (cm)")+
@@ -174,7 +174,7 @@ vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, mode = "MED",
   swr = .swrExtinctionProfile(z,x, SpParams, gdd, mode = mode)
   df = data.frame("SWR" = swr, "Z" = z)
   if(draw) {
-    g<-ggplot(df, aes_string(x="SWR", y="Z"))+
+    g<-ggplot(df, aes(x=.data$SWR, y=.data$Z))+
       geom_path()+
       xlab("Available SWR (%)")+
       ylab("Height (cm)")+
@@ -198,15 +198,15 @@ vprofile_windExtinction<-function(x, SpParams, u = 1, windMeasurementHeight = 20
   target = match.arg(target, c("windspeed", "kineticenergy", "stress"))
   if(draw) {
     if(target=="windspeed") {
-      g<-ggplot(df, aes_string(x="u", y="zmid"))+
+      g<-ggplot(df, aes(x=.data$u, y=.data$zmid))+
         geom_path()+
         xlab("Wind speed (m/s)")
     } else if(target == "kineticenergy") {
-      g<-ggplot(df, aes_string(x="k", y="zmid"))+
+      g<-ggplot(df, aes(x=.data$k, y=.data$zmid))+
         geom_path()+
         xlab("Turbulent kinetic energy (m2/s2)")
     } else if(target == "stress") {
-      g<-ggplot(df, aes_string(x="uw", y="zmid"))+
+      g<-ggplot(df, aes(x=.data$uw, y=.data$zmid))+
         geom_path()+
         xlab("Reynolds stress (m2/s2)")
     }

@@ -3,8 +3,8 @@
   df = data.frame("X" = as.vector(x), 
                   "Y" = y,
                   "Cohort" = gl(length(colnames(x)), nrow(x), labels=labels))
-  g<-ggplot(df, aes_string(x="X", y="Y"))+
-    geom_path(aes_string(col="Cohort", linetype = "Cohort"))+
+  g<-ggplot(df, aes(x=.data$X, y=.data$Y))+
+    geom_path(aes(col=.data$Cohort, linetype = .data$Cohort))+
     scale_color_discrete(name="")+
     scale_linetype_discrete(name="")+
     theme_bw()+
@@ -18,8 +18,8 @@
   if(is.null(labels)) labels = colnames(y)
   df = data.frame("Y" = as.vector(y), "X" = x,
                   "Cohort" = gl(length(colnames(y)), nrow(y), labels=labels))
-  g<-ggplot(df, aes_string(x="X", y="Y"))+
-    geom_path(aes_string(col="Cohort", linetype = "Cohort"))+
+  g<-ggplot(df, aes(x=.data$X, y=.data$Y))+
+    geom_path(aes(col=.data$Cohort, linetype = .data$Cohort))+
     scale_color_discrete(name="")+
     scale_linetype_discrete(name="")+
     theme_bw()+
@@ -34,13 +34,13 @@
   df = data.frame("Y" = as.vector(x), 
                   "Date" = as.Date(rownames(x)),
                   "Cohort" = gl(length(colnames(x)), nrow(x), labels=labels))
-  g<-ggplot(df, aes_string(x="Date", y="Y"))
+  g<-ggplot(df, aes(x=.data$Date, y=.data$Y))
   if(length(labels)<=10) {
-    g<- g + geom_line(aes_string(col="Cohort", linetype = "Cohort"))+
+    g<- g + geom_line(aes(col=.data$Cohort, linetype = .data$Cohort))+
       scale_color_discrete(name="")+
       scale_linetype_discrete(name="")
   } else {
-    g<- g + geom_line(aes_string(group="Cohort"))
+    g<- g + geom_line(aes(group=.data$Cohort))
   }
   g<-g+theme_bw()+xlab(xlab)
   if(!is.null(ylim)) g <- g+ylim(ylim)
@@ -53,8 +53,8 @@
                   "Y2" = as.vector(x2),
                   "Date" = as.Date(rownames(x1)),
                   "Cohort" = gl(length(colnames(x1)), nrow(x1), labels=labels))
-  g<-ggplot(df, aes_string(x="Date"))+
-    geom_ribbon(aes_string(ymin = "Y2", ymax="Y1",fill="Cohort"), alpha = 0.5)+
+  g<-ggplot(df, aes(x=.data$Date))+
+    geom_ribbon(aes(ymin = .data$Y2, ymax=.data$Y1,fill=.data$Cohort), alpha = 0.5)+
     scale_fill_discrete(name="")+
     theme_bw()+
     xlab(xlab)
@@ -69,8 +69,8 @@
   df = data.frame("Y" = as.vector(as.matrix(x[,-1])), 
                   "DateTime" = as.POSIXct(x$datetime),
                   "Cohort" = gl(length(names(x)[-1]), nrow(x), labels=labels))
-  g<-ggplot(df, aes_string(x="DateTime", y="Y"))+
-    geom_line(aes_string(col="Cohort", linetype = "Cohort"))+
+  g<-ggplot(df, aes(x=.data$DateTime, y=.data$Y))+
+    geom_line(aes(col=.data$Cohort, linetype = .data$Cohort))+
     scale_color_discrete(name="")+
     scale_linetype_discrete(name="")+
     theme_bw()+
@@ -91,8 +91,8 @@
                      "LeafType" = "Shade", stringsAsFactors = F)
   df = as.data.frame(rbind(df_sl, df_sh), stringsAsFactors = F)
   df$LeafType = factor(df$LeafType, levels =c("Sunlit","Shade"))
-  g<-ggplot(df, aes_string(x="DateTime", y="Y"))+
-    geom_line(aes_string(col="Cohort", linetype = "Cohort"))+
+  g<-ggplot(df, aes(x=.data$DateTime, y=.data$Y))+
+    geom_line(aes(col=.data$Cohort, linetype = .data$Cohort))+
     facet_wrap(~LeafType, ncol=1)+
     scale_color_discrete(name="")+
     scale_linetype_discrete(name="")+
@@ -105,7 +105,7 @@
 .single_dynamics<-function(x, xlab="", ylab=NULL, ylim = NULL) {
   df = data.frame("Y" = x, 
                   "Date" = as.Date(names(x)))
-  g<-ggplot(df, aes_string(x = "Date", y= "Y"))+
+  g<-ggplot(df, aes(x = .data$Date, y= .data$Y))+
     geom_line()+
     scale_color_discrete(name="")+
     scale_linetype_discrete(name="")+
@@ -119,7 +119,7 @@
 .single_subday_dynamics <-function(x, xlab="Time step", ylab=NULL, ylim = NULL) {
   df = data.frame("Y" = x, 
                   "TimeStep" = 1:length(x))
-  g<-ggplot(df, aes_string(x = "TimeStep", y= "Y"))+
+  g<-ggplot(df, aes(x = .data$TimeStep, y= .data$Y))+
     geom_line()+
     scale_color_discrete(name="")+
     scale_linetype_discrete(name="")+
@@ -135,9 +135,8 @@
   df = data.frame("Y" = as.vector(x), 
                   "TimeStep" = as.numeric(rownames(x)),
                   "Cohort" = gl(length(colnames(x)), nrow(x), labels=labels))
-  g<-ggplot(df, aes_string(x="TimeStep", 
-                           y="Y"))+
-    geom_line(aes_string(col="Cohort", linetype = "Cohort"))+
+  g<-ggplot(df, aes(x=.data$TimeStep, y=.data$Y))+
+    geom_line(aes(col=.data$Cohort, linetype = .data$Cohort))+
     scale_color_discrete(name="")+
     scale_linetype_discrete(name="")+
     theme_bw()+
@@ -159,8 +158,8 @@
                      "LeafType" = "Shade", stringsAsFactors = F)
   df = as.data.frame(rbind(df_sl, df_sh), stringsAsFactors = F)
   df$LeafType = factor(df$LeafType, levels =c("Sunlit","Shade"))
-  g<-ggplot(df, aes_string(x="TimeStep", y="Y"))+
-    geom_line(aes_string(col="Cohort", linetype = "Cohort"))+
+  g<-ggplot(df, aes(x=.data$TimeStep, y=.data$Y))+
+    geom_line(aes(col=.data$Cohort, linetype = .data$Cohort))+
     facet_wrap(~LeafType, ncol=2)+
     scale_color_discrete(name="")+
     scale_linetype_discrete(name="")+

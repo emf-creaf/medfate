@@ -469,9 +469,9 @@
                       PET = tapply(df$PET,INDEX=date.factor, FUN=sum, na.rm=TRUE))
     }
     g<-ggplot(df)+
-      geom_area(aes_string(x="Date", y="Precipitation", fill='"Precipitation"'))+
-      geom_area(aes_string(x="Date", y="Snow", fill='"Snow"'))+
-      geom_path(aes_string(x="Date", y="PET", col='"PET"'))+
+      geom_area(aes(x=.data$Date, y=.data$Precipitation, fill='"Precipitation"'))+
+      geom_area(aes(x=.data$Date, y=.data$Snow, fill='"Snow"'))+
+      geom_path(aes(x=.data$Date, y=.data$PET, col='"PET"'))+
       scale_fill_manual(name="", values=c("Precipitation"="black", "Snow"="red"))+
       scale_color_manual(name="", values=c("PET"="gray"))+
       ylab(ylab)+ xlab(xlab)+
@@ -492,8 +492,8 @@
                       PET = tapply(df$PET,INDEX=date.factor, FUN=sum, na.rm=TRUE))
     }
     g<-ggplot(df)+
-      geom_area(aes_string(x="Date", y="NetRain", fill='"NetRain"'))+
-      geom_path(aes_string(x="Date", y="PET", col='"PET"'))+
+      geom_area(aes(x=.data$Date, y=.data$NetRain, fill='"NetRain"'))+
+      geom_path(aes(x=.data$Date, y=.data$PET, col='"PET"'))+
       scale_fill_manual(name="", values=c("NetRain"="black"))+
       scale_color_manual(name="", values=c("PET"="gray"))+
       ylab(ylab)+xlab(xlab)+
@@ -532,8 +532,8 @@
                       Snowpack = tapply(df$Snowpack,INDEX=date.factor, FUN=mean, na.rm=TRUE))
     }
     g<-ggplot(df)+
-      geom_area(aes_string(x="Date", y="Snow", fill='"Snow"'))+
-      geom_path(aes_string(x="Date", y="Snowpack", col='"Snowpack"'))+
+      geom_area(aes(x=.data$Date, y=.data$Snow, fill="Snow"))+
+      geom_path(aes(x=.data$Date, y=.data$Snowpack, col="Snowpack"))+
       scale_fill_manual(name="", values=c("Snow"="black"))+
       scale_color_manual(name="", values=c("Snowpack"="gray"))+
       ylab(ylab)+xlab(xlab)+
@@ -568,9 +568,9 @@
                       Runoff = tapply(df$Runoff,INDEX=date.factor, FUN=sum, na.rm=TRUE))
     }
     g<-ggplot(df)+
-      geom_line(aes_string(x="Date", y="Export", col='"Export"'))+
-      geom_line(aes_string(x="Date", y="DeepDrainage", col='"Deep drainage"'))+
-      geom_line(aes_string(x="Date", y="Runoff", col='"Runoff"'))+
+      geom_line(aes(x=.data$Date, y=.data$Export, col="Export"))+
+      geom_line(aes(x=.data$Date, y=.data$DeepDrainage, col="Deep drainage"))+
+      geom_line(aes(x=.data$Date, y=.data$Runoff, col="Runoff"))+
       scale_color_manual(name="", values=c("Export"="black", "Deep drainage" = "blue", "Runoff" = "red"))+
       ylab(ylab)+ xlab(xlab)+
       theme_bw()
