@@ -344,7 +344,7 @@ fordyn<-function(forest, soil, SpParams,
     # 2.3 Call management function if required
     cutTreeTableYear = NULL
     cutShrubTableYear = NULL
-    if((!is.null(management_function)) && (!is.null(management_args))) {
+    if(!is.null(management_function)) {
       res = do.call(management_function, list(x = forest, args= management_args, verbose = FALSE))
       if(verboseDyn) cat(paste0(" & management [", res$action,"]"))
       # Update forest and xo objects
