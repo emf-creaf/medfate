@@ -345,6 +345,7 @@ fordyn<-function(forest, soil, SpParams,
     cutTreeTableYear = NULL
     cutShrubTableYear = NULL
     planted_forest = emptyforest()
+    eval(management_args)
     if(!is.null(management_function)) {
       if(!is.null(management_args)) {
         res = do.call(management_function, list(x = forest, args= management_args, verbose = FALSE))
