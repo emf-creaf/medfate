@@ -94,6 +94,8 @@
 #' @name defaultManagementFunction
 defaultManagementFunction<-function(x, args, verbose = FALSE) {
   
+  if(is.null(args)) stop("Please supply a list of management arguments")
+  
   ntree = nrow(x$treeData)
   nshrub = nrow(x$shrubData)
   # Initialize output data

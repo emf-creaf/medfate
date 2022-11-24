@@ -345,41 +345,39 @@ fordyn<-function(forest, soil, SpParams,
     cutTreeTableYear = NULL
     cutShrubTableYear = NULL
     planted_forest = emptyforest()
-    eval(management_args)
+    
     if(!is.null(management_function)) {
-      if(!is.null(management_args)) {
-        res = do.call(management_function, list(x = forest, args= management_args, verbose = FALSE))
-        if(verboseDyn) cat(paste0(" & management [", res$action,"]"))
-        # Update forest and xo objects
-        forest$treeData$N <- pmax(0,forest$treeData$N - res$N_tree_cut)
-        xo$above$N[isTree] <- forest$treeData$N
-        forest$shrubData$Cover <- pmax(0,forest$shrubData$Cover - res$Cover_shrub_cut)
-        xo$above$Cover[!isTree] <- forest$shrubData$Cover
-        # Update cut tables
-        cutTreeTableYear = .createCutTreeTable(iYear, year, xo, res$N_tree_cut)
-        cutShrubTableYear = .createCutShrubTable(iYear, year, xo, res$Cover_shrub_cut)
-        # Retrieve plantation information
-        planted_forest <- res$planted_forest
-        if(nrow(planted_forest$treeData)>0) {
-          for(i in 1:nrow(planted_forest$treeData)) {
-            planted_forest$treeData$Z50[i] = species_parameter(planted_forest$treeData$Species[i], SpParams,"RecrZ50")
-            planted_forest$treeData$Z95[i] = species_parameter(planted_forest$treeData$Species[i], SpParams,"RecrZ95")
-            if(is.na(planted_forest$treeData$Z50[i])) planted_forest$treeData$Z50[i] = 250
-            if(is.na(planted_forest$treeData$Z95[i])) planted_forest$treeData$Z95[i] = 500
-          }
+      res = do.call(management_function, list(x = forest, args= management_args, verbose = FALSE))
+      if(verboseDyn) cat(paste0(" & management [", res$action,"]"))
+      # Update forest and xo objects
+      forest$treeData$N <- pmax(0,forest$treeData$N - res$N_tree_cut)
+      xo$above$N[isTree] <- forest$treeData$N
+      forest$shrubData$Cover <- pmax(0,forest$shrubData$Cover - res$Cover_shrub_cut)
+      xo$above$Cover[!isTree] <- forest$shrubData$Cover
+      # Update cut tables
+      cutTreeTableYear = .createCutTreeTable(iYear, year, xo, res$N_tree_cut)
+      cutShrubTableYear = .createCutShrubTable(iYear, year, xo, res$Cover_shrub_cut)
+      # Retrieve plantation information
+      planted_forest <- res$planted_forest
+      if(nrow(planted_forest$treeData)>0) {
+        for(i in 1:nrow(planted_forest$treeData)) {
+          planted_forest$treeData$Z50[i] = species_parameter(planted_forest$treeData$Species[i], SpParams,"RecrZ50")
+          planted_forest$treeData$Z95[i] = species_parameter(planted_forest$treeData$Species[i], SpParams,"RecrZ95")
+          if(is.na(planted_forest$treeData$Z50[i])) planted_forest$treeData$Z50[i] = 250
+          if(is.na(planted_forest$treeData$Z95[i])) planted_forest$treeData$Z95[i] = 500
         }
-        if(nrow(planted_forest$shrubData)>0) {
-          for(i in 1:nrow(planted_forest$shrubData)) {
-            planted_forest$shrubData$Z50[i] = species_parameter(planted_forest$shrubData$Species[i], SpParams,"RecrZ50")
-            planted_forest$shrubData$Z95[i] = species_parameter(planted_forest$shrubData$Species[i], SpParams,"RecrZ95")
-            if(is.na(planted_forest$shrubData$Z50[i])) planted_forest$shrubData$Z50[i] = 100
-            if(is.na(planted_forest$shrubData$Z95[i])) planted_forest$shrubData$Z95[i] = 300
-          }
-        }
-        
-        # Store new management arguments (may have changed)
-        management_args <- res$management_args
       }
+      if(nrow(planted_forest$shrubData)>0) {
+        for(i in 1:nrow(planted_forest$shrubData)) {
+          planted_forest$shrubData$Z50[i] = species_parameter(planted_forest$shrubData$Species[i], SpParams,"RecrZ50")
+          planted_forest$shrubData$Z95[i] = species_parameter(planted_forest$shrubData$Species[i], SpParams,"RecrZ95")
+          if(is.na(planted_forest$shrubData$Z50[i])) planted_forest$shrubData$Z50[i] = 100
+          if(is.na(planted_forest$shrubData$Z95[i])) planted_forest$shrubData$Z95[i] = 300
+        }
+      }
+      
+      # Store new management arguments (may have changed)
+      management_args <- res$management_args
     } 
     # 2.4 Remove empty cohorts if required
     emptyTrees = rep(FALSE, nrow(forest$treeData))
