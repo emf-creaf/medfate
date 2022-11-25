@@ -95,7 +95,7 @@ fb_forest = emptyforest()
 fb_forest
 ```
 Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height. 
-In our case, we will for simplicity avoid shrubs and concentrate on the main three tree species in the Font-Blanche forest plot: *Phillyrea latifolia* (code 53), *Pinus halepensis* (Alepo pine, code 54), and *Quercus ilex* (holm oak; code 68). In order to run the model, one has to prepare a data table like this one, already prepared for Font-Blanche:
+In our case, we will for simplicity avoid shrubs and concentrate on the main three tree species in the Font-Blanche forest plot: *Phillyrea latifolia* (code 142), *Pinus halepensis* (Alepo pine, code 148), and *Quercus ilex* (holm oak; code 168). In order to run the model, one has to prepare a data table like this one, already prepared for Font-Blanche:
 ```{r}
 fb$treeData
 ```
