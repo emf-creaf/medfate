@@ -417,7 +417,7 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
       ylab(ylab)+
       scale_color_manual(name="", 
                          values=c("Observed"="black", "Modelled"= "red"),
-                         labels =c(str_obs, str_mod))+
+                         labels =c("Observed"=str_obs, "Modelled"=str_mod))+
       theme_bw()
     if(!is.null(title)) g<-g+labs(title=title)
     return(g)
