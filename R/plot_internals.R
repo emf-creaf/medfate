@@ -827,8 +827,11 @@
     type = match.arg(type, .getSubdailyGROWTHPlotTypes())  
   }
   
-  if(is.null(cohorts)) {cohorts = row.names(input$cohorts)}
-  else cohorts = {row.names(input$cohorts)[cohorts]}
+  if(is.null(cohorts)) {
+    cohorts = row.names(input$cohorts)
+  } else if(is.numeric(cohorts)){
+    cohorts = row.names(input$cohorts)[cohorts]
+  }
   spnames = as.character(input$cohorts[cohorts,"Name"])
   
   if(type=="PlantTranspiration") {
