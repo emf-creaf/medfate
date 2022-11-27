@@ -96,6 +96,11 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
   
   if(is.null(args)) stop("Please supply a list of management arguments")
   
+  # Set missing final previous stage to 0
+  if(is.na(args$finalPreviousStage)) args$finalPreviousStage = 0
+  # If missing years since thinning, allow thinning by setting it equal to the minimum years for thinning
+  if(is.na(args$yearsSinceThinning)) args$yearsSinceThinning = args$minThinningInterval
+  
   ntree = nrow(x$treeData)
   nshrub = nrow(x$shrubData)
   # Initialize output data
@@ -142,8 +147,7 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
     thin = FALSE
     
     enoughYearsForThinning = (args$yearsSinceThinning >= args$minThinningInterval)
-    if(is.na(enoughYearsForThinning)) enoughYearsForThinning = TRUE
-    
+
     if(args$thinningMetric=="BA") {
       if(verbose) cat(paste0("  Basal area: ", round(BAtotal,1), " threshold ", round(args$thinningThreshold)))
       if((BAtotal > args$thinningThreshold) && enoughYearsForThinning) thin = TRUE
@@ -156,7 +160,7 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
       HB = stand_hartBeckingIndex(x)
       if(is.na(HB)) stop("NA Hart-becking index")
       if(verbose) cat(paste0("  Hart-Becking: ", round(HB,1), " threshold ", round(args$thinningThreshold)))
-      if(HB < args$thinningThreshold && args$yearsSinceThinning >= args$minThinningInterval) thin = TRUE
+      if((HB < args$thinningThreshold) && enoughYearsForThinning) thin = TRUE
     }
     else {
       stop(paste0("Non-recognized thinning metric '", args$thinningMetric,"'.\n"))
