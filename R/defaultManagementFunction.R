@@ -122,21 +122,27 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
   # Calculate mean DBH (of target species if specified)
   meanDBH = sum(x$treeData$N[isTarget] * x$treeData$DBH[isTarget], na.rm=TRUE)/sum(x$treeData$N[isTarget], na.rm=TRUE)
   
-  action = "none"
+  action <- "none"
 
-  if(args$type == "irregular") action = "thinning"
-  else if(args$type == "regular") {
-    if(verbose) cat(paste0("  mean DBH: ", round(meanDBH,1), " threshold ", args$finalMeanDBH))
-    if(meanDBH>args$finalMeanDBH && args$finalPreviousStage==0) { # If meanDBH exceeds threshold start final cuts
-      action = "finalcut"
-    } else if(args$finalPreviousStage>0) {
-      if(args$finalYearsToCut==0) { # If we are in final cuts and this year needs cutting...
-        action = "finalcut"
-      } else { # If we are in final cuts but we have to wait, decrease year by one
-        args$finalYearsToCut = args$finalYearsToCut - 1
+  if(args$type == "irregular") {
+    action <- "thinning"
+  } else if(args$type == "regular") {
+    if(!is.na(meanDBH)) {
+      if(is.na(args$finalMeanDBH)) stop("Argument 'finalMeanDBH' is missing in a regular management model.")
+      if(verbose) cat(paste0("  mean DBH: ", round(meanDBH,1), " threshold ", args$finalMeanDBH))
+      if(meanDBH > args$finalMeanDBH && args$finalPreviousStage==0) { # If meanDBH exceeds threshold start final cuts
+        action <- "finalcut"
+      } else if(args$finalPreviousStage>0) {
+        if(args$finalYearsToCut==0) { # If we are in final cuts and this year needs cutting...
+          action <- "finalcut"
+        } else { # If we are in final cuts but we have to wait, decrease year by one
+          args$finalYearsToCut <- args$finalYearsToCut - 1
+        }
+      } else {
+        action <- "thinning"
       }
     } else {
-      action = "thinning"
+      warning("Mean DBH for the target species is missing. Cannot apply management.")
     }
   }
   planting = FALSE
@@ -158,9 +164,10 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
     }
     else if(args$thinningMetric=="HB") {
       HB = stand_hartBeckingIndex(x)
-      if(is.na(HB)) stop("NA Hart-becking index")
-      if(verbose) cat(paste0("  Hart-Becking: ", round(HB,1), " threshold ", round(args$thinningThreshold)))
-      if((HB < args$thinningThreshold) && enoughYearsForThinning) thin = TRUE
+      if(!is.na(HB)) { # HB can be missing if not enough trees > minDBH
+        if(verbose) cat(paste0("  Hart-Becking: ", round(HB,1), " threshold ", round(args$thinningThreshold)))
+        if((HB < args$thinningThreshold) && enoughYearsForThinning) thin = TRUE
+      }
     }
     else {
       stop(paste0("Non-recognized thinning metric '", args$thinningMetric,"'.\n"))
@@ -342,6 +349,7 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
     }
     if(verbose) cat(paste0(", final stage: ",args$finalPreviousStage))
   }
+  
   # If tree felling occurred, apply understory clearing
   if(sum(N_tree_cut)>0) {
     stand_shrub_cover = sum(x$shrubData$Cover, na.rm=TRUE)
