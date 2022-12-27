@@ -21,9 +21,9 @@ const double cmdTOmmolm2sMPa = 655.2934; //100.0/(18.01528*86400.0*0.00009804139
 CharacterVector layerNames(int nlayers) {
   CharacterVector ln(nlayers);
   for(int l=0;l<nlayers;l++){
-    char Result[16]; 
-    sprintf(Result, "%d", l+1);
-    ln[l] = Result;
+    String s("");
+    s += (l+1);
+    ln[l] = s;
   }
   return(ln);
 }

@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.8.3
+- Replacing sprintf calls
+
 # Version 2.8.2
 - Function 'redefineSoilLayers' moved to package 'medfateutils'
 - Elements 'ID' and 'patchsize' removed from 'forest'

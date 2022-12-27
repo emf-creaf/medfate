@@ -1,8 +1,8 @@
 Package: medfate
 Type: Package
 Title: Mediterranean Forest Simulation
-Version: 2.8.2
-Date: 2022-11-27
+Version: 2.8.3
+Date: 2022-12-27
 Authors@R: c(
 	person('Miquel', 'De Cáceres', role=c('aut','cre'),
 	email='miquelcaceres@gmail.com', comment = c(ORCID = "0000-0001-7132-2080")),
@@ -27,7 +27,7 @@ Suggests:
 LinkingTo: Rcpp, meteoland
 Encoding: UTF-8
 NeedsCompilation: yes
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 BugReports: https://github.com/emf-creaf/medfate/issues
 Config/testthat/edition: 3
 LazyData: true

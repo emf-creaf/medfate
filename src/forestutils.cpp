@@ -683,14 +683,18 @@ CharacterVector cohortIDs(List x, int treeOffset = 0, int shrubOffset = 0) {
   
   CharacterVector IDs(numCohorts);
   for(int i=0;i<ntree;i++) {
-    char Result[16];
-    sprintf(Result, "T%d_%d", i+treeOffset+1, treeSP[i]);
-    IDs[i] = Result;
+    String s("T");
+    s += (i+treeOffset+1);
+    s += "_";
+    s += treeSP[i];
+    IDs[i] = s;
   }
   for(int i=0;i<nshrub;i++) {
-    char Result[16];
-    sprintf(Result, "S%d_%d", i+shrubOffset+1, shrubSP[i]);
-    IDs[ntree+i] =Result;
+    String s("S");
+    s += (i+shrubOffset+1);
+    s += "_";
+    s += shrubSP[i];
+    IDs[ntree+i] =s;
   }
   return(IDs);
 }
