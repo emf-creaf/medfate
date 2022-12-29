@@ -1201,7 +1201,21 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 
   NumericVector treeZ95 = treeData["Z95"];
   NumericVector treeZ50 = treeData["Z50"];
-  IntegerVector treeSP = treeData["Species"];
+
+  IntegerVector treeSP, shrubSP;
+  if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
+    treeSP = Rcpp::as<Rcpp::IntegerVector>(treeData["Species"]);
+  } else {
+    CharacterVector tspecies = Rcpp::as<Rcpp::CharacterVector>(treeData["Species"]);
+    treeSP = speciesIndex(tspecies, SpParams);
+  }
+  if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
+    shrubSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);  
+  } else {
+    CharacterVector sspecies = Rcpp::as<Rcpp::CharacterVector>(shrubData["Species"]);
+    shrubSP = speciesIndex(sspecies, SpParams);
+  }
+  
   NumericVector treeSPZ50 = speciesNumericParameter(treeSP, SpParams, "Z50");
   NumericVector treeSPZ95 = speciesNumericParameter(treeSP, SpParams, "Z95");
   for(int i=0;i<ntree;i++) {
@@ -1215,7 +1229,6 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
   }
   NumericVector shrubZ95 = shrubData["Z95"];  
   NumericVector shrubZ50 = shrubData["Z50"];  
-  IntegerVector shrubSP = shrubData["Species"];
   NumericVector shrubSPZ50 = speciesNumericParameter(shrubSP, SpParams, "Z50");
   NumericVector shrubSPZ95 = speciesNumericParameter(shrubSP, SpParams, "Z95");
   for(int i=0;i<nshrub;i++) {

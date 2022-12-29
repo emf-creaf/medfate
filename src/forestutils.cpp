@@ -745,11 +745,18 @@ NumericVector cohortCover(List x, DataFrame SpParams, String mode = "MED") {
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   NumericVector cov(treeData.nrows()+shrubData.nrows(), NA_REAL);
   NumericVector tcover;
+  IntegerVector treeSP;
+  if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
+    treeSP = Rcpp::as<Rcpp::IntegerVector>(treeData["Species"]);
+  } else {
+    CharacterVector tspecies = Rcpp::as<Rcpp::CharacterVector>(treeData["Species"]);
+    treeSP = speciesIndex(tspecies, SpParams);
+  }
   if(mode=="MED") {
-    tcover = treeCoverMED(treeData["Species"], treeData["N"], treeData["DBH"],
+    tcover = treeCoverMED(treeSP, treeData["N"], treeData["DBH"],
                           SpParams);
   } else {
-    tcover = treeCoverUS(treeData["Species"], treeData["N"], treeData["CrownWidth"], 
+    tcover = treeCoverUS(treeSP, treeData["N"], treeData["CrownWidth"], 
                          SpParams);
   }
   for(int i=0;i<tcover.size();i++) {
@@ -811,7 +818,14 @@ NumericVector cohortDensity(List x, DataFrame SpParams, String mode = "MED") {
   int ntree = treeData.nrows();
   int nshrub = shrubData.nrows();
   NumericVector treeN = treeData["N"];
-  IntegerVector shrubSP = shrubData["Species"];
+  IntegerVector shrubSP;
+  if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
+    shrubSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);  
+  } else {
+    CharacterVector sspecies = Rcpp::as<Rcpp::CharacterVector>(shrubData["Species"]);
+    shrubSP = speciesIndex(sspecies, SpParams);
+  }
+
   NumericVector shrubHeight = shrubData["Height"];
   int numCohorts  = ntree+nshrub;
   NumericVector N(numCohorts);
@@ -868,7 +882,13 @@ NumericVector cohortIndividualArea(List x, DataFrame SpParams, String mode = "ME
   int ntree = treeData.nrows();
   int nshrub = shrubData.nrows();
   NumericVector treeN = treeData["N"];
-  IntegerVector shrubSP = shrubData["Species"];
+  IntegerVector shrubSP;
+  if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
+    shrubSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);  
+  } else {
+    CharacterVector sspecies = Rcpp::as<Rcpp::CharacterVector>(shrubData["Species"]);
+    shrubSP = speciesIndex(sspecies, SpParams);
+  }
   NumericVector shrubHeight = shrubData["Height"];
   int numCohorts  = ntree+nshrub;
   NumericVector indArea(numCohorts, NA_REAL);
@@ -898,12 +918,24 @@ NumericVector cohortCrownRatio(List x, DataFrame SpParams, String mode = "MED") 
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   int ntree = treeData.nrows();
   int nshrub = shrubData.nrows();
-  IntegerVector shrubSP = shrubData["Species"];  
+  IntegerVector treeSP, shrubSP;
+  if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
+    treeSP = Rcpp::as<Rcpp::IntegerVector>(treeData["Species"]);
+  } else {
+    CharacterVector tspecies = Rcpp::as<Rcpp::CharacterVector>(treeData["Species"]);
+    treeSP = speciesIndex(tspecies, SpParams);
+  }
+  if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
+    shrubSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);  
+  } else {
+    CharacterVector sspecies = Rcpp::as<Rcpp::CharacterVector>(shrubData["Species"]);
+    shrubSP = speciesIndex(sspecies, SpParams);
+  }
   NumericVector crSh = speciesNumericParameterWithImputation(shrubSP, SpParams, "cr",true);
   int numCohorts  = ntree+nshrub;
   NumericVector treeCR;
   if(mode=="MED") {
-    treeCR = treeCrownRatioMED(treeData["Species"],treeData["N"], treeData["DBH"], treeData["Height"], SpParams); 
+    treeCR = treeCrownRatioMED(treeSP,treeData["N"], treeData["DBH"], treeData["Height"], SpParams); 
   } else if(mode=="US") {
     treeCR = treeData["CrownRatio"];
   }
@@ -1311,9 +1343,21 @@ NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, doubl
   int ntree = treeData.nrows();
   int nshrub = shrubData.nrows();
   
-  IntegerVector treeSP = Rcpp::as<Rcpp::IntegerVector>(treeData["Species"]);
+  IntegerVector treeSP, shrubSP;
+  if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
+    treeSP = Rcpp::as<Rcpp::IntegerVector>(treeData["Species"]);
+  } else {
+    CharacterVector tspecies = Rcpp::as<Rcpp::CharacterVector>(treeData["Species"]);
+    treeSP = speciesIndex(tspecies, SpParams);
+  }
+  if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
+    shrubSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);  
+  } else {
+    CharacterVector sspecies = Rcpp::as<Rcpp::CharacterVector>(shrubData["Species"]);
+    shrubSP = speciesIndex(sspecies, SpParams);
+  }
+  
   NumericVector treeH = treeData["Height"];
-  IntegerVector shrubSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);
   NumericVector shrubH = shrubData["Height"];  
   
   NumericVector LAI = cohortLAI(x, SpParams, gdd, mode);
