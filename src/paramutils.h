@@ -12,10 +12,10 @@ IntegerVector speciesIndex(CharacterVector species, DataFrame SpParams);
 
 void checkSpeciesParameters(DataFrame SpParams, CharacterVector params);
 
-NumericVector speciesNumericParameter(IntegerVector SP, DataFrame SpParams, String parName);
+NumericVector speciesNumericParameterFromIndex(IntegerVector SP, DataFrame SpParams, String parName);
 NumericVector speciesNumericParameter(CharacterVector species, DataFrame SpParams, String parName);
 
-CharacterVector speciesCharacterParameter(IntegerVector SP, DataFrame SpParams, String parName);
+CharacterVector speciesCharacterParameterFromIndex(IntegerVector SP, DataFrame SpParams, String parName);
 CharacterVector speciesCharacterParameter(CharacterVector species, DataFrame SpParams, String parName);
 
 NumericVector cohortNumericParameter(List x, DataFrame SpParams, String parName);

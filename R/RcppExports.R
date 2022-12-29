@@ -536,9 +536,8 @@ plant_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
 #' # Species basal area in the forest plot
 #' species_basalArea(exampleforestMED, SpParamsMED)
 #'   
-#' # Value of parameter "Psi_Extract" for species 157 (Pinus halepensis)
-#' # and 176 (Quercus ilex)
-#' species_parameter(c(157,176), SpParamsMED, "Psi_Extract")
+#' # Value of parameter "Psi_Extract" for Pinus halepensis and Quercus ilex
+#' species_parameter(c("Pinus halepensis", "Quercus ilex"), SpParamsMED, "Psi_Extract")
 #'     
 #' @name species_values
 species_basalArea <- function(x, SpParams) {
@@ -1963,6 +1962,14 @@ resetInputs <- function(x) {
     invisible(.Call(`_medfate_checkSpeciesParameters`, SpParams, params))
 }
 
+.speciesNumericParameterFromSpIndex <- function(SP, SpParams, parName) {
+    .Call(`_medfate_speciesNumericParameterFromIndex`, SP, SpParams, parName)
+}
+
+.speciesCharacterParameterFromSpIndex <- function(SP, SpParams, parName) {
+    .Call(`_medfate_speciesCharacterParameterFromIndex`, SP, SpParams, parName)
+}
+
 #' @rdname species_values
 species_characterParameter <- function(species, SpParams, parName) {
     .Call(`_medfate_speciesCharacterParameter`, species, SpParams, parName)
@@ -1974,8 +1981,8 @@ plant_characterParameter <- function(x, SpParams, parName) {
 }
 
 #' @rdname species_values
-species_parameter <- function(SP, SpParams, parName, fillMissing = TRUE) {
-    .Call(`_medfate_speciesNumericParameterWithImputation`, SP, SpParams, parName, fillMissing)
+species_parameter <- function(species, SpParams, parName, fillMissing = TRUE) {
+    .Call(`_medfate_speciesNumericParameterWithImputation`, species, SpParams, parName, fillMissing)
 }
 
 #' @rdname plant_values

@@ -64,7 +64,7 @@ NumericVector sumBySpecies(NumericVector x, IntegerVector sp, DataFrame SpParams
       }
     }
   }
-  sba.attr("names") = speciesCharacterParameter(uniqueSp, SpParams, "Name");
+  sba.attr("names") = speciesCharacterParameterFromIndex(uniqueSp, SpParams, "Name");
   return(sba);
 }
 
@@ -1211,9 +1211,8 @@ NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL, String
 //' # Species basal area in the forest plot
 //' species_basalArea(exampleforestMED, SpParamsMED)
 //'   
-//' # Value of parameter "Psi_Extract" for species 157 (Pinus halepensis)
-//' # and 176 (Quercus ilex)
-//' species_parameter(c(157,176), SpParamsMED, "Psi_Extract")
+//' # Value of parameter "Psi_Extract" for Pinus halepensis and Quercus ilex
+//' species_parameter(c("Pinus halepensis", "Quercus ilex"), SpParamsMED, "Psi_Extract")
 //'     
 //' @name species_values
 // [[Rcpp::export("species_basalArea")]]

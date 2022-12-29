@@ -10,7 +10,7 @@
   isTree = c(rep(TRUE, length(treecohnames)), rep(FALSE, length(shrubcohnames)))
   cohortSummary = data.frame("Step" = rep(step, length(cohnames)),
                              "Species" = NA,
-                             "Name" = NA,
+                             "SpIndex" = NA,
                              "Cohort" = cohnames,
                              "TreeDensityLive" = 0,
                              "TreeBasalAreaLive"= 0,
@@ -32,7 +32,7 @@
     icoh = which(cohortSummary$Cohort==treeTableYear$Cohort[i])
     cohortSummary$Cohort[icoh] = treeTableYear$Cohort[i]
     cohortSummary$Species[icoh] = treeTableYear$Species[i]
-    cohortSummary$Name[icoh] = treeTableYear$Name[i]
+    cohortSummary$SpIndex[icoh] = treeTableYear$SpIndex[i]
     cohortSummary$TreeDensityLive[icoh] = treeTableYear$N[i]
     cohortSummary$TreeBasalAreaLive[icoh] = ba_live[i]
   }
@@ -40,7 +40,7 @@
     icoh = which(cohortSummary$Cohort==shrubTableYear$Cohort[i])
     cohortSummary$Cohort[icoh] = shrubTableYear$Cohort[i]
     cohortSummary$Species[icoh] = shrubTableYear$Species[i]
-    cohortSummary$Name[icoh] = shrubTableYear$Name[i]
+    cohortSummary$SpIndex[icoh] = shrubTableYear$SpIndex[i]
     cohortSummary$ShrubCoverLive[icoh] = shrubTableYear$Cover[i]
   }
   ba_dead = .treeBasalArea(deadTreeTableYear$N, deadTreeTableYear$DBH)
@@ -48,14 +48,14 @@
     icoh = which(cohortSummary$Cohort==deadTreeTableYear$Cohort[i])
     cohortSummary$Cohort[icoh] = deadTreeTableYear$Cohort[i]
     cohortSummary$Species[icoh] = deadTreeTableYear$Species[i]
-    cohortSummary$Name[icoh] = deadTreeTableYear$Name[i]
+    cohortSummary$SpIndex[icoh] = deadTreeTableYear$SpIndex[i]
     cohortSummary$BasalAreaDead[icoh] = ba_dead[i]
   }
   for(i in 1:nrow(deadShrubTableYear)) {
     icoh = which(cohortSummary$Cohort==deadShrubTableYear$Cohort[i])
     cohortSummary$Cohort[icoh] = deadShrubTableYear$Cohort[i]
     cohortSummary$Species[icoh] = deadShrubTableYear$Species[i]
-    cohortSummary$Name[icoh] = deadShrubTableYear$Name[i]
+    cohortSummary$SpIndex[icoh] = deadShrubTableYear$SpIndex[i]
     cohortSummary$ShrubCoverDead[icoh] = deadShrubTableYear$Cover[i]
   }
   if(!is.null(cutTreeTableYear)) {
@@ -64,7 +64,7 @@
       icoh = which(cohortSummary$Cohort==cutTreeTableYear$Cohort[i])
       cohortSummary$Cohort[icoh] = cutTreeTableYear$Cohort[i]
       cohortSummary$Species[icoh] = cutTreeTableYear$Species[i]
-      cohortSummary$Name[icoh] = cutTreeTableYear$Name[i]
+      cohortSummary$SpIndex[icoh] = cutTreeTableYear$SpIndex[i]
       cohortSummary$BasalAreaCut[icoh] = ba_cut[i]
     }
   }
@@ -73,14 +73,14 @@
       icoh = which(cohortSummary$Cohort==cutShrubTableYear$Cohort[i])
       cohortSummary$Cohort[icoh] = cutShrubTableYear$Cohort[i]
       cohortSummary$Species[icoh] = cutShrubTableYear$Species[i]
-      cohortSummary$Name[icoh] = cutShrubTableYear$Name[i]
+      cohortSummary$SpIndex[icoh] = cutShrubTableYear$SpIndex[i]
       cohortSummary$ShrubCoverCut[icoh] = cutShrubTableYear$Cover[i]
     }
   }
   return(cohortSummary)
 }
 .summarizeSpecies<-function(step, cohSum, x, SpParams) {
-  nl_sp = tapply(cohSum$TreeDensityLive, cohSum$Species, sum, na.rm=FALSE)
+  nl_sp = tapply(cohSum$TreeDensityLive, cohSum$SpIndex, sum, na.rm=FALSE)
   bal_sp = tapply(cohSum$TreeBasalAreaLive, cohSum$Species, sum, na.rm=FALSE)
   bad_sp = tapply(cohSum$BasalAreaDead, cohSum$Species, sum, na.rm=FALSE)
   bac_sp = tapply(cohSum$BasalAreaCut, cohSum$Species, sum, na.rm=FALSE)
@@ -88,8 +88,8 @@
   shd_sp = tapply(cohSum$ShrubCoverDead, cohSum$Species, sum, na.rm=FALSE)
   shc_sp = tapply(cohSum$ShrubCoverCut, cohSum$Species, sum, na.rm=FALSE)
   spSumYear <-data.frame("Step" = rep(step, length(nl_sp)),
-                         "Species" = as.integer(names(nl_sp)),
-                         "Name" = species_characterParameter(as.integer(names(nl_sp)), SpParams, "Name"),
+                         "SpIndex" = as.integer(names(nl_sp)),
+                         "Species" = species_characterParameter(as.integer(names(nl_sp)), SpParams, "Name"),
                          "NumCohorts" = as.numeric(table(cohSum$Species)),
                          "TreeDensityLive"= as.numeric(nl_sp),
                          "TreeBasalAreaLive"= as.numeric(bal_sp),
@@ -129,8 +129,8 @@
   tt<-data.frame(Step = rep(step, length(range)), 
                  Year = rep(year, length(range)),
                  Cohort = row.names(x$cohorts)[range],
-                 Species = x$above$SP[range],
-                 Name = x$cohorts$Name[range],
+                 Species = x$cohorts$Name[range],
+                 SpIndex = x$above$SP[range],
                  N = x$above$N[range],
                  DBH = x$above$DBH[range],
                  Height = x$above$H[range],
@@ -146,8 +146,8 @@
   dtt<-data.frame(Step = rep(step, length(range)), 
                   Year = rep(year, length(range)),
                   Cohort = row.names(x$cohorts)[range],
-                  Species = x$above$SP[range],
-                  Name = x$cohorts$Name[range],
+                  Species = x$cohorts$Name[range],
+                  SpIndex = x$above$SP[range],
                   N = x$internalMortality$N_dead[range],
                   DBH = x$above$DBH[range],
                   Height = x$above$H[range],
@@ -161,8 +161,8 @@
   tt<-data.frame(Step = rep(step, length(N_cut)), 
                  Year = rep(year, length(N_cut)),
                  Cohort = row.names(x$cohorts)[range],
-                 Species = x$above$SP[range],
-                 Name = x$cohorts$Name[range],
+                 Species = x$cohorts$Name[range],
+                 SpIndex = x$above$SP[range],
                  N = N_cut,
                  DBH = x$above$DBH[range],
                  Height = x$above$H[range],
@@ -180,8 +180,8 @@
   st<-data.frame(Step = rep(step, length(range)), 
                  Year = rep(year, length(range)),
                  Cohort = row.names(x$cohorts)[range],
-                 Species = x$above$SP[range],
-                 Name = x$cohorts$Name[range],
+                 Species = x$cohorts$Name[range],
+                 SpIndex = x$above$SP[range],
                  Cover = x$above$Cover[range],
                  Height = x$above$H[range],
                  Z50 = x$below$Z50[range],
@@ -198,8 +198,8 @@
   dst<-data.frame(Step = rep(step, length(range)), 
                   Year = rep(year, length(range)),
                   Cohort = row.names(x$cohorts)[range],
-                  Species = x$above$SP[range],
-                  Name = x$cohorts$Name[range],
+                  SpIndex = x$above$SP[range],
+                  Species = x$cohorts$Name[range],
                   Cover = x$internalMortality$Cover_dead[range],
                   Height = x$above$H[range],
                   Z50 = x$below$Z50[range],
@@ -216,8 +216,8 @@
   st<-data.frame(Step = rep(step, length(range)), 
                  Year = rep(year, length(range)),
                  Cohort = row.names(x$cohorts)[range],
-                 Species = x$above$SP[range],
-                 Name = x$cohorts$Name[range],
+                 SpIndex = x$above$SP[range],
+                 Species = x$cohorts$Name[range],
                  Cover = Cover_cut,
                  Height = x$above$H[range],
                  Z50 = x$below$Z50[range],

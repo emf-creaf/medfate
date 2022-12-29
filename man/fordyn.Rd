@@ -97,12 +97,12 @@ An example of management function is provided in \code{\link{defaultManagementFu
 data(examplemeteo)
 #Prepare a two-year meteorological data with half precipitation during 
 #the second year
-meteo2001 = examplemeteo
-meteo2002 = examplemeteo
-meteo2002$Precipitation = meteo2002$Precipitation/2
-row.names(meteo2002) = seq(as.Date("2002-01-01"), 
+meteo2001 <- examplemeteo
+meteo2002 <- examplemeteo
+meteo2002$Precipitation <- meteo2002$Precipitation/2
+row.names(meteo2002) <- seq(as.Date("2002-01-01"), 
                            as.Date("2002-12-31"), by="day")
-meteo_01_02 = rbind(meteo2001, meteo2002)
+meteo_01_02 <- rbind(meteo2001, meteo2002)
 
 #Load example plot plant data
 data(exampleforestMED)
@@ -111,10 +111,10 @@ data(exampleforestMED)
 data(SpParamsMED)
 
 #Initialize control parameters
-control = defaultControl("Granier")
+control <- defaultControl("Granier")
 
 #Initialize soil with default soil params (4 layers)
-examplesoil = soil(defaultSoilParams(4))
+examplesoil <- soil(defaultSoilParams(4))
 
 #Call simulation function
 fd<-fordyn(exampleforestMED, examplesoil, 

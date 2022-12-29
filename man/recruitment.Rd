@@ -36,7 +36,7 @@ data(exampleforestMED)
 data(SpParamsMED)
 
 #Initialize control parameters
-control = defaultControl("Granier")
+control <- defaultControl("Granier")
 
 #Recruitment limits
 plant_parameter(exampleforestMED, SpParamsMED, "MinTempRecr")

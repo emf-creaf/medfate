@@ -31,7 +31,7 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
   NumericVector xsen  = speciesNumericParameterWithImputation(SP, SpParams, "xsen", fillMissingSpParams);
   NumericVector ysen  = speciesNumericParameterWithImputation(SP, SpParams, "ysen", fillMissingSpParams);
   
-  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
+  CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
   for(int j=0; j<numCohorts;j++) {
     if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") { 
       LAI_expanded[j] = 0.0; //Set initial LAI to zero, assuming simulations start at Jan 1st
@@ -81,8 +81,8 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
                         String model = "spwb", String transpirationMode = "Granier") {
   IntegerVector SP = above["SP"];
 
-  NumericVector Hmax = speciesNumericParameter(SP, SpParams, "Hmax");
-  NumericVector Hmed = speciesNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
+  NumericVector Hmax = speciesNumericParameterFromIndex(SP, SpParams, "Hmax");
+  NumericVector Hmed = speciesNumericParameterFromIndex(SP, SpParams, "Hmed"); //To correct conductivity
   
   NumericVector Al2As = speciesNumericParameterWithImputation(SP, SpParams, "Al2As", fillMissingSpParams);
   NumericVector Ar2Al = speciesNumericParameterWithImputation(SP, SpParams, "Ar2Al", fillMissingSpParams);
@@ -452,21 +452,21 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   NumericVector SRsapwood = speciesNumericParameterWithImputation(SP, SpParams, "SRsapwood", fillMissingSpParams);
   
   
-  NumericVector CCleaf = speciesNumericParameter(SP, SpParams, "CCleaf");
-  NumericVector CCsapwood = speciesNumericParameter(SP, SpParams, "CCsapwood");
-  NumericVector CCfineroot = speciesNumericParameter(SP, SpParams, "CCfineroot");
-  NumericVector RGRleafmax = speciesNumericParameter(SP, SpParams, "RGRleafmax");
-  NumericVector RGRsapwoodmax = speciesNumericParameter(SP, SpParams, "RGRsapwoodmax");
-  NumericVector RGRcambiummax = speciesNumericParameter(SP, SpParams, "RGRcambiummax");
-  NumericVector RGRfinerootmax = speciesNumericParameter(SP, SpParams, "RGRfinerootmax");
-  NumericVector SRfineroot = speciesNumericParameter(SP, SpParams, "SRfineroot");
-  NumericVector fHDmin = speciesNumericParameter(SP, SpParams, "fHDmin");
-  NumericVector fHDmax = speciesNumericParameter(SP, SpParams, "fHDmax");
+  NumericVector CCleaf = speciesNumericParameterFromIndex(SP, SpParams, "CCleaf");
+  NumericVector CCsapwood = speciesNumericParameterFromIndex(SP, SpParams, "CCsapwood");
+  NumericVector CCfineroot = speciesNumericParameterFromIndex(SP, SpParams, "CCfineroot");
+  NumericVector RGRleafmax = speciesNumericParameterFromIndex(SP, SpParams, "RGRleafmax");
+  NumericVector RGRsapwoodmax = speciesNumericParameterFromIndex(SP, SpParams, "RGRsapwoodmax");
+  NumericVector RGRcambiummax = speciesNumericParameterFromIndex(SP, SpParams, "RGRcambiummax");
+  NumericVector RGRfinerootmax = speciesNumericParameterFromIndex(SP, SpParams, "RGRfinerootmax");
+  NumericVector SRfineroot = speciesNumericParameterFromIndex(SP, SpParams, "SRfineroot");
+  NumericVector fHDmin = speciesNumericParameterFromIndex(SP, SpParams, "fHDmin");
+  NumericVector fHDmax = speciesNumericParameterFromIndex(SP, SpParams, "fHDmax");
 
   double minimumRelativeStarchForGrowth_default = control["minimumRelativeStarchForGrowth"];
-  NumericVector RSSG = speciesNumericParameter(SP, SpParams, "RSSG");
+  NumericVector RSSG = speciesNumericParameterFromIndex(SP, SpParams, "RSSG");
   
-  NumericVector MortalityBaselineRate = speciesNumericParameter(SP, SpParams, "MortalityBaselineRate");
+  NumericVector MortalityBaselineRate = speciesNumericParameterFromIndex(SP, SpParams, "MortalityBaselineRate");
   
   List maximumRelativeGrowthRates = control["maximumRelativeGrowthRates"];
   double RGRleafmax_default = maximumRelativeGrowthRates["leaf"];
@@ -1000,7 +1000,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   
 
   //Cohort description
-  CharacterVector nsp = speciesCharacterParameter(SP, SpParams, "Name");
+  CharacterVector nsp = speciesCharacterParameterFromIndex(SP, SpParams, "Name");
   DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
   cohortDescdf.attr("row.names") = above.attr("row.names");
   
@@ -1117,7 +1117,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
 
   
   //Cohort description
-  CharacterVector nsp = speciesCharacterParameter(SP, SpParams, "Name");
+  CharacterVector nsp = speciesCharacterParameterFromIndex(SP, SpParams, "Name");
   DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
   cohortDescdf.attr("row.names") = above.attr("row.names");
   
@@ -1216,8 +1216,8 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
     shrubSP = speciesIndex(sspecies, SpParams);
   }
   
-  NumericVector treeSPZ50 = speciesNumericParameter(treeSP, SpParams, "Z50");
-  NumericVector treeSPZ95 = speciesNumericParameter(treeSP, SpParams, "Z95");
+  NumericVector treeSPZ50 = speciesNumericParameterFromIndex(treeSP, SpParams, "Z50");
+  NumericVector treeSPZ95 = speciesNumericParameterFromIndex(treeSP, SpParams, "Z95");
   for(int i=0;i<ntree;i++) {
     Z50[i] = treeZ50[i];
     Z95[i] = treeZ95[i];
@@ -1229,8 +1229,8 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
   }
   NumericVector shrubZ95 = shrubData["Z95"];  
   NumericVector shrubZ50 = shrubData["Z50"];  
-  NumericVector shrubSPZ50 = speciesNumericParameter(shrubSP, SpParams, "Z50");
-  NumericVector shrubSPZ95 = speciesNumericParameter(shrubSP, SpParams, "Z95");
+  NumericVector shrubSPZ50 = speciesNumericParameterFromIndex(shrubSP, SpParams, "Z50");
+  NumericVector shrubSPZ95 = speciesNumericParameterFromIndex(shrubSP, SpParams, "Z95");
   for(int i=0;i<nshrub;i++) {
     Z50[ntree+i] = shrubZ50[i]; 
     Z95[ntree+i] = shrubZ95[i]; 

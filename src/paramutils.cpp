@@ -51,7 +51,8 @@ IntegerVector speciesIndex(CharacterVector species, DataFrame SpParams){
   return(spIndex);
 }
 
-NumericVector speciesNumericParameter(IntegerVector SP, DataFrame SpParams, String parName){
+// [[Rcpp::export(".speciesNumericParameterFromSpIndex")]]
+NumericVector speciesNumericParameterFromIndex(IntegerVector SP, DataFrame SpParams, String parName){
   NumericVector par(SP.size(), NA_REAL);
   if(SpParams.containsElementNamed(parName.get_cstring())) {
     NumericVector parSP = Rcpp::as<Rcpp::NumericVector>(SpParams[parName]);
@@ -79,7 +80,9 @@ NumericVector speciesNumericParameter(CharacterVector species, DataFrame SpParam
   return(par);
 }
 
-CharacterVector speciesCharacterParameter(IntegerVector SP, DataFrame SpParams, String parName){
+
+// [[Rcpp::export(".speciesCharacterParameterFromSpIndex")]]
+CharacterVector speciesCharacterParameterFromIndex(IntegerVector SP, DataFrame SpParams, String parName){
   CharacterVector par(SP.size(), NA_STRING);
   if(SpParams.containsElementNamed(parName.get_cstring())) {
     CharacterVector parSP = SpParams[parName];
@@ -116,14 +119,14 @@ NumericVector cohortNumericParameter(List x, DataFrame SpParams, String parName)
   NumericVector parTrees, parShrubs;
   if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
     IntegerVector tSP = treeData["Species"];
-    parTrees = speciesNumericParameter(tSP, SpParams, parName);
+    parTrees = speciesNumericParameterFromIndex(tSP, SpParams, parName);
   } else {
     CharacterVector tspecies = treeData["Species"];
     parTrees = speciesNumericParameter(tspecies, SpParams, parName);
   }
   if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
     IntegerVector shSP = shrubData["Species"];
-    parShrubs = speciesNumericParameter(shSP, SpParams, parName);
+    parShrubs = speciesNumericParameterFromIndex(shSP, SpParams, parName);
   } else {
     CharacterVector sspecies = shrubData["Species"];
     parShrubs = speciesNumericParameter(sspecies, SpParams, parName);
@@ -147,14 +150,14 @@ CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parN
   CharacterVector parTrees, parShrubs;
   if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
     IntegerVector tSP = Rcpp::as<Rcpp::IntegerVector>(treeData["Species"]);
-    parTrees = speciesCharacterParameter(tSP, SpParams, parName);
+    parTrees = speciesCharacterParameterFromIndex(tSP, SpParams, parName);
   } else {
     CharacterVector tspecies = Rcpp::as<Rcpp::CharacterVector>(treeData["Species"]);
     parTrees = speciesCharacterParameter(tspecies, SpParams, parName);
   }
   if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
     IntegerVector shSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);
-    parShrubs = speciesCharacterParameter(shSP, SpParams, parName);
+    parShrubs = speciesCharacterParameterFromIndex(shSP, SpParams, parName);
   } else {
     CharacterVector sspecies = Rcpp::as<Rcpp::CharacterVector>(shrubData["Species"]);
     parShrubs = speciesCharacterParameter(sspecies, SpParams, parName);
@@ -171,8 +174,8 @@ CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parN
 
 /** Parameter retrieval with imputation */
 NumericVector kPARWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
-  NumericVector kPAR = speciesNumericParameter(SP, SpParams, "kPAR");
+  CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
+  NumericVector kPAR = speciesNumericParameterFromIndex(SP, SpParams, "kPAR");
   for(int j=0;j<kPAR.size();j++) {
     if(leafShape[j] == "Broad") {
       if(NumericVector::is_na(kPAR[j])) kPAR[j] = 0.55;
@@ -185,8 +188,8 @@ NumericVector kPARWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(kPAR);
 }
 NumericVector gammaSWRWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
-  NumericVector gammaSWR = speciesNumericParameter(SP, SpParams, "gammaSWR");
+  CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
+  NumericVector gammaSWR = speciesNumericParameterFromIndex(SP, SpParams, "gammaSWR");
   for(int j=0;j<gammaSWR.size();j++) {
     if(leafShape[j] == "Broad") {
       if(NumericVector::is_na(gammaSWR[j])) gammaSWR[j] = 0.18;
@@ -199,15 +202,15 @@ NumericVector gammaSWRWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(gammaSWR);
 }
 NumericVector alphaSWRWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector alphaSWR = speciesNumericParameter(SP, SpParams, "alphaSWR");
+  NumericVector alphaSWR = speciesNumericParameterFromIndex(SP, SpParams, "alphaSWR");
   for(int j=0;j<alphaSWR.size();j++) {
     if(NumericVector::is_na(alphaSWR[j])) alphaSWR[j] = 0.7;
   }
   return(alphaSWR);
 }
 NumericVector gWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
-  NumericVector g = speciesNumericParameter(SP, SpParams, "g");
+  CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
+  NumericVector g = speciesNumericParameterFromIndex(SP, SpParams, "g");
   for(int j=0;j<g.size();j++) {
     if(leafShape[j] == "Broad") {
       if(NumericVector::is_na(g[j])) g[j] = 0.5;
@@ -220,9 +223,9 @@ NumericVector gWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(g);
 }
 NumericVector fineFoliarRatioWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
-  CharacterVector leafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
-  NumericVector ffr = speciesNumericParameter(SP, SpParams, "r635");
+  CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
+  CharacterVector leafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
+  NumericVector ffr = speciesNumericParameterFromIndex(SP, SpParams, "r635");
   for(int i=0;i<ffr.size();i++) {
     if(NumericVector::is_na(ffr[i])) {
       if(leafShape[i]=="Scale") {
@@ -247,9 +250,9 @@ NumericVector fineFoliarRatioWithImputation(IntegerVector SP, DataFrame SpParams
   return(ffr);
 }
 NumericVector specificLeafAreaWithImputation(IntegerVector SP, DataFrame SpParams){
-  CharacterVector LeafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
-  CharacterVector LeafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
-  NumericVector SLA = speciesNumericParameter(SP, SpParams, "SLA");
+  CharacterVector LeafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
+  CharacterVector LeafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
+  NumericVector SLA = speciesNumericParameterFromIndex(SP, SpParams, "SLA");
   for(int c=0;c<SLA.size();c++){
     if(NumericVector::is_na(SLA[c])) {
       if(!CharacterVector::is_na(LeafShape[c]) && !CharacterVector::is_na(LeafSize[c])) {
@@ -282,9 +285,9 @@ NumericVector specificLeafAreaWithImputation(IntegerVector SP, DataFrame SpParam
   return(SLA);
 }
 NumericVector ligninPercentWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
-  CharacterVector leafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
-  NumericVector cohLigninPercent = speciesNumericParameter(SP, SpParams, "LigninPercent");
+  CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
+  CharacterVector leafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
+  NumericVector cohLigninPercent = speciesNumericParameterFromIndex(SP, SpParams, "LigninPercent");
   for(int i=0;i<cohLigninPercent.size();i++) {
     if(NumericVector::is_na(cohLigninPercent[i])) {
       if(leafShape[i]=="Scale") {
@@ -313,9 +316,9 @@ NumericVector ligninPercentWithImputation(IntegerVector SP, DataFrame SpParams) 
   return(cohLigninPercent);
 }
 NumericVector surfaceToAreaRatioWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
-  CharacterVector leafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
-  NumericVector cohSAV = speciesNumericParameter(SP, SpParams, "SAV");
+  CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
+  CharacterVector leafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
+  NumericVector cohSAV = speciesNumericParameterFromIndex(SP, SpParams, "SAV");
   for(int i=0;i<cohSAV.size();i++) {
     if(NumericVector::is_na(cohSAV[i])) {
       if(leafShape[i]=="Scale") {
@@ -344,9 +347,9 @@ NumericVector surfaceToAreaRatioWithImputation(IntegerVector SP, DataFrame SpPar
   return(cohSAV);
 }
 NumericVector heatContentWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
-  CharacterVector leafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
-  NumericVector cohHeatContent = speciesNumericParameter(SP, SpParams, "HeatContent");
+  CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
+  CharacterVector leafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
+  NumericVector cohHeatContent = speciesNumericParameterFromIndex(SP, SpParams, "HeatContent");
   for(int i=0;i<cohHeatContent.size();i++) {
     if(NumericVector::is_na(cohHeatContent[i])) {
       if(leafShape[i]=="Scale") {
@@ -375,7 +378,7 @@ NumericVector heatContentWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(cohHeatContent);
 }
 NumericVector proportionDeadWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector pDead = speciesNumericParameter(SP, SpParams, "pDead");
+  NumericVector pDead = speciesNumericParameterFromIndex(SP, SpParams, "pDead");
   for(int c=0;c<pDead.size();c++) {
     if(NumericVector::is_na(pDead[c])) {
       pDead[c] = 0.05;
@@ -384,9 +387,9 @@ NumericVector proportionDeadWithImputation(IntegerVector SP, DataFrame SpParams)
   return(pDead);
 }
 NumericVector leafWidthWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
-  CharacterVector leafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
-  NumericVector leafwidth = speciesNumericParameter(SP, SpParams, "LeafWidth");
+  CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
+  CharacterVector leafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
+  NumericVector leafwidth = speciesNumericParameterFromIndex(SP, SpParams, "LeafWidth");
   for(int c=0;c<leafwidth.size();c++) {
     if(NumericVector::is_na(leafwidth[c])) {
       if(leafShape[c]=="Linear") {
@@ -409,7 +412,7 @@ NumericVector leafWidthWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(leafwidth);
 }
 NumericVector Ar2AlWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector Ar2Al = speciesNumericParameter(SP, SpParams, "Ar2Al");
+  NumericVector Ar2Al = speciesNumericParameterFromIndex(SP, SpParams, "Ar2Al");
   for(int c=0;c<Ar2Al.size();c++) {
     if(NumericVector::is_na(Ar2Al[c])) {
       Ar2Al[c] = 1.0;
@@ -418,15 +421,15 @@ NumericVector Ar2AlWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(Ar2Al);
 }
 NumericVector Al2AsWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
-  CharacterVector leafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
-  NumericVector Al2As = speciesNumericParameter(SP, SpParams, "Al2As");
+  CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
+  CharacterVector leafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
+  NumericVector Al2As = speciesNumericParameterFromIndex(SP, SpParams, "Al2As");
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
   NumericVector fam_Al2As = TFM["Al2As"];
-  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   for(int c=0;c<Al2As.size();c++) {
     if(NumericVector::is_na(Al2As[c])) {
       for(int i=0;i<fams.size();i++) {
@@ -456,13 +459,13 @@ NumericVector Al2AsWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(Al2As);
 }
 NumericVector woodDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector woodDensity = speciesNumericParameter(SP, SpParams, "WoodDensity");
+  NumericVector woodDensity = speciesNumericParameterFromIndex(SP, SpParams, "WoodDensity");
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
   NumericVector fam_wood_density = TFM["WoodDensity"];
-  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   for(int c=0;c<woodDensity.size();c++) {
     if(NumericVector::is_na(woodDensity[c])) {
       for(int i=0;i<fams.size();i++) {
@@ -478,13 +481,13 @@ NumericVector woodDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(woodDensity);
 }
 NumericVector leafDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector leafDensity = speciesNumericParameter(SP, SpParams, "LeafDensity");
+  NumericVector leafDensity = speciesNumericParameterFromIndex(SP, SpParams, "LeafDensity");
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
   NumericVector fam_leaf_density = TFM["LeafDensity"];
-  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   for(int c=0;c<leafDensity.size();c++) {
     if(NumericVector::is_na(leafDensity[c])) {
       for(int i=0;i<fams.size();i++) {
@@ -500,7 +503,7 @@ NumericVector leafDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(leafDensity);
 }
 NumericVector fineRootDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector fineRootDensity = speciesNumericParameter(SP, SpParams, "FineRootDensity");
+  NumericVector fineRootDensity = speciesNumericParameterFromIndex(SP, SpParams, "FineRootDensity");
   for(int c=0;c<fineRootDensity.size();c++) {
     if(NumericVector::is_na(fineRootDensity[c])) {
       fineRootDensity[c] = 0.165;
@@ -509,7 +512,7 @@ NumericVector fineRootDensityWithImputation(IntegerVector SP, DataFrame SpParams
   return(fineRootDensity);
 }
 NumericVector specificRootLengthWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector specificRootLength = speciesNumericParameter(SP, SpParams, "SRL");
+  NumericVector specificRootLength = speciesNumericParameterFromIndex(SP, SpParams, "SRL");
   for(int c=0;c<specificRootLength.size();c++) {
     if(NumericVector::is_na(specificRootLength[c])) {
       specificRootLength[c] = 3870.0;
@@ -518,7 +521,7 @@ NumericVector specificRootLengthWithImputation(IntegerVector SP, DataFrame SpPar
   return(specificRootLength);
 }
 NumericVector rootLengthDensityWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector rootLengthDensity = speciesNumericParameter(SP, SpParams, "RLD");
+  NumericVector rootLengthDensity = speciesNumericParameterFromIndex(SP, SpParams, "RLD");
   for(int c=0;c<rootLengthDensity.size();c++) {
     if(NumericVector::is_na(rootLengthDensity[c])) {
       rootLengthDensity[c] = 10.0;
@@ -527,14 +530,14 @@ NumericVector rootLengthDensityWithImputation(IntegerVector SP, DataFrame SpPara
   return(rootLengthDensity);
 }
 NumericVector conduit2sapwoodWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
-  NumericVector conduit2sapwood = speciesNumericParameter(SP, SpParams, "conduit2sapwood");
+  CharacterVector Group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
+  NumericVector conduit2sapwood = speciesNumericParameterFromIndex(SP, SpParams, "conduit2sapwood");
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
   NumericVector fam_conduit2sapwood = TFM["conduit2sapwood"];
-  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   for(int c=0;c<conduit2sapwood.size();c++) {
     if(NumericVector::is_na(conduit2sapwood[c])) {
       for(int i=0;i<fams.size();i++) {
@@ -551,7 +554,7 @@ NumericVector conduit2sapwoodWithImputation(IntegerVector SP, DataFrame SpParams
   return(conduit2sapwood);
 }
 NumericVector maxFMCWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector maxFMC = speciesNumericParameter(SP, SpParams, "maxFMC");
+  NumericVector maxFMC = speciesNumericParameterFromIndex(SP, SpParams, "maxFMC");
   for(int c=0;c<maxFMC.size();c++) {
     if(NumericVector::is_na(maxFMC[c])) {
       maxFMC[c] = 120.0; //To be improved
@@ -560,7 +563,7 @@ NumericVector maxFMCWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(maxFMC);
 }
 NumericVector minFMCWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector minFMC = speciesNumericParameter(SP, SpParams, "minFMC");
+  NumericVector minFMC = speciesNumericParameterFromIndex(SP, SpParams, "minFMC");
   for(int c=0;c<minFMC.size();c++) {
     if(NumericVector::is_na(minFMC[c])) {
       minFMC[c] = 80.0; //To be improved
@@ -570,7 +573,7 @@ NumericVector minFMCWithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 NumericVector stemPI0WithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector WoodDensity = woodDensityWithImputation(SP, SpParams);
-  NumericVector StemPI0 = speciesNumericParameter(SP, SpParams, "StemPI0");
+  NumericVector StemPI0 = speciesNumericParameterFromIndex(SP, SpParams, "StemPI0");
   for(int c=0;c<StemPI0.size();c++) {
     //From: Christoffersen, B.O., Gloor, M., Fauset, S., Fyllas, N.M., Galbraith, D.R., Baker, T.R., Rowland, L., Fisher, R.A., Binks, O.J., Sevanto, S.A., Xu, C., Jansen, S., Choat, B., Mencuccini, M., McDowell, N.G., & Meir, P. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0: 1–60.
     if(NumericVector::is_na(StemPI0[c])) {
@@ -581,7 +584,7 @@ NumericVector stemPI0WithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 NumericVector stemEPSWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector WoodDensity = woodDensityWithImputation(SP, SpParams);
-  NumericVector StemEPS = speciesNumericParameter(SP, SpParams, "StemEPS");
+  NumericVector StemEPS = speciesNumericParameterFromIndex(SP, SpParams, "StemEPS");
   for(int c=0;c<StemEPS.size();c++) {
     //From: Christoffersen, B.O., Gloor, M., Fauset, S., Fyllas, N.M., Galbraith, D.R., Baker, T.R., Rowland, L., Fisher, R.A., Binks, O.J., Sevanto, S.A., Xu, C., Jansen, S., Choat, B., Mencuccini, M., McDowell, N.G., & Meir, P. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0: 1–60.
     if(NumericVector::is_na(StemEPS[c])) {
@@ -592,7 +595,7 @@ NumericVector stemEPSWithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 NumericVector stemAFWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector conduit2sapwood = conduit2sapwoodWithImputation(SP, SpParams);
-  NumericVector stemAF = speciesNumericParameter(SP, SpParams, "StemAF");
+  NumericVector stemAF = speciesNumericParameterFromIndex(SP, SpParams, "StemAF");
   for(int c=0;c<stemAF.size();c++) {
     if(NumericVector::is_na(stemAF[c])) {
       stemAF[c] = conduit2sapwood[c]; 
@@ -601,13 +604,13 @@ NumericVector stemAFWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(stemAF);
 }
 NumericVector leafPI0WithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector leafPI0 = speciesNumericParameter(SP, SpParams, "LeafPI0");
+  NumericVector leafPI0 = speciesNumericParameterFromIndex(SP, SpParams, "LeafPI0");
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
   NumericVector fam_leaf_PI0 = TFM["LeafPI0"];
-  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   for(int c=0;c<leafPI0.size();c++) {
     if(NumericVector::is_na(leafPI0[c])) {
       for(int i=0;i<fams.size();i++) {
@@ -624,13 +627,13 @@ NumericVector leafPI0WithImputation(IntegerVector SP, DataFrame SpParams) {
   return(leafPI0);
 }
 NumericVector leafEPSWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector leafEPS = speciesNumericParameter(SP, SpParams, "LeafEPS");
+  NumericVector leafEPS = speciesNumericParameterFromIndex(SP, SpParams, "LeafEPS");
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
   NumericVector fam_leaf_EPS = TFM["LeafEPS"];
-  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   for(int c=0;c<leafEPS.size();c++) {
     if(NumericVector::is_na(leafEPS[c])) {
       for(int i=0;i<fams.size();i++) {
@@ -647,13 +650,13 @@ NumericVector leafEPSWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(leafEPS);
 }
 NumericVector leafAFWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector leafAF = speciesNumericParameter(SP, SpParams, "LeafAF");
+  NumericVector leafAF = speciesNumericParameterFromIndex(SP, SpParams, "LeafAF");
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
   NumericVector fam_leaf_AF = TFM["LeafAF"];
-  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   for(int c=0;c<leafAF.size();c++) {
     if(NumericVector::is_na(leafAF[c])) {
       for(int i=0;i<fams.size();i++) {
@@ -671,7 +674,7 @@ NumericVector leafAFWithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 
 NumericVector TmaxLAIWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector Tmax_LAI = speciesNumericParameter(SP, SpParams, "Tmax_LAI");
+  NumericVector Tmax_LAI = speciesNumericParameterFromIndex(SP, SpParams, "Tmax_LAI");
   for(int c=0;c<Tmax_LAI.size();c++) {
     if(NumericVector::is_na(Tmax_LAI[c])) {
       Tmax_LAI[c] = 0.134;//Granier coefficient for LAI
@@ -680,7 +683,7 @@ NumericVector TmaxLAIWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(Tmax_LAI);
 }
 NumericVector TmaxLAIsqWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector Tmax_LAIsq = speciesNumericParameter(SP, SpParams, "Tmax_LAIsq");
+  NumericVector Tmax_LAIsq = speciesNumericParameterFromIndex(SP, SpParams, "Tmax_LAIsq");
   for(int c=0;c<Tmax_LAIsq.size();c++) {
     if(NumericVector::is_na(Tmax_LAIsq[c])) {
       Tmax_LAIsq[c] = -0.006; //Granier coefficient for LAI^2
@@ -689,9 +692,9 @@ NumericVector TmaxLAIsqWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(Tmax_LAIsq);
 }
 NumericVector WUEWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
-  CharacterVector leafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
-  NumericVector WUE = speciesNumericParameter(SP, SpParams, "WUE");
+  CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
+  CharacterVector leafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
+  NumericVector WUE = speciesNumericParameterFromIndex(SP, SpParams, "WUE");
   for(int c=0;c<WUE.size();c++) {
     if(NumericVector::is_na(WUE[c])) {
       WUE[c] = 7.9; 
@@ -702,7 +705,7 @@ NumericVector WUEWithImputation(IntegerVector SP, DataFrame SpParams) {
   // DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   // CharacterVector fams = TFM.attr("row.names");
   // NumericVector fam_WUE = TFM["WUE"];
-  // CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  // CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   // for(int c=0;c<WUE.size();c++) {
   //   if(NumericVector::is_na(WUE[c])) {
   //     for(int i=0;i<fams.size();i++) {
@@ -732,7 +735,7 @@ NumericVector WUEWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(WUE);
 }
 NumericVector WUEPARWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector WUE_par = speciesNumericParameter(SP, SpParams, "WUE_par");
+  NumericVector WUE_par = speciesNumericParameterFromIndex(SP, SpParams, "WUE_par");
   for(int c=0;c<WUE_par.size();c++) {
     if(NumericVector::is_na(WUE_par[c])) {
       WUE_par[c] = 0.3643; //default value
@@ -741,7 +744,7 @@ NumericVector WUEPARWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(WUE_par);
 }
 NumericVector WUECO2WithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector WUE_co2 = speciesNumericParameter(SP, SpParams, "WUE_co2");
+  NumericVector WUE_co2 = speciesNumericParameterFromIndex(SP, SpParams, "WUE_co2");
   for(int c=0;c<WUE_co2.size();c++) {
     if(NumericVector::is_na(WUE_co2[c])) {
       WUE_co2[c] = 0.002757;
@@ -750,7 +753,7 @@ NumericVector WUECO2WithImputation(IntegerVector SP, DataFrame SpParams) {
   return(WUE_co2);
 }
 NumericVector WUEVPDWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector WUE_vpd = speciesNumericParameter(SP, SpParams, "WUE_vpd");
+  NumericVector WUE_vpd = speciesNumericParameterFromIndex(SP, SpParams, "WUE_vpd");
   for(int c=0;c<WUE_vpd.size();c++) {
     if(NumericVector::is_na(WUE_vpd[c])) {
       WUE_vpd[c] = -0.4636;
@@ -759,15 +762,15 @@ NumericVector WUEVPDWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(WUE_vpd);
 }
 NumericVector psi50Imputation(NumericVector psi50, IntegerVector SP, DataFrame SpParams) {
-  CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
-  CharacterVector GrowthForm = speciesCharacterParameter(SP, SpParams, "GrowthForm");
-  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
+  CharacterVector Group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
+  CharacterVector GrowthForm = speciesCharacterParameterFromIndex(SP, SpParams, "GrowthForm");
+  CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
   NumericVector fam_P50 = TFM["P50"];
-  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   for(int c=0;c<psi50.size();c++) {
     if(NumericVector::is_na(psi50[c])) {
       for(int i=0;i<fams.size();i++) {
@@ -798,13 +801,13 @@ NumericVector psi50Imputation(NumericVector psi50, IntegerVector SP, DataFrame S
   return(psi50);
 }
 NumericVector psiCriticWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector Psi_Critic = speciesNumericParameter(SP, SpParams, "Psi_Critic");
+  NumericVector Psi_Critic = speciesNumericParameterFromIndex(SP, SpParams, "Psi_Critic");
   return(psi50Imputation(Psi_Critic, SP, SpParams));
 }
 NumericVector psiExtractWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector leafPI0 = leafPI0WithImputation(SP, SpParams);
   NumericVector leafEPS = leafEPSWithImputation(SP, SpParams);
-  NumericVector Psi_Extract = speciesNumericParameter(SP, SpParams, "Psi_Extract");
+  NumericVector Psi_Extract = speciesNumericParameterFromIndex(SP, SpParams, "Psi_Extract");
   double corr = pow(log(0.5)/log(0.05), 1.0/3.0); //Weibull's shape = 3.0
   for(int c=0;c<Psi_Extract.size();c++) {
     if(NumericVector::is_na(Psi_Extract[c])) {
@@ -814,13 +817,13 @@ NumericVector psiExtractWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(Psi_Extract);
 }
 NumericVector GswmaxWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector Gswmax = speciesNumericParameter(SP, SpParams, "Gswmax");
+  NumericVector Gswmax = speciesNumericParameterFromIndex(SP, SpParams, "Gswmax");
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
   NumericVector fam_gswmax = TFM["Gswmax"];
-  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   
   for(int c=0;c<Gswmax.size();c++) {
     if(NumericVector::is_na(Gswmax[c])) {
@@ -835,13 +838,13 @@ NumericVector GswmaxWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(Gswmax);
 }
 NumericVector GswminWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector Gswmin = speciesNumericParameter(SP, SpParams, "Gswmin");
+  NumericVector Gswmin = speciesNumericParameterFromIndex(SP, SpParams, "Gswmin");
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
   NumericVector fam_gswmin = TFM["Gswmin"];
-  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   for(int c=0;c<Gswmin.size();c++) {
     if(NumericVector::is_na(Gswmin[c])) {
       for(int i=0;i<fams.size();i++) {
@@ -856,16 +859,16 @@ NumericVector GswminWithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 
 NumericVector KmaxStemXylemWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector Kmax_stemxylem = speciesNumericParameter(SP, SpParams, "Kmax_stemxylem");
-  CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
-  CharacterVector GrowthForm = speciesCharacterParameter(SP, SpParams, "GrowthForm");
-  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
+  NumericVector Kmax_stemxylem = speciesNumericParameterFromIndex(SP, SpParams, "Kmax_stemxylem");
+  CharacterVector Group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
+  CharacterVector GrowthForm = speciesCharacterParameterFromIndex(SP, SpParams, "GrowthForm");
+  CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
   NumericVector fam_Ks = TFM["Kmax_stemxylem"];
-  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   for(int c=0;c<Kmax_stemxylem.size();c++) {
     if(NumericVector::is_na(Kmax_stemxylem[c])) {
       for(int i=0;i<fams.size();i++) {
@@ -897,7 +900,7 @@ NumericVector KmaxStemXylemWithImputation(IntegerVector SP, DataFrame SpParams) 
 }
 NumericVector KmaxRootXylemWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector Kmax_stemxylem = KmaxStemXylemWithImputation(SP, SpParams);
-  NumericVector Kmax_rootxylem = speciesNumericParameter(SP, SpParams, "Kmax_rootxylem");
+  NumericVector Kmax_rootxylem = speciesNumericParameterFromIndex(SP, SpParams, "Kmax_rootxylem");
   for(int c=0;c<Kmax_rootxylem.size();c++) {
     //Oliveras I, Martínez-Vilalta J, Jimenez-Ortiz T, et al (2003) Hydraulic architecture of Pinus halepensis, P . pinea and Tetraclinis articulata in a dune ecosystem of Eastern Spain. Plant Ecol 131–141
     if(NumericVector::is_na(Kmax_rootxylem[c])) Kmax_rootxylem[c] = 4.0*Kmax_stemxylem[c];
@@ -905,7 +908,7 @@ NumericVector KmaxRootXylemWithImputation(IntegerVector SP, DataFrame SpParams) 
   return(Kmax_rootxylem);
 }
 NumericVector VCleafkmaxWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector VCleaf_kmax = speciesNumericParameter(SP, SpParams, "VCleaf_kmax");
+  NumericVector VCleaf_kmax = speciesNumericParameterFromIndex(SP, SpParams, "VCleaf_kmax");
   NumericVector Gswmax = GswmaxWithImputation(SP, SpParams);
   for(int c=0;c<VCleaf_kmax.size();c++) {
     //Franks, P. J. (2006). Higher rates of leaf gas exchange are associated with higher leaf hydrodynamic pressure gradients. Plant, Cell and Environment, 29(4), 584–592. https://doi.org/10.1111/j.1365-3040.2005.01434.x
@@ -917,13 +920,13 @@ NumericVector VCleafkmaxWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(VCleaf_kmax);
 }
 NumericVector NleafWithImputation(IntegerVector SP, DataFrame SpParams){
-  NumericVector Nleaf = speciesNumericParameter(SP, SpParams, "Nleaf");
+  NumericVector Nleaf = speciesNumericParameterFromIndex(SP, SpParams, "Nleaf");
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
   NumericVector fam_Nleaf = TFM["Nleaf"];
-  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   for(int c=0;c<Nleaf.size();c++) {
     if(NumericVector::is_na(Nleaf[c])) {
       for(int i=0;i<fams.size();i++) {
@@ -937,13 +940,13 @@ NumericVector NleafWithImputation(IntegerVector SP, DataFrame SpParams){
   return(Nleaf);
 }
 NumericVector NsapwoodWithImputation(IntegerVector SP, DataFrame SpParams){
-  NumericVector Nsapwood = speciesNumericParameter(SP, SpParams, "Nsapwood");
+  NumericVector Nsapwood = speciesNumericParameterFromIndex(SP, SpParams, "Nsapwood");
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
   NumericVector fam_Nsapwood = TFM["Nsapwood"];
-  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   for(int c=0;c<Nsapwood.size();c++) {
     if(NumericVector::is_na(Nsapwood[c])) {
       for(int i=0;i<fams.size();i++) {
@@ -957,13 +960,13 @@ NumericVector NsapwoodWithImputation(IntegerVector SP, DataFrame SpParams){
   return(Nsapwood);
 }
 NumericVector NfinerootWithImputation(IntegerVector SP, DataFrame SpParams){
-  NumericVector Nfineroot = speciesNumericParameter(SP, SpParams, "Nfineroot");
+  NumericVector Nfineroot = speciesNumericParameterFromIndex(SP, SpParams, "Nfineroot");
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
   NumericVector fam_Nfineroot = TFM["Nfineroot"];
-  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   for(int c=0;c<Nfineroot.size();c++) {
     if(NumericVector::is_na(Nfineroot[c])) {
       for(int i=0;i<fams.size();i++) {
@@ -980,7 +983,7 @@ NumericVector NfinerootWithImputation(IntegerVector SP, DataFrame SpParams){
 NumericVector Vmax298WithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector SLA = specificLeafAreaWithImputation(SP, SpParams);
   NumericVector Nleaf = NleafWithImputation(SP, SpParams);
-  NumericVector Vmax298 = speciesNumericParameter(SP, SpParams, "Vmax298");
+  NumericVector Vmax298 = speciesNumericParameterFromIndex(SP, SpParams, "Vmax298");
   for(int c=0;c<Vmax298.size();c++) {
     if(NumericVector::is_na(Vmax298[c]))  {
       if(!NumericVector::is_na(SLA[c]) && !NumericVector::is_na(Nleaf[c]))  {
@@ -997,7 +1000,7 @@ NumericVector Vmax298WithImputation(IntegerVector SP, DataFrame SpParams) {
 }
 NumericVector Jmax298WithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector Vmax298 = Vmax298WithImputation(SP, SpParams);
-  NumericVector Jmax298 = speciesNumericParameter(SP, SpParams, "Jmax298");
+  NumericVector Jmax298 = speciesNumericParameterFromIndex(SP, SpParams, "Jmax298");
   for(int c=0;c<Jmax298.size();c++) {
     //Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173
     if(NumericVector::is_na(Jmax298[c])) Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c])); 
@@ -1005,7 +1008,7 @@ NumericVector Jmax298WithImputation(IntegerVector SP, DataFrame SpParams) {
   return(Jmax298);
 }
 NumericVector VCstemDWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector VCstem_d = speciesNumericParameter(SP, SpParams, "VCstem_d");
+  NumericVector VCstem_d = speciesNumericParameterFromIndex(SP, SpParams, "VCstem_d");
   NumericVector psi50(VCstem_d.size(), NA_REAL);
   NumericVector psi50Imp = psi50Imputation(psi50, SP, SpParams);
   for(int c=0;c<VCstem_d.size();c++) {
@@ -1018,7 +1021,7 @@ NumericVector VCstemDWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(VCstem_d);
 }
 NumericVector VCstemCWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector VCstem_c = speciesNumericParameter(SP, SpParams, "VCstem_c");
+  NumericVector VCstem_c = speciesNumericParameterFromIndex(SP, SpParams, "VCstem_c");
   NumericVector psi50(VCstem_c.size(), NA_REAL);
   NumericVector psi50Imp = psi50Imputation(psi50, SP, SpParams);
   for(int c=0;c<VCstem_c.size();c++) {
@@ -1031,7 +1034,7 @@ NumericVector VCstemCWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(VCstem_c);
 }
 NumericVector VCleafDWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector VCleaf_d = speciesNumericParameter(SP, SpParams, "VCleaf_d");
+  NumericVector VCleaf_d = speciesNumericParameterFromIndex(SP, SpParams, "VCleaf_d");
   NumericVector leafPI0 = leafPI0WithImputation(SP, SpParams);
   NumericVector leafEPS = leafEPSWithImputation(SP, SpParams);
   for(int c=0;c<VCleaf_d.size();c++) {
@@ -1047,7 +1050,7 @@ NumericVector VCleafDWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(VCleaf_d);
 }
 NumericVector VCleafCWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector VCleaf_c = speciesNumericParameter(SP, SpParams, "VCleaf_c");
+  NumericVector VCleaf_c = speciesNumericParameterFromIndex(SP, SpParams, "VCleaf_c");
   NumericVector leafPI0 = leafPI0WithImputation(SP, SpParams);
   NumericVector leafEPS = leafEPSWithImputation(SP, SpParams);
   for(int c=0;c<VCleaf_c.size();c++) {
@@ -1063,7 +1066,7 @@ NumericVector VCleafCWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(VCleaf_c);
 }
 NumericVector VCrootDWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector VCroot_d = speciesNumericParameter(SP, SpParams, "VCroot_d");
+  NumericVector VCroot_d = speciesNumericParameterFromIndex(SP, SpParams, "VCroot_d");
   NumericVector VCstem_d = VCstemDWithImputation(SP, SpParams);
   NumericVector VCstem_c = VCstemCWithImputation(SP, SpParams);
   for(int c=0;c<VCroot_d.size();c++) {
@@ -1080,7 +1083,7 @@ NumericVector VCrootDWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(VCroot_d);
 }
 NumericVector VCrootCWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector VCroot_c = speciesNumericParameter(SP, SpParams, "VCroot_c");
+  NumericVector VCroot_c = speciesNumericParameterFromIndex(SP, SpParams, "VCroot_c");
   NumericVector VCstem_d = VCstemDWithImputation(SP, SpParams);
   NumericVector VCstem_c = VCstemCWithImputation(SP, SpParams);
   for(int c=0;c<VCroot_c.size();c++) {
@@ -1096,7 +1099,7 @@ NumericVector VCrootCWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(VCroot_c);
 }
 NumericVector LeafRespirationRateWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector RERleaf = speciesNumericParameter(SP, SpParams, "RERleaf");
+  NumericVector RERleaf = speciesNumericParameterFromIndex(SP, SpParams, "RERleaf");
   NumericVector Nleaf = NleafWithImputation(SP, SpParams);
   for(int c=0;c<RERleaf.size();c++) {
     if(NumericVector::is_na(RERleaf[c])) {
@@ -1109,7 +1112,7 @@ NumericVector LeafRespirationRateWithImputation(IntegerVector SP, DataFrame SpPa
   return(RERleaf);
 }
 NumericVector SapwoodRespirationRateWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector RERsapwood = speciesNumericParameter(SP, SpParams, "RERsapwood");
+  NumericVector RERsapwood = speciesNumericParameterFromIndex(SP, SpParams, "RERsapwood");
   NumericVector Nsapwood = NsapwoodWithImputation(SP, SpParams);
   for(int c=0;c<RERsapwood.size();c++) {
     if(NumericVector::is_na(RERsapwood[c])) {
@@ -1124,8 +1127,8 @@ NumericVector SapwoodRespirationRateWithImputation(IntegerVector SP, DataFrame S
   return(RERsapwood);
 }
 NumericVector SapwoodSenescenceRateWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector SRsapwood = speciesNumericParameter(SP, SpParams, "SRsapwood");
-  NumericVector RGRcambiummax = speciesNumericParameter(SP, SpParams, "RGRcambiummax");
+  NumericVector SRsapwood = speciesNumericParameterFromIndex(SP, SpParams, "SRsapwood");
+  NumericVector RGRcambiummax = speciesNumericParameterFromIndex(SP, SpParams, "RGRcambiummax");
   for(int c=0;c<SRsapwood.size();c++) {
     if(NumericVector::is_na(SRsapwood[c])) {
       if(!NumericVector::is_na(RGRcambiummax[c])) SRsapwood[c] = 0.05544*RGRcambiummax[c];
@@ -1135,7 +1138,7 @@ NumericVector SapwoodSenescenceRateWithImputation(IntegerVector SP, DataFrame Sp
 }
 
 NumericVector FinerootRespirationRateWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector RERfineroot = speciesNumericParameter(SP, SpParams, "RERfineroot");
+  NumericVector RERfineroot = speciesNumericParameterFromIndex(SP, SpParams, "RERfineroot");
   NumericVector Nfineroot = NsapwoodWithImputation(SP, SpParams);
   for(int c=0;c<RERfineroot.size();c++) {
     if(NumericVector::is_na(RERfineroot[c])) {
@@ -1149,13 +1152,13 @@ NumericVector FinerootRespirationRateWithImputation(IntegerVector SP, DataFrame 
 }
 
 NumericVector WoodCWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector WoodC = speciesNumericParameter(SP, SpParams, "WoodC");
+  NumericVector WoodC = speciesNumericParameterFromIndex(SP, SpParams, "WoodC");
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
   CharacterVector fams = TFM.attr("row.names");
   NumericVector fam_WoodC = TFM["WoodC"];
-  CharacterVector family = speciesCharacterParameter(SP, SpParams, "Family");
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
   for(int c=0;c<WoodC.size();c++) {
     if(NumericVector::is_na(WoodC[c])) {
       for(int i=0;i<fams.size();i++) {
@@ -1171,8 +1174,8 @@ NumericVector WoodCWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(WoodC);
 }
 NumericVector leafDurationWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
-  NumericVector leafDuration = speciesNumericParameter(SP, SpParams, "LeafDuration");
+  CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
+  NumericVector leafDuration = speciesNumericParameterFromIndex(SP, SpParams, "LeafDuration");
   for(int c=0;c<leafDuration.size();c++) {
     if(NumericVector::is_na(leafDuration[c])) {
       if((phenoType[c]=="winter-deciduous") || (phenoType[c]=="winter-semideciduous")) leafDuration[c] = 1.0; 
@@ -1183,8 +1186,8 @@ NumericVector leafDurationWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(leafDuration);
 }
 NumericVector t0gddWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
-  NumericVector t0gdd = speciesNumericParameter(SP, SpParams, "t0gdd");
+  CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
+  NumericVector t0gdd = speciesNumericParameterFromIndex(SP, SpParams, "t0gdd");
   for(int c=0;c<t0gdd.size();c++) {
     if(NumericVector::is_na(t0gdd[c])) {
       t0gdd[c] = 50.0; //Default
@@ -1193,8 +1196,8 @@ NumericVector t0gddWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(t0gdd);
 }
 NumericVector SgddWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
-  NumericVector Sgdd = speciesNumericParameter(SP, SpParams, "Sgdd");
+  CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
+  NumericVector Sgdd = speciesNumericParameterFromIndex(SP, SpParams, "Sgdd");
   for(int c=0;c<Sgdd.size();c++) {
     if(NumericVector::is_na(Sgdd[c])) {
       Sgdd[c] = 200.0; //Default
@@ -1203,8 +1206,8 @@ NumericVector SgddWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(Sgdd);
 }
 NumericVector TbgddWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
-  NumericVector Tbgdd = speciesNumericParameter(SP, SpParams, "Tbgdd");
+  CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
+  NumericVector Tbgdd = speciesNumericParameterFromIndex(SP, SpParams, "Tbgdd");
   for(int c=0;c<Tbgdd.size();c++) {
     if(NumericVector::is_na(Tbgdd[c])) {
       Tbgdd[c] = 0.0; //Default
@@ -1213,8 +1216,8 @@ NumericVector TbgddWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(Tbgdd);
 }
 NumericVector SsenWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
-  NumericVector Ssen = speciesNumericParameter(SP, SpParams, "Ssen");
+  CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
+  NumericVector Ssen = speciesNumericParameterFromIndex(SP, SpParams, "Ssen");
   for(int c=0;c<Ssen.size();c++) {
     if(NumericVector::is_na(Ssen[c])) {//Delpierre et al 2009
       Ssen[c] = 8268.0; //Default (broadleaved deciduous)
@@ -1223,8 +1226,8 @@ NumericVector SsenWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(Ssen);
 }
 NumericVector PhsenWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
-  NumericVector Phsen = speciesNumericParameter(SP, SpParams, "Phsen");
+  CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
+  NumericVector Phsen = speciesNumericParameterFromIndex(SP, SpParams, "Phsen");
   for(int c=0;c<Phsen.size();c++) {
     if(NumericVector::is_na(Phsen[c])) {//Delpierre et al 2009
       Phsen[c] = 12.5; //Default (broadleaved deciduous)
@@ -1233,8 +1236,8 @@ NumericVector PhsenWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(Phsen);
 }
 NumericVector TbsenWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
-  NumericVector Tbsen = speciesNumericParameter(SP, SpParams, "Tbsen");
+  CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
+  NumericVector Tbsen = speciesNumericParameterFromIndex(SP, SpParams, "Tbsen");
   for(int c=0;c<Tbsen.size();c++) {
     if(NumericVector::is_na(Tbsen[c])) {//Delpierre et al 2009
       Tbsen[c] = 28.5; //Default (broadleaved deciduous)
@@ -1243,8 +1246,8 @@ NumericVector TbsenWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(Tbsen);
 }
 NumericVector xsenWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
-  NumericVector xsen = speciesNumericParameter(SP, SpParams, "xsen");
+  CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
+  NumericVector xsen = speciesNumericParameterFromIndex(SP, SpParams, "xsen");
   for(int c=0;c<xsen.size();c++) {
     if(NumericVector::is_na(xsen[c])) {//Delpierre et al 2009
       xsen[c] = 2.0; //Default
@@ -1253,8 +1256,8 @@ NumericVector xsenWithImputation(IntegerVector SP, DataFrame SpParams) {
   return(xsen);
 }
 NumericVector ysenWithImputation(IntegerVector SP, DataFrame SpParams) {
-  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
-  NumericVector ysen = speciesNumericParameter(SP, SpParams, "ysen");
+  CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
+  NumericVector ysen = speciesNumericParameterFromIndex(SP, SpParams, "ysen");
   for(int c=0;c<ysen.size();c++) {
     if(NumericVector::is_na(ysen[c])) {//Delpierre et al 2009
       ysen[c] = 2.0; //Default
@@ -1266,9 +1269,9 @@ NumericVector ysenWithImputation(IntegerVector SP, DataFrame SpParams) {
 
 /** Allometric coefficient retrieval with imputation */
 NumericVector shrubAllometricCoefficientWithImputation(IntegerVector SP, DataFrame SpParams, String parName) {
-  NumericVector coef = speciesNumericParameter(SP,SpParams, parName);
-  CharacterVector lifeForm = speciesCharacterParameter(SP, SpParams, "LifeForm");
-  NumericVector Hmax = speciesNumericParameter(SP, SpParams, "Hmax");
+  NumericVector coef = speciesNumericParameterFromIndex(SP,SpParams, parName);
+  CharacterVector lifeForm = speciesCharacterParameterFromIndex(SP, SpParams, "LifeForm");
+  NumericVector Hmax = speciesNumericParameterFromIndex(SP, SpParams, "Hmax");
   for(int i=0;i<coef.size();i++) { // From De Caceres et al. 2019
     if(NumericVector::is_na(coef[i])) {
       if(parName=="a_ash") {
@@ -1320,8 +1323,8 @@ NumericVector shrubAllometricCoefficientWithImputation(IntegerVector SP, DataFra
 
 /** Allometric coefficient retrieval with imputation */
 NumericVector treeAllometricCoefficientWithImputation(IntegerVector SP, DataFrame SpParams, String parName) {
-  NumericVector coef = speciesNumericParameter(SP,SpParams, parName);
-  CharacterVector group = speciesCharacterParameter(SP, SpParams, "Group");
+  NumericVector coef = speciesNumericParameterFromIndex(SP,SpParams, parName);
+  CharacterVector group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
   for(int i=0;i<coef.size();i++) { // From De Caceres et al. 2019
     if(NumericVector::is_na(coef[i])) {
       if(parName=="a_fbt") {
@@ -1378,10 +1381,7 @@ NumericVector treeAllometricCoefficientWithImputation(IntegerVector SP, DataFram
 }
 
 
-
-//' @rdname species_values
-// [[Rcpp::export("species_parameter")]]
- NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame SpParams, String parName, bool fillMissing = true){
+NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame SpParams, String parName, bool fillMissing = true){
   if(fillMissing) {
     if(parName == "kPAR") return(kPARWithImputation(SP,SpParams));
     else if(parName == "gammaSWR") return(gammaSWRWithImputation(SP,SpParams));
@@ -1456,9 +1456,11 @@ NumericVector treeAllometricCoefficientWithImputation(IntegerVector SP, DataFram
     else if((parName == "a_bsh") || (parName == "b_bsh")) return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName));
     else if((parName == "a_btsh") || (parName == "b_btsh") || (parName == "cr")) return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName));
   }
-  return(speciesNumericParameter(SP, SpParams,parName));
+  return(speciesNumericParameterFromIndex(SP, SpParams,parName));
 }
 
+//' @rdname species_values
+// [[Rcpp::export("species_parameter")]]
 NumericVector speciesNumericParameterWithImputation(CharacterVector species, DataFrame SpParams, String parName, bool fillMissing = true){
   if(fillMissing) {
     IntegerVector SP = speciesIndex(species, SpParams);
