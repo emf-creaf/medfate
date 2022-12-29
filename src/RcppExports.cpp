@@ -382,13 +382,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // cohortLargerTreeBasalArea
-NumericVector cohortLargerTreeBasalArea(List x);
-RcppExport SEXP _medfate_cohortLargerTreeBasalArea(SEXP xSEXP) {
+NumericVector cohortLargerTreeBasalArea(List x, double self_proportion);
+RcppExport SEXP _medfate_cohortLargerTreeBasalArea(SEXP xSEXP, SEXP self_proportionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortLargerTreeBasalArea(x));
+    Rcpp::traits::input_parameter< double >::type self_proportion(self_proportionSEXP);
+    rcpp_result_gen = Rcpp::wrap(cohortLargerTreeBasalArea(x, self_proportion));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4781,7 +4782,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_shrubPhytovolume", (DL_FUNC) &_medfate_shrubPhytovolume, 5},
     {"_medfate_cohortIDs", (DL_FUNC) &_medfate_cohortIDs, 3},
     {"_medfate_cohortBasalArea", (DL_FUNC) &_medfate_cohortBasalArea, 1},
-    {"_medfate_cohortLargerTreeBasalArea", (DL_FUNC) &_medfate_cohortLargerTreeBasalArea, 1},
+    {"_medfate_cohortLargerTreeBasalArea", (DL_FUNC) &_medfate_cohortLargerTreeBasalArea, 2},
     {"_medfate_cohortCover", (DL_FUNC) &_medfate_cohortCover, 3},
     {"_medfate_cohortSpecies", (DL_FUNC) &_medfate_cohortSpecies, 1},
     {"_medfate_cohortSpeciesName", (DL_FUNC) &_medfate_cohortSpeciesName, 2},

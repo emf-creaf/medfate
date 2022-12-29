@@ -81,14 +81,14 @@ NumericVector treeBasalArea(NumericVector N, NumericVector dbh) {
   }
   return(BA);
 }
-NumericVector largerTreeBasalArea(NumericVector N, NumericVector dbh) {
+NumericVector largerTreeBasalArea(NumericVector N, NumericVector dbh, double self_include_prop = 0.5) {
   int ncoh = N.size();
   NumericVector BA = treeBasalArea(N, dbh); 
   NumericVector ltBA(ncoh);
   for(int i=0;i<ncoh;i++) {
     ltBA[i] = 0.0;
     for(int j=0;j<ncoh;j++) {
-      if(i==j) ltBA[i] += BA[j]/2.0; //add half of its own basal area
+      if(i==j) ltBA[i] += (BA[j]*self_include_prop); //add half of its own basal area
       else if(dbh[j]>dbh[i]) ltBA[i] += BA[j];
     }
   }
@@ -617,6 +617,7 @@ NumericVector shrubLAIUS(IntegerVector SP, NumericVector H,
 //' @param includeDead A flag to indicate that standing dead fuels (dead branches) are included.
 //' @param treeOffset,shrubOffset Integers to offset cohort IDs.
 //' @param fillMissing A boolean flag to try imputation on missing values.
+//' @param self_proportion Proportion of the target cohort included in the assessment
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
@@ -715,10 +716,10 @@ NumericVector cohortBasalArea(List x) {
 
 //' @rdname plant_values
 // [[Rcpp::export("plant_largerTreeBasalArea")]]
-NumericVector cohortLargerTreeBasalArea(List x) {
+NumericVector cohortLargerTreeBasalArea(List x, double self_proportion = 0.5) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
-  NumericVector tba = largerTreeBasalArea(treeData["N"], treeData["DBH"]);
+  NumericVector tba = largerTreeBasalArea(treeData["N"], treeData["DBH"], self_proportion);
   NumericVector ba(tba.size()+shrubData.nrows(), NA_REAL);
   for(int i=0;i<tba.size();i++) {
     ba[i] = tba[i];

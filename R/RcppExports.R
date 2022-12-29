@@ -351,6 +351,7 @@ fire_Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, win
 #' @param includeDead A flag to indicate that standing dead fuels (dead branches) are included.
 #' @param treeOffset,shrubOffset Integers to offset cohort IDs.
 #' @param fillMissing A boolean flag to try imputation on missing values.
+#' @param self_proportion Proportion of the target cohort included in the assessment
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
@@ -415,8 +416,8 @@ plant_basalArea <- function(x) {
 }
 
 #' @rdname plant_values
-plant_largerTreeBasalArea <- function(x) {
-    .Call(`_medfate_cohortLargerTreeBasalArea`, x)
+plant_largerTreeBasalArea <- function(x, self_proportion = 0.5) {
+    .Call(`_medfate_cohortLargerTreeBasalArea`, x, self_proportion)
 }
 
 #' @rdname plant_values

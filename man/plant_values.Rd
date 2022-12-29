@@ -28,7 +28,7 @@ plant_ID(x, treeOffset = 0L, shrubOffset = 0L)
 
 plant_basalArea(x)
 
-plant_largerTreeBasalArea(x)
+plant_largerTreeBasalArea(x, self_proportion = 0.5)
 
 plant_cover(x, SpParams, mode = "MED")
 
@@ -73,6 +73,8 @@ plant_parameter(x, SpParams, parName, fillMissing = TRUE)
 \item{x}{An object of class \code{\link{forest}}.}
 
 \item{treeOffset, shrubOffset}{Integers to offset cohort IDs.}
+
+\item{self_proportion}{Proportion of the target cohort included in the assessment}
 
 \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
 
