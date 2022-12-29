@@ -4,6 +4,7 @@
 
 # Version 2.8.3
 - Replacing sprintf calls
+- Update of forest_mergeShrubs and forest_mergeTrees
 
 # Version 2.8.2
 - Function 'redefineSoilLayers' moved to package 'medfateutils'
