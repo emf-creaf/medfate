@@ -27,7 +27,7 @@ species_phytovolume(x, SpParams)
 
 species_LAI(x, SpParams, gdd = NA_real_, mode = "MED")
 
-species_characterParameter(SP, SpParams, parName)
+species_characterParameter(species, SpParams, parName)
 
 species_parameter(SP, SpParams, parName, fillMissing = TRUE)
 }
@@ -42,9 +42,9 @@ species_parameter(SP, SpParams, parName, fillMissing = TRUE)
 
 \item{includeDead}{A flag to indicate that standing dead fuels (dead branches) are included.}
 
-\item{SP}{An integer vector of species codes.}
-
 \item{parName}{A string with a parameter name.}
+
+\item{SP}{An integer vector of species codes.}
 
 \item{fillMissing}{A boolean flag to try imputation on missing values.}
 }

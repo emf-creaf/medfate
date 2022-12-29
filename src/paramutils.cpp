@@ -8,11 +8,23 @@
 #include "tissuemoisture.h"
 using namespace Rcpp;
 
-int findRowIndex(int sp, DataFrame SpParams) {
+int findSpParamsRowByName(String spname, DataFrame SpParams) {
+  CharacterVector spNameSP = SpParams["Name"];
+  for(int i=0;i<spNameSP.length();i++) if(spNameSP[i]==spname) return(i);
+  String s = "Species name '";
+  s += spname;
+  s +="' not found in SpParams";
+  stop(s);
+  return(NA_INTEGER);
+}
+
+int findSpParamsRowBySpIndex(int sp, DataFrame SpParams) {
   IntegerVector spIndexSP = SpParams["SpIndex"];
   for(int i=0;i<spIndexSP.length();i++) if(spIndexSP[i]==sp) return(i);
-  Rcerr << sp << " not found!\n";
-  stop("Species code not found in SpParams");
+  String s = "Species index '";
+  s += sp;
+  s +="' not found in SpParams";
+  stop(s);
   return(NA_INTEGER);
 }
 
@@ -29,12 +41,50 @@ void checkSpeciesParameters(DataFrame SpParams, CharacterVector params) {
   }
 }
 
+IntegerVector speciesIndex(CharacterVector species, DataFrame SpParams){
+  IntegerVector spIndex(species.size(), NA_REAL);
+  IntegerVector spIndexSP = Rcpp::as<Rcpp::IntegerVector>(SpParams["SpIndex"]);
+  for(int i=0;i<species.size();i++) {
+    int iSP = findSpParamsRowByName(species[i], SpParams);
+    spIndex[i] = spIndexSP[iSP];
+  }
+  return(spIndex);
+}
+
 NumericVector speciesNumericParameter(IntegerVector SP, DataFrame SpParams, String parName){
   NumericVector par(SP.size(), NA_REAL);
   if(SpParams.containsElementNamed(parName.get_cstring())) {
     NumericVector parSP = Rcpp::as<Rcpp::NumericVector>(SpParams[parName]);
     for(int i=0;i<SP.size();i++) {
-      int iSP = findRowIndex(SP[i], SpParams);
+      int iSP = findSpParamsRowBySpIndex(SP[i], SpParams);
+      par[i] = parSP[iSP];
+    }
+  } else {
+    Rcerr << "Variable '" << parName.get_cstring() << "' was not found in SpParams!\n";
+  }
+  return(par);
+}
+
+NumericVector speciesNumericParameter(CharacterVector species, DataFrame SpParams, String parName){
+  NumericVector par(species.size(), NA_REAL);
+  if(SpParams.containsElementNamed(parName.get_cstring())) {
+    NumericVector parSP = Rcpp::as<Rcpp::NumericVector>(SpParams[parName]);
+    for(int i=0;i<species.size();i++) {
+      int iSP = findSpParamsRowByName(species[i], SpParams);
+      par[i] = parSP[iSP];
+    }
+  } else {
+    Rcerr << "Variable '" << parName.get_cstring() << "' was not found in SpParams!\n";
+  }
+  return(par);
+}
+
+CharacterVector speciesCharacterParameter(IntegerVector SP, DataFrame SpParams, String parName){
+  CharacterVector par(SP.size(), NA_STRING);
+  if(SpParams.containsElementNamed(parName.get_cstring())) {
+    CharacterVector parSP = SpParams[parName];
+    for(int i=0;i<SP.size();i++) {
+      int iSP = findSpParamsRowBySpIndex(SP[i], SpParams);
       par[i] = parSP[iSP];
     }
   } else {
@@ -45,12 +95,12 @@ NumericVector speciesNumericParameter(IntegerVector SP, DataFrame SpParams, Stri
 
 //' @rdname species_values
 // [[Rcpp::export("species_characterParameter")]]
-CharacterVector speciesCharacterParameter(IntegerVector SP, DataFrame SpParams, String parName){
-  CharacterVector par(SP.size(), NA_STRING);
+ CharacterVector speciesCharacterParameter(CharacterVector species, DataFrame SpParams, String parName){
+  CharacterVector par(species.size(), NA_STRING);
   if(SpParams.containsElementNamed(parName.get_cstring())) {
     CharacterVector parSP = SpParams[parName];
-    for(int i=0;i<SP.size();i++) {
-      int iSP = findRowIndex(SP[i], SpParams);
+    for(int i=0;i<species.size();i++) {
+      int iSP = findSpParamsRowByName(species[i], SpParams);
       par[i] = parSP[iSP];
     }
   } else {
@@ -62,18 +112,29 @@ CharacterVector speciesCharacterParameter(IntegerVector SP, DataFrame SpParams, 
 NumericVector cohortNumericParameter(List x, DataFrame SpParams, String parName){
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
-  IntegerVector tSP = treeData["Species"];
-  IntegerVector shSP = shrubData["Species"];
-  NumericVector par(tSP.size()+shSP.size());
-  NumericVector parTrees = speciesNumericParameter(tSP, SpParams, parName);
-  NumericVector parShrubs = speciesNumericParameter(shSP, SpParams, parName);
-  for(int i=0;i<tSP.size();i++) {
+  NumericVector par(treeData.nrow() + shrubData.nrow());
+  NumericVector parTrees, parShrubs;
+  if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
+    IntegerVector tSP = treeData["Species"];
+    parTrees = speciesNumericParameter(tSP, SpParams, parName);
+  } else {
+    CharacterVector tspecies = treeData["Species"];
+    parTrees = speciesNumericParameter(tspecies, SpParams, parName);
+  }
+  if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
+    IntegerVector shSP = shrubData["Species"];
+    parShrubs = speciesNumericParameter(shSP, SpParams, parName);
+  } else {
+    CharacterVector sspecies = shrubData["Species"];
+    parShrubs = speciesNumericParameter(sspecies, SpParams, parName);
+  }
+  for(int i=0;i<treeData.nrow();i++) {
     par[i] = parTrees[i];
   }
-  for(int i=0;i<shSP.size();i++) {
-    par[i+tSP.size()] = parShrubs[i];
+  for(int i=0;i<shrubData.nrow();i++) {
+    par[i + treeData.nrow()] = parShrubs[i];
   }
-  par.attr("names") = cohortIDs(x);
+  par.attr("names") = cohortIDs(x, SpParams);
   return(par);
 }
 
@@ -82,18 +143,29 @@ NumericVector cohortNumericParameter(List x, DataFrame SpParams, String parName)
 CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parName){
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
-  IntegerVector tSP = treeData["Species"];
-  IntegerVector shSP = shrubData["Species"];
-  CharacterVector par(tSP.size()+shSP.size());
-  CharacterVector parTrees = speciesCharacterParameter(tSP, SpParams, parName);
-  CharacterVector parShrubs = speciesCharacterParameter(shSP, SpParams, parName);
-  for(int i=0;i<tSP.size();i++) {
+  CharacterVector par(treeData.nrow()+shrubData.nrow());
+  CharacterVector parTrees, parShrubs;
+  if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
+    IntegerVector tSP = Rcpp::as<Rcpp::IntegerVector>(treeData["Species"]);
+    parTrees = speciesCharacterParameter(tSP, SpParams, parName);
+  } else {
+    CharacterVector tspecies = Rcpp::as<Rcpp::CharacterVector>(treeData["Species"]);
+    parTrees = speciesCharacterParameter(tspecies, SpParams, parName);
+  }
+  if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
+    IntegerVector shSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);
+    parShrubs = speciesCharacterParameter(shSP, SpParams, parName);
+  } else {
+    CharacterVector sspecies = Rcpp::as<Rcpp::CharacterVector>(shrubData["Species"]);
+    parShrubs = speciesCharacterParameter(sspecies, SpParams, parName);
+  }
+  for(int i=0;i<treeData.nrow();i++) {
     par[i] = parTrees[i];
   }
-  for(int i=0;i<shSP.size();i++) {
-    par[i+tSP.size()] = parShrubs[i];
+  for(int i=0;i<shrubData.nrow();i++) {
+    par[i + treeData.nrow()] = parShrubs[i];
   }
-  par.attr("names") = cohortIDs(x);
+  par.attr("names") = cohortIDs(x, SpParams);
   return(par);
 }
 
@@ -1307,10 +1379,9 @@ NumericVector treeAllometricCoefficientWithImputation(IntegerVector SP, DataFram
 
 
 
-
 //' @rdname species_values
 // [[Rcpp::export("species_parameter")]]
-NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame SpParams, String parName, bool fillMissing = true){
+ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame SpParams, String parName, bool fillMissing = true){
   if(fillMissing) {
     if(parName == "kPAR") return(kPARWithImputation(SP,SpParams));
     else if(parName == "gammaSWR") return(gammaSWRWithImputation(SP,SpParams));
@@ -1388,23 +1459,41 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
   return(speciesNumericParameter(SP, SpParams,parName));
 }
 
+NumericVector speciesNumericParameterWithImputation(CharacterVector species, DataFrame SpParams, String parName, bool fillMissing = true){
+  if(fillMissing) {
+    IntegerVector SP = speciesIndex(species, SpParams);
+    return(speciesNumericParameterWithImputation(SP, SpParams, parName, fillMissing));
+  }
+  return(speciesNumericParameter(species, SpParams,parName));
+}
 
 //' @rdname plant_values
 // [[Rcpp::export("plant_parameter")]]
 NumericVector cohortNumericParameterWithImputation(List x, DataFrame SpParams, String parName, bool fillMissing = true){
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
-  IntegerVector tSP = treeData["Species"];
-  IntegerVector shSP = shrubData["Species"];
-  NumericVector par(tSP.size()+shSP.size());
-  NumericVector parTrees = speciesNumericParameterWithImputation(tSP, SpParams, parName, fillMissing);
-  NumericVector parShrubs = speciesNumericParameterWithImputation(shSP, SpParams, parName, fillMissing);
-  for(int i=0;i<tSP.size();i++) {
+  NumericVector par(treeData.nrow() + shrubData.nrow());
+  NumericVector parTrees, parShrubs;
+  if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
+    IntegerVector tSP = treeData["Species"];
+    parTrees = speciesNumericParameterWithImputation(tSP, SpParams, parName, fillMissing);
+  } else {
+    CharacterVector tspecies = treeData["Species"];
+    parTrees = speciesNumericParameterWithImputation(tspecies, SpParams, parName, fillMissing);
+  }
+  if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
+    IntegerVector shSP = shrubData["Species"];
+    parShrubs = speciesNumericParameterWithImputation(shSP, SpParams, parName, fillMissing);
+  } else {
+    CharacterVector sspecies = shrubData["Species"];
+    parShrubs = speciesNumericParameterWithImputation(sspecies, SpParams, parName, fillMissing);
+  }
+  for(int i=0;i<treeData.nrow();i++) {
     par[i] = parTrees[i];
   }
-  for(int i=0;i<shSP.size();i++) {
-    par[i+tSP.size()] = parShrubs[i];
+  for(int i=0;i<shrubData.nrow();i++) {
+    par[i + treeData.nrow()] = parShrubs[i];
   }
-  par.attr("names") = cohortIDs(x);
+  par.attr("names") = cohortIDs(x, SpParams);
   return(par);
 }

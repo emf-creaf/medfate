@@ -163,7 +163,7 @@ NumericVector PARcohort(List x, DataFrame SpParams, double gdd = NA_REAL,
   NumericVector LAI = above["LAI_expanded"];
   NumericVector CR = above["CR"];
   NumericVector pc = parcohort(SP, H, CR, LAI, SpParams);
-  pc.attr("names") = cohortIDs(x);
+  pc.attr("names") = cohortIDs(x, SpParams);
   return(pc);
 }
 NumericVector parheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
@@ -327,7 +327,7 @@ NumericVector cohortAbsorbedSWRFraction(NumericVector z, List x, DataFrame SpPar
   NumericVector kSWR(kPAR.size());
   for(int i=0;i<kPAR.size();i++) kSWR[i] = kPAR[i]/1.35;
   NumericVector caswrf = cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR);
-  caswrf.attr("names") = cohortIDs(x);
+  caswrf.attr("names") = cohortIDs(x, SpParams);
   return(caswrf);
 }
 

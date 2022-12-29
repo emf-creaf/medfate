@@ -6,21 +6,21 @@
 using namespace Rcpp;
 
 DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED");
-NumericMatrix forest2belowground(List x, List soil);
+NumericMatrix forest2belowground(List x, List soil, DataFrame SpParams);
 
-CharacterVector cohortIDs(List x, int treeOffset = 0, int shrubOffset = 0);
+CharacterVector cohortIDs(List x, DataFrame SpParams, int treeOffset = 0, int shrubOffset = 0);
 
 
 double leafAreaProportion(double z1, double z2, double zmin, double zmax);
 
-NumericVector cohortHeight(List x);
+NumericVector cohortHeight(List x, DataFrame SpParams);
 
 NumericVector cohortDensity(List x, DataFrame SpParams, String mode = "MED");
 NumericVector speciesDensity(List x, DataFrame SpParams, String mode = "MED");
 
 NumericVector treeBasalArea(NumericVector N, NumericVector dbh);
 NumericVector treeCohortBasalArea(List x);
-NumericVector cohortBasalArea(List x);
+NumericVector cohortBasalArea(List x, DataFrame SpParams);
 NumericVector dbhClassBasalArea(List x, NumericVector DBHbreaks);
 double forestBasalArea(List x);
 double forestBasalAreaForMinDBH(List x, double minDBH);

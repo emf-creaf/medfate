@@ -24,21 +24,21 @@
 \alias{plant_parameter}
 \title{Plant description functions}
 \usage{
-plant_ID(x, treeOffset = 0L, shrubOffset = 0L)
+plant_ID(x, SpParams, treeOffset = 0L, shrubOffset = 0L)
 
-plant_basalArea(x)
+plant_basalArea(x, SpParams)
 
-plant_largerTreeBasalArea(x, self_proportion = 0.5)
+plant_largerTreeBasalArea(x, SpParams, self_proportion = 0.5)
 
 plant_cover(x, SpParams, mode = "MED")
 
-plant_species(x)
+plant_species(x, SpParams)
 
 plant_speciesName(x, SpParams)
 
 plant_density(x, SpParams, mode = "MED")
 
-plant_height(x)
+plant_height(x, SpParams)
 
 plant_individualArea(x, SpParams, mode = "MED")
 
@@ -72,11 +72,11 @@ plant_parameter(x, SpParams, parName, fillMissing = TRUE)
 \arguments{
 \item{x}{An object of class \code{\link{forest}}.}
 
+\item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
+
 \item{treeOffset, shrubOffset}{Integers to offset cohort IDs.}
 
 \item{self_proportion}{Proportion of the target cohort included in the assessment}
-
-\item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
 
 \item{mode}{Calculation mode, either "MED" or "US".}
 

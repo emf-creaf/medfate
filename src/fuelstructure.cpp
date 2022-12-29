@@ -81,7 +81,7 @@ NumericVector woodyFuelProfile(NumericVector z, NumericVector fuelBiomass, Numer
 NumericVector woodyFuelProfile(NumericVector z, List x, DataFrame SpParams, 
                                double gdd = NA_REAL, String mode = "MED") {
   NumericVector Fuel = cohortFuel(x, SpParams, gdd, true, mode); //in kg/m2
-  NumericVector H = cohortHeight(x);
+  NumericVector H = cohortHeight(x, SpParams);
   NumericVector CR = cohortCrownRatio(x, SpParams, mode);
   return(woodyFuelProfile(z, Fuel, H, CR));
 }
@@ -117,9 +117,9 @@ double layerLAI(double minHeight, double maxHeight, NumericVector cohortLAI, Num
 // [[Rcpp::export(".layerFuelAverageSpeciesParameter")]]
 double layerFuelAverageSpeciesParameter(String spParName, double minHeight, double maxHeight, List x, DataFrame SpParams, double gdd = NA_REAL) {
   NumericVector cohortLoading = cohortFuel(x, SpParams, gdd); //in kg/m2
-  NumericVector parValues = cohortNumericParameter(x, SpParams, spParName);
+  NumericVector parValues = cohortNumericParameterWithImputation(x, SpParams, spParName);
   NumericVector CR = cohortCrownRatio(x, SpParams);
-  NumericVector H = cohortHeight(x);
+  NumericVector H = cohortHeight(x, SpParams);
   double num = 0.0, den = 0.0, cfl = 0.0;
   int nCoh = cohortLoading.size();
   for(int i=0;i<nCoh; i++) {
@@ -301,7 +301,7 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
   }
   
   NumericVector cLAI = cohortLAI(object,SpParams, NA_REAL, mode);
-  NumericVector cH = cohortHeight(object);
+  NumericVector cH = cohortHeight(object, SpParams);
   NumericVector cCR = cohortCrownRatio(object,SpParams, mode);
   double understoryLAI = layerLAI(fbbh, fbh, cLAI, cH, cCR);
   double canopyLAI = layerLAI(cbh, cth, cLAI, cH, cCR);
@@ -372,7 +372,7 @@ DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFM
   NumericVector cohLoading = cohortFuel(object, SpParams, gdd, true, mode);
   NumericVector cohLeafLitter = cohortEquilibriumLeafLitter(object, SpParams, AET, mode);
   NumericVector cohSmallBranchLitter = cohortEquilibriumSmallBranchLitter(object, SpParams, smallBranchDecompositionRate, mode);
-  NumericVector cohHeight = cohortHeight(object);
+  NumericVector cohHeight = cohortHeight(object, SpParams);
   NumericVector cohCL = cohortCrownLength(object, SpParams, mode);
   for(int i=0;i<cohLoading.size();i++) {
     if(NumericVector::is_na(cohLoading[i])) cohLoading[i] = 0.0;
@@ -397,8 +397,8 @@ DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFM
     cohParticleDensity[i] = 1000.0*(cohLeafDensity[i]*(f_leaves_volume) + cohWoodDensity[i]*(1.0 - f_leaves_volume));
   }
   NumericVector cohCR = cohortCrownRatio(object, SpParams, mode);
-  NumericVector cohMinFMC = cohortNumericParameter(object, SpParams, "minFMC");
-  NumericVector cohMaxFMC = cohortNumericParameter(object, SpParams, "maxFMC");
+  NumericVector cohMinFMC = cohortNumericParameterWithImputation(object, SpParams, "minFMC");
+  NumericVector cohMaxFMC = cohortNumericParameterWithImputation(object, SpParams, "maxFMC");
   CharacterVector leafLitterType = leafLitterFuelType(object, SpParams);
   //Canopy limits and loading  
   double canopyBaseHeight = liveStrat["canopyBaseHeight"];

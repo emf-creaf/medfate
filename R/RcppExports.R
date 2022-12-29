@@ -406,18 +406,18 @@ fire_Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, win
 #' plant_ID(exampleforestMED)
 #'       
 #' @name plant_values
-plant_ID <- function(x, treeOffset = 0L, shrubOffset = 0L) {
-    .Call(`_medfate_cohortIDs`, x, treeOffset, shrubOffset)
+plant_ID <- function(x, SpParams, treeOffset = 0L, shrubOffset = 0L) {
+    .Call(`_medfate_cohortIDs`, x, SpParams, treeOffset, shrubOffset)
 }
 
 #' @rdname plant_values
-plant_basalArea <- function(x) {
-    .Call(`_medfate_cohortBasalArea`, x)
+plant_basalArea <- function(x, SpParams) {
+    .Call(`_medfate_cohortBasalArea`, x, SpParams)
 }
 
 #' @rdname plant_values
-plant_largerTreeBasalArea <- function(x, self_proportion = 0.5) {
-    .Call(`_medfate_cohortLargerTreeBasalArea`, x, self_proportion)
+plant_largerTreeBasalArea <- function(x, SpParams, self_proportion = 0.5) {
+    .Call(`_medfate_cohortLargerTreeBasalArea`, x, SpParams, self_proportion)
 }
 
 #' @rdname plant_values
@@ -426,8 +426,8 @@ plant_cover <- function(x, SpParams, mode = "MED") {
 }
 
 #' @rdname plant_values
-plant_species <- function(x) {
-    .Call(`_medfate_cohortSpecies`, x)
+plant_species <- function(x, SpParams) {
+    .Call(`_medfate_cohortSpecies`, x, SpParams)
 }
 
 #' @rdname plant_values
@@ -441,8 +441,8 @@ plant_density <- function(x, SpParams, mode = "MED") {
 }
 
 #' @rdname plant_values
-plant_height <- function(x) {
-    .Call(`_medfate_cohortHeight`, x)
+plant_height <- function(x, SpParams) {
+    .Call(`_medfate_cohortHeight`, x, SpParams)
 }
 
 #' @rdname plant_values
@@ -622,8 +622,8 @@ forest2aboveground <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
 }
 
 #' @rdname modelInput
-forest2belowground <- function(x, soil) {
-    .Call(`_medfate_forest2belowground`, x, soil)
+forest2belowground <- function(x, soil, SpParams) {
+    .Call(`_medfate_forest2belowground`, x, soil, SpParams)
 }
 
 .fuelConditions <- function(airTemp, airHumidity, fuelRadiation, fuelWindSpeed) {
@@ -1964,8 +1964,8 @@ resetInputs <- function(x) {
 }
 
 #' @rdname species_values
-species_characterParameter <- function(SP, SpParams, parName) {
-    .Call(`_medfate_speciesCharacterParameter`, SP, SpParams, parName)
+species_characterParameter <- function(species, SpParams, parName) {
+    .Call(`_medfate_speciesCharacterParameter`, species, SpParams, parName)
 }
 
 #' @rdname plant_values

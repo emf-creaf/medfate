@@ -12,7 +12,7 @@
 \usage{
 forest2aboveground(x, SpParams, gdd = NA_real_, mode = "MED")
 
-forest2belowground(x, soil)
+forest2belowground(x, soil, SpParams)
 
 spwbInput(above, Z50, Z95, soil, SpParams, control)
 

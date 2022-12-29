@@ -54,8 +54,7 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
 
 DataFrame paramsInterception(DataFrame above, DataFrame SpParams, List control) {
   IntegerVector SP = above["SP"];
-  int numCohorts = SP.size();
-  
+
   String transpirationMode = control["transpirationMode"];
   bool fillMissingSpParams = control["fillMissingSpParams"];
   
