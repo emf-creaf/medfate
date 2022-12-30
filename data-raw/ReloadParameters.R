@@ -78,9 +78,9 @@ usethis::use_data(trait_family_means, internal=TRUE, overwrite=TRUE)
 ## Modify exampleforestMED (after rebuilding)
 data(exampleforestMED)
 data("SpParamsMED")
-exampleforestMED$treeData$Species[1] = SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"]
-exampleforestMED$treeData$Species[2] = SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus ilex"]
-exampleforestMED$shrubData$Species[1] = SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus coccifera"]
+exampleforestMED$treeData$Species[1] = "Pinus halepensis"
+exampleforestMED$treeData$Species[2] = "Quercus ilex"
+exampleforestMED$shrubData$Species[1] = "Quercus coccifera"
 usethis::use_data(exampleforestMED, overwrite = T)
 ##Rebuild!
 
@@ -88,9 +88,9 @@ usethis::use_data(exampleforestMED, overwrite = T)
 library(medfate)
 data(examplemeteo)
 data(exampleforestMED)
-PH_cohName = paste0("T1_",exampleforestMED$treeData$Species[1])
-QI_cohName = paste0("T2_",exampleforestMED$treeData$Species[2])
-QC_cohName = paste0("S1_",exampleforestMED$shrubData$Species[1])
+PH_cohName = paste0("T1_",SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"])
+QI_cohName = paste0("T2_",SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus ilex"])
+QC_cohName = paste0("S1_",SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus coccifera"])
 data(SpParamsMED)
 examplesoil = soil(defaultSoilParams(4))
 control = defaultControl("Granier")

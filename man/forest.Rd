@@ -9,7 +9,7 @@
 \usage{
 emptyforest(ntree = 0, nshrub = 0)
 
-\method{summary}{forest}(object, SpParams, mode = "MED", detailed = FALSE, ...)
+\method{summary}{forest}(object, SpParams, mode = "MED", ...)
 
 \method{print}{summary.forest}(x, digits = getOption("digits"), ...)
 }
@@ -20,7 +20,7 @@ emptyforest(ntree = 0, nshrub = 0)
 \itemize{
   \item{\code{treeData}: A data frame of tree cohorts (in rows) and the following columns:
       \itemize{
-        \item{\code{Species}: Non-negative integer for tree species identity (i.e., 0,1,2,...).}
+        \item{\code{Species}: Species name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.}
         \item{\code{Height}: Total height (in cm).}
         \item{\code{DBH}: Diameter at breast height (in cm).}
         \item{\code{N}: Density (number of individuals/hectare).}
@@ -30,7 +30,7 @@ emptyforest(ntree = 0, nshrub = 0)
   }
   \item{\code{shrubData}: A data frame of shrub cohorts (in rows) and the following columns:
       \itemize{
-        \item{\code{Species}: Non-negative integer for shrub species identity (i.e., 0,1,2,...).}
+        \item{\code{Species}: Species name or a non-negative integer for shrub species identity (i.e., 0,1,2,...) matching SpParams.}
         \item{\code{Height}: Total height (in cm).}
         \item{\code{Cover}: Percent cover.}
         \item{\code{Z50}: Depth (in mm) corresponding to 50\% of fine roots.}
@@ -44,8 +44,6 @@ emptyforest(ntree = 0, nshrub = 0)
 \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
 
 \item{mode}{Calculation mode, either "MED" or "US".}
-
-\item{detailed}{A logical flag to indicate that a detailed summary is desired.}
 
 \item{...}{Additional parameters for functions \code{\link{summary}} and \code{\link{print}}.}
 

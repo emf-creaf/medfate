@@ -70,7 +70,7 @@ A last object is needed before calling simulation functions, called `spwbInput`.
 x = forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
 ```
 
-The `spwbInput` object for advanced water and energy balance is similar to that of simple water balance simulations, but contains more elements. Information about the cohort species is found in element `cohorts`  (i.e. code, species and name):
+The `spwbInput` object for advanced water and energy balance is similar to that of simple water balance simulations, but contains more elements. Information about the cohort species is found in element `cohorts`, i.e. the cohort code, the species index and species name:
 ```{r}
 x$cohorts
 ```

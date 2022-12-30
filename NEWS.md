@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.9.0
+- Allows species strings as input in forests objects
+
 # Version 2.8.3
 - Replacing sprintf calls
 - Update of forest_mergeShrubs and forest_mergeTrees
