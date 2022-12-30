@@ -43,7 +43,6 @@ recruitment<-function(forest, SpParams, control,
   } else {
     PARperc <- 100
   } 
-  print(forest)
   treeSpp <- character(0)
   shrubSpp <- character(0)
   if(is.null(control$seedRain)) {
@@ -322,19 +321,16 @@ fordyn<-function(forest, soil, SpParams,
     monthsYear <- months[years==year]
     # 1.1 Calls growth model
     if(verboseDyn) cat(paste0(" (a) Growth/mortality"))
-    print(xi$above)
     Gi <- growth(xi, meteoYear, latitude = latitude, 
                 elevation = elevation, slope = slope, aspect = aspect,
                 CO2ByYear = CO2ByYear)
-    print(xi$above)
-    
+
     # 1.2 Store growth results
     growthResults[[iYear]] <- Gi
     
     # 1.3 Retrieve modified growth output
     xo <- Gi$growthOutput
-    print(xo$above)
-    
+
     # 2.2 Update dead tree/shrub tables
     deadTreeTableYear <- .createDeadTreeTable(iYear, year, xo)
     deadShrubTableYear <- .createDeadShrubTable(iYear, year, xo)
