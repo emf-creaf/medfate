@@ -66,7 +66,7 @@ pobl_ctl
 Now we will fill in data for element `treeData` in the `forest` object. For that, we need to define a mapping from column names in `poblet_trees` to variables in `treeData`. The mapping can be defined using a **named string vector**, i.e. a vector where element names are variable names in `treeData` and vector elements are strings of the variable names in `poblet_trees`:
 
 ```{r}
-mapping = c("Species.name" = "Species", "DBH" = "Diameter.cm")
+mapping <- c("Species.name" = "Species", "DBH" = "Diameter.cm")
 ```
 
 We can now replace the empty `treeData` in `pobl_ctl` using functions `subset()` and `forest_mapTreeTable()`, the latter from **medfateutils**:
@@ -91,7 +91,7 @@ summary(pobl_ctl, SpParamsMED)
 The values of stand density and stand basal area are too low for such a dense forest, which indicates that something needs to be corrected. At this point, it is important to remember that `forest` objects need the density of trees to be specified as *stems per hectare*. We conducted our tree data mapping without indicating the area of the sampled plot. We are told that forest stand sampling was done using a circular plot whose radius was 15 m. We can calculate the sampled area using:
 
 ```{r}
-sampled_area = pi*15^2
+sampled_area <- pi*15^2
 ```
 
 and use this information to map the tree data again, where we specify parameter `plot_size_x`:
@@ -113,7 +113,7 @@ which results in a much higher basal area and density, as should be expected for
 Another issue that we see is the percentage of PAR and SWR that reaches the ground, which have missing values. This indicates that medfate cannot calculate the light extinction profile, in our case because tree heights are missing. Thus, we should somehow estimate tree heights, for example using an allometric relationship:
 
 ```{r}
-poblet_trees$Height.cm = 100 * 1.806*poblet_trees$Diameter.cm^0.518
+poblet_trees$Height.cm <- 100 * 1.806*poblet_trees$Diameter.cm^0.518
 summary(poblet_trees$Height.cm)
 ```
 
@@ -144,29 +144,16 @@ The fraction of PAR/SWR reaching the ground is low, as would be expected for a d
 Here we can repeat our mapping for the managed forest plot, which has two codes corresponding to before and after the thinning intervention. Let us first address the pre-thinning state:
 
 ```{r}
-pobl_thi_bef = emptyforest()
+pobl_thi_bef  <- emptyforest()
 pobl_thi_bef$treeData <- forest_mapTreeTable(subset(poblet_trees, Plot.Code=="POBL_THI_BEF"),
                                              mapping_x = mapping, SpParams = SpParamsMED, 
                                              plot_size_x = sampled_area)
-summary(pobl_thi_bef$treeData)
 ```
 
-Note that the `Species` variable contains two missing values. This will normally happen when some species cannot be identified. We can verify if this happens for other parts of the Poblet tree data:
+A warning is raised that not all species names could be parsed. In this case, the reason is that the name used for the downy oak (*Quercus humilis*) is a synonym and needs to be replaced by its accepted name (*Quercus pubescens*), which we can do:
 
 ```{r}
-sum(!(poblet_trees$Species %in% SpParamsMED$Name))
-```
-
-If we display species counts we can identify which species is not being parsed:
-
-```{r}
-table(poblet_trees$Species)
-```
-
-In this case, the name used for the downy oak (*Quercus humilis*) is a synonym and needs to be replaced by its accepted name (*Quercus pubescens*), which we can do:
-
-```{r}
-poblet_trees$Species[poblet_trees$Species=="Quercus humilis"] = "Quercus pubescens"
+poblet_trees$Species[poblet_trees$Species=="Quercus humilis"] <- "Quercus pubescens"
 ```
 
 Now we repeat our mapping:
