@@ -725,7 +725,12 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
   NumericVector bd = clone(as<NumericVector>(SoilParams["bd"]));
   NumericVector rfc = clone(as<NumericVector>(SoilParams["rfc"]));
 
-
+  if(any(is_na(clay))) stop("Missing values in soil 'clay'");
+  if(any(is_na(sand))) stop("Missing values in soil 'sand'");
+  if(any(is_na(om))) stop("Missing values in soil 'om'");
+  if(any(is_na(bd))) stop("Missing values in soil 'bd'");
+  if(any(is_na(rfc))) stop("Missing values in soil 'rfc'");
+  
   //Parameters to be calculated and state variables
   NumericVector macro(nlayers, NA_REAL);
   NumericVector temperature(nlayers, NA_REAL);
