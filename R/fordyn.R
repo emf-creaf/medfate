@@ -121,7 +121,6 @@ recruitment<-function(forest, SpParams, control,
   shrub_recr_prob <- species_parameter(shrubSpp, SpParams, "ProbRecr")
   shrub_recr_prob[is.na(shrub_recr_prob)] <- control$probRecr
   shrub_recr_prob[!shrub_recr_selection] <- 0
-  
   if(control$recruitmentMode=="stochastic") {
     recr_forest$treeData$N <- rbinom(length(treeSpp), size = 1, prob = tree_recr_prob)*rpois(length(treeSpp), recr_forest$treeData$N)
     recr_forest$shrubData$Cover <- rbinom(length(shrubSpp), size = 1, prob = shrub_recr_prob)*rpois(length(shrubSpp), recr_forest$shrubData$Cover)
@@ -307,15 +306,10 @@ fordyn<-function(forest, soil, SpParams,
   cutShrubTable <- shrubTable[numeric(),,drop = FALSE]
   
   #initial summaries
-  print(treeTable)
-  print(shrubTable)
-  print(deadTreeTable)
-  print(deadShrubTable)
   cohortSummary <-.summarizeCohorts(0, 
                                     treeTable, shrubTable,
                                     deadTreeTable, deadShrubTable,
                                     cutTreeTable, cutShrubTable)
-  print(cohortSummary)
   speciesSummary<-.summarizeSpecies(0,cohortSummary, xi, SpParams)
   standSummary<-.summarizeStand(0,cohortSummary, xi)
 
@@ -450,7 +444,7 @@ fordyn<-function(forest, soil, SpParams,
     treeOffset <- treeOffset + nrow(planted_forest$treeData)
     shrubOffset <- shrubOffset + nrow(planted_forest$shrubData)
     recr_above <- forest2aboveground(recr_forest, SpParams, NA, "MED")
-    row.names(recr_above) <- plant_ID(recr_forest, treeOffset, shrubOffset)
+    row.names(recr_above) <- plant_ID(recr_forest, SpParams, treeOffset, shrubOffset)
     treeOffset <- treeOffset + nrow(recr_forest$treeData)
     shrubOffset <- shrubOffset + nrow(recr_forest$shrubData)
     forest_above <- forest2aboveground(forest, SpParams, NA, "MED")
