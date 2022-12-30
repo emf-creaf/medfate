@@ -6,18 +6,18 @@
 #' \itemize{
 #'   \item{\code{treeData}: A data frame of tree cohorts (in rows) and the following columns:
 #'       \itemize{
-#'         \item{\code{Species}: Species name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.}
-#'         \item{\code{Height}: Total height (in cm).}
-#'         \item{\code{DBH}: Diameter at breast height (in cm).}
-#'         \item{\code{N}: Density (number of individuals/hectare).}
+#'         \item{\code{Species}: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.}
+#'         \item{\code{Height}: Total tree height (in cm).}
+#'         \item{\code{DBH}: Tree diameter at breast height (in cm).}
+#'         \item{\code{N}: Density (number of individuals/hectare) that the measured tree represents.}
 #'         \item{\code{Z50}: Depth (in mm) corresponding to 50\% of fine roots.}
 #'         \item{\code{Z95}: Depth (in mm) corresponding to 95\% of fine roots.}
 #'      }
 #'   }
 #'   \item{\code{shrubData}: A data frame of shrub cohorts (in rows) and the following columns:
 #'       \itemize{
-#'         \item{\code{Species}: Species name or a non-negative integer for shrub species identity (i.e., 0,1,2,...) matching SpParams.}
-#'         \item{\code{Height}: Total height (in cm).}
+#'         \item{\code{Species}: String with species (taxon) name or a non-negative integer for shrub species identity (i.e., 0,1,2,...) matching SpParams.}
+#'         \item{\code{Height}: Average total height of plants (in cm).}
 #'         \item{\code{Cover}: Percent cover.}
 #'         \item{\code{Z50}: Depth (in mm) corresponding to 50\% of fine roots.}
 #'         \item{\code{Z95}: Depth (in mm) corresponding to 95\% of fine roots.}
@@ -48,6 +48,10 @@
 #' data(exampleforestMED)
 #' data(SpParamsMED)
 #' 
+#' # Example forest
+#' exampleforestMED
+#' 
+#' # Summary of example forest
 #' summary(exampleforestMED, SpParamsMED)
 #' 
 #' @name forest
