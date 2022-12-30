@@ -16,3 +16,9 @@ test_that("Can produce all vertical profiles",{
 test_that("Test forest summary",{
   expect_s3_class(summary(exampleforestMED, SpParamsMED), "summary.forest")
 })
+
+test_that("Test forest merging",{
+  expect_s3_class(forest_mergeTrees(exampleforestMED), "forest")
+  expect_s3_class(forest_mergeShrubs(exampleforestMED), "forest")
+})
+
