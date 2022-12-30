@@ -36,6 +36,15 @@ test_that("fordyn can be run in example and empty forests",{
                          latitude = 41.82592, elevation = 100), "fordyn")
 })
 
+test_that("fordyn can be run using species codes",{
+  f <- exampleforestMED
+  f$treeData$Species <- c(148, 168)
+  f$shrubData$Species <- 165
+  expect_s3_class(fordyn(f, examplesoil, 
+                         SpParamsMED, meteo_01_02, control,
+                         latitude = 41.82592, elevation = 100), "fordyn")
+})
+
 test_that("fordyn can be run in example and empty forests using management",{
   expect_s3_class(fordyn(exampleforestMED, examplesoil, 
                          SpParamsMED, meteo_01_02, control,
