@@ -147,7 +147,8 @@
   return(dtt)
 }
 .createCutTreeTable<-function(step, year, x, N_cut) {
-  range = 1:length(N_cut)
+  range = numeric(0)
+  if(length(N_cut)>0) range = 1:length(N_cut)
   tt<-data.frame(Step = rep(step, length(N_cut)), 
                  Year = rep(year, length(N_cut)),
                  Cohort = row.names(x$cohorts)[range],
