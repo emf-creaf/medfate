@@ -389,21 +389,20 @@ fire_Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, win
 #' #Load example plot
 #' data(exampleforestMED)
 #' 
-#' #A short way to obtain total basal area
-#' sum(plant_basalArea(exampleforestMED), na.rm=TRUE)
+#' #A plant-level way to obtain stand basal area
+#' sum(plant_basalArea(exampleforestMED, SpParamsMED), na.rm=TRUE)
 #' 
-#' #The same forest level function for LAI
+#' #The analogous plant-level function for LAI
 #' sum(plant_LAI(exampleforestMED, SpParamsMED))
 #'   
-#' #The same forest level function for fuel loading
+#' #The analogous plant-level function for fuel loading
 #' sum(plant_fuel(exampleforestMED, SpParamsMED))
 #'       
 #' #Summary function for 'forest' objects can be also used
 #' summary(exampleforestMED, SpParamsMED)
 #' 
-#' plant_speciesName(exampleforestMED, SpParamsMED)
-#' 
-#' plant_ID(exampleforestMED)
+#' #Cohort IDs in the models
+#' plant_ID(exampleforestMED, SpParamsMED)
 #'       
 #' @name plant_values
 plant_ID <- function(x, SpParams, treeOffset = 0L, shrubOffset = 0L) {
@@ -504,7 +503,7 @@ plant_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
 #' @param gdd Growth degree days (to account for leaf phenology effects).
 #' @param includeDead A flag to indicate that standing dead fuels (dead branches) are included.
 #' @param mode Calculation mode, either "MED" or "US".
-#' @param SP An integer vector of species codes.
+#' @param species A character vector of species names.
 #' @param parName A string with a parameter name.
 #' @param fillMissing A boolean flag to try imputation on missing values.
 #' 
@@ -536,7 +535,7 @@ plant_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
 #' # Species basal area in the forest plot
 #' species_basalArea(exampleforestMED, SpParamsMED)
 #'   
-#' # Value of parameter "Psi_Extract" for Pinus halepensis and Quercus ilex
+#' # Value of parameter "Psi_Extract" for two species
 #' species_parameter(c("Pinus halepensis", "Quercus ilex"), SpParamsMED, "Psi_Extract")
 #'     
 #' @name species_values

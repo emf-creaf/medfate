@@ -127,21 +127,20 @@ data(SpParamsMED)
 #Load example plot
 data(exampleforestMED)
 
-#A short way to obtain total basal area
-sum(plant_basalArea(exampleforestMED), na.rm=TRUE)
+#A plant-level way to obtain stand basal area
+sum(plant_basalArea(exampleforestMED, SpParamsMED), na.rm=TRUE)
 
-#The same forest level function for LAI
+#The analogous plant-level function for LAI
 sum(plant_LAI(exampleforestMED, SpParamsMED))
   
-#The same forest level function for fuel loading
+#The analogous plant-level function for fuel loading
 sum(plant_fuel(exampleforestMED, SpParamsMED))
       
 #Summary function for 'forest' objects can be also used
 summary(exampleforestMED, SpParamsMED)
 
-plant_speciesName(exampleforestMED, SpParamsMED)
-
-plant_ID(exampleforestMED)
+#Cohort IDs in the models
+plant_ID(exampleforestMED, SpParamsMED)
       
 }
 \seealso{

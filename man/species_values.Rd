@@ -42,11 +42,11 @@ species_parameter(species, SpParams, parName, fillMissing = TRUE)
 
 \item{includeDead}{A flag to indicate that standing dead fuels (dead branches) are included.}
 
+\item{species}{A character vector of species names.}
+
 \item{parName}{A string with a parameter name.}
 
 \item{fillMissing}{A boolean flag to try imputation on missing values.}
-
-\item{SP}{An integer vector of species codes.}
 }
 \value{
 A vector with values for each species in \code{SpParams}:
@@ -75,7 +75,7 @@ data(exampleforestMED)
 # Species basal area in the forest plot
 species_basalArea(exampleforestMED, SpParamsMED)
   
-# Value of parameter "Psi_Extract" for Pinus halepensis and Quercus ilex
+# Value of parameter "Psi_Extract" for two species
 species_parameter(c("Pinus halepensis", "Quercus ilex"), SpParamsMED, "Psi_Extract")
     
 }
