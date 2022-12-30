@@ -440,7 +440,7 @@ fordyn<-function(forest, soil, SpParams,
     
     # 4.1 Generate above-ground data
     planted_above <- forest2aboveground(planted_forest, SpParams, NA, "MED")
-    row.names(planted_above) <- plant_ID(planted_forest, treeOffset, shrubOffset)
+    row.names(planted_above) <- plant_ID(planted_forest, SpParams, treeOffset, shrubOffset)
     treeOffset <- treeOffset + nrow(planted_forest$treeData)
     shrubOffset <- shrubOffset + nrow(planted_forest$shrubData)
     recr_above <- forest2aboveground(recr_forest, SpParams, NA, "MED")
