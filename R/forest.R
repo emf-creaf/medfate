@@ -59,12 +59,17 @@
 #' @rdname forest
 emptyforest <- function(ntree = 0, nshrub = 0) {
   l <- list()
-  l$treeData <- data.frame(Species=character(ntree),DBH=numeric(ntree), 
-                          Height=numeric(ntree), N=numeric(ntree),
-                          Z50 = numeric(ntree), Z95=numeric(ntree))
-  l$shrubData <- data.frame(Species=character(nshrub), Height=numeric(nshrub), 
-                           Cover = numeric(nshrub), 
-                           Z50 = numeric(nshrub), Z95=numeric(nshrub))
+  l$treeData <- data.frame(Species=as.character(rep(NA, ntree)),
+                           DBH=as.numeric(rep(NA, ntree)), 
+                           Height=as.numeric(rep(NA, ntree)), 
+                           N=as.numeric(rep(NA, ntree)),
+                           Z50 = as.numeric(rep(NA, ntree)), 
+                           Z95=as.numeric(rep(NA, ntree)))
+  l$shrubData <- data.frame(Species=as.character(rep(NA, nshrub)), 
+                            Height=as.numeric(rep(NA, nshrub)), 
+                            Cover = as.numeric(rep(NA, nshrub)), 
+                            Z50 = as.numeric(rep(NA, nshrub)), 
+                            Z95=as.numeric(rep(NA, nshrub)))
   l$herbCover <- 0;
   l$herbHeight <- 0;
   class(l)<-c("forest","list")
