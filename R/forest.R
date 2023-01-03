@@ -70,8 +70,8 @@ emptyforest <- function(ntree = 0, nshrub = 0) {
                             Cover = as.numeric(rep(NA, nshrub)), 
                             Z50 = as.numeric(rep(NA, nshrub)), 
                             Z95=as.numeric(rep(NA, nshrub)))
-  l$herbCover <- 0;
-  l$herbHeight <- 0;
+  l$herbCover <- NA;
+  l$herbHeight <- NA;
   class(l)<-c("forest","list")
   return(l)
 }
