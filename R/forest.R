@@ -84,7 +84,13 @@ summary.forest<-function(object, SpParams, mode = "MED", ...) {
   
   s <- list()
   s["BA"] <- stand_basalArea(object)
-  s["N"] <- sum(plant_density(object, SpParams, mode = mode), na.rm=TRUE)
+  N_cov <- plant_density(object, SpParams, mode = mode)
+  Nt<-0
+  Nsh<-0
+  if(ntree>0) Nt <- sum(N_cov[1:ntree], na.rm=TRUE)
+  if(nshrub>0) Nsh <- sum(N_cov[(1+ntree):(1+ntree+nshrub)], na.rm=TRUE)
+  s["Tree_density"] <- Nt
+  s["Shrub_density"] <- Nsh
   coh_cov <- plant_cover(object, SpParams, mode = mode)
   covt <- 0
   covsh <- 0
@@ -117,8 +123,8 @@ summary.forest<-function(object, SpParams, mode = "MED", ...) {
 
 #' @rdname forest
 print.summary.forest<-function(x, digits=getOption("digits"),...) {
-  cat(paste("Tree density (ind/ha):", x[["N"]],"\n"))
   cat(paste("Tree BA (m2/ha):", round(x[["BA"]],digits),"\n"))
+  cat(paste("Density (ind/ha) trees:", round(x[["Tree_density"]], digits), " shrubs (estimated):", round(x[["Shrub_density"]],digits),"\n"))
   cat(paste("Cover (%) trees (open ground):", round(x[["Tree_cover"]],digits), " shrubs:", round(x[["Shrub_cover"]],digits),"\n"))
   cat(paste("Shrub crown phytovolume (m3/m2):", round(x[["Phytovolume"]],digits),"\n"))
   cat(paste("LAI (m2/m2) total:", round(x[["LAI"]], digits)," trees:", round(x[["LAI_trees"]], digits),
