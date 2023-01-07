@@ -196,7 +196,7 @@ void closePlantBiomassBalance(DataFrame plantBiomassBalance, List x,
   NumericVector CohortBiomassChange = Rcpp::as<Rcpp::NumericVector>(plantBiomassBalance["CohortBiomassChange"]);
   
   //PLANT BIOMASS balance (g_ind)
-  for(int j; j<numCohorts;j++) {
+  for(int j=0; j<numCohorts;j++) {
     double sapwoodBiomassBalance = finalSapwoodBiomass_ind[j] - InitialSapwoodBiomass[j];
     StructuralBiomassChange[j] = structuralFinalBiomass_ind[j] - InitialStructuralBiomass[j];
     LabileBiomassChange[j] = labileFinalBiomass_ind[j] - InitialLabileBiomass[j];
@@ -377,20 +377,6 @@ List growthDayInner(List x, NumericVector meteovec,
   }
   //Weather
   double tday = meteovec["tday"];
-  double tmin = meteovec["tmin"];
-  double tmax = meteovec["tmax"];
-  double rhmin = meteovec["rhmin"];
-  double rhmax = meteovec["rhmax"];
-  double rad = meteovec["rad"];
-  double wind = NA_REAL, tminPrev = NA_REAL, tmaxPrev = NA_REAL, tminNext = NA_REAL;
-  double Catm = NA_REAL;
-  if(transpirationMode=="Sperry") {
-    wind = meteovec["wind"];
-    tminPrev = meteovec["tminPrev"];
-    tmaxPrev = meteovec["tmaxPrev"];
-    tminNext = meteovec["tminNext"];
-    Catm = meteovec["Catm"];
-  }
 
 
   //Cohort info
@@ -790,7 +776,7 @@ List growthDayInner(List x, NumericVector meteovec,
         for(int s=0;s<numSteps;s++) {
           
           //Transform sugar concentration (mol gluc · l-1) to sugar mass (g gluc)
-          double leafSugarMassStep = sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass);
+          // double leafSugarMassStep = sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass);
           double sapwoodSugarMassStep = sugarSapwood[j]*(Volume_sapwood[j]*glucoseMolarMass);
           
           //LEAF PHOTOSYNTHESIS and RESPIRATION
@@ -810,7 +796,7 @@ List growthDayInner(List x, NumericVector meteovec,
           }
           
           //MAINTENANCE RESPIRATION
-          double B_resp_leaves = LeafStructBiomass[j] + leafSugarMassStep;
+          // double B_resp_leaves = LeafStructBiomass[j] + leafSugarMassStep;
           double B_resp_sapwood = SapwoodLivingStructBiomass[j] + sapwoodSugarMassStep;
           double B_resp_fineroots = fineRootBiomass[j];
           double QR = qResp(Tcan[s]);
@@ -1030,7 +1016,7 @@ List growthDayInner(List x, NumericVector meteovec,
         
       //UPDATE LEAF AREA, SAPWOOD AREA, FINE ROOT BIOMASS AND CONCENTRATION IN LABILE POOLS
       // Rcout<<"-update";
-      double LAprev = LAexpanded;
+      // double LAprev = LAexpanded;
       LAexpanded += deltaLAgrowth[j] - deltaLAsenescence;
       if(LAexpanded < 0.0) {
         deltaLAsenescence -= LAexpanded;
@@ -1039,7 +1025,7 @@ List growthDayInner(List x, NumericVector meteovec,
       LAdead += deltaLAsenescence;
       LAI_dead[j] = LAdead*N[j]/10000.0;
       LAI_expanded[j] = LAexpanded*N[j]/10000.0;
-      double SAprev = SA[j];
+      // double SAprev = SA[j];
       SA[j] = SA[j] + deltaSAgrowth[j] - deltaSASenescence; 
       NumericVector newFRB(numLayers,0.0);
       for(int s=0;s<numLayers;s++) {
@@ -1107,7 +1093,7 @@ List growthDayInner(List x, NumericVector meteovec,
       
       //MORTALITY Death by carbon starvation or dessication
       // Rcout<<"-mortality";
-      double Nprev = N[j]; //Store initial density (for biomass balance)
+      // double Nprev = N[j]; //Store initial density (for biomass balance)
       double Ndead_day = 0.0;
       bool dynamicCohort = true;
       bool isShrub = !NumericVector::is_na(Cover[j]);
@@ -1657,7 +1643,6 @@ List growth(List x, DataFrame meteo, double latitude,
   bool leafPhenology = control["leafPhenology"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
   bool multiLayerBalance = control["multiLayerBalance"];
-  bool shrubDynamics = control["shrubDynamics"];
   checkgrowthInput(x, transpirationMode, soilFunctions);
 
   //Store input
@@ -1671,8 +1656,7 @@ List growth(List x, DataFrame meteo, double latitude,
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
   IntegerVector SPunique = uniqueSpp(SP);
-  int numSpecies = SPunique.size();
-  
+
   if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
   double latrad = latitude * (M_PI/180.0);
   if(NumericVector::is_na(aspect)) aspect = 0.0;
@@ -1850,7 +1834,6 @@ List growth(List x, DataFrame meteo, double latitude,
   if(verbose) Rcout << "Performing daily simulations\n";
   List s;
   std::string yearString;
-  int iyear = 0;
   for(int i=0;i<numDays;i++) {
     std::string c = as<std::string>(dateStrings[i]);
     yearString = c.substr(0, 4);
