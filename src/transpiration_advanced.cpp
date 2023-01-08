@@ -312,8 +312,7 @@ List transpirationSperry(List x, NumericVector meteovec,
   double thermalCapacityLAI = control["thermalCapacityLAI"];
   bool multiLayerBalance = control["multiLayerBalance"];
   double defaultWindSpeed = control["defaultWindSpeed"];
-  double nonSugarConcentration = control["nonSugarConcentration"];
-  
+
   //Meteo input
   double tmin = meteovec["tmin"];
   double tmax = meteovec["tmax"];
@@ -910,7 +909,7 @@ List transpirationSperry(List x, NumericVector meteovec,
         }
 
         //Determine turgor loss point (as proxy of stomatal closure)
-        double psiTlp = turgorLossPoint(LeafPI0[c], LeafEPS[c]);
+        // double psiTlp = turgorLossPoint(LeafPI0[c], LeafEPS[c]);
         
         //Retrieve transpiration, LeafPsi and dEdP vectors
         fittedE = sFunctionAbove["E"];

@@ -212,14 +212,8 @@ List spwbDay2(List x, NumericVector meteovec,
   //Meteo input
   double tmin = meteovec["tmin"];
   double tmax = meteovec["tmax"];
-  double tminPrev = meteovec["tminPrev"];
-  double tmaxPrev = meteovec["tmaxPrev"];
-  double tminNext = meteovec["tminNext"];
   double prec = meteovec["prec"];
-  double rhmin = meteovec["rhmin"];
-  double rhmax = meteovec["rhmax"];
   double rad = meteovec["rad"];
-  double wind = meteovec["wind"];
   double pet = meteovec["pet"];
   double er = meteovec["er"];
     
@@ -285,8 +279,7 @@ List spwbDay2(List x, NumericVector meteovec,
                                       _["DeepDrainage"] = 0.0);
     EsoilVec = NumericVector(nlayers,0.0);
     for(int c=0;c<numCohorts;c++) {
-      double f_soil_c = LAIlive[c]/LAIcelllive;
-      
+
       //Clone soil and copy moisture values from x
       List soil_c =  clone(soil);
       NumericVector W_c = soil_c["W"];
@@ -1600,7 +1593,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
           error_occurence = true;
         }
       } else if(transpirationMode=="Sperry") {
-        int ntimesteps = control["ndailysteps"];
+        // int ntimesteps = control["ndailysteps"];
         double tmaxPrev = tmax;
         double tminPrev = tmin;
         double tminNext = tmin;
@@ -1902,9 +1895,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       std::string c = as<std::string>(dateStrings[i]);
       J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
     }
-    double delta = meteoland::radiation_solarDeclination(J);
-    double solarConstant = meteoland::radiation_solarConstant(J);
-    
+
     double tmin = MinTemperature[i];
     double tmax = MaxTemperature[i];
     double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
