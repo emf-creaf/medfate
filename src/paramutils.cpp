@@ -42,7 +42,7 @@ void checkSpeciesParameters(DataFrame SpParams, CharacterVector params) {
 }
 
 IntegerVector speciesIndex(CharacterVector species, DataFrame SpParams){
-  IntegerVector spIndex(species.size(), NA_REAL);
+  IntegerVector spIndex(species.size(), NA_INTEGER);
   IntegerVector spIndexSP = Rcpp::as<Rcpp::IntegerVector>(SpParams["SpIndex"]);
   for(int i=0;i<species.size();i++) {
     int iSP = findSpParamsRowByName(species[i], SpParams);
