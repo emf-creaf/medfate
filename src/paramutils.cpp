@@ -1326,22 +1326,26 @@ NumericVector treeAllometricCoefficientWithImputation(IntegerVector SP, DataFram
   NumericVector coef = speciesNumericParameterFromIndex(SP,SpParams, parName);
   CharacterVector group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
   for(int i=0;i<coef.size();i++) { // From De Caceres et al. 2019
+    //Limit to group values for 'c' 
+    if(parName=="c_fbt") {
+      if(group[i]=="Gymnosperm") coef[i] = std::min(coef[i],-0.0066);
+      else coef[i] = std::min(coef[i],-0.0147);
+    }
+    if(parName=="d_fbt") {
+      coef[i] = 0.0;
+    }
     if(NumericVector::is_na(coef[i])) {
       if(parName=="a_fbt") {
-        if(group[i]=="Gymnosperm") coef[i] = 0.048;
-        else coef[i] = 0.1123;
+        if(group[i]=="Gymnosperm") coef[i] = 0.0527;
+        else coef[i] = 0.1300;
       }
       else if(parName=="b_fbt") {
-        if(group[i]=="Gymnosperm") coef[i] = 1.5675;
-        else coef[i] = 1.2215;
+        if(group[i]=="Gymnosperm") coef[i] = 1.5782;
+        else coef[i] = 1.2285;
       }
       else if(parName=="c_fbt") {
-        if(group[i]=="Gymnosperm") coef[i] = -0.0255;
-        else coef[i] = -0.0194;
-      }
-      else if(parName=="d_fbt") {
-        if(group[i]=="Gymnosperm") coef[i] = 0.0;
-        else coef[i] = 0.0057;
+        if(group[i]=="Gymnosperm") coef[i] = -0.0066;
+        else coef[i] = -0.0147;
       }
       else if(parName=="a_cw") {
         if(group[i]=="Gymnosperm") coef[i] = 0.747;

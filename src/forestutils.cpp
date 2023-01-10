@@ -280,12 +280,11 @@ NumericVector treeFoliarBiomassMED(IntegerVector SP, NumericVector N, NumericVec
   NumericVector afbt = speciesNumericParameterWithImputation(SP, SpParams, "a_fbt",true);
   NumericVector bfbt = speciesNumericParameterWithImputation(SP, SpParams, "b_fbt",true);
   NumericVector cfbt = speciesNumericParameterWithImputation(SP, SpParams, "c_fbt",true);
-  NumericVector dfbt = speciesNumericParameterWithImputation(SP, SpParams, "d_fbt",true);
   NumericVector ltba = largerTreeBasalArea(N,dbh, 1.0); //Allometries were calibrated including the target cohort
   int ncoh = N.size();
   NumericVector lb(ncoh);
   for(int i=0;i<ncoh;i++) {
-    lb[i] = ((N[i]/10000)*afbt[i]*pow(dbh[i], bfbt[i])*exp(cfbt[i]*ltba[i])*pow(dbh[i], dfbt[i]*ltba[i]));
+    lb[i] = ((N[i]/10000)*afbt[i]*pow(std::min(50.0,dbh[i]), bfbt[i])*exp(cfbt[i]*ltba[i]));
   }
   if(!NumericVector::is_na(gdd)) {
     NumericVector Sgdd = speciesNumericParameterWithImputation(SP, SpParams, "Sgdd");
@@ -1162,11 +1161,11 @@ NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL,
   double cum_shrub = sum(shLAI);
   NumericVector lai(tLAI.size()+shLAI.size());
   for(int i=0;i<tLAI.size();i++) {
-    if(cum_tree > max_tree_lai) lai[i] = tLAI[i]*(max_tree_lai/cum_tree);
+    if(bounded && (cum_tree > max_tree_lai)) lai[i] = tLAI[i]*(max_tree_lai/cum_tree);
     else lai[i] = tLAI[i];
   }
   for(int i=0;i<shLAI.size();i++) {
-    if(cum_shrub > max_shrub_lai) lai[i+tLAI.size()] = shLAI[i]*(max_shrub_lai/cum_shrub);
+    if(bounded && (cum_shrub > max_shrub_lai)) lai[i+tLAI.size()] = shLAI[i]*(max_shrub_lai/cum_shrub);
     else lai[i+tLAI.size()] = shLAI[i];
   }
   lai.attr("names") = cohortIDs(x, SpParams);
