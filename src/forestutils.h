@@ -51,12 +51,12 @@ NumericVector cohortEquilibriumSmallBranchLitter(List x, DataFrame SpParams, dou
 
 NumericVector cohortCover(List x, DataFrame SpParams, String mode = "MED");
 
-NumericVector treeLAI(IntegerVector SP, NumericVector N, NumericVector dbh, DataFrame SpParams, NumericVector pEmb=NumericVector(0), double gdd = NA_REAL);
-NumericVector shrubLAI(IntegerVector SP, NumericVector Cover, NumericVector H, DataFrame SpParams, double gdd = NA_REAL);
-NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED");
+NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED", bool bounded = true);
+
 NumericMatrix LAIdistributionVectors(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR);
 NumericVector LAIprofileVectors(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR);
-NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED");
+
+NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED", bool bounded = true);
 
 IntegerVector uniqueSpp(IntegerVector sp);
 

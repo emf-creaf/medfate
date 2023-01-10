@@ -580,8 +580,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // cohortLAI
-NumericVector cohortLAI(List x, DataFrame SpParams, double gdd, String mode);
-RcppExport SEXP _medfate_cohortLAI(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
+NumericVector cohortLAI(List x, DataFrame SpParams, double gdd, String mode, bool bounded);
+RcppExport SEXP _medfate_cohortLAI(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP, SEXP boundedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -589,7 +589,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
     Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortLAI(x, SpParams, gdd, mode));
+    Rcpp::traits::input_parameter< bool >::type bounded(boundedSEXP);
+    rcpp_result_gen = Rcpp::wrap(cohortLAI(x, SpParams, gdd, mode, bounded));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -673,8 +674,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // speciesLAI
-NumericVector speciesLAI(List x, DataFrame SpParams, double gdd, String mode);
-RcppExport SEXP _medfate_speciesLAI(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
+NumericVector speciesLAI(List x, DataFrame SpParams, double gdd, String mode, bool bounded);
+RcppExport SEXP _medfate_speciesLAI(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP, SEXP boundedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -682,7 +683,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
     Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
-    rcpp_result_gen = Rcpp::wrap(speciesLAI(x, SpParams, gdd, mode));
+    Rcpp::traits::input_parameter< bool >::type bounded(boundedSEXP);
+    rcpp_result_gen = Rcpp::wrap(speciesLAI(x, SpParams, gdd, mode, bounded));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -740,8 +742,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // standLAI
-double standLAI(List x, DataFrame SpParams, double gdd, String mode);
-RcppExport SEXP _medfate_standLAI(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
+double standLAI(List x, DataFrame SpParams, double gdd, String mode, bool bounded);
+RcppExport SEXP _medfate_standLAI(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP, SEXP boundedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -749,7 +751,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
     Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
-    rcpp_result_gen = Rcpp::wrap(standLAI(x, SpParams, gdd, mode));
+    Rcpp::traits::input_parameter< bool >::type bounded(boundedSEXP);
+    rcpp_result_gen = Rcpp::wrap(standLAI(x, SpParams, gdd, mode, bounded));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -768,8 +771,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // LAIdistribution
-NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, double gdd, String mode);
-RcppExport SEXP _medfate_LAIdistribution(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
+NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, double gdd, String mode, bool bounded);
+RcppExport SEXP _medfate_LAIdistribution(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP, SEXP boundedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -778,7 +781,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
     Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
-    rcpp_result_gen = Rcpp::wrap(LAIdistribution(z, x, SpParams, gdd, mode));
+    Rcpp::traits::input_parameter< bool >::type bounded(boundedSEXP);
+    rcpp_result_gen = Rcpp::wrap(LAIdistribution(z, x, SpParams, gdd, mode, bounded));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -797,8 +801,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // LAIprofile
-NumericVector LAIprofile(NumericVector z, List x, DataFrame SpParams, double gdd, String mode);
-RcppExport SEXP _medfate_LAIprofile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
+NumericVector LAIprofile(NumericVector z, List x, DataFrame SpParams, double gdd, String mode, bool bounded);
+RcppExport SEXP _medfate_LAIprofile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP, SEXP boundedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -807,7 +811,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
     Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
-    rcpp_result_gen = Rcpp::wrap(LAIprofile(z, x, SpParams, gdd, mode));
+    Rcpp::traits::input_parameter< bool >::type bounded(boundedSEXP);
+    rcpp_result_gen = Rcpp::wrap(LAIprofile(z, x, SpParams, gdd, mode, bounded));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4829,23 +4834,23 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_cohortEquilibriumLeafLitter", (DL_FUNC) &_medfate_cohortEquilibriumLeafLitter, 4},
     {"_medfate_cohortEquilibriumSmallBranchLitter", (DL_FUNC) &_medfate_cohortEquilibriumSmallBranchLitter, 4},
     {"_medfate_cohortPhytovolume", (DL_FUNC) &_medfate_cohortPhytovolume, 2},
-    {"_medfate_cohortLAI", (DL_FUNC) &_medfate_cohortLAI, 4},
+    {"_medfate_cohortLAI", (DL_FUNC) &_medfate_cohortLAI, 5},
     {"_medfate_speciesBasalArea", (DL_FUNC) &_medfate_speciesBasalArea, 2},
     {"_medfate_speciesCover", (DL_FUNC) &_medfate_speciesCover, 3},
     {"_medfate_speciesDensity", (DL_FUNC) &_medfate_speciesDensity, 3},
     {"_medfate_speciesFoliarBiomass", (DL_FUNC) &_medfate_speciesFoliarBiomass, 4},
     {"_medfate_speciesFuel", (DL_FUNC) &_medfate_speciesFuel, 5},
     {"_medfate_speciesPhytovolume", (DL_FUNC) &_medfate_speciesPhytovolume, 2},
-    {"_medfate_speciesLAI", (DL_FUNC) &_medfate_speciesLAI, 4},
+    {"_medfate_speciesLAI", (DL_FUNC) &_medfate_speciesLAI, 5},
     {"_medfate_standBasalArea", (DL_FUNC) &_medfate_standBasalArea, 2},
     {"_medfate_standFoliarBiomass", (DL_FUNC) &_medfate_standFoliarBiomass, 4},
     {"_medfate_standPhytovolume", (DL_FUNC) &_medfate_standPhytovolume, 2},
     {"_medfate_standFuel", (DL_FUNC) &_medfate_standFuel, 5},
-    {"_medfate_standLAI", (DL_FUNC) &_medfate_standLAI, 4},
+    {"_medfate_standLAI", (DL_FUNC) &_medfate_standLAI, 5},
     {"_medfate_LAIdistributionVectors", (DL_FUNC) &_medfate_LAIdistributionVectors, 4},
-    {"_medfate_LAIdistribution", (DL_FUNC) &_medfate_LAIdistribution, 5},
+    {"_medfate_LAIdistribution", (DL_FUNC) &_medfate_LAIdistribution, 6},
     {"_medfate_LAIprofileVectors", (DL_FUNC) &_medfate_LAIprofileVectors, 4},
-    {"_medfate_LAIprofile", (DL_FUNC) &_medfate_LAIprofile, 5},
+    {"_medfate_LAIprofile", (DL_FUNC) &_medfate_LAIprofile, 6},
     {"_medfate_forest2aboveground", (DL_FUNC) &_medfate_forest2aboveground, 4},
     {"_medfate_forest2belowground", (DL_FUNC) &_medfate_forest2belowground, 3},
     {"_medfate_fuelConditions", (DL_FUNC) &_medfate_fuelConditions, 4},

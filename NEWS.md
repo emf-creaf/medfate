@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.9.3
+- Bounded leaf area index
+
 # Version 2.9.1
 - Allows species strings as input in forests objects
 - Clean code in growth.cpp

@@ -63,7 +63,7 @@ plant_equilibriumSmallBranchLitter(
 
 plant_phytovolume(x, SpParams)
 
-plant_LAI(x, SpParams, gdd = NA_real_, mode = "MED")
+plant_LAI(x, SpParams, gdd = NA_real_, mode = "MED", bounded = TRUE)
 
 plant_characterParameter(x, SpParams, parName)
 
@@ -87,6 +87,8 @@ plant_parameter(x, SpParams, parName, fillMissing = TRUE)
 \item{AET}{Actual annual evapotranspiration (in mm).}
 
 \item{smallBranchDecompositionRate}{Decomposition rate of small branches.}
+
+\item{bounded}{A boolean flag to indicate that extreme values should be prevented (maximum tree LAI = 7 and maximum shrub LAI = 3)}
 
 \item{parName}{A string with a parameter name.}
 

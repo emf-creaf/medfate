@@ -300,7 +300,7 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
     cthabs = z[index3abs+1];
   }
   
-  NumericVector cLAI = cohortLAI(object,SpParams, NA_REAL, mode);
+  NumericVector cLAI = cohortLAI(object,SpParams, NA_REAL, mode, true);
   NumericVector cH = cohortHeight(object, SpParams);
   NumericVector cCR = cohortCrownRatio(object,SpParams, mode);
   double understoryLAI = layerLAI(fbbh, fbh, cLAI, cH, cCR);

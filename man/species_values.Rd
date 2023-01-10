@@ -25,7 +25,7 @@ species_fuel(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED")
 
 species_phytovolume(x, SpParams)
 
-species_LAI(x, SpParams, gdd = NA_real_, mode = "MED")
+species_LAI(x, SpParams, gdd = NA_real_, mode = "MED", bounded = TRUE)
 
 species_characterParameter(species, SpParams, parName)
 
@@ -41,6 +41,8 @@ species_parameter(species, SpParams, parName, fillMissing = TRUE)
 \item{gdd}{Growth degree days (to account for leaf phenology effects).}
 
 \item{includeDead}{A flag to indicate that standing dead fuels (dead branches) are included.}
+
+\item{bounded}{A boolean flag to indicate that extreme values should be prevented (maximum tree LAI = 7 and maximum shrub LAI = 3)}
 
 \item{species}{A character vector of species names.}
 

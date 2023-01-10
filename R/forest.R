@@ -82,39 +82,42 @@ summary.forest<-function(object, SpParams, mode = "MED", ...) {
   ntree <- nrow(object$treeData)
   nshrub <- nrow(object$shrubData)
   
+  selTree <- c(rep(TRUE, ntree), rep(FALSE, nshrub))
+  selAdult <- c(object$treeData$DBH > 5.0, rep(FALSE, nshrub))
+  selSapling <- c(object$treeData$DBH <= 5.0, rep(FALSE, nshrub))
+  selShrub <- c(rep(FALSE, ntree), rep(TRUE, nshrub))
+
+  coh_N <- plant_density(object, SpParams, mode = mode)
+  coh_cov <- plant_cover(object, SpParams, mode = mode)
+  coh_lai <- plant_LAI(object, SpParams, mode= mode)
+  coh_fuel <- plant_fuel(object, SpParams, mode= mode)
+  
   s <- list()
   s["BA"] <- stand_basalArea(object)
-  N_cov <- plant_density(object, SpParams, mode = mode)
-  Nt<-0
-  Nsh<-0
-  if(ntree>0) Nt <- sum(N_cov[1:ntree], na.rm=TRUE)
-  if(nshrub>0) Nsh <- sum(N_cov[(1+ntree):(1+ntree+nshrub)], na.rm=TRUE)
-  s["Tree_density"] <- Nt
-  s["Shrub_density"] <- Nsh
-  coh_cov <- plant_cover(object, SpParams, mode = mode)
-  covt <- 0
-  covsh <- 0
-  if(ntree>0) covt <- min(100,sum(coh_cov[1:ntree], na.rm=T))
-  if(nshrub>0) covsh <- min(100,sum(coh_cov[(1+ntree):(1+ntree+nshrub)], na.rm=T))
-  s["Tree_cover"] <- covt
-  s["Shrub_cover"] <- covsh
-  LAIc <- plant_LAI(object, SpParams, mode= mode)
-  LAIt <- 0
-  LAIsh <- 0
-  if(ntree>0) LAIt <- sum(LAIc[1:ntree], na.rm=T)
-  if(nshrub>0) LAIsh <- sum(LAIc[(1+ntree):(1+ntree+nshrub)], na.rm=T)
-  s["LAI_trees"] <- LAIt
-  s["LAI_shrubs"] <- LAIsh
-  s["LAI"] <- LAIsh + LAIt
-  Fuelc <- plant_fuel(object, SpParams, mode= mode)
-  Fuelt <- 0
-  Fuelsh <- 0
-  if(ntree>0) Fuelt <- sum(Fuelc[1:ntree], na.rm=T)
-  if(nshrub>0) Fuelsh <- sum(Fuelc[(1+ntree):(1+ntree+nshrub)], na.rm=T)
-  s["Fuel_trees"] <- Fuelt
-  s["Fuel_shrubs"] <- Fuelsh
-  s["Fuel"] <- Fuelt + Fuelsh
+  
+  s["Tree_density"] <- sum(coh_N[selTree], na.rm=TRUE)
+  s["Adult_density"] <- sum(coh_N[selAdult], na.rm=TRUE)
+  s["Sapling_density"] <- sum(coh_N[selSapling], na.rm=TRUE)
+  s["Shrub_density"] <- sum(coh_N[selShrub], na.rm=TRUE)
+
+
+  s["Tree_cover"] <- pmin(100,sum(coh_cov[selTree], na.rm=TRUE))
+  s["Adult_cover"] <- pmin(100,sum(coh_cov[selAdult], na.rm=TRUE))
+  s["Sapling_cover"] <- pmin(100,sum(coh_cov[selSapling], na.rm=TRUE))
+  s["Shrub_cover"] <- pmin(100,sum(coh_cov[selShrub], na.rm=TRUE))
+
+  s["Tree_lai"] <- sum(coh_lai[selTree], na.rm=TRUE)
+  s["Adult_lai"] <- sum(coh_lai[selAdult], na.rm=TRUE)
+  s["Sapling_lai"] <- sum(coh_lai[selSapling], na.rm=TRUE)
+  s["Shrub_lai"] <- sum(coh_lai[selShrub], na.rm=TRUE)
+
+  s["Tree_fuel"] <- sum(coh_lai[selTree], na.rm=TRUE)
+  s["Adult_fuel"] <- sum(coh_lai[selAdult], na.rm=TRUE)
+  s["Sapling_fuel"] <- sum(coh_lai[selSapling], na.rm=TRUE)
+  s["Shrub_fuel"] <- sum(coh_lai[selShrub], na.rm=TRUE)
+  
   s["Phytovolume"] <- sum(plant_phytovolume(object, SpParams),na.rm=TRUE)
+  
   s["PARground"] <- light_PARground(object, SpParams, mode = mode)
   s["SWRground"] <- light_SWRground(object, SpParams, mode = mode)
   class(s)<-c("summary.forest","list")
@@ -124,12 +127,21 @@ summary.forest<-function(object, SpParams, mode = "MED", ...) {
 #' @rdname forest
 print.summary.forest<-function(x, digits=getOption("digits"),...) {
   cat(paste("Tree BA (m2/ha):", round(x[["BA"]],digits),"\n"))
-  cat(paste("Density (ind/ha) trees:", round(x[["Tree_density"]], digits), " shrubs (estimated):", round(x[["Shrub_density"]],digits),"\n"))
-  cat(paste("Cover (%) trees (open ground):", round(x[["Tree_cover"]],digits), " shrubs:", round(x[["Shrub_cover"]],digits),"\n"))
-  cat(paste("Shrub crown phytovolume (m3/m2):", round(x[["Phytovolume"]],digits),"\n"))
-  cat(paste("LAI (m2/m2) total:", round(x[["LAI"]], digits)," trees:", round(x[["LAI_trees"]], digits),
-            " shrubs:", round(x[["LAI_shrubs"]], digits),"\n"))
-  cat(paste("Live fine fuel (kg/m2) total:", round(x[["Fuel"]], digits)," trees:", round(x[["Fuel_trees"]], digits),
-            " shrubs:", round(x[["Fuel_shrubs"]], digits),"\n"))
+  cat(paste("Density (ind/ha) adult trees:", round(x[["Adult_density"]], digits), 
+            " saplings:", round(x[["Sapling_density"]], digits), 
+            " shrubs (estimated):", round(x[["Shrub_density"]],digits),"\n"))
+  cat(paste("Cover (%) adult trees:", round(x[["Adult_cover"]],digits), 
+            " saplings:", round(x[["Sapling_cover"]], digits), 
+            " shrubs:", round(x[["Shrub_cover"]],digits),"\n"))
+  cat(paste("Shrub crown phytovolume (m3/m2):", 
+            round(x[["Phytovolume"]],digits),"\n"))
+  cat(paste("LAI (m2/m2) total:", round(x[["Tree_lai"]] + x[["Shrub_lai"]], digits),
+            " adult trees:", round(x[["Adult_lai"]], digits),
+            " saplings:", round(x[["Sapling_lai"]], digits), 
+            " shrubs:", round(x[["Shrub_lai"]], digits),"\n"))
+  cat(paste("Fuel (kg/m2) total:", round(x[["Tree_fuel"]] + x[["Shrub_fuel"]], digits),
+            " adult trees:", round(x[["Adult_fuel"]], digits),
+            " saplings:", round(x[["Sapling_fuel"]], digits), 
+            " shrubs:", round(x[["Shrub_fuel"]], digits),"\n"))
   cat(paste("PAR ground (%):", round(x[["PARground"]],digits)," SWR ground (%):", round(x[["SWRground"]],digits),"\n"))
 }

@@ -57,6 +57,7 @@
 #' @param gdd Growth degree days (to account for leaf phenology effects).
 #' @param includeDead A flag to indicate that standing dead fuels (dead branches) are included.
 #' @param mode Calculation mode, either "MED" or "US".
+#' @param bounded A boolean flag to indicate that extreme values should be prevented (maximum tree LAI = 7 and maximum shrub LAI = 3)
 #' 
 #' @return 
 #' \itemize{

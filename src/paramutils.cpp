@@ -1328,19 +1328,19 @@ NumericVector treeAllometricCoefficientWithImputation(IntegerVector SP, DataFram
   for(int i=0;i<coef.size();i++) { // From De Caceres et al. 2019
     if(NumericVector::is_na(coef[i])) {
       if(parName=="a_fbt") {
-        if(group[i]=="Gymnosperm") coef[i] = 0.1989;
-        else coef[i] = 0.0709;
+        if(group[i]=="Gymnosperm") coef[i] = 0.048;
+        else coef[i] = 0.1123;
       }
       else if(parName=="b_fbt") {
-        if(group[i]=="Gymnosperm") coef[i] = 1.3805;
-        else coef[i] = 1.5120;
+        if(group[i]=="Gymnosperm") coef[i] = 1.5675;
+        else coef[i] = 1.2215;
       }
       else if(parName=="c_fbt") {
-        if(group[i]=="Gymnosperm") coef[i] = -0.0363;
-        else coef[i] = -0.0183;
+        if(group[i]=="Gymnosperm") coef[i] = -0.0255;
+        else coef[i] = -0.0194;
       }
       else if(parName=="d_fbt") {
-        if(group[i]=="Gymnosperm") coef[i] = 0.066;
+        if(group[i]=="Gymnosperm") coef[i] = 0.0;
         else coef[i] = 0.0057;
       }
       else if(parName=="a_cw") {

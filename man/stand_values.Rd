@@ -21,7 +21,7 @@ stand_phytovolume(x, SpParams)
 
 stand_fuel(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED")
 
-stand_LAI(x, SpParams, gdd = NA_real_, mode = "MED")
+stand_LAI(x, SpParams, gdd = NA_real_, mode = "MED", bounded = TRUE)
 
 stand_dominantTreeDiameter(x, minDBH = 7.5)
 
@@ -43,6 +43,8 @@ stand_quadraticMeanTreeDiameter(x, minDBH = 7.5)
 \item{mode}{Calculation mode, either "MED" or "US".}
 
 \item{includeDead}{A flag to indicate that standing dead fuels (dead branches) are included.}
+
+\item{bounded}{A boolean flag to indicate that extreme values should be prevented (maximum tree LAI = 7 and maximum shrub LAI = 3)}
 }
 \value{
 \itemize{

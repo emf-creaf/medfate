@@ -281,7 +281,7 @@ NumericVector treeFoliarBiomassMED(IntegerVector SP, NumericVector N, NumericVec
   NumericVector bfbt = speciesNumericParameterWithImputation(SP, SpParams, "b_fbt",true);
   NumericVector cfbt = speciesNumericParameterWithImputation(SP, SpParams, "c_fbt",true);
   NumericVector dfbt = speciesNumericParameterWithImputation(SP, SpParams, "d_fbt",true);
-  NumericVector ltba = largerTreeBasalArea(N,dbh);
+  NumericVector ltba = largerTreeBasalArea(N,dbh, 1.0); //Allometries were calibrated including the target cohort
   int ncoh = N.size();
   NumericVector lb(ncoh);
   for(int i=0;i<ncoh;i++) {
@@ -618,6 +618,7 @@ NumericVector shrubLAIUS(IntegerVector SP, NumericVector H,
 //' @param treeOffset,shrubOffset Integers to offset cohort IDs.
 //' @param fillMissing A boolean flag to try imputation on missing values.
 //' @param self_proportion Proportion of the target cohort included in the assessment
+//' @param bounded A boolean flag to indicate that extreme values should be prevented (maximum tree LAI = 7 and maximum shrub LAI = 3)
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
@@ -1125,7 +1126,8 @@ NumericVector cohortPhytovolume(List x, DataFrame SpParams) {
 
 //' @rdname plant_values
 // [[Rcpp::export("plant_LAI")]]
-NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED"){
+NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL, 
+                        String mode = "MED", bool bounded = true){
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   NumericVector tLAI, shLAI;
@@ -1154,12 +1156,18 @@ NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL, String
                        shrubData["SingleShrubCrownArea"], shrubData["FoliageBiomassPerUnitArea"],
                                                                    SpParams, gdd);
   } 
+  double max_tree_lai = 7.0;
+  double max_shrub_lai = 3.0;
+  double cum_tree = sum(tLAI);
+  double cum_shrub = sum(shLAI);
   NumericVector lai(tLAI.size()+shLAI.size());
   for(int i=0;i<tLAI.size();i++) {
-    lai[i] = tLAI[i];
+    if(cum_tree > max_tree_lai) lai[i] = tLAI[i]*(max_tree_lai/cum_tree);
+    else lai[i] = tLAI[i];
   }
   for(int i=0;i<shLAI.size();i++) {
-    lai[i+tLAI.size()] = shLAI[i];
+    if(cum_shrub > max_shrub_lai) lai[i+tLAI.size()] = shLAI[i]*(max_shrub_lai/cum_shrub);
+    else lai[i+tLAI.size()] = shLAI[i];
   }
   lai.attr("names") = cohortIDs(x, SpParams);
   return(lai);
@@ -1181,6 +1189,7 @@ NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL, String
 //' @param species A character vector of species names.
 //' @param parName A string with a parameter name.
 //' @param fillMissing A boolean flag to try imputation on missing values.
+//' @param bounded A boolean flag to indicate that extreme values should be prevented (maximum tree LAI = 7 and maximum shrub LAI = 3)
 //' 
 //' @return
 //' A vector with values for each species in \code{SpParams}:
@@ -1259,8 +1268,9 @@ NumericVector speciesPhytovolume(List x, DataFrame SpParams) {
 
 //' @rdname species_values
 // [[Rcpp::export("species_LAI")]]
-NumericVector speciesLAI(List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED") {
-  NumericVector cl = cohortLAI(x, SpParams, gdd, mode);
+NumericVector speciesLAI(List x, DataFrame SpParams, double gdd = NA_REAL, 
+                         String mode = "MED", bool bounded = true) {
+  NumericVector cl = cohortLAI(x, SpParams, gdd, mode, bounded);
   return(sumBySpecies(cl, cohortSpecies(x, SpParams), SpParams));
 }
 
@@ -1308,8 +1318,9 @@ double standFuel(List x, DataFrame SpParams, double gdd = NA_REAL, bool includeD
 
 //' @rdname stand_values
 // [[Rcpp::export("stand_LAI")]]
-double standLAI(List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED") {
-  NumericVector cl = cohortLAI(x, SpParams, gdd, mode);
+double standLAI(List x, DataFrame SpParams, double gdd = NA_REAL, 
+                String mode = "MED", bool bounded = true) {
+  NumericVector cl = cohortLAI(x, SpParams, gdd, mode, bounded);
   double tl= 0.0;
   for(int i=0;i<cl.size();i++){if(!NumericVector::is_na(cl[i])) tl+=cl[i];}
   return(tl);
@@ -1335,7 +1346,8 @@ NumericMatrix LAIdistributionVectors(NumericVector z, NumericVector LAI, Numeric
   return(LAIdist);
 }
 // [[Rcpp::export(".LAIdistribution")]]
-NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED") {
+NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL, 
+                              String mode = "MED", bool bounded = true) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   int ntree = treeData.nrows();
@@ -1358,7 +1370,7 @@ NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, doubl
   NumericVector treeH = treeData["Height"];
   NumericVector shrubH = shrubData["Height"];  
   
-  NumericVector LAI = cohortLAI(x, SpParams, gdd, mode);
+  NumericVector LAI = cohortLAI(x, SpParams, gdd, mode, bounded);
   int numCohorts  = ntree+nshrub;
   NumericVector H(numCohorts);
   IntegerVector SP(numCohorts);
@@ -1392,7 +1404,8 @@ NumericVector LAIprofileVectors(NumericVector z, NumericVector LAI, NumericVecto
   return(LAIprof);
 }
 // [[Rcpp::export(".LAIprofile")]]
-NumericVector LAIprofile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED") {
+NumericVector LAIprofile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL, 
+                         String mode = "MED", bool bounded = true) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   int ntree = treeData.nrows();
@@ -1404,7 +1417,7 @@ NumericVector LAIprofile(NumericVector z, List x, DataFrame SpParams, double gdd
   NumericVector shrubH = shrubData["Height"];  
   
   NumericVector CR = cohortCrownRatio(x, SpParams, mode);
-  NumericVector LAI = cohortLAI(x, SpParams, gdd, mode);
+  NumericVector LAI = cohortLAI(x, SpParams, gdd, mode, bounded);
   int numCohorts  = ntree+nshrub;
   NumericVector H(numCohorts);
   IntegerVector SP(numCohorts);
@@ -1430,8 +1443,8 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, S
   int nshrub = shrubData.nrows();
   
   NumericVector CR = cohortCrownRatio(x, SpParams, mode);
-  NumericVector LAI_live = cohortLAI(x, SpParams, NA_REAL, mode);
-  NumericVector LAI_expanded = cohortLAI(x, SpParams, gdd, mode);
+  NumericVector LAI_live = cohortLAI(x, SpParams, NA_REAL, mode, true);
+  NumericVector LAI_expanded = cohortLAI(x, SpParams, gdd, mode, true);
   IntegerVector SP(ntree+nshrub);
   NumericVector H(ntree+nshrub);
   

@@ -352,6 +352,7 @@ fire_Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, win
 #' @param treeOffset,shrubOffset Integers to offset cohort IDs.
 #' @param fillMissing A boolean flag to try imputation on missing values.
 #' @param self_proportion Proportion of the target cohort included in the assessment
+#' @param bounded A boolean flag to indicate that extreme values should be prevented (maximum tree LAI = 7 and maximum shrub LAI = 3)
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
@@ -490,8 +491,8 @@ plant_phytovolume <- function(x, SpParams) {
 }
 
 #' @rdname plant_values
-plant_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_cohortLAI`, x, SpParams, gdd, mode)
+plant_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED", bounded = TRUE) {
+    .Call(`_medfate_cohortLAI`, x, SpParams, gdd, mode, bounded)
 }
 
 #' Species description functions
@@ -506,6 +507,7 @@ plant_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
 #' @param species A character vector of species names.
 #' @param parName A string with a parameter name.
 #' @param fillMissing A boolean flag to try imputation on missing values.
+#' @param bounded A boolean flag to indicate that extreme values should be prevented (maximum tree LAI = 7 and maximum shrub LAI = 3)
 #' 
 #' @return
 #' A vector with values for each species in \code{SpParams}:
@@ -569,8 +571,8 @@ species_phytovolume <- function(x, SpParams) {
 }
 
 #' @rdname species_values
-species_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_speciesLAI`, x, SpParams, gdd, mode)
+species_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED", bounded = TRUE) {
+    .Call(`_medfate_speciesLAI`, x, SpParams, gdd, mode, bounded)
 }
 
 #' @rdname stand_values
@@ -594,24 +596,24 @@ stand_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "
 }
 
 #' @rdname stand_values
-stand_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_standLAI`, x, SpParams, gdd, mode)
+stand_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED", bounded = TRUE) {
+    .Call(`_medfate_standLAI`, x, SpParams, gdd, mode, bounded)
 }
 
 .LAIdistributionVectors <- function(z, LAI, H, CR) {
     .Call(`_medfate_LAIdistributionVectors`, z, LAI, H, CR)
 }
 
-.LAIdistribution <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_LAIdistribution`, z, x, SpParams, gdd, mode)
+.LAIdistribution <- function(z, x, SpParams, gdd = NA_real_, mode = "MED", bounded = TRUE) {
+    .Call(`_medfate_LAIdistribution`, z, x, SpParams, gdd, mode, bounded)
 }
 
 .LAIprofileVectors <- function(z, LAI, H, CR) {
     .Call(`_medfate_LAIprofileVectors`, z, LAI, H, CR)
 }
 
-.LAIprofile <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_LAIprofile`, z, x, SpParams, gdd, mode)
+.LAIprofile <- function(z, x, SpParams, gdd = NA_real_, mode = "MED", bounded = TRUE) {
+    .Call(`_medfate_LAIprofile`, z, x, SpParams, gdd, mode, bounded)
 }
 
 #' @rdname modelInput
