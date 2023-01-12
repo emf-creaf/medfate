@@ -4,6 +4,7 @@
 
 # Version 2.9.3
 - Bounded leaf area index
+- IFNcodes out of SpParams
 
 # Version 2.9.1
 - Allows species strings as input in forests objects

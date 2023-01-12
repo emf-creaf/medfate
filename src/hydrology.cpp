@@ -52,7 +52,7 @@ double interceptionGashDay(double Precipitation, double Cm, double p, double ER=
 double soilEvaporationAmount(double DEF,double PETs, double Gsoil){
   double t = pow(DEF/Gsoil, 2.0);
   double Esoil = 0.0;
-  Esoil = std::min(Gsoil*(sqrt(t+1)-sqrt(t)), PETs);
+  Esoil = std::min(Gsoil*(sqrt(t + 1.0)-sqrt(t)), PETs);
   return(Esoil);
 }
 
@@ -70,6 +70,7 @@ NumericVector soilEvaporation(List soil, String soilFunctions, double pet, doubl
   NumericVector W = soil["W"]; //Access to soil state variable
   NumericVector dVec = soil["dVec"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
+  NumericVector psiSoil = psi(soil, soilFunctions);
   int nlayers = W.size();
   NumericVector EsoilVec(nlayers,0.0);
   double swe = soil["SWE"]; //snow pack
@@ -77,7 +78,9 @@ NumericVector soilEvaporation(List soil, String soilFunctions, double pet, doubl
     double PETsoil = pet*(LgroundSWR/100.0);
     double Gsoil = soil["Gsoil"];
     double Ksoil = soil["Ksoil"];
-    double Esoil = soilEvaporationAmount((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
+    double Esoil = 0.0;
+    // Allow evaporation only if water potential is less than -2 MPa
+    if(psiSoil[0] > -2.0) Esoil = soilEvaporationAmount((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
     for(int l=0;l<nlayers;l++) {
       double cumAnt = 0.0;
       double cumPost = 0.0;

@@ -18,7 +18,7 @@ This vignette describes the procedures used to obtain the initial species parame
 The vignette is not self-contained, in the sense that it cannot be reproduced without access to data sets that are not included. Nevertheless, it is intended to serve as example of species parameterization for other regions.
 
 ### Required packages`
-Installed version of **medfate** should be **ver 2.3** or higher. 
+Installed version of **medfate** should be **ver 2.9** or higher. 
 ```{r, eval = FALSE}
 install.packages("medfate")
 ```
@@ -28,7 +28,7 @@ If the version at CRAN is older, the package should be installed from GitHub via
 remotes::install_github("emf-creaf/medfate")
 ```
 
-Package **medfateutils** is important for the species parameterization process, as it includes several functions that facilitate parsing data sources into parameter values. Package **medfateutils** is installed only from GitHub:
+Package **medfateutils** is required for the species parameterization process, as it includes several functions that facilitate parsing data sources into parameter values. Package **medfateutils** is installed only from GitHub:
 
 ```{r, eval = FALSE}
 remotes::install_github("emf-creaf/medfateutils")
@@ -89,205 +89,18 @@ DB_path = "/home/miquel/OneDrive/Professional/MedfateWorks/MedfateSpeciesParamet
 
 ## Initialize species parameter table for IFN
 
-The first task is to define the target entities that will be considered functionally distinct in **medfate** simulations. There is no *a priori* need to limit such entities to biological taxa, nor to particular taxonomic ranks. Nevertheless, in this vignette we will define taxonomic entities either at the **species** or **genus** levels.
+The first task is to define the target entities that will be considered functionally distinct in **medfate** simulations. There is no *a priori* need to limit such entities to biological taxa, nor to particular taxonomic ranks. In our case, we take the species mapping defined in package **medfateutils** for Spanish IFN:
 
-### Load IFN taxon codes
-
-Model simulations will normally entail a lower biological resolution of target entities than used in forest inventory data, because the finer the biological resolution the large the number of missing parameter values. Therefore, it will be usual to consider together entities that are treated as distinct in the forest inventory. 
-
-In our case, we begin by loading shrub and tree species codes used in the second, third, and fourth editions of IFN, i.e. IFN2, IFN3 and IFN4:
-```{r code_gathering}
-IFN23_species_data <- read.csv(paste0(IFN_path,"Sources/SpeciesCodesIFN23.txt"), 
-                             sep="\t")
-IFN23_species_data<-IFN23_species_data[,c(1,2)]
-IFN23_species_data$IFNCODE<-as.character(IFN23_species_data$IFNCODE)
-
-IFN4_shrub_species_data <- read.csv(paste0(IFN_path,"Sources/shrubcodesifn4.txt"), 
-                             sep="\t")
-IFN4_shrub_species_data$IFNCODE<-as.character(IFN4_shrub_species_data$IFNCODE)
-IFN4_tree_species_data <- read.csv(paste0(IFN_path,"Sources/treecodesifn4.txt"), 
-                                    sep="\t")
-IFN4_tree_species_data$IFNCODE<-as.character(IFN4_tree_species_data$IFNCODE)
-IFN4_tree_species_data<-IFN4_tree_species_data[,c(1,2)]
-```
-
-Merge the two code data sets by adding to the codes of IFN2-3 those species codes that were new in IFN4:
 ```{r}
-newShrubs <- !(IFN4_shrub_species_data$IFNCODE %in% IFN23_species_data$IFNCODE)
-newTrees <- !(IFN4_tree_species_data$IFNCODE %in% IFN23_species_data$IFNCODE)
-IFN_species_data <- bind_rows(IFN23_species_data, 
-                              IFN4_shrub_species_data[newShrubs, ], 
-                              IFN4_tree_species_data[newTrees,])
-IFN_species_data <- IFN_species_data[order(as.numeric(IFN_species_data$IFNCODE)),]
+data(IFN_species_mapping)
+head(IFN_species_mapping)
 ```
 
-Check uniqueness of codes:
-```{r}
-length(unique(IFN_species_data$IFNCODE)) == nrow(IFN_species_data)
-```
-
-
-The final table of species names and codes has `r nrow(IFN_species_data)` rows and looks like:
-```{r}
-head(IFN_species_data)
-```
-
-So far, we used the word *species* for IFN biological entities, but in fact not all IFN entities are binomial species. In some cases, subspecies are recorded, while in others identification is at genus level or even uses non-scientific names. Hence, the set of entities needs to be revised and we illustrate the process in the following two sections. 
-
-### Define IFN codes to exclude
-We need to manually define a set of entities (IFN codes) to be excluded because they have low taxonomic information, refer to habitat descriptions or to undesired growth forms (e.g. vines):
-```{r codes_out}
-codesOut <- c("19", # Otras coniferas 
-              "10", # Sin asignar
-              "20", # Pinos
-              "29", # Otros pinos
-              "30",  #Mezcla de coniferas
-              "40", #Quercus
-              "49", #Otros quercus
-              "50", #Mezcla de <e1>rboles de ribera
-              "59", #Otros <e1>rboles rip<ed>colas
-              "70", #Mezcla de frondosas de gran porte
-              "80", #Laurisilva
-              "89", #Otras laurisilvas
-              "90", #Mezcla de peque<f1>as frondosas
-              "99", #Otras frondosas
-              "1500", # Cultivo en mosaico
-              "8000", #	Matorral en mosaico
-              "9000", #Herbazal en mosaico
-              "3400", #Prado en mosaico
-              "3500", #Pastizal-Matorral en mosaico
-              "103", #Otras papilionoideas altas
-              "104" #Otras papilionoideas bajas
-              )
-```
-
-We remove taxa from the IFN taxonomic definition data frame:
-```{r}
-IFN_species_data <- IFN_species_data[!(IFN_species_data$IFNCODE %in% codesOut), ]
-```
-so that we are left with `r nrow(IFN_species_data)` taxa.
-
-### Define taxonomic entities to merge into groups
-
-As mentioned above, simulations will normally require defining groups of entities to be treated together in **medfate**. In our case, we need to define some genus-level groups because the forest inventory records do not always have identifications at species-level resolution:
-```{r codes_genus}
-genus_level <- c("Acacia spp.:7/207/307",
-                 "Adenocarpus spp.:1163/2163/2103/3163/10103",
-                 "Anagyris spp.:175/1175",
-                 "Atriplex spp.:133",
-                 "Artemisia spp.:126/159/1159/3159",
-                 "Asparagus spp.:138/1138/2138",
-                 "Astragalus spp.:6104",
-                 "Betula spp.:73/273/373",
-                 "Bupleurum spp.:124/1124/2124/4124",
-                 "Calicotome spp.:2104/2105/9072/3104",
-                 "Cedrus spp.:17/217/317/917",
-                 "Corema spp.:172/1172",
-                 "Chamaerops humilis:369/3690",
-                 "Clematis spp.:132/1132/2132",
-                 "Crataegus spp.:15/215/315/415/515",
-                 "Coronilla spp.:152/1152/3152/5104",
-                 "Cotoneaster spp.:118",
-                 "Cupressus spp.:36/236/336/436/936",
-                 "Daphne spp.:110/1110/2110/3110",
-                 "Dorycnium spp.:154/7104/1154",
-                 "Echium spp..:161",
-                 "Ephedra spp.:173/1173",
-                 "Erinacea spp.:1104/1166",
-                 "Eucalyptus spp.:60/61/62/63/64/264/364/464",
-                 "Euphorbia spp.:162/1162/2162/3162",
-                 "Fraxinus spp.:55/255/355/455/955",
-                 "Genista spp.:177/1177/155/1155/1255/1355/1455/1555/1755/1156/1655/2155/2156/3155/4155/6155/7155/8155/9075/9155/10155/11155/12155/13155/14155",
-                 "Genistella spp.:9104",
-                 "Halimium spp.:117/1117/2117/3117/4117/5117/6117",
-                 "Helianthemum spp.:142",
-                 "Helichrysum spp.:128/1128/2128",
-                 "Larix spp.:35/235/335/435",
-                 "Lavandula spp.:109/1109/2109/3109/4109",
-                 "Lonicera spp.:144/1144/2144/3144/4144/5144/9012",
-                 "Ilex spp.:65/82/282",
-                 "Juglans spp.:75/275/975",
-                 "Laurus spp.:94/294",
-                 "Maytenus spp.:158/1158",
-                 "Morus spp.:399/499/599",
-                 "Ononis spp.:156/8104",
-                 "Osyris spp.:135/1135/2135",
-                 "Platanus spp.:79/279",
-                 "Populus spp.:51/52/58/258",
-                 "Phlomis spp.:171/1171/2171",
-                 "Phoenix spp.:69/269/469",
-                 "Prunus spp.:95/295/395/495/595/1095/1195/2950/148",
-                 "Pyrus spp.:16",
-                 "Retama spp.:4103/1165/2165",
-                 "Rhamnus spp.:4/122/1122/2122/3122/4122/389/5122/6122",
-                 "Rhododendron spp.:108/1108/2108",
-                 "Ribes spp.:131/1131/2131",
-                 "Rosa spp.:119",
-                 "Rubus spp.:121/1121/2121/3121",
-                 "Ruscus spp.:130/1130",
-                 "Salix spp.:57/257/357/457/557/657/757/857/858/957",
-                 "Sambucus spp.:97/197/297/997/2970",
-                 "Santolina spp.:127/1127/2127",
-                 "Sorbus spp.:78/278/378/478/578/678/778",
-                 "Spartium spp.:3103/9103",
-                 "Spiraea spp.:134/1134",
-                 "Tamarix spp.:53/253",
-                 "Teline spp.:165/9077/9078/9202/9914",
-                 "Teucrium spp.:179/1179",
-                 "Tilia spp.:77/277/377",
-                 "Thymelaea spp.:151",
-                 "Thuja spp.:319",
-                 "Thymus spp.:129/1129/2129/3129/4129/5129",
-                 "Ulex spp.:157/176/1103/6103/1164/3164", #Merges Stauracanthus
-                 "Ulmus spp.:56/256/356/456/956",
-                 "Vaccinium spp.:137/1137",
-                 "Vella spp.:170/1170",
-                 "Viburnum spp.:115/1115/4115/3115/2115"
-                 )
-```
-Groups were manually defined as strings where ':' was used to separate the group name from the set of codes forming the group, which were separated using '/'. We also define groups of taxa at species level, where different synonyms are merged, different codes have been used for the same species, or to merge sub-specific records: 
-```{r}
-assimilated_species<-c("Acer campestre:76/776/976",
-                       "Amelanchier ovalis:2/200",
-                       "Buxus sempervirens:91/291/2910/9071/9100",
-                       "Cistus albidus:101/3101",
-                       "Cistus psilosepalus:2111/11101",
-                       "Cornus sanguinea:9/900",
-                       "Cytisus fontanesii:9074",
-                       "Cytisus scoparius:4104/1167/5103/8103",
-                       "Cytisus commutatus:9011/9201/9481",
-                       "Cytisus oromediterraneus:5155/4167",
-                       "Erica scoparia:283/6102",
-                       "Erica arborea:83/102/1102",
-                       "Euonymus europaeus:5/500",
-                       "Frangula alnus:3/300",
-                       "Juniperus communis:37/937/3700",
-                       "Juniperus phoenicea:39/238/239/1139",
-                       "Medicago arborea:145/9076",
-                       "Myrtus communis:6/600",
-                       "Myrica faya:81/281",
-                       "Pistacia terebinthus:93/9300",
-                       "Quercus ilex:45/245",
-                       "Quercus faginea:44/344",
-                       "Quercus suber:46/646/746/846/946",
-                       "Salvia rosmarinus:114/1114") 
-```
-
-We now build a data frame with group names and codes, by merging the information of these two groups of taxa. We also separate group names from the set of codes defining the group into columns of a data frame:
-```{r code_groups}
-groups_df <- data.frame("Groups" = c(genus_level,
-                                     assimilated_species)) %>%
-  separate("Groups", into=c("group_names", "group_codes"), sep=":")
-head(groups_df)
-```
-
-### Initialize species parameter table
 
 Once we have IFN species names and codes, as well as the definition of the IFN biological entities to merge, we can call function `initSpParams()` from package **medfateutils**. This function also takes the data frame `SpParamsDefinition` as argument, from which it takes the set of parameter names to be filled:
 ```{r initialization, eval = params$spparams_rebuild}
-SpParams <-initSpParams(IFN_species_data$IFNCODE, IFN_species_data$IFNNAME,
+SpParams <-initSpParams(sp_names = IFN_species_mapping$Name,
                         SpParamsDefinition,
-                        groups_df$group_codes, groups_df$group_names,
                         fill_taxonomic = TRUE, verbose = FALSE)
 ```
 Option `fill_taxonomic` tells function `initSpParams()` to use package **taxize** to find taxonomic classification of the species/genus entities. This provides very useful information for parameterization, but makes the process of initialization a bit slower.

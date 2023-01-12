@@ -12,6 +12,7 @@ double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL
 double theta2psiVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double theta);
 double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi);
 
+NumericVector waterExtractable(List soil, String model="SX", double minPsi = -5.0);
 NumericVector waterSAT(List soil, String model = "SX");
 NumericVector thetaSAT(List soil, String model = "SX");
 NumericVector waterFC(List soil, String model = "SX");

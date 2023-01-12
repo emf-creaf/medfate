@@ -93,7 +93,7 @@ List spwbDay1(List x, NumericVector meteovec,
                                             rockyLayerDrainage, true);
     //Evaporation from bare soil (if there is no snow)
     EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
-    
+
     //Copy soil status to x
     for(int c=0;c<numCohorts;c++) for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l];
   } else {
