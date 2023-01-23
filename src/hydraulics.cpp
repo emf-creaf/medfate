@@ -131,6 +131,7 @@ double averagePsi(NumericVector psi, NumericVector v, double c, double d) {
   NumericVector K(nlayers);
   for(int l=0;l<nlayers;l++) K[l]= exp(-0.6931472*pow(std::abs(psi[l]/d),c));
   double psires =  d*pow(log(sum(K*v))/(-0.6931472),1.0/c);
+  psires = std::max(psires, -40.0); //Limits plant water potential to -40 MPa
   return(psires);
 }
 double averagePsiPool(NumericMatrix Psi, NumericMatrix RHOPcohV, double c, double d) {
@@ -139,6 +140,7 @@ double averagePsiPool(NumericMatrix Psi, NumericMatrix RHOPcohV, double c, doubl
   NumericMatrix K(numCohorts, nlayers);
   for(int j =0;j<numCohorts;j++) for(int l=0;l<nlayers;l++) K(j,l)= exp(-0.6931472*pow(std::abs(Psi(j,l)/d),c));
   double psires =  d*pow(log(sum(K*RHOPcohV))/(-0.6931472),1.0/c);
+  psires = std::max(psires, -40.0); //Limits plant water potential to -40 MPa
   return(psires);
 }
 
@@ -1230,7 +1232,7 @@ List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
                               kstemmax, stemc,stemd, psiCav);
     // Rcout<<Psilayers[l]<<" ";
   }
-  Rcout<<"\n";
+  // Rcout<<"\n";
   double psiI = averagePsi(Psilayers, v, stemc, stemd);
   double maxdEdp = dE/std::abs(psiI-supplyPsi[0]);
   // Rcout<<maxdEdp<<"\n";

@@ -5,6 +5,7 @@
 # Version 2.9.3
 - Bounded leaf area index
 - IFNcodes out of SpParams
+- PlantPsi lower limit set to -40 MPa 
 
 # Version 2.9.1
 - Allows species strings as input in forests objects
