@@ -800,17 +800,25 @@ NumericVector psi50Imputation(NumericVector psi50, IntegerVector SP, DataFrame S
   }
   return(psi50);
 }
-NumericVector psiCriticWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector Psi_Critic = speciesNumericParameterFromIndex(SP, SpParams, "Psi_Critic");
-  return(psi50Imputation(Psi_Critic, SP, SpParams));
+
+NumericVector expExtractWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector Exp_Extract = speciesNumericParameterFromIndex(SP, SpParams, "Exp_Extract");
+  for(int c=0;c<Exp_Extract.size();c++) {
+    if(NumericVector::is_na(Exp_Extract[c])) {
+      Exp_Extract[c] = 3.0;
+    }
+  }
+  return(Exp_Extract);
 }
+
 NumericVector psiExtractWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector leafPI0 = leafPI0WithImputation(SP, SpParams);
   NumericVector leafEPS = leafEPSWithImputation(SP, SpParams);
+  NumericVector Exp_Extract = expExtractWithImputation(SP, SpParams);
   NumericVector Psi_Extract = speciesNumericParameterFromIndex(SP, SpParams, "Psi_Extract");
-  double corr = pow(log(0.5)/log(0.05), 1.0/3.0); //Weibull's shape = 3.0
   for(int c=0;c<Psi_Extract.size();c++) {
     if(NumericVector::is_na(Psi_Extract[c])) {
+      double corr = pow(log(0.5)/log(0.05), 1.0/Exp_Extract[c]);
       Psi_Extract[c] = corr*turgorLossPoint(leafPI0[c], leafEPS[c]);
     }
   }
@@ -1420,8 +1428,8 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "WUE_par") return(WUEPARWithImputation(SP, SpParams));
     else if(parName == "WUE_co2") return(WUECO2WithImputation(SP, SpParams));
     else if(parName == "WUE_vpd") return(WUEVPDWithImputation(SP, SpParams));
-    else if(parName == "Psi_Critic") return(psiCriticWithImputation(SP, SpParams));
     else if(parName == "Psi_Extract") return(psiExtractWithImputation(SP, SpParams));
+    else if(parName == "Exp_Extract") return(expExtractWithImputation(SP, SpParams));
     else if(parName == "Kmax_stemxylem") return(KmaxStemXylemWithImputation(SP, SpParams));
     else if(parName == "Kmax_rootxylem") return(KmaxRootXylemWithImputation(SP, SpParams));
     else if(parName == "VCleaf_kmax") return(VCleafkmaxWithImputation(SP, SpParams));

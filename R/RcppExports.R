@@ -933,8 +933,8 @@ growth <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, a
 #'
 #' @param psi A scalar (or a vector, depending on the function) with water potential (in MPa).
 #' @param K Whole-plant relative conductance (0-1).
-#' @param Psi_extract Soil water potential (in MPa) corresponding to 50\% whole-plant relative conductance.
-#' @param ws Exponent of the whole-plant relative conductance Weibull function.
+#' @param psi_extract Soil water potential (in MPa) corresponding to 50\% whole-plant relative transpiration.
+#' @param exp_extract Exponent of the whole-plant relative transpiration Weibull function.
 #' @param v Proportion of fine roots within each soil layer.
 #' @param krhizomax Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
 #' @param kxylemmax Maximum xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
@@ -1006,18 +1006,18 @@ growth <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, a
 #' hydraulics_vulnerabilityCurvePlot(x, type="stem")
 #'              
 #' @name hydraulics_conductancefunctions
-hydraulics_psi2K <- function(psi, Psi_extract, ws = 3.0) {
-    .Call(`_medfate_Psi2K`, psi, Psi_extract, ws)
+hydraulics_psi2K <- function(psi, psi_extract, exp_extract = 3.0) {
+    .Call(`_medfate_Psi2K`, psi, psi_extract, exp_extract)
 }
 
 #' @rdname hydraulics_conductancefunctions
-hydraulics_K2Psi <- function(K, Psi_extract, ws = 3.0) {
-    .Call(`_medfate_K2Psi`, K, Psi_extract, ws)
+hydraulics_K2Psi <- function(K, psi_extract, exp_extract = 3.0) {
+    .Call(`_medfate_K2Psi`, K, psi_extract, exp_extract)
 }
 
 #' @rdname hydraulics_conductancefunctions
-hydraulics_averagePsi <- function(psi, v, c, d) {
-    .Call(`_medfate_averagePsi`, psi, v, c, d)
+hydraulics_averagePsi <- function(psi, v, exp_extract, psi_extract) {
+    .Call(`_medfate_averagePsi`, psi, v, exp_extract, psi_extract)
 }
 
 #' @rdname hydraulics_conductancefunctions
@@ -1786,8 +1786,9 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
 #'         \item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
 #'         \item{\code{Tmax_LAI}: Coefficient relating LAI with the ratio of maximum transpiration over potential evapotranspiration.}
 #'         \item{\code{Tmax_LAIsq}: Coefficient relating squared LAI with the ratio of maximum transpiration over potential evapotranspiration.}
-#'         \item{\code{Psi_Extract}: Water potential corresponding to 50\% relative conductance (in MPa).}
-#'         \item{\code{Psi_Critic}: Water potential corresponding to 50\% of stem cavitation (in MPa).}
+#'         \item{\code{Psi_Extract}: Water potential corresponding to 50\% relative transpiration (in MPa).}
+#'         \item{\code{Exp_Extract}: Parameter of the Weibull function regulating transpiration reduction.}
+#'         \item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve.}
 #'         \item{\code{WUE}: Daily water use efficiency (gross photosynthesis over transpiration) under no light, water or CO2 limitations and VPD = 1kPa (g C/mm water).}
 #'         \item{\code{WUE_par}: Coefficient regulating the influence of \% PAR on gross photosynthesis.}
 #'         \item{\code{WUE_par}: Coefficient regulating the influence of atmospheric CO2 concentration on gross photosynthesis.}

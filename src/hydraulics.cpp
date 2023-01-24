@@ -18,8 +18,8 @@ double const cmhead2MPa = 0.00009804139; //Constant to transform cm head to MPa
 //'
 //' @param psi A scalar (or a vector, depending on the function) with water potential (in MPa).
 //' @param K Whole-plant relative conductance (0-1).
-//' @param Psi_extract Soil water potential (in MPa) corresponding to 50\% whole-plant relative conductance.
-//' @param ws Exponent of the whole-plant relative conductance Weibull function.
+//' @param psi_extract Soil water potential (in MPa) corresponding to 50\% whole-plant relative transpiration.
+//' @param exp_extract Exponent of the whole-plant relative transpiration Weibull function.
 //' @param v Proportion of fine roots within each soil layer.
 //' @param krhizomax Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
 //' @param kxylemmax Maximum xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).
@@ -92,14 +92,14 @@ double const cmhead2MPa = 0.00009804139; //Constant to transform cm head to MPa
 //'              
 //' @name hydraulics_conductancefunctions
 // [[Rcpp::export("hydraulics_psi2K")]]
-double Psi2K(double psi, double Psi_extract, double ws = 3.0) {
-  return(exp(-0.6931472*pow(std::abs(psi/Psi_extract),ws)));
+double Psi2K(double psi, double psi_extract, double exp_extract = 3.0) {
+  return(exp(-0.6931472*pow(std::abs(psi/psi_extract),exp_extract)));
 }
-NumericVector Psi2K(double psi, NumericVector Psi_extract, double ws = 3.0) {
-  int n = Psi_extract.size();
+NumericVector Psi2K(double psi, NumericVector psi_extract, double exp_extract = 3.0) {
+  int n = psi_extract.size();
   NumericVector k(n);
   for(int i=0; i<n; i++) {
-    k[i] = Psi2K(psi,Psi_extract[i],ws);
+    k[i] = Psi2K(psi,psi_extract[i],exp_extract);
   }
   return k;
 }
@@ -110,36 +110,36 @@ NumericVector Psi2K(double psi, NumericVector Psi_extract, double ws = 3.0) {
  */
 //' @rdname hydraulics_conductancefunctions
 // [[Rcpp::export("hydraulics_K2Psi")]]
-double K2Psi(double K, double Psi_extract, double ws = 3.0) {
-  double psi = Psi_extract*pow(log(K)/(-0.6931472),1.0/ws);
+double K2Psi(double K, double psi_extract, double exp_extract = 3.0) {
+  double psi = psi_extract*pow(log(K)/(-0.6931472),1.0/exp_extract);
   if(psi>0.0) psi = -psi; //Usually psi_extr is a positive number
   return psi;
 }
-NumericVector K2Psi(NumericVector K, NumericVector Psi_extract, double ws = 3.0) {
-  int n = Psi_extract.size();
+NumericVector K2Psi(NumericVector K, NumericVector psi_extract, double exp_extract = 3.0) {
+  int n = psi_extract.size();
   NumericVector psi(n);
   for(int i=0; i<n; i++) {
-    psi[i] = K2Psi(K[i], Psi_extract[i], ws);
+    psi[i] = K2Psi(K[i], psi_extract[i], exp_extract);
   }
   return psi;
 }
 
 //' @rdname hydraulics_conductancefunctions
 // [[Rcpp::export("hydraulics_averagePsi")]]
-double averagePsi(NumericVector psi, NumericVector v, double c, double d) {
+double averagePsi(NumericVector psi, NumericVector v, double exp_extract, double psi_extract) {
   int nlayers = psi.size();
   NumericVector K(nlayers);
-  for(int l=0;l<nlayers;l++) K[l]= exp(-0.6931472*pow(std::abs(psi[l]/d),c));
-  double psires =  d*pow(log(sum(K*v))/(-0.6931472),1.0/c);
+  for(int l=0;l<nlayers;l++) K[l]= exp(-0.6931472*pow(std::abs(psi[l]/psi_extract),exp_extract));
+  double psires =  psi_extract*pow(log(sum(K*v))/(-0.6931472),1.0/exp_extract);
   psires = std::max(psires, -40.0); //Limits plant water potential to -40 MPa
   return(psires);
 }
-double averagePsiPool(NumericMatrix Psi, NumericMatrix RHOPcohV, double c, double d) {
+double averagePsiPool(NumericMatrix Psi, NumericMatrix RHOPcohV, double exp_extract, double psi_extract) {
   int nlayers = Psi.ncol();
   int numCohorts = Psi.nrow();
   NumericMatrix K(numCohorts, nlayers);
-  for(int j =0;j<numCohorts;j++) for(int l=0;l<nlayers;l++) K(j,l)= exp(-0.6931472*pow(std::abs(Psi(j,l)/d),c));
-  double psires =  d*pow(log(sum(K*RHOPcohV))/(-0.6931472),1.0/c);
+  for(int j =0;j<numCohorts;j++) for(int l=0;l<nlayers;l++) K(j,l)= exp(-0.6931472*pow(std::abs(Psi(j,l)/psi_extract),exp_extract));
+  double psires =  psi_extract*pow(log(sum(K*RHOPcohV))/(-0.6931472),1.0/exp_extract);
   psires = std::max(psires, -40.0); //Limits plant water potential to -40 MPa
   return(psires);
 }

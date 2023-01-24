@@ -184,15 +184,19 @@ DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool 
   NumericVector WUE_par = speciesNumericParameterWithImputation(SP, SpParams, "WUE_par", true);
   NumericVector WUE_co2 = speciesNumericParameterWithImputation(SP, SpParams, "WUE_co2", true);
   NumericVector WUE_vpd = speciesNumericParameterWithImputation(SP, SpParams, "WUE_vpd", true);
-  NumericVector Psi_Critic = speciesNumericParameterWithImputation(SP, SpParams, "Psi_Critic", fillMissingSpParams);
   NumericVector Psi_Extract = speciesNumericParameterWithImputation(SP, SpParams, "Psi_Extract", fillMissingSpParams);
+  NumericVector Exp_Extract = speciesNumericParameterWithImputation(SP, SpParams, "Exp_Extract", fillMissingSpParams);
+  NumericVector VCstem_c = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_c", fillMissingSpParams);
+  NumericVector VCstem_d = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_d", fillMissingSpParams);
   NumericVector Gswmin = speciesNumericParameterWithImputation(SP, SpParams, "Gswmin", fillMissingSpParams);
   
   DataFrame paramsTranspirationdf = DataFrame::create(_["Gswmin"] = Gswmin,
                                                       _["Tmax_LAI"] = Tmax_LAI,
                                                       _["Tmax_LAIsq"] = Tmax_LAIsq,
                                                       _["Psi_Extract"]=Psi_Extract,
-                                                      _["Psi_Critic"] = Psi_Critic,
+                                                      _["Exp_Extract"]=Exp_Extract,
+                                                      _["VCstem_c"] = VCstem_c,
+                                                      _["VCstem_d"] = VCstem_d,
                                                       _["WUE"] = WUE, 
                                                       _["WUE_par"] = WUE_par, 
                                                       _["WUE_co2"] = WUE_co2,
@@ -851,8 +855,9 @@ DataFrame paramsCanopy(DataFrame above, List control) {
 //'         \item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
 //'         \item{\code{Tmax_LAI}: Coefficient relating LAI with the ratio of maximum transpiration over potential evapotranspiration.}
 //'         \item{\code{Tmax_LAIsq}: Coefficient relating squared LAI with the ratio of maximum transpiration over potential evapotranspiration.}
-//'         \item{\code{Psi_Extract}: Water potential corresponding to 50\% relative conductance (in MPa).}
-//'         \item{\code{Psi_Critic}: Water potential corresponding to 50\% of stem cavitation (in MPa).}
+//'         \item{\code{Psi_Extract}: Water potential corresponding to 50\% relative transpiration (in MPa).}
+//'         \item{\code{Exp_Extract}: Parameter of the Weibull function regulating transpiration reduction.}
+//'         \item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve.}
 //'         \item{\code{WUE}: Daily water use efficiency (gross photosynthesis over transpiration) under no light, water or CO2 limitations and VPD = 1kPa (g C/mm water).}
 //'         \item{\code{WUE_par}: Coefficient regulating the influence of \% PAR on gross photosynthesis.}
 //'         \item{\code{WUE_par}: Coefficient regulating the influence of atmospheric CO2 concentration on gross photosynthesis.}

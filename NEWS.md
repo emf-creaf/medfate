@@ -5,7 +5,9 @@
 # Version 2.9.3
 - Bounded leaf area index
 - IFNcodes out of SpParams
-- PlantPsi lower limit set to -40 MPa 
+- PlantPsi lower limit set to -40 MPa
+- Psi_Critic no longer used in Granier submodel (Stem vulnerability curve used instead)
+- New parameter Exp_Extract to model transpiration decrease in Granier submodel
 
 # Version 2.9.1
 - Allows species strings as input in forests objects

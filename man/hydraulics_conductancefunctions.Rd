@@ -15,11 +15,11 @@
 \alias{hydraulics_vulnerabilityCurvePlot}
 \title{Hydraulic confuctance functions}
 \usage{
-hydraulics_psi2K(psi, Psi_extract, ws = 3)
+hydraulics_psi2K(psi, psi_extract, exp_extract = 3)
 
-hydraulics_K2Psi(K, Psi_extract, ws = 3)
+hydraulics_K2Psi(K, psi_extract, exp_extract = 3)
 
-hydraulics_averagePsi(psi, v, c, d)
+hydraulics_averagePsi(psi, v, exp_extract, psi_extract)
 
 hydraulics_xylemConductance(psi, kxylemmax, c, d)
 
@@ -49,17 +49,17 @@ hydraulics_vulnerabilityCurvePlot(
 \arguments{
 \item{psi}{A scalar (or a vector, depending on the function) with water potential (in MPa).}
 
-\item{Psi_extract}{Soil water potential (in MPa) corresponding to 50\% whole-plant relative conductance.}
+\item{psi_extract}{Soil water potential (in MPa) corresponding to 50\% whole-plant relative transpiration.}
 
-\item{ws}{Exponent of the whole-plant relative conductance Weibull function.}
+\item{exp_extract}{Exponent of the whole-plant relative transpiration Weibull function.}
 
 \item{K}{Whole-plant relative conductance (0-1).}
 
 \item{v}{Proportion of fine roots within each soil layer.}
 
-\item{c, d}{Parameters of the Weibull function (generic xylem vulnerability curve).}
-
 \item{kxylemmax}{Maximum xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
+
+\item{c, d}{Parameters of the Weibull function (generic xylem vulnerability curve).}
 
 \item{kxylem}{Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
 

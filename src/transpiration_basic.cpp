@@ -16,18 +16,16 @@
 #include <meteoland.h>
 using namespace Rcpp;
 
-const double WeibullShape=3.0;
-
 
 //Plant volume in l·m-2 ground = mm
 double plantVol(double plantPsi, NumericVector pars) {
   
   double leafrwc = tissueRelativeWaterContent(plantPsi, pars["leafpi0"], pars["leafeps"], 
-                                              plantPsi, WeibullShape, pars["psi_critic"], 
-                                                                          pars["leafaf"], 0.0);
+                                              plantPsi, pars["stem_c"], pars["stem_d"], 
+                                              pars["leafaf"], 0.0);
   double stemrwc = tissueRelativeWaterContent(plantPsi, pars["stempi0"], pars["stemeps"], 
-                                              plantPsi, WeibullShape, pars["psi_critic"], 
-                                                                          pars["stemaf"], pars["stem_plc"]);
+                                              plantPsi, pars["stem_c"], pars["stem_d"], 
+                                              pars["stemaf"], pars["stem_plc"]);
   return(((pars["Vleaf"] * leafrwc)*pars["LAIphe"]) + ((pars["Vsapwood"] * stemrwc)*pars["LAIlive"]));
 }
 
@@ -138,7 +136,9 @@ List transpirationGranier(List x, NumericVector meteovec,
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   NumericVector Gswmin = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gswmin"]);
   NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
-  NumericVector Psi_Critic = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Critic"]);
+  NumericVector Exp_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Exp_Extract"]);
+  NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
+  NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
   NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
   NumericVector WUE_par(numCohorts, 0.3643);
   NumericVector WUE_co2(numCohorts, 0.002757);
@@ -251,11 +251,11 @@ List transpirationGranier(List x, NumericVector meteovec,
   for(int c=0;c<numCohorts;c++) {
     NumericMatrix ExtractionPoolsCoh(numCohorts, nlayers); //this is used to store extraction of a SINGLE plant cohort from all pools
     
-    NumericVector parsVol = NumericVector::create(_["psi_critic"] = Psi_Critic[c], _["stem_plc"] = StemPLC[c],
+    NumericVector parsVol = NumericVector::create(_["stem_c"] = VCstem_c[c], _["stem_d"] = VCstem_d[c], _["stem_plc"] = StemPLC[c],
                                                   _["leafpi0"] = LeafPI0[c], _["leafeps"] = LeafEPS[c],
-                                                                                                   _["leafaf"] = LeafAF[c],_["stempi0"] = StemPI0[c],_["stemeps"] = StemEPS[c],
-                                                                                                     _["stemaf"] = StemAF[c],_["Vsapwood"] = Vsapwood[c],_["Vleaf"] = Vleaf[c],
-                                                                                                       _["LAIphe"] = LAIphe[c],_["LAIlive"] = LAIlive[c]);
+                                                  _["leafaf"] = LeafAF[c],_["stempi0"] = StemPI0[c],_["stemeps"] = StemEPS[c],
+                                                  _["stemaf"] = StemAF[c],_["Vsapwood"] = Vsapwood[c],_["Vleaf"] = Vleaf[c],
+                                                  _["LAIphe"] = LAIphe[c],_["LAIlive"] = LAIlive[c]);
     
     double rootCrownPsi = NA_REAL;
     
@@ -264,7 +264,7 @@ List transpirationGranier(List x, NumericVector meteovec,
       NumericVector Klc(nlayers);
       NumericVector Kunlc(nlayers);
       for(int l=0;l<nlayers;l++) {
-        Klc[l] = Psi2K(psiSoil[l], Psi_Extract[c], WeibullShape);
+        Klc[l] = Psi2K(psiSoil[l], Psi_Extract[c], Exp_Extract[c]);
         //Limit Mean Kl due to previous cavitation
         if(cavitationRefill!="total") {
           Klc[l] = std::min(Klc[l], 1.0-StemPLC[c]); 
@@ -276,7 +276,7 @@ List transpirationGranier(List x, NumericVector meteovec,
       for(int l=0;l<nlayers;l++) {
         Extraction(c,l) = std::max(TmaxCoh[c]*Klcmean*(Kunlc[l]/sumKunlc),0.0);
       }
-      rootCrownPsi = averagePsi(psiSoil, V(c,_), WeibullShape, Psi_Extract[c]);
+      rootCrownPsi = averagePsi(psiSoil, V(c,_), Exp_Extract[c], Psi_Extract[c]);
       // Rcout<< c << " : " << rootCrownPsi<<"\n";
     } else {
       NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
@@ -286,7 +286,7 @@ List transpirationGranier(List x, NumericVector meteovec,
       for(int j = 0;j<numCohorts;j++) {
         for(int l=0;l<nlayers;l++) {
           RHOPcohV(j,l) = RHOPcoh(j,l)*V(c,l);
-          Klc(j,l) = Psi2K(psiSoilM(c,l), Psi_Extract[c], WeibullShape);
+          Klc(j,l) = Psi2K(psiSoilM(c,l), Psi_Extract[c], Exp_Extract[c]);
           //Limit Mean Kl due to previous cavitation
           if(cavitationRefill!="total") Klc(j,l) = std::min(Klc(j,l), 1.0-StemPLC[c]); 
           Kunlc(j,l) = pow(KunsatM(j,l),0.5)*RHOPcohV(j,l);
@@ -300,7 +300,7 @@ List transpirationGranier(List x, NumericVector meteovec,
         }
         Extraction(c,l) = sum(ExtractionPoolsCoh(_,l)); // Sum extraction from all pools (layer l)
       }
-      rootCrownPsi = averagePsiPool(psiSoilM, RHOPcohV, WeibullShape, Psi_Extract[c]);
+      rootCrownPsi = averagePsiPool(psiSoilM, RHOPcohV, Exp_Extract[c], Psi_Extract[c]);
       // Rcout<< c << " : " << rootCrownPsi<<"\n";
     }
     
@@ -359,22 +359,22 @@ List transpirationGranier(List x, NumericVector meteovec,
   //Plant water status (StemPLC, RWC, DDS)
   for(int c=0;c<numCohorts;c++) {
     if(cavitationRefill!="total") {
-      StemPLC[c] = std::max(1.0 - Psi2K(PlantPsi[c],Psi_Critic[c],WeibullShape), StemPLC[c]); //Track current embolism if no refill
+      StemPLC[c] = std::max(1.0 - xylemConductance(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]), StemPLC[c]); //Track current embolism if no refill
     } else {
-      StemPLC[c] = 1.0 - Psi2K(PlantPsi[c],Psi_Critic[c],WeibullShape);
+      StemPLC[c] = 1.0 - xylemConductance(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]);
     }
     
     //Relative water content and fuel moisture from plant water potential
     RWClm[c] =  tissueRelativeWaterContent(PlantPsi[c], LeafPI0[c], LeafEPS[c], 
-                                           PlantPsi[c], WeibullShape, Psi_Critic[c], 
+                                           PlantPsi[c], VCstem_c[c], VCstem_d[c], 
                                            LeafAF[c], StemPLC[c]);
     RWCsm[c] =  tissueRelativeWaterContent(PlantPsi[c], StemPI0[c], StemEPS[c], 
-                                           PlantPsi[c], WeibullShape, Psi_Critic[c], 
+                                           PlantPsi[c], VCstem_c[c], VCstem_d[c], 
                                            StemAF[c], StemPLC[c]);
     LFMC[c] = maxFMC[c]*((1.0/r635[c])*RWClm[c]+(1.0 - (1.0/r635[c]))*RWCsm[c]);
     
     //Daily drought stress from plant WP
-    DDS[c] = Phe[c]*(1.0 - Psi2K(PlantPsi[c],Psi_Extract[c],WeibullShape)); 
+    DDS[c] = Phe[c]*(1.0 - Psi2K(PlantPsi[c],Psi_Extract[c],Exp_Extract[c])); 
     
     if(cavitationRefill=="rate") {
       double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area

@@ -1165,42 +1165,42 @@ RcppExport SEXP _medfate_growth(SEXP xSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, S
     return rcpp_result_gen;
 }
 // Psi2K
-double Psi2K(double psi, double Psi_extract, double ws);
-RcppExport SEXP _medfate_Psi2K(SEXP psiSEXP, SEXP Psi_extractSEXP, SEXP wsSEXP) {
+double Psi2K(double psi, double psi_extract, double exp_extract);
+RcppExport SEXP _medfate_Psi2K(SEXP psiSEXP, SEXP psi_extractSEXP, SEXP exp_extractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
-    Rcpp::traits::input_parameter< double >::type Psi_extract(Psi_extractSEXP);
-    Rcpp::traits::input_parameter< double >::type ws(wsSEXP);
-    rcpp_result_gen = Rcpp::wrap(Psi2K(psi, Psi_extract, ws));
+    Rcpp::traits::input_parameter< double >::type psi_extract(psi_extractSEXP);
+    Rcpp::traits::input_parameter< double >::type exp_extract(exp_extractSEXP);
+    rcpp_result_gen = Rcpp::wrap(Psi2K(psi, psi_extract, exp_extract));
     return rcpp_result_gen;
 END_RCPP
 }
 // K2Psi
-double K2Psi(double K, double Psi_extract, double ws);
-RcppExport SEXP _medfate_K2Psi(SEXP KSEXP, SEXP Psi_extractSEXP, SEXP wsSEXP) {
+double K2Psi(double K, double psi_extract, double exp_extract);
+RcppExport SEXP _medfate_K2Psi(SEXP KSEXP, SEXP psi_extractSEXP, SEXP exp_extractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type K(KSEXP);
-    Rcpp::traits::input_parameter< double >::type Psi_extract(Psi_extractSEXP);
-    Rcpp::traits::input_parameter< double >::type ws(wsSEXP);
-    rcpp_result_gen = Rcpp::wrap(K2Psi(K, Psi_extract, ws));
+    Rcpp::traits::input_parameter< double >::type psi_extract(psi_extractSEXP);
+    Rcpp::traits::input_parameter< double >::type exp_extract(exp_extractSEXP);
+    rcpp_result_gen = Rcpp::wrap(K2Psi(K, psi_extract, exp_extract));
     return rcpp_result_gen;
 END_RCPP
 }
 // averagePsi
-double averagePsi(NumericVector psi, NumericVector v, double c, double d);
-RcppExport SEXP _medfate_averagePsi(SEXP psiSEXP, SEXP vSEXP, SEXP cSEXP, SEXP dSEXP) {
+double averagePsi(NumericVector psi, NumericVector v, double exp_extract, double psi_extract);
+RcppExport SEXP _medfate_averagePsi(SEXP psiSEXP, SEXP vSEXP, SEXP exp_extractSEXP, SEXP psi_extractSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
-    Rcpp::traits::input_parameter< double >::type c(cSEXP);
-    Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(averagePsi(psi, v, c, d));
+    Rcpp::traits::input_parameter< double >::type exp_extract(exp_extractSEXP);
+    Rcpp::traits::input_parameter< double >::type psi_extract(psi_extractSEXP);
+    rcpp_result_gen = Rcpp::wrap(averagePsi(psi, v, exp_extract, psi_extract));
     return rcpp_result_gen;
 END_RCPP
 }
