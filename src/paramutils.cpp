@@ -818,7 +818,7 @@ NumericVector psiExtractWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector Psi_Extract = speciesNumericParameterFromIndex(SP, SpParams, "Psi_Extract");
   for(int c=0;c<Psi_Extract.size();c++) {
     if(NumericVector::is_na(Psi_Extract[c])) {
-      double corr = pow(log(0.5)/log(0.20), 1.0/Exp_Extract[c]); //Assumes TLP corresponds to 20% stomatal conductance
+      double corr = pow(log(0.5)/log(0.10), 1.0/Exp_Extract[c]); //Assumes TLP corresponds to 10% stomatal conductance (Martin-StPaul 2017 Ecol. Lett)
       Psi_Extract[c] = corr*turgorLossPoint(leafPI0[c], leafEPS[c]);
     }
   }
