@@ -18,6 +18,7 @@ library(readxl)
 library(tidyverse)
 library(medfate)
 library(nlme)
+meta_dir <- "~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/"
 ```
 
 ## Introduction
@@ -31,6 +32,7 @@ This document presents a meta-modelling exercise between basic (Granier's) and a
 The following parameters are used in the basic model, that cannot easily be parameterized from available information (see https://emf-creaf.github.io/medfatebook/index.html):
 
  + `Tmax_LAI` and `Tmax_LAIsp`, which determine the ratio of maximum transpiration over potential evapotranspiration for a given LAI. An empirical function with these parameters was derived by Granier (1999) for European temperate forests, without distinguishing between forests dominated by different species. 
+ + `Psi_Extract` and `Exp_Extract`, which determine the actual transpiration as a fraction of maximum transpiration, as a function of soil water potential for a given layer.
  + `WUE`, which represents the daily water use efficiency (g C of gross assimilation / l H2O transpired) under conditions of VPD = 1kPa, high photosynthetically active radiation (PAR) and no air CO2 limitations. 
  + `WUE_par`, which specifies the dependency of WUE on PAR. 
  + `WUE_co2`, which specifies the dependency of WUE on air CO2 concentration. 
@@ -45,7 +47,7 @@ The metamodelling procedure could be applied to any target species, but we focus
 
 For each of those species, we first revised the values of the most important parameters in the advanced water balance model (parameters of the hydraulic vulnerability curve are omitted as they should not be relevant in simulations without soil water deficit): 
 ```{r, echo = FALSE}
-customParamsSpecies = read_xlsx("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Data/SpParamsCUSTOM.xlsx", sheet = "SpParamsCUSTOM")
+customParamsSpecies = read_xlsx(paste0(meta_dir,"Data/SpParamsCUSTOM.xlsx"), sheet = "SpParamsCUSTOM")
 customParamsSpecies[, c("Name","SLA","Al2As", "VCleaf_kmax", "Kmax_stemxylem", "Gswmax","Vmax298", "Jmax298")] %>%
   kbl() %>%
   kable_styling()
@@ -56,9 +58,10 @@ Ideally, the transpiration and photosynthesis predictions of the advanced water 
 ## Simulations
 
 ```{r, echo = FALSE}
-df = readRDS("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Rdata/metamodelling_results.rds")
-df_co2 = readRDS("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Rdata/metamodelling_co2_results.rds")
-df_vpd = readRDS("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Rdata/metamodelling_vpd_results.rds")
+df = readRDS(paste0(meta_dir,"Rdata/metamodelling_results.rds"))
+df_K = readRDS(paste0(meta_dir,"Rdata/metamodelling_K_results.rds"))
+df_co2 = readRDS(paste0(meta_dir,"Rdata/metamodelling_co2_results.rds"))
+df_vpd = readRDS(paste0(meta_dir,"Rdata/metamodelling_vpd_results.rds"))
 target_spp = sort(unique(as.numeric(df$SP)))
 ```
 
@@ -103,6 +106,40 @@ TR_sp <- df %>%
 TR_sp %>%
   kbl() %>%
   kable_styling()
+```
+
+## Relative transpiration function
+
+
+```{r, echo = FALSE}
+Name <- character(0)
+Pred <- numeric(0)
+exp_extract <- numeric(0)
+psi_extract <- numeric(0)
+for(i in 1:length(target_spp)) {
+  
+  df_i = df_K[df_K$target_sp==target_spp[i],]
+  m_i = nls(Tr_ratio ~ exp(-0.6931472*(psi/psi_extract)^exp_extract), 
+            data = df_i, 
+            start=c(exp_extract=0.5, psi_extract = -0.5))
+  exp_extract[i]<-coefficients(m_i)[1]
+  psi_extract[i]<-coefficients(m_i)[2]
+  Pred <- c(Pred, predict(m_i))
+  Name <- c(Name, rep(SpParamsMED$Name[SpParamsMED$SpIndex==target_spp[i]], nrow(df_i)))
+}
+df_K$Pred<-Pred
+df_K$Name <- Name
+```
+
+```{r, echo = FALSE}
+g2<-ggplot(df_K)+
+  geom_point(aes(x = psi, y = Tr_ratio, col = Name), size=0.1, alpha = 0.3)+
+  geom_point(aes(x = psi, y = Pred, col = Name), size=0.1)+
+  xlim(c(-5,0))+
+  xlab("Soil water potential (MPa)")+ ylab("E (advanced, drought) / E (advanced, no drought)")+
+  theme(legend.position = "none")+
+  theme_bw()+ theme(panel.grid = element_blank())
+g2
 ```
 
 ## Water use efficiency ([CO2] = 386)
@@ -159,7 +196,7 @@ df$WUEg_max_pred = WUEg_max_pred
 We now draw again the previous plot with the species-specific fitted relationships, i.e. relative WUEg as a function of FPAR:
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
-g2<-ggplot(df2, aes(x = PAR, y = WUEg_rel))+
+g3<-ggplot(df2, aes(x = PAR, y = WUEg_rel))+
   geom_point(aes(col = Name), size = 0.3, alpha = 0.3)+
   geom_line(aes(x=PAR, y=Pred, col = Name), size = 1)+
   ylim(c(0,100))+ xlim(c(0,100))+
@@ -167,7 +204,7 @@ g2<-ggplot(df2, aes(x = PAR, y = WUEg_rel))+
   xlab("FPAR (%)")+
   scale_color_discrete("")+
   theme_bw()+ theme(panel.grid = element_blank())
-g2
+g3
 ```
 
 Note that there are substantial differences in the decay coefficients among species.
@@ -203,7 +240,7 @@ for(i in 1:length(target_spp)) {
 ```
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
-g3<-ggplot(df_vpd, aes(x = vpd, y = WUEg_rel))+
+g4<-ggplot(df_vpd, aes(x = vpd, y = WUEg_rel))+
   geom_point(aes(col = SPN), size = 0.1, alpha = 0.3)+
   geom_line(aes(x=vpd, y=WUEg, col = SPN), data = df_pred, size = 1)+
   ylim(c(0.3,3))+
@@ -211,7 +248,7 @@ g3<-ggplot(df_vpd, aes(x = vpd, y = WUEg_rel))+
   xlab("VPD (kPa)")+
   scale_color_discrete("")+
   theme_bw()+ theme(panel.grid = element_blank())
-g3
+g4
 ```
 
 ## Dependency of photosynthesis on [CO2]
@@ -232,16 +269,26 @@ df_co2$Pred = Pred
 ```
 
 ```{r, echo = FALSE}
-g4<-ggplot(df_co2, aes(x = Catm, y = Ag_rel))+
+g5<-ggplot(df_co2, aes(x = Catm, y = Ag_rel))+
   geom_point(aes(col = Name), size=0.3)+
   geom_line(aes(x=Catm, y=Pred, col = Name), size=1)+
   ylab("Ag/Ag([CO2]=386ppm)")+
   xlab("Atmospheric CO2 concentration (ppm)")+
   theme_bw()+ theme(panel.grid = element_blank())
-g4
+g5
 ```
 
 
+```{r, echo = FALSE}
+g <- plot_grid(g1 + theme(legend.position = "none"),
+               g2 + theme(legend.position = "none"),
+               g3 + theme(legend.position = "none"),
+               g4 + theme(legend.position = "none"),
+               g5 + theme(legend.position = "none"),
+               get_legend(g3),
+               labels = c("a)","b)", "c)", "d)", "e)", ""), nrow=3, ncol=2)
+ggsave2("meta_fit.png", g, width = 9, height = 13.5, bg = "white")
+```
 
 
 ## Similarity in E and Ag estimates
@@ -267,6 +314,7 @@ g5<-ggplot(df, aes(x=E_granier, y = E_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
   ylim(c(0,350))+ xlim(c(0,350))+
+  scale_color_discrete("")+
   xlab("Annual E (basic; default parameters)")+ ylab("Annual E (advanced)")+
   theme_bw()+theme(legend.position = "none")+ theme(panel.grid = element_blank())
 g6<-ggplot(df, aes(x=E_granier_meta, y = E_sperry))+
@@ -276,11 +324,12 @@ g6<-ggplot(df, aes(x=E_granier_meta, y = E_sperry))+
   ylim(c(0,350))+ xlim(c(0,350))+
   xlab("Annual E (basic; new parameters)")+ ylab("Annual E (advanced)")+
   theme_bw()+ theme(panel.grid = element_blank())
-l <- get_legend(g2)
+l <- get_legend(g6)
 g6<- g6 +theme(legend.position = "none")
 g7<-ggplot(df, aes(x=Ag_granier, y = Ag_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
+  scale_color_discrete("")+
   ylim(c(0,1500))+ xlim(c(0,1500))+
   xlab("Annual Ag (basic; default parameters)")+ ylab("Annual Ag (advanced)")+
   theme_bw()+theme(legend.position = "none")+ theme(panel.grid = element_blank())
@@ -291,19 +340,11 @@ g8<-ggplot(df, aes(x=Ag_granier_meta, y = Ag_sperry))+
   ylim(c(0,1500))+ xlim(c(0,1500))+
   xlab("Annual Ag (basic; new parameters)")+ ylab("Annual Ag (advanced)")+
   theme_bw()+theme(legend.position = "none")+ theme(panel.grid = element_blank())
-g0<-plot_grid(g5,g6,g7,g8, ncol=2)
-g<-plot_grid(g0,l, ncol=2, rel_widths = c(1,0.2))
+g0<-plot_grid(g5,g6,g7,g8, labels = c("a)", "b)", "c)", "d)"), 
+              ncol=2, nrow = 2)
+g<-plot_grid(g0,l, ncol=2, nrow = 1, rel_widths = c(1,0.2))
+ggsave2("meta_eval.png", g, width = 11, height = 9, bg = "white")
 g
-```
-
-```{r, echo = FALSE}
-g <- plot_grid(g1 + theme(legend.position = "none"),
-               g2 + theme(legend.position = "none"),
-               g3 + theme(legend.position = c(0.73,0.62)),
-               g4 + theme(legend.position = "none"),
-               g7,g8,
-               labels = c("a)","b)", "c)", "d)", "e)","f)"), nrow=3, ncol=2)
-ggsave2("meta_fit_eval.png", g, width = 9, height = 13.5)
 ```
 
 
