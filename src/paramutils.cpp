@@ -1129,17 +1129,16 @@ NumericVector SapwoodRespirationRateWithImputation(IntegerVector SP, DataFrame S
       // double RER_nmolCO2_g_s = pow(10.0, 1.024 + 1.344*log10(Nsapwood_mmol_g)); //nmol CO2·g-1·s-1
       // RERsapwood[c] = 24.0*3600.0*(RER_nmolCO2_g_s/6.0)*(1e-9)*180.156; // nmol CO2·g-1·s-1 to g gluc·g-1·d-1
       // ESTIMATES ARE TOO HIGH
-      RERsapwood[c] = 4.93e-05;
+      RERsapwood[c] = 5.15e-05;
     }
   }
   return(RERsapwood);
 }
 NumericVector SapwoodSenescenceRateWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector SRsapwood = speciesNumericParameterFromIndex(SP, SpParams, "SRsapwood");
-  NumericVector RGRcambiummax = speciesNumericParameterFromIndex(SP, SpParams, "RGRcambiummax");
   for(int c=0;c<SRsapwood.size();c++) {
     if(NumericVector::is_na(SRsapwood[c])) {
-      if(!NumericVector::is_na(RGRcambiummax[c])) SRsapwood[c] = 0.05544*RGRcambiummax[c];
+      SRsapwood[c] = 0.000135;
     }
   }
   return(SRsapwood);

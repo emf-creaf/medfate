@@ -7,7 +7,7 @@
 \usage{
 soil(SoilParams, VG_PTF = "Toth", W = as.numeric(c(1)), SWE = 0)
 
-\method{print}{soil}(x, model = "SX", ...)
+print.soil(x, model = "SX", ...)
 }
 \arguments{
 \item{SoilParams}{A data frame of soil parameters (see an example in \code{\link{defaultSoilParams}}).}

@@ -37,7 +37,8 @@ We used to data sets for the calibration exercise:
 
 plot_desc = readRDS(paste0(base_calibration,"Rdata/plot_desc_FUN2FUN.rds"))
 obs_FUN2FUN = readRDS(paste0(base_calibration,"Rdata/obs_FUN2FUN_IFN.rds"))
-eval_df = readRDS(paste0(base_calibration,"Rdata/eval_FUN2FUN.rds"))
+eval_data_df = readRDS(paste0(base_calibration,"Rdata/eval_data_FUN2FUN.rds"))
+eval_stats_df = readRDS(paste0(base_calibration,"Rdata/eval_stats_FUN2FUN.rds"))
 cal_FUN2FUN_SL_ga = readRDS(paste0(base_calibration,"Rdata/cal_FUN2FUN_SL_ga.rds"))
 cal_FUN2FUN_NSL_ga = readRDS(paste0(base_calibration,"Rdata/cal_FUN2FUN_NSL_ga.rds"))
 sel = !is.na(cal_FUN2FUN_SL_ga$value_cal)
@@ -88,7 +89,7 @@ In addition, soil stoniness in the target plots had been estimated from surface 
 
 For each forest plot in the first data set, we matched each available dendrochronological series with a forest inventory tree cohort by finding which tree (in the IFN3 sampling) had the DBH most similar to that estimated from the dendrochronology at year 2000. Then, we took the series of annual basal area increments (BAI) as the observations to be matched by model secondary growth predictions for the matched tree cohort. For each forest plot of the second data set, we took all available dendrochronological series between 1990 and 2004. Available diameter increments (DI) were used to infer DBH at year 1990 and we transformed DI into annual BAI.
 
-Simulations were performed using daily weather data for each target plot, obtained via interpolation using package **meteoland** (2001 - 2015 period or 1990-2004 period, depending on the data set), and soil physical characteristics where drawn from SoilGrids data base. Water use efficiency parameters (`WUE` and `WUE_par`) were given values resulting from the [meta-modelling exercise](https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html), whereas other parameters of the sensitivity analysis were left to the species-level defaults of `SpParamsMED`. We calibrated the four target parameters for the target dominant species of the target plot using a genetic algorithm (function `ga` from package **GA**). Model parameter values were assumed to be the same for all cohorts of the target species, while the remaining species in the plot were given default constant parameter values. The objective function for the genetic algorithm was the average, across cohorts with observed dendrochronology series, of the mean absolute error (MAE) resulting from comparing observed and predicted annual BAI series. Population size for the genetic algorithm was set to 40 individuals. A maximum of 25 iterations of the genetic algorithm were allowed, and the calibration procedure stopped if the best parameter combination did not change during 5 consecutive iterations.
+Simulations were performed using daily weather data for each target plot, obtained via interpolation using package **meteoland** (2001 - 2015 period or 1990-2004 period, depending on the data set), and soil physical characteristics where drawn from SoilGrids data base. Transpiration and photosynthesis parameters were given values resulting from the [meta-modelling exercise](https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html), whereas other parameters of the sensitivity analysis were left to the species-level defaults of `SpParamsMED`. We calibrated the four target parameters for the target dominant species of the target plot using a genetic algorithm (function `ga` from package **GA**). Model parameter values were assumed to be the same for all cohorts of the target species, while the remaining species in the plot were given default constant parameter values. The objective function for the genetic algorithm was the average, across cohorts with observed dendrochronology series, of the mean absolute error (MAE) resulting from comparing observed and predicted annual BAI series. Population size for the genetic algorithm was set to 40 individuals. A maximum of 25 iterations of the genetic algorithm were allowed, and the calibration procedure stopped if the best parameter combination did not change during 5 consecutive iterations.
 
 The following table shows the range of values explored for each parameter to be calibrated: 
 ```{r, echo = FALSE}
@@ -248,31 +249,21 @@ plot_grid(p, l, ncol = 2, rel_widths = c(0.8,0.2))
 
 Finally, we wanted to evaluate the reduction in predictive error of secondary growth attained by calibrating growth parameters. Moreover, since applications of the growth model will normally be on plots lacking growth observations, we wanted to assess the predictive error of species-level parameter averages and overall parameter averages. Hence, we ran the growth model on the forest plots using either species-level averages or the overall averages of the calibrated parameters. In this second case, we excluded from the values to be averaged those corresponding to plots where relative MAE was > 100%, assuming that calibration was not successful in those cases. The following table shows the species-level parameter values:
 
-```{r, echo = FALSE}
-calParamsSpecies = readRDS(paste0(base_calibration,"/Rdata/calibration_params.rds"))
-calParamsSpecies[,-1] %>% #Ommits index 
-  kbl() %>%
-  kable_styling()
-```
 
 
 
 ```{r, echo = FALSE, eval = TRUE, fig.width=4, fig.height=3.5, warning=FALSE}
-eval_all_df = eval_df[,c("Species", "MAE_all", "MAErel_all","MAE_BAItot_all", "MAErel_BAItot_all")]
-names(eval_all_df)<-c("Species", "MAE_BAI", "MAErel_BAI","MAE_BAItot", "MAErel_BAItot")
+eval_cal_df = eval_stats_df[,c("Species", "MAE_calibrated", "MAErel_calibrated","MAE_BAItot_calibrated", "MAErel_BAItot_calibrated")]
+names(eval_cal_df)<-c("Species", "MAE_BAI", "MAErel_BAI","MAE_BAItot", "MAErel_BAItot")
 
-eval_cal_df = eval_df[,c("Species", "MAE_calibrated", "MAErel_calibrated","MAE_BAItot_calibrated", "MAErel_BAItot_calibrated")]
-names(eval_cal_df)<-names(eval_all_df)
-
-eval_spp_df = eval_df[,c("Species", "MAE_spp", "MAErel_spp","MAE_BAItot_spp", "MAErel_BAItot_spp")]
-names(eval_spp_df)<-names(eval_all_df)
+eval_sperry_df = eval_stats_df[,c("Species", "MAE_sperry", "MAErel_sperry","MAE_BAItot_sperry", "MAErel_BAItot_sperry")]
+names(eval_sperry_df)<-names(eval_cal_df)
 
 eval_cal_df$type = "Calibrated"
-eval_spp_df$type = "Species-level averages"
-eval_all_df$type = "Overall averages"
+eval_sperry_df$type = "Sperry"
 
-eval_all_df = bind_rows(eval_cal_df, eval_spp_df, eval_all_df)
-eval_all_df$type = factor(eval_all_df$type, levels = c("Calibrated", "Species-level averages","Overall averages"))
+eval_all_df = bind_rows(eval_cal_df, eval_sperry_df)
+eval_all_df$type = factor(eval_all_df$type, levels = c("Calibrated", "Sperry"))
 ```
 
 The following panels show the prediction error (either absolute or relative) for the annual BAI, as done above but including the new simulations:
@@ -296,13 +287,11 @@ plot_grid(p1,p2, nrow=1)
 
 The following table shows annual BAI evaluation results by species (medians):
 ```{r echo = FALSE, eval = TRUE}
-eval_df %>% group_by(Species) %>% 
-  summarise(`MAE plot (cm2/yr)` = median(MAE_calibrated, na.rm=T),
-            `MAE spp (cm2/yr)` = median(MAE_spp, na.rm=T),
-            `MAE all (cm2/yr)` = median(MAE_all, na.rm=T),
-            `MAE plot (%)` = median(MAErel_calibrated, na.rm=T),
-            `MAE spp (%)` = median(MAErel_spp, na.rm=T),
-            `MAE all (%)` = median(MAErel_all, na.rm=T)) %>% 
+eval_stats_df %>% group_by(Species) %>% 
+  summarise(`MAE calibrated (cm2/yr)` = median(MAE_calibrated, na.rm=T),
+            `MAE sperry (cm2/yr)` = median(MAE_sperry, na.rm=T),
+            `MAE calibrated (%)` = median(MAErel_calibrated, na.rm=T),
+            `MAE sperry (%)` = median(MAErel_sperry, na.rm=T)) %>% 
   kbl() %>%
   kable_styling()
 ```
@@ -327,21 +316,17 @@ plot_grid(p3,p4, nrow=1)
 ```
 
 
-
 The following table shows total BAI evaluation results by species (medians):
 ```{r echo = FALSE, eval = TRUE}
-eval_df %>% group_by(Species) %>% 
-  summarise(`MAE plot (cm2)` = median(MAE_BAItot_calibrated, na.rm=T),
-            `MAE spp (cm2)` = median(MAE_BAItot_spp, na.rm=T),
-            `MAE all (cm2)` = median(MAE_BAItot_all, na.rm=T),
-            `MAE plot (%)` = median(MAErel_BAItot_calibrated, na.rm=T),
-            `MAE spp (%)` = median(MAErel_BAItot_spp, na.rm=T),
-            `MAE all (%)` = median(MAErel_BAItot_all, na.rm=T)) %>% 
+eval_stats_df %>% group_by(Species) %>% 
+  summarise(`MAE calibrated (cm2)` = median(MAE_BAItot_calibrated, na.rm=T),
+            `MAE sperry (cm2)` = median(MAE_BAItot_sperry, na.rm=T),
+            `MAE calibrated (%)` = median(MAErel_BAItot_calibrated, na.rm=T),
+            `MAE sperry (%)` = median(MAErel_BAItot_sperry, na.rm=T)) %>% 
   kbl() %>%
   kable_styling()
 ```
 
-From these results, it is apparent that the calibration improved substantially the predictive capacity of the model. More importantly, using species-level averages or overall averages do not seem to increase substantially prediction errors, compared to plot-level calibrated parameter values.
 
 ## Bibliography
 

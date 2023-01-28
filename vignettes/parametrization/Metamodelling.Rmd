@@ -55,10 +55,10 @@ customParamsSpecies[, c("Name","SLA","Al2As", "VCleaf_kmax", "Kmax_stemxylem", "
 
 Ideally, the transpiration and photosynthesis predictions of the advanced water balance model should be evaluated with these parameterization before using it as reference for the meta-modelling study. Otherwise we could be biasing both models with inappropriate parameter values. At present, the advance water balance model has been evaluated using data from experimental plots in stands dominated by some of the target species, but not others.
 
-## Simulations
+## Simulations for the meta-modelling exercise
 
 ```{r, echo = FALSE}
-df = readRDS(paste0(meta_dir,"Rdata/metamodelling_results.rds"))
+df = readRDS(paste0(meta_dir,"Rdata/metamodelling_E_Ag_results.rds"))
 df_K = readRDS(paste0(meta_dir,"Rdata/metamodelling_K_results.rds"))
 df_co2 = readRDS(paste0(meta_dir,"Rdata/metamodelling_co2_results.rds"))
 df_vpd = readRDS(paste0(meta_dir,"Rdata/metamodelling_vpd_results.rds"))
@@ -136,7 +136,7 @@ g2<-ggplot(df_K)+
   geom_point(aes(x = psi, y = Tr_ratio, col = Name), size=0.1, alpha = 0.3)+
   geom_point(aes(x = psi, y = Pred, col = Name), size=0.1)+
   xlim(c(-5,0))+
-  xlab("Soil water potential (MPa)")+ ylab("E (advanced, drought) / E (advanced, no drought)")+
+  xlab("Soil water potential (MPa)")+ ylab("E (adv., drought) / E (adv., no drought)")+
   theme(legend.position = "none")+
   theme_bw()+ theme(panel.grid = element_blank())
 g2
@@ -287,13 +287,11 @@ g <- plot_grid(g1 + theme(legend.position = "none"),
                g5 + theme(legend.position = "none"),
                get_legend(g3),
                labels = c("a)","b)", "c)", "d)", "e)", ""), nrow=3, ncol=2)
-ggsave2("meta_fit.png", g, width = 9, height = 13.5, bg = "white")
+ggsave2("meta_fit.png", g, width = 9, height = 11, bg = "white")
 ```
 
 
-## Similarity in E and Ag estimates
-
-### Meta-modelling parameters
+## Meta-modelling parameters
 
 The table containing the five parameters estimated via meta-modelling is the following:
 ```{r, echo = FALSE}
@@ -304,46 +302,85 @@ df_par[,-1] %>%
   kable_styling()
 ```
 
-### Evaluation of the effect of the new parameters
+## Evaluation of the effect of the new parameters
 Here we evaluated whether the estimated parameters indeed increased the similarity of transpiration (E) and gross photosynthesis (Ag) estimates between the two models. To this aim we ran again the basic water balance model on all the forest plots but using the estimated parameters instead of the default values.
 
 The following plots show the effect of the new parameters on annual E and annual Ag for plant cohorts of the plots included in the study:
+```{r, echo = FALSE}
+df_E_Ag = readRDS(paste0(meta_dir,"Rdata/metamodelling_E_Ag_evaluation.rds"))
+df_soil= readRDS(paste0(meta_dir,"Rdata/metamodelling_soil_evaluation.rds"))
+```
 
-```{r, echo = FALSE, fig.width=10, fig.height=9, warning=FALSE}
-g5<-ggplot(df, aes(x=E_granier, y = E_sperry))+
+
+```{r, echo = FALSE, fig.width=10, fig.height=10, warning=FALSE}
+r1 <- cor(df_E_Ag$E_sperry, df_E_Ag$E_granier, use="complete")^2
+g1<-ggplot(df_E_Ag, aes(x=E_granier, y = E_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
+  geom_text(x=50, y= 325, label=paste0("R² = ", round(r1,3)))+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
+  geom_smooth(method="lm", col="black", linetype="dashed")+
   ylim(c(0,350))+ xlim(c(0,350))+
   scale_color_discrete("")+
   xlab("Annual E (basic; default parameters)")+ ylab("Annual E (advanced)")+
   theme_bw()+theme(legend.position = "none")+ theme(panel.grid = element_blank())
-g6<-ggplot(df, aes(x=E_granier_meta, y = E_sperry))+
+r2 <- cor(df_E_Ag$E_sperry, df_E_Ag$E_granier_meta, use="complete")^2
+g2<-ggplot(df_E_Ag, aes(x=E_granier_meta, y = E_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
+  geom_text(x=50, y= 325, label=paste0("R² = ", round(r2,3)))+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
+  geom_smooth(method="lm", col="black", linetype="dashed")+
   scale_color_discrete("")+
   ylim(c(0,350))+ xlim(c(0,350))+
   xlab("Annual E (basic; new parameters)")+ ylab("Annual E (advanced)")+
   theme_bw()+ theme(panel.grid = element_blank())
-l <- get_legend(g6)
-g6<- g6 +theme(legend.position = "none")
-g7<-ggplot(df, aes(x=Ag_granier, y = Ag_sperry))+
+l <- get_legend(g2)
+g2<- g2 +theme(legend.position = "none")
+r3 <- cor(df_E_Ag$Ag_sperry, df_E_Ag$Ag_granier)^2
+g3<-ggplot(df_E_Ag, aes(x=Ag_granier, y = Ag_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
+  geom_text(x=200, y= 1400, label=paste0("R² = ", round(r3,3)))+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
+  geom_smooth(method="lm", col="black", linetype="dashed")+
   scale_color_discrete("")+
   ylim(c(0,1500))+ xlim(c(0,1500))+
   xlab("Annual Ag (basic; default parameters)")+ ylab("Annual Ag (advanced)")+
   theme_bw()+theme(legend.position = "none")+ theme(panel.grid = element_blank())
-g8<-ggplot(df, aes(x=Ag_granier_meta, y = Ag_sperry))+
+r4 <- cor(df_E_Ag$Ag_sperry, df_E_Ag$Ag_granier_meta, use="complete")^2
+g4<-ggplot(df_E_Ag, aes(x=Ag_granier_meta, y = Ag_sperry))+
   geom_point(size=0.3, aes(col=Name), alpha = 0.3)+
+  geom_text(x=200, y= 1400, label=paste0("R² = ", round(r4,3)))+
   geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
+  geom_smooth(method="lm", col="black", linetype="dashed")+
   scale_color_discrete("")+
   ylim(c(0,1500))+ xlim(c(0,1500))+
   xlab("Annual Ag (basic; new parameters)")+ ylab("Annual Ag (advanced)")+
   theme_bw()+theme(legend.position = "none")+ theme(panel.grid = element_blank())
-g0<-plot_grid(g5,g6,g7,g8, labels = c("a)", "b)", "c)", "d)"), 
-              ncol=2, nrow = 2)
+
+r5 <- cor(df_soil$S_RWC, df_soil$G_RWC, use="complete")^2
+g5<-ggplot(df_soil,mapping = aes(x=G_RWC, y=S_RWC))+
+  geom_point(aes(col=Name), size=0.1, alpha = 0.3)+
+  geom_text(x=0.4, y= 0.95, label=paste0("R² = ", round(r5,3)))+
+  geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
+  geom_smooth(method="lm", col="black", linetype="dashed")+
+  xlim(c(0.3,1))+ylim(c(0.3,1))+
+  xlab("Daily soil RWC (basic; default parameters)")+ ylab("Daily soil RWC (advanced)")+
+  theme_bw()+theme(legend.position = "none")+ theme(panel.grid = element_blank())
+
+r6 <- cor(df_soil$S_RWC, df_soil$GM_RWC, use="complete")^2
+g6<-ggplot(df_soil,mapping = aes(x=GM_RWC, y=S_RWC))+
+  geom_point(aes(col=Name), size=0.1, alpha = 0.3)+
+  geom_text(x=0.4, y= 0.95, label=paste0("R² = ", round(r6,3)))+
+  geom_abline(intercept = 0, slope = 1, col="gray", alpha = 0.7, size=2)+
+  geom_smooth(method="lm", col="black", linetype="dashed")+
+  xlim(c(0.3,1))+ylim(c(0.3,1))+
+  xlab("Daily soil RWC (basic; new parameters)")+ ylab("Daily soil RWC (advanced)")+
+  theme_bw()+theme(legend.position = "none")+ theme(panel.grid = element_blank())
+
+g0<-plot_grid(g1,g2,g3,g4, g5, g6,
+              labels = c("a)", "b)", "c)", "d)", "e)", "f)"), 
+              ncol=2, nrow = 3)
 g<-plot_grid(g0,l, ncol=2, nrow = 1, rel_widths = c(1,0.2))
-ggsave2("meta_eval.png", g, width = 11, height = 9, bg = "white")
+ggsave2("meta_eval.png", g, width = 11, height = 11, bg = "white")
 g
 ```
 
