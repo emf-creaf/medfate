@@ -18,7 +18,6 @@ articles:
 - title: Model analysis and parametrization
   contents:
     - starts_with("modelanalysis/Sensitivity")
-    - starts_with("parametrization/SpeciesParameterization")
     - starts_with("parametrization/Metamodelling")
     - starts_with("parametrization/GrowthCalibration")
 - title: Model performance evaluation

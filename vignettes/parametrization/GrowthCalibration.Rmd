@@ -26,10 +26,8 @@ base_calibration = "~/OneDrive/Professional/MedfateWorks/GrowthCalibration/"
 
 ### Observational data
 
-We used to data sets for the calibration exercise:
+The calibration data set corresponds to 75 permanent forest plots of the Spanish National Forest Inventory located in Catalonia. Forest plots correspond to pure stands whose dominant species are *Fagus sylvatica*, *Pinus halepensis*, *Pinus nigra*, *Pinus sylvestris* or *Quercus pubescens*. There are 15 plots per each dominant species and each set of 15 plots encompass a range of climatic aridity. Plot characteristics are described in Rosas et al. (2019). Dendrochronological series are available for up to 6 trees per plot and were sampled in December 2015. Note that a sixth species (*Quercus ilex*) was included in Rosas et al (2019), but dendrochronological dating is not available.
 
-  a) The first data set corresponds to 75 permanent forest plots of the Spanish National Forest Inventory located in Catalonia. Forest plots correspond to pure stands whose dominant species are *Fagus sylvatica*, *Pinus halepensis*, *Pinus nigra*, *Pinus sylvestris* or *Quercus pubescens*. There are 15 plots per each dominant species and each set of 15 plots encompass a range of climatic aridity. Plot characteristics are described in Rosas et al. (2019). Dendrochronological series are available for up to 6 trees per plot and were sampled in December 2015. Note that a sixth species (*Quercus ilex*) was included in Rosas et al (2019), but dendrochronological dating is not available.
-  b) The second data set corresponds to 12 plots located in the Pyrenees and describing pure *Pinus uncinata* stands close to the treeline. Dendrochronological series were taken in 2004-2005 from tree base samples and were available for almost all trees in each stand. Forest stands and sampling procedures are described in Batllori & Gutiérrez (2008) and Batllori et al. (2009).
 
 ```{r, echo = FALSE}
 
@@ -61,6 +59,7 @@ for(i in 1:length(obs_FUN2FUN)) {
 }
 
 
+eval_stats_df$Species[eval_stats_df$Species=="Quercus humilis"] = "Quercus pubescens"
 
 cal_FUN2FUN_SL_ga$Species = as.character(cal_FUN2FUN_SL_ga$Species)
 cal_FUN2FUN_SL_ga$Species[cal_FUN2FUN_SL_ga$Species=="Quercus humilis"] = "Quercus pubescens"
@@ -109,7 +108,6 @@ df %>%
 ### Error function
 ```{r, echo = FALSE}
 df = cal_FUN2FUN_SL_ga[,c(1,2,3, 5,7,9,11)]
-# df = rbind(cal_FUN2FUN_SL_ga[,c(1,2,3, 5,7,9,11)], cal_uncinata_SL_ga[,c(1,2,3, 5,7,9,11)])
 ```
 
 The following panel shows the distribution of the final (optimum) values of the error function (average relative MAE) by dominant species:
@@ -245,86 +243,58 @@ p<-plot_grid(g1,g2,g3,g4,g5,g6, ncol=2)
 plot_grid(p, l, ncol = 2, rel_widths = c(0.8,0.2))
 ```
 
-## Final evaluation
+## Comparison of the basic and advanced sub-models
 
-Finally, we wanted to evaluate the reduction in predictive error of secondary growth attained by calibrating growth parameters. Moreover, since applications of the growth model will normally be on plots lacking growth observations, we wanted to assess the predictive error of species-level parameter averages and overall parameter averages. Hence, we ran the growth model on the forest plots using either species-level averages or the overall averages of the calibrated parameters. In this second case, we excluded from the values to be averaged those corresponding to plots where relative MAE was > 100%, assuming that calibration was not successful in those cases. The following table shows the species-level parameter values:
+Since the calibration exercise had been conducted using the basic sub-model, it is expected that growth simulations with the advanced sub-model have larger error rates and, potentially, larger bias. To check this, we repeated growth simulations using the calibrated parameters for each plot and the advanced sub-model. 
 
-
-
+The following figures show the bias and mean absolute error of annual basal area increments obtained in simulations using the basic and advanced sub-models, in both cases using the calibrated parameters.
 
 ```{r, echo = FALSE, eval = TRUE, fig.width=4, fig.height=3.5, warning=FALSE}
-eval_cal_df = eval_stats_df[,c("Species", "MAE_calibrated", "MAErel_calibrated","MAE_BAItot_calibrated", "MAErel_BAItot_calibrated")]
-names(eval_cal_df)<-c("Species", "MAE_BAI", "MAErel_BAI","MAE_BAItot", "MAErel_BAItot")
+eval_cal_df = eval_stats_df[,c("Species", "Bias_calibrated", "Biasrel_calibrated", "MAE_calibrated", "MAErel_calibrated",
+                               "Bias_BAItot_calibrated", "MAE_BAItot_calibrated", "MAErel_BAItot_calibrated")]
+names(eval_cal_df)<-c("Species", "Bias_BAI", "Biasrel_BAI",  "MAE_BAI", "MAErel_BAI", "Bias_BAItot", "MAE_BAItot", "MAErel_BAItot")
 
-eval_sperry_df = eval_stats_df[,c("Species", "MAE_sperry", "MAErel_sperry","MAE_BAItot_sperry", "MAErel_BAItot_sperry")]
+eval_sperry_df = eval_stats_df[,c("Species", "Bias_sperry", "Biasrel_sperry" ,"MAE_sperry", "MAErel_sperry",
+                                  "Bias_BAItot_sperry", "MAE_BAItot_sperry", "MAErel_BAItot_sperry")]
 names(eval_sperry_df)<-names(eval_cal_df)
 
-eval_cal_df$type = "Calibrated"
-eval_sperry_df$type = "Sperry"
+eval_cal_df$type = "Basic sub-model"
+eval_sperry_df$type = "Advanced sub-model"
 
 eval_all_df = bind_rows(eval_cal_df, eval_sperry_df)
-eval_all_df$type = factor(eval_all_df$type, levels = c("Calibrated", "Sperry"))
+eval_all_df$type = factor(eval_all_df$type, levels = c("Basic sub-model", "Advanced sub-model"))
 ```
 
-The following panels show the prediction error (either absolute or relative) for the annual BAI, as done above but including the new simulations:
-```{r, eval = TRUE, echo = FALSE, fig.width=10, fig.height=5, warning= FALSE}
+```{r, eval = TRUE, echo = FALSE, fig.width=8, fig.height=7, warning= FALSE}
 p1<-ggplot(eval_all_df)+
+  geom_boxplot(aes(x=Species, y=Bias_BAI, fill=type))+
+  labs(x="", y="Bias annual BAI (cm2/yr.)")+
+  geom_abline(slope=0, intercept=0)+
+  scale_fill_discrete(NULL)+
+  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
+                   legend.position = "none")+ theme(panel.grid = element_blank())
+p2<-ggplot(eval_all_df)+
   geom_boxplot(aes(x=Species, y=MAE_BAI, fill=type))+
   labs(x="", y="MAE annual BAI (cm2/yr.)")+
   scale_fill_discrete(NULL)+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
-                   legend.position = c(0.7,0.80))
-p2<-ggplot(eval_all_df)+
-  geom_boxplot(aes(x=Species, y=MAErel_BAI, fill=type))+
-  labs(x="", y="MAE relative annual BAI (%)")+
-  scale_fill_discrete(NULL)+
-  ylim(c(0, 200))+
-  theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
-                   legend.position = "none")
-
-plot_grid(p1,p2, nrow=1)
-```
-
-The following table shows annual BAI evaluation results by species (medians):
-```{r echo = FALSE, eval = TRUE}
-eval_stats_df %>% group_by(Species) %>% 
-  summarise(`MAE calibrated (cm2/yr)` = median(MAE_calibrated, na.rm=T),
-            `MAE sperry (cm2/yr)` = median(MAE_sperry, na.rm=T),
-            `MAE calibrated (%)` = median(MAErel_calibrated, na.rm=T),
-            `MAE sperry (%)` = median(MAErel_sperry, na.rm=T)) %>% 
-  kbl() %>%
-  kable_styling()
-```
-
-We also evaluated the performance of the model in terms of predicting total basal area growth during the 15 years simulated, where we again used as error function the mean absolute error:
-
-```{r eval = TRUE, echo = FALSE, fig.width=10, fig.height=5, warning=FALSE}
+                   legend.position = c(0.6,0.80))+ theme(panel.grid = element_blank())
 p3<-ggplot(eval_all_df)+
-  geom_boxplot(aes(x=Species, y=MAE_BAItot, fill=type))+
-  labs(x="", y="MAE total BAI (cm2)")+
+  geom_boxplot(aes(x=Species, y=Biasrel_BAI, fill=type))+
+  geom_abline(slope=0, intercept=0)+
+  labs(x="", y="Bias relative BAI (%)")+
   scale_fill_discrete(NULL)+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
-                   legend.position = c(0.75,0.80))
+                   legend.position = "none")+ theme(panel.grid = element_blank())
 p4<-ggplot(eval_all_df)+
-  geom_boxplot(aes(x=Species, y=MAErel_BAItot, fill=type))+
-  labs(x="", y="MAE relative total BAI (%)")+
+  geom_boxplot(aes(x=Species, y=MAErel_BAI, fill=type))+
+  labs(x="", y="MAE relative BAI (%)")+
   scale_fill_discrete(NULL)+
-  ylim(c(0, 200))+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
-                   legend.position = "none")
-plot_grid(p3,p4, nrow=1)
-```
-
-
-The following table shows total BAI evaluation results by species (medians):
-```{r echo = FALSE, eval = TRUE}
-eval_stats_df %>% group_by(Species) %>% 
-  summarise(`MAE calibrated (cm2)` = median(MAE_BAItot_calibrated, na.rm=T),
-            `MAE sperry (cm2)` = median(MAE_BAItot_sperry, na.rm=T),
-            `MAE calibrated (%)` = median(MAErel_BAItot_calibrated, na.rm=T),
-            `MAE sperry (%)` = median(MAErel_BAItot_sperry, na.rm=T)) %>% 
-  kbl() %>%
-  kable_styling()
+                   legend.position = "none")+ theme(panel.grid = element_blank())
+p <- plot_grid(p1, p2, p3, p4, labels = c("a)","b)", "c)", "d)"), nrow=2, ncol=2)
+ggsave2("calibration_eval.png", p, width = 8, height = 7, bg = "white")
+p
 ```
 
 
