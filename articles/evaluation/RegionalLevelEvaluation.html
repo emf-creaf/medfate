@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
       </span>
     </div>
 
@@ -75,7 +75,7 @@ with forest inventory data</h1>
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-11-25</h4>
+            <h4 data-toc-skip class="date">2023-01-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/evaluation/RegionalLevelEvaluation.Rmd" class="external-link"><code>vignettes/evaluation/RegionalLevelEvaluation.Rmd</code></a></small>
       <div class="hidden name"><code>RegionalLevelEvaluation.Rmd</code></div>
@@ -98,23 +98,25 @@ the model predictions of forest growth against inventory data for a
 large set of permanent plots. The evaluation focuses first on the growth
 (in diameter and height) of surviving trees, then turning the attention
 to the basal area of dead trees and overall changes in basal area.</p>
-<p>This evaluation was conducted using <strong>medfate</strong> package
-version <strong>2.8.1</strong> for the basic model and
-<strong>2.8.1</strong> for the advanced model.</p>
 </div>
 <div class="section level3">
 <h3 id="simulation-procedure">Simulation procedure<a class="anchor" aria-label="anchor" href="#simulation-procedure"></a>
 </h3>
-<p>We selected <strong>3150</strong> repeated plots (A1 between IFN3 and
-IFN4) without signs of management (cut trees) and whose basal area did
-not decrease between inventory surveys.</p>
+<p>We selected repeated plots (A1 between IFN2 and IFN4) without signs
+of management (cut trees) and whose basal area did not decrease between
+inventory surveys.</p>
 <p>Soil physical properties were drawn from SoilGrids (Hengl 2016),
 complemented by rock fragment content estimates derived from surface
-stoniness measurements in forest plots. Simulations were conducted
-between 2000/2001 (IFN3) and 2014/2016 (IFN4) depending on the sampling
-years of the target plot, with daily weather data obtained via
-interpolation on plot’s coordinates using package
-<strong>meteoland</strong>.</p>
+stoniness measurements in forest plots. Simulations were conducted for
+different periods:</p>
+<ul>
+<li>IFN2 - IFN3 (~ 10 years)</li>
+<li>IFN3 - IFN4 (~ 15 years)</li>
+<li>IFN2 - IFN4 (~ 25 years)</li>
+</ul>
+<p>Actual simulated years depending on the sampling years of the target
+plot. Daily weather data were obtained via interpolation on plot’s
+coordinates using package <strong>meteoland</strong>.</p>
 <p>Default species-specific parameters were modified using the results
 of the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html" class="external-link">meta-modelling
 exercise</a> and the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/GrowthCalibration.html" class="external-link">growth
@@ -123,11 +125,11 @@ all the main species included here, so it is expected that evaluation
 results are worse for those species not included in those exercises.</p>
 <p>Simulations were done for both the <strong>basic</strong> and
 <strong>advanced</strong> transpiration/photosynthesis sub-models. On a
-server with 20 parallel threads, computational times are around
-<strong>5 hours</strong> (i.e. 2 min/plot) for the
-<strong>basic</strong> sub-model, versus around <strong>6 days</strong>
-(i.e. 1 hr/plot) for the <strong>advanced</strong> submodel. The average
-number of tree cohorts per plot is <strong>17</strong>.</p>
+server with 20 parallel threads, computational times for the longest
+simulation (IFN2 - IFN4) are around <strong>5 hours</strong> (i.e. 2
+min/plot) for the <strong>basic</strong> sub-model, versus around
+<strong>6 days</strong> (i.e. 1 hr/plot) for the
+<strong>advanced</strong> submodel.</p>
 <p>In the following sections, we provide the <strong>bias</strong>,
 <strong>mean absolute error</strong> (in absolute and relative terms),
 <strong>root mean squared error</strong> (in absolute and relative
@@ -137,8 +139,7 @@ simulations with both sub-models. Scatter plots are provided to
 represent the relationship between predicted and observed values, as
 well as the factors that may influence the direction and magnitude of
 prediction error (i.e. initial values, environmental conditions, …).</p>
-<p>Detailed results of growth evaluation by species are provided in the
-last section.</p>
+<!-- Detailed results of growth evaluation by species are provided in the last section. -->
 </div>
 </div>
 <div class="section level2">
@@ -153,7 +154,13 @@ Overall predictive capacity to predict diameter increase (cm/yr):
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
-Submodel
+version
+</th>
+<th style="text-align:left;">
+period
+</th>
+<th style="text-align:left;">
+transpirationMode
 </th>
 <th style="text-align:right;">
 n
@@ -189,81 +196,134 @@ R2
 <tbody>
 <tr>
 <td style="text-align:left;">
-Basic
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN23
+</td>
+<td style="text-align:left;">
+Granier
 </td>
 <td style="text-align:right;">
-50969
+25451
 </td>
 <td style="text-align:right;">
-0.2134374
+0.2422718
 </td>
 <td style="text-align:right;">
-0.2222319
+0.2065019
 </td>
 <td style="text-align:right;">
-0.0087945
+-0.0357698
 </td>
 <td style="text-align:right;">
-4.120405
+-14.764340
 </td>
 <td style="text-align:right;">
-0.1247760
+0.1312849
 </td>
 <td style="text-align:right;">
-58.46024
+54.18909
 </td>
 <td style="text-align:right;">
-0.1823914
+0.1827317
 </td>
 <td style="text-align:right;">
-85.45425
+75.42428
 </td>
 <td style="text-align:right;">
-0.0968293
+0.1126420
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Advanced
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN24
+</td>
+<td style="text-align:left;">
+Granier
 </td>
 <td style="text-align:right;">
-51259
+18715
 </td>
 <td style="text-align:right;">
-0.2133616
+0.2146079
 </td>
 <td style="text-align:right;">
-0.2190465
+0.1836396
 </td>
 <td style="text-align:right;">
-0.0056849
+-0.0309682
 </td>
 <td style="text-align:right;">
-2.664438
+-14.430148
 </td>
 <td style="text-align:right;">
-0.1313129
+0.1115759
 </td>
 <td style="text-align:right;">
-61.54476
+51.99060
 </td>
 <td style="text-align:right;">
-0.1890563
+0.1528161
 </td>
 <td style="text-align:right;">
-88.60841
+71.20715
 </td>
 <td style="text-align:right;">
-0.0663581
+0.0915384
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN34
+</td>
+<td style="text-align:left;">
+Granier
+</td>
+<td style="text-align:right;">
+26953
+</td>
+<td style="text-align:right;">
+0.1861523
+</td>
+<td style="text-align:right;">
+0.2019253
+</td>
+<td style="text-align:right;">
+0.0157730
+</td>
+<td style="text-align:right;">
+8.473161
+</td>
+<td style="text-align:right;">
+0.1155808
+</td>
+<td style="text-align:right;">
+62.08938
+</td>
+<td style="text-align:right;">
+0.1557931
+</td>
+<td style="text-align:right;">
+83.69118
+</td>
+<td style="text-align:right;">
+0.0735978
 </td>
 </tr>
 </tbody>
 </table>
 <p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-4-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
 <p>Relationship between diameter increase and climatic variables (MAT,
 P/PET and available PAR):</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-6-1.png" width="768"></p>
 </div>
 <div class="section level3">
 <h3 id="annual-height-increment">Annual height increment<a class="anchor" aria-label="anchor" href="#annual-height-increment"></a>
@@ -272,7 +332,13 @@ Overall predictive capacity to predict height increase (cm/yr):
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
-Submodel
+version
+</th>
+<th style="text-align:left;">
+period
+</th>
+<th style="text-align:left;">
+transpirationMode
 </th>
 <th style="text-align:right;">
 n
@@ -308,72 +374,125 @@ R2
 <tbody>
 <tr>
 <td style="text-align:left;">
-Basic
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN23
+</td>
+<td style="text-align:left;">
+Granier
 </td>
 <td style="text-align:right;">
-50969
+25451
 </td>
 <td style="text-align:right;">
-9.681676
+11.404600
 </td>
 <td style="text-align:right;">
-10.015336
+10.006816
 </td>
 <td style="text-align:right;">
-0.3336599
+-1.3977841
 </td>
 <td style="text-align:right;">
-3.446303
+-12.25632
 </td>
 <td style="text-align:right;">
-9.702118
+9.184401
 </td>
 <td style="text-align:right;">
-100.2111
+80.53242
 </td>
 <td style="text-align:right;">
-13.78655
+12.804963
 </td>
 <td style="text-align:right;">
-142.3984
+112.2789
 </td>
 <td style="text-align:right;">
-0.0514505
+0.0584739
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Advanced
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN24
+</td>
+<td style="text-align:left;">
+Granier
 </td>
 <td style="text-align:right;">
-51259
+18715
 </td>
 <td style="text-align:right;">
-9.680494
+9.894093
 </td>
 <td style="text-align:right;">
-9.925623
+8.633637
 </td>
 <td style="text-align:right;">
-0.2451286
+-1.2604561
 </td>
 <td style="text-align:right;">
-2.532191
+-12.73948
 </td>
 <td style="text-align:right;">
-9.768397
+7.431812
 </td>
 <td style="text-align:right;">
-100.9080
+75.11363
 </td>
 <td style="text-align:right;">
-13.90858
+9.935244
 </td>
 <td style="text-align:right;">
-143.6764
+100.4159
 </td>
 <td style="text-align:right;">
-0.0488624
+0.0658873
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN34
+</td>
+<td style="text-align:left;">
+Granier
+</td>
+<td style="text-align:right;">
+26953
+</td>
+<td style="text-align:right;">
+8.597183
+</td>
+<td style="text-align:right;">
+9.274889
+</td>
+<td style="text-align:right;">
+0.6777056
+</td>
+<td style="text-align:right;">
+7.88288
+</td>
+<td style="text-align:right;">
+9.386741
+</td>
+<td style="text-align:right;">
+109.18392
+</td>
+<td style="text-align:right;">
+12.772581
+</td>
+<td style="text-align:right;">
+148.5670
+</td>
+<td style="text-align:right;">
+0.0355228
 </td>
 </tr>
 </tbody>
@@ -383,15 +502,21 @@ Advanced
 <h3 id="stand-level-basal-area-increment">Stand-level basal area increment<a class="anchor" aria-label="anchor" href="#stand-level-basal-area-increment"></a>
 </h3>
 <p>This comparison does not take into account changes in density. In
-other words, densities from IFN3 are used to calculate stand-level basal
-area of surviving trees. It is meant to evaluate the effect of diameter
-increment of surviving trees in terms of stand basal area increments
-(m2/ha) for the period evaluated.</p>
+other words, densities from the first inventory are used to calculate
+stand-level basal area of surviving trees. It is meant to evaluate the
+effect of diameter increment of surviving trees in terms of annual stand
+basal area increments (m2/ha/yr) for the period evaluated.</p>
 Predictive capacity table:
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
-Submodel
+version
+</th>
+<th style="text-align:left;">
+period
+</th>
+<th style="text-align:left;">
+transpirationMode
 </th>
 <th style="text-align:right;">
 n
@@ -427,96 +552,155 @@ R2
 <tbody>
 <tr>
 <td style="text-align:left;">
-Basic
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN23
+</td>
+<td style="text-align:left;">
+Granier
 </td>
 <td style="text-align:right;">
-3150
+1849
 </td>
 <td style="text-align:right;">
-4.589723
+0.3296613
 </td>
 <td style="text-align:right;">
-4.661572
+0.2761450
 </td>
 <td style="text-align:right;">
-0.0718489
+-0.0535163
 </td>
 <td style="text-align:right;">
-1.565430
+-16.233709
 </td>
 <td style="text-align:right;">
-1.883558
+0.1343859
 </td>
 <td style="text-align:right;">
-41.03859
+40.76485
 </td>
 <td style="text-align:right;">
-3.363282
+0.1992410
 </td>
 <td style="text-align:right;">
-73.27855
+60.43810
 </td>
 <td style="text-align:right;">
-0.3550519
+0.4726211
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Advanced
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN24
+</td>
+<td style="text-align:left;">
+Granier
 </td>
 <td style="text-align:right;">
-3150
+1456
 </td>
 <td style="text-align:right;">
-4.624568
+0.2924157
 </td>
 <td style="text-align:right;">
-4.782380
+0.2418188
 </td>
 <td style="text-align:right;">
-0.1578118
+-0.0505969
 </td>
 <td style="text-align:right;">
-3.412467
+-17.303058
 </td>
 <td style="text-align:right;">
-2.139861
+0.1247991
 </td>
 <td style="text-align:right;">
-46.27158
+42.67867
 </td>
 <td style="text-align:right;">
-3.668289
+0.1836545
 </td>
 <td style="text-align:right;">
-79.32176
+62.80596
 </td>
 <td style="text-align:right;">
-0.3379825
+0.4501299
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN34
+</td>
+<td style="text-align:left;">
+Granier
+</td>
+<td style="text-align:right;">
+1455
+</td>
+<td style="text-align:right;">
+0.3157340
+</td>
+<td style="text-align:right;">
+0.3436174
+</td>
+<td style="text-align:right;">
+0.0278834
+</td>
+<td style="text-align:right;">
+8.831284
+</td>
+<td style="text-align:right;">
+0.1411224
+</td>
+<td style="text-align:right;">
+44.69660
+</td>
+<td style="text-align:right;">
+0.1971484
+</td>
+<td style="text-align:right;">
+62.44129
+</td>
+<td style="text-align:right;">
+0.3875445
 </td>
 </tr>
 </tbody>
 </table>
 <p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-8-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
 <p>Relationship between basal area increase and climatic variables (MAT
 and P/PET):</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-10-1.png" width="768"></p>
 <p>Spatial error distribution:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-10-1.png" width="864"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-11-1.png" width="864"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="mortality">Mortality<a class="anchor" aria-label="anchor" href="#mortality"></a>
 </h2>
-<p>Reduction of basal area (m2/ha) due to trees (DBH &gt;= 7.5) that
-died during the IFN3-IFN4 period against model’s mortality
+<p>Annual reduction of basal area (m2/ha/yr) due to trees (DBH &gt;=
+7.5) that died during the evaluation period against model’s mortality
 prediction.</p>
 <p>Overall predictive capacity:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
-Submodel
+version
+</th>
+<th style="text-align:left;">
+period
+</th>
+<th style="text-align:left;">
+transpirationMode
 </th>
 <th style="text-align:right;">
 n
@@ -552,95 +736,154 @@ R2
 <tbody>
 <tr>
 <td style="text-align:left;">
-Basic
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN23
+</td>
+<td style="text-align:left;">
+Granier
 </td>
 <td style="text-align:right;">
-3150
+1849
 </td>
 <td style="text-align:right;">
-0.9056131
+0.0322127
 </td>
 <td style="text-align:right;">
-0.8801318
+0.0403259
 </td>
 <td style="text-align:right;">
--0.0254813
+0.0081132
 </td>
 <td style="text-align:right;">
--2.813704
+25.186260
 </td>
 <td style="text-align:right;">
-0.9684232
+0.0454724
 </td>
 <td style="text-align:right;">
-106.93565
+141.1629
 </td>
 <td style="text-align:right;">
-2.452310
+0.0833721
 </td>
 <td style="text-align:right;">
-270.7900
+258.8173
 </td>
 <td style="text-align:right;">
-0.0442995
+0.0849273
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Advanced
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN24
+</td>
+<td style="text-align:left;">
+Granier
 </td>
 <td style="text-align:right;">
-3150
+1456
 </td>
 <td style="text-align:right;">
-0.9056131
+0.0452222
 </td>
 <td style="text-align:right;">
-0.7090543
+0.0472280
 </td>
 <td style="text-align:right;">
--0.1965587
+0.0020057
 </td>
 <td style="text-align:right;">
--21.704495
+4.435245
 </td>
 <td style="text-align:right;">
-0.8545694
+0.0460002
 </td>
 <td style="text-align:right;">
-94.36363
+101.7204
 </td>
 <td style="text-align:right;">
-1.527013
+0.0838600
 </td>
 <td style="text-align:right;">
-168.6165
+185.4397
 </td>
 <td style="text-align:right;">
-0.1133470
+0.1118397
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN34
+</td>
+<td style="text-align:left;">
+Granier
+</td>
+<td style="text-align:right;">
+1455
+</td>
+<td style="text-align:right;">
+0.0694300
+</td>
+<td style="text-align:right;">
+0.0675824
+</td>
+<td style="text-align:right;">
+-0.0018476
+</td>
+<td style="text-align:right;">
+-2.661109
+</td>
+<td style="text-align:right;">
+0.0748512
+</td>
+<td style="text-align:right;">
+107.8081
+</td>
+<td style="text-align:right;">
+0.1337330
+</td>
+<td style="text-align:right;">
+192.6156
+</td>
+<td style="text-align:right;">
+0.0437699
 </td>
 </tr>
 </tbody>
 </table>
 <p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-12-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-13-1.png" width="768"></p>
 <p>Relationship between dead basal area and climatic variables (MAT and
 P/PET):</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-13-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-14-1.png" width="768"></p>
 <p>Spatial distribution of errors:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-14-1.png" width="864"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-15-1.png" width="864"></p>
 </div>
 <div class="section level2">
 <h2 id="ingrowth">Ingrowth<a class="anchor" aria-label="anchor" href="#ingrowth"></a>
 </h2>
-<p>Increase of basal area (m2/ha) due to ingrowth of trees with
-diameters between 7.5 cm and 12.5 cm during the IFN3-IFN4 period against
-model’s ingrowth prediction.</p>
+<p>Annual increase of basal area (m2/ha/yr) due to ingrowth of trees
+with diameters between 7.5 cm and 12.5 cm during the evaluated
+period.</p>
 <p>Predictive capacity:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
-Submodel
+version
+</th>
+<th style="text-align:left;">
+period
+</th>
+<th style="text-align:left;">
+transpirationMode
 </th>
 <th style="text-align:right;">
 n
@@ -676,97 +919,157 @@ R2
 <tbody>
 <tr>
 <td style="text-align:left;">
-Basic
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN23
+</td>
+<td style="text-align:left;">
+Granier
 </td>
 <td style="text-align:right;">
-3150
+1849
 </td>
 <td style="text-align:right;">
-1.294118
+0.0997102
 </td>
 <td style="text-align:right;">
-1.487781
+0.1453204
 </td>
 <td style="text-align:right;">
-0.1936632
+0.0456103
 </td>
 <td style="text-align:right;">
-14.96489
+45.74284
 </td>
 <td style="text-align:right;">
-1.712494
+0.1529235
 </td>
 <td style="text-align:right;">
-132.3291
+153.3680
 </td>
 <td style="text-align:right;">
-2.491719
+0.2629928
 </td>
 <td style="text-align:right;">
-192.5419
+263.7572
 </td>
 <td style="text-align:right;">
-0.0064207
+0.0165641
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Advanced
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN24
+</td>
+<td style="text-align:left;">
+Granier
 </td>
 <td style="text-align:right;">
-3150
+1456
 </td>
 <td style="text-align:right;">
-1.294118
+0.0861946
 </td>
 <td style="text-align:right;">
-1.529571
+0.1855351
 </td>
 <td style="text-align:right;">
-0.2354532
+0.0993405
 </td>
 <td style="text-align:right;">
-18.19411
+115.25148
 </td>
 <td style="text-align:right;">
-1.771790
+0.1541454
 </td>
 <td style="text-align:right;">
-136.9110
+178.8343
 </td>
 <td style="text-align:right;">
-2.600122
+0.2426788
 </td>
 <td style="text-align:right;">
-200.9185
+281.5477
 </td>
 <td style="text-align:right;">
-0.0022894
+0.0377933
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN34
+</td>
+<td style="text-align:left;">
+Granier
+</td>
+<td style="text-align:right;">
+1455
+</td>
+<td style="text-align:right;">
+0.0765351
+</td>
+<td style="text-align:right;">
+0.1364557
+</td>
+<td style="text-align:right;">
+0.0599206
+</td>
+<td style="text-align:right;">
+78.29161
+</td>
+<td style="text-align:right;">
+0.1254033
+</td>
+<td style="text-align:right;">
+163.8506
+</td>
+<td style="text-align:right;">
+0.1765572
+</td>
+<td style="text-align:right;">
+230.6879
+</td>
+<td style="text-align:right;">
+0.0139055
 </td>
 </tr>
 </tbody>
 </table>
 <p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-16-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-17-1.png" width="768"></p>
 <p>Relationship between ingrowth basal area and climatic variables (MAT
 and P/PET):</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-17-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-18-1.png" width="768"></p>
 <p>Spatial distribution of errors:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-18-1.png" width="864"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-19-1.png" width="864"></p>
 </div>
 <div class="section level2">
 <h2 id="overall-stand-level-basal-area-change">Overall stand-level basal area change<a class="anchor" aria-label="anchor" href="#overall-stand-level-basal-area-change"></a>
 </h2>
-<p>This includes changes in basal area (m2/ha) due to growth of
-surviving trees, mortality reductions and ingrowth (increase in trees
-with DBH&gt;5) derived from sapling growth. In the observed data, basal
-area changes include also the incorporation of trees into large diameter
-classes that results from the variable-radius sampling design.</p>
+<p>This includes annual changes in basal area (m2/ha/yr) due to growth
+of surviving trees, mortality reductions and ingrowth (increase in trees
+with 7.5 &lt; DBH &lt; 12.5) derived from sapling growth. In the
+observed data, basal area changes include also the incorporation of
+trees into large diameter classes that results from the variable-radius
+sampling design.</p>
 <p>Overall predictive capacity:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
-Submodel
+version
+</th>
+<th style="text-align:left;">
+period
+</th>
+<th style="text-align:left;">
+transpirationMode
 </th>
 <th style="text-align:right;">
 n
@@ -802,7149 +1105,153 @@ R2
 <tbody>
 <tr>
 <td style="text-align:left;">
-Basic
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN23
+</td>
+<td style="text-align:left;">
+Granier
 </td>
 <td style="text-align:right;">
-3150
+1849
 </td>
 <td style="text-align:right;">
-4.978227
+0.4359136
 </td>
 <td style="text-align:right;">
-5.269221
+0.3790116
 </td>
 <td style="text-align:right;">
-0.2909934
+-0.0569020
 </td>
 <td style="text-align:right;">
-5.845322
+-13.0535057
 </td>
 <td style="text-align:right;">
-3.127772
+0.2598900
 </td>
 <td style="text-align:right;">
-62.82902
+59.61960
 </td>
 <td style="text-align:right;">
-4.815994
+0.3685586
 </td>
 <td style="text-align:right;">
-96.74115
+84.54853
 </td>
 <td style="text-align:right;">
-0.1287017
+0.0992470
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Advanced
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN24
+</td>
+<td style="text-align:left;">
+Granier
 </td>
 <td style="text-align:right;">
-3150
+1456
 </td>
 <td style="text-align:right;">
-5.013073
+0.4250274
 </td>
 <td style="text-align:right;">
-5.602896
+0.3970750
 </td>
 <td style="text-align:right;">
-0.5898238
+-0.0279524
 </td>
 <td style="text-align:right;">
-11.765713
+-6.5766140
 </td>
 <td style="text-align:right;">
-3.292755
+0.2237331
 </td>
 <td style="text-align:right;">
-65.68337
+52.63969
 </td>
 <td style="text-align:right;">
-4.759210
+0.2994005
 </td>
 <td style="text-align:right;">
-94.93599
+70.44263
 </td>
 <td style="text-align:right;">
-0.1614133
+0.1407253
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2.9.3
+</td>
+<td style="text-align:left;">
+IFN34
+</td>
+<td style="text-align:left;">
+Granier
+</td>
+<td style="text-align:right;">
+1455
+</td>
+<td style="text-align:right;">
+0.4190594
+</td>
+<td style="text-align:right;">
+0.4205176
+</td>
+<td style="text-align:right;">
+0.0014583
+</td>
+<td style="text-align:right;">
+0.3479825
+</td>
+<td style="text-align:right;">
+0.2352257
+</td>
+<td style="text-align:right;">
+56.13183
+</td>
+<td style="text-align:right;">
+0.3086064
+</td>
+<td style="text-align:right;">
+73.64265
+</td>
+<td style="text-align:right;">
+0.0980298
 </td>
 </tr>
 </tbody>
 </table>
 <p>Predictive capacity plot:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-20-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-21-1.png" width="768"></p>
 <p>Relationship between overall basal area change and climatic variables
 (MAT and P/PET) for the <strong>basic</strong> sub-model:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-21-1.png" width="768"></p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-22-1.png" width="768"></p>
 <p>Spatial distribution of errors:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-23-1.png" width="864"></p>
-</div>
-<div class="section level2">
-<h2 id="detailed-evaluation-by-species">Detailed evaluation by species<a class="anchor" aria-label="anchor" href="#detailed-evaluation-by-species"></a>
-</h2>
-<p>In the following we provide detailed evaluation results for the most
-important species.</p>
-<div class="section level3">
-<h3 id="abies-alba">Abies alba<a class="anchor" aria-label="anchor" href="#abies-alba"></a>
-</h3>
-<div class="section level4">
-<h4 id="annual-diameter-increment-1">Annual diameter increment<a class="anchor" aria-label="anchor" href="#annual-diameter-increment-1"></a>
-</h4>
-Prediction ability for <strong>diameter increase</strong> (cm/yr) of
-surviving trees:
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-1160
-</td>
-<td style="text-align:right;">
-0.3479178
-</td>
-<td style="text-align:right;">
-0.1799860
-</td>
-<td style="text-align:right;">
--0.1679318
-</td>
-<td style="text-align:right;">
--48.26767
-</td>
-<td style="text-align:right;">
-0.2081053
-</td>
-<td style="text-align:right;">
-59.81450
-</td>
-<td style="text-align:right;">
-0.3254210
-</td>
-<td style="text-align:right;">
-93.53387
-</td>
-<td style="text-align:right;">
-0.1560195
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-1292
-</td>
-<td style="text-align:right;">
-0.3391071
-</td>
-<td style="text-align:right;">
-0.1489458
-</td>
-<td style="text-align:right;">
--0.1901613
-</td>
-<td style="text-align:right;">
--56.07706
-</td>
-<td style="text-align:right;">
-0.2212122
-</td>
-<td style="text-align:right;">
-65.23373
-</td>
-<td style="text-align:right;">
-0.3357986
-</td>
-<td style="text-align:right;">
-99.02434
-</td>
-<td style="text-align:right;">
-0.1176289
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-27-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increment</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-28-1.png" width="768"></p>
-</div>
-<div class="section level4">
-<h4 id="annual-height-increment-1">Annual height increment<a class="anchor" aria-label="anchor" href="#annual-height-increment-1"></a>
-</h4>
-<p>Prediction ability for <strong>height increase</strong> (cm/yr) of
-surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-1160
-</td>
-<td style="text-align:right;">
-18.24265
-</td>
-<td style="text-align:right;">
-7.114118
-</td>
-<td style="text-align:right;">
--11.12853
-</td>
-<td style="text-align:right;">
--61.00283
-</td>
-<td style="text-align:right;">
-18.06569
-</td>
-<td style="text-align:right;">
-99.02997
-</td>
-<td style="text-align:right;">
-23.99052
-</td>
-<td style="text-align:right;">
-131.5079
-</td>
-<td style="text-align:right;">
-0.1429425
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-1292
-</td>
-<td style="text-align:right;">
-17.50310
-</td>
-<td style="text-align:right;">
-6.176779
-</td>
-<td style="text-align:right;">
--11.32632
-</td>
-<td style="text-align:right;">
--64.71036
-</td>
-<td style="text-align:right;">
-17.89709
-</td>
-<td style="text-align:right;">
-102.25099
-</td>
-<td style="text-align:right;">
-23.95067
-</td>
-<td style="text-align:right;">
-136.8367
-</td>
-<td style="text-align:right;">
-0.1429932
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="growth-basal-area-increment">Growth basal area increment<a class="anchor" aria-label="anchor" href="#growth-basal-area-increment"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-growth</strong> (m2/ha) of surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-79
-</td>
-<td style="text-align:right;">
-5.584819
-</td>
-<td style="text-align:right;">
-2.492256
-</td>
-<td style="text-align:right;">
--3.092563
-</td>
-<td style="text-align:right;">
--55.37445
-</td>
-<td style="text-align:right;">
-3.139447
-</td>
-<td style="text-align:right;">
-56.21395
-</td>
-<td style="text-align:right;">
-4.639554
-</td>
-<td style="text-align:right;">
-83.07438
-</td>
-<td style="text-align:right;">
-0.5009385
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-86
-</td>
-<td style="text-align:right;">
-5.505698
-</td>
-<td style="text-align:right;">
-2.203647
-</td>
-<td style="text-align:right;">
--3.302051
-</td>
-<td style="text-align:right;">
--59.97515
-</td>
-<td style="text-align:right;">
-3.351143
-</td>
-<td style="text-align:right;">
-60.86681
-</td>
-<td style="text-align:right;">
-4.807914
-</td>
-<td style="text-align:right;">
-87.32615
-</td>
-<td style="text-align:right;">
-0.4549245
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="mortality-1">Mortality<a class="anchor" aria-label="anchor" href="#mortality-1"></a>
-</h4>
-<p>Prediction ability for <strong>basal area decrease due to
-mortality</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-87
-</td>
-<td style="text-align:right;">
-0.8974018
-</td>
-<td style="text-align:right;">
-2.577134
-</td>
-<td style="text-align:right;">
-1.6797325
-</td>
-<td style="text-align:right;">
-187.17729
-</td>
-<td style="text-align:right;">
-2.9574972
-</td>
-<td style="text-align:right;">
-329.5622
-</td>
-<td style="text-align:right;">
-8.185156
-</td>
-<td style="text-align:right;">
-912.0949
-</td>
-<td style="text-align:right;">
-0.0823862
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-87
-</td>
-<td style="text-align:right;">
-0.8974018
-</td>
-<td style="text-align:right;">
-0.244574
-</td>
-<td style="text-align:right;">
--0.6528278
-</td>
-<td style="text-align:right;">
--72.74644
-</td>
-<td style="text-align:right;">
-0.9591168
-</td>
-<td style="text-align:right;">
-106.8771
-</td>
-<td style="text-align:right;">
-1.870584
-</td>
-<td style="text-align:right;">
-208.4444
-</td>
-<td style="text-align:right;">
-0.0001803
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="ingrowth-1">Ingrowth<a class="anchor" aria-label="anchor" href="#ingrowth-1"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-ingrowth</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-91
-</td>
-<td style="text-align:right;">
-0.7734599
-</td>
-<td style="text-align:right;">
-0.7801611
-</td>
-<td style="text-align:right;">
-0.0067012
-</td>
-<td style="text-align:right;">
-0.8663944
-</td>
-<td style="text-align:right;">
-1.153437
-</td>
-<td style="text-align:right;">
-149.1269
-</td>
-<td style="text-align:right;">
-1.889800
-</td>
-<td style="text-align:right;">
-244.3307
-</td>
-<td style="text-align:right;">
-0.0056660
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-94
-</td>
-<td style="text-align:right;">
-0.7487750
-</td>
-<td style="text-align:right;">
-0.6546706
-</td>
-<td style="text-align:right;">
--0.0941044
-</td>
-<td style="text-align:right;">
--12.5677850
-</td>
-<td style="text-align:right;">
-1.017444
-</td>
-<td style="text-align:right;">
-135.8811
-</td>
-<td style="text-align:right;">
-1.743879
-</td>
-<td style="text-align:right;">
-232.8976
-</td>
-<td style="text-align:right;">
-0.0127911
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="overall-basal-area-changes">Overall basal area changes<a class="anchor" aria-label="anchor" href="#overall-basal-area-changes"></a>
-</h4>
-<p>Prediction ability for <strong>overall basal area changes</strong>
-(including growth, mortality and ingrowth):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-90
-</td>
-<td style="text-align:right;">
-4.892583
-</td>
-<td style="text-align:right;">
-2.037757
-</td>
-<td style="text-align:right;">
--2.854826
-</td>
-<td style="text-align:right;">
--58.35008
-</td>
-<td style="text-align:right;">
-3.893966
-</td>
-<td style="text-align:right;">
-79.58918
-</td>
-<td style="text-align:right;">
-6.636401
-</td>
-<td style="text-align:right;">
-135.64208
-</td>
-<td style="text-align:right;">
-0.0614818
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-94
-</td>
-<td style="text-align:right;">
-4.964629
-</td>
-<td style="text-align:right;">
-2.444479
-</td>
-<td style="text-align:right;">
--2.520150
-</td>
-<td style="text-align:right;">
--50.76211
-</td>
-<td style="text-align:right;">
-3.328831
-</td>
-<td style="text-align:right;">
-67.05095
-</td>
-<td style="text-align:right;">
-4.865771
-</td>
-<td style="text-align:right;">
-98.00875
-</td>
-<td style="text-align:right;">
-0.2309724
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-34-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-35-1.png" width="768"></p>
-<p>Spatial distribution of errors:
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-36-1.png" width="864"></p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="fagus-sylvatica">Fagus sylvatica<a class="anchor" aria-label="anchor" href="#fagus-sylvatica"></a>
-</h3>
-<div class="section level4">
-<h4 id="annual-diameter-increment-2">Annual diameter increment<a class="anchor" aria-label="anchor" href="#annual-diameter-increment-2"></a>
-</h4>
-Prediction ability for <strong>diameter increase</strong> (cm/yr) of
-surviving trees:
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-1672
-</td>
-<td style="text-align:right;">
-0.2611595
-</td>
-<td style="text-align:right;">
-0.2195486
-</td>
-<td style="text-align:right;">
--0.0416109
-</td>
-<td style="text-align:right;">
--15.93312
-</td>
-<td style="text-align:right;">
-0.1481469
-</td>
-<td style="text-align:right;">
-56.72662
-</td>
-<td style="text-align:right;">
-0.2233687
-</td>
-<td style="text-align:right;">
-85.52963
-</td>
-<td style="text-align:right;">
-0.0516337
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-1681
-</td>
-<td style="text-align:right;">
-0.2604019
-</td>
-<td style="text-align:right;">
-0.2136167
-</td>
-<td style="text-align:right;">
--0.0467852
-</td>
-<td style="text-align:right;">
--17.96655
-</td>
-<td style="text-align:right;">
-0.1575298
-</td>
-<td style="text-align:right;">
-60.49489
-</td>
-<td style="text-align:right;">
-0.2361472
-</td>
-<td style="text-align:right;">
-90.68568
-</td>
-<td style="text-align:right;">
-0.0075041
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-39-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increment</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-40-1.png" width="768"></p>
-</div>
-<div class="section level4">
-<h4 id="annual-height-increment-2">Annual height increment<a class="anchor" aria-label="anchor" href="#annual-height-increment-2"></a>
-</h4>
-<p>Prediction ability for <strong>height increase</strong> (cm/yr) of
-surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-1672
-</td>
-<td style="text-align:right;">
-14.84581
-</td>
-<td style="text-align:right;">
-9.517191
-</td>
-<td style="text-align:right;">
--5.328615
-</td>
-<td style="text-align:right;">
--35.89307
-</td>
-<td style="text-align:right;">
-14.73578
-</td>
-<td style="text-align:right;">
-99.25887
-</td>
-<td style="text-align:right;">
-20.49699
-</td>
-<td style="text-align:right;">
-138.0658
-</td>
-<td style="text-align:right;">
-0.0003965
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-1681
-</td>
-<td style="text-align:right;">
-14.75809
-</td>
-<td style="text-align:right;">
-9.511406
-</td>
-<td style="text-align:right;">
--5.246681
-</td>
-<td style="text-align:right;">
--35.55123
-</td>
-<td style="text-align:right;">
-14.98101
-</td>
-<td style="text-align:right;">
-101.51049
-</td>
-<td style="text-align:right;">
-20.73330
-</td>
-<td style="text-align:right;">
-140.4877
-</td>
-<td style="text-align:right;">
-0.0000367
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="growth-basal-area-increment-1">Growth basal area increment<a class="anchor" aria-label="anchor" href="#growth-basal-area-increment-1"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-growth</strong> (m2/ha) of surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-146
-</td>
-<td style="text-align:right;">
-3.419833
-</td>
-<td style="text-align:right;">
-2.882802
-</td>
-<td style="text-align:right;">
--0.5370312
-</td>
-<td style="text-align:right;">
--15.70343
-</td>
-<td style="text-align:right;">
-1.394472
-</td>
-<td style="text-align:right;">
-40.77603
-</td>
-<td style="text-align:right;">
-1.917163
-</td>
-<td style="text-align:right;">
-56.06013
-</td>
-<td style="text-align:right;">
-0.6419445
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-147
-</td>
-<td style="text-align:right;">
-3.407792
-</td>
-<td style="text-align:right;">
-2.940665
-</td>
-<td style="text-align:right;">
--0.4671263
-</td>
-<td style="text-align:right;">
--13.70760
-</td>
-<td style="text-align:right;">
-1.570972
-</td>
-<td style="text-align:right;">
-46.09941
-</td>
-<td style="text-align:right;">
-2.109089
-</td>
-<td style="text-align:right;">
-61.89019
-</td>
-<td style="text-align:right;">
-0.6181950
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="mortality-2">Mortality<a class="anchor" aria-label="anchor" href="#mortality-2"></a>
-</h4>
-<p>Prediction ability for <strong>basal area decrease due to
-mortality</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-147
-</td>
-<td style="text-align:right;">
-0.3190163
-</td>
-<td style="text-align:right;">
-0.2962273
-</td>
-<td style="text-align:right;">
--0.0227891
-</td>
-<td style="text-align:right;">
--7.14355
-</td>
-<td style="text-align:right;">
-0.3997413
-</td>
-<td style="text-align:right;">
-125.3043
-</td>
-<td style="text-align:right;">
-0.6830944
-</td>
-<td style="text-align:right;">
-214.1252
-</td>
-<td style="text-align:right;">
-0.1978707
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-147
-</td>
-<td style="text-align:right;">
-0.3190163
-</td>
-<td style="text-align:right;">
-0.2523520
-</td>
-<td style="text-align:right;">
--0.0666643
-</td>
-<td style="text-align:right;">
--20.89683
-</td>
-<td style="text-align:right;">
-0.3978303
-</td>
-<td style="text-align:right;">
-124.7053
-</td>
-<td style="text-align:right;">
-0.7041286
-</td>
-<td style="text-align:right;">
-220.7187
-</td>
-<td style="text-align:right;">
-0.1309826
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="ingrowth-2">Ingrowth<a class="anchor" aria-label="anchor" href="#ingrowth-2"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-ingrowth</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-155
-</td>
-<td style="text-align:right;">
-0.4336826
-</td>
-<td style="text-align:right;">
-0.5640666
-</td>
-<td style="text-align:right;">
-0.1303840
-</td>
-<td style="text-align:right;">
-30.06438
-</td>
-<td style="text-align:right;">
-0.8062629
-</td>
-<td style="text-align:right;">
-185.9108
-</td>
-<td style="text-align:right;">
-1.351962
-</td>
-<td style="text-align:right;">
-311.7400
-</td>
-<td style="text-align:right;">
-0.0052896
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-155
-</td>
-<td style="text-align:right;">
-0.4336826
-</td>
-<td style="text-align:right;">
-0.6408947
-</td>
-<td style="text-align:right;">
-0.2072121
-</td>
-<td style="text-align:right;">
-47.77967
-</td>
-<td style="text-align:right;">
-0.7735241
-</td>
-<td style="text-align:right;">
-178.3618
-</td>
-<td style="text-align:right;">
-1.319636
-</td>
-<td style="text-align:right;">
-304.2861
-</td>
-<td style="text-align:right;">
-0.0101530
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="overall-basal-area-changes-1">Overall basal area changes<a class="anchor" aria-label="anchor" href="#overall-basal-area-changes-1"></a>
-</h4>
-<p>Prediction ability for <strong>overall basal area changes</strong>
-(including growth, mortality and ingrowth):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-155
-</td>
-<td style="text-align:right;">
-3.352394
-</td>
-<td style="text-align:right;">
-2.998542
-</td>
-<td style="text-align:right;">
--0.3538519
-</td>
-<td style="text-align:right;">
--10.555200
-</td>
-<td style="text-align:right;">
-1.868495
-</td>
-<td style="text-align:right;">
-55.73614
-</td>
-<td style="text-align:right;">
-2.499100
-</td>
-<td style="text-align:right;">
-74.54672
-</td>
-<td style="text-align:right;">
-0.4498203
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-155
-</td>
-<td style="text-align:right;">
-3.363037
-</td>
-<td style="text-align:right;">
-3.190456
-</td>
-<td style="text-align:right;">
--0.1725809
-</td>
-<td style="text-align:right;">
--5.131698
-</td>
-<td style="text-align:right;">
-1.886596
-</td>
-<td style="text-align:right;">
-56.09798
-</td>
-<td style="text-align:right;">
-2.468205
-</td>
-<td style="text-align:right;">
-73.39213
-</td>
-<td style="text-align:right;">
-0.4821616
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-46-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-47-1.png" width="768"></p>
-<p>Spatial distribution of errors:
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-48-1.png" width="864"></p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="pinus-halepensis">Pinus halepensis<a class="anchor" aria-label="anchor" href="#pinus-halepensis"></a>
-</h3>
-<div class="section level4">
-<h4 id="annual-diameter-increment-3">Annual diameter increment<a class="anchor" aria-label="anchor" href="#annual-diameter-increment-3"></a>
-</h4>
-Prediction ability for <strong>diameter increase</strong> (cm/yr) of
-surviving trees:
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-6679
-</td>
-<td style="text-align:right;">
-0.2842242
-</td>
-<td style="text-align:right;">
-0.3017824
-</td>
-<td style="text-align:right;">
-0.0175582
-</td>
-<td style="text-align:right;">
-6.177571
-</td>
-<td style="text-align:right;">
-0.1475344
-</td>
-<td style="text-align:right;">
-51.90776
-</td>
-<td style="text-align:right;">
-0.1920034
-</td>
-<td style="text-align:right;">
-67.55348
-</td>
-<td style="text-align:right;">
-0.0587563
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-6679
-</td>
-<td style="text-align:right;">
-0.2842242
-</td>
-<td style="text-align:right;">
-0.2406176
-</td>
-<td style="text-align:right;">
--0.0436066
-</td>
-<td style="text-align:right;">
--15.342309
-</td>
-<td style="text-align:right;">
-0.1461511
-</td>
-<td style="text-align:right;">
-51.42105
-</td>
-<td style="text-align:right;">
-0.1953105
-</td>
-<td style="text-align:right;">
-68.71704
-</td>
-<td style="text-align:right;">
-0.0801838
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-51-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increment</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-52-1.png" width="768"></p>
-</div>
-<div class="section level4">
-<h4 id="annual-height-increment-3">Annual height increment<a class="anchor" aria-label="anchor" href="#annual-height-increment-3"></a>
-</h4>
-<p>Prediction ability for <strong>height increase</strong> (cm/yr) of
-surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-6679
-</td>
-<td style="text-align:right;">
-11.64944
-</td>
-<td style="text-align:right;">
-12.568615
-</td>
-<td style="text-align:right;">
-0.9191707
-</td>
-<td style="text-align:right;">
-7.890253
-</td>
-<td style="text-align:right;">
-9.850086
-</td>
-<td style="text-align:right;">
-84.55413
-</td>
-<td style="text-align:right;">
-12.81941
-</td>
-<td style="text-align:right;">
-110.0431
-</td>
-<td style="text-align:right;">
-0.0001575
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-6679
-</td>
-<td style="text-align:right;">
-11.64944
-</td>
-<td style="text-align:right;">
-9.902783
-</td>
-<td style="text-align:right;">
--1.7466618
-</td>
-<td style="text-align:right;">
--14.993520
-</td>
-<td style="text-align:right;">
-9.117291
-</td>
-<td style="text-align:right;">
-78.26374
-</td>
-<td style="text-align:right;">
-12.29508
-</td>
-<td style="text-align:right;">
-105.5422
-</td>
-<td style="text-align:right;">
-0.0066495
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="growth-basal-area-increment-2">Growth basal area increment<a class="anchor" aria-label="anchor" href="#growth-basal-area-increment-2"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-growth</strong> (m2/ha) of surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-761
-</td>
-<td style="text-align:right;">
-3.369784
-</td>
-<td style="text-align:right;">
-3.574738
-</td>
-<td style="text-align:right;">
-0.2049542
-</td>
-<td style="text-align:right;">
-6.082118
-</td>
-<td style="text-align:right;">
-1.418235
-</td>
-<td style="text-align:right;">
-42.08680
-</td>
-<td style="text-align:right;">
-2.128324
-</td>
-<td style="text-align:right;">
-63.15906
-</td>
-<td style="text-align:right;">
-0.5841479
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-761
-</td>
-<td style="text-align:right;">
-3.369784
-</td>
-<td style="text-align:right;">
-2.805474
-</td>
-<td style="text-align:right;">
--0.5643105
-</td>
-<td style="text-align:right;">
--16.746191
-</td>
-<td style="text-align:right;">
-1.399063
-</td>
-<td style="text-align:right;">
-41.51788
-</td>
-<td style="text-align:right;">
-2.144614
-</td>
-<td style="text-align:right;">
-63.64246
-</td>
-<td style="text-align:right;">
-0.5575932
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="mortality-3">Mortality<a class="anchor" aria-label="anchor" href="#mortality-3"></a>
-</h4>
-<p>Prediction ability for <strong>basal area decrease due to
-mortality</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-774
-</td>
-<td style="text-align:right;">
-0.6151061
-</td>
-<td style="text-align:right;">
-0.5954457
-</td>
-<td style="text-align:right;">
--0.0196603
-</td>
-<td style="text-align:right;">
--3.196254
-</td>
-<td style="text-align:right;">
-0.6146783
-</td>
-<td style="text-align:right;">
-99.93046
-</td>
-<td style="text-align:right;">
-0.9793669
-</td>
-<td style="text-align:right;">
-159.2192
-</td>
-<td style="text-align:right;">
-0.2735518
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-774
-</td>
-<td style="text-align:right;">
-0.6151061
-</td>
-<td style="text-align:right;">
-0.5920734
-</td>
-<td style="text-align:right;">
--0.0230327
-</td>
-<td style="text-align:right;">
--3.744509
-</td>
-<td style="text-align:right;">
-0.6132991
-</td>
-<td style="text-align:right;">
-99.70624
-</td>
-<td style="text-align:right;">
-0.9791351
-</td>
-<td style="text-align:right;">
-159.1815
-</td>
-<td style="text-align:right;">
-0.2743118
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="ingrowth-3">Ingrowth<a class="anchor" aria-label="anchor" href="#ingrowth-3"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-ingrowth</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-861
-</td>
-<td style="text-align:right;">
-0.7046898
-</td>
-<td style="text-align:right;">
-0.6694535
-</td>
-<td style="text-align:right;">
--0.0352363
-</td>
-<td style="text-align:right;">
--5.000259
-</td>
-<td style="text-align:right;">
-1.093482
-</td>
-<td style="text-align:right;">
-155.1720
-</td>
-<td style="text-align:right;">
-1.873626
-</td>
-<td style="text-align:right;">
-265.8795
-</td>
-<td style="text-align:right;">
-0.0001548
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-862
-</td>
-<td style="text-align:right;">
-0.7038723
-</td>
-<td style="text-align:right;">
-0.5954958
-</td>
-<td style="text-align:right;">
--0.1083765
-</td>
-<td style="text-align:right;">
--15.397182
-</td>
-<td style="text-align:right;">
-1.057204
-</td>
-<td style="text-align:right;">
-150.1983
-</td>
-<td style="text-align:right;">
-1.841843
-</td>
-<td style="text-align:right;">
-261.6728
-</td>
-<td style="text-align:right;">
-0.0041841
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="overall-basal-area-changes-2">Overall basal area changes<a class="anchor" aria-label="anchor" href="#overall-basal-area-changes-2"></a>
-</h4>
-<p>Prediction ability for <strong>overall basal area changes</strong>
-(including growth, mortality and ingrowth):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-859
-</td>
-<td style="text-align:right;">
-3.149771
-</td>
-<td style="text-align:right;">
-3.302513
-</td>
-<td style="text-align:right;">
-0.1527425
-</td>
-<td style="text-align:right;">
-4.849321
-</td>
-<td style="text-align:right;">
-2.068191
-</td>
-<td style="text-align:right;">
-65.66164
-</td>
-<td style="text-align:right;">
-2.885904
-</td>
-<td style="text-align:right;">
-91.62267
-</td>
-<td style="text-align:right;">
-0.2980613
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-860
-</td>
-<td style="text-align:right;">
-3.151798
-</td>
-<td style="text-align:right;">
-2.548115
-</td>
-<td style="text-align:right;">
--0.6036830
-</td>
-<td style="text-align:right;">
--19.153608
-</td>
-<td style="text-align:right;">
-2.059711
-</td>
-<td style="text-align:right;">
-65.35037
-</td>
-<td style="text-align:right;">
-2.941325
-</td>
-<td style="text-align:right;">
-93.32214
-</td>
-<td style="text-align:right;">
-0.2461427
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-58-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-59-1.png" width="768"></p>
-<p>Spatial distribution of errors:
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-60-1.png" width="864"></p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="pinus-nigra">Pinus nigra<a class="anchor" aria-label="anchor" href="#pinus-nigra"></a>
-</h3>
-<div class="section level4">
-<h4 id="annual-diameter-increment-4">Annual diameter increment<a class="anchor" aria-label="anchor" href="#annual-diameter-increment-4"></a>
-</h4>
-Prediction ability for <strong>diameter increase</strong> (cm/yr) of
-surviving trees:
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-5328
-</td>
-<td style="text-align:right;">
-0.2060569
-</td>
-<td style="text-align:right;">
-0.2528125
-</td>
-<td style="text-align:right;">
-0.0467556
-</td>
-<td style="text-align:right;">
-22.69063
-</td>
-<td style="text-align:right;">
-0.1206198
-</td>
-<td style="text-align:right;">
-58.53714
-</td>
-<td style="text-align:right;">
-0.1603386
-</td>
-<td style="text-align:right;">
-77.81276
-</td>
-<td style="text-align:right;">
-0.0226950
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-5341
-</td>
-<td style="text-align:right;">
-0.2063814
-</td>
-<td style="text-align:right;">
-0.2349869
-</td>
-<td style="text-align:right;">
-0.0286055
-</td>
-<td style="text-align:right;">
-13.86051
-</td>
-<td style="text-align:right;">
-0.1205047
-</td>
-<td style="text-align:right;">
-58.38932
-</td>
-<td style="text-align:right;">
-0.1621490
-</td>
-<td style="text-align:right;">
-78.56762
-</td>
-<td style="text-align:right;">
-0.0297607
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-63-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increment</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-64-1.png" width="768"></p>
-</div>
-<div class="section level4">
-<h4 id="annual-height-increment-4">Annual height increment<a class="anchor" aria-label="anchor" href="#annual-height-increment-4"></a>
-</h4>
-<p>Prediction ability for <strong>height increase</strong> (cm/yr) of
-surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-5328
-</td>
-<td style="text-align:right;">
-11.73879
-</td>
-<td style="text-align:right;">
-14.35726
-</td>
-<td style="text-align:right;">
-2.618473
-</td>
-<td style="text-align:right;">
-22.30617
-</td>
-<td style="text-align:right;">
-9.555041
-</td>
-<td style="text-align:right;">
-81.39719
-</td>
-<td style="text-align:right;">
-12.04941
-</td>
-<td style="text-align:right;">
-102.6462
-</td>
-<td style="text-align:right;">
-0.0064674
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-5341
-</td>
-<td style="text-align:right;">
-11.71025
-</td>
-<td style="text-align:right;">
-13.39836
-</td>
-<td style="text-align:right;">
-1.688109
-</td>
-<td style="text-align:right;">
-14.41565
-</td>
-<td style="text-align:right;">
-9.012306
-</td>
-<td style="text-align:right;">
-76.96084
-</td>
-<td style="text-align:right;">
-11.59206
-</td>
-<td style="text-align:right;">
-98.9907
-</td>
-<td style="text-align:right;">
-0.0419529
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="growth-basal-area-increment-3">Growth basal area increment<a class="anchor" aria-label="anchor" href="#growth-basal-area-increment-3"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-growth</strong> (m2/ha) of surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-529
-</td>
-<td style="text-align:right;">
-2.634343
-</td>
-<td style="text-align:right;">
-3.216492
-</td>
-<td style="text-align:right;">
-0.5821493
-</td>
-<td style="text-align:right;">
-22.09846
-</td>
-<td style="text-align:right;">
-1.266623
-</td>
-<td style="text-align:right;">
-48.08119
-</td>
-<td style="text-align:right;">
-1.936164
-</td>
-<td style="text-align:right;">
-73.49703
-</td>
-<td style="text-align:right;">
-0.6441601
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-530
-</td>
-<td style="text-align:right;">
-2.637240
-</td>
-<td style="text-align:right;">
-3.030881
-</td>
-<td style="text-align:right;">
-0.3936411
-</td>
-<td style="text-align:right;">
-14.92625
-</td>
-<td style="text-align:right;">
-1.302708
-</td>
-<td style="text-align:right;">
-49.39663
-</td>
-<td style="text-align:right;">
-2.173429
-</td>
-<td style="text-align:right;">
-82.41303
-</td>
-<td style="text-align:right;">
-0.6352291
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="mortality-4">Mortality<a class="anchor" aria-label="anchor" href="#mortality-4"></a>
-</h4>
-<p>Prediction ability for <strong>basal area decrease due to
-mortality</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-535
-</td>
-<td style="text-align:right;">
-0.2679482
-</td>
-<td style="text-align:right;">
-0.2390363
-</td>
-<td style="text-align:right;">
--0.0289119
-</td>
-<td style="text-align:right;">
--10.79013
-</td>
-<td style="text-align:right;">
-0.3630290
-</td>
-<td style="text-align:right;">
-135.4848
-</td>
-<td style="text-align:right;">
-0.7708238
-</td>
-<td style="text-align:right;">
-287.6764
-</td>
-<td style="text-align:right;">
-0.0280479
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-535
-</td>
-<td style="text-align:right;">
-0.2679482
-</td>
-<td style="text-align:right;">
-0.2206204
-</td>
-<td style="text-align:right;">
--0.0473278
-</td>
-<td style="text-align:right;">
--17.66303
-</td>
-<td style="text-align:right;">
-0.3446247
-</td>
-<td style="text-align:right;">
-128.6162
-</td>
-<td style="text-align:right;">
-0.6561915
-</td>
-<td style="text-align:right;">
-244.8949
-</td>
-<td style="text-align:right;">
-0.1477876
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="ingrowth-4">Ingrowth<a class="anchor" aria-label="anchor" href="#ingrowth-4"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-ingrowth</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-547
-</td>
-<td style="text-align:right;">
-0.3567506
-</td>
-<td style="text-align:right;">
-0.7307047
-</td>
-<td style="text-align:right;">
-0.3739541
-</td>
-<td style="text-align:right;">
-104.8223
-</td>
-<td style="text-align:right;">
-0.8762654
-</td>
-<td style="text-align:right;">
-245.6241
-</td>
-<td style="text-align:right;">
-1.476654
-</td>
-<td style="text-align:right;">
-413.9178
-</td>
-<td style="text-align:right;">
-0.0010093
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-546
-</td>
-<td style="text-align:right;">
-0.3574040
-</td>
-<td style="text-align:right;">
-0.7295516
-</td>
-<td style="text-align:right;">
-0.3721476
-</td>
-<td style="text-align:right;">
-104.1252
-</td>
-<td style="text-align:right;">
-0.8814355
-</td>
-<td style="text-align:right;">
-246.6216
-</td>
-<td style="text-align:right;">
-1.467482
-</td>
-<td style="text-align:right;">
-410.5948
-</td>
-<td style="text-align:right;">
-0.0001516
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="overall-basal-area-changes-3">Overall basal area changes<a class="anchor" aria-label="anchor" href="#overall-basal-area-changes-3"></a>
-</h4>
-<p>Prediction ability for <strong>overall basal area changes</strong>
-(including growth, mortality and ingrowth):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-546
-</td>
-<td style="text-align:right;">
-2.652687
-</td>
-<td style="text-align:right;">
-3.631435
-</td>
-<td style="text-align:right;">
-0.9787479
-</td>
-<td style="text-align:right;">
-36.89648
-</td>
-<td style="text-align:right;">
-1.843879
-</td>
-<td style="text-align:right;">
-69.50985
-</td>
-<td style="text-align:right;">
-2.557453
-</td>
-<td style="text-align:right;">
-96.4099
-</td>
-<td style="text-align:right;">
-0.4769920
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-546
-</td>
-<td style="text-align:right;">
-2.658390
-</td>
-<td style="text-align:right;">
-3.455533
-</td>
-<td style="text-align:right;">
-0.7971435
-</td>
-<td style="text-align:right;">
-29.98595
-</td>
-<td style="text-align:right;">
-1.884719
-</td>
-<td style="text-align:right;">
-70.89700
-</td>
-<td style="text-align:right;">
-2.795370
-</td>
-<td style="text-align:right;">
-105.1528
-</td>
-<td style="text-align:right;">
-0.4475505
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-70-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-71-1.png" width="768"></p>
-<p>Spatial distribution of errors:
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-72-1.png" width="864"></p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="pinus-sylvestris">Pinus sylvestris<a class="anchor" aria-label="anchor" href="#pinus-sylvestris"></a>
-</h3>
-<div class="section level4">
-<h4 id="annual-diameter-increment-5">Annual diameter increment<a class="anchor" aria-label="anchor" href="#annual-diameter-increment-5"></a>
-</h4>
-Prediction ability for <strong>diameter increase</strong> (cm/yr) of
-surviving trees:
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-10776
-</td>
-<td style="text-align:right;">
-0.2304888
-</td>
-<td style="text-align:right;">
-0.2533870
-</td>
-<td style="text-align:right;">
-0.0228982
-</td>
-<td style="text-align:right;">
-9.934637
-</td>
-<td style="text-align:right;">
-0.1274461
-</td>
-<td style="text-align:right;">
-55.29385
-</td>
-<td style="text-align:right;">
-0.1695583
-</td>
-<td style="text-align:right;">
-73.56467
-</td>
-<td style="text-align:right;">
-0.0037412
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-10817
-</td>
-<td style="text-align:right;">
-0.2301385
-</td>
-<td style="text-align:right;">
-0.2538722
-</td>
-<td style="text-align:right;">
-0.0237337
-</td>
-<td style="text-align:right;">
-10.312779
-</td>
-<td style="text-align:right;">
-0.1319711
-</td>
-<td style="text-align:right;">
-57.34421
-</td>
-<td style="text-align:right;">
-0.1749564
-</td>
-<td style="text-align:right;">
-76.02221
-</td>
-<td style="text-align:right;">
-0.0053013
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-75-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increment</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-76-1.png" width="768"></p>
-</div>
-<div class="section level4">
-<h4 id="annual-height-increment-5">Annual height increment<a class="anchor" aria-label="anchor" href="#annual-height-increment-5"></a>
-</h4>
-<p>Prediction ability for <strong>height increase</strong> (cm/yr) of
-surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-10776
-</td>
-<td style="text-align:right;">
-11.32565
-</td>
-<td style="text-align:right;">
-13.30690
-</td>
-<td style="text-align:right;">
-1.981257
-</td>
-<td style="text-align:right;">
-17.49354
-</td>
-<td style="text-align:right;">
-9.755439
-</td>
-<td style="text-align:right;">
-86.13582
-</td>
-<td style="text-align:right;">
-12.75539
-</td>
-<td style="text-align:right;">
-112.6239
-</td>
-<td style="text-align:right;">
-0.0288164
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-10817
-</td>
-<td style="text-align:right;">
-11.31373
-</td>
-<td style="text-align:right;">
-13.38725
-</td>
-<td style="text-align:right;">
-2.073521
-</td>
-<td style="text-align:right;">
-18.32748
-</td>
-<td style="text-align:right;">
-9.981043
-</td>
-<td style="text-align:right;">
-88.22066
-</td>
-<td style="text-align:right;">
-13.08587
-</td>
-<td style="text-align:right;">
-115.6637
-</td>
-<td style="text-align:right;">
-0.0224096
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="growth-basal-area-increment-4">Growth basal area increment<a class="anchor" aria-label="anchor" href="#growth-basal-area-increment-4"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-growth</strong> (m2/ha) of surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-818
-</td>
-<td style="text-align:right;">
-3.696646
-</td>
-<td style="text-align:right;">
-3.981879
-</td>
-<td style="text-align:right;">
-0.2852331
-</td>
-<td style="text-align:right;">
-7.715997
-</td>
-<td style="text-align:right;">
-1.583523
-</td>
-<td style="text-align:right;">
-42.83675
-</td>
-<td style="text-align:right;">
-2.545287
-</td>
-<td style="text-align:right;">
-68.85396
-</td>
-<td style="text-align:right;">
-0.5572074
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-820
-</td>
-<td style="text-align:right;">
-3.694286
-</td>
-<td style="text-align:right;">
-4.031870
-</td>
-<td style="text-align:right;">
-0.3375841
-</td>
-<td style="text-align:right;">
-9.138006
-</td>
-<td style="text-align:right;">
-1.706271
-</td>
-<td style="text-align:right;">
-46.18677
-</td>
-<td style="text-align:right;">
-2.724902
-</td>
-<td style="text-align:right;">
-73.75990
-</td>
-<td style="text-align:right;">
-0.5628800
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="mortality-5">Mortality<a class="anchor" aria-label="anchor" href="#mortality-5"></a>
-</h4>
-<p>Prediction ability for <strong>basal area decrease due to
-mortality</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-849
-</td>
-<td style="text-align:right;">
-0.7152006
-</td>
-<td style="text-align:right;">
-0.7332168
-</td>
-<td style="text-align:right;">
-0.0180162
-</td>
-<td style="text-align:right;">
-2.519042
-</td>
-<td style="text-align:right;">
-0.7672208
-</td>
-<td style="text-align:right;">
-107.2735
-</td>
-<td style="text-align:right;">
-1.632713
-</td>
-<td style="text-align:right;">
-228.2874
-</td>
-<td style="text-align:right;">
-0.0609981
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-849
-</td>
-<td style="text-align:right;">
-0.7152006
-</td>
-<td style="text-align:right;">
-0.6910940
-</td>
-<td style="text-align:right;">
--0.0241066
-</td>
-<td style="text-align:right;">
--3.370611
-</td>
-<td style="text-align:right;">
-0.7262201
-</td>
-<td style="text-align:right;">
-101.5408
-</td>
-<td style="text-align:right;">
-1.130739
-</td>
-<td style="text-align:right;">
-158.1009
-</td>
-<td style="text-align:right;">
-0.1956514
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="ingrowth-5">Ingrowth<a class="anchor" aria-label="anchor" href="#ingrowth-5"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-ingrowth</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-842
-</td>
-<td style="text-align:right;">
-0.4374573
-</td>
-<td style="text-align:right;">
-0.5810096
-</td>
-<td style="text-align:right;">
-0.1435523
-</td>
-<td style="text-align:right;">
-32.81516
-</td>
-<td style="text-align:right;">
-0.8281236
-</td>
-<td style="text-align:right;">
-189.3039
-</td>
-<td style="text-align:right;">
-1.503795
-</td>
-<td style="text-align:right;">
-343.7581
-</td>
-<td style="text-align:right;">
-0.0009199
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-839
-</td>
-<td style="text-align:right;">
-0.4390215
-</td>
-<td style="text-align:right;">
-0.6023146
-</td>
-<td style="text-align:right;">
-0.1632931
-</td>
-<td style="text-align:right;">
-37.19478
-</td>
-<td style="text-align:right;">
-0.8535972
-</td>
-<td style="text-align:right;">
-194.4317
-</td>
-<td style="text-align:right;">
-1.561865
-</td>
-<td style="text-align:right;">
-355.7606
-</td>
-<td style="text-align:right;">
-0.0000020
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="overall-basal-area-changes-4">Overall basal area changes<a class="anchor" aria-label="anchor" href="#overall-basal-area-changes-4"></a>
-</h4>
-<p>Prediction ability for <strong>overall basal area changes</strong>
-(including growth, mortality and ingrowth):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-842
-</td>
-<td style="text-align:right;">
-3.337296
-</td>
-<td style="text-align:right;">
-3.755424
-</td>
-<td style="text-align:right;">
-0.4181276
-</td>
-<td style="text-align:right;">
-12.52893
-</td>
-<td style="text-align:right;">
-2.217897
-</td>
-<td style="text-align:right;">
-66.4579
-</td>
-<td style="text-align:right;">
-3.216808
-</td>
-<td style="text-align:right;">
-96.38963
-</td>
-<td style="text-align:right;">
-0.3570214
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-839
-</td>
-<td style="text-align:right;">
-3.354308
-</td>
-<td style="text-align:right;">
-3.845236
-</td>
-<td style="text-align:right;">
-0.4909279
-</td>
-<td style="text-align:right;">
-14.63574
-</td>
-<td style="text-align:right;">
-2.365398
-</td>
-<td style="text-align:right;">
-70.5182
-</td>
-<td style="text-align:right;">
-3.407670
-</td>
-<td style="text-align:right;">
-101.59086
-</td>
-<td style="text-align:right;">
-0.3493891
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-82-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-83-1.png" width="768"></p>
-<p>Spatial distribution of errors:
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-84-1.png" width="864"></p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="pinus-uncinata">Pinus uncinata<a class="anchor" aria-label="anchor" href="#pinus-uncinata"></a>
-</h3>
-<div class="section level4">
-<h4 id="annual-diameter-increment-6">Annual diameter increment<a class="anchor" aria-label="anchor" href="#annual-diameter-increment-6"></a>
-</h4>
-Prediction ability for <strong>diameter increase</strong> (cm/yr) of
-surviving trees:
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-4305
-</td>
-<td style="text-align:right;">
-0.1918883
-</td>
-<td style="text-align:right;">
-0.1307523
-</td>
-<td style="text-align:right;">
--0.0611359
-</td>
-<td style="text-align:right;">
--31.86017
-</td>
-<td style="text-align:right;">
-0.1168734
-</td>
-<td style="text-align:right;">
-60.90699
-</td>
-<td style="text-align:right;">
-0.1690046
-</td>
-<td style="text-align:right;">
-88.07448
-</td>
-<td style="text-align:right;">
-0.0000009
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-4420
-</td>
-<td style="text-align:right;">
-0.1918584
-</td>
-<td style="text-align:right;">
-0.1468640
-</td>
-<td style="text-align:right;">
--0.0449944
-</td>
-<td style="text-align:right;">
--23.45187
-</td>
-<td style="text-align:right;">
-0.1138652
-</td>
-<td style="text-align:right;">
-59.34856
-</td>
-<td style="text-align:right;">
-0.1622058
-</td>
-<td style="text-align:right;">
-84.54456
-</td>
-<td style="text-align:right;">
-0.0062724
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-87-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increment</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-88-1.png" width="768"></p>
-</div>
-<div class="section level4">
-<h4 id="annual-height-increment-6">Annual height increment<a class="anchor" aria-label="anchor" href="#annual-height-increment-6"></a>
-</h4>
-<p>Prediction ability for <strong>height increase</strong> (cm/yr) of
-surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-4305
-</td>
-<td style="text-align:right;">
-11.37451
-</td>
-<td style="text-align:right;">
-6.520524
-</td>
-<td style="text-align:right;">
--4.853987
-</td>
-<td style="text-align:right;">
--42.67425
-</td>
-<td style="text-align:right;">
-9.163481
-</td>
-<td style="text-align:right;">
-80.56154
-</td>
-<td style="text-align:right;">
-12.20984
-</td>
-<td style="text-align:right;">
-107.3439
-</td>
-<td style="text-align:right;">
-0.0579216
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-4420
-</td>
-<td style="text-align:right;">
-11.40975
-</td>
-<td style="text-align:right;">
-7.379237
-</td>
-<td style="text-align:right;">
--4.030518
-</td>
-<td style="text-align:right;">
--35.32519
-</td>
-<td style="text-align:right;">
-9.082712
-</td>
-<td style="text-align:right;">
-79.60480
-</td>
-<td style="text-align:right;">
-12.11836
-</td>
-<td style="text-align:right;">
-106.2105
-</td>
-<td style="text-align:right;">
-0.0410800
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="growth-basal-area-increment-5">Growth basal area increment<a class="anchor" aria-label="anchor" href="#growth-basal-area-increment-5"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-growth</strong> (m2/ha) of surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-247
-</td>
-<td style="text-align:right;">
-3.945246
-</td>
-<td style="text-align:right;">
-2.495870
-</td>
-<td style="text-align:right;">
--1.449376
-</td>
-<td style="text-align:right;">
--36.73727
-</td>
-<td style="text-align:right;">
-1.781955
-</td>
-<td style="text-align:right;">
-45.16713
-</td>
-<td style="text-align:right;">
-3.120922
-</td>
-<td style="text-align:right;">
-79.10588
-</td>
-<td style="text-align:right;">
-0.4178890
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-252
-</td>
-<td style="text-align:right;">
-3.998010
-</td>
-<td style="text-align:right;">
-2.843722
-</td>
-<td style="text-align:right;">
--1.154288
-</td>
-<td style="text-align:right;">
--28.87156
-</td>
-<td style="text-align:right;">
-1.645462
-</td>
-<td style="text-align:right;">
-41.15703
-</td>
-<td style="text-align:right;">
-3.012016
-</td>
-<td style="text-align:right;">
-75.33788
-</td>
-<td style="text-align:right;">
-0.4295947
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="mortality-6">Mortality<a class="anchor" aria-label="anchor" href="#mortality-6"></a>
-</h4>
-<p>Prediction ability for <strong>basal area decrease due to
-mortality</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-254
-</td>
-<td style="text-align:right;">
-1.003574
-</td>
-<td style="text-align:right;">
-1.2154127
-</td>
-<td style="text-align:right;">
-0.2118389
-</td>
-<td style="text-align:right;">
-21.10846
-</td>
-<td style="text-align:right;">
-1.3209922
-</td>
-<td style="text-align:right;">
-131.62881
-</td>
-<td style="text-align:right;">
-3.709656
-</td>
-<td style="text-align:right;">
-369.6446
-</td>
-<td style="text-align:right;">
-0.0504421
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-254
-</td>
-<td style="text-align:right;">
-1.003574
-</td>
-<td style="text-align:right;">
-0.7221944
-</td>
-<td style="text-align:right;">
--0.2813794
-</td>
-<td style="text-align:right;">
--28.03774
-</td>
-<td style="text-align:right;">
-0.8829494
-</td>
-<td style="text-align:right;">
-87.98051
-</td>
-<td style="text-align:right;">
-1.388648
-</td>
-<td style="text-align:right;">
-138.3702
-</td>
-<td style="text-align:right;">
-0.2702760
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="ingrowth-6">Ingrowth<a class="anchor" aria-label="anchor" href="#ingrowth-6"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-ingrowth</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-249
-</td>
-<td style="text-align:right;">
-0.6435067
-</td>
-<td style="text-align:right;">
-0.7251322
-</td>
-<td style="text-align:right;">
-0.0816254
-</td>
-<td style="text-align:right;">
-12.68447
-</td>
-<td style="text-align:right;">
-1.0028783
-</td>
-<td style="text-align:right;">
-155.8458
-</td>
-<td style="text-align:right;">
-1.614116
-</td>
-<td style="text-align:right;">
-250.8312
-</td>
-<td style="text-align:right;">
-0.0019496
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-254
-</td>
-<td style="text-align:right;">
-0.6308393
-</td>
-<td style="text-align:right;">
-0.7164322
-</td>
-<td style="text-align:right;">
-0.0855930
-</td>
-<td style="text-align:right;">
-13.56811
-</td>
-<td style="text-align:right;">
-0.9810886
-</td>
-<td style="text-align:right;">
-155.5212
-</td>
-<td style="text-align:right;">
-1.587041
-</td>
-<td style="text-align:right;">
-251.5761
-</td>
-<td style="text-align:right;">
-0.0148562
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="overall-basal-area-changes-5">Overall basal area changes<a class="anchor" aria-label="anchor" href="#overall-basal-area-changes-5"></a>
-</h4>
-<p>Prediction ability for <strong>overall basal area changes</strong>
-(including growth, mortality and ingrowth):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-249
-</td>
-<td style="text-align:right;">
-3.575857
-</td>
-<td style="text-align:right;">
-2.281392
-</td>
-<td style="text-align:right;">
--1.2944655
-</td>
-<td style="text-align:right;">
--36.20014
-</td>
-<td style="text-align:right;">
-2.626297
-</td>
-<td style="text-align:right;">
-73.44524
-</td>
-<td style="text-align:right;">
-4.499534
-</td>
-<td style="text-align:right;">
-125.83092
-</td>
-<td style="text-align:right;">
-0.0736446
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-254
-</td>
-<td style="text-align:right;">
-3.596529
-</td>
-<td style="text-align:right;">
-2.815684
-</td>
-<td style="text-align:right;">
--0.7808451
-</td>
-<td style="text-align:right;">
--21.71108
-</td>
-<td style="text-align:right;">
-2.369364
-</td>
-<td style="text-align:right;">
-65.87920
-</td>
-<td style="text-align:right;">
-3.567356
-</td>
-<td style="text-align:right;">
-99.18885
-</td>
-<td style="text-align:right;">
-0.2530707
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-94-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-95-1.png" width="768"></p>
-<p>Spatial distribution of errors:
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-96-1.png" width="864"></p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="quercus-faginea">Quercus faginea<a class="anchor" aria-label="anchor" href="#quercus-faginea"></a>
-</h3>
-<div class="section level4">
-<h4 id="annual-diameter-increment-7">Annual diameter increment<a class="anchor" aria-label="anchor" href="#annual-diameter-increment-7"></a>
-</h4>
-Prediction ability for <strong>diameter increase</strong> (cm/yr) of
-surviving trees:
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-842
-</td>
-<td style="text-align:right;">
-0.1618100
-</td>
-<td style="text-align:right;">
-0.1581267
-</td>
-<td style="text-align:right;">
--0.0036833
-</td>
-<td style="text-align:right;">
--2.276318
-</td>
-<td style="text-align:right;">
-0.0876010
-</td>
-<td style="text-align:right;">
-54.13816
-</td>
-<td style="text-align:right;">
-0.1204545
-</td>
-<td style="text-align:right;">
-74.44192
-</td>
-<td style="text-align:right;">
-0.0620846
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-870
-</td>
-<td style="text-align:right;">
-0.1608362
-</td>
-<td style="text-align:right;">
-0.1985843
-</td>
-<td style="text-align:right;">
-0.0377481
-</td>
-<td style="text-align:right;">
-23.469915
-</td>
-<td style="text-align:right;">
-0.0928036
-</td>
-<td style="text-align:right;">
-57.70068
-</td>
-<td style="text-align:right;">
-0.1207824
-</td>
-<td style="text-align:right;">
-75.09652
-</td>
-<td style="text-align:right;">
-0.0739284
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-99-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increment</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-100-1.png" width="768"></p>
-</div>
-<div class="section level4">
-<h4 id="annual-height-increment-7">Annual height increment<a class="anchor" aria-label="anchor" href="#annual-height-increment-7"></a>
-</h4>
-<p>Prediction ability for <strong>height increase</strong> (cm/yr) of
-surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-842
-</td>
-<td style="text-align:right;">
-4.509056
-</td>
-<td style="text-align:right;">
-5.165068
-</td>
-<td style="text-align:right;">
-0.6560114
-</td>
-<td style="text-align:right;">
-14.54875
-</td>
-<td style="text-align:right;">
-7.11984
-</td>
-<td style="text-align:right;">
-157.9009
-</td>
-<td style="text-align:right;">
-9.592975
-</td>
-<td style="text-align:right;">
-212.7490
-</td>
-<td style="text-align:right;">
-0.0133468
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-870
-</td>
-<td style="text-align:right;">
-4.564916
-</td>
-<td style="text-align:right;">
-7.114331
-</td>
-<td style="text-align:right;">
-2.5494144
-</td>
-<td style="text-align:right;">
-55.84800
-</td>
-<td style="text-align:right;">
-7.53067
-</td>
-<td style="text-align:right;">
-164.9684
-</td>
-<td style="text-align:right;">
-9.894856
-</td>
-<td style="text-align:right;">
-216.7588
-</td>
-<td style="text-align:right;">
-0.0325699
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="growth-basal-area-increment-6">Growth basal area increment<a class="anchor" aria-label="anchor" href="#growth-basal-area-increment-6"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-growth</strong> (m2/ha) of surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-204
-</td>
-<td style="text-align:right;">
-1.036296
-</td>
-<td style="text-align:right;">
-0.985605
-</td>
-<td style="text-align:right;">
--0.0506906
-</td>
-<td style="text-align:right;">
--4.891516
-</td>
-<td style="text-align:right;">
-0.4281673
-</td>
-<td style="text-align:right;">
-41.31710
-</td>
-<td style="text-align:right;">
-0.8078995
-</td>
-<td style="text-align:right;">
-77.96034
-</td>
-<td style="text-align:right;">
-0.6199993
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-207
-</td>
-<td style="text-align:right;">
-1.053787
-</td>
-<td style="text-align:right;">
-1.381128
-</td>
-<td style="text-align:right;">
-0.3273408
-</td>
-<td style="text-align:right;">
-31.063263
-</td>
-<td style="text-align:right;">
-0.5695602
-</td>
-<td style="text-align:right;">
-54.04887
-</td>
-<td style="text-align:right;">
-1.0360347
-</td>
-<td style="text-align:right;">
-98.31534
-</td>
-<td style="text-align:right;">
-0.7107044
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="mortality-7">Mortality<a class="anchor" aria-label="anchor" href="#mortality-7"></a>
-</h4>
-<p>Prediction ability for <strong>basal area decrease due to
-mortality</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-210
-</td>
-<td style="text-align:right;">
-0.1005152
-</td>
-<td style="text-align:right;">
-0.1848658
-</td>
-<td style="text-align:right;">
-0.0843506
-</td>
-<td style="text-align:right;">
-83.91823
-</td>
-<td style="text-align:right;">
-0.2506077
-</td>
-<td style="text-align:right;">
-249.3232
-</td>
-<td style="text-align:right;">
-0.8353945
-</td>
-<td style="text-align:right;">
-831.1127
-</td>
-<td style="text-align:right;">
-0.0131918
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-210
-</td>
-<td style="text-align:right;">
-0.1005152
-</td>
-<td style="text-align:right;">
-0.0508534
-</td>
-<td style="text-align:right;">
--0.0496618
-</td>
-<td style="text-align:right;">
--49.40721
-</td>
-<td style="text-align:right;">
-0.1297472
-</td>
-<td style="text-align:right;">
-129.0822
-</td>
-<td style="text-align:right;">
-0.4389493
-</td>
-<td style="text-align:right;">
-436.6995
-</td>
-<td style="text-align:right;">
-0.0766300
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="ingrowth-7">Ingrowth<a class="anchor" aria-label="anchor" href="#ingrowth-7"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-ingrowth</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-240
-</td>
-<td style="text-align:right;">
-0.2162503
-</td>
-<td style="text-align:right;">
-0.6497452
-</td>
-<td style="text-align:right;">
-0.4334948
-</td>
-<td style="text-align:right;">
-200.4598
-</td>
-<td style="text-align:right;">
-0.759895
-</td>
-<td style="text-align:right;">
-351.3960
-</td>
-<td style="text-align:right;">
-1.299541
-</td>
-<td style="text-align:right;">
-600.9429
-</td>
-<td style="text-align:right;">
-0.0002045
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-238
-</td>
-<td style="text-align:right;">
-0.2180675
-</td>
-<td style="text-align:right;">
-0.6199684
-</td>
-<td style="text-align:right;">
-0.4019009
-</td>
-<td style="text-align:right;">
-184.3011
-</td>
-<td style="text-align:right;">
-0.716953
-</td>
-<td style="text-align:right;">
-328.7757
-</td>
-<td style="text-align:right;">
-1.219435
-</td>
-<td style="text-align:right;">
-559.2005
-</td>
-<td style="text-align:right;">
-0.0006134
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="overall-basal-area-changes-6">Overall basal area changes<a class="anchor" aria-label="anchor" href="#overall-basal-area-changes-6"></a>
-</h4>
-<p>Prediction ability for <strong>overall basal area changes</strong>
-(including growth, mortality and ingrowth):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-240
-</td>
-<td style="text-align:right;">
-1.035329
-</td>
-<td style="text-align:right;">
-1.355056
-</td>
-<td style="text-align:right;">
-0.319727
-</td>
-<td style="text-align:right;">
-30.88168
-</td>
-<td style="text-align:right;">
-1.109063
-</td>
-<td style="text-align:right;">
-107.1218
-</td>
-<td style="text-align:right;">
-1.642189
-</td>
-<td style="text-align:right;">
-158.6152
-</td>
-<td style="text-align:right;">
-0.1111120
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-238
-</td>
-<td style="text-align:right;">
-1.072667
-</td>
-<td style="text-align:right;">
-1.776719
-</td>
-<td style="text-align:right;">
-0.704052
-</td>
-<td style="text-align:right;">
-65.63567
-</td>
-<td style="text-align:right;">
-1.173199
-</td>
-<td style="text-align:right;">
-109.3722
-</td>
-<td style="text-align:right;">
-1.713169
-</td>
-<td style="text-align:right;">
-159.7112
-</td>
-<td style="text-align:right;">
-0.3226908
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-106-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-107-1.png" width="768"></p>
-<p>Spatial distribution of errors:
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-108-1.png" width="864"></p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="quercus-ilex">Quercus ilex<a class="anchor" aria-label="anchor" href="#quercus-ilex"></a>
-</h3>
-<div class="section level4">
-<h4 id="annual-diameter-increment-8">Annual diameter increment<a class="anchor" aria-label="anchor" href="#annual-diameter-increment-8"></a>
-</h4>
-Prediction ability for <strong>diameter increase</strong> (cm/yr) of
-surviving trees:
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-8636
-</td>
-<td style="text-align:right;">
-0.1353892
-</td>
-<td style="text-align:right;">
-0.1584521
-</td>
-<td style="text-align:right;">
-0.0230629
-</td>
-<td style="text-align:right;">
-17.03454
-</td>
-<td style="text-align:right;">
-0.0896478
-</td>
-<td style="text-align:right;">
-66.21491
-</td>
-<td style="text-align:right;">
-0.140581
-</td>
-<td style="text-align:right;">
-103.8348
-</td>
-<td style="text-align:right;">
-0.0547823
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-8784
-</td>
-<td style="text-align:right;">
-0.1343974
-</td>
-<td style="text-align:right;">
-0.1876443
-</td>
-<td style="text-align:right;">
-0.0532470
-</td>
-<td style="text-align:right;">
-39.61906
-</td>
-<td style="text-align:right;">
-0.1028332
-</td>
-<td style="text-align:right;">
-76.51428
-</td>
-<td style="text-align:right;">
-0.147327
-</td>
-<td style="text-align:right;">
-109.6204
-</td>
-<td style="text-align:right;">
-0.0553398
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-111-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increment</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-112-1.png" width="768"></p>
-</div>
-<div class="section level4">
-<h4 id="annual-height-increment-8">Annual height increment<a class="anchor" aria-label="anchor" href="#annual-height-increment-8"></a>
-</h4>
-<p>Prediction ability for <strong>height increase</strong> (cm/yr) of
-surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-8636
-</td>
-<td style="text-align:right;">
-4.771396
-</td>
-<td style="text-align:right;">
-4.779419
-</td>
-<td style="text-align:right;">
-0.0080231
-</td>
-<td style="text-align:right;">
-0.16815
-</td>
-<td style="text-align:right;">
-7.045932
-</td>
-<td style="text-align:right;">
-147.6702
-</td>
-<td style="text-align:right;">
-12.49519
-</td>
-<td style="text-align:right;">
-261.8771
-</td>
-<td style="text-align:right;">
-0.0008978
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-8784
-</td>
-<td style="text-align:right;">
-4.800095
-</td>
-<td style="text-align:right;">
-6.034298
-</td>
-<td style="text-align:right;">
-1.2342031
-</td>
-<td style="text-align:right;">
-25.71206
-</td>
-<td style="text-align:right;">
-7.523851
-</td>
-<td style="text-align:right;">
-156.7438
-</td>
-<td style="text-align:right;">
-12.69343
-</td>
-<td style="text-align:right;">
-264.4413
-</td>
-<td style="text-align:right;">
-0.0008582
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="growth-basal-area-increment-7">Growth basal area increment<a class="anchor" aria-label="anchor" href="#growth-basal-area-increment-7"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-growth</strong> (m2/ha) of surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-986
-</td>
-<td style="text-align:right;">
-2.053181
-</td>
-<td style="text-align:right;">
-2.292676
-</td>
-<td style="text-align:right;">
-0.2394950
-</td>
-<td style="text-align:right;">
-11.66458
-</td>
-<td style="text-align:right;">
-1.008840
-</td>
-<td style="text-align:right;">
-49.13547
-</td>
-<td style="text-align:right;">
-2.510380
-</td>
-<td style="text-align:right;">
-122.2678
-</td>
-<td style="text-align:right;">
-0.3029737
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-987
-</td>
-<td style="text-align:right;">
-2.088643
-</td>
-<td style="text-align:right;">
-2.975622
-</td>
-<td style="text-align:right;">
-0.8869785
-</td>
-<td style="text-align:right;">
-42.46673
-</td>
-<td style="text-align:right;">
-1.432502
-</td>
-<td style="text-align:right;">
-68.58531
-</td>
-<td style="text-align:right;">
-3.050834
-</td>
-<td style="text-align:right;">
-146.0677
-</td>
-<td style="text-align:right;">
-0.2978389
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="mortality-8">Mortality<a class="anchor" aria-label="anchor" href="#mortality-8"></a>
-</h4>
-<p>Prediction ability for <strong>basal area decrease due to
-mortality</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-998
-</td>
-<td style="text-align:right;">
-0.233174
-</td>
-<td style="text-align:right;">
-0.3126412
-</td>
-<td style="text-align:right;">
-0.0794673
-</td>
-<td style="text-align:right;">
-34.08069
-</td>
-<td style="text-align:right;">
-0.3783176
-</td>
-<td style="text-align:right;">
-162.2470
-</td>
-<td style="text-align:right;">
-0.9900590
-</td>
-<td style="text-align:right;">
-424.6010
-</td>
-<td style="text-align:right;">
-0.0683851
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-998
-</td>
-<td style="text-align:right;">
-0.233174
-</td>
-<td style="text-align:right;">
-0.1065805
-</td>
-<td style="text-align:right;">
--0.1265935
-</td>
-<td style="text-align:right;">
--54.29144
-</td>
-<td style="text-align:right;">
-0.2712148
-</td>
-<td style="text-align:right;">
-116.3144
-</td>
-<td style="text-align:right;">
-0.6148905
-</td>
-<td style="text-align:right;">
-263.7046
-</td>
-<td style="text-align:right;">
-0.1005692
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="ingrowth-8">Ingrowth<a class="anchor" aria-label="anchor" href="#ingrowth-8"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-ingrowth</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-1151
-</td>
-<td style="text-align:right;">
-1.174751
-</td>
-<td style="text-align:right;">
-0.7988768
-</td>
-<td style="text-align:right;">
--0.3758740
-</td>
-<td style="text-align:right;">
--31.99606
-</td>
-<td style="text-align:right;">
-1.393629
-</td>
-<td style="text-align:right;">
-118.6319
-</td>
-<td style="text-align:right;">
-2.079626
-</td>
-<td style="text-align:right;">
-177.0270
-</td>
-<td style="text-align:right;">
-0.0015298
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-1158
-</td>
-<td style="text-align:right;">
-1.167650
-</td>
-<td style="text-align:right;">
-1.0406284
-</td>
-<td style="text-align:right;">
--0.1270211
-</td>
-<td style="text-align:right;">
--10.87836
-</td>
-<td style="text-align:right;">
-1.533827
-</td>
-<td style="text-align:right;">
-131.3603
-</td>
-<td style="text-align:right;">
-2.218541
-</td>
-<td style="text-align:right;">
-190.0006
-</td>
-<td style="text-align:right;">
-0.0000525
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="overall-basal-area-changes-7">Overall basal area changes<a class="anchor" aria-label="anchor" href="#overall-basal-area-changes-7"></a>
-</h4>
-<p>Prediction ability for <strong>overall basal area changes</strong>
-(including growth, mortality and ingrowth):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-1150
-</td>
-<td style="text-align:right;">
-2.737483
-</td>
-<td style="text-align:right;">
-2.494686
-</td>
-<td style="text-align:right;">
--0.2427967
-</td>
-<td style="text-align:right;">
--8.869341
-</td>
-<td style="text-align:right;">
-1.878445
-</td>
-<td style="text-align:right;">
-68.61942
-</td>
-<td style="text-align:right;">
-3.118404
-</td>
-<td style="text-align:right;">
-113.9150
-</td>
-<td style="text-align:right;">
-0.1998061
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-1158
-</td>
-<td style="text-align:right;">
-2.752949
-</td>
-<td style="text-align:right;">
-3.485085
-</td>
-<td style="text-align:right;">
-0.7321357
-</td>
-<td style="text-align:right;">
-26.594599
-</td>
-<td style="text-align:right;">
-2.173057
-</td>
-<td style="text-align:right;">
-78.93562
-</td>
-<td style="text-align:right;">
-3.430410
-</td>
-<td style="text-align:right;">
-124.6085
-</td>
-<td style="text-align:right;">
-0.2393080
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-118-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-119-1.png" width="768"></p>
-<p>Spatial distribution of errors:
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-120-1.png" width="864"></p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="quercus-pubescens">Quercus pubescens<a class="anchor" aria-label="anchor" href="#quercus-pubescens"></a>
-</h3>
-<div class="section level4">
-<h4 id="annual-diameter-increment-9">Annual diameter increment<a class="anchor" aria-label="anchor" href="#annual-diameter-increment-9"></a>
-</h4>
-Prediction ability for <strong>diameter increase</strong> (cm/yr) of
-surviving trees:
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-2863
-</td>
-<td style="text-align:right;">
-0.1705713
-</td>
-<td style="text-align:right;">
-0.1805879
-</td>
-<td style="text-align:right;">
-0.0100166
-</td>
-<td style="text-align:right;">
-5.872387
-</td>
-<td style="text-align:right;">
-0.0965085
-</td>
-<td style="text-align:right;">
-56.57957
-</td>
-<td style="text-align:right;">
-0.1403449
-</td>
-<td style="text-align:right;">
-82.27931
-</td>
-<td style="text-align:right;">
-0.0621026
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-2916
-</td>
-<td style="text-align:right;">
-0.1689984
-</td>
-<td style="text-align:right;">
-0.2078112
-</td>
-<td style="text-align:right;">
-0.0388127
-</td>
-<td style="text-align:right;">
-22.966329
-</td>
-<td style="text-align:right;">
-0.1055243
-</td>
-<td style="text-align:right;">
-62.44097
-</td>
-<td style="text-align:right;">
-0.1460909
-</td>
-<td style="text-align:right;">
-86.44513
-</td>
-<td style="text-align:right;">
-0.0313081
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-123-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increment</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-124-1.png" width="768"></p>
-</div>
-<div class="section level4">
-<h4 id="annual-height-increment-9">Annual height increment<a class="anchor" aria-label="anchor" href="#annual-height-increment-9"></a>
-</h4>
-<p>Prediction ability for <strong>height increase</strong> (cm/yr) of
-surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-2863
-</td>
-<td style="text-align:right;">
-4.869319
-</td>
-<td style="text-align:right;">
-6.499381
-</td>
-<td style="text-align:right;">
-1.630063
-</td>
-<td style="text-align:right;">
-33.47620
-</td>
-<td style="text-align:right;">
-9.520532
-</td>
-<td style="text-align:right;">
-195.5208
-</td>
-<td style="text-align:right;">
-13.04258
-</td>
-<td style="text-align:right;">
-267.8523
-</td>
-<td style="text-align:right;">
-0.0275492
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-2916
-</td>
-<td style="text-align:right;">
-4.858959
-</td>
-<td style="text-align:right;">
-7.978490
-</td>
-<td style="text-align:right;">
-3.119531
-</td>
-<td style="text-align:right;">
-64.20164
-</td>
-<td style="text-align:right;">
-9.952153
-</td>
-<td style="text-align:right;">
-204.8207
-</td>
-<td style="text-align:right;">
-13.35957
-</td>
-<td style="text-align:right;">
-274.9472
-</td>
-<td style="text-align:right;">
-0.0222712
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="growth-basal-area-increment-8">Growth basal area increment<a class="anchor" aria-label="anchor" href="#growth-basal-area-increment-8"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-growth</strong> (m2/ha) of surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-504
-</td>
-<td style="text-align:right;">
-1.373652
-</td>
-<td style="text-align:right;">
-1.381506
-</td>
-<td style="text-align:right;">
-0.0078546
-</td>
-<td style="text-align:right;">
-0.5718041
-</td>
-<td style="text-align:right;">
-0.5648576
-</td>
-<td style="text-align:right;">
-41.12087
-</td>
-<td style="text-align:right;">
-1.017989
-</td>
-<td style="text-align:right;">
-74.10825
-</td>
-<td style="text-align:right;">
-0.5981418
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-507
-</td>
-<td style="text-align:right;">
-1.390836
-</td>
-<td style="text-align:right;">
-1.772164
-</td>
-<td style="text-align:right;">
-0.3813285
-</td>
-<td style="text-align:right;">
-27.4172106
-</td>
-<td style="text-align:right;">
-0.7392338
-</td>
-<td style="text-align:right;">
-53.15032
-</td>
-<td style="text-align:right;">
-1.362165
-</td>
-<td style="text-align:right;">
-97.93854
-</td>
-<td style="text-align:right;">
-0.5789482
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="mortality-9">Mortality<a class="anchor" aria-label="anchor" href="#mortality-9"></a>
-</h4>
-<p>Prediction ability for <strong>basal area decrease due to
-mortality</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-516
-</td>
-<td style="text-align:right;">
-0.1872343
-</td>
-<td style="text-align:right;">
-0.1959589
-</td>
-<td style="text-align:right;">
-0.0087246
-</td>
-<td style="text-align:right;">
-4.659716
-</td>
-<td style="text-align:right;">
-0.2860946
-</td>
-<td style="text-align:right;">
-152.8003
-</td>
-<td style="text-align:right;">
-0.7870573
-</td>
-<td style="text-align:right;">
-420.3596
-</td>
-<td style="text-align:right;">
-0.0716449
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-516
-</td>
-<td style="text-align:right;">
-0.1872343
-</td>
-<td style="text-align:right;">
-0.0740650
-</td>
-<td style="text-align:right;">
--0.1131692
-</td>
-<td style="text-align:right;">
--60.442584
-</td>
-<td style="text-align:right;">
-0.2094689
-</td>
-<td style="text-align:right;">
-111.8753
-</td>
-<td style="text-align:right;">
-0.4640609
-</td>
-<td style="text-align:right;">
-247.8504
-</td>
-<td style="text-align:right;">
-0.1163907
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="ingrowth-9">Ingrowth<a class="anchor" aria-label="anchor" href="#ingrowth-9"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-ingrowth</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-560
-</td>
-<td style="text-align:right;">
-0.5297386
-</td>
-<td style="text-align:right;">
-0.5791782
-</td>
-<td style="text-align:right;">
-0.0494396
-</td>
-<td style="text-align:right;">
-9.332838
-</td>
-<td style="text-align:right;">
-0.8428514
-</td>
-<td style="text-align:right;">
-159.1070
-</td>
-<td style="text-align:right;">
-1.468206
-</td>
-<td style="text-align:right;">
-277.1568
-</td>
-<td style="text-align:right;">
-0.0000462
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-587
-</td>
-<td style="text-align:right;">
-0.5053724
-</td>
-<td style="text-align:right;">
-0.7423468
-</td>
-<td style="text-align:right;">
-0.2369744
-</td>
-<td style="text-align:right;">
-46.891040
-</td>
-<td style="text-align:right;">
-0.9761203
-</td>
-<td style="text-align:right;">
-193.1487
-</td>
-<td style="text-align:right;">
-1.591328
-</td>
-<td style="text-align:right;">
-314.8822
-</td>
-<td style="text-align:right;">
-0.0016339
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="overall-basal-area-changes-8">Overall basal area changes<a class="anchor" aria-label="anchor" href="#overall-basal-area-changes-8"></a>
-</h4>
-<p>Prediction ability for <strong>overall basal area changes</strong>
-(including growth, mortality and ingrowth):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-559
-</td>
-<td style="text-align:right;">
-1.605391
-</td>
-<td style="text-align:right;">
-1.651585
-</td>
-<td style="text-align:right;">
-0.0461941
-</td>
-<td style="text-align:right;">
-2.877439
-</td>
-<td style="text-align:right;">
-1.262445
-</td>
-<td style="text-align:right;">
-78.63786
-</td>
-<td style="text-align:right;">
-1.934966
-</td>
-<td style="text-align:right;">
-120.5293
-</td>
-<td style="text-align:right;">
-0.2352319
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-587
-</td>
-<td style="text-align:right;">
-1.548793
-</td>
-<td style="text-align:right;">
-2.207983
-</td>
-<td style="text-align:right;">
-0.6591904
-</td>
-<td style="text-align:right;">
-42.561558
-</td>
-<td style="text-align:right;">
-1.452139
-</td>
-<td style="text-align:right;">
-93.75940
-</td>
-<td style="text-align:right;">
-2.102210
-</td>
-<td style="text-align:right;">
-135.7321
-</td>
-<td style="text-align:right;">
-0.2665876
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-130-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-131-1.png" width="768"></p>
-<p>Spatial distribution of errors:
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-132-1.png" width="864"></p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="quercus-suber">Quercus suber<a class="anchor" aria-label="anchor" href="#quercus-suber"></a>
-</h3>
-<div class="section level4">
-<h4 id="annual-diameter-increment-10">Annual diameter increment<a class="anchor" aria-label="anchor" href="#annual-diameter-increment-10"></a>
-</h4>
-Prediction ability for <strong>diameter increase</strong> (cm/yr) of
-surviving trees:
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-2258
-</td>
-<td style="text-align:right;">
-0.1662597
-</td>
-<td style="text-align:right;">
-0.1905388
-</td>
-<td style="text-align:right;">
-0.0242791
-</td>
-<td style="text-align:right;">
-14.60313
-</td>
-<td style="text-align:right;">
-0.1211778
-</td>
-<td style="text-align:right;">
-72.88464
-</td>
-<td style="text-align:right;">
-0.1800103
-</td>
-<td style="text-align:right;">
-108.2705
-</td>
-<td style="text-align:right;">
-0.0208645
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-2267
-</td>
-<td style="text-align:right;">
-0.1658168
-</td>
-<td style="text-align:right;">
-0.1896118
-</td>
-<td style="text-align:right;">
-0.0237950
-</td>
-<td style="text-align:right;">
-14.35018
-</td>
-<td style="text-align:right;">
-0.1288263
-</td>
-<td style="text-align:right;">
-77.69193
-</td>
-<td style="text-align:right;">
-0.1859475
-</td>
-<td style="text-align:right;">
-112.1403
-</td>
-<td style="text-align:right;">
-0.0080705
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-135-1.png" width="768"></p>
-<p>Relationship between <strong>diameter increment</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-136-1.png" width="768"></p>
-</div>
-<div class="section level4">
-<h4 id="annual-height-increment-10">Annual height increment<a class="anchor" aria-label="anchor" href="#annual-height-increment-10"></a>
-</h4>
-<p>Prediction ability for <strong>height increase</strong> (cm/yr) of
-surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-2258
-</td>
-<td style="text-align:right;">
-2.931197
-</td>
-<td style="text-align:right;">
-6.01172
-</td>
-<td style="text-align:right;">
-3.080522
-</td>
-<td style="text-align:right;">
-105.0943
-</td>
-<td style="text-align:right;">
-7.235556
-</td>
-<td style="text-align:right;">
-246.8464
-</td>
-<td style="text-align:right;">
-9.816029
-</td>
-<td style="text-align:right;">
-334.8812
-</td>
-<td style="text-align:right;">
-0.0126293
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-2267
-</td>
-<td style="text-align:right;">
-2.951300
-</td>
-<td style="text-align:right;">
-6.19589
-</td>
-<td style="text-align:right;">
-3.244590
-</td>
-<td style="text-align:right;">
-109.9377
-</td>
-<td style="text-align:right;">
-7.519361
-</td>
-<td style="text-align:right;">
-254.7813
-</td>
-<td style="text-align:right;">
-10.160541
-</td>
-<td style="text-align:right;">
-344.2735
-</td>
-<td style="text-align:right;">
-0.0036243
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="growth-basal-area-increment-9">Growth basal area increment<a class="anchor" aria-label="anchor" href="#growth-basal-area-increment-9"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-growth</strong> (m2/ha) of surviving trees:</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-254
-</td>
-<td style="text-align:right;">
-2.007804
-</td>
-<td style="text-align:right;">
-2.116482
-</td>
-<td style="text-align:right;">
-0.1086778
-</td>
-<td style="text-align:right;">
-5.412767
-</td>
-<td style="text-align:right;">
-0.9867559
-</td>
-<td style="text-align:right;">
-49.14602
-</td>
-<td style="text-align:right;">
-2.203286
-</td>
-<td style="text-align:right;">
-109.7361
-</td>
-<td style="text-align:right;">
-0.3535488
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-254
-</td>
-<td style="text-align:right;">
-2.011885
-</td>
-<td style="text-align:right;">
-2.177295
-</td>
-<td style="text-align:right;">
-0.1654100
-</td>
-<td style="text-align:right;">
-8.221642
-</td>
-<td style="text-align:right;">
-1.1726116
-</td>
-<td style="text-align:right;">
-58.28423
-</td>
-<td style="text-align:right;">
-2.302068
-</td>
-<td style="text-align:right;">
-114.4234
-</td>
-<td style="text-align:right;">
-0.3407160
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="mortality-10">Mortality<a class="anchor" aria-label="anchor" href="#mortality-10"></a>
-</h4>
-<p>Prediction ability for <strong>basal area decrease due to
-mortality</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-254
-</td>
-<td style="text-align:right;">
-0.4963654
-</td>
-<td style="text-align:right;">
-0.3819610
-</td>
-<td style="text-align:right;">
--0.1144044
-</td>
-<td style="text-align:right;">
--23.04842
-</td>
-<td style="text-align:right;">
-0.5550046
-</td>
-<td style="text-align:right;">
-111.8137
-</td>
-<td style="text-align:right;">
-1.0098931
-</td>
-<td style="text-align:right;">
-203.4576
-</td>
-<td style="text-align:right;">
-0.0802258
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-254
-</td>
-<td style="text-align:right;">
-0.4963654
-</td>
-<td style="text-align:right;">
-0.3131265
-</td>
-<td style="text-align:right;">
--0.1832389
-</td>
-<td style="text-align:right;">
--36.91614
-</td>
-<td style="text-align:right;">
-0.5424580
-</td>
-<td style="text-align:right;">
-109.2860
-</td>
-<td style="text-align:right;">
-0.9940458
-</td>
-<td style="text-align:right;">
-200.2649
-</td>
-<td style="text-align:right;">
-0.0829802
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="ingrowth-10">Ingrowth<a class="anchor" aria-label="anchor" href="#ingrowth-10"></a>
-</h4>
-<p>Prediction ability for <strong>basal area increase due to
-ingrowth</strong> (m2/ha):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-261
-</td>
-<td style="text-align:right;">
-0.3514718
-</td>
-<td style="text-align:right;">
-0.1764103
-</td>
-<td style="text-align:right;">
--0.1750615
-</td>
-<td style="text-align:right;">
--49.80812
-</td>
-<td style="text-align:right;">
-0.4692627
-</td>
-<td style="text-align:right;">
-133.5136
-</td>
-<td style="text-align:right;">
-1.119142
-</td>
-<td style="text-align:right;">
-318.4158
-</td>
-<td style="text-align:right;">
-0.0007994
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-261
-</td>
-<td style="text-align:right;">
-0.3514718
-</td>
-<td style="text-align:right;">
-0.1592845
-</td>
-<td style="text-align:right;">
--0.1921873
-</td>
-<td style="text-align:right;">
--54.68072
-</td>
-<td style="text-align:right;">
-0.4506097
-</td>
-<td style="text-align:right;">
-128.2065
-</td>
-<td style="text-align:right;">
-1.120623
-</td>
-<td style="text-align:right;">
-318.8371
-</td>
-<td style="text-align:right;">
-0.0000890
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level4">
-<h4 id="overall-basal-area-changes-9">Overall basal area changes<a class="anchor" aria-label="anchor" href="#overall-basal-area-changes-9"></a>
-</h4>
-<p>Prediction ability for <strong>overall basal area changes</strong>
-(including growth, mortality and ingrowth):</p>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Submodel
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Obs
-</th>
-<th style="text-align:right;">
-Pred
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Biasrel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAErel
-</th>
-<th style="text-align:right;">
-RMSQ
-</th>
-<th style="text-align:right;">
-RMSQrel
-</th>
-<th style="text-align:right;">
-R2
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Basic
-</td>
-<td style="text-align:right;">
-261
-</td>
-<td style="text-align:right;">
-1.822374
-</td>
-<td style="text-align:right;">
-1.864412
-</td>
-<td style="text-align:right;">
-0.0420376
-</td>
-<td style="text-align:right;">
-2.306748
-</td>
-<td style="text-align:right;">
-1.37793
-</td>
-<td style="text-align:right;">
-75.61182
-</td>
-<td style="text-align:right;">
-2.596296
-</td>
-<td style="text-align:right;">
-142.4678
-</td>
-<td style="text-align:right;">
-0.2690516
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Advanced
-</td>
-<td style="text-align:right;">
-261
-</td>
-<td style="text-align:right;">
-1.826345
-</td>
-<td style="text-align:right;">
-1.973456
-</td>
-<td style="text-align:right;">
-0.1471108
-</td>
-<td style="text-align:right;">
-8.054931
-</td>
-<td style="text-align:right;">
-1.56753
-</td>
-<td style="text-align:right;">
-85.82881
-</td>
-<td style="text-align:right;">
-2.760079
-</td>
-<td style="text-align:right;">
-151.1258
-</td>
-<td style="text-align:right;">
-0.2258487
-</td>
-</tr>
-</tbody>
-</table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-142-1.png" width="768"></p>
-<p>Relationship between <strong>basal area changes</strong> and climatic
-variables (MAT and P/PET):
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-143-1.png" width="768"></p>
-<p>Spatial distribution of errors:
-<img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-144-1.png" width="864"></p>
-</div>
-</div>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-24-1.png" width="864"></p>
+<!-- ## Detailed evaluation by species -->
+<!-- In the following we provide detailed evaluation results for the most important species. -->
+<!-- ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE} -->
+<!-- # sp_n <- dfbai_all_bas[dfbai_all_bas$Name!="0-All",] %>% group_by(Name) %>% -->
+<!-- #     summarize(n = n()) -->
+<!-- # sp100 = sp_n$Name[sp_n$n>params$minPlotRecordsDetailed] -->
+<!-- sp100 = c("Abies alba", "Fagus sylvatica", "Pinus halepensis", "Pinus nigra", -->
+<!--           "Pinus sylvestris", "Pinus uncinata", "Quercus faginea", "Quercus ilex", -->
+<!--           "Quercus pubescens", "Quercus suber") -->
+<!-- target_spp = target_spp_bas[names(target_spp_bas) %in% sp100] -->
+<!-- for(i in 1:length(target_spp)) { -->
+<!--   sp = target_spp[i] -->
+<!--   name = names(target_spp)[i] -->
+<!--   res <- knitr::knit_child('_RLEvaluation_child.Rmd', quiet = TRUE) -->
+<!--   cat(res, sep = '\n') -->
+<!-- } -->
+<!-- ``` -->
 </div>
   </div>
 
@@ -7965,7 +1272,7 @@ variables (MAT and P/PET):
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
       </span>
     </div>
 
@@ -74,7 +74,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2022-11-25</h4>
+            <h4 data-toc-skip class="date">2023-01-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/Metamodelling.Rmd" class="external-link"><code>vignettes/parametrization/Metamodelling.Rmd</code></a></small>
       <div class="hidden name"><code>Metamodelling.Rmd</code></div>
@@ -113,6 +113,11 @@ the ratio of maximum transpiration over potential evapotranspiration for
 a given LAI. An empirical function with these parameters was derived by
 Granier (1999) for European temperate forests, without distinguishing
 between forests dominated by different species.</li>
+<li>
+<code>Psi_Extract</code> and <code>Exp_Extract</code>, which
+determine the actual transpiration as a fraction of maximum
+transpiration, as a function of soil water potential for a given
+layer.</li>
 <li>
 <code>WUE</code>, which represents the daily water use efficiency (g
 C of gross assimilation / l H2O transpired) under conditions of VPD =
@@ -513,7 +518,7 @@ of the target species, but not others.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="simulations">Simulations<a class="anchor" aria-label="anchor" href="#simulations"></a>
+<h2 id="simulations-for-the-meta-modelling-exercise">Simulations for the meta-modelling exercise<a class="anchor" aria-label="anchor" href="#simulations-for-the-meta-modelling-exercise"></a>
 </h2>
 <div class="section level3">
 <h3 id="forest-soil-and-weather-inputs">Forest, soil and weather inputs<a class="anchor" aria-label="anchor" href="#forest-soil-and-weather-inputs"></a>
@@ -609,19 +614,19 @@ Abies alba
 2030
 </td>
 <td style="text-align:right;">
-0.5384277
+0.5997430
 </td>
 <td style="text-align:right;">
-0.1430057
+0.1383160
 </td>
 <td style="text-align:right;">
-0.0031740
+0.0030699
 </td>
 <td style="text-align:right;">
-0.0721493
+0.0803656
 </td>
 <td style="text-align:right;">
--0.0032306
+-0.0035985
 </td>
 </tr>
 <tr>
@@ -632,19 +637,19 @@ Fagus sylvatica
 1829
 </td>
 <td style="text-align:right;">
-0.9589866
+0.9725892
 </td>
 <td style="text-align:right;">
-0.2028500
+0.2056667
 </td>
 <td style="text-align:right;">
-0.0047432
+0.0048090
 </td>
 <td style="text-align:right;">
-0.1285042
+0.1303270
 </td>
 <td style="text-align:right;">
--0.0057539
+-0.0058355
 </td>
 </tr>
 <tr>
@@ -655,19 +660,19 @@ Pinus halepensis
 1134
 </td>
 <td style="text-align:right;">
-1.0326890
+1.0334231
 </td>
 <td style="text-align:right;">
-0.1989981
+0.1978057
 </td>
 <td style="text-align:right;">
-0.0059094
+0.0058740
 </td>
 <td style="text-align:right;">
-0.1383803
+0.1384787
 </td>
 <td style="text-align:right;">
--0.0061961
+-0.0062005
 </td>
 </tr>
 <tr>
@@ -678,19 +683,19 @@ Pinus nigra
 1542
 </td>
 <td style="text-align:right;">
-0.9966714
+0.9991212
 </td>
 <td style="text-align:right;">
-0.2363259
+0.2359977
 </td>
 <td style="text-align:right;">
-0.0060182
+0.0060099
 </td>
 <td style="text-align:right;">
-0.1335540
+0.1338822
 </td>
 <td style="text-align:right;">
--0.0059800
+-0.0059947
 </td>
 </tr>
 <tr>
@@ -701,19 +706,19 @@ Pinus pinea
 1389
 </td>
 <td style="text-align:right;">
-1.3273777
+1.2293491
 </td>
 <td style="text-align:right;">
-0.2283904
+0.2822906
 </td>
 <td style="text-align:right;">
-0.0061281
+0.0075743
 </td>
 <td style="text-align:right;">
-0.1778686
+0.1647328
 </td>
 <td style="text-align:right;">
--0.0079643
+-0.0073761
 </td>
 </tr>
 <tr>
@@ -724,19 +729,19 @@ Pinus sylvestris
 1696
 </td>
 <td style="text-align:right;">
-0.9332556
+0.9610576
 </td>
 <td style="text-align:right;">
-0.1978218
+0.1967708
 </td>
 <td style="text-align:right;">
-0.0048035
+0.0047780
 </td>
 <td style="text-align:right;">
-0.1250562
+0.1287817
 </td>
 <td style="text-align:right;">
--0.0055995
+-0.0057663
 </td>
 </tr>
 <tr>
@@ -747,19 +752,19 @@ Pinus uncinata
 1776
 </td>
 <td style="text-align:right;">
-1.0309588
+1.0337017
 </td>
 <td style="text-align:right;">
-0.2076632
+0.2074468
 </td>
 <td style="text-align:right;">
-0.0049276
+0.0049225
 </td>
 <td style="text-align:right;">
-0.1381485
+0.1385160
 </td>
 <td style="text-align:right;">
--0.0061858
+-0.0062022
 </td>
 </tr>
 <tr>
@@ -770,19 +775,19 @@ Quercus faginea
 668
 </td>
 <td style="text-align:right;">
-0.9158626
+0.9333797
 </td>
 <td style="text-align:right;">
-0.2337808
+0.2317702
 </td>
 <td style="text-align:right;">
-0.0090453
+0.0089675
 </td>
 <td style="text-align:right;">
-0.1227256
+0.1250729
 </td>
 <td style="text-align:right;">
--0.0054952
+-0.0056003
 </td>
 </tr>
 <tr>
@@ -793,19 +798,19 @@ Quercus ilex
 1326
 </td>
 <td style="text-align:right;">
-0.6565568
+0.6825581
 </td>
 <td style="text-align:right;">
-0.1854160
+0.1838207
 </td>
 <td style="text-align:right;">
-0.0050918
+0.0050480
 </td>
 <td style="text-align:right;">
-0.0879786
+0.0914628
 </td>
 <td style="text-align:right;">
--0.0039393
+-0.0040953
 </td>
 </tr>
 <tr>
@@ -816,19 +821,19 @@ Quercus pubescens
 1074
 </td>
 <td style="text-align:right;">
-0.8504956
+0.8681932
 </td>
 <td style="text-align:right;">
-0.1932947
+0.1844617
 </td>
 <td style="text-align:right;">
-0.0058982
+0.0056286
 </td>
 <td style="text-align:right;">
-0.1139664
+0.1163379
 </td>
 <td style="text-align:right;">
--0.0051030
+-0.0052092
 </td>
 </tr>
 <tr>
@@ -839,23 +844,30 @@ Quercus suber
 1499
 </td>
 <td style="text-align:right;">
-0.7748351
+0.7808049
 </td>
 <td style="text-align:right;">
-0.1175897
+0.1162868
 </td>
 <td style="text-align:right;">
-0.0030372
+0.0030035
 </td>
 <td style="text-align:right;">
-0.1038279
+0.1046279
 </td>
 <td style="text-align:right;">
--0.0046490
+-0.0046848
 </td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section level2">
+<h2 id="relative-transpiration-function">Relative transpiration function<a class="anchor" aria-label="anchor" href="#relative-transpiration-function"></a>
+</h2>
+<pre><code><span><span class="co">## Warning: Removed 2262 rows containing missing values (`geom_point()`).</span></span>
+<span><span class="co">## Removed 2262 rows containing missing values (`geom_point()`).</span></span></code></pre>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="water-use-efficiency-co2-386">Water use efficiency ([CO2] = 386)<a class="anchor" aria-label="anchor" href="#water-use-efficiency-co2-386"></a>
@@ -880,38 +892,41 @@ corresponding to plots/species where at least 90% of PAR was available
 for at least one cohort of the species in the plot.</p>
 <p>Using this selection, we then draw the relationship between PAR and
 WUEg:
-<img src="Metamodelling_files/figure-html/unnamed-chunk-7-1.png" width="700"></p>
+<img src="Metamodelling_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
 <p>where we see that the relationship is species-specific. WUE is known
 to decrease for parts of the canopy receiving less light (e.g. Medrano
 et al. 2012). We can now plot relative WUE in relationship to FPAR:</p>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
 <p>Note that the relationship between relative WUE and PAR is less noisy
 than the relationship between absolute WUE and FPAR. For each species,
 we fit a non-linear model where relative WUE is a power function of
 FPAR:</p>
 <p>We now draw again the previous plot with the species-specific fitted
 relationships, i.e. relative WUEg as a function of FPAR:</p>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 <p>Note that there are substantial differences in the decay coefficients
 among species.</p>
 </div>
 <div class="section level3">
 <h3 id="relationship-between-wue-and-vpd">Relationship between WUE and VPD<a class="anchor" aria-label="anchor" href="#relationship-between-wue-and-vpd"></a>
 </h3>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="dependency-of-photosynthesis-on-co2">Dependency of photosynthesis on [CO2]<a class="anchor" aria-label="anchor" href="#dependency-of-photosynthesis-on-co2"></a>
 </h2>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<pre><code><span><span class="co">## Warning: Removed 39 rows containing missing values (`geom_point()`).</span></span></code></pre>
+<pre><code><span><span class="co">## `geom_smooth()` using formula = 'y ~ x'</span></span></code></pre>
+<pre><code><span><span class="co">## Warning: Removed 2262 rows containing missing values (`geom_point()`).</span></span></code></pre>
+<pre><code><span><span class="co">## Warning: Removed 2262 rows containing missing values (`geom_point()`).</span></span></code></pre>
+<pre><code><span><span class="co">## Warning: Removed 39 rows containing missing values (`geom_point()`).</span></span></code></pre>
+<pre><code><span><span class="co">## Warning: Removed 11913 rows containing missing values (`geom_point()`).</span></span></code></pre>
 </div>
 <div class="section level2">
-<h2 id="similarity-in-e-and-ag-estimates">Similarity in E and Ag estimates<a class="anchor" aria-label="anchor" href="#similarity-in-e-and-ag-estimates"></a>
+<h2 id="meta-modelling-parameters">Meta-modelling parameters<a class="anchor" aria-label="anchor" href="#meta-modelling-parameters"></a>
 </h2>
-<div class="section level3">
-<h3 id="meta-modelling-parameters">Meta-modelling parameters<a class="anchor" aria-label="anchor" href="#meta-modelling-parameters"></a>
-</h3>
 The table containing the five parameters estimated via meta-modelling is
 the following:
 <table class="table table" style="margin-left: auto; margin-right: auto;">
@@ -924,6 +939,12 @@ Tmax_LAI
 </th>
 <th style="text-align:right;">
 Tmax_LAIsq
+</th>
+<th style="text-align:right;">
+Psi_Extract
+</th>
+<th style="text-align:right;">
+Exp_Extract
 </th>
 <th style="text-align:right;">
 WUE
@@ -944,22 +965,28 @@ WUE_vpd
 Abies alba
 </td>
 <td style="text-align:right;">
-0.0721493
+0.0803656
 </td>
 <td style="text-align:right;">
--0.0032306
+-0.0035985
 </td>
 <td style="text-align:right;">
-7.801018
+-1.7218046
 </td>
 <td style="text-align:right;">
-0.2155961
+1.231947
 </td>
 <td style="text-align:right;">
-0.0044448
+7.216358
 </td>
 <td style="text-align:right;">
--0.4134718
+0.1940967
+</td>
+<td style="text-align:right;">
+0.0044073
+</td>
+<td style="text-align:right;">
+-0.4327408
 </td>
 </tr>
 <tr>
@@ -967,22 +994,28 @@ Abies alba
 Fagus sylvatica
 </td>
 <td style="text-align:right;">
-0.1285042
+0.1303270
 </td>
 <td style="text-align:right;">
--0.0057539
+-0.0058355
 </td>
 <td style="text-align:right;">
-7.946441
+-0.6284243
 </td>
 <td style="text-align:right;">
-0.3202605
+1.382918
 </td>
 <td style="text-align:right;">
-0.0024094
+7.924009
 </td>
 <td style="text-align:right;">
--0.4444841
+0.3216078
+</td>
+<td style="text-align:right;">
+0.0023965
+</td>
+<td style="text-align:right;">
+-0.4432001
 </td>
 </tr>
 <tr>
@@ -990,22 +1023,28 @@ Fagus sylvatica
 Pinus halepensis
 </td>
 <td style="text-align:right;">
-0.1383803
+0.1384787
 </td>
 <td style="text-align:right;">
--0.0061961
+-0.0062005
 </td>
 <td style="text-align:right;">
-8.528514
+-0.8507809
 </td>
 <td style="text-align:right;">
-0.6826373
+1.470610
 </td>
 <td style="text-align:right;">
-0.0025175
+8.523012
 </td>
 <td style="text-align:right;">
--0.3032638
+0.6843513
+</td>
+<td style="text-align:right;">
+0.0025178
+</td>
+<td style="text-align:right;">
+-0.3035192
 </td>
 </tr>
 <tr>
@@ -1013,22 +1052,28 @@ Pinus halepensis
 Pinus nigra
 </td>
 <td style="text-align:right;">
-0.1335540
+0.1338822
 </td>
 <td style="text-align:right;">
--0.0059800
+-0.0059947
 </td>
 <td style="text-align:right;">
-7.481872
+-1.0951387
 </td>
 <td style="text-align:right;">
-0.2775382
+1.237885
 </td>
 <td style="text-align:right;">
-0.0028325
+7.455548
 </td>
 <td style="text-align:right;">
--0.5047739
+0.2734095
+</td>
+<td style="text-align:right;">
+0.0028326
+</td>
+<td style="text-align:right;">
+-0.5042817
 </td>
 </tr>
 <tr>
@@ -1036,22 +1081,28 @@ Pinus nigra
 Pinus pinea
 </td>
 <td style="text-align:right;">
-0.1778686
+0.1647328
 </td>
 <td style="text-align:right;">
--0.0079643
+-0.0073761
 </td>
 <td style="text-align:right;">
-6.709020
+-0.9088451
 </td>
 <td style="text-align:right;">
-0.6322658
+1.616964
 </td>
 <td style="text-align:right;">
-0.0028287
+7.244992
 </td>
 <td style="text-align:right;">
--0.3586753
+0.5811822
+</td>
+<td style="text-align:right;">
+0.0028907
+</td>
+<td style="text-align:right;">
+-0.3438728
 </td>
 </tr>
 <tr>
@@ -1059,22 +1110,28 @@ Pinus pinea
 Pinus sylvestris
 </td>
 <td style="text-align:right;">
-0.1250562
+0.1287817
 </td>
 <td style="text-align:right;">
--0.0055995
+-0.0057663
 </td>
 <td style="text-align:right;">
-7.768175
+-1.0409725
 </td>
 <td style="text-align:right;">
-0.3210154
+1.256204
 </td>
 <td style="text-align:right;">
-0.0029659
+7.602625
 </td>
 <td style="text-align:right;">
--0.4583254
+0.3257445
+</td>
+<td style="text-align:right;">
+0.0029864
+</td>
+<td style="text-align:right;">
+-0.4604605
 </td>
 </tr>
 <tr>
@@ -1082,22 +1139,28 @@ Pinus sylvestris
 Pinus uncinata
 </td>
 <td style="text-align:right;">
-0.1381485
+0.1385160
 </td>
 <td style="text-align:right;">
--0.0061858
+-0.0062022
 </td>
 <td style="text-align:right;">
-5.557423
+-1.0041141
 </td>
 <td style="text-align:right;">
-0.2527727
+1.163380
 </td>
 <td style="text-align:right;">
-0.0037616
+5.546719
 </td>
 <td style="text-align:right;">
--0.3252866
+0.2538479
+</td>
+<td style="text-align:right;">
+0.0037626
+</td>
+<td style="text-align:right;">
+-0.3255832
 </td>
 </tr>
 <tr>
@@ -1105,22 +1168,28 @@ Pinus uncinata
 Quercus faginea
 </td>
 <td style="text-align:right;">
-0.1227256
+0.1250729
 </td>
 <td style="text-align:right;">
--0.0054952
+-0.0056003
 </td>
 <td style="text-align:right;">
-7.914091
+-0.6533079
 </td>
 <td style="text-align:right;">
-0.3299426
+1.336029
 </td>
 <td style="text-align:right;">
-0.0021415
+7.866427
 </td>
 <td style="text-align:right;">
--0.5602333
+0.3322647
+</td>
+<td style="text-align:right;">
+0.0021414
+</td>
+<td style="text-align:right;">
+-0.5563525
 </td>
 </tr>
 <tr>
@@ -1128,22 +1197,28 @@ Quercus faginea
 Quercus ilex
 </td>
 <td style="text-align:right;">
-0.0879786
+0.0914628
 </td>
 <td style="text-align:right;">
--0.0039393
+-0.0040953
 </td>
 <td style="text-align:right;">
-8.597547
+-1.6598896
 </td>
 <td style="text-align:right;">
-0.2572564
+1.065300
 </td>
 <td style="text-align:right;">
-0.0027187
+8.447722
 </td>
 <td style="text-align:right;">
--0.5780737
+0.2523021
+</td>
+<td style="text-align:right;">
+0.0027212
+</td>
+<td style="text-align:right;">
+-0.5791330
 </td>
 </tr>
 <tr>
@@ -1151,22 +1226,28 @@ Quercus ilex
 Quercus pubescens
 </td>
 <td style="text-align:right;">
-0.1139664
+0.1163379
 </td>
 <td style="text-align:right;">
--0.0051030
+-0.0052092
 </td>
 <td style="text-align:right;">
-8.398891
+-0.6774252
 </td>
 <td style="text-align:right;">
-0.3333447
+1.419661
 </td>
 <td style="text-align:right;">
-0.0018260
+8.313443
 </td>
 <td style="text-align:right;">
--0.5200908
+0.3491013
+</td>
+<td style="text-align:right;">
+0.0018287
+</td>
+<td style="text-align:right;">
+-0.5194150
 </td>
 </tr>
 <tr>
@@ -1174,30 +1255,36 @@ Quercus pubescens
 Quercus suber
 </td>
 <td style="text-align:right;">
-0.1038279
+0.1046279
 </td>
 <td style="text-align:right;">
--0.0046490
+-0.0046848
 </td>
 <td style="text-align:right;">
-9.978420
+-1.6637232
 </td>
 <td style="text-align:right;">
-0.3841742
+1.122908
 </td>
 <td style="text-align:right;">
-0.0018839
+9.935690
 </td>
 <td style="text-align:right;">
--0.6331866
+0.3996404
+</td>
+<td style="text-align:right;">
+0.0018855
+</td>
+<td style="text-align:right;">
+-0.6335031
 </td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="section level3">
-<h3 id="evaluation-of-the-effect-of-the-new-parameters">Evaluation of the effect of the new parameters<a class="anchor" aria-label="anchor" href="#evaluation-of-the-effect-of-the-new-parameters"></a>
-</h3>
+<div class="section level2">
+<h2 id="evaluation-of-the-effect-of-the-new-parameters">Evaluation of the effect of the new parameters<a class="anchor" aria-label="anchor" href="#evaluation-of-the-effect-of-the-new-parameters"></a>
+</h2>
 <p>Here we evaluated whether the estimated parameters indeed increased
 the similarity of transpiration (E) and gross photosynthesis (Ag)
 estimates between the two models. To this aim we ran again the basic
@@ -1205,13 +1292,14 @@ water balance model on all the forest plots but using the estimated
 parameters instead of the default values.</p>
 <p>The following plots show the effect of the new parameters on annual E
 and annual Ag for plant cohorts of the plots included in the study:</p>
-<p><img src="Metamodelling_files/figure-html/unnamed-chunk-16-1.png" width="960"></p>
-<pre><code><span><span class="co">## `geom_smooth()` using formula = 'y ~ x'</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: Removed 56 rows containing missing values (`geom_point()`).</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: Removed 12241 rows containing missing values (`geom_point()`).</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: Removed 65 rows containing missing values (`geom_point()`).</span></span></code></pre>
-<pre><code><span><span class="co">## Warning: Removed 582 rows containing missing values (`geom_point()`).</span></span></code></pre>
-</div>
+<pre><code><span><span class="co">## `geom_smooth()` using formula = 'y ~ x'</span></span>
+<span><span class="co">## `geom_smooth()` using formula = 'y ~ x'</span></span>
+<span><span class="co">## `geom_smooth()` using formula = 'y ~ x'</span></span>
+<span><span class="co">## `geom_smooth()` using formula = 'y ~ x'</span></span>
+<span><span class="co">## `geom_smooth()` using formula = 'y ~ x'</span></span>
+<span><span class="co">## `geom_smooth()` using formula = 'y ~ x'</span></span>
+<span><span class="co">## `geom_smooth()` using formula = 'y ~ x'</span></span></code></pre>
+<p><img src="Metamodelling_files/figure-html/unnamed-chunk-20-1.png" width="960"></p>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -1240,7 +1328,7 @@ Agricultural Water Management 114:4–10.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

@@ -20,7 +20,7 @@ Function fuel_windAdjustmentFactor determines the adjustment factor of wind for 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
       </span>
     </div>
 
@@ -228,10 +228,10 @@ Each of them contains live moisture content values for each day (in rows) and pl
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.00829473</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopyBaseHeight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 270</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 280</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopyTopHeight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 740</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 700</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopyAbsoluteBaseHeight</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 260</span>
@@ -240,33 +240,33 @@ Each of them contains live moisture content values for each day (in rows) and pl
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 800</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopyLAI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.756232</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.317868</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="co">#Calculate fuel properties according to FCCS</span></span></span>
 <span class="r-in"><span><span class="va">fccs</span> <span class="op">=</span> <span class="fu">fuel_FCCS</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fccs</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 w  cover hbc htc habc hatc       delta        rhob     rhop</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 0.61531386 100.00 2.7 7.4  2.6  8.0 4.770490365  0.12898336 595.8159</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> shrub  0.02372309   3.75 0.4 0.5  0.0  0.8 0.642625347  0.03691589 412.0091</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> herb   0.02800000  10.00 0.0  NA  0.0   NA 0.200000000  0.14000000 400.0000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> woody  0.20185195     NA 0.0  NA  0.0   NA 0.007637228 26.43000000 438.9106</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> litter 0.27309512     NA 0.0  NA  0.0   NA 0.014027046 19.46918201 370.9679</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  PV         beta   betarel etabetarel    sigma        pDead</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 1.068691e-03 2.240211e-04 0.1483959  0.3477514  5252.03 0.0004042436</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> shrub  5.757903e-05 8.959969e-05 0.2912218  0.5916193  4141.00 0.1448400000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> herb   7.000000e-05 3.500000e-04 0.7375491  0.9588969 11483.00 0.0000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> woody  4.598931e-04 6.021728e-02 0.7375491  0.9588969  1601.05 1.0000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> litter 7.361692e-04 5.248213e-02 9.2387331  0.1428898  7431.44 1.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 w  cover hbc htc habc hatc      delta        rhob     rhop</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 0.48392406 100.00 2.8 7.0  2.6  8.0 4.77681856  0.10130677 594.6765</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shrub  0.02372309   3.75 0.4 0.5  0.0  0.8 0.64262535  0.03691589 412.0091</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> herb   0.02800000  10.00 0.0  NA  0.0   NA 0.20000000  0.14000000 400.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> woody  0.16283867     NA 0.0  NA  0.0   NA 0.00616113 26.43000000 438.9106</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> litter 0.21722657     NA 0.0  NA  0.0   NA 0.01116869 19.44959480 370.9679</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                  PV         beta   betarel etabetarel     sigma        pDead</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 8.419801e-04 1.762638e-04 0.1169495  0.2828149  5261.861 0.0004054233</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shrub  5.757903e-05 8.959969e-05 0.2145909  0.4706631  4141.000 0.1448400000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> herb   7.000000e-05 3.500000e-04 0.5493361  0.8621027 11483.000 0.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> woody  3.710065e-04 6.021728e-02 0.5493361  0.8621027  1601.050 1.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> litter 5.855671e-04 5.242933e-02 9.2421343  0.1427853  7433.886 1.0000000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              FAI        h           RV   MinFMC    MaxFMC ActFMC</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 5.7976757 21012.89 1.032725e-03 74.74129 112.91297     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 4.5751679 21026.90 8.137602e-04 74.88277 113.07457     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> shrub  0.2384348 20117.67 5.757903e-05 63.64891  96.53441     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> herb   0.8038100 18608.00 7.000000e-05       NA        NA     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> woody  0.7363118 18608.00 4.598931e-04       NA        NA     NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> litter 5.4707970 18608.00 7.361692e-04       NA        NA     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> woody  0.5939999 18608.00 3.710065e-04       NA        NA     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> litter 4.3530389 18608.00 5.855671e-04       NA        NA     NA</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">fuel_windAdjustmentFactor</span><span class="op">(</span><span class="va">fccs</span><span class="op">$</span><span class="va">htc</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">fccs</span><span class="op">$</span><span class="va">hbc</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">fccs</span><span class="op">$</span><span class="va">htc</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">fccs</span><span class="op">$</span><span class="va">cover</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1989258</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.2067834</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -282,7 +282,7 @@ Each of them contains live moisture content values for each day (in rows) and pl
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

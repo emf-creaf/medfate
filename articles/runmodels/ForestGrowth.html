@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-11-25</h4>
+            <h4 data-toc-skip class="date">2023-01-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -125,13 +125,13 @@ with the package:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
 <span><span class="va">exampleforestMED</span></span></code></pre></div>
 <pre><code><span><span class="co">## $treeData</span></span>
-<span><span class="co">##   Species   N   DBH Height Z50  Z95</span></span>
-<span><span class="co">## 1     148 168 37.55    800 100  600</span></span>
-<span><span class="co">## 2     168 384 14.60    660 300 1000</span></span>
+<span><span class="co">##            Species   N   DBH Height Z50  Z95</span></span>
+<span><span class="co">## 1 Pinus halepensis 168 37.55    800 100  600</span></span>
+<span><span class="co">## 2     Quercus ilex 384 14.60    660 300 1000</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $shrubData</span></span>
-<span><span class="co">##   Species Cover Height Z50  Z95</span></span>
-<span><span class="co">## 1     165  3.75     80 200 1000</span></span>
+<span><span class="co">##             Species Cover Height Z50  Z95</span></span>
+<span><span class="co">## 1 Quercus coccifera  3.75     80 200 1000</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $herbCover</span></span>
 <span><span class="co">## [1] 10</span></span>
@@ -224,12 +224,12 @@ estimated initial amount of <em>sapwood area</em>:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">above</span></span></code></pre></div>
 <pre><code><span><span class="co">##         SP        N   DBH Cover   H        CR         SA   LAI_live</span></span>
-<span><span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 437.032040 0.96734365</span></span>
-<span><span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642  57.407064 0.86167321</span></span>
+<span><span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 346.522305 0.76700589</span></span>
+<span><span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642  44.592545 0.66932880</span></span>
 <span><span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817   1.251072 0.03928201</span></span>
 <span><span class="co">##        LAI_expanded LAI_dead</span></span>
-<span><span class="co">## T1_148   0.96734365        0</span></span>
-<span><span class="co">## T2_168   0.86167321        0</span></span>
+<span><span class="co">## T1_148   0.76700589        0</span></span>
+<span><span class="co">## T2_168   0.66932880        0</span></span>
 <span><span class="co">## S1_165   0.03928201        0</span></span></code></pre>
 <p>Elements starting with <code>params*</code> contain cohort-specific
 model parameters. Some of them were already presented in previous
@@ -241,13 +241,13 @@ parameters for the forest growth model are
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">paramsGrowth</span></span></code></pre></div>
 <pre><code><span><span class="co">##           RERleaf RERsapwood  RERfineroot CCleaf CCsapwood CCfineroot</span></span>
-<span><span class="co">## T1_148 0.01210607   4.93e-05 0.0009610199 1.5905      1.47        1.3</span></span>
-<span><span class="co">## T2_168 0.01757808   4.93e-05 0.0072846640 1.4300      1.47        1.3</span></span>
-<span><span class="co">## S1_165 0.02647746   4.93e-05 0.0072846640 1.5320      1.47        1.3</span></span>
-<span><span class="co">##        RGRleafmax RGRsapwoodmax RGRcambiummax RGRfinerootmax    SRsapwood</span></span>
-<span><span class="co">## T1_148       0.03            NA   0.003688597            0.1 2.008417e-04</span></span>
-<span><span class="co">## T2_168       0.03            NA   0.001680573            0.1 9.150612e-05</span></span>
-<span><span class="co">## S1_165       0.03         0.002            NA            0.1 1.350000e-04</span></span>
+<span><span class="co">## T1_148 0.01210607   5.15e-05 0.0009610199 1.5905      1.47        1.3</span></span>
+<span><span class="co">## T2_168 0.01757808   5.15e-05 0.0072846640 1.4300      1.47        1.3</span></span>
+<span><span class="co">## S1_165 0.02647746   5.15e-05 0.0072846640 1.5320      1.47        1.3</span></span>
+<span><span class="co">##        RGRleafmax RGRsapwoodmax RGRcambiummax RGRfinerootmax SRsapwood</span></span>
+<span><span class="co">## T1_148       0.03            NA   0.003410814            0.1  0.000135</span></span>
+<span><span class="co">## T2_168       0.03            NA   0.001554011            0.1  0.000135</span></span>
+<span><span class="co">## S1_165       0.03         0.002            NA            0.1  0.000135</span></span>
 <span><span class="co">##         SRfineroot      RSSG fHDmin fHDmax     WoodC MortalityBaselineRate</span></span>
 <span><span class="co">## T1_148 0.001897231 0.3725000     80    160 0.4979943                0.0050</span></span>
 <span><span class="co">## T2_168 0.001897231 0.9500000     40    100 0.4740096                0.0010</span></span>
@@ -282,8 +282,8 @@ targets:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">internalAllocation</span></span></code></pre></div>
 <pre><code><span><span class="co">##        allocationTarget leafAreaTarget fineRootBiomassTarget</span></span>
-<span><span class="co">## T1_148         1317.523      57.579979            1574.98321</span></span>
-<span><span class="co">## T2_168         3908.823      22.439407             667.64217</span></span>
+<span><span class="co">## T1_148         1317.523      45.655113            1248.80275</span></span>
+<span><span class="co">## T2_168         3908.823      17.430438             518.60975</span></span>
 <span><span class="co">## S1_165         4189.325       0.524115              13.57757</span></span></code></pre>
 <p>Additional <code>internal*</code> elements are
 <code>internalMortality</code>, used to keep track of dead individuals;
@@ -299,43 +299,44 @@ model sink limitations on wood formation.</p>
 <code><a href="../../reference/spwb.html">spwb()</a></code>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">G1</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Initial plant cohort biomass (g/m2): 7109.27</span></span>
+<pre><code><span><span class="co">## Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span></span></code></pre>
+<pre><code><span><span class="co">## Initial plant cohort biomass (g/m2): 5608.36</span></span>
 <span><span class="co">## Initial soil water content (mm): 291.257</span></span>
 <span><span class="co">## Initial snowpack content (mm): 0</span></span>
 <span><span class="co">## Performing daily simulations</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Year 2001:....................................</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant biomass (g/m2): 7424.35</span></span>
-<span><span class="co">## Change in plant biomass (g/m2): 315.086</span></span>
-<span><span class="co">## Plant biomass balance result (g/m2): 315.086</span></span>
+<span><span class="co">## Final plant biomass (g/m2): 5902.31</span></span>
+<span><span class="co">## Change in plant biomass (g/m2): 293.956</span></span>
+<span><span class="co">## Plant biomass balance result (g/m2): 293.956</span></span>
 <span><span class="co">## Plant biomass balance components:</span></span>
-<span><span class="co">##   Structural balance (g/m2) 218 Labile balance (g/m2) 125</span></span>
-<span><span class="co">##   Plant individual balance (g/m2) 343 Mortality loss (g/m2) 28</span></span>
-<span><span class="co">## Final soil water content (mm): 273.035</span></span>
+<span><span class="co">##   Structural balance (g/m2) 214 Labile balance (g/m2) 102</span></span>
+<span><span class="co">##   Plant individual balance (g/m2) 317 Mortality loss (g/m2) 23</span></span>
+<span><span class="co">## Final soil water content (mm): 276.268</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in soil water content (mm): -18.2217</span></span>
-<span><span class="co">## Soil water balance result (mm): -18.2217</span></span>
+<span><span class="co">## Change in soil water content (mm): -14.9889</span></span>
+<span><span class="co">## Soil water balance result (mm): -14.9889</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
 <span><span class="co">## Snowpack water balance result (mm): 7.10543e-15</span></span>
 <span><span class="co">## Water balance components:</span></span>
 <span><span class="co">##   Precipitation (mm) 513</span></span>
 <span><span class="co">##   Rain (mm) 462 Snow (mm) 51</span></span>
-<span><span class="co">##   Interception (mm) 95 Net rainfall (mm) 367</span></span>
-<span><span class="co">##   Infiltration (mm) 409 Runoff (mm) 9 Deep drainage (mm) 130</span></span>
-<span><span class="co">##   Soil evaporation (mm) 26 Transpiration (mm) 271</span></span>
-<span><span class="co">##   Plant extraction from soil (mm) 271  Plant water balance (mm) -0 Hydraulic redistribution (mm) 4</span></span></code></pre>
+<span><span class="co">##   Interception (mm) 78 Net rainfall (mm) 385</span></span>
+<span><span class="co">##   Infiltration (mm) 426 Runoff (mm) 10 Deep drainage (mm) 191</span></span>
+<span><span class="co">##   Soil evaporation (mm) 32 Transpiration (mm) 218</span></span>
+<span><span class="co">##   Plant extraction from soil (mm) 218  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span></span></code></pre>
 <p>At the end of daily simulations, the <code><a href="../../reference/growth.html">growth()</a></code> function
 displays information regarding the carbon and water balance, which is
 mostly useful to check that balances are closed.</p>
 <p>Function <code><a href="../../reference/growth.html">growth()</a></code> returns an object of class with the
 same name, actually a list:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">G1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "growth" "list"</span></span></code></pre>
 <p>If we inspect its elements, we realize that some of them are the same
 as returned by <code><a href="../../reference/spwb.html">spwb()</a></code>:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">G1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "latitude"            "topography"          "weather"            </span></span>
 <span><span class="co">##  [4] "growthInput"         "growthOutput"        "WaterBalance"       </span></span>
@@ -368,23 +369,23 @@ subsections:</p>
 <p>To inspect components of the plant carbon balance we can first
 display daily gross photosynthesis expressed as the carbon fixation
 relative to dry biomass:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"GrossPhotosynthesis"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-18-1.png" width="672">
 Then we can draw the maintenance respiration costs (which include the
 sum of leaf, sapwood and fine root respiration) in the same units:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"MaintenanceRespiration"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-19-1.png" width="672">
 Finally we can display the daily negative or positive balance of the
 plant storage, which determines changes in plant carbon pools:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"LabileCarbonBalance"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-20-1.png" width="672"></p>
 <p>Carbon assimilation and respiration rates define the dynamics of
 stored carbon. The most important storage compartment is sapwood starch,
 whose dynamics can be shown using:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"StarchSapwood"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-21-1.png" width="672"></p>
 </div>
@@ -393,20 +394,20 @@ whose dynamics can be shown using:</p>
 </h3>
 <p>Leaf and sapwood area dynamics arising from the interplay between
 growth and senescence of tissues can be inspected using:</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"LeafArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-22-1.png" width="672"></p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"SapwoodArea"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-22-2.png" width="672">
 Even if one year is a short period for tree growth, we can display the
 resulting dynamics in diameter at breast height (DBH) or plant
 height:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"DBH"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Warning: Removed 365 rows containing missing values (`geom_line()`).</span></span></code></pre>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-23-1.png" width="672"></p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="st">"Height"</span>, bySpecies <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-23-2.png" width="672"></p>
 </div>
@@ -415,7 +416,7 @@ height:</p>
 </h3>
 <p>Finally, recall that one can interactively create plots using
 function <code>shinyplot</code>, e.g.:</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/shinyplot.html">shinyplot</a></span><span class="op">(</span><span class="va">G1</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -428,7 +429,7 @@ increment at a given temporal resolution.</p>
 <p>Here, we illustrate the evaluation functions included in the package
 using a fake data set, consisting on the predicted values and some added
 error.</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span></code></pre></div>
 <p>Normally growth evaluations will be at annual scale, but here we only
 have one year of simulated growth. Assuming we want to evaluate the
@@ -436,25 +437,25 @@ predictive capacity of the model in terms of monthly basal area
 increment for the pine cohort, we can plot the relationship between
 observed and predicted values using function
 <code><a href="../../reference/evaluation.html">evaluation_plot()</a></code>:</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                temporalResolution <span class="op">=</span> <span class="st">"month"</span>, plotType <span class="op">=</span> <span class="st">"scatter"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## `geom_smooth()` using formula = 'y ~ x'</span></span></code></pre>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-26-1.png" width="384"></p>
 <p>And the following would help us quantifying the strength of the
 relationship:</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                 temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span></span>
-<span><span class="co">##  12.0000000  -0.1977195 -13.9407205   0.1980247  13.9622393   0.9946258 </span></span>
+<span><span class="co">##  12.0000000  -0.1984183 -14.7572448   0.2129369  15.8370595   0.9889362 </span></span>
 <span><span class="co">##         NSE     NSE.abs </span></span>
-<span><span class="co">##   0.9526141   0.8106137</span></span></code></pre>
+<span><span class="co">##   0.9297695   0.7951616</span></span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series
 together:</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_plot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"DI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                temporalResolution <span class="op">=</span> <span class="st">"day"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ForestGrowth_files/figure-html/unnamed-chunk-28-1.png" width="672"></p>
@@ -462,7 +463,7 @@ together:</p>
 resolution. For convenience, function <code><a href="../../reference/shinyplot.html">shinyplot()</a></code> also
 accepts an observed data frame as second argument, which allows
 performing model evaluation interactively:</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/shinyplot.html">shinyplot</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></code></pre></div>
 </div>
   </div>
@@ -484,7 +485,7 @@ performing model evaluation interactively:</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

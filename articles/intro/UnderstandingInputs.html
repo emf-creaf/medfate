@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2022-11-25</h4>
+            <h4 data-toc-skip class="date">2023-01-31</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>UnderstandingInputs.Rmd</code></div>
@@ -135,68 +135,62 @@ You can find parameter definitions in table
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td align="left">IFNcodes</td>
-<td align="left">Codes in the forest inventory, separated by ‘/’</td>
-<td align="left">String</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
 <td align="left">SpIndex</td>
-<td align="left">Species index 0,1,2,</td>
+<td align="left">Internal species codification (0,1,2,)</td>
 <td align="left">Integer</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Genus</td>
 <td align="left">Taxonomic genus</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Order</td>
 <td align="left">Taxonomical order</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Family</td>
 <td align="left">Taxonomical family</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Group</td>
 <td align="left">Either “Gymnosperm” or “Angiosperm”</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">GrowthForm</td>
 <td align="left">Growth form: Either “Shrub”, “Tree” or
 “Tree/Shrub”</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LifeForm</td>
 <td align="left">Raunkiaer life form</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">LeafShape</td>
 <td align="left">Broad/Needle/Linear/Scale/Spines/Succulent</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LeafSize</td>
 <td align="left">Either “Small” (&lt; 225 mm), “Medium” (&gt; 225 mm
 &amp; &lt; 2025 mm) or “Large” (&gt; 2025 mm)</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">PhenologyType</td>
 <td align="left">Leaf phenology type, either “oneflush-evergreen” (new
 leaves develop in spring-summer), “progressive-evergreen” (new leaves
@@ -207,111 +201,105 @@ produced).</td>
 <td align="left">NA</td>
 <td align="left">Categorical</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Hmed</td>
 <td align="left">Median plant height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Hmax</td>
 <td align="left">Maximum plant height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Z50</td>
 <td align="left">Depth corresponding to 50% of fine roots</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Z95</td>
 <td align="left">Depth corresponding to 95% of fine roots</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">fHDmin</td>
 <td align="left">Minimum value of height-diameter ratio</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">fHDmax</td>
 <td align="left">Maximum value of height-diameter ratio</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">a_ash</td>
 <td align="left">Allometric coefficient for shrub area as function of
 height</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">b_ash</td>
 <td align="left">Allometric coefficient for shrub area as function of
 height</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">a_bsh</td>
 <td align="left">Allometric coefficient for fine fuel shrub biomass (dry
 weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">b_bsh</td>
 <td align="left">Allometric coefficient for fine fuel shrub biomass (dry
 weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">a_btsh</td>
 <td align="left">Allometric coefficient for total fuel shrub biomass
 (dry weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">b_btsh</td>
 <td align="left">Allometric coefficient for total fuel shrub biomass
 (dry weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">cr</td>
 <td align="left">Proportion of total height corresponding to the crown
 (i.e. Crown length divided by total height)</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">a_fbt</td>
 <td align="left">Regression coefficient for tree foliar biomass</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">b_fbt</td>
 <td align="left">Regression coefficient for tree foliar biomass</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
-<td align="left">c_fbt</td>
-<td align="left">Regression coefficient for tree foliar biomass</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
 <tr class="odd">
-<td align="left">d_fbt</td>
+<td align="left">c_fbt</td>
 <td align="left">Regression coefficient for tree foliar biomass</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
@@ -618,17 +606,17 @@ ratio of maximum transpiration over potential evapotranspiration.</td>
 </tr>
 <tr class="even">
 <td align="left">Psi_Extract</td>
-<td align="left">Water potential corresponding to stomatal closure
-(aprox.)</td>
+<td align="left">Water potential corresponding to 50% reduction of
+transpiration</td>
 <td align="left">Numeric</td>
 <td align="left">MPa</td>
 </tr>
 <tr class="odd">
-<td align="left">Psi_Critic</td>
-<td align="left">Water potential corresponding to 50% of stem cavitation
-(~ 50% PLC)</td>
+<td align="left">Exp_Extract</td>
+<td align="left">Parameter of the Weibull function regulating
+transpiration reduction</td>
 <td align="left">Numeric</td>
-<td align="left">MPa</td>
+<td align="left">NA</td>
 </tr>
 <tr class="even">
 <td align="left">WUE</td>
@@ -960,13 +948,13 @@ trees) and <code>shrubData</code> (for shrubs):</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
 <span><span class="va">exampleforestMED</span></span></code></pre></div>
 <pre><code><span><span class="co">## $treeData</span></span>
-<span><span class="co">##   Species   N   DBH Height Z50  Z95</span></span>
-<span><span class="co">## 1     148 168 37.55    800 100  600</span></span>
-<span><span class="co">## 2     168 384 14.60    660 300 1000</span></span>
+<span><span class="co">##            Species   N   DBH Height Z50  Z95</span></span>
+<span><span class="co">## 1 Pinus halepensis 168 37.55    800 100  600</span></span>
+<span><span class="co">## 2     Quercus ilex 384 14.60    660 300 1000</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $shrubData</span></span>
-<span><span class="co">##   Species Cover Height Z50  Z95</span></span>
-<span><span class="co">## 1     165  3.75     80 200 1000</span></span>
+<span><span class="co">##             Species Cover Height Z50  Z95</span></span>
+<span><span class="co">## 1 Quercus coccifera  3.75     80 200 1000</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $herbCover</span></span>
 <span><span class="co">## [1] 10</span></span>
@@ -1004,8 +992,8 @@ function <code><a href="../../reference/modelInput.html">forest2aboveground()</a
 <code class="sourceCode R"><span><span class="va">above</span> <span class="op">=</span> <span class="fu"><a href="../../reference/modelInput.html">forest2aboveground</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
 <span><span class="va">above</span></span></code></pre></div>
 <pre><code><span><span class="co">##         SP        N   DBH Cover   H        CR   LAI_live LAI_expanded LAI_dead</span></span>
-<span><span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 0.96734365   0.96734365        0</span></span>
-<span><span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642 0.86167321   0.86167321        0</span></span>
+<span><span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 0.76700589   0.76700589        0</span></span>
+<span><span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642 0.66932880   0.66932880        0</span></span>
 <span><span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817 0.03928201   0.03928201        0</span></span></code></pre>
 <p>Note that the call to <code><a href="../../reference/modelInput.html">forest2aboveground()</a></code> included
 species parameters, because species-specific values are needed to
@@ -1323,7 +1311,7 @@ function <code><a href="../../reference/growth.html">growth()</a></code>).</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

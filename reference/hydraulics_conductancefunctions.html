@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
       </span>
     </div>
 
@@ -56,11 +56,11 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hydraulics_psi2K</span><span class="op">(</span><span class="va">psi</span>, <span class="va">Psi_extract</span>, ws <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">hydraulics_psi2K</span><span class="op">(</span><span class="va">psi</span>, <span class="va">psi_extract</span>, exp_extract <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">hydraulics_K2Psi</span><span class="op">(</span><span class="va">K</span>, <span class="va">Psi_extract</span>, ws <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="fu">hydraulics_K2Psi</span><span class="op">(</span><span class="va">K</span>, <span class="va">psi_extract</span>, exp_extract <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">hydraulics_averagePsi</span><span class="op">(</span><span class="va">psi</span>, <span class="va">v</span>, <span class="va">c</span>, <span class="va">d</span><span class="op">)</span></span>
+<span><span class="fu">hydraulics_averagePsi</span><span class="op">(</span><span class="va">psi</span>, <span class="va">v</span>, <span class="va">exp_extract</span>, <span class="va">psi_extract</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">hydraulics_xylemConductance</span><span class="op">(</span><span class="va">psi</span>, <span class="va">kxylemmax</span>, <span class="va">c</span>, <span class="va">d</span><span class="op">)</span></span>
 <span></span>
@@ -94,12 +94,12 @@
 <dd><p>A scalar (or a vector, depending on the function) with water potential (in MPa).</p></dd>
 
 
-<dt>Psi_extract</dt>
-<dd><p>Soil water potential (in MPa) corresponding to 50% whole-plant relative conductance.</p></dd>
+<dt>psi_extract</dt>
+<dd><p>Soil water potential (in MPa) corresponding to 50% whole-plant relative transpiration.</p></dd>
 
 
-<dt>ws</dt>
-<dd><p>Exponent of the whole-plant relative conductance Weibull function.</p></dd>
+<dt>exp_extract</dt>
+<dd><p>Exponent of the whole-plant relative transpiration Weibull function.</p></dd>
 
 
 <dt>K</dt>
@@ -110,12 +110,12 @@
 <dd><p>Proportion of fine roots within each soil layer.</p></dd>
 
 
-<dt>c, d</dt>
-<dd><p>Parameters of the Weibull function (generic xylem vulnerability curve).</p></dd>
-
-
 <dt>kxylemmax</dt>
 <dd><p>Maximum xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).</p></dd>
+
+
+<dt>c, d</dt>
+<dd><p>Parameters of the Weibull function (generic xylem vulnerability curve).</p></dd>
 
 
 <dt>kxylem</dt>
@@ -258,7 +258,7 @@ Function <code>hydraulics_vulnerabilityCurvePlot</code> draws a plot of the vuln
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

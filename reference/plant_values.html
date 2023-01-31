@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
       </span>
     </div>
 
@@ -56,21 +56,21 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plant_ID</span><span class="op">(</span><span class="va">x</span>, treeOffset <span class="op">=</span> <span class="fl">0L</span>, shrubOffset <span class="op">=</span> <span class="fl">0L</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plant_ID</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, treeOffset <span class="op">=</span> <span class="fl">0L</span>, shrubOffset <span class="op">=</span> <span class="fl">0L</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_basalArea</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu">plant_basalArea</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_largerTreeBasalArea</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu">plant_largerTreeBasalArea</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, self_proportion <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">plant_cover</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_species</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu">plant_species</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">plant_speciesName</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">plant_density</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_height</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu">plant_height</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">plant_individualArea</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
 <span></span>
@@ -95,7 +95,7 @@
 <span></span>
 <span><span class="fu">plant_phytovolume</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_LAI</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">plant_LAI</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, mode <span class="op">=</span> <span class="st">"MED"</span>, bounded <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">plant_characterParameter</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, <span class="va">parName</span><span class="op">)</span></span>
 <span></span>
@@ -108,12 +108,16 @@
 <dd><p>An object of class <code><a href="forest.html">forest</a></code>.</p></dd>
 
 
+<dt>SpParams</dt>
+<dd><p>A data frame with species parameters (see <code><a href="SpParams.html">SpParamsMED</a></code>).</p></dd>
+
+
 <dt>treeOffset, shrubOffset</dt>
 <dd><p>Integers to offset cohort IDs.</p></dd>
 
 
-<dt>SpParams</dt>
-<dd><p>A data frame with species parameters (see <code><a href="SpParams.html">SpParamsMED</a></code>).</p></dd>
+<dt>self_proportion</dt>
+<dd><p>Proportion of the target cohort included in the assessment</p></dd>
 
 
 <dt>mode</dt>
@@ -134,6 +138,10 @@
 
 <dt>smallBranchDecompositionRate</dt>
 <dd><p>Decomposition rate of small branches.</p></dd>
+
+
+<dt>bounded</dt>
+<dd><p>A boolean flag to indicate that extreme values should be prevented (maximum tree LAI = 7 and maximum shrub LAI = 3)</p></dd>
 
 
 <dt>parName</dt>
@@ -186,33 +194,30 @@
 <span class="r-in"><span><span class="co">#Load example plot</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#A short way to obtain total basal area</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">plant_basalArea</span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#A plant-level way to obtain stand basal area</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">plant_basalArea</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 25.0333</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#The same forest level function for LAI</span></span></span>
+<span class="r-in"><span><span class="co">#The analogous plant-level function for LAI</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">plant_LAI</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.868299</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.475617</span>
 <span class="r-in"><span>  </span></span>
-<span class="r-in"><span><span class="co">#The same forest level function for fuel loading</span></span></span>
+<span class="r-in"><span><span class="co">#The analogous plant-level function for fuel loading</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">plant_fuel</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.6390369</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5076471</span>
 <span class="r-in"><span>      </span></span>
 <span class="r-in"><span><span class="co">#Summary function for 'forest' objects can be also used</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Tree density (ind/ha): 552 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Tree BA (m2/ha): 25.0333016 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cover (%) trees (open ground): 100  shrubs: 3.75 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Density (ind/ha) adult trees: 552  saplings: 0  shrubs (estimated): 749.4923076 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Shrub crown phytovolume (m3/m2): 0.03 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LAI (m2/m2) total: 1.8682989  trees: 1.8290169  shrubs: 0.039282 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Live fine fuel (kg/m2) total: 0.6390369  trees: 0.6153139  shrubs: 0.0237231 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PAR ground (%): 37.5612521  SWR ground (%): 48.416416 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LAI (m2/m2) total: 1.4756167  adult trees: 1.4363347  saplings: 0  shrubs: 0.039282 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fuel (kg/m2) total: 1.4756167  adult trees: 1.4363347  saplings: 0  shrubs: 0.039282 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PAR ground (%): 46.1515845  SWR ground (%): 56.3961355 </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">plant_speciesName</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              T1_148              T2_168              S1_165 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  "Pinus halepensis"      "Quercus ilex" "Quercus coccifera" </span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">plant_ID</span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#Cohort IDs in the models</span></span></span>
+<span class="r-in"><span><span class="fu">plant_ID</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "T1_148" "T2_168" "S1_165"</span>
 <span class="r-in"><span>      </span></span>
 </code></pre></div>
@@ -229,7 +234,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

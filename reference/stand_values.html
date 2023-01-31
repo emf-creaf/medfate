@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
       </span>
     </div>
 
@@ -64,7 +64,7 @@
 <span></span>
 <span><span class="fu">stand_fuel</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, includeDead <span class="op">=</span> <span class="cn">TRUE</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">stand_LAI</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">stand_LAI</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, mode <span class="op">=</span> <span class="st">"MED"</span>, bounded <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">stand_dominantTreeDiameter</span><span class="op">(</span><span class="va">x</span>, minDBH <span class="op">=</span> <span class="fl">7.5</span><span class="op">)</span></span>
 <span></span>
@@ -99,6 +99,10 @@
 
 <dt>includeDead</dt>
 <dd><p>A flag to indicate that standing dead fuels (dead branches) are included.</p></dd>
+
+
+<dt>bounded</dt>
+<dd><p>A boolean flag to indicate that extreme values should be prevented (maximum tree LAI = 7 and maximum shrub LAI = 3)</p></dd>
 
 </dl></div>
     <div id="value">
@@ -150,7 +154,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
