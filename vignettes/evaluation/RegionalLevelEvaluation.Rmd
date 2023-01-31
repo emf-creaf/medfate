@@ -67,79 +67,76 @@ dfbarecr_plot<- bind_rows(dfbarecr_plot_vec) |> sf::st_as_sf()
 dfbatot_sp <- bind_rows(dfbatot_sp_vec) |> sf::st_as_sf()
 dfbatot_plot<- bind_rows(dfbatot_plot_vec) |> sf::st_as_sf()
 
-# if(params$IPM) {
-#   df_IPM = readRDS(paste0(ipmDIR, "IPM_evaluation_table.rds"))
-#   IDs_IPM = row.names(df_IPM)
-#   dfbai_all_bas <-dfbai_all_bas[dfbai_all_bas$ID %in% IDs_IPM,]
-#   dfbai_all_adv <-dfbai_all_adv[dfbai_all_adv$ID %in% IDs_IPM,]
-#   dfbai_bas <-dfbai_bas[dfbai_bas$ID %in% IDs_IPM,]
-#   dfbai_adv <-dfbai_adv[dfbai_adv$ID %in% IDs_IPM,]
-#   dfbarecr_bas <-dfbarecr_bas[dfbarecr_bas$ID %in% IDs_IPM,]
-#   dfbarecr_adv <-dfbarecr_adv[dfbarecr_adv$ID %in% IDs_IPM,]
-#   dfbadead_bas <-dfbadead_bas[dfbadead_bas$ID %in% IDs_IPM,]
-#   dfbadead_adv <-dfbadead_adv[dfbadead_adv$ID %in% IDs_IPM,]
-# }
-
 load("~/OneDrive/EMFDatasets/PoliticalBoundaries/Products/Catalunya/catalonia.rdata")
 cat_sfc = sf::st_as_sfc(cat.contour)
 ```
 
 ```{r, echo = FALSE}
-  evaluation_stats<-function(df) {
-    df_stats <- as.data.frame(sf::st_drop_geometry(df)) |>
-      group_by(version, period,transpirationMode) |>
-      summarize(n = n(),
-                Obs = mean(obs, na.rm=TRUE),
-                Pred = mean(pred, na.rm=TRUE),
-                Bias = mean(error, na.rm=TRUE),
-                Biasrel = 100*Bias/abs(Obs),
-                MAE = mean(abs(error), na.rm=TRUE),
-                MAErel = 100*MAE/abs(Obs),
-                RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-                RMSQrel = 100*RMSQ/abs(Obs),
-                R2 = cor(obs,pred)^2, .groups="drop")
-    return(df_stats)
-  }
+evaluation_stats<-function(df) {
+  df_stats <- as.data.frame(sf::st_drop_geometry(df)) |>
+    group_by(version, period,transpirationMode) |>
+    summarize(n = n(),
+              Obs = mean(obs, na.rm=TRUE),
+              Pred = mean(pred, na.rm=TRUE),
+              Bias = mean(error, na.rm=TRUE),
+              Biasrel = 100*Bias/abs(Obs),
+              MAE = mean(abs(error), na.rm=TRUE),
+              MAErel = 100*MAE/abs(Obs),
+              RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
+              RMSQrel = 100*RMSQ/abs(Obs),
+              R2 = cor(obs,pred)^2, .groups="drop")
+  return(df_stats)
+}
 ```
 
 ### Goal
 
-The aim of this article is to provide an assessment of the performance of `fordyn` for the prediction of forest dynamics in Catalonia (NE of Spain). To this aim, we simulate forest dynamics between two surveys of the Spanish National Forest Inventory and compare the model predictions of forest growth against inventory data for a large set of permanent plots. The evaluation focuses first on the growth (in diameter and height) of surviving trees, then turning the attention to the basal area of dead trees and overall changes in basal area.
-
+The aim of this article is to provide an assessment of the performance of `fordyn` (using either the basic and advanced sub-model) for the prediction of forest dynamics in Catalonia (NE of Spain). To this aim, we simulate forest dynamics between surveys of the Spanish National Forest Inventory and compare the model predictions of forest growth against inventory data for a set of permanent plots. The evaluation focuses first on the growth (in diameter and height) of surviving trees, then turning the attention to the basal area of dead trees and overall changes in basal area.
 
 
 ```{r, echo = FALSE}
-plot_scatter_dbh<-function(dfdbh_bas, dfdbh_adv, points = TRUE){
-g1<-ggplot(dfdbh_bas, aes(x = pred, y= obs))
+plot_scatter_tree<-function(df_bas, df_adv, points = TRUE, 
+                            xylim = c(0,1.5), errorlim = c(-1,1),
+                            initiallim = c(0,50), var = "diameter"){
+  if(var=="diameter") {
+    df_bas$ini <- df_bas$DBH_ini
+    df_adv$ini <- df_adv$DBH_ini
+  } else {
+    df_bas$ini <- df_bas$H_ini
+    df_adv$ini <- df_adv$H_ini
+  }
+g1<-ggplot(df_bas, aes(x = pred, y= obs))
 if(points) {
-  g1 <- g1 +  geom_point(aes(x = pred, y= obs), size=0.1, col="orange", alpha = 0.05, data = dfdbh_bas)
-  g1 <- g1 +  geom_point(aes(x = pred, y= obs), size=0.1, col="light blue", alpha = 0.05, data = dfdbh_adv)
+  g1 <- g1 +  geom_point(aes(x = pred, y= obs), size=0.1, col="orange", alpha = 0.05, data = df_bas)
+  g1 <- g1 +  geom_point(aes(x = pred, y= obs), size=0.1, col="light blue", alpha = 0.05, data = df_adv)
 }
 g1 <- g1 +  geom_abline(intercept = 0, slope = 1, col ="black")+
-  xlab("Predicted diameter increment (cm/yr)")+
-  ylab("Observed diameter increment (cm/yr)")+
-  xlim(c(0,1.5))+ ylim(c(0,1.5))+
+  xlab(paste0("Predicted ", var, " increment (cm/yr)"))+
+  ylab(paste0("Observed ", var, " increment (cm/yr)"))+
+  xlim(xylim)+ ylim(xylim)+
   theme_bw()+
     theme(panel.grid = element_blank())
 
-g2<-ggplot(dfdbh_bas, aes(x = DBH_ini, y= error))
+g2<-ggplot(df_bas, aes(x = ini, y= error))
 if(points) {
-  g2 <- g2 +  geom_point( aes(x = DBH_ini, y= error), size=0.1, col="orange", alpha = 0.05, data = dfdbh_bas)
-  g2 <- g2 +  geom_point( aes(x = DBH_ini, y= error), size=0.1, col="light blue", alpha = 0.05, data = dfdbh_adv)
+  g2 <- g2 +  geom_point( aes(x = ini, y= error), size=0.1, col="orange", alpha = 0.05, data = df_bas)
+  g2 <- g2 +  geom_point( aes(x = ini, y= error), size=0.1, col="light blue", alpha = 0.05, data = df_adv)
 }
 g2 <- g2 +  geom_abline(intercept = 0, slope = 0, col ="black")+
   geom_smooth(method="gam", formula = y ~ s(x, bs = "cs"), 
-              col="red", data = dfdbh_bas)+
+              col="red", data = df_bas)+
   geom_smooth(method="gam", formula = y ~ s(x, bs = "cs"), 
-              col="blue", data = dfdbh_adv)+
-  xlab("Initial diameter (cm)")+
-  ylab("Error diameter increment (cm/yr)")+
-  ylim(c(-1.0,1.0))+xlim(c(0,50))+
+              col="blue", data = df_adv)+
+  xlab(paste0("Initial ", var, " (cm)"))+
+  ylab(paste0("Error ", var, " increment (cm/yr)"))+
+  ylim(errorlim)+xlim(initiallim)+
   theme_bw()+
     theme(panel.grid = element_blank())
 plot_grid(g1, g2,nrow=1)
 }
+```
 
+```{r, echo = FALSE}
 plot_scatter_bai<-function(dfbai_bas, dfbai_adv, quantity = "basal area increment", xylim = c(0,2), errorlim = c(-1,1)) {
 g1<-ggplot(dfbai_bas, aes(x = pred, y= obs))+
   geom_point(aes(x = pred, y= obs), size=0.3, col="orange", alpha = 0.3, data = dfbai_bas)+
@@ -166,14 +163,16 @@ g2<-ggplot(dfbai_bas, aes(x = BA_ini, y= error))+
     theme(panel.grid = element_blank())
 plot_grid(g1, g2, nrow=1)
 }
+```
 
-plot_cov_clim_dbh<-function(dfdbh_bas, dfdbh_adv, points = TRUE){
-  dfdbh_bas$PPET[dfdbh_bas$PPET>2] = 2
-  dfdbh_adv$PPET[dfdbh_adv$PPET>2] = 2
-  dfbas = bind_rows(data.frame(MAT = dfdbh_bas$MAT, PPET = dfdbh_bas$PPET, PAR = dfdbh_bas$light_ini, value = dfdbh_bas$obs, type="Observed"),
-                    data.frame(MAT = dfdbh_bas$MAT, PPET = dfdbh_bas$PPET, PAR = dfdbh_bas$light_ini, value = dfdbh_bas$pred, type="Predicted"))
-  dfadv = bind_rows(data.frame(MAT = dfdbh_adv$MAT, PPET = dfdbh_adv$PPET, PAR = dfdbh_adv$light_ini, value = dfdbh_adv$obs, type="Observed"),
-                    data.frame(MAT = dfdbh_adv$MAT, PPET = dfdbh_adv$PPET, PAR = dfdbh_adv$light_ini, value = dfdbh_adv$pred, type="Predicted"))
+```{r, echo = FALSE}
+plot_cov_clim_tree<-function(df_bas, df_adv, points = TRUE, xylim = c(0,1), errorlim = c(-1,1), var = "diameter"){
+  df_bas$PPET[df_bas$PPET>2] = 2
+  df_adv$PPET[df_adv$PPET>2] = 2
+  dfbas = bind_rows(data.frame(MAT = df_bas$MAT, PPET = df_bas$PPET, PAR = df_bas$light_ini, value = df_bas$obs, type="Observed"),
+                    data.frame(MAT = df_bas$MAT, PPET = df_bas$PPET, PAR = df_bas$light_ini, value = df_bas$pred, type="Predicted"))
+  dfadv = bind_rows(data.frame(MAT = df_adv$MAT, PPET = df_adv$PPET, PAR = df_adv$light_ini, value = df_adv$obs, type="Observed"),
+                    data.frame(MAT = df_adv$MAT, PPET = df_adv$PPET, PAR = df_adv$light_ini, value = df_adv$pred, type="Predicted"))
   g1<-ggplot(dfbas, aes(x = PPET, y=value))
   if(points) {
     g1 <- g1 +  geom_point(aes(x = PPET, y= value), size=0.1, col="gray", alpha = 0.05, data = dfbas[dfbas$type=="Observed", ])
@@ -184,22 +183,22 @@ plot_cov_clim_dbh<-function(dfdbh_bas, dfdbh_adv, points = TRUE){
     geom_smooth(col = "black", method="gam", formula = y ~ s(x, bs = "cs"), data = dfbas[dfbas$type=="Observed", ])+
     geom_smooth(col = "red", method="gam", formula = y ~ s(x, bs = "cs"), data = dfbas[dfbas$type=="Predicted", ])+
     geom_smooth(col = "blue", method="gam", formula = y ~ s(x, bs = "cs"), data = dfadv[dfadv$type=="Predicted", ])+
-    ylab("Annual diameter increment (cm/yr)")+ ylim(c(0,1.0))+
+    ylab(paste0("Annual ", var, " increment (cm/yr)"))+ ylim(xylim)+
     xlab("Moisture index (P/PET)")+
     theme_bw()+
     theme(legend.position = c(0.75,0.85), 
           legend.background = element_blank(),
           panel.grid = element_blank())
   
-  g2<-ggplot(dfdbh_bas, aes(x = PPET, y=error))
+  g2<-ggplot(df_bas, aes(x = PPET, y=error))
   if(points) {
-    g2 <- g2 +  geom_point(aes(x = PPET, y= error), size=0.1, col="orange", alpha = 0.05, data = dfdbh_bas)
-    g2 <- g2 +  geom_point(aes(x = PPET, y= error), size=0.1, col="light blue", alpha = 0.05, data = dfdbh_adv)
+    g2 <- g2 +  geom_point(aes(x = PPET, y= error), size=0.1, col="orange", alpha = 0.05, data = df_bas)
+    g2 <- g2 +  geom_point(aes(x = PPET, y= error), size=0.1, col="light blue", alpha = 0.05, data = df_adv)
   }
-  g2 <- g2 + geom_smooth(col = "red", method="gam", formula = y ~ s(x, bs = "cs"), data = dfdbh_bas)+
-    geom_smooth(col = "blue", method="gam", formula = y ~ s(x, bs = "cs"), data = dfdbh_adv)+
+  g2 <- g2 + geom_smooth(col = "red", method="gam", formula = y ~ s(x, bs = "cs"), data = df_bas)+
+    geom_smooth(col = "blue", method="gam", formula = y ~ s(x, bs = "cs"), data = df_adv)+
     geom_abline(intercept = 0, slope = 0, col ="black")+
-    ylab("Annual diameter increment error (cm)")+ylim(c(-1.0,1.0))+
+    ylab(paste0("Annual ", var, " increment error (cm)"))+ylim(errorlim)+
     xlab("Moisture index (P/PET)")+
     theme_bw()+
     theme(panel.grid = element_blank())
@@ -214,22 +213,22 @@ plot_cov_clim_dbh<-function(dfdbh_bas, dfdbh_adv, points = TRUE){
     geom_smooth(col = "black", method="gam", formula = y ~ s(x, bs = "cs"), data = dfbas[dfbas$type=="Observed", ])+
     geom_smooth(col = "red", method="gam", formula = y ~ s(x, bs = "cs"), data = dfbas[dfbas$type=="Predicted", ])+
     geom_smooth(col = "blue", method="gam", formula = y ~ s(x, bs = "cs"), data = dfadv[dfadv$type=="Predicted", ])+
-    ylab("Annual diameter increment (cm/yr)")+ylim(c(0,1.0))+
+    ylab(paste0("Annual ", var, " increment (cm/yr)"))+ylim(xylim)+
     xlab("Mean annual temperature (ºC)")+
     theme_bw()+
     theme(legend.position = c(0.75,0.85), 
           legend.background = element_blank(),
           panel.grid = element_blank())
   
-  g4<-ggplot(dfdbh_bas, aes(x = MAT, y=error))
+  g4<-ggplot(df_bas, aes(x = MAT, y=error))
   if(points) {
-    g4 <- g4 +  geom_point(aes(x = MAT, y= error), size=0.1, col="orange", alpha = 0.05, data = dfdbh_bas)
-    g4 <- g4 +  geom_point(aes(x = MAT, y= error), size=0.1, col="light blue", alpha = 0.05, data = dfdbh_adv)
+    g4 <- g4 +  geom_point(aes(x = MAT, y= error), size=0.1, col="orange", alpha = 0.05, data = df_bas)
+    g4 <- g4 +  geom_point(aes(x = MAT, y= error), size=0.1, col="light blue", alpha = 0.05, data = df_adv)
   }
-  g4 <- g4 + geom_smooth(col = "red", method="gam", formula = y ~ s(x, bs = "cs"), data = dfdbh_bas)+
-    geom_smooth(col = "blue", method="gam", formula = y ~ s(x, bs = "cs"), data = dfdbh_adv)+
+  g4 <- g4 + geom_smooth(col = "red", method="gam", formula = y ~ s(x, bs = "cs"), data = df_bas)+
+    geom_smooth(col = "blue", method="gam", formula = y ~ s(x, bs = "cs"), data = df_adv)+
     geom_abline(intercept = 0, slope = 0, col ="black")+
-    ylab("Annual diameter increment error (cm)")+ylim(c(-1.0,1.0))+
+    ylab(paste0("Annual ", var, " increment error (cm)"))+ylim(errorlim)+
     xlab("Mean annual temperature (ºC)")+
     theme_bw()+
     theme(panel.grid = element_blank())
@@ -244,28 +243,30 @@ plot_cov_clim_dbh<-function(dfdbh_bas, dfdbh_adv, points = TRUE){
     geom_smooth(col = "black", method="gam", formula = y ~ s(x, bs = "cs"), data = dfbas[dfbas$type=="Observed", ])+
     geom_smooth(col = "red", method="gam", formula = y ~ s(x, bs = "cs"), data = dfbas[dfbas$type=="Predicted", ])+
     geom_smooth(col = "blue", method="gam", formula = y ~ s(x, bs = "cs"), data = dfadv[dfadv$type=="Predicted", ])+
-    ylab("Annual diameter increment (cm/yr)")+ylim(c(0,1.0))+
+    ylab(paste0("Annual ", var," increment (cm/yr)"))+ylim(xylim)+
     xlab("Available PAR (%)")+
     theme_bw()+
     theme(legend.position = c(0.75,0.85), 
           legend.background = element_blank(),
           panel.grid = element_blank())
   
-  g6<-ggplot(dfdbh_bas, aes(x = light_ini, y=error))
+  g6<-ggplot(df_bas, aes(x = light_ini, y=error))
   if(points) {
-    g6 <- g6 +  geom_point(aes(x = light_ini, y= error), size=0.1, col="orange", alpha = 0.05, data = dfdbh_bas)
-    g6 <- g6 +  geom_point(aes(x = light_ini, y= error), size=0.1, col="light blue", alpha = 0.05, data = dfdbh_adv)
+    g6 <- g6 +  geom_point(aes(x = light_ini, y= error), size=0.1, col="orange", alpha = 0.05, data = df_bas)
+    g6 <- g6 +  geom_point(aes(x = light_ini, y= error), size=0.1, col="light blue", alpha = 0.05, data = df_adv)
   }
-  g6 <- g6 + geom_smooth(col = "red", method="gam", formula = y ~ s(x, bs = "cs"), data = dfdbh_bas)+
-    geom_smooth(col = "blue", method="gam", formula = y ~ s(x, bs = "cs"), data = dfdbh_adv)+
+  g6 <- g6 + geom_smooth(col = "red", method="gam", formula = y ~ s(x, bs = "cs"), data = df_bas)+
+    geom_smooth(col = "blue", method="gam", formula = y ~ s(x, bs = "cs"), data = df_adv)+
     geom_abline(intercept = 0, slope = 0, col ="black")+
-    ylab("Annual diameter increment error (cm)")+ylim(c(-1.0,1.0))+
+    ylab(paste0("Annual ", var, " increment error (cm)"))+ylim(errorlim)+
     xlab("Available PAR (%)")+
     theme_bw()+
     theme(panel.grid = element_blank())
   plot_grid(g1, g2, g3, g4, g5,g6, nrow=3)
 }
+```
 
+```{r, echo = FALSE}
 plot_cov_clim_bai<-function(dfbai_bas, dfbai_adv, quantity = "Basal area increment", ylim = c(0,2), errorlim = c(-2,2)){
   dfbai_bas$PPET[dfbai_bas$PPET>2] = 2
   dfbai_adv$PPET[dfbai_adv$PPET>2] = 2
@@ -325,7 +326,9 @@ plot_cov_clim_bai<-function(dfbai_bas, dfbai_adv, quantity = "Basal area increme
     theme(panel.grid = element_blank())
   plot_grid(g1, g2, g3, g4, nrow=2)
 }
+```
 
+```{r, echo = FALSE}
 bai_error_map <-function(data_bai, upper = 1, lower = -1){
   data_bai = data_bai[!is.na(data_bai$error),]
   data_bai$error[data_bai$error > upper] = upper
@@ -333,7 +336,7 @@ bai_error_map <-function(data_bai, upper = 1, lower = -1){
   ggplot(data_bai)+
     geom_sf(aes(col=error), size=0.5)+
     geom_sf(data = cat_sfc)+
-    scale_color_fermenter("m2/ha",palette = 1, breaks = c(lower,lower*0.5,lower*0.25,lower*0.1, 0, upper*0.1,upper*0.25,upper*0.5,upper), 
+    scale_color_fermenter("m2/ha/yr",palette = 1, breaks = c(lower,lower*0.5,lower*0.25,lower*0.1, 0, upper*0.1,upper*0.25,upper*0.5,upper), 
                        type = 'div', direction = 2, na.value = 'transparent')+
     # scale_color_gradient2("m2/ha",low="blue", mid="yellow", high="red")+
     theme_bw()+
@@ -344,28 +347,29 @@ bai_error_map <-function(data_bai, upper = 1, lower = -1){
 
 ### Simulation procedure
 
+We selected permanent plots between the second (IFN2) and the fourth (IFN4) without signs of management (i.e. the presence of stumps) and whose basal area did not decrease more than 10% between inventory surveys (to avoid the effect of disturbances).
 
-We selected repeated plots (A1 between IFN2 and IFN4) without signs of management (cut trees) and whose basal area did not decrease between inventory surveys.
+Soil physical properties were drawn from SoilGrids (Hengl 2016), complemented by rock fragment content estimates derived from surface stoniness measurements in forest plots. 
 
-Soil physical properties were drawn from SoilGrids (Hengl 2016), complemented by rock fragment content estimates derived from surface stoniness measurements in forest plots. Simulations were conducted for different periods:
+`fordyn` simulations were conducted for different periods:
 
   + IFN2 - IFN3 (~ 10 years)
   + IFN3 - IFN4 (~ 15 years)
   + IFN2 - IFN4 (~ 25 years)
 
-Actual simulated years depending on the sampling years of the target plot. Daily weather data were obtained via interpolation on plot's coordinates using package **meteoland**. 
+The actual simulated period varied depending on the sampling years of the target plot. Daily weather data were obtained via interpolation on plot's coordinates using package **meteoland**. 
 
 Default species-specific parameters were modified using the results of the [meta-modelling exercise](https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html) and the [growth calibration exercise](https://emf-creaf.github.io/medfate/articles/parametrization/GrowthCalibration.html). These two exercises do not provide values for all the main species included here, so it is expected that evaluation results are worse for those species not included in those exercises.
 
-Simulations were done for both the **basic** and **advanced** transpiration/photosynthesis sub-models. On a server with 20 parallel threads, computational times for the longest simulation (IFN2 - IFN4) are around **5 hours** (i.e. 2 min/plot) for the **basic** sub-model, versus around **6 days** (i.e. 1 hr/plot) for the **advanced** submodel. 
+Simulations were done for both the **basic** (i.e. Granier) and **advanced** (i.e. Sperry) transpiration/photosynthesis sub-models. On a server with 20 parallel threads, computational times for the longest simulation period (25 years) are around **4 hours** (i.e. 2.5 min/plot) for the **basic** sub-model, versus around **6 days** (i.e. 1.5 hr/plot) for the **advanced** submodel. 
 
-In the following sections, we provide the **bias**, **mean absolute error** (in absolute and relative terms), **root mean squared error** (in absolute and relative terms) and **explained variance (R-squared)** of growth and mortality predictions at the tree-level and stand-level obtained by simulations with both sub-models. Scatter plots are provided to represent the relationship between predicted and observed values, as well as the factors that may influence the direction and magnitude of prediction error (i.e. initial values, environmental conditions, ...).  
+In the following sections, we provide the **bias**, **mean absolute error** (in absolute and relative terms), **root mean squared error** (in absolute and relative terms) and **explained variance (R-squared)** of growth and mortality predictions at the tree-level and stand-level obtained by simulations with both sub-models. Scatter plots are provided for the IFN2-IFN4 simulation to represent the relationship between predicted and observed values, as well as the factors that may influence the direction and magnitude of prediction error (i.e. initial values, environmental conditions, ...).  
 
 <!-- Detailed results of growth evaluation by species are provided in the last section. -->
 
 ## Growth of surviving trees
 
-Comparison of growth of trees (DBH >= 7.5) that survived in both observed and simulated data.
+Comparison of diameter/height growth of trees (DBH >= 7.5) that survived between surveys.
 
 ### Annual diameter increment
 
@@ -379,21 +383,21 @@ dfdbh %>%
 
 
 
-Predictive capacity plots:
+Predictive capacity plots (IFN2-IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
 dfdbh_bas <- dfdbh |> filter(transpirationMode == "Granier",
                              period == "IFN24")
-plot_scatter_dbh(dfdbh_bas, dfdbh_bas, points = TRUE)
+plot_scatter_tree(dfdbh_bas, dfdbh_bas, points = TRUE)
 ```
 
 
-Relationship between diameter increase and climatic variables (MAT, P/PET and available PAR):
+Relationship between diameter increase and climatic variables (MAT, P/PET and available PAR; IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=12, warning=FALSE, message=FALSE}
 dfdbh_bas <- dfdbh |> filter(transpirationMode == "Granier",
                              period == "IFN24")
-plot_cov_clim_dbh(dfdbh_bas, dfdbh_bas, points = TRUE)
+plot_cov_clim_tree(dfdbh_bas, dfdbh_bas, points = TRUE)
 ```
 
 
@@ -406,11 +410,25 @@ dfh %>%
   kbl() %>%
   kable_styling()
 ```
+Predictive capacity plots (IFN2-IFN4):
 
+```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
+dfh_bas <- dfh |> filter(transpirationMode == "Granier",
+                             period == "IFN24")
+plot_scatter_tree(dfh_bas, dfh_bas, points = TRUE, xylim = c(0,20), errorlim = c(-20,20), initiallim = c(0, 2000),
+                  var = "height")
+```
+
+
+Relationship between height increase and climatic variables (MAT, P/PET and available PAR; IFN2 - IFN4):
+
+```{r, echo = FALSE, fig.width=8, fig.height=12, warning=FALSE, message=FALSE}
+plot_cov_clim_tree(dfh_bas, dfh_bas, points = TRUE, xylim = c(0,20), errorlim = c(-20,20), var = "height")
+```
 
 ### Stand-level basal area increment
 
-This comparison does not take into account changes in density. In other words, densities from the first inventory are used to calculate stand-level basal area of surviving trees. It is meant to evaluate the effect of diameter increment of surviving trees in terms of annual stand basal area increments (m2/ha/yr) for the period evaluated.
+Comparison of basal area increment of surviving trees does not take into account changes in density. In other words, densities from the first inventory are used to calculate stand-level basal area of surviving trees. Hence, the comparison is meant to evaluate the effect of diameter increment of surviving trees in terms of annual stand basal area increments (m2/ha/yr) for the period evaluated.
 
 Predictive capacity table:
 ```{r, echo = FALSE, warning=FALSE}
@@ -419,7 +437,7 @@ dfbai_plot %>% evaluation_stats() %>%
   kable_styling()
 ```
 
-Predictive capacity plots:
+Predictive capacity plots (IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
 dfbai_bas <- dfbai_plot |> filter(transpirationMode == "Granier",
@@ -427,14 +445,14 @@ dfbai_bas <- dfbai_plot |> filter(transpirationMode == "Granier",
 plot_scatter_bai(dfbai_bas, dfbai_bas)
 ```
 
-Relationship between basal area increase and climatic variables (MAT and P/PET):
+Relationship between basal area increase and climatic variables (MAT and P/PET; IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=8, warning=FALSE, message=FALSE}
 plot_cov_clim_bai(dfbai_bas, dfbai_bas, errorlim = c(-1,1), ylim = c(0,1))
 ```
 
 
-Spatial error distribution:
+Spatial error distribution (IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=9, fig.height=4}
 p1<-bai_error_map(dfbai_bas)+labs(title="Basic")
@@ -447,7 +465,7 @@ plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "none"),
 
 ## Mortality
 
-Annual reduction of basal area (m2/ha/yr) due to trees (DBH >= 7.5) that died during the evaluation period against model's mortality prediction.
+Annual reduction of basal area (m2/ha/yr) due to trees (DBH >= 7.5) that died during the evaluation period against model's mortality prediction. In both cases, basal area is calculated using the initial diameter of the trees, so that density reductions are the only prediction that is actually evaluated (and not the possible growth of those trees during the simulation).
 
 
 Overall predictive capacity:
@@ -458,7 +476,7 @@ dfbadead_plot %>% evaluation_stats() %>%
   kable_styling()
 ```
 
-Predictive capacity plots:
+Predictive capacity plots (IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message = FALSE}
 dfdead_bas <- dfbadead_plot |> filter(transpirationMode == "Granier",
@@ -467,14 +485,14 @@ plot_scatter_bai(dfdead_bas, dfdead_bas,
                   quantity = "dead basal area", xylim = c(0,0.5), errorlim = c(-0.5,0.5))
 ```
 
-Relationship between dead basal area and climatic variables (MAT and P/PET):
+Relationship between dead basal area and climatic variables (MAT and P/PET; IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=8, warning=FALSE, message=FALSE}
 plot_cov_clim_bai(dfdead_bas, dfdead_bas,
                    quantity = "Dead basal area", ylim = c(0,0.5), errorlim = c(-0.5,0.5))
 ```
 
-Spatial distribution of errors:
+Spatial distribution of errors (IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=9, fig.height=4}
 p1<-bai_error_map(dfdead_bas, upper = 0.5, lower = -0.5)+labs(title="Basic")
@@ -498,7 +516,7 @@ dfbarecr_plot %>% evaluation_stats()  %>%
   kable_styling()
 ```
 
-Predictive capacity plots:
+Predictive capacity plots (IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message = FALSE}
 dfrecr_bas <- dfbarecr_plot |> filter(transpirationMode == "Granier",
@@ -507,14 +525,14 @@ plot_scatter_bai(dfrecr_bas, dfrecr_bas,
                  quantity = "ingrowth basal area", xylim = c(0,0.15), errorlim = c(-0.15,0.15))
 ```
 
-Relationship between ingrowth basal area and climatic variables (MAT and P/PET):
+Relationship between ingrowth basal area and climatic variables (MAT and P/PET; IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=8, warning=FALSE, message=FALSE}
 plot_cov_clim_bai(dfrecr_bas, dfrecr_bas,
                   quantity = "Ingrowth basal area", ylim = c(0,0.15), errorlim = c(-0.15,0.15))
 ```
 
-Spatial distribution of errors:
+Spatial distribution of errors (IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=9, fig.height=4}
 p1<-bai_error_map(dfrecr_bas, upper = 0.5, lower = -0.5)+labs(title="Basic")
@@ -527,7 +545,7 @@ plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "none"),
 
 ## Overall stand-level basal area change
 
-This includes annual changes in basal area (m2/ha/yr) due to growth of surviving trees, mortality reductions and ingrowth (increase in trees with 7.5 < DBH < 12.5) derived from sapling growth. In the observed data, basal area changes include also the incorporation of trees into large diameter classes that results from the variable-radius sampling design.
+This includes annual changes in basal area (m2/ha/yr) due to growth of surviving trees, mortality reductions and ingrowth derived from sapling growth. In the observed data, basal area changes include also the incorporation of trees into large diameter classes that results from the variable-radius sampling design. Since it takes into account all processes together, this evaluation is the most rellevant of all.
 
 Overall predictive capacity:
 
@@ -538,7 +556,7 @@ dfbatot_plot %>% evaluation_stats() %>%
 ```
 
 
-Predictive capacity plot:
+Predictive capacity plot (IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message = FALSE}
 dftot_bas <- dfbatot_plot |> filter(transpirationMode == "Granier",
@@ -548,7 +566,7 @@ p1<-plot_scatter_bai(dftot_bas, dftot_bas,
 p1
 ```
 
-Relationship between overall basal area change and climatic variables (MAT and P/PET) for the **basic** sub-model:
+Relationship between overall basal area change and climatic variables (MAT and P/PET; IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=8, warning=FALSE, message=FALSE}
 p2<-plot_cov_clim_bai(dftot_bas, dftot_bas,
@@ -561,7 +579,7 @@ p0<-cowplot::plot_grid(p1,p2, nrow=2, rel_heights = c(0.33,0.66))
 ggsave(paste0(evalDIR,"/Plots/BAtot_eval.png"),p0, width = 8, height=10)
 ```
 
-Spatial distribution of errors:
+Spatial distribution of errors (IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=9, fig.height=4, warning=FALSE, message=FALSE}
 p1<-bai_error_map(dftot_bas)+labs(title="Basic sub-model")
