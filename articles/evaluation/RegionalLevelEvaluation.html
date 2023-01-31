@@ -91,62 +91,66 @@ Cáceres</h4>
 <h3 id="goal">Goal<a class="anchor" aria-label="anchor" href="#goal"></a>
 </h3>
 <p>The aim of this article is to provide an assessment of the
-performance of <code>fordyn</code> for the prediction of forest dynamics
-in Catalonia (NE of Spain). To this aim, we simulate forest dynamics
-between two surveys of the Spanish National Forest Inventory and compare
-the model predictions of forest growth against inventory data for a
-large set of permanent plots. The evaluation focuses first on the growth
-(in diameter and height) of surviving trees, then turning the attention
-to the basal area of dead trees and overall changes in basal area.</p>
+performance of <code>fordyn</code> (using either the basic and advanced
+sub-model) for the prediction of forest dynamics in Catalonia (NE of
+Spain). To this aim, we simulate forest dynamics between surveys of the
+Spanish National Forest Inventory and compare the model predictions of
+forest growth against inventory data for a set of permanent plots. The
+evaluation focuses first on the growth (in diameter and height) of
+surviving trees, then turning the attention to the basal area of dead
+trees and overall changes in basal area.</p>
 </div>
 <div class="section level3">
 <h3 id="simulation-procedure">Simulation procedure<a class="anchor" aria-label="anchor" href="#simulation-procedure"></a>
 </h3>
-<p>We selected repeated plots (A1 between IFN2 and IFN4) without signs
-of management (cut trees) and whose basal area did not decrease between
-inventory surveys.</p>
+<p>We selected permanent plots between the second (IFN2) and the fourth
+(IFN4) without signs of management (i.e. the presence of stumps) and
+whose basal area did not decrease more than 10% between inventory
+surveys (to avoid the effect of disturbances).</p>
 <p>Soil physical properties were drawn from SoilGrids (Hengl 2016),
 complemented by rock fragment content estimates derived from surface
-stoniness measurements in forest plots. Simulations were conducted for
-different periods:</p>
+stoniness measurements in forest plots.</p>
+<p><code>fordyn</code> simulations were conducted for different
+periods:</p>
 <ul>
 <li>IFN2 - IFN3 (~ 10 years)</li>
 <li>IFN3 - IFN4 (~ 15 years)</li>
 <li>IFN2 - IFN4 (~ 25 years)</li>
 </ul>
-<p>Actual simulated years depending on the sampling years of the target
-plot. Daily weather data were obtained via interpolation on plot’s
-coordinates using package <strong>meteoland</strong>.</p>
+<p>The actual simulated period varied depending on the sampling years of
+the target plot. Daily weather data were obtained via interpolation on
+plot’s coordinates using package <strong>meteoland</strong>.</p>
 <p>Default species-specific parameters were modified using the results
 of the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/Metamodelling.html" class="external-link">meta-modelling
 exercise</a> and the <a href="https://emf-creaf.github.io/medfate/articles/parametrization/GrowthCalibration.html" class="external-link">growth
 calibration exercise</a>. These two exercises do not provide values for
 all the main species included here, so it is expected that evaluation
 results are worse for those species not included in those exercises.</p>
-<p>Simulations were done for both the <strong>basic</strong> and
-<strong>advanced</strong> transpiration/photosynthesis sub-models. On a
-server with 20 parallel threads, computational times for the longest
-simulation (IFN2 - IFN4) are around <strong>5 hours</strong> (i.e. 2
-min/plot) for the <strong>basic</strong> sub-model, versus around
-<strong>6 days</strong> (i.e. 1 hr/plot) for the
-<strong>advanced</strong> submodel.</p>
+<p>Simulations were done for both the <strong>basic</strong>
+(i.e. Granier) and <strong>advanced</strong> (i.e. Sperry)
+transpiration/photosynthesis sub-models. On a server with 20 parallel
+threads, computational times for the longest simulation period (25
+years) are around <strong>4 hours</strong> (i.e. 2.5 min/plot) for the
+<strong>basic</strong> sub-model, versus around <strong>6 days</strong>
+(i.e. 1.5 hr/plot) for the <strong>advanced</strong> submodel.</p>
 <p>In the following sections, we provide the <strong>bias</strong>,
 <strong>mean absolute error</strong> (in absolute and relative terms),
 <strong>root mean squared error</strong> (in absolute and relative
 terms) and <strong>explained variance (R-squared)</strong> of growth and
 mortality predictions at the tree-level and stand-level obtained by
-simulations with both sub-models. Scatter plots are provided to
-represent the relationship between predicted and observed values, as
-well as the factors that may influence the direction and magnitude of
-prediction error (i.e. initial values, environmental conditions, …).</p>
+simulations with both sub-models. Scatter plots are provided for the
+IFN2-IFN4 simulation to represent the relationship between predicted and
+observed values, as well as the factors that may influence the direction
+and magnitude of prediction error (i.e. initial values, environmental
+conditions, …).</p>
 <!-- Detailed results of growth evaluation by species are provided in the last section. -->
 </div>
 </div>
 <div class="section level2">
 <h2 id="growth-of-surviving-trees">Growth of surviving trees<a class="anchor" aria-label="anchor" href="#growth-of-surviving-trees"></a>
 </h2>
-<p>Comparison of growth of trees (DBH &gt;= 7.5) that survived in both
-observed and simulated data.</p>
+<p>Comparison of diameter/height growth of trees (DBH &gt;= 7.5) that
+survived between surveys.</p>
 <div class="section level3">
 <h3 id="annual-diameter-increment">Annual diameter increment<a class="anchor" aria-label="anchor" href="#annual-diameter-increment"></a>
 </h3>
@@ -319,11 +323,11 @@ Granier
 </tr>
 </tbody>
 </table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-5-1.png" width="768"></p>
+<p>Predictive capacity plots (IFN2-IFN4):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
 <p>Relationship between diameter increase and climatic variables (MAT,
-P/PET and available PAR):</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-6-1.png" width="768"></p>
+P/PET and available PAR; IFN2 - IFN4):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-10-1.png" width="768"></p>
 </div>
 <div class="section level3">
 <h3 id="annual-height-increment">Annual height increment<a class="anchor" aria-label="anchor" href="#annual-height-increment"></a>
@@ -497,15 +501,21 @@ Granier
 </tr>
 </tbody>
 </table>
+<p>Predictive capacity plots (IFN2-IFN4):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-12-1.png" width="768"></p>
+<p>Relationship between height increase and climatic variables (MAT,
+P/PET and available PAR; IFN2 - IFN4):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-13-1.png" width="768"></p>
 </div>
 <div class="section level3">
 <h3 id="stand-level-basal-area-increment">Stand-level basal area increment<a class="anchor" aria-label="anchor" href="#stand-level-basal-area-increment"></a>
 </h3>
-<p>This comparison does not take into account changes in density. In
-other words, densities from the first inventory are used to calculate
-stand-level basal area of surviving trees. It is meant to evaluate the
-effect of diameter increment of surviving trees in terms of annual stand
-basal area increments (m2/ha/yr) for the period evaluated.</p>
+<p>Comparison of basal area increment of surviving trees does not take
+into account changes in density. In other words, densities from the
+first inventory are used to calculate stand-level basal area of
+surviving trees. Hence, the comparison is meant to evaluate the effect
+of diameter increment of surviving trees in terms of annual stand basal
+area increments (m2/ha/yr) for the period evaluated.</p>
 Predictive capacity table:
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -675,13 +685,13 @@ Granier
 </tr>
 </tbody>
 </table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-9-1.png" width="768"></p>
+<p>Predictive capacity plots (IFN2 - IFN4):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-15-1.png" width="768"></p>
 <p>Relationship between basal area increase and climatic variables (MAT
-and P/PET):</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-10-1.png" width="768"></p>
-<p>Spatial error distribution:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-11-1.png" width="864"></p>
+and P/PET; IFN2 - IFN4):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-16-1.png" width="768"></p>
+<p>Spatial error distribution (IFN2 - IFN4):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-17-1.png" width="864"></p>
 </div>
 </div>
 <div class="section level2">
@@ -689,7 +699,10 @@ and P/PET):</p>
 </h2>
 <p>Annual reduction of basal area (m2/ha/yr) due to trees (DBH &gt;=
 7.5) that died during the evaluation period against model’s mortality
-prediction.</p>
+prediction. In both cases, basal area is calculated using the initial
+diameter of the trees, so that density reductions are the only
+prediction that is actually evaluated (and not the possible growth of
+those trees during the simulation).</p>
 <p>Overall predictive capacity:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -859,13 +872,13 @@ Granier
 </tr>
 </tbody>
 </table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-13-1.png" width="768"></p>
+<p>Predictive capacity plots (IFN2 - IFN4):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-19-1.png" width="768"></p>
 <p>Relationship between dead basal area and climatic variables (MAT and
-P/PET):</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-14-1.png" width="768"></p>
-<p>Spatial distribution of errors:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-15-1.png" width="864"></p>
+P/PET; IFN2 - IFN4):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-20-1.png" width="768"></p>
+<p>Spatial distribution of errors (IFN2 - IFN4):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-21-1.png" width="864"></p>
 </div>
 <div class="section level2">
 <h2 id="ingrowth">Ingrowth<a class="anchor" aria-label="anchor" href="#ingrowth"></a>
@@ -1042,23 +1055,23 @@ Granier
 </tr>
 </tbody>
 </table>
-<p>Predictive capacity plots:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-17-1.png" width="768"></p>
+<p>Predictive capacity plots (IFN2 - IFN4):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-23-1.png" width="768"></p>
 <p>Relationship between ingrowth basal area and climatic variables (MAT
-and P/PET):</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-18-1.png" width="768"></p>
-<p>Spatial distribution of errors:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-19-1.png" width="864"></p>
+and P/PET; IFN2 - IFN4):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-24-1.png" width="768"></p>
+<p>Spatial distribution of errors (IFN2 - IFN4):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-25-1.png" width="864"></p>
 </div>
 <div class="section level2">
 <h2 id="overall-stand-level-basal-area-change">Overall stand-level basal area change<a class="anchor" aria-label="anchor" href="#overall-stand-level-basal-area-change"></a>
 </h2>
 <p>This includes annual changes in basal area (m2/ha/yr) due to growth
-of surviving trees, mortality reductions and ingrowth (increase in trees
-with 7.5 &lt; DBH &lt; 12.5) derived from sapling growth. In the
-observed data, basal area changes include also the incorporation of
-trees into large diameter classes that results from the variable-radius
-sampling design.</p>
+of surviving trees, mortality reductions and ingrowth derived from
+sapling growth. In the observed data, basal area changes include also
+the incorporation of trees into large diameter classes that results from
+the variable-radius sampling design. Since it takes into account all
+processes together, this evaluation is the most rellevant of all.</p>
 <p>Overall predictive capacity:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -1228,13 +1241,13 @@ Granier
 </tr>
 </tbody>
 </table>
-<p>Predictive capacity plot:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-21-1.png" width="768"></p>
+<p>Predictive capacity plot (IFN2 - IFN4):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-27-1.png" width="768"></p>
 <p>Relationship between overall basal area change and climatic variables
-(MAT and P/PET) for the <strong>basic</strong> sub-model:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-22-1.png" width="768"></p>
-<p>Spatial distribution of errors:</p>
-<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-24-1.png" width="864"></p>
+(MAT and P/PET; IFN2 - IFN4):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-28-1.png" width="768"></p>
+<p>Spatial distribution of errors (IFN2 - IFN4):</p>
+<p><img src="RegionalLevelEvaluation_files/figure-html/unnamed-chunk-30-1.png" width="864"></p>
 <!-- ## Detailed evaluation by species -->
 <!-- In the following we provide detailed evaluation results for the most important species. -->
 <!-- ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE} -->
