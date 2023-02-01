@@ -13,7 +13,7 @@ library(ggplot2)
 library(cowplot)
 library(medfate)
 
-base_pools = "~/OneDrive/Professional/MedfateWorks/PlantWaterPools/"
+base_pools = "~/OneDrive/Professional/MEDFATE_development/PlantWaterPools/"
 ```
 
 ## About this vignette

@@ -21,7 +21,7 @@ library(medfate)
 library(ggplot2)
 library(cowplot)
 library(tidyverse)
-evalDIR = "~/OneDrive/Professional/MedfateWorks/RegionalLevelEvaluation"
+evalDIR = "~/OneDrive/Professional/MEDFATE_development/RegionalLevelEvaluation"
 ipmDIR = "~/OneDrive/Professional/KnowledgeTransfer/CREAF/FORESFuture/Rdata/ipm/"
 ```
 
@@ -73,8 +73,9 @@ cat_sfc = sf::st_as_sfc(cat.contour)
 
 ```{r, echo = FALSE}
 evaluation_stats<-function(df) {
-  df_stats <- as.data.frame(sf::st_drop_geometry(df)) |>
-    group_by(version, period,transpirationMode) |>
+  df$version <- as.character(df$version)
+  df_stats <- sf::st_drop_geometry(df) |>
+    group_by(version, period, transpirationMode) |>
     summarize(n = n(),
               Obs = mean(obs, na.rm=TRUE),
               Pred = mean(pred, na.rm=TRUE),
@@ -85,7 +86,7 @@ evaluation_stats<-function(df) {
               RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
               RMSQrel = 100*RMSQ/abs(Obs),
               R2 = cor(obs,pred)^2, .groups="drop")
-  return(df_stats)
+  return(as.data.frame(df_stats))
 }
 ```
 
@@ -375,9 +376,9 @@ Comparison of diameter/height growth of trees (DBH >= 7.5) that survived between
 
 Overall predictive capacity to predict diameter increase (cm/yr):
 ```{r, echo = FALSE}
-dfdbh %>% 
-  evaluation_stats() %>% 
-  kbl() %>%
+dfdbh |> 
+  evaluation_stats() |> 
+  kbl() |>
   kable_styling()
 ```
 

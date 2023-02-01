@@ -1,6 +1,6 @@
 library(tidyverse)
 library(openxlsx)
-DB_path = "/home/miquel/OneDrive/Professional/MedfateWorks/MedfateSpeciesParametrization/"
+DB_path = "/home/miquel/OneDrive/Professional/MEDFATE_development/MedfateSpeciesParametrization/"
 
 genfun <- function(x) {
   s = strsplit(x,split = " ")

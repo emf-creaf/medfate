@@ -18,7 +18,7 @@ library(readxl)
 library(tidyverse)
 library(medfate)
 library(nlme)
-meta_dir <- "~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/"
+meta_dir <- "~/OneDrive/Professional/MEDFATE_development/Metamodelling_TR_WUE/"
 ```
 
 ## Introduction
@@ -287,7 +287,7 @@ g <- plot_grid(g1 + theme(legend.position = "none"),
                g5 + theme(legend.position = "none"),
                get_legend(g3),
                labels = c("a)","b)", "c)", "d)", "e)", ""), nrow=3, ncol=2)
-ggsave2("meta_fit.png", g, width = 9, height = 11, bg = "white")
+ggsave2(paste0(meta_dir,"/Plots/meta_fit.png"), g, width = 9, height = 11, bg = "white")
 ```
 
 
@@ -295,7 +295,7 @@ ggsave2("meta_fit.png", g, width = 9, height = 11, bg = "white")
 
 The table containing the five parameters estimated via meta-modelling is the following:
 ```{r, echo = FALSE}
-df_par = readRDS("~/OneDrive/Professional/MedfateWorks/Metamodelling_TR_WUE/Rdata/metamodelling_params.rds")
+df_par = readRDS("~/OneDrive/Professional/MEDFATE_development/Metamodelling_TR_WUE/Rdata/metamodelling_params.rds")
 
 df_par[,-1] %>%
   kbl() %>%
@@ -380,7 +380,7 @@ g0<-plot_grid(g1,g2,g3,g4, g5, g6,
               labels = c("a)", "b)", "c)", "d)", "e)", "f)"), 
               ncol=2, nrow = 3)
 g<-plot_grid(g0,l, ncol=2, nrow = 1, rel_widths = c(1,0.2))
-ggsave2("meta_eval.png", g, width = 11, height = 11, bg = "white")
+ggsave2(paste0(meta_dir,"Plots/meta_eval.png"), g, width = 11, height = 11, bg = "white")
 g
 ```
 

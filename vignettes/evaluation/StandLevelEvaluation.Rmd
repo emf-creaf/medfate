@@ -9,12 +9,12 @@ output:
 ---
 ```{r eval = FALSE, include = FALSE}
 ## If necessary, rebuild model evaluation
-source("~/OneDrive/Professional/MedfateWorks/StandLevelEvaluation/main_script.R")
+source("~/OneDrive/Professional/MEDFATE_development/StandLevelEvaluation/main_script.R")
 ```
 
 
 ```{r setup, include=FALSE}
-params = list(wd='/home/miquel/OneDrive/Professional/MedfateWorks/StandLevelEvaluation/',
+params = list(wd='/home/miquel/OneDrive/Professional/MEDFATE_development/StandLevelEvaluation/',
               model='spwb',
               conf='advanced',
               save_plots = FALSE)

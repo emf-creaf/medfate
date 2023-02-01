@@ -15,7 +15,7 @@ library(ggplot2)
 library(cowplot)
 library(tidyverse)
 
-base_calibration = "~/OneDrive/Professional/MedfateWorks/GrowthCalibration/"
+base_calibration = "~/OneDrive/Professional/MEDFATE_development/GrowthCalibration/"
 ```
 
 ## Introduction
@@ -293,7 +293,7 @@ p4<-ggplot(eval_all_df)+
   theme_bw()+theme(axis.text.x = element_text(angle = 30, vjust = 1, hjust=1),
                    legend.position = "none")+ theme(panel.grid = element_blank())
 p <- plot_grid(p1, p2, p3, p4, labels = c("a)","b)", "c)", "d)"), nrow=2, ncol=2)
-ggsave2("calibration_eval.png", p, width = 8, height = 7, bg = "white")
+ggsave(paste0(base_calibration,"Plots/calibration_eval.png"), p, width = 8, height = 7, bg = "white")
 p
 ```
 

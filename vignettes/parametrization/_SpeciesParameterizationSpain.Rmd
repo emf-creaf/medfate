@@ -84,7 +84,7 @@ Befores starting, we define file paths (in my computer) to access source data fo
 ```{r paths}
 IFN_path = "/home/miquel/OneDrive/EMFDatasets/ForestInventories/IFN/"
 IFN_out_path = "/home/miquel/OneDrive/EMFProducts/MEDFATE_Initialisation/IFN/"
-DB_path = "/home/miquel/OneDrive/Professional/MedfateWorks/MedfateSpeciesParametrization/"
+DB_path = "/home/miquel/OneDrive/Professional/MEDFATE_development/MedfateSpeciesParametrization/"
 ```
 
 ## Initialize species parameter table for IFN
