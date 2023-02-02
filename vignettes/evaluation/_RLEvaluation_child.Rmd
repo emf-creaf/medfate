@@ -121,14 +121,14 @@ Predictive capacity plots (IFN2-IFN4):
 ```{r, echo = FALSE, fig.width=8, fig.height = 4, warning=FALSE, message=FALSE}
 dfbatot_bas <- dfbatot_SP |> filter(transpirationMode == "Granier",
                              period == "IFN24")
-dfbatot_adv <- dfbatot_SP |> filter(transpirationMode == "Granier",
-                             period == "IFN24")
-plot_scatter_bai(dfbatot_bas, dfbatot_adv)
+dfbatot_adv <- dfbatot_SP |> filter(transpirationMode == "Sperry",
+                             period == "IFN23") # TO BE CHANGED
+plot_scatter_bai(dfbatot_bas, dfbatot_adv, quantity = "basal area change", xylim = c(-0.5,2), errorlim = c(-2,2))
 ```
 
 Relationship between **basal area changes** and climatic variables (MAT and P/PET; IFN2-IFN4):
 ```{r, echo = FALSE, fig.width=8, fig.height = 8, warning=FALSE, message=FALSE}
-plot_cov_clim_bai(dfbatot_bas, dfbatot_adv, quantity = "Basal area change", ylim = c(-5,20), errorlim = c(-20,20))
+plot_cov_clim_bai(dfbatot_bas, dfbatot_adv, quantity = "Basal area change", ylim = c(-0.5,2), errorlim = c(-2,2))
 ```
 
 Spatial distribution of errors (IFN2-IFN4): 

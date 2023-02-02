@@ -31,7 +31,8 @@ ipmDIR = "~/OneDrive/Professional/KnowledgeTransfer/CREAF/FORESFuture/Rdata/ipm/
 ver <- packageVersion("medfate")
 files <- c(paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN23_v", ver, ".rds"),
            paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN34_v", ver, ".rds"),
-           paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN24_v", ver, ".rds"))
+           paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN24_v", ver, ".rds"),
+           paste0(evalDIR, "/Rdata/IFNeval_results_sperry_IFN23_v", ver, ".rds"))
 n <- length(files)
 dfdbh_vec <- vector("list", n)
 dfh_vec <- vector("list", n)
@@ -106,63 +107,59 @@ plot_scatter_tree<-function(df_bas, df_adv, points = TRUE,
     df_bas$ini <- df_bas$H_ini
     df_adv$ini <- df_adv$H_ini
   }
-g1<-ggplot(df_bas, aes(x = pred, y= obs))
-if(points) {
-  g1 <- g1 +  geom_point(aes(x = pred, y= obs), size=0.1, col="orange", alpha = 0.05, data = df_bas)
-  g1 <- g1 +  geom_point(aes(x = pred, y= obs), size=0.1, col="light blue", alpha = 0.05, data = df_adv)
-}
-g1 <- g1 +  geom_abline(intercept = 0, slope = 1, col ="black")+
-  xlab(paste0("Predicted ", var, " increment (cm/yr)"))+
-  ylab(paste0("Observed ", var, " increment (cm/yr)"))+
-  xlim(xylim)+ ylim(xylim)+
-  theme_bw()+
-    theme(panel.grid = element_blank())
+  df<- bind_rows(df_bas, df_adv)
+  g1<-ggplot(df, aes(x = pred, y= obs))
+  if(points) { 
+    g1 <- g1 +  geom_point(aes(col = transpirationMode), size=0.1, alpha = 0.05)
+  }
+  g1 <- g1 +  geom_abline(intercept = 0, slope = 1, col ="black")+
+    xlab(paste0("Predicted ", var, " increment (cm/yr)"))+
+    ylab(paste0("Observed ", var, " increment (cm/yr)"))+
+    xlim(xylim)+ ylim(xylim)+
+    theme_bw()+
+    theme(panel.grid = element_blank(), legend.position = "none")
 
-g2<-ggplot(df_bas, aes(x = ini, y= error))
-if(points) {
-  g2 <- g2 +  geom_point( aes(x = ini, y= error), size=0.1, col="orange", alpha = 0.05, data = df_bas)
-  g2 <- g2 +  geom_point( aes(x = ini, y= error), size=0.1, col="light blue", alpha = 0.05, data = df_adv)
-}
-g2 <- g2 +  geom_abline(intercept = 0, slope = 0, col ="black")+
-  geom_smooth(method="gam", formula = y ~ s(x, bs = "cs"), 
-              col="red", data = df_bas)+
-  geom_smooth(method="gam", formula = y ~ s(x, bs = "cs"), 
-              col="blue", data = df_adv)+
-  xlab(paste0("Initial ", var, " (cm)"))+
-  ylab(paste0("Error ", var, " increment (cm/yr)"))+
-  ylim(errorlim)+xlim(initiallim)+
-  theme_bw()+
-    theme(panel.grid = element_blank())
-plot_grid(g1, g2,nrow=1)
+  g2<-ggplot(df, aes(x = ini, y= error))
+  if(points) {
+    g2 <- g2 +  geom_point(aes(col=transpirationMode), size=0.1, alpha = 0.05)
+  }
+  g2 <- g2 +  geom_abline(intercept = 0, slope = 0, col ="black")+
+    geom_smooth(aes(col=transpirationMode, fill = transpirationMode), method="gam", formula = y ~ s(x, bs = "cs"))+
+    xlab(paste0("Initial ", var, " (cm)"))+
+    ylab(paste0("Error ", var, " increment (cm/yr)"))+
+    ylim(errorlim)+xlim(initiallim)+
+    scale_fill_discrete("")+
+    scale_color_discrete("")+
+    theme_bw()+
+    theme(panel.grid = element_blank(), legend.position = c(0.80,0.85))
+  plot_grid(g1, g2,nrow=1)
 }
 ```
 
 ```{r, echo = FALSE}
 plot_scatter_bai<-function(dfbai_bas, dfbai_adv, quantity = "basal area increment", xylim = c(0,2), errorlim = c(-1,1)) {
-g1<-ggplot(dfbai_bas, aes(x = pred, y= obs))+
-  geom_point(aes(x = pred, y= obs), size=0.3, col="orange", alpha = 0.3, data = dfbai_bas)+
-  geom_point(aes(x = pred, y= obs), size=0.3, col="light blue", alpha = 0.3, data = dfbai_adv)+
-  geom_abline(intercept = 0, slope = 1, col ="black")+
-  xlab(paste0("Predicted ", quantity," (m2/ha/yr)"))+
-  ylab(paste0("Observed ", quantity," (m2/ha/yr)"))+
-  xlim(xylim)+ ylim(xylim)+
-  theme_bw()+
-    theme(panel.grid = element_blank())
+  
+  df<- bind_rows(dfbai_bas, dfbai_adv)
+  g1<-ggplot(df, aes(x = pred, y= obs))+
+    geom_point(aes(col=transpirationMode), size=0.3, alpha = 0.3)+
+    geom_abline(intercept = 0, slope = 1, col ="black")+
+    xlab(paste0("Predicted ", quantity," (m2/ha/yr)"))+
+    ylab(paste0("Observed ", quantity," (m2/ha/yr)"))+
+    xlim(xylim)+ ylim(xylim)+
+    theme_bw()+ theme(panel.grid = element_blank(), legend.position = "none")
 
-g2<-ggplot(dfbai_bas, aes(x = BA_ini, y= error))+
-  geom_point( aes(x = BA_ini, y= error), size=0.3, col="orange", alpha = 0.3, data = dfbai_bas)+
-  geom_point( aes(x = BA_ini, y= error), size=0.3, col="light blue", alpha = 0.3, data = dfbai_adv)+
-  geom_abline(intercept = 0, slope = 0, col ="black")+
-  geom_smooth(method="loess", formula = y ~ x, 
-              col="red", data = dfbai_bas)+
-  geom_smooth(method="loess", formula = y ~ x, 
-              col="blue", data = dfbai_adv)+
-  xlab("Initial basal area (m2/ha)")+
-  ylab(paste0("Error ", quantity," (m2/ha/yr)"))+
-  xlim(c(0,30))+ylim(errorlim)+
-  theme_bw()+
-    theme(panel.grid = element_blank())
-plot_grid(g1, g2, nrow=1)
+  g2<-ggplot(df, aes(x = BA_ini, y= error))+
+    geom_point(aes(col = transpirationMode), size=0.3, alpha = 0.3, data = dfbai_bas)+
+    geom_abline(intercept = 0, slope = 0, col ="black")+
+    geom_smooth(aes(col = transpirationMode, fill = transpirationMode), method="loess", formula = y ~ x)+
+    xlab("Initial basal area (m2/ha)")+
+    ylab(paste0("Error ", quantity," (m2/ha/yr)"))+
+    xlim(c(0,30))+ylim(errorlim)+
+    scale_fill_discrete("")+
+    scale_color_discrete("")+
+    theme_bw()+ theme(panel.grid = element_blank(), legend.position = c(0.8,0.85))
+  
+  plot_grid(g1, g2, nrow=1)
 }
 ```
 
@@ -170,161 +167,149 @@ plot_grid(g1, g2, nrow=1)
 plot_cov_clim_tree<-function(df_bas, df_adv, points = TRUE, xylim = c(0,1), errorlim = c(-1,1), var = "diameter"){
   df_bas$PPET[df_bas$PPET>2] = 2
   df_adv$PPET[df_adv$PPET>2] = 2
-  dfbas = bind_rows(data.frame(MAT = df_bas$MAT, PPET = df_bas$PPET, PAR = df_bas$light_ini, value = df_bas$obs, type="Observed"),
-                    data.frame(MAT = df_bas$MAT, PPET = df_bas$PPET, PAR = df_bas$light_ini, value = df_bas$pred, type="Predicted"))
-  dfadv = bind_rows(data.frame(MAT = df_adv$MAT, PPET = df_adv$PPET, PAR = df_adv$light_ini, value = df_adv$obs, type="Observed"),
-                    data.frame(MAT = df_adv$MAT, PPET = df_adv$PPET, PAR = df_adv$light_ini, value = df_adv$pred, type="Predicted"))
-  g1<-ggplot(dfbas, aes(x = PPET, y=value))
+  df <- bind_rows(df_bas, df_adv)
+  g1<-ggplot(df, aes(x = PPET, y=pred))
   if(points) {
-    g1 <- g1 +  geom_point(aes(x = PPET, y= value), size=0.1, col="gray", alpha = 0.05, data = dfbas[dfbas$type=="Observed", ])
-    g1 <- g1 +  geom_point(aes(x = PPET, y= value), size=0.1, col="orange", alpha = 0.05, data = dfbas[dfbas$type=="Predicted", ])
-    g1 <- g1 +  geom_point(aes(x = PPET, y= value), size=0.1, col="light blue", alpha = 0.05, data = dfadv[dfadv$type=="Predicted", ])
+    g1 <- g1 +  geom_point(aes(col = transpirationMode), size=0.1, alpha = 0.05)
+    g1 <- g1 +  geom_point(aes(x = PPET, y= obs), size=0.1, col="gray", alpha = 0.05, data = df_bas)
   }
   g1 <- g1 + 
-    geom_smooth(col = "black", method="gam", formula = y ~ s(x, bs = "cs"), data = dfbas[dfbas$type=="Observed", ])+
-    geom_smooth(col = "red", method="gam", formula = y ~ s(x, bs = "cs"), data = dfbas[dfbas$type=="Predicted", ])+
-    geom_smooth(col = "blue", method="gam", formula = y ~ s(x, bs = "cs"), data = dfadv[dfadv$type=="Predicted", ])+
+    geom_smooth(aes(col = transpirationMode, fill = transpirationMode), method="gam", formula = y ~ s(x, bs = "cs"))+
+    geom_smooth(aes(x = PPET, y = obs), col = "black", method="gam", formula = y ~ s(x, bs = "cs"), data = df_bas)+
     ylab(paste0("Annual ", var, " increment (cm/yr)"))+ ylim(xylim)+
     xlab("Moisture index (P/PET)")+
+    scale_color_discrete("")+ scale_fill_discrete("")+
     theme_bw()+
-    theme(legend.position = c(0.75,0.85), 
+    theme(legend.position = "none", 
           legend.background = element_blank(),
           panel.grid = element_blank())
   
-  g2<-ggplot(df_bas, aes(x = PPET, y=error))
+  g2<-ggplot(df, aes(x = PPET, y=error))
   if(points) {
-    g2 <- g2 +  geom_point(aes(x = PPET, y= error), size=0.1, col="orange", alpha = 0.05, data = df_bas)
-    g2 <- g2 +  geom_point(aes(x = PPET, y= error), size=0.1, col="light blue", alpha = 0.05, data = df_adv)
+    g2 <- g2 +  geom_point(aes(col = transpirationMode), size=0.1, alpha = 0.05)
   }
-  g2 <- g2 + geom_smooth(col = "red", method="gam", formula = y ~ s(x, bs = "cs"), data = df_bas)+
-    geom_smooth(col = "blue", method="gam", formula = y ~ s(x, bs = "cs"), data = df_adv)+
+  g2 <- g2 + 
+    geom_smooth(aes(col = transpirationMode, fill = transpirationMode), method="gam", formula = y ~ s(x, bs = "cs"))+
     geom_abline(intercept = 0, slope = 0, col ="black")+
     ylab(paste0("Annual ", var, " increment error (cm)"))+ylim(errorlim)+
     xlab("Moisture index (P/PET)")+
+    scale_color_discrete("")+ scale_fill_discrete("")+
     theme_bw()+
-    theme(panel.grid = element_blank())
+    theme(panel.grid = element_blank(), legend.position = c(0.8,0.85))
   
-  g3<-ggplot(dfbas, aes(x = MAT, y=value))
+  g3<-ggplot(df, aes(x = MAT, y=pred))
   if(points) {
-    g3 <- g3 +  geom_point(aes(x = MAT, y= value), size=0.1, col="gray", alpha = 0.05, data = dfbas[dfbas$type=="Observed", ])
-    g3 <- g3 +  geom_point(aes(x = MAT, y= value), size=0.1, col="orange", alpha = 0.05, data = dfbas[dfbas$type=="Predicted", ])
-    g3 <- g3 +  geom_point(aes(x = MAT, y= value), size=0.1, col="light blue", alpha = 0.05, data = dfadv[dfadv$type=="Predicted", ])
+    g3 <- g3 +  geom_point(aes(col = transpirationMode), size=0.1, alpha = 0.05)
+    g3 <- g3 +  geom_point(aes(x = MAT, y= obs), size=0.1, col="gray", alpha = 0.05, data = df_bas)
   }
   g3 <- g3 + 
-    geom_smooth(col = "black", method="gam", formula = y ~ s(x, bs = "cs"), data = dfbas[dfbas$type=="Observed", ])+
-    geom_smooth(col = "red", method="gam", formula = y ~ s(x, bs = "cs"), data = dfbas[dfbas$type=="Predicted", ])+
-    geom_smooth(col = "blue", method="gam", formula = y ~ s(x, bs = "cs"), data = dfadv[dfadv$type=="Predicted", ])+
+    geom_smooth(aes(col = transpirationMode, fill = transpirationMode), method="gam", formula = y ~ s(x, bs = "cs"))+
+    geom_smooth(aes(x = MAT, y= obs), col = "black", method="gam", formula = y ~ s(x, bs = "cs"), data = df_bas)+
     ylab(paste0("Annual ", var, " increment (cm/yr)"))+ylim(xylim)+
     xlab("Mean annual temperature (ºC)")+
+    scale_color_discrete("")+ scale_fill_discrete("")+
     theme_bw()+
-    theme(legend.position = c(0.75,0.85), 
+    theme(legend.position = "none", 
           legend.background = element_blank(),
           panel.grid = element_blank())
   
-  g4<-ggplot(df_bas, aes(x = MAT, y=error))
+  g4<-ggplot(df, aes(x = MAT, y=error))
   if(points) {
-    g4 <- g4 +  geom_point(aes(x = MAT, y= error), size=0.1, col="orange", alpha = 0.05, data = df_bas)
-    g4 <- g4 +  geom_point(aes(x = MAT, y= error), size=0.1, col="light blue", alpha = 0.05, data = df_adv)
+    g4 <- g4 +  geom_point(aes(col = transpirationMode), size=0.1, alpha = 0.05)
   }
-  g4 <- g4 + geom_smooth(col = "red", method="gam", formula = y ~ s(x, bs = "cs"), data = df_bas)+
-    geom_smooth(col = "blue", method="gam", formula = y ~ s(x, bs = "cs"), data = df_adv)+
+  g4 <- g4 + 
+    geom_smooth(aes(col = transpirationMode, fill = transpirationMode), method="gam", formula = y ~ s(x, bs = "cs"))+
     geom_abline(intercept = 0, slope = 0, col ="black")+
     ylab(paste0("Annual ", var, " increment error (cm)"))+ylim(errorlim)+
     xlab("Mean annual temperature (ºC)")+
+    scale_color_discrete("")+ scale_fill_discrete("")+
     theme_bw()+
-    theme(panel.grid = element_blank())
+    theme(panel.grid = element_blank(), legend.position = "none")
   
-  g5<-ggplot(dfbas, aes(x = PAR, y=value))
+  g5<-ggplot(df, aes(x = light_ini, y=pred))
   if(points) {
-    g5 <- g5 +  geom_point(aes(x = PAR, y= value), size=0.1, col="gray", alpha = 0.05, data = dfbas[dfbas$type=="Observed", ])
-    g5 <- g5 +  geom_point(aes(x = PAR, y= value), size=0.1, col="orange", alpha = 0.05, data = dfbas[dfbas$type=="Predicted", ])
-    g5 <- g5 +  geom_point(aes(x = PAR, y= value), size=0.1, col="light blue", alpha = 0.05, data = dfadv[dfadv$type=="Predicted", ])
+    g5 <- g5 +  geom_point(aes(col = transpirationMode), size=0.1, alpha = 0.05)
+    g5 <- g5 +  geom_point(aes(x = light_ini, y= obs), size=0.1, col="gray", alpha = 0.05, data = df_bas)
   }
   g5 <- g5 + 
-    geom_smooth(col = "black", method="gam", formula = y ~ s(x, bs = "cs"), data = dfbas[dfbas$type=="Observed", ])+
-    geom_smooth(col = "red", method="gam", formula = y ~ s(x, bs = "cs"), data = dfbas[dfbas$type=="Predicted", ])+
-    geom_smooth(col = "blue", method="gam", formula = y ~ s(x, bs = "cs"), data = dfadv[dfadv$type=="Predicted", ])+
+    geom_smooth(aes(col = transpirationMode, fill = transpirationMode), method="gam", formula = y ~ s(x, bs = "cs"))+
+    geom_smooth(aes(x = light_ini, y= obs), col = "black", method="gam", formula = y ~ s(x, bs = "cs"), data = df_bas)+
     ylab(paste0("Annual ", var," increment (cm/yr)"))+ylim(xylim)+
     xlab("Available PAR (%)")+
+    scale_color_discrete("")+ scale_fill_discrete("")+
     theme_bw()+
-    theme(legend.position = c(0.75,0.85), 
+    theme(legend.position = "none", 
           legend.background = element_blank(),
           panel.grid = element_blank())
   
-  g6<-ggplot(df_bas, aes(x = light_ini, y=error))
+  g6<-ggplot(df, aes(x = light_ini, y=error))
   if(points) {
-    g6 <- g6 +  geom_point(aes(x = light_ini, y= error), size=0.1, col="orange", alpha = 0.05, data = df_bas)
-    g6 <- g6 +  geom_point(aes(x = light_ini, y= error), size=0.1, col="light blue", alpha = 0.05, data = df_adv)
+    g6 <- g6 +  geom_point(aes(col = transpirationMode), size=0.1, alpha = 0.05)
   }
-  g6 <- g6 + geom_smooth(col = "red", method="gam", formula = y ~ s(x, bs = "cs"), data = df_bas)+
-    geom_smooth(col = "blue", method="gam", formula = y ~ s(x, bs = "cs"), data = df_adv)+
+  g6 <- g6 + 
+    geom_smooth(aes(col = transpirationMode, fill = transpirationMode), method="gam", formula = y ~ s(x, bs = "cs"))+
     geom_abline(intercept = 0, slope = 0, col ="black")+
     ylab(paste0("Annual ", var, " increment error (cm)"))+ylim(errorlim)+
     xlab("Available PAR (%)")+
+    scale_color_discrete("")+ scale_fill_discrete("")+
     theme_bw()+
-    theme(panel.grid = element_blank())
+    theme(panel.grid = element_blank(), legend.position = "none")
   plot_grid(g1, g2, g3, g4, g5,g6, nrow=3)
 }
 ```
 
 ```{r, echo = FALSE}
-plot_cov_clim_bai<-function(dfbai_bas, dfbai_adv, quantity = "Basal area increment", ylim = c(0,2), errorlim = c(-2,2)){
-  dfbai_bas$PPET[dfbai_bas$PPET>2] = 2
-  dfbai_adv$PPET[dfbai_adv$PPET>2] = 2
-  dfbas = bind_rows(data.frame(MAT = dfbai_bas$MAT, PPET = dfbai_bas$PPET, value = dfbai_bas$obs, type="Observed"),
-                    data.frame(MAT = dfbai_bas$MAT, PPET = dfbai_bas$PPET, value = dfbai_bas$pred, type="Predicted"))
-  dfadv = bind_rows(data.frame(MAT = dfbai_adv$MAT, PPET = dfbai_adv$PPET, value = dfbai_adv$obs, type="Observed"),
-                    data.frame(MAT = dfbai_adv$MAT, PPET = dfbai_adv$PPET, value = dfbai_adv$pred, type="Predicted"))
+plot_cov_clim_bai<-function(df_bas, df_adv, quantity = "Basal area increment", ylim = c(0,2), errorlim = c(-2,2)){
+  df_bas$PPET[df_bas$PPET>2] = 2
+  df_adv$PPET[df_adv$PPET>2] = 2
   
-  g1<-ggplot(dfbai_bas, aes(x = PPET, y=value))+
-    geom_point(aes(x = PPET, y= value), size=0.3, col="gray", alpha = 0.3, data = dfbas[dfbas$type=="Observed", ])+
-    geom_point(aes(x = PPET, y= value), size=0.3, col="orange", alpha = 0.3, data = dfbas[dfbas$type=="Predicted", ])+
-    geom_point(aes(x = PPET, y= value), size=0.3, col="light blue", alpha = 0.3, data = dfadv[dfadv$type=="Predicted", ])+
-    geom_smooth(col = "black", method="loess", formula = y ~ x, data = dfbas[dfbas$type=="Observed", ])+
-    geom_smooth(col = "red", method="loess", formula = y ~ x, data = dfbas[dfbas$type=="Predicted", ])+
-    geom_smooth(col = "blue", method="loess", formula = y ~ x, data = dfadv[dfadv$type=="Predicted", ])+
+  df <- bind_rows(df_bas, df_adv)
+
+  g1<-ggplot(df, aes(x = PPET, y=pred))+
+    geom_point(aes(x = PPET, y= obs), size=0.3, col="gray", alpha = 0.3, data = df_bas)+
+    geom_point(aes(col = transpirationMode), size=0.3, alpha = 0.3)+
+    geom_smooth(aes(x = PPET, y = obs), col = "black", method="loess", formula = y ~ x, data = df_bas)+
+    geom_smooth(aes(col = transpirationMode, fill = transpirationMode), method="loess", formula = y ~ x)+
     ylab(paste0(quantity," (m2/ha/yr)"))+ ylim(ylim)+
     xlab("Moisture index (P/PET)")+
+    scale_color_discrete("")+ scale_fill_discrete("")+
     theme_bw()+
-    theme(legend.position = c(0.75,0.85), 
+    theme(legend.position = "none",
           legend.background = element_blank(),
           panel.grid = element_blank())
   
-  g2<-ggplot(dfbai_bas, aes(x = PPET, y=error))+
-    geom_point(aes(x = PPET, y= error), size=0.3, col="orange", alpha = 0.3, data = dfbai_bas)+
-    geom_point(aes(x = PPET, y= error), size=0.3, col="light blue", alpha = 0.3, data = dfbai_adv)+
-    geom_smooth(aes(x = PPET, y=error), method="loess", formula = y ~ x, col= "red", data = dfbai_bas)+
-    geom_smooth(aes(x = PPET, y=error), method="loess", formula = y ~ x, col= "blue", data = dfbai_adv)+
+  g2<-ggplot(df, aes(x = PPET, y=error))+
+    geom_point(aes(col = transpirationMode), size=0.3, alpha = 0.3)+
+    geom_smooth(aes(col = transpirationMode, fill= transpirationMode), method="loess", formula = y ~ x)+
     geom_abline(intercept = 0, slope = 0, col ="black")+
     ylab(paste0(quantity," error (m2/ha/yr)"))+ylim(errorlim)+
     xlab("Moisture index (P/PET)")+
+    scale_color_discrete("")+ scale_fill_discrete("")+
     theme_bw()+
-    theme(panel.grid = element_blank())
+    theme(panel.grid = element_blank(), legend.position = c(0.8,0.85))
   
-  g3<-ggplot(dfbai_bas, aes(x = MAT, y=value))+
-    geom_point(aes(x = MAT, y= value), size=0.3, col="gray", alpha = 0.3, data = dfbas[dfbas$type=="Observed", ])+
-    geom_point(aes(x = MAT, y= value), size=0.3, col="orange", alpha = 0.3, data = dfbas[dfbas$type=="Predicted", ])+
-    geom_point(aes(x = MAT, y= value), size=0.3, col="light blue", alpha = 0.3, data = dfadv[dfadv$type=="Predicted", ])+
-    geom_smooth(col = "black", method="loess", formula = y ~ x, data = dfbas[dfbas$type=="Observed", ])+
-    geom_smooth(col = "red", method="loess", formula = y ~ x, data = dfbas[dfbas$type=="Predicted", ])+
-    geom_smooth(col = "blue", method="loess", formula = y ~ x, data = dfadv[dfadv$type=="Predicted", ])+
+  g3<-ggplot(df, aes(x = MAT, y=pred))+
+    geom_point(aes(x = MAT, y= obs), size=0.3, col="gray", alpha = 0.3, data = df_bas)+
+    geom_point(aes(col = transpirationMode), size=0.3, alpha = 0.3)+
+    geom_smooth(aes(x = MAT, y = obs), col = "black", method="loess", formula = y ~ x, data = df_bas)+
+    geom_smooth(aes(col = transpirationMode, fill = transpirationMode), method="loess", formula = y ~ x)+
     ylab(paste0(quantity," (m2/ha/yr)"))+ ylim(ylim)+
     xlab("Mean annual temperature (ºC)")+
+    scale_color_discrete("")+ scale_fill_discrete("")+
     theme_bw()+
-    theme(legend.position = c(0.75,0.85), 
+    theme(legend.position = "none", 
           legend.background = element_blank(),
           panel.grid = element_blank())
     
-  g4<-ggplot(dfbai_bas, aes(x = MAT, y=error))+
-    geom_point(aes(x = MAT, y= error), size=0.3, col="orange", alpha = 0.3, data = dfbai_bas)+
-    geom_point(aes(x = MAT, y= error), size=0.3, col="light blue", alpha = 0.3, data = dfbai_adv)+
-    geom_smooth(aes(x = MAT, y=error), method="loess", formula = y ~ x, col= "red", data = dfbai_bas)+
-    geom_smooth(aes(x = MAT, y=error), method="loess", formula = y ~ x, col= "blue", data = dfbai_adv)+
+  g4<-ggplot(df, aes(x = MAT, y=error))+
+    geom_point(aes(col = transpirationMode), size=0.3, alpha = 0.3)+
+    geom_smooth(aes(col = transpirationMode, fill= transpirationMode), method="loess", formula = y ~ x)+
     geom_abline(intercept = 0, slope = 0, col ="black")+
     ylab(paste0(quantity," error (m2/ha/yr)"))+ ylim(errorlim)+
     xlab("Mean annual temperature (ºC)")+
+    scale_color_discrete("")+ scale_fill_discrete("")+
     theme_bw()+
-    theme(panel.grid = element_blank())
+    theme(panel.grid = element_blank(), legend.position = "none")
   plot_grid(g1, g2, g3, g4, nrow=2)
 }
 ```
@@ -389,16 +374,16 @@ Predictive capacity plots (IFN2-IFN4):
 ```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
 dfdbh_bas <- dfdbh |> filter(transpirationMode == "Granier",
                              period == "IFN24")
-plot_scatter_tree(dfdbh_bas, dfdbh_bas, points = TRUE)
+dfdbh_adv <- dfdbh |> filter(transpirationMode == "Sperry",
+                             period == "IFN23") # TO BE CHANGED
+plot_scatter_tree(dfdbh_bas, dfdbh_adv, points = TRUE)
 ```
 
 
 Relationship between diameter increase and climatic variables (MAT, P/PET and available PAR; IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=12, warning=FALSE, message=FALSE}
-dfdbh_bas <- dfdbh |> filter(transpirationMode == "Granier",
-                             period == "IFN24")
-plot_cov_clim_tree(dfdbh_bas, dfdbh_bas, points = TRUE)
+plot_cov_clim_tree(dfdbh_bas, dfdbh_adv, points = TRUE)
 ```
 
 
@@ -416,7 +401,9 @@ Predictive capacity plots (IFN2-IFN4):
 ```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
 dfh_bas <- dfh |> filter(transpirationMode == "Granier",
                              period == "IFN24")
-plot_scatter_tree(dfh_bas, dfh_bas, points = TRUE, xylim = c(0,20), errorlim = c(-20,20), initiallim = c(0, 2000),
+dfh_adv <- dfh |> filter(transpirationMode == "Sperry",
+                             period == "IFN23") # TO BE CHANGED
+plot_scatter_tree(dfh_bas, dfh_adv, points = TRUE, xylim = c(0,20), errorlim = c(-20,20), initiallim = c(0, 2000),
                   var = "height")
 ```
 
@@ -424,7 +411,7 @@ plot_scatter_tree(dfh_bas, dfh_bas, points = TRUE, xylim = c(0,20), errorlim = c
 Relationship between height increase and climatic variables (MAT, P/PET and available PAR; IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=12, warning=FALSE, message=FALSE}
-plot_cov_clim_tree(dfh_bas, dfh_bas, points = TRUE, xylim = c(0,20), errorlim = c(-20,20), var = "height")
+plot_cov_clim_tree(dfh_bas, dfh_adv, points = TRUE, xylim = c(0,20), errorlim = c(-20,20), var = "height")
 ```
 
 ### Stand-level basal area increment
@@ -443,13 +430,15 @@ Predictive capacity plots (IFN2 - IFN4):
 ```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
 dfbai_bas <- dfbai_plot |> filter(transpirationMode == "Granier",
                              period == "IFN24")
-plot_scatter_bai(dfbai_bas, dfbai_bas)
+dfbai_adv <- dfbai_plot |> filter(transpirationMode == "Sperry",
+                             period == "IFN23") # TO BE CHANGED
+plot_scatter_bai(dfbai_bas, dfbai_adv)
 ```
 
 Relationship between basal area increase and climatic variables (MAT and P/PET; IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=8, warning=FALSE, message=FALSE}
-plot_cov_clim_bai(dfbai_bas, dfbai_bas, errorlim = c(-1,1), ylim = c(0,1))
+plot_cov_clim_bai(dfbai_bas, dfbai_adv, errorlim = c(-1,1), ylim = c(0,1))
 ```
 
 
@@ -457,7 +446,7 @@ Spatial error distribution (IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=9, fig.height=4}
 p1<-bai_error_map(dfbai_bas)+labs(title="Basic")
-p2<-bai_error_map(dfbai_bas)+labs(title="Advanced")
+p2<-bai_error_map(dfbai_adv)+labs(title="Advanced")
 plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "none"),
           get_legend(p1),nrow=1, rel_widths = c(1,1,0.25))
 ```
@@ -482,14 +471,16 @@ Predictive capacity plots (IFN2 - IFN4):
 ```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message = FALSE}
 dfdead_bas <- dfbadead_plot |> filter(transpirationMode == "Granier",
                              period == "IFN24")
-plot_scatter_bai(dfdead_bas, dfdead_bas,
+dfdead_adv <- dfbadead_plot |> filter(transpirationMode == "Sperry",
+                             period == "IFN23") # TO BE CHANGED
+plot_scatter_bai(dfdead_bas, dfdead_adv,
                   quantity = "dead basal area", xylim = c(0,0.5), errorlim = c(-0.5,0.5))
 ```
 
 Relationship between dead basal area and climatic variables (MAT and P/PET; IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=8, warning=FALSE, message=FALSE}
-plot_cov_clim_bai(dfdead_bas, dfdead_bas,
+plot_cov_clim_bai(dfdead_bas, dfdead_adv,
                    quantity = "Dead basal area", ylim = c(0,0.5), errorlim = c(-0.5,0.5))
 ```
 
@@ -522,14 +513,16 @@ Predictive capacity plots (IFN2 - IFN4):
 ```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message = FALSE}
 dfrecr_bas <- dfbarecr_plot |> filter(transpirationMode == "Granier",
                              period == "IFN24")
-plot_scatter_bai(dfrecr_bas, dfrecr_bas,
+dfrecr_adv <- dfbarecr_plot |> filter(transpirationMode == "Sperry",
+                             period == "IFN23")
+plot_scatter_bai(dfrecr_bas, dfrecr_adv,
                  quantity = "ingrowth basal area", xylim = c(0,0.15), errorlim = c(-0.15,0.15))
 ```
 
 Relationship between ingrowth basal area and climatic variables (MAT and P/PET; IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=8, warning=FALSE, message=FALSE}
-plot_cov_clim_bai(dfrecr_bas, dfrecr_bas,
+plot_cov_clim_bai(dfrecr_bas, dfrecr_adv,
                   quantity = "Ingrowth basal area", ylim = c(0,0.15), errorlim = c(-0.15,0.15))
 ```
 
@@ -562,7 +555,9 @@ Predictive capacity plot (IFN2 - IFN4):
 ```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message = FALSE}
 dftot_bas <- dfbatot_plot |> filter(transpirationMode == "Granier",
                              period == "IFN24")
-p1<-plot_scatter_bai(dftot_bas, dftot_bas,
+dftot_adv <- dfbatot_plot |> filter(transpirationMode == "Sperry",
+                             period == "IFN23")
+p1<-plot_scatter_bai(dftot_bas, dftot_adv,
                  quantity = "basal area change", xylim = c(-0.5,2), errorlim = c(-2,2))
 p1
 ```
@@ -570,7 +565,7 @@ p1
 Relationship between overall basal area change and climatic variables (MAT and P/PET; IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height=8, warning=FALSE, message=FALSE}
-p2<-plot_cov_clim_bai(dftot_bas, dftot_bas,
+p2<-plot_cov_clim_bai(dftot_bas, dftot_adv,
                   quantity = "Basal area change", ylim = c(-0.5,2), errorlim = c(-2,2))
 p2
 ```
@@ -584,7 +579,7 @@ Spatial distribution of errors (IFN2 - IFN4):
 
 ```{r, echo = FALSE, fig.width=9, fig.height=4, warning=FALSE, message=FALSE}
 p1<-bai_error_map(dftot_bas)+labs(title="Basic sub-model")
-p2<-bai_error_map(dftot_bas)+labs(title="Advanced sub-model")
+p2<-bai_error_map(dftot_adv)+labs(title="Advanced sub-model")
 pm<-plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "none"),
           get_legend(p1),nrow=1, rel_widths = c(1,1,0.25))
 ggsave(paste0(evalDIR,"/Plots/BAtot_error_map.png"),pm, width = 13, height=6, bg="white")
