@@ -1,62 +1,14 @@
-### `r name`
+### `r sp_name`
 
 ```{r, echo = FALSE}
-sel = dfbai$SP==sp
-sel[is.na(sel)] = FALSE
-sel_bas = dfbai_bas$SP==sp
-sel_bas[is.na(sel_bas)] = FALSE
-sel_adv = dfbai_adv$SP==sp
-sel_adv[is.na(sel_adv)] = FALSE
-
-dfbaiSP = dfbai[sel,]
-dfbaiSP_bas = dfbai_bas[sel_bas,]
-dfbaiSP_adv = dfbai_adv[sel_adv,]
-
-sel = dfbai_all$SP==sp
-sel[is.na(sel)] = FALSE
-sel_bas = dfbai_all_bas$SP==sp
-sel_bas[is.na(sel_bas)] = FALSE
-sel_adv = dfbai_all_adv$SP==sp
-sel_adv[is.na(sel_adv)] = FALSE
-
-dfbaiSP_all = dfbai_all[sel,]
-dfbaiSP_all_bas = dfbai_all_bas[sel_bas,]
-dfbaiSP_all_adv = dfbai_all_adv[sel_adv,]
-
-sel = dfbarecr$SP==sp
-sel[is.na(sel)] = FALSE
-sel_bas = dfbarecr_bas$SP==sp
-sel_bas[is.na(sel_bas)] = FALSE
-sel_adv = dfbarecr_adv$SP==sp
-sel_adv[is.na(sel_adv)] = FALSE
-
-dfbarecrSP = dfbarecr[sel,]
-dfbarecrSP_bas = dfbarecr_bas[sel_bas,]
-dfbarecrSP_adv = dfbarecr_adv[sel_adv,]
-
-sel = (dfbadead$SP==sp)
-sel[is.na(sel)] = FALSE
-sel_bas = dfbadead_bas$SP==sp
-sel_bas[is.na(sel_bas)] = FALSE
-sel_adv = dfbadead_adv$SP==sp
-sel_adv[is.na(sel_adv)] = FALSE
-
-dfbadeadSP = dfbadead[sel,]
-dfbadeadSP_bas = dfbadead_bas[sel_bas,]
-dfbadeadSP_adv = dfbadead_adv[sel_adv,]
-
-sel = dfdbh$SP==sp
-sel[is.na(sel)] = FALSE
-sel_bas = dfdbh_bas$SP==sp
-sel_bas[is.na(sel_bas)] = FALSE
-sel_adv = dfdbh_adv$SP==sp
-sel_adv[is.na(sel_adv)] = FALSE
-dfdbh_SP = dfdbh[sel,]
-dfdbhSP_bas = dfdbh_bas[sel_bas,]
-dfdbhSP_adv = dfdbh_adv[sel_adv,]
-dfh_SP = dfh[sel,]
-dfhSP_bas = dfh_bas[sel_bas,]
-dfhSP_adv = dfh_adv[sel_adv,]
+sp_names <- sp_name
+if(sp_name=="Quercus pubescens") sp_names <- c("Quercus pubescens", "Quercus pyrenaica")
+dfbai_SP = dfbai_sp[dfbai_sp$Species_ini %in% sp_names,]
+dfbatot_SP = dfbatot_sp[dfbatot_sp$Species %in% sp_names,]
+dfbarecr_SP = dfbarecr_sp[dfbarecr_sp$Species %in% sp_names,]
+dfbadead_SP = dfbadead_sp[dfbadead_sp$Species %in% sp_names,]
+dfdbh_SP = dfdbh[dfdbh$Species_ini %in% sp_names,]
+dfh_SP = dfh[dfh$Species_ini %in% sp_names,]
 ```
 
 
@@ -64,32 +16,29 @@ dfhSP_adv = dfh_adv[sel_adv,]
 
 Prediction ability for **diameter increase** (cm/yr) of surviving trees:
 ```{r, echo = FALSE}
-dfdbh_SP %>% group_by(Submodel) %>% 
-  summarize(n = n(),
-            Obs = mean(obs, na.rm=TRUE),
-            Pred = mean(pred, na.rm=TRUE),
-            Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Obs),
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/abs(Obs),
-            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Obs),
-            R2 = cor(obs,pred)^2, .groups="drop") %>% 
-  kbl() %>%
+dfdbh_SP |> 
+  evaluation_stats() |> 
+  kbl() |>
   kable_styling()
 ```
 
 
-Predictive capacity plots:
+<!-- Predictive capacity plots: -->
 
-```{r, echo = FALSE, fig.width=8, fig.height = 4, warning=FALSE, message=FALSE}
-plot_scatter_dbh(dfdbhSP_bas, dfdbhSP_adv,  points = TRUE)
-```
+<!-- ```{r, echo = FALSE, fig.width=8, fig.height = 4, warning=FALSE, message=FALSE} -->
+<!-- dfdbhSP_bas <- dfdbh_SP |> filter(transpirationMode == "Granier", -->
+<!--                              period == "IFN24") -->
+<!-- dfdbhSP_adv <- dfdbh_SP |> filter(transpirationMode == "Granier", -->
+<!--                              period == "IFN24") -->
+<!-- plot_scatter_tree(dfdbhSP_bas, dfdbhSP_adv,  points = TRUE) -->
+<!-- ``` -->
 
-Relationship between **diameter increment** and climatic variables (MAT and P/PET):
-```{r, echo = FALSE, fig.width=8, fig.height = 12, warning=FALSE, message=FALSE}
-plot_cov_clim_dbh(dfdbhSP_bas, dfdbhSP_adv,  points = TRUE)
-```
+<!-- Relationship between **diameter increment** and climatic variables (MAT and P/PET): -->
+<!-- ```{r, echo = FALSE, fig.width=8, fig.height = 12, warning=FALSE, message=FALSE} -->
+<!-- plot_cov_clim_tree(dfdbhSP_bas, dfdbhSP_adv,  points = TRUE) -->
+<!-- ``` -->
+
+
 
 
 #### Annual height increment
@@ -97,79 +46,60 @@ plot_cov_clim_dbh(dfdbhSP_bas, dfdbhSP_adv,  points = TRUE)
 Prediction ability for **height increase** (cm/yr) of surviving trees:
 
 ```{r, echo = FALSE}
-dfh_SP %>% group_by(Submodel) %>% 
-  summarize(n = n(),
-            Obs = mean(obs, na.rm=TRUE),
-            Pred = mean(pred, na.rm=TRUE),
-            Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Obs),
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/abs(Obs),
-            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Obs),
-            R2 = cor(obs,pred)^2, .groups="drop") %>% 
-  kbl() %>%
+dfh_SP |> 
+  evaluation_stats() |> 
+  kbl() |>
   kable_styling()
 ```
 
+<!-- Predictive capacity plots (IFN2-IFN4): -->
+
+<!-- ```{r, echo = FALSE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE} -->
+<!-- dfhSP_bas <- dfh_SP |> filter(transpirationMode == "Granier", -->
+<!--                              period == "IFN24") -->
+<!-- dfhSP_adv <- dfh_SP |> filter(transpirationMode == "Granier", -->
+<!--                              period == "IFN24") -->
+<!-- plot_scatter_tree(dfhSP_bas, dfhSP_adv, points = TRUE, xylim = c(0,20), errorlim = c(-20,20), initiallim = c(0, 2000), -->
+<!--                   var = "height") -->
+<!-- ``` -->
+
+<!-- Relationship between height increase and climatic variables (MAT, P/PET and available PAR; IFN2 - IFN4): -->
+
+<!-- ```{r, echo = FALSE, fig.width=8, fig.height=12, warning=FALSE, message=FALSE} -->
+<!-- plot_cov_clim_tree(dfhSP_bas, dfhSP_bas, points = TRUE, xylim = c(0,20), errorlim = c(-20,20), var = "height") -->
+<!-- ``` -->
+
 #### Growth basal area increment
 
-Prediction ability for **basal area increase due to growth** (m2/ha) of surviving trees: 
+Prediction ability for **basal area increase due to growth** (m2/ha/yr) of surviving trees: 
 
 ```{r, echo = FALSE}
-dfbaiSP %>% group_by(Submodel) %>% 
-  summarize(n = n(),
-            Obs = mean(obs, na.rm=TRUE),
-            Pred = mean(pred, na.rm=TRUE),
-            Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Obs),
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/abs(Obs),
-            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Obs),
-            R2 = cor(obs,pred)^2) %>% 
-  kbl() %>%
+dfbai_SP |> 
+  evaluation_stats() |> 
+  kbl() |>
   kable_styling()
 ```
 
 #### Mortality
 
-Prediction ability for **basal area decrease due to mortality** (m2/ha): 
+Prediction ability for **basal area decrease due to mortality** (m2/ha/yr): 
 
-```{r, echo = FALSE, warning=FALSE}
-dfbadeadSP %>% group_by(Submodel) %>% 
-  summarize(n = n(),
-            Obs = mean(obs, na.rm=TRUE),
-            Pred = mean(pred, na.rm=TRUE),
-            Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Obs),
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/abs(Obs),
-            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Obs),
-            R2 = cor(obs,pred)^2) %>% 
-  kbl() %>%
+```{r, echo = FALSE}
+dfbadead_SP |> 
+  evaluation_stats() |> 
+  kbl() |>
   kable_styling()
 ```
 
 #### Ingrowth
 
 
-Prediction ability for **basal area increase due to ingrowth** (m2/ha): 
+Prediction ability for **basal area increase due to ingrowth** (m2/ha/yr): 
 
 ```{r, echo = FALSE, warning=FALSE}
-dfbarecrSP %>% group_by(Submodel) %>% 
-  summarize(n = n(),
-            Obs = mean(obs, na.rm=TRUE),
-            Pred = mean(pred, na.rm=TRUE),
-            Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Obs),
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/abs(Obs),
-            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Obs),
-            R2 = cor(obs,pred)^2) %>% 
-  kbl() %>%
+dfbarecr_SP |> 
+  evaluation_stats() |> 
+  kbl() |>
   kable_styling()
 ```
 
@@ -179,43 +109,32 @@ dfbarecrSP %>% group_by(Submodel) %>%
 Prediction ability for **overall basal area changes** (including growth, mortality and ingrowth):
 
 ```{r, echo = FALSE, warning=FALSE}
-dfbaiSP_all %>% group_by(Submodel) %>% 
-  summarize(n = n(),
-            Obs = mean(obs, na.rm=TRUE),
-            Pred = mean(pred, na.rm=TRUE),
-            Bias = mean(error, na.rm=TRUE),
-            Biasrel = 100*Bias/abs(Obs),
-            MAE = mean(abs(error), na.rm=TRUE),
-            MAErel = 100*MAE/abs(Obs),
-            RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-            RMSQrel = 100*RMSQ/abs(Obs),
-            R2 = cor(obs,pred)^2) %>% 
-  kbl() %>%
+dfbatot_SP |> 
+  evaluation_stats() |> 
+  kbl() |>
   kable_styling()
 ```
 
 
-Predictive capacity plots:
+Predictive capacity plots (IFN2-IFN4):
 
 ```{r, echo = FALSE, fig.width=8, fig.height = 4, warning=FALSE, message=FALSE}
-plot_scatter_bai(dfbaiSP_bas, dfbaiSP_adv)
+dfbatot_bas <- dfbatot_SP |> filter(transpirationMode == "Granier",
+                             period == "IFN24")
+dfbatot_adv <- dfbatot_SP |> filter(transpirationMode == "Granier",
+                             period == "IFN24")
+plot_scatter_bai(dfbatot_bas, dfbatot_adv)
 ```
 
-Relationship between **basal area changes** and climatic variables (MAT and P/PET):
+Relationship between **basal area changes** and climatic variables (MAT and P/PET; IFN2-IFN4):
 ```{r, echo = FALSE, fig.width=8, fig.height = 8, warning=FALSE, message=FALSE}
-plot_cov_clim_bai(dfbaiSP_bas, dfbaiSP_adv, quantity = "Basal area change", ylim = c(-5,20), errorlim = c(-20,20))
+plot_cov_clim_bai(dfbatot_bas, dfbatot_adv, quantity = "Basal area change", ylim = c(-5,20), errorlim = c(-20,20))
 ```
 
-Spatial distribution of errors: 
+Spatial distribution of errors (IFN2-IFN4): 
 ```{r, echo = FALSE, fig.height=4, fig.width=9}
-mapdata_sp = mapdata_bas
-mapdata_sp$error = NA
-mapdata_sp[dfbai_all_bas$ID[dfbai_all_bas$Name==name], "error"] = dfbai_all_bas$error[dfbai_all_bas$Name==name]
-p1<-bai_error_map(mapdata_sp)+labs(title="Basic sub-model")
-mapdata_sp = mapdata_adv
-mapdata_sp[dfbai_all_adv$ID[dfbai_all_adv$Name==name], "error"] = dfbai_all_adv$error[dfbai_all_adv$Name==name]
-p2<-bai_error_map(mapdata_sp)+labs(title="Advanced sub-model")
-pm<-plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "none"),
+p1<-bai_error_map(dfbatot_bas)+labs(title="Basic sub-model")
+p2<-bai_error_map(dfbatot_adv)+labs(title="Advanced sub-model")
+plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "none"),
           get_legend(p1),nrow=1, rel_widths = c(1,1,0.25))
-pm
 ```

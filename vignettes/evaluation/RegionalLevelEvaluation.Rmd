@@ -308,7 +308,7 @@ plot_cov_clim_bai<-function(dfbai_bas, dfbai_adv, quantity = "Basal area increme
     geom_smooth(col = "black", method="loess", formula = y ~ x, data = dfbas[dfbas$type=="Observed", ])+
     geom_smooth(col = "red", method="loess", formula = y ~ x, data = dfbas[dfbas$type=="Predicted", ])+
     geom_smooth(col = "blue", method="loess", formula = y ~ x, data = dfadv[dfadv$type=="Predicted", ])+
-    ylab(paste0(quantity," (m2/ha)"))+ ylim(ylim)+
+    ylab(paste0(quantity," (m2/ha/yr)"))+ ylim(ylim)+
     xlab("Mean annual temperature (ºC)")+
     theme_bw()+
     theme(legend.position = c(0.75,0.85), 
@@ -321,7 +321,7 @@ plot_cov_clim_bai<-function(dfbai_bas, dfbai_adv, quantity = "Basal area increme
     geom_smooth(aes(x = MAT, y=error), method="loess", formula = y ~ x, col= "red", data = dfbai_bas)+
     geom_smooth(aes(x = MAT, y=error), method="loess", formula = y ~ x, col= "blue", data = dfbai_adv)+
     geom_abline(intercept = 0, slope = 0, col ="black")+
-    ylab(paste0(quantity," error (m2/ha)"))+ ylim(errorlim)+
+    ylab(paste0(quantity," error (m2/ha/yr)"))+ ylim(errorlim)+
     xlab("Mean annual temperature (ºC)")+
     theme_bw()+
     theme(panel.grid = element_blank())
@@ -366,7 +366,7 @@ Simulations were done for both the **basic** (i.e. Granier) and **advanced** (i.
 
 In the following sections, we provide the **bias**, **mean absolute error** (in absolute and relative terms), **root mean squared error** (in absolute and relative terms) and **explained variance (R-squared)** of growth and mortality predictions at the tree-level and stand-level obtained by simulations with both sub-models. Scatter plots are provided for the IFN2-IFN4 simulation to represent the relationship between predicted and observed values, as well as the factors that may influence the direction and magnitude of prediction error (i.e. initial values, environmental conditions, ...).  
 
-<!-- Detailed results of growth evaluation by species are provided in the last section. -->
+Detailed results of growth evaluation by species are provided in the last section.
 
 ## Growth of surviving trees
 
@@ -592,26 +592,20 @@ pm
 ```
 
 
-<!-- ## Detailed evaluation by species -->
+## Detailed evaluation by species
 
-<!-- In the following we provide detailed evaluation results for the most important species. -->
+In the following we provide detailed evaluation results for the most important species.
 
 
-<!-- ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE} -->
-<!-- # sp_n <- dfbai_all_bas[dfbai_all_bas$Name!="0-All",] %>% group_by(Name) %>% -->
-<!-- #     summarize(n = n()) -->
-<!-- # sp100 = sp_n$Name[sp_n$n>params$minPlotRecordsDetailed] -->
-<!-- sp100 = c("Abies alba", "Fagus sylvatica", "Pinus halepensis", "Pinus nigra", -->
-<!--           "Pinus sylvestris", "Pinus uncinata", "Quercus faginea", "Quercus ilex", -->
-<!--           "Quercus pubescens", "Quercus suber") -->
-<!-- target_spp = target_spp_bas[names(target_spp_bas) %in% sp100] -->
-<!-- for(i in 1:length(target_spp)) { -->
-
-<!--   sp = target_spp[i] -->
-<!--   name = names(target_spp)[i] -->
-<!--   res <- knitr::knit_child('_RLEvaluation_child.Rmd', quiet = TRUE) -->
-<!--   cat(res, sep = '\n') -->
-<!-- } -->
-<!-- ``` -->
+```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
+sp100 = c("Abies alba", "Fagus sylvatica", "Pinus halepensis", "Pinus nigra",
+          "Pinus sylvestris", "Pinus uncinata", "Quercus faginea", "Quercus ilex",
+          "Quercus pubescens", "Quercus suber")
+for(i in 1:length(sp100)) {
+  sp_name = sp100[i] 
+  res <- knitr::knit_child('_RLEvaluation_child.Rmd', quiet = TRUE)
+  cat(res, sep = '\n')
+}
+```
 
 
