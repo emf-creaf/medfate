@@ -44,6 +44,12 @@ dfbarecr_sp_vec <- vector("list", n)
 dfbarecr_plot_vec <- vector("list", n)
 dfbatot_sp_vec <- vector("list", n)
 dfbatot_plot_vec <- vector("list", n)
+dfNdead_sp_vec <- vector("list", n)
+dfNdead_plot_vec <- vector("list", n)
+dfNrecr_sp_vec <- vector("list", n)
+dfNrecr_plot_vec <- vector("list", n)
+dfNtot_sp_vec <- vector("list", n)
+dfNtot_plot_vec <- vector("list", n)
 for(i in 1:n) {
   post <- readRDS(files[i])
   dfdbh_vec[[i]] <- post$dfdbh
@@ -56,6 +62,12 @@ for(i in 1:n) {
   dfbarecr_plot_vec[[i]] <- post$dfbarecr_plot
   dfbatot_sp_vec[[i]] <- post$dfbatot_sp
   dfbatot_plot_vec[[i]] <- post$dfbatot_plot
+  dfNdead_sp_vec[[i]] <- post$dfNdead_sp
+  dfNdead_plot_vec[[i]] <- post$dfNdead_plot
+  dfNrecr_sp_vec[[i]] <- post$dfNrecr_sp
+  dfNrecr_plot_vec[[i]] <- post$dfNrecr_plot
+  dfNtot_sp_vec[[i]] <- post$dfNtot_sp
+  dfNtot_plot_vec[[i]] <- post$dfNtot_plot
 }
 dfdbh <- bind_rows(dfdbh_vec)
 dfh <- bind_rows(dfh_vec)
@@ -67,6 +79,12 @@ dfbarecr_sp <- bind_rows(dfbarecr_sp_vec) |> sf::st_as_sf()
 dfbarecr_plot<- bind_rows(dfbarecr_plot_vec) |> sf::st_as_sf()
 dfbatot_sp <- bind_rows(dfbatot_sp_vec) |> sf::st_as_sf()
 dfbatot_plot<- bind_rows(dfbatot_plot_vec) |> sf::st_as_sf()
+dfNdead_sp <- bind_rows(dfNdead_sp_vec) |> sf::st_as_sf()
+dfNdead_plot<- bind_rows(dfNdead_plot_vec) |> sf::st_as_sf()
+dfNrecr_sp <- bind_rows(dfNrecr_sp_vec) |> sf::st_as_sf()
+dfNrecr_plot<- bind_rows(dfNrecr_plot_vec) |> sf::st_as_sf()
+dfNtot_sp <- bind_rows(dfNtot_sp_vec) |> sf::st_as_sf()
+dfNtot_plot<- bind_rows(dfNtot_plot_vec) |> sf::st_as_sf()
 
 load("~/OneDrive/EMFDatasets/PoliticalBoundaries/Products/Catalunya/catalonia.rdata")
 cat_sfc = sf::st_as_sfc(cat.contour)
@@ -455,6 +473,7 @@ plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "none"),
 
 ## Mortality
 
+### Basal area reduction
 Annual reduction of basal area (m2/ha/yr) due to trees (DBH >= 7.5) that died during the evaluation period against model's mortality prediction. In both cases, basal area is calculated using the initial diameter of the trees, so that density reductions are the only prediction that is actually evaluated (and not the possible growth of those trees during the simulation).
 
 
@@ -494,8 +513,20 @@ plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "none"),
 ```
 
 
+### Density reduction
+Annual reduction of density (ind/ha/yr) due to trees (DBH >= 7.5) that died during the evaluation period against model's mortality prediction. This is very similar to evaluating the reduction in basal area
+
+Overall predictive capacity:
+
+```{r, echo = FALSE, warning=FALSE}
+dfNdead_plot %>% evaluation_stats() %>% 
+  kbl() %>%
+  kable_styling()
+```
 
 ## Ingrowth
+
+### Basal area increase
 
 Annual increase of basal area (m2/ha/yr) due to ingrowth of trees with diameters between 7.5 cm and 12.5 cm during the evaluated period.
 
@@ -536,8 +567,21 @@ plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "none"),
 ```
 
 
+### Density increase
 
-## Overall stand-level basal area change
+Annual increase of density (ind/ha/yr) due to ingrowth of trees with diameters between 7.5 cm and 12.5 cm during the evaluated period.
+
+Predictive capacity:
+
+```{r, echo = FALSE, warning=FALSE}
+dfNrecr_plot %>% evaluation_stats()  %>% 
+  kbl() %>%
+  kable_styling()
+```
+
+## Overall stand-level change
+
+### Basal area changes
 
 This includes annual changes in basal area (m2/ha/yr) due to growth of surviving trees, mortality reductions and ingrowth derived from sapling growth. In the observed data, basal area changes include also the incorporation of trees into large diameter classes that results from the variable-radius sampling design. Since it takes into account all processes together, this evaluation is the most rellevant of all.
 
@@ -584,6 +628,19 @@ pm<-plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "non
           get_legend(p1),nrow=1, rel_widths = c(1,1,0.25))
 ggsave(paste0(evalDIR,"/Plots/BAtot_error_map.png"),pm, width = 13, height=6, bg="white")
 pm
+```
+
+
+### Density changes
+
+This includes annual changes in density (ind/ha/yr) due to growth of surviving trees, mortality reductions and ingrowth derived from sapling growth. In the observed data, changes include also the incorporation of trees into large diameter classes that results from the variable-radius sampling design. 
+
+Overall predictive capacity:
+
+```{r, echo = FALSE, warning=FALSE}
+dfNtot_plot %>% evaluation_stats() %>% 
+  kbl() %>%
+  kable_styling()
 ```
 
 

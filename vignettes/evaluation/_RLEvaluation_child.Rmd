@@ -7,6 +7,9 @@ dfbai_SP = dfbai_sp[dfbai_sp$Species_ini %in% sp_names,]
 dfbatot_SP = dfbatot_sp[dfbatot_sp$Species %in% sp_names,]
 dfbarecr_SP = dfbarecr_sp[dfbarecr_sp$Species %in% sp_names,]
 dfbadead_SP = dfbadead_sp[dfbadead_sp$Species %in% sp_names,]
+dfNtot_SP = dfNtot_sp[dfNtot_sp$Species %in% sp_names,]
+dfNrecr_SP = dfNrecr_sp[dfNrecr_sp$Species %in% sp_names,]
+dfNdead_SP = dfNdead_sp[dfNdead_sp$Species %in% sp_names,]
 dfdbh_SP = dfdbh[dfdbh$Species_ini %in% sp_names,]
 dfh_SP = dfh[dfh$Species_ini %in% sp_names,]
 ```
@@ -91,6 +94,16 @@ dfbadead_SP |>
   kable_styling()
 ```
 
+Prediction ability for **density decrease due to mortality** (ind/ha/yr): 
+
+```{r, echo = FALSE}
+dfNdead_SP |> 
+  evaluation_stats() |> 
+  kbl() |>
+  kable_styling()
+```
+
+
 #### Ingrowth
 
 
@@ -103,6 +116,15 @@ dfbarecr_SP |>
   kable_styling()
 ```
 
+
+Prediction ability for **density increase due to ingrowth** (ind/ha/yr): 
+
+```{r, echo = FALSE, warning=FALSE}
+dfNrecr_SP |> 
+  evaluation_stats() |> 
+  kbl() |>
+  kable_styling()
+```
 
 #### Overall basal area changes
 
@@ -137,4 +159,14 @@ p1<-bai_error_map(dfbatot_bas)+labs(title="Basic sub-model")
 p2<-bai_error_map(dfbatot_adv)+labs(title="Advanced sub-model")
 plot_grid(p1+theme(legend.position = "none"),p2+theme(legend.position = "none"),
           get_legend(p1),nrow=1, rel_widths = c(1,1,0.25))
+```
+
+
+Prediction ability for **overall density changes** (including growth, mortality and ingrowth):
+
+```{r, echo = FALSE, warning=FALSE}
+dfNtot_SP |> 
+  evaluation_stats() |> 
+  kbl() |>
+  kable_styling()
 ```
