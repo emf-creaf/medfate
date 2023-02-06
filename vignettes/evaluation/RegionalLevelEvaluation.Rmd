@@ -32,7 +32,9 @@ ver <- packageVersion("medfate")
 files <- c(paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN23_v", ver, ".rds"),
            paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN34_v", ver, ".rds"),
            paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN24_v", ver, ".rds"),
-           paste0(evalDIR, "/Rdata/IFNeval_results_sperry_IFN23_v", ver, ".rds"))
+           paste0(evalDIR, "/Rdata/IFNeval_results_sperry_IFN23_v", ver, ".rds"),
+           # paste0(evalDIR, "/Rdata/IFNeval_results_sperry_IFN34_v", ver, ".rds"),
+           paste0(evalDIR, "/Rdata/IFNeval_results_sperry_IFN24_v", ver, ".rds"))
 n <- length(files)
 dfdbh_vec <- vector("list", n)
 dfh_vec <- vector("list", n)
@@ -93,6 +95,7 @@ cat_sfc = sf::st_as_sfc(cat.contour)
 ```{r, echo = FALSE}
 evaluation_stats<-function(df) {
   df$version <- as.character(df$version)
+  df$period <- factor(df$period, levels = c("IFN23", "IFN34", "IFN24"))
   df_stats <- sf::st_drop_geometry(df) |>
     group_by(version, period, transpirationMode) |>
     summarize(n = n(),
@@ -393,7 +396,7 @@ Predictive capacity plots (IFN2-IFN4):
 dfdbh_bas <- dfdbh |> filter(transpirationMode == "Granier",
                              period == "IFN24")
 dfdbh_adv <- dfdbh |> filter(transpirationMode == "Sperry",
-                             period == "IFN23") # TO BE CHANGED
+                             period == "IFN24") 
 plot_scatter_tree(dfdbh_bas, dfdbh_adv, points = TRUE)
 ```
 
@@ -420,7 +423,7 @@ Predictive capacity plots (IFN2-IFN4):
 dfh_bas <- dfh |> filter(transpirationMode == "Granier",
                              period == "IFN24")
 dfh_adv <- dfh |> filter(transpirationMode == "Sperry",
-                             period == "IFN23") # TO BE CHANGED
+                             period == "IFN24")
 plot_scatter_tree(dfh_bas, dfh_adv, points = TRUE, xylim = c(0,20), errorlim = c(-20,20), initiallim = c(0, 2000),
                   var = "height")
 ```
@@ -449,7 +452,7 @@ Predictive capacity plots (IFN2 - IFN4):
 dfbai_bas <- dfbai_plot |> filter(transpirationMode == "Granier",
                              period == "IFN24")
 dfbai_adv <- dfbai_plot |> filter(transpirationMode == "Sperry",
-                             period == "IFN23") # TO BE CHANGED
+                             period == "IFN24")
 plot_scatter_bai(dfbai_bas, dfbai_adv)
 ```
 
@@ -491,7 +494,7 @@ Predictive capacity plots (IFN2 - IFN4):
 dfdead_bas <- dfbadead_plot |> filter(transpirationMode == "Granier",
                              period == "IFN24")
 dfdead_adv <- dfbadead_plot |> filter(transpirationMode == "Sperry",
-                             period == "IFN23") # TO BE CHANGED
+                             period == "IFN24")
 plot_scatter_bai(dfdead_bas, dfdead_adv,
                   quantity = "dead basal area", xylim = c(0,0.5), errorlim = c(-0.5,0.5))
 ```
@@ -545,7 +548,7 @@ Predictive capacity plots (IFN2 - IFN4):
 dfrecr_bas <- dfbarecr_plot |> filter(transpirationMode == "Granier",
                              period == "IFN24")
 dfrecr_adv <- dfbarecr_plot |> filter(transpirationMode == "Sperry",
-                             period == "IFN23")
+                             period == "IFN24")
 plot_scatter_bai(dfrecr_bas, dfrecr_adv,
                  quantity = "ingrowth basal area", xylim = c(0,0.15), errorlim = c(-0.15,0.15))
 ```
@@ -600,7 +603,7 @@ Predictive capacity plot (IFN2 - IFN4):
 dftot_bas <- dfbatot_plot |> filter(transpirationMode == "Granier",
                              period == "IFN24")
 dftot_adv <- dfbatot_plot |> filter(transpirationMode == "Sperry",
-                             period == "IFN23")
+                             period == "IFN24")
 p1<-plot_scatter_bai(dftot_bas, dftot_adv,
                  quantity = "basal area change", xylim = c(-0.5,2), errorlim = c(-2,2))
 p1

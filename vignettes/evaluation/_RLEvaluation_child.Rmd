@@ -144,7 +144,7 @@ Predictive capacity plots (IFN2-IFN4):
 dfbatot_bas <- dfbatot_SP |> filter(transpirationMode == "Granier",
                              period == "IFN24")
 dfbatot_adv <- dfbatot_SP |> filter(transpirationMode == "Sperry",
-                             period == "IFN23") # TO BE CHANGED
+                             period == "IFN24") 
 plot_scatter_bai(dfbatot_bas, dfbatot_adv, quantity = "basal area change", xylim = c(-0.5,2), errorlim = c(-2,2))
 ```
 
