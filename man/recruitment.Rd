@@ -4,7 +4,14 @@
 \alias{recruitment}
 \title{Plant recruitment}
 \usage{
-recruitment(forest, SpParams, control, minMonthTemp, moistureIndex)
+recruitment(
+  forest,
+  SpParams,
+  control,
+  minMonthTemp,
+  moistureIndex,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{forest}{An object of class \code{\link{forest}}.}
@@ -16,6 +23,8 @@ recruitment(forest, SpParams, control, minMonthTemp, moistureIndex)
 \item{minMonthTemp}{Minimum month temperature.}
 
 \item{moistureIndex}{Moisture index (annual precipitation over annual potential evapotranspiration).}
+
+\item{verbose}{Boolean flag to indicate console output during calculations.}
 }
 \value{
 An object of class \code{\link{forest}} with the new plant cohorts.

@@ -7,6 +7,7 @@
 #' @param control A list with default control parameters (see \code{\link{defaultControl}}).
 #' @param minMonthTemp Minimum month temperature.
 #' @param moistureIndex Moisture index (annual precipitation over annual potential evapotranspiration).
+#' @param verbose Boolean flag to indicate console output during calculations.
 #' 
 #' @details Species can recruit if adults (sufficiently tall individuals) are present (seed rain can also be specified in a control parameter). 
 #' Minimum month temperature and moisture index values are used to determine if recruitment was successful. 
@@ -37,12 +38,13 @@
 #' recruitment(exampleforestMED, SpParamsMED, control, 3, 0.25)
 #' 
 recruitment<-function(forest, SpParams, control,
-                      minMonthTemp, moistureIndex) {
+                      minMonthTemp, moistureIndex, verbose = FALSE) {
   if((nrow(forest$treeData)>0) || (nrow(forest$shrubData)>0)) {
     PARperc <- light_PARground(forest, SpParams)
   } else {
     PARperc <- 100
   } 
+  if(verbose) cat(paste0(" [Cold (C): ", round(minMonthTemp,2), " / Moist: ", round(moistureIndex,2), " / FPAR (%): ", round(PARperc,1), "]"))
   treeSpp <- character(0)
   shrubSpp <- character(0)
   if(is.null(control$seedRain)) {
@@ -424,13 +426,12 @@ fordyn<-function(forest, soil, SpParams,
     # 3. Simulate species recruitment
     if(control$allowRecruitment) {
       if(verboseDyn) cat(paste0(", (b) Recruitment"))
-      monthlyMinTemp <- tapply(meteoYear$MinTemperature, monthsYear, FUN="mean", na.rm=TRUE)
-      monthlyMaxTemp <- tapply(meteoYear$MaxTemperature, monthsYear, FUN="mean", na.rm=TRUE)
+      monthlyMinTemp <- tapply(Gi$weather$MinTemperature, monthsYear, FUN="mean", na.rm=TRUE)
+      monthlyMaxTemp <- tapply(Gi$weather$MaxTemperature, monthsYear, FUN="mean", na.rm=TRUE)
       monthlyTemp <- 0.606*monthlyMaxTemp + 0.394*monthlyMinTemp
       minMonthTemp <- min(monthlyTemp, na.rm=TRUE)
-      moistureIndex <- sum(meteoYear$Precipitation, na.rm=TRUE)/sum(meteoYear$PET, na.rm=TRUE)
-      # if(verboseDyn) cat(paste0("       Coldest month mean temp. (Celsius): ", round(minMonthTemp,2), "   Moisture index: ", round(moistureIndex,2), "   FPAR (%): ", round(PARperc,1), "\n"))
-      recr_forest <- recruitment(forest, SpParams, control, minMonthTemp, moistureIndex)
+      moistureIndex <- sum(Gi$WaterBalance$Precipitation, na.rm=TRUE)/sum(Gi$WaterBalance$PET, na.rm=TRUE)
+      recr_forest <- recruitment(forest, SpParams, control, minMonthTemp, moistureIndex, verbose = verboseDyn)
     } else {
       recr_forest <- emptyforest()
     }
