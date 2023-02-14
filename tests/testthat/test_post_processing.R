@@ -351,12 +351,12 @@ test_that("Can produce all advanced subdaily growth plots",{
 })
 
 test_that("Can produce all advanced growth_day plots",{
-  control = defaultControl("Sperry")
-  control$verbose = FALSE
-  control$subdailyCarbonBalance = TRUE
-  x2 = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+  control <- defaultControl("Sperry")
+  control$verbose <- FALSE
+  control$subdailyCarbonBalance <- TRUE
+  x2 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
   expect_s3_class(x2, "growthInput")
-  d1 = d[1]
+  d1 <- d[1]
   sd2<-growth_day(x2, rownames(examplemeteo)[d1],
                 examplemeteo$MinTemperature[d1], examplemeteo$MaxTemperature[d1], 
                 examplemeteo$MinRelativeHumidity[d1], examplemeteo$MaxRelativeHumidity[d1], 
@@ -376,3 +376,25 @@ test_that("Can produce all advanced growth_day plots",{
   expect_s3_class(plot(sd2, "SugarTransport"), "ggplot")
   
 })
+
+test_that("Can produce all fordyn plots",{
+  control <- defaultControl("Granier")
+  control$verbose <- FALSE
+  fd<-fordyn(exampleforestMED, examplesoil, 
+             SpParamsMED, examplemeteo, control,
+             latitude = 41.82592, elevation = 100)
+  expect_s3_class(plot(fd, "NumTreeSpecies"), "ggplot")
+  expect_s3_class(plot(fd, "NumTreeCohorts"), "ggplot")
+  expect_s3_class(plot(fd, "NumShrubSpecies"), "ggplot")
+  expect_s3_class(plot(fd, "NumShrubCohorts"), "ggplot")
+  expect_s3_class(plot(fd, "StandBasalArea"), "ggplot")
+  expect_s3_class(plot(fd, "StandDensity"), "ggplot")
+  expect_s3_class(plot(fd, "SpeciesBasalArea"), "ggplot")
+  expect_s3_class(plot(fd, "SpeciesDensity"), "ggplot")
+  expect_s3_class(plot(fd, "StandShrubCover"), "ggplot")
+  expect_s3_class(plot(fd, "DominantTreeHeight"), "ggplot")
+  expect_s3_class(plot(fd, "DominantTreeDiameter"), "ggplot")
+  expect_s3_class(plot(fd, "QuadraticMeanTreeDiameter"), "ggplot")
+  expect_s3_class(plot(fd, "HartBeckingIndex"), "ggplot")
+})
+  

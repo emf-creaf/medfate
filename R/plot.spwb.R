@@ -635,9 +635,9 @@ plot.fordyn<-function(x, type="StandBasalArea",
   }
   
   df = data.frame(Step = out[["Step"]], y = out[[var]])
-  if(type %in% c("SpeciesDensity", "SpeciesBasalArea", "SpeciesShrubCover", "NumCohortsSpecies")) df$group = as.character(out[["Name"]])
+  if(type %in% c("SpeciesDensity", "SpeciesBasalArea", "SpeciesShrubCover", "NumCohortsSpecies")) df$group = as.character(out[["Species"]])
   else if(type %in% c("CohortBasalArea", "CohortDensity", "CohortShrubCover")) {
-    df$group = paste0(as.character(out[["Cohort"]]), " (", as.character(out[["Name"]]),")")
+    df$group = paste0(as.character(out[["Cohort"]]), " (", as.character(out[["Species"]]),")")
   }
   df = df[!is.na(df$y),]
   g<-ggplot(df, aes(x=.data$Step, y=.data$y))
