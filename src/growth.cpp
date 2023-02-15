@@ -1683,6 +1683,13 @@ List growth(List x, DataFrame meteo, double latitude,
   if(!meteo.containsElementNamed("Radiation")) stop("Please include variable 'Radiation' in weather input.");
   Radiation = meteo["Radiation"];
   
+  if(any(is_na(Precipitation))) stop("Missing values in 'Precipitation'");
+  if(any(is_na(MinTemperature))) stop("Missing values in 'MinTemperature'");
+  if(any(is_na(MaxTemperature))) stop("Missing values in 'MaxTemperature'");
+  if(any(is_na(MinRelativeHumidity))) stop("Missing values in 'MinRelativeHumidity'");
+  if(any(is_na(MaxRelativeHumidity))) stop("Missing values in 'MaxRelativeHumidity'");
+  if(any(is_na(Radiation))) stop("Missing values in 'Radiation'");
+  
   NumericVector WindSpeed(numDays, NA_REAL);
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
   
@@ -1694,6 +1701,7 @@ List growth(List x, DataFrame meteo, double latitude,
     if(verbose) {
       Rcout<<"CO2 taken from input column 'CO2'\n";
     }
+    if(any(is_na(CO2))) stop("Missing values in 'CO2'");
   }
   
   IntegerVector DOY, JulianDay;

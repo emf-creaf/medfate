@@ -33,7 +33,7 @@ files <- c(paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN23_v", ver, ".rds"
            paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN34_v", ver, ".rds"),
            paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN24_v", ver, ".rds"),
            paste0(evalDIR, "/Rdata/IFNeval_results_sperry_IFN23_v", ver, ".rds"),
-           # paste0(evalDIR, "/Rdata/IFNeval_results_sperry_IFN34_v", ver, ".rds"),
+           paste0(evalDIR, "/Rdata/IFNeval_results_sperry_IFN34_v", ver, ".rds"),
            paste0(evalDIR, "/Rdata/IFNeval_results_sperry_IFN24_v", ver, ".rds"))
 n <- length(files)
 dfdbh_vec <- vector("list", n)
