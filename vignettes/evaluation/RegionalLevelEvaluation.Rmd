@@ -52,6 +52,10 @@ dfNrecr_sp_vec <- vector("list", n)
 dfNrecr_plot_vec <- vector("list", n)
 dfNtot_sp_vec <- vector("list", n)
 dfNtot_plot_vec <- vector("list", n)
+dfshcov_plot_vec <- vector("list", n)
+dfshheight_plot_vec <- vector("list", n)
+dflai_allom_plot_vec <- vector("list", n)
+dflai_state_plot_vec <- vector("list", n)
 for(i in 1:n) {
   post <- readRDS(files[i])
   dfdbh_vec[[i]] <- post$dfdbh
@@ -70,6 +74,10 @@ for(i in 1:n) {
   dfNrecr_plot_vec[[i]] <- post$dfNrecr_plot
   dfNtot_sp_vec[[i]] <- post$dfNtot_sp
   dfNtot_plot_vec[[i]] <- post$dfNtot_plot
+  dfshcov_plot_vec[[i]] <- post$dfshcov_plot
+  dfshheight_plot_vec[[i]] <- post$dfshheight_plot
+  dflai_allom_plot_vec[[i]] <- post$dflai_allom_plot
+  dflai_state_plot_vec[[i]] <- post$dflai_state_plot
 }
 dfdbh <- bind_rows(dfdbh_vec)
 dfh <- bind_rows(dfh_vec)
@@ -87,6 +95,10 @@ dfNrecr_sp <- bind_rows(dfNrecr_sp_vec) |> sf::st_as_sf()
 dfNrecr_plot<- bind_rows(dfNrecr_plot_vec) |> sf::st_as_sf()
 dfNtot_sp <- bind_rows(dfNtot_sp_vec) |> sf::st_as_sf()
 dfNtot_plot<- bind_rows(dfNtot_plot_vec) |> sf::st_as_sf()
+dfshcov_plot<- bind_rows(dfshcov_plot_vec) |> sf::st_as_sf()
+dfshheight_plot<- bind_rows(dfshheight_plot_vec) |> sf::st_as_sf()
+dflai_allom_plot<- bind_rows(dflai_allom_plot_vec) |> sf::st_as_sf()
+dflai_state_plot<- bind_rows(dflai_state_plot_vec) |> sf::st_as_sf()
 
 load("~/OneDrive/EMFDatasets/PoliticalBoundaries/Products/Catalunya/catalonia.rdata")
 cat_sfc = sf::st_as_sfc(cat.contour)
@@ -114,7 +126,7 @@ evaluation_stats<-function(df) {
 
 ### Goal
 
-The aim of this article is to provide an assessment of the performance of `fordyn` (using either the basic and advanced sub-model) for the prediction of forest dynamics in Catalonia (NE of Spain). To this aim, we simulate forest dynamics between surveys of the Spanish National Forest Inventory and compare the model predictions of forest growth against inventory data for a set of permanent plots. The evaluation focuses first on the growth (in diameter and height) of surviving trees, then turning the attention to the basal area of dead trees and overall changes in basal area.
+The aim of this article is to provide an assessment of the performance of `fordyn` (using either the basic and advanced sub-model) for the prediction of forest dynamics in Catalonia (NE of Spain). To this aim, we simulate forest dynamics between surveys of the Spanish National Forest Inventory and compare the model predictions of forest development against inventory data for a set of permanent plots. The evaluation focuses first on the growth (in diameter and height) of surviving trees, then turning the attention to the basal area of dead trees and overall changes in terms of basal area and density. Then, we evaluate changes in stand leaf area index and, finally, changes in shrub cover and mean shrub height. 
 
 
 ```{r, echo = FALSE}
@@ -372,7 +384,7 @@ Simulations were done for both the **basic** (i.e. Granier) and **advanced** (i.
 
 In the following sections, we provide the **bias**, **mean absolute error** (in absolute and relative terms), **root mean squared error** (in absolute and relative terms) and **explained variance (R-squared)** of growth and mortality predictions at the tree-level and stand-level obtained by simulations with both sub-models. Scatter plots are provided for the IFN2-IFN4 simulation to represent the relationship between predicted and observed values, as well as the factors that may influence the direction and magnitude of prediction error (i.e. initial values, environmental conditions, ...).  
 
-Detailed results of growth evaluation by species are provided in the last section.
+Detailed results of growth evaluation by tree species are provided in the last section.
 
 ## Growth of surviving trees
 
@@ -619,7 +631,7 @@ p2
 
 ```{r, echo = FALSE}
 p0<-cowplot::plot_grid(p1,p2, nrow=2, rel_heights = c(0.33,0.66))
-ggsave(paste0(evalDIR,"/Plots/BAtot_eval.png"),p0, width = 8, height=10)
+ggsave(paste0(evalDIR,"/Plots/BAtot_eval.png"),p0, width = 8, height=12)
 ```
 
 Spatial distribution of errors (IFN2 - IFN4):
@@ -646,8 +658,48 @@ dfNtot_plot %>% evaluation_stats() %>%
   kable_styling()
 ```
 
+### Changes in leaf area index of trees > 7.5 cm
 
-## Detailed evaluation by species
+Overall predictive capacity using allometric equations:
+
+```{r, echo = FALSE, warning=FALSE}
+dflai_allom_plot %>% evaluation_stats() %>% 
+  kbl() %>%
+  kable_styling()
+```
+
+Overall predictive capacity using state variables:
+
+```{r, echo = FALSE, warning=FALSE}
+dflai_state_plot %>% evaluation_stats() %>% 
+  kbl() %>%
+  kable_styling()
+```
+
+
+## Shrub cover and mean height
+
+### Shrub percent cover changes
+
+Overall predictive capacity:
+
+```{r, echo = FALSE, warning=FALSE}
+dfshcov_plot %>% evaluation_stats() %>% 
+  kbl() %>%
+  kable_styling()
+```
+
+### Shrub mean height changes
+
+Overall predictive capacity:
+
+```{r, echo = FALSE, warning=FALSE}
+dfshheight_plot %>% evaluation_stats() %>% 
+  kbl() %>%
+  kable_styling()
+```
+
+## Detailed evaluation by tree species
 
 In the following we provide detailed evaluation results for the most important species.
 
