@@ -20,7 +20,7 @@ rm(SpParamsUS)
 SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/InitialSpParamsMED.xlsx",
                                               sheet="InitialSpParamsMED", na = "NA"), stringsAsFactors=FALSE)
 
-MFWdir = "~/OneDrive/Professional/MEDFATE_development/"
+MFWdir = "~/OneDrive/mcaceres_work/model_development/medfate_development/"
 
 # Revised hydraulic/photosynthesis parameters
 customParamsSpecies = readxl::read_xlsx(paste0(MFWdir,"Metamodelling_TR_WUE/Data/SpParamsCUSTOM.xlsx"))
