@@ -18,7 +18,7 @@ library(readxl)
 library(tidyverse)
 library(medfate)
 library(nlme)
-meta_dir <- "~/OneDrive/Professional/MEDFATE_development/Metamodelling_TR_WUE/"
+meta_dir <- "/home/miquel/OneDrive/mcaceres_work/model_development/medfate_development/Metamodelling_TR_WUE/"
 ```
 
 ## Introduction
@@ -295,7 +295,7 @@ ggsave2(paste0(meta_dir,"/Plots/meta_fit.png"), g, width = 9, height = 11, bg = 
 
 The table containing the five parameters estimated via meta-modelling is the following:
 ```{r, echo = FALSE}
-df_par = readRDS("~/OneDrive/Professional/MEDFATE_development/Metamodelling_TR_WUE/Rdata/metamodelling_params.rds")
+df_par = readRDS(paste0(meta_dir,"Rdata/metamodelling_params.rds"))
 
 df_par[,-1] %>%
   kbl() %>%

@@ -11,7 +11,7 @@ emptyforest(ntree = 0, nshrub = 0)
 
 \method{summary}{forest}(object, SpParams, mode = "MED", ...)
 
-print.summary.forest(x, digits = getOption("digits"), ...)
+\method{print}{summary.forest}(x, digits = getOption("digits"), ...)
 }
 \arguments{
 \item{ntree, nshrub}{Number of tree and shrub cohorts, respectively.}

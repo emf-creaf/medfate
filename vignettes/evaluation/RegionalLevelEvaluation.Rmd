@@ -21,8 +21,7 @@ library(medfate)
 library(ggplot2)
 library(cowplot)
 library(tidyverse)
-evalDIR = "~/OneDrive/Professional/MEDFATE_development/RegionalLevelEvaluation"
-ipmDIR = "~/OneDrive/Professional/KnowledgeTransfer/CREAF/FORESFuture/Rdata/ipm/"
+evalDIR = "~/OneDrive/mcaceres_work/model_development/medfate_development/RegionalLevelEvaluation"
 ```
 
 ## Introduction
@@ -56,8 +55,13 @@ dfshcov_plot_vec <- vector("list", n)
 dfshheight_plot_vec <- vector("list", n)
 dflai_allom_plot_vec <- vector("list", n)
 dflai_state_plot_vec <- vector("list", n)
+IDs <- NULL
 for(i in 1:n) {
   post <- readRDS(files[i])
+  if(is.null(IDs)) IDs <- unique(post$dfbai_plot$id)
+  else {
+    IDs <- IDs[IDs %in% post$dfbai_plot$id]
+  }
   dfdbh_vec[[i]] <- post$dfdbh
   dfh_vec[[i]] <- post$dfh
   dfbai_sp_vec[[i]] <- post$dfbai_sp
@@ -81,26 +85,26 @@ for(i in 1:n) {
 }
 dfdbh <- bind_rows(dfdbh_vec)
 dfh <- bind_rows(dfh_vec)
-dfbai_sp <- bind_rows(dfbai_sp_vec) |> sf::st_as_sf()
-dfbai_plot<- bind_rows(dfbai_plot_vec) |> sf::st_as_sf()
-dfbadead_sp <- bind_rows(dfbadead_sp_vec) |> sf::st_as_sf()
-dfbadead_plot<- bind_rows(dfbadead_plot_vec) |> sf::st_as_sf()
-dfbarecr_sp <- bind_rows(dfbarecr_sp_vec) |> sf::st_as_sf()
-dfbarecr_plot<- bind_rows(dfbarecr_plot_vec) |> sf::st_as_sf()
-dfbatot_sp <- bind_rows(dfbatot_sp_vec) |> sf::st_as_sf()
-dfbatot_plot<- bind_rows(dfbatot_plot_vec) |> sf::st_as_sf()
-dfNdead_sp <- bind_rows(dfNdead_sp_vec) |> sf::st_as_sf()
-dfNdead_plot<- bind_rows(dfNdead_plot_vec) |> sf::st_as_sf()
-dfNrecr_sp <- bind_rows(dfNrecr_sp_vec) |> sf::st_as_sf()
-dfNrecr_plot<- bind_rows(dfNrecr_plot_vec) |> sf::st_as_sf()
-dfNtot_sp <- bind_rows(dfNtot_sp_vec) |> sf::st_as_sf()
-dfNtot_plot<- bind_rows(dfNtot_plot_vec) |> sf::st_as_sf()
-dfshcov_plot<- bind_rows(dfshcov_plot_vec) |> sf::st_as_sf()
-dfshheight_plot<- bind_rows(dfshheight_plot_vec) |> sf::st_as_sf()
-dflai_allom_plot<- bind_rows(dflai_allom_plot_vec) |> sf::st_as_sf()
-dflai_state_plot<- bind_rows(dflai_state_plot_vec) |> sf::st_as_sf()
+dfbai_sp <- bind_rows(dfbai_sp_vec) |> filter(id %in% IDs) |> sf::st_as_sf()
+dfbai_plot<- bind_rows(dfbai_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
+dfbadead_sp <- bind_rows(dfbadead_sp_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
+dfbadead_plot<- bind_rows(dfbadead_plot_vec) |> filter(id %in% IDs)|> sf::st_as_sf()
+dfbarecr_sp <- bind_rows(dfbarecr_sp_vec) |> filter(id %in% IDs)|> sf::st_as_sf()
+dfbarecr_plot<- bind_rows(dfbarecr_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
+dfbatot_sp <- bind_rows(dfbatot_sp_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
+dfbatot_plot<- bind_rows(dfbatot_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
+dfNdead_sp <- bind_rows(dfNdead_sp_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
+dfNdead_plot<- bind_rows(dfNdead_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
+dfNrecr_sp <- bind_rows(dfNrecr_sp_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
+dfNrecr_plot<- bind_rows(dfNrecr_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
+dfNtot_sp <- bind_rows(dfNtot_sp_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
+dfNtot_plot<- bind_rows(dfNtot_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
+dfshcov_plot<- bind_rows(dfshcov_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
+dfshheight_plot<- bind_rows(dfshheight_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
+dflai_allom_plot<- bind_rows(dflai_allom_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
+dflai_state_plot<- bind_rows(dflai_state_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
 
-load("~/OneDrive/EMFDatasets/PoliticalBoundaries/Products/Catalunya/catalonia.rdata")
+load("~/OneDrive/EMF_datasets/PoliticalBoundaries/Products/Catalunya/catalonia.rdata")
 cat_sfc = sf::st_as_sfc(cat.contour)
 ```
 
@@ -119,7 +123,7 @@ evaluation_stats<-function(df) {
               MAErel = 100*MAE/abs(Obs),
               RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
               RMSQrel = 100*RMSQ/abs(Obs),
-              R2 = cor(obs,pred)^2, .groups="drop")
+              R2 = cor(obs,pred, use = "complete.obs")^2, .groups="drop")
   return(as.data.frame(df_stats))
 }
 ```

@@ -1,13 +1,14 @@
-import(meteoland)
 import(ggplot2)
 import(shiny)
+importFrom("meteoland", "utils_atmosphericPressure", "utils_averageDailyVP",
+       "utils_saturationVP", "penman")
 importFrom("stats", "aggregate","filter","median",
            "cor","quantile", "dnorm", "Gamma", "glm", "predict",
            "rpois", "rbinom", "uniroot")
 importFrom("grDevices", "rainbow")
 importFrom("graphics", "axis", "abline", "barplot", "legend", "lines", "matplot","mtext",
            "matlines", "par", "polygon","axis.Date")
-importFrom("utils", "data", "setTxtProgressBar", "txtProgressBar", "head", "tail")
+importFrom("utils", "data", "setTxtProgressBar", "txtProgressBar")
 useDynLib(medfate, .registration = TRUE)
 exportPattern("^[[:alpha:]]+")
 

@@ -15,7 +15,7 @@ library(ggplot2)
 library(cowplot)
 library(tidyverse)
 
-base_calibration = "~/OneDrive/Professional/MEDFATE_development/GrowthCalibration/"
+base_calibration = "/home/miquel/OneDrive/mcaceres_work/model_development/medfate_development/GrowthCalibration/"
 ```
 
 ## Introduction

@@ -267,6 +267,8 @@ fordyn<-function(forest, soil, SpParams,
     if(verboseDyn) cat(paste0("Initialisation from previous run\n"))
     xi <- forest$NextInputObject
     forest <- forest$NextForestObject
+    #Check number of cohorts of both objects
+    if(nrow(xi$above) != (nrow(forest$treeData) + nrow(forest$shrubData))) stop("growthInput and forest objects do not match!") 
   } else {
     if(is.numeric(forest$treeData$Species)) {
       forest$treeData$Species <- .speciesCharacterParameterFromSpIndex(forest$treeData$Species, SpParams, "Name")
