@@ -29,10 +29,10 @@ evalDIR = "~/OneDrive/mcaceres_work/model_development/medfate_development/Region
 ```{r, echo = FALSE}
 ver <- packageVersion("medfate")
 files <- c(paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN23_v", ver, ".rds"),
-           paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN34_v", ver, ".rds"),
-           paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN24_v", ver, ".rds"),
            paste0(evalDIR, "/Rdata/IFNeval_results_sperry_IFN23_v", ver, ".rds"),
+           paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN34_v", ver, ".rds"),
            paste0(evalDIR, "/Rdata/IFNeval_results_sperry_IFN34_v", ver, ".rds"),
+           paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN24_v", ver, ".rds"),
            paste0(evalDIR, "/Rdata/IFNeval_results_sperry_IFN24_v", ver, ".rds"))
 n <- length(files)
 dfdbh_vec <- vector("list", n)
@@ -55,13 +55,18 @@ dfshcov_plot_vec <- vector("list", n)
 dfshheight_plot_vec <- vector("list", n)
 dflai_allom_plot_vec <- vector("list", n)
 dflai_state_plot_vec <- vector("list", n)
-IDs <- NULL
+IDs_23 <- NULL
+IDs_34 <- NULL
+IDs_24 <- NULL
 for(i in 1:n) {
   post <- readRDS(files[i])
-  if(is.null(IDs)) IDs <- unique(post$dfbai_plot$id)
-  else {
-    IDs <- IDs[IDs %in% post$dfbai_plot$id]
-  }
+  if(i==1) IDs_23 <- unique(post$dfbai_plot$id)
+  else if(i==2)  IDs_23 <- IDs_23[IDs_23 %in% post$dfbai_plot$id]
+  else if(i==3) IDs_34 <- unique(post$dfbai_plot$id)
+  else if(i==4)  IDs_34 <- IDs_34[IDs_34 %in% post$dfbai_plot$id]
+  else if(i==5) IDs_24 <- unique(post$dfbai_plot$id)
+  else if(i==6)  IDs_24 <- IDs_24[IDs_24 %in% post$dfbai_plot$id]
+  
   dfdbh_vec[[i]] <- post$dfdbh
   dfh_vec[[i]] <- post$dfh
   dfbai_sp_vec[[i]] <- post$dfbai_sp
@@ -83,26 +88,53 @@ for(i in 1:n) {
   dflai_allom_plot_vec[[i]] <- post$dflai_allom_plot
   dflai_state_plot_vec[[i]] <- post$dflai_state_plot
 }
+for(i in 1:n) {
+  if(i %in% 1:2) IDs <- IDs_23
+  else if(i %in% 3:4) IDs <- IDs_34
+  else if(i %in% 5:6) IDs <- IDs_24
+  
+  dfdbh_vec[[i]] <- dfdbh_vec[[i]] |> filter(id %in% IDs)
+  dfh_vec[[i]] <- dfh_vec[[i]] |> filter(id %in% IDs)
+  dfbai_sp_vec[[i]] <- dfbai_sp_vec[[i]] |> filter(id %in% IDs)
+  dfbai_plot_vec[[i]] <- dfbai_plot_vec[[i]] |> filter(id %in% IDs)
+  dfbadead_sp_vec[[i]] <- dfbadead_sp_vec[[i]] |> filter(id %in% IDs)
+  dfbadead_plot_vec[[i]] <- dfbadead_plot_vec[[i]] |> filter(id %in% IDs)
+  dfbarecr_sp_vec[[i]] <- dfbarecr_sp_vec[[i]] |> filter(id %in% IDs)
+  dfbarecr_plot_vec[[i]] <- dfbarecr_plot_vec[[i]] |> filter(id %in% IDs)
+  dfbatot_sp_vec[[i]] <- dfbatot_sp_vec[[i]] |> filter(id %in% IDs)
+  dfbatot_plot_vec[[i]] <- dfbatot_plot_vec[[i]] |> filter(id %in% IDs)
+  dfNdead_sp_vec[[i]] <- dfNdead_sp_vec[[i]] |> filter(id %in% IDs)
+  dfNdead_plot_vec[[i]] <- dfNdead_plot_vec[[i]] |> filter(id %in% IDs)
+  dfNrecr_sp_vec[[i]] <- dfNrecr_sp_vec[[i]] |> filter(id %in% IDs)
+  dfNrecr_plot_vec[[i]] <- dfNrecr_plot_vec[[i]] |> filter(id %in% IDs)
+  dfNtot_sp_vec[[i]] <- dfNtot_sp_vec[[i]] |> filter(id %in% IDs)
+  dfNtot_plot_vec[[i]] <- dfNtot_plot_vec[[i]] |> filter(id %in% IDs)
+  dfshcov_plot_vec[[i]] <- dfshcov_plot_vec[[i]] |> filter(id %in% IDs)
+  dfshheight_plot_vec[[i]] <- dfshheight_plot_vec[[i]] |> filter(id %in% IDs)
+  dflai_allom_plot_vec[[i]] <- dflai_allom_plot_vec[[i]] |> filter(id %in% IDs)
+  dflai_state_plot_vec[[i]] <- dflai_state_plot_vec[[i]] |> filter(id %in% IDs)
+} 
+
 dfdbh <- bind_rows(dfdbh_vec)
 dfh <- bind_rows(dfh_vec)
-dfbai_sp <- bind_rows(dfbai_sp_vec) |> filter(id %in% IDs) |> sf::st_as_sf()
-dfbai_plot<- bind_rows(dfbai_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
-dfbadead_sp <- bind_rows(dfbadead_sp_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
-dfbadead_plot<- bind_rows(dfbadead_plot_vec) |> filter(id %in% IDs)|> sf::st_as_sf()
-dfbarecr_sp <- bind_rows(dfbarecr_sp_vec) |> filter(id %in% IDs)|> sf::st_as_sf()
-dfbarecr_plot<- bind_rows(dfbarecr_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
-dfbatot_sp <- bind_rows(dfbatot_sp_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
-dfbatot_plot<- bind_rows(dfbatot_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
-dfNdead_sp <- bind_rows(dfNdead_sp_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
-dfNdead_plot<- bind_rows(dfNdead_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
-dfNrecr_sp <- bind_rows(dfNrecr_sp_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
-dfNrecr_plot<- bind_rows(dfNrecr_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
-dfNtot_sp <- bind_rows(dfNtot_sp_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
-dfNtot_plot<- bind_rows(dfNtot_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
-dfshcov_plot<- bind_rows(dfshcov_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
-dfshheight_plot<- bind_rows(dfshheight_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
-dflai_allom_plot<- bind_rows(dflai_allom_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
-dflai_state_plot<- bind_rows(dflai_state_plot_vec)|> filter(id %in% IDs) |> sf::st_as_sf()
+dfbai_sp <- bind_rows(dfbai_sp_vec) |> sf::st_as_sf()
+dfbai_plot<- bind_rows(dfbai_plot_vec) |> sf::st_as_sf()
+dfbadead_sp <- bind_rows(dfbadead_sp_vec) |> sf::st_as_sf()
+dfbadead_plot<- bind_rows(dfbadead_plot_vec) |> sf::st_as_sf()
+dfbarecr_sp <- bind_rows(dfbarecr_sp_vec) |> sf::st_as_sf()
+dfbarecr_plot<- bind_rows(dfbarecr_plot_vec) |> sf::st_as_sf()
+dfbatot_sp <- bind_rows(dfbatot_sp_vec) |> sf::st_as_sf()
+dfbatot_plot<- bind_rows(dfbatot_plot_vec) |> sf::st_as_sf()
+dfNdead_sp <- bind_rows(dfNdead_sp_vec) |> sf::st_as_sf()
+dfNdead_plot<- bind_rows(dfNdead_plot_vec) |> sf::st_as_sf()
+dfNrecr_sp <- bind_rows(dfNrecr_sp_vec) |> sf::st_as_sf()
+dfNrecr_plot<- bind_rows(dfNrecr_plot_vec) |> sf::st_as_sf()
+dfNtot_sp <- bind_rows(dfNtot_sp_vec) |> sf::st_as_sf()
+dfNtot_plot<- bind_rows(dfNtot_plot_vec) |> sf::st_as_sf()
+dfshcov_plot<- bind_rows(dfshcov_plot_vec) |> sf::st_as_sf()
+dfshheight_plot<- bind_rows(dfshheight_plot_vec) |> sf::st_as_sf()
+dflai_allom_plot<- bind_rows(dflai_allom_plot_vec) |> sf::st_as_sf()
+dflai_state_plot<- bind_rows(dflai_state_plot_vec) |> sf::st_as_sf()
 
 load("~/OneDrive/EMF_datasets/PoliticalBoundaries/Products/Catalunya/catalonia.rdata")
 cat_sfc = sf::st_as_sfc(cat.contour)
@@ -119,10 +151,10 @@ evaluation_stats<-function(df) {
               Pred = mean(pred, na.rm=TRUE),
               Bias = mean(error, na.rm=TRUE),
               Biasrel = 100*Bias/abs(Obs),
-              MAE = mean(abs(error), na.rm=TRUE),
-              MAErel = 100*MAE/abs(Obs),
-              RMSQ = sqrt(mean(error^2, na.rm=TRUE)),
-              RMSQrel = 100*RMSQ/abs(Obs),
+              # MAE = mean(abs(error), na.rm=TRUE),
+              # MAErel = 100*MAE/abs(Obs),
+              RMSE = sqrt(mean(error^2, na.rm=TRUE)),
+              RMSErel = 100*RMSE/abs(Obs),
               R2 = cor(obs,pred, use = "complete.obs")^2, .groups="drop")
   return(as.data.frame(df_stats))
 }
@@ -386,7 +418,7 @@ Default species-specific parameters were modified using the results of the [meta
 
 Simulations were done for both the **basic** (i.e. Granier) and **advanced** (i.e. Sperry) transpiration/photosynthesis sub-models. On a server with 20 parallel threads, computational times for the longest simulation period (25 years) are around **4 hours** (i.e. 2.5 min/plot) for the **basic** sub-model, versus around **6 days** (i.e. 1.5 hr/plot) for the **advanced** submodel. 
 
-In the following sections, we provide the **bias**, **mean absolute error** (in absolute and relative terms), **root mean squared error** (in absolute and relative terms) and **explained variance (R-squared)** of growth and mortality predictions at the tree-level and stand-level obtained by simulations with both sub-models. Scatter plots are provided for the IFN2-IFN4 simulation to represent the relationship between predicted and observed values, as well as the factors that may influence the direction and magnitude of prediction error (i.e. initial values, environmental conditions, ...).  
+In the following sections, we provide the **bias**, **root mean squared error** (in absolute and relative terms) and **explained variance (R-squared)** of growth and mortality predictions at the tree-level and stand-level obtained by simulations with both sub-models. Scatter plots are provided for the IFN2-IFN4 simulation to represent the relationship between predicted and observed values, as well as the factors that may influence the direction and magnitude of prediction error (i.e. initial values, environmental conditions, ...).  
 
 Detailed results of growth evaluation by tree species are provided in the last section.
 
@@ -709,14 +741,14 @@ In the following we provide detailed evaluation results for the most important s
 
 
 ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
-sp100 = c("Abies alba", "Fagus sylvatica", "Pinus halepensis", "Pinus nigra",
-          "Pinus sylvestris", "Pinus uncinata", "Quercus faginea", "Quercus ilex",
-          "Quercus pubescens", "Quercus suber")
-for(i in 1:length(sp100)) {
-  sp_name = sp100[i] 
-  res <- knitr::knit_child('_RLEvaluation_child.Rmd', quiet = TRUE)
-  cat(res, sep = '\n')
-}
+ sp100 = c("Abies alba", "Fagus sylvatica", "Pinus halepensis", "Pinus nigra",
+           "Pinus sylvestris", "Pinus uncinata", "Quercus faginea", "Quercus ilex",
+           "Quercus pubescens", "Quercus suber")
+ for(i in 1:length(sp100)) {
+   sp_name = sp100[i] 
+   res <- knitr::knit_child('_RLEvaluation_child.Rmd', quiet = TRUE)
+   cat(res, sep = '\n')
+ }
 ```
 
 
