@@ -532,6 +532,9 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
 DataFrame paramsAllometries(DataFrame above, DataFrame SpParams, bool fillMissingSpParams) {
   IntegerVector SP = above["SP"];
   
+  NumericVector Afbt = speciesNumericParameterWithImputation(SP, SpParams, "a_fbt",fillMissingSpParams);
+  NumericVector Bfbt = speciesNumericParameterWithImputation(SP, SpParams, "b_fbt",fillMissingSpParams);
+  NumericVector Cfbt = speciesNumericParameterWithImputation(SP, SpParams, "c_fbt",fillMissingSpParams);
   NumericVector Aash = speciesNumericParameterWithImputation(SP, SpParams, "a_ash",fillMissingSpParams);
   NumericVector Bash = speciesNumericParameterWithImputation(SP, SpParams, "b_ash",fillMissingSpParams);
   NumericVector Absh = speciesNumericParameterWithImputation(SP, SpParams, "a_bsh",fillMissingSpParams);
@@ -545,7 +548,8 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams, bool fillMissin
   NumericVector Acw = speciesNumericParameterWithImputation(SP, SpParams, "a_cw",fillMissingSpParams);
   NumericVector Bcw = speciesNumericParameterWithImputation(SP, SpParams, "b_cw",fillMissingSpParams);
 
-  DataFrame paramsAllometriesdf = DataFrame::create(_["Aash"] = Aash, _["Bash"] = Bash, _["Absh"] = Absh, _["Bbsh"] = Bbsh,
+  DataFrame paramsAllometriesdf = DataFrame::create(_["Afbt"] = Afbt, _["Bfbt"] = Bfbt, _["Cfbt"] = Cfbt,
+                                                    _["Aash"] = Aash, _["Bash"] = Bash, _["Absh"] = Absh, _["Bbsh"] = Bbsh,
                                                     _["Acr"] = Acr, _["B1cr"] = B1cr, _["B2cr"] = B2cr, _["B3cr"] = B3cr,
                                                     _["C1cr"] = C1cr, _["C2cr"] = C2cr, 
                                                     _["Acw"] = Acw, _["Bcw"] = Bcw);
@@ -667,6 +671,7 @@ DataFrame internalAllocationDataFrame(DataFrame above,
 
   NumericVector allocationTarget(numCohorts,0.0);
   NumericVector leafAreaTarget(numCohorts,0.0);
+  NumericVector sapwoodAreaTarget(numCohorts,0.0);
   NumericVector fineRootBiomassTarget(numCohorts, 0.0);
   
   
@@ -678,6 +683,7 @@ DataFrame internalAllocationDataFrame(DataFrame above,
   if(transpirationMode=="Granier") {
     for(int c=0;c<numCohorts;c++){
       leafAreaTarget[c] = Al2As[c]*(SA[c]/10000.0);
+      sapwoodAreaTarget[c] = SA[c];
       allocationTarget[c] = Al2As[c];
       fineRootBiomassTarget[c] = fineRootBiomass[c];
     }
@@ -693,11 +699,13 @@ DataFrame internalAllocationDataFrame(DataFrame above,
       } else if(allocationStrategy=="Al2As") {
         allocationTarget[c] = Al2As[c];
       }
+      sapwoodAreaTarget[c] = SA[c];
       fineRootBiomassTarget[c] = fineRootBiomass[c];
     }
   }
   df = DataFrame::create(Named("allocationTarget") = allocationTarget,
                          Named("leafAreaTarget") = leafAreaTarget,
+                         Named("sapwoodAreaTarget") = sapwoodAreaTarget,
                          Named("fineRootBiomassTarget") = fineRootBiomassTarget);
   df.attr("row.names") = above.attr("row.names");
   return(df);

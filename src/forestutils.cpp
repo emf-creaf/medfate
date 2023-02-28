@@ -75,21 +75,23 @@ NumericVector sumBySpecies(NumericVector x, IntegerVector sp, DataFrame SpParams
 // [[Rcpp::export(".treeBasalArea")]]
 NumericVector treeBasalArea(NumericVector N, NumericVector dbh) {
   int ncoh = N.size(); //N is density of individuals (ind/ha) in the cell
-  NumericVector BA(ncoh); 
+  NumericVector BA(ncoh, NA_REAL); 
   for(int i=0;i<ncoh;i++) {
-    BA[i] = N[i]*3.141593*pow(dbh[i]/200,2.0); //Basal area in m2/ha
+    if(!NumericVector::is_na(dbh[i])) BA[i] = N[i]*3.141593*pow(dbh[i]/200,2.0); //Basal area in m2/ha
   }
   return(BA);
 }
 NumericVector largerTreeBasalArea(NumericVector N, NumericVector dbh, double self_include_prop = 0.5) {
   int ncoh = N.size();
   NumericVector BA = treeBasalArea(N, dbh); 
-  NumericVector ltBA(ncoh);
+  NumericVector ltBA(ncoh, NA_REAL);
   for(int i=0;i<ncoh;i++) {
-    ltBA[i] = 0.0;
-    for(int j=0;j<ncoh;j++) {
-      if(i==j) ltBA[i] += (BA[j]*self_include_prop); //add half of its own basal area
-      else if(dbh[j]>dbh[i]) ltBA[i] += BA[j];
+    if(!NumericVector::is_na(BA[i])) {
+      ltBA[i] = 0.0;
+      for(int j=0;j<ncoh;j++) {
+        if(i==j) ltBA[i] += (BA[j]*self_include_prop); //add half of its own basal area
+        else if(dbh[j]>dbh[i]) ltBA[i] += BA[j];
+      }
     }
   }
   return(ltBA);

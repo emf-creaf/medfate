@@ -256,6 +256,9 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
   
   //Allometric parameters
   DataFrame paramsAllometries = Rcpp::as<Rcpp::DataFrame>(x["paramsAllometries"]);
+  NumericVector Afbt  = paramsAllometries["Afbt"];
+  NumericVector Bfbt  = paramsAllometries["Bfbt"];
+  NumericVector Cfbt  = paramsAllometries["Cfbt"];
   NumericVector Aash  = paramsAllometries["Aash"];
   NumericVector Bash  = paramsAllometries["Bash"];
   NumericVector Absh  = paramsAllometries["Absh"];
@@ -268,6 +271,10 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
   NumericVector B3cr  = paramsAllometries["B3cr"];
   NumericVector C1cr  = paramsAllometries["C1cr"];
   NumericVector C2cr  = paramsAllometries["C2cr"];
+  
+  //Phenology parameters
+  DataFrame internalPhenology = Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
+  LogicalVector budFormation = internalPhenology["budFormation"];
   
   //Allometric parameters
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
@@ -282,11 +289,14 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
   NumericVector Hmax  = paramsAnatomy["Hmax"];
   NumericVector SLA = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["SLA"]);
+  NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
   NumericVector r635  = paramsAnatomy["r635"];
   
   DataFrame internalAllocation = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
   NumericVector leafAreaTarget = internalAllocation["leafAreaTarget"];
+  NumericVector sapwoodAreaTarget = internalAllocation["sapwoodAreaTarget"];
   
+  //Update DBH
   NumericVector deltaDBH(numCohorts, 0.0);
   for(int j=0;j<numCohorts; j++) {
     if(!NumericVector::is_na(DBH[j])) {
@@ -294,6 +304,7 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
       DBH[j] = DBH[j] + deltaDBH[j];
     }
   }
+  //Update height
   NumericVector L = parcohortC(H, LAI_live, LAI_dead, kPAR, CR);
   for(int j=0;j<numCohorts; j++) {
     if(!NumericVector::is_na(DBH[j]) && N[j]>0.0) {
@@ -302,25 +313,44 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
       H[j] = H[j] + fHD*deltaDBH[j];
     }
   }
+  //Update crown ratio
   NumericVector crNew = treeCrownRatioMED(N, DBH, H, Acw, Bcw, Acr, B1cr, B2cr, B3cr, C1cr, C2cr);
   for(int j=0;j<numCohorts; j++) {
     if(!NumericVector::is_na(DBH[j]) && N[j]>0.0) {
       CR[j] = crNew[j];
     }
   }
-  
+  //Update tree leaf area target
+  NumericVector ltba = largerTreeBasalArea(N, DBH, 1.0); //Allometries were calibrated including the target cohort
+  for(int j=0;j<numCohorts;j++) {
+    if(!NumericVector::is_na(DBH[j]) && N[j]>0.0) {
+      if(budFormation[j]) {
+        // Rcout <<j<< " "<< ltba[j]<< " "<<leafAreaTarget[j];
+        leafAreaTarget[j] = SLA[j]*(Afbt[j]*pow(std::min(50.0,DBH[j]), Bfbt[j])*exp(Cfbt[j]*ltba[j]));
+        LAI_live[j] = leafAreaTarget[j]*N[j]/10000.0;
+        // Rcout << " "<< leafAreaTarget[j]<<"\n";
+      }
+    }
+  }
   //Shrub variables
   if(shrubDynamics) {
     for(int j=0;j<numCohorts; j++) {
       if(NumericVector::is_na(DBH[j]) && N[j]>0.0) {
-        double Wleaves = leafAreaTarget[j]/SLA[j];  //Calculates the biomass (kg dry weight) of leaves
-        double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates phytovolume (in m3/ind)
-        H[j] = pow(1e6*PV/Aash[j], 1.0/(1.0+Bash[j])); //Updates shrub height
-        // Rcout<< Wleaves << " " << PV << " " << H[j]<<"\n";
-        if(H[j]> Hmax[j]) { //Limit height (and update the former variables)
-          H[j] = Hmax[j];
+        if(budFormation[j]) {
+          leafAreaTarget[j] = (Al2As[j]*SA[j])/10000.0; // Set leaf area target according to current sapwood area
+          double Wleaves = leafAreaTarget[j]/SLA[j];  //Calculates the biomass (kg dry weight) of leaves
+          double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates phytovolume (in m3/ind)
+          H[j] = pow(1e6*PV/Aash[j], 1.0/(1.0+Bash[j])); //Updates shrub height
+          // Rcout<< Wleaves << " " << PV << " " << H[j]<<"\n";
+          if(H[j]> Hmax[j]) { //Limit height (and update the former variables)
+            H[j] = Hmax[j];
+            PV = (Aash[j]/1e6)*pow(H[j], (1.0+Bash[j])); //recalculate phytovolume from H
+            Wleaves = (Absh[j]/r635[j])*pow(PV, Bbsh[j]); //recalculate Wleaves from phytovolume
+            leafAreaTarget[j] = Wleaves * SLA[j]; //recalculate leaf area target from Wleaves
+            sapwoodAreaTarget[j] = 10000.0*leafAreaTarget[j]/Al2As[j]; //Set target sapwood area (may generate sapwood senescence)
+          }
+          Cover[j] = std::min(100.0, N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); //Updates shrub cover
         }
-        Cover[j] = std::min(100.0, N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); //Updates shrub cover
       }
     }
   }
@@ -453,6 +483,7 @@ List growthDayInner(List x, NumericVector meteovec,
   
   DataFrame internalAllocation = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
   NumericVector allocationTarget = internalAllocation["allocationTarget"];
+  NumericVector sapwoodAreaTarget = internalAllocation["sapwoodAreaTarget"];
   NumericVector leafAreaTarget = internalAllocation["leafAreaTarget"];
   NumericVector fineRootBiomassTarget = internalAllocation["fineRootBiomassTarget"];
   
@@ -967,10 +998,10 @@ List growthDayInner(List x, NumericVector meteovec,
       double deltaLAsenescence = std::min(LAexpanded, LAexpanded*propLeafSenescence);
       double senescenceLeafLoss = deltaLAsenescence*(1000.0/SLA[j]);
 
-      //Define sapwood senescense
-      double propSASenescence = SRsapwood[j]*std::max(0.0,(tday-5.0)/20.0)/(1.0+15.0*exp(-0.01*H[j]));
-      double deltaSASenescence = propSASenescence*SA[j];
-      
+      //Define sapwood senescense as sapwood exceeding the target
+      double deltaSASenescence = std::max(0.0, SA[j] - sapwoodAreaTarget[j]);
+      double propSASenescence = deltaSASenescence/SA[j];
+        
       //FRB SENESCENCE
       NumericVector deltaFRBsenescence(numLayers, 0.0);
       for(int l=0;l<numLayers;l++) {
@@ -1041,9 +1072,9 @@ List growthDayInner(List x, NumericVector meteovec,
       // Rcout<<"-updatederived";
       if(transpirationMode=="Granier") {
         //Update Huber value
-        if(LAlive>0.0) {
-          Al2As[j] = (LAlive)/(SA[j]/10000.0);
-        }
+        // if(LAlive>0.0) {
+        //   Al2As[j] = (LAlive)/(SA[j]/10000.0);
+        // }
         for(int c=0;c<numCohorts;c++){
           L(c,_) = coarseRootLengths(V(c,_), dVec, 0.5); //Arbitrary ratio (to revise some day)
           CRSV[c] = coarseRootSoilVolume(V(c,_), dVec, 0.5);
@@ -1055,7 +1086,7 @@ List growthDayInner(List x, NumericVector meteovec,
           double oldrootR = 1.0/VCroot_kmaxVEC[j];
           double oldrootprop = oldrootR/(oldrootR+oldstemR);
           
-          Al2As[j] = (LAlive)/(SA[j]/10000.0);
+          // Al2As[j] = (LAlive)/(SA[j]/10000.0);
           VCstem_kmax[j]=maximumStemHydraulicConductance(Kmax_stemxylem[j], Hmed[j], Al2As[j] ,H[j], taper); 
           VCstem_kmax[j]=std::min(VCstem_kmax[j], maximumStemConductance);
           
@@ -1152,19 +1183,25 @@ List growthDayInner(List x, NumericVector meteovec,
       //UPDATE TARGETS
       // Rcout<<"-updatetargets";
       //Set target leaf area if bud formation is allowed
-      if(budFormation[j]) {
-        if(allocationStrategy == "Plant_kmax") {
-          leafAreaTarget[j] = LAlive*(Plant_kmax[j]/allocationTarget[j]);
-        } else if(allocationStrategy =="Al2As") {
-          leafAreaTarget[j] = (SA[j]/10000.0)*allocationTarget[j];
-        }
-        LAI_live[j] = leafAreaTarget[j]*N[j]/10000.0;
-      }
+      // if(budFormation[j]) {
+      //   if(allocationStrategy == "Plant_kmax") {
+      //     leafAreaTarget[j] = LAlive*(Plant_kmax[j]/allocationTarget[j]);
+      //   } else if(allocationStrategy =="Al2As") {
+      //     leafAreaTarget[j] = (SA[j]/10000.0)*allocationTarget[j];
+      //   }
+      //   LAI_live[j] = leafAreaTarget[j]*N[j]/10000.0;
+      // }
       //Update fine root biomass target     
       if((LAI_live[j]>0.0) && (N[j]>0.0)) {
         if(transpirationMode=="Granier") {
+          sapwoodAreaTarget[j] = 10000.0*leafAreaTarget[j]/Al2As[j];
           fineRootBiomassTarget[j] = (Ar2Al[j]*leafAreaTarget[j])/(specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4);
         } else {
+          if(allocationStrategy == "Plant_kmax") {
+            sapwoodAreaTarget[j] = 10000.0*(leafAreaTarget[j]/Al2As[j])*(allocationTarget[j]/Plant_kmax[j]);
+          } else if(allocationStrategy =="Al2As") {
+            sapwoodAreaTarget[j] = 10000.0*leafAreaTarget[j]/Al2As[j];
+          }
           NumericVector VGrhizo_target(numLayers,0.0);
           for(int s=0;s<numLayers;s++) {
             // Rcout<<VCroot_kmaxVEC[j]<< " "<<VCstem_kmax[j]<<"\n";

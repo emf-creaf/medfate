@@ -19,6 +19,8 @@ NumericVector cohortDensity(List x, DataFrame SpParams, String mode = "MED");
 NumericVector speciesDensity(List x, DataFrame SpParams, String mode = "MED");
 
 NumericVector treeBasalArea(NumericVector N, NumericVector dbh);
+NumericVector largerTreeBasalArea(NumericVector N, NumericVector dbh, double self_include_prop = 0.5);
+
 NumericVector treeCohortBasalArea(List x);
 NumericVector cohortBasalArea(List x, DataFrame SpParams);
 NumericVector dbhClassBasalArea(List x, NumericVector DBHbreaks);
