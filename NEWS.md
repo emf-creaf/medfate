@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.9.4
+- Leaf area limited by allometries
+
 # Version 2.9.3
 - Bounded leaf area index
 - IFNcodes out of SpParams
