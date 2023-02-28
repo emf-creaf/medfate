@@ -998,9 +998,10 @@ List growthDayInner(List x, NumericVector meteovec,
       double deltaLAsenescence = std::min(LAexpanded, LAexpanded*propLeafSenescence);
       double senescenceLeafLoss = deltaLAsenescence*(1000.0/SLA[j]);
 
-      //Define sapwood senescense as sapwood exceeding the target
+      //Define sapwood senescence as maximum of turnover and sapwood exceeding the target
+      double propSASenescence = SRsapwood[j]*std::max(0.0,(tday-5.0)/20.0)/(1.0+15.0*exp(-0.01*H[j]));
       double deltaSASenescence = std::max(0.0, SA[j] - sapwoodAreaTarget[j]);
-      double propSASenescence = deltaSASenescence/SA[j];
+      propSASenescence = std::max(propSASenescence, deltaSASenescence/SA[j]);
         
       //FRB SENESCENCE
       NumericVector deltaFRBsenescence(numLayers, 0.0);
