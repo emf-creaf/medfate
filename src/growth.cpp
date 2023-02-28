@@ -553,6 +553,7 @@ List growthDayInner(List x, NumericVector meteovec,
   NumericVector RGRcambiummax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRcambiummax"]);
   NumericVector RGRsapwoodmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRsapwoodmax"]);
   NumericVector RGRfinerootmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRfinerootmax"]);
+  NumericVector SRsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["SRsapwood"]);
   NumericVector SRfineroot = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["SRfineroot"]);
   NumericVector RSSG = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RSSG"]);
   NumericVector MortalityBaselineRate = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["MortalityBaselineRate"]);

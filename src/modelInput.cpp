@@ -453,7 +453,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   NumericVector RERleaf = speciesNumericParameterWithImputation(SP, SpParams, "RERleaf", fillMissingSpParams);
   NumericVector RERsapwood = speciesNumericParameterWithImputation(SP, SpParams, "RERsapwood", fillMissingSpParams);
   NumericVector RERfineroot = speciesNumericParameterWithImputation(SP, SpParams, "RERfineroot", fillMissingSpParams);
-  // NumericVector SRsapwood = speciesNumericParameterWithImputation(SP, SpParams, "SRsapwood", fillMissingSpParams);
+  NumericVector SRsapwood = speciesNumericParameterWithImputation(SP, SpParams, "SRsapwood", fillMissingSpParams);
   
   
   NumericVector CCleaf = speciesNumericParameterFromIndex(SP, SpParams, "CCleaf");
@@ -485,7 +485,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   double CCfineroot_default = constructionCosts["fineroot"];
   
   List senescenceRates = control["senescenceRates"];
-  // double SRsapwood_default = senescenceRates["sapwood"];
+  double SRsapwood_default = senescenceRates["sapwood"];
   double SRfineroot_default = senescenceRates["fineroot"];
   
   double mortalityBaselineRate_default = control["mortalityBaselineRate"];
@@ -500,7 +500,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
       if(NumericVector::is_na(RGRcambiummax[c]) && !NumericVector::is_na(DBH[c])) RGRcambiummax[c] = RGRcambiummax_default;
       if(NumericVector::is_na(RGRsapwoodmax[c]) && NumericVector::is_na(DBH[c])) RGRsapwoodmax[c] = RGRsapwoodmax_default;
       if(NumericVector::is_na(RGRfinerootmax[c])) RGRfinerootmax[c] = RGRfinerootmax_default;
-      // if(NumericVector::is_na(SRsapwood[c])) SRsapwood[c] = SRsapwood_default;
+      if(NumericVector::is_na(SRsapwood[c])) SRsapwood[c] = SRsapwood_default;
       if(NumericVector::is_na(SRfineroot[c])) SRfineroot[c] = SRfineroot_default;
       if(NumericVector::is_na(RSSG[c])) RSSG[c] = minimumRelativeStarchForGrowth_default;
       if(NumericVector::is_na(MortalityBaselineRate[c])) MortalityBaselineRate[c] = mortalityBaselineRate_default;
@@ -517,7 +517,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
                                                _["RGRsapwoodmax"] = RGRsapwoodmax,
                                                _["RGRcambiummax"] = RGRcambiummax,
                                                _["RGRfinerootmax"] = RGRfinerootmax,
-                                               // _["SRsapwood"] = SRsapwood,
+                                               _["SRsapwood"] = SRsapwood,
                                                _["SRfineroot"] = SRfineroot,
                                                _["RSSG"] = RSSG,
                                                _["fHDmin"] = fHDmin,
