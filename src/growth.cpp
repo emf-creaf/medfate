@@ -479,7 +479,11 @@ List growthDayInner(List x, NumericVector meteovec,
 
   DataFrame internalMortality = Rcpp::as<Rcpp::DataFrame>(x["internalMortality"]);
   NumericVector N_dead = internalMortality["N_dead"];
+  NumericVector N_starvation = internalMortality["N_starvation"];
+  NumericVector N_dessication = internalMortality["N_dessication"];
   NumericVector Cover_dead = internalMortality["Cover_dead"];
+  NumericVector Cover_starvation = internalMortality["Cover_starvation"];
+  NumericVector Cover_dessication = internalMortality["Cover_dessication"];
   
   DataFrame internalAllocation = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
   NumericVector allocationTarget = internalAllocation["allocationTarget"];
@@ -1134,13 +1138,16 @@ List growthDayInner(List x, NumericVector meteovec,
       if(transpirationMode=="Granier") stemSympRWC = symplasticRelativeWaterContent(PlantPsi[j], StemPI0[j], StemEPS[j]);
       else stemSympRWC = sum(StemSympRWCInst(j,_))/((double) numSteps);
       if(dynamicCohort) {
+        String cause = "undertermined";
         if(mortalityMode=="whole-cohort/deterministic") {
           if((sugarSapwood[j]<mortalitySugarThreshold) && allowStarvation) {
             Ndead_day = N[j];
             if(verbose) Rcout<<" [Cohort "<< j<<" died from starvation] ";
+            cause = "starvation";
           } else if( (stemSympRWC < mortalityRWCThreshold) && allowDessication) {
             Ndead_day = N[j];
             if(verbose) Rcout<<" [Cohort "<< j<<" died from dessication] ";
+            cause = "dessication";
           }
         } else {
           double basalMortalityRate = 1.0 - exp(log(1.0 - MortalityBaselineRate[j])/356.0);
@@ -1148,21 +1155,21 @@ List growthDayInner(List x, NumericVector meteovec,
           if(allowStarvation) starvationRate[j] = dailyMortalityProbability(basalMortalityRate, sugarSapwood[j], mortalitySugarThreshold, 0.0);
           if(allowDessication) dessicationRate[j] = dailyMortalityProbability(basalMortalityRate, stemSympRWC, mortalityRWCThreshold, 0.0);
           mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));
+          if((dessicationRate[j] > basalMortalityRate) && (dessicationRate[j] > starvationRate[j])) {
+            cause = "dessication";
+          } else if((starvationRate[j] > basalMortalityRate) && (starvationRate[j] > dessicationRate[j])) {
+            cause = "starvation";
+          }
           // Rcout<< j << " "<< stemSympRWC<< " "<< dessicationRate[j]<<"\n";
           if(mortalityMode =="density/deterministic") {
             Ndead_day = N[j]*mortalityRate[j];
           } else if(mortalityMode =="whole-cohort/stochastic") {
             if(R::runif(0.0,1.0) < mortalityRate[j]) {
               Ndead_day = N[j];
-              if(dessicationRate[j]>starvationRate[j]) {
-                Rcout<<" [Cohort "<< j<<" died from dessication] ";
-              } else {
-                Rcout<<" [Cohort "<< j<<" died from starvation] ";
-              }
+              Rcout<<" [Cohort "<< j<<" died from " << cause.get_cstring() << "] ";
             }
           } else if(mortalityMode == "density/stochastic") {
             Ndead_day = R::rbinom(round(N[j]), mortalityRate[j]);
-            // Rcout<< j<< " "<< P_day<< " "<< N[j]<< " "<< Ndead_day<< " "<< R::rbinom(750, 2.82309e-05)<< "\n";
           }
         }
         // Update density and increase the number of dead plants
@@ -1170,9 +1177,19 @@ List growthDayInner(List x, NumericVector meteovec,
         double Cdead_day = Cover[j]*(Ndead_day/N[j]);
         N[j] = N[j] - Ndead_day;
         N_dead[j] = N_dead[j] + Ndead_day;
+        if(cause == "starvation") {
+          N_starvation[j] = N_starvation[j] + Ndead_day;
+        } else if(cause == "dessication") {
+          N_dessication[j] = N_dessication[j] + Ndead_day;
+        }
         if(isShrub) {
           Cover[j] = std::max(0.0, Cover[j] - Cdead_day);
           Cover_dead[j] = Cover_dead[j] + Cdead_day;
+          if(cause == "starvation") {
+            Cover_starvation[j] = Cover_starvation[j] + Cdead_day;
+          } else if(cause == "dessication") {
+            Cover_dessication[j] = Cover_dessication[j] + Cdead_day;
+          }
         }
         //Update LAI dead and LAI expanded as a result of density decrease
         double LAI_change = LAexpanded*Ndead_day/10000.0;

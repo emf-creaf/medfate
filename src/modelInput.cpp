@@ -656,9 +656,17 @@ DataFrame internalCarbonDataFrame(DataFrame above,
 DataFrame internalMortalityDataFrame(DataFrame above) {
   int numCohorts = above.nrow();
   NumericVector N_dead(numCohorts, 0.0);
+  NumericVector N_starvation(numCohorts, 0.0);
+  NumericVector N_dessication(numCohorts, 0.0);
   NumericVector Cover_dead(numCohorts, 0.0);
+  NumericVector Cover_starvation(numCohorts, 0.0);
+  NumericVector Cover_dessication(numCohorts, 0.0);
   DataFrame df = DataFrame::create(Named("N_dead") = N_dead,
-                                   Named("Cover_dead") = Cover_dead);
+                                   Named("N_starvation") = N_starvation,
+                                   Named("N_dessication") = N_dessication,
+                                   Named("Cover_dead") = Cover_dead,
+                                   Named("Cover_starvation") = Cover_starvation,
+                                   Named("Cover_dessication") = Cover_dessication);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }
