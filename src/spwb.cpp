@@ -21,7 +21,7 @@ using namespace Rcpp;
 NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slope) {
   DataFrame FCCSprops = Rcpp::as<Rcpp::DataFrame>(x["internalFCCS"]);
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
-  DataFrame above = Rcpp::as<Rcpp::DataFrame>(transp["above"]);
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   
   double tmin = meteovec["tmin"];
   double tmax = meteovec["tmax"];
@@ -42,7 +42,7 @@ NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slo
   NumericVector deadFMC(LFMC.size(), fm_dead);
   NumericVector canopyFMC = (LFMC*(1.0 - PLC) + fm_dead*PLC);
   
-  NumericVector cohHeight = above["Height"];
+  NumericVector cohHeight = above["H"];
   NumericVector cohCR = above["CR"];
   NumericVector cohLoading = above["Loading"];
   
