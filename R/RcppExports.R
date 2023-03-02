@@ -1686,12 +1686,23 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
     .Call(`_medfate_paramsBelow`, above, Z50, Z95, soil, paramsAnatomydf, paramsTranspirationdf, control)
 }
 
+.spwbInput <- function(above, Z50, Z95, soil, SpParams, control) {
+    .Call(`_medfate_spwbInput`, above, Z50, Z95, soil, SpParams, control)
+}
+
+.growthInput <- function(above, Z50, Z95, soil, SpParams, control) {
+    .Call(`_medfate_growthInput`, above, Z50, Z95, soil, SpParams, control)
+}
+
+.cloneInput <- function(input) {
+    .Call(`_medfate_cloneInput`, input)
+}
+
 #' Input for simulation models
 #'
 #' Functions \code{forest2spwbInput} and \code{forest2growthInput} take an object of class \code{\link{forest}} 
 #' and calculate input data for functions \code{\link{spwb}}, \code{\link{pwb}} and \code{\link{growth}}, respectively. 
-#' Functions \code{spwbInput} and \code{growthInput} do the same but starting from different input data. 
-#' Function \code{forest2aboveground} calculates aboveground variables that may be used in \code{spwbInput} and \code{growthInput} functions. 
+#' Function \code{forest2aboveground} calculates aboveground variables such as leaf area index. 
 #' Function \code{forest2belowground} calculates belowground variables such as fine root distribution.
 #' 
 #' @param x An object of class \code{\link{forest}}.
@@ -1704,10 +1715,9 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
 #' @param Z50,Z95 Numeric vectors with cohort depths (in mm) corresponding to 50\% and 95\% of fine roots.
 #' 
 #' @details
-#' Functions \code{forest2spwbInput} and \code{forest2abovegroundInput} extracts height and species identity from plant cohorts of \code{x}, 
+#' Functions \code{forest2spwbInput} and \code{forest2aboveground} extract height and species identity from plant cohorts of \code{x}, 
 #' and calculate leaf area index and crown ratio. Function \code{forest2spwbInput} also calculates the distribution of fine roots 
-#' across soil. Both \code{forest2spwbInput} and \code{spwbInput} find parameter values for each plant cohort 
-#' according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Sperry"} 
+#' across soil, and finds parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Sperry"} 
 #' the functions also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
 #' 
 #' @return 
@@ -1723,7 +1733,7 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
 #'   \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
 #' }
 #' 
-#' Functions \code{forest2spwbInput()} and \code{spwbInput()} return a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
+#' Function \code{forest2spwbInput()} returns a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
 #'   \itemize{
 #'     \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
 #'     \item{\code{canopy}: A list of stand-level state variables.}
@@ -1824,7 +1834,7 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
 #'     }
 #'     \item{\code{internalPhenology} and \code{internalWater}: data frames to store internal state variables.}
 #'   }
-#' Functions \code{forest2growthInput} and \code{growthInput} return a list of class \code{growthInput} with the same elements as \code{spwbInput}, but with additional information. 
+#' Function \code{forest2growthInput} returns a list of class \code{growthInput} with the same elements as \code{spwbInput}, but with additional information. 
 #' \itemize{
 #' \item{Element \code{above} includes the following additional columns:
 #'     \itemize{
@@ -1890,18 +1900,10 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
 #' # Initialize soil with default soil params
 #' examplesoil = soil(defaultSoilParams())
 #' 
-#' # Rooting depths
-#' Z50 = c(exampleforestMED$treeData$Z50, exampleforestMED$shrubData$Z50)
-#' Z95 = c(exampleforestMED$treeData$Z95, exampleforestMED$shrubData$Z95)
-#' 
 #' # Initialize control parameters
 #' control = defaultControl("Granier")
 #' 
 #' # Prepare spwb input
-#' spwbInput(above, Z50, Z95, examplesoil,SpParamsMED, control)
-#' 
-#' # When starting from an object of class 'forest' the whole process
-#' # can be simplified:
 #' forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
 #'                 
 #' # Prepare input for Sperry transpiration mode
@@ -1909,20 +1911,6 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
 #' forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
 #' 
 #' @name modelInput
-spwbInput <- function(above, Z50, Z95, soil, SpParams, control) {
-    .Call(`_medfate_spwbInput`, above, Z50, Z95, soil, SpParams, control)
-}
-
-#' @rdname modelInput
-growthInput <- function(above, Z50, Z95, soil, SpParams, control) {
-    .Call(`_medfate_growthInput`, above, Z50, Z95, soil, SpParams, control)
-}
-
-.cloneInput <- function(input) {
-    .Call(`_medfate_cloneInput`, input)
-}
-
-#' @rdname modelInput
 forest2spwbInput <- function(x, soil, SpParams, control, mode = "MED") {
     .Call(`_medfate_forest2spwbInput`, x, soil, SpParams, control, mode)
 }

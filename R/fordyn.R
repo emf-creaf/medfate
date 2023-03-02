@@ -481,7 +481,7 @@ fordyn<-function(forest, soil, SpParams,
     
     
     # 4.5 Prepare growth input for next year
-    xi <- growthInput(above = above_all,
+    xi <- .growthInput(above = above_all,
                      Z50 = c(forest$treeData$Z50, forest$shrubData$Z50),
                      Z95 = c(forest$treeData$Z95, forest$shrubData$Z95),
                      xo$soil, SpParams, control)

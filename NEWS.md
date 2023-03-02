@@ -4,6 +4,7 @@
 
 # Version 2.9.4
 - Leaf area limited by allometries
+- Functions 'growthInput()' and 'spwbInput()' no longer visible at the user level
 
 # Version 2.9.3
 - Bounded leaf area index
