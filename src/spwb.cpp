@@ -1449,7 +1449,6 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   String cavitationRefill = control["cavitationRefill"];
   bool verbose = control["verbose"];
   
-  bool subdailyResults = control["subdailyResults"];
   bool leafPhenology = control["leafPhenology"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
   bool multiLayerBalance = control["multiLayerBalance"];
@@ -1725,7 +1724,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       Cm[i] = stand["Cm"];
       
 
-      if(subdailyResults) {
+      if(control["subdailyResults"]) {
         subdailyRes[i] = clone(s);
       }
   }
@@ -1758,10 +1757,10 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
                      Named("weather") = clone(meteo),
                      Named("spwbInput") = spwbInput,
                      Named("spwbOutput") = clone(x),
-                     Named("WaterBalance")=DWB, 
-                     Named("Soil")=SWB,
-                     Named("Stand")=Stand, 
-                     Named("Plants") = plantDWOL);
+                     Named("WaterBalance")=DWB);
+    if(control["soilResults"]) l.push_back(SWB, "Soil");
+    if(control["standResults"]) l.push_back(Stand, "Stand");
+    if(control["plantResults"]) l.push_back(plantDWOL, "Plants");
   } else {
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
@@ -1769,17 +1768,20 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
                      Named("spwbInput") = spwbInput,
                      Named("spwbOutput") = clone(x),
                      Named("WaterBalance")=DWB, 
-                     Named("EnergyBalance") = DEB,
-                     Named("Temperature") = DT,
-                     Named("TemperatureLayers") = NA_REAL,
-                     Named("Soil")=SWB,
-                     Named("Stand")=Stand, 
-                     Named("Plants") = plantDWOL,
-                     Named("SunlitLeaves") =  sunlitDO,
-                     Named("ShadeLeaves") =  shadeDO);
-    if(multiLayerBalance) l["TemperatureLayers"] = DLT;
+                     Named("EnergyBalance") = DEB);
+    if(control["temperatureResults"]) {
+      l.push_back(DT, "Temperature");
+      if(multiLayerBalance) l.push_back(DLT,"TemperatureLayers");
+    }
+    if(control["soilResults"]) l.push_back(SWB, "Soil");
+    if(control["standResults"]) l.push_back(Stand, "Stand");
+    if(control["plantResults"]) l.push_back(plantDWOL, "Plants");
+    if(control["leafResults"]) {
+      l.push_back(sunlitDO, "SunlitLeaves");
+      l.push_back(shadeDO, "ShadeLeaves");
+    }
   }
-  if(subdailyResults) l.push_back(subdailyRes,"subdaily");
+  if(control["subdailyResults"]) l.push_back(subdailyRes,"subdaily");
   l.attr("class") = CharacterVector::create("spwb","list");
   return(l);
 }
@@ -2161,10 +2163,10 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
                      Named("weather") = clone(meteo),
                      Named("spwbInput") = spwbInput,
                      Named("spwbOutput") = clone(x),
-                     Named("WaterBalance")=DWB, 
-                     Named("Soil")=SWB,
-                     Named("Stand") =Stand,
-                     Named("Plants") = plantDWOL);
+                     Named("WaterBalance")=DWB);
+    if(control["soilResults"]) l.push_back(SWB, "Soil");
+    if(control["standResults"]) l.push_back(Stand, "Stand");
+    if(control["plantResults"]) l.push_back(plantDWOL, "Plants");
   } else {
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
@@ -2172,17 +2174,20 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
                      Named("spwbInput") = spwbInput,
                      Named("spwbOutput") = clone(x),
                      Named("WaterBalance")=DWB, 
-                     Named("EnergyBalance") = DEB,
-                     Named("Temperature") = DT,
-                     Named("TemperatureLayers") = NA_REAL,
-                     Named("Soil")=SWB,
-                     Named("Stand") =Stand,
-                     Named("Plants") = plantDWOL,
-                     Named("SunlitLeaves") = sunlitDO,
-                     Named("ShadeLeaves") = shadeDO);
-    if(multiLayerBalance) l["TemperatureLayers"] = DLT;
+                     Named("EnergyBalance") = DEB);
+    if(control["temperatureResults"]) {
+      l.push_back(DT, "Temperature");
+      if(multiLayerBalance) l.push_back(DLT,"TemperatureLayers");
+    }
+    if(control["soilResults"]) l.push_back(SWB, "Soil");
+    if(control["standResults"]) l.push_back(Stand, "Stand");
+    if(control["plantResults"]) l.push_back(plantDWOL, "Plants");
+    if(control["leafResults"]) {
+      l.push_back(sunlitDO, "SunlitLeaves");
+      l.push_back(shadeDO, "ShadeLeaves");
+    }
   }
-  if(subdailyResults) l.push_back(subdailyRes,"subdaily");
+  if(control["subdailyResults"]) l.push_back(subdailyRes,"subdaily");
   l.attr("class") = CharacterVector::create("pwb","list");
   return(l);                    
 }

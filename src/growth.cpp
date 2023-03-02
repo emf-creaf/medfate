@@ -1694,7 +1694,6 @@ List growth(List x, DataFrame meteo, double latitude,
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
   bool verbose = control["verbose"];
-  bool subdailyResults = control["subdailyResults"];
   bool leafPhenology = control["leafPhenology"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
   bool multiLayerBalance = control["multiLayerBalance"];
@@ -2079,7 +2078,7 @@ List growth(List x, DataFrame meteo, double latitude,
     //   for(int j=0;j<numCohorts; j++) ringList[j] = initialize_ring();
     // }
 
-    if(subdailyResults) {
+    if(control["subdailyResults"]) {
       subdailyRes[i] = clone(s);
     }
   }
@@ -2201,14 +2200,16 @@ List growth(List x, DataFrame meteo, double latitude,
                      Named("growthOutput") = clone(x),
                      Named("WaterBalance")=DWB, 
                      Named("CarbonBalance")=StandCarbonBalance, 
-                     Named("BiomassBalance") = StandBiomassBalance,
-                     Named("Soil")=SWB,
-                     Named("Stand")=Stand,
-                     Named("Plants") = plantDWOL,
-                     Named("LabileCarbonBalance") = labileCarbonBalance,
-                     Named("PlantBiomassBalance") = plantBiomassBalance,
-                     Named("PlantStructure") = plantStructure,
-                     Named("GrowthMortality") = growthMortality);
+                     Named("BiomassBalance") = StandBiomassBalance);
+    if(control["soilResults"]) l.push_back(SWB, "Soil");
+    if(control["standResults"]) l.push_back(Stand, "Stand");
+    if(control["plantResults"]) {
+      l.push_back(plantDWOL, "Plants");
+      l.push_back(labileCarbonBalance, "LabileCarbonBalance");
+      l.push_back(plantBiomassBalance, "PlantBiomassBalance");
+      l.push_back(plantStructure, "PlantStructure");
+      l.push_back(growthMortality, "GrowthMortality");
+    }
   } else {
     l = List::create(Named("latitude") = latitude,
                    Named("topography") = topo,
@@ -2218,21 +2219,26 @@ List growth(List x, DataFrame meteo, double latitude,
                    Named("WaterBalance")=DWB, 
                    Named("CarbonBalance")=StandCarbonBalance, 
                    Named("EnergyBalance") = DEB,
-                   Named("BiomassBalance") = StandBiomassBalance,
-                   Named("Temperature") = DT,
-                   Named("TemperatureLayers") = NA_REAL,
-                   Named("Soil")=SWB,
-                   Named("Stand")=Stand,
-                   Named("Plants") = plantDWOL,
-                   Named("SunlitLeaves") = sunlitDO,
-                   Named("ShadeLeaves") = shadeDO,
-                   Named("LabileCarbonBalance") = labileCarbonBalance,
-                   Named("PlantBiomassBalance") = plantBiomassBalance,
-                   Named("PlantStructure") = plantStructure,
-                   Named("GrowthMortality") = growthMortality);
-    if(multiLayerBalance) l["TemperatureLayers"] = DLT;
+                   Named("BiomassBalance") = StandBiomassBalance);
+    if(control["temperatureResults"]) {
+      l.push_back(DT, "Temperature");
+      if(multiLayerBalance) l.push_back(DLT,"TemperatureLayers");
+    }
+    if(control["soilResults"]) l.push_back(SWB, "Soil");
+    if(control["standResults"]) l.push_back(Stand, "Stand");
+    if(control["plantResults"]) l.push_back(plantDWOL, "Plants");
+    if(control["leafResults"]) {
+      l.push_back(sunlitDO, "SunlitLeaves");
+      l.push_back(shadeDO, "ShadeLeaves");
+    }
+    if(control["plantResults"]){
+      l.push_back(labileCarbonBalance, "LabileCarbonBalance");
+      l.push_back(plantBiomassBalance, "PlantBiomassBalance");
+      l.push_back(plantStructure, "PlantStructure");
+      l.push_back(growthMortality, "GrowthMortality");
+    }
   }
-  if(subdailyResults) l.push_back(subdailyRes,"subdaily");
+  if(control["subdailyResults"]) l.push_back(subdailyRes,"subdaily");
   l.attr("class") = CharacterVector::create("growth","list");
   return(l);
 }

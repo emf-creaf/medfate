@@ -6,6 +6,7 @@
 - Leaf area limited by allometries
 - Functions 'growthInput()' and 'spwbInput()' no longer visible at the user level
 - No calculation mode forest structure (US mode removed)
+- Control flag options to restrict output in 'spwb()' 'pwb()' and 'growth()'
 
 # Version 2.9.3
 - Bounded leaf area index
