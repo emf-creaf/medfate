@@ -14,11 +14,11 @@
 \alias{light_longwaveRadiationSHAW}
 \title{Radiation transfer functions}
 \usage{
-light_PARcohort(x, SpParams, gdd = NA_real_, mode = "MED")
+light_PARcohort(x, SpParams, gdd = NA_real_)
 
-light_PARground(x, SpParams, gdd = NA_real_, mode = "MED")
+light_PARground(x, SpParams, gdd = NA_real_)
 
-light_SWRground(x, SpParams, gdd = NA_real_, mode = "MED")
+light_SWRground(x, SpParams, gdd = NA_real_)
 
 light_cohortAbsorbedSWRFraction(z, x, SpParams, gdd = NA_real_)
 
@@ -84,8 +84,6 @@ light_longwaveRadiationSHAW(
 \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
 
 \item{gdd}{Growth degree days.}
-
-\item{mode}{Calculation mode, either "MED" or "US".}
 
 \item{z}{A numeric vector with height values.}
 

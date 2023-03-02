@@ -8,6 +8,7 @@
 #include "forestutils.h"
 #include "paramutils.h"
 #include "tissuemoisture.h"
+#include "fuelstructure.h"
 #include "hydraulics.h"
 #include "stdlib.h"
 
@@ -772,7 +773,8 @@ DataFrame paramsCanopy(DataFrame above, List control) {
 }
 
 // [[Rcpp::export(".spwbInput")]]
-List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame SpParams, List control) {
+List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame FCCSprops, 
+               DataFrame SpParams, List control) {
   
   
   IntegerVector SP = above["SP"];
@@ -850,7 +852,8 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
                             _["paramsTranspiration"] = paramsTranspirationdf,
                             _["paramsWaterStorage"] = paramsWaterStoragedf,
                             _["internalPhenology"] = internalPhenologyDataFrame(above),
-                            _["internalWater"] = internalWaterDataFrame(above, transpirationMode));
+                            _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
+                            _["internalFCCS"] = FCCSprops);
   
   input.attr("class") = CharacterVector::create("spwbInput","list");
   return(input);
@@ -859,7 +862,8 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
 
 
 // [[Rcpp::export(".growthInput")]]
-List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame SpParams, List control) {
+List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame FCCSprops,
+                 DataFrame SpParams, List control) {
 
   IntegerVector SP = above["SP"];
   NumericVector LAI_live = above["LAI_live"];
@@ -911,7 +915,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
     SA[c] = 10000.0*(LAI_live[c]/(N[c]/10000.0))/Al2As[c];//Individual SA in cm2
   }
   
-
+  
   
   //Cohort description
   CharacterVector nsp = speciesCharacterParameterFromIndex(SP, SpParams, "Name");
@@ -978,7 +982,8 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                        _["internalAllocation"] = internalAllocationDataFrame(plantsdf, belowdf,
                                                       paramsAnatomydf,
                                                       paramsTranspirationdf, control),
-                       _["internalMortality"] = internalMortalityDataFrame(plantsdf));
+                       _["internalMortality"] = internalMortalityDataFrame(plantsdf),
+                       _["internalFCCS"] = FCCSprops);
   
   input.attr("class") = CharacterVector::create("growthInput","list");
   return(input);
@@ -1051,7 +1056,6 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //' @param x An object of class \code{\link{forest}}.
 //' @param SpParams A data frame with species parameters (see \code{\link{SpParamsDefinition}} and \code{\link{SpParamsMED}}).
 //' @param gdd Growth degree days to account for leaf phenology effects (in Celsius). This should be left \code{NA} in most applications.
-//' @param mode Calculation mode, either "MED" or "US".
 //' @param soil An object of class \code{\link{soil}}.
 //' @param control A list with default control parameters (see \code{\link{defaultControl}}).
 //' @param above A data frame with aboveground plant information (see the return value of \code{forest2aboveground} below). In the case of \code{spwbInput} the variables should include \code{SP}, \code{N}, \code{LAI_live}, \code{LAI_dead}, \code{H} and \code{CR}. In the case of \code{growthInput} variables should include \code{DBH} and \code{Cover}.
@@ -1255,10 +1259,13 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //' 
 //' @name modelInput
 // [[Rcpp::export("forest2spwbInput")]]
-List forest2spwbInput(List x, List soil, DataFrame SpParams, List control, String mode = "MED") {
+List forest2spwbInput(List x, List soil, DataFrame SpParams, List control) {
   List rdc = rootDistributionComplete(x, SpParams, control["fillMissingRootParams"]);
-  DataFrame above = forest2aboveground(x, SpParams, NA_REAL, mode);
-  return(spwbInput(above, rdc["Z50"], rdc["Z95"], soil, SpParams, control));
+  bool fireHazardResults = control["fireHazardResults"];
+  DataFrame above = forest2aboveground(x, SpParams, NA_REAL, fireHazardResults);
+  DataFrame FCCSprops = R_NilValue;
+  if(fireHazardResults) FCCSprops = FCCSproperties(x, SpParams);
+  return(spwbInput(above, rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control));
 }
 
 
@@ -1266,8 +1273,11 @@ List forest2spwbInput(List x, List soil, DataFrame SpParams, List control, Strin
 // [[Rcpp::export("forest2growthInput")]]
 List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   List rdc = rootDistributionComplete(x, SpParams, control["fillMissingRootParams"]);
-  DataFrame above = forest2aboveground(x, SpParams, NA_REAL);
-  return(growthInput(above,  rdc["Z50"], rdc["Z95"], soil, SpParams, control));
+  bool fireHazardResults = control["fireHazardResults"];
+  DataFrame above = forest2aboveground(x, SpParams, NA_REAL, fireHazardResults);
+  DataFrame FCCSprops = R_NilValue;
+  if(fireHazardResults) FCCSprops = FCCSproperties(x, SpParams);
+  return(growthInput(above,  rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control));
 }
 
 //' Reset simulation inputs

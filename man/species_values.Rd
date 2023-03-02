@@ -15,17 +15,17 @@
 \usage{
 species_basalArea(x, SpParams)
 
-species_cover(x, SpParams, mode = "MED")
+species_cover(x, SpParams)
 
-species_density(x, SpParams, mode = "MED")
+species_density(x, SpParams)
 
-species_foliarBiomass(x, SpParams, gdd = NA_real_, mode = "MED")
+species_foliarBiomass(x, SpParams, gdd = NA_real_)
 
-species_fuel(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED")
+species_fuel(x, SpParams, gdd = NA_real_, includeDead = TRUE)
 
 species_phytovolume(x, SpParams)
 
-species_LAI(x, SpParams, gdd = NA_real_, mode = "MED", bounded = TRUE)
+species_LAI(x, SpParams, gdd = NA_real_, bounded = TRUE)
 
 species_characterParameter(species, SpParams, parName)
 
@@ -35,8 +35,6 @@ species_parameter(species, SpParams, parName, fillMissing = TRUE)
 \item{x}{An object of class \code{\link{forest}}.}
 
 \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
-
-\item{mode}{Calculation mode, either "MED" or "US".}
 
 \item{gdd}{Growth degree days (to account for leaf phenology effects).}
 

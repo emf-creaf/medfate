@@ -8,11 +8,11 @@
 \alias{forest2growthInput}
 \title{Input for simulation models}
 \usage{
-forest2aboveground(x, SpParams, gdd = NA_real_, mode = "MED")
+forest2aboveground(x, SpParams, gdd = NA_real_, loading = FALSE)
 
 forest2belowground(x, soil, SpParams)
 
-forest2spwbInput(x, soil, SpParams, control, mode = "MED")
+forest2spwbInput(x, soil, SpParams, control)
 
 forest2growthInput(x, soil, SpParams, control)
 }
@@ -22,8 +22,6 @@ forest2growthInput(x, soil, SpParams, control)
 \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsDefinition}} and \code{\link{SpParamsMED}}).}
 
 \item{gdd}{Growth degree days to account for leaf phenology effects (in Celsius). This should be left \code{NA} in most applications.}
-
-\item{mode}{Calculation mode, either "MED" or "US".}
 
 \item{soil}{An object of class \code{\link{soil}}.}
 

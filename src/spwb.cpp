@@ -12,10 +12,66 @@
 #include "photosynthesis.h"
 #include "phenology.h"
 #include "transpiration.h"
+#include "fuelstructure.h"
+#include "firebehaviour.h"
 #include "soil.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
+NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slope) {
+  DataFrame FCCSprops = Rcpp::as<Rcpp::DataFrame>(x["internalFCCS"]);
+  DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(transp["above"]);
+  
+  double tmin = meteovec["tmin"];
+  double tmax = meteovec["tmax"];
+  double rhmin = meteovec["rhmin"];
+  double rhmax = meteovec["rhmax"];
+  double wind = meteovec["wind"];
+  
+
+  // Estimate moisture of dead fine fuels (Resco de Dios et al. 2015)
+  double vp = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
+  double D = std::max(0.0, meteoland::utils_saturationVP(tmax) - vp);
+  double fm_dead = 5.43 + 52.91*exp(-0.64*D); 
+  
+  //Calculate cohort canopy moisture to the average of canopy live and dead fuels, considering that a fraction of LAI is dead
+  //proportionally to stem PLC (Ruffault et al. 2023)
+  NumericVector LFMC = Plants["LFMC"];
+  NumericVector PLC = Plants["StemPLC"];
+  NumericVector deadFMC(LFMC.size(), fm_dead);
+  NumericVector canopyFMC = (LFMC*(1.0 - PLC) + fm_dead*PLC);
+  
+  NumericVector cohHeight = above["Height"];
+  NumericVector cohCR = above["CR"];
+  NumericVector cohLoading = above["Loading"];
+  
+  //Average canopy moisture in the crown and surface layers
+  NumericVector ActFMC = FCCSprops["ActFMC"];
+  NumericVector w = FCCSprops["w"];
+  if(w[1] > 0.0) ActFMC[1] = layerFuelAverageParameter(200.0, 10000.0, canopyFMC, cohLoading, cohHeight, cohCR);
+  else ActFMC[1] = NA_REAL;
+  if(w[2] > 0.0) ActFMC[2] = layerFuelAverageParameter(0.0, 200.0, canopyFMC, cohLoading, cohHeight, cohCR);
+  else ActFMC[1] = NA_REAL;
+      
+  NumericVector MdeadSI = NumericVector::create(fm_dead, fm_dead, fm_dead, fm_dead, fm_dead); 
+  NumericVector MliveSI = NumericVector::create(90, 90, 60); //Default values (not actually used)
+  List fccs = FCCSbehaviour(FCCSprops, MliveSI, MdeadSI, slope, wind);
+  List surfaceFire = fccs["SurfaceFire"];
+  List crownFire = fccs["CrownFire"];
+  List firePotentials = fccs["FirePotentials"];
+  NumericVector fireHazard = NumericVector::create(
+    _["ROS_surface [m/min]"] = surfaceFire["ROS [m/min]"],
+    _["I_b_surface [kW/m]"] = surfaceFire["I_b [kW/m]"],
+    _["FL_surface [m]"] = surfaceFire["FL [m]"],
+    _["ROS_crown [m/min]"] = crownFire["ROS_crown [m/min]"],
+    _["I_b_crown [kW/m]"] = crownFire["I_b_crown [kW/m]"],
+    _["FL_crown [m]"] = crownFire["FL_crown [m]"],
+    _["SFP"] = firePotentials["SFP"],
+    _["CFP"] = firePotentials["CFP"]
+  );
+  return(fireHazard);
+}
 
 // Soil water balance with simple hydraulic model
 List spwbDay1(List x, NumericVector meteovec, 
@@ -150,6 +206,13 @@ List spwbDay1(List x, NumericVector meteovec,
     }
   }
   
+  //Fire hazard
+  bool fireHazardResults = control["fireHazardResults"];
+  NumericVector fireHazard(1,NA_REAL);
+  if(fireHazardResults) fireHazard = fccsHazard(x, meteovec, transp, slope);
+  
+  
+  // Arrange output
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
   NumericVector Eplant = Rcpp::as<Rcpp::NumericVector>(Plants["Transpiration"]);
 
@@ -179,7 +242,8 @@ List spwbDay1(List x, NumericVector meteovec,
                         _["WaterBalance"] = DB, 
                         _["Soil"] = SB,
                         _["Stand"] = Stand,
-                        _["Plants"] = Plants);
+                        _["Plants"] = Plants,
+                        _["FireHazard"] = fireHazard);
   l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
 }
@@ -333,6 +397,13 @@ List spwbDay2(List x, NumericVector meteovec,
   }
   NumericVector psiVec = psi(soil, soilFunctions); //Calculate current soil water potential for output
   
+  
+  //Fire hazard
+  bool fireHazardResults = control["fireHazardResults"];
+  NumericVector fireHazard(1,NA_REAL);
+  if(fireHazardResults) fireHazard = fccsHazard(x, meteovec, transp, slope);
+
+  //Arrange output
   NumericVector topo = NumericVector::create(elevation, slope, aspect);
   topo.attr("names") = CharacterVector::create("elevation", "slope", "aspect");
   
@@ -370,7 +441,8 @@ List spwbDay2(List x, NumericVector meteovec,
                         _["ShadeLeavesInst"] = transp["ShadeLeavesInst"],
                         _["LightExtinction"] = transp["LightExtinction"],
                         _["LWRExtinction"] = transp["LWRExtinction"],
-                        _["CanopyTurbulence"] = transp["CanopyTurbulence"]);
+                        _["CanopyTurbulence"] = transp["CanopyTurbulence"],
+                        _["FireHazard"] = fireHazard);
   l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
 }

@@ -11,7 +11,6 @@ fuel_stratification(
   object,
   SpParams,
   gdd = NA_real_,
-  mode = "MED",
   heightProfileStep = 10,
   maxHeightProfile = 5000,
   bulkDensityThreshold = 0.05
@@ -22,7 +21,6 @@ fuel_FCCS(
   SpParams,
   cohortFMC = as.numeric(c()),
   gdd = NA_real_,
-  mode = "MED",
   heightProfileStep = 10,
   maxHeightProfile = 5000,
   bulkDensityThreshold = 0.05,
@@ -42,8 +40,6 @@ fuel_windAdjustmentFactor(
 \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
 
 \item{gdd}{Growth degree-days.}
-
-\item{mode}{Calculation mode, either "MED" or "US".}
 
 \item{heightProfileStep}{Precision for the fuel bulk density profile.}
 

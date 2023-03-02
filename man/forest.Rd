@@ -9,7 +9,7 @@
 \usage{
 emptyforest(ntree = 0, nshrub = 0)
 
-\method{summary}{forest}(object, SpParams, mode = "MED", ...)
+\method{summary}{forest}(object, SpParams, ...)
 
 \method{print}{summary.forest}(x, digits = getOption("digits"), ...)
 }
@@ -42,8 +42,6 @@ emptyforest(ntree = 0, nshrub = 0)
 }}
 
 \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
-
-\item{mode}{Calculation mode, either "MED" or "US".}
 
 \item{...}{Additional parameters for functions \code{\link{summary}} and \code{\link{print}}.}
 

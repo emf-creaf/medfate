@@ -30,40 +30,39 @@ plant_basalArea(x, SpParams)
 
 plant_largerTreeBasalArea(x, SpParams, self_proportion = 0.5)
 
-plant_cover(x, SpParams, mode = "MED")
+plant_cover(x, SpParams)
 
 plant_species(x, SpParams)
 
 plant_speciesName(x, SpParams)
 
-plant_density(x, SpParams, mode = "MED")
+plant_density(x, SpParams)
 
 plant_height(x, SpParams)
 
-plant_individualArea(x, SpParams, mode = "MED")
+plant_individualArea(x, SpParams)
 
-plant_crownRatio(x, SpParams, mode = "MED")
+plant_crownRatio(x, SpParams)
 
-plant_crownBaseHeight(x, SpParams, mode = "MED")
+plant_crownBaseHeight(x, SpParams)
 
-plant_crownLength(x, SpParams, mode = "MED")
+plant_crownLength(x, SpParams)
 
-plant_foliarBiomass(x, SpParams, gdd = NA_real_, mode = "MED")
+plant_foliarBiomass(x, SpParams, gdd = NA_real_)
 
-plant_fuel(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED")
+plant_fuel(x, SpParams, gdd = NA_real_, includeDead = TRUE)
 
-plant_equilibriumLeafLitter(x, SpParams, AET = 800, mode = "MED")
+plant_equilibriumLeafLitter(x, SpParams, AET = 800)
 
 plant_equilibriumSmallBranchLitter(
   x,
   SpParams,
-  smallBranchDecompositionRate = 0.81,
-  mode = "MED"
+  smallBranchDecompositionRate = 0.81
 )
 
 plant_phytovolume(x, SpParams)
 
-plant_LAI(x, SpParams, gdd = NA_real_, mode = "MED", bounded = TRUE)
+plant_LAI(x, SpParams, gdd = NA_real_, bounded = TRUE)
 
 plant_characterParameter(x, SpParams, parName)
 
@@ -77,8 +76,6 @@ plant_parameter(x, SpParams, parName, fillMissing = TRUE)
 \item{treeOffset, shrubOffset}{Integers to offset cohort IDs.}
 
 \item{self_proportion}{Proportion of the target cohort included in the assessment}
-
-\item{mode}{Calculation mode, either "MED" or "US".}
 
 \item{gdd}{Growth degree days (to account for leaf phenology effects).}
 

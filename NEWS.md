@@ -2,9 +2,10 @@
  NEWS for R Package "medfate"
 -------------------------------
 
-# Version 2.9.4
+# Version 3.0.0
 - Leaf area limited by allometries
 - Functions 'growthInput()' and 'spwbInput()' no longer visible at the user level
+- No calculation mode forest structure (US mode removed)
 
 # Version 2.9.3
 - Bounded leaf area index
