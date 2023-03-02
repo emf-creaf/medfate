@@ -809,8 +809,8 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
                                          _["LAI_live"]=LAI_live, 
                                          _["LAI_expanded"] = LAI_expanded, 
                                          _["LAI_dead"] = LAI_dead);
-  plantsdf.attr("row.names") = above.attr("row.names");
   if(control["fireHazardResults"]) plantsdf.push_back(above["Loading"], "Loading");
+  plantsdf.attr("row.names") = above.attr("row.names");
   
   DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams, fillMissingSpParams, "spwb", transpirationMode);
   
@@ -933,6 +933,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                                          _["LAI_live"]=LAI_live, 
                                          _["LAI_expanded"]=LAI_expanded, 
                                          _["LAI_dead"] = LAI_dead);
+  if(control["fireHazardResults"]) plantsdf.push_back(above["Loading"], "Loading");
   plantsdf.attr("row.names") = above.attr("row.names");
   
 

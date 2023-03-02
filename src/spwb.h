@@ -11,6 +11,7 @@ DataFrame defineWaterBalanceDailyOutput(DataFrame meteo, NumericVector PET, Stri
 DataFrame defineSoilWaterBalanceDailyOutput(DataFrame meteo, List soil, String transpirationMode);
 DataFrame defineEnergyBalanceDailyOutput(DataFrame meteo);
 DataFrame defineTemperatureDailyOutput(DataFrame meteo);
+DataFrame defineFireHazardOutput(DataFrame meteo);
 NumericMatrix defineTemperatureLayersDailyOutput(DataFrame meteo, DataFrame canopy);
 List defineSunlitShadeLeavesDailyOutput(DataFrame meteo, DataFrame above);
 List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, List control);
@@ -22,6 +23,7 @@ void fillSoilWaterBalanceDailyOutput(DataFrame SWB, List soil, List sDay,
 void fillEnergyBalanceTemperatureDailyOutput(DataFrame DEB, DataFrame DT, NumericMatrix DLT, List sDay, 
                                              int iday, bool multiLayerBalance);
 void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int day, String transpirationMode);
+void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday);
 
 void printWaterBalanceResult(DataFrame DWB, List plantDWOL, 
                              List soil, String soilFunctions,

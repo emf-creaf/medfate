@@ -1396,6 +1396,7 @@ List growthDayInner(List x, NumericVector meteovec,
     l.push_back(spwbOut["LightExtinction"], "LightExtinction");
     l.push_back(spwbOut["CanopyTurbulence"], "CanopyTurbulence");
   }
+  if(control["fireHazardResults"]) l.push_back(spwbOut["FireHazard"], "FireHazard");
   l.attr("class") = CharacterVector::create("growth_day","list");
   return(l);
 }
@@ -1873,6 +1874,9 @@ List growth(List x, DataFrame meteo, double latitude,
   List plantDWOL = definePlantWaterDailyOutput(meteo, above, soil, control);
   NumericVector EplantCohTot(numCohorts, 0.0);
 
+  //Fire hazard output variables
+  DataFrame fireHazard;
+  if(control["fireHazardResults"]) fireHazard = defineFireHazardOutput(meteo);
   
   //Count years (times structural variables will be updated)
   int numYears = 0;
@@ -1959,6 +1963,7 @@ List growth(List x, DataFrame meteo, double latitude,
         Named("tday") = tday, Named("tmax") = tmax, Named("tmin") = tmin,
         Named("prec") = Precipitation[i], Named("rhmin") = rhmin, Named("rhmax") = rhmax,
         Named("rad") = rad, 
+        Named("wind") = wind, 
         Named("pet") = PET[i],
         Named("Catm") = Catm,
         Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
@@ -2011,6 +2016,7 @@ List growth(List x, DataFrame meteo, double latitude,
     fillWaterBalanceDailyOutput(DWB, s,i, transpirationMode);
     fillSoilWaterBalanceDailyOutput(SWB, soil, s,
                                     i, numDays, transpirationMode, soilFunctions);
+    if(control["fireHazardResults"]) fillFireHazardOutput(fireHazard, s, i);
     
     List stand = s["Stand"];
     LgroundPAR[i] = stand["LgroundPAR"];
@@ -2210,6 +2216,7 @@ List growth(List x, DataFrame meteo, double latitude,
       l.push_back(plantStructure, "PlantStructure");
       l.push_back(growthMortality, "GrowthMortality");
     }
+    if(control["fireHazardResults"]) l.push_back(fireHazard, "FireHazard");
   } else {
     l = List::create(Named("latitude") = latitude,
                    Named("topography") = topo,
@@ -2237,6 +2244,7 @@ List growth(List x, DataFrame meteo, double latitude,
       l.push_back(plantStructure, "PlantStructure");
       l.push_back(growthMortality, "GrowthMortality");
     }
+    if(control["fireHazardResults"]) l.push_back(fireHazard, "FireHazard");
   }
   if(control["subdailyResults"]) l.push_back(subdailyRes,"subdaily");
   l.attr("class") = CharacterVector::create("growth","list");

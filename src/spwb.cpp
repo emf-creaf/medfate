@@ -45,6 +45,10 @@ NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slo
   NumericVector cohHeight = above["H"];
   NumericVector cohCR = above["CR"];
   NumericVector cohLoading = above["Loading"];
+  //Correct loading for phenology
+  NumericVector LAI_expanded = above["LAI_expanded"];
+  NumericVector LAI_live = above["LAI_live"];
+  cohLoading = cohLoading*(LAI_expanded/LAI_live);
   
   //Average canopy moisture in the crown and surface layers
   NumericVector ActFMC = FCCSprops["ActFMC"];
@@ -61,6 +65,9 @@ NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slo
   List crownFire = fccs["CrownFire"];
   List firePotentials = fccs["FirePotentials"];
   NumericVector fireHazard = NumericVector::create(
+    _["DFMC [%]"] = fm_dead,
+    _["CFMC_understory [%]"] = ActFMC[1],
+    _["CFMC_overstory [%]"] = ActFMC[2],
     _["ROS_surface [m/min]"] = surfaceFire["ROS [m/min]"],
     _["I_b_surface [kW/m]"] = surfaceFire["I_b [kW/m]"],
     _["FL_surface [m]"] = surfaceFire["FL [m]"],
@@ -242,8 +249,8 @@ List spwbDay1(List x, NumericVector meteovec,
                         _["WaterBalance"] = DB, 
                         _["Soil"] = SB,
                         _["Stand"] = Stand,
-                        _["Plants"] = Plants,
-                        _["FireHazard"] = fireHazard);
+                        _["Plants"] = Plants);
+  if(control["fireHazardResults"]) l.push_back(fireHazard, "FireHazard");
   l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
 }
@@ -441,8 +448,8 @@ List spwbDay2(List x, NumericVector meteovec,
                         _["ShadeLeavesInst"] = transp["ShadeLeavesInst"],
                         _["LightExtinction"] = transp["LightExtinction"],
                         _["LWRExtinction"] = transp["LWRExtinction"],
-                        _["CanopyTurbulence"] = transp["CanopyTurbulence"],
-                        _["FireHazard"] = fireHazard);
+                        _["CanopyTurbulence"] = transp["CanopyTurbulence"]);
+  if(control["fireHazardResults"]) l.push_back(fireHazard, "FireHazard");
   l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
 }
@@ -948,6 +955,29 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
   }
   return(plants);
 }
+DataFrame defineFireHazardOutput(DataFrame meteo){
+  CharacterVector dateStrings = meteo.attr("row.names");
+  int numDays = dateStrings.length();
+  
+  NumericVector DFMC(numDays), CFMC_understory(numDays), CFMC_overstory(numDays);
+  NumericVector ROS_surface(numDays), I_b_surface(numDays), FL_surface(numDays);
+  NumericVector ROS_crown(numDays), I_b_crown(numDays), FL_crown(numDays);
+  NumericVector SFP(numDays), CFP(numDays);
+  DataFrame df = DataFrame::create(_["DFMC"] = DFMC,
+                                   _["CFMC_understory"] = CFMC_understory,
+                                   _["CFMC_overstory"] = CFMC_overstory,
+                                   _["ROS_surface"] = ROS_surface,
+                                   _["I_b_surface"] = I_b_surface,
+                                   _["FL_surface"] = FL_surface,
+                                   _["ROS_crown"] = ROS_crown,
+                                   _["I_b_crown"] = I_b_crown,
+                                   _["FL_crown"] = FL_crown,
+                                   _["SFP"] = SFP,
+                                   _["CFP"] = CFP);
+  
+  df.attr("row.names") = dateStrings;
+  return(df);
+}
 void fillWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday, String transpirationMode) {
   List db = sDay["WaterBalance"];
   NumericVector Precipitation = DWB["Precipitation"];
@@ -1193,7 +1223,31 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
 
   }
 }
-
+void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday) {
+  NumericVector fhd = sDay["FireHazard"];
+  NumericVector DFMC = fireHazard["DFMC"];
+  NumericVector CFMC_understory = fireHazard["CFMC_understory"];
+  NumericVector CFMC_overstory = fireHazard["CFMC_overstory"];
+  NumericVector ROS_surface = fireHazard["ROS_surface"];
+  NumericVector I_b_surface = fireHazard["I_b_surface"];
+  NumericVector FL_surface = fireHazard["FL_surface"];
+  NumericVector ROS_crown = fireHazard["ROS_crown"];
+  NumericVector I_b_crown = fireHazard["I_b_crown"];
+  NumericVector FL_crown = fireHazard["FL_crown"];
+  NumericVector SFP = fireHazard["SFP"];
+  NumericVector CFP = fireHazard["CFP"];
+  DFMC[iday] = fhd["DFMC [%]"];
+  CFMC_understory[iday] = fhd["CFMC_understory [%]"];
+  CFMC_overstory[iday] = fhd["CFMC_overstory [%]"];
+  ROS_surface[iday] = fhd["ROS_surface [m/min]"];
+  I_b_surface[iday] = fhd["I_b_surface [kW/m]"];
+  FL_surface[iday] = fhd["FL_surface [m]"];
+  ROS_crown[iday] = fhd["ROS_crown [m/min]"];
+  I_b_crown[iday] = fhd["I_b_crown [kW/m]"];
+  FL_crown[iday] = fhd["FL_crown [m]"];
+  SFP[iday] = fhd["SFP"];
+  CFP[iday] = fhd["CFP"];
+}
 void printWaterBalanceResult(DataFrame DWB, List plantDWOL, 
                              List soil, String soilFunctions,
                              NumericVector initialContent, double initialSnowContent,
@@ -1575,7 +1629,10 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   List shadeDO = defineSunlitShadeLeavesDailyOutput(meteo, above);
   List plantDWOL = definePlantWaterDailyOutput(meteo, above, soil, control);
 
-  
+  //Fire hazard output variables
+  DataFrame fireHazard;
+  if(control["fireHazardResults"]) fireHazard = defineFireHazardOutput(meteo);
+
   NumericVector initialContent = water(soil, soilFunctions);
   double initialSnowContent = soil["SWE"];
   if(verbose) {
@@ -1660,6 +1717,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
           Named("tday") = tday, Named("tmax") = tmax, Named("tmin") = tmin,
           Named("prec") = Precipitation[i], Named("rhmin") = rhmin, Named("rhmax") = rhmax,
           Named("rad") = rad, 
+          Named("wind") = wind, 
           Named("Catm") = Catm,
           Named("pet") = PET[i],
           Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
@@ -1713,6 +1771,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       fillWaterBalanceDailyOutput(DWB, s,i, transpirationMode);
       fillSoilWaterBalanceDailyOutput(SWB, soil, s,
                                       i, numDays, transpirationMode, soilFunctions);
+      if(control["fireHazardResults"]) fillFireHazardOutput(fireHazard, s, i);
       
       List stand = s["Stand"];
       LgroundPAR[i] = stand["LgroundPAR"];
@@ -1761,6 +1820,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
     if(control["soilResults"]) l.push_back(SWB, "Soil");
     if(control["standResults"]) l.push_back(Stand, "Stand");
     if(control["plantResults"]) l.push_back(plantDWOL, "Plants");
+    if(control["fireHazardResults"]) l.push_back(fireHazard, "FireHazard");
   } else {
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
@@ -1780,6 +1840,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       l.push_back(sunlitDO, "SunlitLeaves");
       l.push_back(shadeDO, "ShadeLeaves");
     }
+    if(control["fireHazardResults"]) l.push_back(fireHazard, "FireHazard");
   }
   if(control["subdailyResults"]) l.push_back(subdailyRes,"subdaily");
   l.attr("class") = CharacterVector::create("spwb","list");
@@ -1947,6 +2008,9 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   List plantDWOL = definePlantWaterDailyOutput(meteo, above, soil, control);
   NumericVector EplantCohTot(numCohorts, 0.0);
 
+  //Fire hazard output variables
+  DataFrame fireHazard;
+  if(control["fireHazardResults"]) fireHazard = defineFireHazardOutput(meteo);
   
   bool error_occurence = false;
   if(verbose) Rcout << "Performing daily simulations ";
@@ -2031,6 +2095,8 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       NumericVector meteovec = NumericVector::create(
         Named("tday") = tday, Named("tmax") = tmax, Named("tmin") = tmin,
         Named("prec") = Precipitation[i], Named("rhmin") = rhmin, Named("rhmax") = rhmax,
+        Named("rad") = rad, 
+        Named("wind") = wind, 
         Named("Catm") = Catm,
         Named("pet") = PET[i]);
       try{
@@ -2086,6 +2152,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     
     //Update plant daily water output
     fillPlantWaterDailyOutput(plantDWOL, sunlitDO, shadeDO, s, i, transpirationMode);
+    if(control["fireHazardResults"]) fillFireHazardOutput(fireHazard, s, i);
     
     List Plants = s["Plants"];
     NumericVector EplantCoh = Plants["Transpiration"];
@@ -2167,6 +2234,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     if(control["soilResults"]) l.push_back(SWB, "Soil");
     if(control["standResults"]) l.push_back(Stand, "Stand");
     if(control["plantResults"]) l.push_back(plantDWOL, "Plants");
+    if(control["fireHazardResults"]) l.push_back(fireHazard, "FireHazard");
   } else {
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
@@ -2186,6 +2254,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       l.push_back(sunlitDO, "SunlitLeaves");
       l.push_back(shadeDO, "ShadeLeaves");
     }
+    if(control["fireHazardResults"]) l.push_back(fireHazard, "FireHazard");
   }
   if(control["subdailyResults"]) l.push_back(subdailyRes,"subdaily");
   l.attr("class") = CharacterVector::create("pwb","list");
