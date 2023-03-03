@@ -16,10 +16,12 @@ We solved that issue and would like to re-submit the package.
 * Ubuntu Linux 20.04.1 LTS, R-release, GCC (on rhub)
 * Fedora Linux, R-devel, clang, gfortran (on rhub)
 
+Other platforms were tested with rhub, but lead to PREPROC errors (unavailable dependencies)
+
 ## R CMD check results
 
 In all CI tests 1 NOTE is generated about the size of 'libs', due to the large
-amount of compiled code:
+amount of compiled code (e.g.):
 
      installed size is 41.7Mb
      sub-directories of 1Mb or more:
