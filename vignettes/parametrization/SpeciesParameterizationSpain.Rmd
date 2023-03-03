@@ -15,7 +15,7 @@ params:
 
 This vignette describes the procedures used to obtain the initial species parameter data table that serves to obtain the data frame `SpParamsMED` included in package **medfate**. The taxon entities chosen are intended to cover most of the woody plant taxa in Spain, as they are reported in the Spanish National Forest Inventory surveys (*Inventario Forestal Nacional* or IFN). In addition, a list of `forest` objects is also created for each of three IFN surveys, where species codification follows the parameter data table.
 
-The vignette is not self-contained, in the sense that it cannot be reproduced without access to data sets that are not included. Nevertheless, it is intended to serve as example of species parameterization for other regions.
+>**IMPORTANT**: The vignette is not self-contained, in the sense that it cannot be reproduced without access to data sets that are not included. Nevertheless, it is intended to serve as example of species parameterization for other regions.
 
 ### Required packages`
 Installed version of **medfate** should be **ver 2.9** or higher. 
@@ -51,7 +51,7 @@ Once we have **medfate**, **medfateutils**,  **medfuels** and **IFNread**, we lo
 library(medfate)
 library(medfateutils)
 library(medfuels)
-library(IFNread)
+# library(IFNread)
 library(tidyverse)
 library(openxlsx)
 ```
@@ -80,11 +80,11 @@ The following sections describe different steps that we used to obtain the speci
  
 ### Source data paths
 
-Befores starting, we define file paths (in my computer) to access source data for parameter filling. Source data includes forest inventory (i.e. IFN) data as well as plant trait and allometric data bases:
+Before starting, we define file paths (in my computer) to access source data for parameter filling. Source data includes forest inventory (i.e. IFN) data as well as plant trait and allometric data bases:
 ```{r paths}
-IFN_path = "/home/miquel/OneDrive/EMFDatasets/ForestInventories/IFN/"
-IFN_out_path = "/home/miquel/OneDrive/EMFProducts/MEDFATE_Initialisation/IFN/"
-DB_path = "/home/miquel/OneDrive/Professional/MEDFATE_development/MedfateSpeciesParametrization/"
+IFN_path = "/home/miquel/OneDrive/EMF_datasets/ForestInventories/IFN/"
+IFN_out_path = "/home/miquel/OneDrive/mcaceres_work/model_initialisation/MEDFATE_Initialisation/IFN/"
+DB_path = "/home/miquel/OneDrive/mcaceres_work/model_development/medfate_development/MedfateSpeciesParametrization/"
 ```
 
 ## Initialize species parameter table for IFN
@@ -116,167 +116,168 @@ The result of calling `initSpParams()` is a data frame with `nrow(SpParams)` row
 head(SpParams[,1:7])
 ```
 
-## Parameters drawn from IFN data
+<!-- ## Parameters drawn from IFN data -->
 
-Some plant size parameters, such as maximum height or minimum/maximum values of the height-to-diameter ratio, can be derived from forest inventory data. In addition, it is important that medfate's parameter `GrowthForm` (either "Tree", "Tree/Shrub" or "Shrub") matches the treatment given in forest inventory surveys. Diameters are normally measured in "Tree" entities, whereas shrubs are often measured using cover indices, and some species may be recorded in either way. Thus, the `GrowthForm` parameter should also be derived from forest inventory.
+<!-- Some plant size parameters, such as maximum height or minimum/maximum values of the height-to-diameter ratio, can be derived from forest inventory data. In addition, it is important that medfate's parameter `GrowthForm` (either "Tree", "Tree/Shrub" or "Shrub") matches the treatment given in forest inventory surveys. Diameters are normally measured in "Tree" entities, whereas shrubs are often measured using cover indices, and some species may be recorded in either way. Thus, the `GrowthForm` parameter should also be derived from forest inventory. -->
 
-### Load IFN plot data
+<!-- ### Load IFN plot data -->
 
-We first load IFN tree and shrub data corresponding to the three surveys (tree data is in two different tables in the case of IFN2): 
-```{r load_ifn}
-shrubDataIFN2 <-readRDS(paste0(IFN_path,"Products/IFN2/Rdata/shrubDataIFN2_Spain.rds"))
-shrubDataIFN2$ID<-as.character(shrubDataIFN2$ID)
-shrubDataIFN3 <-readRDS(paste0(IFN_path,"Products/IFN3/Rdata/shrubDataIFN3_Spain.rds"))
-shrubDataIFN4 <-readRDS(paste0(IFN_path,"Products/IFN4/Rdata/shrubDataIFN4_Spain.rds"))
+<!-- We first load IFN tree and shrub data corresponding to the three surveys (tree data is in two different tables in the case of IFN2):  -->
+<!-- ```{r load_ifn} -->
+<!-- shrubDataIFN2 <-readRDS(paste0(IFN_path,"Products/IFN2/Rdata/shrubDataIFN2_Spain.rds")) -->
+<!-- shrubDataIFN2$ID<-as.character(shrubDataIFN2$ID) -->
+<!-- shrubDataIFN3 <-readRDS(paste0(IFN_path,"Products/IFN3/Rdata/shrubDataIFN3_Spain.rds")) -->
+<!-- shrubDataIFN4 <-readRDS(paste0(IFN_path,"Products/IFN4/Rdata/shrubDataIFN4_Spain.rds")) -->
 
-piesMayoresDataIFN2<-readRDS(paste0(IFN_path,"Products/IFN2/Rdata/piesMayoresDataIFN2_Spain.rds"))
-piesMenoresDataIFN2<-readRDS(paste0(IFN_path,"Products/IFN2/Rdata/piesMenoresDataIFN2_Spain.rds"))
-piesMenoresDataIFN2$ID = as.character(piesMenoresDataIFN2$ID)
-piesMenoresDataIFN2$Species = as.character(piesMenoresDataIFN2$Species)
-treeDataIFN2 = rbind(piesMayoresDataIFN2, piesMenoresDataIFN2) # Add pies menores
+<!-- piesMayoresDataIFN2<-readRDS(paste0(IFN_path,"Products/IFN2/Rdata/piesMayoresDataIFN2_Spain.rds")) -->
+<!-- piesMenoresDataIFN2<-readRDS(paste0(IFN_path,"Products/IFN2/Rdata/piesMenoresDataIFN2_Spain.rds")) -->
+<!-- piesMenoresDataIFN2$ID = as.character(piesMenoresDataIFN2$ID) -->
+<!-- piesMenoresDataIFN2$Species = as.character(piesMenoresDataIFN2$Species) -->
+<!-- treeDataIFN2 = rbind(piesMayoresDataIFN2, piesMenoresDataIFN2) # Add pies menores -->
 
-treeDataIFN3<-readRDS(paste0(IFN_path,"Products/IFN3/Rdata/treeDataIFN3_Spain.rds"))
-treeDataIFN3 = treeDataIFN3[!(treeDataIFN3$OIF3 %in% c("888","999")),] # remove dead trees
-regDataIFN3 = readRDS(paste0(IFN_path,"Products/IFN3/Rdata/regDataIFN3_Spain.rds"))
-regTreeDataIFN3 = IFNread::extractRegTreeData(regDataIFN3, subsetVars=T)
-treeDataIFN3 = rbind(treeDataIFN3[,c("ID","Species","DBH","H","N")],
-                     regTreeDataIFN3[,c("ID","Species","DBH","H","N")])
-treeDataIFN4<-readRDS(paste0(IFN_path,"Products/IFN4/Rdata/treeDataIFN4_Spain.rds"))
-treeDataIFN4 = treeDataIFN4[!(treeDataIFN4$OIF4 %in% c("888","999")),] # remove dead trees
-regDataIFN4 = readRDS(paste0(IFN_path,"Products/IFN4/Rdata/regDataIFN4_Spain.rds"))
-regTreeDataIFN4 = IFNread::extractRegTreeData(regDataIFN4, subsetVars=T)
-treeDataIFN4 = rbind(treeDataIFN4[,c("ID","Species","DBH","H","N")],
-                     regTreeDataIFN4[,c("ID","Species","DBH","H","N")])
+<!-- treeDataIFN3<-readRDS(paste0(IFN_path,"Products/IFN3/Rdata/treeDataIFN3_Spain.rds")) -->
+<!-- treeDataIFN3 = treeDataIFN3[!(treeDataIFN3$OIF3 %in% c("888","999")),] # remove dead trees -->
+<!-- regDataIFN3 = readRDS(paste0(IFN_path,"Products/IFN3/Rdata/regDataIFN3_Spain.rds")) -->
+<!-- regTreeDataIFN3 = IFNread::extractRegTreeData(regDataIFN3, subsetVars=T) -->
+<!-- treeDataIFN3 = rbind(treeDataIFN3[,c("ID","Species","DBH","H","N")], -->
+<!--                      regTreeDataIFN3[,c("ID","Species","DBH","H","N")]) -->
+<!-- treeDataIFN4<-readRDS(paste0(IFN_path,"Products/IFN4/Rdata/treeDataIFN4_Spain.rds")) -->
+<!-- treeDataIFN4 = treeDataIFN4[!(treeDataIFN4$OIF4 %in% c("888","999")),] # remove dead trees -->
+<!-- regDataIFN4 = readRDS(paste0(IFN_path,"Products/IFN4/Rdata/regDataIFN4_Spain.rds")) -->
+<!-- regTreeDataIFN4 = IFNread::extractRegTreeData(regDataIFN4, subsetVars=T) -->
+<!-- treeDataIFN4 = rbind(treeDataIFN4[,c("ID","Species","DBH","H","N")], -->
+<!--                      regTreeDataIFN4[,c("ID","Species","DBH","H","N")]) -->
 
-```
-
-
-
-### Merge IFN data
-We merge the data sets into two tables, one for shrubs and the other for trees, taking only columns `ID` (plot identification), `Species` (code), `H` (height) and `DBH` (for trees).
-```{r merge_ifn}
-shrubDataIFN <-bind_rows(shrubDataIFN2[,c("ID","Species", "H")],
-                         shrubDataIFN3[,c("ID","Species", "H")],
-                         shrubDataIFN4[,c("ID","Species", "H")])
-
-treeDataIFN <-bind_rows(treeDataIFN2[,c("ID","Species", "H", "DBH")],
-                        treeDataIFN3[,c("ID","Species", "H", "DBH")],
-                        treeDataIFN4[,c("ID","Species", "H", "DBH")])
-```
-
-### Growth form
-
-To tell **medfate** which target entities are shrubs, trees (or both, since some species occur in both tree and shrub tables), we can simply take the species code vectors:
-```{r growth_form}
-shrub_codes <- as.numeric(shrubDataIFN$Species)
-tree_codes <- as.numeric(treeDataIFN$Species)
-```
-
-Before populating parameter `GrowthForm`, we can check how many species appear both as trees and shrubs:
-```{r}
-sum(unique(shrub_codes) %in% unique(tree_codes))
-```
-We can populate column `GrowthForm` of the species parameter table by calling function `populateGrowthForm()` of package **medfateutils**:
-```{r}
-SpParams = populateGrowthForm(SpParams, 
-                              tree_codes, shrub_codes,
-                              fill_fromGenus = TRUE)
-
-```
-Some codes (particularly, those excluded above) may not be recognized according to the target entity definition of `SpParams` and are ignored. The option `fill_fromGenus = TRUE` was used to tell function `populateGrowthForm()` to impute growth form of species with missing value from the growth form of other species of the same genus, if homogeneous. Some species may still have missing growth form after the imputation process. We identify them:
-```{r}
-missingGrowthFormSpecies = SpParams[is.na(SpParams$GrowthForm), c("Name")]
-print(missingGrowthFormSpecies)
-```
-and manually set the growth form for them:
-```{r}
-missingTrees<-c( "Dracaena drago", "Pleiomeris canariensis", "Quercus lusitanica",
-                 "Sideroxylon mirmulans") 
-SpParams$GrowthForm[SpParams$Name %in% missingTrees] = "Tree"
-missingShrubs<-c( "Dittrichia viscosa", "Periploca laevigata", "Withania frutescens") 
-SpParams$GrowthForm[SpParams$Name %in% missingShrubs] = "Shrub"
-
-```
-We can inspect how many species were deemed "Tree", "Shrub" or "Tree/Shrub".
-```{r}
-table(SpParams$GrowthForm, useNA = "ifany")
-```
+<!-- ``` -->
 
 
-### Maximum/median height
 
-Maximum and median heights for each target entity can be obtained from observed height distributions. Thus, we define species identity and height (in cm) vectors from tree/shrub data:
-```{r maximum_med_height}
-species_codes <- c(treeDataIFN$Species, shrubDataIFN$Species)
-height_values <- c(treeDataIFN$H, shrubDataIFN$H)*100 # m to cm
-```
-and then call function `populateHeightParams()` to populate parameters `Hmax` and `Hmed`, corresponding to maximum and median heights.
-```{r}
-SpParams <- populateHeightParams(SpParams,
-                                 species_codes, height_values)
-```
-By default, maximum height is defined as the 99\% quantile of the height distribution, whereas median height corresponds to the 50\% quantile. 
+<!-- ### Merge IFN data -->
+<!-- We merge the data sets into two tables, one for shrubs and the other for trees, taking only columns `ID` (plot identification), `Species` (code), `H` (height) and `DBH` (for trees). -->
+<!-- ```{r merge_ifn} -->
+<!-- shrubDataIFN <-bind_rows(shrubDataIFN2[,c("ID","Species", "H")], -->
+<!--                          shrubDataIFN3[,c("ID","Species", "H")], -->
+<!--                          shrubDataIFN4[,c("ID","Species", "H")]) -->
 
-Parameters `Hmax` and `Hmed` are strict, meaning that medfate does not have inbuilt imputation procedures for them, so we must complete their columns in the parameter table. We can inspect the missing values for each growth form: 
-```{r}
-table(is.na(SpParams$Hmax), SpParams$GrowthForm)
-table(is.na(SpParams$Hmed), SpParams$GrowthForm)
-```
-and then use the species with known values for each growth from to impute species averages:
-```{r}
-SpParams$Hmax[is.na(SpParams$Hmax) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$Hmax[SpParams$GrowthForm != "Shrub"], na.rm=TRUE))
-SpParams$Hmax[is.na(SpParams$Hmax) & SpParams$GrowthForm == "Shrub"] = round(mean(SpParams$Hmax[SpParams$GrowthForm == "Shrub"], na.rm=TRUE))
+<!-- treeDataIFN <-bind_rows(treeDataIFN2[,c("ID","Species", "H", "DBH")], -->
+<!--                         treeDataIFN3[,c("ID","Species", "H", "DBH")], -->
+<!--                         treeDataIFN4[,c("ID","Species", "H", "DBH")]) -->
+<!-- ``` -->
 
-SpParams$Hmed[is.na(SpParams$Hmed) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$Hmed[SpParams$GrowthForm != "Shrub"], na.rm=TRUE))
-SpParams$Hmed[is.na(SpParams$Hmed) & SpParams$GrowthForm == "Shrub"] = round(mean(SpParams$Hmed[SpParams$GrowthForm == "Shrub"], na.rm=TRUE))
-```
+<!-- ### Growth form -->
 
-The final distribution of `Hmax` (cm) by growth form is:
-```{r}
-tapply(SpParams$Hmax, SpParams$GrowthForm, summary)
-```
-and that of `Hmed` (cm) by growth form is:
-```{r}
-tapply(SpParams$Hmed, SpParams$GrowthForm, summary)
-```
+<!-- To tell **medfate** which target entities are shrubs, trees (or both, since some species occur in both tree and shrub tables), we can simply take the species code vectors: -->
+<!-- ```{r growth_form} -->
+<!-- shrub_codes <- as.numeric(shrubDataIFN$Species) -->
+<!-- tree_codes <- as.numeric(treeDataIFN$Species) -->
+<!-- ``` -->
+
+<!-- Before populating parameter `GrowthForm`, we can check how many species appear both as trees and shrubs: -->
+<!-- ```{r} -->
+<!-- sum(unique(shrub_codes) %in% unique(tree_codes)) -->
+<!-- ``` -->
+<!-- We can populate column `GrowthForm` of the species parameter table by calling function `populateGrowthForm()` of package **medfateutils**: -->
+<!-- ```{r} -->
+<!-- SpParams = populateGrowthForm(SpParams,  -->
+<!--                               tree_codes, shrub_codes, -->
+<!--                               fill_fromGenus = TRUE) -->
+
+<!-- ``` -->
+<!-- Some codes (particularly, those excluded above) may not be recognized according to the target entity definition of `SpParams` and are ignored. The option `fill_fromGenus = TRUE` was used to tell function `populateGrowthForm()` to impute growth form of species with missing value from the growth form of other species of the same genus, if homogeneous. Some species may still have missing growth form after the imputation process. We identify them: -->
+<!-- ```{r} -->
+<!-- missingGrowthFormSpecies = SpParams[is.na(SpParams$GrowthForm), c("Name")] -->
+<!-- print(missingGrowthFormSpecies) -->
+<!-- ``` -->
+<!-- and manually set the growth form for them: -->
+<!-- ```{r} -->
+<!-- missingTrees<-c( "Dracaena drago", "Pleiomeris canariensis", "Quercus lusitanica", -->
+<!--                  "Sideroxylon mirmulans")  -->
+<!-- SpParams$GrowthForm[SpParams$Name %in% missingTrees] = "Tree" -->
+<!-- missingShrubs<-c( "Dittrichia viscosa", "Periploca laevigata", "Withania frutescens")  -->
+<!-- SpParams$GrowthForm[SpParams$Name %in% missingShrubs] = "Shrub" -->
+
+<!-- ``` -->
+<!-- We can inspect how many species were deemed "Tree", "Shrub" or "Tree/Shrub". -->
+<!-- ```{r} -->
+<!-- table(SpParams$GrowthForm, useNA = "ifany") -->
+<!-- ``` -->
 
 
-### Diameter/height ratio
+<!-- ### Maximum/median height -->
 
-Minimum and maximum diameter/height ratios are used in **medfate** to translate diameter growth into height growth. We first assemble three data vectors needed to populate these parameters (heights and diameters in cm):
-```{r HD_ratio}
-tree_species_codes <- treeDataIFN$Species
-tree_height_values <- treeDataIFN$H*100 # m to cm
-tree_diameter_values <- treeDataIFN$DBH
-```
-and then call function `populateTreeDiameterHeightParams()` from package **medfateutils**:
-```{r}
-sel <- (tree_diameter_values >1 & tree_diameter_values<7.5 
-        & tree_height_values >130 & tree_height_values < 2000)
-sel[is.na(sel)] = FALSE
-SpParams <- populateTreeDiameterHeightParams(SpParams,
-                                             tree_species_codes[sel], 
-                                             tree_height_values[sel],
-                                             tree_diameter_values[sel], 
-                                             quantile_fHDmax = 0.99)
-```
-This function fills parameters `fHDmin` and `fHDmax`, corresponding to the minimum and maximum values of the height-to-diameter ratio. The 5\% and 95\% quantile values are used for these parameters, respectively, by default. 
+<!-- Maximum and median heights for each target entity can be obtained from observed height distributions. Thus, we define species identity and height (in cm) vectors from tree/shrub data: -->
+<!-- ```{r maximum_med_height} -->
+<!-- species_codes <- c(treeDataIFN$Species, shrubDataIFN$Species) -->
+<!-- height_values <- c(treeDataIFN$H, shrubDataIFN$H)*100 # m to cm -->
+<!-- ``` -->
+<!-- and then call function `populateHeightParams()` to populate parameters `Hmax` and `Hmed`, corresponding to maximum and median heights. -->
+<!-- ```{r} -->
+<!-- SpParams <- populateHeightParams(SpParams, -->
+<!--                                  species_codes, height_values) -->
+<!-- ``` -->
+<!-- By default, maximum height is defined as the 99\% quantile of the height distribution, whereas median height corresponds to the 50\% quantile.  -->
 
-Missing values may occur after imputation:  
-```{r}
-table(is.na(SpParams$fHDmin), SpParams$GrowthForm)
-table(is.na(SpParams$fHDmax), SpParams$GrowthForm)
-```
-Since `fHDmin` and `fHDmax` are strict parameters, we use shrub and tree averages to fill the remaining cases:
-```{r}
-SpParams$fHDmax[is.na(SpParams$fHDmax) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$fHDmax, na.rm=TRUE))
-SpParams$fHDmin[is.na(SpParams$fHDmin) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$fHDmin, na.rm=TRUE))
-```
+<!-- Parameters `Hmax` and `Hmed` are strict, meaning that medfate does not have inbuilt imputation procedures for them, so we must complete their columns in the parameter table. We can inspect the missing values for each growth form:  -->
+<!-- ```{r} -->
+<!-- table(is.na(SpParams$Hmax), SpParams$GrowthForm) -->
+<!-- table(is.na(SpParams$Hmed), SpParams$GrowthForm) -->
+<!-- ``` -->
+<!-- and then use the species with known values for each growth from to impute species averages: -->
+<!-- ```{r} -->
+<!-- SpParams$Hmax[is.na(SpParams$Hmax) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$Hmax[SpParams$GrowthForm != "Shrub"], na.rm=TRUE)) -->
+<!-- SpParams$Hmax[is.na(SpParams$Hmax) & SpParams$GrowthForm == "Shrub"] = round(mean(SpParams$Hmax[SpParams$GrowthForm == "Shrub"], na.rm=TRUE)) -->
 
-The final distributions of `fHDmax` and `fHDmin` are:
-```{r}
-summary(SpParams[SpParams$GrowthForm != "Shrub" ,c("fHDmax", "fHDmin")])
-```
+<!-- SpParams$Hmed[is.na(SpParams$Hmed) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$Hmed[SpParams$GrowthForm != "Shrub"], na.rm=TRUE)) -->
+<!-- SpParams$Hmed[is.na(SpParams$Hmed) & SpParams$GrowthForm == "Shrub"] = round(mean(SpParams$Hmed[SpParams$GrowthForm == "Shrub"], na.rm=TRUE)) -->
+<!-- ``` -->
+
+<!-- The final distribution of `Hmax` (cm) by growth form is: -->
+<!-- ```{r} -->
+<!-- tapply(SpParams$Hmax, SpParams$GrowthForm, summary) -->
+<!-- ``` -->
+<!-- and that of `Hmed` (cm) by growth form is: -->
+<!-- ```{r} -->
+<!-- tapply(SpParams$Hmed, SpParams$GrowthForm, summary) -->
+<!-- ``` -->
+
+
+<!-- ### Diameter/height ratio -->
+
+<!-- Minimum and maximum diameter/height ratios are used in **medfate** to translate diameter growth into height growth. We first assemble three data vectors needed to populate these parameters (heights and diameters in cm): -->
+<!-- ```{r HD_ratio} -->
+<!-- tree_species_codes <- treeDataIFN$Species -->
+<!-- tree_height_values <- treeDataIFN$H*100 # m to cm -->
+<!-- tree_diameter_values <- treeDataIFN$DBH -->
+<!-- ``` -->
+<!-- and then call function `populateTreeDiameterHeightParams()` from package **medfateutils**: -->
+<!-- ```{r} -->
+<!-- sel <- (tree_diameter_values >1 & tree_diameter_values<7.5  -->
+<!--         & tree_height_values >130 & tree_height_values < 2000) -->
+<!-- sel[is.na(sel)] = FALSE -->
+<!-- SpParams <- populateTreeDiameterHeightParams(SpParams, -->
+<!--                                              tree_species_codes[sel],  -->
+<!--                                              tree_height_values[sel], -->
+<!--                                              tree_diameter_values[sel],  -->
+<!--                                              quantile_fHDmax = 0.99) -->
+<!-- ``` -->
+<!-- This function fills parameters `fHDmin` and `fHDmax`, corresponding to the minimum and maximum values of the height-to-diameter ratio. The 5\% and 95\% quantile values are used for these parameters, respectively, by default.  -->
+
+<!-- Missing values may occur after imputation:   -->
+<!-- ```{r} -->
+<!-- table(is.na(SpParams$fHDmin), SpParams$GrowthForm) -->
+<!-- table(is.na(SpParams$fHDmax), SpParams$GrowthForm) -->
+<!-- ``` -->
+<!-- Since `fHDmin` and `fHDmax` are strict parameters, we use shrub and tree averages to fill the remaining cases: -->
+<!-- ```{r} -->
+<!-- SpParams$fHDmax[is.na(SpParams$fHDmax) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$fHDmax, na.rm=TRUE)) -->
+<!-- SpParams$fHDmin[is.na(SpParams$fHDmin) & SpParams$GrowthForm != "Shrub"] = round(mean(SpParams$fHDmin, na.rm=TRUE)) -->
+<!-- ``` -->
+
+<!-- The final distributions of `fHDmax` and `fHDmin` are: -->
+<!-- ```{r} -->
+<!-- summary(SpParams[SpParams$GrowthForm != "Shrub" ,c("fHDmax", "fHDmin")]) -->
+<!-- ``` -->
+
 
 ## Allometric coefficients
 
@@ -1512,137 +1513,11 @@ summary(SpParams[,c("RSSG")])
 ```
 
 
-```{r save_SpParams, eval = params$spparams_rebuild, include = FALSE}
-  wb <- openxlsx::createWorkbook()
-  openxlsx::addWorksheet(wb, "InitialSpParamsMED")
-  openxlsx::writeDataTable(wb, "InitialSpParamsMED", SpParams)
-  openxlsx::saveWorkbook(wb,"../../data-raw/InitialSpParamsMED.xlsx", overwrite=TRUE)
-```
-
-## Initialize forest plot lists for Spain
-
-If we have a species parameter table with taxonomic information, growth forms and species maximum rooting depths (`Z95`), we are ready to create lists of `forest` objects from forest plot data. Here we will use function `IFN2forestlist()` from package **medfateutils**, which has been designed to parse data from the Spanish National Forest Inventory. In section *Parameters drawn from IFN data* we loaded shrub and tree data from the three forest inventory surveys: IFN2, IFN3 and IFN4. Here we use this information to create forest lists:
-
-```{r IFN2_spain, eval = params$IFN_rebuild}
-IFN2_forestlist = IFN2forestlist(treeDataIFN2, shrubDataIFN2, SpParams, 
-                                 setDefaults = TRUE, filterWrongRecords = TRUE)
-saveRDS(IFN2_forestlist, file=paste0(IFN_out_path,"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"))
-```
-
-```{r include = FALSE, echo = FALSE}
-if(params$IFN_rebuild) {
-  saveRDS(IFN2_forestlist, file=paste0(IFN_out_path,"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"))
-} else {
-  IFN2_forestlist = readRDS(paste0(IFN_out_path,"Products/IFN2/Rdata/forestlist_IFN2_Spain.rds"))
-}
-```
-Some of the shrub/tree records may not be parsed if they have not been included in the species definition of `SpParams`. The number of plots parsed is:
-```{r}
-length(IFN2_forestlist)
-```
-And here is the first element as an example:
-```{r}
-IFN2_forestlist[[1]]
-```
-
-We can repeat the same operation for IFN3:
-```{r IFN3_Spain, eval = params$IFN_rebuild}
-IFN3_forestlist = IFN2forestlist(treeDataIFN3, shrubDataIFN3, SpParams, 
-                                 setDefaults = TRUE, filterWrongRecords = TRUE)
-saveRDS(IFN3_forestlist, file=paste0(IFN_out_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
-
-```
-
-```{r include = FALSE, echo = FALSE}
-if(params$IFN_rebuild) {
-  saveRDS(IFN3_forestlist, file=paste0(IFN_out_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
-} else {
-    IFN3_forestlist = readRDS(paste0(IFN_out_path,"Products/IFN3/Rdata/forestlist_IFN3_Spain.rds"))
-
-}
-```
-Again, some of the shrub/tree records may not be parsed if they have not been included in the species definition of `SpParams`. The number of plots parsed is now:
-```{r}
-length(IFN3_forestlist)
-```
-
-Finally, we repeat the operation for IFN4:
-```{r IFN4_Spain, eval = params$IFN_rebuild}
-IFN4_forestlist = IFN2forestlist(treeDataIFN4, shrubDataIFN4, SpParams, 
-                                 setDefaults = TRUE, filterWrongRecords = TRUE)
-saveRDS(IFN4_forestlist, file=paste0(IFN_out_path,"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"))
-```
-
-```{r include = FALSE, echo = FALSE}
-if(params$IFN_rebuild) {
-saveRDS(IFN4_forestlist, file=paste0(IFN_out_path,"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"))
-} else {
-    IFN4_forestlist = readRDS(paste0(IFN_out_path,"Products/IFN4/Rdata/forestlist_IFN4_Spain.rds"))
-
-}
-```
-The number of plots parsed is lower than the previous two, as IFN4 is not yet completed for all Spanish provinces:
-```{r}
-length(IFN4_forestlist)
-```
-
-
-
-```{r IFN2_CAT, eval = params$IFN_rebuild, include = FALSE}
-piesMayoresDataIFN2CAT = readRDS(file=paste0(IFN_path,"Products/IFN2/Rdata/piesMayoresDataIFN2_Catalunya.rds"))
-piesMenoresDataIFN2CAT = readRDS(file=paste0(IFN_path,"Products/IFN2/Rdata/piesMenoresDataIFN2_Catalunya.rds"))
-treeDataIFN2CAT = rbind(piesMayoresDataIFN2CAT, piesMenoresDataIFN2CAT) # Add pies menores
-shrubDataIFN2CAT = readRDS(file=paste0(IFN_path,"Products/IFN2/Rdata/shrubDataIFN2_Catalunya.rds"))
-IFN2_forestlist_CAT = IFN2forestlist(treeDataIFN2CAT, shrubDataIFN2CAT, SpParams)
-saveRDS(IFN2_forestlist_CAT, file=paste0(IFN_out_path,"Products/IFN2/Rdata/forestlist_IFN2_Catalunya.rds"))
-rm(IFN2_forestlist_CAT)
-rm(treeDataIFN2CAT)
-rm(shrubDataIFN2CAT)
-rm(piesMayoresDataIFN2CAT)
-rm(piesMenoresDataIFN2CAT)
-```
-
-```{r IFN3_CAT, eval = params$IFN_rebuild, include = FALSE}
-mc = read.table(paste0(IFN_path,"Sources/IFN3/ModelCombustible.txt"), sep="\t", header=T)
-mc  = mc[mc$IdClasse %in% c("A1","N","NN","A3C","A4","A4C","A6C"),]
-row.names(mc) = mc$IdParcela
-herbData = mc[,c("IdParcela","HerbaciFcc","HerbaciHm")]
-herbData$HerbaciHm = herbData$HerbaciHm*10
-names(herbData) = c("ID", "Cover", "Height")
-treeDataIFN3CAT = readRDS(file=paste0(IFN_path,"Products/IFN3/Rdata/treeDataIFN3_Catalunya.rds"))
-treeDataIFN3CAT = treeDataIFN3CAT[!(treeDataIFN3CAT$OIF3 %in% c("888","999")),] # remove dead trees
-regDataIFN3CAT = readRDS(file=paste0(IFN_path,"Products/IFN3/Rdata/regDataIFN3_Catalunya.rds"))
-regTreeDataIFN3CAT = IFNread::extractRegTreeData(regDataIFN3CAT, subsetVars=T)
-treeDataIFN3CAT = rbind(treeDataIFN3CAT[,c("ID","Species","DBH","H","N")],
-                     regTreeDataIFN3CAT[,c("ID","Species","DBH","H","N")])
-shrubDataIFN3CAT = readRDS(file=paste0(IFN_path,"Products/IFN3/Rdata/shrubDataIFN3_Catalunya.rds"))
-IFN3_forestlist_CAT = IFN2forestlist(treeDataIFN3CAT, shrubDataIFN3CAT, SpParams, 
-                                 IFNherbData = herbData)
-saveRDS(IFN3_forestlist_CAT, file=paste0(IFN_out_path,"Products/IFN3/Rdata/forestlist_IFN3_Catalunya.rds"))
-rm(IFN3_forestlist_CAT)
-rm(treeDataIFN3CAT)
-rm(regDataIFN3CAT)
-rm(regTreeDataIFN3CAT)
-rm(shrubDataIFN3CAT)
-rm(herbData)
-rm(mc)
-```
-
-```{r IFN4_CAT, eval = params$IFN_rebuild, include = FALSE}
-treeDataIFN4CAT = readRDS(file=paste0(IFN_out_path,"Products/IFN4/Rdata/treeDataIFN4_Catalunya.rds"))
-treeDataIFN4CAT = treeDataIFN4CAT[!(treeDataIFN4CAT$OIF4 %in% c("888","999")),] # remove dead trees
-regDataIFN4CAT = readRDS(file=paste0(IFN_out_path,"Products/IFN4/Rdata/regDataIFN4_Catalunya.rds"))
-regTreeDataIFN4CAT = IFNread::extractRegTreeData(regDataIFN4CAT, subsetVars=T)
-treeDataIFN4CAT = rbind(treeDataIFN4CAT[,c("ID","Species","DBH","H","N")],
-                     regTreeDataIFN4CAT[,c("ID","Species","DBH","H","N")])
-shrubDataIFN4CAT = readRDS(file=paste0(IFN_out_path,"Products/IFN4/Rdata/shrubDataIFN4_Catalunya.rds"))
-IFN4_forestlist_CAT = IFN2forestlist(treeDataIFN4CAT, shrubDataIFN4CAT, SpParams)
-saveRDS(IFN4_forestlist_CAT, file=paste0(IFN_out_path,"Products/IFN4/Rdata/forestlist_IFN4_Catalunya.rds"))
-rm(IFN4_forestlist_CAT)
-rm(treeDataIFN4CAT)
-rm(regDataIFN4CAT)
-rm(regTreeDataIFN4CAT)
-rm(shrubDataIFN4CAT)
-```
+<!-- ```{r save_SpParams, eval = params$spparams_rebuild, include = FALSE} -->
+<!--   wb <- openxlsx::createWorkbook() -->
+<!--   openxlsx::addWorksheet(wb, "InitialSpParamsMED") -->
+<!--   openxlsx::writeDataTable(wb, "InitialSpParamsMED", SpParams) -->
+<!--   openxlsx::saveWorkbook(wb,"../../data-raw/InitialSpParamsMED.xlsx", overwrite=TRUE) -->
+<!-- ``` -->
 
 ## References
