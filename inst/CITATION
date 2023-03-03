@@ -1,35 +1,38 @@
-citHeader("To cite 'medfate' package in publications use the citation corresponding to the model you used and mention the package version:")
-
-citEntry(entry="Manual",
+c(
+  bibentry("Article",
+         header = "To cite 'medfate' package in publications use the citation corresponding to the model you used and mention the package version. For simulations with transpirationMode = 'Granier' you should use:",
          title = "Coupling a water balance model with forest inventory data to evaluate plant drought stress at the regional level",
-         author = "De Caceres M, Martinez-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L",
+         author = c(person("Miquel", "De Caceres"),
+                    person("Jordi", "Martinez-Vilalta"),
+                    person("Lluis", "Coll"), 
+                    person("Pilar", "Llorens"),
+                    person("Pere", "Casals"),
+                    person("Rafael", "Poyatos"),
+                    person("Juli", "Pausas"),
+                    person("Lluis", "Brotons")),
          journal = "Agricultural and Forest Meteorology",
          year = "2015",
          volume = "213",
          pages = "77-90",
-         doi = "10.1016/j.agrformet.2015.06.012",
-         textVersion = 
-         paste(" De Caceres M, Martinez-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L (2015) Coupling a water balance model with forest inventory data to evaluate plant drought stress at the regional level. ",
-               "Agricultural and Forest Meteorology 213: 77-90",
-	       ". https://doi.org/10.1016/j.agrformet.2015.06.012",
-               sep=""),
-         )
-
-citEntry(entry="Manual",
+         doi = "10.1016/j.agrformet.2015.06.012"),
+         
+  bibentry("Article",
+         header = "For simulations with transpirationMode = 'Sperry' you should use:",
+         footer = "Thank you for using 'medfate'",
          title = "Unravelling the effect of species mixing on water use and drought stress in holm oak forests: a modelling approach",
-         author = "De Caceres M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, Martinez-Vilalta J",
+         author = c(person("Miquel", "De Caceres"),
+                    person("Maurizio", "Mencuccini"),
+                    person("Nicolas", "Martin-StPaul"), 
+                    person("Jean-Marc", "Limousin"),
+                    person("Lluis", "Coll"),
+                    person("Rafael", "Poyatos"),
+                    person("Antoine", "Cabon"),
+                    person("Victor", "Granda"),
+                    person("Alicia", "Forner"),
+                    person("Fernando", "Valladares"),
+                    person("Jordi", "Martinez-Vilalta")),
          journal = "Agricultural and Forest Meteorology",
          year = "2021",
          volume = "296",
-         doi = "10.1016/j.agrformet.2020.108233",
-         textVersion = 
-         paste(" De Caceres M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, Martinez-Vilalta J (2021) Unravelling the effect of species mixing on water use and drought stress in holm oak forests: a modelling approach.",
-           " Agricultural and Forest Meteorology 296",
-  	       ". https://doi.org/10.1016/j.agrformet.2020.108233",
-               sep=""),
-         )
-         
-citFooter("Thank you for using 'medfate'")
-
-
-
+         doi = "10.1016/j.agrformet.2020.108233")
+)
