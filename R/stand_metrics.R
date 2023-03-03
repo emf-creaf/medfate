@@ -56,7 +56,6 @@
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
 #' @param gdd Growth degree days (to account for leaf phenology effects).
 #' @param includeDead A flag to indicate that standing dead fuels (dead branches) are included.
-#' @param mode Calculation mode, either "MED" or "US".
 #' @param bounded A boolean flag to indicate that extreme values should be prevented (maximum tree LAI = 7 and maximum shrub LAI = 3)
 #' 
 #' @return 
@@ -65,7 +64,7 @@
 #' \item{\code{stand_dominantTreeDiameter}: Dominant tree diameter, i.e the average diameter of the 100 widest trees (in cm).}
 #' \item{\code{stand_quadraticMeanTreeDiameter}: Quadratic mean tree diameter, i.e. the diameter value corresponding to the current basal area and density.}
 #' \item{\code{stand_dominantTreeHeight}: Dominant tree height, i.e the average height of the 100 tallest trees (in cm).}
-#' \item{\code{stand_hartBeckingIndex}: Hart becking index.}
+#' \item{\code{stand_hartBeckingIndex}: Hart-Becking index.}
 #' \item{\code{stand_foliarBiomass}: Standing biomass of leaves (in kg/m2).}
 #' \item{\code{stand_fuel}: Stand fine fuel load (in kg/m2).}
 #' \item{\code{stand_LAI}: Stand leaf area index (m2/m2).}

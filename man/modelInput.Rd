@@ -5,6 +5,8 @@
 \alias{forest2belowground}
 \alias{modelInput}
 \alias{forest2spwbInput}
+\alias{spwbInput}
+\alias{growthInput}
 \alias{forest2growthInput}
 \title{Input for simulation models}
 \usage{
@@ -23,13 +25,11 @@ forest2growthInput(x, soil, SpParams, control)
 
 \item{gdd}{Growth degree days to account for leaf phenology effects (in Celsius). This should be left \code{NA} in most applications.}
 
+\item{loading}{A logical flag to indicate that fuel loading should be included (for fire hazard calculations).}
+
 \item{soil}{An object of class \code{\link{soil}}.}
 
 \item{control}{A list with default control parameters (see \code{\link{defaultControl}}).}
-
-\item{above}{A data frame with aboveground plant information (see the return value of \code{forest2aboveground} below). In the case of \code{spwbInput} the variables should include \code{SP}, \code{N}, \code{LAI_live}, \code{LAI_dead}, \code{H} and \code{CR}. In the case of \code{growthInput} variables should include \code{DBH} and \code{Cover}.}
-
-\item{Z50, Z95}{Numeric vectors with cohort depths (in mm) corresponding to 50\% and 95\% of fine roots.}
 }
 \value{
 Function \code{forest2aboveground()} returns a data frame with the following columns (rows are identified as specified by function \code{\link{plant_ID}}):
@@ -42,6 +42,7 @@ Function \code{forest2aboveground()} returns a data frame with the following col
   \item{\code{LAI_live}: Live leaf area index (m2/m2) (one-side leaf area relative to plot area), includes leaves in winter dormant buds.}
   \item{\code{LAI_expanded}: Leaf area index of expanded leaves (m2/m2) (one-side leaf area relative to plot area).}
   \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
+  \item{\code{Loading}: Fine fuel loading (kg/m2), only if \code{loading = TRUE}.}
 }
 
 Function \code{forest2spwbInput()} returns a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
@@ -144,6 +145,7 @@ Function \code{forest2spwbInput()} returns a list of class \code{spwbInput} with
       }
     }
     \item{\code{internalPhenology} and \code{internalWater}: data frames to store internal state variables.}
+    \item{\code{internalFCCS}: A data frame with fuel characteristics, according to \code{\link{fuel_FCCS}} (only if \code{fireHazardResults = TRUE}, in the control list).}
   }
 Function \code{forest2growthInput} returns a list of class \code{growthInput} with the same elements as \code{spwbInput}, but with additional information. 
 \itemize{
