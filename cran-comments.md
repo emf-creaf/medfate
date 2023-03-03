@@ -15,7 +15,6 @@ We solved that issue and would like to re-submit the package.
 * win-builder (old-rel)
 * Ubuntu Linux 20.04.1 LTS, R-release, GCC (on rhub)
 * Fedora Linux, R-devel, clang, gfortran (on rhub)
-* Debian Linux, R-devel, GCC ASAN/UBSAN (on rhub)
 
 ## R CMD check results
 
