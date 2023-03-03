@@ -16,3 +16,5 @@
 ^vignettes/runmodels/*$
 ^vignettes/workedexamples/*$
 ^vignettes/parametrization/*$
+^cran-comments\.md$
+^CRAN-SUBMISSION$
