@@ -37,7 +37,7 @@ Live fuel moisture of shrub and canopy layers is estimated from plant water stat
 Dead fuel moisture is estimated following Resco-de-Dios et al. (2015).
 }
 \examples{
-\dontrun{
+\donttest{
 #Load example daily meteorological data
 data(examplemeteo)
 

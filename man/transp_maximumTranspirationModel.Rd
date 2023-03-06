@@ -51,8 +51,7 @@ since coefficients \code{a} and \code{b} in the equation above correspond to par
 respectively (see \code{\link{SpParamsMED}}).
 }
 \examples{
-
-\dontrun{
+\donttest{
 #Load example daily meteorological data
 data(examplemeteo)
 
@@ -63,16 +62,17 @@ data(exampleforestMED)
 data(SpParamsMED)
 
 # Initialize soil with default soil params
-examplesoil = soil(defaultSoilParams(4))
+examplesoil <- soil(defaultSoilParams(4))
 
 # Initialize control parameters for 'Sperry' transpiration mode
-control = defaultControl(transpirationMode="Sperry")
+control <- defaultControl(transpirationMode="Sperry")
 
 # Initialize input
-x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 # Estimate maximum transpiration ratio models for each cohort
-m = transp_maximumTranspirationModel(x2, examplemeteo, 
+# Weather is subset to speed-up results
+m <- transp_maximumTranspirationModel(x2, examplemeteo[1:10,], 
                                      41.82592, elevation = 100, 
                                      slope = 0, aspect = 0)
 

@@ -17,5 +17,5 @@ Same sources as \code{\link{SpParamsMED}}
 \seealso{\code{\link{SpParamsMED}}, \code{\link{spwbInput}}}
 \keyword{datasets}
 \examples{
-medfate:::trait_family_means
+medfate::trait_family_means
 }

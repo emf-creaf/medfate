@@ -13,7 +13,7 @@
 #'   \item{Additional options for function growth(): "GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "LabileCarbonBalance","SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport".}
 #' }
 #' 
-#' @details A data frame with a column 'datetime' and as many columns as plant cohorts.
+#' @return A data frame with a column 'datetime' and as many columns as plant cohorts.
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 

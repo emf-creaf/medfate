@@ -136,6 +136,8 @@ NumericVector conicRS_one(double Zcone, NumericVector d){
 //'   \item{\code{root_horizontalProportions()} calculates the (horizontal) proportion of roots of each cohort in the water pool corresponding to itself and that of other cohorts, for each soil layer. Returns a list (with as many elements as cohorts) with each element being a matrix.}
 //'   }
 //' 
+//' @return See details.
+//' 
 //' @references
 //' Schenk, H., Jackson, R., 2002. The global biogeography of roots. Ecol. Monogr. 72, 311–328.
 //' 

@@ -131,7 +131,7 @@ x1 = forest2growthInput(exampleforestMED, examplesoil, SpParamsMED, control)
 #Call simulation function
 G1<-growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
  
-\dontrun{
+\donttest{
 #Switch to 'Sperry' transpiration mode
 control = defaultControl("Sperry")
 

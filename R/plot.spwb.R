@@ -128,6 +128,7 @@
 #'   }
 #'
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' @return An ggplot object
 #' 
 #' @seealso  \code{\link{spwb}}, \code{\link{pwb}}, \code{\link{growth}}, \code{\link{fordyn}}, \code{\link{summary.spwb}}
 #' 

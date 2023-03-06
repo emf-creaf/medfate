@@ -34,8 +34,7 @@
 #' @seealso \code{\link{spwb}}, \code{\link{transp_transpirationGranier}}, \code{\link{transp_transpirationSperry}}, \code{\link{SpParamsMED}}
 #' 
 #' @examples 
-#' 
-#' \dontrun{
+#' \donttest{
 #' #Load example daily meteorological data
 #' data(examplemeteo)
 #' 
@@ -46,16 +45,17 @@
 #' data(SpParamsMED)
 #'
 #' # Initialize soil with default soil params
-#' examplesoil = soil(defaultSoilParams(4))
+#' examplesoil <- soil(defaultSoilParams(4))
 #' 
 #' # Initialize control parameters for 'Sperry' transpiration mode
-#' control = defaultControl(transpirationMode="Sperry")
+#' control <- defaultControl(transpirationMode="Sperry")
 #' 
 #' # Initialize input
-#' x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 #' 
 #' # Estimate maximum transpiration ratio models for each cohort
-#' m = transp_maximumTranspirationModel(x2, examplemeteo, 
+#' # Weather is subset to speed-up results
+#' m <- transp_maximumTranspirationModel(x2, examplemeteo[1:10,], 
 #'                                      41.82592, elevation = 100, 
 #'                                      slope = 0, aspect = 0)
 #' 
@@ -72,7 +72,6 @@ transp_maximumTranspirationModel<-function(x, meteo, latitude, elevation, slope,
   if("PET" %in% names(meteo)) meteo$PET = NULL
   PET <- numeric(nrow(meteo))
   
-  cat(paste0("\n Calculating PET...\n"))
   for (i in 1:length(meteo[['MinTemperature']])) {
     PET[i] <- meteoland::penman(
       latrad = latitude*pi/180,

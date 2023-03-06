@@ -65,6 +65,7 @@
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
 #' @seealso  \code{\link{spwb_day}}, \code{\link{plot.spwb}}
+#' @return An ggplot object
 #' 
 #' @examples 
 #' #Load example daily meteorological data

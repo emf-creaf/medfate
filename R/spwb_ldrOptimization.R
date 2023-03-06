@@ -169,20 +169,23 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
         f
       }
       if(x_1sp$control$transpirationMode=="Granier") {
-        PsiMin[ci,i,j] <- mean(aggregate(s_res$Plants$PlantPsi[op_days], 
-                                         by = list(years[op_days]),
-                                         FUN = function(x) min(ma(x)))$x)
+        psi <- s_res$Plants$PlantPsi[op_days]
       } else {
-        PsiMin[ci,i,j] <- mean(aggregate(s_res$Plants$StemPsi[op_days], 
-                                         by = list(years[op_days]),
-                                         FUN = function(x) min(ma(x)))$x)
+        psi <- s_res$Plants$StemPsi[op_days]
       }
+      PsiMin[ci,i,j] <- mean(aggregate(psi, 
+                                       by = list(years[op_days]),
+                                       FUN = function(x) {
+                                         m <- ma(x)
+                                         if(sum(!is.na(m)>0)) return(min(m, na.rm=TRUE))
+                                         return(NA)
+                                       })$x)
       # if(verbose) print(s_res$spwbInput)
-      E[ci,i,j] <- mean(s_res$Plants$Transpiration[op_days], na.rm=T)
+      E[ci,i,j] <- mean(s_res$Plants$Transpiration[op_days], na.rm=TRUE)
       if(x_1sp$control$transpirationMode=="Granier") {
-        An[ci,i,j] <- mean(s_res$Plants$Photosynthesis[op_days], na.rm=T)
+        An[ci,i,j] <- mean(s_res$Plants$GrossPhotosynthesis[op_days], na.rm=TRUE)
       } else {
-        An[ci,i,j] <- mean(s_res$Plants$NetPhotosynthesis[op_days], na.rm=T)
+        An[ci,i,j] <- mean(s_res$Plants$NetPhotosynthesis[op_days], na.rm=TRUE)
       }
       setTxtProgressBar(pb, row)
     }
@@ -252,7 +255,7 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
 #' @seealso \code{\link{spwb}}, \code{\link{soil}}, \code{\link{root_ldrDistribution}}
 #' 
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #' #Load example daily meteorological data
 #' data(examplemeteo)
 #' 
@@ -263,22 +266,20 @@ spwb_ldrExploration<-function(x, meteo, cohorts = NULL,
 #' data(SpParamsMED)
 #' 
 #' #Initialize soil with default soil params
-#' examplesoil = soil(defaultSoilParams(2))
+#' examplesoil <- soil(defaultSoilParams(2))
 #' 
 #' #Initialize control parameters
-#' control = defaultControl("Granier")
+#' control <- defaultControl("Granier")
 #' 
 #' #Initialize input
-#' x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 #' 
-#' #Run exploration
-#' y = spwb_ldrExploration(x = x, meteo = examplemeteo, 
+#' #Run exploration (weather subset for faster computation)
+#' y <- spwb_ldrExploration(x = x, meteo = examplemeteo[1:50,], 
 #'                         elevation = 100, latitude = 41.82592)
 #' 
 #' #Optimization under different modes
 #' spwb_ldrOptimization(y = y, psi_crit = c(-2,-3,-4), opt_mode = 1)
-#' spwb_ldrOptimization(y = y, psi_crit = c(-2,-3,-4), opt_mode = 2)
-#' spwb_ldrOptimization(y = y, psi_crit = c(-2,-3,-4), opt_mode = 3)
 #' }
 #' 
 #' @name spwb_ldrOptimization

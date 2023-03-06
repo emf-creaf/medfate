@@ -1347,7 +1347,7 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL,
 //' #Monthly summary (averages) of soil water balance
 //' summary(S1, freq="months",FUN=mean, output="Soil")
 //'                   
-//' \dontrun{
+//' \donttest{
 //' #Switch to 'Sperry' transpiration mode
 //' control = defaultControl("Sperry")
 //' 

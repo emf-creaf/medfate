@@ -59,19 +59,19 @@ Due to parameter dependence, modifying some parameters affects others:
 }
 }
 \examples{
-\dontrun{
+\donttest{
 #Load example data and species parameters
 data(examplemeteo)
 data(exampleforestMED)
 data(SpParamsMED)
 
 #Initialize input
-examplesoil = soil(defaultSoilParams(2))
-control = defaultControl("Granier")
-x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+examplesoil <- soil(defaultSoilParams(2))
+control <- defaultControl("Granier")
+x <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Perform sensitivity analysis
-res = spwb_sensitivity(x, examplesoil, examplemeteo, latitude = 41, elevation = 100)
+res <- spwb_sensitivity(x, examplesoil, examplemeteo, latitude = 41, elevation = 100)
 }
 
 }

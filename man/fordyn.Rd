@@ -92,7 +92,7 @@ and return a list with the following elements:
 An example of management function is provided in \code{\link{defaultManagementFunction}}.
 }
 \examples{
-\dontrun{
+\donttest{
 #Load example daily meteorological data
 data(examplemeteo)
 #Prepare a two-year meteorological data with half precipitation during 

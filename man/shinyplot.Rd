@@ -43,38 +43,6 @@ Creates a shiny app with interactive plots for simulation results and evaluation
 \details{
 Only run this function in interactive mode. When \code{measuredData} is not \code{NULL}, an additional panel is shown for evaluation plots.
 }
-\examples{
-## Only run this example in interactive R sessions
-\dontrun{
-  #Load example daily meteorological data
-  data(examplemeteo)
-  
-  #Load example plot plant data
-  data(exampleforestMED)
-  
-  #Default species parameterization
-  data(SpParamsMED)
-  
-  #Initialize soil with default soil params (4 layers)
-  examplesoil = soil(defaultSoilParams(4))
-  
-  #Initialize control parameters
-  control = defaultControl("Granier")
-  
-  #Initialize input
-  x1 = forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
-  
-  #Call simulation function
-  S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
-  
-  #Load observed data (in this case the same simulation results with some added error)  
-  data(exampleobs)
-  
-  #Call interactive plot shiny app
-  shinyplot(S1, exampleobs)
-}
-
-}
 \seealso{
 \code{\link{plot.spwb}}, \code{\link{evaluation_plot}}
 }

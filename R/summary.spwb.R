@@ -114,6 +114,8 @@
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
+#' @return A matrix with dates as row names and the desired summaries in columns
+#' 
 #' @note When applied to \code{\link{fordyn}} objects, the summary function can be used to gather the results of different yearly steps into a single table while keeping a daily resolution (i.e. using \code{freq = "days"}.
 #' 
 #' @seealso \code{\link{spwb}}, \code{\link{pwb}}, \code{\link{growth}}, \code{\link{fordyn}}, \code{\link{plot.spwb}}, \code{\link{extractSubdaily}}

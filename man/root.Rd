@@ -122,6 +122,9 @@ root_horizontalProportions(poolProportions, VolInd, N, V, d, rfc)
 
 \item{poolProportions}{Division of the stand area among plant cohorts (proportions).}
 }
+\value{
+See details.
+}
 \description{
 Functions to calculate properties of fine/coarse roots within the soil, given root system parameters and soil layer definition.
 }

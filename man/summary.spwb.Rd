@@ -56,6 +56,9 @@
 
 \item{...}{Additional parameters for function \code{summary}.}
 }
+\value{
+A matrix with dates as row names and the desired summaries in columns
+}
 \description{
 Function \code{summary} summarizes the model's output in different temporal steps (i.e. weekly, annual, ...).
 }

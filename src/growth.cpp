@@ -1618,7 +1618,7 @@ void checkgrowthInput(List x, String transpirationMode, String soilFunctions) {
 //' #Call simulation function
 //' G1<-growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 //'  
-//' \dontrun{
+//' \donttest{
 //' #Switch to 'Sperry' transpiration mode
 //' control = defaultControl("Sperry")
 //' 

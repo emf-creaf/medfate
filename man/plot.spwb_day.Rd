@@ -56,6 +56,9 @@
 
 \item{...}{Additional parameters for function \code{plot}.}
 }
+\value{
+An ggplot object
+}
 \description{
 Functions to plot the subdaily simulation results of \code{\link{spwb_day}}, \code{\link{growth_day}} 
 or the transpiration calculations of \code{\link{transp_transpirationSperry}}.

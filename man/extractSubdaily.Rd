@@ -13,6 +13,9 @@ extractSubdaily(x, output = "E", dates = NULL)
 
 \item{dates}{A date vector indicating the subset of simulated days for which subdaily output is desired.}
 }
+\value{
+A data frame with a column 'datetime' and as many columns as plant cohorts.
+}
 \description{
 Given the result of simulations, this function extracts subdaily output corresponding to each simulated day and returns it as a data frame.
 }
@@ -23,8 +26,6 @@ This function only works when simulations have been carried using control option
   \item{Additional options for shade and sunlit leaves in pwb() and spbw(): Either "SunlitLeaves$x" or "ShadeLeaves$x" where 'x' is one of the following: "Abs_SWR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE".}
   \item{Additional options for function growth(): "GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "LabileCarbonBalance","SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport".}
 }
-
-A data frame with a column 'datetime' and as many columns as plant cohorts.
 }
 \seealso{
 \code{\link{summary.spwb}}

@@ -55,7 +55,7 @@
 #' @seealso \code{\link{evaluation_metric}}, \code{\link{modifyInputParams}}, \code{\link{spwb}}, \code{\link{growth}}
 #' 
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #' #Load example daily meteorological data
 #' data(examplemeteo)
 #' 
@@ -66,20 +66,20 @@
 #' data(SpParamsMED)
 #' 
 #' #Initialize soil with default soil params (4 layers)
-#' examplesoil = soil(defaultSoilParams(4))
+#' examplesoil <- soil(defaultSoilParams(4))
 #' 
 #' #Initialize control parameters
-#' control = defaultControl("Granier")
+#' control <- defaultControl("Granier")
 #' 
 #' #Initialize input
-#' x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 #' 
 #' # Cohort name for Pinus halepensis
-#' PH_coh = paste0("T1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"])
+#' PH_coh <- paste0("T1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"])
 #' PH_coh 
 #' 
 #' #Parameter names of interest
-#' parNames = c(paste0(PH_coh,"/Z50"), paste0(PH_coh,"/Z95"))
+#' parNames <- c(paste0(PH_coh,"/Z50"), paste0(PH_coh,"/Z95"))
 #' 
 #' #Specify parameter matrix
 #' parMatrix <- cbind(c(200,300), c(500,1000))

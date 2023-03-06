@@ -912,7 +912,7 @@ growth_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, e
 #' #Call simulation function
 #' G1<-growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 #'  
-#' \dontrun{
+#' \donttest{
 #' #Switch to 'Sperry' transpiration mode
 #' control = defaultControl("Sperry")
 #' 
@@ -1558,27 +1558,27 @@ hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInpu
 #' @seealso  \code{\link{spwb}}
 #' 
 #' @examples
-#' LAI = 2
-#' nlayer = 10
-#' LAIlayerlive = matrix(rep(LAI/nlayer,nlayer),nlayer,1)
-#' LAIlayerdead = matrix(0,nlayer,1)
-#' kb = 0.8
-#' kd_PAR = 0.5
-#' kd_SWR = kd_PAR/1.35
-#' alpha_PAR = 0.9
-#' gamma_PAR = 0.04
-#' gamma_SWR = 0.05
-#' alpha_SWR = 0.7
+#' LAI <- 2
+#' nlayer <- 10
+#' LAIlayerlive <- matrix(rep(LAI/nlayer,nlayer),nlayer,1)
+#' LAIlayerdead <- matrix(0,nlayer,1)
+#' kb <- 0.8
+#' kd_PAR <- 0.5
+#' kd_SWR <- kd_PAR/1.35
+#' alpha_PAR <- 0.9
+#' gamma_PAR <- 0.04
+#' gamma_SWR <- 0.05
+#' alpha_SWR <- 0.7
 #' 
-#' Ibfpar = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kb, alpha_PAR)
-#' Idfpar = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kd_PAR, alpha_PAR)
-#' Ibfswr = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kb, alpha_SWR)
-#' Idfswr = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kd_SWR, alpha_SWR)
-#' fsunlit = light_layerSunlitFraction(LAIlayerlive, LAIlayerdead, kb)
-#' SHarea = (1-fsunlit)*LAIlayerlive[,1] 
-#' SLarea = fsunlit*LAIlayerlive[,1] 
+#' Ibfpar <- light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kb, alpha_PAR)
+#' Idfpar <- light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kd_PAR, alpha_PAR)
+#' Ibfswr <- light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kb, alpha_SWR)
+#' Idfswr <- light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kd_SWR, alpha_SWR)
+#' fsunlit <- light_layerSunlitFraction(LAIlayerlive, LAIlayerdead, kb)
+#' SHarea <- (1-fsunlit)*LAIlayerlive[,1] 
+#' SLarea <- fsunlit*LAIlayerlive[,1] 
 #' 
-#' par(mar=c(4,4,1,1), mfrow=c(1,2))
+#' oldpar <- par(mar=c(4,4,1,1), mfrow=c(1,2))
 #' plot(Ibfpar*100, 1:nlayer,type="l", ylab="Layer", 
 #'      xlab="Percentage of irradiance", xlim=c(0,100), ylim=c(1,nlayer), col="dark green")
 #' lines(Idfpar*100, 1:nlayer, col="dark green", lty=2)
@@ -1588,25 +1588,26 @@ hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInpu
 #' plot(fsunlit*100, 1:nlayer,type="l", ylab="Layer", 
 #'      xlab="Percentage of leaves", xlim=c(0,100), ylim=c(1,nlayer))
 #' lines((1-fsunlit)*100, 1:nlayer, lty=2)
+#' par(oldpar)  
 #'   
-#' solarElevation = 0.67
-#' SWR_direct = 1100
-#' SWR_diffuse = 300
-#' PAR_direct = 550
-#' PAR_diffuse = 150
+#' solarElevation <- 0.67
+#' SWR_direct <- 1100
+#' SWR_diffuse <- 300
+#' PAR_direct <- 550
+#' PAR_diffuse <- 150
 #' 
-#' abs_PAR = light_cohortSunlitShadeAbsorbedRadiation(PAR_direct, PAR_diffuse,
+#' abs_PAR <- light_cohortSunlitShadeAbsorbedRadiation(PAR_direct, PAR_diffuse,
 #'                         Ibfpar, Idfpar, beta = solarElevation, 
 #'                         LAIlayerlive, LAIlayerdead, kb, kd_PAR, alpha_PAR, gamma_PAR)
-#' abs_SWR = light_cohortSunlitShadeAbsorbedRadiation(SWR_direct, SWR_diffuse,
+#' abs_SWR <- light_cohortSunlitShadeAbsorbedRadiation(SWR_direct, SWR_diffuse,
 #'                          Ibfswr, Idfswr, beta = solarElevation, 
 #'                          LAIlayerlive, LAIlayerdead, kb, kd_SWR, alpha_SWR, gamma_SWR)
-#' par(mar=c(4,4,1,1), mfrow=c(1,2))
-#' absRadSL = abs_SWR$I_sunlit[,1]
-#' absRadSH = abs_SWR$I_shade[,1]
-#' lambda = 546.6507
-#' QSL = abs_PAR$I_sunlit[,1]*lambda*0.836*0.01
-#' QSH = abs_PAR$I_shade[,1]*lambda*0.836*0.01
+#' oldpar <- par(mar=c(4,4,1,1), mfrow=c(1,2))
+#' absRadSL <- abs_SWR$I_sunlit[,1]
+#' absRadSH <- abs_SWR$I_shade[,1]
+#' lambda <- 546.6507
+#' QSL <- abs_PAR$I_sunlit[,1]*lambda*0.836*0.01
+#' QSH <- abs_PAR$I_shade[,1]*lambda*0.836*0.01
 #' plot(QSL, 1:nlayer,type="l", ylab="Layer", 
 #'    xlab="Absorbed PAR quantum flux per leaf area", ylim=c(1,nlayer), col="dark green", 
 #'    xlim=c(0,max(QSL)))
@@ -1615,6 +1616,7 @@ hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInpu
 #'    xlab="Absorbed SWR per leaf area (W/m2)", ylim=c(1,nlayer), col="red", 
 #'    xlim=c(0,max(absRadSL)))
 #' lines(absRadSH, 1:nlayer, col="red", lty=2)
+#' par(oldpar)
 #'   
 #' @name light
 light_PARcohort <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
@@ -2236,6 +2238,8 @@ photo_multilayerPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair,
 #'   \item{\code{root_individualRootedGroundArea()} calculates the area (m2) covered by roots of an individual, for each soil layer.}
 #'   \item{\code{root_horizontalProportions()} calculates the (horizontal) proportion of roots of each cohort in the water pool corresponding to itself and that of other cohorts, for each soil layer. Returns a list (with as many elements as cohorts) with each element being a matrix.}
 #'   }
+#' 
+#' @return See details.
 #' 
 #' @references
 #' Schenk, H., Jackson, R., 2002. The global biogeography of roots. Ecol. Monogr. 72, 311–328.
@@ -2950,7 +2954,7 @@ spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, ele
 #' #Monthly summary (averages) of soil water balance
 #' summary(S1, freq="months",FUN=mean, output="Soil")
 #'                   
-#' \dontrun{
+#' \donttest{
 #' #Switch to 'Sperry' transpiration mode
 #' control = defaultControl("Sperry")
 #' 

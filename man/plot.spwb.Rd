@@ -91,6 +91,9 @@
 
 \item{...}{Additional parameters for function \code{plot} (not used).}
 }
+\value{
+An ggplot object
+}
 \description{
 Function \code{plot} plots time series of the results of the soil plant water balance model (see \code{\link{spwb}}), 
 plant water balance model (see \code{\link{pwb}}), the forest growth model (see \code{\link{growth}}) 

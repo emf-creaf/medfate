@@ -201,7 +201,7 @@ recruitment<-function(forest, SpParams, control,
 #' @seealso \code{\link{growth}}, \code{\link{recruitment}}, \code{\link{plot.growth}}, \code{\link{defaultManagementFunction}}
 #' 
 #' @examples 
-#' \dontrun{
+#' \donttest{
 #' #Load example daily meteorological data
 #' data(examplemeteo)
 #' #Prepare a two-year meteorological data with half precipitation during 
