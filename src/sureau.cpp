@@ -1,11 +1,16 @@
-// [[Rcpp::interfaces(r,cpp)]]
-#define STRICT_R_HEADERS
-#include <meteoland.h>
+#include "tissuemoisture.h"
 #include <Rcpp.h>
 using namespace Rcpp;
 
-double convertFluxFrom_mmolm2s_To_mm(double x, double timeStep, double LAI=1) {
-  return(x * (LAI * timeStep * 3600.0 * 18.0) / 1.0e6);
+double convertFluxFrom_mmolm2s_To_mm(double x, double Nhours, double LAI=1.0) {
+  return(x * (LAI * Nhours * 3600.0 * 18.0) / 1.0e6);
+}
+double temp2SVP(double TD) {
+  if(!NumericVector::is_na(TD)) return(0.61078*exp((17.269*TD)/(237.3+TD)));
+  return(NA_REAL);
+}
+double vapourPressureFromRH(double T, double RH) {
+  return(temp2SVP(T)*(RH/100.0));
 }
 
 //#interpolate climate values between two WBclim objects
@@ -20,8 +25,83 @@ List interp_WBclim(List clim1, List clim2, double p=0.5) {
   return(res);
 }
 
+void update_soilConductanceAndPsi(List WBsoil) {
+  List params = WBsoil["params"];
+  NumericVector soilWaterStock = WBsoil["soilWaterStock"];
+  NumericVector REW = WBsoil["REW"];
+  NumericVector PsiSoil = WBsoil["PsiSoil"];
+  NumericVector kSoil = WBsoil["kSoil"];
+  
+  NumericVector V_field_capacity = params["V_field_capacity"];
+  NumericVector V_saturation_capacity_vg = params["V_saturation_capacity_vg"];
+  NumericVector V_residual_capacity_vg = params["V_residual_capacity_vg"];
+  NumericVector m = params["m"];
+  NumericVector n = params["n"];
+  NumericVector alpha_vg = params["alpha_vg"];
+  NumericVector Ksat_vg = params["Ksat_vg"];
+  NumericVector B_GC = params["B_GC"];
+  NumericVector I_vg = params["I_vg"];
+  double offSetPsoil = params["offSetPsoil"];
+  
+  //# Compute soil hydraulic conductivity with Van Genuchten
+  //# Soil water holding capacity  (volumetric)
+  NumericVector totalavailwater = V_saturation_capacity_vg - V_residual_capacity_vg;
+  NumericVector totalavailwater_FC = (V_field_capacity - V_residual_capacity_vg);
+  // Compute the relative water content (m3 water/m3 soil) based on Water Reserve and soil volume
+  NumericVector actualavailwater = (soilWaterStock - V_residual_capacity_vg);
+  for(int i = 0;i<REW.size();i++) {
+    REW[i] = actualavailwater[i] / totalavailwater[i]; //  #/ numeric [ncouches
+    if(REW[i] <=0.0001) REW[i] = 0.0001;
+    else if(REW[i]>1.0) REW[i] = 1.0;
+    // KSoil_temp <- REW^(WBsoil$params$I_vg) * (1 - (1 - REW^(1 / WBsoil$params$m))^WBsoil$params$m)^2
+    double KSoil_temp = pow(REW[i], I_vg[i]) * pow(1.0 - pow(1.0 - pow(REW[i],(1.0 / m[i])),m[i]),2.0);
+    // PsiSoil <- (-1 * ((((1 / REW)^(1 / WBsoil$params$m)) - 1)^(1 / WBsoil$params$n)) / WBsoil$params$alpha_vg / 10000) - WBsoil$params$offSetPsoil  # diviser par 10000 pour passer de cm à MPa
+    PsiSoil[i] = (-1.0 * (pow((pow(1.0 / REW[i], 1.0 / m[i])) - 1.0, 1.0 / n[i])) / (alpha_vg[i] * 10000.0)) - offSetPsoil;//  # diviser par 10000 pour passer de cm à MPa
+    // # Compute Soil conductance
+    kSoil[i] = 1000.0 * Ksat_vg[i] * B_GC[i] * KSoil_temp;
+  }
+
+  double REW_tot_fc = sum(actualavailwater) / sum(totalavailwater_FC); // #/ numeric sum of all layers
+  WBsoil["REW_tot_fc"] = std::min(REW_tot_fc,1.0);
+  WBsoil["REW_tot_sat"] = sum(actualavailwater) / sum(totalavailwater); //  #/ numeric sum of all layers
+}
+
+// # Update soil water reservoirs, potential and psi according to wate fluxes from the plant
+void update_soilWater(List WBsoil, NumericVector fluxEvap) {
+  NumericVector soilWaterStock = WBsoil["soilWaterStock"];
+  for(int i=0;i<soilWaterStock.size();i++) soilWaterStock[i] = soilWaterStock[i] - fluxEvap[i];
+  update_soilConductanceAndPsi(WBsoil);
+}
+
+
+void update_kplant(List WBveg, List WBsoil) {
+  List params = as<Rcpp::List>(WBveg["params"]);
+  
+  NumericVector k_RSApoInit = params["k_RSApoInit"];
+  
+  NumericVector k_RSApo = WBveg["k_RSApo"];
+  NumericVector k_SoilToStem = WBveg["k_SoilToStem"];
+  NumericVector kSoil = WBsoil["kSoil"];
+  
+  WBveg["k_SLApo"] = ((double) params["k_SLApoInit"]) * (1.0 - ((double) WBveg["PLC_Leaf"])/100.0);
+  
+  for(int i = 0;i<k_RSApo.size();i++) {
+    //# calculate k_RSApo and k_SLApo with cavitation
+    k_RSApo[i] = k_RSApoInit[i] * (1.0 - ((double) WBveg["PLC_Stem"])/100.0);
+    //# Root from root length
+    k_SoilToStem[i] = 1.0/((1.0/kSoil[i]) + (1.0/k_RSApo[i])); // # conductance from soil to collar (two resistances in series Rsoil and Rroot)
+  }
+    
+  // Compute k_plant (from root to leaf) for diagnostic only
+  WBveg["k_Plant"] =  1.0/ (1.0 /sum(k_RSApo) + 1.0/((double) WBveg["k_SLApo"]) + 1.0/((double) WBveg["k_LSym"]));
+        
+}
+
+
 //# compute Evaporation from ETP and Gsoil and update SWS, Psi and in each soil layer
-void compute_evaporationG(List WBsoil, double RHair, double Tair, int Nhours, double LAI, double ETP, double K) {
+void compute_evaporationG(List WBsoil, double RHair, double Tair, 
+                          double Nhours, double LAI, 
+                          double ETP, double K) {
   //# created 03/01/2021 by JR / based on SurEau.C with gsoil0
   //# such as Esoil = gSoil0 * REW1 * VPDsoil/Patm
 
@@ -33,28 +113,78 @@ void compute_evaporationG(List WBsoil, double RHair, double Tair, int Nhours, do
   //#TODO: improve this relation....
   double Tsoil = 0.6009*Tair+3.59;// # from relation fitted on O3HP
   
-  // VPDsoil <- compute.VPDfromRHandT(RHair, Tsoil)
-  double VPDsoil = meteoland::vapourPressureFromRH(Tsoil, RHair);
+  double VPDsoil = vapourPressureFromRH(Tsoil, RHair);
   
-  if (Tsoil < 0.0) { //# no evaporation from frozen soil
-    for(int i=0;i< Evaporation.size(); i++) Evaporation[i] = 0.0;
-  } else {
+  double evaporation = 0.0;
+  if (Tsoil > 0.0) { //# no evaporation from frozen soil
     double g_Soil = ((double) params["gSoil0"]) * ((double) REW[0]);
     double E_Soil1 = g_Soil * VPDsoil / 101.3; // #  VPD effect
-    double ETP_mmol_s = 1.0e6 * ETP / ((double) (3600 * Nhours * 18));
+    double ETP_mmol_s = 1.0e6 * ETP / (3600.0 * Nhours * 18.0);
     double E_Soil2 = (g_Soil / ((double) params["gSoil0"])) * ETP_mmol_s * exp(-1.0*K * LAI);// # limitation by ETP depending on radiation reaching the soil
     double E_Soil3 = std::min(E_Soil1, E_Soil2);
-    WBsoil["Evaporation"] = convertFluxFrom_mmolm2s_To_mm(E_Soil3, timeStep=Nhours); // # Conversion from mmol/m2/s to mm
-    Evaporation = WBsoil["Evaporation"];
+    evaporation = convertFluxFrom_mmolm2s_To_mm(E_Soil3, Nhours); // # Conversion from mmol/m2/s to mm
   }
     
-  WBsoil["EvaporationSum"] = sum(Evaporation);
-      
-  soilWaterStock[0] = soilWaterStock[0] - WBsoil$Evaporation
-    WBsoil <- compute.soilConductanceAndPsi.WBsoil(WBsoil)
-      
+  WBsoil["EvaporationSum"] = evaporation;
+  WBsoil["Evaporation"] = evaporation;
+  
+  soilWaterStock[0] = soilWaterStock[0] - evaporation;
+  update_soilConductanceAndPsi(WBsoil);
 }
 
+double turgor_comp(double PiFT, double Esymp, double Rstemp) {
+  return(-1.0*PiFT - Esymp * Rstemp);
+}
+
+List compute_regulFact(double psi, List params, String regulationType) {
+  
+  
+  double stomatalClosure = NA_REAL;
+  double regulFact = NA_REAL;
+  double regulFactPrime = NA_REAL;
+  
+  if(regulationType == "PiecewiseLinear") {
+    double PsiStartClosing = params["PsiStartClosing"];
+    double PsiClose = params["PsiClose"];
+    if (psi > PsiStartClosing) {
+      stomatalClosure = 0.0;
+      regulFact = 1.0;
+      regulFactPrime = 0.0;
+    } else if (psi > PsiClose) {
+      stomatalClosure = 1.0;
+      regulFact = (psi - PsiClose) / (PsiStartClosing - PsiClose);
+      regulFactPrime = 1.0 / (PsiStartClosing - PsiClose);
+    } else {
+      stomatalClosure = 2.0;
+      regulFact = 0.0;
+      regulFactPrime = 0.0;
+    }
+  } else if (regulationType == "Sigmoid") {
+    double slope_gs = params["slope_gs"];
+    double P50_gs = params["P50_gs"];
+    double PL_gs = 1.0 / (1.0 + exp(slope_gs / 25.0 * (psi - P50_gs)));
+    regulFact = 1.0 - PL_gs;
+    double al = slope_gs / 25.0;
+    regulFactPrime = al * PL_gs * regulFact;
+   //# regulFactPrime = al*exp(-al*(psi-P50_gs)) / ((1+exp(-al*(psi-P50_gs)))^2) # formulation in psi (same but slower to compute)
+  } else if (regulationType == "Turgor") {
+    double turgorPressureAtGsMax = params["turgorPressureAtGsMax"];
+    double epsilonSym_Leaf = params["epsilonSym_Leaf"];
+    double PiFullTurgor_Leaf = params["PiFullTurgor_Leaf"];
+    double rs = symplasticRelativeWaterContent(psi, PiFullTurgor_Leaf, epsilonSym_Leaf);
+    double turgor = turgor_comp(PiFullTurgor_Leaf, epsilonSym_Leaf, rs);
+    regulFact = std::max(0.0, std::min(1.0, turgor / turgorPressureAtGsMax));
+    if((regulFact == 1.0) || (regulFact == 0.0)) {
+      regulFactPrime = 0.0;
+    } else {
+      regulFactPrime = 0.0;// # TODO insert the derivative to compute regulFactPrime
+    }
+  }
+  List res = List::create(_["regulFact"] = regulFact, 
+                          _["stomatalClosure"] = stomatalClosure, 
+                          _["regulFactPrime"] = regulFactPrime);
+  return(res);
+}
 
 
 double PLCPrime_comp(double plc, double slope) {
@@ -64,7 +194,7 @@ double PLC_comp(double Pmin, double slope, double P50){
   return (100.0 / (1.0 + exp(slope / 25.0 * (Pmin - P50))));
 }
 
-void SemiImplicitTemporalIntegration(List WBveg, List WBsoil, double dt, int nsmalltimesteps, NumericVector opt) {
+void semi_implicit_temporal_integration(List WBveg, List WBsoil, double dt, int nsmalltimesteps, NumericVector opt) {
   
   List params = as<Rcpp::List>(WBveg["params"]);
   
@@ -216,7 +346,7 @@ void SemiImplicitTemporalIntegration(List WBveg, List WBsoil, double dt, int nsm
 }
 
 // [[Rcpp::export]]
-void compute_plantNextTimeStep(List WBveg, List WBsoil, List WBclim_current, List WBclim_next, 
+List compute_plantNextTimeStep(List WBveg, List WBsoil, List WBclim_current, List WBclim_next, 
                                int Nhours, 
                                IntegerVector nsmalltimesteps, NumericVector opt) {
   
@@ -225,10 +355,15 @@ void compute_plantNextTimeStep(List WBveg, List WBsoil, List WBclim_current, Lis
   bool cavitationWellComputed = false;
   
   int nwhilecomp = 0;
+  NumericVector fluxSoilToStemLargeTimeStep;
   while ((!regulationWellComputed || !cavitationWellComputed) && (nwhilecomp<nsmalltimesteps.size())) { //# LOOP TO TRY DIFFERENT TIME STEPS
     List WBveg_n = clone(WBveg); // # initial value of WBveg
     List WBsoil_n = clone(WBsoil); // # initial value of WBsoil
      
+    double LAI = (double) WBveg["LAI"];
+     
+    List params  = WBveg_n["params"];
+    
     bool regulationWellComputed = false;
     bool cavitationWellComputed = false;
     int nwhilecomp = nwhilecomp + 1;
@@ -236,72 +371,73 @@ void compute_plantNextTimeStep(List WBveg, List WBsoil, List WBclim_current, Lis
     double deltaPLCMax = 1.0e-100;
     
     int nts = nsmalltimesteps[nwhilecomp];// # number of small time steps
-    double fluxSoilToStemLargeTimeStep = 0.0;
     double fluxEvaporationSoilLargeTimeStep = 0.0;
-    for(int its = 1; i <= nts; i++) { //#INTERNAL LOOP ON SMALL TIME STEPS
+    for(int its = 1; its <= nts; its++) { //#INTERNAL LOOP ON SMALL TIME STEPS
       double p = (((double) its ) - 0.5)/((double) nts);
       List WBclim = interp_WBclim(WBclim_current, WBclim_next, p); // # climate at nph
-      List WBsoil_n = compute_evaporationG(WBsoil = WBsoil_n,ETP = WBveg_n$ETPr,Tair = WBclim$Tair_mean, RHair = WBclim$RHair,K = WBveg_n$params$K,LAI = WBveg_n$LAI,Nhours = Nhours/nts)
-//       fluxEvaporationSoilLargeTimeStep = fluxEvaporationSoilLargeTimeStep + WBsoil_n$E_Soil3/nts
-// #WBclim = lapply(seq_along(WBclim_current),function(i) unlist(0.5*(WBclim_current[i])+unlist(WBclim_next[i])))
-//       WBveg_tmp <- compute.transpiration.WBveg(WBveg_n, WBclim, Nhours, modeling_options) # transpi with climate at nph
-//       WBveg_np1 <- implicit.temporal.integration.atnp1(WBveg_tmp,  WBsoil_n, dt = Nhours * 3600 / nts, opt = opt)
-//       WBveg_np1 <- update.kplant.WBveg(WBveg_np1,WBsoil_n)
-//       WBveg_np1 <- update.capacitancesApoAndSym.WBveg(WBveg_np1)
-//       
-// #browser()
-// # QUANTITIES TO CHECK IF THE RESOLUTION IS OK
-// # 1. delta regulation between n and np1
-//       regul_np1 = compute.regulFact(psi = WBveg_np1$Psi_LSym, params = WBveg_np1$params,regulationType=modeling_options$stomatalRegFormulation)
-//         regul_n   = compute.regulFact(psi = WBveg_n$Psi_LSym  , params = WBveg_n$params  ,regulationType=modeling_options$stomatalRegFormulation)# TODO check why recomputed? should be in WBveg_tmp
-//       deltaRegulMax = max(deltaRegulMax,abs(regul_np1$regulFact-regul_n$regulFact))
-// # 2. PLC at n and np1
-//         deltaPLCMax = max(deltaPLCMax,WBveg_np1$PLC_Leaf-WBveg_n$PLC_Leaf,WBveg_np1$PLC_Stem-WBveg_n$PLC_Stem)
-//         WBveg_n = WBveg_np1 # Update WBveg_n
-//       
-// # 3. update of soil on small time step (done by FP in version 16)
-//       fluxSoilToStem = WBveg$k_SoilToStem*(WBsoil_n$PsiSoil-WBveg_np1$Psi_SApo)
-// # NB the time step for fluxSoilToStem is Nhours/nts!
-//         WBveg_np1$fluxSoilToStem = convertFluxFrom_mmolm2s_To_mm(fluxSoilToStem, LAI = WBveg$LAI, timeStep = Nhours/nts) # Quantity from each soil layer to the below part
-//       WBsoil_n <- update.soilWater.WBsoil(WBsoil = WBsoil_n, fluxEvap = WBveg_np1$fluxSoilToStem)
-//         fluxSoilToStemLargeTimeStep = fluxSoilToStemLargeTimeStep + fluxSoilToStem/nts # mean flux over one large time step
-//       
-// # if (opt$numericalScheme == "Explicit" ) {
-// #   write.WBoutput(Date = NA, WBoutput = WBoutput, WBsoil = WBsoil, WBveg = WBveg_n, WBclim = WBclim_next)
-// # }
-//       
-//       
-//     } # end loop small time step
-// # TESTS ON RESOLUTION
-//     WBveg_np1$Diag_deltaRegulMax = deltaRegulMax
-//     regulationWellComputed = (deltaRegulMax<0.05)
-//       WBveg_np1$Diag_deltaPLCMax = deltaPLCMax
-//     cavitationWellComputed = (deltaPLCMax<1) # 1%
-//       WBveg_np1$Diag_timeStepInHours = Nhours/nts
-//     
-// # if (nwhilecomp==length(opt$nsmalltimesteps)&deltaRegulMax>0.05) {
-// #   warning(paste0('regulation inacurate(deltaRegulMax=',signif(deltaRegulMax, digits = 3),'; please reduce the time step, currently=',Nhours/nts))
-// # }
-// # if (nwhilecomp==length(opt$nsmalltimesteps)&deltaPLCMax>1) {# 1%
-// #   warning(paste0('water release from cavitation inacurate(deltaPLCMax(%)=',signif(deltaPLCMax, digits = 3),'; please reduce the time step, currently=',Nhours/nts))
-// # }
-  } # end while
-// # B. SAVING SOLUTION AT NEXT TIME STEP IN WBveg
-//     WBveg = WBveg_np1
-//   
-//   WBveg <- compute.transpiration.WBveg(WBveg, WBclim_next, Nhours,modeling_options=modeling_options) # final update of transpiration at clim_next (useful for consistency in outputs, but not required for the computations)
-//     
-//     
-// # C. UPDATING FLUX FROM SOIL (WBveg$fluxSoilToStem is used as input in UpdateSoilWater.WBsoil)
-// #TODO FP suggests moving the computation of  fluxSoilToStem in the main loop, as it is the coupling between the two models...
-//     
-// # mean soil quantities on large time steps
-//     WBveg$Emin_mm  = convertFluxFrom_mmolm2s_To_mm(WBveg$Emin, LAI = WBveg$LAI, timeStep = Nhours) # Flux from each soil layer to the below part
-//     WBveg$Emin_S_mm = convertFluxFrom_mmolm2s_To_mm(WBveg$Emin_S, LAI = WBveg$LAI, timeStep = Nhours) # Flux from each soil layer to the below part
-//     
-//     WBveg$SumFluxSoilToStem <- sum(fluxSoilToStemLargeTimeStep) # flux total en mmol/m2/s / used for Tleaf
-//     WBveg$fluxSoilToStem_mm  <- convertFluxFrom_mmolm2s_To_mm(fluxSoilToStemLargeTimeStep, LAI = WBveg$LAI, timeStep = Nhours) # Flux from each soil layer to the below part  in mm
-//     WBveg$transpiration_mm     <- convertFluxFrom_mmolm2s_To_mm((WBveg$Emin + WBveg$Emin_S + WBveg$Elim),LAI = WBveg$LAI, timeStep = Nhours) # total flux in mm
-//     
-//     return(WBveg)
+      double ETPr = WBveg_n["ETPr"];
+      double Tair_mean = WBclim["Tair_mean"];
+      double RHair = WBclim["RHair"];
+      compute_evaporationG(WBsoil_n, RHair, Tair_mean, 
+                           ((double) Nhours)/((double) nts), (double) WBveg_n["LAI"],
+                           ETPr, (double) params["K"]);
+      double fluxEvaporationSoilLargeTimeStep = fluxEvaporationSoilLargeTimeStep + ((double) WBsoil_n["E_Soil3"])/((double) nts);
+      
+      List WBveg_np1 = clone(WBveg_n);
+      compute_transpiration(WBveg_np1, WBclim, Nhours, modeling_options);// # transpi with climate at nph
+      semi_implicit_temporal_integration(Wveg_np1,  WBsoil_n, dt = Nhours * 3600 / nts, opt = opt);
+      update_kplant(WBveg_np1,WBsoil_n);
+      update_capacitancesApoAndSym(WBveg_np1);
+
+      // # QUANTITIES TO CHECK IF THE RESOLUTION IS OK
+      // # 1. delta regulation between n and np1
+      List regul_np1 = compute_regulFact(psi = WBveg_np1$Psi_LSym, params = WBveg_np1$params,regulationType=modeling_options$stomatalRegFormulation);
+      List regul_n   = compute_regulFact(psi = WBveg_n$Psi_LSym  , params = WBveg_n$params  ,regulationType=modeling_options$stomatalRegFormulation); //# TODO check why recomputed? should be in WBveg_tmp
+      
+      deltaRegulMax = std::max(deltaRegulMax,std::abs(((double) regul_np1["regulFact"]) - ((double) regul_n["regulFact"])));
+      
+      // # 2. PLC at n and np1
+      deltaPLCMax = max(deltaPLCMax,WBveg_np1$PLC_Leaf-WBveg_n$PLC_Leaf,WBveg_np1$PLC_Stem-WBveg_n$PLC_Stem)
+      WBveg_n = WBveg_np1; //# Update WBveg_n
+
+      // # 3. update of soil on small time step (done by FP in version 16)
+      NumericVector fluxSoilToStem_mm = WBveg_np1["fluxSoilToStem"];
+      double Psi_SApo = WBveg_np1["Psi_SApo"];
+      NumericVector k_SoilToStem = WBveg["k_SoilToStem"]; //MIQUEL: Why WBveg here?
+      NumericVector PsiSoil = WBsoil_n["PsiSoil"]; 
+      for(int i=0;i < fluxSoilToStem_mm.size();i++) {
+        double fluxSoilToStem_mmolm2s = k_SoilToStem[i]*(PsiSoil[i] - Psi_SApo);
+        fluxSoilToStemLargeTimeStep[i] = fluxSoilToStemLargeTimeStep[i] + fluxSoilToStem_mmolm2s/((double) nts);// # mean flux over one large time step
+        fluxSoilToStem_mm[i] = convertFluxFrom_mmolm2s_To_mm(fluxSoilToStem_mmolm2s, ((double) Nhours)/((double) nts), LAI); // # Quantity from each soil layer to the below part
+      }
+      // # NB the time step for fluxSoilToStem_mm is Nhours/nts!
+      update_soilWater(WBsoil_n, fluxSoilToStem_mm);
+    } //# end loop small time step
+    
+    // # TESTS ON RESOLUTION
+    WBveg_np1["Diag_deltaRegulMax"] = deltaRegulMax;
+    regulationWellComputed = (deltaRegulMax<0.05);
+    WBveg_np1["Diag_deltaPLCMax"] = deltaPLCMax;
+    cavitationWellComputed = (deltaPLCMax<1.0);// # 1%
+    WBveg_np1["Diag_timeStepInHours"] = ((double) Nhours)/((double) nts);
+  } //# end while
+  
+  // # B. SAVING SOLUTION AT NEXT TIME STEP IN WBveg
+  WBveg = WBveg_np1;
+  // # final update of transpiration at clim_next (useful for consistency in outputs, but not required for the computations)
+  compute_transpiration(WBveg, WBclim_next, Nhours,modeling_options=modeling_options);
+  // # C. UPDATING FLUX FROM SOIL (WBveg$fluxSoilToStem is used as input in UpdateSoilWater.WBsoil)
+  // #TODO FP suggests moving the computation of  fluxSoilToStem in the main loop, as it is the coupling between the two models...
+  // # mean soil quantities on large time steps
+  WBveg["Emin_mm"]  = convertFluxFrom_mmolm2s_To_mm((double) WBveg["Emin"], (double) Nhours, LAI); // # Flux from each soil layer to the below part
+  WBveg["Emin_S_mm"] = convertFluxFrom_mmolm2s_To_mm((double) WBveg["Emin_S"], (double) Nhours, LAI); // # Flux from each soil layer to the below part
+     
+  WBveg["SumFluxSoilToStem"] = sum(fluxSoilToStemLargeTimeStep);// # flux total en mmol/m2/s / used for Tleaf
+  NumericVector fluxSoilToStem_mm = WBveg["fluxSoilToStem_mm"];
+  for(int i=0;i< fluxSoilToStem_mm.size();i++) {
+    fluxSoilToStem_mm[i] = convertFluxFrom_mmolm2s_To_mm(fluxSoilToStemLargeTimeStep[i], (double) Nhours, LAI); // # Flux from each soil layer to the below part  in mm
+  }
+  WBveg["transpiration_mm"] = convertFluxFrom_mmolm2s_To_mm((double)(WBveg["Emin"] + WBveg["Emin_S"] + WBveg["Elim"]), (double) Nhours, LAI); //# total flux in mm
+     
+  return(WBveg)
 }
