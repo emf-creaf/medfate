@@ -2975,6 +2975,10 @@ pwb <- function(x, meteo, W, latitude, elevation = NA_real_, slope = NA_real_, a
     .Call(`_medfate_pwb`, x, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, CO2ByYear)
 }
 
+SemiImplicitTemporalIntegration <- function(WBveg, WBsoil, dt, nsmalltimesteps, opt) {
+    invisible(.Call(`_medfate_SemiImplicitTemporalIntegration`, WBveg, WBsoil, dt, nsmalltimesteps, opt))
+}
+
 #' Tissue moisture functions
 #' 
 #' Set of functions used to calculate tissue moisture from water potential and viceversa.
