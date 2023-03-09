@@ -71,7 +71,6 @@ NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, Num
 //' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
 //' @param z A numeric vector with height values.
 //' @param gdd Growth degree days.
-//' @param mode Calculation mode, either "MED" or "US".
 //' 
 //' @details
 //' Functions for short-wave radiation are adapted from Anten & Bastiaans (2016), 
@@ -157,9 +156,8 @@ NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, Num
 //'   
 //' @name light
 // [[Rcpp::export("light_PARcohort")]]
-NumericVector PARcohort(List x, DataFrame SpParams, double gdd = NA_REAL,
-                        String mode = "MED") {
-  DataFrame above = forest2aboveground(x, SpParams, gdd, mode);
+NumericVector PARcohort(List x, DataFrame SpParams, double gdd = NA_REAL) {
+  DataFrame above = forest2aboveground(x, SpParams, gdd, false);
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
   NumericVector LAI = above["LAI_expanded"];
@@ -191,9 +189,8 @@ NumericVector swrheight(NumericVector heights, IntegerVector SP, NumericVector H
 }
 
 // [[Rcpp::export(".parheight")]]
-NumericVector parheight(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL,
-                                   String mode = "MED") {
-  DataFrame above = forest2aboveground(x, SpParams, gdd, mode);
+NumericVector parheight(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL) {
+  DataFrame above = forest2aboveground(x, SpParams, gdd, false);
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
   NumericVector LAI = above["LAI_expanded"];
@@ -203,14 +200,12 @@ NumericVector parheight(NumericVector z, List x, DataFrame SpParams, double gdd 
 
 //' @rdname light
 // [[Rcpp::export("light_PARground")]]
-NumericVector PARground(List x, DataFrame SpParams, double gdd = NA_REAL,
-                        String mode = "MED") {
-  return(parheight(NumericVector::create(0.0), x, SpParams, gdd, mode));
+NumericVector PARground(List x, DataFrame SpParams, double gdd = NA_REAL) {
+  return(parheight(NumericVector::create(0.0), x, SpParams, gdd));
 }
 // [[Rcpp::export(".swrheight")]]
-NumericVector swrheight(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL,
-                        String mode = "MED") {
-  DataFrame above = forest2aboveground(x, SpParams, gdd, mode);
+NumericVector swrheight(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL) {
+  DataFrame above = forest2aboveground(x, SpParams, gdd, false);
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
   NumericVector LAI = above["LAI_expanded"];
@@ -220,16 +215,14 @@ NumericVector swrheight(NumericVector z, List x, DataFrame SpParams, double gdd 
 
 //' @rdname light
 // [[Rcpp::export("light_SWRground")]]
-NumericVector SWRground(List x, DataFrame SpParams, double gdd = NA_REAL,
-                        String mode = "MED") {
-  return(swrheight(NumericVector::create(0.0), x, SpParams, gdd, mode));
+NumericVector SWRground(List x, DataFrame SpParams, double gdd = NA_REAL) {
+  return(swrheight(NumericVector::create(0.0), x, SpParams, gdd));
 }
 
 
 // [[Rcpp::export(".parExtinctionProfile")]]
-NumericVector parExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL,
-                                   String mode = "MED") {
-  DataFrame above = forest2aboveground(x, SpParams, gdd, mode);
+NumericVector parExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL) {
+  DataFrame above = forest2aboveground(x, SpParams, gdd, false);
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
   NumericVector LAI = above["LAI_expanded"];
@@ -238,9 +231,8 @@ NumericVector parExtinctionProfile(NumericVector z, List x, DataFrame SpParams, 
 }
 
 // [[Rcpp::export(".swrExtinctionProfile")]]
-NumericVector swrExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL,
-                                   String mode = "MED") {
-  DataFrame above = forest2aboveground(x, SpParams,  gdd, mode);
+NumericVector swrExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL) {
+  DataFrame above = forest2aboveground(x, SpParams,  gdd, false);
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
   NumericVector LAI = above["LAI_expanded"];

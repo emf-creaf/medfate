@@ -2,6 +2,13 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 3.0.0
+- Leaf area limited by allometries
+- Functions 'growthInput()' and 'spwbInput()' no longer visible at the user level
+- No calculation mode forest structure (US mode removed)
+- Control flag options to restrict output in 'spwb()' 'pwb()' and 'growth()'
+- Control flag to calculate fire hazard during 'spwb()' 'pwb()' and 'growth()' simulations
+
 # Version 2.9.3
 - Bounded leaf area index
 - IFNcodes out of SpParams

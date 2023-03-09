@@ -7,7 +7,6 @@
 #' @param z A numeric vector with height values.
 #' @param d A numeric vector with soil layer widths.
 #' @param gdd Growth degree days.
-#' @param mode Calculation mode, either "MED" or "US".
 #' @param byCohorts Separate profiles for each cohort.
 #' @param bySpecies Aggregate cohort profiles by species.
 #' @param u The value of measured wind speed (in m/s).
@@ -48,14 +47,14 @@
 #' vprofile_windExtinction(exampleforestMED, SpParamsMED)
 #' 
 #' @name vprofile_leafAreaDensity
-vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, mode = "MED",
+vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, 
                                    byCohorts = FALSE, bySpecies = FALSE, 
                                    draw = TRUE, xlim = NULL) {
   if(!(inherits(x,"data.frame") || inherits(x, "forest"))) stop("'x' should be of class 'forest' or 'data.frame'")
   if(inherits(x, "forest")) {
     if(is.null(SpParams)) stop("Please, provide 'SpParams' to calculate leaf area.")
     spnames <- plant_speciesName(x, SpParams)
-    x <- forest2aboveground(x, SpParams, gdd, mode = mode)
+    x <- forest2aboveground(x, SpParams, gdd)
   } else {
     if(any(!(c("LAI_expanded", "H", "CR", "SP") %in% names(x)))) {
       stop("Data frame should contain columns 'SP', 'LAI_expanded', 'H' and 'CR'")
@@ -132,10 +131,10 @@ vprofile_rootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE,
 }
 
 #' @rdname vprofile_leafAreaDensity
-vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA, mode = "MED", 
+vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA,
                                    draw = TRUE, xlim = NULL) {
   if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams))/100)*100 +10, by=10)
-  wfp <- .woodyFuelProfile(z,x, SpParams, gdd, mode = mode)
+  wfp <- .woodyFuelProfile(z,x, SpParams, gdd)
   df <- data.frame("BD" = c(0,wfp), "Z" = z)
   if(draw) {
     g<-ggplot(df, aes(x=.data$BD, y=.data$Z))+
@@ -150,10 +149,10 @@ vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA, mode = "MED"
 }
 
 #' @rdname vprofile_leafAreaDensity
-vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, mode = "MED", 
+vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, 
                                  draw = TRUE, xlim = c(0,100)) {
   if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams), na.rm = TRUE)/100)*100 +10, by=10)
-  pep <- .parExtinctionProfile(z,x, SpParams, gdd, mode = mode)
+  pep <- .parExtinctionProfile(z,x, SpParams, gdd)
   df <- data.frame("PEP" = pep, "Z" = z)
   if(draw) {
     g<-ggplot(df, aes(x=.data$PEP, y=.data$Z))+
@@ -168,10 +167,10 @@ vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, mode = "MED",
 }
 
 #' @rdname vprofile_leafAreaDensity
-vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, mode = "MED",
+vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, 
                                  draw = TRUE, xlim = c(0,100)) {
   if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams))/100)*100 +10, by=10)
-  swr <- .swrExtinctionProfile(z,x, SpParams, gdd, mode = mode)
+  swr <- .swrExtinctionProfile(z,x, SpParams, gdd)
   df <- data.frame("SWR" = swr, "Z" = z)
   if(draw) {
     g<-ggplot(df, aes(x=.data$SWR, y=.data$Z))+
@@ -188,10 +187,10 @@ vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, mode = "MED",
 #' @rdname vprofile_leafAreaDensity
 vprofile_windExtinction<-function(x, SpParams, u = 1, windMeasurementHeight = 200,
                                   boundaryLayerSize = 2000, target = "windspeed",
-                                  z = NULL, gdd = NA, mode = "MED", 
+                                  z = NULL, gdd = NA, 
                                   draw = TRUE, xlim = NULL) {
   if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams))/100)*100 +boundaryLayerSize, by=10)
-  lad <- vprofile_leafAreaDensity(x, SpParams, z,gdd,mode,FALSE,FALSE,FALSE, xlim)
+  lad <- vprofile_leafAreaDensity(x, SpParams, z,gdd,FALSE,FALSE,FALSE, xlim)
   canopyHeight <- max(plant_height(x, SpParams), na.rm=T)
   zmid <- 0.5*(z[1:(length(z)-1)] + z[2:(length(z))])
   df <- wind_canopyTurbulence(zmid, lad, canopyHeight, u, windMeasurementHeight)

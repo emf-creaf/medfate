@@ -256,6 +256,9 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
   
   //Allometric parameters
   DataFrame paramsAllometries = Rcpp::as<Rcpp::DataFrame>(x["paramsAllometries"]);
+  NumericVector Afbt  = paramsAllometries["Afbt"];
+  NumericVector Bfbt  = paramsAllometries["Bfbt"];
+  NumericVector Cfbt  = paramsAllometries["Cfbt"];
   NumericVector Aash  = paramsAllometries["Aash"];
   NumericVector Bash  = paramsAllometries["Bash"];
   NumericVector Absh  = paramsAllometries["Absh"];
@@ -268,6 +271,10 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
   NumericVector B3cr  = paramsAllometries["B3cr"];
   NumericVector C1cr  = paramsAllometries["C1cr"];
   NumericVector C2cr  = paramsAllometries["C2cr"];
+  
+  //Phenology parameters
+  DataFrame internalPhenology = Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
+  LogicalVector budFormation = internalPhenology["budFormation"];
   
   //Allometric parameters
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
@@ -282,11 +289,14 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
   NumericVector Hmax  = paramsAnatomy["Hmax"];
   NumericVector SLA = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["SLA"]);
+  NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
   NumericVector r635  = paramsAnatomy["r635"];
   
   DataFrame internalAllocation = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
   NumericVector leafAreaTarget = internalAllocation["leafAreaTarget"];
+  NumericVector sapwoodAreaTarget = internalAllocation["sapwoodAreaTarget"];
   
+  //Update DBH
   NumericVector deltaDBH(numCohorts, 0.0);
   for(int j=0;j<numCohorts; j++) {
     if(!NumericVector::is_na(DBH[j])) {
@@ -294,6 +304,7 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
       DBH[j] = DBH[j] + deltaDBH[j];
     }
   }
+  //Update height
   NumericVector L = parcohortC(H, LAI_live, LAI_dead, kPAR, CR);
   for(int j=0;j<numCohorts; j++) {
     if(!NumericVector::is_na(DBH[j]) && N[j]>0.0) {
@@ -302,25 +313,44 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
       H[j] = H[j] + fHD*deltaDBH[j];
     }
   }
-  NumericVector crNew = treeCrownRatioMED(N, DBH, H, Acw, Bcw, Acr, B1cr, B2cr, B3cr, C1cr, C2cr);
+  //Update crown ratio
+  NumericVector crNew = treeCrownRatio(N, DBH, H, Acw, Bcw, Acr, B1cr, B2cr, B3cr, C1cr, C2cr);
   for(int j=0;j<numCohorts; j++) {
     if(!NumericVector::is_na(DBH[j]) && N[j]>0.0) {
       CR[j] = crNew[j];
     }
   }
-  
+  //Update tree leaf area target
+  NumericVector ltba = largerTreeBasalArea(N, DBH, 1.0); //Allometries were calibrated including the target cohort
+  for(int j=0;j<numCohorts;j++) {
+    if(!NumericVector::is_na(DBH[j]) && N[j]>0.0) {
+      if(budFormation[j]) {
+        // Rcout <<j<< " "<< ltba[j]<< " "<<leafAreaTarget[j];
+        leafAreaTarget[j] = SLA[j]*(Afbt[j]*pow(std::min(50.0,DBH[j]), Bfbt[j])*exp(Cfbt[j]*ltba[j]));
+        LAI_live[j] = leafAreaTarget[j]*N[j]/10000.0;
+        // Rcout << " "<< leafAreaTarget[j]<<"\n";
+      }
+    }
+  }
   //Shrub variables
   if(shrubDynamics) {
     for(int j=0;j<numCohorts; j++) {
       if(NumericVector::is_na(DBH[j]) && N[j]>0.0) {
-        double Wleaves = leafAreaTarget[j]/SLA[j];  //Calculates the biomass (kg dry weight) of leaves
-        double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates phytovolume (in m3/ind)
-        H[j] = pow(1e6*PV/Aash[j], 1.0/(1.0+Bash[j])); //Updates shrub height
-        // Rcout<< Wleaves << " " << PV << " " << H[j]<<"\n";
-        if(H[j]> Hmax[j]) { //Limit height (and update the former variables)
-          H[j] = Hmax[j];
+        if(budFormation[j]) {
+          leafAreaTarget[j] = (Al2As[j]*SA[j])/10000.0; // Set leaf area target according to current sapwood area
+          double Wleaves = leafAreaTarget[j]/SLA[j];  //Calculates the biomass (kg dry weight) of leaves
+          double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates phytovolume (in m3/ind)
+          H[j] = pow(1e6*PV/Aash[j], 1.0/(1.0+Bash[j])); //Updates shrub height
+          // Rcout<< Wleaves << " " << PV << " " << H[j]<<"\n";
+          if(H[j]> Hmax[j]) { //Limit height (and update the former variables)
+            H[j] = Hmax[j];
+            PV = (Aash[j]/1e6)*pow(H[j], (1.0+Bash[j])); //recalculate phytovolume from H
+            Wleaves = (Absh[j]/r635[j])*pow(PV, Bbsh[j]); //recalculate Wleaves from phytovolume
+            leafAreaTarget[j] = Wleaves * SLA[j]; //recalculate leaf area target from Wleaves
+            sapwoodAreaTarget[j] = 10000.0*leafAreaTarget[j]/Al2As[j]; //Set target sapwood area (may generate sapwood senescence)
+          }
+          Cover[j] = std::min(100.0, N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); //Updates shrub cover
         }
-        Cover[j] = std::min(100.0, N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); //Updates shrub cover
       }
     }
   }
@@ -449,10 +479,15 @@ List growthDayInner(List x, NumericVector meteovec,
 
   DataFrame internalMortality = Rcpp::as<Rcpp::DataFrame>(x["internalMortality"]);
   NumericVector N_dead = internalMortality["N_dead"];
+  NumericVector N_starvation = internalMortality["N_starvation"];
+  NumericVector N_dessication = internalMortality["N_dessication"];
   NumericVector Cover_dead = internalMortality["Cover_dead"];
+  NumericVector Cover_starvation = internalMortality["Cover_starvation"];
+  NumericVector Cover_dessication = internalMortality["Cover_dessication"];
   
   DataFrame internalAllocation = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
   NumericVector allocationTarget = internalAllocation["allocationTarget"];
+  NumericVector sapwoodAreaTarget = internalAllocation["sapwoodAreaTarget"];
   NumericVector leafAreaTarget = internalAllocation["leafAreaTarget"];
   NumericVector fineRootBiomassTarget = internalAllocation["fineRootBiomassTarget"];
   
@@ -967,10 +1002,11 @@ List growthDayInner(List x, NumericVector meteovec,
       double deltaLAsenescence = std::min(LAexpanded, LAexpanded*propLeafSenescence);
       double senescenceLeafLoss = deltaLAsenescence*(1000.0/SLA[j]);
 
-      //Define sapwood senescense
+      //Define sapwood senescence as maximum of turnover and sapwood exceeding the target
       double propSASenescence = SRsapwood[j]*std::max(0.0,(tday-5.0)/20.0)/(1.0+15.0*exp(-0.01*H[j]));
-      double deltaSASenescence = propSASenescence*SA[j];
-      
+      double deltaSASenescence = std::max(0.0, SA[j] - sapwoodAreaTarget[j]);
+      propSASenescence = std::max(propSASenescence, deltaSASenescence/SA[j]);
+        
       //FRB SENESCENCE
       NumericVector deltaFRBsenescence(numLayers, 0.0);
       for(int l=0;l<numLayers;l++) {
@@ -1041,9 +1077,9 @@ List growthDayInner(List x, NumericVector meteovec,
       // Rcout<<"-updatederived";
       if(transpirationMode=="Granier") {
         //Update Huber value
-        if(LAlive>0.0) {
-          Al2As[j] = (LAlive)/(SA[j]/10000.0);
-        }
+        // if(LAlive>0.0) {
+        //   Al2As[j] = (LAlive)/(SA[j]/10000.0);
+        // }
         for(int c=0;c<numCohorts;c++){
           L(c,_) = coarseRootLengths(V(c,_), dVec, 0.5); //Arbitrary ratio (to revise some day)
           CRSV[c] = coarseRootSoilVolume(V(c,_), dVec, 0.5);
@@ -1055,7 +1091,7 @@ List growthDayInner(List x, NumericVector meteovec,
           double oldrootR = 1.0/VCroot_kmaxVEC[j];
           double oldrootprop = oldrootR/(oldrootR+oldstemR);
           
-          Al2As[j] = (LAlive)/(SA[j]/10000.0);
+          // Al2As[j] = (LAlive)/(SA[j]/10000.0);
           VCstem_kmax[j]=maximumStemHydraulicConductance(Kmax_stemxylem[j], Hmed[j], Al2As[j] ,H[j], taper); 
           VCstem_kmax[j]=std::min(VCstem_kmax[j], maximumStemConductance);
           
@@ -1102,13 +1138,16 @@ List growthDayInner(List x, NumericVector meteovec,
       if(transpirationMode=="Granier") stemSympRWC = symplasticRelativeWaterContent(PlantPsi[j], StemPI0[j], StemEPS[j]);
       else stemSympRWC = sum(StemSympRWCInst(j,_))/((double) numSteps);
       if(dynamicCohort) {
+        String cause = "undertermined";
         if(mortalityMode=="whole-cohort/deterministic") {
           if((sugarSapwood[j]<mortalitySugarThreshold) && allowStarvation) {
             Ndead_day = N[j];
             if(verbose) Rcout<<" [Cohort "<< j<<" died from starvation] ";
+            cause = "starvation";
           } else if( (stemSympRWC < mortalityRWCThreshold) && allowDessication) {
             Ndead_day = N[j];
             if(verbose) Rcout<<" [Cohort "<< j<<" died from dessication] ";
+            cause = "dessication";
           }
         } else {
           double basalMortalityRate = 1.0 - exp(log(1.0 - MortalityBaselineRate[j])/356.0);
@@ -1116,21 +1155,21 @@ List growthDayInner(List x, NumericVector meteovec,
           if(allowStarvation) starvationRate[j] = dailyMortalityProbability(basalMortalityRate, sugarSapwood[j], mortalitySugarThreshold, 0.0);
           if(allowDessication) dessicationRate[j] = dailyMortalityProbability(basalMortalityRate, stemSympRWC, mortalityRWCThreshold, 0.0);
           mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));
+          if((dessicationRate[j] > basalMortalityRate) && (dessicationRate[j] > starvationRate[j])) {
+            cause = "dessication";
+          } else if((starvationRate[j] > basalMortalityRate) && (starvationRate[j] > dessicationRate[j])) {
+            cause = "starvation";
+          }
           // Rcout<< j << " "<< stemSympRWC<< " "<< dessicationRate[j]<<"\n";
           if(mortalityMode =="density/deterministic") {
             Ndead_day = N[j]*mortalityRate[j];
           } else if(mortalityMode =="whole-cohort/stochastic") {
             if(R::runif(0.0,1.0) < mortalityRate[j]) {
               Ndead_day = N[j];
-              if(dessicationRate[j]>starvationRate[j]) {
-                Rcout<<" [Cohort "<< j<<" died from dessication] ";
-              } else {
-                Rcout<<" [Cohort "<< j<<" died from starvation] ";
-              }
+              Rcout<<" [Cohort "<< j<<" died from " << cause.get_cstring() << "] ";
             }
           } else if(mortalityMode == "density/stochastic") {
             Ndead_day = R::rbinom(round(N[j]), mortalityRate[j]);
-            // Rcout<< j<< " "<< P_day<< " "<< N[j]<< " "<< Ndead_day<< " "<< R::rbinom(750, 2.82309e-05)<< "\n";
           }
         }
         // Update density and increase the number of dead plants
@@ -1138,9 +1177,19 @@ List growthDayInner(List x, NumericVector meteovec,
         double Cdead_day = Cover[j]*(Ndead_day/N[j]);
         N[j] = N[j] - Ndead_day;
         N_dead[j] = N_dead[j] + Ndead_day;
+        if(cause == "starvation") {
+          N_starvation[j] = N_starvation[j] + Ndead_day;
+        } else if(cause == "dessication") {
+          N_dessication[j] = N_dessication[j] + Ndead_day;
+        }
         if(isShrub) {
           Cover[j] = std::max(0.0, Cover[j] - Cdead_day);
           Cover_dead[j] = Cover_dead[j] + Cdead_day;
+          if(cause == "starvation") {
+            Cover_starvation[j] = Cover_starvation[j] + Cdead_day;
+          } else if(cause == "dessication") {
+            Cover_dessication[j] = Cover_dessication[j] + Cdead_day;
+          }
         }
         //Update LAI dead and LAI expanded as a result of density decrease
         double LAI_change = LAexpanded*Ndead_day/10000.0;
@@ -1152,19 +1201,25 @@ List growthDayInner(List x, NumericVector meteovec,
       //UPDATE TARGETS
       // Rcout<<"-updatetargets";
       //Set target leaf area if bud formation is allowed
-      if(budFormation[j]) {
-        if(allocationStrategy == "Plant_kmax") {
-          leafAreaTarget[j] = LAlive*(Plant_kmax[j]/allocationTarget[j]);
-        } else if(allocationStrategy =="Al2As") {
-          leafAreaTarget[j] = (SA[j]/10000.0)*allocationTarget[j];
-        }
-        LAI_live[j] = leafAreaTarget[j]*N[j]/10000.0;
-      }
+      // if(budFormation[j]) {
+      //   if(allocationStrategy == "Plant_kmax") {
+      //     leafAreaTarget[j] = LAlive*(Plant_kmax[j]/allocationTarget[j]);
+      //   } else if(allocationStrategy =="Al2As") {
+      //     leafAreaTarget[j] = (SA[j]/10000.0)*allocationTarget[j];
+      //   }
+      //   LAI_live[j] = leafAreaTarget[j]*N[j]/10000.0;
+      // }
       //Update fine root biomass target     
       if((LAI_live[j]>0.0) && (N[j]>0.0)) {
         if(transpirationMode=="Granier") {
+          sapwoodAreaTarget[j] = 10000.0*leafAreaTarget[j]/Al2As[j];
           fineRootBiomassTarget[j] = (Ar2Al[j]*leafAreaTarget[j])/(specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4);
         } else {
+          if(allocationStrategy == "Plant_kmax") {
+            sapwoodAreaTarget[j] = 10000.0*(leafAreaTarget[j]/Al2As[j])*(allocationTarget[j]/Plant_kmax[j]);
+          } else if(allocationStrategy =="Al2As") {
+            sapwoodAreaTarget[j] = 10000.0*leafAreaTarget[j]/Al2As[j];
+          }
           NumericVector VGrhizo_target(numLayers,0.0);
           for(int s=0;s<numLayers;s++) {
             // Rcout<<VCroot_kmaxVEC[j]<< " "<<VCstem_kmax[j]<<"\n";
@@ -1341,6 +1396,7 @@ List growthDayInner(List x, NumericVector meteovec,
     l.push_back(spwbOut["LightExtinction"], "LightExtinction");
     l.push_back(spwbOut["CanopyTurbulence"], "CanopyTurbulence");
   }
+  if(control["fireHazardResults"]) l.push_back(spwbOut["FireHazard"], "FireHazard");
   l.attr("class") = CharacterVector::create("growth_day","list");
   return(l);
 }
@@ -1639,7 +1695,6 @@ List growth(List x, DataFrame meteo, double latitude,
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
   bool verbose = control["verbose"];
-  bool subdailyResults = control["subdailyResults"];
   bool leafPhenology = control["leafPhenology"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
   bool multiLayerBalance = control["multiLayerBalance"];
@@ -1819,6 +1874,9 @@ List growth(List x, DataFrame meteo, double latitude,
   List plantDWOL = definePlantWaterDailyOutput(meteo, above, soil, control);
   NumericVector EplantCohTot(numCohorts, 0.0);
 
+  //Fire hazard output variables
+  DataFrame fireHazard;
+  if(control["fireHazardResults"]) fireHazard = defineFireHazardOutput(meteo);
   
   //Count years (times structural variables will be updated)
   int numYears = 0;
@@ -1905,6 +1963,7 @@ List growth(List x, DataFrame meteo, double latitude,
         Named("tday") = tday, Named("tmax") = tmax, Named("tmin") = tmin,
         Named("prec") = Precipitation[i], Named("rhmin") = rhmin, Named("rhmax") = rhmax,
         Named("rad") = rad, 
+        Named("wind") = wind, 
         Named("pet") = PET[i],
         Named("Catm") = Catm,
         Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
@@ -1957,6 +2016,7 @@ List growth(List x, DataFrame meteo, double latitude,
     fillWaterBalanceDailyOutput(DWB, s,i, transpirationMode);
     fillSoilWaterBalanceDailyOutput(SWB, soil, s,
                                     i, numDays, transpirationMode, soilFunctions);
+    if(control["fireHazardResults"]) fillFireHazardOutput(fireHazard, s, i);
     
     List stand = s["Stand"];
     LgroundPAR[i] = stand["LgroundPAR"];
@@ -2024,7 +2084,7 @@ List growth(List x, DataFrame meteo, double latitude,
     //   for(int j=0;j<numCohorts; j++) ringList[j] = initialize_ring();
     // }
 
-    if(subdailyResults) {
+    if(control["subdailyResults"]) {
       subdailyRes[i] = clone(s);
     }
   }
@@ -2146,14 +2206,17 @@ List growth(List x, DataFrame meteo, double latitude,
                      Named("growthOutput") = clone(x),
                      Named("WaterBalance")=DWB, 
                      Named("CarbonBalance")=StandCarbonBalance, 
-                     Named("BiomassBalance") = StandBiomassBalance,
-                     Named("Soil")=SWB,
-                     Named("Stand")=Stand,
-                     Named("Plants") = plantDWOL,
-                     Named("LabileCarbonBalance") = labileCarbonBalance,
-                     Named("PlantBiomassBalance") = plantBiomassBalance,
-                     Named("PlantStructure") = plantStructure,
-                     Named("GrowthMortality") = growthMortality);
+                     Named("BiomassBalance") = StandBiomassBalance);
+    if(control["soilResults"]) l.push_back(SWB, "Soil");
+    if(control["standResults"]) l.push_back(Stand, "Stand");
+    if(control["plantResults"]) {
+      l.push_back(plantDWOL, "Plants");
+      l.push_back(labileCarbonBalance, "LabileCarbonBalance");
+      l.push_back(plantBiomassBalance, "PlantBiomassBalance");
+      l.push_back(plantStructure, "PlantStructure");
+      l.push_back(growthMortality, "GrowthMortality");
+    }
+    if(control["fireHazardResults"]) l.push_back(fireHazard, "FireHazard");
   } else {
     l = List::create(Named("latitude") = latitude,
                    Named("topography") = topo,
@@ -2163,21 +2226,27 @@ List growth(List x, DataFrame meteo, double latitude,
                    Named("WaterBalance")=DWB, 
                    Named("CarbonBalance")=StandCarbonBalance, 
                    Named("EnergyBalance") = DEB,
-                   Named("BiomassBalance") = StandBiomassBalance,
-                   Named("Temperature") = DT,
-                   Named("TemperatureLayers") = NA_REAL,
-                   Named("Soil")=SWB,
-                   Named("Stand")=Stand,
-                   Named("Plants") = plantDWOL,
-                   Named("SunlitLeaves") = sunlitDO,
-                   Named("ShadeLeaves") = shadeDO,
-                   Named("LabileCarbonBalance") = labileCarbonBalance,
-                   Named("PlantBiomassBalance") = plantBiomassBalance,
-                   Named("PlantStructure") = plantStructure,
-                   Named("GrowthMortality") = growthMortality);
-    if(multiLayerBalance) l["TemperatureLayers"] = DLT;
+                   Named("BiomassBalance") = StandBiomassBalance);
+    if(control["temperatureResults"]) {
+      l.push_back(DT, "Temperature");
+      if(multiLayerBalance) l.push_back(DLT,"TemperatureLayers");
+    }
+    if(control["soilResults"]) l.push_back(SWB, "Soil");
+    if(control["standResults"]) l.push_back(Stand, "Stand");
+    if(control["plantResults"]) l.push_back(plantDWOL, "Plants");
+    if(control["leafResults"]) {
+      l.push_back(sunlitDO, "SunlitLeaves");
+      l.push_back(shadeDO, "ShadeLeaves");
+    }
+    if(control["plantResults"]){
+      l.push_back(labileCarbonBalance, "LabileCarbonBalance");
+      l.push_back(plantBiomassBalance, "PlantBiomassBalance");
+      l.push_back(plantStructure, "PlantStructure");
+      l.push_back(growthMortality, "GrowthMortality");
+    }
+    if(control["fireHazardResults"]) l.push_back(fireHazard, "FireHazard");
   }
-  if(subdailyResults) l.push_back(subdailyRes,"subdaily");
+  if(control["subdailyResults"]) l.push_back(subdailyRes,"subdaily");
   l.attr("class") = CharacterVector::create("growth","list");
   return(l);
 }

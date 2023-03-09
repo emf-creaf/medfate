@@ -17,7 +17,13 @@ A list, with the following options (default values in parentheses):
       \item{\code{verbose (=TRUE)}: Boolean flag to indicate console output during calculations. In function \code{fordyn} \code{verbose} is always set to FALSE.}
       \item{\code{fillMissingRootParams (=TRUE)}: Boolean flag to indicate that functions \code{\link{spwbInput}} and \code{\link{growthInput}} should provide estimates for Z50 and Z95 if these are lacking in the forest data. Note that if \code{fillMissingRootParams} is set to \code{FALSE} then simulations may fail if the user does not provide values for Z50 and Z95 in tree or shrub data.}
       \item{\code{fillMissingSpParams (=TRUE)}: Boolean flag to indicate that functions \code{\link{spwbInput}} and \code{\link{growthInput}} should provide estimates for functional parameters if these are lacking in the species parameter table \code{\link{SpParams}}. Note that if \code{fillMissingSpParams} is set to \code{FALSE} then simulations may fail if the user does not provide values for required parameters.}
+      \item{\code{standResults (=TRUE)}: Boolean flag to keep stand-level results (in a list called 'Stand').}
+      \item{\code{soilResults (=TRUE)}: Boolean flag to keep stand-level results (in a list called 'Soil').}
+      \item{\code{plantResults (=TRUE)}: Boolean flag to keep plant-level results (in a list called 'Plants').}
+      \item{\code{leafResults (=TRUE)}: Boolean flag to keep leaf-level results (in elements called 'SunlitLeaves' and 'ShadeLeaves').}
+      \item{\code{temperatureResults (=TRUE)}: Boolean flag to keep temperature results (in elements called 'Temperature' and 'TemperatureLayers').}
       \item{\code{subdailyResults (=FALSE)}: Boolean flag to force subdaily results to be stored (as a list called 'subdaily' of \code{\link{spwb_day}} objects, one by simulated date) in calls to \code{\link{spwb}}. In function \code{fordyn} \code{subdailyResults} is always set to FALSE.}
+      \item{\code{fireHazardResults (=FALSE): Boolean flag to force calculation of daily fire hazard.}}
     }
   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}}):
     \itemize{

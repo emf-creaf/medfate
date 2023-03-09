@@ -14,7 +14,6 @@ vprofile_leafAreaDensity(
   SpParams = NULL,
   z = NULL,
   gdd = NA,
-  mode = "MED",
   byCohorts = FALSE,
   bySpecies = FALSE,
   draw = TRUE,
@@ -35,7 +34,6 @@ vprofile_fuelBulkDensity(
   SpParams,
   z = NULL,
   gdd = NA,
-  mode = "MED",
   draw = TRUE,
   xlim = NULL
 )
@@ -45,7 +43,6 @@ vprofile_PARExtinction(
   SpParams,
   z = NULL,
   gdd = NA,
-  mode = "MED",
   draw = TRUE,
   xlim = c(0, 100)
 )
@@ -55,7 +52,6 @@ vprofile_SWRExtinction(
   SpParams,
   z = NULL,
   gdd = NA,
-  mode = "MED",
   draw = TRUE,
   xlim = c(0, 100)
 )
@@ -69,7 +65,6 @@ vprofile_windExtinction(
   target = "windspeed",
   z = NULL,
   gdd = NA,
-  mode = "MED",
   draw = TRUE,
   xlim = NULL
 )
@@ -82,8 +77,6 @@ vprofile_windExtinction(
 \item{z}{A numeric vector with height values.}
 
 \item{gdd}{Growth degree days.}
-
-\item{mode}{Calculation mode, either "MED" or "US".}
 
 \item{byCohorts}{Separate profiles for each cohort.}
 

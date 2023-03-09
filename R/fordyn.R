@@ -440,15 +440,15 @@ fordyn<-function(forest, soil, SpParams,
 
     
     # 4.1 Generate above-ground data
-    planted_above <- forest2aboveground(planted_forest, SpParams, NA, "MED")
+    planted_above <- forest2aboveground(planted_forest, SpParams, NA)
     row.names(planted_above) <- plant_ID(planted_forest, SpParams, treeOffset, shrubOffset)
     treeOffset <- treeOffset + nrow(planted_forest$treeData)
     shrubOffset <- shrubOffset + nrow(planted_forest$shrubData)
-    recr_above <- forest2aboveground(recr_forest, SpParams, NA, "MED")
+    recr_above <- forest2aboveground(recr_forest, SpParams, NA)
     row.names(recr_above) <- plant_ID(recr_forest, SpParams, treeOffset, shrubOffset)
     treeOffset <- treeOffset + nrow(recr_forest$treeData)
     shrubOffset <- shrubOffset + nrow(recr_forest$shrubData)
-    forest_above <- forest2aboveground(forest, SpParams, NA, "MED")
+    forest_above <- forest2aboveground(forest, SpParams, NA)
     row.names(forest_above) <- row.names(xo$cohorts)
     forest_above$LAI_live[!is.na(forest_above$DBH)] <- xo$above$LAI_live[!is.na(forest_above$DBH)]
     forest_above$LAI_expanded[!is.na(forest_above$DBH)] <- xo$above$LAI_expanded[!is.na(forest_above$DBH)]
@@ -481,10 +481,10 @@ fordyn<-function(forest, soil, SpParams,
     
     
     # 4.5 Prepare growth input for next year
-    xi <- growthInput(above = above_all,
+    xi <- .growthInput(above = above_all,
                      Z50 = c(forest$treeData$Z50, forest$shrubData$Z50),
                      Z95 = c(forest$treeData$Z95, forest$shrubData$Z95),
-                     xo$soil, SpParams, control)
+                     xo$soil, NULL, SpParams, control)
     
     # 4.6 Replace previous state for surviving cohorts
     xi$cohorts[repl_vec,] <- xo$cohorts[sel_vec,, drop=FALSE]

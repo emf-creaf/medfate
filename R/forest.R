@@ -28,7 +28,6 @@
 #' }
 #' 
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
-#' @param mode Calculation mode, either "MED" or "US".
 #' @param x The object returned by \code{summary.forest}.
 #' @param digits Minimal number of significant digits.
 #' @param ... Additional parameters for functions \code{\link{summary}} and \code{\link{print}}.
@@ -77,7 +76,7 @@ emptyforest <- function(ntree = 0, nshrub = 0) {
 }
 
 #' @rdname forest
-summary.forest<-function(object, SpParams, mode = "MED", ...) {
+summary.forest<-function(object, SpParams, ...) {
 
   ntree <- nrow(object$treeData)
   nshrub <- nrow(object$shrubData)
@@ -87,10 +86,10 @@ summary.forest<-function(object, SpParams, mode = "MED", ...) {
   selSapling <- c(object$treeData$DBH <= 5.0, rep(FALSE, nshrub))
   selShrub <- c(rep(FALSE, ntree), rep(TRUE, nshrub))
 
-  coh_N <- plant_density(object, SpParams, mode = mode)
-  coh_cov <- plant_cover(object, SpParams, mode = mode)
-  coh_lai <- plant_LAI(object, SpParams, mode= mode)
-  coh_fuel <- plant_fuel(object, SpParams, mode= mode)
+  coh_N <- plant_density(object, SpParams)
+  coh_cov <- plant_cover(object, SpParams)
+  coh_lai <- plant_LAI(object, SpParams)
+  coh_fuel <- plant_fuel(object, SpParams)
   
   s <- list()
   s["BA"] <- stand_basalArea(object)
@@ -118,8 +117,8 @@ summary.forest<-function(object, SpParams, mode = "MED", ...) {
   
   s["Phytovolume"] <- sum(plant_phytovolume(object, SpParams),na.rm=TRUE)
   
-  s["PARground"] <- light_PARground(object, SpParams, mode = mode)
-  s["SWRground"] <- light_SWRground(object, SpParams, mode = mode)
+  s["PARground"] <- light_PARground(object, SpParams)
+  s["SWRground"] <- light_SWRground(object, SpParams)
   class(s)<-c("summary.forest","list")
   return(s)
 }

@@ -1,7 +1,11 @@
 Package: medfate
 Type: Package
 Title: Mediterranean Forest Simulation
+<<<<<<< HEAD
 Version: 2.9.3
+=======
+Version: 3.0.0
+>>>>>>> leafarea
 Date: 2023-03-03
 Authors@R: c(
 	person('Miquel', 'De Cáceres', role=c('aut','cre'),

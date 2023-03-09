@@ -8,6 +8,7 @@
 #include "forestutils.h"
 #include "paramutils.h"
 #include "tissuemoisture.h"
+#include "fuelstructure.h"
 #include "hydraulics.h"
 #include "stdlib.h"
 
@@ -532,6 +533,9 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
 DataFrame paramsAllometries(DataFrame above, DataFrame SpParams, bool fillMissingSpParams) {
   IntegerVector SP = above["SP"];
   
+  NumericVector Afbt = speciesNumericParameterWithImputation(SP, SpParams, "a_fbt",fillMissingSpParams);
+  NumericVector Bfbt = speciesNumericParameterWithImputation(SP, SpParams, "b_fbt",fillMissingSpParams);
+  NumericVector Cfbt = speciesNumericParameterWithImputation(SP, SpParams, "c_fbt",fillMissingSpParams);
   NumericVector Aash = speciesNumericParameterWithImputation(SP, SpParams, "a_ash",fillMissingSpParams);
   NumericVector Bash = speciesNumericParameterWithImputation(SP, SpParams, "b_ash",fillMissingSpParams);
   NumericVector Absh = speciesNumericParameterWithImputation(SP, SpParams, "a_bsh",fillMissingSpParams);
@@ -545,7 +549,8 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams, bool fillMissin
   NumericVector Acw = speciesNumericParameterWithImputation(SP, SpParams, "a_cw",fillMissingSpParams);
   NumericVector Bcw = speciesNumericParameterWithImputation(SP, SpParams, "b_cw",fillMissingSpParams);
 
-  DataFrame paramsAllometriesdf = DataFrame::create(_["Aash"] = Aash, _["Bash"] = Bash, _["Absh"] = Absh, _["Bbsh"] = Bbsh,
+  DataFrame paramsAllometriesdf = DataFrame::create(_["Afbt"] = Afbt, _["Bfbt"] = Bfbt, _["Cfbt"] = Cfbt,
+                                                    _["Aash"] = Aash, _["Bash"] = Bash, _["Absh"] = Absh, _["Bbsh"] = Bbsh,
                                                     _["Acr"] = Acr, _["B1cr"] = B1cr, _["B2cr"] = B2cr, _["B3cr"] = B3cr,
                                                     _["C1cr"] = C1cr, _["C2cr"] = C2cr, 
                                                     _["Acw"] = Acw, _["Bcw"] = Bcw);
@@ -652,9 +657,17 @@ DataFrame internalCarbonDataFrame(DataFrame above,
 DataFrame internalMortalityDataFrame(DataFrame above) {
   int numCohorts = above.nrow();
   NumericVector N_dead(numCohorts, 0.0);
+  NumericVector N_starvation(numCohorts, 0.0);
+  NumericVector N_dessication(numCohorts, 0.0);
   NumericVector Cover_dead(numCohorts, 0.0);
+  NumericVector Cover_starvation(numCohorts, 0.0);
+  NumericVector Cover_dessication(numCohorts, 0.0);
   DataFrame df = DataFrame::create(Named("N_dead") = N_dead,
-                                   Named("Cover_dead") = Cover_dead);
+                                   Named("N_starvation") = N_starvation,
+                                   Named("N_dessication") = N_dessication,
+                                   Named("Cover_dead") = Cover_dead,
+                                   Named("Cover_starvation") = Cover_starvation,
+                                   Named("Cover_dessication") = Cover_dessication);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }
@@ -667,6 +680,7 @@ DataFrame internalAllocationDataFrame(DataFrame above,
 
   NumericVector allocationTarget(numCohorts,0.0);
   NumericVector leafAreaTarget(numCohorts,0.0);
+  NumericVector sapwoodAreaTarget(numCohorts,0.0);
   NumericVector fineRootBiomassTarget(numCohorts, 0.0);
   
   
@@ -678,6 +692,7 @@ DataFrame internalAllocationDataFrame(DataFrame above,
   if(transpirationMode=="Granier") {
     for(int c=0;c<numCohorts;c++){
       leafAreaTarget[c] = Al2As[c]*(SA[c]/10000.0);
+      sapwoodAreaTarget[c] = SA[c];
       allocationTarget[c] = Al2As[c];
       fineRootBiomassTarget[c] = fineRootBiomass[c];
     }
@@ -693,11 +708,13 @@ DataFrame internalAllocationDataFrame(DataFrame above,
       } else if(allocationStrategy=="Al2As") {
         allocationTarget[c] = Al2As[c];
       }
+      sapwoodAreaTarget[c] = SA[c];
       fineRootBiomassTarget[c] = fineRootBiomass[c];
     }
   }
   df = DataFrame::create(Named("allocationTarget") = allocationTarget,
                          Named("leafAreaTarget") = leafAreaTarget,
+                         Named("sapwoodAreaTarget") = sapwoodAreaTarget,
                          Named("fineRootBiomassTarget") = fineRootBiomassTarget);
   df.attr("row.names") = above.attr("row.names");
   return(df);
@@ -755,28 +772,300 @@ DataFrame paramsCanopy(DataFrame above, List control) {
   return(paramsCanopy);
 }
 
+// [[Rcpp::export(".spwbInput")]]
+List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame FCCSprops, 
+               DataFrame SpParams, List control) {
+  
+  
+  IntegerVector SP = above["SP"];
+  NumericVector LAI_live = above["LAI_live"];
+  NumericVector LAI_expanded = above["LAI_expanded"];
+  NumericVector LAI_dead = above["LAI_dead"];
+  NumericVector H = above["H"];
+  NumericVector DBH = above["DBH"];
+  NumericVector N = above["N"];
+  NumericVector CR = above["CR"];
+  
+  String transpirationMode = control["transpirationMode"];
+  if((transpirationMode!="Granier") && (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
+
+  bool fillMissingSpParams = control["fillMissingSpParams"];
+  String soilFunctions = control["soilFunctions"]; 
+  if((soilFunctions!="SX") && (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
+  
+  int numCohorts = SP.size();
+  for(int c=0;c<numCohorts;c++){
+    if(NumericVector::is_na(CR[c])) CR[c] = 0.5; //PATCH TO AVOID MISSING VALUES!!!!
+  }
+  
+
+  //Cohort description
+  CharacterVector nsp = speciesCharacterParameterFromIndex(SP, SpParams, "Name");
+  DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
+  cohortDescdf.attr("row.names") = above.attr("row.names");
+  
+  //Above 
+  DataFrame plantsdf = DataFrame::create(_["H"]=H, _["CR"]=CR, _["N"] = N,
+                                         _["LAI_live"]=LAI_live, 
+                                         _["LAI_expanded"] = LAI_expanded, 
+                                         _["LAI_dead"] = LAI_dead);
+  if(control["fireHazardResults"]) plantsdf.push_back(above["Loading"], "Loading");
+  plantsdf.attr("row.names") = above.attr("row.names");
+  
+  DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams, fillMissingSpParams, "spwb", transpirationMode);
+  
+  DataFrame paramsTranspirationdf;
+  if(transpirationMode=="Granier") {
+    paramsTranspirationdf = paramsTranspirationGranier(above,SpParams, fillMissingSpParams);
+  } else {
+    paramsTranspirationdf = paramsTranspirationSperry(above, soil, SpParams, paramsAnatomydf, control);
+  }
+
+  List below = paramsBelow(above, Z50, Z95, soil, 
+                           paramsAnatomydf, paramsTranspirationdf, control);
+  List belowLayers = below["belowLayers"];
+  DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(below["below"]);
+  
+  DataFrame paramsWaterStoragedf = paramsWaterStorage(above, belowLayers, SpParams, paramsAnatomydf, fillMissingSpParams);
+  
+  DataFrame paramsCanopydf;
+  List ctl = clone(control);
+  if(transpirationMode=="Granier") {
+    paramsCanopydf = List::create();
+  } else if(transpirationMode =="Sperry"){
+    paramsCanopydf = paramsCanopy(above, control);
+    if(soilFunctions=="SX") {
+      soilFunctions = "VG"; 
+      ctl["soilFunctions"] = soilFunctions;
+      Rcerr<<"Soil pedotransfer functions set to Van Genuchten ('VG').\n";
+    }
+  }
+  List input = List::create(_["control"] = ctl,
+                            _["soil"] = clone(soil),
+                            _["canopy"] = paramsCanopydf,
+                            _["cohorts"] = cohortDescdf,
+                            _["above"] = plantsdf,
+                            _["below"] = belowdf,
+                            _["belowLayers"] = belowLayers,
+                            _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
+                            _["paramsAnatomy"] = paramsAnatomydf,
+                            _["paramsInterception"] = paramsInterception(above, SpParams, control),
+                            _["paramsTranspiration"] = paramsTranspirationdf,
+                            _["paramsWaterStorage"] = paramsWaterStoragedf,
+                            _["internalPhenology"] = internalPhenologyDataFrame(above),
+                            _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
+                            _["internalFCCS"] = FCCSprops);
+  
+  input.attr("class") = CharacterVector::create("spwbInput","list");
+  return(input);
+}
+
+
+
+// [[Rcpp::export(".growthInput")]]
+List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame FCCSprops,
+                 DataFrame SpParams, List control) {
+
+  IntegerVector SP = above["SP"];
+  NumericVector LAI_live = above["LAI_live"];
+  NumericVector LAI_expanded = above["LAI_expanded"];
+  NumericVector LAI_dead = above["LAI_dead"];
+  NumericVector N = above["N"];
+  NumericVector DBH = above["DBH"];
+  NumericVector Cover = above["Cover"];
+  NumericVector H = above["H"];
+  NumericVector CR = above["CR"];
+  
+  control["cavitationRefill"] = "growth";
+  
+  String transpirationMode = control["transpirationMode"];
+  if((transpirationMode!="Granier") && (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
+
+  bool fillMissingSpParams = control["fillMissingSpParams"];
+  
+  String soilFunctions = control["soilFunctions"]; 
+  if((soilFunctions!="SX") && (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
+  
+  
+  DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams, fillMissingSpParams, "growth",transpirationMode);
+  NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
+  NumericVector SLA = paramsAnatomydf["SLA"];
+  NumericVector Al2As = paramsAnatomydf["Al2As"];
+  
+  DataFrame paramsGrowthdf = paramsGrowth(above, SpParams, control);
+  
+  DataFrame paramsAllometriesdf = paramsAllometries(above, SpParams, fillMissingSpParams);
+  
+  
+  DataFrame paramsTranspirationdf;
+  if(transpirationMode=="Granier") {
+    paramsTranspirationdf = paramsTranspirationGranier(above,SpParams, fillMissingSpParams);
+  } else {
+    paramsTranspirationdf = paramsTranspirationSperry(above, soil, SpParams, paramsAnatomydf, control);
+  }
+
+
+  int numCohorts = SP.size();
+  for(int c=0;c<numCohorts;c++){
+    if(NumericVector::is_na(CR[c])) CR[c] = 0.5; //PATCH TO AVOID MISSING VALUES!!!!
+  }
+  
+  
+  NumericVector SA(numCohorts);
+  for(int c=0;c<numCohorts;c++){
+    SA[c] = 10000.0*(LAI_live[c]/(N[c]/10000.0))/Al2As[c];//Individual SA in cm2
+  }
+  
+  
+  
+  //Cohort description
+  CharacterVector nsp = speciesCharacterParameterFromIndex(SP, SpParams, "Name");
+  DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
+  cohortDescdf.attr("row.names") = above.attr("row.names");
+  
+  DataFrame plantsdf = DataFrame::create(_["SP"]=SP, 
+                                         _["N"]=N,
+                                         _["DBH"]=DBH, 
+                                         _["Cover"] = Cover, 
+                                         _["H"]=H, 
+                                         _["CR"]=CR,
+                                         _["SA"] = SA, 
+                                         _["LAI_live"]=LAI_live, 
+                                         _["LAI_expanded"]=LAI_expanded, 
+                                         _["LAI_dead"] = LAI_dead);
+  if(control["fireHazardResults"]) plantsdf.push_back(above["Loading"], "Loading");
+  plantsdf.attr("row.names") = above.attr("row.names");
+  
+
+  // List ringList(numCohorts);
+  // for(int i=0;i<numCohorts;i++) ringList[i] = initialize_ring();
+  // ringList.attr("names") = above.attr("row.names");
+  
+  List below = paramsBelow(above, Z50, Z95, soil, 
+                           paramsAnatomydf, paramsTranspirationdf, control);
+  List belowLayers = below["belowLayers"];
+  DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(below["below"]);
+  
+  DataFrame paramsWaterStoragedf = paramsWaterStorage(above, belowLayers, SpParams, paramsAnatomydf, fillMissingSpParams);
+  
+  
+  DataFrame paramsCanopydf;
+  List ctl = clone(control);
+  if(transpirationMode=="Granier") {
+    paramsCanopydf = List::create();
+  } else if(transpirationMode =="Sperry"){
+    paramsCanopydf = paramsCanopy(above, control);
+    if(soilFunctions=="SX") {
+      soilFunctions = "VG"; 
+      ctl["soilFunctions"] = soilFunctions;
+      Rcerr<<"Soil pedotransfer functions set to Van Genuchten ('VG').\n";
+    }
+  } 
+  List input = List::create(_["control"] = ctl,
+                       _["soil"] = clone(soil),
+                       _["canopy"] = paramsCanopydf,
+                       _["cohorts"] = cohortDescdf,
+                       _["above"] = plantsdf,
+                       _["below"] = belowdf,
+                       _["belowLayers"] = belowLayers,
+                       _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
+                       _["paramsAnatomy"] = paramsAnatomydf,
+                       _["paramsInterception"] = paramsInterception(above, SpParams, control),
+                       _["paramsTranspiration"] = paramsTranspirationdf,
+                       _["paramsWaterStorage"] = paramsWaterStoragedf,
+                       _["paramsGrowth"]= paramsGrowthdf,
+                       _["paramsAllometries"] = paramsAllometriesdf,
+                       _["internalPhenology"] = internalPhenologyDataFrame(above),
+                       _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
+                       _["internalCarbon"] = internalCarbonDataFrame(plantsdf, belowdf, belowLayers,
+                                                       paramsAnatomydf, 
+                                                       paramsWaterStoragedf,
+                                                       paramsGrowthdf, control),
+                       _["internalAllocation"] = internalAllocationDataFrame(plantsdf, belowdf,
+                                                      paramsAnatomydf,
+                                                      paramsTranspirationdf, control),
+                       _["internalMortality"] = internalMortalityDataFrame(plantsdf),
+                       _["internalFCCS"] = FCCSprops);
+  
+  input.attr("class") = CharacterVector::create("growthInput","list");
+  return(input);
+}
+
+// [[Rcpp::export(".cloneInput")]]
+List cloneInput(List input) {
+  return(clone(input));
+}
+
+List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootParams){
+  DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
+  DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
+  int ntree = treeData.nrows();
+  int nshrub = shrubData.nrows();
+  NumericVector Z95(ntree+nshrub), Z50(ntree+nshrub);
+
+  NumericVector treeZ95 = treeData["Z95"];
+  NumericVector treeZ50 = treeData["Z50"];
+
+  IntegerVector treeSP, shrubSP;
+  if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
+    treeSP = Rcpp::as<Rcpp::IntegerVector>(treeData["Species"]);
+  } else {
+    CharacterVector tspecies = Rcpp::as<Rcpp::CharacterVector>(treeData["Species"]);
+    treeSP = speciesIndex(tspecies, SpParams);
+  }
+  if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
+    shrubSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);  
+  } else {
+    CharacterVector sspecies = Rcpp::as<Rcpp::CharacterVector>(shrubData["Species"]);
+    shrubSP = speciesIndex(sspecies, SpParams);
+  }
+  
+  NumericVector treeSPZ50 = speciesNumericParameterFromIndex(treeSP, SpParams, "Z50");
+  NumericVector treeSPZ95 = speciesNumericParameterFromIndex(treeSP, SpParams, "Z95");
+  for(int i=0;i<ntree;i++) {
+    Z50[i] = treeZ50[i];
+    Z95[i] = treeZ95[i];
+    if(fillMissingRootParams) {
+      if(NumericVector::is_na(Z50[i])) Z50[i] = treeSPZ50[i];
+      if(NumericVector::is_na(Z95[i])) Z95[i] = treeSPZ95[i];
+      if(NumericVector::is_na(Z50[i]) && !NumericVector::is_na(Z95[i])) Z50[i] = exp(log(Z95[i])/1.4);
+    }
+  }
+  NumericVector shrubZ95 = shrubData["Z95"];  
+  NumericVector shrubZ50 = shrubData["Z50"];  
+  NumericVector shrubSPZ50 = speciesNumericParameterFromIndex(shrubSP, SpParams, "Z50");
+  NumericVector shrubSPZ95 = speciesNumericParameterFromIndex(shrubSP, SpParams, "Z95");
+  for(int i=0;i<nshrub;i++) {
+    Z50[ntree+i] = shrubZ50[i]; 
+    Z95[ntree+i] = shrubZ95[i]; 
+    if(fillMissingRootParams) {
+      if(NumericVector::is_na(Z50[ntree+i])) Z50[ntree+i] = shrubSPZ50[i];
+      if(NumericVector::is_na(Z95[ntree+i])) Z95[ntree+i] = shrubSPZ95[i];
+      if(NumericVector::is_na(Z50[ntree+i]) && !NumericVector::is_na(Z95[ntree+i])) Z50[ntree+i] = exp(log(Z95[ntree+i])/1.4);
+    }
+  }
+
+  return(List::create(_["Z50"] = Z50, _["Z95"] = Z95));  
+}
+
 //' Input for simulation models
 //'
 //' Functions \code{forest2spwbInput} and \code{forest2growthInput} take an object of class \code{\link{forest}} 
 //' and calculate input data for functions \code{\link{spwb}}, \code{\link{pwb}} and \code{\link{growth}}, respectively. 
-//' Functions \code{spwbInput} and \code{growthInput} do the same but starting from different input data. 
-//' Function \code{forest2aboveground} calculates aboveground variables that may be used in \code{spwbInput} and \code{growthInput} functions. 
+//' Function \code{forest2aboveground} calculates aboveground variables such as leaf area index. 
 //' Function \code{forest2belowground} calculates belowground variables such as fine root distribution.
 //' 
 //' @param x An object of class \code{\link{forest}}.
 //' @param SpParams A data frame with species parameters (see \code{\link{SpParamsDefinition}} and \code{\link{SpParamsMED}}).
 //' @param gdd Growth degree days to account for leaf phenology effects (in Celsius). This should be left \code{NA} in most applications.
-//' @param mode Calculation mode, either "MED" or "US".
+//' @param loading A logical flag to indicate that fuel loading should be included (for fire hazard calculations). 
 //' @param soil An object of class \code{\link{soil}}.
 //' @param control A list with default control parameters (see \code{\link{defaultControl}}).
-//' @param above A data frame with aboveground plant information (see the return value of \code{forest2aboveground} below). In the case of \code{spwbInput} the variables should include \code{SP}, \code{N}, \code{LAI_live}, \code{LAI_dead}, \code{H} and \code{CR}. In the case of \code{growthInput} variables should include \code{DBH} and \code{Cover}.
-//' @param Z50,Z95 Numeric vectors with cohort depths (in mm) corresponding to 50\% and 95\% of fine roots.
 //' 
 //' @details
-//' Functions \code{forest2spwbInput} and \code{forest2abovegroundInput} extracts height and species identity from plant cohorts of \code{x}, 
+//' Functions \code{forest2spwbInput} and \code{forest2aboveground} extract height and species identity from plant cohorts of \code{x}, 
 //' and calculate leaf area index and crown ratio. Function \code{forest2spwbInput} also calculates the distribution of fine roots 
-//' across soil. Both \code{forest2spwbInput} and \code{spwbInput} find parameter values for each plant cohort 
-//' according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Sperry"} 
+//' across soil, and finds parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Sperry"} 
 //' the functions also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
 //' 
 //' @return 
@@ -790,9 +1079,10 @@ DataFrame paramsCanopy(DataFrame above, List control) {
 //'   \item{\code{LAI_live}: Live leaf area index (m2/m2) (one-side leaf area relative to plot area), includes leaves in winter dormant buds.}
 //'   \item{\code{LAI_expanded}: Leaf area index of expanded leaves (m2/m2) (one-side leaf area relative to plot area).}
 //'   \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
+//'   \item{\code{Loading}: Fine fuel loading (kg/m2), only if \code{loading = TRUE}.}
 //' }
 //' 
-//' Functions \code{forest2spwbInput()} and \code{spwbInput()} return a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
+//' Function \code{forest2spwbInput()} returns a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
 //'   \itemize{
 //'     \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
 //'     \item{\code{canopy}: A list of stand-level state variables.}
@@ -892,8 +1182,9 @@ DataFrame paramsCanopy(DataFrame above, List control) {
 //'       }
 //'     }
 //'     \item{\code{internalPhenology} and \code{internalWater}: data frames to store internal state variables.}
+//'     \item{\code{internalFCCS}: A data frame with fuel characteristics, according to \code{\link{fuel_FCCS}} (only if \code{fireHazardResults = TRUE}, in the control list).}
 //'   }
-//' Functions \code{forest2growthInput} and \code{growthInput} return a list of class \code{growthInput} with the same elements as \code{spwbInput}, but with additional information. 
+//' Function \code{forest2growthInput} returns a list of class \code{growthInput} with the same elements as \code{spwbInput}, but with additional information. 
 //' \itemize{
 //' \item{Element \code{above} includes the following additional columns:
 //'     \itemize{
@@ -959,18 +1250,10 @@ DataFrame paramsCanopy(DataFrame above, List control) {
 //' # Initialize soil with default soil params
 //' examplesoil = soil(defaultSoilParams())
 //' 
-//' # Rooting depths
-//' Z50 = c(exampleforestMED$treeData$Z50, exampleforestMED$shrubData$Z50)
-//' Z95 = c(exampleforestMED$treeData$Z95, exampleforestMED$shrubData$Z95)
-//' 
 //' # Initialize control parameters
 //' control = defaultControl("Granier")
 //' 
 //' # Prepare spwb input
-//' spwbInput(above, Z50, Z95, examplesoil,SpParamsMED, control)
-//' 
-//' # When starting from an object of class 'forest' the whole process
-//' # can be simplified:
 //' forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
 //'                 
 //' # Prepare input for Sperry transpiration mode
@@ -978,283 +1261,15 @@ DataFrame paramsCanopy(DataFrame above, List control) {
 //' forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
 //' 
 //' @name modelInput
-// [[Rcpp::export("spwbInput")]]
-List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame SpParams, List control) {
-  
-  
-  IntegerVector SP = above["SP"];
-  NumericVector LAI_live = above["LAI_live"];
-  NumericVector LAI_expanded = above["LAI_expanded"];
-  NumericVector LAI_dead = above["LAI_dead"];
-  NumericVector H = above["H"];
-  NumericVector DBH = above["DBH"];
-  NumericVector N = above["N"];
-  NumericVector CR = above["CR"];
-  
-  String transpirationMode = control["transpirationMode"];
-  if((transpirationMode!="Granier") && (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
-
-  bool fillMissingSpParams = control["fillMissingSpParams"];
-  String soilFunctions = control["soilFunctions"]; 
-  if((soilFunctions!="SX") && (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
-  
-  int numCohorts = SP.size();
-  for(int c=0;c<numCohorts;c++){
-    if(NumericVector::is_na(CR[c])) CR[c] = 0.5; //PATCH TO AVOID MISSING VALUES!!!!
-  }
-  
-
-  //Cohort description
-  CharacterVector nsp = speciesCharacterParameterFromIndex(SP, SpParams, "Name");
-  DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
-  cohortDescdf.attr("row.names") = above.attr("row.names");
-  
-  //Above 
-  DataFrame plantsdf = DataFrame::create(_["H"]=H, _["CR"]=CR, _["N"] = N,
-                                         _["LAI_live"]=LAI_live, 
-                                         _["LAI_expanded"] = LAI_expanded, 
-                                         _["LAI_dead"] = LAI_dead);
-  plantsdf.attr("row.names") = above.attr("row.names");
-  
-  DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams, fillMissingSpParams, "spwb", transpirationMode);
-  
-  DataFrame paramsTranspirationdf;
-  if(transpirationMode=="Granier") {
-    paramsTranspirationdf = paramsTranspirationGranier(above,SpParams, fillMissingSpParams);
-  } else {
-    paramsTranspirationdf = paramsTranspirationSperry(above, soil, SpParams, paramsAnatomydf, control);
-  }
-
-  List below = paramsBelow(above, Z50, Z95, soil, 
-                           paramsAnatomydf, paramsTranspirationdf, control);
-  List belowLayers = below["belowLayers"];
-  DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(below["below"]);
-  
-  DataFrame paramsWaterStoragedf = paramsWaterStorage(above, belowLayers, SpParams, paramsAnatomydf, fillMissingSpParams);
-  
-  DataFrame paramsCanopydf;
-  List ctl = clone(control);
-  if(transpirationMode=="Granier") {
-    paramsCanopydf = List::create();
-  } else if(transpirationMode =="Sperry"){
-    paramsCanopydf = paramsCanopy(above, control);
-    if(soilFunctions=="SX") {
-      soilFunctions = "VG"; 
-      ctl["soilFunctions"] = soilFunctions;
-      Rcerr<<"Soil pedotransfer functions set to Van Genuchten ('VG').\n";
-    }
-  }
-  List input = List::create(_["control"] = ctl,
-                            _["soil"] = clone(soil),
-                            _["canopy"] = paramsCanopydf,
-                            _["cohorts"] = cohortDescdf,
-                            _["above"] = plantsdf,
-                            _["below"] = belowdf,
-                            _["belowLayers"] = belowLayers,
-                            _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
-                            _["paramsAnatomy"] = paramsAnatomydf,
-                            _["paramsInterception"] = paramsInterception(above, SpParams, control),
-                            _["paramsTranspiration"] = paramsTranspirationdf,
-                            _["paramsWaterStorage"] = paramsWaterStoragedf,
-                            _["internalPhenology"] = internalPhenologyDataFrame(above),
-                            _["internalWater"] = internalWaterDataFrame(above, transpirationMode));
-  
-  input.attr("class") = CharacterVector::create("spwbInput","list");
-  return(input);
-}
-
-
-
-//' @rdname modelInput
-// [[Rcpp::export("growthInput")]]
-List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame SpParams, List control) {
-
-  IntegerVector SP = above["SP"];
-  NumericVector LAI_live = above["LAI_live"];
-  NumericVector LAI_expanded = above["LAI_expanded"];
-  NumericVector LAI_dead = above["LAI_dead"];
-  NumericVector N = above["N"];
-  NumericVector DBH = above["DBH"];
-  NumericVector Cover = above["Cover"];
-  NumericVector H = above["H"];
-  NumericVector CR = above["CR"];
-  
-  control["cavitationRefill"] = "growth";
-  
-  String transpirationMode = control["transpirationMode"];
-  if((transpirationMode!="Granier") && (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
-
-  bool fillMissingSpParams = control["fillMissingSpParams"];
-  
-  String soilFunctions = control["soilFunctions"]; 
-  if((soilFunctions!="SX") && (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
-  
-  
-  DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams, fillMissingSpParams, "growth",transpirationMode);
-  NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
-  NumericVector SLA = paramsAnatomydf["SLA"];
-  NumericVector Al2As = paramsAnatomydf["Al2As"];
-  
-  DataFrame paramsGrowthdf = paramsGrowth(above, SpParams, control);
-  
-  DataFrame paramsAllometriesdf = paramsAllometries(above, SpParams, fillMissingSpParams);
-  
-  
-  DataFrame paramsTranspirationdf;
-  if(transpirationMode=="Granier") {
-    paramsTranspirationdf = paramsTranspirationGranier(above,SpParams, fillMissingSpParams);
-  } else {
-    paramsTranspirationdf = paramsTranspirationSperry(above, soil, SpParams, paramsAnatomydf, control);
-  }
-
-
-  int numCohorts = SP.size();
-  for(int c=0;c<numCohorts;c++){
-    if(NumericVector::is_na(CR[c])) CR[c] = 0.5; //PATCH TO AVOID MISSING VALUES!!!!
-  }
-  
-  
-  NumericVector SA(numCohorts);
-  for(int c=0;c<numCohorts;c++){
-    SA[c] = 10000.0*(LAI_live[c]/(N[c]/10000.0))/Al2As[c];//Individual SA in cm2
-  }
-  
-
-  
-  //Cohort description
-  CharacterVector nsp = speciesCharacterParameterFromIndex(SP, SpParams, "Name");
-  DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
-  cohortDescdf.attr("row.names") = above.attr("row.names");
-  
-  DataFrame plantsdf = DataFrame::create(_["SP"]=SP, 
-                                         _["N"]=N,
-                                         _["DBH"]=DBH, 
-                                         _["Cover"] = Cover, 
-                                         _["H"]=H, 
-                                         _["CR"]=CR,
-                                         _["SA"] = SA, 
-                                         _["LAI_live"]=LAI_live, 
-                                         _["LAI_expanded"]=LAI_expanded, 
-                                         _["LAI_dead"] = LAI_dead);
-  plantsdf.attr("row.names") = above.attr("row.names");
-  
-
-  // List ringList(numCohorts);
-  // for(int i=0;i<numCohorts;i++) ringList[i] = initialize_ring();
-  // ringList.attr("names") = above.attr("row.names");
-  
-  List below = paramsBelow(above, Z50, Z95, soil, 
-                           paramsAnatomydf, paramsTranspirationdf, control);
-  List belowLayers = below["belowLayers"];
-  DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(below["below"]);
-  
-  DataFrame paramsWaterStoragedf = paramsWaterStorage(above, belowLayers, SpParams, paramsAnatomydf, fillMissingSpParams);
-  
-  
-  DataFrame paramsCanopydf;
-  List ctl = clone(control);
-  if(transpirationMode=="Granier") {
-    paramsCanopydf = List::create();
-  } else if(transpirationMode =="Sperry"){
-    paramsCanopydf = paramsCanopy(above, control);
-    if(soilFunctions=="SX") {
-      soilFunctions = "VG"; 
-      ctl["soilFunctions"] = soilFunctions;
-      Rcerr<<"Soil pedotransfer functions set to Van Genuchten ('VG').\n";
-    }
-  } 
-  List input = List::create(_["control"] = ctl,
-                       _["soil"] = clone(soil),
-                       _["canopy"] = paramsCanopydf,
-                       _["cohorts"] = cohortDescdf,
-                       _["above"] = plantsdf,
-                       _["below"] = belowdf,
-                       _["belowLayers"] = belowLayers,
-                       _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
-                       _["paramsAnatomy"] = paramsAnatomydf,
-                       _["paramsInterception"] = paramsInterception(above, SpParams, control),
-                       _["paramsTranspiration"] = paramsTranspirationdf,
-                       _["paramsWaterStorage"] = paramsWaterStoragedf,
-                       _["paramsGrowth"]= paramsGrowthdf,
-                       _["paramsAllometries"] = paramsAllometriesdf,
-                       _["internalPhenology"] = internalPhenologyDataFrame(above),
-                       _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
-                       _["internalCarbon"] = internalCarbonDataFrame(plantsdf, belowdf, belowLayers,
-                                                       paramsAnatomydf, 
-                                                       paramsWaterStoragedf,
-                                                       paramsGrowthdf, control),
-                       _["internalAllocation"] = internalAllocationDataFrame(plantsdf, belowdf,
-                                                      paramsAnatomydf,
-                                                      paramsTranspirationdf, control),
-                       _["internalMortality"] = internalMortalityDataFrame(plantsdf));
-  
-  input.attr("class") = CharacterVector::create("growthInput","list");
-  return(input);
-}
-
-// [[Rcpp::export(".cloneInput")]]
-List cloneInput(List input) {
-  return(clone(input));
-}
-
-List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootParams){
-  DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
-  DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
-  int ntree = treeData.nrows();
-  int nshrub = shrubData.nrows();
-  NumericVector Z95(ntree+nshrub), Z50(ntree+nshrub);
-
-  NumericVector treeZ95 = treeData["Z95"];
-  NumericVector treeZ50 = treeData["Z50"];
-
-  IntegerVector treeSP, shrubSP;
-  if((TYPEOF(treeData["Species"]) == INTSXP) || (TYPEOF(treeData["Species"]) == REALSXP)) {
-    treeSP = Rcpp::as<Rcpp::IntegerVector>(treeData["Species"]);
-  } else {
-    CharacterVector tspecies = Rcpp::as<Rcpp::CharacterVector>(treeData["Species"]);
-    treeSP = speciesIndex(tspecies, SpParams);
-  }
-  if((TYPEOF(shrubData["Species"]) == INTSXP) || (TYPEOF(shrubData["Species"]) == REALSXP)) {
-    shrubSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);  
-  } else {
-    CharacterVector sspecies = Rcpp::as<Rcpp::CharacterVector>(shrubData["Species"]);
-    shrubSP = speciesIndex(sspecies, SpParams);
-  }
-  
-  NumericVector treeSPZ50 = speciesNumericParameterFromIndex(treeSP, SpParams, "Z50");
-  NumericVector treeSPZ95 = speciesNumericParameterFromIndex(treeSP, SpParams, "Z95");
-  for(int i=0;i<ntree;i++) {
-    Z50[i] = treeZ50[i];
-    Z95[i] = treeZ95[i];
-    if(fillMissingRootParams) {
-      if(NumericVector::is_na(Z50[i])) Z50[i] = treeSPZ50[i];
-      if(NumericVector::is_na(Z95[i])) Z95[i] = treeSPZ95[i];
-      if(NumericVector::is_na(Z50[i]) && !NumericVector::is_na(Z95[i])) Z50[i] = exp(log(Z95[i])/1.4);
-    }
-  }
-  NumericVector shrubZ95 = shrubData["Z95"];  
-  NumericVector shrubZ50 = shrubData["Z50"];  
-  NumericVector shrubSPZ50 = speciesNumericParameterFromIndex(shrubSP, SpParams, "Z50");
-  NumericVector shrubSPZ95 = speciesNumericParameterFromIndex(shrubSP, SpParams, "Z95");
-  for(int i=0;i<nshrub;i++) {
-    Z50[ntree+i] = shrubZ50[i]; 
-    Z95[ntree+i] = shrubZ95[i]; 
-    if(fillMissingRootParams) {
-      if(NumericVector::is_na(Z50[ntree+i])) Z50[ntree+i] = shrubSPZ50[i];
-      if(NumericVector::is_na(Z95[ntree+i])) Z95[ntree+i] = shrubSPZ95[i];
-      if(NumericVector::is_na(Z50[ntree+i]) && !NumericVector::is_na(Z95[ntree+i])) Z50[ntree+i] = exp(log(Z95[ntree+i])/1.4);
-    }
-  }
-
-  return(List::create(_["Z50"] = Z50, _["Z95"] = Z95));  
-}
-
-//' @rdname modelInput
+//' @aliases spwbInput growthInput
 // [[Rcpp::export("forest2spwbInput")]]
-List forest2spwbInput(List x, List soil, DataFrame SpParams, List control, String mode = "MED") {
+List forest2spwbInput(List x, List soil, DataFrame SpParams, List control) {
   List rdc = rootDistributionComplete(x, SpParams, control["fillMissingRootParams"]);
-  DataFrame above = forest2aboveground(x, SpParams, NA_REAL, mode);
-  return(spwbInput(above, rdc["Z50"], rdc["Z95"], soil, SpParams, control));
+  bool fireHazardResults = control["fireHazardResults"];
+  DataFrame above = forest2aboveground(x, SpParams, NA_REAL, fireHazardResults);
+  DataFrame FCCSprops = R_NilValue;
+  if(fireHazardResults) FCCSprops = FCCSproperties(x, SpParams);
+  return(spwbInput(above, rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control));
 }
 
 
@@ -1262,8 +1277,11 @@ List forest2spwbInput(List x, List soil, DataFrame SpParams, List control, Strin
 // [[Rcpp::export("forest2growthInput")]]
 List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   List rdc = rootDistributionComplete(x, SpParams, control["fillMissingRootParams"]);
-  DataFrame above = forest2aboveground(x, SpParams, NA_REAL);
-  return(growthInput(above,  rdc["Z50"], rdc["Z95"], soil, SpParams, control));
+  bool fireHazardResults = control["fireHazardResults"];
+  DataFrame above = forest2aboveground(x, SpParams, NA_REAL, fireHazardResults);
+  DataFrame FCCSprops = R_NilValue;
+  if(fireHazardResults) FCCSprops = FCCSproperties(x, SpParams);
+  return(growthInput(above,  rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control));
 }
 
 //' Reset simulation inputs

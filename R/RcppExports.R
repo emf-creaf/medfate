@@ -344,7 +344,6 @@ fire_Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, win
 #' @param x An object of class \code{\link{forest}}.
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
 #' @param parName A string with a parameter name.
-#' @param mode Calculation mode, either "MED" or "US".
 #' @param gdd Growth degree days (to account for leaf phenology effects).
 #' @param AET Actual annual evapotranspiration (in mm).
 #' @param smallBranchDecompositionRate Decomposition rate of small branches.
@@ -421,8 +420,8 @@ plant_largerTreeBasalArea <- function(x, SpParams, self_proportion = 0.5) {
 }
 
 #' @rdname plant_values
-plant_cover <- function(x, SpParams, mode = "MED") {
-    .Call(`_medfate_cohortCover`, x, SpParams, mode)
+plant_cover <- function(x, SpParams) {
+    .Call(`_medfate_cohortCover`, x, SpParams)
 }
 
 #' @rdname plant_values
@@ -436,8 +435,8 @@ plant_speciesName <- function(x, SpParams) {
 }
 
 #' @rdname plant_values
-plant_density <- function(x, SpParams, mode = "MED") {
-    .Call(`_medfate_cohortDensity`, x, SpParams, mode)
+plant_density <- function(x, SpParams) {
+    .Call(`_medfate_cohortDensity`, x, SpParams)
 }
 
 #' @rdname plant_values
@@ -446,43 +445,43 @@ plant_height <- function(x, SpParams) {
 }
 
 #' @rdname plant_values
-plant_individualArea <- function(x, SpParams, mode = "MED") {
-    .Call(`_medfate_cohortIndividualArea`, x, SpParams, mode)
+plant_individualArea <- function(x, SpParams) {
+    .Call(`_medfate_cohortIndividualArea`, x, SpParams)
 }
 
 #' @rdname plant_values
-plant_crownRatio <- function(x, SpParams, mode = "MED") {
-    .Call(`_medfate_cohortCrownRatio`, x, SpParams, mode)
+plant_crownRatio <- function(x, SpParams) {
+    .Call(`_medfate_cohortCrownRatio`, x, SpParams)
 }
 
 #' @rdname plant_values
-plant_crownBaseHeight <- function(x, SpParams, mode = "MED") {
-    .Call(`_medfate_cohortCrownBaseHeight`, x, SpParams, mode)
+plant_crownBaseHeight <- function(x, SpParams) {
+    .Call(`_medfate_cohortCrownBaseHeight`, x, SpParams)
 }
 
 #' @rdname plant_values
-plant_crownLength <- function(x, SpParams, mode = "MED") {
-    .Call(`_medfate_cohortCrownLength`, x, SpParams, mode)
+plant_crownLength <- function(x, SpParams) {
+    .Call(`_medfate_cohortCrownLength`, x, SpParams)
 }
 
 #' @rdname plant_values
-plant_foliarBiomass <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_cohortFoliarBiomass`, x, SpParams, gdd, mode)
+plant_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
+    .Call(`_medfate_cohortFoliarBiomass`, x, SpParams, gdd)
 }
 
 #' @rdname plant_values
-plant_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED") {
-    .Call(`_medfate_cohortFuel`, x, SpParams, gdd, includeDead, mode)
+plant_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
+    .Call(`_medfate_cohortFuel`, x, SpParams, gdd, includeDead)
 }
 
 #' @rdname plant_values
-plant_equilibriumLeafLitter <- function(x, SpParams, AET = 800, mode = "MED") {
-    .Call(`_medfate_cohortEquilibriumLeafLitter`, x, SpParams, AET, mode)
+plant_equilibriumLeafLitter <- function(x, SpParams, AET = 800) {
+    .Call(`_medfate_cohortEquilibriumLeafLitter`, x, SpParams, AET)
 }
 
 #' @rdname plant_values
-plant_equilibriumSmallBranchLitter <- function(x, SpParams, smallBranchDecompositionRate = 0.81, mode = "MED") {
-    .Call(`_medfate_cohortEquilibriumSmallBranchLitter`, x, SpParams, smallBranchDecompositionRate, mode)
+plant_equilibriumSmallBranchLitter <- function(x, SpParams, smallBranchDecompositionRate = 0.81) {
+    .Call(`_medfate_cohortEquilibriumSmallBranchLitter`, x, SpParams, smallBranchDecompositionRate)
 }
 
 #' @rdname plant_values
@@ -491,8 +490,8 @@ plant_phytovolume <- function(x, SpParams) {
 }
 
 #' @rdname plant_values
-plant_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED", bounded = TRUE) {
-    .Call(`_medfate_cohortLAI`, x, SpParams, gdd, mode, bounded)
+plant_LAI <- function(x, SpParams, gdd = NA_real_, bounded = TRUE) {
+    .Call(`_medfate_cohortLAI`, x, SpParams, gdd, bounded)
 }
 
 #' Species description functions
@@ -503,7 +502,6 @@ plant_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED", bounded = TRUE)
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
 #' @param gdd Growth degree days (to account for leaf phenology effects).
 #' @param includeDead A flag to indicate that standing dead fuels (dead branches) are included.
-#' @param mode Calculation mode, either "MED" or "US".
 #' @param species A character vector of species names.
 #' @param parName A string with a parameter name.
 #' @param fillMissing A boolean flag to try imputation on missing values.
@@ -546,23 +544,23 @@ species_basalArea <- function(x, SpParams) {
 }
 
 #' @rdname species_values
-species_cover <- function(x, SpParams, mode = "MED") {
-    .Call(`_medfate_speciesCover`, x, SpParams, mode)
+species_cover <- function(x, SpParams) {
+    .Call(`_medfate_speciesCover`, x, SpParams)
 }
 
 #' @rdname species_values
-species_density <- function(x, SpParams, mode = "MED") {
-    .Call(`_medfate_speciesDensity`, x, SpParams, mode)
+species_density <- function(x, SpParams) {
+    .Call(`_medfate_speciesDensity`, x, SpParams)
 }
 
 #' @rdname species_values
-species_foliarBiomass <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_speciesFoliarBiomass`, x, SpParams, gdd, mode)
+species_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
+    .Call(`_medfate_speciesFoliarBiomass`, x, SpParams, gdd)
 }
 
 #' @rdname species_values
-species_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED") {
-    .Call(`_medfate_speciesFuel`, x, SpParams, gdd, includeDead, mode)
+species_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
+    .Call(`_medfate_speciesFuel`, x, SpParams, gdd, includeDead)
 }
 
 #' @rdname species_values
@@ -571,8 +569,8 @@ species_phytovolume <- function(x, SpParams) {
 }
 
 #' @rdname species_values
-species_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED", bounded = TRUE) {
-    .Call(`_medfate_speciesLAI`, x, SpParams, gdd, mode, bounded)
+species_LAI <- function(x, SpParams, gdd = NA_real_, bounded = TRUE) {
+    .Call(`_medfate_speciesLAI`, x, SpParams, gdd, bounded)
 }
 
 #' @rdname stand_values
@@ -581,8 +579,8 @@ stand_basalArea <- function(x, minDBH = 7.5) {
 }
 
 #' @rdname stand_values
-stand_foliarBiomass <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_standFoliarBiomass`, x, SpParams, gdd, mode)
+stand_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
+    .Call(`_medfate_standFoliarBiomass`, x, SpParams, gdd)
 }
 
 #' @rdname stand_values
@@ -591,34 +589,34 @@ stand_phytovolume <- function(x, SpParams) {
 }
 
 #' @rdname stand_values
-stand_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED") {
-    .Call(`_medfate_standFuel`, x, SpParams, gdd, includeDead, mode)
+stand_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
+    .Call(`_medfate_standFuel`, x, SpParams, gdd, includeDead)
 }
 
 #' @rdname stand_values
-stand_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED", bounded = TRUE) {
-    .Call(`_medfate_standLAI`, x, SpParams, gdd, mode, bounded)
+stand_LAI <- function(x, SpParams, gdd = NA_real_, bounded = TRUE) {
+    .Call(`_medfate_standLAI`, x, SpParams, gdd, bounded)
 }
 
 .LAIdistributionVectors <- function(z, LAI, H, CR) {
     .Call(`_medfate_LAIdistributionVectors`, z, LAI, H, CR)
 }
 
-.LAIdistribution <- function(z, x, SpParams, gdd = NA_real_, mode = "MED", bounded = TRUE) {
-    .Call(`_medfate_LAIdistribution`, z, x, SpParams, gdd, mode, bounded)
+.LAIdistribution <- function(z, x, SpParams, gdd = NA_real_, bounded = TRUE) {
+    .Call(`_medfate_LAIdistribution`, z, x, SpParams, gdd, bounded)
 }
 
 .LAIprofileVectors <- function(z, LAI, H, CR) {
     .Call(`_medfate_LAIprofileVectors`, z, LAI, H, CR)
 }
 
-.LAIprofile <- function(z, x, SpParams, gdd = NA_real_, mode = "MED", bounded = TRUE) {
-    .Call(`_medfate_LAIprofile`, z, x, SpParams, gdd, mode, bounded)
+.LAIprofile <- function(z, x, SpParams, gdd = NA_real_, bounded = TRUE) {
+    .Call(`_medfate_LAIprofile`, z, x, SpParams, gdd, bounded)
 }
 
 #' @rdname modelInput
-forest2aboveground <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_forest2aboveground`, x, SpParams, gdd, mode)
+forest2aboveground <- function(x, SpParams, gdd = NA_real_, loading = FALSE) {
+    .Call(`_medfate_forest2aboveground`, x, SpParams, gdd, loading)
 }
 
 #' @rdname modelInput
@@ -642,8 +640,8 @@ forest2belowground <- function(x, soil, SpParams) {
     .Call(`_medfate_EMCSimard`, fuelTemperature, fuelHumidity)
 }
 
-.woodyFuelProfile <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_woodyFuelProfile`, z, x, SpParams, gdd, mode)
+.woodyFuelProfile <- function(z, x, SpParams, gdd = NA_real_) {
+    .Call(`_medfate_woodyFuelProfile`, z, x, SpParams, gdd)
 }
 
 .layerCohortFuelLoading <- function(minHeight, maxHeight, cohortLoading, H, CR) {
@@ -681,7 +679,6 @@ forest2belowground <- function(x, soil, SpParams) {
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
 #' @param cohortFMC A numeric vector of (actual) fuel moisture content by cohort.
 #' @param gdd Growth degree-days.
-#' @param mode Calculation mode, either "MED" or "US".
 #' @param heightProfileStep Precision for the fuel bulk density profile.
 #' @param maxHeightProfile Maximum height for the fuel bulk density profile.
 #' 
@@ -753,8 +750,8 @@ forest2belowground <- function(x, soil, SpParams) {
 #' fuel_windAdjustmentFactor(fccs$htc[2], fccs$hbc[1], fccs$htc[1], fccs$cover[1])
 #' 
 #' @name fuel_properties
-fuel_stratification <- function(object, SpParams, gdd = NA_real_, mode = "MED", heightProfileStep = 10.0, maxHeightProfile = 5000.0, bulkDensityThreshold = 0.05) {
-    .Call(`_medfate_fuelLiveStratification`, object, SpParams, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
+fuel_stratification <- function(object, SpParams, gdd = NA_real_, heightProfileStep = 10.0, maxHeightProfile = 5000.0, bulkDensityThreshold = 0.05) {
+    .Call(`_medfate_fuelLiveStratification`, object, SpParams, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
 }
 
 #' @rdname fuel_properties
@@ -766,8 +763,8 @@ fuel_stratification <- function(object, SpParams, gdd = NA_real_, mode = "MED", 
 #'     \item{\code{"profile"}: As the difference of base and top heights in bulk density profiles.}  
 #'     \item{\code{"absoluteprofile"}: As the difference of absolute base and absolute top heights in bulk density profiles.}  
 #'   }
-fuel_FCCS <- function(object, SpParams, cohortFMC = as.numeric( c()), gdd = NA_real_, mode = "MED", heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05, depthMode = "crownaverage") {
-    .Call(`_medfate_FCCSproperties`, object, SpParams, cohortFMC, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold, depthMode)
+fuel_FCCS <- function(object, SpParams, cohortFMC = as.numeric( c()), gdd = NA_real_, heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05, depthMode = "crownaverage") {
+    .Call(`_medfate_FCCSproperties`, object, SpParams, cohortFMC, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold, depthMode)
 }
 
 #' Mortality
@@ -1534,7 +1531,6 @@ hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInpu
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
 #' @param z A numeric vector with height values.
 #' @param gdd Growth degree days.
-#' @param mode Calculation mode, either "MED" or "US".
 #' 
 #' @details
 #' Functions for short-wave radiation are adapted from Anten & Bastiaans (2016), 
@@ -1619,34 +1615,34 @@ hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInpu
 #' par(oldpar)
 #'   
 #' @name light
-light_PARcohort <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_PARcohort`, x, SpParams, gdd, mode)
+light_PARcohort <- function(x, SpParams, gdd = NA_real_) {
+    .Call(`_medfate_PARcohort`, x, SpParams, gdd)
 }
 
-.parheight <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_parheight`, z, x, SpParams, gdd, mode)
-}
-
-#' @rdname light
-light_PARground <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_PARground`, x, SpParams, gdd, mode)
-}
-
-.swrheight <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_swrheight`, z, x, SpParams, gdd, mode)
+.parheight <- function(z, x, SpParams, gdd = NA_real_) {
+    .Call(`_medfate_parheight`, z, x, SpParams, gdd)
 }
 
 #' @rdname light
-light_SWRground <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_SWRground`, x, SpParams, gdd, mode)
+light_PARground <- function(x, SpParams, gdd = NA_real_) {
+    .Call(`_medfate_PARground`, x, SpParams, gdd)
 }
 
-.parExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_parExtinctionProfile`, z, x, SpParams, gdd, mode)
+.swrheight <- function(z, x, SpParams, gdd = NA_real_) {
+    .Call(`_medfate_swrheight`, z, x, SpParams, gdd)
 }
 
-.swrExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
-    .Call(`_medfate_swrExtinctionProfile`, z, x, SpParams, gdd, mode)
+#' @rdname light
+light_SWRground <- function(x, SpParams, gdd = NA_real_) {
+    .Call(`_medfate_SWRground`, x, SpParams, gdd)
+}
+
+.parExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_) {
+    .Call(`_medfate_parExtinctionProfile`, z, x, SpParams, gdd)
+}
+
+.swrExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_) {
+    .Call(`_medfate_swrExtinctionProfile`, z, x, SpParams, gdd)
 }
 
 #' @rdname light
@@ -1688,28 +1684,36 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
     .Call(`_medfate_paramsBelow`, above, Z50, Z95, soil, paramsAnatomydf, paramsTranspirationdf, control)
 }
 
+.spwbInput <- function(above, Z50, Z95, soil, FCCSprops, SpParams, control) {
+    .Call(`_medfate_spwbInput`, above, Z50, Z95, soil, FCCSprops, SpParams, control)
+}
+
+.growthInput <- function(above, Z50, Z95, soil, FCCSprops, SpParams, control) {
+    .Call(`_medfate_growthInput`, above, Z50, Z95, soil, FCCSprops, SpParams, control)
+}
+
+.cloneInput <- function(input) {
+    .Call(`_medfate_cloneInput`, input)
+}
+
 #' Input for simulation models
 #'
 #' Functions \code{forest2spwbInput} and \code{forest2growthInput} take an object of class \code{\link{forest}} 
 #' and calculate input data for functions \code{\link{spwb}}, \code{\link{pwb}} and \code{\link{growth}}, respectively. 
-#' Functions \code{spwbInput} and \code{growthInput} do the same but starting from different input data. 
-#' Function \code{forest2aboveground} calculates aboveground variables that may be used in \code{spwbInput} and \code{growthInput} functions. 
+#' Function \code{forest2aboveground} calculates aboveground variables such as leaf area index. 
 #' Function \code{forest2belowground} calculates belowground variables such as fine root distribution.
 #' 
 #' @param x An object of class \code{\link{forest}}.
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsDefinition}} and \code{\link{SpParamsMED}}).
 #' @param gdd Growth degree days to account for leaf phenology effects (in Celsius). This should be left \code{NA} in most applications.
-#' @param mode Calculation mode, either "MED" or "US".
+#' @param loading A logical flag to indicate that fuel loading should be included (for fire hazard calculations). 
 #' @param soil An object of class \code{\link{soil}}.
 #' @param control A list with default control parameters (see \code{\link{defaultControl}}).
-#' @param above A data frame with aboveground plant information (see the return value of \code{forest2aboveground} below). In the case of \code{spwbInput} the variables should include \code{SP}, \code{N}, \code{LAI_live}, \code{LAI_dead}, \code{H} and \code{CR}. In the case of \code{growthInput} variables should include \code{DBH} and \code{Cover}.
-#' @param Z50,Z95 Numeric vectors with cohort depths (in mm) corresponding to 50\% and 95\% of fine roots.
 #' 
 #' @details
-#' Functions \code{forest2spwbInput} and \code{forest2abovegroundInput} extracts height and species identity from plant cohorts of \code{x}, 
+#' Functions \code{forest2spwbInput} and \code{forest2aboveground} extract height and species identity from plant cohorts of \code{x}, 
 #' and calculate leaf area index and crown ratio. Function \code{forest2spwbInput} also calculates the distribution of fine roots 
-#' across soil. Both \code{forest2spwbInput} and \code{spwbInput} find parameter values for each plant cohort 
-#' according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Sperry"} 
+#' across soil, and finds parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Sperry"} 
 #' the functions also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
 #' 
 #' @return 
@@ -1723,9 +1727,10 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
 #'   \item{\code{LAI_live}: Live leaf area index (m2/m2) (one-side leaf area relative to plot area), includes leaves in winter dormant buds.}
 #'   \item{\code{LAI_expanded}: Leaf area index of expanded leaves (m2/m2) (one-side leaf area relative to plot area).}
 #'   \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
+#'   \item{\code{Loading}: Fine fuel loading (kg/m2), only if \code{loading = TRUE}.}
 #' }
 #' 
-#' Functions \code{forest2spwbInput()} and \code{spwbInput()} return a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
+#' Function \code{forest2spwbInput()} returns a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
 #'   \itemize{
 #'     \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
 #'     \item{\code{canopy}: A list of stand-level state variables.}
@@ -1825,8 +1830,9 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
 #'       }
 #'     }
 #'     \item{\code{internalPhenology} and \code{internalWater}: data frames to store internal state variables.}
+#'     \item{\code{internalFCCS}: A data frame with fuel characteristics, according to \code{\link{fuel_FCCS}} (only if \code{fireHazardResults = TRUE}, in the control list).}
 #'   }
-#' Functions \code{forest2growthInput} and \code{growthInput} return a list of class \code{growthInput} with the same elements as \code{spwbInput}, but with additional information. 
+#' Function \code{forest2growthInput} returns a list of class \code{growthInput} with the same elements as \code{spwbInput}, but with additional information. 
 #' \itemize{
 #' \item{Element \code{above} includes the following additional columns:
 #'     \itemize{
@@ -1892,18 +1898,10 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
 #' # Initialize soil with default soil params
 #' examplesoil = soil(defaultSoilParams())
 #' 
-#' # Rooting depths
-#' Z50 = c(exampleforestMED$treeData$Z50, exampleforestMED$shrubData$Z50)
-#' Z95 = c(exampleforestMED$treeData$Z95, exampleforestMED$shrubData$Z95)
-#' 
 #' # Initialize control parameters
 #' control = defaultControl("Granier")
 #' 
 #' # Prepare spwb input
-#' spwbInput(above, Z50, Z95, examplesoil,SpParamsMED, control)
-#' 
-#' # When starting from an object of class 'forest' the whole process
-#' # can be simplified:
 #' forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
 #'                 
 #' # Prepare input for Sperry transpiration mode
@@ -1911,22 +1909,9 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
 #' forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
 #' 
 #' @name modelInput
-spwbInput <- function(above, Z50, Z95, soil, SpParams, control) {
-    .Call(`_medfate_spwbInput`, above, Z50, Z95, soil, SpParams, control)
-}
-
-#' @rdname modelInput
-growthInput <- function(above, Z50, Z95, soil, SpParams, control) {
-    .Call(`_medfate_growthInput`, above, Z50, Z95, soil, SpParams, control)
-}
-
-.cloneInput <- function(input) {
-    .Call(`_medfate_cloneInput`, input)
-}
-
-#' @rdname modelInput
-forest2spwbInput <- function(x, soil, SpParams, control, mode = "MED") {
-    .Call(`_medfate_forest2spwbInput`, x, soil, SpParams, control, mode)
+#' @aliases spwbInput growthInput
+forest2spwbInput <- function(x, soil, SpParams, control) {
+    .Call(`_medfate_forest2spwbInput`, x, soil, SpParams, control)
 }
 
 #' @rdname modelInput
