@@ -18,3 +18,4 @@
 ^vignettes/parametrization/*$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
+^LICENSE\.md$
