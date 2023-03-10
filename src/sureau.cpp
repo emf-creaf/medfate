@@ -12,6 +12,110 @@ double temp2SVP(double TD) {
 double vapourPressureFromRH(double T, double RH) {
   return(temp2SVP(T)*(RH/100.0));
 }
+double turgor_comp(double PiFT, double Esymp, double Rstemp) {
+  return(-1.0*PiFT - Esymp * Rstemp);
+}
+double PLCPrime_comp(double plc, double slope) {
+  return(-1.0*slope/25.0 * plc/100 * (1.0 - plc/100));
+}
+double PLC_comp(double Pmin, double slope, double P50){
+  return (100.0 / (1.0 + exp(slope / 25.0 * (Pmin - P50))));
+}
+double gCrown_comp(double gCrown0, double windSpeed){
+  windSpeed=  std::max(0.1, windSpeed); //# to avoid very high conductance values 
+  return(gCrown0*pow(windSpeed,0.6));
+}
+
+double gmin_comp(double leafTemperature, double gmin_20, 
+                 double TPhase, double Q10_1, double Q10_2, bool gminTempOff=false) {
+  double gmin = NA_REAL;
+  if(!gminTempOff){
+    if (leafTemperature<= TPhase) {
+      gmin = gmin_20 * pow(Q10_1,(leafTemperature - 20.0) / 10.0);
+    } else if (leafTemperature > TPhase) {
+      gmin = gmin_20 * pow(Q10_1, (TPhase - 20.0) / 10.0) * pow(Q10_2, (leafTemperature- TPhase) / 10.0);
+    }
+  } else if(gminTempOff) {
+    gmin = gmin_20;
+  }
+  return(gmin);
+}
+double Emin_comp(double gmin, double gBL, double gCrown, 
+                 double VPD, double airPressure =101.3) {
+  double gmintot = 1.0/(1.0/gmin+ 1.0/gBL + 1.0/gCrown);
+  return(gmintot * VPD /airPressure); 
+}
+
+NumericVector regulFact_comp(double psi, List params, String regulationType) {
+  
+  
+  double stomatalClosure = NA_REAL;
+  double regulFact = NA_REAL;
+  double regulFactPrime = NA_REAL;
+  
+  if(regulationType == "PiecewiseLinear") {
+    double PsiStartClosing = params["PsiStartClosing"];
+    double PsiClose = params["PsiClose"];
+    if (psi > PsiStartClosing) {
+      stomatalClosure = 0.0;
+      regulFact = 1.0;
+      regulFactPrime = 0.0;
+    } else if (psi > PsiClose) {
+      stomatalClosure = 1.0;
+      regulFact = (psi - PsiClose) / (PsiStartClosing - PsiClose);
+      regulFactPrime = 1.0 / (PsiStartClosing - PsiClose);
+    } else {
+      stomatalClosure = 2.0;
+      regulFact = 0.0;
+      regulFactPrime = 0.0;
+    }
+  } else if (regulationType == "Sigmoid") {
+    double slope_gs = params["slope_gs"];
+    double P50_gs = params["P50_gs"];
+    double PL_gs = 1.0 / (1.0 + exp(slope_gs / 25.0 * (psi - P50_gs)));
+    regulFact = 1.0 - PL_gs;
+    double al = slope_gs / 25.0;
+    regulFactPrime = al * PL_gs * regulFact;
+    //# regulFactPrime = al*exp(-al*(psi-P50_gs)) / ((1+exp(-al*(psi-P50_gs)))^2) # formulation in psi (same but slower to compute)
+  } else if (regulationType == "Turgor") {
+    double turgorPressureAtGsMax = params["turgorPressureAtGsMax"];
+    double epsilonSym_Leaf = params["epsilonSym_Leaf"];
+    double PiFullTurgor_Leaf = params["PiFullTurgor_Leaf"];
+    double rs = symplasticRelativeWaterContent(psi, PiFullTurgor_Leaf, epsilonSym_Leaf);
+    double turgor = turgor_comp(PiFullTurgor_Leaf, epsilonSym_Leaf, rs);
+    regulFact = std::max(0.0, std::min(1.0, turgor / turgorPressureAtGsMax));
+    if((regulFact == 1.0) || (regulFact == 0.0)) {
+      regulFactPrime = 0.0;
+    } else {
+      regulFactPrime = 0.0;// # TODO insert the derivative to compute regulFactPrime
+    }
+  }
+  NumericVector res = NumericVector::create(_["regulFact"] = regulFact, 
+                                            _["stomatalClosure"] = stomatalClosure, 
+                                            _["regulFactPrime"] = regulFactPrime);
+  return(res);
+}
+
+
+
+//# stomatal conductance calculation with Jarvis type formulations
+void calculate_gsJarvis(List WBveg, double PAR, int option = 1){
+  List params  = WBveg["params"];
+  double JarvisPAR = params["JarvisPAR"];
+  double gsMax = params["gsMax"];
+  double gsNight = params["gsNight"];
+  double gsMax2, gsNight2;
+  if (option == 1) { //# temperature effect on gs
+    double tempEff = 1.0/(1.0 + pow((((double) WBveg["leafTemperature"]) - ((double) params["Tgs_optim"]))/((double) params["Tgs_sens"]), 2.0));
+    gsMax2    = std::max(0.0, gsMax * tempEff);
+    gsNight2  = std::max(0.0, gsNight * tempEff);
+  } else {
+    gsMax2    = std::max(0.0, gsMax);
+    gsNight2  = std::max(0.0, gsNight);
+  }
+  WBveg["gs_bound"] = gsNight2 + (gsMax2 - gsNight2) * (1.0 - exp(-1.0*JarvisPAR*PAR));
+}
+
 
 //#interpolate climate values between two WBclim objects
 List interp_WBclim(List clim1, List clim2, double p=0.5) {
@@ -73,7 +177,7 @@ void update_soilWater(List WBsoil, NumericVector fluxEvap) {
   update_soilConductanceAndPsi(WBsoil);
 }
 
-
+// # Update plant conductances
 void update_kplant(List WBveg, List WBsoil) {
   List params = as<Rcpp::List>(WBveg["params"]);
   
@@ -132,66 +236,80 @@ void compute_evaporationG(List WBsoil, double RHair, double Tair,
   update_soilConductanceAndPsi(WBsoil);
 }
 
-double turgor_comp(double PiFT, double Esymp, double Rstemp) {
-  return(-1.0*PiFT - Esymp * Rstemp);
-}
-
-List compute_regulFact(double psi, List params, String regulationType) {
-  
-  
-  double stomatalClosure = NA_REAL;
-  double regulFact = NA_REAL;
-  double regulFactPrime = NA_REAL;
-  
-  if(regulationType == "PiecewiseLinear") {
-    double PsiStartClosing = params["PsiStartClosing"];
-    double PsiClose = params["PsiClose"];
-    if (psi > PsiStartClosing) {
-      stomatalClosure = 0.0;
-      regulFact = 1.0;
-      regulFactPrime = 0.0;
-    } else if (psi > PsiClose) {
-      stomatalClosure = 1.0;
-      regulFact = (psi - PsiClose) / (PsiStartClosing - PsiClose);
-      regulFactPrime = 1.0 / (PsiStartClosing - PsiClose);
-    } else {
-      stomatalClosure = 2.0;
-      regulFact = 0.0;
-      regulFactPrime = 0.0;
-    }
-  } else if (regulationType == "Sigmoid") {
-    double slope_gs = params["slope_gs"];
-    double P50_gs = params["P50_gs"];
-    double PL_gs = 1.0 / (1.0 + exp(slope_gs / 25.0 * (psi - P50_gs)));
-    regulFact = 1.0 - PL_gs;
-    double al = slope_gs / 25.0;
-    regulFactPrime = al * PL_gs * regulFact;
-   //# regulFactPrime = al*exp(-al*(psi-P50_gs)) / ((1+exp(-al*(psi-P50_gs)))^2) # formulation in psi (same but slower to compute)
-  } else if (regulationType == "Turgor") {
-    double turgorPressureAtGsMax = params["turgorPressureAtGsMax"];
-    double epsilonSym_Leaf = params["epsilonSym_Leaf"];
-    double PiFullTurgor_Leaf = params["PiFullTurgor_Leaf"];
-    double rs = symplasticRelativeWaterContent(psi, PiFullTurgor_Leaf, epsilonSym_Leaf);
-    double turgor = turgor_comp(PiFullTurgor_Leaf, epsilonSym_Leaf, rs);
-    regulFact = std::max(0.0, std::min(1.0, turgor / turgorPressureAtGsMax));
-    if((regulFact == 1.0) || (regulFact == 0.0)) {
-      regulFactPrime = 0.0;
-    } else {
-      regulFactPrime = 0.0;// # TODO insert the derivative to compute regulFactPrime
-    }
-  }
-  List res = List::create(_["regulFact"] = regulFact, 
-                          _["stomatalClosure"] = stomatalClosure, 
-                          _["regulFactPrime"] = regulFactPrime);
-  return(res);
-}
 
 
-double PLCPrime_comp(double plc, double slope) {
-  return(-1.0*slope/25.0 * plc/100 * (1.0 - plc/100));
-}
-double PLC_comp(double Pmin, double slope, double P50){
-  return (100.0 / (1.0 + exp(slope / 25.0 * (Pmin - P50))));
+
+void compute_transpiration(List WBveg, List WBclim, double Nhours, NumericVector opt, String stomatalRegFormulation) {
+  List params  = WBveg["params"];
+  
+  //# calculate Tleaf, leafVPD and gBL
+  double Einst= ((double) WBveg["Elim"]) + ((double) WBveg["Emin"]);
+
+  // # calculate Tleaf, leafVPD and gBL
+  NumericVector TGbl_Leaf = compute_Tleaf(Tair=WBclim$Tair_mean,
+                               PAR=WBclim$PAR,
+                               POTENTIAL_PAR = WBclim$Potential_PAR,
+                               WS = WBclim$WS,
+                               RH = WBclim$RHair_mean,
+                               gs = WBveg$gs_lim,
+                               g_cuti = WBveg$gmin,
+                               PsiLeaf =WBveg$Psi_LSym, 
+                               leaf_size=WBveg$params$leaf_size,
+                               leaf_angle=WBveg$params$leaf_angle,
+                               TurnOffEB=F);
+      
+  WBveg["leafTemperature"] = TGbl_Leaf[0];
+  WBveg["gBL"] = TGbl_Leaf[1];
+  WBveg["leafVPD"] = TGbl_Leaf[2];
+    
+  //# calculate gcrown
+  WBveg["gCrown"]  = gCrown_comp((double) params["gCrown0"], (double) WBclim["WS"]);
+      
+  //# Leaf cuticular conductances and cuticular transpiration
+  WBveg["gmin"] = gmin_comp((double) WBveg["leafTemperature"], 
+                            (double) params["gmin20"], (double) params["TPhase_gmin"],
+                            (double) params["Q10_1_gmin"], (double) params["Q10_2_gmin"]);
+  WBveg["Emin"] = Emin_comp((double) WBveg["gmin"], (double) WBveg["gBL"], 
+                            (double) WBveg["gCrown"], (double) WBveg["leafVPD"]);
+  //# Stem cuticular transpiration
+  WBveg["Emin_S"] =  ((double) params["fTRBToLeaf"]) * Emin_comp((double) WBveg["gmin_S"], (double) WBveg["gBL"], 
+                                                                 (double) WBveg["gCrown"], (double) WBclim["VPD"]);
+  // #compute current stomatal regulation
+  NumericVector regul = regulFact_comp(WBveg["Psi_LSym"], params, stomatalRegFormulation);
+  WBveg["regulFact"] = regul["regulFact"];
+      
+  //# calculate canopy Transpiration with no regulation
+  calculate_gsJarvis(WBveg, (double) WBclim["PAR"], option=2);// # calculate gs_bound
+  WBveg["gcanopy_bound"]  = 1.0/(1.0/((double) WBveg["gCrown"]) + 1.0/((double) WBveg["gs_bound"]) + 1.0/((double) WBveg["gBL"]));
+  WBveg["Ebound"] = ((double) WBveg["gcanopy_bound"]) * ((double) WBveg["leafVPD"]) / 101.3;
+
+  //# calculate canopy transpiration with current regulation
+  WBveg["gs_lim"] = ((double) WBveg["gs_bound"]) * ((double) WBveg["regulFact"]);
+  WBveg["gcanopy_lim"] = 1.0/(1.0/WBveg["gCrown"] + 1.0/WBveg["gs_lim"] + 1.0/WBveg["gBL"]); // # NB: gcanopy_lim =0 when gs_lim=0 (1/(1+1/0)=0 in R)
+  WBveg["Elim"] = ((double) WBveg["gcanopy_lim"]) * ((double) WBveg["leafVPD"])/ 101.3;   
+  double gs_lim_prime = ((double) WBveg["gs_bound"]) * ((double) regul["regulFactPrime"]);
+  double dbxmin = 1e-100;
+  WBveg["Eprime"] = ((double) WBveg["Elim"]) * gs_lim_prime /(WBveg$gs_lim*(1.0+WBveg$gs_lim*(1.0/WBveg$gCrown+1.0/WBveg$gBL))+dbxmin);
+        
+        
+  //# update Tleaf according to new conductance to avoid large gaps (comestic)
+  TGbl_Leaf = compute.Tleaf(Tair=WBclim$Tair_mean,
+                                   PAR=WBclim$PAR,
+                                   POTENTIAL_PAR = WBclim$Potential_PAR,
+                                   WS = WBclim$WS,
+                                   RH = WBclim$RHair_mean,
+                                   gs = WBveg$gs_lim,
+                                   g_cuti = WBveg$gmin,
+                                   PsiLeaf =WBveg$Psi_LSym, 
+                                   leaf_size=WBveg$params$leaf_size,
+                                   leaf_angle=WBveg$params$leaf_angle,
+                                   TurnOffEB=F,
+                                   transpirationModel = modeling_options$transpirationModel);
+          
+          
+  WBveg["leafTemperature"] = TGbl_Leaf[0];
+  WBveg["gBL"] = TGbl_Leaf[1];
+  WBveg["leafVPD"] = TGbl_Leaf[2];
 }
 
 void semi_implicit_temporal_integration(List WBveg, List WBsoil, double dt, int nsmalltimesteps, NumericVector opt) {
