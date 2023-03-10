@@ -356,7 +356,7 @@ Simulations using the 'Sperry' transpiration mode are computationally much more 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 -0.03387804 -0.03265883</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 -0.03454400 -0.03520480</span>
 <span class="r-in"><span>                  </span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co">#Switch to 'Sperry' transpiration mode</span></span></span>
 <span class="r-in"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -365,6 +365,25 @@ Simulations using the 'Sperry' transpiration mode are computationally much more 
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Call simulation function</span></span></span>
 <span class="r-in"><span><span class="va">S2</span><span class="op">&lt;-</span><span class="fu">spwb</span><span class="op">(</span><span class="va">x2</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 286.862</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial snowpack content (mm): 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 274.404</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -12.4576</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -12.4576</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 7.10543e-15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 98 Net rainfall (mm) 364</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 405 Runoff (mm) 11 Deep drainage (mm) 203</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 6 Transpiration (mm) 208</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 208  Plant water balance (mm) 0 Hydraulic redistribution (mm) 1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Run the model with 'Sperry' transpiration mode using the water balance of </span></span></span>
 <span class="r-in"><span><span class="co"># simulated with the 'Granier' model</span></span></span>
@@ -374,7 +393,10 @@ Simulations using the 'Sperry' transpiration mode are computationally much more 
 <span class="r-in"><span>        canopyEvaporation <span class="op">=</span> <span class="va">S1</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">Interception</span>,</span></span>
 <span class="r-in"><span>        snowMelt <span class="op">=</span> <span class="va">S1</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">Snowmelt</span>,</span></span>
 <span class="r-in"><span>        soilEvaporation <span class="op">=</span> <span class="va">S1</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">SoilEvaporation</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Year 2001:....................................done</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Transpiration (mm) 210 Plant extraction from soil (mm) 210 Hydraulic redistribution (mm) 0</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span>                </span></span>
 </code></pre></div>
     </div>
@@ -386,7 +408,7 @@ Simulations using the 'Sperry' transpiration mode are computationally much more 
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Miquel De Cáceres, Shengli Huang, Víctor Granda, Antoine Cabon.</p>
+  <p></p><p>Developed by Miquel De Cáceres, Víctor Granda, Antoine Cabon.</p>
 </div>
 
 <div class="pkgdown">

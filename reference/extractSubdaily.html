@@ -73,13 +73,18 @@
 <dd><p>A date vector indicating the subset of simulated days for which subdaily output is desired.</p></dd>
 
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    
+
+<p>A data frame with a column 'datetime' and as many columns as plant cohorts.</p>
+    </div>
     <div id="details">
     <h2>Details</h2>
     <p>This function only works when simulations have been carried using control option 'subdailyResults = TRUE' (see <code><a href="defaultControl.html">defaultControl</a></code>). Subdaily simulation results will then be stored as elements of the a list called 'subdaily' in the simulation output. Function <code>extractSubdaily</code> will assemble subdaily results from this list and return them as a data frame. Options for parameter 'output' are the following:</p><ul><li><p>Functions pwb() and spwb(): "E","Ag","An","dEdP","RootPsi","StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC","PWB", "Temperature", "ExtractionInst".</p></li>
 <li><p>Additional options for shade and sunlit leaves in pwb() and spbw(): Either "SunlitLeaves$x" or "ShadeLeaves$x" where 'x' is one of the following: "Abs_SWR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE".</p></li>
 <li><p>Additional options for function growth(): "GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "LabileCarbonBalance","SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport".</p></li>
-</ul><p>A data frame with a column 'datetime' and as many columns as plant cohorts.</p>
-    </div>
+</ul></div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="summary.spwb.html">summary.spwb</a></code></p></div>
@@ -97,7 +102,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Miquel De Cáceres, Shengli Huang, Víctor Granda, Antoine Cabon.</p>
+  <p></p><p>Developed by Miquel De Cáceres, Víctor Granda, Antoine Cabon.</p>
 </div>
 
 <div class="pkgdown">

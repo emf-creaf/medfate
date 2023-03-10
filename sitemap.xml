@@ -7,6 +7,9 @@
     <loc>/CONTRIBUTING.html</loc>
   </url>
   <url>
+    <loc>/LICENSE.html</loc>
+  </url>
+  <url>
     <loc>/articles/evaluation/RegionalLevelEvaluation.html</loc>
   </url>
   <url>
@@ -149,6 +152,9 @@
   </url>
   <url>
     <loc>/reference/light.html</loc>
+  </url>
+  <url>
+    <loc>/reference/medfate-package.html</loc>
   </url>
   <url>
     <loc>/reference/modelInput.html</loc>
