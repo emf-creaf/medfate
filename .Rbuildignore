@@ -9,6 +9,7 @@
 ^docs/*$
 ^_pkgdown\.yml$
 ^\.github$
+^vignettes/*$
 ^vignettes/medfate.bib$
 ^vignettes/intro/*$
 ^vignettes/evaluation/*$

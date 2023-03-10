@@ -1909,7 +1909,7 @@ double gammds ( double x, double p)
   //
   //  Licensing:
   //
-  //    This code is distributed under the GNU-LGPL license,
+  //    This code is distributed under the GNU-LGPL v.3 license,
   //    described in: 
   //               https://www.gnu.org/licenses/lgpl-3.0.txt
   //
