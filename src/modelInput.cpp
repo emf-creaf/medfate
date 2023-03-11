@@ -99,7 +99,13 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
 
   DataFrame paramsAnatomydf;
   if(model=="spwb") {
-    if(transpirationMode=="Sperry") {
+    if(transpirationMode=="Granier") {
+      paramsAnatomydf = DataFrame::create(
+        _["Al2As"] = Al2As, _["Ar2Al"] = Ar2Al, _["SLA"] = SLA,
+          _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = LeafDensity, 
+            _["SRL"] = SRL, _["RLD"] = RLD,  
+            _["r635"] = r635);
+    } else {
       paramsAnatomydf = DataFrame::create(
         _["Hmed"] = Hmed,
         _["Al2As"] = Al2As, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
@@ -107,23 +113,9 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
           _["conduit2sapwood"] = conduit2sapwood,
           _["SRL"] = SRL, _["RLD"] = RLD,  
           _["r635"] = r635);
-    } else {
-      paramsAnatomydf = DataFrame::create(
-          _["Al2As"] = Al2As, _["Ar2Al"] = Ar2Al, _["SLA"] = SLA,
-          _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = LeafDensity, 
-          _["SRL"] = SRL, _["RLD"] = RLD,  
-          _["r635"] = r635);
     }
   } else if(model=="growth") {
-    if(transpirationMode=="Sperry") {
-      paramsAnatomydf = DataFrame::create(
-        _["Hmax"] = Hmax,_["Hmed"] = Hmed,
-        _["Al2As"] = Al2As, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
-        _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = LeafDensity, 
-          _["conduit2sapwood"] = conduit2sapwood,
-          _["SRL"] = SRL, _["RLD"] = RLD,  
-          _["r635"] = r635);
-    } else {
+    if(transpirationMode=="Granier") {
       paramsAnatomydf = DataFrame::create(
         _["Hmax"] = Hmax,_["Hmed"] = Hmed,
         _["Al2As"] = Al2As, _["Ar2Al"] = Ar2Al, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
@@ -131,6 +123,14 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
             _["conduit2sapwood"] = conduit2sapwood,
             _["SRL"] = SRL, _["RLD"] = RLD,  
             _["r635"] = r635);
+    } else {
+      paramsAnatomydf = DataFrame::create(
+        _["Hmax"] = Hmax,_["Hmed"] = Hmed,
+        _["Al2As"] = Al2As, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
+        _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = LeafDensity, 
+          _["conduit2sapwood"] = conduit2sapwood,
+          _["SRL"] = SRL, _["RLD"] = RLD,  
+          _["r635"] = r635);
     }
   }
   paramsAnatomydf.attr("row.names") = above.attr("row.names");
@@ -277,7 +277,78 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
   paramsTranspirationdf.attr("row.names") = above.attr("row.names");
   return(paramsTranspirationdf);
 }
-
+DataFrame paramsTranspirationCochard(DataFrame above, List soil, DataFrame SpParams, 
+                                    DataFrame paramsAnatomydf, List control) {
+  IntegerVector SP = above["SP"];
+  NumericVector H = above["H"];
+  int numCohorts = SP.size();
+  
+  double maximumStemConductance = control["maximumStemConductance"];
+  double fracRootResistance = control["fracRootResistance"];
+  double fracLeafResistance = control["fracLeafResistance"];
+  String transpirationMode = control["transpirationMode"];
+  
+  bool fillMissingSpParams = control["fillMissingSpParams"];
+  
+  NumericVector dVec = soil["dVec"];
+  
+  NumericVector Vmax298 = speciesNumericParameterWithImputation(SP, SpParams, "Vmax298", fillMissingSpParams);
+  NumericVector Jmax298 = speciesNumericParameterWithImputation(SP, SpParams, "Jmax298", fillMissingSpParams);
+  NumericVector VCleaf_kmax = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_kmax", fillMissingSpParams);
+  NumericVector Gswmax = speciesNumericParameterWithImputation(SP, SpParams, "Gswmax", fillMissingSpParams);
+  NumericVector Gswmin = speciesNumericParameterWithImputation(SP, SpParams, "Gswmin", fillMissingSpParams);
+  NumericVector Kmax_stemxylem = speciesNumericParameterWithImputation(SP, SpParams, "Kmax_stemxylem", fillMissingSpParams);
+  NumericVector Kmax_rootxylem = speciesNumericParameterWithImputation(SP, SpParams, "Kmax_rootxylem", fillMissingSpParams);
+  NumericVector VCstem_c = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_c", fillMissingSpParams);
+  NumericVector VCstem_d = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_d", fillMissingSpParams);
+  NumericVector VCleaf_c = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_c", fillMissingSpParams);
+  NumericVector VCleaf_d = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_d", fillMissingSpParams);
+  NumericVector VCroot_c = speciesNumericParameterWithImputation(SP, SpParams, "VCroot_c", fillMissingSpParams);
+  NumericVector VCroot_d = speciesNumericParameterWithImputation(SP, SpParams, "VCroot_d", fillMissingSpParams);
+  
+  NumericVector Al2As = paramsAnatomydf["Al2As"];
+  NumericVector SLA = paramsAnatomydf["SLA"];
+  NumericVector Hmed =  paramsAnatomydf["Hmed"];
+  
+  NumericVector VCstem_kmax(numCohorts);
+  NumericVector VCroottot_kmax(numCohorts, 0.0);
+  NumericVector VGrhizotot_kmax(numCohorts, 0.0);
+  NumericVector Plant_kmax(numCohorts, 0.0);
+  
+  // Scaled conductance parameters parameters
+  for(int c=0;c<numCohorts;c++){
+    //Stem maximum conductance (in mmol·m-2·s-1·MPa-1)
+    VCstem_kmax[c]=maximumStemHydraulicConductance(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c],control["taper"]); 
+    VCstem_kmax[c]=std::min(VCstem_kmax[c], maximumStemConductance);
+    
+    //Root maximum conductance
+    double rstem = (1.0/VCstem_kmax[c]);
+    double rleaf = (1.0/VCleaf_kmax[c]);
+    double rtot = (rstem+rleaf)/(1.0 - fracRootResistance);
+    double VCroot_kmaxc = 1.0/(rtot - rstem - rleaf);
+    VCroottot_kmax[c] = VCroot_kmaxc;
+    
+    //Leaf maximum conductance
+    if(!NumericVector::is_na(fracLeafResistance)) {
+      double rstem = (1.0/VCstem_kmax[c]);
+      double rtot = rstem/(1.0-fracRootResistance - fracLeafResistance);
+      VCleaf_kmax[c] = 1.0/(rtot*fracLeafResistance);
+    }
+    //Plant kmax
+    Plant_kmax[c] = 1.0/((1.0/VCleaf_kmax[c])+(1.0/VCstem_kmax[c])+(1.0/VCroottot_kmax[c]));
+  }
+  
+  DataFrame paramsTranspirationdf = DataFrame::create(
+    _["Gswmin"]=Gswmin, _["Gswmax"]=Gswmax,_["Vmax298"]=Vmax298,
+      _["Jmax298"]=Jmax298, _["Kmax_stemxylem"] = Kmax_stemxylem, _["Kmax_rootxylem"] = Kmax_rootxylem,
+        _["VCleaf_kmax"]=VCleaf_kmax,_["VCleaf_c"]=VCleaf_c,_["VCleaf_d"]=VCleaf_d,
+        _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, 
+        _["VCroot_kmax"] = VCroottot_kmax ,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,
+        _["VGrhizo_kmax"] = VGrhizotot_kmax,
+        _["Plant_kmax"] = Plant_kmax);
+  paramsTranspirationdf.attr("row.names") = above.attr("row.names");
+  return(paramsTranspirationdf);
+}
 // [[Rcpp::export(".paramsBelow")]]
 List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, 
                  DataFrame paramsAnatomydf, DataFrame paramsTranspirationdf, List control) {
@@ -787,7 +858,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   NumericVector CR = above["CR"];
   
   String transpirationMode = control["transpirationMode"];
-  if((transpirationMode!="Granier") && (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
+  if((transpirationMode!="Granier") && (transpirationMode!="Sperry") && (transpirationMode!="Cochard")) stop("Wrong Transpiration mode ('transpirationMode' should be 'Granier', 'Sperry' or 'Cochard')");
 
   bool fillMissingSpParams = control["fillMissingSpParams"];
   String soilFunctions = control["soilFunctions"]; 
@@ -817,8 +888,10 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   DataFrame paramsTranspirationdf;
   if(transpirationMode=="Granier") {
     paramsTranspirationdf = paramsTranspirationGranier(above,SpParams, fillMissingSpParams);
-  } else {
+  } else if(transpirationMode=="Sperry") {
     paramsTranspirationdf = paramsTranspirationSperry(above, soil, SpParams, paramsAnatomydf, control);
+  } else if(transpirationMode=="Cochard") {
+    paramsTranspirationdf = paramsTranspirationCochard(above, soil, SpParams, paramsAnatomydf, control);
   }
 
   List below = paramsBelow(above, Z50, Z95, soil, 
@@ -832,7 +905,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   List ctl = clone(control);
   if(transpirationMode=="Granier") {
     paramsCanopydf = List::create();
-  } else if(transpirationMode =="Sperry"){
+  } else {
     paramsCanopydf = paramsCanopy(above, control);
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
@@ -879,8 +952,8 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   control["cavitationRefill"] = "growth";
   
   String transpirationMode = control["transpirationMode"];
-  if((transpirationMode!="Granier") && (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
-
+  if((transpirationMode!="Granier") && (transpirationMode!="Sperry") && (transpirationMode!="Cochard")) stop("Wrong Transpiration mode ('transpirationMode' should be 'Granier', 'Sperry' or 'Cochard')");
+  
   bool fillMissingSpParams = control["fillMissingSpParams"];
   
   String soilFunctions = control["soilFunctions"]; 
@@ -900,8 +973,10 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   DataFrame paramsTranspirationdf;
   if(transpirationMode=="Granier") {
     paramsTranspirationdf = paramsTranspirationGranier(above,SpParams, fillMissingSpParams);
-  } else {
+  } else if(transpirationMode=="Sperry") {
     paramsTranspirationdf = paramsTranspirationSperry(above, soil, SpParams, paramsAnatomydf, control);
+  } else if(transpirationMode=="Cochard") {
+    paramsTranspirationdf = paramsTranspirationCochard(above, soil, SpParams, paramsAnatomydf, control);
   }
 
 
@@ -953,7 +1028,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   List ctl = clone(control);
   if(transpirationMode=="Granier") {
     paramsCanopydf = List::create();
-  } else if(transpirationMode =="Sperry"){
+  } else {
     paramsCanopydf = paramsCanopy(above, control);
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
@@ -1250,14 +1325,18 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //' # Initialize soil with default soil params
 //' examplesoil = soil(defaultSoilParams())
 //' 
-//' # Initialize control parameters
+//' # Initialize control parameters using Granier transpiration mode
 //' control = defaultControl("Granier")
 //' 
 //' # Prepare spwb input
 //' forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
 //'                 
-//' # Prepare input for Sperry transpiration mode
+//' # Prepare input for 'Sperry' transpiration mode
 //' control = defaultControl("Sperry")
+//' forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
+//' 
+//' # Prepare input for 'Cochard' transpiration mode
+//' control = defaultControl("Cochard")
 //' forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
 //' 
 //' @name modelInput
@@ -1302,7 +1381,7 @@ void resetInputs(List x) {
   List soil = x["soil"];
   String transpirationMode = control["transpirationMode"];
   //Reset of canopy layer state variables 
-  if(transpirationMode=="Sperry") {
+  if(transpirationMode != "Granier") {
     DataFrame can = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
     NumericVector Tair = can["Tair"];
     NumericVector Cair = can["Cair"];
@@ -1334,7 +1413,7 @@ void resetInputs(List x) {
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
   NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
   
-  if(transpirationMode=="Sperry") {
+  if(transpirationMode!="Granier") {
     NumericMatrix RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["RhizoPsi"]);
     NumericVector RootCrownPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
     NumericVector Stem1Psi = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem1Psi"]);
@@ -1367,7 +1446,7 @@ void updatePlantKmax(List x) {
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   
-  if(transpirationMode=="Sperry") {
+  if(transpirationMode!="Granier") {
     DataFrame paramsTranspirationdf =  Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
     NumericVector Plant_kmax = paramsTranspirationdf["Plant_kmax"];
     NumericVector VCleaf_kmax = paramsTranspirationdf["VCleaf_kmax"];
@@ -1390,7 +1469,7 @@ void updateBelowgroundConductances(List x) {
   int nlayers = V.ncol();
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
-  if(transpirationMode=="Sperry") {
+  if(transpirationMode!="Granier") {
     DataFrame paramsTranspirationdf = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
     NumericVector VCroot_kmax = belowLayers["VCroot_kmax"];
     NumericVector VGrhizo_kmax = belowLayers["VGrhizo_kmax"];
@@ -1505,7 +1584,7 @@ void multiplyInputParam(List x, String paramType, String paramName,
     multiplyInputParamSingle(x, "paramsAnatomy", "Al2As", cohort, f);
     if(message) multiplyMessage("Vsapwood", cohNames[cohort], f);
     multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, 1.0/f);
-    if(transpirationMode=="Sperry") {
+    if(transpirationMode!="Granier") {
       if(message) multiplyMessage("VCstem_kmax", cohNames[cohort], f);
       multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, 1.0/f);
       if(message) multiplyMessage("VCroot_kmax", cohNames[cohort], f);
@@ -1529,7 +1608,7 @@ void multiplyInputParam(List x, String paramType, String paramName,
   } else {
     multiplyInputParamSingle(x, paramType, paramName, cohort, f);
   }
-  if(transpirationMode=="Sperry") {
+  if(transpirationMode!="Granier") {
     if(message) Rcerr<< "[Message] Recalculating plant maximum conductances.\n";
     updatePlantKmax(x);
   }
@@ -1589,7 +1668,7 @@ void modifyInputParam(List x, String paramType, String paramName,
       if(message) multiplyMessage("SA", cohNames[cohort], 1.0/f);
       multiplyInputParamSingle(x, "above", "SA", cohort, 1.0/f);
     }
-    if(transpirationMode=="Sperry") {
+    if(transpirationMode!="Granier") {
       if(message) multiplyMessage("VCstem_kmax", cohNames[cohort], 1.0/f);
       multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, 1.0/f);
       if(message) multiplyMessage("VCroot_kmax", cohNames[cohort], 1.0/f);
@@ -1599,7 +1678,7 @@ void modifyInputParam(List x, String paramType, String paramName,
     if(message) modifyMessage(paramName, cohNames[cohort], newValue);
     modifyInputParamSingle(x, paramType, paramName, cohort, newValue);
   }
-  if(transpirationMode=="Sperry") {
+  if(transpirationMode!="Granier") {
     if(message) Rcerr<< "[Message] Recalculating plant maximum conductances.\n";
     updatePlantKmax(x);
   }

@@ -2,7 +2,7 @@
 #'
 #' Creates a list control parameters default values for simulations
 #' 
-#' @param transpirationMode Transpiration model (either 'Granier' or 'Sperry'). See \code{\link{spwbInput}}.
+#' @param transpirationMode Transpiration model (either 'Granier', 'Sperry' or 'Cochard'). See \code{\link{spwbInput}}.
 #' 
 #' @details The function returns a list with default parameters. 
 #' Users can change those defaults that need to be set to other values and use the list as input for model functions. 
@@ -26,8 +26,10 @@
 #'     }
 #'   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}}):
 #'     \itemize{
-#'       \item{\code{transpirationMode (="Granier")}: Transpiration model (either 'Granier' or 'Sperry'). See \code{\link{spwbInput}}.}
-#'       \item{\code{soilFunctions (="SX")}: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten). If \code{transpirationMode = "Sperry"} then soilFunctions is set by default to \code{'VG'}.}
+#'       \item{\code{transpirationMode (="Granier")}: Transpiration model (either 'Granier', 'Sperry' or 'Cochard'). See \code{\link{spwbInput}}.}
+#'       \item{\code{soilFunctions (="VG")}: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten). 
+#'                  If \code{transpirationMode} is 'Sperry' or 'Cochard' then soilFunctions is forced to \code{'VG'}.
+#'                  Only simulations with 'Granier' are allowed to use Saxton functions.}
 #'       \item{\code{defaultWindSpeed (= 2.5)}: Default wind speed value (in m/s) to be used when missing from data. }
 #'       \item{\code{defaultCO2 (= 386)}: Default atmospheric (abovecanopy) CO2 concentration (in micromol·mol-1 = ppm). This value will be used whenever CO2 concentration is not specified in the weather input. }
 #'       \item{\code{snowpack (=TRUE)}: Boolean flag to indicate the simulation of snow accumulation and melting.}
@@ -89,7 +91,7 @@
 #'       \item{\code{allowDessication (=TRUE)}: Boolean flag to indicate that mortality by dessication is allowed.}
 #'       \item{\code{allowStarvation (=TRUE)}: Boolean flag to indicate that mortality by starvation is allowed.}
 #'       \item{\code{sinkLimitation (=TRUE): Boolean flag to indicate that temperature and turgor limitations to growth are applied.}}
-#'       \item{\code{ shrubDynamics [= TRUE]}: Boolean flag to allow the application of demographic processes to shrubs.}
+#'       \item{\code{shrubDynamics [= TRUE]}: Boolean flag to allow the application of demographic processes to shrubs.}
 #'       \item{\code{allocationStrategy (="Al2As")}: Strategy for allocation (either "Plant_kmax", for constant maximum plant conductance, or "Al2As" for constant Huber value).}
 #'       \item{\code{phloemConductanceFactor (= 0.2))}: Factor to transform stem xylem conductance to stem phloem conductance (only for transpirationMode = "Sperry").}
 #'       \item{\code{nonSugarConcentration (= 0.25)}: Non-sugar (inorganic) solute concentration  (mol·l-1) in cells.}
@@ -134,6 +136,7 @@
 #' 
 #' @name defaultControl
 defaultControl<-function(transpirationMode = "Granier") {
+  transpirationMode <- match.arg(transpirationMode, c("Granier", "Sperry", "Cochard"))
   return(list(
     #For all functions
     fillMissingRootParams = TRUE,
@@ -149,7 +152,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     
     # For water balance
     transpirationMode = transpirationMode,
-    soilFunctions = ifelse(transpirationMode=="Sperry", "VG", "SX"),
+    soilFunctions = "VG",
     defaultWindSpeed = 2.5, #m/s
     defaultCO2 = 386, #ppm
     snowpack = TRUE,

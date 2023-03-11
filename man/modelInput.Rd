@@ -220,14 +220,18 @@ above
 # Initialize soil with default soil params
 examplesoil = soil(defaultSoilParams())
 
-# Initialize control parameters
+# Initialize control parameters using Granier transpiration mode
 control = defaultControl("Granier")
 
 # Prepare spwb input
 forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
                 
-# Prepare input for Sperry transpiration mode
+# Prepare input for 'Sperry' transpiration mode
 control = defaultControl("Sperry")
+forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
+
+# Prepare input for 'Cochard' transpiration mode
+control = defaultControl("Cochard")
 forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
 
 }
