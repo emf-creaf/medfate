@@ -2838,8 +2838,8 @@ spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, ele
 #'     \item{\code{"Transpiration"}: Plant transpiration (considering all soil layers) (in mm).}
 #'     \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network.}
 #'   }
-#'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"}).}
-#'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"}).}
+#'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).}
+#'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).}
 #'   \item{\code{"Soil"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
 #'   \itemize{
 #'     \item{\code{"W.1"}, \code{...}, \code{"W.k"}: Relative soil moisture content (relative to field capacity) in each soil layer.}

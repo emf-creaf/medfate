@@ -62,7 +62,8 @@ Some parameters deserve explanation here:
 
  1. Console output can be turned off by setting `verbose = FALSE`. 
  2. The soil water retention curves can be switched between Saxton's and Van Genuchten's using parameter `soilFunctions`. 
- 3. The complexity of the soil water balance calculations will be very different if we set `transpirationMode = "Sperry"`. Most of the other options apply in the case of advanced soil water balance only. 
+ 3. The complexity of the soil water balance calculations will be very different if we set `transpirationMode = "Sperry"` or 
+ `transpirationMode = "Cochard"`, instead of `transpirationMode = "Granier"`.  
  
 ### Water balance input object
 
@@ -72,7 +73,7 @@ A last object is needed before calling simulation functions, called `spwbInput`.
 x = forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
 ```
 
-Different parameter variables will be drawn depending on the value of `transpirationMode`. For the simple water balance model (`transpirationMode = "Granier"`), relatively few parameters are needed. All the input information for forest data and species parameter values can be inspected by accessing the different elements of this object, whose names are.
+Different parameter variables will be drawn depending on the value of `transpirationMode`. For the basic water balance model (`transpirationMode = "Granier"`), relatively few parameters are needed. All the input information for forest data and species parameter values can be inspected by accessing the different elements of this object, whose names are.
 ```{r}
 names(x)
 ```

@@ -220,7 +220,7 @@ Because soil properties vary strongly at fine spatial scales, ideally soil physi
 
 Retrieval of soil properties from SoilGrids can be done using function `soilgridsParams()` from package **medfateutils**. Assuming we know the plot coordinates, we first create an object `sf` (see package **sf**):
 ```{r}
-sf_pt = sf::st_sfc(sf::st_point(c(1.0219, 41.3443)), crs = 4326)
+sf_pt <- sf::st_sfc(sf::st_point(c(1.0219, 41.3443)), crs = 4326)
 ```
 
 This object can be used to query SoilGrids using `soilgridsParams()`:
@@ -248,7 +248,7 @@ print(pobl_soil)
 It is important to remember that SoilGrids may underestimate the amount of rocks in the soil. This is because soil samples (which were used to generate the global database) do not normally contain large stones or blocks. Hence, realistic simulations should reduce the soil water holding capacity by increasing the column `rfc`. For example, here we will assume that the third layer contains 80% of rocks:
 
 ```{r}
-pobl_soil_props$rfc[3] = 80
+pobl_soil_props$rfc[3] <- 80
 ```
 
 If we rebuild the soil object and inspect its properties we will see the effect on the soil water holding capacity and soil extractable water:
