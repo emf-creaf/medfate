@@ -14,7 +14,7 @@ processes:
 
 - Soil water balance (De Cáceres et al. 2015)
 - Plant hydraulics, transpiration and photosynthesis (De Cáceres et
-  al. 2021)
+  al. 2021, Ruffault et al. 2022)
 - Carbon balance, plant growth, senescence and mortality (De Cáceres et
   al. under review)
 - Forest dynamics, including recruitment and management (De Cáceres et
@@ -83,6 +83,12 @@ Modelling Facility*](https://emf.creaf.cat) at CREAF (Spain).
   drought stress in holm oak forests: a modelling approach. Agricultural
   and Forest Meteorology 296
   (<https://doi.org/10.1016/j.agrformet.2020.108233>).
+
+- Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022)
+  SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations
+  of plant water status and drought-induced mortality at the ecosystem
+  level. Geoscientific Model Development 15, 5593-5626
+  (<https://doi.org/10.5194/gmd-15-5593-2022>).
 
 - De Cáceres M, Molowny-Horas R, Cabon A, Martínez-Vilalta J, Mencuccini
   M, García-Valdés R, Nadal-Sala D, Sabaté S, Martin-StPaul N, Morin N,

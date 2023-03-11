@@ -17,7 +17,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.path = "README-")
 Package **medfate** is designed to assist forest scientists to simulate forest functioning and dynamics, using cohort-based description of forest stands. The package provides functions to simulate the following processes:
 
 + Soil water balance (De Cáceres et al. 2015)
-+ Plant hydraulics, transpiration and photosynthesis (De Cáceres et al. 2021)
++ Plant hydraulics, transpiration and photosynthesis (De Cáceres et al. 2021, Ruffault et al. 2022)
 + Carbon balance, plant growth, senescence and mortality (De Cáceres et al. under review)
 + Forest dynamics, including recruitment and management (De Cáceres et al. under review)
 
@@ -56,5 +56,7 @@ The set of R packages are developed and maintained by the [*Ecosystem Modelling 
 + De Cáceres M, Martínez-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (https://doi.org/10.1016/j.agrformet.2015.06.012).
 
 + De Cáceres M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, Martínez-Vilalta J (2021) Unravelling the effect of species mixing on water use and drought stress in holm oak forests: a modelling approach. Agricultural and Forest Meteorology 296 (https://doi.org/10.1016/j.agrformet.2020.108233).
+
++ Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022) SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level. Geoscientific Model Development 15, 5593-5626 (https://doi.org/10.5194/gmd-15-5593-2022).
 
 + De Cáceres M, Molowny-Horas R, Cabon A, Martínez-Vilalta J, Mencuccini M, García-Valdés R, Nadal-Sala D, Sabaté S, Martin-StPaul N, Morin N, Batllori E, Améztegui A (under review) MEDFATE 2.8.1: A trait-enabled model to simulate Mediterranean forest function and dynamics at regional scales. Geophysical Model Development (https://doi.org/10.5194/gmd-2022-243).
