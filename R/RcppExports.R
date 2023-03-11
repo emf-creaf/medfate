@@ -2953,14 +2953,15 @@ spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, ele
 #' #Call simulation function
 #' S2<-spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 #' 
-#' # Run the model with 'Sperry' transpiration mode using the water balance of 
-#' # simulated with the 'Granier' model
-#' WS = as.matrix(S1$Soil[, c("W.1", "W.2", "W.3", "W.4")])
-#' P2<-pwb(x2, examplemeteo, latitude = 41.82592, elevation = 100, 
-#'         W = WS,
-#'         canopyEvaporation = S1$WaterBalance$Interception,
-#'         snowMelt = S1$WaterBalance$Snowmelt,
-#'         soilEvaporation = S1$WaterBalance$SoilEvaporation)
+#' #Switch to 'Cochard' transpiration mode
+#' control = defaultControl("Cochard")
+#' 
+#' #Initialize input
+#' x3 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' 
+#' #Call simulation function
+#' S3<-spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
+#' 
 #' }
 #'                 
 #' @name spwb
