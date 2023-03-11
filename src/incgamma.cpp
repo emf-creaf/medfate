@@ -1909,7 +1909,9 @@ double gammds ( double x, double p)
   //
   //  Licensing:
   //
-  //    This code is distributed under the GNU LGPL license. 
+  //    This code is distributed under the GNU-LGPL v.3 license,
+  //    described in: 
+  //               https://www.gnu.org/licenses/lgpl-3.0.txt
   //
   //  Modified:
   //
@@ -1918,7 +1920,9 @@ double gammds ( double x, double p)
   //  Author:
   //
   //    Original FORTRAN77 version by Chi Leung Lau.
-  //    C++ version by John Burkardt.
+  //    C++ version by John Burkardt available at:
+  //           https://people.math.sc.edu/Burkardt/cpp_src/asa032/asa032.html
+  //    Modified by Miquel De Caceres
   //
   //  Reference:
   //

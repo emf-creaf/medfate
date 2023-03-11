@@ -1,7 +1,8 @@
 This is a re-submission of package 'medfate', which was formely present in CRAN but got
 archived due to an unsolved compilation warning (https://cran.r-project.org/web/packages/medfate/index.html) under clang-UBSAN platform. 
 
-We solved that issue and would like to re-submit the package.
+## Licencing added
+We added the copyright holder of code in 'incgamma.cpp' (John Burkardt) in 'Authors@R' and added LPGL (>= 3) into the 'License' section of the DESCRIPTION FILE. We also added file LICENSE.note explaining that this part of the code is distributed under GNU-LGPL 3 license.
 
 ## Tested environments
 

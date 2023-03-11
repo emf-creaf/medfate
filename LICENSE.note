@@ -1,0 +1,3 @@
+The medfate package as a whole is distributed under GPL 2, with the license included in the package. The medfate package includes other open source software components. The following is a list of these components:
+
+* incgamma.cpp: LGPL 3 (https://www.gnu.org/licenses/lgpl-3.0.txt), copyright holder being John Burkardt. 
