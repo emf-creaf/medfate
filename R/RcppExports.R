@@ -2834,10 +2834,9 @@ spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, ele
 #'     \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
 #'     \item{\code{"Evapotranspiration"}: Evapotranspiration (in mm).}
 #'     \item{\code{"SoilEvaporation"}: Bare soil evaporation (in mm).}
-#'     \item{\code{"PlantExtraction"}: Amount of water extracted from soil by plants (in mm) (can only be different from transpiration for \code{transpirationMode = "Sperry"} when capacitance is considered).}
+#'     \item{\code{"PlantExtraction"}: Amount of water extracted from soil by plants (in mm).}
 #'     \item{\code{"Transpiration"}: Plant transpiration (considering all soil layers) (in mm).}
-#'     \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network (only for \code{transpirationMode = "Sperry"}).}
-#'     
+#'     \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network.}
 #'   }
 #'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"}).}
 #'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"}).}
@@ -2848,7 +2847,7 @@ spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, ele
 #'     \item{\code{"MLTot"}: Total soil water volume (in L/m2).}
 #'     \item{\code{"SWE"}: Snow water equivalent (mm) of the snow pack.}
 #'     \item{\code{"PlantExt.1"}, \code{...}, \code{"PlantExt.k"}: Plant extraction from each soil layer (in mm).}
-#'     \item{\code{"HydraulicInput.1"}, \code{...}, \code{"HydraulicInput.k"}: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm) (only for \code{transpirationMode = "Sperry"}).}
+#'     \item{\code{"HydraulicInput.1"}, \code{...}, \code{"HydraulicInput.k"}: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm).}
 #'     \item{\code{"psi.1"}, \code{...}, \code{"psi.k"}: Soil water potential in each soil layer (in MPa).}
 #'   }
 #'   \item{\code{"Stand"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
@@ -2915,7 +2914,7 @@ spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, ele
 #' De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, \enc{Martínez}{Martinez}-Vilalta J (2021) Unravelling the effect of species mixing on water use and drought stress in holm oak forests: a modelling approach. Agricultural and Forest Meteorology 296 (doi:10.1016/j.agrformet.2020.108233).
 #' 
 #' Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022) 
-#' SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level
+#' SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level.
 #' Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
@@ -2935,16 +2934,16 @@ spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, ele
 #' data(SpParamsMED)
 #' 
 #' #Initialize soil with default soil params (4 layers)
-#' examplesoil = soil(defaultSoilParams(4))
+#' examplesoil <- soil(defaultSoilParams(4))
 #' 
 #' #Initialize control parameters
-#' control = defaultControl("Granier")
+#' control <- defaultControl("Granier")
 #' 
 #' #Initialize input
-#' x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
-#' S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
+#' S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 #' 
 #' #Plot results
 #' plot(S1)
@@ -2954,22 +2953,22 @@ spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, ele
 #'                   
 #' \donttest{
 #' #Switch to 'Sperry' transpiration mode
-#' control = defaultControl("Sperry")
+#' control <- defaultControl("Sperry")
 #' 
 #' #Initialize input
-#' x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
-#' S2<-spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
+#' S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 #' 
 #' #Switch to 'Cochard' transpiration mode
-#' control = defaultControl("Cochard")
+#' control <- defaultControl("Cochard")
 #' 
 #' #Initialize input
-#' x3 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
-#' S3<-spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
+#' S3 <- spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 #' 
 #' }
 #'                 
@@ -3149,11 +3148,23 @@ transp_transpirationSperry <- function(x, meteo, day, latitude, elevation, slope
     .Call(`_medfate_transpirationSperry`, x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, stepFunctions, modifyInput)
 }
 
+#' @rdname transp_modes
+transp_transpirationCochard <- function(x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, modifyInput = TRUE) {
+    .Call(`_medfate_transpirationCochard`, x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, modifyInput)
+}
+
 #' Transpiration modes
 #' 
-#' High-level sub-models to represent transpiration, plant hydraulics and water relations 
-#' within plants. The two submodels represent a very different degree of complexity, 
-#' and correspond to Granier et al. (1999) or Sperry et al. (2017).
+#' High-level sub-models representing transpiration, plant hydraulics, photosynthesis and water relations 
+#' within plants. 
+#' 
+#' Three sub-models are available: 
+#' \itemize{
+#'   \item{Sub-model in function \code{transp_transpirationGranier} was described in De \enc{Cáceres}{Caceres} et al. (2015).} 
+#'   \item{Sub-model in function \code{transp_transpirationSperry} was described in De \enc{Cáceres}{Caceres} et al. (2021).} 
+#'   \item{Sub-model in function \code{transp_transpirationCochard} combines the energy balance described in
+#'   described in De \enc{Cáceres}{Caceres} et al. (2021) with the stomatal conductance and plant hydraulics described in Ruffault et al. (2022).} 
+#' }
 #' 
 #' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}, built using the 'Granier' or 'Sperry' transpiration modes, depending on the function to be called.
 #' @param meteo A data frame with daily meteorological data series:
@@ -3173,7 +3184,7 @@ transp_transpirationSperry <- function(x, meteo, day, latitude, elevation, slope
 #' @param modifyInput Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.
 #' 
 #' @return
-#' Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry} return a list with the following elements:
+#' A list with the following elements:
 #' \itemize{
 #'   \item{\code{"cohorts"}: A data frame with cohort information, copied from \code{\link{spwbInput}}.}
 #'   \item{\code{"Stand"}: A vector of stand-level variables.}
@@ -3187,7 +3198,7 @@ transp_transpirationSperry <- function(x, meteo, day, latitude, elevation, slope
 #'       \item{\code{"psi"}: Water potential (in MPa) of the plant cohort (average over soil layers).}
 #'       \item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
 #'     }
-#'   When using \code{transp_transpirationSperry}, element \code{"Plants"} includes:
+#'   When using \code{transp_transpirationSperry} or \code{transp_transpirationCochard}, element \code{"Plants"} includes:
 #'     \itemize{
 #'       \item{\code{"LAI"}: Leaf area index of the plant cohort.}
 #'       \item{\code{"LAIlive"}: Leaf area index of the plant cohort, assuming all leaves are unfolded.}
@@ -3214,8 +3225,8 @@ transp_transpirationSperry <- function(x, meteo, day, latitude, elevation, slope
 #'   }
 #'   \item{\code{"Extraction"}: A data frame with mm of water extracted from each soil layer (in columns) by each cohort (in rows).}
 #' 
-#'   The remaining items are only given by \code{transp_transpirationSperry}:
-#'   \item{\code{"EnergyBalance"}: When using the 'Sperry' transpiration mode, the model performs energy balance of the stand and 'EnergyBalance' is a list with the following:
+#'   The remaining items are only given by \code{transp_transpirationSperry} or \code{transp_transpirationCochard}:
+#'   \item{\code{"EnergyBalance"}: A list with the following elements:
 #'     \itemize{
 #'       \item{\code{"Temperature"}: A data frame with the temperature of the atmosphere ('Tatm'), canopy ('Tcan') and soil ('Tsoil.1', 'Tsoil.2', ...) for each time step.}
 #'       \item{\code{"CanopyEnergyBalance"}: A data frame with the components of the canopy energy balance (in W/m2) for each time step.}
@@ -3270,6 +3281,10 @@ transp_transpirationSperry <- function(x, meteo, day, latitude, elevation, slope
 #' 
 #' Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2017. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment 40, 816-830 (doi: 10.1111/pce.12852).
 #' 
+#' Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022) 
+#' SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level.
+#' Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).
+#' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
 #' @seealso \code{\link{spwb_day}}, \code{\link{plot.spwb_day}}
@@ -3285,30 +3300,41 @@ transp_transpirationSperry <- function(x, meteo, day, latitude, elevation, slope
 #' data(SpParamsMED)
 #' 
 #' #Initialize soil with default soil params (4 layers)
-#' examplesoil = soil(defaultSoilParams(4))
+#' examplesoil <- soil(defaultSoilParams(4))
 #' 
 #' #Initialize control parameters
-#' control = defaultControl("Granier")
+#' control <- defaultControl("Granier")
 #' 
 #' #Initialize input
-#' x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 #' 
 #' # Transpiration according to Granier's model, plant water potential 
 #' # and plant stress for a given day
-#' t1 = transp_transpirationGranier(x1, examplemeteo, 1, 
+#' t1 <- transp_transpirationGranier(x1, examplemeteo, 1, 
 #'                                  latitude = 41.82592, elevation = 100, slope = 0, aspect = 0, 
 #'                                  modifyInput = FALSE)
 #' 
 #' #Switch to 'Sperry' transpiration mode
-#' control = defaultControl("Sperry")
+#' control <- defaultControl("Sperry")
 #' 
 #' #Initialize input
-#' x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 #' 
 #' # Transpiration according to Sperry's model
-#' t2 = transp_transpirationSperry(x2, examplemeteo, 1, 
+#' t2 <- transp_transpirationSperry(x2, examplemeteo, 1, 
 #'                                 latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
 #'                                 modifyInput = FALSE)
+#'                                 
+#' #Switch to 'Cochard' transpiration mode
+#' control <- defaultControl("Cochard")
+#' 
+#' #Initialize input
+#' x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' 
+#' # Transpiration according to Cochard's model (SurEau-Ecos)
+#' t3 <- transp_transpirationCochard(x3, examplemeteo, 1, 
+#'                                  latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
+#'                                  modifyInput = FALSE)
 #'                                 
 #' @name transp_modes
 transp_transpirationGranier <- function(x, meteo, day, latitude, elevation, slope, aspect, modifyInput = TRUE) {

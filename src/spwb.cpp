@@ -199,7 +199,7 @@ List spwbDay1(List x, NumericVector meteovec,
   
   //Canopy transpiration  
   // Rcout<<"hola";
-  List transp = transpirationGranier(x, meteovec, elevation, true);
+  List transp = transpirationBasic(x, meteovec, elevation, true);
   // Rcout<<"hola2";
   NumericMatrix soilLayerExtract = Rcpp::as<Rcpp::NumericMatrix>(transp["Extraction"]);
   NumericVector ExtractionVec(nlayers, 0.0);
@@ -271,6 +271,7 @@ List spwbDay2(List x, NumericVector meteovec,
   bool plantWaterPools = (rhizosphereOverlap!="total");
   String soilFunctions = control["soilFunctions"];
   int ntimesteps = control["ndailysteps"];
+  String transpirationMode = control["transpirationMode"];
 
   //Soil parameters
   List soil = x["soil"];
@@ -376,11 +377,11 @@ List spwbDay2(List x, NumericVector meteovec,
   }
 
   //B.2 - Canopy transpiration  
-  List transp = transpirationSperry(x, meteovec, 
+  List transp = transpirationAdvanced(x, meteovec, 
                                     latitude, elevation, slope, aspect, 
                                     solarConstant, delta, 
                                     hydroInputs["Interception"], hydroInputs["Snowmelt"], sum(EsoilVec),
-                                    verbose, NA_INTEGER, true);
+                                    verbose, NA_INTEGER, true, transpirationMode);
 
   
   NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(transp["ExtractionInst"]);
@@ -1364,10 +1365,9 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL,
 //'     \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
 //'     \item{\code{"Evapotranspiration"}: Evapotranspiration (in mm).}
 //'     \item{\code{"SoilEvaporation"}: Bare soil evaporation (in mm).}
-//'     \item{\code{"PlantExtraction"}: Amount of water extracted from soil by plants (in mm) (can only be different from transpiration for \code{transpirationMode = "Sperry"} when capacitance is considered).}
+//'     \item{\code{"PlantExtraction"}: Amount of water extracted from soil by plants (in mm).}
 //'     \item{\code{"Transpiration"}: Plant transpiration (considering all soil layers) (in mm).}
-//'     \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network (only for \code{transpirationMode = "Sperry"}).}
-//'     
+//'     \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network.}
 //'   }
 //'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"}).}
 //'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"}).}
@@ -1378,7 +1378,7 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL,
 //'     \item{\code{"MLTot"}: Total soil water volume (in L/m2).}
 //'     \item{\code{"SWE"}: Snow water equivalent (mm) of the snow pack.}
 //'     \item{\code{"PlantExt.1"}, \code{...}, \code{"PlantExt.k"}: Plant extraction from each soil layer (in mm).}
-//'     \item{\code{"HydraulicInput.1"}, \code{...}, \code{"HydraulicInput.k"}: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm) (only for \code{transpirationMode = "Sperry"}).}
+//'     \item{\code{"HydraulicInput.1"}, \code{...}, \code{"HydraulicInput.k"}: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm).}
 //'     \item{\code{"psi.1"}, \code{...}, \code{"psi.k"}: Soil water potential in each soil layer (in MPa).}
 //'   }
 //'   \item{\code{"Stand"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
@@ -1445,7 +1445,7 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL,
 //' De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, \enc{Martínez}{Martinez}-Vilalta J (2021) Unravelling the effect of species mixing on water use and drought stress in holm oak forests: a modelling approach. Agricultural and Forest Meteorology 296 (doi:10.1016/j.agrformet.2020.108233).
 //' 
 //' Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022) 
-//' SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level
+//' SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level.
 //' Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
@@ -1465,16 +1465,16 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL,
 //' data(SpParamsMED)
 //' 
 //' #Initialize soil with default soil params (4 layers)
-//' examplesoil = soil(defaultSoilParams(4))
+//' examplesoil <- soil(defaultSoilParams(4))
 //' 
 //' #Initialize control parameters
-//' control = defaultControl("Granier")
+//' control <- defaultControl("Granier")
 //' 
 //' #Initialize input
-//' x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 //' 
 //' #Call simulation function
-//' S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
+//' S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 //' 
 //' #Plot results
 //' plot(S1)
@@ -1484,22 +1484,22 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL,
 //'                   
 //' \donttest{
 //' #Switch to 'Sperry' transpiration mode
-//' control = defaultControl("Sperry")
+//' control <- defaultControl("Sperry")
 //' 
 //' #Initialize input
-//' x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 //' 
 //' #Call simulation function
-//' S2<-spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
+//' S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 //' 
 //' #Switch to 'Cochard' transpiration mode
-//' control = defaultControl("Cochard")
+//' control <- defaultControl("Cochard")
 //' 
 //' #Initialize input
-//' x3 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 //' 
 //' #Call simulation function
-//' S3<-spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
+//' S3 <- spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 //' 
 //' }
 //'                 
@@ -1739,7 +1739,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
           Rcerr<< "c++ error: "<< ex.what() <<"\n";
           error_occurence = true;
         }
-      } else if(transpirationMode=="Sperry") {
+      } else {
         // int ntimesteps = control["ndailysteps"];
         double tmaxPrev = tmax;
         double tminPrev = tmin;
@@ -2110,13 +2110,13 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
         Named("Catm") = Catm,
         Named("pet") = PET[i]);
       try{
-        s = transpirationGranier(x, meteovec, 
-                                 elevation, true);
+        s = transpirationBasic(x, meteovec, 
+                               elevation, true);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;
       }
-    } else if(transpirationMode=="Sperry") {
+    } else {
       
       double delta = meteoland::radiation_solarDeclination(J);
       double solarConstant = meteoland::radiation_solarConstant(J);
@@ -2147,12 +2147,12 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
         Named("wind") = wind, 
         Named("Catm") = Catm);
       try{
-        s = transpirationSperry(x, meteovec, 
+        s = transpirationAdvanced(x, meteovec, 
                                 latitude, elevation, slope, aspect,
                                 solarConstant, delta,
                                 canopyEvaporation[i], snowMelt[i], soilEvaporation[i],
                                 verbose, NA_INTEGER, 
-                                true);
+                                true, transpirationMode);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;

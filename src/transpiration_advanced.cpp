@@ -284,12 +284,12 @@ void copyRhizoPsi(int c, int iPM,
   }
 }
 
-List transpirationSperry(List x, NumericVector meteovec, 
+List transpirationAdvanced(List x, NumericVector meteovec, 
                   double latitude, double elevation, double slope, double aspect, 
                   double solarConstant, double delta,
                   double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
                   bool verbose = false, int stepFunctions = NA_INTEGER, 
-                  bool modifyInput = true) {
+                  bool modifyInput = true, String transpirationMode = "Sperry") {
   //Control parameters
   List control = x["control"];
   String soilFunctions = control["soilFunctions"];
@@ -1741,12 +1741,80 @@ List transpirationSperry(List x, DataFrame meteo, int day,
     Named("rad") = rad, 
     Named("wind") = wind, 
     Named("Catm") = Catm);
-  return(transpirationSperry(x, meteovec,
+  return(transpirationAdvanced(x, meteovec,
                      latitude, elevation, slope, aspect,
                      solarConstant, delta,
                      canopyEvaporation, snowMelt, soilEvaporation,
                      false, stepFunctions, 
-                     modifyInput));
+                     modifyInput, "Sperry"));
+} 
+
+//' @rdname transp_modes
+// [[Rcpp::export("transp_transpirationCochard")]]
+List transpirationCochard(List x, DataFrame meteo, int day,
+                         double latitude, double elevation, double slope, double aspect,
+                         double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
+                         bool modifyInput = true) {
+  List control = x["control"];
+  if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
+  NumericVector MinTemperature = meteo["MinTemperature"];
+  if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
+  NumericVector MaxTemperature = meteo["MaxTemperature"];
+  if(!meteo.containsElementNamed("MinRelativeHumidity")) stop("Please include variable 'MinRelativeHumidity' in weather input.");
+  NumericVector MinRelativeHumidity = meteo["MinRelativeHumidity"];
+  if(!meteo.containsElementNamed("MaxRelativeHumidity")) stop("Please include variable 'MaxRelativeHumidity' in weather input.");
+  NumericVector MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
+  if(!meteo.containsElementNamed("Radiation")) stop("Please include variable 'Radiation' in weather input.");
+  NumericVector Radiation = meteo["Radiation"];
+  if(!meteo.containsElementNamed("Precipitation")) stop("Please include variable 'Precipitation' in weather input.");
+  NumericVector Precipitation = meteo["Precipitation"];
+  NumericVector WindSpeed(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
+  NumericVector CO2(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("CO2")) CO2 = meteo["CO2"];
+  
+  CharacterVector dateStrings = meteo.attr("row.names");
+  std::string c = as<std::string>(dateStrings[day-1]);
+  int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+  double delta = meteoland::radiation_solarDeclination(J);
+  double solarConstant = meteoland::radiation_solarConstant(J);
+  
+  double prec = Precipitation[day-1];
+  double rad = Radiation[day-1];
+  double tmax = MaxTemperature[day-1];
+  double tmin = MinTemperature[day-1];
+  double tmaxPrev = tmax;
+  double tminPrev = tmin;
+  double tminNext = tmin;
+  if(day>1) {
+    tmaxPrev = MaxTemperature[day-2];
+    tminPrev = MinTemperature[day-2];
+  }
+  if(day<(MaxTemperature.length()-1)) tminNext = MinTemperature[day];
+  double rhmax = MaxRelativeHumidity[day-1];
+  double rhmin = MinRelativeHumidity[day-1];
+  double wind = WindSpeed[day-1];
+  double Catm = CO2[day-1];
+  if(NumericVector::is_na(Catm)) Catm = control["defaultCO2"];
+  
+  NumericVector meteovec = NumericVector::create(
+    Named("tmin") = tmin, 
+    Named("tmax") = tmax,
+    Named("tminPrev") = tminPrev, 
+    Named("tmaxPrev") = tmaxPrev, 
+    Named("tminNext") = tminNext, 
+    Named("prec") = prec,
+    Named("rhmin") = rhmin, 
+    Named("rhmax") = rhmax, 
+    Named("rad") = rad, 
+    Named("wind") = wind, 
+    Named("Catm") = Catm);
+  return(transpirationAdvanced(x, meteovec,
+                             latitude, elevation, slope, aspect,
+                             solarConstant, delta,
+                             canopyEvaporation, snowMelt, soilEvaporation,
+                             false, NA_INTEGER, 
+                             modifyInput, "Cochard"));
 } 
 
 

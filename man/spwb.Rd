@@ -80,10 +80,9 @@ There are many elements in common in these lists, so they are listed here togeth
     \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
     \item{\code{"Evapotranspiration"}: Evapotranspiration (in mm).}
     \item{\code{"SoilEvaporation"}: Bare soil evaporation (in mm).}
-    \item{\code{"PlantExtraction"}: Amount of water extracted from soil by plants (in mm) (can only be different from transpiration for \code{transpirationMode = "Sperry"} when capacitance is considered).}
+    \item{\code{"PlantExtraction"}: Amount of water extracted from soil by plants (in mm).}
     \item{\code{"Transpiration"}: Plant transpiration (considering all soil layers) (in mm).}
-    \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network (only for \code{transpirationMode = "Sperry"}).}
-    
+    \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network.}
   }
   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"}).}
   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"}).}
@@ -94,7 +93,7 @@ There are many elements in common in these lists, so they are listed here togeth
     \item{\code{"MLTot"}: Total soil water volume (in L/m2).}
     \item{\code{"SWE"}: Snow water equivalent (mm) of the snow pack.}
     \item{\code{"PlantExt.1"}, \code{...}, \code{"PlantExt.k"}: Plant extraction from each soil layer (in mm).}
-    \item{\code{"HydraulicInput.1"}, \code{...}, \code{"HydraulicInput.k"}: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm) (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"HydraulicInput.1"}, \code{...}, \code{"HydraulicInput.k"}: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm).}
     \item{\code{"psi.1"}, \code{...}, \code{"psi.k"}: Soil water potential in each soil layer (in MPa).}
   }
   \item{\code{"Stand"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
@@ -183,16 +182,16 @@ data(exampleforestMED)
 data(SpParamsMED)
 
 #Initialize soil with default soil params (4 layers)
-examplesoil = soil(defaultSoilParams(4))
+examplesoil <- soil(defaultSoilParams(4))
 
 #Initialize control parameters
-control = defaultControl("Granier")
+control <- defaultControl("Granier")
 
 #Initialize input
-x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Call simulation function
-S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
+S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 
 #Plot results
 plot(S1)
@@ -202,22 +201,22 @@ summary(S1, freq="months",FUN=mean, output="Soil")
                   
 \donttest{
 #Switch to 'Sperry' transpiration mode
-control = defaultControl("Sperry")
+control <- defaultControl("Sperry")
 
 #Initialize input
-x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Call simulation function
-S2<-spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
+S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 
 #Switch to 'Cochard' transpiration mode
-control = defaultControl("Cochard")
+control <- defaultControl("Cochard")
 
 #Initialize input
-x3 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Call simulation function
-S3<-spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
+S3 <- spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 
 }
                 
@@ -228,7 +227,7 @@ De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llore
 De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, \enc{Martínez}{Martinez}-Vilalta J (2021) Unravelling the effect of species mixing on water use and drought stress in holm oak forests: a modelling approach. Agricultural and Forest Meteorology 296 (doi:10.1016/j.agrformet.2020.108233).
 
 Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022) 
-SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level
+SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level.
 Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).
 }
 \seealso{

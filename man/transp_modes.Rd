@@ -2,6 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{transp_transpirationSperry}
 \alias{transp_transpirationSperry}
+\alias{transp_transpirationCochard}
 \alias{transp_modes}
 \alias{transp_transpirationGranier}
 \title{Transpiration modes}
@@ -18,6 +19,20 @@ transp_transpirationSperry(
   snowMelt = 0,
   soilEvaporation = 0,
   stepFunctions = NA_integer_,
+  modifyInput = TRUE
+)
+
+transp_transpirationCochard(
+  x,
+  meteo,
+  day,
+  latitude,
+  elevation,
+  slope,
+  aspect,
+  canopyEvaporation = 0,
+  snowMelt = 0,
+  soilEvaporation = 0,
   modifyInput = TRUE
 )
 
@@ -64,7 +79,7 @@ transp_transpirationGranier(
 \item{modifyInput}{Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.}
 }
 \value{
-Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry} return a list with the following elements:
+A list with the following elements:
 \itemize{
   \item{\code{"cohorts"}: A data frame with cohort information, copied from \code{\link{spwbInput}}.}
   \item{\code{"Stand"}: A vector of stand-level variables.}
@@ -78,7 +93,7 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
       \item{\code{"psi"}: Water potential (in MPa) of the plant cohort (average over soil layers).}
       \item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
     }
-  When using \code{transp_transpirationSperry}, element \code{"Plants"} includes:
+  When using \code{transp_transpirationSperry} or \code{transp_transpirationCochard}, element \code{"Plants"} includes:
     \itemize{
       \item{\code{"LAI"}: Leaf area index of the plant cohort.}
       \item{\code{"LAIlive"}: Leaf area index of the plant cohort, assuming all leaves are unfolded.}
@@ -105,8 +120,8 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
   }
   \item{\code{"Extraction"}: A data frame with mm of water extracted from each soil layer (in columns) by each cohort (in rows).}
 
-  The remaining items are only given by \code{transp_transpirationSperry}:
-  \item{\code{"EnergyBalance"}: When using the 'Sperry' transpiration mode, the model performs energy balance of the stand and 'EnergyBalance' is a list with the following:
+  The remaining items are only given by \code{transp_transpirationSperry} or \code{transp_transpirationCochard}:
+  \item{\code{"EnergyBalance"}: A list with the following elements:
     \itemize{
       \item{\code{"Temperature"}: A data frame with the temperature of the atmosphere ('Tatm'), canopy ('Tcan') and soil ('Tsoil.1', 'Tsoil.2', ...) for each time step.}
       \item{\code{"CanopyEnergyBalance"}: A data frame with the components of the canopy energy balance (in W/m2) for each time step.}
@@ -157,9 +172,17 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
 }
 }
 \description{
-High-level sub-models to represent transpiration, plant hydraulics and water relations 
-within plants. The two submodels represent a very different degree of complexity, 
-and correspond to Granier et al. (1999) or Sperry et al. (2017).
+High-level sub-models representing transpiration, plant hydraulics, photosynthesis and water relations 
+within plants.
+}
+\details{
+Three sub-models are available: 
+\itemize{
+  \item{Sub-model in function \code{transp_transpirationGranier} was described in De \enc{Cáceres}{Caceres} et al. (2015).} 
+  \item{Sub-model in function \code{transp_transpirationSperry} was described in De \enc{Cáceres}{Caceres} et al. (2021).} 
+  \item{Sub-model in function \code{transp_transpirationCochard} combines the energy balance described in
+  described in De \enc{Cáceres}{Caceres} et al. (2021) with the stomatal conductance and plant hydraulics described in Ruffault et al. (2022).} 
+}
 }
 \examples{
 #Load example daily meteorological data
@@ -172,36 +195,51 @@ data(exampleforestMED)
 data(SpParamsMED)
 
 #Initialize soil with default soil params (4 layers)
-examplesoil = soil(defaultSoilParams(4))
+examplesoil <- soil(defaultSoilParams(4))
 
 #Initialize control parameters
-control = defaultControl("Granier")
+control <- defaultControl("Granier")
 
 #Initialize input
-x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 # Transpiration according to Granier's model, plant water potential 
 # and plant stress for a given day
-t1 = transp_transpirationGranier(x1, examplemeteo, 1, 
+t1 <- transp_transpirationGranier(x1, examplemeteo, 1, 
                                  latitude = 41.82592, elevation = 100, slope = 0, aspect = 0, 
                                  modifyInput = FALSE)
 
 #Switch to 'Sperry' transpiration mode
-control = defaultControl("Sperry")
+control <- defaultControl("Sperry")
 
 #Initialize input
-x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 # Transpiration according to Sperry's model
-t2 = transp_transpirationSperry(x2, examplemeteo, 1, 
+t2 <- transp_transpirationSperry(x2, examplemeteo, 1, 
                                 latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
                                 modifyInput = FALSE)
+                                
+#Switch to 'Cochard' transpiration mode
+control <- defaultControl("Cochard")
+
+#Initialize input
+x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+
+# Transpiration according to Cochard's model (SurEau-Ecos)
+t3 <- transp_transpirationCochard(x3, examplemeteo, 1, 
+                                 latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
+                                 modifyInput = FALSE)
                                 
 }
 \references{
 Granier A, \enc{Bréda}{Breda} N, Biron P, Villette S (1999) A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands. Ecol Modell 116:269–283. https://doi.org/10.1016/S0304-3800(98)00205-1.
 
 Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2017. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment 40, 816-830 (doi: 10.1111/pce.12852).
+
+Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022) 
+SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level.
+Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).
 }
 \seealso{
 \code{\link{spwb_day}}, \code{\link{plot.spwb_day}}
