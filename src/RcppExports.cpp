@@ -4325,8 +4325,8 @@ RcppExport SEXP _medfate_pwb(SEXP xSEXP, SEXP meteoSEXP, SEXP WSEXP, SEXP latitu
     return rcpp_result_gen;
 }
 // compute_plantNextTimeStep
-List compute_plantNextTimeStep(List WBveg, List WBsoil, List WBclim_current, List WBclim_next, int Nhours, IntegerVector nsmalltimesteps, NumericVector opt);
-RcppExport SEXP _medfate_compute_plantNextTimeStep(SEXP WBvegSEXP, SEXP WBsoilSEXP, SEXP WBclim_currentSEXP, SEXP WBclim_nextSEXP, SEXP NhoursSEXP, SEXP nsmalltimestepsSEXP, SEXP optSEXP) {
+List compute_plantNextTimeStep(List WBveg, List WBsoil, List WBclim_current, List WBclim_next, int Nhours, IntegerVector nsmalltimesteps, NumericVector opt, String stomatalRegFormulation);
+RcppExport SEXP _medfate_compute_plantNextTimeStep(SEXP WBvegSEXP, SEXP WBsoilSEXP, SEXP WBclim_currentSEXP, SEXP WBclim_nextSEXP, SEXP NhoursSEXP, SEXP nsmalltimestepsSEXP, SEXP optSEXP, SEXP stomatalRegFormulationSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -4337,7 +4337,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type Nhours(NhoursSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type nsmalltimesteps(nsmalltimestepsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type opt(optSEXP);
-    rcpp_result_gen = Rcpp::wrap(compute_plantNextTimeStep(WBveg, WBsoil, WBclim_current, WBclim_next, Nhours, nsmalltimesteps, opt));
+    Rcpp::traits::input_parameter< String >::type stomatalRegFormulation(stomatalRegFormulationSEXP);
+    rcpp_result_gen = Rcpp::wrap(compute_plantNextTimeStep(WBveg, WBsoil, WBclim_current, WBclim_next, Nhours, nsmalltimesteps, opt, stomatalRegFormulation));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5007,7 +5008,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_spwbDay", (DL_FUNC) &_medfate_spwbDay, 16},
     {"_medfate_spwb", (DL_FUNC) &_medfate_spwb, 7},
     {"_medfate_pwb", (DL_FUNC) &_medfate_pwb, 11},
-    {"_medfate_compute_plantNextTimeStep", (DL_FUNC) &_medfate_compute_plantNextTimeStep, 7},
+    {"_medfate_compute_plantNextTimeStep", (DL_FUNC) &_medfate_compute_plantNextTimeStep, 8},
     {"_medfate_sapwoodWaterCapacity", (DL_FUNC) &_medfate_sapwoodWaterCapacity, 5},
     {"_medfate_leafWaterCapacity", (DL_FUNC) &_medfate_leafWaterCapacity, 2},
     {"_medfate_turgorLossPoint", (DL_FUNC) &_medfate_turgorLossPoint, 2},

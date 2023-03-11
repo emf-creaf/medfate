@@ -117,7 +117,7 @@ void update_soilConductanceAndPsi(List WBsoil) {
   NumericVector REW = WBsoil["REW"];
   NumericVector PsiSoil = WBsoil["PsiSoil"];
   NumericVector kSoil = WBsoil["kSoil"];
-  
+
   NumericVector V_field_capacity = params["V_field_capacity"];
   NumericVector V_saturation_capacity_vg = params["V_saturation_capacity_vg"];
   NumericVector V_residual_capacity_vg = params["V_residual_capacity_vg"];
@@ -128,7 +128,7 @@ void update_soilConductanceAndPsi(List WBsoil) {
   NumericVector B_GC = params["B_GC"];
   NumericVector I_vg = params["I_vg"];
   double offSetPsoil = params["offSetPsoil"];
-  
+
   //# Compute soil hydraulic conductivity with Van Genuchten
   //# Soil water holding capacity  (volumetric)
   NumericVector totalavailwater = V_saturation_capacity_vg - V_residual_capacity_vg;
@@ -180,43 +180,43 @@ void update_gsJarvis(List WBveg, double PAR, int option = 1){
 // # Update plant conductances
 void update_kplant(List WBveg, List WBsoil) {
   List params = as<Rcpp::List>(WBveg["params"]);
-  
+
   NumericVector k_RSApoInit = params["k_RSApoInit"];
-  
+
   NumericVector k_RSApo = WBveg["k_RSApo"];
   NumericVector k_SoilToStem = WBveg["k_SoilToStem"];
   NumericVector kSoil = WBsoil["kSoil"];
-  
+
   WBveg["k_SLApo"] = ((double) params["k_SLApoInit"]) * (1.0 - ((double) WBveg["PLC_Leaf"])/100.0);
-  
+
   for(int i = 0;i<k_RSApo.size();i++) {
     //# calculate k_RSApo and k_SLApo with cavitation
     k_RSApo[i] = k_RSApoInit[i] * (1.0 - ((double) WBveg["PLC_Stem"])/100.0);
     //# Root from root length
     k_SoilToStem[i] = 1.0/((1.0/kSoil[i]) + (1.0/k_RSApo[i])); // # conductance from soil to collar (two resistances in series Rsoil and Rroot)
   }
-    
+
   // Compute k_plant (from root to leaf) for diagnostic only
   WBveg["k_Plant"] =  1.0/ (1.0 /sum(k_RSApo) + 1.0/((double) WBveg["k_SLApo"]) + 1.0/((double) WBveg["k_LSym"]));
-        
 }
 
 // # update symplasmic plant capacitances for Trunk and leaves
 void update_capacitancesApoAndSym(List WBveg) {
   List params = as<Rcpp::List>(WBveg["params"]);
   double dbxmin = 1.0e-100; //# NM minimal double to avoid-INF
-  
+
   double LAI = WBveg["LAI"];
   double Psi_SSym = WBveg["Psi_SSym"];
   double Psi_LSym = WBveg["Psi_LSym"];
-  
+  double Q_LSym_sat_mmol_perLeafArea = WBveg["Q_LSym_sat_mmol_perLeafArea"];
+
   double epsilonSym_Leaf = params["epsilonSym_Leaf"];
   double PiFullTurgor_Leaf = params["PiFullTurgor_Leaf"];
   double epsilonSym_Stem = params["epsilonSym_Stem"];
   double PiFullTurgor_Stem = params["PiFullTurgor_Stem"];
   double PsiTLP_Leaf = params["PsiTLP_Leaf"];
   double PsiTLP_Stem = params["PsiTLP_Stem"];
-  
+
   //#----Compute the relative water content of the symplasm----
   double RWC_LSym = 1.0 - Rs_comp(PiFullTurgor_Leaf, epsilonSym_Leaf, Psi_LSym - dbxmin);
   //#----Compute the derivative of the relative water content of the symplasm----
@@ -227,16 +227,16 @@ void update_capacitancesApoAndSym(List WBveg) {
     RWC_LSym_prime = -1.0*PiFullTurgor_Leaf / pow(Psi_LSym, 2.0);// # FP derivative of Pi0/Psi
   }
   //# Compute the leaf capacitance (mmol/MPa/m2_sol)
-  if (LAI==0){ 
-    WBveg["C_LSym"] = 0.0; 
-  } else { 
-    WBveg["C_LSym"] = ((double) WBveg["Q_LSym_sat_mmol_perLeafArea"]) * RWC_LSym_prime;
+  if (LAI==0){
+    WBveg["C_LSym"] = 0.0;
+  } else {
+    WBveg["C_LSym"] = Q_LSym_sat_mmol_perLeafArea * RWC_LSym_prime;
   } //# changed 25/10/2021 by NM
-    
-    
+
+
   //#----Stem symplasmic canopy water content----
   double RWC_SSym = 1.0 - Rs_comp(PiFullTurgor_Stem, epsilonSym_Stem, Psi_SSym - dbxmin);
-      
+
   //#----Compute the derivative of the relative water content of the symplasm----
   double RWC_SSym_prime;
   if (Psi_SSym > PsiTLP_Stem) {
@@ -245,14 +245,14 @@ void update_capacitancesApoAndSym(List WBveg) {
     RWC_SSym_prime = -1.0* PiFullTurgor_Stem / pow(Psi_SSym, 2.0);
   }
   //# Compute the capacitance (mmol/MPa/m2_leaf)
-  WBveg["C_SSym"] = ((double) WBveg["Q_SSym_sat_mmol_perLeafArea"]) * RWC_SSym_prime; // #  changed 25/10/2021 by NM. --> Stem capacitance per leaf area can only decrease with LAI (cannot increase when LAI<1 )
+  WBveg["C_SSym"] = Q_LSym_sat_mmol_perLeafArea * RWC_SSym_prime; // #  changed 25/10/2021 by NM. --> Stem capacitance per leaf area can only decrease with LAI (cannot increase when LAI<1 )
   WBveg["C_SApo"] = params["C_SApoInit"];
   WBveg["C_LApo"] = params["C_LApoInit"];
 }
 
 //# compute Evaporation from ETP and Gsoil and update SWS, Psi and in each soil layer
-void compute_evaporationG(List WBsoil, double RHair, double Tair, 
-                          double Nhours, double LAI, 
+void compute_evaporationG(List WBsoil, double RHair, double Tair,
+                          double Nhours, double LAI,
                           double ETP, double K) {
   //# created 03/01/2021 by JR / based on SurEau.C with gsoil0
   //# such as Esoil = gSoil0 * REW1 * VPDsoil/Patm
@@ -261,12 +261,12 @@ void compute_evaporationG(List WBsoil, double RHair, double Tair,
   NumericVector REW = WBsoil["REW"];
   NumericVector Evaporation = WBsoil["Evaporation"];
   NumericVector soilWaterStock = WBsoil["soilWaterStock"];
-  
+
   //#TODO: improve this relation....
   double Tsoil = 0.6009*Tair+3.59;// # from relation fitted on O3HP
-  
+
   double VPDsoil = vapourPressureFromRH(Tsoil, RHair);
-  
+
   double evaporation = 0.0;
   if (Tsoil > 0.0) { //# no evaporation from frozen soil
     double g_Soil = ((double) params["gSoil0"]) * ((double) REW[0]);
@@ -276,18 +276,18 @@ void compute_evaporationG(List WBsoil, double RHair, double Tair,
     double E_Soil3 = std::min(E_Soil1, E_Soil2);
     evaporation = convertFluxFrom_mmolm2s_To_mm(E_Soil3, Nhours); // # Conversion from mmol/m2/s to mm
   }
-    
+
   WBsoil["EvaporationSum"] = evaporation;
   WBsoil["Evaporation"] = evaporation;
-  
+
   soilWaterStock[0] = soilWaterStock[0] - evaporation;
   update_soilConductanceAndPsi(WBsoil);
 }
 
 //# New version of compute Tleaf by Nicolas Martin (04/08/2021) : corrected cloud cover calculation  / Changed input parameters also
-NumericVector compute_Tleaf(double Tair, double PAR, double POTENTIAL_PAR, double WS, double RH, 
-                            double gs, double g_cuti, double Einst , double PsiLeaf,  
-                            double leaf_size = 50.0, double leaf_angle=45.0, 
+NumericVector compute_Tleaf(double Tair, double PAR, double POTENTIAL_PAR, double WS, double RH,
+                            double gs, double g_cuti, double Einst , double PsiLeaf,
+                            double leaf_size = 50.0, double leaf_angle=45.0,
                             bool TurnOffEB = false) {
   // #Compute Tleaf and VPDLeaf
   // # SWR  // short-wave radiation    (W/m2)
@@ -295,27 +295,27 @@ NumericVector compute_Tleaf(double Tair, double PAR, double POTENTIAL_PAR, doubl
   // # Tair // air temperature (degC)
   // # leaf_angle // # leaf angle (depuis le plan horizontal : 0-90 deg)
   // # leaf_size  // characteristic dimension from vegetation params in mm (1 - 3000 : pine needle - banana leaf)
-  
+
   WS = std::max(WS, 0.1);//  # Force minimum wind speed to avoid excessive heating
   double SWR =  PAR*0.5495; // # from µmol/m²/s to Watts/m²
-  
+
   double aSWR = 0.5; // #  //  absorptance to SWR %
-  
+
   double gflat = 0.00662;
   double gcyl  = 0.00403; //  coefficient in rbl equation    m
-  double jflat = 0.5; 
+  double jflat = 0.5;
   double jcyl  = 0.6;  //  coefficient in rbl equation  none
-  
+
   double em_leaf = 0.97;     // emissivity    none
   double SB = 5.6704e-8;     //  Stefan-Boltzman constant    W m-2 K-4
   double p   = 1.292;        // density of dry air    kg/m3
   double Cp  = 1010.0;       // heat capacity of dry air    J kg-1 K-1
   double y   = 0.066;        // psychrometric constant    kPa K-1
-  
+
   double a  = 0.61121;     // coefficient in esat equation    kPa
   double b  = 17.502;     // coefficient in esat equation    none
   double z  = 240.97;     // coefficient in esat equation    °C
-  
+
   //# VARAIBLE CALCULEES
   //# rst  #   // stomatal resistance s m-1 (not needed)
   //# esat # //// saturation vapor pressure    kPa
@@ -336,20 +336,20 @@ NumericVector compute_Tleaf(double Tair, double PAR, double POTENTIAL_PAR, doubl
   if(POTENTIAL_PAR > 0.0) {
     cloud_cover = std::min(1.0, PAR/POTENTIAL_PAR);
   }
-  
+
   double esat = a * exp(b * Tair / (Tair + z)); // #kPa
   double ea = esat * (RH / 100);
   double s = esat * b * z / pow(Tair + z, 2.0);
   double em_air = ((1.0 - 0.84 * cloud_cover) * 1.31 * pow(10.0 * ea / (Tair + 273.15), 0.14285714) + 0.84 * cloud_cover);
   double VPDx = esat - ea; // #Update VPD with esat and ea (why?)
-    
+
   //# Bilan radiatif
   double SWRabs = aSWR * cos(leaf_angle * 3.1416 / 180.0) * SWR; // # Radiation absorbed by leaves
   double LWRin  = em_air * SB * pow(Tair + 273.15, 4.0);  // # Incoming long-wave radiation (W m-2) for clear and cloudy sky
   double LWRouti  = em_leaf * SB * pow(Tair + 273.15, 4.0); //# Outcoming long-wave radiation (W m-2) for clear and cloudy sky
   double Rni = SWRabs + LWRin - LWRouti; // # isothermal net radiation
   double rr = p * Cp / (4.0 * em_leaf * SB * pow(Tair + 273.15, 3.0));// # Radiative resistance
-    
+
   //# Boundary layer resistance
   double rbl;
   if(leaf_size > 3.0) {
@@ -357,10 +357,10 @@ NumericVector compute_Tleaf(double Tair, double PAR, double POTENTIAL_PAR, doubl
   } else {
     rbl = 1.0 / (1.5 * gcyl * (pow(WS,jcyl) / pow(leaf_size / 1000.0, 1.0 - jcyl))); // # A flat leaf if > 3mm
   } //# a needle, formula for a cylinder
-    
+
   double g_bl = 1.0 / rbl * 1000.0 * 40.0; // #leaf boundary layer conductance in mmol/s/m2
-  double rblr = 1.0 / (1.0 / rbl + 1.0 / rr); 
-    
+  double rblr = 1.0 / (1.0 / rbl + 1.0 / rr);
+
   //#Include the gs term into the energy balance
   double rst = 9999.99;
   if ((gs+g_cuti) > 0.0) {
@@ -368,15 +368,15 @@ NumericVector compute_Tleaf(double Tair, double PAR, double POTENTIAL_PAR, doubl
   }
 
   double ym = y * (rst / rblr);
-  
+
   // compute Tleaf with linear approximation
   double Delta_T = (ym * Rni * rblr / (p * Cp) - VPDx) / (s + ym);
   double Tleaf = Tair + Delta_T;
-    
+
   double e_sat_air = 611.21*exp((18.678 - Tair/234.5) * Tair/(257.14 + Tair)); // saturation vapour water pressure at Tair in Pa from Buck's equation
   double e_air = e_sat_air*RH/100.0;  // vapour water pressure at Tair and RHair
   double VPD_Air =  (e_sat_air - e_air)/1000.0;
-    
+
   double e_sat = 611.21*exp((18.678 - Tleaf/234.5) * Tleaf/(257.14 + Tleaf));    // saturation vapour water pressure at Tair in Pa from Buck's equation
   double e = e_sat*exp(PsiLeaf * 2.16947115/(Tleaf + 273.15));
   // effect of leaf water potential on e
@@ -394,7 +394,7 @@ NumericVector compute_Tleaf(double Tair, double PAR, double POTENTIAL_PAR, doubl
 
 void compute_transpiration(List WBveg, List WBclim, double Nhours, NumericVector opt, String stomatalRegFormulation) {
   List params  = WBveg["params"];
-  
+
   // # calculate Tleaf, leafVPD and gBL
   double Tair_mean = WBclim["Tair_mean"];
   double PAR = WBclim["PAR"];
@@ -403,34 +403,34 @@ void compute_transpiration(List WBveg, List WBclim, double Nhours, NumericVector
   double RHair_mean = WBclim["RHair_mean"];
   double gs_lim = WBveg["gs_lim"];
   double gmin = WBveg["gmin"];
-  double Psi_LSym =WBveg["Psi_LSym"]; 
+  double Psi_LSym =WBveg["Psi_LSym"];
   double leaf_size = params["leaf_size"];
   double leaf_angle = params["leaf_angle"];
   NumericVector TGbl_Leaf = compute_Tleaf(Tair_mean, PAR, POTENTIAL_PAR, WS, RHair_mean,
                                           gs_lim, gmin, Psi_LSym,
                                           leaf_size, leaf_angle, false);
-      
+
   WBveg["leafTemperature"] = TGbl_Leaf[0];
   WBveg["gBL"] = TGbl_Leaf[1];
   WBveg["leafVPD"] = TGbl_Leaf[2];
-    
+
   //# calculate gcrown
   double gCrown = gCrown_comp((double) params["gCrown0"], (double) WBclim["WS"]);
   WBveg["gCrown"]  = gCrown;
-      
+
   //# Leaf cuticular conductances and cuticular transpiration
-  WBveg["gmin"] = gmin_comp((double) WBveg["leafTemperature"], 
+  WBveg["gmin"] = gmin_comp((double) WBveg["leafTemperature"],
                             (double) params["gmin20"], (double) params["TPhase_gmin"],
                             (double) params["Q10_1_gmin"], (double) params["Q10_2_gmin"]);
-  WBveg["Emin"] = Emin_comp((double) WBveg["gmin"], (double) WBveg["gBL"], 
+  WBveg["Emin"] = Emin_comp((double) WBveg["gmin"], (double) WBveg["gBL"],
                             (double) WBveg["gCrown"], (double) WBveg["leafVPD"]);
   //# Stem cuticular transpiration
-  WBveg["Emin_S"] =  ((double) params["fTRBToLeaf"]) * Emin_comp((double) WBveg["gmin_S"], (double) WBveg["gBL"], 
+  WBveg["Emin_S"] =  ((double) params["fTRBToLeaf"]) * Emin_comp((double) WBveg["gmin_S"], (double) WBveg["gBL"],
                                                                  (double) WBveg["gCrown"], (double) WBclim["VPD"]);
   // #compute current stomatal regulation
   NumericVector regul = regulFact_comp(WBveg["Psi_LSym"], params, stomatalRegFormulation);
   WBveg["regulFact"] = regul["regulFact"];
-      
+
   //# calculate canopy Transpiration with no regulation
   update_gsJarvis(WBveg, (double) WBclim["PAR"], 2);// # calculate gs_bound
   double gs_bound = WBveg["gs_bound"];
@@ -442,29 +442,29 @@ void compute_transpiration(List WBveg, List WBclim, double Nhours, NumericVector
   //# calculate canopy transpiration with current regulation
   gs_lim = gs_bound * regul["regulFact"];
   double gcanopy_lim = 1.0/(1.0/gCrown + 1.0/gs_lim + 1.0/gBL); // # NB: gcanopy_lim =0 when gs_lim=0 (1/(1+1/0)=0 in R)
-  double Elim = gcanopy_lim * ((double) WBveg["leafVPD"])/ 101.3;   
+  double Elim = gcanopy_lim * ((double) WBveg["leafVPD"])/ 101.3;
   double gs_lim_prime = gs_bound * regul["regulFactPrime"];
   double dbxmin = 1.0e-100;
   WBveg["gs_lim"] = gs_lim;
   WBveg["gcanopy_lim"] = gcanopy_lim;
-  WBveg["Elim"] = Elim;   
+  WBveg["Elim"] = Elim;
   WBveg["Eprime"] = Elim * gs_lim_prime /(gs_lim * (1.0+ gs_lim*(1.0/gCrown + 1.0/gBL)) + dbxmin);
-        
+
   //# update Tleaf according to new conductance to avoid large gaps (comestic)
   TGbl_Leaf = compute_Tleaf(Tair_mean, PAR, POTENTIAL_PAR, WS, RHair_mean,
                             gs_lim, gmin, Psi_LSym,
                             leaf_size, leaf_angle, false);
-          
+
   WBveg["leafTemperature"] = TGbl_Leaf[0];
   WBveg["gBL"] = TGbl_Leaf[1];
   WBveg["leafVPD"] = TGbl_Leaf[2];
 }
 
-void semi_implicit_temporal_integration(List WBveg, List WBsoil, 
+void semi_implicit_temporal_integration(List WBveg, List WBsoil,
                                         double dt, int nsmalltimesteps, NumericVector opt) {
-  
+
   List params = as<Rcpp::List>(WBveg["params"]);
-  
+
   // Step 1. Initializing current time step according to computation options (FP)
   double dbxmin = 1.0e-100; // FP minimal double to avoid 0/0
   double Psi_LApo_n = WBveg["Psi_LApo"];
@@ -473,57 +473,57 @@ void semi_implicit_temporal_integration(List WBveg, List WBsoil,
   double Psi_SSym_n = WBveg["Psi_SSym"];
   double Psi_LApo_cav = WBveg["Psi_LApo_cav"];
   double Psi_SApo_cav = WBveg["Psi_SApo_cav"];
-  
+
   //Modifiers
   double Lsym = opt["Lsym"];
   double Ssym = opt["Ssym"];
   double CLapo = opt["CLapo"];
   double CTapo = opt["CTapo"];
-  double Eord = opt["Eord"];
+  // double Eord = opt["Eord"]; MIQUEL: NOT USED
   double Lcav = opt["Lcav"];
   double Scav = opt["Scav"];
-  
+
   double k_SSym = WBveg["k_SSym"];
   double k_LSym = WBveg["k_LSym"];
   double c_LSym = WBveg["C_LSym"];
   double c_SSym = WBveg["C_SSym"];
   double c_LApo = WBveg["C_LApo"];
   double c_SApo = WBveg["C_SApo"];
-  
+
   double K_LSym = Lsym * k_LSym;   //
   double K_SSym = Ssym * k_SSym;   //
   double C_LSym = Lsym * c_LSym;   //
   double C_SSym = Ssym * c_SSym;   //
   double C_LApo = CLapo * c_LApo; //
   double C_SApo = CTapo * c_SApo; //
-  
-  
+
+
   double K_SL = WBveg["k_SLApo"];
-  
+
   double E_nph = WBveg["Elim"]; // COMPUTED WITH WBveg$Psi_LSym AND INTERPOLATE CLIMATE
-  double Eprime = WBveg["Eprime"];
-  double Eprime_nph = Eord * Eprime;
-  
+  // double Eprime = WBveg["Eprime"]; MIQUEL: NOT used
+  // double Eprime_nph = Eord * Eprime; MIQUEL: Not used
+
   double Emin_L_nph = WBveg["Emin"];
   double Emin_S_nph = WBveg["Emin_S"];
-  
+
   double PLC_Leaf = WBveg["PLC_Leaf"];
   double PLC_Stem = WBveg["PLC_Stem"];
   double Q_LApo_sat_mmol_perLeafArea = WBveg["Q_LApo_sat_mmol_perLeafArea"];
   double Q_SApo_sat_mmol_perLeafArea = WBveg["Q_SApo_sat_mmol_perLeafArea"];
-  
+
   double slope_VC_Leaf = params["slope_VC_Leaf"];
   double slope_VC_Stem = params["slope_VC_Stem"];
   double P50_VC_Leaf = params["P50_VC_Leaf"];
   double P50_VC_Stem = params["P50_VC_Stem"];
-  
+
   //Compute K_L_Cav et K_S_Cav
   double PLC_prime_L = PLCPrime_comp(PLC_Leaf, slope_VC_Leaf);
   double K_L_Cav = -1.0 * Lcav * Q_LApo_sat_mmol_perLeafArea * PLC_prime_L / dt;  // avec WBveg$Q_LSym_sat en l/m2 sol # changed by NM (25/10/2021)
   double PLC_prime_S = PLCPrime_comp(PLC_Stem, slope_VC_Stem);
   double K_S_Cav = -1.0 * Scav * Q_SApo_sat_mmol_perLeafArea * PLC_prime_S / dt;  // opt$Scav * WBveg$K_S_Cav #FP corrected a bug sign herehanged by NM (25/10/2021)
-    
-    
+
+
   // Step 2. While loop in order to decide if cavitation or not :
   //  In order to account for the cavitation that occurs only when potentials go below their lowest value "cav" (formerly called "mem" in an earlier version)
   // the following computations are done trying sequentially the resolutions of LApo and TApo eventually activating
@@ -531,7 +531,7 @@ void semi_implicit_temporal_integration(List WBveg, List WBsoil,
   // in case of computational problem, the last case assume no cavitation flux
   bool LcavitWellComputed = false; //initialized to false
   bool ScavitWellComputed = false;
-  
+
   NumericVector delta_L_cavs, delta_S_cavs;
   if ((Lcav==0.0) && (Scav==0.0)) { // no cavitation flux computed
       delta_L_cavs = NumericVector::create(0.0);
@@ -546,13 +546,13 @@ void semi_implicit_temporal_integration(List WBveg, List WBsoil,
       delta_L_cavs=NumericVector::create(0.0,1.0,0.0,1.0,0.0); // the fifth case is here in case no solution with others...
       delta_S_cavs=NumericVector::create(0.0,0.0,1.0,1.0,0.0);
   }
-    
+
   NumericVector k_SoilToStem = WBveg["k_SoilToStem"];
   NumericVector PsiSoil = WBsoil["PsiSoil"];
 
   double alpha, Psi_td, Psi_LApo_np1, Psi_SApo_np1, Psi_LSym_np1, Psi_SSym_np1;
   double psiref;
-  
+
   int nwhilecomp = 0; // # count the number of step in while loop (if more than 4 no solution and warning)
   while (((!LcavitWellComputed)||(!ScavitWellComputed)) && (nwhilecomp<delta_L_cavs.size())) {
       nwhilecomp = nwhilecomp + 1;
@@ -577,7 +577,7 @@ void semi_implicit_temporal_integration(List WBveg, List WBsoil,
         Rcerr << "water flux due to Cavitation ignored with time step, no solution from the implicit solver="<<dt<<"\n";
       }
   } //# end of the while loop with check on cavitation options
-  
+
   WBveg["Diag_nwhile_cavit"] = nwhilecomp;  // # Diagnostic step to track cavit event and eventual errors (corresponding to nwhilecomp==5)
 
   //# Step 3. Compute Psi_Symp_np1 (L and S)
@@ -613,46 +613,49 @@ void semi_implicit_temporal_integration(List WBveg, List WBsoil,
 }
 
 // [[Rcpp::export]]
-List compute_plantNextTimeStep(List WBveg, List WBsoil, List WBclim_current, List WBclim_next, 
-                               int Nhours, 
+List compute_plantNextTimeStep(List WBveg, List WBsoil, List WBclim_current, List WBclim_next,
+                               int Nhours,
                                IntegerVector nsmalltimesteps, NumericVector opt, String stomatalRegFormulation) {
-  
+
   // # A. LOOP ON THE IMPLICIT SOLVER IN PSI, trying different time steps until results are OK
   bool regulationWellComputed = false;
   bool cavitationWellComputed = false;
-  List WBveg_np1;
+  List params  = WBveg["params"];
+  NumericVector kSoil = WBsoil["kSoil"];
   
+  List WBveg_np1;
+
   double LAI = (double) WBveg["LAI"];
   
   int nwhilecomp = 0;
-  NumericVector fluxSoilToStemLargeTimeStep;
+  NumericVector fluxSoilToStemLargeTimeStep(kSoil.size(), 0.0);
+  
   while ((!regulationWellComputed || !cavitationWellComputed) && (nwhilecomp<nsmalltimesteps.size())) { //# LOOP TO TRY DIFFERENT TIME STEPS
     List WBveg_n = clone(WBveg); // # initial value of WBveg
     List WBsoil_n = clone(WBsoil); // # initial value of WBsoil
-    
-     
-    List params  = WBveg_n["params"];
-    
-    bool regulationWellComputed = false;
-    bool cavitationWellComputed = false;
+
+    regulationWellComputed = false;
+    cavitationWellComputed = false;
     int nwhilecomp = nwhilecomp + 1;
     double deltaRegulMax = 1.0e-100;
     double deltaPLCMax = 1.0e-100;
     
-    int nts = nsmalltimesteps[nwhilecomp];// # number of small time steps
     double fluxEvaporationSoilLargeTimeStep = 0.0;
+    for(int i=0;i < kSoil.size();i++) fluxSoilToStemLargeTimeStep[i] = 0.0;
+      
+    int nts = nsmalltimesteps[nwhilecomp];// # number of small time steps
     for(int its = 1; its <= nts; its++) { //#INTERNAL LOOP ON SMALL TIME STEPS
       double p = (((double) its ) - 0.5)/((double) nts);
       List WBclim = interp_WBclim(WBclim_current, WBclim_next, p); // # climate at nph
       double ETPr = WBveg_n["ETPr"];
       double Tair_mean = WBclim["Tair_mean"];
       double RHair = WBclim["RHair"];
-      compute_evaporationG(WBsoil_n, RHair, Tair_mean, 
+      compute_evaporationG(WBsoil_n, RHair, Tair_mean,
                            ((double) Nhours)/((double) nts), LAI,
                            ETPr, (double) params["K"]);
-      double fluxEvaporationSoilLargeTimeStep = fluxEvaporationSoilLargeTimeStep + ((double) WBsoil_n["E_Soil3"])/((double) nts);
-      
-      WBveg_np1 = clone(WBveg_n);
+      fluxEvaporationSoilLargeTimeStep = fluxEvaporationSoilLargeTimeStep + ((double) WBsoil_n["E_Soil3"])/((double) nts);
+
+      WBveg_np1 = clone(WBveg_n); // Clone WBveg object
       compute_transpiration(WBveg_np1, WBclim, Nhours, opt, stomatalRegFormulation);// # transpi with climate at nph
       semi_implicit_temporal_integration(WBveg_np1,  WBsoil_n, ((double) Nhours) * 3600.0 / ((double) nts), nts, opt);
       update_kplant(WBveg_np1, WBsoil_n);
@@ -662,9 +665,9 @@ List compute_plantNextTimeStep(List WBveg, List WBsoil, List WBclim_current, Lis
       // # 1. delta regulation between n and np1 (MIQUEL: Only Psi_LSym changes between the two calculations, params should be the same)
       NumericVector regul_np1 = regulFact_comp(WBveg_np1["Psi_LSym"], params, stomatalRegFormulation);
       NumericVector regul_n = regulFact_comp(WBveg_n["Psi_LSym"], params, stomatalRegFormulation); //# TODO check why recomputed? should be in WBveg_tmp
-      
+
       deltaRegulMax = std::max(deltaRegulMax,std::abs((double) regul_np1["regulFact"] - (double) regul_n["regulFact"]));
-      
+
       // # 2. PLC at n and np1
       deltaPLCMax = std::max(deltaPLCMax, (double) WBveg_np1["PLC_Leaf"] - (double) WBveg_n["PLC_Leaf"]);
       deltaPLCMax = std::max(deltaPLCMax, (double) WBveg_np1["PLC_Stem"] - (double) WBveg_n["PLC_Stem"]);
@@ -674,8 +677,8 @@ List compute_plantNextTimeStep(List WBveg, List WBsoil, List WBclim_current, Lis
       NumericVector fluxSoilToStem_mm = WBveg_np1["fluxSoilToStem"];
       double Psi_SApo = WBveg_np1["Psi_SApo"];
       NumericVector k_SoilToStem = WBveg["k_SoilToStem"]; //MIQUEL: Why WBveg here?
-      NumericVector PsiSoil = WBsoil_n["PsiSoil"]; 
-      for(int i=0;i < fluxSoilToStem_mm.size();i++) {
+      NumericVector PsiSoil = WBsoil_n["PsiSoil"];
+      for(int i=0;i < kSoil.size();i++) {
         double fluxSoilToStem_mmolm2s = k_SoilToStem[i]*(PsiSoil[i] - Psi_SApo);
         fluxSoilToStemLargeTimeStep[i] = fluxSoilToStemLargeTimeStep[i] + fluxSoilToStem_mmolm2s/((double) nts);// # mean flux over one large time step
         fluxSoilToStem_mm[i] = convertFluxFrom_mmolm2s_To_mm(fluxSoilToStem_mmolm2s, ((double) Nhours)/((double) nts), LAI); // # Quantity from each soil layer to the below part
@@ -683,15 +686,15 @@ List compute_plantNextTimeStep(List WBveg, List WBsoil, List WBclim_current, Lis
       // # NB the time step for fluxSoilToStem_mm is Nhours/nts!
       update_soilWater(WBsoil_n, fluxSoilToStem_mm);
     } //# end loop small time step
-    
+
     // # TESTS ON RESOLUTION
-    // WBveg_np1["Diag_deltaRegulMax"] = deltaRegulMax;
+    WBveg_np1["Diag_deltaRegulMax"] = deltaRegulMax;
     regulationWellComputed = (deltaRegulMax<0.05);
-    // WBveg_np1["Diag_deltaPLCMax"] = deltaPLCMax;
+    WBveg_np1["Diag_deltaPLCMax"] = deltaPLCMax;
     cavitationWellComputed = (deltaPLCMax<1.0);// # 1%
-    // WBveg_np1["Diag_timeStepInHours"] = ((double) Nhours)/((double) nts);
+    WBveg_np1["Diag_timeStepInHours"] = ((double) Nhours)/((double) nts);
   } //# end while
-  
+
   // # B. SAVING SOLUTION AT NEXT TIME STEP IN WBveg
   WBveg = WBveg_np1;
   // # final update of transpiration at clim_next (useful for consistency in outputs, but not required for the computations)
@@ -701,14 +704,15 @@ List compute_plantNextTimeStep(List WBveg, List WBsoil, List WBclim_current, Lis
   // # mean soil quantities on large time steps
   WBveg["Emin_mm"]  = convertFluxFrom_mmolm2s_To_mm((double) WBveg["Emin"], (double) Nhours, LAI); // # Flux from each soil layer to the below part
   WBveg["Emin_S_mm"] = convertFluxFrom_mmolm2s_To_mm((double) WBveg["Emin_S"], (double) Nhours, LAI); // # Flux from each soil layer to the below part
-     
-  WBveg["SumFluxSoilToStem"] = sum(fluxSoilToStemLargeTimeStep);// # flux total en mmol/m2/s / used for Tleaf
+
+  double SumFluxSoilToStem = sum(fluxSoilToStemLargeTimeStep); // # flux total en mmol/m2/s / used for Tleaf
+  WBveg["SumFluxSoilToStem"] = SumFluxSoilToStem;
   NumericVector fluxSoilToStem_mm = WBveg["fluxSoilToStem_mm"];
   for(int i=0;i< fluxSoilToStem_mm.size();i++) {
     fluxSoilToStem_mm[i] = convertFluxFrom_mmolm2s_To_mm(fluxSoilToStemLargeTimeStep[i], (double) Nhours, LAI); // # Flux from each soil layer to the below part  in mm
   }
-  WBveg["transpiration_mm"] = convertFluxFrom_mmolm2s_To_mm(((double) WBveg["Emin"]) + ((double) WBveg["Emin_S"]) + ((double) WBveg["Elim"]), 
+  WBveg["transpiration_mm"] = convertFluxFrom_mmolm2s_To_mm(((double) WBveg["Emin"]) + ((double) WBveg["Emin_S"]) + ((double) WBveg["Elim"]),
                                                             (double) Nhours, LAI); //# total flux in mm
-  // D. Return modified object
+  // D. RETURN FINAL MODIFIED OBJECT
   return(WBveg);
 }
