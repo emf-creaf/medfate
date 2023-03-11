@@ -2796,20 +2796,25 @@ spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, ele
 #'     \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
 #'     \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
 #'     \item{\code{Precipitation}: Precipitation (in mm).}
-#'     \item{\code{Radiation}: Solar radiation (in MJ/m2/day), required only if \code{snowpack = TRUE}.}
+#'     \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
 #'     \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
 #'     \item{\code{CO2}: Atmospheric (abovecanopy) CO2 concentration (in ppm). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
 #'   }
 #' @param latitude Latitude (in degrees).
-#' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Sperry' transpiration mode. Elevation is also required for 'Granier' if snowpack dynamics are simulated.
+#' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).
 #' @param CO2ByYear A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).
 #' 
 #' @details 
-#' The model using 'Granier' transpiration mode is illustrated by function \code{\link{transp_transpirationGranier}} and described in De Caceres et al. (2015). 
-#' Simulations using the 'Sperry' transpiration mode are computationally much more expensive, are described in De Cáceres et al. (2021) and are illustrated by function \code{\link{transp_transpirationSperry}}. 
+#' The simulation functions allow using three different sub-models of transpiration and photosynthesis:
+#' \itemize{
+#'   \item{The sub-model corresponding to 'Granier' transpiration mode is illustrated by function \code{\link{transp_transpirationGranier}} and was described in De Caceres et al. (2015).} 
+#'   \item{The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function \code{\link{transp_transpirationSperry}} and was described in De Caceres et al. (2021).} 
+#'   \item{The sub-model corresponding to 'Cochard' transpiration mode is illustrated by function \code{\link{transp_transpirationCochard}} and was described in Ruffault et al. (2022).} 
+#' }
+#' Simulations using the 'Sperry' or 'Cochard' transpiration mode are computationally much more expensive than 'Granier'.
 #' 
 #' @return
-#' Function \code{spwb} returns a list of class 'spwb' whereas Function \code{pwb} returns a list of class 'pwb'. 
+#' Function \code{spwb} returns a list of class 'spwb' whereas function \code{pwb} returns a list of class 'pwb'. 
 #' There are many elements in common in these lists, so they are listed here together:
 #' \itemize{
 #'   \item{\code{"latitude"}: Latitude (in degrees) given as input.} 
@@ -2876,7 +2881,7 @@ spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, ele
 #'     \item{\code{"LFMC"}: A data frame with the daily live fuel moisture content (in percent of dry weight).}
 #'     \item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance).}
 #'   }
-#' If \code{transpirationMode="Sperry"}, element \code{"Plants"} is a list with the following subelements:
+#' If \code{transpirationMode="Sperry"} or \code{transpirationMode="Cochard"}, element \code{"Plants"} is a list with the following subelements:
 #'   \itemize{
 #'     \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
 #'     \item{\code{"AbsorbedSWR"}: A data frame with the daily SWR absorbed by each plant cohort.}
@@ -2908,6 +2913,10 @@ spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, ele
 #' De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (doi:10.1016/j.agrformet.2015.06.012).
 #' 
 #' De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, \enc{Martínez}{Martinez}-Vilalta J (2021) Unravelling the effect of species mixing on water use and drought stress in holm oak forests: a modelling approach. Agricultural and Forest Meteorology 296 (doi:10.1016/j.agrformet.2020.108233).
+#' 
+#' Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022) 
+#' SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level
+#' Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 

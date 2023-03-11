@@ -22,6 +22,11 @@
 #' [\href{https://orcid.org/0000-0003-0840-1477}{ORCID}]}
 #' \item{ Nicolas Martin-StPaul
 #' [\href{https://orcid.org/0000-0001-7574-0108}{ORCID}]}
+#' \item{ Julien Ruffault}
+#' \item{ François Pimont
+#' [\href{https://orcid.org/0000-0002-9842-6207}{ORCID}]}
+#' \item{ Hervé Cochard
+#' [\href{https://orcid.org/0000-0002-2727-7072}{ORCID}]}
 #' \item{ Aitor Améztegui
 #' [\href{https://orcid.org/0000-0001-6426-1726}{ORCID}]}
 #' \item{ Shengli Huang
@@ -37,6 +42,7 @@
 #' \itemize{
 #'    \item{De Cáceres et al. (2015) (\doi{10.1016/j.agrformet.2015.06.012})}
 #'    \item{De Cáceres et al. (2021) (\doi{10.1016/j.agrformet.2020.108233})}
+#'    \item{Ruffault et al. (2022) (\doi{10.5194/gmd-15-5593-2022})}
 #' }
 #' 
 #' @keywords internal
