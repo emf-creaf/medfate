@@ -65,8 +65,13 @@ which evolve together with **medfate**:
   provides functions to help initializing vegetation, soil and species
   parameter inputs for **medfate** simulation functions.
 
+## Authorship
+
 The set of R packages are developed and maintained by the [*Ecosystem
-Modelling Facility*](https://emf.creaf.cat) at CREAF (Spain).
+Modelling Facility*](https://emf.creaf.cat) unit at CREAF (in Spain), in
+close collaboration with researchers from
+[*URFM-INRAE*](https://www6.paca.inrae.fr/ecologie_des_forets_mediterraneennes/)
+(in FRANCE).
 
 ## References
 

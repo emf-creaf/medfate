@@ -10,6 +10,8 @@
 #' [\href{https://orcid.org/0000-0001-7132-2080}{ORCID}]
 #'
 #' Authors: \itemize{
+#' \item{ Nicolas Martin-StPaul
+#' [\href{https://orcid.org/0000-0001-7574-0108}{ORCID}]}
 #' \item{ Víctor Granda
 #' [\href{https://orcid.org/0000-0002-0469-1991}{ORCID}]}
 #' \item{ Antoine Cabon
@@ -20,8 +22,6 @@
 #' [\href{https://orcid.org/0000-0002-2332-7298}{ORCID}]}
 #' \item{ Maurizio Mencuccini
 #' [\href{https://orcid.org/0000-0003-0840-1477}{ORCID}]}
-#' \item{ Nicolas Martin-StPaul
-#' [\href{https://orcid.org/0000-0001-7574-0108}{ORCID}]}
 #' \item{ Julien Ruffault}
 #' \item{ François Pimont
 #' [\href{https://orcid.org/0000-0002-9842-6207}{ORCID}]}
