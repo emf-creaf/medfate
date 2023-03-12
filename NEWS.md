@@ -8,6 +8,7 @@
 - No calculation mode forest structure (US mode removed)
 - Control flag options to restrict output in 'spwb()' 'pwb()' and 'growth()'
 - Control flag to calculate fire hazard during 'spwb()' 'pwb()' and 'growth()' simulations
+- Integration of SUREAU-ECOS code as new transpiration mode ('Cochard')
 
 # Version 2.9.3
 - Bounded leaf area index

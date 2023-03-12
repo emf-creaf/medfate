@@ -48,7 +48,7 @@ transp_transpirationGranier(
 )
 }
 \arguments{
-\item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}, built using the 'Granier' or 'Sperry' transpiration modes, depending on the function to be called.}
+\item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}, built using the 'Granier', 'Sperry' or 'Cochard' transpiration modes.}
 
 \item{meteo}{A data frame with daily meteorological data series:
 \itemize{
@@ -178,10 +178,11 @@ within plants.
 \details{
 Three sub-models are available: 
 \itemize{
-  \item{Sub-model in function \code{transp_transpirationGranier} was described in De \enc{Cáceres}{Caceres} et al. (2015).} 
-  \item{Sub-model in function \code{transp_transpirationSperry} was described in De \enc{Cáceres}{Caceres} et al. (2021).} 
-  \item{Sub-model in function \code{transp_transpirationCochard} combines the energy balance described in
-  described in De \enc{Cáceres}{Caceres} et al. (2021) with the stomatal conductance and plant hydraulics described in Ruffault et al. (2022).} 
+  \item{Sub-model in function \code{transp_transpirationGranier} was described in De \enc{Cáceres}{Caceres} et al. (2015), 
+  and implements an approach originally described in Granier et al. (1999).} 
+  \item{Sub-model in function \code{transp_transpirationSperry} was described in De \enc{Cáceres}{Caceres} et al. (2021), and
+  implements a modelling approach originally described in Sperry et al. (2017).} 
+  \item{Sub-model in function \code{transp_transpirationCochard} was described for SUREAU-ECOS model in Ruffault et al. (2022).} 
 }
 }
 \examples{
@@ -233,17 +234,24 @@ t3 <- transp_transpirationCochard(x3, examplemeteo, 1,
                                 
 }
 \references{
-Granier A, \enc{Bréda}{Breda} N, Biron P, Villette S (1999) A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands. Ecol Modell 116:269–283. https://doi.org/10.1016/S0304-3800(98)00205-1.
+De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (doi:10.1016/j.agrformet.2015.06.012).
 
-Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2017. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment 40, 816-830 (doi: 10.1111/pce.12852).
+De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, \enc{Martínez}{Martinez}-Vilalta J (2021) Unravelling the effect of species mixing on water use and drought stress in holm oak forests: a modelling approach. Agricultural and Forest Meteorology 296 (doi:10.1016/j.agrformet.2020.108233).
+
+Granier A, \enc{Bréda}{Breda} N, Biron P, Villette S (1999) A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands. Ecol Modell 116:269–283. https://doi.org/10.1016/S0304-3800(98)00205-1.
 
 Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022) 
 SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level.
 Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).
+
+Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2017. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment 40, 816-830 (doi: 10.1111/pce.12852).
 }
 \seealso{
 \code{\link{spwb_day}}, \code{\link{plot.spwb_day}}
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+\itemize{
+  \item{Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF}
+  \item{Nicolas Martin-StPaul, URFM-INRAE}
+}
 }
