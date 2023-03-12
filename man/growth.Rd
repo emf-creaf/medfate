@@ -24,14 +24,14 @@ growth(
   \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
   \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
   \item{\code{Precipitation}: Precipitation (in mm).}
-  \item{\code{Radiation}: Solar radiation (in MJ/m2/day), required only if \code{snowpack = TRUE}.}
+  \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
   \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
   \item{\code{CO2}: Atmospheric (abovecanopy) CO2 concentration (in ppm). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
 }}
 
-\item{latitude}{Latitude (in degrees). Required when \code{x$TranspirationMode = "Sperry"}.}
+\item{latitude}{Latitude (in degrees).}
 
-\item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when \code{x$TranspirationMode = "Sperry"}. Elevation is also required for 'Granier' if snowpack dynamics are simulated.}
+\item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).}
 
 \item{CO2ByYear}{A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).}
 }
@@ -44,14 +44,14 @@ A list of class 'growth' with the following elements:
   \item{\code{"growthInput"}: A copy of the object \code{x} of class \code{\link{growthInput}} given as input.}
   \item{\code{"growthOutput"}: An copy of the final state of the object \code{x} of class \code{\link{growthInput}}.}
   \item{\code{"WaterBalance"}: A data frame where different water balance variables (see \code{\link{spwb}}).}
-  \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
+  \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}; see \code{\link{spwb}}).}
   \item{\code{"CarbonBalance"}: A data frame where different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration and net primary production), all in g C · m-2.}
   \item{\code{"BiomassBalance"}: A data frame with the daily values of stand biomass balance components (in g dry · m-2.}
-  \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
+  \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}; see \code{\link{spwb}}).}
   \item{\code{"Soil"}: A data frame where different soil variables  (see \code{\link{spwb}}).}
   \item{\code{"Stand"}: A data frame where different stand-level variables (see \code{\link{spwb}}).}
   \item{\code{"Plants"}: A list of daily results for plant cohorts (see \code{\link{spwb}}).}
-  \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: A list with daily results for sunlit and shade leaves (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
+  \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: A list with daily results for sunlit and shade leaves (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}; see \code{\link{spwb}}).}
   \item{\code{"LabileCarbonBalance"}: A list of daily labile carbon balance results for plant cohorts, with elements:}
   \itemize{
     \item{\code{"GrossPhotosynthesis"}: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).}
@@ -106,8 +106,8 @@ during a period specified in the input climatic data.
 }
 \details{
 Detailed model description is available in the medfate book. 
-Simulations using the 'Sperry' transpiration mode are computationally much more expensive 
-than those using the simple transpiration mode.
+Simulations using the 'Sperry' or 'Cochard' transpiration modes are computationally much more expensive 
+than those using the 'Granier' transpiration mode.
 }
 \examples{
 #Load example daily meteorological data
@@ -120,26 +120,35 @@ data(exampleforestMED)
 data(SpParamsMED)
   
 #Initialize control parameters
-control = defaultControl("Granier")
+control <- defaultControl("Granier")
   
 #Initialize soil with default soil params (4 layers)
-examplesoil = soil(defaultSoilParams(4))
+examplesoil <- soil(defaultSoilParams(4))
 
 #Initialize vegetation input
-x1 = forest2growthInput(exampleforestMED, examplesoil, SpParamsMED, control)
+x1 <- forest2growthInput(exampleforestMED, examplesoil, SpParamsMED, control)
 
 #Call simulation function
-G1<-growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
+G1 <- growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
  
 \donttest{
 #Switch to 'Sperry' transpiration mode
-control = defaultControl("Sperry")
+control <- defaultControl("Sperry")
 
 #Initialize vegetation input
-x2 = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x2 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Call simulation function
-G2<-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
+G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
+
+#Switch to 'Cochard' transpiration mode
+control <- defaultControl("Cochard")
+
+#Initialize vegetation input
+x3 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+
+#Call simulation function
+G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 }
       
 }

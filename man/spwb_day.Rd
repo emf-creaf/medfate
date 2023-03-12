@@ -3,7 +3,7 @@
 \name{growth_day}
 \alias{growth_day}
 \alias{spwb_day}
-\title{Single day simulation}
+\title{Single-day simulation}
 \usage{
 growth_day(
   x,
@@ -56,9 +56,9 @@ spwb_day(
 
 \item{wind}{Wind speed (in m/s).}
 
-\item{latitude}{Latitude (in degrees). Required when using the 'Sperry' transpiration mode.}
+\item{latitude}{Latitude (in degrees).}
 
-\item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Sperry' transpiration mode.}
+\item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).}
 
 \item{prec}{Precipitation (in mm).}
 
@@ -88,26 +88,31 @@ following elements:
   \item{\code{"Stand"}: A named vector with with stand values for the simulated day, equivalent to one row of 'Stand' object returned by \code{\link{spwb}}.}
   \item{\code{"Plants"}: A data frame of results for each plant cohort (see \code{\link{transp_transpirationGranier}} or \code{\link{transp_transpirationSperry}}).}
 }
-The following items are only returned when \code{transpirationMode = "Sperry"}:
-  \itemize{
-    \item{\code{"EnergyBalance"}: Energy balance of the stand (see \code{\link{transp_transpirationSperry}}).}
-    \item{\code{"RhizoPsi"}: Minimum water potential (in MPa) inside roots, after crossing rhizosphere, per cohort and soil layer.}
-    \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: For each leaf type, a data frame with values of LAI, Vmax298 and Jmax298 for leaves of this type in each plant cohort.}
-    \item{\code{"ExtractionInst"}: Water extracted by each plant cohort during each time step.}
-    \item{\code{"PlantsInst"}: A list with instantaneous (per time step) results for each plant cohort (see \code{\link{transp_transpirationSperry}}).}
-    \item{\code{"LightExtinction"}: A list of information regarding radiation balance through the canopy, as returned by function \code{\link{light_instantaneousLightExtinctionAbsortion}}.}
-    \item{\code{"CanopyTurbulence"}: Canopy turbulence (see \code{\link{wind_canopyTurbulence}}).}
-  }
+The following items are only returned when \code{transpirationMode = "Sperry"} or  \code{transpirationMode = "Cochard"}:
+\itemize{
+  \item{\code{"EnergyBalance"}: Energy balance of the stand (see \code{\link{transp_transpirationSperry}}).}
+  \item{\code{"RhizoPsi"}: Minimum water potential (in MPa) inside roots, after crossing rhizosphere, per cohort and soil layer.}
+  \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: For each leaf type, a data frame with values of LAI, Vmax298 and Jmax298 for leaves of this type in each plant cohort.}
+  \item{\code{"ExtractionInst"}: Water extracted by each plant cohort during each time step.}
+  \item{\code{"PlantsInst"}: A list with instantaneous (per time step) results for each plant cohort (see \code{\link{transp_transpirationSperry}}).}
+  \item{\code{"LightExtinction"}: A list of information regarding radiation balance through the canopy, as returned by function \code{\link{light_instantaneousLightExtinctionAbsortion}}.}
+  \item{\code{"CanopyTurbulence"}: Canopy turbulence (see \code{\link{wind_canopyTurbulence}}).}
+}
 }
 \description{
 Function \code{spwb_day} performs water balance for a single day and \code{growth_day} 
 performs water and carbon balance for a single day.
 }
 \details{
-Detailed model description is available in the medfate book. 
-The model using 'Granier' transpiration mode is described in De Caceres et al. (2015). 
-Simulations using the 'Sperry' transpiration mode are computationally much more expensive, are described in De Cáceres et al. (2021) 
-and are illustrated by function \code{\link{transp_transpirationSperry}}.
+The simulation functions allow using three different sub-models of transpiration and photosynthesis:
+\itemize{
+  \item{The sub-model corresponding to 'Granier' transpiration mode is illustrated by function \code{\link{transp_transpirationGranier}} and was described in De Caceres et al. (2015),
+  and implements an approach originally described in Granier et al. (1999).} 
+  \item{The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function \code{\link{transp_transpirationSperry}} and was described in De Caceres et al. (2021), and
+  implements a modelling approach originally described in Sperry et al. (2017).}  
+  \item{The sub-model corresponding to 'Cochard' transpiration mode is illustrated by function \code{\link{transp_transpirationCochard}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
+}
+Simulations using the 'Sperry' or 'Cochard' transpiration mode are computationally much more expensive than 'Granier'.
 }
 \examples{
 #Load example daily meteorological data
@@ -162,11 +167,22 @@ sd3 <- growth_day(x3, rownames(examplemeteo)[d],
 De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (doi:10.1016/j.agrformet.2015.06.012).
 
 De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, \enc{Martínez}{Martinez}-Vilalta J (2021) Unravelling the effect of species mixing on water use and drought stress in holm oak forests: a modelling approach. Agricultural and Forest Meteorology 296 (doi:10.1016/j.agrformet.2020.108233).
+
+Granier A, \enc{Bréda}{Breda} N, Biron P, Villette S (1999) A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands. Ecol Modell 116:269–283. https://doi.org/10.1016/S0304-3800(98)00205-1.
+
+Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022) 
+SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level.
+Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).
+
+Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2017. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment 40, 816-830 (doi: 10.1111/pce.12852).
 }
 \seealso{
 \code{\link{spwbInput}}, \code{\link{spwb}},  \code{\link{plot.spwb_day}},  
 \code{\link{growthInput}}, \code{\link{growth}},  \code{\link{plot.growth_day}}
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+\itemize{
+  \item{Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF}
+  \item{Nicolas Martin-StPaul, URFM-INRAE}
+}
 }

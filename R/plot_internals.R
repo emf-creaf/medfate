@@ -39,7 +39,7 @@
             "Plant water balance" = "PlantWaterBalance",
             "Gross photosynthesis" = "PlantGrossPhotosynthesis",
             "Gross photosynthesis per leaf" = "GrossPhotosynthesisPerLeaf")
-  if(transpirationMode == "Sperry") {
+  if(transpirationMode %in% c("Sperry","Cochard")) {
     TYPES <-c(TYPES,
               "Net photosynthesis" = "PlantNetPhotosynthesis",
               "Net photosynthesis per leaf" = "NetPhotosynthesisPerLeaf",
@@ -54,7 +54,7 @@
               "Absorbed SWR fraction" = "AbsorbedSWRFraction")
   }           
 
-  if(transpirationMode == "Sperry") {
+  if(transpirationMode %in% c("Sperry","Cochard")) {
     TYPES <-c(TYPES,
               "Minimum leaf water potential" = "LeafPsiMin",
               "Maximum leaf water potential" = "LeafPsiMax",
@@ -71,7 +71,7 @@
               "Leaf relative water content" = "LeafRWC",
               "Live fuel moisture content" = "LFMC")
   }
-  if(transpirationMode == "Sperry") {
+  if(transpirationMode %in% c("Sperry","Cochard")) {
     TYPES <-c(TYPES,
               "Soil-plant conductance" = "SoilPlantConductance")
   }
@@ -82,7 +82,7 @@
 }
 .getSunlitShadePlotTypes<-function(transpirationMode = "Granier"){
   TYPES = character(0)
-  if(transpirationMode=="Sperry") {
+  if(transpirationMode %in% c("Sperry","Cochard")) {
     TYPES = c(TYPES,
               "Minimum leaf temperature (sunlit)" ="TempMin_SL", 
               "Minimum leaf temperature (shade)" = "TempMin_SH", 
@@ -101,7 +101,7 @@
 }
 .getEnergyPlotTypes<-function(transpirationMode = "Granier") {
   TYPES = character(0)
-  if(transpirationMode=="Sperry") {
+  if(transpirationMode %in% c("Sperry","Cochard")) {
     TYPES = c(TYPES,
               "Temperature" = "Temperature",
               "Temperature range" = "TemperatureRange",

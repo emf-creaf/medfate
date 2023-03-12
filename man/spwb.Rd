@@ -169,7 +169,7 @@ The simulation functions allow using three different sub-models of transpiration
   and implements an approach originally described in Granier et al. (1999).} 
   \item{The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function \code{\link{transp_transpirationSperry}} and was described in De Caceres et al. (2021), and
   implements a modelling approach originally described in Sperry et al. (2017).}  
-  \item{The sub-model corresponding to 'Cochard' transpiration mode is illustrated by function \code{\link{transp_transpirationCochard}} and was described for model SUREAU-ECOS in Ruffault et al. (2022).} 
+  \item{The sub-model corresponding to 'Cochard' transpiration mode is illustrated by function \code{\link{transp_transpirationCochard}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
 }
 Simulations using the 'Sperry' or 'Cochard' transpiration mode are computationally much more expensive than 'Granier'.
 }

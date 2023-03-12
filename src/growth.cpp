@@ -448,7 +448,7 @@ List growthDayInner(List x, NumericVector meteovec,
   NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["V"]);
   NumericMatrix L = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["L"]);
   NumericMatrix RhizoPsi, VCroot_kmax, VGrhizo_kmax;
-  if(transpirationMode=="Sperry") {
+  if((transpirationMode=="Sperry") || (transpirationMode=="Cochard")) {
     RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["RhizoPsi"]);
     VCroot_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
     VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
@@ -516,7 +516,7 @@ List growthDayInner(List x, NumericVector meteovec,
   NumericMatrix StemSympPsiInst, LeafSympPsiInst, StemSympRWCInst, LeafSympRWCInst;
   List eb;
   double tcan_day = NA_REAL;
-  if(transpirationMode=="Sperry") {
+  if((transpirationMode=="Sperry") || (transpirationMode=="Cochard")) {
     StemSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympPsi"]);
     LeafSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympPsi"]);
     StemSympRWCInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympRWC"]);
@@ -608,7 +608,7 @@ List growthDayInner(List x, NumericVector meteovec,
   //Ring of forming vessels
   // List ringList = as<Rcpp::List>(x["internalRings"]);
   
-  //Subdaily output matrices (Sperry)
+  //Subdaily output matrices (Sperry/Cochard)
   NumericMatrix LabileCarbonBalanceInst(numCohorts, numSteps);  
   NumericMatrix GrossPhotosynthesisInst(numCohorts, numSteps);  
   NumericMatrix MaintenanceRespirationInst(numCohorts, numSteps);  
@@ -1084,7 +1084,7 @@ List growthDayInner(List x, NumericVector meteovec,
           L(c,_) = coarseRootLengths(V(c,_), dVec, 0.5); //Arbitrary ratio (to revise some day)
           CRSV[c] = coarseRootSoilVolume(V(c,_), dVec, 0.5);
         }
-      } else { //SPERRY
+      } else { //SPERRY/COCHARD
         if(LAlive>0.0) {
           //Update Huber value, stem and root hydraulic conductance
           double oldstemR = 1.0/VCstem_kmax[j];
@@ -1494,7 +1494,7 @@ void checkgrowthInput(List x, String transpirationMode, String soilFunctions) {
   if(!x.containsElementNamed("belowLayers")) stop("belowLayers missing in growthInput");
   List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
   if(!belowLayers.containsElementNamed("V")) stop("V missing in growthInput$belowLayers");
-  if(transpirationMode=="Sperry"){
+  if((transpirationMode=="Sperry") || (transpirationMode=="Cochard")) {
     if(!belowLayers.containsElementNamed("VGrhizo_kmax")) stop("VGrhizo_kmax missing in growthInput$below");
     if(!belowLayers.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in growthInput$below");
   }  
@@ -1529,7 +1529,7 @@ void checkgrowthInput(List x, String transpirationMode, String soilFunctions) {
   if(transpirationMode=="Granier") {
     if(!paramsTranspiration.containsElementNamed("Psi_Extract")) stop("Psi_Extract missing in growthInput$paramsTransp");
     if(!paramsTranspiration.containsElementNamed("WUE")) stop("WUE missing in growthInput$paramsTransp");
-  } else if(transpirationMode=="Sperry") {
+  } else if((transpirationMode=="Sperry") || (transpirationMode=="Cochard")) {
     if(!soil.containsElementNamed("VG_n")) stop("VG_n missing in soil");
     if(!soil.containsElementNamed("VG_alpha")) stop("VG_alpha missing in soil");
     
@@ -1572,18 +1572,18 @@ void checkgrowthInput(List x, String transpirationMode, String soilFunctions) {
 //'     \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
 //'     \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
 //'     \item{\code{Precipitation}: Precipitation (in mm).}
-//'     \item{\code{Radiation}: Solar radiation (in MJ/m2/day), required only if \code{snowpack = TRUE}.}
+//'     \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
 //'     \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
 //'     \item{\code{CO2}: Atmospheric (abovecanopy) CO2 concentration (in ppm). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
 //'   }
-//' @param latitude Latitude (in degrees). Required when \code{x$TranspirationMode = "Sperry"}.
-//' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when \code{x$TranspirationMode = "Sperry"}. Elevation is also required for 'Granier' if snowpack dynamics are simulated.
+//' @param latitude Latitude (in degrees).
+//' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
 //' @param CO2ByYear A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).
 //' 
 //' @details
 //' Detailed model description is available in the medfate book. 
-//' Simulations using the 'Sperry' transpiration mode are computationally much more expensive 
-//' than those using the simple transpiration mode. 
+//' Simulations using the 'Sperry' or 'Cochard' transpiration modes are computationally much more expensive 
+//' than those using the 'Granier' transpiration mode. 
 //' 
 //' @return
 //' A list of class 'growth' with the following elements:
@@ -1594,14 +1594,14 @@ void checkgrowthInput(List x, String transpirationMode, String soilFunctions) {
 //'   \item{\code{"growthInput"}: A copy of the object \code{x} of class \code{\link{growthInput}} given as input.}
 //'   \item{\code{"growthOutput"}: An copy of the final state of the object \code{x} of class \code{\link{growthInput}}.}
 //'   \item{\code{"WaterBalance"}: A data frame where different water balance variables (see \code{\link{spwb}}).}
-//'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
+//'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}; see \code{\link{spwb}}).}
 //'   \item{\code{"CarbonBalance"}: A data frame where different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration and net primary production), all in g C · m-2.}
 //'   \item{\code{"BiomassBalance"}: A data frame with the daily values of stand biomass balance components (in g dry · m-2.}
-//'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
+//'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}; see \code{\link{spwb}}).}
 //'   \item{\code{"Soil"}: A data frame where different soil variables  (see \code{\link{spwb}}).}
 //'   \item{\code{"Stand"}: A data frame where different stand-level variables (see \code{\link{spwb}}).}
 //'   \item{\code{"Plants"}: A list of daily results for plant cohorts (see \code{\link{spwb}}).}
-//'   \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: A list with daily results for sunlit and shade leaves (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
+//'   \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: A list with daily results for sunlit and shade leaves (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}; see \code{\link{spwb}}).}
 //'   \item{\code{"LabileCarbonBalance"}: A list of daily labile carbon balance results for plant cohorts, with elements:}
 //'   \itemize{
 //'     \item{\code{"GrossPhotosynthesis"}: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).}
@@ -1663,26 +1663,35 @@ void checkgrowthInput(List x, String transpirationMode, String soilFunctions) {
 //' data(SpParamsMED)
 //'   
 //' #Initialize control parameters
-//' control = defaultControl("Granier")
+//' control <- defaultControl("Granier")
 //'   
 //' #Initialize soil with default soil params (4 layers)
-//' examplesoil = soil(defaultSoilParams(4))
+//' examplesoil <- soil(defaultSoilParams(4))
 //' 
 //' #Initialize vegetation input
-//' x1 = forest2growthInput(exampleforestMED, examplesoil, SpParamsMED, control)
+//' x1 <- forest2growthInput(exampleforestMED, examplesoil, SpParamsMED, control)
 //' 
 //' #Call simulation function
-//' G1<-growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
+//' G1 <- growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 //'  
 //' \donttest{
 //' #Switch to 'Sperry' transpiration mode
-//' control = defaultControl("Sperry")
+//' control <- defaultControl("Sperry")
 //' 
 //' #Initialize vegetation input
-//' x2 = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' x2 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
 //' 
 //' #Call simulation function
-//' G2<-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
+//' G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
+//' 
+//' #Switch to 'Cochard' transpiration mode
+//' control <- defaultControl("Cochard")
+//' 
+//' #Initialize vegetation input
+//' x3 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' 
+//' #Call simulation function
+//' G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 //' }
 //'       
 // [[Rcpp::export("growth")]]
@@ -1822,7 +1831,7 @@ List growth(List x, DataFrame meteo, double latitude,
   DataFrame DEB = defineEnergyBalanceDailyOutput(meteo);
   DataFrame DT = defineTemperatureDailyOutput(meteo);
   NumericMatrix DLT;
-  if(transpirationMode=="Sperry") DLT =  defineTemperatureLayersDailyOutput(meteo, canopy);
+  if((transpirationMode=="Sperry") || (transpirationMode == "Cochard")) DLT =  defineTemperatureLayersDailyOutput(meteo, canopy);
   
   //Plant carbon output variables
   NumericMatrix LabileCarbonBalance(numDays, numCohorts);
@@ -1976,7 +1985,7 @@ List growth(List x, DataFrame meteo, double latitude,
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;
       }
-    } else if(transpirationMode=="Sperry") {
+    } else {
       double tmaxPrev = tmax;
       double tminPrev = tmin;
       double tminNext = tmin;

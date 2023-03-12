@@ -182,7 +182,7 @@ Three sub-models are available:
   and implements an approach originally described in Granier et al. (1999).} 
   \item{Sub-model in function \code{transp_transpirationSperry} was described in De \enc{Cáceres}{Caceres} et al. (2021), and
   implements a modelling approach originally described in Sperry et al. (2017).} 
-  \item{Sub-model in function \code{transp_transpirationCochard} was described for SUREAU-ECOS model in Ruffault et al. (2022).} 
+  \item{Sub-model in function \code{transp_transpirationCochard} was described for SurEau-Ecos v2.0 model in Ruffault et al. (2022).} 
 }
 }
 \examples{

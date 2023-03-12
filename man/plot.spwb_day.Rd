@@ -44,7 +44,8 @@
 
 \item{type}{The information to be plotted (see details).}
 
-\item{bySpecies}{Allows aggregating output by species, before drawing plots. Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
+\item{bySpecies}{Allows aggregating output by species, before drawing plots. Aggregation can involve a sum (as for plant LAI or transpiration) 
+or a LAI-weighted mean (as for plant stress or plant water potential).}
 
 \item{xlim}{Range of values for x.}
 
@@ -60,8 +61,8 @@
 An ggplot object
 }
 \description{
-Functions to plot the subdaily simulation results of \code{\link{spwb_day}}, \code{\link{growth_day}} 
-or the transpiration calculations of \code{\link{transp_transpirationSperry}}.
+Functions to plot the sub-daily simulation results of \code{\link{spwb_day}}, \code{\link{growth_day}} 
+or the transpiration calculations of \code{\link{transp_transpirationSperry}} or \code{\link{transp_transpirationCochard}}.
 }
 \details{
 The following plots are available for \code{spwb_day} and \code{pwb_day}:
@@ -113,7 +114,7 @@ And the following plots are additionally available for \code{growth_day}:
   }
 }
 \note{
-Only for soil plant water balance simulations using \code{transpirationMode = "Sperry"}. This function can be used to display subdaily dynamics of corresponding to single days on \code{\link{spwb}} runs, if control option \code{subdailyResults} is set to \code{TRUE}. See also option \code{subdaily} in \code{\link{plot.spwb}}.
+Only for soil plant water balance simulations using \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}. This function can be used to display subdaily dynamics of corresponding to single days on \code{\link{spwb}} runs, if control option \code{subdailyResults} is set to \code{TRUE}. See also option \code{subdaily} in \code{\link{plot.spwb}}.
 }
 \examples{
 #Load example daily meteorological data
@@ -125,20 +126,16 @@ data(exampleforestMED)
 #Default species parameterization
 data(SpParamsMED)
 
-#Initialize control parameters
-control = defaultControl("Granier")
-control$ndailysteps = 24  
-
 #Initialize soil with default soil params (2 layers)
-examplesoil = soil(defaultSoilParams(2), W=c(0.5,0.5))
+examplesoil <- soil(defaultSoilParams(2), W=c(0.5,0.5))
 
 #Switch to 'Sperry' transpiration mode
-control = defaultControl("Sperry")
+control <- defaultControl("Sperry")
 
 #Simulate one day only
-x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-d = 100
-sd2<-spwb_day(x2, rownames(examplemeteo)[d], 
+x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+d <- 100
+sd2 <- spwb_day(x2, rownames(examplemeteo)[d], 
               examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
               examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
               examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
@@ -150,7 +147,7 @@ plot(sd2, "PlantTranspiration")
 
 }
 \seealso{
-\code{\link{spwb_day}}, \code{\link{plot.spwb}}
+\code{\link{spwb_day}}, \code{\link{growth_day}}, \code{\link{plot.spwb}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF

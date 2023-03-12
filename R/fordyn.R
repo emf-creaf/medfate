@@ -403,7 +403,7 @@ fordyn<-function(forest, soil, SpParams,
       xo$below <- xo$below[!emptyCohorts, , drop=FALSE] 
       xo$belowLayers$V <- xo$belowLayers$V[!emptyCohorts, , drop=FALSE] 
       xo$belowLayers$L <- xo$belowLayers$L[!emptyCohorts, , drop=FALSE] 
-      if(control$transpirationMode=="Sperry") {
+      if(control$transpirationMode!="Granier") {
         xo$belowLayers$VGrhizo_kmax <- xo$belowLayers$VGrhizo_kmax[!emptyCohorts, , drop=FALSE]
         xo$belowLayers$VCroot_kmax <- xo$belowLayers$VCroot_kmax[!emptyCohorts, , drop=FALSE]
         xo$belowLayers$RhizoPsi <- xo$belowLayers$RhizoPsi[!emptyCohorts, , drop=FALSE]

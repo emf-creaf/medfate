@@ -1,11 +1,12 @@
 #' Plots simulation results for one day
 #' 
-#' Functions to plot the subdaily simulation results of \code{\link{spwb_day}}, \code{\link{growth_day}} 
-#' or the transpiration calculations of \code{\link{transp_transpirationSperry}}.
+#' Functions to plot the sub-daily simulation results of \code{\link{spwb_day}}, \code{\link{growth_day}} 
+#' or the transpiration calculations of \code{\link{transp_transpirationSperry}} or \code{\link{transp_transpirationCochard}}.
 #'
 #' @param x An object of class \code{spwb_day}, \code{growth_day} or \code{pwb_day}.
 #' @param type The information to be plotted (see details).
-#' @param bySpecies Allows aggregating output by species, before drawing plots. Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).
+#' @param bySpecies Allows aggregating output by species, before drawing plots. Aggregation can involve a sum (as for plant LAI or transpiration) 
+#'                  or a LAI-weighted mean (as for plant stress or plant water potential).
 #' @param xlim Range of values for x.
 #' @param ylim Range of values for y.
 #' @param xlab x-axis label.
@@ -60,11 +61,11 @@
 #'     \item{\code{"SugarTransport"}:}{ Phloem sugar transport rate.}
 #'   }
 #'   
-#' @note Only for soil plant water balance simulations using \code{transpirationMode = "Sperry"}. This function can be used to display subdaily dynamics of corresponding to single days on \code{\link{spwb}} runs, if control option \code{subdailyResults} is set to \code{TRUE}. See also option \code{subdaily} in \code{\link{plot.spwb}}.
+#' @note Only for soil plant water balance simulations using \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}. This function can be used to display subdaily dynamics of corresponding to single days on \code{\link{spwb}} runs, if control option \code{subdailyResults} is set to \code{TRUE}. See also option \code{subdaily} in \code{\link{plot.spwb}}.
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
-#' @seealso  \code{\link{spwb_day}}, \code{\link{plot.spwb}}
+#' @seealso  \code{\link{spwb_day}}, \code{\link{growth_day}}, \code{\link{plot.spwb}}
 #' @return An ggplot object
 #' 
 #' @examples 
@@ -77,20 +78,16 @@
 #' #Default species parameterization
 #' data(SpParamsMED)
 #' 
-#' #Initialize control parameters
-#' control = defaultControl("Granier")
-#' control$ndailysteps = 24  
-#' 
 #' #Initialize soil with default soil params (2 layers)
-#' examplesoil = soil(defaultSoilParams(2), W=c(0.5,0.5))
+#' examplesoil <- soil(defaultSoilParams(2), W=c(0.5,0.5))
 #' 
 #' #Switch to 'Sperry' transpiration mode
-#' control = defaultControl("Sperry")
+#' control <- defaultControl("Sperry")
 #' 
 #' #Simulate one day only
-#' x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-#' d = 100
-#' sd2<-spwb_day(x2, rownames(examplemeteo)[d], 
+#' x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' d <- 100
+#' sd2 <- spwb_day(x2, rownames(examplemeteo)[d], 
 #'               examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
 #'               examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
 #'               examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 

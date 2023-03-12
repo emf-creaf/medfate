@@ -108,14 +108,14 @@
 #'     \item{\code{"FineRootBiomass"}: Fine root dry biomass per individual.}
 #'     \item{\code{"SapwoodArea"}:  Sapwood area per individual.}
 #'     \item{\code{"LeafArea"}:  Leaf area per individual.}
-#'     \item{\code{"FineRootArea"}: Fine root area per individual (only for \code{transpirationMode = "Sperry"}).}
+#'     \item{\code{"FineRootArea"}: Fine root area per individual (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).}
 #'     \item{\code{"DBH"}: Diameter at breast height (in cm) for an average individual of each plant cohort.}
 #'     \item{\code{"Height"}: Height (in cm) for an average individual of each plant cohort.}
 #'     \item{\code{"SAgrowth"}:  Sapwood area growth rate.}
 #'     \item{\code{"LAgrowth"}:  Leaf area growth rate.}
-#'     \item{\code{"FRAgrowth"}:  Fine root area growth rate (only for \code{transpirationMode = "Sperry"}).}
+#'     \item{\code{"FRAgrowth"}:  Fine root area growth rate (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).}
 #'     \item{\code{"HuberValue"}:  Ratio of leaf area to sapwood area.}
-#'     \item{\code{"RootAreaLeafArea"}:  Ratio of fine root area to leaf area (only for \code{transpirationMode = "Sperry"}).}
+#'     \item{\code{"RootAreaLeafArea"}:  Ratio of fine root area to leaf area (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).}
 #'   }
 #' Finally, the following plots are only available for \code{\link{fordyn}} simulation results:
 #'   \itemize{

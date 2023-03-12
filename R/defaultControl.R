@@ -60,7 +60,7 @@
 #'       \item{\code{hydraulicRedistributionFraction (= 0.1)}: Fraction of plant transpiration corresponding to hydraulic redistribution.}
 #'     }
 #'   
-#'   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Sperry"}):
+#'   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Sperry"} or \code{traspirationMode = "Cochard"}):
 #'     \itemize{
 #'       \item{\code{ndailysteps (= 24)}: Number of steps into which each day is divided for determination of stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).}
 #'       \item{\code{nsubsteps (= 3600)}: Number of substeps into which each step is divided for multi-layer canopy energy balance solving.}
