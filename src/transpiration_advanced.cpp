@@ -13,6 +13,7 @@
 #include "photosynthesis.h"
 #include "root.h"
 #include "soil.h"
+#include "inner_sperry.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -21,223 +22,6 @@ const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
 const double Cp_Jmol = 29.37152; // J * mol^-1 * ºC^-1
 const double eps_xylem = 1e3; // xylem elastic modulus (1 GPa = 1000 MPa)
 
-
-List profitMaximization2(List supplyFunction, int initialPos,
-                         double Catm, double Patm, double Tair, double vpa, double u, 
-                         double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, 
-                         double leafWidth, double refLeafArea,
-                         double Gswmin, double Gswmax) {
-  
-  NumericVector E = supplyFunction["E"];
-  NumericVector dEdP = supplyFunction["dEdP"];
-  NumericVector leafPsi = supplyFunction["psiLeaf"];
-  int nsteps = E.size();
-  
-  double maxdEdp = 0.0, mindEdp = 99999999.0;
-
-  int valid = 1;
-  for(int i=0;i<nsteps-1;i++) {
-    if((i>0) && (E[i] > E[i-1])) valid++; 
-    mindEdp = std::min(mindEdp, dEdP[i]);
-    maxdEdp = std::max(maxdEdp, dEdP[i]);
-  }
-  nsteps = valid;
-  // Rcout<< valid<< " "<< maxdEdp << " "<<mindEdp<< " "<< mindEdp/maxdEdp<<"\n";
-  // initial pos cannot be over the valid steps
-  initialPos = std::min(initialPos, nsteps-1);
-  
-  //Evaluate photosynthesis and profit at Agmax
-  NumericVector photoAgMax = leafPhotosynthesisOneFunction2(E[nsteps-1], leafPsi[nsteps - 1], Catm, Patm, Tair, vpa, u, 
-                                                          SWRabs, LWRnet, Q, Vmax298, Jmax298, 
-                                                          leafWidth, refLeafArea, false);
-  double Agmax = photoAgMax["GrossPhotosynthesis"];
-  double profitAgMax = (1.0 - ((maxdEdp - dEdP[nsteps-1])/(maxdEdp - mindEdp))); 
-  
-
-  //Photosynthesis and profit maximization at current value of initialPos
-  NumericVector photoInitial = leafPhotosynthesisOneFunction2(E[initialPos], leafPsi[initialPos], Catm, Patm, Tair, vpa, u, 
-                                                           SWRabs, LWRnet, Q, Vmax298, Jmax298, 
-                                                           leafWidth, refLeafArea, false);
-  double AgInitial = photoInitial["GrossPhotosynthesis"];
-  double profitInitial = (AgInitial/Agmax) - ((maxdEdp - dEdP[initialPos])/(maxdEdp - mindEdp)); 
-  if(Agmax ==0.0) profitInitial = - ((maxdEdp - dEdP[initialPos])/(maxdEdp - mindEdp)); //To avoid 0/0 division
-    
-  NumericVector photoPrev, photoNext, photoCurrent;
-  int iPos = initialPos;
-  double profitPrev, profitNext, profitCurrent;
-  
-  photoCurrent = photoInitial;
-  profitCurrent = profitInitial;
-  
-  int prevStep = 0;
-  bool cont = true;
-  // Rcout<< " initialPos " << initialPos;
-  while(cont) {
-    // Rcout<<".";
-    if((iPos>0) && (prevStep <= 0)) {
-      photoPrev = leafPhotosynthesisOneFunction2(E[iPos-1], leafPsi[iPos-1], Catm, Patm, Tair, vpa, u, 
-                                                 SWRabs, LWRnet, Q, Vmax298, Jmax298, 
-                                                 leafWidth, refLeafArea, false);
-      double AgPrev = photoPrev["GrossPhotosynthesis"];
-      profitPrev = (AgPrev/Agmax) - ((maxdEdp - dEdP[iPos-1])/(maxdEdp - mindEdp)); 
-      if(Agmax ==0.0) profitPrev = - ((maxdEdp - dEdP[iPos-1])/(maxdEdp - mindEdp)); 
-    } else {
-      photoPrev = photoCurrent;
-      profitPrev = profitCurrent;
-    }
-    if((iPos < (nsteps-1)) && (prevStep >= 0)) {
-      photoNext = leafPhotosynthesisOneFunction2(E[iPos+1], leafPsi[iPos+1], Catm, Patm, Tair, vpa, u, 
-                                                 SWRabs, LWRnet, Q, Vmax298, Jmax298, 
-                                                 leafWidth, refLeafArea, false);
-      double AgNext = photoNext["GrossPhotosynthesis"];
-      profitNext = (AgNext/Agmax) - ((maxdEdp - dEdP[iPos+1])/(maxdEdp - mindEdp)); 
-      if(Agmax ==0.0) profitNext = - ((maxdEdp - dEdP[iPos+1])/(maxdEdp - mindEdp)); 
-    } else {
-      photoNext = photoAgMax;
-      profitNext = profitAgMax;
-    }
-    bool selDecr = ((profitPrev >= profitCurrent) && (photoPrev["Gsw"] >= Gswmin)) || (photoCurrent["Gsw"]>Gswmax);
-    selDecr = selDecr && (prevStep<=0) && (iPos>0);
-    bool selIncr = ((profitNext > profitCurrent) && (photoNext["Gsw"] <= Gswmax)) || (photoCurrent["Gsw"]<Gswmin);
-    selIncr = selIncr && (prevStep>=0) && (iPos<(nsteps-1));
-    if(selDecr) {
-      profitCurrent = profitPrev;
-      photoCurrent = photoPrev;
-      iPos = iPos-1;
-      prevStep = -1;
-      // Rcout <<"-";
-    } else if(selIncr) {
-      profitCurrent = profitNext;
-      photoCurrent = photoNext;
-      iPos = iPos+1;
-      // Rcout <<"+";
-      prevStep = 1;
-    } else {
-      cont = false;
-    }
-  }
-  // Rcout <<"\n";
-  // Rcout<< " finalPos " << iPos<< " final profit "<< profitCurrent <<"\n"; 
-  
-  return(List::create(Named("photosynthesisFunction") = photoCurrent,
-                      Named("Profit") = profitCurrent,
-                      Named("iMaxProfit")=iPos));
-}
-
-//' Stomatal regulation
-//' 
-//' Set of high-level functions used in the calculation of stomatal conductance and transpiration. 
-//' Function \code{transp_profitMaximization} calculates gain and cost functions, 
-//' as well as profit maximization from supply and photosynthesis input functions. 
-//' Function \code{transp_stomatalRegulationPlot} produces a plot with the cohort supply functions against water potential 
-//' and a plot with the cohort photosynthesis functions against water potential, both with the maximum profit values indicated.
-//' 
-//' @param supplyFunction Water supply function (see \code{\link{hydraulics_supplyFunctionNetwork}}).
-//' @param photosynthesisFunction Function returned by \code{photo_photosynthesisFunction()}.
-//' @param Gswmin,Gswmax Minimum and maximum stomatal conductance to water vapour (mol·m-2·s-1).
-//' 
-//' @return
-//' Function \code{transp_profitMaximization} returns a list with the following elements:
-//' \itemize{
-//'   \item{\code{Cost}: Cost function [0-1].}
-//'   \item{\code{Gain}: Gain function [0-1].}
-//'   \item{\code{Profit}: Profit function [0-1].}
-//'   \item{\code{iMaxProfit}: Index corresponding to maximum profit (starting from 0).}
-//' }
-//' 
-//' @references
-//' Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2017. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment 40, 816-830 (doi: 10.1111/pce.12852).
-//' 
-//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-//' 
-//' @seealso
-//' \code{\link{transp_transpirationSperry}}, \code{\link{hydraulics_supplyFunctionNetwork}}, \code{\link{biophysics_leafTemperature}}, \code{\link{photo_photosynthesis}}, \code{\link{spwb_day}}, \code{\link{plot.spwb_day}}
-//' 
-//' @examples
-//' #Load example daily meteorological data
-//' data(examplemeteo)
-//' 
-//' #Load example plot plant data
-//' data(exampleforestMED)
-//' 
-//' #Default species parameterization
-//' data(SpParamsMED)
-//' 
-//' #Initialize soil with default soil params (4 layers)
-//' examplesoil = soil(defaultSoilParams(4))
-//' 
-//' #Initialize control parameters
-//' control = defaultControl(transpirationMode="Sperry")
-//' 
-//' #Initialize input
-//' x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-//' 
-//' # Stomatal VPD curve and chosen value for the 12th time step at day 100
-//' transp_stomatalRegulationPlot(x2, examplemeteo, day=100, timestep = 12,
-//'                               latitude = 41.82592, elevation = 100, type="VPD")
-//'  
-//' @name transp_stomatalregulation
-// [[Rcpp::export("transp_profitMaximization")]]
-List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax) {
-  NumericVector supplyE = supplyFunction["E"];
-  NumericVector supplydEdp = supplyFunction["dEdP"];
-  NumericVector Ag = photosynthesisFunction["GrossPhotosynthesis"];
-  NumericVector leafTemp = photosynthesisFunction["LeafTemperature"];
-  NumericVector leafVPD = photosynthesisFunction["LeafVPD"];
-  NumericVector Gsw = photosynthesisFunction["Gsw"];
-  NumericVector supplyKterm = supplyFunction["kterm"];
-  int nsteps = supplydEdp.size();
-  double maxdEdp = 0.0, mindEdp = 99999999.0;
-  double Agmax = 0.0;
-  //Find valid limits according to stomatal conductance
-  int ini = 0, fin = nsteps-1;
- 
-  for(int i=ini;i<fin;i++) {
-    mindEdp = std::min(mindEdp, supplydEdp[i]);
-    maxdEdp = std::max(maxdEdp, supplydEdp[i]);
-    Agmax = std::max(Agmax, Ag[i]);
-  }
-  
-  //Evaluate profit for valid steps
-  NumericVector profit(nsteps, NA_REAL);
-  NumericVector cost(nsteps, NA_REAL);
-  NumericVector gain(nsteps, NA_REAL);
-  for(int i=ini;i<fin;i++) {
-    gain[i] = Ag[i]/Agmax;
-    cost[i] = (maxdEdp-supplydEdp[i])/(maxdEdp-mindEdp); 
-    profit[i] = gain[i]-cost[i];
-  }
-  
-  while((Gsw[ini]<=Gswmin) && (ini<fin)) ini++;
-  while((Gsw[fin]>=Gswmax) && (fin>ini)) fin--; 
-  
-  //Ensure that ini <=fin
-  ini = std::min(ini, fin);
-  fin = std::max(ini,fin);
-  
-  int imaxprofit=ini;
-  double maxprofit=profit[ini];
-  if(fin>ini) {
-    for(int i=ini+1;i<=fin;i++){
-      if((profit[i]>maxprofit)) {
-        maxprofit = profit[i];
-        imaxprofit = i;
-      }
-    }
-  }
-  // Rcout<<ini<< " "<< fin<< " Gsw= " << Gsw[imaxprofit] <<" Gswmax= "<<Gswmax<<" Gswmin "<<Gswmin<<" iPM="<< imaxprofit<<" Eini=" <<supplyE[ini]<<" Efin=" <<supplyE[fin]<<" E[iPM]=" <<supplyE[imaxprofit]<<"\n";
-  if((Gsw[imaxprofit] > Gswmax) && (imaxprofit>ini)) {
-    Rcout<<ini<< " "<< fin<< " Gsw= " << Gsw[imaxprofit] <<" Gswmax= "<<Gswmax<<" Gswmin "<<Gswmin<<" iPM="<< imaxprofit<<" Eini=" <<supplyE[ini]<<" Efin=" <<supplyE[fin]<<" E[iPM]=" <<supplyE[imaxprofit]<<"\n";
-    for(int i=0;i<Gsw.size();i++) {
-      Rcout<< i << " Gsw "<< Gsw[i] << " supplyE "<< supplyE[i] << " leafT "<< leafTemp[i]<< " leafVPD "<< leafVPD[i]  << "\n";
-    }
-    stop("Gsw > Gswmax");
-  }
-  return(List::create(Named("Cost") = cost,
-                      Named("Gain") = gain,
-                      Named("Profit") = profit,
-                      Named("iMaxProfit")=imaxprofit));
-}
 
 
 void copyRhizoPsi(int c, int iPM, 
@@ -284,14 +68,32 @@ void copyRhizoPsi(int c, int iPM,
   }
 }
 
+// SCHEDULE - Following steps for one day, given a weather vector:
+//
+// STEP 1. Estimate stand-level leaf area values and leaf distribution across layers from leaf-level live/expanded area
+// STEP 2. Determine vertical wind speed profile
+// STEP 3a. Direct and diffuse short-wave radiation for sub-steps
+// STEP 3b. Above-canopy air temperature  and long-wave radiation emission for sub-steps
+// STEP 3c. Short-wave radiation extinction and absorption for sub-steps
+// STEP 4. Hydraulics: determine layers where the plant is connected and supply functions (Sperry mode)
+// STEP 5. Sub-daily (e.g. hourly) loop
+// STEP 5.1 Long-wave radiation balance
+// STEP 5.2 Plant cohort loop
+//  . Leaf energy balance (sunlit and shade leaves)
+//  . Stomatal conductance: Jarvis-type for Cochard, optimality-based for Sperry
+//  . Plant hydraulics: explicit water transport for Cochard, steady-state for Sperry
+// STEP 5.3 Soil and canopy energy balances (single or multiple canopy layers)
+// STEP 6. Plant drought stress (relative whole-plant conductance), cavitation and live fuel moisture
+// STEP 7. Subtract extracted water from soil moisture 
 List transpirationAdvanced(List x, NumericVector meteovec, 
                   double latitude, double elevation, double slope, double aspect, 
                   double solarConstant, double delta,
                   double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
                   bool verbose = false, int stepFunctions = NA_INTEGER, 
-                  bool modifyInput = true, String transpirationMode = "Sperry") {
+                  bool modifyInput = true) {
   //Control parameters
   List control = x["control"];
+  String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
   List numericParams = control["numericParams"];
   int ntrial = numericParams["ntrial"];
@@ -465,7 +267,74 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   bool clearday = (prec==0);
   
   
-  //1. Leaf Phenology: Adjusted leaf area index
+  ////////////////////////////////////////
+  // DEFINE OUTPUT
+  ////////////////////////////////////////
+  //Transpiration and photosynthesis
+  NumericMatrix K(numCohorts, nlayers);
+  NumericVector Eplant(numCohorts, 0.0), Anplant(numCohorts, 0.0), Agplant(numCohorts, 0.0);
+  NumericMatrix Rninst(numCohorts,ntimesteps);
+  NumericMatrix dEdPInst(numCohorts, ntimesteps);
+  NumericMatrix Qinst(numCohorts,ntimesteps);
+  NumericMatrix Einst(numCohorts, ntimesteps);
+  NumericMatrix Aninst(numCohorts, ntimesteps), Aginst(numCohorts, ntimesteps);
+  NumericMatrix LeafPsiInst(numCohorts, ntimesteps), StemPsiInst(numCohorts, ntimesteps);
+  NumericMatrix LeafSympPsiInst(numCohorts, ntimesteps), StemSympPsiInst(numCohorts, ntimesteps);
+  NumericMatrix LeafRWCInst(numCohorts, ntimesteps), StemRWCInst(numCohorts, ntimesteps);
+  NumericMatrix LeafSympRWCInst(numCohorts, ntimesteps), StemSympRWCInst(numCohorts, ntimesteps);
+  NumericMatrix RootPsiInst(numCohorts, ntimesteps);
+  NumericMatrix PWBinst(numCohorts, ntimesteps);
+  NumericMatrix E_SL(numCohorts, ntimesteps);
+  NumericMatrix E_SH(numCohorts, ntimesteps);
+  NumericMatrix An_SL(numCohorts, ntimesteps), Ag_SL(numCohorts, ntimesteps);
+  NumericMatrix An_SH(numCohorts, ntimesteps), Ag_SH(numCohorts, ntimesteps);
+  NumericMatrix Psi_SL(numCohorts, ntimesteps);
+  NumericMatrix Psi_SH(numCohorts, ntimesteps);
+  NumericMatrix Ci_SL(numCohorts, ntimesteps);
+  NumericMatrix Ci_SH(numCohorts, ntimesteps);
+  NumericMatrix SWR_SL(numCohorts, ntimesteps);
+  NumericMatrix SWR_SH(numCohorts, ntimesteps);
+  NumericMatrix PAR_SL(numCohorts, ntimesteps);
+  NumericMatrix PAR_SH(numCohorts, ntimesteps);
+  NumericMatrix LWR_SL(numCohorts, ntimesteps);
+  NumericMatrix LWR_SH(numCohorts, ntimesteps);
+  NumericMatrix GSW_SH(numCohorts, ntimesteps);
+  NumericMatrix GSW_SL(numCohorts, ntimesteps);
+  NumericMatrix VPD_SH(numCohorts, ntimesteps);
+  NumericMatrix VPD_SL(numCohorts, ntimesteps);
+  NumericMatrix Temp_SH(numCohorts, ntimesteps);
+  NumericMatrix Temp_SL(numCohorts, ntimesteps);
+  NumericVector minLeafPsi(numCohorts,0.0), maxLeafPsi(numCohorts,-99999.0); 
+  NumericVector maxGSW_SL(numCohorts,-99999.0), maxGSW_SH(numCohorts,-99999.0); 
+  NumericVector minGSW_SL(numCohorts,99999.0), minGSW_SH(numCohorts,99999.0); 
+  NumericVector maxTemp_SL(numCohorts,-99999.0), maxTemp_SH(numCohorts,-99999.0); 
+  NumericVector minTemp_SL(numCohorts,99999.0), minTemp_SH(numCohorts,99999.0); 
+  NumericVector minLeafPsi_SL(numCohorts,0.0), maxLeafPsi_SL(numCohorts,-99999.0); 
+  NumericVector minLeafPsi_SH(numCohorts,0.0), maxLeafPsi_SH(numCohorts,-99999.0);
+  NumericVector minStemPsi(numCohorts, 0.0), minRootPsi(numCohorts,0.0); //Minimum potentials experienced
+  NumericMatrix minPsiRhizo(numCohorts, nlayers);
+  if(numCohorts>0) std::fill(minPsiRhizo.begin(), minPsiRhizo.end(), 0.0);
+  NumericMatrix PLC(numCohorts, ntimesteps);
+  NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts),RWCssm(numCohorts), RWClsm(numCohorts);
+  NumericVector dEdPm(numCohorts);
+  NumericVector PWB(numCohorts,0.0);
+  
+  IntegerVector iPMSunlit(numCohorts,0), iPMShade(numCohorts,0); //Initial values set to closed stomata
+  
+  List outPhotoSunlit(numCohorts);
+  List outPhotoShade(numCohorts);
+  List outPMSunlit(numCohorts);
+  List outPMShade(numCohorts);
+  outPhotoSunlit.attr("names") = above.attr("row.names");
+  outPhotoShade.attr("names") = above.attr("row.names");
+  outPMSunlit.attr("names") = above.attr("row.names");
+  outPMShade.attr("names") = above.attr("row.names");
+  
+  List lwrExtinctionList(ntimesteps);
+  
+  ////////////////////////////////////////
+  // STEP 1. Estimate stand-level leaf area values and leaf distribution across layers from leaf-level live/expanded area
+  ////////////////////////////////////////
   NumericVector Phe(numCohorts);
   double LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0;
   double canopyHeight = 100.0; //Minimum canopy height of 1 m
@@ -490,7 +359,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   NumericVector LAIpe = LAIprofileVectors(z, LAIphe, H, CR);
   NumericVector LAIpd = LAIprofileVectors(z, LAIdead, H, CR);
   NumericVector lad = 100.0*(LAIpe + LAIpd)/verticalLayerSize;
-  //3. Wind extinction profile
+  ////////////////////////////////////////
+  // STEP 2. Determine vertical wind speed profile
+  ////////////////////////////////////////
   if(NumericVector::is_na(wind)) wind = defaultWindSpeed; //set to default if missing
   wind = std::min(10.0, std::max(wind, 0.1)); //Bound between 0.1 m/s (0.36 km/h)  and 10 m/s (36 km/h)
   DataFrame canopyTurbulence = NA_REAL;
@@ -502,12 +373,16 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     dU = Rcpp::as<Rcpp::NumericVector>(canopyTurbulence["du"]);
     uw = canopyTurbulence["uw"];
   } 
-  //4a. Instantaneous direct and diffuse shorwave radiation
+  ////////////////////////////////////////
+  // STEP 3a. Direct and diffuse shorwave radiation for sub-steps
+  ////////////////////////////////////////
   DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, slorad, asprad, delta,
                                                         rad, clearday, ntimesteps);
   NumericVector solarHour = ddd["SolarHour"]; //in radians
   
-  //4b. Instantaneous air temperature (above canopy) and longwave radiation
+  ////////////////////////////////////////
+  // STEP 3b. Above-canopy air temperature and long-wave radiation emission for sub-steps
+  ////////////////////////////////////////
   NumericVector Tatm(ntimesteps), lwdr(ntimesteps), Tcan(ntimesteps, NA_REAL), Tsunrise(ntimesteps);
   NumericVector net_LWR_can(ntimesteps),LEcan_heat(ntimesteps), Hcan_heat(ntimesteps), Ebal(ntimesteps);
   NumericVector net_LWR_soil(ntimesteps), Ebalsoil(ntimesteps), Hcansoil(ntimesteps), LEsoil_heat(ntimesteps);
@@ -539,9 +414,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   //Take temperature soil vector 
   Tsoil_mat(0,_) = Tsoil; 
   
-  
-  
-  //4c. Light extinction and absortion by time steps
+  ////////////////////////////////////////
+  // STEP 3c. Short-wave radiation extinction and absortion for sub-steps
+  ////////////////////////////////////////
   List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
                                                                         kPAR, alphaSWR, gammaSWR,
                                                                         ddd, 
@@ -572,7 +447,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     NumericVector SLarealayer(ncanlayers), SHarealayer(ncanlayers);
     double sn =0.0;
     for(int i=(ncanlayers-1);i>=0.0;i--) {
-      //Effect of nitrogen concentration decay through the canopy
+      //Effect of nitrogen concentration decay through the canopy (Improvement: see 10.5194/bg-7-1833-2010)
       double fn = exp(-0.713*(sn+LAIme(i,c)/2.0)/sum(LAIme(_,c)));
       // Rcout<<" l"<<i<<" fsunlit: "<< fsunlit[i]<<" lai: "<< LAIme(i,c)<<" fn: "<< fn <<"\n";
       sn+=LAIme(i,c);
@@ -618,7 +493,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     // Rcout << c << " "<< hc_sl<<" "<< iLayerSunlit[c]<< " "<< hc_sh<<" "<< iLayerShade[c]<<"\n";
   }
   
-  //Hydraulics: determine layers where the plant is connected
+  ////////////////////////////////////////
+  //  STEP 4. Hydraulics: determine layers where the plant is connected and supply functions (Sperry mode)
+  ////////////////////////////////////////
   IntegerVector nlayerscon(numCohorts,0);
   LogicalMatrix layerConnected(numCohorts, nlayers);
   List layerConnectedPools(numCohorts);
@@ -632,7 +509,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   //Average sap fluidity
   double sapFluidityDay = 1.0/waterDynamicViscosity((tmin+tmax)/2.0);
   
-  //Hydraulics: supply functions
+  //Hydraulics: Define supply functions
   List hydraulicNetwork(numCohorts);
   List supply(numCohorts);
   List supplyAboveground(numCohorts);
@@ -673,27 +550,28 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         }
       }
       
-      
-      //Build supply function networks 
-      if(!capacitance) {
-        hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
-                                 _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
-                                 _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
-                                 _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
-                                 _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
-                                 _["PLCstem"] = NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]));
-        supply[c] = supplyFunctionNetwork(hydraulicNetwork[c],
-                                          0.0, maxNsteps,
-                                          ntrial, psiTol, ETol, 0.001); 
-      } else {
-        hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
-                                           _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
-                                           _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
-                                           _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
-                                           _["PLCstem"] = NumericVector::create(0.0));
-        supply[c] = supplyFunctionNetworkStem1(hydraulicNetwork[c],
-                                               0.0, maxNsteps,
-                                               ntrial, psiTol, ETol, 0.001); 
+      //Build supply function networks (Sperry transpiration mode)
+      if(transpirationMode=="Sperry") {
+        if(!capacitance) {
+          hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
+                                             _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
+                                             _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
+                                                                                                                                         _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
+                                                                                                                                                                                                                                       _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
+                                                                                                                                                                                                                                                                                                                                     _["PLCstem"] = NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]));
+          supply[c] = supplyFunctionNetwork(hydraulicNetwork[c],
+                                            0.0, maxNsteps,
+                                            ntrial, psiTol, ETol, 0.001); 
+        } else {
+          hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
+                                             _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
+                                             _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
+                                                                                                                                         _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
+                                                                                                                                                                                                                                       _["PLCstem"] = NumericVector::create(0.0));
+          supply[c] = supplyFunctionNetworkStem1(hydraulicNetwork[c],
+                                                 0.0, maxNsteps,
+                                                 ntrial, psiTol, ETol, 0.001); 
+        }
       }
     } else {
       // Plant water pools
@@ -749,105 +627,38 @@ List transpirationAdvanced(List x, NumericVector meteovec,
           }
         }
       }
-      
-      //Build supply function networks 
-      if(!capacitance) {
-        hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
-                                           _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
-                                           _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
-                                           _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
-                                           _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
-                                           _["PLCstem"] = NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]));
-        supply[c] = supplyFunctionNetwork(hydraulicNetwork[c],
-                                          0.0, maxNsteps,
-                                          ntrial, psiTol, ETol, 0.001); 
-      } else {
-        hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
-                                           _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
-                                           _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
-                                           _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
-                                           _["PLCstem"] = NumericVector::create(0.0));
-        supply[c] = supplyFunctionNetworkStem1(hydraulicNetwork[c],
-                                               0.0, maxNsteps,
-                                               ntrial, psiTol, ETol, 0.001); 
+      //Build supply function networks (Sperry transpiration mode)
+      if(transpirationMode == "Sperry") {
+        if(!capacitance) {
+          hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
+                                             _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
+                                             _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
+                                                                                                                                         _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
+                                                                                                                                                                                                                                       _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
+                                                                                                                                                                                                                                                                                                                                     _["PLCstem"] = NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]));
+          supply[c] = supplyFunctionNetwork(hydraulicNetwork[c],
+                                            0.0, maxNsteps,
+                                            ntrial, psiTol, ETol, 0.001); 
+        } else {
+          hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
+                                             _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
+                                             _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
+                                                                                                                                         _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
+                                                                                                                                                                                                                                       _["PLCstem"] = NumericVector::create(0.0));
+          supply[c] = supplyFunctionNetworkStem1(hydraulicNetwork[c],
+                                                 0.0, maxNsteps,
+                                                 ntrial, psiTol, ETol, 0.001); 
+        }
       }
     }
   }
-  
 
-  
-  //Transpiration and photosynthesis
-  NumericMatrix K(numCohorts, nlayers);
-  NumericVector Eplant(numCohorts, 0.0), Anplant(numCohorts, 0.0), Agplant(numCohorts, 0.0);
-  NumericMatrix Rninst(numCohorts,ntimesteps);
-  NumericMatrix dEdPInst(numCohorts, ntimesteps);
-  NumericMatrix Qinst(numCohorts,ntimesteps);
-  NumericMatrix Einst(numCohorts, ntimesteps);
-  NumericMatrix Aninst(numCohorts, ntimesteps), Aginst(numCohorts, ntimesteps);
-  NumericMatrix LeafPsiInst(numCohorts, ntimesteps), StemPsiInst(numCohorts, ntimesteps);
-  NumericMatrix LeafSympPsiInst(numCohorts, ntimesteps), StemSympPsiInst(numCohorts, ntimesteps);
-  NumericMatrix LeafRWCInst(numCohorts, ntimesteps), StemRWCInst(numCohorts, ntimesteps);
-  NumericMatrix LeafSympRWCInst(numCohorts, ntimesteps), StemSympRWCInst(numCohorts, ntimesteps);
-  NumericMatrix RootPsiInst(numCohorts, ntimesteps);
-  NumericMatrix PWBinst(numCohorts, ntimesteps);
-  NumericMatrix E_SL(numCohorts, ntimesteps);
-  NumericMatrix E_SH(numCohorts, ntimesteps);
-  NumericMatrix An_SL(numCohorts, ntimesteps), Ag_SL(numCohorts, ntimesteps);
-  NumericMatrix An_SH(numCohorts, ntimesteps), Ag_SH(numCohorts, ntimesteps);
-  NumericMatrix Psi_SL(numCohorts, ntimesteps);
-  NumericMatrix Psi_SH(numCohorts, ntimesteps);
-  NumericMatrix Ci_SL(numCohorts, ntimesteps);
-  NumericMatrix Ci_SH(numCohorts, ntimesteps);
-  NumericMatrix SWR_SL(numCohorts, ntimesteps);
-  NumericMatrix SWR_SH(numCohorts, ntimesteps);
-  NumericMatrix PAR_SL(numCohorts, ntimesteps);
-  NumericMatrix PAR_SH(numCohorts, ntimesteps);
-  NumericMatrix LWR_SL(numCohorts, ntimesteps);
-  NumericMatrix LWR_SH(numCohorts, ntimesteps);
-  NumericMatrix GSW_SH(numCohorts, ntimesteps);
-  NumericMatrix GSW_SL(numCohorts, ntimesteps);
-  NumericMatrix VPD_SH(numCohorts, ntimesteps);
-  NumericMatrix VPD_SL(numCohorts, ntimesteps);
-  NumericMatrix Temp_SH(numCohorts, ntimesteps);
-  NumericMatrix Temp_SL(numCohorts, ntimesteps);
-  NumericVector minLeafPsi(numCohorts,0.0), maxLeafPsi(numCohorts,-99999.0); 
-  NumericVector maxGSW_SL(numCohorts,-99999.0), maxGSW_SH(numCohorts,-99999.0); 
-  NumericVector minGSW_SL(numCohorts,99999.0), minGSW_SH(numCohorts,99999.0); 
-  NumericVector maxTemp_SL(numCohorts,-99999.0), maxTemp_SH(numCohorts,-99999.0); 
-  NumericVector minTemp_SL(numCohorts,99999.0), minTemp_SH(numCohorts,99999.0); 
-  NumericVector minLeafPsi_SL(numCohorts,0.0), maxLeafPsi_SL(numCohorts,-99999.0); 
-  NumericVector minLeafPsi_SH(numCohorts,0.0), maxLeafPsi_SH(numCohorts,-99999.0);
-  NumericVector minStemPsi(numCohorts, 0.0), minRootPsi(numCohorts,0.0); //Minimum potentials experienced
-  NumericMatrix minPsiRhizo(numCohorts, nlayers);
-  if(numCohorts>0) std::fill(minPsiRhizo.begin(), minPsiRhizo.end(), 0.0);
-  NumericMatrix PLC(numCohorts, ntimesteps);
-  NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts),RWCssm(numCohorts), RWClsm(numCohorts);
-  NumericVector dEdPm(numCohorts);
-  NumericVector PWB(numCohorts,0.0);
-  
-  IntegerVector iPMSunlit(numCohorts,0), iPMShade(numCohorts,0); //Initial values set to closed stomata
-    
-  List outPhotoSunlit(numCohorts);
-  List outPhotoShade(numCohorts);
-  List outPMSunlit(numCohorts);
-  List outPMShade(numCohorts);
-  outPhotoSunlit.attr("names") = above.attr("row.names");
-  outPhotoShade.attr("names") = above.attr("row.names");
-  outPMSunlit.attr("names") = above.attr("row.names");
-  outPMShade.attr("names") = above.attr("row.names");
-  
-  List lwrExtinctionList(ntimesteps);
-  
+  ////////////////////////////////////////
+  // STEP 5. Sub-daily (e.g. hourly) loop
+  ////////////////////////////////////////
   for(int n=0;n<ntimesteps;n++) { //Time loop
-    //Longwave radiation
-    List lwrExtinction = longwaveRadiationSHAW(LAIme, LAImd, LAImx, 
-                                               lwdr[n], Tsoil[0], Tair);
-    lwrExtinctionList[n] = lwrExtinction;
-    net_LWR_soil[n] = lwrExtinction["Lnet_ground"];
-    net_LWR_can[n]= lwrExtinction["Lnet_canopy"];
-    NumericMatrix Lnet_cohort_layer = lwrExtinction["Lnet_cohort_layer"];
     
-    //Retrieve radiation absorbed for the current time step
+    //Retrieve short-wave radiation absorbed for the current time step
     NumericVector absPAR_SL_COH = abs_PAR_SL_COH_list[n];
     NumericVector absPAR_SH_COH = abs_PAR_SH_COH_list[n];
     NumericVector absSWR_SL_COH = abs_SWR_SL_COH_list[n];
@@ -855,6 +666,19 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     NumericMatrix absSWR_SL_ML = abs_SWR_SL_ML_list[n];
     NumericMatrix absSWR_SH_ML = abs_SWR_SH_ML_list[n];
 
+    ////////////////////////////////////////
+    // STEP 5.1 Long-wave radiation balance
+    ////////////////////////////////////////
+    List lwrExtinction = longwaveRadiationSHAW(LAIme, LAImd, LAImx, 
+                                               lwdr[n], Tsoil[0], Tair);
+    lwrExtinctionList[n] = lwrExtinction;
+    net_LWR_soil[n] = lwrExtinction["Lnet_ground"];
+    net_LWR_can[n]= lwrExtinction["Lnet_canopy"];
+    NumericMatrix Lnet_cohort_layer = lwrExtinction["Lnet_cohort_layer"];
+    
+    ////////////////////////////////////////
+    // STEP 5.2 Sunlit/shade leaf energy balance and plant hydraulics
+    ////////////////////////////////////////
     for(int c=0;c<numCohorts;c++) { //Plant cohort loop
       
       //default values
@@ -1258,7 +1082,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       }
     } //End of cohort loop
     
-    //CANOPY AND SOIL ENERGY BALANCE
+    ////////////////////////////////////////
+    // STEP 5.3 Soil and canopy energy balances (single or multiple canopy layers)
+    ////////////////////////////////////////
     
     //Soil latent heat (soil evaporation)
     //Latent heat (snow fusion) as J/m2/s
@@ -1439,7 +1265,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     }
   } //End of timestep loop
 
-  //4z. Plant daily drought stress (from root collar mid-day water potential)
+  ////////////////////////////////////////
+  // STEP 6. Plant drought stress (relative whole-plant conductance), cavitation and live fuel moisture
+  ////////////////////////////////////////
   NumericVector SoilExtractCoh(numCohorts,0.0);
   NumericVector DDS(numCohorts, 0.0), LFMC(numCohorts, 0.0);
   for(int c=0;c<numCohorts;c++) {
@@ -1460,7 +1288,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   }
   
   
-  //B.3 - Substract  extracted water from soil moisture 
+  ////////////////////////////////////////
+  // STEP 7. Subtract extracted water from soil moisture 
+  ////////////////////////////////////////
   if(modifyInput){
     for(int l=0;l<nlayers;l++) {
       Ws[l] = std::max(Ws[l] - (sum(soilLayerExtractInst(l,_))/Water_FC[l]),0.0);
@@ -1473,7 +1303,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       }
     }
   }
-  //6. Copy LAIexpanded for output
+  
+  // ARRANGE OUTPUT
   NumericVector LAIcohort(numCohorts);
   for(int c=0;c<numCohorts;c++) {
     LAIcohort[c]= LAIphe[c];
@@ -1688,6 +1519,9 @@ List transpirationSperry(List x, DataFrame meteo, int day,
                         int stepFunctions = NA_INTEGER, 
                         bool modifyInput = true) {
   List control = x["control"];
+  String transpirationMode = control["transpirationMode"];
+  if(transpirationMode != "Sperry") stop("Transpiration mode in 'x' must be 'Sperry'");
+  
   if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
   NumericVector MinTemperature = meteo["MinTemperature"];
   if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
@@ -1746,7 +1580,7 @@ List transpirationSperry(List x, DataFrame meteo, int day,
                      solarConstant, delta,
                      canopyEvaporation, snowMelt, soilEvaporation,
                      false, stepFunctions, 
-                     modifyInput, "Sperry"));
+                     modifyInput));
 } 
 
 //' @rdname transp_modes
@@ -1756,6 +1590,8 @@ List transpirationCochard(List x, DataFrame meteo, int day,
                          double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
                          bool modifyInput = true) {
   List control = x["control"];
+  String transpirationMode = control["transpirationMode"];
+  if(transpirationMode != "Cochard") stop("Transpiration mode in 'x' must be 'Cochard'");
   if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
   NumericVector MinTemperature = meteo["MinTemperature"];
   if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
@@ -1814,7 +1650,7 @@ List transpirationCochard(List x, DataFrame meteo, int day,
                              solarConstant, delta,
                              canopyEvaporation, snowMelt, soilEvaporation,
                              false, NA_INTEGER, 
-                             modifyInput, "Cochard"));
+                             modifyInput));
 } 
 
 

@@ -381,7 +381,7 @@ List spwbDay2(List x, NumericVector meteovec,
                                     latitude, elevation, slope, aspect, 
                                     solarConstant, delta, 
                                     hydroInputs["Interception"], hydroInputs["Snowmelt"], sum(EsoilVec),
-                                    verbose, NA_INTEGER, true, transpirationMode);
+                                    verbose, NA_INTEGER, true);
 
   
   NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(transp["ExtractionInst"]);
@@ -2179,7 +2179,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
                                 solarConstant, delta,
                                 canopyEvaporation[i], snowMelt[i], soilEvaporation[i],
                                 verbose, NA_INTEGER, 
-                                true, transpirationMode);
+                                true);
       } catch(std::exception& ex) {
         Rcerr<< "c++ error: "<< ex.what() <<"\n";
         error_occurence = true;

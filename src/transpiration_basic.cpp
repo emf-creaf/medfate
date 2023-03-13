@@ -72,8 +72,7 @@ double findNewPlantPsiCuticular(double E_cut, double plantPsi, NumericVector par
 }
 
 List transpirationBasic(List x, NumericVector meteovec,  
-                        double elevation, bool modifyInput = true, 
-                        String transpirationMode = "Granier") {
+                        double elevation, bool modifyInput = true) {
   //Control parameters
   List control = x["control"];
   String cavitationRefill = control["cavitationRefill"];
@@ -740,7 +739,7 @@ List transpirationGranier(List x, DataFrame meteo, int day,
     Named("tday") = tday, 
     Named("pet") = pet,
     Named("Catm") = Catm);
-  return(transpirationBasic(x, meteovec, elevation, modifyInput, "Granier"));
+  return(transpirationBasic(x, meteovec, elevation, modifyInput));
 } 
 
 

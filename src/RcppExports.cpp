@@ -2209,6 +2209,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// profitMaximization
+List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax);
+RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GswminSEXP, SEXP GswmaxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type supplyFunction(supplyFunctionSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type photosynthesisFunction(photosynthesisFunctionSEXP);
+    Rcpp::traits::input_parameter< double >::type Gswmin(GswminSEXP);
+    Rcpp::traits::input_parameter< double >::type Gswmax(GswmaxSEXP);
+    rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction, Gswmin, Gswmax));
+    return rcpp_result_gen;
+END_RCPP
+}
 // parcohort
 NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams);
 RcppExport SEXP _medfate_parcohort(SEXP SPSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP LAISEXP, SEXP SpParamsSEXP) {
@@ -4451,20 +4465,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// profitMaximization
-List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax);
-RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GswminSEXP, SEXP GswmaxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type supplyFunction(supplyFunctionSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type photosynthesisFunction(photosynthesisFunctionSEXP);
-    Rcpp::traits::input_parameter< double >::type Gswmin(GswminSEXP);
-    Rcpp::traits::input_parameter< double >::type Gswmax(GswmaxSEXP);
-    rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction, Gswmin, Gswmax));
-    return rcpp_result_gen;
-END_RCPP
-}
 // transpirationSperry
 List transpirationSperry(List x, DataFrame meteo, int day, double latitude, double elevation, double slope, double aspect, double canopyEvaporation, double snowMelt, double soilEvaporation, int stepFunctions, bool modifyInput);
 RcppExport SEXP _medfate_transpirationSperry(SEXP xSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP canopyEvaporationSEXP, SEXP snowMeltSEXP, SEXP soilEvaporationSEXP, SEXP stepFunctionsSEXP, SEXP modifyInputSEXP) {
@@ -4933,6 +4933,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_incgam", (DL_FUNC) &_medfate_incgam, 2},
     {"_medfate_invincgam", (DL_FUNC) &_medfate_invincgam, 3},
     {"_medfate_gammds", (DL_FUNC) &_medfate_gammds, 2},
+    {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 4},
     {"_medfate_parcohort", (DL_FUNC) &_medfate_parcohort, 5},
     {"_medfate_PARcohort", (DL_FUNC) &_medfate_PARcohort, 3},
     {"_medfate_parheight", (DL_FUNC) &_medfate_parheight, 4},
@@ -5038,7 +5039,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_apoplasticRelativeWaterContent", (DL_FUNC) &_medfate_apoplasticRelativeWaterContent, 3},
     {"_medfate_apoplasticWaterPotential", (DL_FUNC) &_medfate_apoplasticWaterPotential, 3},
     {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 8},
-    {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 4},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 12},
     {"_medfate_transpirationCochard", (DL_FUNC) &_medfate_transpirationCochard, 11},
     {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 8},
