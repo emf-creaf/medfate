@@ -10,19 +10,16 @@
 #include "forestutils.h"
 #include "tissuemoisture.h"
 #include "carbon.h"
-#include "photosynthesis.h"
 #include "root.h"
 #include "soil.h"
 #include "inner_sperry.h"
+#include "inner_cochard.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
 const double SIGMA_Wm2 = 5.67*1e-8;
 const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
 const double Cp_Jmol = 29.37152; // J * mol^-1 * ºC^-1
-
-
-
 
 // SCHEDULE - Following steps for one day, given a weather vector:
 //
@@ -87,8 +84,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   NumericVector LAIdead = Rcpp::as<Rcpp::NumericVector>(above["LAI_dead"]);
   NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
-  NumericVector N = Rcpp::as<Rcpp::NumericVector>(above["N"]);
-  
+
   int numCohorts = LAIlive.size();
   
   //Soil input
@@ -490,9 +486,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
           hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
                                              _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
                                              _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
-                                                                                                                                         _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
-                                                                                                                                                                                                                                       _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
-                                                                                                                                                                                                                                                                                                                                     _["PLCstem"] = NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]));
+                                             _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
+                                             _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
+                                             _["PLCstem"] = NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]));
           supply[c] = supplyFunctionNetwork(hydraulicNetwork[c],
                                             0.0, maxNsteps,
                                             ntrial, psiTol, ETol, 0.001); 
@@ -500,8 +496,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
           hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
                                              _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
                                              _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
-                                                                                                                                         _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
-                                                                                                                                                                                                                                       _["PLCstem"] = NumericVector::create(0.0));
+                                             _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
+                                             _["PLCstem"] = NumericVector::create(0.0));
           supply[c] = supplyFunctionNetworkStem1(hydraulicNetwork[c],
                                                  0.0, maxNsteps,
                                                  ntrial, psiTol, ETol, 0.001); 
@@ -588,7 +584,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   }
 
   ////////////////////////////////
-  // Create output objects to be filled in inner functions
+  // Create input and output objects to be filled in inner functions
   ////////////////////////////////
   DataFrame Tinst = DataFrame::create(_["SolarHour"] = solarHour, 
                                       _["Tatm"] = Tatm, _["Tcan"] = Tcan, _["Tsoil"] = Tsoil_mat);
@@ -732,7 +728,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                        _["WaterBalance"] = PWB);
   Plants.attr("row.names") = above.attr("row.names");
   
-  List output = List::create(_["EnergyBalance"] = EB,
+  List innerOutput = List::create(_["EnergyBalance"] = EB,
                              _["Extraction"] = SoilWaterExtract,
                              _["ExtractionInst"] = soilLayerExtractInst,
                              _["RhizoPsi"] = minPsiRhizo,
@@ -751,7 +747,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                              _["PMSunlitFunctions"] = outPMSunlit,
                              _["PMShadeFunctions"] = outPMShade);
   
-  List inputSperry = List::create(_["Patm"] = Patm,
+  List innerInput;
+  if(transpirationMode =="Sperry") {
+    innerInput = List::create(_["Patm"] = Patm,
                                   _["zWind"] = zWind,
                                   _["iLayerCohort"] = iLayerCohort,
                                   _["iLayerSunlit"] = iLayerSunlit,
@@ -762,7 +760,17 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                   _["layerConnected"] = layerConnected,
                                   _["layerConnectedPools"] = layerConnectedPools,
                                   _["supply"] = supply);
-
+  } else {
+    innerInput = List::create(_["Patm"] = Patm,
+                              _["zWind"] = zWind,
+                              _["iLayerCohort"] = iLayerCohort,
+                              _["iLayerSunlit"] = iLayerSunlit,
+                              _["iLayerShade"] = iLayerShade,
+                              _["nlayerscon"] = nlayerscon,
+                              _["layerConnected"] = layerConnected,
+                              _["layerConnectedPools"] = layerConnectedPools);
+  }
+  
   ////////////////////////////////////////
   // STEP 5. Sub-daily (e.g. hourly) loop
   ////////////////////////////////////////
@@ -803,13 +811,14 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         LWR_SL(c,n) = sum(Lnet_cohort_layer(_,c)*fsunlit);
         LWR_SH(c,n) = sum(Lnet_cohort_layer(_,c)*(1.0 - fsunlit));
       }
-    }
+    } 
     
     if(transpirationMode == "Sperry") {
-      innerSperry(x, inputSperry, output, n, tstep, 
+      innerSperry(x, innerInput, innerOutput, n, tstep, 
                   verbose, stepFunctions, modifyInput);
     } else {
-      // innerCochard(x, inputCochard, output, n, tstep, ...);
+      innerCochard(x, innerInput, innerOutput, n, tstep,
+                   verbose, modifyInput);
     }
     
     ////////////////////////////////////////
