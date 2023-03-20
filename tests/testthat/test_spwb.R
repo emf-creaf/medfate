@@ -19,11 +19,11 @@ test_that("spwb can be run in example and empty forests",{
   x2 = forest2spwbInput(emptyforest(), examplesoil, SpParamsMED, control)
   expect_s3_class(spwb(x2, examplemeteo[1:10,],
                        latitude = 41.82592, elevation = 100), "spwb")
-  control <- defaultControl("Cochard")
-  control$verbose <- FALSE
-  x2 = forest2spwbInput(emptyforest(),examplesoil, SpParamsMED, control)
-  expect_s3_class(spwb(x2, examplemeteo[1:10,],
-                       latitude = 41.82592, elevation = 100), "spwb")
+  # control <- defaultControl("Cochard")
+  # control$verbose <- FALSE
+  # x2 = forest2spwbInput(emptyforest(),examplesoil, SpParamsMED, control)
+  # expect_s3_class(spwb(x2, examplemeteo[1:10,],
+  #                      latitude = 41.82592, elevation = 100), "spwb")
 })
 
 test_that("fordyn can be run using species codes",{

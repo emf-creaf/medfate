@@ -3189,8 +3189,8 @@ moisture_apoplasticPsi <- function(RWC, c, d) {
 }
 
 #' @rdname moisture
-moisture_tissueRWC <- function(psiSym, pi0, epsilon, psiApo, c, d, af, femb = 0.0) {
-    .Call(`_medfate_tissueRelativeWaterContent`, psiSym, pi0, epsilon, psiApo, c, d, af, femb)
+moisture_tissueRWC <- function(psiSym, pi0, epsilon, psiApo, c, d, af) {
+    .Call(`_medfate_tissueRelativeWaterContent`, psiSym, pi0, epsilon, psiApo, c, d, af)
 }
 
 #' @rdname transp_modes

@@ -22,10 +22,10 @@ double plantVol(double plantPsi, NumericVector pars) {
   
   double leafrwc = tissueRelativeWaterContent(plantPsi, pars["leafpi0"], pars["leafeps"], 
                                               plantPsi, pars["stem_c"], pars["stem_d"], 
-                                              pars["leafaf"], 0.0);
+                                              pars["leafaf"]);
   double stemrwc = tissueRelativeWaterContent(plantPsi, pars["stempi0"], pars["stemeps"], 
                                               plantPsi, pars["stem_c"], pars["stem_d"], 
-                                              pars["stemaf"], pars["stem_plc"]);
+                                              pars["stemaf"]);
   return(((pars["Vleaf"] * leafrwc)*pars["LAIphe"]) + ((pars["Vsapwood"] * stemrwc)*pars["LAIlive"]));
 }
 
@@ -251,7 +251,7 @@ List transpirationBasic(List x, NumericVector meteovec,
   for(int c=0;c<numCohorts;c++) {
     NumericMatrix ExtractionPoolsCoh(numCohorts, nlayers); //this is used to store extraction of a SINGLE plant cohort from all pools
     
-    NumericVector parsVol = NumericVector::create(_["stem_c"] = VCstem_c[c], _["stem_d"] = VCstem_d[c], _["stem_plc"] = StemPLC[c],
+    NumericVector parsVol = NumericVector::create(_["stem_c"] = VCstem_c[c], _["stem_d"] = VCstem_d[c],
                                                   _["leafpi0"] = LeafPI0[c], _["leafeps"] = LeafEPS[c],
                                                   _["leafaf"] = LeafAF[c],_["stempi0"] = StemPI0[c],_["stemeps"] = StemEPS[c],
                                                   _["stemaf"] = StemAF[c],_["Vsapwood"] = Vsapwood[c],_["Vleaf"] = Vleaf[c],
@@ -367,10 +367,10 @@ List transpirationBasic(List x, NumericVector meteovec,
     //Relative water content and fuel moisture from plant water potential
     RWClm[c] =  tissueRelativeWaterContent(PlantPsi[c], LeafPI0[c], LeafEPS[c], 
                                            PlantPsi[c], VCstem_c[c], VCstem_d[c], 
-                                           LeafAF[c], StemPLC[c]);
+                                           LeafAF[c]);
     RWCsm[c] =  tissueRelativeWaterContent(PlantPsi[c], StemPI0[c], StemEPS[c], 
                                            PlantPsi[c], VCstem_c[c], VCstem_d[c], 
-                                           StemAF[c], StemPLC[c]);
+                                           StemAF[c]);
     LFMC[c] = maxFMC[c]*((1.0/r635[c])*RWClm[c]+(1.0 - (1.0/r635[c]))*RWCsm[c]);
     
     //Daily drought stress from plant WP

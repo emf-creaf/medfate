@@ -171,8 +171,8 @@ double apoplasticWaterPotential(double RWC, double c, double d) {
 // [[Rcpp::export("moisture_tissueRWC")]]
 double tissueRelativeWaterContent(double psiSym, double pi0, double epsilon, 
                                   double psiApo, double c, double d, 
-                                  double af, double femb = 0.0) {
+                                  double af) {
   double sym_rwc = symplasticRelativeWaterContent(psiSym, pi0, epsilon);
-  double apo_rwc = std::min(1.0-femb, apoplasticRelativeWaterContent(psiApo, c, d)); //Water content cannot be higher than the fraction of non-embolized conduits
+  double apo_rwc = apoplasticRelativeWaterContent(psiApo, c, d); //Water content cannot be higher than the fraction of non-embolized conduits
   return(sym_rwc*(1.0-af)+apo_rwc*af);
 }

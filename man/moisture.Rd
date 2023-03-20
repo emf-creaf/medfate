@@ -28,7 +28,7 @@ moisture_apoplasticRWC(psiApo, c, d)
 
 moisture_apoplasticPsi(RWC, c, d)
 
-moisture_tissueRWC(psiSym, pi0, epsilon, psiApo, c, d, af, femb = 0)
+moisture_tissueRWC(psiSym, pi0, epsilon, psiApo, c, d, af)
 
 moisture_pressureVolumeCurvePlot(
   x,
@@ -65,8 +65,6 @@ moisture_pressureVolumeCurvePlot(
 
 \item{af}{Apoplastic fraction (proportion) in the segment (e.g. leaf or stem).}
 
-\item{femb}{Fraction of embolized conduits.}
-
 \item{x}{An object of class \code{\link{spwbInput}}.}
 
 \item{segment}{Segment whose relative water content curve to plot, either \code{"stem"} or \code{"leaf"}.}
@@ -76,6 +74,8 @@ moisture_pressureVolumeCurvePlot(
 \item{psiVec}{Vector of water potential values to evaluate for the pressure-volume curve.}
 
 \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
+
+\item{femb}{Fraction of embolized conduits.}
 }
 \value{
 Values returned for each function are:

@@ -9,6 +9,7 @@
 - Control flag options to restrict output in 'spwb()' 'pwb()' and 'growth()'
 - Control flag to calculate fire hazard during 'spwb()' 'pwb()' and 'growth()' simulations
 - Integration of SurEau-Ecos v2.0 code as new transpiration mode ('Cochard')
+- Bug correction tissue moisture and water balance in granier's model
 
 # Version 2.9.3
 - Bounded leaf area index
