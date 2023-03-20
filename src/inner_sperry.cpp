@@ -299,6 +299,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   NumericVector N = Rcpp::as<Rcpp::NumericVector>(above["N"]);
   
   List soil = x["soil"];
+  NumericVector Ws = soil["W"]; //Access to soil state variable
   NumericVector dVec = soil["dVec"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   // NumericVector Theta_FC = thetaFC(soil, soilFunctions);
@@ -764,12 +765,15 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         
         
         //Copy transpiration and from connected layers to transpiration from soil layers
+        //And update soil water content (soil water potential will not be updated until next day!)
         if(!plantWaterPools) {
           int cl = 0;
           for(int l=0;l<nlayers;l++) {
             if(layerConnected(c,l)) {
               SoilWaterExtract(c,l) += Esoilcn[cl]; //Add to cummulative transpiration from layers
               soilLayerExtractInst(l,n) += Esoilcn[cl];
+              //Apply extraction to soil layer
+              if(modifyInput) Ws[l] = std::max(Ws[l] - (Esoilcn[cl]/Water_FC[l]),0.0);
               cl++;
             } 
           }

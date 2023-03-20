@@ -33,8 +33,7 @@ const double Cp_Jmol = 29.37152; // J * mol^-1 * ºC^-1
 // STEP 5.1 Long-wave radiation balance
 // STEP 5.2 Leaf energy balance, stomatal conductance and plant hydraulics  (Sperry or Cochard inner functions)
 // STEP 5.3 Soil and canopy energy balances (single or multiple canopy layers)
-// STEP 6. Plant drought stress (relative whole-plant conductance), cavitation and live fuel moisture
-// STEP 7. Subtract extracted water from soil moisture 
+// STEP 6. Update plant drought stress (relative whole-plant conductance), cavitation and live fuel moisture
 List transpirationAdvanced(List x, NumericVector meteovec, 
                   double latitude, double elevation, double slope, double aspect, 
                   double solarConstant, double delta,
@@ -100,8 +99,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   NumericVector clay = soil["clay"];
   NumericVector Ws = soil["W"]; //Access to soil state variable
   double SWE = soil["SWE"];
-  NumericVector psiSoil = psi(soil, soilFunctions); //Get soil water potential
-  
+
   //Canopy params
   DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
   NumericVector zlow = canopyParams["zlow"];
@@ -195,6 +193,22 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   if(prec >0.0) cloudcover = 1.0;
   bool clearday = (prec==0);
   
+  ////////////////////////////////////////
+  // INITIAL SOIL STATE (from previous step)
+  ////////////////////////////////////////
+  NumericVector psiSoil = psi(soil, soilFunctions); //Get soil water potential
+  NumericMatrix psiSoilM(numCohorts, nlayers);
+  if(!plantWaterPools){
+    //Copy soil water potentials from pools
+    List soil_pool = clone(soil);
+    NumericVector Ws_pool = soil_pool["W"];
+    for(int j = 0; j<numCohorts;j++) {
+      //Copy values of soil moisture from pool of cohort j
+      for(int l = 0; l<nlayers;l++) Ws_pool[l] = Wpool(j,l);
+      //Calculate soil water potential
+      psiSoilM(j,_) = psi(soil_pool, soilFunctions);
+    }
+  }
   
   ////////////////////////////////////////
   // DEFINE OUTPUT
@@ -504,19 +518,6 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         }
       }
     } else {
-      // Plant water pools
-      
-      //Copy soil water potentials from pools
-      NumericMatrix psiSoilM(numCohorts, nlayers);
-      List soil_pool = clone(soil);
-      NumericVector Ws_pool = soil_pool["W"];
-      for(int j = 0; j<numCohorts;j++) {
-        //Copy values of soil moisture from pool of cohort j
-        for(int l = 0; l<nlayers;l++) Ws_pool[l] = Wpool(j,l);
-        //Calculate soil water potential
-        psiSoilM(j,_) = psi(soil_pool, soilFunctions);
-      }
-      
       //Determine connected layers (non-zero fine root abundance)
       NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
       LogicalMatrix layerConnectedCoh(numCohorts, nlayers);
@@ -563,9 +564,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
           hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
                                              _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
                                              _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
-                                                                                                                                         _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
-                                                                                                                                                                                                                                       _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
-                                                                                                                                                                                                                                                                                                                                     _["PLCstem"] = NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]));
+                                             _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
+                                             _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
+                                             _["PLCstem"] = NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]));
           supply[c] = supplyFunctionNetwork(hydraulicNetwork[c],
                                             0.0, maxNsteps,
                                             ntrial, psiTol, ETol, 0.001); 
@@ -573,8 +574,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
           hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
                                              _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
                                              _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
-                                                                                                                                         _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
-                                                                                                                                                                                                                                       _["PLCstem"] = NumericVector::create(0.0));
+                                             _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
+                                             _["PLCstem"] = NumericVector::create(0.0));
           supply[c] = supplyFunctionNetworkStem1(hydraulicNetwork[c],
                                                  0.0, maxNsteps,
                                                  ntrial, psiTol, ETol, 0.001); 
@@ -761,6 +762,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                   _["layerConnectedPools"] = layerConnectedPools,
                                   _["supply"] = supply);
   } else {
+    //To do, create initial plant state
     innerInput = List::create(_["Patm"] = Patm,
                               _["zWind"] = zWind,
                               _["iLayerCohort"] = iLayerCohort,
@@ -768,7 +770,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                               _["iLayerShade"] = iLayerShade,
                               _["nlayerscon"] = nlayerscon,
                               _["layerConnected"] = layerConnected,
-                              _["layerConnectedPools"] = layerConnectedPools);
+                              _["layerConnectedPools"] = layerConnectedPools,
+                              _["psiSoil"] = psiSoil,
+                              _["psiSoilM"] = psiSoilM);
   }
   
   ////////////////////////////////////////
@@ -811,7 +815,14 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         LWR_SL(c,n) = sum(Lnet_cohort_layer(_,c)*fsunlit);
         LWR_SH(c,n) = sum(Lnet_cohort_layer(_,c)*(1.0 - fsunlit));
       }
-    } 
+    }
+    // Determine soil evaporation and snow melt for the corresponding step
+    double soilEvapStep = abs_SWR_soil[n]*(soilEvaporation/sum(abs_SWR_soil));
+    double snowMeltStep = abs_SWR_soil[n]*(snowMelt/sum(abs_SWR_soil));
+    if(sum(abs_SWR_soil)==0.0) { // avoid zero sums
+      soilEvapStep = 0.0; 
+      snowMeltStep = 0.0;
+    }
     
     if(transpirationMode == "Sperry") {
       innerSperry(x, innerInput, innerOutput, n, tstep, 
@@ -827,19 +838,10 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     
     //Soil latent heat (soil evaporation)
     //Latent heat (snow fusion) as J/m2/s
-    double soilEvapStep = abs_SWR_soil[n]*(soilEvaporation/sum(abs_SWR_soil));
-    double snowMeltStep = abs_SWR_soil[n]*(snowMelt/sum(abs_SWR_soil));
-    if(sum(abs_SWR_soil)==0.0) { // avoid zero sums
-      soilEvapStep = 0.0; 
-      snowMeltStep = 0.0;
-    }
-    if(SWE>0.0) {
-      abs_SWR_soil[n] = 0.0; //Set SWR absorbed by soil to zero (for energy balance) if snow pack is present 
-    }
+    if(SWE>0.0) abs_SWR_soil[n] = 0.0; //Set SWR absorbed by soil to zero (for energy balance) if snow pack is present 
     double LEsoilevap = (1e6)*meteoland::utils_latentHeatVaporisation(Tsoil[0])*soilEvapStep/tstep;
     double LEsnow = (1e6)*(snowMeltStep*0.33355)/tstep; // 0.33355 = latent heat of fusion
     LEsoil_heat[n] = LEsoilevap + LEsnow;
-    
     
     //Canopy evaporation (mm) in the current step
     double canEvapStep = canopyEvaporation*(abs_SWR_can[n]/sum(abs_SWR_can));
@@ -1024,15 +1026,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     }
   }
   
-  
-  ////////////////////////////////////////
-  // STEP 7. Subtract extracted water from soil moisture 
-  ////////////////////////////////////////
+  //copy soil to the pools of all cohorts
   if(modifyInput){
-    for(int l=0;l<nlayers;l++) {
-      Ws[l] = std::max(Ws[l] - (sum(soilLayerExtractInst(l,_))/Water_FC[l]),0.0);
-    } 
-    if(!plantWaterPools) { //copy soil to the pools of all cohorts
+    if(!plantWaterPools) { 
       for(int c=0;c<numCohorts;c++) {
         for(int l=0;l<nlayers;l++) {
           Wpool(c,l) = Ws[l];

@@ -13,18 +13,10 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   // Extract control variables
   List control = x["control"];
   String soilFunctions = control["soilFunctions"];
-  bool capacitance = control["capacitance"];
   String cavitationRefill = control["cavitationRefill"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
-  List numericParams = control["numericParams"];
-  // int ntrial = numericParams["ntrial"];
-  int maxNsteps  = numericParams["maxNsteps"];
-  // double psiTol = numericParams["psiTol"];
-  double ETol = numericParams["ETol"];
-  double klatleaf = control["klatleaf"];
-  double klatstem = control["klatstem"];
-  
+
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   int numCohorts = cohorts.nrow();
   
