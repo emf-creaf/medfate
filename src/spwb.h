@@ -25,9 +25,8 @@ void fillEnergyBalanceTemperatureDailyOutput(DataFrame DEB, DataFrame DT, Numeri
 void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int day, String transpirationMode);
 void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday);
 
-void printWaterBalanceResult(DataFrame DWB, List plantDWOL, 
-                             List soil, String soilFunctions,
-                             NumericVector initialContent, double initialSnowContent,
+void printWaterBalanceResult(DataFrame DWB, List plantDWOL, List x,
+                             NumericVector initialPlantContent, NumericVector initialSoilContent, double initialSnowContent,
                              String transpirationMode);
 
 List spwbDay(List x, CharacterVector date, double tmin, double tmax, 

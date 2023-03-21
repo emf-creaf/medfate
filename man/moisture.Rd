@@ -74,8 +74,6 @@ moisture_pressureVolumeCurvePlot(
 \item{psiVec}{Vector of water potential values to evaluate for the pressure-volume curve.}
 
 \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
-
-\item{femb}{Fraction of embolized conduits.}
 }
 \value{
 Values returned for each function are:

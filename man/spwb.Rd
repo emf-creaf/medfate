@@ -211,14 +211,6 @@ x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 #Call simulation function
 S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 
-#Switch to 'Cochard' transpiration mode
-control <- defaultControl("Cochard")
-
-#Initialize input
-x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-
-#Call simulation function
-S3 <- spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 
 }
                 

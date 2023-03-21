@@ -141,14 +141,6 @@ x2 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
 #Call simulation function
 G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 
-#Switch to 'Cochard' transpiration mode
-control <- defaultControl("Cochard")
-
-#Initialize vegetation input
-x3 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
-
-#Call simulation function
-G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 }
       
 }

@@ -919,14 +919,6 @@ growth_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, e
 #' #Call simulation function
 #' G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 #' 
-#' #Switch to 'Cochard' transpiration mode
-#' control <- defaultControl("Cochard")
-#' 
-#' #Initialize vegetation input
-#' x3 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
-#' 
-#' #Call simulation function
-#' G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 #' }
 #'       
 growth <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_, CO2ByYear = numeric(0)) {
@@ -3074,14 +3066,6 @@ spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, ele
 #' #Call simulation function
 #' S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 #' 
-#' #Switch to 'Cochard' transpiration mode
-#' control <- defaultControl("Cochard")
-#' 
-#' #Initialize input
-#' x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-#' 
-#' #Call simulation function
-#' S3 <- spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 #' 
 #' }
 #'                 
@@ -3115,7 +3099,6 @@ compute_plantNextTimeStep <- function(WBveg, WBsoil, WBclim_current, WBclim_next
 #' @param epsilon Bulk modulus of elasticity (MPa).
 #' @param c,d Parameters of the xylem vulnerability curve.
 #' @param af Apoplastic fraction (proportion) in the segment (e.g. leaf or stem).
-#' @param femb Fraction of embolized conduits.
 #' @param L Vector with the length of coarse roots (mm) for each soil layer.
 #' @param V Vector with the proportion [0-1] of fine roots within each soil layer.
 #' @param Al2As Leaf area to sapwood area (in m2·m-2).
@@ -3191,6 +3174,10 @@ moisture_apoplasticPsi <- function(RWC, c, d) {
 #' @rdname moisture
 moisture_tissueRWC <- function(psiSym, pi0, epsilon, psiApo, c, d, af) {
     .Call(`_medfate_tissueRelativeWaterContent`, psiSym, pi0, epsilon, psiApo, c, d, af)
+}
+
+plant_water <- function(x) {
+    .Call(`_medfate_plantWaterContent`, x)
 }
 
 #' @rdname transp_modes
@@ -3389,17 +3376,6 @@ transp_transpirationCochard <- function(x, meteo, day, latitude, elevation, slop
 #' t2 <- transp_transpirationSperry(x2, examplemeteo, 1, 
 #'                                 latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
 #'                                 modifyInput = FALSE)
-#'                                 
-#' #Switch to 'Cochard' transpiration mode
-#' control <- defaultControl("Cochard")
-#' 
-#' #Initialize input
-#' x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-#' 
-#' # Transpiration according to Cochard's model (SurEau-Ecos)
-#' t3 <- transp_transpirationCochard(x3, examplemeteo, 1, 
-#'                                  latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
-#'                                  modifyInput = FALSE)
 #'                                 
 #' @name transp_modes
 transp_transpirationGranier <- function(x, meteo, day, latitude, elevation, slope, aspect, modifyInput = TRUE) {

@@ -14,6 +14,7 @@
 #include "transpiration.h"
 #include "fuelstructure.h"
 #include "firebehaviour.h"
+#include "tissuemoisture.h"
 #include "soil.h"
 #include <meteoland.h>
 using namespace Rcpp;
@@ -1266,14 +1267,18 @@ void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday) {
   SFP[iday] = fhd["SFP"];
   CFP[iday] = fhd["CFP"];
 }
-void printWaterBalanceResult(DataFrame DWB, List plantDWOL, 
-                             List soil, String soilFunctions,
-                             NumericVector initialContent, double initialSnowContent,
+void printWaterBalanceResult(DataFrame DWB, List plantDWOL, List x,
+                             NumericVector initialPlantContent, NumericVector initialSoilContent, double initialSnowContent,
                              String transpirationMode) {
+  List soil = x["soil"];
+  List control = x["control"];
+  String soilFunctions = control["soilFunctions"];
   
-  NumericVector finalContent = water(soil, soilFunctions);
+  NumericVector finalPlantContent = plantWaterContent(x);
+  NumericVector finalSoilContent = water(soil, soilFunctions);
   double finalSnowContent = soil["SWE"];
-  Rcout<<"Final soil water content (mm): "<< sum(finalContent)<<"\n";
+  Rcout<<"Final plant water content (mm): "<< sum(finalPlantContent)<<"\n";
+  Rcout<<"Final soil water content (mm): "<< sum(finalSoilContent)<<"\n";
   Rcout<<"Final snowpack content (mm): "<< finalSnowContent<<"\n";
   
   NumericVector Precipitation = DWB["Precipitation"];
@@ -1306,7 +1311,9 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL,
   
   double soil_wb = (Rainfallsum - Interceptionsum) + Snowmeltsum - Runoffsum - DeepDrainagesum - SoilEvaporationsum - sum(PlantExtraction);
   double snowpack_wb = Snowsum - Snowmeltsum;
-  Rcout<<"Change in soil water content (mm): "<< sum(finalContent) - sum(initialContent)<<"\n";
+  Rcout<<"Change in plant water content (mm): "<< sum(finalPlantContent) - sum(initialPlantContent)<<"\n";
+  Rcout<<"Plant water balance result (mm): "<< sum(PlantWaterBalance)<<"\n";
+  Rcout<<"Change in soil water content (mm): "<< sum(finalSoilContent) - sum(initialSoilContent)<<"\n";
   Rcout<<"Soil water balance result (mm): "<< soil_wb<<"\n";
   Rcout<<"Change in snowpack water content (mm): "<< finalSnowContent - initialSnowContent<<"\n";
   Rcout<<"Snowpack water balance result (mm): "<< snowpack_wb<<"\n";
@@ -1519,14 +1526,6 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL,
 //' #Call simulation function
 //' S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 //' 
-//' #Switch to 'Cochard' transpiration mode
-//' control <- defaultControl("Cochard")
-//' 
-//' #Initialize input
-//' x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-//' 
-//' #Call simulation function
-//' S3 <- spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 //' 
 //' }
 //'                 
@@ -1670,10 +1669,12 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   DataFrame fireHazard;
   if(control["fireHazardResults"]) fireHazard = defineFireHazardOutput(meteo);
 
-  NumericVector initialContent = water(soil, soilFunctions);
+  NumericVector initialSoilContent = water(soil, soilFunctions);
+  NumericVector initialPlantContent = plantWaterContent(x);
   double initialSnowContent = soil["SWE"];
   if(verbose) {
-    Rcout<<"Initial soil water content (mm): "<< sum(initialContent)<<"\n";
+    Rcout<<"Initial plant water content (mm): "<< sum(initialPlantContent)<<"\n";
+    Rcout<<"Initial soil water content (mm): "<< sum(initialSoilContent)<<"\n";
     Rcout<<"Initial snowpack content (mm): "<< initialSnowContent<<"\n";
   }
   
@@ -1827,8 +1828,8 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   if(verbose) Rcout << "\n\n";
   
   if(verbose) {
-    printWaterBalanceResult(DWB, plantDWOL, soil, soilFunctions,
-                            initialContent, initialSnowContent,
+    printWaterBalanceResult(DWB, plantDWOL, x,
+                            initialPlantContent, initialSoilContent, initialSnowContent,
                             transpirationMode);
     if(error_occurence) {
       Rcout<< " ERROR: Calculations stopped because of numerical error: Revise parameters\n";

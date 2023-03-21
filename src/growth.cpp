@@ -1684,14 +1684,6 @@ void checkgrowthInput(List x, String transpirationMode, String soilFunctions) {
 //' #Call simulation function
 //' G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 //' 
-//' #Switch to 'Cochard' transpiration mode
-//' control <- defaultControl("Cochard")
-//' 
-//' #Initialize vegetation input
-//' x3 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
-//' 
-//' #Call simulation function
-//' G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 //' }
 //'       
 // [[Rcpp::export("growth")]]
@@ -1893,7 +1885,8 @@ List growth(List x, DataFrame meteo, double latitude,
     if(((DOY[i]==1) && (i>0)) || ((i==(numDays-1)) && (DOY[i]>=365))) numYears = numYears + 1;
   }
 
-  NumericVector initialContent = water(soil, soilFunctions);
+  NumericVector initialSoilContent = water(soil, soilFunctions);
+  NumericVector initialPlantContent = plantWaterContent(x);
   double initialSnowContent = soil["SWE"];
   DataFrame ccIni_m2 = carbonCompartments(x, "g_m2");
   double cohortBiomassBalanceSum = 0.0;
@@ -1901,7 +1894,8 @@ List growth(List x, DataFrame meteo, double latitude,
   
   if(verbose) {
     Rcout<<"Initial plant cohort biomass (g/m2): "<<initialCohortBiomass<<"\n";
-    Rcout<<"Initial soil water content (mm): "<< sum(initialContent)<<"\n";
+    Rcout<<"Initial plant water content (mm): "<< sum(initialPlantContent)<<"\n";
+    Rcout<<"Initial soil water content (mm): "<< sum(initialSoilContent)<<"\n";
     Rcout<<"Initial snowpack content (mm): "<< initialSnowContent<<"\n";
   }
   
@@ -2111,8 +2105,8 @@ List growth(List x, DataFrame meteo, double latitude,
     Rcout<<"  Structural balance (g/m2) "  <<round(sum(StandBiomassBalance(_,0)))<<" Labile balance (g/m2) "  <<round(sum(StandBiomassBalance(_,1))) <<"\n";
     Rcout<<"  Plant individual balance (g/m2) "  <<round(sum(StandBiomassBalance(_,2)))<<" Mortality loss (g/m2) "  <<round(sum(StandBiomassBalance(_,3))) <<"\n";
     
-    printWaterBalanceResult(DWB, plantDWOL, soil, soilFunctions,
-                            initialContent, initialSnowContent,
+    printWaterBalanceResult(DWB, plantDWOL, x,
+                            initialPlantContent, initialSoilContent, initialSnowContent,
                             transpirationMode);
     
     if(error_occurence) {

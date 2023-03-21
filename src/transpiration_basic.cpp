@@ -102,8 +102,8 @@ List transpirationBasic(List x, NumericVector meteovec,
   double Patm = meteoland::utils_atmosphericPressure(elevation);
   
   //Vegetation input
-  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
   NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
   NumericVector LAIdead = Rcpp::as<Rcpp::NumericVector>(above["LAI_dead"]);
@@ -674,17 +674,6 @@ List transpirationBasic(List x, NumericVector meteovec,
 //' t2 <- transp_transpirationSperry(x2, examplemeteo, 1, 
 //'                                 latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
 //'                                 modifyInput = FALSE)
-//'                                 
-//' #Switch to 'Cochard' transpiration mode
-//' control <- defaultControl("Cochard")
-//' 
-//' #Initialize input
-//' x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-//' 
-//' # Transpiration according to Cochard's model (SurEau-Ecos)
-//' t3 <- transp_transpirationCochard(x3, examplemeteo, 1, 
-//'                                  latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
-//'                                  modifyInput = FALSE)
 //'                                 
 //' @name transp_modes
 // [[Rcpp::export("transp_transpirationGranier")]]

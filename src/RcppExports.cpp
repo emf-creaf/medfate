@@ -4464,6 +4464,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// plantWaterContent
+NumericVector plantWaterContent(List x);
+RcppExport SEXP _medfate_plantWaterContent(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(plantWaterContent(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // transpirationSperry
 List transpirationSperry(List x, DataFrame meteo, int day, double latitude, double elevation, double slope, double aspect, double canopyEvaporation, double snowMelt, double soilEvaporation, int stepFunctions, bool modifyInput);
 RcppExport SEXP _medfate_transpirationSperry(SEXP xSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP canopyEvaporationSEXP, SEXP snowMeltSEXP, SEXP soilEvaporationSEXP, SEXP stepFunctionsSEXP, SEXP modifyInputSEXP) {
@@ -5038,6 +5049,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_apoplasticRelativeWaterContent", (DL_FUNC) &_medfate_apoplasticRelativeWaterContent, 3},
     {"_medfate_apoplasticWaterPotential", (DL_FUNC) &_medfate_apoplasticWaterPotential, 3},
     {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 7},
+    {"_medfate_plantWaterContent", (DL_FUNC) &_medfate_plantWaterContent, 1},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 12},
     {"_medfate_transpirationCochard", (DL_FUNC) &_medfate_transpirationCochard, 11},
     {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 8},

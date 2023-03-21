@@ -25,7 +25,6 @@ using namespace Rcpp;
 //' @param epsilon Bulk modulus of elasticity (MPa).
 //' @param c,d Parameters of the xylem vulnerability curve.
 //' @param af Apoplastic fraction (proportion) in the segment (e.g. leaf or stem).
-//' @param femb Fraction of embolized conduits.
 //' @param L Vector with the length of coarse roots (mm) for each soil layer.
 //' @param V Vector with the proportion [0-1] of fine roots within each soil layer.
 //' @param Al2As Leaf area to sapwood area (in m2·m-2).
@@ -175,4 +174,62 @@ double tissueRelativeWaterContent(double psiSym, double pi0, double epsilon,
   double sym_rwc = symplasticRelativeWaterContent(psiSym, pi0, epsilon);
   double apo_rwc = apoplasticRelativeWaterContent(psiApo, c, d); //Water content cannot be higher than the fraction of non-embolized conduits
   return(sym_rwc*(1.0-af)+apo_rwc*af);
+}
+
+
+// [[Rcpp::export("plant_water")]]
+NumericVector plantWaterContent(List x) {
+  List control = x["control"];
+  String transpirationMode = control["transpirationMode"];
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
+  NumericVector vol(LAIlive.size(), NA_REAL);
+  
+  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+  NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
+  NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
+  DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
+  NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
+  NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
+  NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
+  NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]); //l·m-2 = mm
+  NumericVector LeafPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafPI0"]);
+  NumericVector LeafEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafEPS"]);
+  NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
+  NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
+  
+  DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+  if(transpirationMode == "Granier") {
+    NumericVector PlantPsi = clone(Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]));
+    for(int c = 0;c< LAIlive.size();c++) {
+      double leafrwc = tissueRelativeWaterContent(PlantPsi[c], LeafPI0[c], LeafEPS[c], 
+                                                  PlantPsi[c], VCstem_c[c], VCstem_d[c], 
+                                                  LeafAF[c]);
+      
+      double stemrwc = tissueRelativeWaterContent(PlantPsi[c], StemPI0[c], StemEPS[c], 
+                                                  PlantPsi[c], VCstem_c[c], VCstem_d[c], 
+                                                  StemAF[c]);
+      vol[c] = ((Vleaf[c] * leafrwc) + (Vsapwood[c] * stemrwc))*LAIlive[c];
+    }
+  } else {
+    NumericVector StemPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
+    NumericVector Stem1PsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem1Psi"]);
+    NumericVector LeafPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
+    NumericVector StemSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
+    NumericVector LeafSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
+    for(int c = 0;c< LAIlive.size();c++) {
+      double leafrwc = tissueRelativeWaterContent(LeafSympPsiVEC[c], LeafPI0[c], LeafEPS[c], 
+                                                  LeafPsiVEC[c], VCstem_c[c], VCstem_d[c], 
+                                                  LeafAF[c]);
+        
+      double stemrwc = tissueRelativeWaterContent(StemSympPsiVEC[c], StemPI0[c], StemEPS[c], 
+                                                  Stem1PsiVEC[c], VCstem_c[c], VCstem_d[c], 
+                                                  StemAF[c]);
+      vol[c] = ((Vleaf[c] * leafrwc) + (Vsapwood[c] * stemrwc))*LAIlive[c];
+    }
+  }
+    
+  vol.attr("names") = above.attr("row.names");
+  return(vol);
 }
