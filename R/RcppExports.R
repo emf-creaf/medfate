@@ -2316,7 +2316,7 @@ photo_multilayerPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair,
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
 #' @seealso
-#'  \code{\link{spwb}}, \code{\link{spwb_ldrOptimization}}, \code{\link{forest2spwbInput}}, \code{\link{soil}}
+#'  \code{\link{spwb}},  \code{\link{forest2spwbInput}}, \code{\link{soil}}
 #'
 #' @examples
 #' #Load example plot plant data
@@ -3026,7 +3026,7 @@ spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, ele
 #' 
 #' @seealso 
 #' \code{\link{spwbInput}}, \code{\link{spwb_day}}, \code{\link{plot.spwb}}, 
-#' \code{\link{spwb_ldrOptimization}}, \code{\link{forest}}
+#' \code{\link{forest}}
 #' 
 #' @examples
 #' #Load example daily meteorological data

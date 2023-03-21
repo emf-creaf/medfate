@@ -230,7 +230,7 @@ Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y
 }
 \seealso{
 \code{\link{spwbInput}}, \code{\link{spwb_day}}, \code{\link{plot.spwb}}, 
-\code{\link{spwb_ldrOptimization}}, \code{\link{forest}}
+\code{\link{forest}}
 }
 \author{
 \itemize{

@@ -146,7 +146,7 @@ NumericVector conicRS_one(double Zcone, NumericVector d){
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
 //' @seealso
-//'  \code{\link{spwb}}, \code{\link{spwb_ldrOptimization}}, \code{\link{forest2spwbInput}}, \code{\link{soil}}
+//'  \code{\link{spwb}},  \code{\link{forest2spwbInput}}, \code{\link{soil}}
 //'
 //' @examples
 //' #Load example plot plant data

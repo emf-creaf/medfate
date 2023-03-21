@@ -1486,7 +1486,7 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL, List x,
 //' 
 //' @seealso 
 //' \code{\link{spwbInput}}, \code{\link{spwb_day}}, \code{\link{plot.spwb}}, 
-//' \code{\link{spwb_ldrOptimization}}, \code{\link{forest}}
+//' \code{\link{forest}}
 //' 
 //' @examples
 //' #Load example daily meteorological data

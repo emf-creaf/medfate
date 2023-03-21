@@ -114,8 +114,6 @@ reference:
   desc:  Evaluation and optimization
   contents:
   - exampleobs
-  - starts_with("spwb_ldr")
-  - spwb_sensitivity
   - starts_with("evaluation_")
   - starts_with("optimization_")
   
