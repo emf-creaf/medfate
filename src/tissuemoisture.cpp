@@ -42,6 +42,7 @@ using namespace Rcpp;
 //'   \item{\code{moisture_apoplasticWaterPotential}: Water potential (in MPa) of the apoplastic fraction.}
 //'   \item{\code{moisture_turgorLossPoint}: Water potential (in MPa) corresponding to turgor loss point.}
 //'   \item{\code{moisture_segmentRWC}: Segment relative water content [0-1].}
+//'   \item{\code{water_plant}: A vector of water content (mm) per plant cohort.}
 //' }
 //' 
 //' @references
@@ -176,7 +177,7 @@ double tissueRelativeWaterContent(double psiSym, double pi0, double epsilon,
   return(sym_rwc*(1.0-af)+apo_rwc*af);
 }
 
-
+//' @rdname moisture
 // [[Rcpp::export("plant_water")]]
 NumericVector plantWaterContent(List x) {
   List control = x["control"];

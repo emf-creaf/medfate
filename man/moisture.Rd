@@ -11,6 +11,7 @@
 \alias{moisture_apoplasticRWC}
 \alias{moisture_apoplasticPsi}
 \alias{moisture_tissueRWC}
+\alias{plant_water}
 \alias{moisture_pressureVolumeCurvePlot}
 \title{Tissue moisture functions}
 \usage{
@@ -29,6 +30,8 @@ moisture_apoplasticRWC(psiApo, c, d)
 moisture_apoplasticPsi(RWC, c, d)
 
 moisture_tissueRWC(psiSym, pi0, epsilon, psiApo, c, d, af)
+
+plant_water(x)
 
 moisture_pressureVolumeCurvePlot(
   x,
@@ -84,6 +87,7 @@ Values returned for each function are:
   \item{\code{moisture_apoplasticWaterPotential}: Water potential (in MPa) of the apoplastic fraction.}
   \item{\code{moisture_turgorLossPoint}: Water potential (in MPa) corresponding to turgor loss point.}
   \item{\code{moisture_segmentRWC}: Segment relative water content [0-1].}
+  \item{\code{water_plant}: A vector of water content (mm) per plant cohort.}
 }
 }
 \description{

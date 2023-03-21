@@ -3116,6 +3116,7 @@ compute_plantNextTimeStep <- function(WBveg, WBsoil, WBclim_current, WBclim_next
 #'   \item{\code{moisture_apoplasticWaterPotential}: Water potential (in MPa) of the apoplastic fraction.}
 #'   \item{\code{moisture_turgorLossPoint}: Water potential (in MPa) corresponding to turgor loss point.}
 #'   \item{\code{moisture_segmentRWC}: Segment relative water content [0-1].}
+#'   \item{\code{water_plant}: A vector of water content (mm) per plant cohort.}
 #' }
 #' 
 #' @references
@@ -3176,6 +3177,7 @@ moisture_tissueRWC <- function(psiSym, pi0, epsilon, psiApo, c, d, af) {
     .Call(`_medfate_tissueRelativeWaterContent`, psiSym, pi0, epsilon, psiApo, c, d, af)
 }
 
+#' @rdname moisture
 plant_water <- function(x) {
     .Call(`_medfate_plantWaterContent`, x)
 }

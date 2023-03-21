@@ -32,44 +32,18 @@ double plantVol(double plantPsi, NumericVector pars) {
 
 double findNewPlantPsiConnected(double flowFromRoots, double plantPsi, double rootCrownPsi,
                                 NumericVector parsVol){
+  if(plantPsi==rootCrownPsi) return(plantPsi);
+  double V = plantVol(plantPsi, parsVol);
   //More negative rootCrownPsi causes increased flow due to water being removed
-  if(rootCrownPsi <= plantPsi) return(rootCrownPsi); 
-  else {
-    double V = plantVol(plantPsi, parsVol);
-    double psiStep = rootCrownPsi - plantPsi;
-    double Vnew = plantVol(plantPsi + psiStep, parsVol);
-    while((Vnew - V) > flowFromRoots) {
-      psiStep = psiStep/2.0;
-      Vnew = plantVol(plantPsi + psiStep, parsVol);
-    }
-    return(plantPsi+psiStep);
+  double psiStep = rootCrownPsi - plantPsi;
+  double Vnew = plantVol(plantPsi + psiStep, parsVol);
+  while(std::abs(Vnew - V) > flowFromRoots) {
+    psiStep = psiStep/2.0;
+    Vnew = plantVol(plantPsi + psiStep, parsVol);
   }
-  return(plantPsi);
+  return(plantPsi+psiStep);
 }
 
-double findNewPlantPsiCuticular(double E_cut, double plantPsi, NumericVector parsVol){
-  double V = plantVol(plantPsi, parsVol);
-  // Rcout<< " V: "<< V<<" "<< E_cut<<" ";
-  double psiStep = 0.001;
-  double psi = plantPsi - psiStep;
-  double Vnew = plantVol(psi, parsVol);
-  double Vdecrease = V - Vnew;
-  double Etol = 1e-6;
-  int cnt = 0;
-  while((std::abs(Vdecrease - E_cut) > Etol) && (cnt < 100)) {
-    cnt++;
-    if(Vdecrease > E_cut) {
-      //Go one step behind and reduce step size 
-      psi = psi + psiStep;
-      psiStep = psiStep/2.0; 
-    } else {
-      psi = psi - psiStep;
-    }
-    Vnew = plantVol(psi, parsVol);
-    Vdecrease = V - Vnew;
-  }
-  return(psi);
-}
 
 List transpirationBasic(List x, NumericVector meteovec,  
                         double elevation, bool modifyInput = true) {
@@ -305,27 +279,30 @@ List transpirationBasic(List x, NumericVector meteovec,
     }
     
     //Cuticular transpiration    
-    double lvp_tmax = leafVapourPressure(tmax,  PlantPsi[c]);
-    double lvp_tmin = leafVapourPressure(tmin,  PlantPsi[c]);
-    double lvpd_tmax = std::max(0.0, lvp_tmax - vpatm);
-    double lvpd_tmin = std::max(0.0, lvp_tmin - vpatm);
-    double E_gmin = Gswmin[c]*(lvpd_tmin+lvpd_tmax)/(2.0*Patm); // mol·s-1·m-2
-    double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
+    // double lvp_tmax = leafVapourPressure(tmax,  PlantPsi[c]);
+    // double lvp_tmin = leafVapourPressure(tmin,  PlantPsi[c]);
+    // double lvpd_tmax = std::max(0.0, lvp_tmax - vpatm);
+    // double lvpd_tmin = std::max(0.0, lvp_tmin - vpatm);
+    // double E_gmin = Gswmin[c]*(lvpd_tmin+lvpd_tmax)/(2.0*Patm); // mol·s-1·m-2
+    // double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
 
     double oldVol = plantVol(PlantPsi[c], parsVol); 
     
     //Transpiration is the maximum of predicted extraction and cuticular transpiration
     double ext_sum = sum(Extraction(c,_));
-    double corr_extraction = 0.0;
-    if(E_cut > ext_sum) {
-      Eplant[c] = E_cut;
-      corr_extraction = E_cut - ext_sum; //Correction to be added to extraction
-    } else {
-      Eplant[c] = ext_sum;
-    }
-    PlantPsi[c] = findNewPlantPsiConnected(Eplant[c], PlantPsi[c], rootCrownPsi, parsVol);
+    // double corr_extraction = 0.0;
+    // if(E_cut > ext_sum) {
+    //   Eplant[c] = E_cut;
+    //   corr_extraction = E_cut - ext_sum; //Correction to be added to extraction
+    // } else {
+    //   Eplant[c] = ext_sum;
+    // }
+    Eplant[c] = ext_sum;
+    // PlantPsi[c] = findNewPlantPsiConnected(Eplant[c], PlantPsi[c], rootCrownPsi, parsVol);
     //For deciduous species, make water potential follow soil during winter
-    if(LAIphe[c]==0.0) PlantPsi[c] = rootCrownPsi;
+    // if(LAIphe[c]==0.0) PlantPsi[c] = rootCrownPsi;
+    PlantPsi[c] = rootCrownPsi;
+    // PlantPsi[c] = rootCrownPsi;
     double newVol = plantVol(PlantPsi[c], parsVol);
     
     double volDiff = newVol - oldVol;
@@ -333,17 +310,17 @@ List transpirationBasic(List x, NumericVector meteovec,
     PWB[c] = volDiff;
     
     //Divide the difference among soil layers extraction
-    for(int l=0;l<nlayers;l++) {
-      if(!plantWaterPools) { 
-        if(ext_sum>0.0) Extraction(c,l) += (volDiff+corr_extraction)*(Extraction(c,l)/ext_sum);
-      } else { // recalculate also extraction from soil pools
-        for(int j = 0;j<numCohorts;j++) {
-          if(ext_sum>0.0) ExtractionPoolsCoh(j,l) += (volDiff+corr_extraction)*(ExtractionPoolsCoh(j,l)/ext_sum);
-        }
-        //Recalculate extraction from soil layers
-        Extraction(c,l) = sum(ExtractionPoolsCoh(_,l)); // Sum extraction from all pools (layer l)
-      }
-    }
+    // for(int l=0;l<nlayers;l++) {
+    //   if(!plantWaterPools) {
+    //     if(ext_sum>0.0) Extraction(c,l) += (corr_extraction)*(Extraction(c,l)/ext_sum);
+    //   } else { // recalculate also extraction from soil pools
+    //     for(int j = 0;j<numCohorts;j++) {
+    //       if(ext_sum>0.0) ExtractionPoolsCoh(j,l) += (corr_extraction)*(ExtractionPoolsCoh(j,l)/ext_sum);
+    //     }
+    //     //Recalculate extraction from soil layers
+    //     Extraction(c,l) = sum(ExtractionPoolsCoh(_,l)); // Sum extraction from all pools (layer l)
+    //   }
+    // }
     //Photosynthesis
     double fpar = std::min(1.0, pow(PARcohort[c]/100.0,WUE_par[c]));
     double fco2 = (1.0 - exp((-1.0)*WUE_co2[c]*Catm));
