@@ -14,17 +14,14 @@ double PLC(double Pmin, double slope, double P50){
   return (100.0 / (1.0 + exp(slope / 25.0 * (Pmin - P50))));
 }
 double invPLC(double plc, double slope, double P50){
-  return(P50 + log(100.0/plc)*(25.0/slope));
+  return(P50 + log((100.0/plc)-1.0)*(25.0/slope));
 }
-// [[Rcpp::export]]
-List initHydraulicArchitecture(List x) {
+
+List initCochardNetwork(int c,
+                       DataFrame internalWater, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
+                       NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
+                       double sapFluidityDay = 1.0) {
   //Root distribution input
-  DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
-  List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
-  NumericMatrix VCroot_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
-  NumericMatrix VGrhizo_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
-  
-  DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
   NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
   NumericVector Elim = Rcpp::as<Rcpp::NumericVector>(internalWater["Elim"]);
   NumericVector Emin_L = Rcpp::as<Rcpp::NumericVector>(internalWater["Emin_L"]);
@@ -36,7 +33,6 @@ List initHydraulicArchitecture(List x) {
   NumericVector RootCrownPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
   NumericVector StemSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
 
-  DataFrame paramsTranspiration = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   NumericVector Plant_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Plant_kmax"]);
   NumericVector VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_kmax"]);
   NumericVector VCleaf_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_P50"]);
@@ -47,97 +43,109 @@ List initHydraulicArchitecture(List x) {
   NumericVector VCroot_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_P50"]);
   NumericVector VCroot_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_slope"]);
   
-  DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
   NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]);
   NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
   NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]);
   NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
   
-  int numCohorts = StemPLCVEC.size();
-  List HAs(numCohorts);
-  for(int c = 0;c<numCohorts;c++) {
-    List HA = List::create();
-    //Params
-    List params = List::create();
-    params.push_back(VCleaf_P50[c], "VCleaf_P50"); 
-    params.push_back(VCleaf_slope[c], "VCleaf_slope"); 
-    params.push_back(VCstem_P50[c], "VCstem_P50"); 
-    params.push_back(VCstem_slope[c], "VCstem_slope"); 
-    params.push_back(VCroot_P50[c], "VCrootP50"); 
-    params.push_back(VCroot_slope[c], "VCroot_slope"); 
-    
-    HA.push_back(params, "params");
-    
-    //Water potentials
-    HA.push_back(StemPsiVEC[c], "Psi_LApo"); // Leaf apo psi  = Stem psi
-    HA.push_back(LeafPsiVEC[c], "Psi_LSym"); // Leaf sym psi = Leaf psi
-    HA.push_back(RootCrownPsiVEC[c], "Psi_SApo"); // Stem apo psi = root crown psi
-    HA.push_back(StemSympPsiVEC[c], "Psi_SSym");
-    HA.push_back(invPLC(StemPLCVEC[c]*100.0, VCstem_slope[c], VCstem_P50[c]), "Psi_SApo_cav"); //Sureau operates with %
-    HA.push_back(invPLC(LeafPLCVEC[c]*100.0, VCleaf_slope[c], VCleaf_P50[c]), "Psi_LApo_cav"); //Sureau operates with %
-    //PLC levels
-    HA.push_back(StemPLCVEC[c]*100.0, "PLC_Stem"); //Sureau operates with %
-    HA.push_back(LeafPLCVEC[c]*100.0, "PLC_Leaf"); //Sureau operates with %
-    //Capacitances (mmol m-2 MPa-1)
-    HA.push_back(2e-05, "C_SApo"); //Capacitance of the stem apoplasm
-    HA.push_back(1e-05, "C_LApo"); //Capacitance of the leaf apoplasm
-    HA.push_back(4761.905, "C_SSym"); //Capacitance of the stem symplasm (HOW TO ESTIMATE THEM?)
-    HA.push_back(361.9048, "C_LSym"); //Capacitance of the leaf symplasm (HOW TO ESTIMATE THEM?)
-    //Conductances (mmol m-2 MPa-1 s-1)
-    HA.push_back(Plant_kmax[c], "k_Plant"); //Whole-plant conductance  = Plant_kmax
-    HA.push_back(VCstem_kmax[c], "k_SLApo"); //Conductance from trunk apoplasm to leaf apoplasm = VCstem_kmax
-    HA.push_back(0.26, "k_SSym"); //Conductance from stem apoplasm to stem symplasm (CONTROL PARAMETER?)
-    HA.push_back(VCleaf_kmax[c], "k_LSym"); //Conductance from leaf apoplasm to leaf symplasm = VCleaf_kmax
-    HA.push_back(VCroot_kmax(c,_), "k_SoilToStem"); //Conductance from rhizosphere to root crown?
-    //Water content (mmol m-2)
-    double l2mmol = 1.0e6/18.0;
-    HA.push_back(Vsapwood[c]*StemAF[c]*l2mmol, "Q_SApo_sat_mmol_perLeafArea"); //Water content in stem apoplasm
-    HA.push_back(Vleaf[c]*LeafAF[c]*l2mmol, "Q_LApo_sat_mmol_perLeafArea"); //Water content in leaf apoplasm
-    HA.push_back(Vsapwood[c]*(1.0 - StemAF[c])*l2mmol, "Q_SSym_sat_mmol_perLeafArea"); //Water content in stem symplasm
-    HA.push_back(Vleaf[c]*(1.0 - LeafAF[c])*l2mmol, "Q_LSym_sat_mmol_perLeafArea"); //Water content in leaf symplasm
-    //Flows (mmol m-2 s-1)
-    HA.push_back(Einst[c], "Einst"); //Total transpiration
-    HA.push_back(Elim[c], "Elim"); //Stomatal transpiration
-    HA.push_back(Emin_L[c], "Emin_L"); //Leaf cuticular transpiration
-    HA.push_back(Emin_S[c], "Emin_S"); //Stem cuticular transpiration
-    
-    //Diagnostics
-    HA.push_back(NA_INTEGER, "Diag_nwhile_cavit");
-    
-
-    HAs[c] = HA;
-  }
+  List network = List::create();
+  //Params
+  List params = List::create();
+  params.push_back(VCleaf_P50[c], "VCleaf_P50"); 
+  params.push_back(VCleaf_slope[c], "VCleaf_slope"); 
+  params.push_back(VCstem_P50[c], "VCstem_P50"); 
+  params.push_back(VCstem_slope[c], "VCstem_slope"); 
+  params.push_back(VCroot_P50[c], "VCrootP50"); 
+  params.push_back(VCroot_slope[c], "VCroot_slope"); 
   
-  return(HAs);
+  network.push_back(params, "params");
+  
+  //Water potentials
+  network.push_back(StemPsiVEC[c], "Psi_LApo"); // Leaf apo psi  = Stem psi
+  network.push_back(LeafPsiVEC[c], "Psi_LSym"); // Leaf sym psi = Leaf psi
+  network.push_back(RootCrownPsiVEC[c], "Psi_SApo"); // Stem apo psi = root crown psi
+  network.push_back(StemSympPsiVEC[c], "Psi_SSym");
+  network.push_back(std::min(0.0, invPLC(StemPLCVEC[c]*100.0, VCstem_slope[c], VCstem_P50[c])), "Psi_SApo_cav"); //Sureau operates with %
+  network.push_back(std::min(0.0, invPLC(LeafPLCVEC[c]*100.0, VCleaf_slope[c], VCleaf_P50[c])), "Psi_LApo_cav"); //Sureau operates with %
+  //PLC levels
+  network.push_back(StemPLCVEC[c]*100.0, "PLC_Stem"); //Sureau operates with %
+  network.push_back(LeafPLCVEC[c]*100.0, "PLC_Leaf"); //Sureau operates with %
+  //Capacitances (mmol m-2 MPa-1)
+  network.push_back(2e-05, "C_SApo"); //Capacitance of the stem apoplasm
+  network.push_back(1e-05, "C_LApo"); //Capacitance of the leaf apoplasm
+  network.push_back(4761.905, "C_SSym"); //Capacitance of the stem symplasm (HOW TO ESTIMATE THEM?)
+  network.push_back(361.9048, "C_LSym"); //Capacitance of the leaf symplasm (HOW TO ESTIMATE THEM?)
+  //Conductances (mmol m-2 MPa-1 s-1)
+  network.push_back(sapFluidityDay*Plant_kmax[c], "k_Plant"); //Whole-plant conductance  = Plant_kmax
+  network.push_back(sapFluidityDay*VCstem_kmax[c], "k_SLApo"); //Conductance from trunk apoplasm to leaf apoplasm = VCstem_kmax
+  network.push_back(sapFluidityDay*0.26, "k_SSym"); //Conductance from stem apoplasm to stem symplasm (CONTROL PARAMETER?)
+  network.push_back(sapFluidityDay*VCleaf_kmax[c], "k_LSym"); //Conductance from leaf apoplasm to leaf symplasm = VCleaf_kmax
+  network.push_back(sapFluidityDay*VCroot_kmax, "k_SoilToStem"); //Conductance from rhizosphere to root crown?
+  //Water content (mmol m-2)
+  double l2mmol = 1.0e6/18.0;
+  network.push_back(Vsapwood[c]*StemAF[c]*l2mmol, "Q_SApo_sat_mmol_perLeafArea"); //Water content in stem apoplasm
+  network.push_back(Vleaf[c]*LeafAF[c]*l2mmol, "Q_LApo_sat_mmol_perLeafArea"); //Water content in leaf apoplasm
+  network.push_back(Vsapwood[c]*(1.0 - StemAF[c])*l2mmol, "Q_SSym_sat_mmol_perLeafArea"); //Water content in stem symplasm
+  network.push_back(Vleaf[c]*(1.0 - LeafAF[c])*l2mmol, "Q_LSym_sat_mmol_perLeafArea"); //Water content in leaf symplasm
+  //Flows (mmol m-2 s-1)
+  network.push_back(Einst[c], "Einst"); //Total transpiration
+  network.push_back(Elim[c], "Elim"); //Stomatal transpiration
+  network.push_back(Emin_L[c], "Emin_L"); //Leaf cuticular transpiration
+  network.push_back(Emin_S[c], "Emin_S"); //Stem cuticular transpiration
+  
+  //Diagnostics
+  network.push_back(NA_INTEGER, "Diag_nwhile_cavit");
+  
+  return(network);
+}
+
+// Initializes network for all plant cohorts in x
+// [[Rcpp::export]]
+List initCochardNetworks(List x) {
+  List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
+  NumericMatrix VCroot_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
+  NumericMatrix VGrhizo_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
+  DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+  DataFrame paramsTranspiration = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+  DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
+  
+  int numCohorts = internalWater.nrow();
+  List networks(numCohorts);
+  for(int c = 0;c<numCohorts;c++) {
+    networks[c] = initCochardNetwork(c,
+                                     internalWater, paramsTranspiration, paramsWaterStorage,
+                                     VCroot_kmax(c,_), VGrhizo_kmax(c,_));
+  }
+  return(networks);
 }
 
 // [[Rcpp::export]]
-void semi_implicit_integration(List HA, List soil, 
+void semi_implicit_integration(List network, List soil, 
                                double dt, int nsmalltimesteps, NumericVector opt) {
   
-  List params = as<Rcpp::List>(HA["params"]);
+  List params = as<Rcpp::List>(network["params"]);
   
   // Step 1. Initializing current time step according to computation options (FP)
   double dbxmin = 1.0e-100; // FP minimal double to avoid 0/0
-  double Psi_LApo_n = HA["Psi_LApo"];
-  double Psi_SApo_n = HA["Psi_SApo"];
-  double Psi_LSym_n = HA["Psi_LSym"];
-  double Psi_SSym_n = HA["Psi_SSym"];
-  double Psi_LApo_cav = HA["Psi_LApo_cav"];
-  double Psi_SApo_cav = HA["Psi_SApo_cav"];
+  double Psi_LApo_n = network["Psi_LApo"];
+  double Psi_SApo_n = network["Psi_SApo"];
+  double Psi_LSym_n = network["Psi_LSym"];
+  double Psi_SSym_n = network["Psi_SSym"];
+  double Psi_LApo_cav = network["Psi_LApo_cav"];
+  double Psi_SApo_cav = network["Psi_SApo_cav"];
   
   //Conductances
-  double K_SL = HA["k_SLApo"];
-  double k_SSym = HA["k_SSym"];
-  double k_LSym = HA["k_LSym"];
-  double c_LSym = HA["C_LSym"];
-  double c_SSym = HA["C_SSym"];
-  double c_LApo = HA["C_LApo"];
-  double c_SApo = HA["C_SApo"];
-  double PLC_Leaf = HA["PLC_Leaf"];
-  double PLC_Stem = HA["PLC_Stem"];
-  double Q_LApo_sat_mmol_perLeafArea = HA["Q_LApo_sat_mmol_perLeafArea"];
-  double Q_SApo_sat_mmol_perLeafArea = HA["Q_SApo_sat_mmol_perLeafArea"];
+  double K_SL = network["k_SLApo"];
+  double k_SSym = network["k_SSym"];
+  double k_LSym = network["k_LSym"];
+  double c_LSym = network["C_LSym"];
+  double c_SSym = network["C_SSym"];
+  double c_LApo = network["C_LApo"];
+  double c_SApo = network["C_SApo"];
+  double PLC_Leaf = network["PLC_Leaf"];
+  double PLC_Stem = network["PLC_Stem"];
+  double Q_LApo_sat_mmol_perLeafArea = network["Q_LApo_sat_mmol_perLeafArea"];
+  double Q_SApo_sat_mmol_perLeafArea = network["Q_SApo_sat_mmol_perLeafArea"];
   
   //Modifiers
   double Lsym = opt["Lsym"];
@@ -157,9 +165,9 @@ void semi_implicit_integration(List HA, List soil,
   double C_LApo = CLapo * c_LApo; 
   double C_SApo = CTapo * c_SApo; 
   
-  double E_nph = HA["Elim"]; // Leaf stomatal transpiration
-  double Emin_L_nph = HA["Emin_L"]; //Leaf cuticular transpiration
-  double Emin_S_nph = HA["Emin_S"]; //Stem cuticular transpiration
+  double E_nph = network["Elim"]; // Leaf stomatal transpiration
+  double Emin_L_nph = network["Emin_L"]; //Leaf cuticular transpiration
+  double Emin_S_nph = network["Emin_S"]; //Stem cuticular transpiration
   
   
   double VCleaf_slope = params["VCleaf_slope"];
@@ -197,7 +205,7 @@ void semi_implicit_integration(List HA, List soil,
     delta_S_cavs=NumericVector::create(0.0,0.0,1.0,1.0,0.0);
   }
 
-  NumericVector k_SoilToStem = HA["k_SoilToStem"];
+  NumericVector k_SoilToStem = network["k_SoilToStem"];
   NumericVector PsiSoil = psi(soil, "VG");
 
   double alpha, Psi_td, Psi_LApo_np1, Psi_SApo_np1, Psi_LSym_np1, Psi_SSym_np1;
@@ -228,7 +236,7 @@ void semi_implicit_integration(List HA, List soil,
     }
   } //# end of the while loop with check on cavitation options
    
-  HA["Diag_nwhile_cavit"] = nwhilecomp;  // # Diagnostic step to track cavit event and eventual errors (corresponding to nwhilecomp==5)
+  network["Diag_nwhile_cavit"] = nwhilecomp;  // # Diagnostic step to track cavit event and eventual errors (corresponding to nwhilecomp==5)
 
   //# Step 3. Compute Psi_Symp_np1 (L and S)
   alpha = exp(-1.0*K_LSym/C_LSym*dt);
@@ -238,23 +246,23 @@ void semi_implicit_integration(List HA, List soil,
   Psi_td = (K_SSym*Psi_SApo_n - Emin_S_nph)/(K_SSym + dbxmin); // # dbxmin to avoid 0/0
   Psi_SSym_np1 = alpha * Psi_SSym_n +(1.0 - alpha) * Psi_td;
 
-  //#Step 4 : set computed values in HA and update Psi_cav, PLC and Psi_AllSoil
-  HA["Psi_LApo"] = std::min(-0.00001, Psi_LApo_np1);
-  HA["Psi_SApo"] = std::min(-0.00001,Psi_SApo_np1);
-  HA["Psi_LSym"] = std::min(-0.00001,Psi_LSym_np1);
-  HA["Psi_SSym"] = std::min(-0.00001,Psi_SSym_np1);
+  //#Step 4 : set computed values in network and update Psi_cav, PLC and Psi_AllSoil
+  network["Psi_LApo"] = std::min(-0.00001, Psi_LApo_np1);
+  network["Psi_SApo"] = std::min(-0.00001,Psi_SApo_np1);
+  network["Psi_LSym"] = std::min(-0.00001,Psi_LSym_np1);
+  network["Psi_SSym"] = std::min(-0.00001,Psi_SSym_np1);
 
   //# Cavitation
-  psiref = HA["Psi_LApo"];  //# the reference is at current time step for other modes  (implicit, explicit)
+  psiref = network["Psi_LApo"];  //# the reference is at current time step for other modes  (implicit, explicit)
   if(psiref < Psi_LApo_cav) {
-    HA["Psi_LApo_cav"] = psiref;
-    HA["PLC_Leaf"] = PLC(psiref, VCleaf_slope, VCleaf_P50);
+    network["Psi_LApo_cav"] = psiref;
+    network["PLC_Leaf"] = PLC(psiref, VCleaf_slope, VCleaf_P50);
   }
 
-  psiref = HA["Psi_SApo"];  //# The reference is at current time step for other modes (implicit, explicit)
+  psiref = network["Psi_SApo"];  //# The reference is at current time step for other modes (implicit, explicit)
   if (psiref < Psi_SApo_cav) {
-    HA["Psi_SApo_cav"] = psiref;
-    HA["PLC_Stem"] = PLC(psiref, VCstem_slope, VCstem_P50);
+    network["Psi_SApo_cav"] = psiref;
+    network["PLC_Stem"] = PLC(psiref, VCstem_slope, VCstem_P50);
   }
 
 
@@ -304,38 +312,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   NumericVector Gswmin = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gswmin"]);
   NumericVector Gswmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gswmax"]);
-  NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_kmax"]);
-  NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
-  NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
-  NumericVector VCroot_kmax_sum = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCroot_kmax"]);
-  NumericVector VCroot_c = paramsTransp["VCroot_c"];
-  NumericVector VCroot_d = paramsTransp["VCroot_d"];
-  NumericVector VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_kmax"]);
-  NumericVector VCleaf_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_c"]);
-  NumericVector VCleaf_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_d"]);
-  
-  DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
-  NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
-  NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
-  NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
-  NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]); //l·m-2 = mm
-  NumericVector LeafPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafPI0"]);
-  NumericVector LeafEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafEPS"]);
-  NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
-  NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
-  
-  //Extract internal variables
-  // Rcout<<"internal\n";
-  DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
-  NumericVector StemPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
-  NumericVector Stem1PsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem1Psi"]);
-  NumericVector Stem2PsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem2Psi"]);
-  NumericVector EinstVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
-  NumericVector LeafPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
-  NumericVector RootCrownPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
-  NumericVector StemSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
-  NumericVector LeafSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
-  
+
   //Water pools
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
   List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);

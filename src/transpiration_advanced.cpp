@@ -146,19 +146,13 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   NumericVector r635 = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["r635"]);
   
   //Transpiration parameters
-  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
-  NumericVector Plant_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Plant_kmax"]);
-  NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_kmax"]);
-  NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
-  NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
-  NumericVector VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_kmax"]);
-  NumericVector VCleaf_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_c"]);
-  NumericVector VCleaf_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_d"]);
-  NumericVector VCroot_kmax_sum = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCroot_kmax"]);
-  NumericVector VCroot_c = paramsTransp["VCroot_c"];
-  NumericVector VCroot_d = paramsTransp["VCroot_d"];
-  NumericVector Vmax298 = paramsTransp["Vmax298"];
-  NumericVector Jmax298 = paramsTransp["Jmax298"];
+  DataFrame paramsTranspiration = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+  NumericVector Plant_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Plant_kmax"]);
+  NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_kmax"]);
+  NumericVector VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_kmax"]);
+
+  NumericVector Vmax298 = paramsTranspiration["Vmax298"];
+  NumericVector Jmax298 = paramsTranspiration["Jmax298"];
 
   //Water storage parameters
   DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
@@ -455,7 +449,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   
   //Hydraulics: Define supply functions
   List hydraulicNetwork(numCohorts);
-  List supply(numCohorts);
+  List supply(numCohorts); 
   List supplyAboveground(numCohorts);
   supply.attr("names") = above.attr("row.names");
   for(int c=0;c<numCohorts;c++) {
@@ -496,26 +490,28 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       
       //Build supply function networks (Sperry transpiration mode)
       if(transpirationMode=="Sperry") {
+        List HN = initSperryNetwork(c,
+                                    internalWater, paramsTranspiration, paramsWaterStorage,
+                                    VCroot_kmaxc, VGrhizo_kmaxc,
+                                    psic, VG_nc, VG_alphac,
+                                    sapFluidityDay);
         if(!capacitance) {
-          hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
-                                             _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
-                                             _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
-                                             _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
-                                             _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
-                                             _["PLCstem"] = NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]));
-          supply[c] = supplyFunctionNetwork(hydraulicNetwork[c],
+          hydraulicNetwork[c] = HN;
+          supply[c] = supplyFunctionNetwork(HN,
                                             0.0, maxNsteps,
                                             ntrial, psiTol, ETol, 0.001); 
         } else {
-          hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
-                                             _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
-                                             _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
-                                             _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
-                                             _["PLCstem"] = NumericVector::create(0.0));
-          supply[c] = supplyFunctionNetworkStem1(hydraulicNetwork[c],
+          HN["PLCstem"] = NumericVector::create(0.0);
+          hydraulicNetwork[c] = HN;
+          supply[c] = supplyFunctionNetworkStem1(HN,
                                                  0.0, maxNsteps,
                                                  ntrial, psiTol, ETol, 0.001); 
         }
+      } else if(transpirationMode == "Cochard") {
+        hydraulicNetwork[c] = initCochardNetwork(c, 
+                                                internalWater, paramsTranspiration, paramsWaterStorage,
+                                                VCroot_kmax(c,_), VGrhizo_kmax(c,_),
+                                                sapFluidityDay);
       }
     } else {
       //Determine connected layers (non-zero fine root abundance)
@@ -560,51 +556,34 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       }
       //Build supply function networks (Sperry transpiration mode)
       if(transpirationMode == "Sperry") {
+        List HN = initSperryNetwork(c,
+                                    internalWater, paramsTranspiration, paramsWaterStorage,
+                                    VCroot_kmaxc, VGrhizo_kmaxc,
+                                    psic, VG_nc, VG_alphac,
+                                    sapFluidityDay);
         if(!capacitance) {
-          hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
-                                             _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
-                                             _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
-                                             _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
-                                             _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
-                                             _["PLCstem"] = NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]));
-          supply[c] = supplyFunctionNetwork(hydraulicNetwork[c],
+          hydraulicNetwork[c] = HN;
+          supply[c] = supplyFunctionNetwork(HN,
                                             0.0, maxNsteps,
                                             ntrial, psiTol, ETol, 0.001); 
         } else {
-          hydraulicNetwork[c] = List::create(_["psisoil"] = psic,
-                                             _["krhizomax"] = VGrhizo_kmaxc,_["nsoil"] = VG_nc,_["alphasoil"] = VG_alphac,
-                                             _["krootmax"] = sapFluidityDay*VCroot_kmaxc, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
-                                             _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
-                                             _["PLCstem"] = NumericVector::create(0.0));
-          supply[c] = supplyFunctionNetworkStem1(hydraulicNetwork[c],
+          HN["PLCstem"] = NumericVector::create(0.0);
+          hydraulicNetwork[c] = HN;
+          supply[c] = supplyFunctionNetworkStem1(HN,
                                                  0.0, maxNsteps,
                                                  ntrial, psiTol, ETol, 0.001); 
         }
+      } else if(transpirationMode == "Cochard") {
+        hydraulicNetwork[c] = initCochardNetwork(c, 
+                                                internalWater, paramsTranspiration, paramsWaterStorage,
+                                                VCroot_kmaxc, VGrhizo_kmaxc,
+                                                sapFluidityDay);
       }
     }
   }
-
   ////////////////////////////////
   // Create input and output objects to be filled in inner functions
   ////////////////////////////////
-  DataFrame Tinst = DataFrame::create(_["SolarHour"] = solarHour, 
-                                      _["Tatm"] = Tatm, _["Tcan"] = Tcan, _["Tsoil"] = Tsoil_mat);
-  Tcan_mat.attr("dimnames") = List::create(seq(1,ntimesteps), seq(1,ncanlayers));
-  VPcan_mat.attr("dimnames") = List::create(seq(1,ntimesteps), seq(1,ncanlayers));
-  DataFrame CEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
-                                        _["SWRcan"] = abs_SWR_can, _["LWRcan"] = net_LWR_can,
-                                        _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["Ebalcan"] = Ebal);
-  DataFrame SEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
-                                        _["Hcansoil"] = Hcansoil, _["LEsoil"] = LEsoil_heat, _["SWRsoil"] = abs_SWR_soil, _["LWRsoil"] = net_LWR_soil,
-                                        _["Ebalsoil"] = Ebalsoil);
-  List EB = List::create(_["Temperature"]=Tinst, _["CanopyEnergyBalance"] = CEBinst, _["SoilEnergyBalance"] = SEBinst,
-                         _["TemperatureLayers"] = NA_REAL, _["VaporPressureLayers"] = NA_REAL);
-  if(multiLayerBalance) {
-    EB["TemperatureLayers"] = Tcan_mat;
-    EB["VaporPressureLayers"] = VPcan_mat;
-  }
-  
-  
   E_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   E_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Psi_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -729,7 +708,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                        _["WaterBalance"] = PWB);
   Plants.attr("row.names") = above.attr("row.names");
   
-  List innerOutput = List::create(_["EnergyBalance"] = EB,
+  List innerOutput = List::create(
                              _["Extraction"] = SoilWaterExtract,
                              _["ExtractionInst"] = soilLayerExtractInst,
                              _["RhizoPsi"] = minPsiRhizo,
@@ -741,7 +720,6 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                              _["ShadeLeavesInst"] = ShadeInst,
                              _["LightExtinction"] = lightExtinctionAbsortion,
                              _["LWRExtinction"] = lwrExtinctionList,
-                             _["CanopyTurbulence"] = canopyTurbulence,
                              _["SupplyFunctions"] = supply,
                              _["PhotoSunlitFunctions"] = outPhotoSunlit,
                              _["PhotoShadeFunctions"] = outPhotoShade,
@@ -761,7 +739,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                   _["layerConnected"] = layerConnected,
                                   _["layerConnectedPools"] = layerConnectedPools,
                                   _["supply"] = supply);
-  } else {
+  } else if(transpirationMode =="Cochard") {
     //To do, create initial plant state
     innerInput = List::create(_["Patm"] = Patm,
                               _["zWind"] = zWind,
@@ -772,7 +750,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                               _["layerConnected"] = layerConnected,
                               _["layerConnectedPools"] = layerConnectedPools,
                               _["psiSoil"] = psiSoil,
-                              _["psiSoilM"] = psiSoilM);
+                              _["psiSoilM"] = psiSoilM,
+                              _["network"] = hydraulicNetwork);
   }
   
   ////////////////////////////////////////
@@ -827,7 +806,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     if(transpirationMode == "Sperry") {
       innerSperry(x, innerInput, innerOutput, n, tstep, 
                   verbose, stepFunctions, modifyInput);
-    } else {
+    } else if(transpirationMode == "Cochard"){
       innerCochard(x, innerInput, innerOutput, n, tstep,
                    verbose, modifyInput);
     }
@@ -1038,6 +1017,23 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   }
   
   // ARRANGE OUTPUT
+  DataFrame Tinst = DataFrame::create(_["SolarHour"] = solarHour, 
+                                      _["Tatm"] = Tatm, _["Tcan"] = Tcan, _["Tsoil"] = Tsoil_mat);
+  Tcan_mat.attr("dimnames") = List::create(seq(1,ntimesteps), seq(1,ncanlayers));
+  VPcan_mat.attr("dimnames") = List::create(seq(1,ntimesteps), seq(1,ncanlayers));
+  DataFrame CEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
+                                        _["SWRcan"] = abs_SWR_can, _["LWRcan"] = net_LWR_can,
+                                        _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["Ebalcan"] = Ebal);
+  DataFrame SEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
+                                        _["Hcansoil"] = Hcansoil, _["LEsoil"] = LEsoil_heat, _["SWRsoil"] = abs_SWR_soil, _["LWRsoil"] = net_LWR_soil,
+                                        _["Ebalsoil"] = Ebalsoil);
+  List EB = List::create(_["Temperature"]=Tinst, _["CanopyEnergyBalance"] = CEBinst, _["SoilEnergyBalance"] = SEBinst,
+                         _["TemperatureLayers"] = NA_REAL, _["VaporPressureLayers"] = NA_REAL);
+  if(multiLayerBalance) {
+    EB["TemperatureLayers"] = Tcan_mat;
+    EB["VaporPressureLayers"] = VPcan_mat;
+  }
+  
   NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell, 
                                               _["LAIlive"] = LAIcelllive, 
                                               _["LAIexpanded"] = LAIcellexpanded, 

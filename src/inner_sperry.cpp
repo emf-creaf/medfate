@@ -9,6 +9,33 @@ using namespace Rcpp;
 
 const double eps_xylem = 1e3; // xylem elastic modulus (1 GPa = 1000 MPa)
 
+List initSperryNetwork(int c,
+                       DataFrame internalWater, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
+                       NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
+                       NumericVector psiSoil, NumericVector VG_n, NumericVector VG_alpha,
+                       double sapFluidityDay = 1.0) {
+  
+  NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_kmax"]);
+  NumericVector VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_kmax"]);
+  NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_c"]);
+  NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_d"]);
+  NumericVector VCleaf_c = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_c"]);
+  NumericVector VCleaf_d = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_d"]);
+  NumericVector StemPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
+  NumericVector VCroot_c = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_c"]);
+  NumericVector VCroot_d = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_d"]);
+  
+  List HN = List::create(_["psisoil"] = psiSoil,
+                         _["krhizomax"] = VGrhizo_kmax,_["nsoil"] = VG_n,_["alphasoil"] = VG_alpha,
+                         _["krootmax"] = sapFluidityDay*VCroot_kmax, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
+                         _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
+                         _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
+                         _["PLCstem"] = NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]));
+  
+  return(HN);
+}
+
+
 List profitMaximization2(List supplyFunction, int initialPos,
                          double Catm, double Patm, double Tair, double vpa, double u, 
                          double SWRabs, double LWRnet, double Q, double Vmax298, double Jmax298, 
@@ -374,12 +401,6 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   List outPhotoShade = output["PhotoShadeFunctions"];
   List outPMSunlit = output["PMSunlitFunctions"];
   List outPMShade = output["PMShadeFunctions"];
-  
-  // Rcout<<"EB\n";
-  List EB = output["EnergyBalance"];
-  DataFrame Tinst = Rcpp::as<Rcpp::DataFrame>(EB["Temperature"]);
-  DataFrame CEBinst = Rcpp::as<Rcpp::DataFrame>(EB["CanopyEnergyBalance"]);
-  DataFrame SEBinst = Rcpp::as<Rcpp::DataFrame>(EB["SoilEnergyBalance"]);
   
   NumericMatrix SoilWaterExtract = Rcpp::as<Rcpp::NumericMatrix>(output["Extraction"]);
   NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(output["ExtractionInst"]);

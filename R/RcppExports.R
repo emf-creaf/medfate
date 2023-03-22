@@ -1494,12 +1494,12 @@ hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInpu
     .Call(`_medfate_gammds`, x, p)
 }
 
-initHydraulicArchitecture <- function(x) {
-    .Call(`_medfate_initHydraulicArchitecture`, x)
+initCochardNetworks <- function(x) {
+    .Call(`_medfate_initCochardNetworks`, x)
 }
 
-semi_implicit_integration <- function(HA, soil, dt, nsmalltimesteps, opt) {
-    invisible(.Call(`_medfate_semi_implicit_integration`, HA, soil, dt, nsmalltimesteps, opt))
+semi_implicit_integration <- function(network, soil, dt, nsmalltimesteps, opt) {
+    invisible(.Call(`_medfate_semi_implicit_integration`, network, soil, dt, nsmalltimesteps, opt))
 }
 
 #' Stomatal regulation
