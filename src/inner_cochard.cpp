@@ -327,12 +327,6 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   
   //Extract output to be filled
   
-  // Rcout<<"EB\n";
-  List EB = output["EnergyBalance"];
-  DataFrame Tinst = Rcpp::as<Rcpp::DataFrame>(EB["Temperature"]);
-  DataFrame CEBinst = Rcpp::as<Rcpp::DataFrame>(EB["CanopyEnergyBalance"]);
-  DataFrame SEBinst = Rcpp::as<Rcpp::DataFrame>(EB["SoilEnergyBalance"]);
-  
   NumericMatrix SoilWaterExtract = Rcpp::as<Rcpp::NumericMatrix>(output["Extraction"]);
   NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(output["ExtractionInst"]);
   
