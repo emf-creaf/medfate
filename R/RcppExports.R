@@ -1494,6 +1494,14 @@ hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInpu
     .Call(`_medfate_gammds`, x, p)
 }
 
+initHydraulicArchitecture <- function(x) {
+    .Call(`_medfate_initHydraulicArchitecture`, x)
+}
+
+semi_implicit_integration <- function(HA, soil, dt, nsmalltimesteps, opt) {
+    invisible(.Call(`_medfate_semi_implicit_integration`, HA, soil, dt, nsmalltimesteps, opt))
+}
+
 #' Stomatal regulation
 #' 
 #' Set of high-level functions used in the calculation of stomatal conductance and transpiration. 
