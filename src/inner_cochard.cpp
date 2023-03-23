@@ -5,6 +5,7 @@
 #include "hydraulics.h"
 #include "soil.h"
 #include "tissuemoisture.h"
+#include <meteoland.h>
 using namespace Rcpp;
 
 double PLC_derivative(double plc, double slope) {
@@ -20,6 +21,16 @@ double RWC(double PiFT, double Esymp, double Pmin) {
   double A = std::max((-1.0 * (Pmin + PiFT - Esymp) - sqrt(pow(Pmin + PiFT - Esymp, 2.0) + 4.0 * (Pmin * Esymp))) / (2.0 * Esymp), 1.0 - PiFT / Pmin);
   return(A);
 }
+double gCrown(double gCrown0, double windSpeed){
+  windSpeed=  std::max(0.1, windSpeed); //# to avoid very high conductance values 
+  return(gCrown0*pow(windSpeed,0.6));
+}
+double Emin(double gmin, double gBL, double gCrown, 
+            double VPD, double airPressure =101.3) {
+  double gmintot = 1.0/(1.0/gmin+ 1.0/gBL + 1.0/gCrown);
+  return(gmintot * VPD /airPressure); 
+}
+
 // # Update plant conductances
 void update_conductances(List network) {
   List params = as<Rcpp::List>(network["params"]);
@@ -133,6 +144,11 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   List network = List::create();
   //Params
   List params = List::create();
+  // CONSTANTS TO BE REVISED
+  params.push_back(150.0, "gCrown0"); 
+  params.push_back(2.0, "gmin_S"); 
+  params.push_back(0.8, "fTRBToLeaf");
+  //PLANT RELATED PARAMETERS
   params.push_back(VCleaf_P50[c], "VCleaf_P50"); 
   params.push_back(VCleaf_slope[c], "VCleaf_slope"); 
   params.push_back(VCstem_P50[c], "VCstem_P50"); 
@@ -193,6 +209,9 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   
   //Diagnostics
   network.push_back(NA_INTEGER, "Diag_nwhile_cavit");
+  network.push_back(NA_INTEGER, "Diag_deltaRegulMax");
+  network.push_back(NA_INTEGER, "Diag_deltaPLCMax");
+  network.push_back(NA_INTEGER, "Diag_timeStepInSeconds");
   
   // Update plant conductances and capacitances according to network status
   update_conductances(network);
@@ -322,7 +341,6 @@ void semi_implicit_integration(List network,
 
   int nwhilecomp = 0; // # count the number of step in while loop (if more than 4 no solution and warning)
   while (((!LcavitWellComputed)||(!ScavitWellComputed)) && (nwhilecomp<delta_L_cavs.size())) {
-    nwhilecomp = nwhilecomp + 1;
     double delta_L_cav = delta_L_cavs[nwhilecomp];
     double delta_S_cav = delta_S_cavs[nwhilecomp];
 
@@ -340,6 +358,8 @@ void semi_implicit_integration(List network,
     //# 2.4 check if cavitation is well computed according to delta_cav, np1 and "cav"
     LcavitWellComputed = (delta_L_cav==(Psi_LApo_np1 < Psi_LApo_cav)) || (Lcav==0.0);
     ScavitWellComputed = (delta_S_cav==(Psi_SApo_np1 < Psi_SApo_cav)) || (Scav==0.0);
+    
+    nwhilecomp = nwhilecomp + 1;
     if ((delta_L_cavs.size() > 1) && (nwhilecomp==delta_L_cavs.size())) { //# we tried the normal cases and the computation is still not ok so we have done a last one desactivating cavitation water source (delta_cav=0)
       Rcerr << "water flux due to Cavitation ignored with time step, no solution from the implicit solver="<<dt<<"\n";
     }
@@ -550,9 +570,9 @@ void innerCochard(List x, List input, List output, int n, double tstep,
     bool regulationWellComputed = false;
     bool cavitationWellComputed = false;
     List network = networks[c];
+    List params = network["params"];
+    
     NumericVector kSoil = network["k_Soil"];
-
-    List network_np1;
 
     double LAI = LAIphe[c];
     double LAI_sh = LAI_SH[c];  
@@ -562,8 +582,10 @@ void innerCochard(List x, List input, List output, int n, double tstep,
     int nwhilecomp = 0;
     NumericVector fluxSoilToStemLargeTimeStep(kSoil.size(), 0.0);
 
+    List network_n;
+    
     while ((!regulationWellComputed || !cavitationWellComputed) && (nwhilecomp<nsmalltimesteps.size())) { //# LOOP TO TRY DIFFERENT TIME STEPS
-       List network_n = clone(network); // # initial value of WBveg
+      network_n = clone(network); // # initial value of WBveg
     //   List WBsoil_n = clone(WBsoil); // # initial value of WBsoil
     //   
       regulationWellComputed = false;
@@ -588,27 +610,43 @@ void innerCochard(List x, List input, List output, int n, double tstep,
         //                      ETPr, (double) params["K"]);
         // fluxEvaporationSoilLargeTimeStep = fluxEvaporationSoilLargeTimeStep + ((double) WBsoil_n["E_Soil3"])/((double) nts);
 
-        network_np1 = clone(network_n); // Clone WBveg object
+        // network_np1 = clone(network_n); // Clone WBveg object
     //     compute_transpiration(WBveg_np1, WBclim, Nhours, opt, stomatalRegFormulation);// # transpi with climate at nph
-        semi_implicit_integration(network_np1, dt, opt);
-        update_conductances(network_np1);
-        update_capacitances(network_np1);
-    //     
-    //     // # QUANTITIES TO CHECK IF THE RESOLUTION IS OK
-    //     // # 1. delta regulation between n and np1 (MIQUEL: Only Psi_LSym changes between the two calculations, params should be the same)
-    //     NumericVector regul_np1 = regulFact_comp(WBveg_np1["Psi_LSym"], params, stomatalRegFormulation);
-    //     NumericVector regul_n = regulFact_comp(WBveg_n["Psi_LSym"], params, stomatalRegFormulation); //# TODO check why recomputed? should be in WBveg_tmp
+        //Transpiration for sunlit and shade leaves
+        
+        //Average transpiration flows and leaf cuticular flow according to fraction of sunlit/shade leaves
+        
+        //Compute stem cuticular transpiration
+        double VPD = meteoland::utils_saturationVP(Tair[iLayerCohort[c]]) - VPair[iLayerCohort[c]];
+        double gC = gCrown((double) params["gCrown0"], zWind[iLayerCohort[c]]);
+        double gmin_S = params["gmin_S"];
+        double gflat = 0.00662;
+        double jflat = 0.5;
+        double rBL = 1.0 / (1.5 * gflat * (pow(zWind[iLayerCohort[c]], jflat) / pow(leafWidth[c] / 1000.0, 1.0 - jflat)));
+        double gBL = 1.0 / rBL * 1000.0 * 40.0; // # boundary layer conductance in mmol/s/m2
+        double Emin_S = ((double) params["fTRBToLeaf"]) * Emin(gmin_S, gBL, gC, VPD);
+        network_n["Emin_S"] =  Emin_S;
+        // Rcout<< Emin_S<<"\n";
+        
+        //Effects on water potentials and flows
+        semi_implicit_integration(network_n, dt, opt);
+        update_conductances(network_n);
+        update_capacitances(network_n);
+
+        // # QUANTITIES TO CHECK IF THE RESOLUTION IS OK
+        // # 1. delta regulation between n and np1 (MIQUEL: Only Psi_LSym changes between the two calculations, params should be the same)
+        // NumericVector regul_np1 = regulFact_comp(WBveg_np1["Psi_LSym"], params, stomatalRegFormulation);
     //     
     //     deltaRegulMax = std::max(deltaRegulMax,std::abs((double) regul_np1["regulFact"] - (double) regul_n["regulFact"]));
     //     
-    //     // # 2. PLC at n and np1
-    //     deltaPLCMax = std::max(deltaPLCMax, (double) WBveg_np1["PLC_Leaf"] - (double) WBveg_n["PLC_Leaf"]);
-    //     deltaPLCMax = std::max(deltaPLCMax, (double) WBveg_np1["PLC_Stem"] - (double) WBveg_n["PLC_Stem"]);
-    //     WBveg_n = WBveg_np1; //# Update WBveg_n
-    //     
-    //     // # 3. update of soil on small time step (done by FP in version 16)
-    //     NumericVector fluxSoilToStem_mm = WBveg_np1["fluxSoilToStem"];
-    //     double Psi_SApo = WBveg_np1["Psi_SApo"];
+        // # 2. PLC at n and np1
+        deltaPLCMax = std::max(deltaPLCMax, (double) network_n["PLC_Leaf"] - (double) network_n["PLC_Leaf"]);
+        deltaPLCMax = std::max(deltaPLCMax, (double) network_n["PLC_Stem"] - (double) network_n["PLC_Stem"]);
+        // network_n = network_np1; //# Update network_n
+
+        // # 3. update of soil on small time step (done by FP in version 16)
+        // NumericVector fluxSoilToStem_mm = WBveg_np1["fluxSoilToStem"];
+        // double Psi_SApo = WBveg_np1["Psi_SApo"];
     //     NumericVector k_SoilToStem = WBveg["k_SoilToStem"]; //MIQUEL: Why WBveg here?
     //     NumericVector PsiSoil = WBsoil_n["PsiSoil"];
     //     for(int i=0;i < kSoil.size();i++) {
@@ -619,18 +657,20 @@ void innerCochard(List x, List input, List output, int n, double tstep,
     //     // # NB the time step for fluxSoilToStem_mm is Nhours/nts!
     //     update_soilWater(WBsoil_n, fluxSoilToStem_mm);
       } //# end loop small time step
-    //   
-    //   // # TESTS ON RESOLUTION
-    //   WBveg_np1["Diag_deltaRegulMax"] = deltaRegulMax;
-    //   regulationWellComputed = (deltaRegulMax<0.05);
-    //   WBveg_np1["Diag_deltaPLCMax"] = deltaPLCMax;
-    //   cavitationWellComputed = (deltaPLCMax<1.0);// # 1%
-    //   WBveg_np1["Diag_timeStepInHours"] = ((double) Nhours)/((double) nts);
+
+      // # TESTS ON RESOLUTION
+      network_n["Diag_deltaRegulMax"] = deltaRegulMax;
+      regulationWellComputed = (deltaRegulMax<0.05);
+      network_n["Diag_deltaPLCMax"] = deltaPLCMax;
+      cavitationWellComputed = (deltaPLCMax<1.0);// # 1%
+      network_n["Diag_timeStepInSeconds"] = dt;
       nwhilecomp = nwhilecomp + 1;
     } //# end while
-    // 
-    // // # B. SAVING SOLUTION AT NEXT TIME STEP IN WBveg
-    // WBveg = WBveg_np1;
+
+    // # B. SAVING SOLUTION AT NEXT TIME STEP IN WBveg
+    networks[c] = network_n;
+    network = network_n;
+    
     // // # final update of transpiration at clim_next (useful for consistency in outputs, but not required for the computations)
     // compute_transpiration(WBveg, WBclim_next, Nhours, opt, stomatalRegFormulation);
     // // # C. UPDATING FLUX FROM SOIL (WBveg$fluxSoilToStem is used as input in UpdateSoilWater.WBsoil)
