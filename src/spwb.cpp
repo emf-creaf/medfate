@@ -1677,7 +1677,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   DataFrame DEB = defineEnergyBalanceDailyOutput(meteo);
   DataFrame DT = defineTemperatureDailyOutput(meteo);
   NumericMatrix DLT;
-  if(transpirationMode=="Sperry") DLT =  defineTemperatureLayersDailyOutput(meteo, canopy);
+  if(transpirationMode!="Granier") DLT =  defineTemperatureLayersDailyOutput(meteo, canopy);
   
   //Plant output variables
   List sunlitDO = defineSunlitShadeLeavesDailyOutput(meteo, above);
