@@ -437,7 +437,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   }
   
   ////////////////////////////////////////
-  //  STEP 4. Hydraulics: determine layers where the plant is connected and supply functions (Sperry mode)
+  //  STEP 4. Hydraulics: determine layers where the plant is connected 
+  //          and supply functions (Sperry transpiration mode)
   ////////////////////////////////////////
   IntegerVector nlayerscon(numCohorts,0);
   LogicalMatrix layerConnected(numCohorts, nlayers);
@@ -508,9 +509,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                                  ntrial, psiTol, ETol, 0.001); 
         }
       } else if(transpirationMode == "Cochard") {
-        hydraulicNetwork[c] = initCochardNetwork(c, 
+        hydraulicNetwork[c] = initCochardNetwork(c, LAIphe,
                                                 internalWater, paramsTranspiration, paramsWaterStorage,
-                                                VCroot_kmax(c,_), VGrhizo_kmax(c,_),
+                                                psic, VCroot_kmax(c,_), VGrhizo_kmax(c,_),
                                                 sapFluidityDay);
       }
     } else {
@@ -574,9 +575,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                                  ntrial, psiTol, ETol, 0.001); 
         }
       } else if(transpirationMode == "Cochard") {
-        hydraulicNetwork[c] = initCochardNetwork(c, 
+        hydraulicNetwork[c] = initCochardNetwork(c, LAIphe,
                                                 internalWater, paramsTranspiration, paramsWaterStorage,
-                                                VCroot_kmaxc, VGrhizo_kmaxc,
+                                                psic, VCroot_kmaxc, VGrhizo_kmaxc,
                                                 sapFluidityDay);
       }
     }
@@ -751,7 +752,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                               _["layerConnectedPools"] = layerConnectedPools,
                               _["psiSoil"] = psiSoil,
                               _["psiSoilM"] = psiSoilM,
-                              _["network"] = hydraulicNetwork);
+                              _["networks"] = hydraulicNetwork);
   }
   
   ////////////////////////////////////////

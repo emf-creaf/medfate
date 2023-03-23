@@ -1498,8 +1498,8 @@ initCochardNetworks <- function(x) {
     .Call(`_medfate_initCochardNetworks`, x)
 }
 
-semi_implicit_integration <- function(network, soil, dt, nsmalltimesteps, opt) {
-    invisible(.Call(`_medfate_semi_implicit_integration`, network, soil, dt, nsmalltimesteps, opt))
+semi_implicit_integration <- function(network, dt, opt) {
+    invisible(.Call(`_medfate_semi_implicit_integration`, network, dt, opt))
 }
 
 #' Stomatal regulation

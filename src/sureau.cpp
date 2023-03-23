@@ -636,7 +636,6 @@ List compute_plantNextTimeStep(List WBveg, List WBsoil, List WBclim_current, Lis
 
     regulationWellComputed = false;
     cavitationWellComputed = false;
-    int nwhilecomp = nwhilecomp + 1;
     double deltaRegulMax = 1.0e-100;
     double deltaPLCMax = 1.0e-100;
     
@@ -693,6 +692,7 @@ List compute_plantNextTimeStep(List WBveg, List WBsoil, List WBclim_current, Lis
     WBveg_np1["Diag_deltaPLCMax"] = deltaPLCMax;
     cavitationWellComputed = (deltaPLCMax<1.0);// # 1%
     WBveg_np1["Diag_timeStepInHours"] = ((double) Nhours)/((double) nts);
+    nwhilecomp = nwhilecomp + 1;
   } //# end while
 
   // # B. SAVING SOLUTION AT NEXT TIME STEP IN WBveg

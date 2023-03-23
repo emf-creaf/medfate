@@ -16,10 +16,87 @@ double PLC(double Pmin, double slope, double P50){
 double invPLC(double plc, double slope, double P50){
   return(P50 + log((100.0/plc)-1.0)*(25.0/slope));
 }
+double RWC(double PiFT, double Esymp, double Pmin) {
+  double A = std::max((-1.0 * (Pmin + PiFT - Esymp) - sqrt(pow(Pmin + PiFT - Esymp, 2.0) + 4.0 * (Pmin * Esymp))) / (2.0 * Esymp), 1.0 - PiFT / Pmin);
+  return(A);
+}
+// # Update plant conductances
+void update_conductances(List network) {
+  List params = as<Rcpp::List>(network["params"]);
+  
+  NumericVector k_RSApoInit = params["k_RSApoInit"];
+  
+  NumericVector k_RSApo = network["k_RSApo"];
+  NumericVector k_SoilToStem = network["k_SoilToStem"];
+  NumericVector k_Soil = network["k_Soil"];
+  
+  network["k_SLApo"] = ((double) params["k_SLApoInit"]) * (1.0 - ((double) network["PLC_Leaf"])/100.0);
 
-List initCochardNetwork(int c,
+  for(int i = 0;i<k_RSApo.size();i++) {
+    //# calculate k_RSApo and k_SLApo with cavitation
+    k_RSApo[i] = k_RSApoInit[i] * (1.0 - ((double) network["PLC_Stem"])/100.0);
+    //# Root from root length
+    k_SoilToStem[i] = 1.0/((1.0/k_Soil[i]) + (1.0/k_RSApo[i])); // # conductance from soil to collar (two resistances in series Rsoil and Rroot)
+  }
+
+  // Compute k_plant (from root to leaf) for diagnostic only
+  network["k_Plant"] =  1.0/ (1.0 /sum(k_RSApo) + 1.0/((double) network["k_SLApo"]) + 1.0/((double) network["k_LSym"]));
+}
+
+// # update symplasmic plant capacitances for Trunk and leaves
+void update_capacitances(List network) {
+  List params = as<Rcpp::List>(network["params"]);
+  double dbxmin = 1.0e-100; //# NM minimal double to avoid-INF
+  
+  double LAI = network["LAI"];
+  double Psi_SSym = network["Psi_SSym"];
+  double Psi_LSym = network["Psi_LSym"];
+  double Q_LSym_sat_mmol_perLeafArea = network["Q_LSym_sat_mmol_perLeafArea"];
+  
+  double epsilonSym_Leaf = params["epsilonSym_Leaf"];
+  double PiFullTurgor_Leaf = params["PiFullTurgor_Leaf"];
+  double epsilonSym_Stem = params["epsilonSym_Stem"];
+  double PiFullTurgor_Stem = params["PiFullTurgor_Stem"];
+  double PsiTLP_Leaf = turgorLossPoint(PiFullTurgor_Leaf, epsilonSym_Leaf);
+  double PsiTLP_Stem = turgorLossPoint(PiFullTurgor_Stem, epsilonSym_Stem);
+
+  //#----Compute the relative water content of the symplasm----
+  double RWC_LSym = 1.0 - RWC(PiFullTurgor_Leaf, epsilonSym_Leaf, Psi_LSym - dbxmin);
+  //#----Compute the derivative of the relative water content of the symplasm----
+  double RWC_LSym_prime;
+  if(Psi_LSym > PsiTLP_Leaf) { //# FP derivative of -Pi0- Eps(1-RWC)+Pi0/RWC
+    RWC_LSym_prime = RWC_LSym / (-1.0*PiFullTurgor_Leaf - Psi_LSym - epsilonSym_Leaf + 2.0 * epsilonSym_Leaf * RWC_LSym);
+  } else {
+    RWC_LSym_prime = -1.0*PiFullTurgor_Leaf / pow(Psi_LSym, 2.0);// # FP derivative of Pi0/Psi
+  }
+  //# Compute the leaf capacitance (mmol/MPa/m2_sol)
+  if (LAI==0){
+    network["C_LSym"] = 0.0;
+  } else {
+    network["C_LSym"] = Q_LSym_sat_mmol_perLeafArea * RWC_LSym_prime;
+  } //# changed 25/10/2021 by NM
+  
+  
+  //#----Stem symplasmic canopy water content----
+  double RWC_SSym = 1.0 - RWC(PiFullTurgor_Stem, epsilonSym_Stem, Psi_SSym - dbxmin);
+  
+  //#----Compute the derivative of the relative water content of the symplasm----
+  double RWC_SSym_prime;
+  if (Psi_SSym > PsiTLP_Stem) {
+    RWC_SSym_prime = RWC_SSym / (-1.0* PiFullTurgor_Stem - Psi_SSym - epsilonSym_Stem + 2.0 * epsilonSym_Stem * RWC_SSym);
+  } else {
+    RWC_SSym_prime = -1.0* PiFullTurgor_Stem / pow(Psi_SSym, 2.0);
+  }
+  //# Compute the capacitance (mmol/MPa/m2_leaf)
+  network["C_SSym"] = Q_LSym_sat_mmol_perLeafArea * RWC_SSym_prime; // #  changed 25/10/2021 by NM. --> Stem capacitance per leaf area can only decrease with LAI (cannot increase when LAI<1 )
+  network["C_SApo"] = params["C_SApoInit"];
+  network["C_LApo"] = params["C_LApoInit"];
+}
+
+
+List initCochardNetwork(int c, NumericVector LAIphe,
                        DataFrame internalWater, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
-                       NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
+                       NumericVector PsiSoil, NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
                        double sapFluidityDay = 1.0) {
   //Root distribution input
   NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
@@ -43,10 +120,15 @@ List initCochardNetwork(int c,
   NumericVector VCroot_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_P50"]);
   NumericVector VCroot_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_slope"]);
   
-  NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]);
-  NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
-  NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]);
+  NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
+  NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
   NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
+  NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]); //l·m-2 = mm
+  NumericVector LeafPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafPI0"]);
+  NumericVector LeafEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafEPS"]);
+  NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
+  NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
+  
   
   List network = List::create();
   //Params
@@ -57,8 +139,19 @@ List initCochardNetwork(int c,
   params.push_back(VCstem_slope[c], "VCstem_slope"); 
   params.push_back(VCroot_P50[c], "VCrootP50"); 
   params.push_back(VCroot_slope[c], "VCroot_slope"); 
+  params.push_back(sapFluidityDay*VCstem_kmax[c], "k_SLApoInit"); //Maximum conductance from trunk apoplasm to leaf apoplasm = VCstem_kmax
+  params.push_back(sapFluidityDay*VCroot_kmax, "k_RSApoInit"); //Maximum conductance from rhizosphere surface to root crown
+  params.push_back(LeafPI0[c], "PiFullTurgor_Leaf"); 
+  params.push_back(LeafEPS[c], "epsilonSym_Leaf"); 
+  params.push_back(StemPI0[c], "PiFullTurgor_Stem"); 
+  params.push_back(StemEPS[c], "epsilonSym_Stem"); 
+  params.push_back(2e-05, "C_SApoInit"); //Maximum capacitance of the stem apoplasm
+  params.push_back(1e-05, "C_LApoInit"); //Maximum capacitance of the leaf apoplasm
   
   network.push_back(params, "params");
+  
+  //LAI
+  network.push_back(LAIphe[c], "LAI");
   
   //Water potentials
   network.push_back(StemPsiVEC[c], "Psi_LApo"); // Leaf apo psi  = Stem psi
@@ -67,20 +160,25 @@ List initCochardNetwork(int c,
   network.push_back(StemSympPsiVEC[c], "Psi_SSym");
   network.push_back(std::min(0.0, invPLC(StemPLCVEC[c]*100.0, VCstem_slope[c], VCstem_P50[c])), "Psi_SApo_cav"); //Sureau operates with %
   network.push_back(std::min(0.0, invPLC(LeafPLCVEC[c]*100.0, VCleaf_slope[c], VCleaf_P50[c])), "Psi_LApo_cav"); //Sureau operates with %
+  network.push_back(PsiSoil, "PsiSoil"); // Leaf apo psi  = Stem psi
   //PLC levels
   network.push_back(StemPLCVEC[c]*100.0, "PLC_Stem"); //Sureau operates with %
   network.push_back(LeafPLCVEC[c]*100.0, "PLC_Leaf"); //Sureau operates with %
   //Capacitances (mmol m-2 MPa-1)
-  network.push_back(2e-05, "C_SApo"); //Capacitance of the stem apoplasm
-  network.push_back(1e-05, "C_LApo"); //Capacitance of the leaf apoplasm
-  network.push_back(4761.905, "C_SSym"); //Capacitance of the stem symplasm (HOW TO ESTIMATE THEM?)
-  network.push_back(361.9048, "C_LSym"); //Capacitance of the leaf symplasm (HOW TO ESTIMATE THEM?)
+  network.push_back(NA_REAL, "C_SApo"); //Capacitance of the stem apoplasm
+  network.push_back(NA_REAL, "C_LApo"); //Capacitance of the leaf apoplasm
+  network.push_back(NA_REAL, "C_SSym"); //Capacitance of the stem symplasm (HOW TO ESTIMATE THEM?)
+  network.push_back(NA_REAL, "C_LSym"); //Capacitance of the leaf symplasm (HOW TO ESTIMATE THEM?)
   //Conductances (mmol m-2 MPa-1 s-1)
-  network.push_back(sapFluidityDay*Plant_kmax[c], "k_Plant"); //Whole-plant conductance  = Plant_kmax
-  network.push_back(sapFluidityDay*VCstem_kmax[c], "k_SLApo"); //Conductance from trunk apoplasm to leaf apoplasm = VCstem_kmax
+  network.push_back(NA_REAL, "k_Plant"); //Whole-plant conductance  = Plant_kmax
+  network.push_back(NA_REAL, "k_SLApo"); //Conductance from trunk apoplasm to leaf apoplasm = VCstem_kmax
   network.push_back(sapFluidityDay*0.26, "k_SSym"); //Conductance from stem apoplasm to stem symplasm (CONTROL PARAMETER?)
   network.push_back(sapFluidityDay*VCleaf_kmax[c], "k_LSym"); //Conductance from leaf apoplasm to leaf symplasm = VCleaf_kmax
-  network.push_back(sapFluidityDay*VCroot_kmax, "k_SoilToStem"); //Conductance from rhizosphere to root crown?
+  NumericVector k_RSApo(VGrhizo_kmax.size(), NA_REAL);
+  network.push_back(k_RSApo, "k_RSApo"); //Conductance from rhizosphere surface to root crown?
+  NumericVector k_SoilToStem(VGrhizo_kmax.size(), NA_REAL);
+  network.push_back(k_SoilToStem, "k_SoilToStem"); //Conductance from rhizosphere surface to root crown?
+  network.push_back(VGrhizo_kmax, "k_Soil"); //Conductance in the rhizosphere
   //Water content (mmol m-2)
   double l2mmol = 1.0e6/18.0;
   network.push_back(Vsapwood[c]*StemAF[c]*l2mmol, "Q_SApo_sat_mmol_perLeafArea"); //Water content in stem apoplasm
@@ -96,12 +194,18 @@ List initCochardNetwork(int c,
   //Diagnostics
   network.push_back(NA_INTEGER, "Diag_nwhile_cavit");
   
+  // Update plant conductances and capacitances according to network status
+  update_conductances(network);
+  update_capacitances(network);
   return(network);
 }
 
 // Initializes network for all plant cohorts in x
 // [[Rcpp::export]]
 List initCochardNetworks(List x) {
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
+  
   List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
   NumericMatrix VCroot_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
   NumericMatrix VGrhizo_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
@@ -109,21 +213,27 @@ List initCochardNetworks(List x) {
   DataFrame paramsTranspiration = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
   
+  List soil = x["soil"];
+  NumericVector psiSoil = psi(soil, "VG");
   int numCohorts = internalWater.nrow();
   List networks(numCohorts);
   for(int c = 0;c<numCohorts;c++) {
-    networks[c] = initCochardNetwork(c,
+    networks[c] = initCochardNetwork(c, LAIphe,
                                      internalWater, paramsTranspiration, paramsWaterStorage,
-                                     VCroot_kmax(c,_), VGrhizo_kmax(c,_));
+                                     psiSoil, VCroot_kmax(c,_), VGrhizo_kmax(c,_));
   }
   return(networks);
 }
 
+
+// dt - Smallest time step (seconds)
+// opt - Option flag vector
 // [[Rcpp::export]]
-void semi_implicit_integration(List network, List soil, 
-                               double dt, int nsmalltimesteps, NumericVector opt) {
+void semi_implicit_integration(List network, 
+                               double dt, NumericVector opt) {
   
   List params = as<Rcpp::List>(network["params"]);
+  NumericVector PsiSoil = network["PsiSoil"];
   
   // Step 1. Initializing current time step according to computation options (FP)
   double dbxmin = 1.0e-100; // FP minimal double to avoid 0/0
@@ -206,7 +316,6 @@ void semi_implicit_integration(List network, List soil,
   }
 
   NumericVector k_SoilToStem = network["k_SoilToStem"];
-  NumericVector PsiSoil = psi(soil, "VG");
 
   double alpha, Psi_td, Psi_LApo_np1, Psi_SApo_np1, Psi_LSym_np1, Psi_SSym_np1;
   double psiref;
@@ -264,14 +373,22 @@ void semi_implicit_integration(List network, List soil,
     network["Psi_SApo_cav"] = psiref;
     network["PLC_Stem"] = PLC(psiref, VCstem_slope, VCstem_P50);
   }
-
-
-  // WBveg["Psi_AllSoil"] = sum(k_SoilToStem * PsiSoil)/sum(k_SoilToStem);
-  // 
 }
 
 void innerCochard(List x, List input, List output, int n, double tstep, 
                  bool verbose = false, bool modifyInput = true) {
+  
+  // Extract hydraulic networks
+  List networks = input["networks"];
+  
+  IntegerVector nsmalltimesteps = IntegerVector::create(2,4, 8, 16);
+  NumericVector opt = NumericVector::create(_["Lsym"] = 1.0,
+                                            _["Ssym"] = 1.0,
+                                            _["Eord"] = 1.0,
+                                            _["Lcav"] = 1.0,
+                                            _["Scav"] = 1.0,
+                                            _["CLapo"] = 1.0,
+                                            _["CTapo"] = 1.0);
   
   // Extract control variables
   List control = x["control"];
@@ -290,11 +407,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   List soil = x["soil"];
   NumericVector dVec = soil["dVec"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
-  // NumericVector Theta_FC = thetaFC(soil, soilFunctions);
-  // NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);
-  // NumericVector VG_alpha = Rcpp::as<Rcpp::NumericVector>(soil["VG_alpha"]);
-  NumericVector Tsoil = soil["Temp"]; 
-  int nlayers = Tsoil.length();
+  int nlayers = dVec.length();
   
   // Extract parameters
   // Rcout<<"params\n";
@@ -313,26 +426,45 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   NumericVector Gswmin = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gswmin"]);
   NumericVector Gswmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gswmax"]);
 
-  //Water pools
-  DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
-  List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
-  NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
-  List RHOP;
-  NumericVector poolProportions(numCohorts);
-  if(plantWaterPools) {
-    RHOP = belowLayers["RHOP"];
-    poolProportions = belowdf["poolProportions"];
-  }
-  NumericMatrix RhizoPsiMAT = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["RhizoPsi"]);
+  DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
+  NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
+  NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
+  NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
+  NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]); //l·m-2 = mm
+  NumericVector LeafPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafPI0"]);
+  NumericVector LeafEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafEPS"]);
+  NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
+  NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
+  
+  DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+  NumericVector EinstVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
+  NumericVector ElimVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Elim"]);
+  NumericVector Emin_LVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Emin_L"]);
+  NumericVector Emin_SVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Emin_S"]);
+  NumericVector StemPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
+  NumericVector LeafPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
+  NumericVector StemPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
+  NumericVector LeafPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
+  NumericVector RootCrownPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
+  NumericVector StemSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
+  
+  // //Water pools
+  // DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
+  // List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
+  // NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
+  // List RHOP;
+  // NumericVector poolProportions(numCohorts);
+  // if(plantWaterPools) {
+  //   RHOP = belowLayers["RHOP"];
+  //   poolProportions = belowdf["poolProportions"];
+  // }
+  // NumericMatrix RhizoPsiMAT = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["RhizoPsi"]);
   
   //Extract output to be filled
   
   NumericMatrix SoilWaterExtract = Rcpp::as<Rcpp::NumericMatrix>(output["Extraction"]);
   NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(output["ExtractionInst"]);
-  
   NumericMatrix minPsiRhizo = Rcpp::as<Rcpp::NumericMatrix>(output["RhizoPsi"]);
-  
-  // Rcout<<"Plants\n";
   List Plants = output["Plants"];
   NumericVector PWB = Plants["WaterBalance"];
   NumericVector Eplant = Plants["Transpiration"];
@@ -342,8 +474,6 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   NumericVector maxLeafPsi = Plants["LeafPsiMax"];
   NumericVector minStemPsi = Plants["StemPsi"];
   NumericVector minRootPsi = Plants["RootPsi"];
-  
-  // Rcout<<"Leaves\n";
   List Sunlit = output["SunlitLeaves"];
   List Shade = output["ShadeLeaves"];
   NumericVector LAI_SL = Sunlit["LAI"];
@@ -355,7 +485,6 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   NumericVector maxTemp_SL = Sunlit["TempMax"];
   NumericVector minLeafPsi_SL = Sunlit["LeafPsiMin"];
   NumericVector maxLeafPsi_SL = Sunlit["LeafPsiMax"];
-  
   NumericVector LAI_SH = Shade["LAI"];
   NumericVector Vmax298SH = Shade["Vmax298"];
   NumericVector Jmax298SH = Shade["Jmax298"];
@@ -365,13 +494,10 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   NumericVector maxTemp_SH = Shade["TempMax"];
   NumericVector minLeafPsi_SH = Shade["LeafPsiMin"];
   NumericVector maxLeafPsi_SH = Shade["LeafPsiMax"];
-  
-  // Rcout<<"PlantsInst\n";
   List PlantsInst = output["PlantsInst"];
   NumericMatrix Einst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["E"]);
   NumericMatrix Aginst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["Ag"]);
   NumericMatrix Aninst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["An"]);
-  NumericMatrix dEdPInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["dEdP"]);
   NumericMatrix PWBinst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["PWB"]);
   NumericMatrix StemSympRWCInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympRWC"]);
   NumericMatrix LeafSympRWCInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympRWC"]);
@@ -383,7 +509,6 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   NumericMatrix PLC = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemPLC"]);
   NumericMatrix StemSympPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympPsi"]);
   NumericMatrix LeafSympPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympPsi"]);
-  
   List ShadeInst = output["ShadeLeavesInst"];
   NumericMatrix SWR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Abs_SWR"]);
   NumericMatrix PAR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Abs_PAR"]);
@@ -396,7 +521,6 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   NumericMatrix Temp_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Temp"]);
   NumericMatrix GSW_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Gsw"]);
   NumericMatrix Ci_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Ci"]);
-  
   List SunlitInst = output["SunlitLeavesInst"];
   NumericMatrix SWR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Abs_SWR"]);
   NumericMatrix PAR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Abs_PAR"]);
@@ -422,51 +546,53 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   List layerConnectedPools = input["layerConnectedPools"];
 
   for(int c=0;c<numCohorts;c++) { //Plant cohort loop
-    // 
-    // 
-    // // # A. LOOP ON THE IMPLICIT SOLVER IN PSI, trying different time steps until results are OK
-    // bool regulationWellComputed = false;
-    // bool cavitationWellComputed = false;
-    // List params  = WBveg["params"];
-    // NumericVector kSoil = WBsoil["kSoil"];
-    // 
-    // List WBveg_np1;
-    // 
-    // double LAI = (double) WBveg["LAI"];
-    // 
-    // int nwhilecomp = 0;
-    // NumericVector fluxSoilToStemLargeTimeStep(kSoil.size(), 0.0);
-    // 
-    // while ((!regulationWellComputed || !cavitationWellComputed) && (nwhilecomp<nsmalltimesteps.size())) { //# LOOP TO TRY DIFFERENT TIME STEPS
-    //   List WBveg_n = clone(WBveg); // # initial value of WBveg
+    // # A. LOOP ON THE IMPLICIT SOLVER IN PSI, trying different time steps until results are OK
+    bool regulationWellComputed = false;
+    bool cavitationWellComputed = false;
+    List network = networks[c];
+    NumericVector kSoil = network["k_Soil"];
+
+    List network_np1;
+
+    double LAI = LAIphe[c];
+    double LAI_sh = LAI_SH[c];  
+    double LAI_sl = LAI_SL[c];
+    Rcout << " hour step " << n << " cohort " << c << " "<< LAI<< " "<< LAI_sh << " " << LAI_sl<<"\n";
+
+    int nwhilecomp = 0;
+    NumericVector fluxSoilToStemLargeTimeStep(kSoil.size(), 0.0);
+
+    while ((!regulationWellComputed || !cavitationWellComputed) && (nwhilecomp<nsmalltimesteps.size())) { //# LOOP TO TRY DIFFERENT TIME STEPS
+       List network_n = clone(network); // # initial value of WBveg
     //   List WBsoil_n = clone(WBsoil); // # initial value of WBsoil
     //   
-    //   regulationWellComputed = false;
-    //   cavitationWellComputed = false;
-    //   int nwhilecomp = nwhilecomp + 1;
-    //   double deltaRegulMax = 1.0e-100;
-    //   double deltaPLCMax = 1.0e-100;
-    //   
-    //   double fluxEvaporationSoilLargeTimeStep = 0.0;
-    //   for(int i=0;i < kSoil.size();i++) fluxSoilToStemLargeTimeStep[i] = 0.0;
-    //   
-    //   int nts = nsmalltimesteps[nwhilecomp];// # number of small time steps
-    //   for(int its = 1; its <= nts; its++) { //#INTERNAL LOOP ON SMALL TIME STEPS
-    //     double p = (((double) its ) - 0.5)/((double) nts);
-    //     List WBclim = interp_WBclim(WBclim_current, WBclim_next, p); // # climate at nph
-    //     double ETPr = WBveg_n["ETPr"];
-    //     double Tair_mean = WBclim["Tair_mean"];
-    //     double RHair = WBclim["RHair"];
-    //     compute_evaporationG(WBsoil_n, RHair, Tair_mean,
-    //                          ((double) Nhours)/((double) nts), LAI,
-    //                          ETPr, (double) params["K"]);
-    //     fluxEvaporationSoilLargeTimeStep = fluxEvaporationSoilLargeTimeStep + ((double) WBsoil_n["E_Soil3"])/((double) nts);
-    //     
-    //     WBveg_np1 = clone(WBveg_n); // Clone WBveg object
+      regulationWellComputed = false;
+      cavitationWellComputed = false;
+      double deltaRegulMax = 1.0e-100;
+      double deltaPLCMax = 1.0e-100;
+
+      //Reset soil flux to zero
+      for(int i=0;i < kSoil.size();i++) fluxSoilToStemLargeTimeStep[i] = 0.0;
+
+      int nts = nsmalltimesteps[nwhilecomp];// # number of small time steps
+      double dt = tstep / ((double) nts); //Determine number of seconds of small time steps
+      Rcout<< "Attempt #" << nwhilecomp<<" nts "<< nts << " dt " << dt << "\n";
+      for(int its = 1; its <= nts; its++) { //#INTERNAL LOOP ON SMALL TIME STEPS
+        // double p = (((double) its ) - 0.5)/((double) nts);
+        // List WBclim = interp_WBclim(WBclim_current, WBclim_next, p); // # climate at nph
+        // double ETPr = WBveg_n["ETPr"];
+        // double Tair_mean = WBclim["Tair_mean"];
+        // double RHair = WBclim["RHair"];
+        // compute_evaporationG(WBsoil_n, RHair, Tair_mean,
+        //                      ((double) Nhours)/((double) nts), LAI,
+        //                      ETPr, (double) params["K"]);
+        // fluxEvaporationSoilLargeTimeStep = fluxEvaporationSoilLargeTimeStep + ((double) WBsoil_n["E_Soil3"])/((double) nts);
+
+        network_np1 = clone(network_n); // Clone WBveg object
     //     compute_transpiration(WBveg_np1, WBclim, Nhours, opt, stomatalRegFormulation);// # transpi with climate at nph
-    //     semi_implicit_temporal_integration(WBveg_np1,  WBsoil_n, ((double) Nhours) * 3600.0 / ((double) nts), nts, opt);
-    //     update_kplant(WBveg_np1, WBsoil_n);
-    //     update_capacitancesApoAndSym(WBveg_np1);
+        semi_implicit_integration(network_np1, dt, opt);
+        update_conductances(network_np1);
+        update_capacitances(network_np1);
     //     
     //     // # QUANTITIES TO CHECK IF THE RESOLUTION IS OK
     //     // # 1. delta regulation between n and np1 (MIQUEL: Only Psi_LSym changes between the two calculations, params should be the same)
@@ -492,7 +618,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
     //     }
     //     // # NB the time step for fluxSoilToStem_mm is Nhours/nts!
     //     update_soilWater(WBsoil_n, fluxSoilToStem_mm);
-    //   } //# end loop small time step
+      } //# end loop small time step
     //   
     //   // # TESTS ON RESOLUTION
     //   WBveg_np1["Diag_deltaRegulMax"] = deltaRegulMax;
@@ -500,7 +626,8 @@ void innerCochard(List x, List input, List output, int n, double tstep,
     //   WBveg_np1["Diag_deltaPLCMax"] = deltaPLCMax;
     //   cavitationWellComputed = (deltaPLCMax<1.0);// # 1%
     //   WBveg_np1["Diag_timeStepInHours"] = ((double) Nhours)/((double) nts);
-    // } //# end while
+      nwhilecomp = nwhilecomp + 1;
+    } //# end while
     // 
     // // # B. SAVING SOLUTION AT NEXT TIME STEP IN WBveg
     // WBveg = WBveg_np1;
@@ -521,6 +648,155 @@ void innerCochard(List x, List input, List output, int n, double tstep,
     // WBveg["transpiration_mm"] = convertFluxFrom_mmolm2s_To_mm(((double) WBveg["Emin"]) + ((double) WBveg["Emin_S"]) + ((double) WBveg["Elim"]),
     //                                            (double) Nhours, LAI); //# total flux in mm
     
-  }
+    
+    
+    // Rcout<<iPMSunlit[c]<<" "<<iPMShade[c] <<" "<<GwSunlit[iPMSunlit[c]]<<" "<<GwShade[iPMShade[c]]<<" "<<fittedE[iPMSunlit[c]]<<" "<<fittedE[iPMShade[c]]<<"\n";
+    //Get leaf status
+    //Store leaf values
+    // E_SH(c,n) = fittedE[iPMShade[c]];
+    // E_SL(c,n) = fittedE[iPMSunlit[c]];
+    // Psi_SH(c,n) = LeafPsi[iPMShade[c]];
+    // Psi_SL(c,n) = LeafPsi[iPMSunlit[c]];
+    // An_SH(c,n) = photoShade["NetPhotosynthesis"];
+    // An_SL(c,n) = photoSunlit["NetPhotosynthesis"];
+    // Ag_SH(c,n) = photoShade["GrossPhotosynthesis"];
+    // Ag_SL(c,n) = photoSunlit["GrossPhotosynthesis"];
+    // Ci_SH(c,n) = photoShade["Ci"];
+    // Ci_SL(c,n) = photoSunlit["Ci"];
+    // GSW_SH(c,n)= photoShade["Gsw"];
+    // GSW_SL(c,n)= photoSunlit["Gsw"];
+    // VPD_SH(c,n)= photoShade["LeafVPD"];
+    // VPD_SL(c,n)= photoSunlit["LeafVPD"];
+    // Temp_SH(c,n)= photoShade["LeafTemperature"];
+    // Temp_SL(c,n)= photoSunlit["LeafTemperature"];
+    
+    //Scale photosynthesis
+    // double Agsum = Ag_SL(c,n)*LAI_SL[c] + Ag_SH(c,n)*LAI_SH[c];
+    // double Ansum = An_SL(c,n)*LAI_SL[c] + An_SH(c,n)*LAI_SH[c];
+    // Aginst(c,n) = (1e-6)*12.01017*Agsum*tstep;
+    // Aninst(c,n) = (1e-6)*12.01017*Ansum*tstep;
+    
+    //Average flow from sunlit and shade leaves
+    // double Eaverage = (fittedE[iPMSunlit[c]]*LAI_SL[c] + fittedE[iPMShade[c]]*LAI_SH[c])/(LAI_SL[c] + LAI_SH[c]);
+    
 
+    //Store instantaneous flow and leaf water potential
+    // EinstVEC[c] = fittedE[iPM];
+    // LeafPsiVEC[c] = LeafPsi[iPM];
+    // RootCrownPsiVEC[c] = psiRootCrown[iPM]; 
+    
+    //Scale from instantaneous flow to water volume in the time step
+    // Einst(c,n) = fittedE[iPM]*0.001*0.01802*LAIphe[c]*tstep; 
+    // 
+    // NumericVector Esoilcn(nlayerscon[c],0.0);
+    // NumericVector ElayersVEC(nlayerscon[c],0.0);
+    
+    
+    // //Get info from sFunctionBelow (this will be different depending on wether capacitance is considered)
+    // NumericMatrix ERhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunctionBelow["ERhizo"]);
+    // NumericMatrix RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(sFunctionBelow["psiRhizo"]);
+    
+    //Store steady state stem and rootcrown and root surface water potential values
+    // NumericMatrix newStemPsi = Rcpp::as<Rcpp::NumericMatrix>(sFunctionAbove["psiStem"]);
+    // Stem1PsiVEC[c] = newStemPsi(iPM,0); 
+    // Stem2PsiVEC[c] = newStemPsi(iPM,1);
+    // for(int lc=0;lc<nlayerscon[c];lc++) {
+    //   ElayersVEC[lc] = ERhizo(iPM,lc)*tstep; //Scale according to the time step
+    // }
+    
+    //Copy RhizoPsi and from connected layers to RhizoPsi from soil layers
+    // copyRhizoPsi(c,iPM, 
+    //              RhizoPsi, RhizoPsiMAT,
+    //              layerConnected, 
+    //              RHOP, layerConnectedPools,
+    //              VCroot_c, VCroot_d,  
+    //              plantWaterPools);
+    
+    // Store the PLC corresponding to stem1 water potential
+    // if(cavitationRefill!="total") {
+    //   StemPLCVEC[c] = std::max(StemPLCVEC[c], 1.0 - xylemConductance(Stem1PsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
+    // } else { //Immediate refilling
+    //   StemPLCVEC[c] = 1.0 - xylemConductance(Stem1PsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
+    // }
+    
+    //Scale soil water extracted from leaf to cohort level
+    // for(int lc=0;lc<nlayerscon[c];lc++) {
+    //   Esoilcn[lc] = ElayersVEC[lc]*0.001*0.01802*LAIphe[c]; //Scale from flow to water volume in the time step
+    // }
+    
+    //Balance between extraction and transpiration
+    // PWBinst(c,n) = sum(Esoilcn) - Einst(c,n);
+    
+    //Add step transpiration to daily plant cohort transpiration
+    // Eplant[c] += Einst(c,n);
+    // Anplant[c] += Aninst(c,n);
+    // Agplant[c] += Aginst(c,n);
+    //Add PWB
+    // PWB[c] += PWBinst(c,n); 
+    
+    
+    
+    //Copy transpiration and from connected layers to transpiration from soil layers
+    //And update soil water content (soil water potential will not be updated until next day!)
+    // if(!plantWaterPools) {
+    //   int cl = 0;
+    //   for(int l=0;l<nlayers;l++) {
+    //     if(layerConnected(c,l)) {
+    //       SoilWaterExtract(c,l) += Esoilcn[cl]; //Add to cummulative transpiration from layers
+    //       soilLayerExtractInst(l,n) += Esoilcn[cl];
+    //       //Apply extraction to soil layer
+    //       if(modifyInput) Ws[l] = std::max(Ws[l] - (Esoilcn[cl]/Water_FC[l]),0.0);
+    //       cl++;
+    //     } 
+    //   }
+    // } else {
+    //   NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
+    //   LogicalMatrix layerConnectedCoh = Rcpp::as<Rcpp::LogicalMatrix>(layerConnectedPools[c]);
+    //   int cl = 0;
+    //   for(int j = 0;j<numCohorts;j++) {
+    //     for(int l=0;l<nlayers;l++) {
+    //       if(layerConnectedCoh(j,l)) {
+    //         SoilWaterExtract(c,l) += Esoilcn[cl]; //Add to cummulative transpiration from layers
+    //         soilLayerExtractInst(l,n) += Esoilcn[cl];
+    //         //Apply extraction to soil layer
+    //         if(modifyInput) Wpool(j,l) = Wpool(j,l) - (Esoilcn[cl]/(Water_FC[l]*poolProportions[j])); //Apply extraction from pools
+    //         cl++;
+    //       }
+    //     }
+    //   }
+    // }
+    if(N[c]>0.0) {
+      //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
+      PLC(c,n) = StemPLCVEC[c];
+      StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]);
+      LeafSympRWCInst(c,n) = symplasticRelativeWaterContent(LeafPsiVEC[c], LeafPI0[c], LeafEPS[c]);
+      // StemRWCInst(c,n) = StemSympRWCInst(c,n)*(1.0 - StemAF[c]) + apoplasticRelativeWaterContent(StemPsiVEC[c], VCstem_c[c], VCstem_d[c])*StemAF[c];
+      // LeafRWCInst(c,n) = LeafSympRWCInst(c,n)*(1.0 - LeafAF[c]) + apoplasticRelativeWaterContent(LeafPsiVEC[c], VCleaf_c[c], VCleaf_d[c])*LeafAF[c];
+      StemPsiInst(c,n) = StemPsiVEC[c]; 
+      LeafPsiInst(c,n) = LeafPsiVEC[c]; //Store instantaneous (average) leaf potential
+      RootPsiInst(c,n) = RootCrownPsiVEC[c]; //Store instantaneous root crown potential
+      StemSympPsiInst(c,n) = StemSympPsiVEC[c];
+      
+      //Store the minimum water potential of the day (i.e. mid-day)
+      minGSW_SL[c] = std::min(minGSW_SL[c], GSW_SL(c,n));
+      minGSW_SH[c] = std::min(minGSW_SH[c], GSW_SH(c,n));
+      maxGSW_SL[c] = std::max(maxGSW_SL[c], GSW_SL(c,n));
+      maxGSW_SH[c] = std::max(maxGSW_SH[c], GSW_SH(c,n));
+      minTemp_SL[c] = std::min(minTemp_SL[c], Temp_SL(c,n));
+      minTemp_SH[c] = std::min(minTemp_SH[c], Temp_SH(c,n));
+      maxTemp_SL[c] = std::max(maxTemp_SL[c], Temp_SL(c,n));
+      maxTemp_SH[c] = std::max(maxTemp_SH[c], Temp_SH(c,n));
+      minLeafPsi_SL[c] = std::min(minLeafPsi_SL[c], Psi_SL(c,n));
+      minLeafPsi_SH[c] = std::min(minLeafPsi_SH[c], Psi_SH(c,n));
+      maxLeafPsi_SL[c] = std::max(maxLeafPsi_SL[c], Psi_SL(c,n));
+      maxLeafPsi_SH[c] = std::max(maxLeafPsi_SH[c], Psi_SH(c,n));
+      minLeafPsi[c] = std::min(minLeafPsi[c], LeafPsiInst(c,n));
+      maxLeafPsi[c] = std::max(maxLeafPsi[c], LeafPsiInst(c,n));
+      minStemPsi[c] = std::min(minStemPsi[c], StemPsiInst(c,n));
+      minRootPsi[c] = std::min(minRootPsi[c], RootPsiInst(c,n));
+      // for(int l=0;l<nlayers;l++) {
+      //   minPsiRhizo(c,l) = std::min(minPsiRhizo(c,l), RhizoPsiMAT(c,l));
+      // }
+    }
+  }
 }
