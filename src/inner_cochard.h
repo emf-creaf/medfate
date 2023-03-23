@@ -6,7 +6,8 @@
 using namespace Rcpp;
 
 List initCochardNetwork(int c, NumericVector LAIphe,
-                       DataFrame internalWater, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
+                       DataFrame internalWater, 
+                       DataFrame paramsAnatomy, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
                        NumericVector PsiSoil, NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
                        double sapFluidityDay = 1.0);
 

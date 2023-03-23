@@ -106,7 +106,8 @@ void update_capacitances(List network) {
 
 
 List initCochardNetwork(int c, NumericVector LAIphe,
-                       DataFrame internalWater, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
+                       DataFrame internalWater, 
+                       DataFrame paramsAnatomy, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
                        NumericVector PsiSoil, NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
                        double sapFluidityDay = 1.0) {
   //Root distribution input
@@ -131,6 +132,8 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   NumericVector VCroot_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_P50"]);
   NumericVector VCroot_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_slope"]);
   
+  NumericVector LeafWidth = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["LeafWidth"]);
+  
   NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
   NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
   NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
@@ -149,6 +152,7 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   params.push_back(2.0, "gmin_S"); 
   params.push_back(0.8, "fTRBToLeaf");
   //PLANT RELATED PARAMETERS
+  params.push_back(LeafWidth[c]*10.0, "leaf_size");  //from cm to mm
   params.push_back(VCleaf_P50[c], "VCleaf_P50"); 
   params.push_back(VCleaf_slope[c], "VCleaf_slope"); 
   params.push_back(VCstem_P50[c], "VCstem_P50"); 
@@ -229,6 +233,7 @@ List initCochardNetworks(List x) {
   NumericMatrix VCroot_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
   NumericMatrix VGrhizo_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+  DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
   DataFrame paramsTranspiration = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
   
@@ -238,7 +243,8 @@ List initCochardNetworks(List x) {
   List networks(numCohorts);
   for(int c = 0;c<numCohorts;c++) {
     networks[c] = initCochardNetwork(c, LAIphe,
-                                     internalWater, paramsTranspiration, paramsWaterStorage,
+                                     internalWater, 
+                                     paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                      psiSoil, VCroot_kmax(c,_), VGrhizo_kmax(c,_));
   }
   return(networks);
@@ -439,9 +445,6 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   NumericVector VPair = canopyParams["VPair"];
   NumericVector Cair = canopyParams["Cair"];
   
-  DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
-  NumericVector leafWidth = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["LeafWidth"]);
-  
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   NumericVector Gswmin = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gswmin"]);
   NumericVector Gswmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gswmax"]);
@@ -622,7 +625,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
         double gmin_S = params["gmin_S"];
         double gflat = 0.00662;
         double jflat = 0.5;
-        double rBL = 1.0 / (1.5 * gflat * (pow(zWind[iLayerCohort[c]], jflat) / pow(leafWidth[c] / 1000.0, 1.0 - jflat)));
+        double rBL = 1.0 / (1.5 * gflat * (pow(zWind[iLayerCohort[c]], jflat) / pow((double) params["leaf_size"] / 1000.0, 1.0 - jflat)));
         double gBL = 1.0 / rBL * 1000.0 * 40.0; // # boundary layer conductance in mmol/s/m2
         double Emin_S = ((double) params["fTRBToLeaf"]) * Emin(gmin_S, gBL, gC, VPD);
         network_n["Emin_S"] =  Emin_S;

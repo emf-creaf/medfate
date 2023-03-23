@@ -510,7 +510,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         }
       } else if(transpirationMode == "Cochard") {
         hydraulicNetwork[c] = initCochardNetwork(c, LAIphe,
-                                                internalWater, paramsTranspiration, paramsWaterStorage,
+                                                internalWater, 
+                                                paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                                 psic, VCroot_kmax(c,_), VGrhizo_kmax(c,_),
                                                 sapFluidityDay);
       }
@@ -576,7 +577,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         }
       } else if(transpirationMode == "Cochard") {
         hydraulicNetwork[c] = initCochardNetwork(c, LAIphe,
-                                                internalWater, paramsTranspiration, paramsWaterStorage,
+                                                internalWater, 
+                                                paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                                 psic, VCroot_kmaxc, VGrhizo_kmaxc,
                                                 sapFluidityDay);
       }
