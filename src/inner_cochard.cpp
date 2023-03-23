@@ -619,6 +619,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   NumericMatrix Einst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["E"]);
   NumericMatrix Aginst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["Ag"]);
   NumericMatrix Aninst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["An"]);
+  NumericMatrix dEdPInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["dEdP"]);
   NumericMatrix PWBinst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["PWB"]);
   NumericMatrix StemSympRWCInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympRWC"]);
   NumericMatrix LeafSympRWCInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympRWC"]);
@@ -684,7 +685,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
     NumericVector kSoil = network["k_Soil"];
 
     double LAI = network["LAI"];
-    Rcout << "\n*** HOUR STEP " << n << " cohort " << c << "***\n";
+    // Rcout << "\n*** HOUR STEP " << n << " cohort " << c << "***\n";
 
     int nwhilecomp = 0;
     NumericVector fluxSoilToStemLargeTimeStep(kSoil.size(), 0.0);
@@ -706,7 +707,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
 
       int nts = nsmalltimesteps[nwhilecomp];// # number of small time steps
       double dt = tstep / ((double) nts); //Determine number of seconds of small time steps
-      Rcout<< " Attempt #" << nwhilecomp<<" nts "<< nts << " dt " << dt << "\n";
+      // Rcout<< " Attempt #" << nwhilecomp<<" nts "<< nts << " dt " << dt << "\n";
       for(int its = 1; its <= nts; its++) { //#INTERNAL LOOP ON SMALL TIME STEPS
         // double p = (((double) its ) - 0.5)/((double) nts);
         // List WBclim = interp_WBclim(WBclim_current, WBclim_next, p); // # climate at nph
@@ -742,8 +743,8 @@ void innerCochard(List x, List input, List output, int n, double tstep,
         double VPD_air = meteoland::utils_saturationVP(Tair[iLayerCohort[c]]) - VPair[iLayerCohort[c]];
         VPD_SL(c,n) = std::max(0.0,leafVapourPressure(Temp_SL(c,n), Psi_LSym) - VPair[iLayerSunlit[c]]);
         VPD_SH(c,n) = std::max(0.0,leafVapourPressure(Temp_SH(c,n), Psi_LSym) - VPair[iLayerShade[c]]);
-        Rcout<< "  AirT "<< Tair[iLayerCohort[c]] << " LT_SL "<< Temp_SL(c,n)<< " LT_SH "<< Temp_SH(c,n)<<"\n";
-        Rcout<< "  VPD_air "<< VPD_air << " VPD_SL "<< VPD_SL(c,n)<< " VPD_SH "<< VPD_SH(c,n)<<"\n";
+        // Rcout<< "  AirT "<< Tair[iLayerCohort[c]] << " LT_SL "<< Temp_SL(c,n)<< " LT_SH "<< Temp_SH(c,n)<<"\n";
+        // Rcout<< "  VPD_air "<< VPD_air << " VPD_SL "<< VPD_SL(c,n)<< " VPD_SH "<< VPD_SH(c,n)<<"\n";
         
         //gCR = g Crown
         double gCR = gCrown(gCrown0, zWind[iLayerCohort[c]]);
@@ -761,13 +762,13 @@ void innerCochard(List x, List input, List output, int n, double tstep,
         //Compute stem cuticular transpiration
         double Emin_S = fTRBToLeaf * Emin(gmin_S, gBL, gCR, VPD_air, Patm);
         network_n["Emin_S"] =  Emin_S;
-        Rcout<< "  Emin_S "<< Emin_S<<" Emin_L_SL "<< Emin_L_SL<<" Emin_L_SH "<< Emin_L_SH<<" Emin_L "<< Emin_L<<"\n";
+        // Rcout<< "  Emin_S "<< Emin_S<<" Emin_L_SL "<< Emin_L_SL<<" Emin_L_SH "<< Emin_L_SH<<" Emin_L "<< Emin_L<<"\n";
         
         // Current stomatal regulation
         NumericVector regul = regulFact(Psi_LSym, params);
         double gs_SL = gsJarvis(params, PAR_SL(c,n), Temp_SL(c,n));
         double gs_SH = gsJarvis(params, PAR_SH(c,n), Temp_SH(c,n));
-        Rcout<< "  PAR_SL "<< PAR_SL(c,n)<<"  gs_SL "<< gs_SL<<"  PAR_SH "<< PAR_SH(c,n)<<" gs_SH "<< gs_SH<<"\n";
+        //Rcout<< "  PAR_SL "<< PAR_SL(c,n)<<"  gs_SL "<< gs_SL<<"  PAR_SH "<< PAR_SH(c,n)<<" gs_SH "<< gs_SH<<"\n";
         GSW_SL(c,n) = gs_SL * regul["regulFact"];
         GSW_SH(c,n) = gs_SH * regul["regulFact"];
         
@@ -780,7 +781,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
         network_n["Elim_SH"] = Elim_SH;
         Elim = ((Elim_SL*LAI_SL[c]) + (Elim_SH*LAI_SH[c]))/LAI; 
         network_n["Elim"] = Elim;
-        Rcout<< "  Elim_SL "<< Elim_SL<<"  Elim_SH "<< Elim_SH<<"  Elim "<< Elim<<"\n";
+        // Rcout<< "  Elim_SL "<< Elim_SL<<"  Elim_SH "<< Elim_SH<<"  Elim "<< Elim<<"\n";
         
         //Add transpiration sources
         network_n["Einst"] = Elim + Emin_S + Emin_L;
@@ -848,6 +849,8 @@ void innerCochard(List x, List input, List output, int n, double tstep,
     E_SH(c,n) = network["Elim_SH"];
     Psi_SH(c,n) = network["Psi_LSym"];
     Psi_SL(c,n) = network["Psi_LSym"];
+    //Store Plant k
+    dEdPInst(c,n) = network["k_Plant"];
     
     //Sunlit/shade photosynthesis
     NumericVector LP_SL = leafphotosynthesis(irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL[c], 
@@ -868,6 +871,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
     //Store state
     StemPsiVEC[c] = network["Psi_LApo"];
     LeafPsiVEC[c] = network["Psi_LSym"];
+    StemSympPsiVEC[c] = network["Psi_SSym"];
     RootCrownPsiVEC[c] = network["Psi_SApo"];
     StemPLCVEC[c] = ((double) network["PLC_Stem"])/100.0;
     LeafPLCVEC[c] = ((double) network["PLC_Leaf"])/100.0;
@@ -889,7 +893,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
 
     //Scale from instantaneous flow to water volume in the time step
     Einst(c,n) = EinstVEC[c]*0.001*0.01802*LAIphe[c]*tstep;
-    
+
 
     // 
     // NumericVector Esoilcn(nlayerscon[c],0.0);
@@ -936,7 +940,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
     Anplant[c] += Aninst(c,n);
     Agplant[c] += Aginst(c,n);
     //Add PWB
-    // PWB[c] += PWBinst(c,n); 
+    PWB[c] += PWBinst(c,n);
     
     
     

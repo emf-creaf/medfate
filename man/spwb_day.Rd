@@ -153,9 +153,21 @@ sd2 <-spwb_day(x2, rownames(examplemeteo)[d],
 #Plot plant transpiration (see function 'plot.swb.day()')
 plot(sd2)
 
-#Simulate water and carbon balance for one day only
-x3  <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
-sd3 <- growth_day(x3, rownames(examplemeteo)[d],
+#Simulate water balance for one day only (Cochard mode)
+control <- defaultControl("Cochard")
+x3 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
+sd3 <-spwb_day(x3, rownames(examplemeteo)[d],
+              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
+              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
+              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
+              latitude = 41.82592, elevation = 100, slope=0, aspect=0,
+              prec = examplemeteo$Precipitation[d])
+
+
+#Simulate water and carbon balance for one day only (Granier mode)
+control <- defaultControl("Granier")
+x4  <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+sd4 <- growth_day(x4, rownames(examplemeteo)[d],
                 examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
                 examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
                 examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 

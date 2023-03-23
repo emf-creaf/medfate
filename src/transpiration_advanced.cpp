@@ -998,8 +998,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     RWClm[c] = sum(LeafRWCInst(c,_))/((double)LeafRWCInst.ncol());
     LFMC[c] = maxFMC[c]*((1.0/r635[c])*RWClm[c]+(1.0 - (1.0/r635[c]))*RWCsm[c]);
     dEdPm[c] = sum(dEdPInst(c,_))/((double)dEdPInst.ncol());  
-    double maxConductance = maximumSoilPlantConductance(VGrhizo_kmax(c,_), VCroot_kmax(c,_), VCstem_kmax[c], VCleaf_kmax[c]);
-    DDS[c] = Phe[c]*(1.0 - (dEdPm[c]/(sapFluidityDay*maxConductance)));
+    DDS[c] = Phe[c]*(1.0 - (dEdPm[c]/(sapFluidityDay*Plant_kmax[c])));
     
     if(cavitationRefill=="rate") {
       double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area

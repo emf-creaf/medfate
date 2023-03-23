@@ -2867,9 +2867,21 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
 #' #Plot plant transpiration (see function 'plot.swb.day()')
 #' plot(sd2)
 #' 
-#' #Simulate water and carbon balance for one day only
-#' x3  <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
-#' sd3 <- growth_day(x3, rownames(examplemeteo)[d],
+#' #Simulate water balance for one day only (Cochard mode)
+#' control <- defaultControl("Cochard")
+#' x3 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
+#' sd3 <-spwb_day(x3, rownames(examplemeteo)[d],
+#'               examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
+#'               examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
+#'               examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
+#'               latitude = 41.82592, elevation = 100, slope=0, aspect=0,
+#'               prec = examplemeteo$Precipitation[d])
+#' 
+#' 
+#' #Simulate water and carbon balance for one day only (Granier mode)
+#' control <- defaultControl("Granier")
+#' x4  <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' sd4 <- growth_day(x4, rownames(examplemeteo)[d],
 #'                 examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
 #'                 examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
 #'                 examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
@@ -3074,7 +3086,14 @@ spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, ele
 #' #Call simulation function
 #' S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 #' 
+#' #Switch to 'Cochard' transpiration mode
+#' control <- defaultControl("Cochard")
 #' 
+#' #Initialize input
+#' x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' 
+#' #Call simulation function
+#' S3 <- spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 #' }
 #'                 
 #' @name spwb
