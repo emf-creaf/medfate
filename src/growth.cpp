@@ -466,8 +466,13 @@ List growthDayInner(List x, NumericVector meteovec,
     PlantPsi  = Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]);
   } else {
     psiApoLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
-    psiApoStem = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem1Psi"]);
-    psiSympLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
+    if(transpirationMode == "Sperry") {
+      psiApoStem = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem1Psi"]);
+      psiSympLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
+    } else {
+      psiApoStem = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
+      psiSympLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
+    }
     psiSympStem = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
   }
   
@@ -1684,6 +1689,14 @@ void checkgrowthInput(List x, String transpirationMode, String soilFunctions) {
 //' #Call simulation function
 //' G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 //' 
+//' #Switch to 'Cochard' transpiration mode
+//' control <- defaultControl("Cochard")
+//' 
+//' #Initialize vegetation input
+//' x3 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' 
+//' #Call simulation function
+//' G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
 //' }
 //'       
 // [[Rcpp::export("growth")]]
