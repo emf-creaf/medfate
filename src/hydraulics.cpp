@@ -2484,6 +2484,9 @@ double averageRhizosphereResistancePercent(double krhizomax, double n, double al
   return(sum/cnt);
 }
 
+
+
+
 //' @rdname hydraulics_scalingconductance
 // [[Rcpp::export("hydraulics_findRhizosphereMaximumConductance")]]
 double findRhizosphereMaximumConductance(double averageResistancePercent, double n, double alpha,

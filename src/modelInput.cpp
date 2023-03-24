@@ -356,14 +356,30 @@ DataFrame paramsTranspirationCochard(DataFrame above, List soil, DataFrame SpPar
     Plant_kmax[c] = 1.0/((1.0/VCleaf_kmax[c])+(1.0/VCstem_kmax[c])+(1.0/VCroottot_kmax[c]));
   }
   
-  DataFrame paramsTranspirationdf = DataFrame::create(
-    _["Gswmin"]=Gswmin, _["Gswmax"]=Gswmax,_["Vmax298"]=Vmax298,
-      _["Jmax298"]=Jmax298, _["Kmax_stemxylem"] = Kmax_stemxylem, _["Kmax_rootxylem"] = Kmax_rootxylem,
-        _["VCleaf_kmax"]=VCleaf_kmax,_["VCleaf_slope"]=VCleaf_slope,_["VCleaf_P50"]=VCleaf_P50,
-        _["VCstem_kmax"]=VCstem_kmax,_["VCstem_slope"]=VCstem_slope,_["VCstem_P50"]=VCstem_P50, 
-        _["VCroot_kmax"] = VCroottot_kmax ,_["VCroot_slope"]=VCroot_slope,_["VCroot_P50"]=VCroot_P50,
-        _["VGrhizo_kmax"] = VGrhizotot_kmax,
-        _["Plant_kmax"] = Plant_kmax);
+  DataFrame paramsTranspirationdf = DataFrame::create();
+  paramsTranspirationdf.push_back(Gswmin, "Gswmin");
+  paramsTranspirationdf.push_back(Gswmax, "Gswmax");
+  paramsTranspirationdf.push_back(Vmax298, "Vmax298");
+  paramsTranspirationdf.push_back(Jmax298, "Jmax298");
+  paramsTranspirationdf.push_back(Kmax_stemxylem, "Kmax_stemxylem");
+  paramsTranspirationdf.push_back(Kmax_rootxylem, "Kmax_rootxylem");
+  paramsTranspirationdf.push_back(VCleaf_kmax, "VCleaf_kmax");
+  paramsTranspirationdf.push_back(VCleaf_slope, "VCleaf_slope");
+  paramsTranspirationdf.push_back(VCleaf_P50, "VCleaf_P50");
+  paramsTranspirationdf.push_back(VCleaf_c, "VCleaf_c");
+  paramsTranspirationdf.push_back(VCleaf_d, "VCleaf_d");
+  paramsTranspirationdf.push_back(VCstem_kmax, "VCstem_kmax");
+  paramsTranspirationdf.push_back(VCstem_slope, "VCstem_slope");
+  paramsTranspirationdf.push_back(VCstem_P50, "VCstem_P50");
+  paramsTranspirationdf.push_back(VCstem_c, "VCstem_c");
+  paramsTranspirationdf.push_back(VCstem_d, "VCstem_d");
+  paramsTranspirationdf.push_back(VCroottot_kmax, "VCroot_kmax");
+  paramsTranspirationdf.push_back(VCroot_slope, "VCroot_slope");
+  paramsTranspirationdf.push_back(VCroot_P50, "VCroot_P50");
+  paramsTranspirationdf.push_back(VCroot_c, "VCroot_c");
+  paramsTranspirationdf.push_back(VCroot_d, "VCroot_d");
+  paramsTranspirationdf.push_back(VGrhizotot_kmax, "VGrhizo_kmax");
+  paramsTranspirationdf.push_back(Plant_kmax, "Plant_kmax");
   paramsTranspirationdf.attr("row.names") = above.attr("row.names");
   return(paramsTranspirationdf);
 }
@@ -447,7 +463,7 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                                  _["L"] = L,
                                  _["Wpool"] = Wpool);
     }
-  } else if(transpirationMode == "Sperry"){
+  } else {
     NumericVector Al2As = paramsAnatomydf["Al2As"];
     NumericVector FineRootDensity = paramsAnatomydf["FineRootDensity"];
     NumericVector SRL = paramsAnatomydf["SRL"];
@@ -499,78 +515,6 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
       }
       FRB[c] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(c,_), LAI_live[c], N[c], 
                                             SRL[c], FineRootDensity[c], RLD[c]);
-    }
-    belowLayers = List::create(_["V"] = V,
-                               _["L"] = L,
-                               _["VGrhizo_kmax"] = VGrhizo_kmax,
-                               _["VCroot_kmax"] = VCroot_kmax,
-                               _["Wpool"] = Wpool,
-                               _["RhizoPsi"] = RhizoPsi);
-    if(rhizosphereOverlap!="total") {
-      belowdf = DataFrame::create(_["Z50"]=Z50,
-                                  _["Z95"]=Z95,
-                                  _["fineRootBiomass"] = FRB,
-                                  _["coarseRootSoilVolume"] = CRSV,
-                                  _["poolProportions"] = poolProportions);
-      List RHOP;
-      if(rhizosphereOverlap=="none") RHOP = nonoverlapHorizontalProportions(V);
-      else RHOP = horizontalProportions(poolProportions, CRSV, N, V, dVec, rfc);
-      belowLayers["RHOP"] = RHOP;
-    } else {
-      belowdf = DataFrame::create(_["Z50"]=Z50,
-                                  _["Z95"]=Z95,
-                                  _["fineRootBiomass"] = FRB,
-                                  _["coarseRootSoilVolume"] = CRSV);
-    }
-  } else if(transpirationMode == "Cochard"){
-    NumericVector Al2As = paramsAnatomydf["Al2As"];
-    NumericVector FineRootDensity = paramsAnatomydf["FineRootDensity"];
-    NumericVector SRL = paramsAnatomydf["SRL"];
-    NumericVector RLD = paramsAnatomydf["RLD"];
-    
-    NumericVector Kmax_stemxylem = paramsTranspirationdf["Kmax_stemxylem"];
-    NumericVector VCroottot_kmax = paramsTranspirationdf["VCroot_kmax"];
-    NumericVector VCstem_kmax = paramsTranspirationdf["VCstem_kmax"];
-    NumericVector VCleaf_kmax = paramsTranspirationdf["VCleaf_kmax"];
-    NumericVector VGrhizotot_kmax = paramsTranspirationdf["VGrhizo_kmax"];
-    
-    
-    NumericMatrix RhizoPsi =  NumericMatrix(numCohorts, nlayers);
-    RhizoPsi.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
-    std::fill(RhizoPsi.begin(), RhizoPsi.end(), -0.033);
-    
-    
-    NumericVector FRB(numCohorts,0.0), CRSV(numCohorts,0.0),FRAI(numCohorts,0.0);
-    NumericVector Ksat = soil["Ksat"];
-    for(int c=0;c<numCohorts;c++)  {
-    // We use Kmax_stemxylem instead of Kmax_rootxylem because of reliability
-      CRSV[c] = coarseRootSoilVolumeFromConductance(Kmax_stemxylem[c], VCroottot_kmax[c], Al2As[c],
-                                                    V(c,_), dVec, rfc);
-    }
-
-    
-    NumericMatrix VCroot_kmax(numCohorts, nlayers); 
-    NumericMatrix VGrhizo_kmax(numCohorts, nlayers);
-    VGrhizo_kmax.attr("dimnames") = V.attr("dimnames");
-    VCroot_kmax.attr("dimnames") = V.attr("dimnames");
-    std::fill(VCroot_kmax.begin(), VCroot_kmax.end(), 0.0);
-    std::fill(VGrhizo_kmax.begin(), VGrhizo_kmax.end(), 0.0);
-    
-    NumericVector Vc;
-    for(int c=0;c<numCohorts;c++){
-      Vc = V(c,_);
-      L(c,_) = coarseRootLengthsFromVolume(CRSV[c], V(c,_), dVec, rfc); 
-      NumericVector xp = rootxylemConductanceProportions(L(c,_), V(c,_));
-      for(int l=0;l<nlayers;l++) {
-        VCroot_kmax(c,_) = VCroottot_kmax[c]*xp;
-        // VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
-        //              VCroottot_kmax[c], VCroot_c[c], VCroot_d[c],
-        //                                                      VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-        //                                                                                           VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
-        // VGrhizotot_kmax[c] += VGrhizo_kmax(c,l); 
-      }
-      // FRB[c] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(c,_), LAI_live[c], N[c], 
-      //                                       SRL[c], FineRootDensity[c], RLD[c]);
     }
     belowLayers = List::create(_["V"] = V,
                                _["L"] = L,
