@@ -3120,10 +3120,6 @@ pwb <- function(x, meteo, W, latitude, elevation = NA_real_, slope = NA_real_, a
     .Call(`_medfate_pwb`, x, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, CO2ByYear)
 }
 
-compute_plantNextTimeStep <- function(WBveg, WBsoil, WBclim_current, WBclim_next, Nhours, nsmalltimesteps, opt, stomatalRegFormulation) {
-    .Call(`_medfate_compute_plantNextTimeStep`, WBveg, WBsoil, WBclim_current, WBclim_next, Nhours, nsmalltimesteps, opt, stomatalRegFormulation)
-}
-
 #' Tissue moisture functions
 #' 
 #' Set of functions used to calculate tissue moisture from water potential and viceversa.
