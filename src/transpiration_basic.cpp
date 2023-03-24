@@ -652,6 +652,17 @@ List transpirationBasic(List x, NumericVector meteovec,
 //'                                 latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
 //'                                 modifyInput = FALSE)
 //'                                 
+//' #Switch to 'Cochard' transpiration mode
+//' control <- defaultControl("Cochard")
+//' 
+//' #Initialize input
+//' x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' 
+//' # Transpiration according to Cochard's model
+//' t3 <- transp_transpirationCochard(x3, examplemeteo, 1, 
+//'                                   latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
+//'                                   modifyInput = FALSE)
+//'                                 
 //' @name transp_modes
 // [[Rcpp::export("transp_transpirationGranier")]]
 List transpirationGranier(List x, DataFrame meteo, int day,

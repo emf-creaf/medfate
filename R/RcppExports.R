@@ -3414,6 +3414,17 @@ transp_transpirationCochard <- function(x, meteo, day, latitude, elevation, slop
 #'                                 latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
 #'                                 modifyInput = FALSE)
 #'                                 
+#' #Switch to 'Cochard' transpiration mode
+#' control <- defaultControl("Cochard")
+#' 
+#' #Initialize input
+#' x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' 
+#' # Transpiration according to Cochard's model
+#' t3 <- transp_transpirationCochard(x3, examplemeteo, 1, 
+#'                                   latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
+#'                                   modifyInput = FALSE)
+#'                                 
 #' @name transp_modes
 transp_transpirationGranier <- function(x, meteo, day, latitude, elevation, slope, aspect, modifyInput = TRUE) {
     .Call(`_medfate_transpirationGranier`, x, meteo, day, latitude, elevation, slope, aspect, modifyInput)

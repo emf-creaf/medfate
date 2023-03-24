@@ -1047,47 +1047,31 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     Vmax298SH[c] = Vmax298SH[c]/LAI_SH[c];
     Jmax298SH[c] = Jmax298SH[c]/LAI_SH[c];
   }
-  List l;
-  if(!IntegerVector::is_na(stepFunctions)){
-    l = List::create(_["cohorts"] = clone(cohorts),
-                     _["EnergyBalance"] = EB,
-                     _["Stand"] = Stand,
-                     _["Extraction"] = SoilWaterExtract,
-                     _["ExtractionInst"] = soilLayerExtractInst,
-                     _["RhizoPsi"] = minPsiRhizo,
-                     _["Plants"] = Plants,
-                     _["SunlitLeaves"] = Sunlit,
-                     _["ShadeLeaves"] = Shade,
-                     _["PlantsInst"] = PlantsInst,
-                     _["SunlitLeavesInst"] = SunlitInst,
-                     _["ShadeLeavesInst"] = ShadeInst,
-                     _["LightExtinction"] = lightExtinctionAbsortion,
-                     _["LWRExtinction"] = lwrExtinctionList,
-                     _["CanopyTurbulence"] = canopyTurbulence,
-                     _["SupplyFunctions"] = supply,
-                     _["PhotoSunlitFunctions"] = outPhotoSunlit,
-                     _["PhotoShadeFunctions"] = outPhotoShade,
-                     _["PMSunlitFunctions"] = outPMSunlit,
-                     _["PMShadeFunctions"] = outPMShade);
-  } else {
-    l = List::create(_["cohorts"] = clone(cohorts),
-                     _["EnergyBalance"] = EB,
-                     _["Extraction"] = SoilWaterExtract,
-                     _["RhizoPsi"] = minPsiRhizo,
-                     _["Stand"] = Stand,
-                     _["Plants"] = Plants,
-                     _["SunlitLeaves"] = Sunlit,
-                     _["ShadeLeaves"] = Shade,
-                     _["ExtractionInst"] = soilLayerExtractInst,
-                     _["PlantsInst"] = PlantsInst,
-                     _["SunlitLeavesInst"] = SunlitInst,
-                     _["ShadeLeavesInst"] = ShadeInst,
-                     _["LightExtinction"] = lightExtinctionAbsortion,
-                     _["LWRExtinction"] = lwrExtinctionList,
-                     _["CanopyTurbulence"] = canopyTurbulence,
-                     _["SupplyFunctions"] = supply);
-    
-  } 
+  List l = List::create(_["cohorts"] = clone(cohorts),
+                        _["EnergyBalance"] = EB,
+                        _["Extraction"] = SoilWaterExtract,
+                        _["RhizoPsi"] = minPsiRhizo,
+                        _["Stand"] = Stand,
+                        _["Plants"] = Plants,
+                        _["SunlitLeaves"] = Sunlit,
+                        _["ShadeLeaves"] = Shade,
+                        _["ExtractionInst"] = soilLayerExtractInst,
+                        _["PlantsInst"] = PlantsInst,
+                        _["SunlitLeavesInst"] = SunlitInst,
+                        _["ShadeLeavesInst"] = ShadeInst,
+                        _["LightExtinction"] = lightExtinctionAbsortion,
+                        _["LWRExtinction"] = lwrExtinctionList,
+                        _["CanopyTurbulence"] = canopyTurbulence);
+  
+  if(transpirationMode =="Sperry") {
+    l.push_back(supply, "SupplyFunctions");
+    if((!IntegerVector::is_na(stepFunctions))){
+      l.push_back(outPhotoSunlit, "PhotoSunlitFunctions");
+      l.push_back(outPhotoShade, "PhotoShadeFunctions");
+      l.push_back(outPMSunlit, "PMSunlitFunctions");
+      l.push_back(outPMShade, "PMShadeFunctions");
+    }
+  }
   l.attr("class") = CharacterVector::create("pwb_day","list");
   return(l);
 }
