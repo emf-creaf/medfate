@@ -330,7 +330,6 @@ List initCochardNetwork(int c, NumericVector LAIphe,
 }
 
 // Initializes network for all plant cohorts in x
-// [[Rcpp::export]]
 List initCochardNetworks(List x) {
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
@@ -363,7 +362,6 @@ List initCochardNetworks(List x) {
 
 // dt - Smallest time step (seconds)
 // opt - Option flag vector
-// [[Rcpp::export]]
 void semi_implicit_integration(List network, double dt, NumericVector opt) {
   
   List params = as<Rcpp::List>(network["params"]);

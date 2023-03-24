@@ -2209,29 +2209,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// initCochardNetworks
-List initCochardNetworks(List x);
-RcppExport SEXP _medfate_initCochardNetworks(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(initCochardNetworks(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// semi_implicit_integration
-void semi_implicit_integration(List network, double dt, NumericVector opt);
-RcppExport SEXP _medfate_semi_implicit_integration(SEXP networkSEXP, SEXP dtSEXP, SEXP optSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type network(networkSEXP);
-    Rcpp::traits::input_parameter< double >::type dt(dtSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type opt(optSEXP);
-    semi_implicit_integration(network, dt, opt);
-    return R_NilValue;
-END_RCPP
-}
 // profitMaximization
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax);
 RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GswminSEXP, SEXP GswmaxSEXP) {
@@ -4948,8 +4925,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_incgam", (DL_FUNC) &_medfate_incgam, 2},
     {"_medfate_invincgam", (DL_FUNC) &_medfate_invincgam, 3},
     {"_medfate_gammds", (DL_FUNC) &_medfate_gammds, 2},
-    {"_medfate_initCochardNetworks", (DL_FUNC) &_medfate_initCochardNetworks, 1},
-    {"_medfate_semi_implicit_integration", (DL_FUNC) &_medfate_semi_implicit_integration, 3},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 4},
     {"_medfate_parcohort", (DL_FUNC) &_medfate_parcohort, 5},
     {"_medfate_PARcohort", (DL_FUNC) &_medfate_PARcohort, 3},
