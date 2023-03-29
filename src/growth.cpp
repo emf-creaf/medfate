@@ -810,7 +810,6 @@ List growthDayInner(List x, NumericVector meteovec,
         double conversionSapwood = std::max(-starchSapwood[j], sugarSapwood[j] - equilibriumSapwoodSugarConc);
         starchSapwood[j] +=conversionSapwood;
         sugarSapwood[j] -=conversionSapwood;
-        
       } else {
         //3.1 Carbon balance and growth by steps
         for(int s=0;s<numSteps;s++) {
@@ -1029,20 +1028,17 @@ List growthDayInner(List x, NumericVector meteovec,
       // Rcout<<"-translocation";
       double translocationSugarLeaf = propLeafSenescence*Volume_leaves[j]*sugarLeaf[j];
       double translocationStarchLeaf = propLeafSenescence*Volume_leaves[j]*starchLeaf[j];
-      double translocationSugarSapwood = propSASenescence*Volume_sapwood[j]*starchSapwood[j];
+      double translocationSugarSapwood = propSASenescence*Volume_sapwood[j]*sugarSapwood[j];
       if(Volume_leaves[j]>0) {
         if(starchLeaf[j] > Starch_max_leaves[j]) { // Add excess leaf starch to translocation
           translocationStarchLeaf += ((starchLeaf[j] - Starch_max_leaves[j])*Volume_leaves[j]);
         }
-        // if(j==(numCohorts-1)) Rcout<< j << " translocation "<< propLeafSenescence<< " "<< translocationSugarLeaf<<"\n";
         sugarLeaf[j] = ((sugarLeaf[j]*Volume_leaves[j]) - translocationSugarLeaf)/Volume_leaves[j]; 
         starchLeaf[j] = ((starchLeaf[j]*Volume_leaves[j]) - translocationStarchLeaf)/Volume_leaves[j]; 
       }
       sugarSapwood[j] = ((sugarSapwood[j]*Volume_sapwood[j]) - translocationSugarSapwood)/Volume_sapwood[j]; 
       starchSapwood[j] = ((starchSapwood[j]*Volume_sapwood[j]) + translocationSugarLeaf + translocationStarchLeaf + translocationSugarSapwood)/Volume_sapwood[j]; 
-      
-      // if(j==(numCohorts-1)) Rcout<< j << " after translocation " << sugarLeaf[j]<< " "<< starchLeaf[j]<<"\n";
-      
+
       //ROOT EXUDATION and close carbon balance (non-subdaily carbon balance)
       if(!subdailyCarbonBalance) {
         //Excess sapwood starch carbon is lost as root exudation
