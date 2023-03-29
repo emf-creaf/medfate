@@ -141,6 +141,8 @@
                   DBH = x$above$DBH[range],
                   Height = x$above$H[range],
                   N = x$internalMortality$N_dead[range],
+                  N_starvation = x$internalMortality$N_starvation[range],
+                  N_dessication = x$internalMortality$N_dessication[range],
                   Z50 = x$below$Z50[range],
                   Z95 = x$below$Z95[range])
   dtt = dtt[dtt$N>0,, drop = FALSE]
@@ -189,6 +191,8 @@
                   Cohort = row.names(x$cohorts)[range],
                   Species = x$cohorts$Name[range],
                   Cover = x$internalMortality$Cover_dead[range],
+                  Cover_starvation = x$internalMortality$Cover_starvation[range],
+                  Cover_dessication = x$internalMortality$Cover_dessication[range],
                   Height = x$above$H[range],
                   Z50 = x$below$Z50[range],
                   Z95 = x$below$Z95[range])

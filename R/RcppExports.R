@@ -1960,7 +1960,9 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
 #'       \item{\code{fineRootBiomassTarget}: Target fine root biomass (g dry) per individual.}
 #'     }
 #'   }
-#'   \item{\code{internalCarbon} and \code{internalRings}: data structures to store other internal state variables.}
+#'   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
+#'   \item{\code{internalMortality}: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
+#'   also distinguishing mortality due to starvation or dessication.}
 #' }
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
