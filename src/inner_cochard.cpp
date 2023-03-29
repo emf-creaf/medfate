@@ -17,6 +17,14 @@ double PLC(double Pmin, double slope, double P50){
 double invPLC(double plc, double slope, double P50){
   return(P50 + log((100.0/plc)-1.0)*(25.0/slope));
 }
+double averagePsiSigmoid(NumericVector psi, NumericVector v, double slope, double P50) {
+  int nlayers = psi.size();
+  NumericVector K(nlayers);
+  for(int l=0;l<nlayers;l++) K[l]= PLC(psi[l], slope, P50);
+  double psires =  invPLC(sum(K*v), slope, P50);
+  psires = std::max(psires, -40.0); //Limits plant water potential to -40 MPa
+  return(psires);
+}
 double RWC(double PiFT, double Esymp, double Pmin) {
   double A = std::max((-1.0 * (Pmin + PiFT - Esymp) - sqrt(pow(Pmin + PiFT - Esymp, 2.0) + 4.0 * (Pmin * Esymp))) / (2.0 * Esymp), 1.0 - PiFT / Pmin);
   return(A);
@@ -254,7 +262,7 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   params.push_back(VCleaf_slope[c], "VCleaf_slope"); 
   params.push_back(VCstem_P50[c], "VCstem_P50"); 
   params.push_back(VCstem_slope[c], "VCstem_slope"); 
-  params.push_back(VCroot_P50[c], "VCrootP50"); 
+  params.push_back(VCroot_P50[c], "VCroot_P50"); 
   params.push_back(VCroot_slope[c], "VCroot_slope"); 
   params.push_back(sapFluidityDay*VCstem_kmax[c], "k_SLApoInit"); //Maximum conductance from trunk apoplasm to leaf apoplasm = VCstem_kmax
   params.push_back(sapFluidityDay*VCroot_kmax, "k_RSApoInit"); //Maximum conductance from rhizosphere surface to root crown
@@ -359,6 +367,59 @@ List initCochardNetworks(List x) {
   return(networks);
 }
 
+
+void calculateRhizoPsi(int c, 
+                       List network, NumericMatrix RhizoPsiMAT,
+                       LogicalMatrix layerConnected, 
+                       List RHOP, List layerConnectedPools,
+                       bool plantWaterPools) {
+  int nlayers = layerConnected.ncol();
+  int numCohorts = layerConnected.nrow();
+  NumericVector k_SoilToStem = network["k_SoilToStem"];
+  NumericVector k_Soil = network["k_Soil"];
+  NumericVector PsiSoil = network["PsiSoil"];
+  List params = as<Rcpp::List>(network["params"]);
+  double VCroot_slope = params["VCroot_slope"];
+  double VCroot_P50 = params["VCroot_P50"];
+  
+  double Psi_SApo = network["Psi_SApo"];
+  if(!plantWaterPools) {
+    int cl = 0;
+    for(int l=0;l<nlayers;l++) {
+      if(layerConnected(c,l)) {
+        double fluxSoilToStem_mmolm2s = k_SoilToStem[cl]*(PsiSoil[cl] - Psi_SApo);
+        RhizoPsiMAT(c,l) = PsiSoil[cl] - fluxSoilToStem_mmolm2s/k_Soil[cl];
+        // Rcout<< c << l <<" "<< fluxSoilToStem_mmolm2s<<" " << PsiSoil[cl]<< " "<< RhizoPsiMAT(c,l)<<"\n";
+        cl++;
+      } 
+    }
+  } else {
+    NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
+    LogicalMatrix layerConnectedCoh = Rcpp::as<Rcpp::LogicalMatrix>(layerConnectedPools[c]);
+    NumericVector rplv(numCohorts,NA_REAL);
+    NumericVector vplv(numCohorts,NA_REAL);
+    int cl = 0;
+    for(int l=0;l<nlayers;l++) {
+      int clj = 0;
+      for(int j=0;j<numCohorts;j++) {
+        if(layerConnectedCoh(j,l)) {
+          double fluxSoilToStem_mmolm2s = k_SoilToStem[cl]*(PsiSoil[cl] - Psi_SApo);
+          rplv[clj] = PsiSoil[cl] - fluxSoilToStem_mmolm2s/k_Soil[cl];
+          vplv[clj] = RHOPcoh(c,l);
+          cl++;
+          clj++;
+        }
+      }
+      NumericVector pv(clj,NA_REAL);
+      NumericVector vv(clj,NA_REAL);
+      for(int j=0;j<clj;j++) {
+        pv[j] = rplv[j];
+        vv[j] = vplv[j];
+      }
+      RhizoPsiMAT(c,l) = averagePsiSigmoid(pv, vv, VCroot_slope, VCroot_P50);
+    }
+  }
+}
 
 // dt - Smallest time step (seconds)
 // opt - Option flag vector
@@ -885,18 +946,12 @@ void innerCochard(List x, List input, List output, int n, double tstep,
     Einst(c,n) = EinstVEC[c]*0.001*0.01802*LAIphe[c]*tstep;
 
     
-    // //Get info from sFunctionBelow (this will be different depending on wether capacitance is considered)
-    // NumericMatrix ERhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunctionBelow["ERhizo"]);
-    // NumericMatrix RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(sFunctionBelow["psiRhizo"]);
-    
-    
-    //Copy RhizoPsi and from connected layers to RhizoPsi from soil layers
-    // copyRhizoPsi(c,iPM, 
-    //              RhizoPsi, RhizoPsiMAT,
-    //              layerConnected, 
-    //              RHOP, layerConnectedPools,
-    //              VCroot_c, VCroot_d,  
-    //              plantWaterPools);
+    //Calculate and copy RhizoPsi from connected layers to RhizoPsi from soil layers
+    calculateRhizoPsi(c,
+                      network, RhizoPsiMAT,
+                      layerConnected,
+                      RHOP, layerConnectedPools,
+                      plantWaterPools);
     
     //Balance between extraction and transpiration
     PWBinst(c,n) = sum(fluxSoilToStem_mm) - Einst(c,n);
@@ -968,9 +1023,9 @@ void innerCochard(List x, List input, List output, int n, double tstep,
       maxLeafPsi[c] = std::max(maxLeafPsi[c], LeafPsiInst(c,n));
       minStemPsi[c] = std::min(minStemPsi[c], StemPsiInst(c,n));
       minRootPsi[c] = std::min(minRootPsi[c], RootPsiInst(c,n));
-      // for(int l=0;l<nlayers;l++) {
-      //   minPsiRhizo(c,l) = std::min(minPsiRhizo(c,l), RhizoPsiMAT(c,l));
-      // }
+      for(int l=0;l<nlayers;l++) {
+        minPsiRhizo(c,l) = std::min(minPsiRhizo(c,l), RhizoPsiMAT(c,l));
+      }
     }
   }
 }

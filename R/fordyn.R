@@ -251,7 +251,7 @@ fordyn<-function(forest, soil, SpParams,
       management_args <- managenent_result$management_args
     } 
     
-    # 3.1 Simulate species recruitment and resprouting
+    # 3. Simulate species recruitment and resprouting
     if(verboseDyn && (control$allowRecruitment || control$allowResprouting)) cat(paste0(", (b) Recruitment/resprouting"))
     if(control$allowRecruitment) {
       monthlyMinTemp <- tapply(Gi$weather$MinTemperature, monthsYear, FUN="mean", na.rm=TRUE)
@@ -263,6 +263,7 @@ fordyn<-function(forest, soil, SpParams,
     } else {
       recr_forest <- emptyforest()
     }
+    # 4. Simulate species resprouting
     if(control$allowResprouting) {
       resp_forest <- resprouting(forest, xo$internalMortality, SpParams, control,
                                  managenent_result)
@@ -270,7 +271,7 @@ fordyn<-function(forest, soil, SpParams,
       resp_forest <- emptyforest()
     }
     
-    # 3.2 Remove empty cohorts if required
+    # 4. Remove empty cohorts if required
     emptyTrees <- rep(FALSE, nrow(forest$treeData))
     emptyShrubs <- rep(FALSE, nrow(forest$shrubData))
     if(control$removeEmptyCohorts) {
@@ -309,7 +310,7 @@ fordyn<-function(forest, soil, SpParams,
 
     
 
-    # 4.1 Generate above-ground data
+    # 5.1 Generate above-ground data
     #planted
     planted_above <- forest2aboveground(planted_forest, SpParams, NA)
     row.names(planted_above) <- plant_ID(planted_forest, SpParams, treeOffset, shrubOffset)
@@ -335,7 +336,7 @@ fordyn<-function(forest, soil, SpParams,
       forest_above$LAI_expanded[is.na(forest_above$DBH)] <- xo$above$LAI_expanded[is.na(forest_above$DBH)]
     }
 
-    # 4.2 Merge above-ground data (first trees)
+    # 5.2 Merge above-ground data (first trees)
     above_all <- rbind(forest_above[!is.na(forest_above$DBH),, drop = FALSE], 
                       planted_above[!is.na(planted_above$DBH),, drop = FALSE],
                       recr_above[!is.na(recr_above$DBH),, drop = FALSE],
@@ -345,7 +346,7 @@ fordyn<-function(forest, soil, SpParams,
                       recr_above[is.na(recr_above$DBH),, drop = FALSE],
                       resp_above[is.na(resp_above$DBH),, drop = FALSE])
     
-    # 4.3 Logical vector for replacement
+    # 5.3 Logical vector for replacement
     repl_vec <- c(rep(TRUE, nrow(forest$treeData)),
                   rep(FALSE, nrow(planted_forest$treeData)),
                   rep(FALSE, nrow(recr_forest$treeData)),
@@ -357,18 +358,18 @@ fordyn<-function(forest, soil, SpParams,
     sel_vec <- c(rep(TRUE, nrow(forest$treeData)),
                 rep(control$shrubDynamics, nrow(forest$shrubData)))
     
-    # 4.4 Merge cohorts in forest object
+    # 5.4 Merge cohorts in forest object
     forest$treeData <- rbind(forest$treeData, planted_forest$treeData, recr_forest$treeData, resp_forest$treeData)
     forest$shrubData <- rbind(forest$shrubData, planted_forest$shrubData, recr_forest$shrubData, resp_forest$shrubData)
     
     
-    # 4.5 Prepare growth input for next year
+    # 5.5 Prepare growth input for next year
     xi <- .growthInput(above = above_all,
                      Z50 = c(forest$treeData$Z50, forest$shrubData$Z50),
                      Z95 = c(forest$treeData$Z95, forest$shrubData$Z95),
                      xo$soil, NULL, SpParams, control)
     
-    # 4.6 Replace previous state for surviving cohorts
+    # 5.6 Replace previous state for surviving cohorts
     xi$cohorts[repl_vec,] <- xo$cohorts[sel_vec,, drop=FALSE]
     xi$above[repl_vec,] <- xo$above[sel_vec,, drop=FALSE]
     xi$below[repl_vec,] <- xo$below[sel_vec,, drop=FALSE]
@@ -393,10 +394,10 @@ fordyn<-function(forest, soil, SpParams,
     xi$internalAllocation[repl_vec,] <- xo$internalAllocation[sel_vec,, drop=FALSE]
 
     
-    # 5.1 Store current forest state (after recruitment/resprouting)
+    # 6.1 Store current forest state (after recruitment/resprouting)
     forestStructures[[iYear+1]] <- forest
     
-    # 5.2 Process summaries (after recruitment/resprouting)
+    # 6.2 Process summaries (after recruitment/resprouting)
     treeTableYear <- .createTreeTable(iYear, year, xi)
     shrubTableYear <- .createShrubTable(iYear, year, xi)
     cohSumYear <- .summarizeCohorts(iYear,
@@ -407,7 +408,7 @@ fordyn<-function(forest, soil, SpParams,
     standSummary <- rbind(standSummary,  .summarizeStand(iYear,cohSumYear, xi))
     cohortSummary <- rbind(cohortSummary, cohSumYear)
     
-    # 5.3 Update tree/shrub tables (after recruitment)
+    # 6.3 Update tree/shrub tables (after recruitment)
     treeTable <- rbind(treeTable, treeTableYear)
     shrubTable <- rbind(shrubTable, shrubTableYear)
     deadTreeTable <- rbind(deadTreeTable, deadTreeTableYear)
