@@ -31,7 +31,7 @@ using namespace Rcpp;
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
-//' @seealso \code{\link{growth}}, \code{\link{recruitment}}
+//' @seealso \code{\link{growth}}, \code{\link{regeneration}}
 //' 
 // [[Rcpp::export("mortality_dailyProbability")]]
 double dailyMortalityProbability(double basalMortalityRate, double stressValue, double stressThreshold,

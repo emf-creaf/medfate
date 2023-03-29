@@ -149,12 +149,12 @@ reference:
   contents:
   - starts_with("carbon_")
   
-- title: Secondary growth, mortality and recruitment
-  desc: Wood formation, mortality and recruitment processes
+- title: Secondary growth, mortality and regeneration
+  desc: Wood formation, mortality, recruitment and resprouting processes
   contents:
   - starts_with("woodformation_")
   - starts_with("mortality_")
-  - recruitment
+  - regeneration
 
 - title: Water content
   desc:  Plant/tissue water contents

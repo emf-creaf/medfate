@@ -30,7 +30,7 @@ Returns a probability (between 0 and 1).
 A simple function to determine a daily mortality likelihood according to the value of a stress variable.
 }
 \seealso{
-\code{\link{growth}}, \code{\link{recruitment}}
+\code{\link{growth}}, \code{\link{regeneration}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF

@@ -30,9 +30,9 @@ fordyn(
 
 \item{control}{A list with default control parameters (see \code{\link{defaultControl}}).}
 
-\item{latitude}{Latitude (in degrees). Required when \code{x$TranspirationMode = "Sperry"}.}
+\item{latitude}{Latitude (in degrees).}
 
-\item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when \code{x$TranspirationMode = "Sperry"}. Elevation is also required for 'Granier' if snowpack dynamics are simulated.}
+\item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).}
 
 \item{CO2ByYear}{A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).}
 
@@ -133,7 +133,7 @@ fd$DeadTreeTable
 
 }
 \seealso{
-\code{\link{growth}}, \code{\link{recruitment}}, \code{\link{plot.growth}}, \code{\link{defaultManagementFunction}}
+\code{\link{growth}}, \code{\link{regeneration}}, \code{\link{plot.growth}}, \code{\link{defaultManagementFunction}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
