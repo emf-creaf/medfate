@@ -149,17 +149,37 @@ resprouting <- function(forest, internalMortality, SpParams, control,
                         management_results = NULL) {
   n_trees <- nrow(forest$treeData)
   n_shrubs <- nrow(forest$shrubData)
+
+  resp_dist_trees <- species_parameter(forest$treeData$Species, SpParams, "RespDist")
+  resp_dist_trees[is.na(resp_dist_trees)] <- 0
+  resp_dist_shrubs <- species_parameter(forest$shrubData$Species, SpParams, "RespDist")
+  resp_dist_shrubs[is.na(resp_dist_shrubs)] <- 0
+  resp_fire_trees <- species_parameter(forest$treeData$Species, SpParams, "RespFire")
+  resp_fire_trees[is.na(resp_fire_trees)] <- 0
+  resp_fire_shrubs <- species_parameter(forest$shrubData$Species, SpParams, "RespFire")
+  resp_fire_shrubs[is.na(resp_fire_shrubs)] <- 0
+  resp_clip_trees <- species_parameter(forest$treeData$Species, SpParams, "RespClip")
+  resp_clip_trees[is.na(resp_clip_trees)] <- 0
+  resp_clip_shrubs <- species_parameter(forest$shrubData$Species, SpParams, "RespClip")
+  resp_clip_shrubs[is.na(resp_clip_shrubs)] <- 0
+  
   N_resprouting <- internalMortality$N_dessication
-  if(n_trees>0) N_resprouting <- N_resprouting[1:n_trees]
-  else N_resprouting <- numeric(0)
-  Cover_resprouting <- internalMortality$Cover_dessication
-  if(n_shrubs>0) Cover_resprouting <- Cover_resprouting[(n_trees+1):(n_trees+n_shrubs)]
-  else Cover_resprouting <- numeric(0)
-  if(!is.null(management_results)) { ## Add tree cuts
-    N_resprouting <- N_resprouting + management_results$N_tree_cut
-    Cover_resprouting <- Cover_resprouting + management_results$Cover_shrub_cut
+  if(n_trees>0) {
+    N_resprouting <- N_resprouting[1:n_trees]*resp_dist_trees
+  } else { 
+    N_resprouting <- numeric(0)
   }
-  # TO DO: set non-resprouting species to zero
+  Cover_resprouting <- internalMortality$Cover_dessication
+  if(n_shrubs>0) {
+    Cover_resprouting <- Cover_resprouting[(n_trees+1):(n_trees+n_shrubs)]*resp_dist_shrubs
+  } else {
+    Cover_resprouting <- numeric(0)
+  }
+  if(!is.null(management_results)) { ## Add tree/shrub cuts
+    N_resprouting <- N_resprouting + management_results$N_tree_cut*resp_clip_trees
+    Cover_resprouting <- Cover_resprouting + management_results$Cover_shrub_cut*resp_clip_shrubs
+  }
+  
   # Copy forest to inherit species and belowground information
   resp_forest <- forest 
   resp_forest$treeData$N <- N_resprouting
@@ -568,10 +588,10 @@ fordyn<-function(forest, soil, SpParams,
     xi$internalAllocation[repl_vec,] <- xo$internalAllocation[sel_vec,, drop=FALSE]
 
     
-    # 5.1 Store current forest state (after recruitment)
+    # 5.1 Store current forest state (after recruitment/resprouting)
     forestStructures[[iYear+1]] <- forest
     
-    # 5.2 Process summaries (after recruitment)
+    # 5.2 Process summaries (after recruitment/resprouting)
     treeTableYear <- .createTreeTable(iYear, year, xi)
     shrubTableYear <- .createShrubTable(iYear, year, xi)
     cohSumYear <- .summarizeCohorts(iYear,
