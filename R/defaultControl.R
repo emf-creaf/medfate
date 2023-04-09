@@ -14,8 +14,8 @@
 #'   \bold{General}:
 #'     \itemize{
 #'       \item{\code{verbose [= TRUE]}: Boolean flag to indicate console output during calculations. In function \code{fordyn} \code{verbose} is always set to FALSE.}
-#'       \item{\code{fillMissingRootParams [= TRUE]}: Boolean flag to indicate that functions \code{\link{spwbInput}} and \code{\link{growthInput}} should provide estimates for Z50 and Z95 if these are lacking in the forest data. Note that if \code{fillMissingRootParams} is set to \code{FALSE} then simulations may fail if the user does not provide values for Z50 and Z95 in tree or shrub data.}
-#'       \item{\code{fillMissingSpParams [= TRUE]}: Boolean flag to indicate that functions \code{\link{spwbInput}} and \code{\link{growthInput}} should provide estimates for functional parameters if these are lacking in the species parameter table \code{\link{SpParams}}. Note that if \code{fillMissingSpParams} is set to \code{FALSE} then simulations may fail if the user does not provide values for required parameters.}
+#'       \item{\code{fillMissingRootParams [= TRUE]}: Boolean flag to indicate that initializing functions should provide estimates for Z50 and Z95 if these are lacking in the forest data. Note that if \code{fillMissingRootParams} is set to \code{FALSE} then simulations may fail if the user does not provide values for Z50 and Z95 in tree or shrub data.}
+#'       \item{\code{fillMissingSpParams [= TRUE]}: Boolean flag to indicate that initializing functions should provide estimates for functional parameters if these are lacking in the species parameter table \code{\link{SpParams}}. Note that if \code{fillMissingSpParams} is set to \code{FALSE} then simulations may fail if the user does not provide values for required parameters.}
 #'       \item{\code{standResults [= TRUE]}: Boolean flag to keep stand-level results (in a list called 'Stand').}
 #'       \item{\code{soilResults [= TRUE]}: Boolean flag to keep stand-level results (in a list called 'Soil').}
 #'       \item{\code{plantResults [= TRUE]}: Boolean flag to keep plant-level results (in a list called 'Plants').}
