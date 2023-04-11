@@ -2841,17 +2841,19 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
 #' 
 #' # Day to be simulated
 #' d <- 100
+#' meteovec <- unlist(examplemeteo[d,])
+#' date <- rownames(examplemeteo)[d]
 #' 
 #' #Simulate water balance one day only (Granier mode)
 #' examplesoil <- soil(defaultSoilParams(4))
 #' x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-#' sd1 <- spwb_day(x1, rownames(examplemeteo)[d], as.vector(examplemeteo[d,]),  
+#' sd1 <- spwb_day(x1, date, meteovec,  
 #'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0) 
 #' 
 #' #Simulate water balance for one day only (Sperry mode)
 #' control <- defaultControl("Sperry")
 #' x2 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
-#' sd2 <-spwb_day(x2, rownames(examplemeteo)[d], as.vector(examplemeteo[d,]),
+#' sd2 <-spwb_day(x2, date, meteovec,
 #'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 #' 
 #' #Plot plant transpiration (see function 'plot.swb.day()')
@@ -2860,14 +2862,14 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
 #' #Simulate water balance for one day only (Cochard mode)
 #' control <- defaultControl("Cochard")
 #' x3 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
-#' sd3 <-spwb_day(x3, rownames(examplemeteo)[d], as.vector(examplemeteo[d,]),
+#' sd3 <-spwb_day(x3, date, meteovec,
 #'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 #' 
 #' 
 #' #Simulate water and carbon balance for one day only (Granier mode)
 #' control <- defaultControl("Granier")
 #' x4  <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
-#' sd4 <- growth_day(x4, rownames(examplemeteo)[d], as.vector(examplemeteo[d,]),
+#' sd4 <- growth_day(x4, date, meteovec,
 #'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 #' 
 #' @name spwb_day

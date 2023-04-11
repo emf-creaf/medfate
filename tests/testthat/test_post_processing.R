@@ -204,7 +204,7 @@ test_that("Can produce all advanced spwb_day plots",{
     expect_s3_class(x2, "spwbInput")
     d1 = d[1]
     sd2<-spwb_day(x2, rownames(examplemeteo)[d1],
-                  as.vector(examplemeteo[d1,]), 
+                  unlist(examplemeteo[d1,]), 
                   latitude = 41.82592, elevation = 100, slope=0, aspect=0)
     expect_s3_class(sd2, "spwb_day")
     expect_type(fireHazard(sd2, SpParamsMED, exampleforestMED), "double")
@@ -365,7 +365,7 @@ test_that("Can produce all advanced growth_day plots",{
     expect_s3_class(x2, "growthInput")
     d1 <- d[1]
     sd2<-growth_day(x2, rownames(examplemeteo)[d1],
-                    as.vector(examplemeteo[d1,]), 
+                    unlist(examplemeteo[d1,]), 
                     latitude = 41.82592, elevation = 100, slope=0, aspect=0)
     expect_s3_class(sd2, "growth_day")
     expect_type(fireHazard(sd2, SpParamsMED, exampleforestMED), "double")

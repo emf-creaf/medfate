@@ -549,17 +549,19 @@ List spwbDay_advanced(List x, NumericVector meteovec,
 //' 
 //' # Day to be simulated
 //' d <- 100
+//' meteovec <- unlist(examplemeteo[d,])
+//' date <- rownames(examplemeteo)[d]
 //' 
 //' #Simulate water balance one day only (Granier mode)
 //' examplesoil <- soil(defaultSoilParams(4))
 //' x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-//' sd1 <- spwb_day(x1, rownames(examplemeteo)[d], as.vector(examplemeteo[d,]),  
+//' sd1 <- spwb_day(x1, date, meteovec,  
 //'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0) 
 //' 
 //' #Simulate water balance for one day only (Sperry mode)
 //' control <- defaultControl("Sperry")
 //' x2 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
-//' sd2 <-spwb_day(x2, rownames(examplemeteo)[d], as.vector(examplemeteo[d,]),
+//' sd2 <-spwb_day(x2, date, meteovec,
 //'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 //' 
 //' #Plot plant transpiration (see function 'plot.swb.day()')
@@ -568,14 +570,14 @@ List spwbDay_advanced(List x, NumericVector meteovec,
 //' #Simulate water balance for one day only (Cochard mode)
 //' control <- defaultControl("Cochard")
 //' x3 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
-//' sd3 <-spwb_day(x3, rownames(examplemeteo)[d], as.vector(examplemeteo[d,]),
+//' sd3 <-spwb_day(x3, date, meteovec,
 //'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 //' 
 //' 
 //' #Simulate water and carbon balance for one day only (Granier mode)
 //' control <- defaultControl("Granier")
 //' x4  <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
-//' sd4 <- growth_day(x4, rownames(examplemeteo)[d], as.vector(examplemeteo[d,]),
+//' sd4 <- growth_day(x4, date, meteovec,
 //'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 //' 
 //' @name spwb_day
@@ -584,7 +586,6 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
             double latitude, double elevation, double slope, double aspect,  
             double runon=0.0, 
             bool modifyInput = true) {
-  
   double tmin = meteovec["MinTemperature"];
   double tmax = meteovec["MaxTemperature"];
   double rhmin = meteovec["MinRelativeHumidity"];
@@ -597,7 +598,6 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
   if(meteovec.containsElementNamed("CO2")) Catm = meteovec["CO2"];
   double Patm = NA_REAL; 
   if(meteovec.containsElementNamed("Patm")) Patm = meteovec["Patm"];
-  
   //Control parameters
   List control = x["control"];
   bool verbose = control["verbose"];
