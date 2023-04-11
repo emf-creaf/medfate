@@ -8,18 +8,11 @@
 growth_day(
   x,
   date,
-  tmin,
-  tmax,
-  rhmin,
-  rhmax,
-  rad,
-  wind,
+  meteovec,
   latitude,
   elevation,
   slope,
   aspect,
-  prec,
-  CO2 = NA_real_,
   runon = 0,
   modifyInput = TRUE
 )
@@ -27,18 +20,11 @@ growth_day(
 spwb_day(
   x,
   date,
-  tmin,
-  tmax,
-  rhmin,
-  rhmax,
-  rad,
-  wind,
+  meteovec,
   latitude,
   elevation,
   slope,
   aspect,
-  prec,
-  CO2 = NA_real_,
   runon = 0,
   modifyInput = TRUE
 )
@@ -48,21 +34,11 @@ spwb_day(
 
 \item{date}{Date as string "yyyy-mm-dd".}
 
-\item{tmin, tmax}{Minimum and maximum temperature (in degrees Celsius).}
-
-\item{rhmin, rhmax}{Minimum and maximum relative humidity (in percent).}
-
-\item{rad}{Solar radiation (in MJ/m2/day).}
-
-\item{wind}{Wind speed (in m/s).}
+\item{meteovec}{A named numerical vector with weather data (see variables in \code{\link{spwb}}).}
 
 \item{latitude}{Latitude (in degrees).}
 
 \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).}
-
-\item{prec}{Precipitation (in mm).}
-
-\item{CO2}{Atmospheric CO2 concentration (in ppm). If missing, default value is drawn from control parameter 'defaultCO2' in \code{x}.}
 
 \item{runon}{Surface water amount running on the target area from upslope (in mm).}
 
@@ -130,25 +106,17 @@ control <- defaultControl("Granier")
 # Day to be simulated
 d <- 100
 
-#Simulate water balance one day only (Granier)
+#Simulate water balance one day only (Granier mode)
 examplesoil <- soil(defaultSoilParams(4))
 x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-sd1 <- spwb_day(x1, rownames(examplemeteo)[d],  
-                examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
-                examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
-                examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
-                latitude = 41.82592, elevation = 100, slope=0, aspect=0,
-                prec = examplemeteo$Precipitation[d]) 
+sd1 <- spwb_day(x1, rownames(examplemeteo)[d], as.vector(examplemeteo[d,]),  
+                latitude = 41.82592, elevation = 100, slope=0, aspect=0) 
 
 #Simulate water balance for one day only (Sperry mode)
 control <- defaultControl("Sperry")
 x2 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
-sd2 <-spwb_day(x2, rownames(examplemeteo)[d],
-              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
-              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
-              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
-              latitude = 41.82592, elevation = 100, slope=0, aspect=0,
-              prec = examplemeteo$Precipitation[d])
+sd2 <-spwb_day(x2, rownames(examplemeteo)[d], as.vector(examplemeteo[d,]),
+              latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 
 #Plot plant transpiration (see function 'plot.swb.day()')
 plot(sd2)
@@ -156,23 +124,15 @@ plot(sd2)
 #Simulate water balance for one day only (Cochard mode)
 control <- defaultControl("Cochard")
 x3 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
-sd3 <-spwb_day(x3, rownames(examplemeteo)[d],
-              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
-              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
-              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
-              latitude = 41.82592, elevation = 100, slope=0, aspect=0,
-              prec = examplemeteo$Precipitation[d])
+sd3 <-spwb_day(x3, rownames(examplemeteo)[d], as.vector(examplemeteo[d,]),
+              latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 
 
 #Simulate water and carbon balance for one day only (Granier mode)
 control <- defaultControl("Granier")
 x4  <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
-sd4 <- growth_day(x4, rownames(examplemeteo)[d],
-                examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
-                examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
-                examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
-                latitude = 41.82592, elevation = 100, slope=0, aspect=0,
-                prec = examplemeteo$Precipitation[d])
+sd4 <- growth_day(x4, rownames(examplemeteo)[d], as.vector(examplemeteo[d,]),
+                latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 
 }
 \references{

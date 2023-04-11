@@ -5,7 +5,6 @@
 #endif
 using namespace Rcpp;
 
-List growthDay(List x, CharacterVector date, double tmin, double tmax, 
-               double rhmin, double rhmax, double rad, double wind, 
+List growthDay(List x, CharacterVector date, NumericVector meteovec, 
                double latitude, double elevation, double slope, double aspect,  
-               double prec, double runon=0.0, bool modifyInput = true);
+               double runon=0.0, bool modifyInput = true);

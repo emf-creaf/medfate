@@ -788,8 +788,8 @@ mortality_dailyProbability <- function(basalMortalityRate, stressValue, stressTh
 }
 
 #' @rdname spwb_day
-growth_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, CO2 = NA_real_, runon = 0.0, modifyInput = TRUE) {
-    .Call(`_medfate_growthDay`, x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, CO2, runon, modifyInput)
+growth_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runon = 0.0, modifyInput = TRUE) {
+    .Call(`_medfate_growthDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, modifyInput)
 }
 
 #' Forest growth
@@ -810,6 +810,7 @@ growth_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, e
 #'     \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
 #'     \item{\code{WindSpeed}: Above-canopy wind speed (in m/s). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
 #'     \item{\code{CO2}: Atmospheric (abovecanopy) CO2 concentration (in ppm). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
+#'     \item{\code{Patm}: Atmospheric pressure (in kPa). This column may not exist, or can be left with \code{NA} values. In both cases, a value is estimated from elevation.}
 #'   }
 #' @param latitude Latitude (in degrees).
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
@@ -2754,14 +2755,9 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
 #' 
 #' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.
 #' @param date Date as string "yyyy-mm-dd".
-#' @param tmin,tmax Minimum and maximum temperature (in degrees Celsius).
-#' @param rhmin,rhmax Minimum and maximum relative humidity (in percent).
-#' @param rad Solar radiation (in MJ/m2/day).
-#' @param wind Wind speed (in m/s).
-#' @param prec Precipitation (in mm).
+#' @param meteovec A named numerical vector with weather data (see variables in \code{\link{spwb}}).
 #' @param latitude Latitude (in degrees).
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
-#' @param CO2 Atmospheric CO2 concentration (in ppm). If missing, default value is drawn from control parameter 'defaultCO2' in \code{x}.
 #' @param runon Surface water amount running on the target area from upslope (in mm).
 #' @param modifyInput Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.
 #' 
@@ -2846,25 +2842,17 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
 #' # Day to be simulated
 #' d <- 100
 #' 
-#' #Simulate water balance one day only (Granier)
+#' #Simulate water balance one day only (Granier mode)
 #' examplesoil <- soil(defaultSoilParams(4))
 #' x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-#' sd1 <- spwb_day(x1, rownames(examplemeteo)[d],  
-#'                 examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
-#'                 examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
-#'                 examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
-#'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0,
-#'                 prec = examplemeteo$Precipitation[d]) 
+#' sd1 <- spwb_day(x1, rownames(examplemeteo)[d], as.vector(examplemeteo[d,]),  
+#'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0) 
 #' 
 #' #Simulate water balance for one day only (Sperry mode)
 #' control <- defaultControl("Sperry")
 #' x2 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
-#' sd2 <-spwb_day(x2, rownames(examplemeteo)[d],
-#'               examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
-#'               examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
-#'               examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
-#'               latitude = 41.82592, elevation = 100, slope=0, aspect=0,
-#'               prec = examplemeteo$Precipitation[d])
+#' sd2 <-spwb_day(x2, rownames(examplemeteo)[d], as.vector(examplemeteo[d,]),
+#'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 #' 
 #' #Plot plant transpiration (see function 'plot.swb.day()')
 #' plot(sd2)
@@ -2872,27 +2860,19 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
 #' #Simulate water balance for one day only (Cochard mode)
 #' control <- defaultControl("Cochard")
 #' x3 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
-#' sd3 <-spwb_day(x3, rownames(examplemeteo)[d],
-#'               examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
-#'               examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
-#'               examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
-#'               latitude = 41.82592, elevation = 100, slope=0, aspect=0,
-#'               prec = examplemeteo$Precipitation[d])
+#' sd3 <-spwb_day(x3, rownames(examplemeteo)[d], as.vector(examplemeteo[d,]),
+#'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 #' 
 #' 
 #' #Simulate water and carbon balance for one day only (Granier mode)
 #' control <- defaultControl("Granier")
 #' x4  <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
-#' sd4 <- growth_day(x4, rownames(examplemeteo)[d],
-#'                 examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
-#'                 examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
-#'                 examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
-#'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0,
-#'                 prec = examplemeteo$Precipitation[d])
+#' sd4 <- growth_day(x4, rownames(examplemeteo)[d], as.vector(examplemeteo[d,]),
+#'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 #' 
 #' @name spwb_day
-spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, CO2 = NA_real_, runon = 0.0, modifyInput = TRUE) {
-    .Call(`_medfate_spwbDay`, x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, CO2, runon, modifyInput)
+spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runon = 0.0, modifyInput = TRUE) {
+    .Call(`_medfate_spwbDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, modifyInput)
 }
 
 #' Soil-plant water balance
@@ -2916,6 +2896,7 @@ spwb_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, ele
 #'     \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
 #'     \item{\code{WindSpeed}: Above-canopy wind speed (in m/s). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
 #'     \item{\code{CO2}: Atmospheric (above-canopy) CO2 concentration (in ppm). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
+#'     \item{\code{Patm}: Atmospheric pressure (in kPa). This column may not exist, or can be left with \code{NA} values. In both cases, a value is estimated from elevation.}
 #'   }
 #' @param latitude Latitude (in degrees).
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).

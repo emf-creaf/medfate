@@ -74,7 +74,11 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   double rad = meteovec["rad"];
   double wind = meteovec["wind"];
   double Catm = meteovec["Catm"];
-
+  double Patm = meteovec["Patm"];
+  
+  //Atmospheric pressure (if missing)
+  if(NumericVector::is_na(Patm)) Patm = meteoland::utils_atmosphericPressure(elevation);
+  
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
@@ -172,8 +176,6 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   //Step in seconds
   double tstep = 86400.0/((double) ntimesteps);
 
-  //Atmospheric pressure
-  double Patm = meteoland::utils_atmosphericPressure(elevation);
   
  
   //Daily average water vapor pressure at the atmosphere (kPa)

@@ -29,14 +29,13 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL, List x,
                              NumericVector initialPlantContent, NumericVector initialSoilContent, double initialSnowContent,
                              String transpirationMode);
 
-List spwbDay(List x, CharacterVector date, double tmin, double tmax, 
-             double rhmin, double rhmax, double rad, double wind, 
+List spwbDay(List x, CharacterVector date, NumericVector meteovec,
              double latitude, double elevation, double slope, double aspect,  
-             double prec, double CO2 = NA_REAL, double runon=0.0, bool modifyInput = true);
-List spwbDay1(List x, NumericVector meteovec, 
-              double elevation, double slope, double aspect, 
-              double runon=0.0, bool verbose=false);
-List spwbDay2(List x, NumericVector meteovec, 
-              double latitude, double elevation, double slope, double aspect,
-              double solarConstant, double delta, 
-              double runon=0.0, bool verbose = false);
+             double runon=0.0, bool modifyInput = true);
+List spwbDay_basic(List x, NumericVector meteovec, 
+                   double elevation, double slope, double aspect, 
+                   double runon=0.0, bool verbose=false);
+List spwbDay_advanced(List x, NumericVector meteovec, 
+                      double latitude, double elevation, double slope, double aspect,
+                      double solarConstant, double delta, 
+                      double runon=0.0, bool verbose = false);

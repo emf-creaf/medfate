@@ -204,11 +204,8 @@ test_that("Can produce all advanced spwb_day plots",{
     expect_s3_class(x2, "spwbInput")
     d1 = d[1]
     sd2<-spwb_day(x2, rownames(examplemeteo)[d1],
-                  examplemeteo$MinTemperature[d1], examplemeteo$MaxTemperature[d1], 
-                  examplemeteo$MinRelativeHumidity[d1], examplemeteo$MaxRelativeHumidity[d1], 
-                  examplemeteo$Radiation[d1], examplemeteo$WindSpeed[d1], 
-                  latitude = 41.82592, elevation = 100, slope=0, aspect=0,
-                  prec = examplemeteo$Precipitation[d1])
+                  as.vector(examplemeteo[d1,]), 
+                  latitude = 41.82592, elevation = 100, slope=0, aspect=0)
     expect_s3_class(sd2, "spwb_day")
     expect_type(fireHazard(sd2, SpParamsMED, exampleforestMED), "double")
     expect_s3_class(plot(sd2, "LeafPsi"), "ggplot")
@@ -368,11 +365,8 @@ test_that("Can produce all advanced growth_day plots",{
     expect_s3_class(x2, "growthInput")
     d1 <- d[1]
     sd2<-growth_day(x2, rownames(examplemeteo)[d1],
-                    examplemeteo$MinTemperature[d1], examplemeteo$MaxTemperature[d1], 
-                    examplemeteo$MinRelativeHumidity[d1], examplemeteo$MaxRelativeHumidity[d1], 
-                    examplemeteo$Radiation[d1], examplemeteo$WindSpeed[d1], 
-                    latitude = 41.82592, elevation = 100, slope=0, aspect=0,
-                    prec = examplemeteo$Precipitation[d1])
+                    as.vector(examplemeteo[d1,]), 
+                    latitude = 41.82592, elevation = 100, slope=0, aspect=0)
     expect_s3_class(sd2, "growth_day")
     expect_type(fireHazard(sd2, SpParamsMED, exampleforestMED), "double")
     expect_s3_class(plot(sd2, "GrossPhotosynthesis"), "ggplot")

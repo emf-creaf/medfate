@@ -68,13 +68,16 @@ List transpirationBasic(List x, NumericVector meteovec,
   double tmax = meteovec["tmax"];
   double tmin = meteovec["tmin"];
   double Catm = meteovec["Catm"];
+  double Patm = meteovec["Patm"];
+  
+  //Atmospheric pressure (if missing)
+  if(NumericVector::is_na(Patm)) Patm = meteoland::utils_atmosphericPressure(elevation);
+  
   //Daily average water vapor pressure at the atmosphere (kPa)
   double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
   double vpd = std::max(0.0, meteoland::utils_saturationVP((tmin+tmax)/2.0) - vpatm);
     
-  //Atmospheric pressure (kPa)
-  double Patm = meteoland::utils_atmosphericPressure(elevation);
-  
+    
   //Vegetation input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);

@@ -396,11 +396,11 @@ List growthDayInner(List x, NumericVector meteovec,
   //Soil-plant water balance
   List spwbOut;
   if(transpirationMode=="Granier") {
-    spwbOut = spwbDay1(x, meteovec, 
-                       elevation, 
+    spwbOut = spwbDay_basic(x, meteovec, 
+                       elevation, slope, aspect,
                        runon, verbose); 
   } else {
-    spwbOut = spwbDay2(x, meteovec, 
+    spwbOut = spwbDay_advanced(x, meteovec, 
                        latitude, elevation, slope, aspect,
                        solarConstant, delta, 
                        runon, verbose);
@@ -1407,17 +1407,29 @@ List growthDayInner(List x, NumericVector meteovec,
 
 //' @rdname spwb_day
 // [[Rcpp::export("growth_day")]]
-List growthDay(List x, CharacterVector date, double tmin, double tmax, double rhmin, 
-               double rhmax, double rad, double wind, 
+List growthDay(List x, CharacterVector date, NumericVector meteovec, 
                double latitude, double elevation, double slope, double aspect,  
-               double prec, double CO2 = NA_REAL, double runon=0.0, bool modifyInput = true) {
+               double runon=0.0, bool modifyInput = true) {
+  
+  double tmin = meteovec["MinTemperature"];
+  double tmax = meteovec["MaxTemperature"];
+  double rhmin = meteovec["MinRelativeHumidity"];
+  double rhmax = meteovec["MaxRelativeHumidity"];
+  double rad = meteovec["Radiation"];
+  double prec = meteovec["Precipitation"];
+  double wind = NA_REAL;
+  if(meteovec.containsElementNamed("WindSpeed")) wind = meteovec["WindSpeed"];
+  double Catm = NA_REAL; 
+  if(meteovec.containsElementNamed("CO2")) Catm = meteovec["CO2"];
+  double Patm = NA_REAL; 
+  if(meteovec.containsElementNamed("Patm")) Patm = meteovec["Patm"];
+  
   //Control parameters
   List control = x["control"];
   bool verbose = control["verbose"];
   
   bool leafPhenology = control["leafPhenology"];
   String transpirationMode = control["transpirationMode"];
-  double Catm = CO2;
   if(NumericVector::is_na(Catm)) Catm = control["defaultCO2"];
   
   //Will not modify input x 
@@ -1450,7 +1462,7 @@ List growthDay(List x, CharacterVector date, double tmin, double tmax, double rh
   }
   
   double er = erFactor(doy, pet, prec);
-  NumericVector meteovec = NumericVector::create(
+  NumericVector meteovec_inner = NumericVector::create(
     Named("tday") = tday,
     Named("tmin") = tmin, 
     Named("tmax") = tmax,
@@ -1463,13 +1475,13 @@ List growthDay(List x, CharacterVector date, double tmin, double tmax, double rh
     Named("rad") = rad, 
     Named("wind") = wind, 
     Named("Catm") = Catm,
+    Named("Patm") = Patm,
     Named("pet") = pet,
     Named("er") = er);
-  List s = growthDayInner(x, meteovec, 
+  List s = growthDayInner(x, meteovec_inner, 
                      latitude, elevation, slope, aspect,
                      solarConstant, delta, 
                      runon, verbose);
-  // Rcout<<"hola4\n";
   return(s);
 }
 
@@ -1576,6 +1588,7 @@ void checkgrowthInput(List x, String transpirationMode, String soilFunctions) {
 //'     \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
 //'     \item{\code{WindSpeed}: Above-canopy wind speed (in m/s). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
 //'     \item{\code{CO2}: Atmospheric (abovecanopy) CO2 concentration (in ppm). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
+//'     \item{\code{Patm}: Atmospheric pressure (in kPa). This column may not exist, or can be left with \code{NA} values. In both cases, a value is estimated from elevation.}
 //'   }
 //' @param latitude Latitude (in degrees).
 //' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
@@ -1768,7 +1781,13 @@ List growth(List x, DataFrame meteo, double latitude,
     }
     if(any(is_na(CO2))) stop("Missing values in 'CO2'");
   }
-  
+  NumericVector Patm(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("Patm")) {
+    Patm = meteo["Patm"];
+    if(verbose) {
+      Rcout<<"Patm taken from input column 'Patm'\n";
+    }
+  }
   IntegerVector DOY, JulianDay;
   NumericVector Photoperiod;
   bool doy_input = false, photoperiod_input = false, julianday_input = false;
@@ -1971,16 +1990,18 @@ List growth(List x, DataFrame meteo, double latitude,
     
     //2. Water balance and photosynthesis
     if(transpirationMode=="Granier") {
-      NumericVector meteovec = NumericVector::create(
+      NumericVector meteovec_inner = NumericVector::create(
         Named("tday") = tday, Named("tmax") = tmax, Named("tmin") = tmin,
-        Named("prec") = Precipitation[i], Named("rhmin") = rhmin, Named("rhmax") = rhmax,
+        Named("prec") = Precipitation[i], 
+        Named("rhmin") = rhmin, Named("rhmax") = rhmax,
         Named("rad") = rad, 
         Named("wind") = wind, 
         Named("pet") = PET[i],
-        Named("Catm") = Catm,
-        Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
+        Named("Catm") = Catm);
+      meteovec_inner.push_back(Patm[i], "Patm");
+      meteovec_inner.push_back(erFactor(DOY[i], PET[i], Precipitation[i]), "er");
       try{
-        s = growthDayInner(x, meteovec,  
+        s = growthDayInner(x, meteovec_inner,  
                            latitude, elevation, slope, aspect,
                            solarConstant, delta, 
                            0.0, false); //No Runon in simulations for a single cell
@@ -2010,6 +2031,7 @@ List growth(List x, DataFrame meteo, double latitude,
         Named("rad") = rad, 
         Named("wind") = wind, 
         Named("Catm") = Catm,
+        Named("Patm") = Patm[i],
         Named("pet") = PET[i],
         Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
       try{
