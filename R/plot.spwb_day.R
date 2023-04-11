@@ -87,12 +87,10 @@
 #' #Simulate one day only
 #' x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 #' d <- 100
-#' sd2 <- spwb_day(x2, rownames(examplemeteo)[d], 
-#'               examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
-#'               examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
-#'               examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
-#'               latitude = 41.82592, elevation = 100, 
-#'               slope= 0, aspect = 0, prec = examplemeteo$Precipitation[d])
+#' date <- rownames(examplemeteo)[d]
+#' meteovec <- unlist(examplemeteo[d,])
+#' sd2 <- spwb_day(x2, date, meteovec,
+#'               latitude = 41.82592, elevation = 100, slope= 0, aspect = 0)
 #' 
 #' #Display transpiration for subdaily steps
 #' plot(sd2, "PlantTranspiration")

@@ -1113,6 +1113,8 @@ List transpirationSperry(List x, DataFrame meteo, int day,
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
   NumericVector CO2(Precipitation.length(), NA_REAL);
   if(meteo.containsElementNamed("CO2")) CO2 = meteo["CO2"];
+  NumericVector Patm(MinTemperature.length(), NA_REAL);
+  if(meteo.containsElementNamed("Patm")) Patm = meteo["Patm"];
   
   CharacterVector dateStrings = meteo.attr("row.names");
   std::string c = as<std::string>(dateStrings[day-1]);
@@ -1149,7 +1151,8 @@ List transpirationSperry(List x, DataFrame meteo, int day,
     Named("rhmax") = rhmax, 
     Named("rad") = rad, 
     Named("wind") = wind, 
-    Named("Catm") = Catm);
+    Named("Catm") = Catm,
+    Named("Patm") = Patm[day-1]);
   return(transpirationAdvanced(x, meteovec,
                      latitude, elevation, slope, aspect,
                      solarConstant, delta,
@@ -1183,6 +1186,8 @@ List transpirationCochard(List x, DataFrame meteo, int day,
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
   NumericVector CO2(Precipitation.length(), NA_REAL);
   if(meteo.containsElementNamed("CO2")) CO2 = meteo["CO2"];
+  NumericVector Patm(MinTemperature.length(), NA_REAL);
+  if(meteo.containsElementNamed("Patm")) Patm = meteo["Patm"];
   
   CharacterVector dateStrings = meteo.attr("row.names");
   std::string c = as<std::string>(dateStrings[day-1]);
@@ -1219,7 +1224,8 @@ List transpirationCochard(List x, DataFrame meteo, int day,
     Named("rhmax") = rhmax, 
     Named("rad") = rad, 
     Named("wind") = wind, 
-    Named("Catm") = Catm);
+    Named("Catm") = Catm,
+    Named("Patm") = Patm[day-1]);
   return(transpirationAdvanced(x, meteovec,
                              latitude, elevation, slope, aspect,
                              solarConstant, delta,

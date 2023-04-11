@@ -686,6 +686,8 @@ List transpirationGranier(List x, DataFrame meteo, int day,
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
   NumericVector CO2(MinTemperature.length(), NA_REAL);
   if(meteo.containsElementNamed("CO2")) CO2 = meteo["CO2"];
+  NumericVector Patm(MinTemperature.length(), NA_REAL);
+  if(meteo.containsElementNamed("Patm")) Patm = meteo["Patm"];
   
   if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
   double latrad = latitude * (M_PI/180.0);
@@ -706,7 +708,7 @@ List transpirationGranier(List x, DataFrame meteo, int day,
   double rad = Radiation[day-1];
   double wind = WindSpeed[day-1];
   double Catm = CO2[day-1];
-  
+
   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, 
                              tmin, tmax, rhmin, rhmax, rad, wind);
   
@@ -718,7 +720,8 @@ List transpirationGranier(List x, DataFrame meteo, int day,
     Named("rhmax") = rhmax,
     Named("tday") = tday, 
     Named("pet") = pet,
-    Named("Catm") = Catm);
+    Named("Catm") = Catm,
+    Named("Patm") = Patm[day-1]);
   return(transpirationBasic(x, meteovec, elevation, modifyInput));
 } 
 
