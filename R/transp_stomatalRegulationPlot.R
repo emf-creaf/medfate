@@ -1,8 +1,8 @@
 #' @rdname transp_stomatalregulation
 #' 
 #' @param x An object of class \code{\link{spwbInput}} built using the 'Sperry' transpiration mode.
-#' @param meteo A data frame with daily meteorological data series.
-#' @param day An integer to identify a day within \code{meteo}.
+#' @param meteo A data frame with daily meteorological data series (see \code{\link{spwb}}).
+#' @param day An integer to identify a day (a row) within \code{meteo}.
 #' @param timestep An integer between 1 and \code{ndailysteps} specified in \code{x} (see \code{\link{defaultControl}}).
 #' @param latitude Latitude (in degrees).
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).

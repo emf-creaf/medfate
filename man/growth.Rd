@@ -17,18 +17,7 @@ growth(
 \arguments{
 \item{x}{An object of class \code{\link{growthInput}}.}
 
-\item{meteo}{A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}).The following columns are required:
-\itemize{
-  \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
-  \item{\code{MaxTemperature}: Maximum temperature (in degrees Celsius).}
-  \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
-  \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
-  \item{\code{Precipitation}: Precipitation (in mm).}
-  \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
-  \item{\code{WindSpeed}: Above-canopy wind speed (in m/s). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
-  \item{\code{CO2}: Atmospheric (abovecanopy) CO2 concentration (in ppm). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
-  \item{\code{Patm}: Atmospheric pressure (in kPa). This column may not exist, or can be left with \code{NA} values. In both cases, a value is estimated from elevation.}
-}}
+\item{meteo}{A data frame with daily meteorological data series (see \code{\link{spwb}}).}
 
 \item{latitude}{Latitude (in degrees).}
 

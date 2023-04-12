@@ -34,7 +34,7 @@ spwb_day(
 
 \item{date}{Date as string "yyyy-mm-dd".}
 
-\item{meteovec}{A named numerical vector with weather data (see variables in \code{\link{spwb}}).}
+\item{meteovec}{A named numerical vector with weather data. See variable names in parameter \code{meteo} of \code{\link{spwb}}.}
 
 \item{latitude}{Latitude (in degrees).}
 

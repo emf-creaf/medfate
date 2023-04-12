@@ -50,19 +50,9 @@ transp_transpirationGranier(
 \arguments{
 \item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}, built using the 'Granier', 'Sperry' or 'Cochard' transpiration modes.}
 
-\item{meteo}{A data frame with daily meteorological data series:
-\itemize{
-  \item{\code{DOY}: Day of the year (Julian day).}
-  \item{\code{Precipitation}: Precipitation (in mm).}
-  \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
-  \item{\code{MaxTemperature}: Maximum temperature (in degrees Celsius).}
-  \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
-  \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
-  \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
-  \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
-}}
+\item{meteo}{A data frame with daily meteorological data series (see \code{\link{spwb}}).}
 
-\item{day}{An integer to identify a day within \code{meteo}.}
+\item{day}{An integer to identify a day (row) within the \code{meteo} data frame.}
 
 \item{latitude}{Latitude (in degrees).}
 

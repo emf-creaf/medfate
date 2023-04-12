@@ -800,18 +800,7 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, ru
 #' during a period specified in the input climatic data. 
 #' 
 #' @param x An object of class \code{\link{growthInput}}.
-#' @param meteo A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}).The following columns are required:
-#'   \itemize{
-#'     \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
-#'     \item{\code{MaxTemperature}: Maximum temperature (in degrees Celsius).}
-#'     \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
-#'     \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
-#'     \item{\code{Precipitation}: Precipitation (in mm).}
-#'     \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
-#'     \item{\code{WindSpeed}: Above-canopy wind speed (in m/s). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
-#'     \item{\code{CO2}: Atmospheric (abovecanopy) CO2 concentration (in ppm). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
-#'     \item{\code{Patm}: Atmospheric pressure (in kPa). This column may not exist, or can be left with \code{NA} values. In both cases, a value is estimated from elevation.}
-#'   }
+#' @param meteo A data frame with daily meteorological data series (see \code{\link{spwb}}).
 #' @param latitude Latitude (in degrees).
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
 #' @param CO2ByYear A named numeric vector with years as names and atmospheric CO2 concentration (in ppm) as values. Used to specify annual changes in CO2 concentration along the simulation (as an alternative to specifying daily values in \code{meteo}).
@@ -2755,7 +2744,7 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
 #' 
 #' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.
 #' @param date Date as string "yyyy-mm-dd".
-#' @param meteovec A named numerical vector with weather data (see variables in \code{\link{spwb}}).
+#' @param meteovec A named numerical vector with weather data. See variable names in parameter \code{meteo} of \code{\link{spwb}}.
 #' @param latitude Latitude (in degrees).
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
 #' @param runon Surface water amount running on the target area from upslope (in mm).
@@ -2888,7 +2877,7 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #' 
 #' @param x An object of class \code{\link{spwbInput}}.
 #' @param meteo A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}). 
-#' The following columns are required:
+#' The following columns are required and cannot have missing values:
 #'   \itemize{
 #'     \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
 #'     \item{\code{MaxTemperature}: Maximum temperature (in degrees Celsius).}
@@ -2896,6 +2885,9 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #'     \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
 #'     \item{\code{Precipitation}: Precipitation (in mm).}
 #'     \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
+#'   }
+#' The following columns are optional:
+#'   \itemize{
 #'     \item{\code{WindSpeed}: Above-canopy wind speed (in m/s). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
 #'     \item{\code{CO2}: Atmospheric (above-canopy) CO2 concentration (in ppm). This column may not exist, or can be left with \code{NA} values. In both cases simulations will assume a constant value specified in \code{\link{defaultControl}}.}
 #'     \item{\code{Patm}: Atmospheric pressure (in kPa). This column may not exist, or can be left with \code{NA} values. In both cases, a value is estimated from elevation.}
@@ -3221,18 +3213,8 @@ transp_transpirationCochard <- function(x, meteo, day, latitude, elevation, slop
 #' }
 #' 
 #' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}, built using the 'Granier', 'Sperry' or 'Cochard' transpiration modes.
-#' @param meteo A data frame with daily meteorological data series:
-#'   \itemize{
-#'     \item{\code{DOY}: Day of the year (Julian day).}
-#'     \item{\code{Precipitation}: Precipitation (in mm).}
-#'     \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
-#'     \item{\code{MaxTemperature}: Maximum temperature (in degrees Celsius).}
-#'     \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
-#'     \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
-#'     \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
-#'     \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
-#'   }
-#' @param day An integer to identify a day within \code{meteo}.
+#' @param meteo A data frame with daily meteorological data series (see \code{\link{spwb}}).
+#' @param day An integer to identify a day (row) within the \code{meteo} data frame.
 #' @param latitude Latitude (in degrees).
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).
 #' @param modifyInput Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.

@@ -35,9 +35,9 @@ transp_stomatalRegulationPlot(
 
 \item{x}{An object of class \code{\link{spwbInput}} built using the 'Sperry' transpiration mode.}
 
-\item{meteo}{A data frame with daily meteorological data series.}
+\item{meteo}{A data frame with daily meteorological data series (see \code{\link{spwb}}).}
 
-\item{day}{An integer to identify a day within \code{meteo}.}
+\item{day}{An integer to identify a day (a row) within \code{meteo}.}
 
 \item{timestep}{An integer between 1 and \code{ndailysteps} specified in \code{x} (see \code{\link{defaultControl}}).}
 

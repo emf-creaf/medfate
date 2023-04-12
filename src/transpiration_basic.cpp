@@ -489,18 +489,8 @@ List transpirationBasic(List x, NumericVector meteovec,
 //' }
 //' 
 //' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}, built using the 'Granier', 'Sperry' or 'Cochard' transpiration modes.
-//' @param meteo A data frame with daily meteorological data series:
-//'   \itemize{
-//'     \item{\code{DOY}: Day of the year (Julian day).}
-//'     \item{\code{Precipitation}: Precipitation (in mm).}
-//'     \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
-//'     \item{\code{MaxTemperature}: Maximum temperature (in degrees Celsius).}
-//'     \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
-//'     \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
-//'     \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
-//'     \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
-//'   }
-//' @param day An integer to identify a day within \code{meteo}.
+//' @param meteo A data frame with daily meteorological data series (see \code{\link{spwb}}).
+//' @param day An integer to identify a day (row) within the \code{meteo} data frame.
 //' @param latitude Latitude (in degrees).
 //' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).
 //' @param modifyInput Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.
