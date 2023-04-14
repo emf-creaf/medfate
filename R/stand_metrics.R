@@ -104,3 +104,14 @@ stand_hartBeckingIndex<-function(x, minDBH = 7.5) {
 stand_quadraticMeanTreeDiameter<-function(x, minDBH = 7.5) {
   return(.quadraticMeanTreeDiameter(n = x$treeData$N, dbh = x$treeData$DBH, minDBH = 7.5))
 }
+
+#' @rdname stand_values
+stand_dominantTreeSpecies <-function(x, SpParams) {
+  s<-species_basalArea(x, SpParams)
+  s<-s[!is.na(s)]
+  s<-s[s>0.0]
+  if(length(s)>0) {
+    return(names(s)[which.max(s)])
+  }
+  return(NA)
+}

@@ -11,6 +11,7 @@
 \alias{stand_dominantTreeHeight}
 \alias{stand_hartBeckingIndex}
 \alias{stand_quadraticMeanTreeDiameter}
+\alias{stand_dominantTreeSpecies}
 \title{Stand values}
 \usage{
 stand_basalArea(x, minDBH = 7.5)
@@ -30,6 +31,8 @@ stand_dominantTreeHeight(x, minDBH = 7.5)
 stand_hartBeckingIndex(x, minDBH = 7.5)
 
 stand_quadraticMeanTreeDiameter(x, minDBH = 7.5)
+
+stand_dominantTreeSpecies(x, SpParams)
 }
 \arguments{
 \item{x}{An object of class \code{\link{forest}}.}
