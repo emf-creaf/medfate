@@ -17,7 +17,6 @@ rm(SpParamsUS)
 
 
 # Initial table
-# TO DO: UPDATE TREE FB ALLOMETRIES IN INITIALSPPARAMSMED!
 SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/InitialSpParamsMED.xlsx",
                                               sheet="InitialSpParamsMED", na = "NA"), stringsAsFactors=FALSE)
 
