@@ -327,6 +327,7 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
       if(budFormation[j]) {
         // Rcout <<j<< " "<< ltba[j]<< " "<<leafAreaTarget[j];
         leafAreaTarget[j] = SLA[j]*(Afbt[j]*pow(std::min(50.0,DBH[j]), Bfbt[j])*exp(Cfbt[j]*ltba[j]));
+        leafAreaTarget[j] = leafAreaTarget[j] * exp(-0.0001*N[j]);//Correct for high density packing
         LAI_live[j] = leafAreaTarget[j]*N[j]/10000.0;
         // Rcout << " "<< leafAreaTarget[j]<<"\n";
       }

@@ -262,7 +262,7 @@ NumericVector treeFoliarBiomass(IntegerVector SP, NumericVector N, NumericVector
   int ncoh = N.size();
   NumericVector lb(ncoh);
   for(int i=0;i<ncoh;i++) {
-    lb[i] = ((N[i]/10000)*afbt[i]*pow(std::min(200.0,dbh[i]), bfbt[i])*exp(cfbt[i]*std::min(ltba[i], 200.0)));
+    lb[i] = ((N[i]/10000.0)*afbt[i]*pow(std::min(200.0,dbh[i]), bfbt[i])*exp(cfbt[i]*std::min(ltba[i], 200.0)));
     lb[i] = lb[i] * exp(-0.0001*N[i]);//Correct for high density packing
   }
   if(!NumericVector::is_na(gdd)) {
