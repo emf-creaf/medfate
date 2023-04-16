@@ -36,9 +36,6 @@ NumericVector treeCrownRatio(NumericVector N, NumericVector dbh, NumericVector H
                                 NumericVector Acr, NumericVector B1cr, NumericVector B2cr, NumericVector B3cr,
                                 NumericVector C1cr, NumericVector C2cr);
 
-NumericVector treeFuel(IntegerVector SP, NumericVector N, NumericVector dbh, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true);
-NumericVector shrubFuel(IntegerVector SP, NumericVector Cover, NumericVector H, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true);
-
 NumericVector cohortFuel(List x, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true);
 
 NumericVector cohortCrownRatio(List x, DataFrame SpParams);

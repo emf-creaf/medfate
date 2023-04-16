@@ -110,10 +110,10 @@ summary.forest<-function(object, SpParams, ...) {
   s["Sapling_lai"] <- sum(coh_lai[selSapling], na.rm=TRUE)
   s["Shrub_lai"] <- sum(coh_lai[selShrub], na.rm=TRUE)
 
-  s["Tree_fuel"] <- sum(coh_lai[selTree], na.rm=TRUE)
-  s["Adult_fuel"] <- sum(coh_lai[selAdult], na.rm=TRUE)
-  s["Sapling_fuel"] <- sum(coh_lai[selSapling], na.rm=TRUE)
-  s["Shrub_fuel"] <- sum(coh_lai[selShrub], na.rm=TRUE)
+  s["Tree_fuel"] <- sum(coh_fuel[selTree], na.rm=TRUE)
+  s["Adult_fuel"] <- sum(coh_fuel[selAdult], na.rm=TRUE)
+  s["Sapling_fuel"] <- sum(coh_fuel[selSapling], na.rm=TRUE)
+  s["Shrub_fuel"] <- sum(coh_fuel[selShrub], na.rm=TRUE)
   
   s["Phytovolume"] <- sum(plant_phytovolume(object, SpParams),na.rm=TRUE)
   
