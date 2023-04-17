@@ -573,7 +573,14 @@ List growthDayInner(List x, NumericVector meteovec,
   NumericVector SRsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["SRsapwood"]);
   NumericVector SRfineroot = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["SRfineroot"]);
   NumericVector RSSG = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RSSG"]);
-  NumericVector MortalityBaselineRate = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["MortalityBaselineRate"]);
+
+  //Mortality/regeneration parameters
+  DataFrame paramsMortalityRegeneration = Rcpp::as<Rcpp::DataFrame>(x["paramsMortalityRegeneration"]);
+  NumericVector MortalityBaselineRate = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["MortalityBaselineRate"]);
+  NumericVector RecrTreeDensity = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["RecrTreeDensity"]);
+  NumericVector RecrTreeDBH = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["RecrTreeDBH"]);
+  NumericVector IngrowthTreeDensity = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["IngrowthTreeDensity"]);
+  NumericVector IngrowthTreeDBH = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["IngrowthTreeDBH"]);
   
   //Phenology parameters
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
@@ -1184,15 +1191,22 @@ List growthDayInner(List x, NumericVector meteovec,
         // Update density and increase the number of dead plants
         Ndead_day = std::min(Ndead_day, N[j]);
         double Cdead_day = Cover[j]*(Ndead_day/N[j]);
-        N[j] = N[j] - Ndead_day;
-        N_dead[j] = N_dead[j] + Ndead_day;
         if(cause == "starvation") {
           N_starvation[j] = N_starvation[j] + Ndead_day;
         } else if(cause == "dessication") {
           N_dessication[j] = N_dessication[j] + Ndead_day;
-        // } else if(!isShrub) { // Self-thinning occurring in tree cohorts 
-          // double b_st = log(RecrTreeDensity)
+        } else if(!isShrub) { // Self-thinning occurring in tree cohorts
+          if(DBH[j] < IngrowthTreeDBH[j]) {
+            double b_st = log(RecrTreeDensity[j]/IngrowthTreeDensity[j])/log(RecrTreeDBH[j]/IngrowthTreeDBH[j]);
+            double a_st = IngrowthTreeDensity[j]/pow(IngrowthTreeDBH[j], b_st);
+            double N_st = a_st*pow(DBH[j], b_st);
+            double N_dead_selfthinning = N[j] - std::min(N[j], N_st);
+            // Rcout<< b_st<< " "<< a_st<< " "<< N_st<< " "<< N_dead_selfthinning<<"\n";
+            Ndead_day = Ndead_day + N_dead_selfthinning;
+          }
         }
+        N[j] = N[j] - Ndead_day;
+        N_dead[j] = N_dead[j] + Ndead_day;
         if(isShrub) {
           Cover[j] = std::max(0.0, Cover[j] - Cdead_day);
           Cover_dead[j] = Cover_dead[j] + Cdead_day;
