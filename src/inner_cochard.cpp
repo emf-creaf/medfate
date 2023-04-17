@@ -423,6 +423,7 @@ void calculateRhizoPsi(int c,
 
 // dt - Smallest time step (seconds)
 // opt - Option flag vector
+// [[Rcpp::export("semi_implicit_integration")]]
 void semi_implicit_integration(List network, double dt, NumericVector opt) {
   
   List params = as<Rcpp::List>(network["params"]);

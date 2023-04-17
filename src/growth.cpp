@@ -1190,6 +1190,8 @@ List growthDayInner(List x, NumericVector meteovec,
           N_starvation[j] = N_starvation[j] + Ndead_day;
         } else if(cause == "dessication") {
           N_dessication[j] = N_dessication[j] + Ndead_day;
+        // } else if(!isShrub) { // Self-thinning occurring in tree cohorts 
+          // double b_st = log(RecrTreeDensity)
         }
         if(isShrub) {
           Cover[j] = std::max(0.0, Cover[j] - Cdead_day);
