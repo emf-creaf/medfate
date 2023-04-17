@@ -184,10 +184,16 @@ resprouting <- function(forest, internalMortality, SpParams, control,
   # Copy forest to inherit species and belowground information
   resp_forest <- forest 
   resp_forest$treeData$N <- N_resprouting
-  resp_forest$treeData$DBH <- rep(0.5, n_trees)
-  resp_forest$treeData$Height <- rep(50, n_trees)
+  
+  resp_forest$treeData$DBH <- species_parameter(resp_forest$treeData$Species, SpParams, "RecrTreeDBH")
+  resp_forest$treeData$DBH[is.na(resp_forest$treeData$DBH)] <- control$recrTreeDBH
+  resp_forest$treeData$Height <- species_parameter(resp_forest$treeData$Species, SpParams, "RecrTreeHeight")
+  resp_forest$treeData$Height[is.na(resp_forest$treeData$Height)] <- control$recrTreeHeight
+  
   resp_forest$shrubData$Cover <- Cover_resprouting
-  resp_forest$shrubData$Height <- rep(10, n_shrubs)
+  resp_forest$shrubData$Height <- species_parameter(resp_forest$shrubData$Species, SpParams, "RecrShrubHeight")
+  resp_forest$shrubData$Height[is.na(resp_forest$shrubData$Height)] <- control$recrShrubHeight
+  
   # Trim species with no resprouting
   resp_forest$treeData <- resp_forest$treeData[resp_forest$treeData$N > 0, , drop = FALSE]
   resp_forest$shrubData <- resp_forest$shrubData[resp_forest$shrubData$Cover > 0, , drop = FALSE]

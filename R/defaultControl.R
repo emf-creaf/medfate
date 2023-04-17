@@ -123,9 +123,9 @@
 #'      \item{\code{minTempRecr [= 0]}: Default threshold of minimum average temperature of the coldest month necessary for recruiting from seeds (when species parameter \code{MinTempRecr} is missing).} 
 #'      \item{\code{minMoistureRecr [= 0.3]}: Default threshold of minimum moisture index (annual precipitation over annual ETP) necessary for seed-recruiting (when species parameter \code{MinMoistureRecr} is missing).} 
 #'      \item{\code{minFPARRecr [= 10]}: Default threshold of minimum fraction of PAR (in \%)  reaching the ground necessary for recruiting (when species parameter \code{MinFPARRecr} is missing).} 
-#'      \item{\code{recrTreeHeight [= 620]}: Default height (cm) for seed-recruited trees  (when species parameter \code{RecrTreeHeight} is missing).}
-#'      \item{\code{recrShrubCover [= 1]}: Default cover (\%) for seed-recruited shrubs  (when species parameter \code{RecrShrubCover} is missing).}
-#'      \item{\code{recrShrubHeight [= 25]}: Default height (cm) for seed-recruited shrubs  (when species parameter \code{RecrShrubHeight} is missing).}
+#'      \item{\code{recrTreeHeight [= 620]}: Default height (cm) for recruited trees  (when species parameter \code{RecrTreeHeight} is missing).}
+#'      \item{\code{recrShrubCover [= 1]}: Default cover (\%) for shrubs recruited from seed  (when species parameter \code{RecrShrubCover} is missing).}
+#'      \item{\code{recrShrubHeight [= 25]}: Default height (cm) for recruited shrubs  (when species parameter \code{RecrShrubHeight} is missing).}
 #'      \item{\code{recrTreeZ50 [= 100]}: Default value for Z50 (mm) in seed-recruited trees  (when species parameter \code{RecrZ50} is missing).}
 #'      \item{\code{recrShrubZ50 [= 50]}: Default value for Z50 (mm) in seed-recruited shrubs  (when species parameter \code{RecrZ50} is missing).}
 #'      \item{\code{recrTreeZ95 [= 1000]}: Default value for Z95 (mm) in seed-recruited trees  (when species parameter \code{RecrZ50} is missing).}
