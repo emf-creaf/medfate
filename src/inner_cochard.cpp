@@ -338,6 +338,7 @@ List initCochardNetwork(int c, NumericVector LAIphe,
 }
 
 // Initializes network for all plant cohorts in x
+// [[Rcpp::export("initCochardNetworks")]]
 List initCochardNetworks(List x) {
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
@@ -364,6 +365,7 @@ List initCochardNetworks(List x) {
                                      VCroot_kmax(c,_), VGrhizo_kmax(c,_),
                                      psiSoil, VG_n, VG_alpha);
   }
+  networks.attr("names") = above.attr("row.names");
   return(networks);
 }
 
