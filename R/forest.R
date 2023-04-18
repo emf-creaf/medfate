@@ -91,8 +91,12 @@ summary.forest<-function(object, SpParams, ...) {
   coh_lai <- plant_LAI(object, SpParams)
   coh_fuel <- plant_fuel(object, SpParams)
   
+  coh_ba <- plant_basalArea(object, SpParams)
+  
   s <- list()
-  s["BA"] <- stand_basalArea(object)
+  s["Tree_BA"] <- sum(coh_ba[selTree], na.rm=TRUE)
+  s["Adult_BA"] <- sum(coh_ba[selAdult], na.rm=TRUE)
+  s["Sapling_BA"] <- sum(coh_ba[selSapling], na.rm=TRUE)
   
   s["Tree_density"] <- sum(coh_N[selTree], na.rm=TRUE)
   s["Adult_density"] <- sum(coh_N[selAdult], na.rm=TRUE)
@@ -125,7 +129,8 @@ summary.forest<-function(object, SpParams, ...) {
 
 #' @rdname forest
 print.summary.forest<-function(x, digits=getOption("digits"),...) {
-  cat(paste("Tree BA (m2/ha):", round(x[["BA"]],digits),"\n"))
+  cat(paste("Tree BA (m2/ha):", round(x[["Tree_BA"]],digits)," adult trees:", round(x[["Adult_BA"]], digits), 
+            " saplings:", round(x[["Sapling_BA"]], digits),"\n"))
   cat(paste("Density (ind/ha) adult trees:", round(x[["Adult_density"]], digits), 
             " saplings:", round(x[["Sapling_density"]], digits), 
             " shrubs (estimated):", round(x[["Shrub_density"]],digits),"\n"))
