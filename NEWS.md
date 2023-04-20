@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 3.0.1
+- Herbaceous information in summary.forest
+
 # Version 3.0.0
 - Leaf area limited by allometries
 - Functions 'growthInput()' and 'spwbInput()' no longer visible at the user level

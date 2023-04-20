@@ -471,7 +471,7 @@ NumericVector shrubLAI(IntegerVector SP, NumericVector Cover, NumericVector H, D
 
 // [[Rcpp::export("herb_LAI")]]
 double herbLAI(double herbCover, double herbHeight){
-  return(herbFoliarBiomass( herbCover,  herbHeight)*9.0); // SLA = 9 m2/kg from Brachypodium retusum in BROT2
+  return(std::min(2.0,herbFoliarBiomass(herbCover, herbHeight)*9.0)); // SLA = 9 m2/kg from Brachypodium retusum in BROT2
 }
 
 
