@@ -2,8 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
-# Version 3.0.1
+# Version 3.1.0
 - Herbaceous information in summary.forest
+- Herbaceous transpiration added to the water balance
 
 # Version 3.0.0
 - Leaf area limited by allometries

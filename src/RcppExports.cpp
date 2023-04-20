@@ -2294,7 +2294,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // PARground
-NumericVector PARground(List x, DataFrame SpParams, double gdd);
+double PARground(List x, DataFrame SpParams, double gdd);
 RcppExport SEXP _medfate_PARground(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -2321,7 +2321,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // SWRground
-NumericVector SWRground(List x, DataFrame SpParams, double gdd);
+double SWRground(List x, DataFrame SpParams, double gdd);
 RcppExport SEXP _medfate_SWRground(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

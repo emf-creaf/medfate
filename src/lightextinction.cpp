@@ -200,9 +200,24 @@ NumericVector parheight(NumericVector z, List x, DataFrame SpParams, double gdd 
 
 //' @rdname light
 // [[Rcpp::export("light_PARground")]]
-NumericVector PARground(List x, DataFrame SpParams, double gdd = NA_REAL) {
-  return(parheight(NumericVector::create(0.0), x, SpParams, gdd));
+double PARground(List x, DataFrame SpParams, double gdd = NA_REAL) {
+  DataFrame above = forest2aboveground(x, SpParams, gdd, false);
+  NumericVector LAIphe = above["LAI_expanded"];
+  NumericVector LAIdead = above["LAI_dead"];
+  IntegerVector SP = above["SP"];
+  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true);
+  int numCohorts = LAIphe.size();
+  double s = 0.0;
+  for(int c=0;c<numCohorts;c++) {
+    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
+  }
+  //Herb layer effects on light extinction and interception
+  s += 0.5*herbLAI(x["herbCover"], x["herbHeight"]);
+  //Percentage of irradiance reaching the ground
+  double LgroundPAR = 100.0*exp((-1.0)*s);
+  return(LgroundPAR);
 }
+
 // [[Rcpp::export(".swrheight")]]
 NumericVector swrheight(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL) {
   DataFrame above = forest2aboveground(x, SpParams, gdd, false);
@@ -215,8 +230,22 @@ NumericVector swrheight(NumericVector z, List x, DataFrame SpParams, double gdd 
 
 //' @rdname light
 // [[Rcpp::export("light_SWRground")]]
-NumericVector SWRground(List x, DataFrame SpParams, double gdd = NA_REAL) {
-  return(swrheight(NumericVector::create(0.0), x, SpParams, gdd));
+double SWRground(List x, DataFrame SpParams, double gdd = NA_REAL) {
+  DataFrame above = forest2aboveground(x, SpParams, gdd, false);
+  NumericVector LAIphe = above["LAI_expanded"];
+  NumericVector LAIdead = above["LAI_dead"];
+  IntegerVector SP = above["SP"];
+  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true);
+  int numCohorts = LAIphe.size();
+  double s = 0.0;
+  for(int c=0;c<numCohorts;c++) {
+    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
+  }
+  //Herb layer effects on light extinction and interception
+  s += 0.5*herbLAI(x["herbCover"], x["herbHeight"]);
+  //Percentage of irradiance reaching the ground
+  double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
+  return(LgroundSWR);
 }
 
 
