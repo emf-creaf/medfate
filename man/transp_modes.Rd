@@ -18,6 +18,7 @@ transp_transpirationSperry(
   canopyEvaporation = 0,
   snowMelt = 0,
   soilEvaporation = 0,
+  herbTranspiration = 0,
   stepFunctions = NA_integer_,
   modifyInput = TRUE
 )
@@ -33,6 +34,7 @@ transp_transpirationCochard(
   canopyEvaporation = 0,
   snowMelt = 0,
   soilEvaporation = 0,
+  herbTranspiration = 0,
   modifyInput = TRUE
 )
 
@@ -63,6 +65,8 @@ transp_transpirationGranier(
 \item{snowMelt}{Snow melt values  for \code{day} (mm).}
 
 \item{soilEvaporation}{Bare soil evaporation for \code{day} (mm).}
+
+\item{herbTranspiration}{Transpiration of herbaceous plants for \code{day} (mm).}
 
 \item{stepFunctions}{An integer to indicate a simulation step for which photosynthesis and profit maximization functions are desired.}
 

@@ -431,7 +431,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   List transp = transpirationAdvanced(x, meteovec, 
                                     latitude, elevation, slope, aspect, 
                                     solarConstant, delta, 
-                                    hydroInputs["Interception"], hydroInputs["Snowmelt"], sum(EsoilVec),
+                                    hydroInputs["Interception"], hydroInputs["Snowmelt"], sum(EsoilVec), Eherb,
                                     verbose, NA_INTEGER, true);
 
   
@@ -1459,8 +1459,9 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL, List x,
 //'     \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
 //'     \item{\code{"Evapotranspiration"}: Evapotranspiration (in mm).}
 //'     \item{\code{"SoilEvaporation"}: Bare soil evaporation (in mm).}
-//'     \item{\code{"PlantExtraction"}: Amount of water extracted from soil by plants (in mm).}
-//'     \item{\code{"Transpiration"}: Plant transpiration (considering all soil layers) (in mm).}
+//'     \item{\code{"HerbTranspiration"}: Transpiration due to the herbaceous layer (in mm).}
+//'     \item{\code{"PlantExtraction"}: Amount of water extracted from soil by woody plants (in mm).}
+//'     \item{\code{"Transpiration"}: Woody plant transpiration (in mm).}
 //'     \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network.}
 //'   }
 //'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).}
@@ -1477,10 +1478,11 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL, List x,
 //'   }
 //'   \item{\code{"Stand"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
 //'   \itemize{
-//'     \item{\code{"LAI"}: LAI of the stand (including live and dead leaves) (in m2/m2).}
-//'     \item{\code{"LAIlive"}: LAI of the stand assuming all leaves are unfolded (in m2/m2).}
-//'     \item{\code{"LAIexpanded"}: LAI of the stand of leaves actually unfolded (in m2/m2).}
-//'     \item{\code{"LAIdead"}: LAI of the stand corresponding to dead leaves (in m2/m2).}
+//'     \item{\code{"LAI"}: LAI of the stand (including the herbaceous layer and live + dead leaves of woody plants) (in m2/m2).}
+//'     \item{\code{"LAIherb"}: LAI of the herbaceous layer (in m2/m2).}
+//'     \item{\code{"LAIlive"}: LAI of the woody plants assuming all leaves are unfolded (in m2/m2).}
+//'     \item{\code{"LAIexpanded"}: LAI of the woody plants with leaves actually unfolded (in m2/m2).}
+//'     \item{\code{"LAIdead"}: LAI of the woody plants corresponding to dead leaves (in m2/m2).}
 //'     \item{\code{"Cm"}: Water retention capacity of the canopy (in mm) (accounting for leaf phenology).}
 //'     \item{\code{"LgroundPAR"}: The percentage of PAR that reaches the ground (accounting for leaf phenology).}
 //'     \item{\code{"LgroundSWR"}: The percentage of SWR that reaches the ground (accounting for leaf phenology).}
@@ -1975,8 +1977,9 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
 //' 
 //' @param W A matrix with the same number of rows as \code{meteo} and as many columns as soil layers, containing the soil moisture of each layer as proportion of field capacity.
 //' @param canopyEvaporation A vector of daily canopy evaporation (from interception) values (mm). The length should match the number of rows in \code{meteo}.
-//' @param soilEvaporation A vector of daily bare soil evaporation values (mm). The length should match the number of rows in \code{meteo}.
 //' @param snowMelt A vector of daily snow melt values (mm). The length should match the number of rows in \code{meteo}.
+//' @param soilEvaporation A vector of daily bare soil evaporation values (mm). The length should match the number of rows in \code{meteo}.
+//' @param herbTranspiration A vector of daily herbaceous transpiration values (mm). The length should match the number of rows in \code{meteo}.
 //' 
 // [[Rcpp::export("pwb")]]
 List pwb(List x, DataFrame meteo, NumericMatrix W,
@@ -1984,6 +1987,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
          NumericVector canopyEvaporation = NumericVector(0), 
          NumericVector snowMelt = NumericVector(0), 
          NumericVector soilEvaporation = NumericVector(0),
+         NumericVector herbTranspiration = NumericVector(0),
          NumericVector CO2ByYear = NumericVector(0)) {
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
@@ -2271,7 +2275,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
         s = transpirationAdvanced(x, meteovec, 
                                 latitude, elevation, slope, aspect,
                                 solarConstant, delta,
-                                canopyEvaporation[i], snowMelt[i], soilEvaporation[i],
+                                canopyEvaporation[i], snowMelt[i], soilEvaporation[i], herbTranspiration[i],
                                 verbose, NA_INTEGER, 
                                 true);
       } catch(std::exception& ex) {

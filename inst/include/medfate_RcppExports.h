@@ -926,17 +926,17 @@ namespace medfate {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline List pwb(List x, DataFrame meteo, NumericMatrix W, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL, NumericVector canopyEvaporation = NumericVector(0), NumericVector snowMelt = NumericVector(0), NumericVector soilEvaporation = NumericVector(0), NumericVector CO2ByYear = NumericVector(0)) {
-        typedef SEXP(*Ptr_pwb)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
+    inline List pwb(List x, DataFrame meteo, NumericMatrix W, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL, NumericVector canopyEvaporation = NumericVector(0), NumericVector snowMelt = NumericVector(0), NumericVector soilEvaporation = NumericVector(0), NumericVector herbTranspiration = NumericVector(0), NumericVector CO2ByYear = NumericVector(0)) {
+        typedef SEXP(*Ptr_pwb)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_pwb p_pwb = NULL;
         if (p_pwb == NULL) {
-            validateSignature("List(*pwb)(List,DataFrame,NumericMatrix,double,double,double,double,NumericVector,NumericVector,NumericVector,NumericVector)");
+            validateSignature("List(*pwb)(List,DataFrame,NumericMatrix,double,double,double,double,NumericVector,NumericVector,NumericVector,NumericVector,NumericVector)");
             p_pwb = (Ptr_pwb)R_GetCCallable("medfate", "_medfate_pwb");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_pwb(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(meteo)), Shield<SEXP>(Rcpp::wrap(W)), Shield<SEXP>(Rcpp::wrap(latitude)), Shield<SEXP>(Rcpp::wrap(elevation)), Shield<SEXP>(Rcpp::wrap(slope)), Shield<SEXP>(Rcpp::wrap(aspect)), Shield<SEXP>(Rcpp::wrap(canopyEvaporation)), Shield<SEXP>(Rcpp::wrap(snowMelt)), Shield<SEXP>(Rcpp::wrap(soilEvaporation)), Shield<SEXP>(Rcpp::wrap(CO2ByYear)));
+            rcpp_result_gen = p_pwb(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(meteo)), Shield<SEXP>(Rcpp::wrap(W)), Shield<SEXP>(Rcpp::wrap(latitude)), Shield<SEXP>(Rcpp::wrap(elevation)), Shield<SEXP>(Rcpp::wrap(slope)), Shield<SEXP>(Rcpp::wrap(aspect)), Shield<SEXP>(Rcpp::wrap(canopyEvaporation)), Shield<SEXP>(Rcpp::wrap(snowMelt)), Shield<SEXP>(Rcpp::wrap(soilEvaporation)), Shield<SEXP>(Rcpp::wrap(herbTranspiration)), Shield<SEXP>(Rcpp::wrap(CO2ByYear)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

@@ -26,6 +26,7 @@ pwb(
   canopyEvaporation = numeric(0),
   snowMelt = numeric(0),
   soilEvaporation = numeric(0),
+  herbTranspiration = numeric(0),
   CO2ByYear = numeric(0)
 )
 }
@@ -62,6 +63,8 @@ The following columns are optional:
 \item{snowMelt}{A vector of daily snow melt values (mm). The length should match the number of rows in \code{meteo}.}
 
 \item{soilEvaporation}{A vector of daily bare soil evaporation values (mm). The length should match the number of rows in \code{meteo}.}
+
+\item{herbTranspiration}{A vector of daily herbaceous transpiration values (mm). The length should match the number of rows in \code{meteo}.}
 }
 \value{
 Function \code{spwb} returns a list of class 'spwb' whereas function \code{pwb} returns a list of class 'pwb'. 
@@ -84,8 +87,9 @@ There are many elements in common in these lists, so they are listed here togeth
     \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
     \item{\code{"Evapotranspiration"}: Evapotranspiration (in mm).}
     \item{\code{"SoilEvaporation"}: Bare soil evaporation (in mm).}
-    \item{\code{"PlantExtraction"}: Amount of water extracted from soil by plants (in mm).}
-    \item{\code{"Transpiration"}: Plant transpiration (considering all soil layers) (in mm).}
+    \item{\code{"HerbTranspiration"}: Transpiration due to the herbaceous layer (in mm).}
+    \item{\code{"PlantExtraction"}: Amount of water extracted from soil by woody plants (in mm).}
+    \item{\code{"Transpiration"}: Woody plant transpiration (in mm).}
     \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network.}
   }
   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).}
@@ -102,10 +106,11 @@ There are many elements in common in these lists, so they are listed here togeth
   }
   \item{\code{"Stand"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
   \itemize{
-    \item{\code{"LAI"}: LAI of the stand (including live and dead leaves) (in m2/m2).}
-    \item{\code{"LAIlive"}: LAI of the stand assuming all leaves are unfolded (in m2/m2).}
-    \item{\code{"LAIexpanded"}: LAI of the stand of leaves actually unfolded (in m2/m2).}
-    \item{\code{"LAIdead"}: LAI of the stand corresponding to dead leaves (in m2/m2).}
+    \item{\code{"LAI"}: LAI of the stand (including the herbaceous layer and live + dead leaves of woody plants) (in m2/m2).}
+    \item{\code{"LAIherb"}: LAI of the herbaceous layer (in m2/m2).}
+    \item{\code{"LAIlive"}: LAI of the woody plants assuming all leaves are unfolded (in m2/m2).}
+    \item{\code{"LAIexpanded"}: LAI of the woody plants with leaves actually unfolded (in m2/m2).}
+    \item{\code{"LAIdead"}: LAI of the woody plants corresponding to dead leaves (in m2/m2).}
     \item{\code{"Cm"}: Water retention capacity of the canopy (in mm) (accounting for leaf phenology).}
     \item{\code{"LgroundPAR"}: The percentage of PAR that reaches the ground (accounting for leaf phenology).}
     \item{\code{"LgroundSWR"}: The percentage of SWR that reaches the ground (accounting for leaf phenology).}

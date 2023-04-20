@@ -647,7 +647,7 @@
   if(type=="LAI") {
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
     df = Stand[,c("LAI", "LAIherb", "LAIexpanded", "LAIdead")]
-    names(df)<-c("Total (live+dead+herb)", "LAI (herbaceous)", "Live unfolded","Dead standing")
+    names(df)<-c("Total (herb+unfolded+dead)", "Herbaceous", "Woody plants unfolded","Woody plants dead")
     if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
     if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
     return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))

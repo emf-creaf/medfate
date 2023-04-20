@@ -2961,8 +2961,9 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #'     \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
 #'     \item{\code{"Evapotranspiration"}: Evapotranspiration (in mm).}
 #'     \item{\code{"SoilEvaporation"}: Bare soil evaporation (in mm).}
-#'     \item{\code{"PlantExtraction"}: Amount of water extracted from soil by plants (in mm).}
-#'     \item{\code{"Transpiration"}: Plant transpiration (considering all soil layers) (in mm).}
+#'     \item{\code{"HerbTranspiration"}: Transpiration due to the herbaceous layer (in mm).}
+#'     \item{\code{"PlantExtraction"}: Amount of water extracted from soil by woody plants (in mm).}
+#'     \item{\code{"Transpiration"}: Woody plant transpiration (in mm).}
 #'     \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network.}
 #'   }
 #'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).}
@@ -2979,10 +2980,11 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #'   }
 #'   \item{\code{"Stand"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
 #'   \itemize{
-#'     \item{\code{"LAI"}: LAI of the stand (including live and dead leaves) (in m2/m2).}
-#'     \item{\code{"LAIlive"}: LAI of the stand assuming all leaves are unfolded (in m2/m2).}
-#'     \item{\code{"LAIexpanded"}: LAI of the stand of leaves actually unfolded (in m2/m2).}
-#'     \item{\code{"LAIdead"}: LAI of the stand corresponding to dead leaves (in m2/m2).}
+#'     \item{\code{"LAI"}: LAI of the stand (including the herbaceous layer and live + dead leaves of woody plants) (in m2/m2).}
+#'     \item{\code{"LAIherb"}: LAI of the herbaceous layer (in m2/m2).}
+#'     \item{\code{"LAIlive"}: LAI of the woody plants assuming all leaves are unfolded (in m2/m2).}
+#'     \item{\code{"LAIexpanded"}: LAI of the woody plants with leaves actually unfolded (in m2/m2).}
+#'     \item{\code{"LAIdead"}: LAI of the woody plants corresponding to dead leaves (in m2/m2).}
 #'     \item{\code{"Cm"}: Water retention capacity of the canopy (in mm) (accounting for leaf phenology).}
 #'     \item{\code{"LgroundPAR"}: The percentage of PAR that reaches the ground (accounting for leaf phenology).}
 #'     \item{\code{"LgroundSWR"}: The percentage of SWR that reaches the ground (accounting for leaf phenology).}
@@ -3115,11 +3117,12 @@ spwb <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, asp
 #' 
 #' @param W A matrix with the same number of rows as \code{meteo} and as many columns as soil layers, containing the soil moisture of each layer as proportion of field capacity.
 #' @param canopyEvaporation A vector of daily canopy evaporation (from interception) values (mm). The length should match the number of rows in \code{meteo}.
-#' @param soilEvaporation A vector of daily bare soil evaporation values (mm). The length should match the number of rows in \code{meteo}.
 #' @param snowMelt A vector of daily snow melt values (mm). The length should match the number of rows in \code{meteo}.
+#' @param soilEvaporation A vector of daily bare soil evaporation values (mm). The length should match the number of rows in \code{meteo}.
+#' @param herbTranspiration A vector of daily herbaceous transpiration values (mm). The length should match the number of rows in \code{meteo}.
 #' 
-pwb <- function(x, meteo, W, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_, canopyEvaporation = numeric(0), snowMelt = numeric(0), soilEvaporation = numeric(0), CO2ByYear = numeric(0)) {
-    .Call(`_medfate_pwb`, x, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, CO2ByYear)
+pwb <- function(x, meteo, W, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_, canopyEvaporation = numeric(0), snowMelt = numeric(0), soilEvaporation = numeric(0), herbTranspiration = numeric(0), CO2ByYear = numeric(0)) {
+    .Call(`_medfate_pwb`, x, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration, CO2ByYear)
 }
 
 #' Tissue moisture functions
@@ -3218,17 +3221,19 @@ plant_water <- function(x) {
 #' @rdname transp_modes
 #' 
 #' @param canopyEvaporation Canopy evaporation (from interception) for \code{day} (mm).
-#' @param soilEvaporation Bare soil evaporation for \code{day} (mm).
 #' @param snowMelt Snow melt values  for \code{day} (mm).
+#' @param soilEvaporation Bare soil evaporation for \code{day} (mm).
+#' @param herbTranspiration Transpiration of herbaceous plants for \code{day} (mm).
 #' @param stepFunctions An integer to indicate a simulation step for which photosynthesis and profit maximization functions are desired.
 #' 
-transp_transpirationSperry <- function(x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, stepFunctions = NA_integer_, modifyInput = TRUE) {
-    .Call(`_medfate_transpirationSperry`, x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, stepFunctions, modifyInput)
+#' 
+transp_transpirationSperry <- function(x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, herbTranspiration = 0.0, stepFunctions = NA_integer_, modifyInput = TRUE) {
+    .Call(`_medfate_transpirationSperry`, x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration, stepFunctions, modifyInput)
 }
 
 #' @rdname transp_modes
-transp_transpirationCochard <- function(x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, modifyInput = TRUE) {
-    .Call(`_medfate_transpirationCochard`, x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, modifyInput)
+transp_transpirationCochard <- function(x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, herbTranspiration = 0.0, modifyInput = TRUE) {
+    .Call(`_medfate_transpirationCochard`, x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration, modifyInput)
 }
 
 #' Transpiration modes

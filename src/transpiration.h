@@ -11,6 +11,6 @@ List transpirationBasic(List x, NumericVector meteovec,
 List transpirationAdvanced(List x, NumericVector meteovec,
                   double latitude, double elevation, double slope, double aspect,
                   double solarConstant, double delta,
-                  double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
+                  double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0, double herbTranspiration = 0.0,
                   bool verbose = false, int stepFunctions = NA_INTEGER, 
                   bool modifyInput = true);
