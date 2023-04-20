@@ -9,6 +9,7 @@
 #' @param gdd Growth degree days.
 #' @param byCohorts Separate profiles for each cohort.
 #' @param bySpecies Aggregate cohort profiles by species.
+#' @param includeHerbs Include herbaceous layer in the profile.
 #' @param u The value of measured wind speed (in m/s).
 #' @param windMeasurementHeight Height corresponding to wind measurement (in cm over the canopy).
 #' @param boundaryLayerSize Size of the boundary layer (in cm) over the canopy.
@@ -48,12 +49,14 @@
 #' 
 #' @name vprofile_leafAreaDensity
 vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, 
-                                   byCohorts = FALSE, bySpecies = FALSE, 
+                                   byCohorts = FALSE, bySpecies = FALSE, includeHerbs = FALSE,
                                    draw = TRUE, xlim = NULL) {
   if(!(inherits(x,"data.frame") || inherits(x, "forest"))) stop("'x' should be of class 'forest' or 'data.frame'")
   if(inherits(x, "forest")) {
     if(is.null(SpParams)) stop("Please, provide 'SpParams' to calculate leaf area.")
     spnames <- plant_speciesName(x, SpParams)
+    herbHeight <- x$herbHeight
+    herbLAI <- herb_LAI(x$herbCover, x$herbHeight)
     x <- forest2aboveground(x, SpParams, gdd)
   } else {
     if(any(!(c("LAI_expanded", "H", "CR", "SP") %in% names(x)))) {
@@ -61,11 +64,23 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA,
     }
     spnames <- x$SP
   }
-
-  if(is.null(z)) z <- seq(0, ceiling(max(x$H)/100)*100 +10, by=10)
+  cohortnames <- row.names(x)
+  
+  if(is.null(z)) z <- seq(0, ceiling(max(x$H)/100)*100 +10, by=1)
   w <- z[2:length(z)]- z[1:(length(z)-1)]
+  
+  lai_vect <- x$LAI_expanded
+  h_vect <- x$H
+  cr_vect <- x$CR
+  if(includeHerbs) {
+    lai_vect <- c(lai_vect, herbLAI)
+    h_vect <- c(h_vect, herbHeight)
+    cr_vect <- c(x$CR, 1.0)
+    spnames <- c(spnames, "Herbaceous")
+    cohortnames <- c(cohortnames, "Herbaceous")
+  }
   if(!byCohorts) {
-    lai <- .LAIprofileVectors(z, x$LAI_expanded, x$H, x$CR)
+    lai <- .LAIprofileVectors(z, lai_vect, h_vect, cr_vect)
     lai <- 100*lai/w
     if(draw) {
       df <- data.frame("lai" = c(0,lai), "z" = z)
@@ -77,8 +92,7 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA,
       if(!is.null(xlim)) g <- g + xlim(xlim)
     }
   } else {
-    cohortnames <- row.names(x)
-    lai <- .LAIdistributionVectors(z, x$LAI_expanded, x$H, x$CR)
+    lai <- .LAIdistributionVectors(z, lai_vect, h_vect, cr_vect)
     lai <- 100*sweep(lai,1,w, "/")
     if(bySpecies) {
       lai <- t(apply(lai,1, tapply, spnames, sum, na.rm=T))
@@ -133,7 +147,7 @@ vprofile_rootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE,
 #' @rdname vprofile_leafAreaDensity
 vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA,
                                    draw = TRUE, xlim = NULL) {
-  if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams))/100)*100 +10, by=10)
+  if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams))/100)*100 +10, by=1)
   wfp <- .woodyFuelProfile(z,x, SpParams, gdd)
   df <- data.frame("BD" = c(0,wfp), "Z" = z)
   if(draw) {
@@ -149,10 +163,10 @@ vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA,
 }
 
 #' @rdname vprofile_leafAreaDensity
-vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, 
+vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, includeHerbs = FALSE, 
                                  draw = TRUE, xlim = c(0,100)) {
-  if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams), na.rm = TRUE)/100)*100 +10, by=10)
-  pep <- .parExtinctionProfile(z,x, SpParams, gdd)
+  if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams), na.rm = TRUE)/100)*100 +10, by=1)
+  pep <- .parExtinctionProfile(z,x, SpParams, gdd, includeHerbs)
   df <- data.frame("PEP" = pep, "Z" = z)
   if(draw) {
     g<-ggplot(df, aes(x=.data$PEP, y=.data$Z))+
@@ -167,10 +181,10 @@ vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA,
 }
 
 #' @rdname vprofile_leafAreaDensity
-vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, 
+vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, includeHerbs = FALSE, 
                                  draw = TRUE, xlim = c(0,100)) {
-  if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams))/100)*100 +10, by=10)
-  swr <- .swrExtinctionProfile(z,x, SpParams, gdd)
+  if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams))/100)*100 +10, by=1)
+  swr <- .swrExtinctionProfile(z,x, SpParams, gdd, includeHerbs)
   df <- data.frame("SWR" = swr, "Z" = z)
   if(draw) {
     g<-ggplot(df, aes(x=.data$SWR, y=.data$Z))+
@@ -187,10 +201,12 @@ vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA,
 #' @rdname vprofile_leafAreaDensity
 vprofile_windExtinction<-function(x, SpParams, u = 1, windMeasurementHeight = 200,
                                   boundaryLayerSize = 2000, target = "windspeed",
-                                  z = NULL, gdd = NA, 
+                                  z = NULL, gdd = NA, includeHerbs = FALSE,
                                   draw = TRUE, xlim = NULL) {
-  if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams))/100)*100 +boundaryLayerSize, by=10)
-  lad <- vprofile_leafAreaDensity(x, SpParams, z,gdd,FALSE,FALSE,FALSE, xlim)
+  if(is.null(z)) z <- seq(0, ceiling(max(plant_height(x, SpParams))/100)*100 +boundaryLayerSize, by=1)
+  lad <- vprofile_leafAreaDensity(x=x, SpParams = SpParams, z = z, gdd = gdd,
+                                  byCohorts = FALSE, bySpecies = FALSE, includeHerbs = includeHerbs,
+                                  draw = FALSE, xlim = xlim)
   canopyHeight <- max(plant_height(x, SpParams), na.rm=T)
   zmid <- 0.5*(z[1:(length(z)-1)] + z[2:(length(z))])
   df <- wind_canopyTurbulence(zmid, lad, canopyHeight, u, windMeasurementHeight)

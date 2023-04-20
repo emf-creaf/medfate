@@ -250,22 +250,34 @@ double SWRground(List x, DataFrame SpParams, double gdd = NA_REAL) {
 
 
 // [[Rcpp::export(".parExtinctionProfile")]]
-NumericVector parExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL) {
+NumericVector parExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL, bool includeHerbs = false) {
   DataFrame above = forest2aboveground(x, SpParams, gdd, false);
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
   NumericVector LAI = above["LAI_expanded"];
   NumericVector CR = above["CR"];
+  if(includeHerbs) {
+    SP.push_back(0);
+    H.push_back(x["herbHeight"]);
+    LAI.push_back(herbLAI(x["herbCover"], x["herbHeight"]));
+    CR.push_back(1.0);
+  }
   return(parheight(z, SP, H, CR, LAI, SpParams));
 }
 
 // [[Rcpp::export(".swrExtinctionProfile")]]
-NumericVector swrExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL) {
+NumericVector swrExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL, bool includeHerbs = false) {
   DataFrame above = forest2aboveground(x, SpParams,  gdd, false);
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
   NumericVector LAI = above["LAI_expanded"];
   NumericVector CR = above["CR"];
+  if(includeHerbs) {
+    SP.push_back(0);
+    H.push_back(x["herbHeight"]);
+    LAI.push_back(herbLAI(x["herbCover"], x["herbHeight"]));
+    CR.push_back(1.0);
+  }
   return(swrheight(z, SP, H, CR, LAI, SpParams));
 }
 

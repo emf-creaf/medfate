@@ -1726,12 +1726,12 @@ light_SWRground <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_SWRground`, x, SpParams, gdd)
 }
 
-.parExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_parExtinctionProfile`, z, x, SpParams, gdd)
+.parExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_, includeHerbs = FALSE) {
+    .Call(`_medfate_parExtinctionProfile`, z, x, SpParams, gdd, includeHerbs)
 }
 
-.swrExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_swrExtinctionProfile`, z, x, SpParams, gdd)
+.swrExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_, includeHerbs = FALSE) {
+    .Call(`_medfate_swrExtinctionProfile`, z, x, SpParams, gdd, includeHerbs)
 }
 
 #' @rdname light
