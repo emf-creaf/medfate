@@ -310,6 +310,27 @@ NumericVector shrubFoliarBiomass(IntegerVector SP, NumericVector Cover, NumericV
   return(fb);
 }
 
+//' Herbaceous description functions
+//'
+//' Functions to calculate attributes of the herbaceous component of a \code{\link{forest}} object 
+//' via its attributes herbCover and herbHeight.
+//' 
+//' @param herbCover Percent cover of the herb layer.
+//' @param herbHeight Mean height (in cm) of the herb layer.
+//' 
+//' @return
+//' A single scalar:
+//' \itemize{
+//'   \item{\code{herb_foliarBiomass}: Biomass of leaves (in kg/m2).}
+//'   \item{\code{herb_fuel}: Fine fuel load (in kg/m2).}
+//'   \item{\code{herb_LAI}: Leaf area index (m2/m2).}
+//' }
+//' 
+//' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+//' 
+//' @seealso \code{\link{spwb}}, \code{\link{forest}}, \code{\link{plant_basalArea}}, \code{\link{summary.forest}}
+//' 
+//' @name herb_values
 // [[Rcpp::export("herb_foliarBiomass")]]
 double herbFoliarBiomass(double herbCover, double herbHeight){
   double herbFB = 0.014*herbCover*(herbHeight/100.0); // From piropinus
@@ -437,6 +458,7 @@ NumericVector shrubFuel(IntegerVector SP, NumericVector Cover, NumericVector H, 
   }
   return(W);
 }
+//' @rdname herb_values
 // [[Rcpp::export("herb_fuel")]]
 double herbFuel(double herbCover, double herbHeight){
   return(herbFoliarBiomass( herbCover,  herbHeight));
@@ -469,15 +491,16 @@ NumericVector shrubLAI(IntegerVector SP, NumericVector Cover, NumericVector H, D
   return(lai);
 }
 
+//' @rdname herb_values
 // [[Rcpp::export("herb_LAI")]]
 double herbLAI(double herbCover, double herbHeight){
   return(std::min(2.0,herbFoliarBiomass(herbCover, herbHeight)*9.0)); // SLA = 9 m2/kg from Brachypodium retusum in BROT2
 }
 
 
-//' Plant description functions
+//' Woody plant cohort description functions
 //'
-//' Functions to calculate attributes of plants in a \code{\link{forest}} object.
+//' Functions to calculate attributes of woody plants in a \code{\link{forest}} object.
 //' 
 //' @param x An object of class \code{\link{forest}}.
 //' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
@@ -494,7 +517,7 @@ double herbLAI(double herbCover, double herbHeight){
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
 //' @return
-//' A vector with values for each plant of the input \code{\link{forest}} object:
+//' A vector with values for each woody plant cohort of the input \code{\link{forest}} object:
 //' \itemize{
 //'   \item{\code{plant_basalArea}: Tree basal area (m2/ha).}
 //'   \item{\code{plant_largerTreeBasalArea}: Basal area (m2/ha) of trees larger (in diameter) than the tree. Half of the trees of the same record are included.}
@@ -1079,13 +1102,6 @@ NumericVector speciesFuel(List x, DataFrame SpParams, double gdd = NA_REAL, bool
 }
 
 //' @rdname species_values
-// [[Rcpp::export("species_phytovolume")]]
-NumericVector speciesPhytovolume(List x, DataFrame SpParams) {
-  NumericVector cp = cohortPhytovolume(x, SpParams);
-  return(sumBySpecies(cp, cohortSpecies(x, SpParams), SpParams));
-}
-
-//' @rdname species_values
 // [[Rcpp::export("species_LAI")]]
 NumericVector speciesLAI(List x, DataFrame SpParams, double gdd = NA_REAL, 
                          bool bounded = true) {
@@ -1112,17 +1128,10 @@ double standFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_REAL) {
   NumericVector fb = cohortFoliarBiomass(x, SpParams, gdd);
   double tfb= 0.0;
   for(int i=0;i<fb.size();i++){if(!NumericVector::is_na(fb[i])) tfb+=fb[i];}
+  tfb += herbFoliarBiomass(x["herbCover"], x["herbHeight"]);
   return(tfb);
 }
 
-//' @rdname stand_values
-// [[Rcpp::export("stand_phytovolume")]]
-double standPhytovolume(List x, DataFrame SpParams) {
-  NumericVector cp = cohortPhytovolume(x, SpParams);
-  double tp= 0.0;
-  for(int i=0;i<cp.size();i++){if(!NumericVector::is_na(cp[i])) tp+=cp[i];}
-  return(tp);
-}
 
 //' @rdname stand_values
 // [[Rcpp::export("stand_fuel")]]
@@ -1130,6 +1139,7 @@ double standFuel(List x, DataFrame SpParams, double gdd = NA_REAL, bool includeD
   NumericVector cf = cohortFuel(x, SpParams, gdd, includeDead);
   double tf= 0.0;
   for(int i=0;i<cf.size();i++){if(!NumericVector::is_na(cf[i])) tf+=cf[i];}
+  tf += herbFuel(x["herbCover"], x["herbHeight"]);
   return(tf);
 }
 
@@ -1142,6 +1152,7 @@ double standLAI(List x, DataFrame SpParams, double gdd = NA_REAL,
   NumericVector cl = cohortLAI(x, SpParams, gdd, bounded);
   double tl= 0.0;
   for(int i=0;i<cl.size();i++){if(!NumericVector::is_na(cl[i])) tl+=cl[i];}
+  tl += herbLAI(x["herbCover"], x["herbHeight"]);
   return(tl);
 }
 

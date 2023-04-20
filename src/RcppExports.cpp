@@ -682,18 +682,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// speciesPhytovolume
-NumericVector speciesPhytovolume(List x, DataFrame SpParams);
-RcppExport SEXP _medfate_speciesPhytovolume(SEXP xSEXP, SEXP SpParamsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(speciesPhytovolume(x, SpParams));
-    return rcpp_result_gen;
-END_RCPP
-}
 // speciesLAI
 NumericVector speciesLAI(List x, DataFrame SpParams, double gdd, bool bounded);
 RcppExport SEXP _medfate_speciesLAI(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP boundedSEXP) {
@@ -730,18 +718,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
     rcpp_result_gen = Rcpp::wrap(standFoliarBiomass(x, SpParams, gdd));
-    return rcpp_result_gen;
-END_RCPP
-}
-// standPhytovolume
-double standPhytovolume(List x, DataFrame SpParams);
-RcppExport SEXP _medfate_standPhytovolume(SEXP xSEXP, SEXP SpParamsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(standPhytovolume(x, SpParams));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4889,11 +4865,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_speciesDensity", (DL_FUNC) &_medfate_speciesDensity, 2},
     {"_medfate_speciesFoliarBiomass", (DL_FUNC) &_medfate_speciesFoliarBiomass, 3},
     {"_medfate_speciesFuel", (DL_FUNC) &_medfate_speciesFuel, 4},
-    {"_medfate_speciesPhytovolume", (DL_FUNC) &_medfate_speciesPhytovolume, 2},
     {"_medfate_speciesLAI", (DL_FUNC) &_medfate_speciesLAI, 4},
     {"_medfate_standBasalArea", (DL_FUNC) &_medfate_standBasalArea, 2},
     {"_medfate_standFoliarBiomass", (DL_FUNC) &_medfate_standFoliarBiomass, 3},
-    {"_medfate_standPhytovolume", (DL_FUNC) &_medfate_standPhytovolume, 2},
     {"_medfate_standFuel", (DL_FUNC) &_medfate_standFuel, 4},
     {"_medfate_standLAI", (DL_FUNC) &_medfate_standLAI, 4},
     {"_medfate_LAIdistributionVectors", (DL_FUNC) &_medfate_LAIdistributionVectors, 4},

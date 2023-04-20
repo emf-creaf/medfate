@@ -7,7 +7,6 @@
 \alias{species_density}
 \alias{species_foliarBiomass}
 \alias{species_fuel}
-\alias{species_phytovolume}
 \alias{species_LAI}
 \alias{species_characterParameter}
 \alias{species_parameter}
@@ -22,8 +21,6 @@ species_density(x, SpParams)
 species_foliarBiomass(x, SpParams, gdd = NA_real_)
 
 species_fuel(x, SpParams, gdd = NA_real_, includeDead = TRUE)
-
-species_phytovolume(x, SpParams)
 
 species_LAI(x, SpParams, gdd = NA_real_, bounded = TRUE)
 

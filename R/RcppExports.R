@@ -329,6 +329,27 @@ fire_Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, win
     .Call(`_medfate_shrubCrownRatio`, SP, SpParams)
 }
 
+#' Herbaceous description functions
+#'
+#' Functions to calculate attributes of the herbaceous component of a \code{\link{forest}} object 
+#' via its attributes herbCover and herbHeight.
+#' 
+#' @param herbCover Percent cover of the herb layer.
+#' @param herbHeight Mean height (in cm) of the herb layer.
+#' 
+#' @return
+#' A single scalar:
+#' \itemize{
+#'   \item{\code{herb_foliarBiomass}: Biomass of leaves (in kg/m2).}
+#'   \item{\code{herb_fuel}: Fine fuel load (in kg/m2).}
+#'   \item{\code{herb_LAI}: Leaf area index (m2/m2).}
+#' }
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{spwb}}, \code{\link{forest}}, \code{\link{plant_basalArea}}, \code{\link{summary.forest}}
+#' 
+#' @name herb_values
 herb_foliarBiomass <- function(herbCover, herbHeight) {
     .Call(`_medfate_herbFoliarBiomass`, herbCover, herbHeight)
 }
@@ -341,17 +362,19 @@ herb_foliarBiomass <- function(herbCover, herbHeight) {
     .Call(`_medfate_shrubPhytovolume`, SP, Cover, H, CR, SpParams)
 }
 
+#' @rdname herb_values
 herb_fuel <- function(herbCover, herbHeight) {
     .Call(`_medfate_herbFuel`, herbCover, herbHeight)
 }
 
+#' @rdname herb_values
 herb_LAI <- function(herbCover, herbHeight) {
     .Call(`_medfate_herbLAI`, herbCover, herbHeight)
 }
 
-#' Plant description functions
+#' Woody plant cohort description functions
 #'
-#' Functions to calculate attributes of plants in a \code{\link{forest}} object.
+#' Functions to calculate attributes of woody plants in a \code{\link{forest}} object.
 #' 
 #' @param x An object of class \code{\link{forest}}.
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
@@ -368,7 +391,7 @@ herb_LAI <- function(herbCover, herbHeight) {
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
 #' @return
-#' A vector with values for each plant of the input \code{\link{forest}} object:
+#' A vector with values for each woody plant cohort of the input \code{\link{forest}} object:
 #' \itemize{
 #'   \item{\code{plant_basalArea}: Tree basal area (m2/ha).}
 #'   \item{\code{plant_largerTreeBasalArea}: Basal area (m2/ha) of trees larger (in diameter) than the tree. Half of the trees of the same record are included.}
@@ -576,11 +599,6 @@ species_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
 }
 
 #' @rdname species_values
-species_phytovolume <- function(x, SpParams) {
-    .Call(`_medfate_speciesPhytovolume`, x, SpParams)
-}
-
-#' @rdname species_values
 species_LAI <- function(x, SpParams, gdd = NA_real_, bounded = TRUE) {
     .Call(`_medfate_speciesLAI`, x, SpParams, gdd, bounded)
 }
@@ -593,11 +611,6 @@ stand_basalArea <- function(x, minDBH = 7.5) {
 #' @rdname stand_values
 stand_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_standFoliarBiomass`, x, SpParams, gdd)
-}
-
-#' @rdname stand_values
-stand_phytovolume <- function(x, SpParams) {
-    .Call(`_medfate_standPhytovolume`, x, SpParams)
 }
 
 #' @rdname stand_values

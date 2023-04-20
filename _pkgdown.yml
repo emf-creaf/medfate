@@ -52,6 +52,7 @@ reference:
   contents:
   - starts_with("stand_")
   - starts_with("plant_")
+  - starts_with("herb_")
   - starts_with("species_")
   - starts_with("vprofile_")
   - starts_with("plot.forest")

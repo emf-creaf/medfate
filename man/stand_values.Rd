@@ -3,7 +3,6 @@
 \name{stand_basalArea}
 \alias{stand_basalArea}
 \alias{stand_foliarBiomass}
-\alias{stand_phytovolume}
 \alias{stand_fuel}
 \alias{stand_LAI}
 \alias{stand_values}
@@ -17,8 +16,6 @@
 stand_basalArea(x, minDBH = 7.5)
 
 stand_foliarBiomass(x, SpParams, gdd = NA_real_)
-
-stand_phytovolume(x, SpParams)
 
 stand_fuel(x, SpParams, gdd = NA_real_, includeDead = TRUE)
 

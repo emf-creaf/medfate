@@ -22,7 +22,7 @@
 \alias{plant_LAI}
 \alias{plant_characterParameter}
 \alias{plant_parameter}
-\title{Plant description functions}
+\title{Woody plant cohort description functions}
 \usage{
 plant_ID(x, SpParams, treeOffset = 0L, shrubOffset = 0L)
 
@@ -92,7 +92,7 @@ plant_parameter(x, SpParams, parName, fillMissing = TRUE)
 \item{fillMissing}{A boolean flag to try imputation on missing values.}
 }
 \value{
-A vector with values for each plant of the input \code{\link{forest}} object:
+A vector with values for each woody plant cohort of the input \code{\link{forest}} object:
 \itemize{
   \item{\code{plant_basalArea}: Tree basal area (m2/ha).}
   \item{\code{plant_largerTreeBasalArea}: Basal area (m2/ha) of trees larger (in diameter) than the tree. Half of the trees of the same record are included.}
@@ -117,7 +117,7 @@ A vector with values for each plant of the input \code{\link{forest}} object:
 }
 }
 \description{
-Functions to calculate attributes of plants in a \code{\link{forest}} object.
+Functions to calculate attributes of woody plants in a \code{\link{forest}} object.
 }
 \examples{
 #Default species parameterization
