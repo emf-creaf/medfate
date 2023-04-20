@@ -108,18 +108,21 @@ summary.forest<-function(object, SpParams, ...) {
   s["Adult_cover"] <- pmin(100,sum(coh_cov[selAdult], na.rm=TRUE))
   s["Sapling_cover"] <- pmin(100,sum(coh_cov[selSapling], na.rm=TRUE))
   s["Shrub_cover"] <- pmin(100,sum(coh_cov[selShrub], na.rm=TRUE))
+  hc <- object$herbCover
+  if(is.na(hc)) hc <- 0
+  s["Herb_cover"] <- hc
 
   s["Tree_lai"] <- sum(coh_lai[selTree], na.rm=TRUE)
   s["Adult_lai"] <- sum(coh_lai[selAdult], na.rm=TRUE)
   s["Sapling_lai"] <- sum(coh_lai[selSapling], na.rm=TRUE)
   s["Shrub_lai"] <- sum(coh_lai[selShrub], na.rm=TRUE)
-
+  s["Herb_lai"] <- herb_LAI(object$herbCover, object$herbHeight)
+  
   s["Tree_fuel"] <- sum(coh_fuel[selTree], na.rm=TRUE)
   s["Adult_fuel"] <- sum(coh_fuel[selAdult], na.rm=TRUE)
   s["Sapling_fuel"] <- sum(coh_fuel[selSapling], na.rm=TRUE)
   s["Shrub_fuel"] <- sum(coh_fuel[selShrub], na.rm=TRUE)
-  
-  s["Phytovolume"] <- sum(plant_phytovolume(object, SpParams),na.rm=TRUE)
+  s["Herb_fuel"] <- herb_fuel(object$herbCover, object$herbHeight)
   
   s["PARground"] <- light_PARground(object, SpParams)
   s["SWRground"] <- light_SWRground(object, SpParams)
@@ -136,16 +139,20 @@ print.summary.forest<-function(x, digits=getOption("digits"),...) {
             " shrubs (estimated):", round(x[["Shrub_density"]],digits),"\n"))
   cat(paste("Cover (%) adult trees:", round(x[["Adult_cover"]],digits), 
             " saplings:", round(x[["Sapling_cover"]], digits), 
-            " shrubs:", round(x[["Shrub_cover"]],digits),"\n"))
-  cat(paste("Shrub crown phytovolume (m3/m2):", 
-            round(x[["Phytovolume"]],digits),"\n"))
-  cat(paste("LAI (m2/m2) total:", round(x[["Tree_lai"]] + x[["Shrub_lai"]], digits),
+            " shrubs:", round(x[["Shrub_cover"]],digits),
+            " herbs:", round(x[["Herb_cover"]],digits),
+            "\n"))
+  cat(paste("LAI (m2/m2) total:", round(x[["Tree_lai"]] + x[["Shrub_lai"]] + x[["Herb_lai"]], digits),
             " adult trees:", round(x[["Adult_lai"]], digits),
             " saplings:", round(x[["Sapling_lai"]], digits), 
-            " shrubs:", round(x[["Shrub_lai"]], digits),"\n"))
-  cat(paste("Fuel (kg/m2) total:", round(x[["Tree_fuel"]] + x[["Shrub_fuel"]], digits),
+            " shrubs:", round(x[["Shrub_lai"]], digits),
+            " herbs:", round(x[["Herb_lai"]], digits),
+            "\n"))
+  cat(paste("Fuel (kg/m2) total:", round(x[["Tree_fuel"]] + x[["Shrub_fuel"]] + x[["Herb_fuel"]], digits),
             " adult trees:", round(x[["Adult_fuel"]], digits),
             " saplings:", round(x[["Sapling_fuel"]], digits), 
-            " shrubs:", round(x[["Shrub_fuel"]], digits),"\n"))
+            " shrubs:", round(x[["Shrub_fuel"]], digits),
+            " herbs:", round(x[["Herb_fuel"]],digits),
+            "\n"))
   cat(paste("PAR ground (%):", round(x[["PARground"]],digits)," SWR ground (%):", round(x[["SWRground"]],digits),"\n"))
 }

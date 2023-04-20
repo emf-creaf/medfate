@@ -437,7 +437,7 @@ DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFM
   double herbHeight = object["herbHeight"];
   if(NumericVector::is_na(herbHeight)) herbHeight = 0.0;
   double herbDepth = herbHeight/100.0; //in cm
-  double herbLoading = 0.014*herbCover*(herbHeight/100.0); // From piropinus
+  double herbLoading = herbFoliarBiomass(herbCover, herbHeight); // From piropinus
   
   //Woody loading  
   double woodyLoading = std::accumulate(cohSmallBranchLitter.begin(),cohSmallBranchLitter.end(),0.0);

@@ -329,12 +329,24 @@ fire_Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, win
     .Call(`_medfate_shrubCrownRatio`, SP, SpParams)
 }
 
+herb_foliarBiomass <- function(herbCover, herbHeight) {
+    .Call(`_medfate_herbFoliarBiomass`, herbCover, herbHeight)
+}
+
 .shrubCover <- function(x, excludeMinHeight = 0.0) {
     .Call(`_medfate_shrubCover`, x, excludeMinHeight)
 }
 
 .shrubPhytovolume <- function(SP, Cover, H, CR, SpParams) {
     .Call(`_medfate_shrubPhytovolume`, SP, Cover, H, CR, SpParams)
+}
+
+herb_fuel <- function(herbCover, herbHeight) {
+    .Call(`_medfate_herbFuel`, herbCover, herbHeight)
+}
+
+herb_LAI <- function(herbCover, herbHeight) {
+    .Call(`_medfate_herbLAI`, herbCover, herbHeight)
 }
 
 #' Plant description functions

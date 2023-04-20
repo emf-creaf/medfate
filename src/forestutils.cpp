@@ -310,6 +310,12 @@ NumericVector shrubFoliarBiomass(IntegerVector SP, NumericVector Cover, NumericV
   return(fb);
 }
 
+// [[Rcpp::export("herb_foliarBiomass")]]
+double herbFoliarBiomass(double herbCover, double herbHeight){
+  double herbFB = 0.014*herbCover*(herbHeight/100.0); // From piropinus
+  if(NumericVector::is_na(herbFB)) herbFB = 0.0;
+  return(herbFB);
+}
 
 
 /**
@@ -431,6 +437,10 @@ NumericVector shrubFuel(IntegerVector SP, NumericVector Cover, NumericVector H, 
   }
   return(W);
 }
+// [[Rcpp::export("herb_fuel")]]
+double herbFuel(double herbCover, double herbHeight){
+  return(herbFoliarBiomass( herbCover,  herbHeight));
+}
 
 /**
  *  Leaf Area Index (LAI)
@@ -457,6 +467,11 @@ NumericVector shrubLAI(IntegerVector SP, NumericVector Cover, NumericVector H, D
     lai[i] = (SLA[i]*lb[i]); 
   }
   return(lai);
+}
+
+// [[Rcpp::export("herb_LAI")]]
+double herbLAI(double herbCover, double herbHeight){
+  return(herbFoliarBiomass( herbCover,  herbHeight)*9.0); // SLA = 9 m2/kg from Brachypodium retusum in BROT2
 }
 
 

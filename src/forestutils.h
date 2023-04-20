@@ -42,6 +42,7 @@ NumericVector cohortCrownRatio(List x, DataFrame SpParams);
 NumericVector cohortCrownBaseHeight(List x, DataFrame SpParams);
 NumericVector cohortCrownLength(List x, DataFrame SpParams);
 
+double herbFoliarBiomass(double herbCover, double herbHeight);
 NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_REAL);
 
 NumericVector cohortEquilibriumLeafLitter(List x, DataFrame SpParams, double AET = 800);

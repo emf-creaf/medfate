@@ -330,6 +330,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// herbFoliarBiomass
+double herbFoliarBiomass(double herbCover, double herbHeight);
+RcppExport SEXP _medfate_herbFoliarBiomass(SEXP herbCoverSEXP, SEXP herbHeightSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type herbCover(herbCoverSEXP);
+    Rcpp::traits::input_parameter< double >::type herbHeight(herbHeightSEXP);
+    rcpp_result_gen = Rcpp::wrap(herbFoliarBiomass(herbCover, herbHeight));
+    return rcpp_result_gen;
+END_RCPP
+}
 // shrubCover
 double shrubCover(List x, double excludeMinHeight);
 RcppExport SEXP _medfate_shrubCover(SEXP xSEXP, SEXP excludeMinHeightSEXP) {
@@ -354,6 +366,30 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type CR(CRSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     rcpp_result_gen = Rcpp::wrap(shrubPhytovolume(SP, Cover, H, CR, SpParams));
+    return rcpp_result_gen;
+END_RCPP
+}
+// herbFuel
+double herbFuel(double herbCover, double herbHeight);
+RcppExport SEXP _medfate_herbFuel(SEXP herbCoverSEXP, SEXP herbHeightSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type herbCover(herbCoverSEXP);
+    Rcpp::traits::input_parameter< double >::type herbHeight(herbHeightSEXP);
+    rcpp_result_gen = Rcpp::wrap(herbFuel(herbCover, herbHeight));
+    return rcpp_result_gen;
+END_RCPP
+}
+// herbLAI
+double herbLAI(double herbCover, double herbHeight);
+RcppExport SEXP _medfate_herbLAI(SEXP herbCoverSEXP, SEXP herbHeightSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type herbCover(herbCoverSEXP);
+    Rcpp::traits::input_parameter< double >::type herbHeight(herbHeightSEXP);
+    rcpp_result_gen = Rcpp::wrap(herbLAI(herbCover, herbHeight));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4825,8 +4861,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},
     {"_medfate_treeBasalArea", (DL_FUNC) &_medfate_treeBasalArea, 2},
     {"_medfate_shrubCrownRatio", (DL_FUNC) &_medfate_shrubCrownRatio, 2},
+    {"_medfate_herbFoliarBiomass", (DL_FUNC) &_medfate_herbFoliarBiomass, 2},
     {"_medfate_shrubCover", (DL_FUNC) &_medfate_shrubCover, 2},
     {"_medfate_shrubPhytovolume", (DL_FUNC) &_medfate_shrubPhytovolume, 5},
+    {"_medfate_herbFuel", (DL_FUNC) &_medfate_herbFuel, 2},
+    {"_medfate_herbLAI", (DL_FUNC) &_medfate_herbLAI, 2},
     {"_medfate_cohortIDs", (DL_FUNC) &_medfate_cohortIDs, 4},
     {"_medfate_cohortBasalArea", (DL_FUNC) &_medfate_cohortBasalArea, 2},
     {"_medfate_cohortLargerTreeBasalArea", (DL_FUNC) &_medfate_cohortLargerTreeBasalArea, 3},
