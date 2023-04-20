@@ -112,8 +112,8 @@ A list, with the following options (default values in brackets):
    }
   \bold{Forest dynamics} (function \code{\link{fordyn}}):
    \itemize{
-     \item{\code{allowRecruitment [= TRUE]}: Boolean flag to indicate that recruitment is allowed.}
-     \item{\code{recruitmentMode [= "stochastic"]}: String describing how recruitment is applied. Current accepted values are "deterministic" or "stochastic".}
+     \item{\code{allowRecruitment [= TRUE]}: Boolean flag to indicate that recruitment from seeds is allowed.}
+     \item{\code{recruitmentMode [= "stochastic"]}: String describing how recruitment from seeds is applied. Current accepted values are "deterministic" or "stochastic".}
      \item{\code{allowResprouting [= TRUE]}: Boolean flag to indicate that resprouting is allowed.}
      \item{\code{removeEmptyCohorts [= TRUE]}: Boolean flag to indicate the removal of cohorts whose density is too low.}
      \item{\code{minimumCohortDensity [= 1]}: Threshold of density resulting in cohort removal.}

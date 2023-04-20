@@ -83,6 +83,7 @@ NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slo
 
 double herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, 
                                List soil, String soilFunctions, bool modifySoil = true){
+  if(NumericVector::is_na(herbLAI)) return(0.0);
   double Tmax_herb = pet*(LherbSWR/100.0)*(0.134*herbLAI - 0.006*pow(herbLAI, 2.0));
   NumericVector psiSoil = psi(soil, soilFunctions);
   NumericVector W = soil["W"];
