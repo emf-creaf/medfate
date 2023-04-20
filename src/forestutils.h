@@ -50,6 +50,7 @@ NumericVector cohortEquilibriumSmallBranchLitter(List x, DataFrame SpParams, dou
 
 NumericVector cohortCover(List x, DataFrame SpParams);
 
+double herbLAI(double herbCover, double herbHeight);
 NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL, bool bounded = true);
 
 NumericMatrix LAIdistributionVectors(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR);

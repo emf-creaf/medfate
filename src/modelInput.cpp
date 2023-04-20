@@ -1000,6 +1000,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   List input = List::create(_["control"] = ctl,
                             _["soil"] = clone(soil),
                             _["canopy"] = paramsCanopydf,
+                            _["herbLAI"] = NA_REAL, //To be filled outside
                             _["cohorts"] = cohortDescdf,
                             _["above"] = plantsdf,
                             _["below"] = belowdf,
@@ -1124,6 +1125,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   List input = List::create(_["control"] = ctl,
                        _["soil"] = clone(soil),
                        _["canopy"] = paramsCanopydf,
+                       _["herbLAI"] = NA_REAL, //To be filled outside
                        _["cohorts"] = cohortDescdf,
                        _["above"] = plantsdf,
                        _["below"] = belowdf,
@@ -1144,9 +1146,9 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                                                        paramsGrowthdf, control),
                        _["internalAllocation"] = internalAllocationDataFrame(plantsdf, belowdf,
                                                       paramsAnatomydf,
-                                                      paramsTranspirationdf, control),
-                       _["internalMortality"] = internalMortalityDataFrame(plantsdf));
+                                                      paramsTranspirationdf, control));
   
+  input.push_back(internalMortalityDataFrame(plantsdf), "internalMortality");
   input.push_back(FCCSprops, "internalFCCS");
   
   input.attr("class") = CharacterVector::create("growthInput","list");
@@ -1457,7 +1459,9 @@ List forest2spwbInput(List x, List soil, DataFrame SpParams, List control) {
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL, fireHazardResults);
   DataFrame FCCSprops = R_NilValue;
   if(fireHazardResults) FCCSprops = FCCSproperties(x, SpParams);
-  return(spwbInput(above, rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control));
+  List s = spwbInput(above, rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control);
+  s["herbLAI"] = herbLAI(x["herbCover"], x["herbHeight"]);
+  return(s);
 }
 
 
@@ -1469,7 +1473,9 @@ List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL, fireHazardResults);
   DataFrame FCCSprops = R_NilValue;
   if(fireHazardResults) FCCSprops = FCCSproperties(x, SpParams);
-  return(growthInput(above,  rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control));
+  List g = growthInput(above,  rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control);
+  g["herbLAI"] = herbLAI(x["herbCover"], x["herbHeight"]);
+  return(g);
 }
 
 //' Reset simulation inputs

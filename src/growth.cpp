@@ -1905,7 +1905,7 @@ List growth(List x, DataFrame meteo, double latitude,
   DataFrame SWB = defineSoilWaterBalanceDailyOutput(meteo, soil, transpirationMode);
   
   
-  NumericVector LAI(numDays), LAIlive(numDays), LAIexpanded(numDays), LAIdead(numDays);
+  NumericVector LAI(numDays), LAIherb(numDays) , LAIlive(numDays), LAIexpanded(numDays), LAIdead(numDays);
   NumericVector Cm(numDays);
   NumericVector LgroundPAR(numDays);
   NumericVector LgroundSWR(numDays);
@@ -2069,6 +2069,7 @@ List growth(List x, DataFrame meteo, double latitude,
     LgroundPAR[i] = stand["LgroundPAR"];
     LgroundSWR[i] = stand["LgroundSWR"];
     LAI[i] = stand["LAI"];
+    LAIherb[i] = stand["LAIherb"];
     LAIlive[i] = stand["LAIlive"];
     LAIexpanded[i] = stand["LAIexpanded"];
     LAIdead[i] = stand["LAIdead"];
@@ -2201,9 +2202,9 @@ List growth(List x, DataFrame meteo, double latitude,
   NumericVector topo = NumericVector::create(elevation, slope, aspect);
   topo.attr("names") = CharacterVector::create("elevation", "slope", "aspect");
   
-  Rcpp::DataFrame Stand = DataFrame::create(_["LAI"]=LAI, _["LAIlive"]=LAIlive, _["LAIexpanded"]=LAIexpanded,_["LAIdead"]=LAIdead,
-                                            _["Cm"]=Cm, 
-                                            _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
+  Rcpp::DataFrame Stand = DataFrame::create(_["LAI"]=LAI, _["LAIherb"]=LAIherb, 
+                                            _["LAIlive"]=LAIlive, _["LAIexpanded"]=LAIexpanded,_["LAIdead"]=LAIdead,
+                                            _["Cm"]=Cm, _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
   Stand.attr("row.names") = meteo.attr("row.names");
 
   
