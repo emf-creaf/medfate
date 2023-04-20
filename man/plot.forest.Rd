@@ -11,6 +11,7 @@
   type = "LeafAreaDensity",
   byCohorts = FALSE,
   bySpecies = FALSE,
+  includeHerbs = FALSE,
   ...
 )
 
