@@ -78,6 +78,10 @@ emptyforest <- function(ntree = 0, nshrub = 0) {
 #' @rdname forest
 summary.forest<-function(object, SpParams, ...) {
 
+  # Checks
+  if(length(object$herbCover)!=1) object$herbCover = NA
+  if(length(object$herbHeight)!=1) object$herbHeight = NA
+  
   ntree <- nrow(object$treeData)
   nshrub <- nrow(object$shrubData)
   
