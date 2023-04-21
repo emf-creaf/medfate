@@ -121,12 +121,14 @@ summary.forest<-function(object, SpParams, ...) {
   s["Sapling_lai"] <- sum(coh_lai[selSapling], na.rm=TRUE)
   s["Shrub_lai"] <- sum(coh_lai[selShrub], na.rm=TRUE)
   s["Herb_lai"] <- herb_LAI(object$herbCover, object$herbHeight)
+  s["Total_lai"] <- s[["Tree_lai"]] + s[["Shrub_lai"]] + s[["Herb_lai"]]
   
   s["Tree_fuel"] <- sum(coh_fuel[selTree], na.rm=TRUE)
   s["Adult_fuel"] <- sum(coh_fuel[selAdult], na.rm=TRUE)
   s["Sapling_fuel"] <- sum(coh_fuel[selSapling], na.rm=TRUE)
   s["Shrub_fuel"] <- sum(coh_fuel[selShrub], na.rm=TRUE)
   s["Herb_fuel"] <- herb_fuel(object$herbCover, object$herbHeight)
+  s["Total_fuel"] <- s[["Tree_fuel"]] + s[["Shrub_fuel"]] + s[["Herb_fuel"]]
   
   s["PARground"] <- light_PARground(object, SpParams)
   s["SWRground"] <- light_SWRground(object, SpParams)
@@ -146,13 +148,13 @@ print.summary.forest<-function(x, digits=getOption("digits"),...) {
             " shrubs:", round(x[["Shrub_cover"]],digits),
             " herbs:", round(x[["Herb_cover"]],digits),
             "\n"))
-  cat(paste("LAI (m2/m2) total:", round(x[["Tree_lai"]] + x[["Shrub_lai"]] + x[["Herb_lai"]], digits),
+  cat(paste("LAI (m2/m2) total:", round(x[["Total_lai"]], digits),
             " adult trees:", round(x[["Adult_lai"]], digits),
             " saplings:", round(x[["Sapling_lai"]], digits), 
             " shrubs:", round(x[["Shrub_lai"]], digits),
             " herbs:", round(x[["Herb_lai"]], digits),
             "\n"))
-  cat(paste("Fuel (kg/m2) total:", round(x[["Tree_fuel"]] + x[["Shrub_fuel"]] + x[["Herb_fuel"]], digits),
+  cat(paste("Fuel (kg/m2) total:", round(x[["Total_fuel"]], digits),
             " adult trees:", round(x[["Adult_fuel"]], digits),
             " saplings:", round(x[["Sapling_fuel"]], digits), 
             " shrubs:", round(x[["Shrub_fuel"]], digits),
