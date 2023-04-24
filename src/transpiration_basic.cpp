@@ -236,6 +236,14 @@ List transpirationBasic(List x, NumericVector meteovec,
     
     double rootCrownPsi = NA_REAL;
     
+    //Cuticular transpiration    
+    double lvp_tmax = leafVapourPressure(tmax,  PlantPsi[c]);
+    double lvp_tmin = leafVapourPressure(tmin,  PlantPsi[c]);
+    double lvpd_tmax = std::max(0.0, lvp_tmax - vpatm);
+    double lvpd_tmin = std::max(0.0, lvp_tmin - vpatm);
+    double E_gmin = Gswmin[c]*(lvpd_tmin+lvpd_tmax)/(2.0*Patm); // mol·s-1·m-2
+    double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
+    
     //Extraction from soil (can later be modified if there are changes in plant water content)
     if(!plantWaterPools) {
       NumericVector Klc(nlayers);
@@ -251,7 +259,7 @@ List transpirationBasic(List x, NumericVector meteovec,
       double sumKunlc = sum(Kunlc);
       double Klcmean = sum(Klc*V(c,_));
       for(int l=0;l<nlayers;l++) {
-        Extraction(c,l) = std::max(TmaxCoh[c]*Klcmean*(Kunlc[l]/sumKunlc),0.0);
+        Extraction(c,l) = std::max(TmaxCoh[c]*Klcmean, E_gmin)*(Kunlc[l]/sumKunlc);
       }
       rootCrownPsi = averagePsi(psiSoil, V(c,_), Exp_Extract[c], Psi_Extract[c]);
       // Rcout<< c << " : " << rootCrownPsi<<"\n";
@@ -273,7 +281,7 @@ List transpirationBasic(List x, NumericVector meteovec,
       double Klcmean = sum(Klc*RHOPcohV);
       for(int l=0;l<nlayers;l++) {
         for(int j = 0;j<numCohorts;j++) {
-          ExtractionPoolsCoh(j,l) = std::max(TmaxCoh[c]*Klcmean*(Kunlc(j,l)/sumKunlc),0.0);
+          ExtractionPoolsCoh(j,l) = std::max(TmaxCoh[c]*Klcmean, E_gmin)*(Kunlc(j,l)/sumKunlc);
         }
         Extraction(c,l) = sum(ExtractionPoolsCoh(_,l)); // Sum extraction from all pools (layer l)
       }
@@ -281,25 +289,12 @@ List transpirationBasic(List x, NumericVector meteovec,
       // Rcout<< c << " : " << rootCrownPsi<<"\n";
     }
     
-    //Cuticular transpiration    
-    // double lvp_tmax = leafVapourPressure(tmax,  PlantPsi[c]);
-    // double lvp_tmin = leafVapourPressure(tmin,  PlantPsi[c]);
-    // double lvpd_tmax = std::max(0.0, lvp_tmax - vpatm);
-    // double lvpd_tmin = std::max(0.0, lvp_tmin - vpatm);
-    // double E_gmin = Gswmin[c]*(lvpd_tmin+lvpd_tmax)/(2.0*Patm); // mol·s-1·m-2
-    // double E_cut = E_gmin*LAIphe[c]*(24.0*3600.0*0.018);
+
 
     double oldVol = plantVol(PlantPsi[c], parsVol); 
     
     //Transpiration is the maximum of predicted extraction and cuticular transpiration
     double ext_sum = sum(Extraction(c,_));
-    // double corr_extraction = 0.0;
-    // if(E_cut > ext_sum) {
-    //   Eplant[c] = E_cut;
-    //   corr_extraction = E_cut - ext_sum; //Correction to be added to extraction
-    // } else {
-    //   Eplant[c] = ext_sum;
-    // }
     Eplant[c] = ext_sum;
     // PlantPsi[c] = findNewPlantPsiConnected(Eplant[c], PlantPsi[c], rootCrownPsi, parsVol);
     //For deciduous species, make water potential follow soil during winter
@@ -312,18 +307,6 @@ List transpirationBasic(List x, NumericVector meteovec,
     //Plant transpiration and water balance
     PWB[c] = volDiff;
     
-    //Divide the difference among soil layers extraction
-    // for(int l=0;l<nlayers;l++) {
-    //   if(!plantWaterPools) {
-    //     if(ext_sum>0.0) Extraction(c,l) += (corr_extraction)*(Extraction(c,l)/ext_sum);
-    //   } else { // recalculate also extraction from soil pools
-    //     for(int j = 0;j<numCohorts;j++) {
-    //       if(ext_sum>0.0) ExtractionPoolsCoh(j,l) += (corr_extraction)*(ExtractionPoolsCoh(j,l)/ext_sum);
-    //     }
-    //     //Recalculate extraction from soil layers
-    //     Extraction(c,l) = sum(ExtractionPoolsCoh(_,l)); // Sum extraction from all pools (layer l)
-    //   }
-    // }
     //Photosynthesis
     double fpar = std::min(1.0, pow(PARcohort[c]/100.0,WUE_par[c]));
     double fco2 = (1.0 - exp((-1.0)*WUE_co2[c]*Catm));
