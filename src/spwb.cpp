@@ -81,20 +81,6 @@ NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slo
   return(fireHazard);
 }
 
-double herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, 
-                               List soil, String soilFunctions, bool modifySoil = true){
-  if(NumericVector::is_na(herbLAI)) return(0.0);
-  double Tmax_herb = pet*(LherbSWR/100.0)*(0.134*herbLAI - 0.006*pow(herbLAI, 2.0));
-  NumericVector psiSoil = psi(soil, soilFunctions);
-  NumericVector W = soil["W"];
-  NumericVector Water_FC = waterFC(soil, soilFunctions);
-  double Eherb = Tmax_herb*Psi2K(psiSoil[0], -1.5, 2.0);
-  if(modifySoil) {
-    W[0] = W[0] - (Eherb/Water_FC[0]);
-  }
-  return(Eherb);
-}
-
 // Soil water balance with simple hydraulic model
 List spwbDay_basic(List x, NumericVector meteovec, 
               double elevation, double slope, double aspect,

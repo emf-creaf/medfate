@@ -1422,6 +1422,13 @@ hydrology_soilEvaporation <- function(soil, soilFunctions, pet, LgroundSWR, modi
     .Call(`_medfate_soilEvaporation`, soil, soilFunctions, pet, LgroundSWR, modifySoil)
 }
 
+#' @rdname hydrology_soil
+#' @param LherbSWR Percentage of short-wave radiation (SWR) reaching the herbaceous layer.
+#' @param herbLAI Leaf area index of the herbaceous layer.
+hydrology_herbaceousTranspiration <- function(pet, LherbSWR, herbLAI, soil, soilFunctions, modifySoil = TRUE) {
+    .Call(`_medfate_herbaceousTranspiration`, pet, LherbSWR, herbLAI, soil, soilFunctions, modifySoil)
+}
+
 .hydrology_infiltrationAmount <- function(input, Ssoil) {
     .Call(`_medfate_infiltrationAmount`, input, Ssoil)
 }

@@ -3,6 +3,7 @@
 \name{hydrology_soilEvaporationAmount}
 \alias{hydrology_soilEvaporationAmount}
 \alias{hydrology_soilEvaporation}
+\alias{hydrology_herbaceousTranspiration}
 \alias{hydrology_infiltrationRepartition}
 \alias{hydrology_snowMelt}
 \alias{hydrology_soil}
@@ -16,6 +17,15 @@ hydrology_soilEvaporation(
   soilFunctions,
   pet,
   LgroundSWR,
+  modifySoil = TRUE
+)
+
+hydrology_herbaceousTranspiration(
+  pet,
+  LherbSWR,
+  herbLAI,
+  soil,
+  soilFunctions,
   modifySoil = TRUE
 )
 
@@ -41,6 +51,10 @@ hydrology_infiltrationAmount(input, Ssoil)
 \item{LgroundSWR}{Percentage of short-wave radiation (SWR) reaching the ground.}
 
 \item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
+
+\item{LherbSWR}{Percentage of short-wave radiation (SWR) reaching the herbaceous layer.}
+
+\item{herbLAI}{Leaf area index of the herbaceous layer.}
 
 \item{I}{Soil infiltration (in mm of water).}
 

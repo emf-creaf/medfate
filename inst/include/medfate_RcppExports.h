@@ -171,6 +171,27 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
+    inline double hydrology_herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, List soil, String soilFunctions, bool modifySoil = true) {
+        typedef SEXP(*Ptr_hydrology_herbaceousTranspiration)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
+        static Ptr_hydrology_herbaceousTranspiration p_hydrology_herbaceousTranspiration = NULL;
+        if (p_hydrology_herbaceousTranspiration == NULL) {
+            validateSignature("double(*hydrology_herbaceousTranspiration)(double,double,double,List,String,bool)");
+            p_hydrology_herbaceousTranspiration = (Ptr_hydrology_herbaceousTranspiration)R_GetCCallable("medfate", "_medfate_hydrology_herbaceousTranspiration");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_hydrology_herbaceousTranspiration(Shield<SEXP>(Rcpp::wrap(pet)), Shield<SEXP>(Rcpp::wrap(LherbSWR)), Shield<SEXP>(Rcpp::wrap(herbLAI)), Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(soilFunctions)), Shield<SEXP>(Rcpp::wrap(modifySoil)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<double >(rcpp_result_gen);
+    }
+
     inline double _hydrology_infiltrationAmount(double input, double Ssoil) {
         typedef SEXP(*Ptr__hydrology_infiltrationAmount)(SEXP,SEXP);
         static Ptr__hydrology_infiltrationAmount p__hydrology_infiltrationAmount = NULL;
