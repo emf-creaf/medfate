@@ -99,5 +99,5 @@ close collaboration with researchers from
   M, García-Valdés R, Nadal-Sala D, Sabaté S, Martin-StPaul N, Morin X,
   D’Adamo F, Batllori E, Améztegui A (2023) MEDFATE 2.9.3: A
   trait-enabled model to simulate Mediterranean forest function and
-  dynamics at regional scales. Geophysical Model Development
+  dynamics at regional scales. Geoscientific Model Development
   (<https://doi.org/10.5194/gmd-2022-243>).
