@@ -14,7 +14,7 @@ library(medfate)
 
 ## About this vignette
 
-This document describes how to run the growth model of `medfate`, implemented in function `growth()`. All the details of the model design and formulation can be found at the corresponding chapters of the [medfate book](https://emf-creaf.github.io/medfatebook/index.html). 
+This document describes how to run the growth model of `medfate`, described in De Cáceres et al. (2023) and implemented in function `growth()`. All the details of the model design and formulation can be found at the corresponding chapters of the [medfate book](https://emf-creaf.github.io/medfatebook/index.html). 
 
 Because the forest growth model builds on the water balance model, the reader is assumed here to be familiarized with `spwb()`. If not, we recommend reading vignette [*Basic water balance*](https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html) before this one. 
 
@@ -207,3 +207,7 @@ Again, actual comparisons will be done at coarser temporal resolution. For conve
 ```{r, eval = FALSE}
 shinyplot(G1, exampleobs)
 ```
+
+## References
+
++ De Cáceres M, Molowny-Horas R, Cabon A, Martínez-Vilalta J, Mencuccini M, García-Valdés R, Nadal-Sala D, Sabaté S, Martin-StPaul N, Morin X, D'Adamo F, Batllori E, Améztegui A (2023) MEDFATE 2.9.3: A trait-enabled model to simulate Mediterranean forest function and dynamics at regional scales. Geophysical Model Development (https://doi.org/10.5194/gmd-2022-243).
