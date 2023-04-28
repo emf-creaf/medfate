@@ -71,7 +71,7 @@ The set of R packages are developed and maintained by the [*Ecosystem
 Modelling Facility*](https://emf.creaf.cat) unit at CREAF (in Spain), in
 close collaboration with researchers from
 [*URFM-INRAE*](https://www6.paca.inrae.fr/ecologie_des_forets_mediterraneennes/)
-(in FRANCE).
+(in France).
 
 ## References
 
@@ -96,7 +96,7 @@ close collaboration with researchers from
   (<https://doi.org/10.5194/gmd-15-5593-2022>).
 
 - De Cáceres M, Molowny-Horas R, Cabon A, Martínez-Vilalta J, Mencuccini
-  M, García-Valdés R, Nadal-Sala D, Sabaté S, Martin-StPaul N, Morin N,
+  M, García-Valdés R, Nadal-Sala D, Sabaté S, Martin-StPaul N, Morin X,
   D’Adamo F, Batllori E, Améztegui A (2023) MEDFATE 2.9.3: A
   trait-enabled model to simulate Mediterranean forest function and
   dynamics at regional scales. Geophysical Model Development
