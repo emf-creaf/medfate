@@ -27,7 +27,7 @@ evalDIR = "~/OneDrive/mcaceres_work/model_development/medfate_development/Region
 ## Introduction
 
 ```{r, echo = FALSE}
-ver <- packageVersion("medfate")
+ver <- "2.9.3" # packageVersion("medfate")
 files <- c(paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN23_v", ver, ".rds"),
            paste0(evalDIR, "/Rdata/IFNeval_results_sperry_IFN23_v", ver, ".rds"),
            paste0(evalDIR, "/Rdata/IFNeval_results_granier_IFN34_v", ver, ".rds"),
