@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.0</span>
       </span>
     </div>
 
@@ -86,9 +86,13 @@
           <p class="section-desc"></p><p>Plant, species and forest attributes</p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="stand_values.html">stand_basalArea()</a></code> <code><a href="stand_values.html">stand_foliarBiomass()</a></code> <code><a href="stand_values.html">stand_phytovolume()</a></code> <code><a href="stand_values.html">stand_fuel()</a></code> <code><a href="stand_values.html">stand_LAI()</a></code> <code><a href="stand_values.html">stand_dominantTreeDiameter()</a></code> <code><a href="stand_values.html">stand_dominantTreeHeight()</a></code> <code><a href="stand_values.html">stand_hartBeckingIndex()</a></code> <code><a href="stand_values.html">stand_quadraticMeanTreeDiameter()</a></code> </p>
+          <p><code><a href="stand_values.html">stand_basalArea()</a></code> <code><a href="stand_values.html">stand_foliarBiomass()</a></code> <code><a href="stand_values.html">stand_phytovolume()</a></code> <code><a href="stand_values.html">stand_fuel()</a></code> <code><a href="stand_values.html">stand_LAI()</a></code> <code><a href="stand_values.html">stand_dominantTreeDiameter()</a></code> <code><a href="stand_values.html">stand_dominantTreeHeight()</a></code> <code><a href="stand_values.html">stand_hartBeckingIndex()</a></code> <code><a href="stand_values.html">stand_quadraticMeanTreeDiameter()</a></code> <code><a href="stand_values.html">stand_dominantTreeSpecies()</a></code> </p>
         </td>
         <td><p>Stand values</p></td>
+      </tr><tr><td>
+          <p><code><a href="moisture.html">moisture_sapwoodWaterCapacity()</a></code> <code><a href="moisture.html">moisture_leafWaterCapacity()</a></code> <code><a href="moisture.html">moisture_turgorLossPoint()</a></code> <code><a href="moisture.html">moisture_symplasticRWC()</a></code> <code><a href="moisture.html">moisture_symplasticPsi()</a></code> <code><a href="moisture.html">moisture_apoplasticRWC()</a></code> <code><a href="moisture.html">moisture_apoplasticPsi()</a></code> <code><a href="moisture.html">moisture_tissueRWC()</a></code> <code><a href="moisture.html">plant_water()</a></code> <code><a href="moisture.html">moisture_pressureVolumeCurvePlot()</a></code> </p>
+        </td>
+        <td><p>Tissue moisture functions</p></td>
       </tr><tr><td>
           <p><code><a href="plant_values.html">plant_ID()</a></code> <code><a href="plant_values.html">plant_basalArea()</a></code> <code><a href="plant_values.html">plant_largerTreeBasalArea()</a></code> <code><a href="plant_values.html">plant_cover()</a></code> <code><a href="plant_values.html">plant_species()</a></code> <code><a href="plant_values.html">plant_speciesName()</a></code> <code><a href="plant_values.html">plant_density()</a></code> <code><a href="plant_values.html">plant_height()</a></code> <code><a href="plant_values.html">plant_individualArea()</a></code> <code><a href="plant_values.html">plant_crownRatio()</a></code> <code><a href="plant_values.html">plant_crownBaseHeight()</a></code> <code><a href="plant_values.html">plant_crownLength()</a></code> <code><a href="plant_values.html">plant_foliarBiomass()</a></code> <code><a href="plant_values.html">plant_fuel()</a></code> <code><a href="plant_values.html">plant_equilibriumLeafLitter()</a></code> <code><a href="plant_values.html">plant_equilibriumSmallBranchLitter()</a></code> <code><a href="plant_values.html">plant_phytovolume()</a></code> <code><a href="plant_values.html">plant_LAI()</a></code> <code><a href="plant_values.html">plant_characterParameter()</a></code> <code><a href="plant_values.html">plant_parameter()</a></code> </p>
         </td>
@@ -154,7 +158,7 @@
           <p class="section-desc"></p><p>Simulation control and input objects</p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="modelInput.html">forest2aboveground()</a></code> <code><a href="modelInput.html">forest2belowground()</a></code> <code><a href="modelInput.html">spwbInput()</a></code> <code><a href="modelInput.html">growthInput()</a></code> <code><a href="modelInput.html">forest2spwbInput()</a></code> <code><a href="modelInput.html">forest2growthInput()</a></code> </p>
+          <p><code><a href="modelInput.html">forest2aboveground()</a></code> <code><a href="modelInput.html">forest2belowground()</a></code> <code><a href="modelInput.html">forest2spwbInput()</a></code> <code><a href="modelInput.html">forest2growthInput()</a></code> </p>
         </td>
         <td><p>Input for simulation models</p></td>
       </tr><tr><td>
@@ -180,7 +184,7 @@
       </tr><tr><td>
           <p><code><a href="spwb_day.html">growth_day()</a></code> <code><a href="spwb_day.html">spwb_day()</a></code> </p>
         </td>
-        <td><p>Single day simulation</p></td>
+        <td><p>Single-day simulation</p></td>
       </tr><tr><td>
           <p><code><a href="growth.html">growth()</a></code> </p>
         </td>
@@ -241,18 +245,6 @@
           <p><code><a href="exampleobs.html">exampleobs</a></code> </p>
         </td>
         <td><p>Example observed data</p></td>
-      </tr><tr><td>
-          <p><code><a href="spwb_ldrCalibration.html">spwb_ldrCalibration()</a></code> </p>
-        </td>
-        <td><p>Calibration of root distribution</p></td>
-      </tr><tr><td>
-          <p><code><a href="spwb_ldrOptimization.html">spwb_ldrExploration()</a></code> <code><a href="spwb_ldrOptimization.html">spwb_ldrOptimization()</a></code> </p>
-        </td>
-        <td><p>Optimization of root distribution</p></td>
-      </tr><tr><td>
-          <p><code><a href="spwb_sensitivity.html">spwb_sensitivity()</a></code> </p>
-        </td>
-        <td><p>Sensitivity analysis for soil plant water balance simulations</p></td>
       </tr><tr><td>
           <p><code><a href="evaluation.html">evaluation_table()</a></code> <code><a href="evaluation.html">evaluation_stats()</a></code> <code><a href="evaluation.html">evaluation_plot()</a></code> <code><a href="evaluation.html">evaluation_metric()</a></code> </p>
         </td>
@@ -322,7 +314,7 @@
         </td>
         <td><p>Maximum transpiration vs. LAI</p></td>
       </tr><tr><td>
-          <p><code><a href="transp_modes.html">transp_transpirationSperry()</a></code> <code><a href="transp_modes.html">transp_transpirationGranier()</a></code> </p>
+          <p><code><a href="transp_modes.html">transp_transpirationSperry()</a></code> <code><a href="transp_modes.html">transp_transpirationCochard()</a></code> <code><a href="transp_modes.html">transp_transpirationGranier()</a></code> </p>
         </td>
         <td><p>Transpiration modes</p></td>
       </tr><tr><td>
@@ -338,8 +330,8 @@
         </td>
         <td><p>Carbon-related functions</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
-          <h2 id="secondary-growth-mortality-and-recruitment">Secondary growth, mortality and recruitment <a href="#secondary-growth-mortality-and-recruitment" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p><p>Wood formation, mortality and recruitment processes</p>
+          <h2 id="secondary-growth-mortality-and-regeneration">Secondary growth, mortality and regeneration <a href="#secondary-growth-mortality-and-regeneration" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Wood formation, mortality, recruitment and resprouting processes</p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="woodformation.html">woodformation_initRing()</a></code> <code><a href="woodformation.html">woodformation_temperatureEffect()</a></code> <code><a href="woodformation.html">woodformation_relativeExpansionRate()</a></code> <code><a href="woodformation.html">woodformation_growRing()</a></code> <code><a href="woodformation.html">woodformation_relativeGrowthRate()</a></code> </p>
@@ -350,15 +342,15 @@
         </td>
         <td><p>Mortality</p></td>
       </tr><tr><td>
-          <p><code><a href="recruitment.html">recruitment()</a></code> </p>
+          <p><code><a href="regeneration.html">recruitment()</a></code> <code><a href="regeneration.html">resprouting()</a></code> </p>
         </td>
-        <td><p>Plant recruitment</p></td>
+        <td><p>Plant regeneration</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="water-content">Water content <a href="#water-content" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Plant/tissue water contents</p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="moisture.html">moisture_sapwoodWaterCapacity()</a></code> <code><a href="moisture.html">moisture_leafWaterCapacity()</a></code> <code><a href="moisture.html">moisture_turgorLossPoint()</a></code> <code><a href="moisture.html">moisture_symplasticRWC()</a></code> <code><a href="moisture.html">moisture_symplasticPsi()</a></code> <code><a href="moisture.html">moisture_apoplasticRWC()</a></code> <code><a href="moisture.html">moisture_apoplasticPsi()</a></code> <code><a href="moisture.html">moisture_tissueRWC()</a></code> <code><a href="moisture.html">moisture_pressureVolumeCurvePlot()</a></code> </p>
+          <p><code><a href="moisture.html">moisture_sapwoodWaterCapacity()</a></code> <code><a href="moisture.html">moisture_leafWaterCapacity()</a></code> <code><a href="moisture.html">moisture_turgorLossPoint()</a></code> <code><a href="moisture.html">moisture_symplasticRWC()</a></code> <code><a href="moisture.html">moisture_symplasticPsi()</a></code> <code><a href="moisture.html">moisture_apoplasticRWC()</a></code> <code><a href="moisture.html">moisture_apoplasticPsi()</a></code> <code><a href="moisture.html">moisture_tissueRWC()</a></code> <code><a href="moisture.html">plant_water()</a></code> <code><a href="moisture.html">moisture_pressureVolumeCurvePlot()</a></code> </p>
         </td>
         <td><p>Tissue moisture functions</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
@@ -386,7 +378,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Miquel De Cáceres, Víctor Granda, Antoine Cabon.</p>
+  <p></p><p>Developed by Miquel De Cáceres, Nicolas Martin-StPaul, Víctor Granda, Antoine Cabon.</p>
 </div>
 
 <div class="pkgdown">

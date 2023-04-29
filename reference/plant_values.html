@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.0</span>
       </span>
     </div>
 
@@ -62,40 +62,39 @@
 <span></span>
 <span><span class="fu">plant_largerTreeBasalArea</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, self_proportion <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_cover</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">plant_cover</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">plant_species</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">plant_speciesName</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_density</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">plant_density</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">plant_height</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_individualArea</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">plant_individualArea</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_crownRatio</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">plant_crownRatio</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_crownBaseHeight</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">plant_crownBaseHeight</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_crownLength</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">plant_crownLength</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_foliarBiomass</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">plant_foliarBiomass</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_fuel</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, includeDead <span class="op">=</span> <span class="cn">TRUE</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">plant_fuel</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, includeDead <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_equilibriumLeafLitter</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, AET <span class="op">=</span> <span class="fl">800</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">plant_equilibriumLeafLitter</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, AET <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">plant_equilibriumSmallBranchLitter</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">SpParams</span>,</span>
-<span>  smallBranchDecompositionRate <span class="op">=</span> <span class="fl">0.81</span>,</span>
-<span>  mode <span class="op">=</span> <span class="st">"MED"</span></span>
+<span>  smallBranchDecompositionRate <span class="op">=</span> <span class="fl">0.81</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">plant_phytovolume</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_LAI</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, mode <span class="op">=</span> <span class="st">"MED"</span>, bounded <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">plant_LAI</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, bounded <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">plant_characterParameter</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, <span class="va">parName</span><span class="op">)</span></span>
 <span></span>
@@ -118,10 +117,6 @@
 
 <dt>self_proportion</dt>
 <dd><p>Proportion of the target cohort included in the assessment</p></dd>
-
-
-<dt>mode</dt>
-<dd><p>Calculation mode, either "MED" or "US".</p></dd>
 
 
 <dt>gdd</dt>
@@ -200,11 +195,11 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#The analogous plant-level function for LAI</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">plant_LAI</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.475617</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.58151</span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="co">#The analogous plant-level function for fuel loading</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">plant_fuel</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5076471</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5419197</span>
 <span class="r-in"><span>      </span></span>
 <span class="r-in"><span><span class="co">#Summary function for 'forest' objects can be also used</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
@@ -212,9 +207,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Density (ind/ha) adult trees: 552  saplings: 0  shrubs (estimated): 749.4923076 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Shrub crown phytovolume (m3/m2): 0.03 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LAI (m2/m2) total: 1.4756167  adult trees: 1.4363347  saplings: 0  shrubs: 0.039282 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fuel (kg/m2) total: 1.4756167  adult trees: 1.4363347  saplings: 0  shrubs: 0.039282 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PAR ground (%): 46.1515845  SWR ground (%): 56.3961355 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LAI (m2/m2) total: 1.5815096  adult trees: 1.5543216  saplings: 0  shrubs: 0.027188 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fuel (kg/m2) total: 0.5419197  adult trees: 0.5255004  saplings: 0  shrubs: 0.0164193 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PAR ground (%): 43.7187599  SWR ground (%): 54.1786308 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Cohort IDs in the models</span></span></span>
 <span class="r-in"><span><span class="fu">plant_ID</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
@@ -230,7 +225,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Miquel De Cáceres, Víctor Granda, Antoine Cabon.</p>
+  <p></p><p>Developed by Miquel De Cáceres, Nicolas Martin-StPaul, Víctor Granda, Antoine Cabon.</p>
 </div>
 
 <div class="pkgdown">

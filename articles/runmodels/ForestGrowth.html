@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.0</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2023-03-10</h4>
+            <h4 data-toc-skip class="date">2023-04-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -208,7 +208,7 @@ object, whose names are:</p>
 <span><span class="co">## [10] "paramsInterception"  "paramsTranspiration" "paramsWaterStorage" </span></span>
 <span><span class="co">## [13] "paramsGrowth"        "paramsAllometries"   "internalPhenology"  </span></span>
 <span><span class="co">## [16] "internalWater"       "internalCarbon"      "internalAllocation" </span></span>
-<span><span class="co">## [19] "internalMortality"</span></span></code></pre>
+<span><span class="co">## [19] "internalMortality"   "internalFCCS"</span></span></code></pre>
 <p>As with <code>spwbInput</code> objects, information about the cohort
 species is found in element <code>cohorts</code> (i.e. code, species and
 name):</p>
@@ -223,14 +223,14 @@ that we already know, but with an additional columns that describes the
 estimated initial amount of <em>sapwood area</em>:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">above</span></span></code></pre></div>
-<pre><code><span><span class="co">##         SP        N   DBH Cover   H        CR         SA   LAI_live</span></span>
-<span><span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 346.522305 0.76700589</span></span>
-<span><span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642  44.592545 0.66932880</span></span>
-<span><span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817   1.251072 0.03928201</span></span>
+<pre><code><span><span class="co">##         SP        N   DBH Cover   H        CR          SA   LAI_live</span></span>
+<span><span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 383.4520992 0.84874773</span></span>
+<span><span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642  47.0072886 0.70557382</span></span>
+<span><span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817   0.8658978 0.02718804</span></span>
 <span><span class="co">##        LAI_expanded LAI_dead</span></span>
-<span><span class="co">## T1_148   0.76700589        0</span></span>
-<span><span class="co">## T2_168   0.66932880        0</span></span>
-<span><span class="co">## S1_165   0.03928201        0</span></span></code></pre>
+<span><span class="co">## T1_148   0.84874773        0</span></span>
+<span><span class="co">## T2_168   0.70557382        0</span></span>
+<span><span class="co">## S1_165   0.02718804        0</span></span></code></pre>
 <p>Elements starting with <code>params*</code> contain cohort-specific
 model parameters. Some of them were already presented in previous
 vignettes (<a href="https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html" class="external-link"><em>Basic
@@ -257,14 +257,14 @@ respiration rages. Another important set of parameters is given in
 <code>paramsAllometries</code>:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">paramsAllometries</span></span></code></pre></div>
-<pre><code><span><span class="co">##             Aash     Bash      Absh      Bbsh     Acr   B1cr     B2cr</span></span>
-<span><span class="co">## T1_148 5.8458000 1.494400 0.3596000 0.7138000 1.99500 -0.649 -0.02000</span></span>
-<span><span class="co">## T2_168 1.8574862 1.885548 0.5238830 0.7337293 1.98539 -0.552 -0.01386</span></span>
-<span><span class="co">## S1_165 0.1305509 2.408443 0.5147731 0.5311554 1.50600 -0.706 -0.07800</span></span>
-<span><span class="co">##                B3cr     C1cr     C2cr       Acw    Bcw</span></span>
-<span><span class="co">## T1_148 -0.000120000 -0.00400 -0.15900 0.6415296 0.7310</span></span>
-<span><span class="co">## T2_168 -0.000110736 -0.00685 -0.20101 0.5681897 0.7974</span></span>
-<span><span class="co">## S1_165  0.000180000 -0.00700  0.00000 0.8390000 0.7350</span></span></code></pre>
+<pre><code><span><span class="co">##              Afbt     Bfbt        Cfbt      Aash     Bash      Absh      Bbsh</span></span>
+<span><span class="co">## T1_148 0.07607828 1.462411 -0.02280106 5.8458000 1.494400 0.3596000 0.7138000</span></span>
+<span><span class="co">## T2_168 0.07848713 1.497670 -0.01470000 1.8574862 1.885548 0.5238830 0.7337293</span></span>
+<span><span class="co">## S1_165 0.13000000 1.228500 -0.01470000 0.1305509 2.408443 0.5147731 0.5311554</span></span>
+<span><span class="co">##            Acr   B1cr     B2cr         B3cr     C1cr     C2cr       Acw    Bcw</span></span>
+<span><span class="co">## T1_148 1.99500 -0.649 -0.02000 -0.000120000 -0.00400 -0.15900 0.6415296 0.7310</span></span>
+<span><span class="co">## T2_168 1.98539 -0.552 -0.01386 -0.000110736 -0.00685 -0.20101 0.5681897 0.7974</span></span>
+<span><span class="co">## S1_165 1.50600 -0.706 -0.07800  0.000180000 -0.00700  0.00000 0.8390000 0.7350</span></span></code></pre>
 <p>Note that in the previous models, allometries were already used to
 estimate above-ground structural parameters, but these were static
 during simulations.</p>
@@ -281,10 +281,10 @@ storage carbon levels can be seen in <code>internalCarbon</code>:</p>
 targets:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">internalAllocation</span></span></code></pre></div>
-<pre><code><span><span class="co">##        allocationTarget leafAreaTarget fineRootBiomassTarget</span></span>
-<span><span class="co">## T1_148         1317.523      45.655113            1248.80275</span></span>
-<span><span class="co">## T2_168         3908.823      17.430438             518.60975</span></span>
-<span><span class="co">## S1_165         4189.325       0.524115              13.57757</span></span></code></pre>
+<pre><code><span><span class="co">##        allocationTarget leafAreaTarget sapwoodAreaTarget fineRootBiomassTarget</span></span>
+<span><span class="co">## T1_148         1317.523     50.5206982       383.4520992           1381.890945</span></span>
+<span><span class="co">## T2_168         3908.823     18.3743183        47.0072886            546.693144</span></span>
+<span><span class="co">## S1_165         4189.325      0.3627528         0.8658978              9.397368</span></span></code></pre>
 <p>Additional <code>internal*</code> elements are
 <code>internalMortality</code>, used to keep track of dead individuals;
 and <code>internalRings</code>, which stores state variables used to
@@ -301,32 +301,36 @@ model sink limitations on wood formation.</p>
 <code class="sourceCode R"><span><span class="va">G1</span><span class="op">&lt;-</span><span class="fu"><a href="../../reference/growth.html">growth</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span></span></code></pre>
 <pre><code><span><span class="co">## Package 'meteoland' [ver. 2.0.0]</span></span></code></pre>
-<pre><code><span><span class="co">## Initial plant cohort biomass (g/m2): 5608.36</span></span>
-<span><span class="co">## Initial soil water content (mm): 291.257</span></span>
+<pre><code><span><span class="co">## Initial plant cohort biomass (g/m2): 6108.49</span></span>
+<span><span class="co">## Initial plant water content (mm): 7.05319</span></span>
+<span><span class="co">## Initial soil water content (mm): 286.862</span></span>
 <span><span class="co">## Initial snowpack content (mm): 0</span></span>
 <span><span class="co">## Performing daily simulations</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Year 2001:....................................</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant biomass (g/m2): 5902.31</span></span>
-<span><span class="co">## Change in plant biomass (g/m2): 293.956</span></span>
-<span><span class="co">## Plant biomass balance result (g/m2): 293.956</span></span>
+<span><span class="co">## Final plant biomass (g/m2): 6263.95</span></span>
+<span><span class="co">## Change in plant biomass (g/m2): 155.455</span></span>
+<span><span class="co">## Plant biomass balance result (g/m2): 155.455</span></span>
 <span><span class="co">## Plant biomass balance components:</span></span>
-<span><span class="co">##   Structural balance (g/m2) 214 Labile balance (g/m2) 102</span></span>
-<span><span class="co">##   Plant individual balance (g/m2) 317 Mortality loss (g/m2) 23</span></span>
-<span><span class="co">## Final soil water content (mm): 276.268</span></span>
+<span><span class="co">##   Structural balance (g/m2) 84 Labile balance (g/m2) 96</span></span>
+<span><span class="co">##   Plant individual balance (g/m2) 180 Mortality loss (g/m2) 25</span></span>
+<span><span class="co">## Final plant water content (mm): 7.06471</span></span>
+<span><span class="co">## Final soil water content (mm): 270.944</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in soil water content (mm): -14.9889</span></span>
-<span><span class="co">## Soil water balance result (mm): -14.9889</span></span>
+<span><span class="co">## Change in plant water content (mm): 0.0115223</span></span>
+<span><span class="co">## Plant water balance result (mm): -0.00147679</span></span>
+<span><span class="co">## Change in soil water content (mm): -15.9182</span></span>
+<span><span class="co">## Soil water balance result (mm): -15.9182</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
-<span><span class="co">## Snowpack water balance result (mm): 7.10543e-15</span></span>
+<span><span class="co">## Snowpack water balance result (mm): -7.10543e-15</span></span>
 <span><span class="co">## Water balance components:</span></span>
 <span><span class="co">##   Precipitation (mm) 513</span></span>
 <span><span class="co">##   Rain (mm) 462 Snow (mm) 51</span></span>
-<span><span class="co">##   Interception (mm) 78 Net rainfall (mm) 385</span></span>
-<span><span class="co">##   Infiltration (mm) 426 Runoff (mm) 10 Deep drainage (mm) 191</span></span>
-<span><span class="co">##   Soil evaporation (mm) 32 Transpiration (mm) 218</span></span>
-<span><span class="co">##   Plant extraction from soil (mm) 218  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span></span></code></pre>
+<span><span class="co">##   Interception (mm) 83 Net rainfall (mm) 379</span></span>
+<span><span class="co">##   Infiltration (mm) 419 Runoff (mm) 12 Deep drainage (mm) 171</span></span>
+<span><span class="co">##   Soil evaporation (mm) 30 Transpiration (mm) 233</span></span>
+<span><span class="co">##   Plant extraction from soil (mm) 233  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span></span></code></pre>
 <p>At the end of daily simulations, the <code><a href="../../reference/growth.html">growth()</a></code> function
 displays information regarding the carbon and water balance, which is
 mostly useful to check that balances are closed.</p>
@@ -449,9 +453,9 @@ relationship:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                 temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##           n        Bias    Bias.rel         MAE     MAE.rel           r </span></span>
-<span><span class="co">##  12.0000000  -0.1984183 -14.7572448   0.2129369  15.8370595   0.9889362 </span></span>
+<span><span class="co">##  12.0000000  -0.2007875 -14.9334552   0.2152299  16.0075992   0.9889913 </span></span>
 <span><span class="co">##         NSE     NSE.abs </span></span>
-<span><span class="co">##   0.9297695   0.7951616</span></span></code></pre>
+<span><span class="co">##   0.9286913   0.7929559</span></span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series
@@ -481,7 +485,7 @@ performing model evaluation interactively:</p>
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Miquel De Cáceres, Víctor Granda, Antoine Cabon.</p>
+<p>Developed by Miquel De Cáceres, Nicolas Martin-StPaul, Víctor Granda, Antoine Cabon.</p>
 </div>
 
 <div class="pkgdown">

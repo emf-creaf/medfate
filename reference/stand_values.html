@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.0</span>
       </span>
     </div>
 
@@ -58,13 +58,13 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">stand_basalArea</span><span class="op">(</span><span class="va">x</span>, minDBH <span class="op">=</span> <span class="fl">7.5</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">stand_foliarBiomass</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">stand_foliarBiomass</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">stand_phytovolume</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">stand_fuel</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, includeDead <span class="op">=</span> <span class="cn">TRUE</span>, mode <span class="op">=</span> <span class="st">"MED"</span><span class="op">)</span></span>
+<span><span class="fu">stand_fuel</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, includeDead <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">stand_LAI</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, mode <span class="op">=</span> <span class="st">"MED"</span>, bounded <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">stand_LAI</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, bounded <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">stand_dominantTreeDiameter</span><span class="op">(</span><span class="va">x</span>, minDBH <span class="op">=</span> <span class="fl">7.5</span><span class="op">)</span></span>
 <span></span>
@@ -72,7 +72,9 @@
 <span></span>
 <span><span class="fu">stand_hartBeckingIndex</span><span class="op">(</span><span class="va">x</span>, minDBH <span class="op">=</span> <span class="fl">7.5</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">stand_quadraticMeanTreeDiameter</span><span class="op">(</span><span class="va">x</span>, minDBH <span class="op">=</span> <span class="fl">7.5</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">stand_quadraticMeanTreeDiameter</span><span class="op">(</span><span class="va">x</span>, minDBH <span class="op">=</span> <span class="fl">7.5</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">stand_dominantTreeSpecies</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -93,10 +95,6 @@
 <dd><p>Growth degree days (to account for leaf phenology effects).</p></dd>
 
 
-<dt>mode</dt>
-<dd><p>Calculation mode, either "MED" or "US".</p></dd>
-
-
 <dt>includeDead</dt>
 <dd><p>A flag to indicate that standing dead fuels (dead branches) are included.</p></dd>
 
@@ -113,7 +111,7 @@
 <li><p><code>stand_dominantTreeDiameter</code>: Dominant tree diameter, i.e the average diameter of the 100 widest trees (in cm).</p></li>
 <li><p><code>stand_quadraticMeanTreeDiameter</code>: Quadratic mean tree diameter, i.e. the diameter value corresponding to the current basal area and density.</p></li>
 <li><p><code>stand_dominantTreeHeight</code>: Dominant tree height, i.e the average height of the 100 tallest trees (in cm).</p></li>
-<li><p><code>stand_hartBeckingIndex</code>: Hart becking index.</p></li>
+<li><p><code>stand_hartBeckingIndex</code>: Hart-Becking index.</p></li>
 <li><p><code>stand_foliarBiomass</code>: Standing biomass of leaves (in kg/m2).</p></li>
 <li><p><code>stand_fuel</code>: Stand fine fuel load (in kg/m2).</p></li>
 <li><p><code>stand_LAI</code>: Stand leaf area index (m2/m2).</p></li>
@@ -150,7 +148,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Miquel De Cáceres, Víctor Granda, Antoine Cabon.</p>
+  <p></p><p>Developed by Miquel De Cáceres, Nicolas Martin-StPaul, Víctor Granda, Antoine Cabon.</p>
 </div>
 
 <div class="pkgdown">

@@ -19,7 +19,7 @@ or the forest dynamics model (see fordyn)."><!-- mathjax --><script src="https:/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.0</span>
       </span>
     </div>
 
@@ -260,14 +260,14 @@ or the forest dynamics model (see <code><a href="fordyn.html">fordyn</a></code>)
 <li><p><code>"FineRootBiomass"</code>: Fine root dry biomass per individual.</p></li>
 <li><p><code>"SapwoodArea"</code>:  Sapwood area per individual.</p></li>
 <li><p><code>"LeafArea"</code>:  Leaf area per individual.</p></li>
-<li><p><code>"FineRootArea"</code>: Fine root area per individual (only for <code>transpirationMode = "Sperry"</code>).</p></li>
+<li><p><code>"FineRootArea"</code>: Fine root area per individual (only for <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Cochard"</code>).</p></li>
 <li><p><code>"DBH"</code>: Diameter at breast height (in cm) for an average individual of each plant cohort.</p></li>
 <li><p><code>"Height"</code>: Height (in cm) for an average individual of each plant cohort.</p></li>
 <li><p><code>"SAgrowth"</code>:  Sapwood area growth rate.</p></li>
 <li><p><code>"LAgrowth"</code>:  Leaf area growth rate.</p></li>
-<li><p><code>"FRAgrowth"</code>:  Fine root area growth rate (only for <code>transpirationMode = "Sperry"</code>).</p></li>
+<li><p><code>"FRAgrowth"</code>:  Fine root area growth rate (only for <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Cochard"</code>).</p></li>
 <li><p><code>"HuberValue"</code>:  Ratio of leaf area to sapwood area.</p></li>
-<li><p><code>"RootAreaLeafArea"</code>:  Ratio of fine root area to leaf area (only for <code>transpirationMode = "Sperry"</code>).</p></li>
+<li><p><code>"RootAreaLeafArea"</code>:  Ratio of fine root area to leaf area (only for <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Cochard"</code>).</p></li>
 </ul><p>Finally, the following plots are only available for <code><a href="fordyn.html">fordyn</a></code> simulation results:</p><ul><li><p><code>"StandBasalArea"</code>: Stand basal area of living trees.</p></li>
 <li><p><code>"StandDensity"</code>: Stand density of living trees.</p></li>
 <li><p><code>"SpeciesBasalArea"</code>: Basal area of living trees by species.</p></li>
@@ -306,25 +306,29 @@ or the forest dynamics model (see <code><a href="fordyn.html">fordyn</a></code>)
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Call simulation function</span></span></span>
 <span class="r-in"><span><span class="va">S1</span><span class="op">&lt;-</span><span class="fu"><a href="spwb.html">spwb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 185.069</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant water content (mm): 5.24843</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 180.814</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial snowpack content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 170.247</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 5.24653</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 165.066</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -14.8224</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -14.8224</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.00189302</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.00189302</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -15.7481</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -15.7481</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 78 Net rainfall (mm) 384</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 425 Runoff (mm) 10 Deep drainage (mm) 187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 29 Transpiration (mm) 223</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 223  Plant water balance (mm) -0 Hydraulic redistribution (mm) 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 84 Net rainfall (mm) 378</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 418 Runoff (mm) 12 Deep drainage (mm) 167</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 28 Transpiration (mm) 238</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 238  Plant water balance (mm) -0 Hydraulic redistribution (mm) 0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Plot results</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></span></span>
@@ -340,7 +344,7 @@ or the forest dynamics model (see <code><a href="fordyn.html">fordyn</a></code>)
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Miquel De Cáceres, Víctor Granda, Antoine Cabon.</p>
+  <p></p><p>Developed by Miquel De Cáceres, Nicolas Martin-StPaul, Víctor Granda, Antoine Cabon.</p>
 </div>
 
 <div class="pkgdown">

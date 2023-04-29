@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.0</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2023-03-10</h4>
+            <h4 data-toc-skip class="date">2023-04-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/PreparingInputs.Rmd" class="external-link"><code>vignettes/intro/PreparingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>PreparingInputs.Rmd</code></div>
@@ -98,7 +98,7 @@ processing his/her own data.</p>
 <strong>medfateutils</strong> and <strong>meteoland</strong>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/" class="external-link">medfate</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Package 'medfate' [ver. 2.9.3]</span></span>
+<span><span class="co">#&gt; Package 'medfate' [ver. 3.0.0]</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">medfateutils</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Package 'medfateutils' [ver. 0.1.7]</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/meteoland/index.html" class="external-link">meteoland</a></span><span class="op">)</span></span>
@@ -215,8 +215,8 @@ function defined in <strong>medfate</strong> for this object class:</p>
 <span><span class="co">#&gt; Density (ind/ha) adult trees: 267  saplings: 0  shrubs (estimated): 0 </span></span>
 <span><span class="co">#&gt; Cover (%) adult trees: 42.1205627  saplings: 0  shrubs: 0 </span></span>
 <span><span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span></span>
-<span><span class="co">#&gt; LAI (m2/m2) total: 0.5088881  adult trees: 0.5088881  saplings: 0  shrubs: 0 </span></span>
-<span><span class="co">#&gt; Fuel (kg/m2) total: 0.5088881  adult trees: 0.5088881  saplings: 0  shrubs: 0 </span></span>
+<span><span class="co">#&gt; LAI (m2/m2) total: 0.544959  adult trees: 0.544959  saplings: 0  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Fuel (kg/m2) total: 0.1421746  adult trees: 0.1421746  saplings: 0  shrubs: 0 </span></span>
 <span><span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></span></code></pre></div>
 <p>The values of stand density and stand basal area are too low for such
 a dense forest, which indicates that something needs to be corrected. At
@@ -241,8 +241,8 @@ parameter <code>plot_size_x</code>:</p>
 <span><span class="co">#&gt; Density (ind/ha) adult trees: 3777.277316  saplings: 0  shrubs (estimated): 0 </span></span>
 <span><span class="co">#&gt; Cover (%) adult trees: 100  saplings: 0  shrubs: 0 </span></span>
 <span><span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span></span>
-<span><span class="co">#&gt; LAI (m2/m2) total: 5.2981772  adult trees: 5.2981772  saplings: 0  shrubs: 0 </span></span>
-<span><span class="co">#&gt; Fuel (kg/m2) total: 5.2981772  adult trees: 5.2981772  saplings: 0  shrubs: 0 </span></span>
+<span><span class="co">#&gt; LAI (m2/m2) total: 5.6770407  adult trees: 5.6770407  saplings: 0  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Fuel (kg/m2) total: 1.493419  adult trees: 1.493419  saplings: 0  shrubs: 0 </span></span>
 <span><span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></span></code></pre></div>
 <p>which results in a much higher basal area and density, as should be
 expected for a dense oak forest resulting from an abandoned old
@@ -273,9 +273,9 @@ defined, we can include them in our mapping:</p>
 <span><span class="co">#&gt; Density (ind/ha) adult trees: 3777.277316  saplings: 0  shrubs (estimated): 0 </span></span>
 <span><span class="co">#&gt; Cover (%) adult trees: 100  saplings: 0  shrubs: 0 </span></span>
 <span><span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span></span>
-<span><span class="co">#&gt; LAI (m2/m2) total: 5.2981772  adult trees: 5.2981772  saplings: 0  shrubs: 0 </span></span>
-<span><span class="co">#&gt; Fuel (kg/m2) total: 5.2981772  adult trees: 5.2981772  saplings: 0  shrubs: 0 </span></span>
-<span><span class="co">#&gt; PAR ground (%): 5.4258401  SWR ground (%): 11.5496319</span></span></code></pre></div>
+<span><span class="co">#&gt; LAI (m2/m2) total: 5.6770407  adult trees: 5.6770407  saplings: 0  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Fuel (kg/m2) total: 1.493419  adult trees: 1.493419  saplings: 0  shrubs: 0 </span></span>
+<span><span class="co">#&gt; PAR ground (%): 4.4052535  SWR ground (%): 9.8976935</span></span></code></pre></div>
 <p>The fraction of PAR/SWR reaching the ground is low, as would be
 expected for a dense forest.</p>
 </div>
@@ -309,9 +309,9 @@ accepted name (<em>Quercus pubescens</em>), which we can do:</p>
 <span><span class="co">#&gt; Density (ind/ha) adult trees: 3692.3946797  saplings: 0  shrubs (estimated): 0 </span></span>
 <span><span class="co">#&gt; Cover (%) adult trees: 100  saplings: 0  shrubs: 0 </span></span>
 <span><span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span></span>
-<span><span class="co">#&gt; LAI (m2/m2) total: 5.1732143  adult trees: 5.1732143  saplings: 0  shrubs: 0 </span></span>
-<span><span class="co">#&gt; Fuel (kg/m2) total: 5.1732143  adult trees: 5.1732143  saplings: 0  shrubs: 0 </span></span>
-<span><span class="co">#&gt; PAR ground (%): 5.8118696  SWR ground (%): 12.1528578</span></span></code></pre></div>
+<span><span class="co">#&gt; LAI (m2/m2) total: 5.5833511  adult trees: 5.5833511  saplings: 0  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Fuel (kg/m2) total: 1.4629714  adult trees: 1.4629714  saplings: 0  shrubs: 0 </span></span>
+<span><span class="co">#&gt; PAR ground (%): 4.6382035  SWR ground (%): 10.2827899</span></span></code></pre></div>
 <p>Like the control plot, these statistics indicate a dense oak forest.
 We can repeat the same operations with the forest plot after the
 thinning intervention:</p>
@@ -325,9 +325,9 @@ thinning intervention:</p>
 <span><span class="co">#&gt; Density (ind/ha) adult trees: 2673.8030439  saplings: 0  shrubs (estimated): 0 </span></span>
 <span><span class="co">#&gt; Cover (%) adult trees: 100  saplings: 0  shrubs: 0 </span></span>
 <span><span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span></span>
-<span><span class="co">#&gt; LAI (m2/m2) total: 4.1893232  adult trees: 4.1893232  saplings: 0  shrubs: 0 </span></span>
-<span><span class="co">#&gt; Fuel (kg/m2) total: 4.1893232  adult trees: 4.1893232  saplings: 0  shrubs: 0 </span></span>
-<span><span class="co">#&gt; PAR ground (%): 9.9845852  SWR ground (%): 18.1452511</span></span></code></pre></div>
+<span><span class="co">#&gt; LAI (m2/m2) total: 4.5328748  adult trees: 4.5328748  saplings: 0  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Fuel (kg/m2) total: 1.1915321  adult trees: 1.1915321  saplings: 0  shrubs: 0 </span></span>
+<span><span class="co">#&gt; PAR ground (%): 8.2654902  SWR ground (%): 15.7752683</span></span></code></pre></div>
 <p>Note the decrease in tree density and basal area, and the increase in
 light reaching the ground, despite the estimated leaf area index is
 still high.</p>
@@ -371,9 +371,9 @@ tree cohorts using again:</p>
 <span><span class="co">#&gt; Density (ind/ha) adult trees: 2673.8030439  saplings: 0  shrubs (estimated): 0 </span></span>
 <span><span class="co">#&gt; Cover (%) adult trees: 100  saplings: 0  shrubs: 0 </span></span>
 <span><span class="co">#&gt; Shrub crown phytovolume (m3/m2): 0 </span></span>
-<span><span class="co">#&gt; LAI (m2/m2) total: 4.0130914  adult trees: 4.0130914  saplings: 0  shrubs: 0 </span></span>
-<span><span class="co">#&gt; Fuel (kg/m2) total: 4.0130914  adult trees: 4.0130914  saplings: 0  shrubs: 0 </span></span>
-<span><span class="co">#&gt; PAR ground (%): 11.0008212  SWR ground (%): 19.4959555</span></span></code></pre></div>
+<span><span class="co">#&gt; LAI (m2/m2) total: 4.0969956  adult trees: 4.0969956  saplings: 0  shrubs: 0 </span></span>
+<span><span class="co">#&gt; Fuel (kg/m2) total: 1.0724731  adult trees: 1.0724731  saplings: 0  shrubs: 0 </span></span>
+<span><span class="co">#&gt; PAR ground (%): 10.5046984  SWR ground (%): 18.8407833</span></span></code></pre></div>
 <p>Function <code><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees()</a></code> will preserve the stand
 density and basal area that the stand description had before merging
 cohorts. Other properties like leaf area index may be slightly
@@ -396,7 +396,7 @@ function <code><a href="https://rdrr.io/pkg/medfateutils/man/soilgridsParams.htm
 first create an object <code>sf</code> (see package
 <strong>sf</strong>):</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sf_pt</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.0219</span>, <span class="fl">41.3443</span><span class="op">)</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">sf_pt</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sfc.html" class="external-link">st_sfc</a></span><span class="op">(</span><span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st.html" class="external-link">st_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.0219</span>, <span class="fl">41.3443</span><span class="op">)</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span></code></pre></div>
 <p>This object can be used to query SoilGrids using
 <code><a href="https://rdrr.io/pkg/medfateutils/man/soilgridsParams.html" class="external-link">soilgridsParams()</a></code>:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
@@ -454,7 +454,7 @@ water holding capacity by increasing the column <code>rfc</code>. For
 example, here we will assume that the third layer contains 80% of
 rocks:</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pobl_soil_props</span><span class="op">$</span><span class="va">rfc</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">=</span> <span class="fl">80</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">pobl_soil_props</span><span class="op">$</span><span class="va">rfc</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">80</span></span></code></pre></div>
 <p>If we rebuild the soil object and inspect its properties we will see
 the effect on the soil water holding capacity and soil extractable
 water:</p>
@@ -508,6 +508,9 @@ coordinates of our site as well as topographic variables.</p>
 <span><span class="co">#&gt; Warning: `SpatialPointsTopography()` was deprecated in meteoland 2.0.0.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Spatial_*_Topography classes are soft deprecated. User topography now can be</span></span>
 <span><span class="co">#&gt;   provided as sf or stars objects</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span><span class="va">pobl_spt</span></span>
 <span><span class="co">#&gt; Object of class SpatialPointsTopography</span></span>
 <span><span class="co">#&gt;         coordinates elevation slope aspect</span></span>
@@ -535,6 +538,9 @@ set of target points is rather straightforward using function
 <span><span class="co">#&gt;   deprecated. Interpolator should be created with create_meteo_interpolator(),</span></span>
 <span><span class="co">#&gt;   and spatial objects to interpolate should be from sf (vector) or star</span></span>
 <span><span class="co">#&gt;   (raster) classes. Interpolation is performed with interpolate_data()</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span><span class="co">#&gt; Warning in interpolationpoints(exampleinterpolationdata, pobl_spt): CRS</span></span>
 <span><span class="co">#&gt; projection of 'points' adapted to that of 'object'.</span></span>
 <span><span class="co">#&gt; Processing point '1' (1/1) -</span></span>
@@ -545,7 +551,10 @@ set of target points is rather straightforward using function
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Spatial_*_Meteorology classes are soft deprecated. Meteorology objects are</span></span>
 <span><span class="co">#&gt;   now normal sf points objects</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">meteoland</span> package.</span></span>
-<span><span class="co">#&gt;   Please report the issue to the authors.</span></span></code></pre></div>
+<span><span class="co">#&gt;   Please report the issue to the authors.</span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
+<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span></code></pre></div>
 <p>Note that a warning was raised, because the boundary box of the
 interpolator does not include the location of the Poblet forests. In
 this case, the result of the interpolation is not reliable and should
@@ -626,7 +635,7 @@ obtaining weather data would be similar in other cases.</p>
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Miquel De Cáceres, Víctor Granda, Antoine Cabon.</p>
+<p>Developed by Miquel De Cáceres, Nicolas Martin-StPaul, Víctor Granda, Antoine Cabon.</p>
 </div>
 
 <div class="pkgdown">

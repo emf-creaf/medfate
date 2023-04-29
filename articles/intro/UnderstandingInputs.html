@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.0</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2023-03-10</h4>
+            <h4 data-toc-skip class="date">2023-04-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>UnderstandingInputs.Rmd</code></div>
@@ -917,6 +917,26 @@ roots</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
 </tr>
+<tr class="odd">
+<td align="left">RespFire</td>
+<td align="left">Number of resprouts per stem after fire
+disturbance</td>
+<td align="left">Numeric</td>
+<td align="left">unitless</td>
+</tr>
+<tr class="even">
+<td align="left">RespDist</td>
+<td align="left">Number of resprouts per stem after undefined
+disturbance (typically desiccation)</td>
+<td align="left">Numeric</td>
+<td align="left">unitless</td>
+</tr>
+<tr class="odd">
+<td align="left">RespClip</td>
+<td align="left">Number of resprouts per stem after clipping</td>
+<td align="left">Numeric</td>
+<td align="left">unitless</td>
+</tr>
 </tbody>
 </table>
 <p>In order to understand the role of parameters in the model, you
@@ -992,9 +1012,9 @@ function <code><a href="../../reference/modelInput.html">forest2aboveground()</a
 <code class="sourceCode R"><span><span class="va">above</span> <span class="op">=</span> <span class="fu"><a href="../../reference/modelInput.html">forest2aboveground</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
 <span><span class="va">above</span></span></code></pre></div>
 <pre><code><span><span class="co">##         SP        N   DBH Cover   H        CR   LAI_live LAI_expanded LAI_dead</span></span>
-<span><span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 0.76700589   0.76700589        0</span></span>
-<span><span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642 0.66932880   0.66932880        0</span></span>
-<span><span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817 0.03928201   0.03928201        0</span></span></code></pre>
+<span><span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 0.84874773   0.84874773        0</span></span>
+<span><span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642 0.70557382   0.70557382        0</span></span>
+<span><span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817 0.02718804   0.02718804        0</span></span></code></pre>
 <p>Note that the call to <code><a href="../../reference/modelInput.html">forest2aboveground()</a></code> included
 species parameters, because species-specific values are needed to
 calculate leaf area from tree diameters or shrub cover. Columns
@@ -1230,39 +1250,43 @@ parameterization is obtained using function
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">control</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "fillMissingRootParams"            "fillMissingSpParams"             </span></span>
 <span><span class="co">##  [3] "verbose"                          "subdailyResults"                 </span></span>
-<span><span class="co">##  [5] "transpirationMode"                "soilFunctions"                   </span></span>
-<span><span class="co">##  [7] "defaultWindSpeed"                 "defaultCO2"                      </span></span>
-<span><span class="co">##  [9] "snowpack"                         "leafPhenology"                   </span></span>
-<span><span class="co">## [11] "rockyLayerDrainage"               "unlimitedSoilWater"              </span></span>
-<span><span class="co">## [13] "rhizosphereOverlap"               "unfoldingDD"                     </span></span>
-<span><span class="co">## [15] "verticalLayerSize"                "windMeasurementHeight"           </span></span>
-<span><span class="co">## [17] "cavitationRefill"                 "hydraulicRedistributionFraction" </span></span>
-<span><span class="co">## [19] "ndailysteps"                      "nsubsteps"                       </span></span>
-<span><span class="co">## [21] "capacitance"                      "taper"                           </span></span>
-<span><span class="co">## [23] "multiLayerBalance"                "maximumStemConductance"          </span></span>
-<span><span class="co">## [25] "klatstem"                         "klatleaf"                        </span></span>
-<span><span class="co">## [27] "numericParams"                    "fracLeafResistance"              </span></span>
-<span><span class="co">## [29] "fracRootResistance"               "averageFracRhizosphereResistance"</span></span>
-<span><span class="co">## [31] "thermalCapacityLAI"               "boundaryLayerSize"               </span></span>
-<span><span class="co">## [33] "refillMaximumRate"                "subdailyCarbonBalance"           </span></span>
-<span><span class="co">## [35] "allowDessication"                 "allowStarvation"                 </span></span>
-<span><span class="co">## [37] "sinkLimitation"                   "shrubDynamics"                   </span></span>
-<span><span class="co">## [39] "allocationStrategy"               "phloemConductanceFactor"         </span></span>
-<span><span class="co">## [41] "nonSugarConcentration"            "equilibriumOsmoticConcentration" </span></span>
-<span><span class="co">## [43] "minimumRelativeStarchForGrowth"   "constructionCosts"               </span></span>
-<span><span class="co">## [45] "senescenceRates"                  "maximumRelativeGrowthRates"      </span></span>
-<span><span class="co">## [47] "mortalityMode"                    "mortalityBaselineRate"           </span></span>
-<span><span class="co">## [49] "mortalityRelativeSugarThreshold"  "mortalityRWCThreshold"           </span></span>
-<span><span class="co">## [51] "allowRecruitment"                 "recruitmentMode"                 </span></span>
-<span><span class="co">## [53] "removeEmptyCohorts"               "minimumCohortDensity"            </span></span>
-<span><span class="co">## [55] "seedRain"                         "seedProductionTreeHeight"        </span></span>
-<span><span class="co">## [57] "seedProductionShrubHeight"        "probRecr"                        </span></span>
-<span><span class="co">## [59] "minTempRecr"                      "minMoistureRecr"                 </span></span>
-<span><span class="co">## [61] "minFPARRecr"                      "recrTreeDBH"                     </span></span>
-<span><span class="co">## [63] "recrTreeDensity"                  "recrTreeHeight"                  </span></span>
-<span><span class="co">## [65] "recrShrubCover"                   "recrShrubHeight"                 </span></span>
-<span><span class="co">## [67] "recrTreeZ50"                      "recrShrubZ50"                    </span></span>
-<span><span class="co">## [69] "recrTreeZ95"                      "recrShrubZ95"</span></span></code></pre>
+<span><span class="co">##  [5] "standResults"                     "soilResults"                     </span></span>
+<span><span class="co">##  [7] "plantResults"                     "leafResults"                     </span></span>
+<span><span class="co">##  [9] "temperatureResults"               "fireHazardResults"               </span></span>
+<span><span class="co">## [11] "transpirationMode"                "soilFunctions"                   </span></span>
+<span><span class="co">## [13] "defaultWindSpeed"                 "defaultCO2"                      </span></span>
+<span><span class="co">## [15] "snowpack"                         "leafPhenology"                   </span></span>
+<span><span class="co">## [17] "rockyLayerDrainage"               "unlimitedSoilWater"              </span></span>
+<span><span class="co">## [19] "rhizosphereOverlap"               "unfoldingDD"                     </span></span>
+<span><span class="co">## [21] "verticalLayerSize"                "windMeasurementHeight"           </span></span>
+<span><span class="co">## [23] "cavitationRefill"                 "hydraulicRedistributionFraction" </span></span>
+<span><span class="co">## [25] "ndailysteps"                      "nsubsteps"                       </span></span>
+<span><span class="co">## [27] "capacitance"                      "taper"                           </span></span>
+<span><span class="co">## [29] "multiLayerBalance"                "maximumStemConductance"          </span></span>
+<span><span class="co">## [31] "klatstem"                         "klatleaf"                        </span></span>
+<span><span class="co">## [33] "numericParams"                    "fracLeafResistance"              </span></span>
+<span><span class="co">## [35] "fracRootResistance"               "averageFracRhizosphereResistance"</span></span>
+<span><span class="co">## [37] "thermalCapacityLAI"               "boundaryLayerSize"               </span></span>
+<span><span class="co">## [39] "refillMaximumRate"                "subdailyCarbonBalance"           </span></span>
+<span><span class="co">## [41] "allowDessication"                 "allowStarvation"                 </span></span>
+<span><span class="co">## [43] "sinkLimitation"                   "shrubDynamics"                   </span></span>
+<span><span class="co">## [45] "allocationStrategy"               "phloemConductanceFactor"         </span></span>
+<span><span class="co">## [47] "nonSugarConcentration"            "equilibriumOsmoticConcentration" </span></span>
+<span><span class="co">## [49] "minimumRelativeStarchForGrowth"   "constructionCosts"               </span></span>
+<span><span class="co">## [51] "senescenceRates"                  "maximumRelativeGrowthRates"      </span></span>
+<span><span class="co">## [53] "mortalityMode"                    "mortalityBaselineRate"           </span></span>
+<span><span class="co">## [55] "mortalityRelativeSugarThreshold"  "mortalityRWCThreshold"           </span></span>
+<span><span class="co">## [57] "allowRecruitment"                 "recruitmentMode"                 </span></span>
+<span><span class="co">## [59] "allowResprouting"                 "removeEmptyCohorts"              </span></span>
+<span><span class="co">## [61] "minimumCohortDensity"             "seedRain"                        </span></span>
+<span><span class="co">## [63] "seedProductionTreeHeight"         "seedProductionShrubHeight"       </span></span>
+<span><span class="co">## [65] "probRecr"                         "minTempRecr"                     </span></span>
+<span><span class="co">## [67] "minMoistureRecr"                  "minFPARRecr"                     </span></span>
+<span><span class="co">## [69] "recrTreeDBH"                      "recrTreeDensity"                 </span></span>
+<span><span class="co">## [71] "recrTreeHeight"                   "recrShrubCover"                  </span></span>
+<span><span class="co">## [73] "recrShrubHeight"                  "recrTreeZ50"                     </span></span>
+<span><span class="co">## [75] "recrShrubZ50"                     "recrTreeZ95"                     </span></span>
+<span><span class="co">## [77] "recrShrubZ95"</span></span></code></pre>
 <p>Control parameters should normally be left to their default value
 until their effect on simulations is fully understood.</p>
 </div>
@@ -1274,9 +1298,8 @@ until their effect on simulations is fully understood.</p>
 species-parameter and simulation control inputs into a single input
 object (of class <code>spwbInput</code> or <code>growthInput</code>)
 that is then used as input to the corresponding simulation function
-along with weather data. The combination of inputs is done via functions
-<code><a href="../../reference/modelInput.html">spwbInput()</a></code> and <code><a href="../../reference/modelInput.html">growthInput()</a></code>, respectively,
-or the more convenient <code><a href="../../reference/modelInput.html">forest2spwbInput()</a></code> and
+along with weather data. The combination of vegentation, soil and
+control inputs is done via functions <code><a href="../../reference/modelInput.html">forest2spwbInput()</a></code> and
 <code><a href="../../reference/modelInput.html">forest2growthInput()</a></code>. While it complicates the code, having
 this additional step is handy because cohort-level parameters and state
 variables initialized can then be modified by the user (or an automated
@@ -1286,7 +1309,7 @@ The input objects for functions <code><a href="../../reference/spwb.html">spwb()
 water balance</em></a> and <a href="https://emf-creaf.github.io/medfate/articles/runmodels/ForestGrowth.html" class="external-link"><em>Forest
 growth</em></a>, respectively.</p>
 <p>Function <code><a href="../../reference/fordyn.html">fordyn()</a></code> is different from the other two
-models, in the sense that the user enters forest, soil,
+simulation functions, in the sense that the user enters forest, soil,
 species-parameter and simulation control inputs directly into the
 simulation function (in fact, <code><a href="../../reference/fordyn.html">fordyn()</a></code> internally calls
 <code><a href="../../reference/modelInput.html">forest2growthInput()</a></code> to initialize the input object to
@@ -1306,7 +1329,7 @@ function <code><a href="../../reference/growth.html">growth()</a></code>).</p>
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Miquel De Cáceres, Víctor Granda, Antoine Cabon.</p>
+<p>Developed by Miquel De Cáceres, Nicolas Martin-StPaul, Víctor Granda, Antoine Cabon.</p>
 </div>
 
 <div class="pkgdown">

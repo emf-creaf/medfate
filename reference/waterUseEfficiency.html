@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.0</span>
       </span>
     </div>
 
@@ -73,10 +73,10 @@
 
 
 <dt>type</dt>
-<dd><p>A string to indicate the scale of WUE calculation. Either:</p><ul><li><p><code>"Leaf iWUE"</code>: Leaf intrinsic WUE, i.e. instantaneous ratio between photosynthesis and stomatal conductance (only for simulations with <code>transpirationMode = "Sperry"</code> and <code>subdailyResults = TRUE</code>).</p></li>
-<li><p><code>"Leaf Ci"</code>: Leaf intercellular CO2 concentration (only for simulations with <code>transpirationMode = "Sperry"</code> and <code>subdailyResults = TRUE</code>).</p></li>
-<li><p><code>"Plant An/E"</code>: Plant (cohort) net photosynthesis over plant transpiration (only for simulations with <code>transpirationMode = "Sperry"</code>)</p></li>
-<li><p><code>"Stand An/E"</code>: Stand net photosynthesis over stand transpiration (only for simulations with <code>transpirationMode = "Sperry"</code>)</p></li>
+<dd><p>A string to indicate the scale of WUE calculation. Either:</p><ul><li><p><code>"Leaf iWUE"</code>: Leaf intrinsic WUE, i.e. instantaneous ratio between photosynthesis and stomatal conductance (only for simulations with <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Cochard"</code> and <code>subdailyResults = TRUE</code>).</p></li>
+<li><p><code>"Leaf Ci"</code>: Leaf intercellular CO2 concentration (only for simulations with <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Cochard"</code> and <code>subdailyResults = TRUE</code>).</p></li>
+<li><p><code>"Plant An/E"</code>: Plant (cohort) net photosynthesis over plant transpiration (only for simulations with <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Cochard"</code>)</p></li>
+<li><p><code>"Stand An/E"</code>: Stand net photosynthesis over stand transpiration (only for simulations with <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Cochard"</code>)</p></li>
 <li><p><code>"Plant Ag/E"</code>: Plant (cohort) gross photosynthesis over plant transpiration</p></li>
 <li><p><code>"Stand Ag/E"</code>: Stand gross photosynthesis over stand transpiration</p></li>
 </ul></dd>
@@ -132,7 +132,7 @@ and then they are aggregated to the desired scale by calculating weighted averag
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Miquel De Cáceres, Víctor Granda, Antoine Cabon.</p>
+  <p></p><p>Developed by Miquel De Cáceres, Nicolas Martin-StPaul, Víctor Granda, Antoine Cabon.</p>
 </div>
 
 <div class="pkgdown">

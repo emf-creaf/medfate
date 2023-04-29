@@ -190,7 +190,7 @@
     <loc>/reference/plot.spwb_day.html</loc>
   </url>
   <url>
-    <loc>/reference/recruitment.html</loc>
+    <loc>/reference/regeneration.html</loc>
   </url>
   <url>
     <loc>/reference/resetInputs.html</loc>
@@ -221,15 +221,6 @@
   </url>
   <url>
     <loc>/reference/spwb_day.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spwb_ldrCalibration.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spwb_ldrOptimization.html</loc>
-  </url>
-  <url>
-    <loc>/reference/spwb_sensitivity.html</loc>
   </url>
   <url>
     <loc>/reference/stand_values.html</loc>

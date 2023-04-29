@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.0</span>
       </span>
     </div>
 
@@ -70,7 +70,9 @@
 <span></span>
 <span><span class="fu">moisture_apoplasticPsi</span><span class="op">(</span><span class="va">RWC</span>, <span class="va">c</span>, <span class="va">d</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">moisture_tissueRWC</span><span class="op">(</span><span class="va">psiSym</span>, <span class="va">pi0</span>, <span class="va">epsilon</span>, <span class="va">psiApo</span>, <span class="va">c</span>, <span class="va">d</span>, <span class="va">af</span>, femb <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="fu">moisture_tissueRWC</span><span class="op">(</span><span class="va">psiSym</span>, <span class="va">pi0</span>, <span class="va">epsilon</span>, <span class="va">psiApo</span>, <span class="va">c</span>, <span class="va">d</span>, <span class="va">af</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">plant_water</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">moisture_pressureVolumeCurvePlot</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
@@ -135,10 +137,6 @@
 <dd><p>Apoplastic fraction (proportion) in the segment (e.g. leaf or stem).</p></dd>
 
 
-<dt>femb</dt>
-<dd><p>Fraction of embolized conduits.</p></dd>
-
-
 <dt>x</dt>
 <dd><p>An object of class <code><a href="modelInput.html">spwbInput</a></code>.</p></dd>
 
@@ -169,6 +167,7 @@
 <li><p><code>moisture_apoplasticWaterPotential</code>: Water potential (in MPa) of the apoplastic fraction.</p></li>
 <li><p><code>moisture_turgorLossPoint</code>: Water potential (in MPa) corresponding to turgor loss point.</p></li>
 <li><p><code>moisture_segmentRWC</code>: Segment relative water content [0-1].</p></li>
+<li><p><code>water_plant</code>: A vector of water content (mm) per plant cohort.</p></li>
 </ul></div>
     <div id="references">
     <h2>References</h2>
@@ -203,7 +202,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Miquel De Cáceres, Víctor Granda, Antoine Cabon.</p>
+  <p></p><p>Developed by Miquel De Cáceres, Nicolas Martin-StPaul, Víctor Granda, Antoine Cabon.</p>
 </div>
 
 <div class="pkgdown">

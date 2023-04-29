@@ -22,7 +22,7 @@ and photosynthesis processes are conducted with different level of detail depend
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.9.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.0</span>
       </span>
     </div>
 
@@ -99,14 +99,15 @@ and photosynthesis processes are conducted with different level of detail depend
 
 <dt>meteo</dt>
 <dd><p>A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see <code><a href="https://rdrr.io/r/base/Dates.html" class="external-link">Date</a></code>). 
-The following columns are required:</p><ul><li><p><code>MinTemperature</code>: Minimum temperature (in degrees Celsius).</p></li>
+The following columns are required and cannot have missing values:</p><ul><li><p><code>MinTemperature</code>: Minimum temperature (in degrees Celsius).</p></li>
 <li><p><code>MaxTemperature</code>: Maximum temperature (in degrees Celsius).</p></li>
 <li><p><code>MinRelativeHumidity</code>: Minimum relative humidity (in percent).</p></li>
 <li><p><code>MaxRelativeHumidity</code>: Maximum relative humidity (in percent).</p></li>
 <li><p><code>Precipitation</code>: Precipitation (in mm).</p></li>
-<li><p><code>Radiation</code>: Solar radiation (in MJ/m2/day), required only if <code>snowpack = TRUE</code>.</p></li>
-<li><p><code>WindSpeed</code>: Wind speed (in m/s). If not available, this column can be left with <code>NA</code> values.</p></li>
-<li><p><code>CO2</code>: Atmospheric (abovecanopy) CO2 concentration (in ppm). This column may not exist, or can be left with <code>NA</code> values. In both cases simulations will assume a constant value specified in <code><a href="defaultControl.html">defaultControl</a></code>.</p></li>
+<li><p><code>Radiation</code>: Solar radiation (in MJ/m2/day).</p></li>
+</ul><p>The following columns are optional:</p><ul><li><p><code>WindSpeed</code>: Above-canopy wind speed (in m/s). This column may not exist, or can be left with <code>NA</code> values. In both cases simulations will assume a constant value specified in <code><a href="defaultControl.html">defaultControl</a></code>.</p></li>
+<li><p><code>CO2</code>: Atmospheric (above-canopy) CO2 concentration (in ppm). This column may not exist, or can be left with <code>NA</code> values. In both cases simulations will assume a constant value specified in <code><a href="defaultControl.html">defaultControl</a></code>.</p></li>
+<li><p><code>Patm</code>: Atmospheric pressure (in kPa). This column may not exist, or can be left with <code>NA</code> values. In both cases, a value is estimated from elevation.</p></li>
 </ul></dd>
 
 
@@ -115,7 +116,7 @@ The following columns are required:</p><ul><li><p><code>MinTemperature</code>: M
 
 
 <dt>elevation, slope, aspect</dt>
-<dd><p>Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Sperry' transpiration mode. Elevation is also required for 'Granier' if snowpack dynamics are simulated.</p></dd>
+<dd><p>Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).</p></dd>
 
 
 <dt>CO2ByYear</dt>
@@ -142,7 +143,7 @@ The following columns are required:</p><ul><li><p><code>MinTemperature</code>: M
     <h2>Value</h2>
     
 
-<p>Function <code>spwb</code> returns a list of class 'spwb' whereas Function <code>pwb</code> returns a list of class 'pwb'. 
+<p>Function <code>spwb</code> returns a list of class 'spwb' whereas function <code>pwb</code> returns a list of class 'pwb'. 
 There are many elements in common in these lists, so they are listed here together:</p><ul><li><p><code>"latitude"</code>: Latitude (in degrees) given as input.</p></li>
 <li><p><code>"topography"</code>: Vector with elevation, slope and aspect given as input.</p></li>
 <li><p><code>"weather"</code>: A copy of the input weather data frame.</p></li>
@@ -158,18 +159,18 @@ There are many elements in common in these lists, so they are listed here togeth
 <li><p><code>"DeepDrainage"</code>: The amount of water exported via deep drainage (in mm).</p></li>
 <li><p><code>"Evapotranspiration"</code>: Evapotranspiration (in mm).</p></li>
 <li><p><code>"SoilEvaporation"</code>: Bare soil evaporation (in mm).</p></li>
-<li><p><code>"PlantExtraction"</code>: Amount of water extracted from soil by plants (in mm) (can only be different from transpiration for <code>transpirationMode = "Sperry"</code> when capacitance is considered).</p></li>
+<li><p><code>"PlantExtraction"</code>: Amount of water extracted from soil by plants (in mm).</p></li>
 <li><p><code>"Transpiration"</code>: Plant transpiration (considering all soil layers) (in mm).</p></li>
-<li><p><code>"HydraulicRedistribution"</code>: Water redistributed among soil layers, transported through the plant hydraulic network (only for <code>transpirationMode = "Sperry"</code>).</p></li>
+<li><p><code>"HydraulicRedistribution"</code>: Water redistributed among soil layers, transported through the plant hydraulic network.</p></li>
 </ul></li>
-<li><p><code>"EnergyBalance"</code>: A data frame with the daily values of energy balance components for the soil and the canopy (only for <code>transpirationMode = "Sperry"</code>).</p></li>
-<li><p><code>"Temperature"</code>: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for <code>transpirationMode = "Sperry"</code>).</p></li>
+<li><p><code>"EnergyBalance"</code>: A data frame with the daily values of energy balance components for the soil and the canopy (only for <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Cochard"</code>).</p></li>
+<li><p><code>"Temperature"</code>: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Cochard"</code>).</p></li>
 <li><p><code>"Soil"</code>: A data frame where different variables (in columns) are given for each simulated day (in rows):</p><ul><li><p><code>"W.1"</code>, <code>...</code>, <code>"W.k"</code>: Relative soil moisture content (relative to field capacity) in each soil layer.</p></li>
 <li><p><code>"ML.1"</code>, <code>...</code>, <code>"ML.k"</code>: Soil water volume in each soil layer (in L/m2).</p></li>
 <li><p><code>"MLTot"</code>: Total soil water volume (in L/m2).</p></li>
 <li><p><code>"SWE"</code>: Snow water equivalent (mm) of the snow pack.</p></li>
 <li><p><code>"PlantExt.1"</code>, <code>...</code>, <code>"PlantExt.k"</code>: Plant extraction from each soil layer (in mm).</p></li>
-<li><p><code>"HydraulicInput.1"</code>, <code>...</code>, <code>"HydraulicInput.k"</code>: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm) (only for <code>transpirationMode = "Sperry"</code>).</p></li>
+<li><p><code>"HydraulicInput.1"</code>, <code>...</code>, <code>"HydraulicInput.k"</code>: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm).</p></li>
 <li><p><code>"psi.1"</code>, <code>...</code>, <code>"psi.k"</code>: Soil water potential in each soil layer (in MPa).</p></li>
 </ul></li>
 <li><p><code>"Stand"</code>: A data frame where different variables (in columns) are given for each simulated day (in rows):</p><ul><li><p><code>"LAI"</code>: LAI of the stand (including live and dead leaves) (in m2/m2).</p></li>
@@ -197,7 +198,7 @@ There are many elements in common in these lists, so they are listed here togeth
 <li><p><code>"StemRWC"</code>: A data frame with the average daily stem relative water content of each plant (in percent).</p></li>
 <li><p><code>"LFMC"</code>: A data frame with the daily live fuel moisture content (in percent of dry weight).</p></li>
 <li><p><code>"PlantStress"</code>: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance).</p></li>
-</ul><p>If <code>transpirationMode="Sperry"</code>, element <code>"Plants"</code> is a list with the following subelements:</p>
+</ul><p>If <code>transpirationMode="Sperry"</code> or <code>transpirationMode="Cochard"</code>, element <code>"Plants"</code> is a list with the following subelements:</p>
 <p></p>
 <ul><li><p><code>"LAI"</code>: A data frame with the daily leaf area index for each plant cohort.</p></li>
 <li><p><code>"AbsorbedSWR"</code>: A data frame with the daily SWR absorbed by each plant cohort.</p></li>
@@ -224,23 +225,34 @@ There are many elements in common in these lists, so they are listed here togeth
 </ul></div>
     <div id="details">
     <h2>Details</h2>
-    <p>The model using 'Granier' transpiration mode is illustrated by function <code><a href="transp_modes.html">transp_transpirationGranier</a></code> and described in De Caceres et al. (2015). 
-Simulations using the 'Sperry' transpiration mode are computationally much more expensive, are described in De Cáceres et al. (2021) and are illustrated by function <code><a href="transp_modes.html">transp_transpirationSperry</a></code>.</p>
+    <p>The simulation functions allow using three different sub-models of transpiration and photosynthesis:</p><ul><li><p>The sub-model corresponding to 'Granier' transpiration mode is illustrated by function <code><a href="transp_modes.html">transp_transpirationGranier</a></code> and was described in De Caceres et al. (2015),
+  and implements an approach originally described in Granier et al. (1999).</p></li>
+<li><p>The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function <code><a href="transp_modes.html">transp_transpirationSperry</a></code> and was described in De Caceres et al. (2021), and
+  implements a modelling approach originally described in Sperry et al. (2017).</p></li>
+<li><p>The sub-model corresponding to 'Cochard' transpiration mode is illustrated by function <code><a href="transp_modes.html">transp_transpirationCochard</a></code> and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).</p></li>
+</ul><p>Simulations using the 'Sperry' or 'Cochard' transpiration mode are computationally much more expensive than 'Granier'.</p>
     </div>
     <div id="references">
     <h2>References</h2>
     <p>De Cáceres M, Martínez-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (doi:10.1016/j.agrformet.2015.06.012).</p>
 <p>De Cáceres M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, Martínez-Vilalta J (2021) Unravelling the effect of species mixing on water use and drought stress in holm oak forests: a modelling approach. Agricultural and Forest Meteorology 296 (doi:10.1016/j.agrformet.2020.108233).</p>
+<p>Granier A, Bréda N, Biron P, Villette S (1999) A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands. Ecol Modell 116:269–283. https://doi.org/10.1016/S0304-3800(98)00205-1.</p>
+<p>Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022) 
+SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level.
+Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).</p>
+<p>Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2017. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment 40, 816-830 (doi: 10.1111/pce.12852).</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="modelInput.html">spwbInput</a></code>, <code><a href="spwb_day.html">spwb_day</a></code>, <code><a href="plot.spwb.html">plot.spwb</a></code>, 
-<code><a href="spwb_ldrOptimization.html">spwb_ldrOptimization</a></code>, <code><a href="forest.html">forest</a></code></p></div>
+<code><a href="forest.html">forest</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>
-    <p>Miquel De Cáceres Ainsa, CREAF</p>
-    </div>
+    
+<ul><li><p>Miquel De Cáceres Ainsa, CREAF</p></li>
+<li><p>Nicolas Martin-StPaul, URFM-INRAE</p></li>
+</ul></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
@@ -254,35 +266,39 @@ Simulations using the 'Sperry' transpiration mode are computationally much more 
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Initialize soil with default soil params (4 layers)</span></span></span>
-<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Initialize control parameters</span></span></span>
-<span class="r-in"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Initialize input</span></span></span>
-<span class="r-in"><span><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Call simulation function</span></span></span>
-<span class="r-in"><span><span class="va">S1</span><span class="op">&lt;-</span><span class="fu">spwb</span><span class="op">(</span><span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 291.257</span>
+<span class="r-in"><span><span class="va">S1</span> <span class="op">&lt;-</span> <span class="fu">spwb</span><span class="op">(</span><span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant water content (mm): 7.05319</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 286.862</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial snowpack content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 276.274</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 7.05118</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 270.939</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -14.9831</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -14.9831</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.00201431</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.00201431</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -15.9232</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -15.9232</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 78 Net rainfall (mm) 384</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 425 Runoff (mm) 10 Deep drainage (mm) 186</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 30 Transpiration (mm) 224</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 224  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 84 Net rainfall (mm) 378</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 418 Runoff (mm) 12 Deep drainage (mm) 166</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 29 Transpiration (mm) 239</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 239  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Plot results</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></span></span>
@@ -291,111 +307,135 @@ Simulations using the 'Sperry' transpiration mode are computationally much more 
 <span class="r-in"><span><span class="co">#Monthly summary (averages) of soil water balance</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S1</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"Soil"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                  W.1       W.2       W.3       W.4     ML.1     ML.2     ML.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 0.9892049 0.9990394 0.9997346 1.0121628 67.52638 116.6939 75.82797</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 0.9503938 0.9881053 0.9950163 0.9929000 64.87701 115.4167 75.47010</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 0.9586082 0.9910139 0.9966658 1.0054007 65.43775 115.7564 75.59521</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 0.9069321 0.9620716 0.9805790 0.9736952 61.91017 112.3758 74.37505</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 0.9178486 0.9748275 0.9902185 0.9875088 62.65536 113.8658 75.10619</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 0.7611943 0.8753406 0.9457209 0.9333093 51.96163 102.2451 71.73113</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 0.9269586 0.9454615 0.9559994 0.9515141 63.27725 110.4356 72.51074</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 0.9329331 0.9789025 0.9913702 0.9915375 63.68508 114.3418 75.19354</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 0.9368336 0.9791737 0.9905085 0.9886870 63.95135 114.3734 75.12819</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 0.9610995 0.9916522 0.9963759 1.0004055 65.60782 115.8310 75.57322</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 0.9550351 0.9879691 0.9948165 1.0050697 65.19384 115.4008 75.45494</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 0.9082461 0.9754212 0.9914484 0.9879558 61.99987 113.9351 75.19947</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 0.9879080 0.9989506 0.9997059 1.0117808 63.38496 116.5306 75.72640</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 0.9440066 0.9868900 0.9945718 0.9921854 60.56821 115.1237 75.33750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 0.9533282 0.9900628 0.9963667 1.0044092 61.16630 115.4938 75.47346</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 0.8917494 0.9560654 0.9783013 0.9706936 57.21535 111.5279 74.10504</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 0.9085565 0.9722591 0.9892245 0.9854567 58.29371 113.4169 74.93245</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 0.7419989 0.8625183 0.9386663 0.9261549 47.60724 100.6153 71.10274</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 0.9186286 0.9350794 0.9496017 0.9436251 58.93994 109.0798 71.93108</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 0.9243430 0.9764703 0.9894704 0.9893835 59.30658 113.9082 74.95108</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 0.9280676 0.9765713 0.9894568 0.9860006 59.54555 113.9199 74.95005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 0.9543752 0.9898791 0.9940466 0.9912233 61.23347 115.4723 75.29772</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 0.9492593 0.9866071 0.9943492 1.0039309 60.90523 115.0906 75.32064</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 0.8985368 0.9733894 0.9907626 0.9870621 57.65084 113.5488 75.04896</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                ML.4    MLTot      WTD        SWE PlantExt.1 PlantExt.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 30.70825 290.7565 3960.093 1.61400691  0.1419176 0.06136416</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 30.12383 285.8876 3999.634 0.26644530  0.2675714 0.15287120</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 30.50309 287.2925 3968.541 0.01762496  0.2857171 0.15164636</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 29.54117 278.2022 4000.000 0.56746438  0.3395704 0.21064226</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 29.96027 281.5876 3996.947 0.00000000  0.3696160 0.27149630</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 28.31590 254.2538 4000.000 0.00000000  0.3211620 0.47471461</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 28.86821 275.0918 3989.994 0.00000000  0.5656209 0.24275046</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 30.08249 283.3029 3986.726 0.00000000  0.5052572 0.29231260</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 29.99601 283.4490 3996.052 0.00000000  0.3983728 0.22766865</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 30.35154 287.3636 3982.452 0.00000000  0.2951499 0.15802419</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 30.49305 286.5426 3960.669 2.50191892  0.2102914 0.11533909</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 29.97383 281.1083 4000.000 0.00000000  0.1725671 0.12547008</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             PlantExt.3 PlantExt.4 HydraulicInput.1 HydraulicInput.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 0.009642881 0.01647008                0       0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 0.034996054 0.02212360                0       0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 0.031170111 0.02802256                0       0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 0.059151035 0.02210037                0       0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 0.064901145 0.03877430                0       0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 0.167231375 0.07194962                0       0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 0.054209325 0.03363244                0       0.00158082</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 0.070064190 0.04030615                0       0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 0.056986098 0.02964608                0       0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 0.035234322 0.02353468                0       0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 0.024903027 0.01899388                0       0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 0.029777127 0.01688472                0       0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 30.65642 286.2983 3939.319 1.63052532  0.1521431 0.06515375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 30.06269 281.0921 3999.551 0.27022147  0.2822282 0.16629978</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 30.43307 282.5666 3953.935 0.01762496  0.3033031 0.16329086</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 29.41150 272.2598 4000.000 0.57265738  0.3483754 0.23141832</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 29.85882 276.5019 3998.648 0.00000000  0.3837659 0.29832585</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 28.06200 247.3873 4000.000 0.00000000  0.3131999 0.51744003</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 28.59134 268.5421 3993.181 0.00000000  0.6106124 0.25048142</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 29.97780 278.1436 3982.524 0.00000000  0.5304044 0.31899552</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 29.87530 278.2908 3995.562 0.00000000  0.4179530 0.24852581</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 30.03354 282.0371 3975.564 0.00000000  0.3165140 0.17629179</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 30.41858 281.7351 3940.899 2.54346786  0.2223354 0.12412511</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 29.90746 276.1560 4000.000 0.00000000  0.1799674 0.13738539</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            PlantExt.3 PlantExt.4 HydraulicInput.1 HydraulicInput.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 0.01036981 0.01745646                0      0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 0.03881923 0.02285381                0      0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 0.03381721 0.03006261                0      0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 0.06722299 0.02715705                0      0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 0.07219377 0.04117188                0      0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 0.19243558 0.08070211                0      0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 0.06075088 0.03509890                0      0.002086419</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 0.07412306 0.04628539                0      0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 0.06463969 0.03012832                0      0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 0.04226271 0.01184195                0      0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 0.02708120 0.02121602                0      0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 0.03256167 0.01829705                0      0.000000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            HydraulicInput.3 HydraulicInput.4       psi.1       psi.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01     1.467457e-04     0.0000000000 -0.03504953 -0.03318100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01     1.260789e-04     0.0000000000 -0.04377635 -0.03526814</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01     1.710484e-04     0.0000000000 -0.04116751 -0.03453022</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01     0.000000e+00     0.0034352671 -0.05538502 -0.04036560</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01     0.000000e+00     0.0000000000 -0.05469694 -0.03801003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01     0.000000e+00     0.0000000000 -0.13778956 -0.06773699</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01     3.759710e-03     0.0075248522 -0.05255820 -0.04651766</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01     1.397812e-04     0.0052639301 -0.04796377 -0.03687462</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01     0.000000e+00     0.0033075749 -0.04697928 -0.03673405</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01     5.170925e-05     0.0005027863 -0.04085145 -0.03451751</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01     4.602756e-04     0.0004337342 -0.04238603 -0.03510256</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01     0.000000e+00     0.0000000000 -0.05510568 -0.03768968</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01     1.281595e-04     0.000000e+00 -0.03524520 -0.03318456</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01     0.000000e+00     0.000000e+00 -0.04492516 -0.03531702</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01     1.583897e-04     0.000000e+00 -0.04204448 -0.03457242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01     0.000000e+00     1.713549e-03 -0.05879713 -0.04087990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01     0.000000e+00     0.000000e+00 -0.05655070 -0.03802884</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01     0.000000e+00     0.000000e+00 -0.14333084 -0.06660369</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01     3.992297e-03     8.101438e-03 -0.05429606 -0.04711612</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01     6.360821e-04     2.570246e-03 -0.04957865 -0.03698685</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01     0.000000e+00     3.757356e-03 -0.04853904 -0.03687595</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01     5.479476e-05     2.954608e-03 -0.04204607 -0.03470568</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01     5.074275e-04     4.539855e-05 -0.04334115 -0.03516708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01     0.000000e+00     0.000000e+00 -0.05687172 -0.03767920</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                  psi.3       psi.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 -0.03305186 -0.03121214</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 -0.03392118 -0.03432907</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 -0.03355154 -0.03243131</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 -0.03660403 -0.03794976</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 -0.03470044 -0.03526140</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 -0.04460257 -0.04781068</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 -0.04238135 -0.04422105</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 -0.03451134 -0.03466024</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 -0.03462065 -0.03497147</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 -0.03364069 -0.03320650</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 -0.03387804 -0.03265883</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 -0.03454400 -0.03520480</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 -0.03305360 -0.03133614</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 -0.03393356 -0.03435633</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 -0.03355985 -0.03253133</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 -0.03673334 -0.03810726</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 -0.03473195 -0.03539983</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 -0.04497618 -0.04782936</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 -0.04273801 -0.04449754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 -0.03471647 -0.03485102</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 -0.03468434 -0.03537816</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 -0.03396293 -0.03454437</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 -0.03389051 -0.03273106</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 -0.03455106 -0.03519695</span>
 <span class="r-in"><span>                  </span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co">#Switch to 'Sperry' transpiration mode</span></span></span>
-<span class="r-in"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Initialize input</span></span></span>
-<span class="r-in"><span><span class="va">x2</span> <span class="op">=</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Call simulation function</span></span></span>
-<span class="r-in"><span><span class="va">S2</span><span class="op">&lt;-</span><span class="fu">spwb</span><span class="op">(</span><span class="va">x2</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">S2</span> <span class="op">&lt;-</span> <span class="fu">spwb</span><span class="op">(</span><span class="va">x2</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant water content (mm): 8.34165</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 286.862</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial snowpack content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 274.404</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 8.33852</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 273.746</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -12.4576</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -12.4576</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.00312288</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -1.56533e-16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -13.1161</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -13.1161</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 7.10543e-15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 98 Net rainfall (mm) 364</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 405 Runoff (mm) 11 Deep drainage (mm) 203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 6 Transpiration (mm) 208</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 208  Plant water balance (mm) 0 Hydraulic redistribution (mm) 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 103 Net rainfall (mm) 359</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 400 Runoff (mm) 10 Deep drainage (mm) 189</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 6 Transpiration (mm) 219</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 219  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Run the model with 'Sperry' transpiration mode using the water balance of </span></span></span>
-<span class="r-in"><span><span class="co"># simulated with the 'Granier' model</span></span></span>
-<span class="r-in"><span><span class="va">WS</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">S1</span><span class="op">$</span><span class="va">Soil</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"W.1"</span>, <span class="st">"W.2"</span>, <span class="st">"W.3"</span>, <span class="st">"W.4"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">P2</span><span class="op">&lt;-</span><span class="fu">pwb</span><span class="op">(</span><span class="va">x2</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, </span></span>
-<span class="r-in"><span>        W <span class="op">=</span> <span class="va">WS</span>,</span></span>
-<span class="r-in"><span>        canopyEvaporation <span class="op">=</span> <span class="va">S1</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">Interception</span>,</span></span>
-<span class="r-in"><span>        snowMelt <span class="op">=</span> <span class="va">S1</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">Snowmelt</span>,</span></span>
-<span class="r-in"><span>        soilEvaporation <span class="op">=</span> <span class="va">S1</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">SoilEvaporation</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  Year 2001:....................................done</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Transpiration (mm) 210 Plant extraction from soil (mm) 210 Hydraulic redistribution (mm) 0</span>
+<span class="r-in"><span><span class="co">#Switch to 'Cochard' transpiration mode</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Cochard"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Initialize input</span></span></span>
+<span class="r-in"><span><span class="va">x3</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#Call simulation function</span></span></span>
+<span class="r-in"><span><span class="va">S3</span> <span class="op">&lt;-</span> <span class="fu">spwb</span><span class="op">(</span><span class="va">x3</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant water content (mm): 8.34165</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 286.862</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial snowpack content (mm): 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 8.24302</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 278.733</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.0986304</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): 6.09472</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -8.12937</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -8.12937</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 103 Net rainfall (mm) 359</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 400 Runoff (mm) 10 Deep drainage (mm) 246</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 6 Transpiration (mm) 150</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 156  Plant water balance (mm) 6 Hydraulic redistribution (mm) 0</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span>                </span></span>
 </code></pre></div>
@@ -408,7 +448,7 @@ Simulations using the 'Sperry' transpiration mode are computationally much more 
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Miquel De Cáceres, Víctor Granda, Antoine Cabon.</p>
+  <p></p><p>Developed by Miquel De Cáceres, Nicolas Martin-StPaul, Víctor Granda, Antoine Cabon.</p>
 </div>
 
 <div class="pkgdown">
