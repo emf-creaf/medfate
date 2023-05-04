@@ -23,7 +23,7 @@ License: GPL (>= 2) | LGPL (>= 3)
 URL: https://emf-creaf.github.io/medfate/
 LazyLoad: yes
 Depends: R (>= 3.5.0)
-Imports: ggplot2 (>= 3.0.0), meteoland (>= 0.8.1), Rcpp (>= 1.0.6), shiny
+Imports: ggplot2 (>= 3.0.0), meteoland (>= 2.0.0), Rcpp (>= 1.0.6), shiny
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
