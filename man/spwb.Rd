@@ -33,7 +33,9 @@ pwb(
 \arguments{
 \item{x}{An object of class \code{\link{spwbInput}}.}
 
-\item{meteo}{A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}). 
+\item{meteo}{A data frame with daily meteorological data series. 
+Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}). Alternatively,
+a column \code{dates} can contain \code{\link{Date}} or \code{\link{POSIXct}} classes.
 The following columns are required and cannot have missing values:
   \itemize{
     \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}

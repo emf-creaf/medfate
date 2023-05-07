@@ -1825,8 +1825,9 @@ List growth(List x, DataFrame meteo, double latitude,
       Rcout<<"Julian day taken from input column 'JulianDay'\n";
     }
   }
-  CharacterVector dateStrings = meteo.attr("row.names");
   
+  // Dates
+  CharacterVector dateStrings = getWeatherDates(meteo);
   if(!doy_input) DOY = date2doy(dateStrings);
   if(!photoperiod_input) Photoperiod = date2photoperiod(dateStrings, latrad);
   

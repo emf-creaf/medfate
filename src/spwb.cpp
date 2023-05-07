@@ -19,6 +19,33 @@
 #include <meteoland.h>
 using namespace Rcpp;
 
+CharacterVector getWeatherDates(DataFrame meteo){
+  CharacterVector dateStrings;
+  if(meteo.containsElementNamed("dates")){
+    RObject vector = Rcpp::as<Rcpp::RObject>(meteo["dates"]);
+    if(is<DateVector>(vector)) {
+      DateVector dateVector = Rcpp::as<Rcpp::DateVector>(vector);
+      CharacterVector dS(dateVector.size(), NA_STRING);
+      for(int i=0;i< dateVector.size();i++) {
+        Date d = dateVector[i];
+        dS[i] = d.format("%Y-%m-%d");
+      }
+      dateStrings = dS;
+    } else if(is<DatetimeVector>(vector)) {
+      DatetimeVector datetimeVector = Rcpp::as<Rcpp::DatetimeVector>(vector);
+      CharacterVector dS(datetimeVector.size(), NA_STRING);
+      for(int i=0;i< datetimeVector.size();i++) {
+        Datetime d = datetimeVector[i];
+        dS[i] = d.format("%Y-%m-%d");
+      }
+      dateStrings = dS;
+    }
+  } else {
+    dateStrings = meteo.attr("row.names"); 
+  }
+  return(dateStrings);
+}
+
 NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slope) {
   DataFrame FCCSprops = Rcpp::as<Rcpp::DataFrame>(x["internalFCCS"]);
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
@@ -1394,7 +1421,9 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL, List x,
 //' and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
 //' 
 //' @param x An object of class \code{\link{spwbInput}}.
-//' @param meteo A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}). 
+//' @param meteo A data frame with daily meteorological data series. 
+//' Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}). Alternatively,
+//' a column \code{dates} can contain \code{\link{Date}} or \code{\link{POSIXct}} classes.
 //' The following columns are required and cannot have missing values:
 //'   \itemize{
 //'     \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
@@ -1699,8 +1728,8 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
     }
   }
   
-  CharacterVector dateStrings = meteo.attr("row.names");
-  
+  // Dates
+  CharacterVector dateStrings = getWeatherDates(meteo);
   if(!doy_input) DOY = date2doy(dateStrings);
   if(!photoperiod_input) Photoperiod = date2photoperiod(dateStrings, latrad);
   
@@ -2080,8 +2109,9 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   if(soilEvaporation.length()==0) {
     soilEvaporation = NumericVector(numDays,0.0);
   }
-  CharacterVector dateStrings = meteo.attr("row.names");
   
+  // Dates
+  CharacterVector dateStrings = getWeatherDates(meteo);
   if(!doy_input) DOY = date2doy(dateStrings);
   if(!photoperiod_input) Photoperiod = date2photoperiod(dateStrings, latrad);
   
