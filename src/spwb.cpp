@@ -656,9 +656,11 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
   double rhmin = meteovec["MinRelativeHumidity"];
   double rhmax = meteovec["MaxRelativeHumidity"];
   if(NumericVector::is_na(rhmax)) {
+    warning("Maximum relative humidity assumed 100");
     rhmax = 100.0;
   }
   if(NumericVector::is_na(rhmin)) {
+    warning("Minimum relative humidity estimated from temperature range");
     double vp_tmin = meteoland::utils_saturationVP(tmin);
     double vp_tmax = meteoland::utils_saturationVP(tmax);
     rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
@@ -698,6 +700,13 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
   double slorad = slope * (M_PI/180.0);
   double photoperiod = meteoland::radiation_daylength(latrad, 0.0, 0.0, delta);
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+  if(NumericVector::is_na(rad)) {
+    warning("Estimating solar radiation");
+    double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
+    rad = meteoland::radiation_solarRadiation(solarConstant, latrad, elevation,
+                                              slorad, asprad, delta, tmax -tmin, tmax-tmin,
+                                              vpa, prec);
+  }
   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
 
   //Derive doy from date  
@@ -1437,12 +1446,12 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL, List x,
 //'     \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
 //'     \item{\code{MaxTemperature}: Maximum temperature (in degrees Celsius).}
 //'     \item{\code{Precipitation}: Precipitation (in mm).}
-//'     \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
 //'   }
-//' The following columns are required but can contain missing values, but they will raise warnings:
+//' The following columns are required but can contain missing values (NOTE: missing values will raise warnings):
 //'   \itemize{
 //'     \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
 //'     \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
+//'     \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
 //'   }
 //' The following columns are optional:
 //'   \itemize{
@@ -1696,7 +1705,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   if(any(is_na(MaxTemperature))) stop("Missing values in 'MaxTemperature'");
   if(any(is_na(MinRelativeHumidity))) warning("Missing values in 'MinRelativeHumidity' were estimated from temperature range");
   if(any(is_na(MaxRelativeHumidity))) warning("Missing values in 'MaxRelativeHumidity' were assumed to be 100");
-  if(any(is_na(Radiation))) stop("Missing values in 'Radiation'");
+  if(any(is_na(Radiation))) warning("Missing values in 'Radiation' were estimated");
   
   NumericVector CO2(Precipitation.length(), NA_REAL);
   if(meteo.containsElementNamed("CO2")) {
@@ -1849,6 +1858,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
       double rhmin = MinRelativeHumidity[i];
       double rhmax = MaxRelativeHumidity[i];
+      double prec = Precipitation[i];
       double rad = Radiation[i];
       if(NumericVector::is_na(rhmax)) {
         rhmax = 100.0;
@@ -1857,6 +1867,12 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
         double vp_tmin = meteoland::utils_saturationVP(tmin);
         double vp_tmax = meteoland::utils_saturationVP(tmax);
         rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+      }
+      if(NumericVector::is_na(rad)) {
+        double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
+        rad = meteoland::radiation_solarRadiation(solarConstant, latrad, elevation,
+                                                  slorad, asprad, delta, tmax -tmin, tmax-tmin,
+                                                  vpa, prec);
       }
       PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, 
                                  tmin, tmax, rhmin, rhmax, rad, wind);
@@ -1871,13 +1887,13 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       if(transpirationMode=="Granier") {
         NumericVector meteovec = NumericVector::create(
           Named("tday") = tday, Named("tmax") = tmax, Named("tmin") = tmin,
-          Named("prec") = Precipitation[i], Named("rhmin") = rhmin, Named("rhmax") = rhmax,
+          Named("prec") = prec, Named("rhmin") = rhmin, Named("rhmax") = rhmax,
           Named("rad") = rad, 
           Named("wind") = wind, 
           Named("Catm") = Catm,
           Named("Patm") = Patm[i],
           Named("pet") = PET[i],
-          Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
+          Named("er") = erFactor(DOY[i], PET[i], prec));
         try{
           s = spwbDay_basic(x, meteovec, 
                             elevation, slope, aspect, 
@@ -2070,7 +2086,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   if(any(is_na(MaxTemperature))) stop("Missing values in 'MaxTemperature'");
   if(any(is_na(MinRelativeHumidity))) warning("Missing values in 'MinRelativeHumidity' were estimated from temperature range");
   if(any(is_na(MaxRelativeHumidity))) warning("Missing values in 'MaxRelativeHumidity' were assumed to be 100");
-  if(any(is_na(Radiation))) stop("Missing values in 'Radiation'");
+  if(any(is_na(Radiation))) warning("Missing values in 'Radiation' were estimated");
   
   NumericVector WindSpeed(numDays, NA_REAL);
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
@@ -2217,13 +2233,16 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       std::string c = as<std::string>(dateStrings[i]);
       J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str())); 
     }
-
+    double delta = meteoland::radiation_solarDeclination(J);
+    double solarConstant = meteoland::radiation_solarConstant(J);
+    
     double tmin = MinTemperature[i];
     double tmax = MaxTemperature[i];
     double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
     double rhmin = MinRelativeHumidity[i];
     double rhmax = MaxRelativeHumidity[i];
     double rad = Radiation[i];
+    double prec = Precipitation[i];
     if(NumericVector::is_na(rhmax)) {
       rhmax = 100.0;
     }
@@ -2232,7 +2251,12 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       double vp_tmax = meteoland::utils_saturationVP(tmax);
       rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
     }
-    
+    if(NumericVector::is_na(rad)) {
+      double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
+      rad = meteoland::radiation_solarRadiation(solarConstant, latrad, elevation,
+                                                slorad, asprad, delta, tmax -tmin, tmax-tmin,
+                                                vpa, prec);
+    }
     PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, 
                                tmin, tmax, rhmin, rhmax, rad, wind);
 
@@ -2269,7 +2293,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     if(transpirationMode=="Granier") {
       NumericVector meteovec = NumericVector::create(
         Named("tday") = tday, Named("tmax") = tmax, Named("tmin") = tmin,
-        Named("prec") = Precipitation[i], Named("rhmin") = rhmin, Named("rhmax") = rhmax,
+        Named("prec") = prec, Named("rhmin") = rhmin, Named("rhmax") = rhmax,
         Named("rad") = rad, 
         Named("wind") = wind, 
         Named("Catm") = Catm,
@@ -2283,11 +2307,6 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
         error_occurence = true;
       }
     } else {
-      
-      double delta = meteoland::radiation_solarDeclination(J);
-      double solarConstant = meteoland::radiation_solarConstant(J);
-      double tmin = MinTemperature[i];
-      double tmax = MaxTemperature[i];
       double tmaxPrev = tmax;
       double tminPrev = tmin;
       double tminNext = tmin;
@@ -2296,10 +2315,6 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
         tminPrev = MinTemperature[i-1];
       }
       if(i<(numDays-1)) tminNext = MinTemperature[i+1]; 
-      double rhmin = MinRelativeHumidity[i];
-      double rhmax = MaxRelativeHumidity[i];
-      double rad = Radiation[i];
-      double prec = Precipitation[i];
       NumericVector meteovec = NumericVector::create(
         Named("tmin") = tmin, 
         Named("tmax") = tmax,

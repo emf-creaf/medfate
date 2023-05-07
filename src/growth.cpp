@@ -1787,7 +1787,7 @@ List growth(List x, DataFrame meteo, double latitude,
   if(any(is_na(MaxTemperature))) stop("Missing values in 'MaxTemperature'");
   if(any(is_na(MinRelativeHumidity))) warning("Missing values in 'MinRelativeHumidity' were estimated from temperature range");
   if(any(is_na(MaxRelativeHumidity))) warning("Missing values in 'MaxRelativeHumidity' were assumed to be 100");
-  if(any(is_na(Radiation))) stop("Missing values in 'Radiation'");
+  if(any(is_na(Radiation))) warning("Missing values in 'Radiation' were estimated");
   
   NumericVector WindSpeed(numDays, NA_REAL);
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
@@ -1996,6 +1996,7 @@ List growth(List x, DataFrame meteo, double latitude,
     
     double tmin = MinTemperature[i];
     double tmax = MaxTemperature[i];
+    double prec = Precipitation[i];
     double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
     double rhmin = MinRelativeHumidity[i];
     double rhmax = MaxRelativeHumidity[i];
@@ -2007,6 +2008,12 @@ List growth(List x, DataFrame meteo, double latitude,
       double vp_tmin = meteoland::utils_saturationVP(tmin);
       double vp_tmax = meteoland::utils_saturationVP(tmax);
       rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+    }
+    if(NumericVector::is_na(rad)) {
+      double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
+      rad = meteoland::radiation_solarRadiation(solarConstant, latrad, elevation,
+                                                slorad, asprad, delta, tmax -tmin, tmax-tmin,
+                                                vpa, prec);
     }
     PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, 
                                tmin, tmax, rhmin, rhmax, rad, wind);
@@ -2021,14 +2028,14 @@ List growth(List x, DataFrame meteo, double latitude,
     if(transpirationMode=="Granier") {
       NumericVector meteovec_inner = NumericVector::create(
         Named("tday") = tday, Named("tmax") = tmax, Named("tmin") = tmin,
-        Named("prec") = Precipitation[i], 
+        Named("prec") = prec, 
         Named("rhmin") = rhmin, Named("rhmax") = rhmax,
         Named("rad") = rad, 
         Named("wind") = wind, 
         Named("pet") = PET[i],
         Named("Catm") = Catm);
       meteovec_inner.push_back(Patm[i], "Patm");
-      meteovec_inner.push_back(erFactor(DOY[i], PET[i], Precipitation[i]), "er");
+      meteovec_inner.push_back(erFactor(DOY[i], PET[i], prec), "er");
       try{
         s = growthDayInner(x, meteovec_inner,  
                            latitude, elevation, slope, aspect,
