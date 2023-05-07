@@ -655,6 +655,14 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
   double tmax = meteovec["MaxTemperature"];
   double rhmin = meteovec["MinRelativeHumidity"];
   double rhmax = meteovec["MaxRelativeHumidity"];
+  if(NumericVector::is_na(rhmax)) {
+    rhmax = 100.0;
+  }
+  if(NumericVector::is_na(rhmin)) {
+    double vp_tmin = meteoland::utils_saturationVP(tmin);
+    double vp_tmax = meteoland::utils_saturationVP(tmax);
+    rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+  }
   double rad = meteovec["Radiation"];
   double prec = meteovec["Precipitation"];
   double wind = NA_REAL;
@@ -1428,10 +1436,13 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL, List x,
 //'   \itemize{
 //'     \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
 //'     \item{\code{MaxTemperature}: Maximum temperature (in degrees Celsius).}
-//'     \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
-//'     \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
 //'     \item{\code{Precipitation}: Precipitation (in mm).}
 //'     \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
+//'   }
+//' The following columns are required but can contain missing values, but they will raise warnings:
+//'   \itemize{
+//'     \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
+//'     \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
 //'   }
 //' The following columns are optional:
 //'   \itemize{
@@ -1683,8 +1694,8 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   if(any(is_na(Precipitation))) stop("Missing values in 'Precipitation'");
   if(any(is_na(MinTemperature))) stop("Missing values in 'MinTemperature'");
   if(any(is_na(MaxTemperature))) stop("Missing values in 'MaxTemperature'");
-  if(any(is_na(MinRelativeHumidity))) stop("Missing values in 'MinRelativeHumidity'");
-  if(any(is_na(MaxRelativeHumidity))) stop("Missing values in 'MaxRelativeHumidity'");
+  if(any(is_na(MinRelativeHumidity))) warning("Missing values in 'MinRelativeHumidity' were estimated from temperature range");
+  if(any(is_na(MaxRelativeHumidity))) warning("Missing values in 'MaxRelativeHumidity' were assumed to be 100");
   if(any(is_na(Radiation))) stop("Missing values in 'Radiation'");
   
   NumericVector CO2(Precipitation.length(), NA_REAL);
@@ -1839,7 +1850,14 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       double rhmin = MinRelativeHumidity[i];
       double rhmax = MaxRelativeHumidity[i];
       double rad = Radiation[i];
-      
+      if(NumericVector::is_na(rhmax)) {
+        rhmax = 100.0;
+      }
+      if(NumericVector::is_na(rhmin)) {
+        double vp_tmin = meteoland::utils_saturationVP(tmin);
+        double vp_tmax = meteoland::utils_saturationVP(tmax);
+        rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+      }
       PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, 
                                  tmin, tmax, rhmin, rhmax, rad, wind);
       
@@ -2050,8 +2068,8 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   if(any(is_na(Precipitation))) stop("Missing values in 'Precipitation'");
   if(any(is_na(MinTemperature))) stop("Missing values in 'MinTemperature'");
   if(any(is_na(MaxTemperature))) stop("Missing values in 'MaxTemperature'");
-  if(any(is_na(MinRelativeHumidity))) stop("Missing values in 'MinRelativeHumidity'");
-  if(any(is_na(MaxRelativeHumidity))) stop("Missing values in 'MaxRelativeHumidity'");
+  if(any(is_na(MinRelativeHumidity))) warning("Missing values in 'MinRelativeHumidity' were estimated from temperature range");
+  if(any(is_na(MaxRelativeHumidity))) warning("Missing values in 'MaxRelativeHumidity' were assumed to be 100");
   if(any(is_na(Radiation))) stop("Missing values in 'Radiation'");
   
   NumericVector WindSpeed(numDays, NA_REAL);
@@ -2206,7 +2224,14 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     double rhmin = MinRelativeHumidity[i];
     double rhmax = MaxRelativeHumidity[i];
     double rad = Radiation[i];
-    
+    if(NumericVector::is_na(rhmax)) {
+      rhmax = 100.0;
+    }
+    if(NumericVector::is_na(rhmin)) {
+      double vp_tmin = meteoland::utils_saturationVP(tmin);
+      double vp_tmax = meteoland::utils_saturationVP(tmax);
+      rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+    }
     
     PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, 
                                tmin, tmax, rhmin, rhmax, rad, wind);

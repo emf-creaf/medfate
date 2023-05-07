@@ -6,6 +6,7 @@
 - Herbaceous information in summary.forest
 - Herbaceous transpiration added to the water balance
 - Weather input can now have dates as Date or POSIXct objects in column 'dates' instead of row names
+- Weather input can now have missing values in MinRelativeHumidity and MaxRelativeHumidity
 
 # Version 3.0.0
 - Leaf area limited by allometries

@@ -2923,10 +2923,13 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #'   \itemize{
 #'     \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
 #'     \item{\code{MaxTemperature}: Maximum temperature (in degrees Celsius).}
-#'     \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
-#'     \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
 #'     \item{\code{Precipitation}: Precipitation (in mm).}
 #'     \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
+#'   }
+#' The following columns are required but can contain missing values, but they will raise warnings:
+#'   \itemize{
+#'     \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
+#'     \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
 #'   }
 #' The following columns are optional:
 #'   \itemize{

@@ -12,6 +12,7 @@
 #' @param type A string of the plot type: "LeafAreaDensity", "RootDistribution", "FuelBulkDensity", "PARExtinction", "SWRExtinction" or "WindExtinction". 
 #' @param byCohorts A logical flag to separate profiles for each cohort.
 #' @param bySpecies A logical flag to aggregate results by species.
+#' @param includeHerbs A logical flag to include herbaceous layer in the profile.
 #' @param \dots Additional parameters to vertical profiles
 #' 
 #' @return A ggplot or a shiny application, depending on the function.

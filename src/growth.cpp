@@ -1439,6 +1439,14 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
   double tmax = meteovec["MaxTemperature"];
   double rhmin = meteovec["MinRelativeHumidity"];
   double rhmax = meteovec["MaxRelativeHumidity"];
+  if(NumericVector::is_na(rhmax)) {
+    rhmax = 100.0;
+  }
+  if(NumericVector::is_na(rhmin)) {
+    double vp_tmin = meteoland::utils_saturationVP(tmin);
+    double vp_tmax = meteoland::utils_saturationVP(tmax);
+    rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+  }
   double rad = meteovec["Radiation"];
   double prec = meteovec["Precipitation"];
   double wind = NA_REAL;
@@ -1777,8 +1785,8 @@ List growth(List x, DataFrame meteo, double latitude,
   if(any(is_na(Precipitation))) stop("Missing values in 'Precipitation'");
   if(any(is_na(MinTemperature))) stop("Missing values in 'MinTemperature'");
   if(any(is_na(MaxTemperature))) stop("Missing values in 'MaxTemperature'");
-  if(any(is_na(MinRelativeHumidity))) stop("Missing values in 'MinRelativeHumidity'");
-  if(any(is_na(MaxRelativeHumidity))) stop("Missing values in 'MaxRelativeHumidity'");
+  if(any(is_na(MinRelativeHumidity))) warning("Missing values in 'MinRelativeHumidity' were estimated from temperature range");
+  if(any(is_na(MaxRelativeHumidity))) warning("Missing values in 'MaxRelativeHumidity' were assumed to be 100");
   if(any(is_na(Radiation))) stop("Missing values in 'Radiation'");
   
   NumericVector WindSpeed(numDays, NA_REAL);
@@ -1992,7 +2000,14 @@ List growth(List x, DataFrame meteo, double latitude,
     double rhmin = MinRelativeHumidity[i];
     double rhmax = MaxRelativeHumidity[i];
     double rad = Radiation[i];
-
+    if(NumericVector::is_na(rhmax)) {
+      rhmax = 100.0;
+    }
+    if(NumericVector::is_na(rhmin)) {
+      double vp_tmin = meteoland::utils_saturationVP(tmin);
+      double vp_tmax = meteoland::utils_saturationVP(tmax);
+      rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+    }
     PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, 
                                tmin, tmax, rhmin, rhmax, rad, wind);
     
