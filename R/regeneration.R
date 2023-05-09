@@ -1,6 +1,6 @@
 #' Plant regeneration
 #'
-#' Annual plant recruitment or resprouting observed in a forest stand
+#' Annual plant regeneration from seed recruitment or from resprouting
 #' 
 #' @param forest An object of class \code{\link{forest}}.
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsDefinition}}).
@@ -34,12 +34,13 @@
 #' 
 #' #Initialize control parameters
 #' control <- defaultControl("Granier")
+#' control$recruitmentMode = "deterministic" 
 #' 
 #' #Recruitment limits
 #' plant_parameter(exampleforestMED, SpParamsMED, "MinTempRecr")
 #' plant_parameter(exampleforestMED, SpParamsMED, "MinMoistureRecr")
 #' 
-#' #Compare recruitment outcomes
+#' #Compare seed recruitment outcomes
 #' recruitment(exampleforestMED, SpParamsMED, control, 0, 0.25)
 #' recruitment(exampleforestMED, SpParamsMED, control, 3, 0.25)
 #' 
@@ -77,7 +78,6 @@ recruitment<-function(forest, SpParams, control,
     if(control$shrubDynamics) shrubSpp <- control$seedRain[!isTree]
   }
   recr_forest <- emptyforest(ntree = length(treeSpp), nshrub=length(shrubSpp))
-  
   ## Determine if species can recruit 
   tree_recr_selection <- logical(0)
   tree_minFPAR <- numeric(0)
@@ -100,6 +100,7 @@ recruitment<-function(forest, SpParams, control,
     tree_minFPAR <- species_parameter(treeSpp, SpParams, "MinFPARRecr")
     tree_minFPAR[is.na(tree_minFPAR)] <- control$minFPARRecr
     tree_recr_selection <- (minMonthTemp > minTemp) & (moistureIndex > minMoisture) & (PARperc > tree_minFPAR)
+    # if(verbose) print(cbind(treeSpp, tree_recr_selection))
   }
   shrub_recr_selection <- logical(0)
   shrub_minFPAR <- numeric(0)

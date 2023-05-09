@@ -44,7 +44,7 @@ resprouting(
 An object of class \code{\link{forest}} with the new plant cohorts.
 }
 \description{
-Annual plant recruitment or resprouting observed in a forest stand
+Annual plant regeneration from seed recruitment or from resprouting
 }
 \details{
 \itemize{
@@ -65,12 +65,13 @@ data(SpParamsMED)
 
 #Initialize control parameters
 control <- defaultControl("Granier")
+control$recruitmentMode = "deterministic" 
 
 #Recruitment limits
 plant_parameter(exampleforestMED, SpParamsMED, "MinTempRecr")
 plant_parameter(exampleforestMED, SpParamsMED, "MinMoistureRecr")
 
-#Compare recruitment outcomes
+#Compare seed recruitment outcomes
 recruitment(exampleforestMED, SpParamsMED, control, 0, 0.25)
 recruitment(exampleforestMED, SpParamsMED, control, 3, 0.25)
 
