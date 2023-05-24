@@ -162,8 +162,8 @@ reference:
   contents:
   - starts_with("moisture_")
   
-- title: Fuels and fire behaviour
-  desc:  Fuel characteristics and fire behaviour
+- title: Wildfire
+  desc:  Fuel characteristics, fire behaviour and fire severity
   contents:
   - starts_with("fire_")
   - starts_with("fuel_")

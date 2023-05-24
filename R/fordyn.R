@@ -312,22 +312,22 @@ fordyn<-function(forest, soil, SpParams,
 
     # 5.1 Generate above-ground data
     #planted
-    planted_above <- forest2aboveground(planted_forest, SpParams, NA)
+    planted_above <- forest2aboveground(planted_forest, SpParams, NA, TRUE)
     row.names(planted_above) <- plant_ID(planted_forest, SpParams, treeOffset, shrubOffset)
     treeOffset <- treeOffset + nrow(planted_forest$treeData)
     shrubOffset <- shrubOffset + nrow(planted_forest$shrubData)
     #recruitment
-    recr_above <- forest2aboveground(recr_forest, SpParams, NA)
+    recr_above <- forest2aboveground(recr_forest, SpParams, NA, TRUE)
     row.names(recr_above) <- plant_ID(recr_forest, SpParams, treeOffset, shrubOffset)
     treeOffset <- treeOffset + nrow(recr_forest$treeData)
     shrubOffset <- shrubOffset + nrow(recr_forest$shrubData)
     #resprouting
-    resp_above <- forest2aboveground(resp_forest, SpParams, NA)
+    resp_above <- forest2aboveground(resp_forest, SpParams, NA, TRUE)
     row.names(resp_above) <- plant_ID(resp_forest, SpParams, treeOffset, shrubOffset)
     treeOffset <- treeOffset + nrow(resp_forest$treeData)
     shrubOffset <- shrubOffset + nrow(resp_forest$shrubData)
     #surviving
-    forest_above <- forest2aboveground(forest, SpParams, NA)
+    forest_above <- forest2aboveground(forest, SpParams, NA, TRUE)
     row.names(forest_above) <- row.names(xo$cohorts)
     forest_above$LAI_live[!is.na(forest_above$DBH)] <- xo$above$LAI_live[!is.na(forest_above$DBH)]
     forest_above$LAI_expanded[!is.na(forest_above$DBH)] <- xo$above$LAI_expanded[!is.na(forest_above$DBH)]

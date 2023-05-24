@@ -143,6 +143,7 @@
                   N = x$internalMortality$N_dead[range],
                   N_starvation = x$internalMortality$N_starvation[range],
                   N_dessication = x$internalMortality$N_dessication[range],
+                  N_burnt = x$internalMortality$N_burnt[range],
                   Z50 = x$below$Z50[range],
                   Z95 = x$below$Z95[range])
   dtt = dtt[dtt$N>0,, drop = FALSE]
@@ -193,6 +194,7 @@
                   Cover = x$internalMortality$Cover_dead[range],
                   Cover_starvation = x$internalMortality$Cover_starvation[range],
                   Cover_dessication = x$internalMortality$Cover_dessication[range],
+                  Cover_burnt = x$internalMortality$Cover_burnt[range],
                   Height = x$above$H[range],
                   Z50 = x$below$Z50[range],
                   Z95 = x$below$Z95[range])

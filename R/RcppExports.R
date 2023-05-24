@@ -321,6 +321,71 @@ fire_Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, win
     .Call(`_medfate_rothermel`, modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, windDir, slope, aspect)
 }
 
+#' Fire severity functions
+#' 
+#' Functions to estimate fire effects on foliage, buds and cambium, based on the model
+#' by Michaletz & Johnson (2008)
+#' 
+#' @param Ib_surf Surface fireline intensity (kW/m).
+#' @param t_res fire residence time (seconds).
+#' @param T_air Air temperature (degrees Celsius).
+#' @param T_necrosis Temperature of tissue necrosis (degrees Celsius).
+#' @param rho_air Air density (kg/m3).
+#' @param rho_bark Bark density (kg/m3).
+#' @param fmc_bark Bark moisture content (\% dry weight).
+#' @param z height (m).
+#' @param SLA Specific leaf area (m2/kg).
+#' @param h Heat transfer coefficient
+#' @param c Specific heat capacity
+#' @param thermal_factor Tissue thermal factor.
+#' @param bark_diffusivity Bark thermal diffusivity (m2/s).
+#' 
+#' @return 
+#' \itemize{
+#'   \item{Function \code{fire_plumeTemperature} returns the plume temperature at a given height.}
+#'   \item{Function \code{fire_barkThermalDiffusivity} returns the bark thermal diffusivity given a bark moisture value.}
+#'   \item{Function \code{fire_radialBoleNecrosis} returns the depth of radial bole necrosis in cm.}
+#'   \item{Function \code{fire_leafThermalFactor} returns the thermal factor of leaves as a function of specific leaf area.}
+#'   \item{Function \code{fire_necrosisCriticalTemperature} returns the (plume) temperature yielding necrosis for a given residence time and tissue thermal factor.}
+#'   \item{Function \code{fire_necrosisHeight} returns the height (in m) of necrosis for tissues with given thermal factor.}
+#' }
+#' 
+#' @references
+#' 
+#'   Michaletz, S.T., and Johnson, E.A. 2006. A heat transfer model of crown scorch in forest fires. Can. J. For. Res. 36: 2839–2851. doi:10.1139/X06-158.
+#' 
+#'   Michaletz ST, Johnson EA. 2008. A biophysical process model of tree mortality in surface fires. Canadian Journal of Forest Research 38: 2013–2029.
+#'   
+#' @name fire_severity
+fire_plumeTemperature <- function(Ib_surf, z, T_air = 25.0, rho_air = 1.169) {
+    .Call(`_medfate_plumeTemperature`, Ib_surf, z, T_air, rho_air)
+}
+
+#' @rdname fire_severity
+fire_barkThermalDiffusivity <- function(fmc_bark, rho_bark = 500.0, T_air = 25.0) {
+    .Call(`_medfate_barkThermalDiffusivity`, fmc_bark, rho_bark, T_air)
+}
+
+#' @rdname fire_severity
+fire_radialBoleNecrosis <- function(Ib_surf, t_res, bark_diffusivity, T_air = 25.0, rho_air = 1.169, T_necrosis = 60.0) {
+    .Call(`_medfate_radialBoleNecrosis`, Ib_surf, t_res, bark_diffusivity, T_air, rho_air, T_necrosis)
+}
+
+#' @rdname fire_severity
+fire_leafThermalFactor <- function(SLA, h = 130.0, c = 2500.0) {
+    .Call(`_medfate_leafThermalFactor`, SLA, h, c)
+}
+
+#' @rdname fire_severity
+fire_necrosisCriticalTemperature <- function(t_res, tissue_factor, T_air = 25.0, T_necrosis = 60.0) {
+    .Call(`_medfate_necrosisCriticalTemperature`, t_res, tissue_factor, T_air, T_necrosis)
+}
+
+#' @rdname fire_severity
+fire_necrosisHeight <- function(Ib_surf, t_res, tissue_factor, T_air = 25.0, rho_air = 1.169, T_necrosis = 60.0) {
+    .Call(`_medfate_necrosisHeight`, Ib_surf, t_res, tissue_factor, T_air, rho_air, T_necrosis)
+}
+
 .treeBasalArea <- function(N, dbh) {
     .Call(`_medfate_treeBasalArea`, N, dbh)
 }

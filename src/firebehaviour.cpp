@@ -371,6 +371,7 @@ List FCCSbehaviour(DataFrame FCCSpropsSI,
   
   //Crown fire residence time (min)
   double t_r_crown = 192.0*RT_ca;
+  // Rcout<<"T_r_crown: "<<t_r_crown<<"\n";
   
   //Crown fire fireline intensity (Btu/ft/min)
   double I_b_crown = I_r_crown*ros_crown*t_r_crown;

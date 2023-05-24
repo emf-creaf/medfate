@@ -415,8 +415,15 @@ List growthDayInner(List x, NumericVector meteovec,
   }
   //Weather
   double tday = meteovec["tday"];
+  double pfire = meteovec["pfire"];
 
 
+  bool fireOccurrence = false;
+  NumericVector fireBehavior(1,NA_REAL);
+  if(R::runif(0.0,1.0) < pfire) {
+    fireBehavior = fccsHazard(x, meteovec, spwbOut, slope);
+  }
+  
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
@@ -1144,8 +1151,6 @@ List growthDayInner(List x, NumericVector meteovec,
       FineRootBiomassBalance[j] = finerootBiomassIncrement - senescenceFinerootLoss;
       
       //MORTALITY Death by carbon starvation or dessication
-      // Rcout<<"-mortality";
-      // double Nprev = N[j]; //Store initial density (for biomass balance)
       double Ndead_day = 0.0;
       bool dynamicCohort = true;
       bool isShrub = !NumericVector::is_na(Cover[j]);
@@ -1155,6 +1160,10 @@ List growthDayInner(List x, NumericVector meteovec,
       else stemSympRWC = sum(StemSympRWCInst(j,_))/((double) numSteps);
       if(dynamicCohort) {
         String cause = "undertermined";
+        //Determine fire severity if fire occurred
+        if(fireOccurrence) {
+          
+        }
         if(mortalityMode=="whole-cohort/deterministic") {
           if((sugarSapwood[j]<mortalitySugarThreshold) && allowStarvation) {
             Ndead_day = N[j];
@@ -1455,6 +1464,8 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
   if(meteovec.containsElementNamed("CO2")) Catm = meteovec["CO2"];
   double Patm = NA_REAL; 
   if(meteovec.containsElementNamed("Patm")) Patm = meteovec["Patm"];
+  double pfire = 0.0; 
+  if(meteovec.containsElementNamed("FireProbability")) pfire = meteovec["FireProbability"];
   
   //Control parameters
   List control = x["control"];
@@ -1509,7 +1520,8 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
     Named("Catm") = Catm,
     Named("Patm") = Patm,
     Named("pet") = pet,
-    Named("er") = er);
+    Named("er") = er,
+    Named("pfire") = pfire);
   List s = growthDayInner(x, meteovec_inner, 
                      latitude, elevation, slope, aspect,
                      solarConstant, delta, 
@@ -1792,6 +1804,9 @@ List growth(List x, DataFrame meteo, double latitude,
   NumericVector WindSpeed(numDays, NA_REAL);
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
   
+  NumericVector FireProbability(numDays, 0.0);
+  if(meteo.containsElementNamed("FireProbability")) FireProbability = meteo["FireProbability"];
+  
   NumericVector PET = NumericVector(numDays, NA_REAL);
   
   NumericVector CO2(Precipitation.length(), NA_REAL);
@@ -1977,7 +1992,6 @@ List growth(List x, DataFrame meteo, double latitude,
       Catm = control["defaultCO2"];
     }
     
-    
     if(unlimitedSoilWater) {
       NumericVector W = soil["W"];
       for(int h=0;h<W.size();h++) W[h] = 1.0;
@@ -2036,6 +2050,7 @@ List growth(List x, DataFrame meteo, double latitude,
         Named("Catm") = Catm);
       meteovec_inner.push_back(Patm[i], "Patm");
       meteovec_inner.push_back(erFactor(DOY[i], PET[i], prec), "er");
+      meteovec_inner.push_back(FireProbability[i], "pfire"); 
       try{
         s = growthDayInner(x, meteovec_inner,  
                            latitude, elevation, slope, aspect,

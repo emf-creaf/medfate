@@ -165,15 +165,19 @@ resprouting <- function(forest, internalMortality, SpParams, control,
   resp_clip_shrubs <- species_parameter(forest$shrubData$Species, SpParams, "RespClip")
   resp_clip_shrubs[is.na(resp_clip_shrubs)] <- 0
   
-  N_resprouting <- internalMortality$N_dessication
+  N_resprouting_dessication <- internalMortality$N_dessication
+  N_resprouting_burnt <- internalMortality$N_burnt
   if(n_trees>0) {
-    N_resprouting <- N_resprouting[1:n_trees]*resp_dist_trees
+    N_resprouting <- N_resprouting_dessication[1:n_trees]*resp_dist_trees
+    N_resprouting <- N_resprouting + N_resprouting_burnt[1:n_trees]*resp_fire_trees
   } else { 
     N_resprouting <- numeric(0)
   }
-  Cover_resprouting <- internalMortality$Cover_dessication
+  Cover_resprouting_dessication <- internalMortality$Cover_dessication
+  Cover_resprouting_burnt <- internalMortality$Cover_burnt
   if(n_shrubs>0) {
-    Cover_resprouting <- Cover_resprouting[(n_trees+1):(n_trees+n_shrubs)]*resp_dist_shrubs
+    Cover_resprouting <- Cover_resprouting_dessication[(n_trees+1):(n_trees+n_shrubs)]*resp_dist_shrubs
+    Cover_resprouting <- Cover_resprouting + Cover_resprouting_burnt[(n_trees+1):(n_trees+n_shrubs)]*resp_fire_shrubs
   } else {
     Cover_resprouting <- numeric(0)
   }

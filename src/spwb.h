@@ -31,6 +31,8 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL, List x,
                              NumericVector initialPlantContent, NumericVector initialSoilContent, double initialSnowContent,
                              String transpirationMode);
 
+NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slope);
+
 List spwbDay(List x, CharacterVector date, NumericVector meteovec,
              double latitude, double elevation, double slope, double aspect,  
              double runon=0.0, bool modifyInput = true);

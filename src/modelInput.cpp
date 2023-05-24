@@ -803,15 +803,19 @@ DataFrame internalMortalityDataFrame(DataFrame above) {
   NumericVector N_dead(numCohorts, 0.0);
   NumericVector N_starvation(numCohorts, 0.0);
   NumericVector N_dessication(numCohorts, 0.0);
+  NumericVector N_burnt(numCohorts, 0.0);
   NumericVector Cover_dead(numCohorts, 0.0);
   NumericVector Cover_starvation(numCohorts, 0.0);
   NumericVector Cover_dessication(numCohorts, 0.0);
+  NumericVector Cover_burnt(numCohorts, 0.0);
   DataFrame df = DataFrame::create(Named("N_dead") = N_dead,
                                    Named("N_starvation") = N_starvation,
                                    Named("N_dessication") = N_dessication,
+                                   Named("N_burnt") = N_burnt,
                                    Named("Cover_dead") = Cover_dead,
                                    Named("Cover_starvation") = Cover_starvation,
-                                   Named("Cover_dessication") = Cover_dessication);
+                                   Named("Cover_dessication") = Cover_dessication,
+                                   Named("Cover_burnt") = Cover_burnt);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }
@@ -1033,6 +1037,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   NumericVector Cover = above["Cover"];
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
+  NumericVector Loading = above["Loading"];
   
   control["cavitationRefill"] = "growth";
   
@@ -1093,8 +1098,8 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                                          _["SA"] = SA, 
                                          _["LAI_live"]=LAI_live, 
                                          _["LAI_expanded"]=LAI_expanded, 
-                                         _["LAI_dead"] = LAI_dead);
-  if(control["fireHazardResults"]) plantsdf.push_back(above["Loading"], "Loading");
+                                         _["LAI_dead"] = LAI_dead,
+                                         _["Loading"] = Loading);
   plantsdf.attr("row.names") = above.attr("row.names");
   
 
@@ -1469,10 +1474,9 @@ List forest2spwbInput(List x, List soil, DataFrame SpParams, List control) {
 // [[Rcpp::export("forest2growthInput")]]
 List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   List rdc = rootDistributionComplete(x, SpParams, control["fillMissingRootParams"]);
-  bool fireHazardResults = control["fireHazardResults"];
-  DataFrame above = forest2aboveground(x, SpParams, NA_REAL, fireHazardResults);
-  DataFrame FCCSprops = R_NilValue;
-  if(fireHazardResults) FCCSprops = FCCSproperties(x, SpParams);
+  // Loading and FCCS properties are needed if fire hazard results are true or fires are simulated 
+  DataFrame above = forest2aboveground(x, SpParams, NA_REAL, true);
+  DataFrame FCCSprops = FCCSproperties(x, SpParams);
   List g = growthInput(above,  rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control);
   g["herbLAI"] = herbLAI(x["herbCover"], x["herbHeight"]);
   return(g);
