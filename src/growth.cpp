@@ -2085,6 +2085,7 @@ List growth(List x, DataFrame meteo, double latitude,
         Named("Patm") = Patm[i],
         Named("pet") = PET[i],
         Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
+      meteovec.push_back(FireProbability[i], "pfire"); 
       try{
         s = growthDayInner(x, meteovec, 
                            latitude, elevation, slope, aspect,

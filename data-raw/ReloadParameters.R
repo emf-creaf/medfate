@@ -34,28 +34,29 @@ SpParamsMED = medfate::modifySpParams(SpParamsMED, metamodellingParamsSpecies, s
 RGRcambiummaxTrees = readRDS(paste0(MFWdir,"GrowthCalibration/Rdata/RGRcambiummax_trees.rds"))
 SpParamsMED = medfate::modifySpParams(SpParamsMED, RGRcambiummaxTrees, subsetSpecies = FALSE)
 # Load ingrowth calibration results
-recruitmentParamsSpecies = readRDS(paste0(MFWdir,"MortalityIngrowthCalibration/Rdata/final_recruitment_params.rds"))
+recruitmentParamsSpecies = readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/Rdata/final_recruitment_params.rds"))
 SpParamsMED = medfate::modifySpParams(SpParamsMED, recruitmentParamsSpecies, subsetSpecies = FALSE)
 # Load Mortality calibration results
-mortalityParamsSpecies = readRDS(paste0(MFWdir,"MortalityIngrowthCalibration/Rdata/mort_rates.rds"))
+mortalityParamsSpecies = readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/Rdata/mort_rates.rds"))
 SpParamsMED = medfate::modifySpParams(SpParamsMED, mortalityParamsSpecies, subsetSpecies = FALSE)
 # Manual tuning
+tree_all_cols = 27:39
 #Use allometries of A. alba for P. abies
-SpParamsMED[147,26:37] = SpParamsMED[1,26:37]
+SpParamsMED[147,tree_all_cols] = SpParamsMED[1,tree_all_cols]
 #Use allometries of A. alba for A. pinsapo
-SpParamsMED[2,26:37] = SpParamsMED[1,26:37]
+SpParamsMED[2,tree_all_cols] = SpParamsMED[1,tree_all_cols]
 #Use allometries of A. alba for P. menziesii
-SpParamsMED[163,26:37] = SpParamsMED[1,26:37]
+SpParamsMED[163,tree_all_cols] = SpParamsMED[1,tree_all_cols]
 #Use allometries of A. alba for Cedrus
-SpParamsMED[34,26:37] = SpParamsMED[1,26:37]
+SpParamsMED[34,tree_all_cols] = SpParamsMED[1,tree_all_cols]
 #Use allometries of A. alba for T.baccata
-SpParamsMED[201,26:37] = SpParamsMED[1,26:37]
+SpParamsMED[201,tree_all_cols] = SpParamsMED[1,tree_all_cols]
 #Use allometries of J. communis for J. phoenicea
-SpParamsMED[118,26:37] = SpParamsMED[116,26:37]
+SpParamsMED[118,tree_all_cols] = SpParamsMED[116,tree_all_cols]
 #Use allometries of J. communis for J. phoenicea
-SpParamsMED[121,26:37] = SpParamsMED[116,26:37]
+SpParamsMED[121,tree_all_cols] = SpParamsMED[116,tree_all_cols]
 #Use allometries of J. communis for Cupressus
-SpParamsMED[62,26:37] = SpParamsMED[116,26:37]
+SpParamsMED[62,tree_all_cols] = SpParamsMED[116,tree_all_cols]
 pines = c("Pinus halepensis", "Pinus nigra", "Pinus pinea","Pinus sylvestris", "Pinus uncinata", "Pinus radiata", "Pinus pinaster")
 SpParamsMED$fHDmin[SpParamsMED$Name %in% pines] = 80
 SpParamsMED$fHDmax[SpParamsMED$Name %in% pines] = 160
