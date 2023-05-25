@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.1</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2023-04-29</h4>
+            <h4 data-toc-skip class="date">2023-05-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/parametrization/SpeciesParameterizationSpain.Rmd" class="external-link"><code>vignettes/parametrization/SpeciesParameterizationSpain.Rmd</code></a></small>
       <div class="hidden name"><code>SpeciesParameterizationSpain.Rmd</code></div>
@@ -155,40 +155,42 @@ other common packages that we will employ in this vignette:</p>
 <span><span class="co">##  [16] "fHDmin"                "fHDmax"                "a_ash"                </span></span>
 <span><span class="co">##  [19] "b_ash"                 "a_bsh"                 "b_bsh"                </span></span>
 <span><span class="co">##  [22] "a_btsh"                "b_btsh"                "cr"                   </span></span>
-<span><span class="co">##  [25] "a_fbt"                 "b_fbt"                 "c_fbt"                </span></span>
-<span><span class="co">##  [28] "a_cr"                  "b_1cr"                 "b_2cr"                </span></span>
-<span><span class="co">##  [31] "b_3cr"                 "c_1cr"                 "c_2cr"                </span></span>
-<span><span class="co">##  [34] "a_cw"                  "b_cw"                  "LeafDuration"         </span></span>
-<span><span class="co">##  [37] "t0gdd"                 "Sgdd"                  "Tbgdd"                </span></span>
-<span><span class="co">##  [40] "Ssen"                  "Phsen"                 "Tbsen"                </span></span>
-<span><span class="co">##  [43] "xsen"                  "ysen"                  "SLA"                  </span></span>
-<span><span class="co">##  [46] "LeafDensity"           "WoodDensity"           "FineRootDensity"      </span></span>
-<span><span class="co">##  [49] "conduit2sapwood"       "r635"                  "pDead"                </span></span>
-<span><span class="co">##  [52] "Al2As"                 "Ar2Al"                 "LeafWidth"            </span></span>
-<span><span class="co">##  [55] "SRL"                   "RLD"                   "maxFMC"               </span></span>
-<span><span class="co">##  [58] "minFMC"                "LeafPI0"               "LeafEPS"              </span></span>
-<span><span class="co">##  [61] "LeafAF"                "StemPI0"               "StemEPS"              </span></span>
-<span><span class="co">##  [64] "StemAF"                "SAV"                   "HeatContent"          </span></span>
-<span><span class="co">##  [67] "LigninPercent"         "gammaSWR"              "alphaSWR"             </span></span>
-<span><span class="co">##  [70] "kPAR"                  "g"                     "Tmax_LAI"             </span></span>
-<span><span class="co">##  [73] "Tmax_LAIsq"            "Psi_Extract"           "Exp_Extract"          </span></span>
-<span><span class="co">##  [76] "WUE"                   "WUE_par"               "WUE_co2"              </span></span>
-<span><span class="co">##  [79] "WUE_vpd"               "Gswmin"                "Gswmax"               </span></span>
-<span><span class="co">##  [82] "VCleaf_kmax"           "VCleaf_c"              "VCleaf_d"             </span></span>
-<span><span class="co">##  [85] "Kmax_stemxylem"        "VCstem_c"              "VCstem_d"             </span></span>
-<span><span class="co">##  [88] "Kmax_rootxylem"        "VCroot_c"              "VCroot_d"             </span></span>
-<span><span class="co">##  [91] "Vmax298"               "Jmax298"               "Nleaf"                </span></span>
-<span><span class="co">##  [94] "Nsapwood"              "Nfineroot"             "WoodC"                </span></span>
-<span><span class="co">##  [97] "RERleaf"               "RERsapwood"            "RERfineroot"          </span></span>
-<span><span class="co">## [100] "CCleaf"                "CCsapwood"             "CCfineroot"           </span></span>
-<span><span class="co">## [103] "RGRleafmax"            "RGRsapwoodmax"         "RGRcambiummax"        </span></span>
-<span><span class="co">## [106] "RGRfinerootmax"        "SRsapwood"             "SRfineroot"           </span></span>
-<span><span class="co">## [109] "RSSG"                  "MortalityBaselineRate" "SeedProductionHeight" </span></span>
-<span><span class="co">## [112] "ProbRecr"              "MinTempRecr"           "MinMoistureRecr"      </span></span>
-<span><span class="co">## [115] "MinFPARRecr"           "RecrTreeDBH"           "RecrTreeHeight"       </span></span>
-<span><span class="co">## [118] "RecrShrubHeight"       "RecrTreeDensity"       "RecrShrubCover"       </span></span>
-<span><span class="co">## [121] "RecrZ50"               "RecrZ95"               "RespFire"             </span></span>
-<span><span class="co">## [124] "RespDist"              "RespClip"</span></span></code></pre>
+<span><span class="co">##  [25] "ba"                    "a_fbt"                 "b_fbt"                </span></span>
+<span><span class="co">##  [28] "c_fbt"                 "a_cr"                  "b_1cr"                </span></span>
+<span><span class="co">##  [31] "b_2cr"                 "b_3cr"                 "c_1cr"                </span></span>
+<span><span class="co">##  [34] "c_2cr"                 "a_cw"                  "b_cw"                 </span></span>
+<span><span class="co">##  [37] "a_ba"                  "b_ba"                  "LeafDuration"         </span></span>
+<span><span class="co">##  [40] "t0gdd"                 "Sgdd"                  "Tbgdd"                </span></span>
+<span><span class="co">##  [43] "Ssen"                  "Phsen"                 "Tbsen"                </span></span>
+<span><span class="co">##  [46] "xsen"                  "ysen"                  "SLA"                  </span></span>
+<span><span class="co">##  [49] "LeafDensity"           "WoodDensity"           "FineRootDensity"      </span></span>
+<span><span class="co">##  [52] "conduit2sapwood"       "r635"                  "pDead"                </span></span>
+<span><span class="co">##  [55] "Al2As"                 "Ar2Al"                 "LeafWidth"            </span></span>
+<span><span class="co">##  [58] "SRL"                   "RLD"                   "maxFMC"               </span></span>
+<span><span class="co">##  [61] "minFMC"                "LeafPI0"               "LeafEPS"              </span></span>
+<span><span class="co">##  [64] "LeafAF"                "StemPI0"               "StemEPS"              </span></span>
+<span><span class="co">##  [67] "StemAF"                "SAV"                   "HeatContent"          </span></span>
+<span><span class="co">##  [70] "LigninPercent"         "gammaSWR"              "alphaSWR"             </span></span>
+<span><span class="co">##  [73] "kPAR"                  "g"                     "Tmax_LAI"             </span></span>
+<span><span class="co">##  [76] "Tmax_LAIsq"            "Psi_Extract"           "Exp_Extract"          </span></span>
+<span><span class="co">##  [79] "WUE"                   "WUE_par"               "WUE_co2"              </span></span>
+<span><span class="co">##  [82] "WUE_vpd"               "Gswmin"                "Gswmax"               </span></span>
+<span><span class="co">##  [85] "VCleaf_kmax"           "VCleaf_c"              "VCleaf_d"             </span></span>
+<span><span class="co">##  [88] "Kmax_stemxylem"        "VCstem_c"              "VCstem_d"             </span></span>
+<span><span class="co">##  [91] "Kmax_rootxylem"        "VCroot_c"              "VCroot_d"             </span></span>
+<span><span class="co">##  [94] "Vmax298"               "Jmax298"               "Nleaf"                </span></span>
+<span><span class="co">##  [97] "Nsapwood"              "Nfineroot"             "WoodC"                </span></span>
+<span><span class="co">## [100] "RERleaf"               "RERsapwood"            "RERfineroot"          </span></span>
+<span><span class="co">## [103] "CCleaf"                "CCsapwood"             "CCfineroot"           </span></span>
+<span><span class="co">## [106] "RGRleafmax"            "RGRsapwoodmax"         "RGRcambiummax"        </span></span>
+<span><span class="co">## [109] "RGRfinerootmax"        "SRsapwood"             "SRfineroot"           </span></span>
+<span><span class="co">## [112] "RSSG"                  "MortalityBaselineRate" "SeedProductionHeight" </span></span>
+<span><span class="co">## [115] "ProbRecr"              "MinTempRecr"           "MinMoistureRecr"      </span></span>
+<span><span class="co">## [118] "MinFPARRecr"           "RecrTreeDBH"           "RecrTreeHeight"       </span></span>
+<span><span class="co">## [121] "RecrShrubHeight"       "RecrTreeDensity"       "RecrShrubCover"       </span></span>
+<span><span class="co">## [124] "RecrZ50"               "RecrZ95"               "RespFire"             </span></span>
+<span><span class="co">## [127] "RespDist"              "RespClip"              "IngrowthTreeDensity"  </span></span>
+<span><span class="co">## [130] "IngrowthTreeDBH"</span></span></code></pre>
 <p>It is obvious that such a sheer number of parameters cannot be
 searched for manually, even for a small number of target species. Hence,
 it is important to draw values from allometric and plant trait data

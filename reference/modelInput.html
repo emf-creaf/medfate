@@ -20,7 +20,7 @@ Function forest2belowground calculates belowground variables such as fine root d
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.1</span>
       </span>
     </div>
 
@@ -244,6 +244,7 @@ Function <code>forest2belowground</code> calculates belowground variables such a
 <li><p><code>leafAreaTarget</code>: Target leaf area (m2) per individual.</p></li>
 <li><p><code>sapwoodAreaTarget</code>: Target sapwood area (cm2) per individual.</p></li>
 <li><p><code>fineRootBiomassTarget</code>: Target fine root biomass (g dry) per individual.</p></li>
+<li><p><code>crownBudPercent</code>: Percentage of the crown with buds.</p></li>
 </ul></li>
 <li><p><code>internalCarbon</code>: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.</p></li>
 <li><p><code>internalMortality</code>: A data frame to store the cumulative mortality (density for trees and cover for shrubs) predicted during the simulation,
@@ -506,6 +507,18 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mortalityRWCThreshold</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeDBH</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeDensity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$ingrowthTreeDBH</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$ingrowthTreeDensity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$allowRecruitment</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -541,12 +554,6 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$minFPARRecr</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeDBH</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeDensity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 127</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeHeight</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 620</span>
@@ -612,6 +619,9 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopy</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $herbLAI</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.252</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $cohorts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         SP              Name</span>
@@ -927,6 +937,18 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mortalityRWCThreshold</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeDBH</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeDensity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$ingrowthTreeDBH</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$ingrowthTreeDensity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$allowRecruitment</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -962,12 +984,6 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$minFPARRecr</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeDBH</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeDensity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 127</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeHeight</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 620</span>
@@ -1061,6 +1077,9 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> 26 2500 2550 2600   NA   NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 27 2600 2650 2700   NA   NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 28 2700 2750 2800   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $herbLAI</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.252</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $cohorts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         SP              Name</span>
@@ -1402,6 +1421,18 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$mortalityRWCThreshold</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeDBH</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeDensity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$ingrowthTreeDBH</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$ingrowthTreeDensity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$allowRecruitment</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -1437,12 +1468,6 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$minFPARRecr</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeDBH</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeDensity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 127</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeHeight</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 620</span>
@@ -1536,6 +1561,9 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> 26 2500 2550 2600   NA   NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 27 2600 2650 2700   NA   NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 28 2700 2750 2800   NA   NA    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $herbLAI</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.252</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $cohorts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         SP              Name</span>

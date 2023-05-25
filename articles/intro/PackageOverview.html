@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.1</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2023-04-29</h4>
+            <h4 data-toc-skip class="date">2023-05-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/PackageOverview.Rmd" class="external-link"><code>vignettes/intro/PackageOverview.Rmd</code></a></small>
       <div class="hidden name"><code>PackageOverview.Rmd</code></div>
@@ -98,17 +98,17 @@ applications.</p>
 <p>The R package <code>medfate</code> has been designed to study the
 characteristics and simulate the functioning and structural dynamics of
 forest ecosystems. Climatic conditions are the main environmental
-drivers, with a particular focus on drought impacts under Mediterranean
-conditions. Representation of vegetation accounts for structural and
-compositional variation but is not spatially-explicit (i.e. trees or
-shrubs do not have explicit coordinates within forest stands). This
-representation is chosen so that package functions can be easily applied
-to forest plot data from national forest inventories. Since the package
-intends to facilitate predictions of not only forest functioning but
-also forest structural and compositional dynamics, the taxonomic
-identity of plants is stored, and parameter values need to be provided
-for each taxonomic entity (but the package could be used with functional
-groups).</p>
+drivers, with a particular focus on drought and fire impacts under
+Mediterranean conditions. Representation of vegetation accounts for
+structural and compositional variation but is not spatially-explicit
+(i.e. trees or shrubs do not have explicit coordinates within forest
+stands). This representation is chosen so that package functions can be
+easily applied to forest plot data from national forest inventories.
+Since the package intends to facilitate predictions of not only forest
+functioning but also forest structural and compositional dynamics, the
+taxonomic identity of plants is stored, and parameter values need to be
+provided for each taxonomic entity (but the package could be used with
+functional groups).</p>
 <p>Currently, the distributed R package does not include any vignette,
 but the package <a href="https://emf-creaf.github.io/medfate/" class="external-link">website</a> includes
 articles covering model simulation examples, sensitivity analysis,
@@ -232,12 +232,16 @@ functions.</li>
 <li>
 <code>carbon_*</code>: Carbon balance.</li>
 <li>
+<code>fire_*</code>: Fire behavior and severity.</li>
+<li>
+<code>fuel_*</code>: Fuel properties.</li>
+<li>
 <code>hydraulics_*</code>: Plant hydraulics.</li>
 <li>
 <code>hydrology_*</code>: Canopy and soil hydrology (rainfall
 interception, soil evaporation, soil infiltration).</li>
 <li>
-<code>light_*</code>: Light extinction and absortion.</li>
+<code>light_*</code>: Radiation extinction and absorption.</li>
 <li>
 <code>moisture_*</code>: Live tissue moisture.</li>
 <li>

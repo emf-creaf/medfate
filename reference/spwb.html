@@ -22,7 +22,7 @@ and photosynthesis processes are conducted with different level of detail depend
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.1</span>
       </span>
     </div>
 
@@ -87,6 +87,7 @@ and photosynthesis processes are conducted with different level of detail depend
 <span>  canopyEvaporation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  snowMelt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  soilEvaporation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  herbTranspiration <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  CO2ByYear <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -98,12 +99,14 @@ and photosynthesis processes are conducted with different level of detail depend
 
 
 <dt>meteo</dt>
-<dd><p>A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see <code><a href="https://rdrr.io/r/base/Dates.html" class="external-link">Date</a></code>). 
+<dd><p>A data frame with daily meteorological data series. 
+Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see <code><a href="https://rdrr.io/r/base/Dates.html" class="external-link">Date</a></code>). Alternatively,
+a column <code>dates</code> can contain <code><a href="https://rdrr.io/r/base/Dates.html" class="external-link">Date</a></code> or <code><a href="https://rdrr.io/r/base/DateTimeClasses.html" class="external-link">POSIXct</a></code> classes.
 The following columns are required and cannot have missing values:</p><ul><li><p><code>MinTemperature</code>: Minimum temperature (in degrees Celsius).</p></li>
 <li><p><code>MaxTemperature</code>: Maximum temperature (in degrees Celsius).</p></li>
-<li><p><code>MinRelativeHumidity</code>: Minimum relative humidity (in percent).</p></li>
-<li><p><code>MaxRelativeHumidity</code>: Maximum relative humidity (in percent).</p></li>
 <li><p><code>Precipitation</code>: Precipitation (in mm).</p></li>
+</ul><p>The following columns are required but can contain missing values (NOTE: missing values will raise warnings):</p><ul><li><p><code>MinRelativeHumidity</code>: Minimum relative humidity (in percent).</p></li>
+<li><p><code>MaxRelativeHumidity</code>: Maximum relative humidity (in percent).</p></li>
 <li><p><code>Radiation</code>: Solar radiation (in MJ/m2/day).</p></li>
 </ul><p>The following columns are optional:</p><ul><li><p><code>WindSpeed</code>: Above-canopy wind speed (in m/s). This column may not exist, or can be left with <code>NA</code> values. In both cases simulations will assume a constant value specified in <code><a href="defaultControl.html">defaultControl</a></code>.</p></li>
 <li><p><code>CO2</code>: Atmospheric (above-canopy) CO2 concentration (in ppm). This column may not exist, or can be left with <code>NA</code> values. In both cases simulations will assume a constant value specified in <code><a href="defaultControl.html">defaultControl</a></code>.</p></li>
@@ -138,6 +141,10 @@ The following columns are required and cannot have missing values:</p><ul><li><p
 <dt>soilEvaporation</dt>
 <dd><p>A vector of daily bare soil evaporation values (mm). The length should match the number of rows in <code>meteo</code>.</p></dd>
 
+
+<dt>herbTranspiration</dt>
+<dd><p>A vector of daily herbaceous transpiration values (mm). The length should match the number of rows in <code>meteo</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -159,8 +166,9 @@ There are many elements in common in these lists, so they are listed here togeth
 <li><p><code>"DeepDrainage"</code>: The amount of water exported via deep drainage (in mm).</p></li>
 <li><p><code>"Evapotranspiration"</code>: Evapotranspiration (in mm).</p></li>
 <li><p><code>"SoilEvaporation"</code>: Bare soil evaporation (in mm).</p></li>
-<li><p><code>"PlantExtraction"</code>: Amount of water extracted from soil by plants (in mm).</p></li>
-<li><p><code>"Transpiration"</code>: Plant transpiration (considering all soil layers) (in mm).</p></li>
+<li><p><code>"HerbTranspiration"</code>: Transpiration due to the herbaceous layer (in mm).</p></li>
+<li><p><code>"PlantExtraction"</code>: Amount of water extracted from soil by woody plants (in mm).</p></li>
+<li><p><code>"Transpiration"</code>: Woody plant transpiration (in mm).</p></li>
 <li><p><code>"HydraulicRedistribution"</code>: Water redistributed among soil layers, transported through the plant hydraulic network.</p></li>
 </ul></li>
 <li><p><code>"EnergyBalance"</code>: A data frame with the daily values of energy balance components for the soil and the canopy (only for <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Cochard"</code>).</p></li>
@@ -173,10 +181,11 @@ There are many elements in common in these lists, so they are listed here togeth
 <li><p><code>"HydraulicInput.1"</code>, <code>...</code>, <code>"HydraulicInput.k"</code>: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm).</p></li>
 <li><p><code>"psi.1"</code>, <code>...</code>, <code>"psi.k"</code>: Soil water potential in each soil layer (in MPa).</p></li>
 </ul></li>
-<li><p><code>"Stand"</code>: A data frame where different variables (in columns) are given for each simulated day (in rows):</p><ul><li><p><code>"LAI"</code>: LAI of the stand (including live and dead leaves) (in m2/m2).</p></li>
-<li><p><code>"LAIlive"</code>: LAI of the stand assuming all leaves are unfolded (in m2/m2).</p></li>
-<li><p><code>"LAIexpanded"</code>: LAI of the stand of leaves actually unfolded (in m2/m2).</p></li>
-<li><p><code>"LAIdead"</code>: LAI of the stand corresponding to dead leaves (in m2/m2).</p></li>
+<li><p><code>"Stand"</code>: A data frame where different variables (in columns) are given for each simulated day (in rows):</p><ul><li><p><code>"LAI"</code>: LAI of the stand (including the herbaceous layer and live + dead leaves of woody plants) (in m2/m2).</p></li>
+<li><p><code>"LAIherb"</code>: LAI of the herbaceous layer (in m2/m2).</p></li>
+<li><p><code>"LAIlive"</code>: LAI of the woody plants assuming all leaves are unfolded (in m2/m2).</p></li>
+<li><p><code>"LAIexpanded"</code>: LAI of the woody plants with leaves actually unfolded (in m2/m2).</p></li>
+<li><p><code>"LAIdead"</code>: LAI of the woody plants corresponding to dead leaves (in m2/m2).</p></li>
 <li><p><code>"Cm"</code>: Water retention capacity of the canopy (in mm) (accounting for leaf phenology).</p></li>
 <li><p><code>"LgroundPAR"</code>: The percentage of PAR that reaches the ground (accounting for leaf phenology).</p></li>
 <li><p><code>"LgroundSWR"</code>: The percentage of SWR that reaches the ground (accounting for leaf phenology).</p></li>
@@ -283,22 +292,22 @@ Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 7.05118</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 270.939</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 7.05075</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 269.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.00201431</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.00201431</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -15.9232</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -15.9232</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.00244512</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.00244512</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -17.4616</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -17.4616</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 84 Net rainfall (mm) 378</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 418 Runoff (mm) 12 Deep drainage (mm) 166</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 29 Transpiration (mm) 239</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 239  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 98 Net rainfall (mm) 365</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 405 Runoff (mm) 11 Deep drainage (mm) 133</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 26  Herbaceous transpiration (mm) 25 Woody plant transpiration (mm) 238</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 238  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Plot results</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></span></span>
@@ -306,71 +315,71 @@ Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).</p
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Monthly summary (averages) of soil water balance</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">S1</span>, freq<span class="op">=</span><span class="st">"months"</span>,FUN<span class="op">=</span><span class="va">mean</span>, output<span class="op">=</span><span class="st">"Soil"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                  W.1       W.2       W.3       W.4     ML.1     ML.2     ML.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 0.9879080 0.9989506 0.9997059 1.0117808 63.38496 116.5306 75.72640</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 0.9440066 0.9868900 0.9945718 0.9921854 60.56821 115.1237 75.33750</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 0.9533282 0.9900628 0.9963667 1.0044092 61.16630 115.4938 75.47346</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 0.8917494 0.9560654 0.9783013 0.9706936 57.21535 111.5279 74.10504</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 0.9085565 0.9722591 0.9892245 0.9854567 58.29371 113.4169 74.93245</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 0.7419989 0.8625183 0.9386663 0.9261549 47.60724 100.6153 71.10274</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 0.9186286 0.9350794 0.9496017 0.9436251 58.93994 109.0798 71.93108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 0.9243430 0.9764703 0.9894704 0.9893835 59.30658 113.9082 74.95108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 0.9280676 0.9765713 0.9894568 0.9860006 59.54555 113.9199 74.95005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 0.9543752 0.9898791 0.9940466 0.9912233 61.23347 115.4723 75.29772</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 0.9492593 0.9866071 0.9943492 1.0039309 60.90523 115.0906 75.32064</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 0.8985368 0.9733894 0.9907626 0.9870621 57.65084 113.5488 75.04896</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                  W.1       W.2       W.3       W.4     ML.1      ML.2     ML.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 0.9861832 0.9988521 0.9996342 1.0110589 63.27429 116.51907 75.72097</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 0.9350150 0.9861124 0.9943870 0.9916039 59.99130 115.03294 75.32351</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 0.9461859 0.9893986 0.9962687 1.0034747 60.70804 115.41629 75.46604</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 0.8633559 0.9493053 0.9771738 0.9687908 55.39360 110.73929 74.01963</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 0.8916220 0.9667688 0.9711910 0.9565047 57.20718 112.77645 73.56644</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 0.7050198 0.8431780 0.9181367 0.9045223 45.23463  98.35921 69.54764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 0.8977013 0.9151454 0.9100730 0.8619537 57.59723 106.75443 68.93683</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 0.9033547 0.9676754 0.9655569 0.9308935 57.95996 112.88221 73.13967</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 0.9132573 0.9739827 0.9885703 0.9844480 58.59531 113.61798 74.88290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 0.9451102 0.9816207 0.9839852 0.9841902 60.63902 114.50898 74.53558</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 0.9403463 0.9857204 0.9942627 1.0031263 60.33337 114.98722 75.31409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 0.8863691 0.9723675 0.9906895 0.9871651 56.87015 113.42956 75.04342</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                ML.4    MLTot      WTD        SWE PlantExt.1 PlantExt.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 30.65642 286.2983 3939.319 1.63052532  0.1521431 0.06515375</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 30.06269 281.0921 3999.551 0.27022147  0.2822282 0.16629978</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 30.43307 282.5666 3953.935 0.01762496  0.3033031 0.16329086</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 29.41150 272.2598 4000.000 0.57265738  0.3483754 0.23141832</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 29.85882 276.5019 3998.648 0.00000000  0.3837659 0.29832585</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 28.06200 247.3873 4000.000 0.00000000  0.3131999 0.51744003</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 28.59134 268.5421 3993.181 0.00000000  0.6106124 0.25048142</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 29.97780 278.1436 3982.524 0.00000000  0.5304044 0.31899552</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 29.87530 278.2908 3995.562 0.00000000  0.4179530 0.24852581</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 30.03354 282.0371 3975.564 0.00000000  0.3165140 0.17629179</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 30.41858 281.7351 3940.899 2.54346786  0.2223354 0.12412511</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 29.90746 276.1560 4000.000 0.00000000  0.1799674 0.13738539</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            PlantExt.3 PlantExt.4 HydraulicInput.1 HydraulicInput.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 0.01036981 0.01745646                0      0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 0.03881923 0.02285381                0      0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 0.03381721 0.03006261                0      0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 0.06722299 0.02715705                0      0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 0.07219377 0.04117188                0      0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 0.19243558 0.08070211                0      0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 0.06075088 0.03509890                0      0.002086419</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 0.07412306 0.04628539                0      0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 0.06463969 0.03012832                0      0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 0.04226271 0.01184195                0      0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 0.02708120 0.02121602                0      0.000000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 0.03256167 0.01829705                0      0.000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 30.63455 286.1489 3942.912 1.66648856  0.1510746 0.06625295</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 30.04508 280.3928 4000.000 0.27844279  0.2726438 0.17519952</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 30.40476 281.9951 3958.292 0.01762496  0.2953448 0.17015270</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 29.35385 269.5064 4000.000 0.58396340  0.3050653 0.26337547</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 28.98159 272.5317 4000.000 0.00000000  0.3715036 0.34540625</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 27.40655 240.5480 4000.000 0.00000000  0.2166515 0.57404925</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 26.11674 259.4052 4000.000 0.00000000  0.6586843 0.29184367</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 28.20558 272.1874 3995.354 0.00000000  0.5324176 0.37729790</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 29.82825 276.9244 3997.837 0.00000000  0.3970297 0.26731416</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 29.82045 279.5040 3982.537 0.00000000  0.3136863 0.18012014</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 30.39420 281.0289 3943.820 2.63392663  0.2154720 0.12988246</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 29.91058 275.2537 4000.000 0.00000000  0.1700952 0.14568227</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            PlantExt.3   PlantExt.4 HydraulicInput.1 HydraulicInput.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 0.01064638  0.017131479      0.000000000     0.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 0.03980619  0.022243734      0.000000000     0.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 0.03468096  0.030056170      0.000000000     0.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 0.07085770  0.033126639      0.000000000     0.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 0.06437494  0.012425402      0.000000000     0.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 0.21127238  0.083679787      0.002091568     0.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 0.04022890 -0.037586123      0.000000000     0.0009387991</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 0.06690611 -0.008527718      0.000000000     0.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 0.06242261  0.033758604      0.000000000     0.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 0.03608462  0.016678406      0.000000000     0.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 0.02689142  0.022290390      0.000000000     0.0000000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 0.03343056  0.018629015      0.000000000     0.0000000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            HydraulicInput.3 HydraulicInput.4       psi.1       psi.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01     1.281595e-04     0.000000e+00 -0.03524520 -0.03318456</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01     0.000000e+00     0.000000e+00 -0.04492516 -0.03531702</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01     1.583897e-04     0.000000e+00 -0.04204448 -0.03457242</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01     0.000000e+00     1.713549e-03 -0.05879713 -0.04087990</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01     0.000000e+00     0.000000e+00 -0.05655070 -0.03802884</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01     0.000000e+00     0.000000e+00 -0.14333084 -0.06660369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01     3.992297e-03     8.101438e-03 -0.05429606 -0.04711612</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01     6.360821e-04     2.570246e-03 -0.04957865 -0.03698685</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01     0.000000e+00     3.757356e-03 -0.04853904 -0.03687595</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01     5.479476e-05     2.954608e-03 -0.04204607 -0.03470568</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01     5.074275e-04     4.539855e-05 -0.04334115 -0.03516708</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01     0.000000e+00     0.000000e+00 -0.05687172 -0.03767920</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01     6.021935e-05      0.000000000 -0.03558445 -0.03320195</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01     0.000000e+00      0.000000000 -0.04740715 -0.03546462</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01     1.089816e-04      0.000000000 -0.04385267 -0.03468742</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01     0.000000e+00      0.000000000 -0.06888018 -0.04230430</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01     2.749508e-04      0.009715944 -0.06312485 -0.03911903</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01     0.000000e+00      0.000000000 -0.18515531 -0.07405974</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01     4.820877e-03      0.051037409 -0.06445968 -0.05327334</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01     3.859103e-04      0.025175856 -0.05630541 -0.03862850</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01     1.405620e-04      0.002072620 -0.05256632 -0.03739046</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01     1.739971e-04      0.002226250 -0.04426747 -0.03605944</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01     4.646828e-04      0.000000000 -0.04557490 -0.03531786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01     0.000000e+00      0.000000000 -0.06106496 -0.03788211</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                  psi.3       psi.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 -0.03305360 -0.03133614</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 -0.03393356 -0.03435633</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 -0.03355985 -0.03253133</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 -0.03673334 -0.03810726</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 -0.03473195 -0.03539983</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 -0.04497618 -0.04782936</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 -0.04273801 -0.04449754</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 -0.03471647 -0.03485102</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 -0.03468434 -0.03537816</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 -0.03396293 -0.03454437</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 -0.03389051 -0.03273106</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 -0.03455106 -0.03519695</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-01-01 -0.03306632 -0.03143458</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-02-01 -0.03396376 -0.03445347</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-03-01 -0.03357536 -0.03264804</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-04-01 -0.03694261 -0.03850249</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-05-01 -0.03792067 -0.04065794</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-06-01 -0.04978415 -0.05318168</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-07-01 -0.05122342 -0.06403887</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-08-01 -0.03884289 -0.04609027</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-09-01 -0.03491810 -0.03565487</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-10-01 -0.03557142 -0.03565764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-11-01 -0.03390389 -0.03281876</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2001-12-01 -0.03456529 -0.03518201</span>
 <span class="r-in"><span>                  </span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co">#Switch to 'Sperry' transpiration mode</span></span></span>
@@ -388,22 +397,22 @@ Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 8.33852</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 273.746</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 8.3377</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 271.266</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.00312288</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -1.56533e-16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -13.1161</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -13.1161</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.00394232</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -2.46068e-16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -15.5957</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -15.5957</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 103 Net rainfall (mm) 359</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 400 Runoff (mm) 10 Deep drainage (mm) 189</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 6 Transpiration (mm) 219</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 219  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 98 Net rainfall (mm) 365</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 405 Runoff (mm) 11 Deep drainage (mm) 155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 24  Herbaceous transpiration (mm) 25 Woody plant transpiration (mm) 216</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 216  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Switch to 'Cochard' transpiration mode</span></span></span>
 <span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Cochard"</span><span class="op">)</span></span></span>
@@ -420,22 +429,22 @@ Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).</p
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 8.24302</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 278.733</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 8.23306</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 276.05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.0986304</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): 6.09472</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -8.12937</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -8.12937</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.108587</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): 6.06972</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -10.8123</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -10.8123</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 103 Net rainfall (mm) 359</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 400 Runoff (mm) 10 Deep drainage (mm) 246</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 6 Transpiration (mm) 150</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 156  Plant water balance (mm) 6 Hydraulic redistribution (mm) 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 98 Net rainfall (mm) 365</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 405 Runoff (mm) 11 Deep drainage (mm) 206</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 30  Herbaceous transpiration (mm) 25 Woody plant transpiration (mm) 148</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 154  Plant water balance (mm) 6 Hydraulic redistribution (mm) 0</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span>                </span></span>
 </code></pre></div>

@@ -115,6 +115,9 @@
     <loc>/reference/fire_behaviour.html</loc>
   </url>
   <url>
+    <loc>/reference/fire_severity.html</loc>
+  </url>
+  <url>
     <loc>/reference/fordyn.html</loc>
   </url>
   <url>
@@ -128,6 +131,9 @@
   </url>
   <url>
     <loc>/reference/growth.html</loc>
+  </url>
+  <url>
+    <loc>/reference/herb_values.html</loc>
   </url>
   <url>
     <loc>/reference/hydraulics_conductancefunctions.html</loc>
