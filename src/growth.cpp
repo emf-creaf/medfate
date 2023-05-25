@@ -6,6 +6,8 @@
 #include "phenology.h"
 #include "biophysicsutils.h"
 #include "forestutils.h"
+#include "fireseverity.h"
+#include "firebehaviour.h"
 #include "tissuemoisture.h"
 #include "hydraulics.h"
 #include "hydrology.h"
@@ -415,6 +417,7 @@ List growthDayInner(List x, NumericVector meteovec,
   }
   //Weather
   double tday = meteovec["tday"];
+  double tmax = meteovec["tmax"];
   double pfire = meteovec["pfire"];
 
 
@@ -422,6 +425,7 @@ List growthDayInner(List x, NumericVector meteovec,
   NumericVector fireBehavior(1,NA_REAL);
   if(R::runif(0.0,1.0) < pfire) {
     fireBehavior = fccsHazard(x, meteovec, spwbOut, slope);
+    fireOccurrence = true;
   }
   
   //Cohort info
@@ -519,6 +523,7 @@ List growthDayInner(List x, NumericVector meteovec,
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(spwbOut["Plants"]);
   List PlantsInst;
   NumericVector Ag = Plants["GrossPhotosynthesis"];
+  NumericVector LFMC = Plants["LFMC"];
   NumericVector PARcohort;
   NumericMatrix AgStep, AnStep;
   int numSteps = 1;
@@ -631,7 +636,12 @@ List growthDayInner(List x, NumericVector meteovec,
   NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
   NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
   
-
+  //Allometry parameters
+  DataFrame paramsAllometries = Rcpp::as<Rcpp::DataFrame>(x["paramsAllometries"]);
+  NumericVector Aba  = paramsAllometries["Aba"];
+  NumericVector Bba  = paramsAllometries["Bba"];
+  NumericVector ba  = paramsAllometries["ba"];
+  
   //Ring of forming vessels
   // List ringList = as<Rcpp::List>(x["internalRings"]);
   
@@ -1162,7 +1172,44 @@ List growthDayInner(List x, NumericVector meteovec,
         String cause = "undertermined";
         //Determine fire severity if fire occurred
         if(fireOccurrence) {
+          double foliar_factor = leafThermalFactor(SLA[j]);
+          //Determine foliage/bud burn
+          double Ib_surf = fireBehavior["I_b_surface [kW/m]"];
+          double t_res_surf = fireBehavior["t_r_surface [s]"];
+          double t_r_crown = fireBehavior["t_r_crown [s]"];
+          double fm_dead = fireBehavior["DFMC [%]"];
+          double Ic_ratio = fireBehavior["Ic_ratio"];
+          double Hn_leaves = 100.0*necrosisHeight(Ib_surf, t_res_surf, foliar_factor, tmax); //Necrosis height (cm)
+          double Hn_buds = 100.0*necrosisHeight(Ib_surf, t_res_surf, 0.130, tmax); //Bud necrosis height (cm)
+          double cbh = H[j]*(1.0 - CR[j]);
+          double burnRatioLeaves = std::min(1.0, std::max(0.0, (Hn_leaves - cbh)/(H[j] - cbh)));
+          double burnRatioBuds = std::min(1.0, std::max(0.0, (Hn_buds - cbh)/(H[j] - cbh)));
+          Rcout << " foliar_factor "<< foliar_factor << " Hn_leaves "<<Hn_leaves << " br_leaves "<< burnRatioLeaves<< " Hn_buds "<<Hn_buds << " br_buds "<< burnRatioBuds<<"\n";
+          //Determine crown fire or torching effects
+          double canopyFMC = (LFMC[j]*(1.0 - StemPLC[j]) + fm_dead*StemPLC[j]);
+          double Ib_crit = criticalFirelineIntensity(cbh/100.0, canopyFMC);
+          Rcout << "Ic_ratio "<< Ic_ratio <<" Ib_crit "<<Ib_crit<< " Ib_surf "<< Ib_surf<<"\n";
+          if((Ic_ratio > 1.0) || (Ib_surf > Ib_crit)) {
+            burnRatioLeaves = 1.0;
+            double Tc = necrosisCriticalTemperature(t_r_crown, 0.130 , tmax);
+            if(Tc < 900.0) burnRatioBuds = 1.0;
+          }
+          Rcout << "br_leaves "<< burnRatioLeaves<< " br_buds "<< burnRatioBuds<<"\n";
+          //Surface fire effects on cambium
+          double bark_diff = barkThermalDiffusivity(fm_dead, 500.0, tmax);
+          double xn = radialBoleNecrosis(Ib_surf, t_res_surf, bark_diff, tmax);
+          double bark_thickness = 1.0;
+          if(isShrub) {
+            bark_thickness = ba[j]*0.1; // from mm to cm
+          } else {
+            bark_thickness = Aba[j]*pow(DBH[j],Bba[j])*0.1;// from mm to cm
+          } 
+          Rcout << "xn "<< xn<< " xa "<<bark_thickness<<"\n";
           
+          //Effects
+          double LAburned = LAlive * burnRatioLeaves;
+          bool abovegroundSurvival = (burnRatioBuds < 1.0) && (bark_thickness > xn);
+          Rcout << "abovegroundSurvival "<< abovegroundSurvival<< " LAburned "<<LAburned<<"\n";
         }
         if(mortalityMode=="whole-cohort/deterministic") {
           if((sugarSapwood[j]<mortalitySugarThreshold) && allowStarvation) {

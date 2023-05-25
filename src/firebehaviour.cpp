@@ -442,6 +442,7 @@ List FCCSbehaviour(DataFrame FCCSpropsSI,
                               _["WAF"]=WAF,
                               _["ROS_crown [m/min]"]=ros_crown,
                               _["I_b_crown [kW/m]"] = I_b_crown,
+                              _["t_r_crown [s]"] = t_r_crown*60.0, //from min to sec
                               _["Ic_ratio"] = ic_ratio,
                               _["FL_crown [m]"]=FL_crown);
     
@@ -459,6 +460,7 @@ List FCCSbehaviour(DataFrame FCCSpropsSI,
                            _["ROS_windslopecap [m/min]"]=windslopecap,
                            _["ROS [m/min]"]=ros,
                            _["I_b [kW/m]"] = I_b,
+                           _["t_r [s]"] = t_r*60.0, //From minutes to sec
                            _["FL [m]"]=FL);
   return(List::create(_["SurfaceFire"] = surfaceFire, _["CrownFire"] = crownFire, _["FirePotentials"] = firePotentials));
 }

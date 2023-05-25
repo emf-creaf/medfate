@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Being able to anticipate the impact of global change on forest ecosystems is one of the major environmental challenges in contemporary societies. However, uncertainties in how forests function and practical constraints in how to integrate available information prevent the development of robust and reliable predictive models. Despite the amount of knowledge accumulated about the functioning and dynamics of Mediterranean forests, scientists should make coordinate their efforts to address the challenge of integrating the different global change drivers in a modelling framework useful for research and applications.
 
-The R package `medfate` has been designed to study the characteristics and simulate the functioning and structural dynamics of forest ecosystems. Climatic conditions are the main environmental drivers, with a particular focus on drought impacts under Mediterranean conditions. Representation of vegetation accounts for structural and compositional variation but is not spatially-explicit (i.e. trees or shrubs do not have explicit coordinates within forest stands). This representation is chosen so that package functions can be easily applied to forest plot data from national forest inventories. Since the package intends to facilitate predictions of not only forest functioning but also forest structural and compositional dynamics, the taxonomic identity of plants is stored, and parameter values need to be provided for each taxonomic entity (but the package could be used with functional groups).
+The R package `medfate` has been designed to study the characteristics and simulate the functioning and structural dynamics of forest ecosystems. Climatic conditions are the main environmental drivers, with a particular focus on drought and fire impacts under Mediterranean conditions. Representation of vegetation accounts for structural and compositional variation but is not spatially-explicit (i.e. trees or shrubs do not have explicit coordinates within forest stands). This representation is chosen so that package functions can be easily applied to forest plot data from national forest inventories. Since the package intends to facilitate predictions of not only forest functioning but also forest structural and compositional dynamics, the taxonomic identity of plants is stored, and parameter values need to be provided for each taxonomic entity (but the package could be used with functional groups).
 
 ```{r, echo=TRUE, include=FALSE}
 library(medfate)
@@ -69,9 +69,11 @@ Sub-model functions are grouped by *subject*, which is included in the name of t
 
 -   `biophysics_*`: Physical and biophysical utility functions.
 -   `carbon_*`: Carbon balance.
+-   `fire_*`: Fire behavior and severity.
+-   `fuel_*`: Fuel properties.
 -   `hydraulics_*`: Plant hydraulics.
 -   `hydrology_*`: Canopy and soil hydrology (rainfall interception, soil evaporation, soil infiltration).
--   `light_*`: Light extinction and absortion.
+-   `light_*`: Radiation extinction and absorption.
 -   `moisture_*`: Live tissue moisture.
 -   `pheno_*`: Leaf phenology.
 -   `photo_*`: Leaf photosynthesis.

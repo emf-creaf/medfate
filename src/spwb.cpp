@@ -98,9 +98,12 @@ NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slo
     _["CFMC_overstory [%]"] = ActFMC[2],
     _["ROS_surface [m/min]"] = surfaceFire["ROS [m/min]"],
     _["I_b_surface [kW/m]"] = surfaceFire["I_b [kW/m]"],
+    _["t_r_surface [s]"] = surfaceFire["t_r [s]"],
     _["FL_surface [m]"] = surfaceFire["FL [m]"],
+    _["Ic_ratio"] = crownFire["Ic_ratio"],
     _["ROS_crown [m/min]"] = crownFire["ROS_crown [m/min]"],
     _["I_b_crown [kW/m]"] = crownFire["I_b_crown [kW/m]"],
+    _["t_r_crown [s]"] = crownFire["t_r_crown [s]"],
     _["FL_crown [m]"] = crownFire["FL_crown [m]"],
     _["SFP"] = firePotentials["SFP"],
     _["CFP"] = firePotentials["CFP"]
@@ -1069,17 +1072,20 @@ DataFrame defineFireHazardOutput(DataFrame meteo){
   int numDays = dateStrings.length();
   
   NumericVector DFMC(numDays), CFMC_understory(numDays), CFMC_overstory(numDays);
-  NumericVector ROS_surface(numDays), I_b_surface(numDays), FL_surface(numDays);
-  NumericVector ROS_crown(numDays), I_b_crown(numDays), FL_crown(numDays);
+  NumericVector ROS_surface(numDays), I_b_surface(numDays), t_r_surface(numDays),  Ic_ratio(numDays), FL_surface(numDays);
+  NumericVector ROS_crown(numDays), I_b_crown(numDays), t_r_crown(numDays), FL_crown(numDays);
   NumericVector SFP(numDays), CFP(numDays);
   DataFrame df = DataFrame::create(_["DFMC"] = DFMC,
                                    _["CFMC_understory"] = CFMC_understory,
                                    _["CFMC_overstory"] = CFMC_overstory,
                                    _["ROS_surface"] = ROS_surface,
                                    _["I_b_surface"] = I_b_surface,
+                                   _["t_r_surface"] = t_r_surface,
                                    _["FL_surface"] = FL_surface,
+                                   _["Ic_ratio"] = Ic_ratio,
                                    _["ROS_crown"] = ROS_crown,
                                    _["I_b_crown"] = I_b_crown,
+                                   _["t_r_crown"] = t_r_crown,
                                    _["FL_crown"] = FL_crown,
                                    _["SFP"] = SFP,
                                    _["CFP"] = CFP);
@@ -1341,9 +1347,12 @@ void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday) {
   NumericVector CFMC_overstory = fireHazard["CFMC_overstory"];
   NumericVector ROS_surface = fireHazard["ROS_surface"];
   NumericVector I_b_surface = fireHazard["I_b_surface"];
+  NumericVector t_r_surface = fireHazard["t_r_surface"];
   NumericVector FL_surface = fireHazard["FL_surface"];
+  NumericVector Ic_ratio = fireHazard["Ic_ratio"];
   NumericVector ROS_crown = fireHazard["ROS_crown"];
   NumericVector I_b_crown = fireHazard["I_b_crown"];
+  NumericVector t_r_crown = fireHazard["t_r_crown"];
   NumericVector FL_crown = fireHazard["FL_crown"];
   NumericVector SFP = fireHazard["SFP"];
   NumericVector CFP = fireHazard["CFP"];
@@ -1352,9 +1361,12 @@ void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday) {
   CFMC_overstory[iday] = fhd["CFMC_overstory [%]"];
   ROS_surface[iday] = fhd["ROS_surface [m/min]"];
   I_b_surface[iday] = fhd["I_b_surface [kW/m]"];
+  t_r_surface[iday] = fhd["t_r_surface [s]"];
   FL_surface[iday] = fhd["FL_surface [m]"];
+  Ic_ratio[iday] = fhd["Ic_ratio"];
   ROS_crown[iday] = fhd["ROS_crown [m/min]"];
   I_b_crown[iday] = fhd["I_b_crown [kW/m]"];
+  t_r_crown[iday] = fhd["t_r_crown [s]"];
   FL_crown[iday] = fhd["FL_crown [m]"];
   SFP[iday] = fhd["SFP"];
   CFP[iday] = fhd["CFP"];

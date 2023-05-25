@@ -87,7 +87,7 @@ double radialBoleNecrosis(double Ib_surf, double t_res, double bark_diffusivity,
 // [[Rcpp::export("fire_leafThermalFactor")]]
 double leafThermalFactor(double SLA, double h = 130.0, double c = 2500.0) {
    return(SLA*(h/c));
- }
+}
 
 //' @rdname fire_severity
 // [[Rcpp::export("fire_necrosisCriticalTemperature")]]
