@@ -364,10 +364,11 @@ fordyn<-function(forest, soil, SpParams,
     
     
     # 5.5 Prepare growth input for next year
+    FCCSprops = fuel_FCCS(forest, SpParams);
     xi <- .growthInput(above = above_all, 
                      Z50 = c(forest$treeData$Z50, forest$shrubData$Z50),
                      Z95 = c(forest$treeData$Z95, forest$shrubData$Z95),
-                     xo$soil, NULL, SpParams, control)
+                     xo$soil, FCCSprops, SpParams, control)
     xi$herbLAI <- xo$herbLAI
     # 5.6 Replace previous state for surviving cohorts
     xi$cohorts[repl_vec,] <- xo$cohorts[sel_vec,, drop=FALSE]

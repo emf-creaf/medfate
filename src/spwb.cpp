@@ -76,7 +76,10 @@ NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slo
   //Correct loading for phenology
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_live = above["LAI_live"];
-  cohLoading = cohLoading*(LAI_expanded/LAI_live);
+  for(int i=0;i<LAI_live.size();i++){
+    if(LAI_live[i]>0.0) cohLoading[i] = cohLoading[i]*(LAI_expanded[i]/LAI_live[i]);
+    else cohLoading[i] = 0.0;
+  }
   
   //Average canopy moisture in the crown and surface layers
   NumericVector ActFMC = FCCSprops["ActFMC"];

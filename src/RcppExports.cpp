@@ -363,32 +363,32 @@ BEGIN_RCPP
 END_RCPP
 }
 // necrosisCriticalTemperature
-double necrosisCriticalTemperature(double t_res, double tissue_factor, double T_air, double T_necrosis);
-RcppExport SEXP _medfate_necrosisCriticalTemperature(SEXP t_resSEXP, SEXP tissue_factorSEXP, SEXP T_airSEXP, SEXP T_necrosisSEXP) {
+double necrosisCriticalTemperature(double t_res, double thermal_factor, double T_air, double T_necrosis);
+RcppExport SEXP _medfate_necrosisCriticalTemperature(SEXP t_resSEXP, SEXP thermal_factorSEXP, SEXP T_airSEXP, SEXP T_necrosisSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type t_res(t_resSEXP);
-    Rcpp::traits::input_parameter< double >::type tissue_factor(tissue_factorSEXP);
+    Rcpp::traits::input_parameter< double >::type thermal_factor(thermal_factorSEXP);
     Rcpp::traits::input_parameter< double >::type T_air(T_airSEXP);
     Rcpp::traits::input_parameter< double >::type T_necrosis(T_necrosisSEXP);
-    rcpp_result_gen = Rcpp::wrap(necrosisCriticalTemperature(t_res, tissue_factor, T_air, T_necrosis));
+    rcpp_result_gen = Rcpp::wrap(necrosisCriticalTemperature(t_res, thermal_factor, T_air, T_necrosis));
     return rcpp_result_gen;
 END_RCPP
 }
 // necrosisHeight
-double necrosisHeight(double Ib_surf, double t_res, double tissue_factor, double T_air, double rho_air, double T_necrosis);
-RcppExport SEXP _medfate_necrosisHeight(SEXP Ib_surfSEXP, SEXP t_resSEXP, SEXP tissue_factorSEXP, SEXP T_airSEXP, SEXP rho_airSEXP, SEXP T_necrosisSEXP) {
+double necrosisHeight(double Ib_surf, double t_res, double thermal_factor, double T_air, double rho_air, double T_necrosis);
+RcppExport SEXP _medfate_necrosisHeight(SEXP Ib_surfSEXP, SEXP t_resSEXP, SEXP thermal_factorSEXP, SEXP T_airSEXP, SEXP rho_airSEXP, SEXP T_necrosisSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type Ib_surf(Ib_surfSEXP);
     Rcpp::traits::input_parameter< double >::type t_res(t_resSEXP);
-    Rcpp::traits::input_parameter< double >::type tissue_factor(tissue_factorSEXP);
+    Rcpp::traits::input_parameter< double >::type thermal_factor(thermal_factorSEXP);
     Rcpp::traits::input_parameter< double >::type T_air(T_airSEXP);
     Rcpp::traits::input_parameter< double >::type rho_air(rho_airSEXP);
     Rcpp::traits::input_parameter< double >::type T_necrosis(T_necrosisSEXP);
-    rcpp_result_gen = Rcpp::wrap(necrosisHeight(Ib_surf, t_res, tissue_factor, T_air, rho_air, T_necrosis));
+    rcpp_result_gen = Rcpp::wrap(necrosisHeight(Ib_surf, t_res, thermal_factor, T_air, rho_air, T_necrosis));
     return rcpp_result_gen;
 END_RCPP
 }

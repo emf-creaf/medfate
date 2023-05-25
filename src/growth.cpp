@@ -360,6 +360,7 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
             sapwoodAreaTarget[j] = 10000.0*leafAreaTarget[j]/Al2As[j]; //Set target sapwood area (may generate sapwood senescence)
           }
           Cover[j] = std::min(100.0, N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); //Updates shrub cover
+          LAI_live[j] = leafAreaTarget[j]*N[j]/10000.0;
         }
       }
     }
@@ -505,15 +506,18 @@ List growthDayInner(List x, NumericVector meteovec,
   NumericVector N_dead = internalMortality["N_dead"];
   NumericVector N_starvation = internalMortality["N_starvation"];
   NumericVector N_dessication = internalMortality["N_dessication"];
+  NumericVector N_burnt = internalMortality["N_burnt"];
   NumericVector Cover_dead = internalMortality["Cover_dead"];
   NumericVector Cover_starvation = internalMortality["Cover_starvation"];
   NumericVector Cover_dessication = internalMortality["Cover_dessication"];
+  NumericVector Cover_burnt = internalMortality["Cover_burnt"];
   
   DataFrame internalAllocation = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
   NumericVector allocationTarget = internalAllocation["allocationTarget"];
   NumericVector sapwoodAreaTarget = internalAllocation["sapwoodAreaTarget"];
   NumericVector leafAreaTarget = internalAllocation["leafAreaTarget"];
   NumericVector fineRootBiomassTarget = internalAllocation["fineRootBiomassTarget"];
+  NumericVector crownBudPercent = internalAllocation["crownBudPercent"];
   
   DataFrame internalPhenology = Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
   LogicalVector leafUnfolding = internalPhenology["leafUnfolding"];
@@ -774,8 +778,8 @@ List growthDayInner(List x, NumericVector meteovec,
         
         if(leafUnfolding[j]) {
           double deltaLApheno = std::max(leafAreaTarget[j]*(1.0 - StemPLC[j]) - LAexpanded, 0.0);
-          double deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]*(rleafcell/rcellmax));
-          if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
+          double deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*SA[j]*RGRleafmax[j]*(rleafcell/rcellmax));
+          if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
           double deltaLAavailable = 0.0;
           deltaLAavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerLA);
           deltaLAgrowth[j] = std::min(deltaLAsink, deltaLAavailable);
@@ -888,8 +892,8 @@ List growthDayInner(List x, NumericVector meteovec,
           //Leaf growth
           if(leafUnfolding[j]) {
             double deltaLApheno = std::max(leafAreaTarget[j]*(1.0 - StemPLC[j]) - LAexpanded, 0.0);
-            double deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]*(rleafcell/rcellmax));
-            if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
+            double deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*(1.0/((double) numSteps))*SA[j]*RGRleafmax[j]*(rleafcell/rcellmax));
+            if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, (crownBudPercent[j]/100.0)*(1.0/((double) numSteps))*SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
             //Grow at expense of stem sugar
             double deltaLAavailable = std::max(0.0, (starchSapwood[j]-minimumStarchForPrimaryGrowth)*(glucoseMolarMass*Volume_sapwood[j])/costPerLA);
             double deltaLAgrowthStep = std::min(deltaLAsink, deltaLAavailable);
@@ -1026,12 +1030,16 @@ List growthDayInner(List x, NumericVector meteovec,
         leafSenescence[j] = false; //To prevent further loss
       }
 
-      //Leaf senescence due to drought (only when PLC increases)
+      //Leaf senescence and bud senescence due to drought (only when PLC increases)
       double PLCinc = (StemPLC[j]-StemPLCprev[j]);
       if(PLCinc>0.0) {
         double LAplc = std::min(LAexpanded, (1.0-StemPLC[j])*leafAreaTarget[j]);
         if(LAplc<LAexpanded) {
           propLeafSenescence = std::max((LAexpanded-LAplc)/LAexpanded, propLeafSenescence);
+        }
+        double budplc = 100.0*(1.0-StemPLC[j]);
+        if(budplc < crownBudPercent[j]) {
+          crownBudPercent[j] = budplc;
         }
       }
 
@@ -1153,7 +1161,8 @@ List growthDayInner(List x, NumericVector meteovec,
       }
       //Decrease PLC due to new SA growth
       if(cavitationRefill=="growth") StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth[j]/SA[j]));
-      
+      //Increase crown buds to new SA growth
+      crownBudPercent[j] = std::min(100.0, crownBudPercent[j] + 100.0*(deltaSAgrowth[j]/SA[j]));
       
       
       //LEAF/FINE ROOT BIOMASS balance (g_ind)
@@ -1171,6 +1180,8 @@ List growthDayInner(List x, NumericVector meteovec,
       if(dynamicCohort) {
         String cause = "undertermined";
         //Determine fire severity if fire occurred
+        double LAI_burnt_change = 0.0;
+        bool abovegroundFireSurvival = true;
         if(fireOccurrence) {
           double foliar_factor = leafThermalFactor(SLA[j]);
           //Determine foliage/bud burn
@@ -1184,17 +1195,17 @@ List growthDayInner(List x, NumericVector meteovec,
           double cbh = H[j]*(1.0 - CR[j]);
           double burnRatioLeaves = std::min(1.0, std::max(0.0, (Hn_leaves - cbh)/(H[j] - cbh)));
           double burnRatioBuds = std::min(1.0, std::max(0.0, (Hn_buds - cbh)/(H[j] - cbh)));
-          Rcout << " foliar_factor "<< foliar_factor << " Hn_leaves "<<Hn_leaves << " br_leaves "<< burnRatioLeaves<< " Hn_buds "<<Hn_buds << " br_buds "<< burnRatioBuds<<"\n";
+          // Rcout << " foliar_factor "<< foliar_factor << " Hn_leaves "<<Hn_leaves << " br_leaves "<< burnRatioLeaves<< " Hn_buds "<<Hn_buds << " br_buds "<< burnRatioBuds<<"\n";
           //Determine crown fire or torching effects
           double canopyFMC = (LFMC[j]*(1.0 - StemPLC[j]) + fm_dead*StemPLC[j]);
           double Ib_crit = criticalFirelineIntensity(cbh/100.0, canopyFMC);
-          Rcout << "Ic_ratio "<< Ic_ratio <<" Ib_crit "<<Ib_crit<< " Ib_surf "<< Ib_surf<<"\n";
+          // Rcout << "Ic_ratio "<< Ic_ratio <<" Ib_crit "<<Ib_crit<< " Ib_surf "<< Ib_surf<<"\n";
           if((Ic_ratio > 1.0) || (Ib_surf > Ib_crit)) {
             burnRatioLeaves = 1.0;
             double Tc = necrosisCriticalTemperature(t_r_crown, 0.130 , tmax);
             if(Tc < 900.0) burnRatioBuds = 1.0;
           }
-          Rcout << "br_leaves "<< burnRatioLeaves<< " br_buds "<< burnRatioBuds<<"\n";
+          // Rcout << "br_leaves "<< burnRatioLeaves<< " br_buds "<< burnRatioBuds<<"\n";
           //Surface fire effects on cambium
           double bark_diff = barkThermalDiffusivity(fm_dead, 500.0, tmax);
           double xn = radialBoleNecrosis(Ib_surf, t_res_surf, bark_diff, tmax);
@@ -1204,51 +1215,60 @@ List growthDayInner(List x, NumericVector meteovec,
           } else {
             bark_thickness = Aba[j]*pow(DBH[j],Bba[j])*0.1;// from mm to cm
           } 
-          Rcout << "xn "<< xn<< " xa "<<bark_thickness<<"\n";
+          // Rcout << "xn "<< xn<< " xa "<<bark_thickness<<"\n";
           
           //Effects
-          double LAburned = LAlive * burnRatioLeaves;
-          bool abovegroundSurvival = (burnRatioBuds < 1.0) && (bark_thickness > xn);
-          Rcout << "abovegroundSurvival "<< abovegroundSurvival<< " LAburned "<<LAburned<<"\n";
+          double LAburned = LAexpanded * burnRatioLeaves;
+          LAI_burnt_change = LAburned*N[j]/10000.0;
+          crownBudPercent[j] = crownBudPercent[j]*(1.0 - burnRatioBuds);
+          abovegroundFireSurvival = (burnRatioBuds < 1.0) && (bark_thickness > xn);
+          // Rcout << "abovegroundSurvival "<< abovegroundFireSurvival<< " burnRatioLeaves "<< burnRatioLeaves<< " LAI_burnt_change "<<LAI_burnt_change<<"\n";
         }
-        if(mortalityMode=="whole-cohort/deterministic") {
-          if((sugarSapwood[j]<mortalitySugarThreshold) && allowStarvation) {
-            Ndead_day = N[j];
-            if(verbose) Rcout<<" [Cohort "<< j<<" died from starvation] ";
-            cause = "starvation";
-          } else if( (stemSympRWC < mortalityRWCThreshold) && allowDessication) {
-            Ndead_day = N[j];
-            if(verbose) Rcout<<" [Cohort "<< j<<" died from dessication] ";
-            cause = "dessication";
-          }
-        } else {
-          double basalMortalityRate = 1.0 - exp(log(1.0 - MortalityBaselineRate[j])/356.0);
-          
-          if(allowStarvation) starvationRate[j] = dailyMortalityProbability(basalMortalityRate, sugarSapwood[j], mortalitySugarThreshold, 0.0);
-          if(allowDessication) dessicationRate[j] = dailyMortalityProbability(basalMortalityRate, stemSympRWC, mortalityRWCThreshold, 0.0);
-          mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));
-          if((dessicationRate[j] > basalMortalityRate) && (dessicationRate[j] > starvationRate[j])) {
-            cause = "dessication";
-          } else if((starvationRate[j] > basalMortalityRate) && (starvationRate[j] > dessicationRate[j])) {
-            cause = "starvation";
-          }
-          // Rcout<< j << " "<< stemSympRWC<< " "<< dessicationRate[j]<<"\n";
-          if(mortalityMode =="density/deterministic") {
-            Ndead_day = N[j]*mortalityRate[j];
-          } else if(mortalityMode =="whole-cohort/stochastic") {
-            if(R::runif(0.0,1.0) < mortalityRate[j]) {
+        if(abovegroundFireSurvival) {
+          if(mortalityMode=="whole-cohort/deterministic") {
+            if((sugarSapwood[j]<mortalitySugarThreshold) && allowStarvation) {
               Ndead_day = N[j];
-              Rcout<<" [Cohort "<< j<<" died from " << cause.get_cstring() << "] ";
+              if(verbose) Rcout<<" [Cohort "<< j<<" died from starvation] ";
+              cause = "starvation";
+            } else if( (stemSympRWC < mortalityRWCThreshold) && allowDessication) {
+              Ndead_day = N[j];
+              if(verbose) Rcout<<" [Cohort "<< j<<" died from dessication] ";
+              cause = "dessication";
             }
-          } else if(mortalityMode == "density/stochastic") {
-            Ndead_day = R::rbinom(round(N[j]), mortalityRate[j]);
+          } else {
+            double basalMortalityRate = 1.0 - exp(log(1.0 - MortalityBaselineRate[j])/356.0);
+            
+            if(allowStarvation) starvationRate[j] = dailyMortalityProbability(basalMortalityRate, sugarSapwood[j], mortalitySugarThreshold, 0.0);
+            if(allowDessication) dessicationRate[j] = dailyMortalityProbability(basalMortalityRate, stemSympRWC, mortalityRWCThreshold, 0.0);
+            mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));
+            if((dessicationRate[j] > basalMortalityRate) && (dessicationRate[j] > starvationRate[j])) {
+              cause = "dessication";
+            } else if((starvationRate[j] > basalMortalityRate) && (starvationRate[j] > dessicationRate[j])) {
+              cause = "starvation";
+            }
+            // Rcout<< j << " "<< stemSympRWC<< " "<< dessicationRate[j]<<"\n";
+            if(mortalityMode =="density/deterministic") {
+              Ndead_day = N[j]*mortalityRate[j];
+            } else if(mortalityMode =="whole-cohort/stochastic") {
+              if(R::runif(0.0,1.0) < mortalityRate[j]) {
+                Ndead_day = N[j];
+                Rcout<<" [Cohort "<< j<<" died from " << cause.get_cstring() << "] ";
+              }
+            } else if(mortalityMode == "density/stochastic") {
+              Ndead_day = R::rbinom(round(N[j]), mortalityRate[j]);
+            }
           }
+        } else { //Cohort burned
+          Ndead_day = N[j];
+          cause = "burnt";
         }
         // Update density and increase the number of dead plants
         Ndead_day = std::min(Ndead_day, N[j]);
         double Cdead_day = Cover[j]*(Ndead_day/N[j]);
         if(cause == "starvation") {
           N_starvation[j] = N_starvation[j] + Ndead_day;
+        } else if(cause == "burnt") {
+          N_burnt[j] = N_burnt[j] + Ndead_day;
         } else if(cause == "dessication") {
           N_dessication[j] = N_dessication[j] + Ndead_day;
         } else if(!isShrub) { // Self-thinning occurring in tree cohorts
@@ -1270,12 +1290,23 @@ List growthDayInner(List x, NumericVector meteovec,
             Cover_starvation[j] = Cover_starvation[j] + Cdead_day;
           } else if(cause == "dessication") {
             Cover_dessication[j] = Cover_dessication[j] + Cdead_day;
+          } else if(cause == "burnt") {
+            Cover_burnt[j] = Cover_burnt[j] + Cdead_day;
           }
         }
         //Update LAI dead and LAI expanded as a result of density decrease
-        double LAI_change = LAexpanded*Ndead_day/10000.0;
-        LAI_dead[j] = LAI_dead[j] + LAI_change;
-        LAI_expanded[j] = LAI_expanded[j] - LAI_change;
+        if(abovegroundFireSurvival) {
+          double LAI_change = LAexpanded*Ndead_day/10000.0;
+          LAI_dead[j] = LAI_dead[j] + LAI_change;
+          LAI_expanded[j] = std::max(0.0, LAI_expanded[j] - LAI_change - LAI_burnt_change);
+        } else {
+          fineRootBiomassTarget[j] = 0.0;
+          sapwoodAreaTarget[j] = 0.0;
+          leafAreaTarget[j] = 0.0;
+          LAI_live[j] = 0.0;
+          LAI_dead[j] = 0.0;
+          LAI_expanded[j] = 0.0;
+        }
       }
       
 

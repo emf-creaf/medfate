@@ -91,17 +91,17 @@ double leafThermalFactor(double SLA, double h = 130.0, double c = 2500.0) {
 
 //' @rdname fire_severity
 // [[Rcpp::export("fire_necrosisCriticalTemperature")]]
-double necrosisCriticalTemperature(double t_res, double tissue_factor, double T_air = 25.0, double T_necrosis = 60.0) {
-   double theta = exp(-1.0*tissue_factor*t_res);
+double necrosisCriticalTemperature(double t_res, double thermal_factor, double T_air = 25.0, double T_necrosis = 60.0) {
+   double theta = exp(-1.0*thermal_factor*t_res);
    double T_c = (T_necrosis - (theta*T_air))/(1.0 - theta);
    return(T_c);
 }
 
 //' @rdname fire_severity
 // [[Rcpp::export("fire_necrosisHeight")]]
-double necrosisHeight(double Ib_surf, double t_res, double tissue_factor, 
+double necrosisHeight(double Ib_surf, double t_res, double thermal_factor, 
                       double T_air = 25.0, double rho_air = 1.169, double T_necrosis = 60.0) {
-  double T_c = necrosisCriticalTemperature(t_res, tissue_factor, T_air, T_necrosis);
+  double T_c = necrosisCriticalTemperature(t_res, thermal_factor, T_air, T_necrosis);
   double C = 2.6; //(Yuan and Cox 1996)
   double c_air = 1.007; //J·kg-1·ºC-1
   double z_necrosis = C*(1.0/(T_c - T_air))*pow((T_air + 273.15)/9.8,1.0/3.0)*pow(Ib_surf/(c_air*rho_air), 2.0/3.0);

@@ -377,13 +377,13 @@ fire_leafThermalFactor <- function(SLA, h = 130.0, c = 2500.0) {
 }
 
 #' @rdname fire_severity
-fire_necrosisCriticalTemperature <- function(t_res, tissue_factor, T_air = 25.0, T_necrosis = 60.0) {
-    .Call(`_medfate_necrosisCriticalTemperature`, t_res, tissue_factor, T_air, T_necrosis)
+fire_necrosisCriticalTemperature <- function(t_res, thermal_factor, T_air = 25.0, T_necrosis = 60.0) {
+    .Call(`_medfate_necrosisCriticalTemperature`, t_res, thermal_factor, T_air, T_necrosis)
 }
 
 #' @rdname fire_severity
-fire_necrosisHeight <- function(Ib_surf, t_res, tissue_factor, T_air = 25.0, rho_air = 1.169, T_necrosis = 60.0) {
-    .Call(`_medfate_necrosisHeight`, Ib_surf, t_res, tissue_factor, T_air, rho_air, T_necrosis)
+fire_necrosisHeight <- function(Ib_surf, t_res, thermal_factor, T_air = 25.0, rho_air = 1.169, T_necrosis = 60.0) {
+    .Call(`_medfate_necrosisHeight`, Ib_surf, t_res, thermal_factor, T_air, rho_air, T_necrosis)
 }
 
 .treeBasalArea <- function(N, dbh) {
@@ -2053,6 +2053,7 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
 #'       \item{\code{leafAreaTarget}: Target leaf area (m2) per individual.}
 #'       \item{\code{sapwoodAreaTarget}: Target sapwood area (cm2) per individual.}
 #'       \item{\code{fineRootBiomassTarget}: Target fine root biomass (g dry) per individual.}
+#'       \item{\code{crownBudPercent}: Percentage of the crown with buds.}
 #'     }
 #'   }
 #'   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}

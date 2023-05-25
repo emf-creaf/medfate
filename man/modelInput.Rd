@@ -206,6 +206,7 @@ Function \code{forest2growthInput} returns a list of class \code{growthInput} wi
       \item{\code{leafAreaTarget}: Target leaf area (m2) per individual.}
       \item{\code{sapwoodAreaTarget}: Target sapwood area (cm2) per individual.}
       \item{\code{fineRootBiomassTarget}: Target fine root biomass (g dry) per individual.}
+      \item{\code{crownBudPercent}: Percentage of the crown with buds.}
     }
   }
   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}

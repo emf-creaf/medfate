@@ -834,7 +834,7 @@ DataFrame internalAllocationDataFrame(DataFrame above,
   NumericVector leafAreaTarget(numCohorts,0.0);
   NumericVector sapwoodAreaTarget(numCohorts,0.0);
   NumericVector fineRootBiomassTarget(numCohorts, 0.0);
-  
+  NumericVector crownBudPercent(numCohorts, 100.0);
   
   String transpirationMode = control["transpirationMode"];
   NumericVector SA = above["SA"];
@@ -867,7 +867,8 @@ DataFrame internalAllocationDataFrame(DataFrame above,
   df = DataFrame::create(Named("allocationTarget") = allocationTarget,
                          Named("leafAreaTarget") = leafAreaTarget,
                          Named("sapwoodAreaTarget") = sapwoodAreaTarget,
-                         Named("fineRootBiomassTarget") = fineRootBiomassTarget);
+                         Named("fineRootBiomassTarget") = fineRootBiomassTarget,
+                         Named("crownBudPercent") = crownBudPercent);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }  
@@ -1417,6 +1418,7 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //'       \item{\code{leafAreaTarget}: Target leaf area (m2) per individual.}
 //'       \item{\code{sapwoodAreaTarget}: Target sapwood area (cm2) per individual.}
 //'       \item{\code{fineRootBiomassTarget}: Target fine root biomass (g dry) per individual.}
+//'       \item{\code{crownBudPercent}: Percentage of the crown with buds.}
 //'     }
 //'   }
 //'   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}

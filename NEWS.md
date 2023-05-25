@@ -2,6 +2,10 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 3.1.1
+- Fire severity implemented
+- Crown bud percent decreases with PLC and fire, increases with SA growth and regulates primary growth rate
+
 # Version 3.1.0
 - Herbaceous information in summary.forest
 - Herbaceous transpiration added to the water balance

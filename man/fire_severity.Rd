@@ -27,7 +27,7 @@ fire_leafThermalFactor(SLA, h = 130, c = 2500)
 
 fire_necrosisCriticalTemperature(
   t_res,
-  tissue_factor,
+  thermal_factor,
   T_air = 25,
   T_necrosis = 60
 )
@@ -35,7 +35,7 @@ fire_necrosisCriticalTemperature(
 fire_necrosisHeight(
   Ib_surf,
   t_res,
-  tissue_factor,
+  thermal_factor,
   T_air = 25,
   rho_air = 1.169,
   T_necrosis = 60
