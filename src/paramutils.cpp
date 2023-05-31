@@ -1324,7 +1324,7 @@ NumericVector shrubAllometricCoefficientWithImputation(IntegerVector SP, DataFra
         else if(lifeForm[i]=="Phanerophyte" && (Hmax[i]>=300)) coef[i] = 0.719;
         else coef[i] = 0.95; 
       }
-      else if(parName=="ba") {
+      else if(parName=="BTsh") {
         coef[i] = 2.0;
       }
     }
@@ -1391,10 +1391,10 @@ NumericVector treeAllometricCoefficientWithImputation(IntegerVector SP, DataFram
         if(group[i]=="Gymnosperm") coef[i] = -0.159;
         else coef[i] = 0.0;
       }
-      else if(parName=="a_ba") {
+      else if(parName=="a_bt") {
         coef[i] = 0.886;
       }
-      else if(parName=="b_ba") {
+      else if(parName=="b_bt") {
         coef[i] = 0.969;
       }
     }
@@ -1474,10 +1474,10 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if((parName == "a_cw") || (parName == "b_cw")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
     else if((parName == "a_cr") || (parName == "b_1cr") || (parName == "b_2cr") || (parName == "b_3cr")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
     else if((parName == "c_1cr") || (parName == "c_2cr")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
-    else if((parName == "a_ba") || (parName == "b_ba")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
+    else if((parName == "a_bt") || (parName == "b_bt")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
     else if((parName == "a_ash") || (parName == "b_ash")) return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName));
     else if((parName == "a_bsh") || (parName == "b_bsh")) return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName));
-    else if((parName == "a_btsh") || (parName == "b_btsh") || (parName == "cr") || (parName == "ba")) return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName));
+    else if((parName == "a_btsh") || (parName == "b_btsh") || (parName == "cr") || (parName == "BTsh")) return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName));
   }
   return(speciesNumericParameterFromIndex(SP, SpParams,parName));
 }

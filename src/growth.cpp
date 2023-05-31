@@ -419,8 +419,8 @@ List growthDayInner(List x, NumericVector meteovec,
   //Weather
   double tday = meteovec["tday"];
   double tmax = meteovec["tmax"];
+  double Patm = meteovec["Patm"];
   double pfire = meteovec["pfire"];
-
 
   bool fireOccurrence = false;
   NumericVector fireBehavior(1,NA_REAL);
@@ -642,9 +642,9 @@ List growthDayInner(List x, NumericVector meteovec,
   
   //Allometry parameters
   DataFrame paramsAllometries = Rcpp::as<Rcpp::DataFrame>(x["paramsAllometries"]);
-  NumericVector Aba  = paramsAllometries["Aba"];
-  NumericVector Bba  = paramsAllometries["Bba"];
-  NumericVector ba  = paramsAllometries["ba"];
+  NumericVector Abt  = paramsAllometries["Abt"];
+  NumericVector Bbt  = paramsAllometries["Bbt"];
+  NumericVector BTsh  = paramsAllometries["BTsh"];
   
   //Ring of forming vessels
   // List ringList = as<Rcpp::List>(x["internalRings"]);
@@ -1183,6 +1183,7 @@ List growthDayInner(List x, NumericVector meteovec,
         double LAI_burnt_change = 0.0;
         bool abovegroundFireSurvival = true;
         if(fireOccurrence) {
+          double rho_air = meteoland::utils_airDensity(tmax, Patm);
           double foliar_factor = leafThermalFactor(SLA[j]);
           //Determine foliage/bud burn
           double Ib_surf = fireBehavior["I_b_surface [kW/m]"];
@@ -1190,11 +1191,11 @@ List growthDayInner(List x, NumericVector meteovec,
           double t_r_crown = fireBehavior["t_r_crown [s]"];
           double fm_dead = fireBehavior["DFMC [%]"];
           double Ic_ratio = fireBehavior["Ic_ratio"];
-          double Hn_leaves = 100.0*necrosisHeight(Ib_surf, t_res_surf, foliar_factor, tmax); //Necrosis height (cm)
-          double Hn_buds = 100.0*necrosisHeight(Ib_surf, t_res_surf, 0.130, tmax); //Bud necrosis height (cm)
+          double Hn_leaves = 100.0*necrosisHeight(Ib_surf, t_res_surf, foliar_factor, tmax, rho_air); //Necrosis height (cm)
+          double Hn_buds = 100.0*necrosisHeight(Ib_surf, t_res_surf, 0.130, tmax, rho_air); //Bud necrosis height (cm)
           double cbh = H[j]*(1.0 - CR[j]);
-          double burnRatioLeaves = std::min(1.0, std::max(0.0, (Hn_leaves - cbh)/(H[j] - cbh)));
-          double burnRatioBuds = std::min(1.0, std::max(0.0, (Hn_buds - cbh)/(H[j] - cbh)));
+          double burnRatioLeaves = leafAreaProportion(0.0, Hn_leaves, cbh, H[j]);
+          double burnRatioBuds = leafAreaProportion(0.0, Hn_buds, cbh, H[j]);
           // Rcout << " foliar_factor "<< foliar_factor << " Hn_leaves "<<Hn_leaves << " br_leaves "<< burnRatioLeaves<< " Hn_buds "<<Hn_buds << " br_buds "<< burnRatioBuds<<"\n";
           //Determine crown fire or torching effects
           double canopyFMC = (LFMC[j]*(1.0 - StemPLC[j]) + fm_dead*StemPLC[j]);
@@ -1202,18 +1203,18 @@ List growthDayInner(List x, NumericVector meteovec,
           // Rcout << "Ic_ratio "<< Ic_ratio <<" Ib_crit "<<Ib_crit<< " Ib_surf "<< Ib_surf<<"\n";
           if((Ic_ratio > 1.0) || (Ib_surf > Ib_crit)) {
             burnRatioLeaves = 1.0;
-            double Tc = necrosisCriticalTemperature(t_r_crown, 0.130 , tmax);
+            double Tc = necrosisCriticalTemperature(t_r_crown, 0.130 , tmax, rho_air);
             if(Tc < 900.0) burnRatioBuds = 1.0;
           }
           // Rcout << "br_leaves "<< burnRatioLeaves<< " br_buds "<< burnRatioBuds<<"\n";
           //Surface fire effects on cambium
           double bark_diff = barkThermalDiffusivity(fm_dead, 500.0, tmax);
-          double xn = radialBoleNecrosis(Ib_surf, t_res_surf, bark_diff, tmax);
+          double xn = radialBoleNecrosis(Ib_surf, t_res_surf, bark_diff, tmax, rho_air);
           double bark_thickness = 1.0;
           if(isShrub) {
-            bark_thickness = ba[j]*0.1; // from mm to cm
+            bark_thickness = BTsh[j]*0.1; // from mm to cm
           } else {
-            bark_thickness = Aba[j]*pow(DBH[j],Bba[j])*0.1;// from mm to cm
+            bark_thickness = Abt[j]*pow(DBH[j],Bbt[j])*0.1;// from mm to cm
           } 
           // Rcout << "xn "<< xn<< " xa "<<bark_thickness<<"\n";
           
