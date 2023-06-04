@@ -213,21 +213,21 @@ fordyn<-function(forest, soil, SpParams,
     # 2.3 Call management function if required
     cutTreeTableYear <- NULL
     cutShrubTableYear <- NULL
-    managenent_result <- NULL
+    management_result <- NULL
     planted_forest <- emptyforest()
     if(!is.null(management_function)) {
-      managenent_result <- do.call(management_function, list(x = forest, args= management_args, verbose = FALSE))
-      if(verboseDyn) cat(paste0(" & management [", managenent_result$action,"]"))
+      management_result <- do.call(management_function, list(x = forest, args= management_args, verbose = FALSE))
+      if(verboseDyn) cat(paste0(" & management [", management_result$action,"]"))
       # Update forest and xo objects
-      forest$treeData$N <- pmax(0,forest$treeData$N - managenent_result$N_tree_cut)
+      forest$treeData$N <- pmax(0,forest$treeData$N - management_result$N_tree_cut)
       xo$above$N[isTree] <- forest$treeData$N
-      forest$shrubData$Cover <- pmax(0,forest$shrubData$Cover - managenent_result$Cover_shrub_cut)
+      forest$shrubData$Cover <- pmax(0,forest$shrubData$Cover - management_result$Cover_shrub_cut)
       xo$above$Cover[!isTree] <- forest$shrubData$Cover
       # Update cut tables
-      cutTreeTableYear <- .createCutTreeTable(iYear, year, xo, managenent_result$N_tree_cut)
-      cutShrubTableYear <- .createCutShrubTable(iYear, year, xo, managenent_result$Cover_shrub_cut)
+      cutTreeTableYear <- .createCutTreeTable(iYear, year, xo, management_result$N_tree_cut)
+      cutShrubTableYear <- .createCutShrubTable(iYear, year, xo, management_result$Cover_shrub_cut)
       # Retrieve plantation information
-      planted_forest <- managenent_result$planted_forest
+      planted_forest <- management_result$planted_forest
       if(nrow(planted_forest$treeData)>0) {
         for(i in 1:nrow(planted_forest$treeData)) {
           planted_forest$treeData$Z50[i] <- species_parameter(planted_forest$treeData$Species[i], SpParams,"RecrZ50")
@@ -246,7 +246,7 @@ fordyn<-function(forest, soil, SpParams,
       }
       
       # Store new management arguments (may have changed)
-      management_args <- managenent_result$management_args
+      management_args <- management_result$management_args
     } 
     
     # 3. Simulate species recruitment and resprouting
@@ -261,14 +261,15 @@ fordyn<-function(forest, soil, SpParams,
     } else {
       recr_forest <- emptyforest()
     }
-    # 4. Simulate species resprouting
+    # 3.2. Simulate species resprouting
     if(control$allowResprouting) {
       resp_forest <- resprouting(forest, xo$internalMortality, SpParams, control,
-                                 managenent_result)
+                                 management_result)
     } else {
       resp_forest <- emptyforest()
     }
     
+    # 4. Update inputs for next year 
     nyf <- .nextYearForest(forest, xo, SpParams, control, 
                            planted_forest, recr_forest, resp_forest)
 
