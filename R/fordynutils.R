@@ -12,8 +12,8 @@
     coh_numbers <- sapply(strsplit(coh_names, "_"), function(x) {
       as.numeric(substr(x[[1]], 2, nchar(x[[1]])))
     })
-    treeOffset <- max(coh_numbers[isTree])
-    shrubOffset <- max(coh_numbers[!isTree])
+    if(sum(isTree)>0) treeOffset <- max(coh_numbers[isTree])
+    if(sum(!isTree)>0) shrubOffset <- max(coh_numbers[!isTree])
   } 
   
   # 1. Remove empty cohorts if required
