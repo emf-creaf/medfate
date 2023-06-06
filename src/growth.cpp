@@ -1778,6 +1778,12 @@ void checkgrowthInput(List x, String transpirationMode, String soilFunctions) {
 //' 
 //' @seealso \code{\link{growthInput}}, \code{\link{growth_day}}, \code{\link{plot.growth}}
 //' 
+//' @references
+//' De Cáceres M, Molowny-Horas R, Cabon A, Martínez-Vilalta J, Mencuccini M, García-Valdés R, Nadal-Sala D, Sabaté S, 
+//' Martin-StPaul N, Morin X, D'Adamo F, Batllori E, Améztegui A (2023) MEDFATE 2.9.3: A trait-enabled model to simulate 
+//' Mediterranean forest function and dynamics at regional scales. 
+//' Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-3165-2023).
+//' 
 //' @examples
 //' #Load example daily meteorological data
 //' data(examplemeteo)

@@ -33,6 +33,7 @@ c(
          journal = "Agricultural and Forest Meteorology",
          year = "2021",
          volume = "296",
+         pages = "108233",
          doi = "10.1016/j.agrformet.2020.108233"),
 
   bibentry("Article",
@@ -46,6 +47,7 @@ c(
          journal = "Geoscientific Model Development",
          year = "2022",
          volume = "15",
+         pages = "5593–5626",
          doi = "10.5194/gmd-15-5593-2022"),
 
     bibentry("Article",
@@ -68,5 +70,6 @@ c(
          journal = "Geoscientific Model Development",
          year = "2023",
          volume = "16",
-         doi = "10.5194/gmd-2022-243")
+         pages = "3165-2023",
+         doi = "10.5194/gmd-16-3165-2023")
 )
