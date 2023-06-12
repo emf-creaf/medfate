@@ -2,7 +2,6 @@
 \name{exampleforest}
 \Rdversion{1.1}
 \alias{exampleforestMED}
-\alias{exampleforestUS}
 \docType{data}
 \title{Example forest stands}
 \description{
@@ -10,7 +9,6 @@
 }
 \usage{
 data(exampleforestMED)
-data(exampleforestUS)
 }
 \format{
  An object of class \code{\link{forest}} containing the description of the tree, sapling and shrub cohorts of a forest patch.

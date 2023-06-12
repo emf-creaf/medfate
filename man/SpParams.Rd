@@ -3,7 +3,6 @@
 \alias{SpParams}
 \alias{SpParamsDefinition}
 \alias{SpParamsMED}
-\alias{SpParamsUS}
 \docType{data}
 \title{
 Data tables with species parameter definition and values for Mediterranean and US
@@ -14,10 +13,9 @@ A data sets of species parameter definition and values, the latter resulting fro
 \usage{
 data("SpParamsDefinition")
 data("SpParamsMED")
-data("SpParamsUS")
 }
 \format{
-Data frame \code{SpParamsDefinition} has parameters in rows and columns 'ParameterName', 'ParameterGroup', 'Definition', 'Type' and 'Units'. Data frames \code{SpParamsMED} and \code{SpParamsUS} have species or genus as rows and column names equal to parameter names in \code{SpParamsDefinition}.
+Data frame \code{SpParamsDefinition} has parameters in rows and columns 'ParameterName', 'ParameterGroup', 'Definition', 'Type' and 'Units'. Data frame \code{SpParamsMED} has species or genus as rows and column names equal to parameter names in \code{SpParamsDefinition}.
 }
 \details{
 Plant trait parameter sources are listed in the bibliography section. Details of the procedures used to obtain the species parameter tables can be found in the article 'Species parameterization for Spain' at https://emf-creaf.github.io/medfate/. 
