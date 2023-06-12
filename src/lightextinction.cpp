@@ -212,7 +212,7 @@ double PARground(List x, DataFrame SpParams, double gdd = NA_REAL) {
     s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
   }
   //Herb layer effects on light extinction and interception
-  s += 0.5*herbLAI(x["herbCover"], x["herbHeight"]);
+  s += 0.5*herbLAIAllometric(x["herbCover"], x["herbHeight"]);
   //Percentage of irradiance reaching the ground
   double LgroundPAR = 100.0*exp((-1.0)*s);
   return(LgroundPAR);
@@ -242,7 +242,7 @@ double SWRground(List x, DataFrame SpParams, double gdd = NA_REAL) {
     s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
   }
   //Herb layer effects on light extinction and interception
-  s += 0.5*herbLAI(x["herbCover"], x["herbHeight"]);
+  s += 0.5*herbLAIAllometric(x["herbCover"], x["herbHeight"]);
   //Percentage of irradiance reaching the ground
   double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
   return(LgroundSWR);
@@ -259,7 +259,7 @@ NumericVector parExtinctionProfile(NumericVector z, List x, DataFrame SpParams, 
   if(includeHerbs) {
     SP.push_back(0);
     H.push_back(x["herbHeight"]);
-    LAI.push_back(herbLAI(x["herbCover"], x["herbHeight"]));
+    LAI.push_back(herbLAIAllometric(x["herbCover"], x["herbHeight"]));
     CR.push_back(1.0);
   }
   return(parheight(z, SP, H, CR, LAI, SpParams));
@@ -275,7 +275,7 @@ NumericVector swrExtinctionProfile(NumericVector z, List x, DataFrame SpParams, 
   if(includeHerbs) {
     SP.push_back(0);
     H.push_back(x["herbHeight"]);
-    LAI.push_back(herbLAI(x["herbCover"], x["herbHeight"]));
+    LAI.push_back(herbLAIAllometric(x["herbCover"], x["herbHeight"]));
     CR.push_back(1.0);
   }
   return(swrheight(z, SP, H, CR, LAI, SpParams));

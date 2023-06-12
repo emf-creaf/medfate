@@ -391,23 +391,29 @@ fire_necrosisHeight <- function(Ib_surf, t_res, thermal_factor, T_air = 25.0, rh
 }
 
 .shrubCrownRatio <- function(SP, SpParams) {
-    .Call(`_medfate_shrubCrownRatio`, SP, SpParams)
+    .Call(`_medfate_shrubCrownRatioAllometric`, SP, SpParams)
+}
+
+.shrubCover <- function(x, excludeMinHeight = 0.0) {
+    .Call(`_medfate_shrubCover`, x, excludeMinHeight)
+}
+
+.shrubPhytovolume <- function(SP, Cover, H, SpParams) {
+    .Call(`_medfate_shrubPhytovolumeAllometric`, SP, Cover, H, SpParams)
 }
 
 #' Herbaceous description functions
 #'
 #' Functions to calculate attributes of the herbaceous component of a \code{\link{forest}} object 
-#' via its attributes herbCover and herbHeight.
-#' 
-#' @param herbCover Percent cover of the herb layer.
-#' @param herbHeight Mean height (in cm) of the herb layer.
+#'  
+#' @param x An object of class \code{\link{forest}}.
 #' 
 #' @return
 #' A single scalar:
 #' \itemize{
-#'   \item{\code{herb_foliarBiomass}: Biomass of leaves (in kg/m2).}
-#'   \item{\code{herb_fuel}: Fine fuel load (in kg/m2).}
-#'   \item{\code{herb_LAI}: Leaf area index (m2/m2).}
+#'   \item{\code{herb_foliarBiomass}: Herbaceous biomass of leaves (in kg/m2).}
+#'   \item{\code{herb_fuelLoading}: Herbaceous fine fuel loading (in kg/m2).}
+#'   \item{\code{herb_LAI}: Herbaceous leaf area index (m2/m2).}
 #' }
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
@@ -415,26 +421,18 @@ fire_necrosisHeight <- function(Ib_surf, t_res, thermal_factor, T_air = 25.0, rh
 #' @seealso \code{\link{spwb}}, \code{\link{forest}}, \code{\link{plant_basalArea}}, \code{\link{summary.forest}}
 #' 
 #' @name herb_values
-herb_foliarBiomass <- function(herbCover, herbHeight) {
-    .Call(`_medfate_herbFoliarBiomass`, herbCover, herbHeight)
-}
-
-.shrubCover <- function(x, excludeMinHeight = 0.0) {
-    .Call(`_medfate_shrubCover`, x, excludeMinHeight)
-}
-
-.shrubPhytovolume <- function(SP, Cover, H, CR, SpParams) {
-    .Call(`_medfate_shrubPhytovolume`, SP, Cover, H, CR, SpParams)
+herb_foliarBiomass <- function(x) {
+    .Call(`_medfate_herbFoliarBiomass`, x)
 }
 
 #' @rdname herb_values
-herb_fuel <- function(herbCover, herbHeight) {
-    .Call(`_medfate_herbFuel`, herbCover, herbHeight)
+herb_fuelLoading <- function(x) {
+    .Call(`_medfate_herbFuelLoading`, x)
 }
 
 #' @rdname herb_values
-herb_LAI <- function(herbCover, herbHeight) {
-    .Call(`_medfate_herbLAI`, herbCover, herbHeight)
+herb_LAI <- function(x) {
+    .Call(`_medfate_herbLAI`, x)
 }
 
 #' Woody plant cohort description functions
@@ -469,7 +467,7 @@ herb_LAI <- function(herbCover, herbHeight) {
 #'   \item{\code{plant_equilibriumLeafLitter}: Litter biomass of leaves at equilibrium (in kg/m2).}
 #'   \item{\code{plant_equilibriumSmallBranchLitter}: Litter biomass of small branches (< 6.35 mm diameter) at equilibrium (in kg/m2).}
 #'   \item{\code{plant_foliarBiomass}: Standing biomass of leaves (in kg/m2).}
-#'   \item{\code{plant_fuel}: Fine fuel load (in kg/m2).}
+#'   \item{\code{plant_fuelLoading}: Fine fuel load (in kg/m2).}
 #'   \item{\code{plant_height}: Total height (in cm).}
 #'   \item{\code{plant_ID}: Cohort coding for simulation functions (concatenation of 'T' (Trees) or 'S' (Shrub), cohort index and species index).}
 #'   \item{\code{plant_LAI}: Leaf area index (m2/m2).}
@@ -496,7 +494,7 @@ herb_LAI <- function(herbCover, herbHeight) {
 #' sum(plant_LAI(exampleforestMED, SpParamsMED))
 #'   
 #' #The analogous plant-level function for fuel loading
-#' sum(plant_fuel(exampleforestMED, SpParamsMED))
+#' sum(plant_fuelLoading(exampleforestMED, SpParamsMED))
 #'       
 #' #Summary function for 'forest' objects can be also used
 #' summary(exampleforestMED, SpParamsMED)
@@ -570,8 +568,8 @@ plant_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
 }
 
 #' @rdname plant_values
-plant_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
-    .Call(`_medfate_cohortFuel`, x, SpParams, gdd, includeDead)
+plant_fuelLoading <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
+    .Call(`_medfate_cohortFuelLoading`, x, SpParams, gdd, includeDead)
 }
 
 #' @rdname plant_values
@@ -659,8 +657,8 @@ species_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
 }
 
 #' @rdname species_values
-species_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
-    .Call(`_medfate_speciesFuel`, x, SpParams, gdd, includeDead)
+species_fuelLoading <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
+    .Call(`_medfate_speciesFuelLoading`, x, SpParams, gdd, includeDead)
 }
 
 #' @rdname species_values
@@ -679,8 +677,8 @@ stand_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
 }
 
 #' @rdname stand_values
-stand_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
-    .Call(`_medfate_standFuel`, x, SpParams, gdd, includeDead)
+stand_fuelLoading <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
+    .Call(`_medfate_standFuelLoading`, x, SpParams, gdd, includeDead)
 }
 
 #' @rdname stand_values

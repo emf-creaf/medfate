@@ -25,7 +25,7 @@ test_that("Test forest merging",{
 test_that("Test stand metrics",{
   expect_type(stand_basalArea(exampleforestMED), "double")
   expect_type(stand_foliarBiomass(exampleforestMED, SpParamsMED), "double")
-  expect_type(stand_fuel(exampleforestMED, SpParamsMED), "double")
+  expect_type(stand_fuelLoading(exampleforestMED, SpParamsMED), "double")
   expect_type(stand_foliarBiomass(exampleforestMED, SpParamsMED), "double")
   expect_type(stand_LAI(exampleforestMED, SpParamsMED), "double")
   expect_type(stand_dominantTreeDiameter(exampleforestMED), "double")

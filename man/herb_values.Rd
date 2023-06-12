@@ -3,32 +3,29 @@
 \name{herb_values}
 \alias{herb_values}
 \alias{herb_foliarBiomass}
-\alias{herb_fuel}
+\alias{herb_fuelLoading}
 \alias{herb_LAI}
 \title{Herbaceous description functions}
 \usage{
-herb_foliarBiomass(herbCover, herbHeight)
+herb_foliarBiomass(x)
 
-herb_fuel(herbCover, herbHeight)
+herb_fuelLoading(x)
 
-herb_LAI(herbCover, herbHeight)
+herb_LAI(x)
 }
 \arguments{
-\item{herbCover}{Percent cover of the herb layer.}
-
-\item{herbHeight}{Mean height (in cm) of the herb layer.}
+\item{x}{An object of class \code{\link{forest}}.}
 }
 \value{
 A single scalar:
 \itemize{
-  \item{\code{herb_foliarBiomass}: Biomass of leaves (in kg/m2).}
-  \item{\code{herb_fuel}: Fine fuel load (in kg/m2).}
-  \item{\code{herb_LAI}: Leaf area index (m2/m2).}
+  \item{\code{herb_foliarBiomass}: Herbaceous biomass of leaves (in kg/m2).}
+  \item{\code{herb_fuelLoading}: Herbaceous fine fuel loading (in kg/m2).}
+  \item{\code{herb_LAI}: Herbaceous leaf area index (m2/m2).}
 }
 }
 \description{
-Functions to calculate attributes of the herbaceous component of a \code{\link{forest}} object 
-via its attributes herbCover and herbHeight.
+Functions to calculate attributes of the herbaceous component of a \code{\link{forest}} object
 }
 \seealso{
 \code{\link{spwb}}, \code{\link{forest}}, \code{\link{plant_basalArea}}, \code{\link{summary.forest}}

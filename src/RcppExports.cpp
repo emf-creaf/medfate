@@ -404,27 +404,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// shrubCrownRatio
-NumericVector shrubCrownRatio(IntegerVector SP, DataFrame SpParams);
-RcppExport SEXP _medfate_shrubCrownRatio(SEXP SPSEXP, SEXP SpParamsSEXP) {
+// shrubCrownRatioAllometric
+NumericVector shrubCrownRatioAllometric(IntegerVector SP, DataFrame SpParams);
+RcppExport SEXP _medfate_shrubCrownRatioAllometric(SEXP SPSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< IntegerVector >::type SP(SPSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(shrubCrownRatio(SP, SpParams));
-    return rcpp_result_gen;
-END_RCPP
-}
-// herbFoliarBiomass
-double herbFoliarBiomass(double herbCover, double herbHeight);
-RcppExport SEXP _medfate_herbFoliarBiomass(SEXP herbCoverSEXP, SEXP herbHeightSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type herbCover(herbCoverSEXP);
-    Rcpp::traits::input_parameter< double >::type herbHeight(herbHeightSEXP);
-    rcpp_result_gen = Rcpp::wrap(herbFoliarBiomass(herbCover, herbHeight));
+    rcpp_result_gen = Rcpp::wrap(shrubCrownRatioAllometric(SP, SpParams));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -440,42 +428,50 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// shrubPhytovolume
-NumericVector shrubPhytovolume(IntegerVector SP, NumericVector Cover, NumericVector H, NumericVector CR, DataFrame SpParams);
-RcppExport SEXP _medfate_shrubPhytovolume(SEXP SPSEXP, SEXP CoverSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP SpParamsSEXP) {
+// shrubPhytovolumeAllometric
+NumericVector shrubPhytovolumeAllometric(IntegerVector SP, NumericVector Cover, NumericVector H, DataFrame SpParams);
+RcppExport SEXP _medfate_shrubPhytovolumeAllometric(SEXP SPSEXP, SEXP CoverSEXP, SEXP HSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< IntegerVector >::type SP(SPSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Cover(CoverSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type H(HSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type CR(CRSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(shrubPhytovolume(SP, Cover, H, CR, SpParams));
+    rcpp_result_gen = Rcpp::wrap(shrubPhytovolumeAllometric(SP, Cover, H, SpParams));
     return rcpp_result_gen;
 END_RCPP
 }
-// herbFuel
-double herbFuel(double herbCover, double herbHeight);
-RcppExport SEXP _medfate_herbFuel(SEXP herbCoverSEXP, SEXP herbHeightSEXP) {
+// herbFoliarBiomass
+double herbFoliarBiomass(List x);
+RcppExport SEXP _medfate_herbFoliarBiomass(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type herbCover(herbCoverSEXP);
-    Rcpp::traits::input_parameter< double >::type herbHeight(herbHeightSEXP);
-    rcpp_result_gen = Rcpp::wrap(herbFuel(herbCover, herbHeight));
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(herbFoliarBiomass(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// herbFuelLoading
+double herbFuelLoading(List x);
+RcppExport SEXP _medfate_herbFuelLoading(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(herbFuelLoading(x));
     return rcpp_result_gen;
 END_RCPP
 }
 // herbLAI
-double herbLAI(double herbCover, double herbHeight);
-RcppExport SEXP _medfate_herbLAI(SEXP herbCoverSEXP, SEXP herbHeightSEXP) {
+double herbLAI(List x);
+RcppExport SEXP _medfate_herbLAI(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type herbCover(herbCoverSEXP);
-    Rcpp::traits::input_parameter< double >::type herbHeight(herbHeightSEXP);
-    rcpp_result_gen = Rcpp::wrap(herbLAI(herbCover, herbHeight));
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(herbLAI(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -639,9 +635,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cohortFuel
-NumericVector cohortFuel(List x, DataFrame SpParams, double gdd, bool includeDead);
-RcppExport SEXP _medfate_cohortFuel(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP includeDeadSEXP) {
+// cohortFuelLoading
+NumericVector cohortFuelLoading(List x, DataFrame SpParams, double gdd, bool includeDead);
+RcppExport SEXP _medfate_cohortFuelLoading(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP includeDeadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -649,7 +645,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
     Rcpp::traits::input_parameter< bool >::type includeDead(includeDeadSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortFuel(x, SpParams, gdd, includeDead));
+    rcpp_result_gen = Rcpp::wrap(cohortFuelLoading(x, SpParams, gdd, includeDead));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -754,9 +750,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// speciesFuel
-NumericVector speciesFuel(List x, DataFrame SpParams, double gdd, bool includeDead);
-RcppExport SEXP _medfate_speciesFuel(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP includeDeadSEXP) {
+// speciesFuelLoading
+NumericVector speciesFuelLoading(List x, DataFrame SpParams, double gdd, bool includeDead);
+RcppExport SEXP _medfate_speciesFuelLoading(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP includeDeadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -764,7 +760,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
     Rcpp::traits::input_parameter< bool >::type includeDead(includeDeadSEXP);
-    rcpp_result_gen = Rcpp::wrap(speciesFuel(x, SpParams, gdd, includeDead));
+    rcpp_result_gen = Rcpp::wrap(speciesFuelLoading(x, SpParams, gdd, includeDead));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -807,9 +803,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// standFuel
-double standFuel(List x, DataFrame SpParams, double gdd, bool includeDead);
-RcppExport SEXP _medfate_standFuel(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP includeDeadSEXP) {
+// standFuelLoading
+double standFuelLoading(List x, DataFrame SpParams, double gdd, bool includeDead);
+RcppExport SEXP _medfate_standFuelLoading(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP includeDeadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -817,7 +813,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
     Rcpp::traits::input_parameter< bool >::type includeDead(includeDeadSEXP);
-    rcpp_result_gen = Rcpp::wrap(standFuel(x, SpParams, gdd, includeDead));
+    rcpp_result_gen = Rcpp::wrap(standFuelLoading(x, SpParams, gdd, includeDead));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4974,12 +4970,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_necrosisCriticalTemperature", (DL_FUNC) &_medfate_necrosisCriticalTemperature, 4},
     {"_medfate_necrosisHeight", (DL_FUNC) &_medfate_necrosisHeight, 6},
     {"_medfate_treeBasalArea", (DL_FUNC) &_medfate_treeBasalArea, 2},
-    {"_medfate_shrubCrownRatio", (DL_FUNC) &_medfate_shrubCrownRatio, 2},
-    {"_medfate_herbFoliarBiomass", (DL_FUNC) &_medfate_herbFoliarBiomass, 2},
+    {"_medfate_shrubCrownRatioAllometric", (DL_FUNC) &_medfate_shrubCrownRatioAllometric, 2},
     {"_medfate_shrubCover", (DL_FUNC) &_medfate_shrubCover, 2},
-    {"_medfate_shrubPhytovolume", (DL_FUNC) &_medfate_shrubPhytovolume, 5},
-    {"_medfate_herbFuel", (DL_FUNC) &_medfate_herbFuel, 2},
-    {"_medfate_herbLAI", (DL_FUNC) &_medfate_herbLAI, 2},
+    {"_medfate_shrubPhytovolumeAllometric", (DL_FUNC) &_medfate_shrubPhytovolumeAllometric, 4},
+    {"_medfate_herbFoliarBiomass", (DL_FUNC) &_medfate_herbFoliarBiomass, 1},
+    {"_medfate_herbFuelLoading", (DL_FUNC) &_medfate_herbFuelLoading, 1},
+    {"_medfate_herbLAI", (DL_FUNC) &_medfate_herbLAI, 1},
     {"_medfate_cohortIDs", (DL_FUNC) &_medfate_cohortIDs, 4},
     {"_medfate_cohortBasalArea", (DL_FUNC) &_medfate_cohortBasalArea, 2},
     {"_medfate_cohortLargerTreeBasalArea", (DL_FUNC) &_medfate_cohortLargerTreeBasalArea, 3},
@@ -4993,7 +4989,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_cohortCrownBaseHeight", (DL_FUNC) &_medfate_cohortCrownBaseHeight, 2},
     {"_medfate_cohortCrownLength", (DL_FUNC) &_medfate_cohortCrownLength, 2},
     {"_medfate_cohortFoliarBiomass", (DL_FUNC) &_medfate_cohortFoliarBiomass, 3},
-    {"_medfate_cohortFuel", (DL_FUNC) &_medfate_cohortFuel, 4},
+    {"_medfate_cohortFuelLoading", (DL_FUNC) &_medfate_cohortFuelLoading, 4},
     {"_medfate_cohortEquilibriumLeafLitter", (DL_FUNC) &_medfate_cohortEquilibriumLeafLitter, 3},
     {"_medfate_cohortEquilibriumSmallBranchLitter", (DL_FUNC) &_medfate_cohortEquilibriumSmallBranchLitter, 3},
     {"_medfate_cohortPhytovolume", (DL_FUNC) &_medfate_cohortPhytovolume, 2},
@@ -5002,11 +4998,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_speciesCover", (DL_FUNC) &_medfate_speciesCover, 2},
     {"_medfate_speciesDensity", (DL_FUNC) &_medfate_speciesDensity, 2},
     {"_medfate_speciesFoliarBiomass", (DL_FUNC) &_medfate_speciesFoliarBiomass, 3},
-    {"_medfate_speciesFuel", (DL_FUNC) &_medfate_speciesFuel, 4},
+    {"_medfate_speciesFuelLoading", (DL_FUNC) &_medfate_speciesFuelLoading, 4},
     {"_medfate_speciesLAI", (DL_FUNC) &_medfate_speciesLAI, 4},
     {"_medfate_standBasalArea", (DL_FUNC) &_medfate_standBasalArea, 2},
     {"_medfate_standFoliarBiomass", (DL_FUNC) &_medfate_standFoliarBiomass, 3},
-    {"_medfate_standFuel", (DL_FUNC) &_medfate_standFuel, 4},
+    {"_medfate_standFuelLoading", (DL_FUNC) &_medfate_standFuelLoading, 4},
     {"_medfate_standLAI", (DL_FUNC) &_medfate_standLAI, 4},
     {"_medfate_LAIdistributionVectors", (DL_FUNC) &_medfate_LAIdistributionVectors, 4},
     {"_medfate_LAIdistribution", (DL_FUNC) &_medfate_LAIdistribution, 5},

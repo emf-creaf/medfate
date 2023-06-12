@@ -1471,7 +1471,7 @@ List forest2spwbInput(List x, List soil, DataFrame SpParams, List control) {
   DataFrame FCCSprops = R_NilValue;
   if(fireHazardResults) FCCSprops = FCCSproperties(x, SpParams);
   List s = spwbInput(above, rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control);
-  s["herbLAI"] = herbLAI(x["herbCover"], x["herbHeight"]);
+  s["herbLAI"] = herbLAIAllometric(x["herbCover"], x["herbHeight"]);
   return(s);
 }
 
@@ -1484,7 +1484,7 @@ List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL, true);
   DataFrame FCCSprops = FCCSproperties(x, SpParams);
   List g = growthInput(above,  rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control);
-  g["herbLAI"] = herbLAI(x["herbCover"], x["herbHeight"]);
+  g["herbLAI"] = herbLAIAllometric(x["herbCover"], x["herbHeight"]);
   return(g);
 }
 

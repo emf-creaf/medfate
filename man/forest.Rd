@@ -16,7 +16,7 @@ emptyforest(ntree = 0, nshrub = 0)
 \arguments{
 \item{ntree, nshrub}{Number of tree and shrub cohorts, respectively.}
 
-\item{object}{An object of class \code{forest} has the following structure:
+\item{object}{An object of class \code{forest} has the following structure (see details):
 \itemize{
   \item{\code{treeData}: A data frame of tree cohorts (in rows) and the following columns:
       \itemize{
@@ -59,6 +59,21 @@ Description of a forest stand
 \details{
 Function \code{summary.forest} can be used to summarize a \code{forest} object in the console. 
 Function \code{emptyforest} creates an empty \code{forest} object.
+
+The structure presented above for \code{forest} objects corresponds to the required data elements. 
+A \code{forest} object can contain additional information when this is available. Data frames \code{treeData} 
+and \code{shrubData} can contain additional columns:
+\itemize{
+  \item{\code{LAI}: Leaf area index (m2/m2)}
+  \item{\code{FoliarBiomass}: Standing dry biomass of leaves (kg/m2)}
+  \item{\code{FuelLoading}: Fine fuel loading (kg/m2)}
+  \item{\code{CrownRatio}: The ratio between crown length and total height (between 0 and 1)}
+}
+Similarly, one can define \code{forest} list elements \code{herbLAI}, \code{herbFoliarBiomass} or \code{herbFuelLoading}.
+All these values are used to override allometry-based estimates of those variables when initializing
+inputs for functions \code{\link{spwb}} or \code{\link{spwb_day}}. Note that leaf area index, foliar biomass and
+fuel loading are related entities, and they are treated as such in medfate. Therefore, users are expected to supply 
+one or the other, and not all of them at the same time.
 }
 \examples{
 data(exampleforestMED)

@@ -728,7 +728,7 @@ List rothermel(String modeltype, NumericVector wSI, NumericVector sSI, double de
 //   IntegerVector SP = swbInput["SP"];
 //   NumericVector LAI = swbInput["LAI"];
 //   
-//   NumericVector cohLoading = cohortFuel(x, SpParams);
+//   NumericVector cohLoading = cohortFuelLoading(x, SpParams);
 // 
 //   //Initialize other cohort-based variables
 //   int numCohorts = LAI.size();

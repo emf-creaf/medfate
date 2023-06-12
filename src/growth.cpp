@@ -316,7 +316,7 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
     }
   }
   //Update crown ratio
-  NumericVector crNew = treeCrownRatio(N, DBH, H, Acw, Bcw, Acr, B1cr, B2cr, B3cr, C1cr, C2cr);
+  NumericVector crNew = treeCrownRatioAllometric(N, DBH, H, Acw, Bcw, Acr, B1cr, B2cr, B3cr, C1cr, C2cr);
   for(int j=0;j<numCohorts; j++) {
     if(!NumericVector::is_na(DBH[j]) && N[j]>0.0) {
       CR[j] = crNew[j];

@@ -2,7 +2,7 @@
 #' 
 #' Description of a forest stand
 #' 
-#' @param object An object of class \code{forest} has the following structure:
+#' @param object An object of class \code{forest} has the following structure (see details):
 #' \itemize{
 #'   \item{\code{treeData}: A data frame of tree cohorts (in rows) and the following columns:
 #'       \itemize{
@@ -35,6 +35,22 @@
 #' 
 #' @details Function \code{summary.forest} can be used to summarize a \code{forest} object in the console. 
 #' Function \code{emptyforest} creates an empty \code{forest} object.
+#' 
+#' The structure presented above for \code{forest} objects corresponds to the required data elements. 
+#' A \code{forest} object can contain additional information when this is available. Data frames \code{treeData} 
+#' and \code{shrubData} can contain additional columns:
+#' \itemize{
+#'   \item{\code{LAI}: Leaf area index (m2/m2)}
+#'   \item{\code{FoliarBiomass}: Standing dry biomass of leaves (kg/m2)}
+#'   \item{\code{FuelLoading}: Fine fuel loading (kg/m2)}
+#'   \item{\code{CrownRatio}: The ratio between crown length and total height (between 0 and 1)}
+#' }
+#' Similarly, one can define \code{forest} list elements \code{herbLAI}, \code{herbFoliarBiomass} or \code{herbFuelLoading}.
+#' All these values are used to override allometry-based estimates of those variables when initializing
+#' inputs for functions \code{\link{spwb}} or \code{\link{spwb_day}}. Note that leaf area index, foliar biomass and
+#' fuel loading are related entities, and they are treated as such in medfate. Therefore, users are expected to supply 
+#' one or the other, and not all of them at the same time.
+#' 
 #' 
 #' @return Function \code{summary.forest} returns a list with several structural attributes, such as the basal area and LAI of the forest. 
 #' Function \code{emptyforest} returns an empty \code{forest} object.
@@ -93,7 +109,7 @@ summary.forest<-function(object, SpParams, ...) {
   coh_N <- plant_density(object, SpParams)
   coh_cov <- plant_cover(object, SpParams)
   coh_lai <- plant_LAI(object, SpParams)
-  coh_fuel <- plant_fuel(object, SpParams)
+  coh_fuel <- plant_fuelLoading(object, SpParams)
   
   coh_ba <- plant_basalArea(object, SpParams)
   
@@ -120,14 +136,14 @@ summary.forest<-function(object, SpParams, ...) {
   s["Adult_lai"] <- sum(coh_lai[selAdult], na.rm=TRUE)
   s["Sapling_lai"] <- sum(coh_lai[selSapling], na.rm=TRUE)
   s["Shrub_lai"] <- sum(coh_lai[selShrub], na.rm=TRUE)
-  s["Herb_lai"] <- herb_LAI(object$herbCover, object$herbHeight)
+  s["Herb_lai"] <- herb_LAI(object)
   s["Total_lai"] <- s[["Tree_lai"]] + s[["Shrub_lai"]] + s[["Herb_lai"]]
   
   s["Tree_fuel"] <- sum(coh_fuel[selTree], na.rm=TRUE)
   s["Adult_fuel"] <- sum(coh_fuel[selAdult], na.rm=TRUE)
   s["Sapling_fuel"] <- sum(coh_fuel[selSapling], na.rm=TRUE)
   s["Shrub_fuel"] <- sum(coh_fuel[selShrub], na.rm=TRUE)
-  s["Herb_fuel"] <- herb_fuel(object$herbCover, object$herbHeight)
+  s["Herb_fuel"] <- herb_fuelLoading(object)
   s["Total_fuel"] <- s[["Tree_fuel"]] + s[["Shrub_fuel"]] + s[["Herb_fuel"]]
   
   s["PARground"] <- light_PARground(object, SpParams)
@@ -154,7 +170,7 @@ print.summary.forest<-function(x, digits=getOption("digits"),...) {
             " shrubs:", round(x[["Shrub_lai"]], digits),
             " herbs:", round(x[["Herb_lai"]], digits),
             "\n"))
-  cat(paste("Fuel (kg/m2) total:", round(x[["Total_fuel"]], digits),
+  cat(paste("Fuel loading (kg/m2) total:", round(x[["Total_fuel"]], digits),
             " adult trees:", round(x[["Adult_fuel"]], digits),
             " saplings:", round(x[["Sapling_fuel"]], digits), 
             " shrubs:", round(x[["Shrub_fuel"]], digits),
