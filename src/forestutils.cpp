@@ -372,16 +372,16 @@ NumericVector shrubPhytovolumeAllometric(IntegerVector SP, NumericVector Cover, 
 /**
  * Fine fuel loading (in kg/m2)
  */
-NumericVector treeFuelAllometric(IntegerVector SP, NumericVector N, NumericVector dbh, NumericVector FB,
+NumericVector treeFuelAllometric(IntegerVector SP, NumericVector FB,
                                  DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true){
   NumericVector Sgdd = speciesNumericParameterWithImputation(SP, SpParams, "Sgdd");
   NumericVector fTreeFuel = speciesNumericParameterWithImputation(SP, SpParams, "r635", true);
   NumericVector pDead = speciesNumericParameterWithImputation(SP, SpParams, "pDead");
-  int ncoh = N.size();
+  int ncoh = SP.size();
   double ftf = 0.0, btf = 0.0;
-  NumericVector fuel(ncoh);
+  NumericVector fuel(ncoh, NA_REAL);
   for(int i=0;i<ncoh;i++) {
-    if((!NumericVector::is_na(dbh[i])) && (!NumericVector::is_na(N[i]))) {
+    if(!NumericVector::is_na(FB[i])){
       ftf = FB[i]; //Foliar biomass (kg per m2)
       btf = ftf*(fTreeFuel[i]-1.0); // Small branch fuels (proportion of foliar fuels)
       if(!NumericVector::is_na(gdd)) { //Apply phenology correction to foliar fuels
@@ -392,7 +392,6 @@ NumericVector treeFuelAllometric(IntegerVector SP, NumericVector N, NumericVecto
         fuel[i] = fuel[i] + fuel[i]*pDead[i]; //If required add fine dead fuels (proportion of live fuels)
       }
     }
-    else fuel[i] = NA_REAL;
   }
   return(fuel);
 }
@@ -476,8 +475,8 @@ double herbFoliarBiomass(List x){
     herbFB = x["herbFoliarBiomass"];
   } else if(x.containsElementNamed("herbFuelLoading")) {
     herbFB = x["herbFuelLoading"];
-  } else if(x.containsElementNamed("LAI")) {
-    double herbLAI = x["LAI"];
+  } else if(x.containsElementNamed("herbLAI")) {
+    double herbLAI = x["herbLAI"];
     herbFB = herbLAI/9.0; //assume SLA = 9
   }
   if(NumericVector::is_na(herbFB)) {
@@ -999,7 +998,7 @@ NumericVector cohortFuelLoading(List x, DataFrame SpParams, double gdd = NA_REAL
   }
   
   //Estimate fuel derived from foliar allometries or measured foliar biomass
-  NumericVector tFuelAllom = treeFuelAllometric(treeSP, treeData["N"], treeData["DBH"], tFB, SpParams, gdd, includeDead);
+  NumericVector tFuelAllom = treeFuelAllometric(treeSP, tFB, SpParams, gdd, includeDead);
   
   //Replace missing fuel values with allometric estimates
   for(int i=0;i<tFuel.size();i++) {

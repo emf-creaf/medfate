@@ -237,6 +237,11 @@ data(SpParamsMED)
 # Aboveground parameters
 forest2aboveground(exampleforestMED, SpParamsMED)
 
+# Example of aboveground parameters taken from a forest
+# described using LAI and crown ratio
+data(exampleforestMED2)
+forest2aboveground(exampleforestMED2, SpParamsMED)
+
 # Initialize soil with default soil params
 examplesoil <- soil(defaultSoilParams())
 
@@ -256,6 +261,11 @@ forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
 # Prepare input for 'Cochard' transpiration mode
 control <- defaultControl("Cochard")
 forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
+
+# Example of initialization from a forest 
+# described using LAI and crown ratio
+control <- defaultControl("Granier")
+forest2spwbInput(exampleforestMED2, examplesoil, SpParamsMED, control)
 
 }
 \seealso{

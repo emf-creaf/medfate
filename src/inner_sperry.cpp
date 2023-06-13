@@ -323,7 +323,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
 
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
-  NumericVector N = Rcpp::as<Rcpp::NumericVector>(above["N"]);
+  NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
   
   List soil = x["soil"];
   NumericVector Ws = soil["W"]; //Access to soil state variable
@@ -825,7 +825,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         Temp_SH(c,n)= NA_REAL;
         Temp_SL(c,n)= NA_REAL;
       }        
-    } else if(N[c]>0.0) { //Cohorts with living individuals but no LAI should be in equilibrium with soil (i.e. no transpiration)
+    } else if(LAIlive[c]>0.0) { //Cohorts with living individuals but no LAI should be in equilibrium with soil (i.e. no transpiration)
       List sFunctionBelow = supply[c];
       NumericVector  psiRootCrown = sFunctionBelow["psiRootCrown"];
       RootCrownPsiVEC[c] = psiRootCrown[0];
@@ -845,7 +845,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
       }
     }
     
-    if(N[c]>0.0) {
+    if(LAIlive[c]>0.0) {
       //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
       PLC(c,n) = StemPLCVEC[c];
       StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]);

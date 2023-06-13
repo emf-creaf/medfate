@@ -599,7 +599,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
-  NumericVector N = Rcpp::as<Rcpp::NumericVector>(above["N"]);
+  NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
   
   List soil = x["soil"];
   NumericVector Ws = soil["W"];
@@ -996,7 +996,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
         }
       }
     }
-    if(N[c]>0.0) {
+    if(LAIlive[c]>0.0) {
       //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
       PLC(c,n) = StemPLCVEC[c];
       StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]);

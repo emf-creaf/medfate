@@ -395,8 +395,9 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   int nlayers = dVec.size();
 
   NumericVector LAI_live = above["LAI_live"];
-  NumericVector N = above["N"];
-  int numCohorts = N.size();
+  int numCohorts = LAI_live.size();
+  NumericVector N(numCohorts, NA_REAL);
+  if(above.containsElementNamed("N")) N = above["N"];
   
   
   String rhizosphereOverlap = control["rhizosphereOverlap"];
@@ -947,7 +948,6 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector H = above["H"];
   NumericVector DBH = above["DBH"];
-  NumericVector N = above["N"];
   NumericVector CR = above["CR"];
   
   String transpirationMode = control["transpirationMode"];
@@ -969,7 +969,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   cohortDescdf.attr("row.names") = above.attr("row.names");
   
   //Above 
-  DataFrame plantsdf = DataFrame::create(_["H"]=H, _["CR"]=CR, _["N"] = N,
+  DataFrame plantsdf = DataFrame::create(_["H"]=H, _["CR"]=CR,
                                          _["LAI_live"]=LAI_live, 
                                          _["LAI_expanded"] = LAI_expanded, 
                                          _["LAI_dead"] = LAI_dead);
@@ -990,8 +990,13 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   List below = paramsBelow(above, Z50, Z95, soil, 
                            paramsAnatomydf, paramsTranspirationdf, control);
   List belowLayers = below["belowLayers"];
-  DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(below["below"]);
-
+  DataFrame belowdfComplete = Rcpp::as<Rcpp::DataFrame>(below["below"]);
+  DataFrame belowdf = DataFrame::create(_["Z50"] = Z50, _["Z95"] = Z95);
+  if(belowdfComplete.containsElementNamed("poolProportions")) {
+    belowdf.push_back(belowdfComplete["poolProportions"], "poolProportions");
+  }
+  belowdf.attr("row.names") = above.attr("row.names");
+  
   DataFrame paramsWaterStoragedf = paramsWaterStorage(above, belowLayers, SpParams, paramsAnatomydf, fillMissingSpParams);
 
   DataFrame paramsCanopydf;
@@ -1441,6 +1446,11 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //' # Aboveground parameters
 //' forest2aboveground(exampleforestMED, SpParamsMED)
 //' 
+//' # Example of aboveground parameters taken from a forest
+//' # described using LAI and crown ratio
+//' data(exampleforestMED2)
+//' forest2aboveground(exampleforestMED2, SpParamsMED)
+//' 
 //' # Initialize soil with default soil params
 //' examplesoil <- soil(defaultSoilParams())
 //' 
@@ -1460,6 +1470,11 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //' # Prepare input for 'Cochard' transpiration mode
 //' control <- defaultControl("Cochard")
 //' forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
+//' 
+//' # Example of initialization from a forest 
+//' # described using LAI and crown ratio
+//' control <- defaultControl("Granier")
+//' forest2spwbInput(exampleforestMED2, examplesoil, SpParamsMED, control)
 //' 
 //' @name modelInput
 //' @aliases spwbInput growthInput
