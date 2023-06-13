@@ -109,7 +109,7 @@ In addition to the physical soil description, this object contains soil paramete
 ```{r}
 names(examplesoil)
 ```
-For example, `macro` specifies the macroporosity of each layer; `Gsoil` and `Ksoil` are parameters needed to model the process of water infiltration into the soil. The meaning of all elements in the soil object can be found in the help page for function `soil()`.
+For example, `macro` specifies the macroporosity of each layer; `Gsoil` and `Ksoil` are parameters needed to model the process of evaporation from the bare soil. The meaning of all elements in the soil object can be found in the help page for function `soil()`.
 
 At any time, one can show the characteristics and status of the soil object using its `print` function:
 ```{r}

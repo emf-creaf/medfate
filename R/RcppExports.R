@@ -2739,8 +2739,8 @@ soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
 #'   \item{\code{SoilDepth}: Soil depth (in mm).}
 #'   \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
 #'   \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
-#'   \item{\code{Ksoil}: Kappa parameter for infiltration.}
-#'   \item{\code{Gsoil}: Gamma parameter for infiltration.}
+#'   \item{\code{Ksoil}: Kappa parameter for bare soil evaporation.}
+#'   \item{\code{Gsoil}: Gamma parameter for bare soil evaporation (see \code{\link{hydrology_soilEvaporationAmount}}).}
 #'   \item{\code{dVec}: Width of soil layers (in mm).}
 #'   \item{\code{sand}: Sand percentage for each layer (in percent volume).}
 #'   \item{\code{clay}: Clay percentage for each layer (in percent volume).}
