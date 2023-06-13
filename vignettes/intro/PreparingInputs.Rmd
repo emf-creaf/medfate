@@ -260,39 +260,38 @@ print(pobl_soil)
 
 ## Interpolating weather
 
-While soil information is often scarce and uncertain, obtaining daily weather data suitable for simulations is not straightforward either. Here we illustrate one way of obtaining such data using package **meteoland**. We begin by building an object of class `SpatialPointsTopography`, which contains both the coordinates of our site as well as topographic variables.
+While soil information is often scarce and uncertain, obtaining daily weather data suitable for simulations is not straightforward either. Here we illustrate one way of obtaining such data using package **meteoland**. We begin by adding topographic variables into a `sf` object:
 
 ```{r}
-coords_sp <- as(sf_pt, "Spatial")
-pobl_spt <- SpatialPointsTopography(coords_sp,
-                                    elevation = 850, slope = 15.1, aspect = 15)
+pobl_spt <- sf::st_sf(sf_pt) |>
+            dplyr::mutate(elevation = 850,
+                          slope = 15.1, 
+                          aspect = 15)
+
 pobl_spt
 ```
 
-The more difficult part of using package **meteoland** is to assemble weather data from surface weather stations into an object of class `MeteorologyInterpolationData`. Please see the [meteoland package documentation](https://emf-creaf.github.io/meteoland/index.html) to learn how to do that. Here we will assume that such an object is already available, by using the example object provided in the **meteoland** package.
+The more difficult part of using package **meteoland** is to assemble reference weather data from surface weather stations into the socalled **interpolator** object (of class `stars`). Please see the [meteoland package documentation](https://emf-creaf.github.io/meteoland/index.html) to learn how to create interpolator objects. Here we will assume that such an object is already available, by using the example object provided in the **meteoland** package.
 
 ```{r}
-data("exampleinterpolationdata")
-class(exampleinterpolationdata)
+data("meteoland_interpolator_example")
 ```
 
-Once we have this interpolator, obtaining interpolated weather for a set of target points is rather straightforward using function `interpolationpoints()` from **meteoland**:
+Once we have this interpolator, obtaining interpolated weather for a set of target points is rather straightforward using function `interpolate_data()` from **meteoland**:
 
 ```{r}
-meteo <- interpolationpoints(exampleinterpolationdata, pobl_spt)
+meteo <- interpolate_data(pobl_spt, meteoland_interpolator_example)
 ```
 
-Note that a warning was raised, because the boundary box of the interpolator does not include the location of the Poblet forests. In this case, the result of the interpolation is not reliable and should not be used. The output of function `interpolationpoints()` is an object of class `SpatialPointsMeteorology`, whose structure is:
+ The output of function `interpolate_data()` is an object of class `sf`:
 
 ```{r}
-str(meteo)
+meteo
 ```
 
-We can access the weather data frame by subsetting the appropriate element of slot `data`:
+We can access the weather data frame by subsetting the appropriate element of `interpolated_data`:
 
 ```{r}
-pobl_weather <- meteo@data[[1]]
+pobl_weather <- meteo$interpolated_data[[1]]
 head(pobl_weather)
 ```
-
-As we indicated above, the daily weather data is not valid in this case because of the mismatch between the boundaries of the interpolator data set and the location of our plots. Nevertheless, the process for obtaining weather data would be similar in other cases.
