@@ -1,0 +1,91 @@
+---
+title: "Example_SurEau"
+author: "Miquel De Caceres"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_document:
+    toc: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Preparation
+
+Initialisation for `spwb()` function: 
+
+```{r }
+library(medfate)
+
+# Soil
+examplesoil <- soil(defaultSoilParams(n = 4))
+
+# Load example plot plant data
+data(exampleforestMED)
+
+# Prepare input for 'Cochard' transpiration mode
+control <- defaultControl("Cochard")
+
+# Create input for spwb
+x <- forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
+
+```
+
+### Sureau network input
+
+Create Cochard network (similar) for each of the three plant cohort in `x`. This returns a list with three elements:
+```{r}
+cn <- initCochardNetworks(x)
+length(cn)
+```
+
+You can inspect the structure of the network for the first object using:
+
+```{r}
+network <- cn[[1]]
+str(network)
+```
+
+### Call to `semi_implicit_integration()`
+
+If we modify the values of `Elim`, `Emin_L`  or `Emin_S`, then a call to `semi_implicit_integration()` should update the water potentials according to these flows. The water potentials prior to the call are:
+```{r}
+network$Psi_LApo
+network$Psi_LSym
+network$Psi_SApo
+network$Psi_SSym
+```
+
+We now set the options and time step size:
+```{r}
+opt <- c("Lsym" = 1.0, "Ssym" = 1.0, 
+         "Eord" = 1.0, "Lcav" = 1.0, "Scav" = 1.0,
+         "CLapo" = 1.0, "CTapo" = 1.0)
+
+# Number of small steps per hour sub-steps
+nsmalltimesteps <- c(2, 4, 8, 16)
+
+# Seconds of the small time step (four sub-steps per hour)
+dt <- 3600.0 / nsmalltimesteps[2] 
+```
+
+We also specify the flows and call `semi_implicit_integration()`:
+```{r}
+network$Elim <- 0.1
+network$Emin_L <- 0.01
+network$Emin_S <- 0.01
+
+semi_implicit_integration(network, dt, opt)
+```
+
+The function modifies the `network` object, whose water potentials are now:
+
+```{r}
+network$Psi_LApo
+network$Psi_LSym
+network$Psi_SApo
+network$Psi_SSym
+```
+
+
