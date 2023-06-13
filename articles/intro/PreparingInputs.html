@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2023-05-25</h4>
+            <h4 data-toc-skip class="date">2023-06-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/PreparingInputs.Rmd" class="external-link"><code>vignettes/intro/PreparingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>PreparingInputs.Rmd</code></div>
@@ -102,12 +102,7 @@ processing his/her own data.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">medfateutils</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Package 'medfateutils' [ver. 0.1.7]</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/meteoland/index.html" class="external-link">meteoland</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required package: sp</span></span>
-<span><span class="co">#&gt; Loading required package: sf</span></span>
-<span><span class="co">#&gt; Linking to GEOS 3.10.2, GDAL 3.4.1, PROJ 8.2.1; sf_use_s2() is TRUE</span></span>
-<span><span class="co">#&gt; Loading required package: stars</span></span>
-<span><span class="co">#&gt; Loading required package: abind</span></span>
-<span><span class="co">#&gt; Package 'meteoland' [ver. 2.0.0]</span></span></code></pre></div>
+<span><span class="co">#&gt; Package 'meteoland' [ver. 2.0.1]</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="buildingmanipulating-forest-objects">Building/manipulating forest objects<a class="anchor" aria-label="anchor" href="#buildingmanipulating-forest-objects"></a>
@@ -215,7 +210,7 @@ function defined in <strong>medfate</strong> for this object class:</p>
 <span><span class="co">#&gt; Density (ind/ha) adult trees: 267  saplings: 0  shrubs (estimated): 0 </span></span>
 <span><span class="co">#&gt; Cover (%) adult trees: 42.1205627  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; LAI (m2/m2) total: 0.544959  adult trees: 0.544959  saplings: 0  shrubs: 0  herbs: 0 </span></span>
-<span><span class="co">#&gt; Fuel (kg/m2) total: 0.1421746  adult trees: 0.1421746  saplings: 0  shrubs: 0  herbs: 0 </span></span>
+<span><span class="co">#&gt; Fuel loading (kg/m2) total: 0.1421746  adult trees: 0.1421746  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; PAR ground (%): 74.1020142  SWR ground (%): 80.0899066</span></span></code></pre></div>
 <p>The values of stand density and stand basal area are too low for such
 a dense forest, which indicates that something needs to be corrected. At
@@ -240,7 +235,7 @@ parameter <code>plot_size_x</code>:</p>
 <span><span class="co">#&gt; Density (ind/ha) adult trees: 3777.277316  saplings: 0  shrubs (estimated): 0 </span></span>
 <span><span class="co">#&gt; Cover (%) adult trees: 100  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; LAI (m2/m2) total: 5.6770407  adult trees: 5.6770407  saplings: 0  shrubs: 0  herbs: 0 </span></span>
-<span><span class="co">#&gt; Fuel (kg/m2) total: 1.493419  adult trees: 1.493419  saplings: 0  shrubs: 0  herbs: 0 </span></span>
+<span><span class="co">#&gt; Fuel loading (kg/m2) total: 1.493419  adult trees: 1.493419  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; PAR ground (%): 4.4052535  SWR ground (%): 9.8976935</span></span></code></pre></div>
 <p>which results in a much higher basal area and density, as should be
 expected for a dense oak forest resulting from an abandoned old
@@ -271,7 +266,7 @@ defined, we can include them in our mapping:</p>
 <span><span class="co">#&gt; Density (ind/ha) adult trees: 3777.277316  saplings: 0  shrubs (estimated): 0 </span></span>
 <span><span class="co">#&gt; Cover (%) adult trees: 100  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; LAI (m2/m2) total: 5.6770407  adult trees: 5.6770407  saplings: 0  shrubs: 0  herbs: 0 </span></span>
-<span><span class="co">#&gt; Fuel (kg/m2) total: 1.493419  adult trees: 1.493419  saplings: 0  shrubs: 0  herbs: 0 </span></span>
+<span><span class="co">#&gt; Fuel loading (kg/m2) total: 1.493419  adult trees: 1.493419  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; PAR ground (%): 4.4052535  SWR ground (%): 9.8976935</span></span></code></pre></div>
 <p>The fraction of PAR/SWR reaching the ground is low, as would be
 expected for a dense forest.</p>
@@ -306,7 +301,7 @@ accepted name (<em>Quercus pubescens</em>), which we can do:</p>
 <span><span class="co">#&gt; Density (ind/ha) adult trees: 3692.3946797  saplings: 0  shrubs (estimated): 0 </span></span>
 <span><span class="co">#&gt; Cover (%) adult trees: 100  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; LAI (m2/m2) total: 5.5833511  adult trees: 5.5833511  saplings: 0  shrubs: 0  herbs: 0 </span></span>
-<span><span class="co">#&gt; Fuel (kg/m2) total: 1.4629714  adult trees: 1.4629714  saplings: 0  shrubs: 0  herbs: 0 </span></span>
+<span><span class="co">#&gt; Fuel loading (kg/m2) total: 1.4629714  adult trees: 1.4629714  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; PAR ground (%): 4.6382035  SWR ground (%): 10.2827898</span></span></code></pre></div>
 <p>Like the control plot, these statistics indicate a dense oak forest.
 We can repeat the same operations with the forest plot after the
@@ -321,7 +316,7 @@ thinning intervention:</p>
 <span><span class="co">#&gt; Density (ind/ha) adult trees: 2673.8030439  saplings: 0  shrubs (estimated): 0 </span></span>
 <span><span class="co">#&gt; Cover (%) adult trees: 100  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; LAI (m2/m2) total: 4.5328748  adult trees: 4.5328748  saplings: 0  shrubs: 0  herbs: 0 </span></span>
-<span><span class="co">#&gt; Fuel (kg/m2) total: 1.1915321  adult trees: 1.1915321  saplings: 0  shrubs: 0  herbs: 0 </span></span>
+<span><span class="co">#&gt; Fuel loading (kg/m2) total: 1.1915321  adult trees: 1.1915321  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; PAR ground (%): 8.2654902  SWR ground (%): 15.7752682</span></span></code></pre></div>
 <p>Note the decrease in tree density and basal area, and the increase in
 light reaching the ground, despite the estimated leaf area index is
@@ -366,7 +361,7 @@ tree cohorts using again:</p>
 <span><span class="co">#&gt; Density (ind/ha) adult trees: 2673.8030439  saplings: 0  shrubs (estimated): 0 </span></span>
 <span><span class="co">#&gt; Cover (%) adult trees: 100  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; LAI (m2/m2) total: 4.0969956  adult trees: 4.0969956  saplings: 0  shrubs: 0  herbs: 0 </span></span>
-<span><span class="co">#&gt; Fuel (kg/m2) total: 1.0724731  adult trees: 1.0724731  saplings: 0  shrubs: 0  herbs: 0 </span></span>
+<span><span class="co">#&gt; Fuel loading (kg/m2) total: 1.0724731  adult trees: 1.0724731  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; PAR ground (%): 10.5046983  SWR ground (%): 18.8407832</span></span></code></pre></div>
 <p>Function <code><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees()</a></code> will preserve the stand
 density and basal area that the stand description had before merging
@@ -492,128 +487,80 @@ water:</p>
 <p>While soil information is often scarce and uncertain, obtaining daily
 weather data suitable for simulations is not straightforward either.
 Here we illustrate one way of obtaining such data using package
-<strong>meteoland</strong>. We begin by building an object of class
-<code>SpatialPointsTopography</code>, which contains both the
-coordinates of our site as well as topographic variables.</p>
+<strong>meteoland</strong>. We begin by adding topographic variables
+into a <code>sf</code> object:</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">coords_sp</span> <span class="op">&lt;-</span> <span class="fu">as</span><span class="op">(</span><span class="va">sf_pt</span>, <span class="st">"Spatial"</span><span class="op">)</span></span>
-<span><span class="va">pobl_spt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meteoland/man/SpatialPointsTopography.html" class="external-link">SpatialPointsTopography</a></span><span class="op">(</span><span class="va">coords_sp</span>,</span>
-<span>                                    elevation <span class="op">=</span> <span class="fl">850</span>, slope <span class="op">=</span> <span class="fl">15.1</span>, aspect <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: `SpatialPointsTopography()` was deprecated in meteoland 2.0.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Spatial_*_Topography classes are soft deprecated. User topography now can be</span></span>
-<span><span class="co">#&gt;   provided as sf or stars objects</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
+<code class="sourceCode R"><span><span class="va">pobl_spt</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sf.html" class="external-link">st_sf</a></span><span class="op">(</span><span class="va">sf_pt</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>            <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>elevation <span class="op">=</span> <span class="fl">850</span>,</span>
+<span>                          slope <span class="op">=</span> <span class="fl">15.1</span>, </span>
+<span>                          aspect <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">pobl_spt</span></span>
-<span><span class="co">#&gt; Object of class SpatialPointsTopography</span></span>
-<span><span class="co">#&gt;         coordinates elevation slope aspect</span></span>
-<span><span class="co">#&gt; 1 (1.0219, 41.3443)       850  15.1     15</span></span></code></pre></div>
+<span><span class="co">#&gt; Simple feature collection with 1 feature and 3 fields</span></span>
+<span><span class="co">#&gt; Geometry type: POINT</span></span>
+<span><span class="co">#&gt; Dimension:     XY</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: 1.0219 ymin: 41.3443 xmax: 1.0219 ymax: 41.3443</span></span>
+<span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
+<span><span class="co">#&gt;                    sf_pt elevation slope aspect</span></span>
+<span><span class="co">#&gt; 1 POINT (1.0219 41.3443)       850  15.1     15</span></span></code></pre></div>
 <p>The more difficult part of using package <strong>meteoland</strong>
-is to assemble weather data from surface weather stations into an object
-of class <code>MeteorologyInterpolationData</code>. Please see the <a href="https://emf-creaf.github.io/meteoland/index.html" class="external-link">meteoland
-package documentation</a> to learn how to do that. Here we will assume
-that such an object is already available, by using the example object
-provided in the <strong>meteoland</strong> package.</p>
+is to assemble reference weather data from surface weather stations into
+the socalled <strong>interpolator</strong> object (of class
+<code>stars</code>). Please see the <a href="https://emf-creaf.github.io/meteoland/index.html" class="external-link">meteoland
+package documentation</a> to learn how to create interpolator objects.
+Here we will assume that such an object is already available, by using
+the example object provided in the <strong>meteoland</strong>
+package.</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"exampleinterpolationdata"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">exampleinterpolationdata</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "MeteorologyInterpolationData"</span></span>
-<span><span class="co">#&gt; attr(,"package")</span></span>
-<span><span class="co">#&gt; [1] "meteoland"</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"meteoland_interpolator_example"</span><span class="op">)</span></span></code></pre></div>
 <p>Once we have this interpolator, obtaining interpolated weather for a
 set of target points is rather straightforward using function
-<code><a href="https://rdrr.io/pkg/meteoland/man/interpolationpoints.html" class="external-link">interpolationpoints()</a></code> from <strong>meteoland</strong>:</p>
+<code><a href="https://rdrr.io/pkg/meteoland/man/interpolate_data.html" class="external-link">interpolate_data()</a></code> from <strong>meteoland</strong>:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">meteo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meteoland/man/interpolationpoints.html" class="external-link">interpolationpoints</a></span><span class="op">(</span><span class="va">exampleinterpolationdata</span>, <span class="va">pobl_spt</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: `interpolationpoints()` was deprecated in meteoland 2.0.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `interpolate_data()` instead.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Spatial_*_Topography and MetereologyInterpolationData classes are soft</span></span>
-<span><span class="co">#&gt;   deprecated. Interpolator should be created with create_meteo_interpolator(),</span></span>
-<span><span class="co">#&gt;   and spatial objects to interpolate should be from sf (vector) or star</span></span>
-<span><span class="co">#&gt;   (raster) classes. Interpolation is performed with interpolate_data()</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning in interpolationpoints(exampleinterpolationdata, pobl_spt): CRS</span></span>
-<span><span class="co">#&gt; projection of 'points' adapted to that of 'object'.</span></span>
-<span><span class="co">#&gt; Processing point '1' (1/1) -</span></span>
-<span><span class="co">#&gt; Warning in interpolationpoints(exampleinterpolationdata, pobl_spt): Point '1'</span></span>
-<span><span class="co">#&gt; outside the boundary box of interpolation data object.</span></span>
-<span><span class="co">#&gt;  done.</span></span>
-<span><span class="co">#&gt; Warning: `SpatialPointsMeteorology()` was deprecated in meteoland 2.0.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Spatial_*_Meteorology classes are soft deprecated. Meteorology objects are</span></span>
-<span><span class="co">#&gt;   now normal sf points objects</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">meteoland</span> package.</span></span>
-<span><span class="co">#&gt;   Please report the issue to the authors.</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span></code></pre></div>
-<p>Note that a warning was raised, because the boundary box of the
-interpolator does not include the location of the Poblet forests. In
-this case, the result of the interpolation is not reliable and should
-not be used. The output of function <code><a href="https://rdrr.io/pkg/meteoland/man/interpolationpoints.html" class="external-link">interpolationpoints()</a></code>
-is an object of class <code>SpatialPointsMeteorology</code>, whose
-structure is:</p>
+<code class="sourceCode R"><span><span class="va">meteo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/meteoland/man/interpolate_data.html" class="external-link">interpolate_data</a></span><span class="op">(</span><span class="va">pobl_spt</span>, <span class="va">meteoland_interpolator_example</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Starting interpolation...</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Temperature interpolation is needed also...</span></span>
+<span><span class="co">#&gt; • Interpolating temperature...</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Precipitation interpolation is needed also...</span></span>
+<span><span class="co">#&gt; • Interpolating precipitation...</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Relative humidity interpolation is needed also...</span></span>
+<span><span class="co">#&gt; • Interpolating relative humidity...</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Radiation calculation is needed also...</span></span>
+<span><span class="co">#&gt; • Calculating radiation...</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Wind interpolation is needed also...</span></span>
+<span><span class="co">#&gt; • Interpolating wind...</span></span>
+<span><span class="co">#&gt; • Calculating PET...</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Interpolation done...</span></span></code></pre></div>
+<p>The output of function <code><a href="https://rdrr.io/pkg/meteoland/man/interpolate_data.html" class="external-link">interpolate_data()</a></code> is an object
+of class <code>sf</code>:</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">meteo</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Formal class 'SpatialPointsMeteorology' [package "meteoland"] with 5 slots</span></span>
-<span><span class="co">#&gt;   ..@ dates      : Date[1:1461], format: "2000-01-01" "2000-01-02" ...</span></span>
-<span><span class="co">#&gt;   ..@ data       :List of 1</span></span>
-<span><span class="co">#&gt;   .. ..$ 1:'data.frame': 1461 obs. of  12 variables:</span></span>
-<span><span class="co">#&gt;   .. .. ..$ DOY                 : num [1:1461] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
-<span><span class="co">#&gt;   .. .. ..$ MeanTemperature     : num [1:1461] 5.56 6.71 7.34 4.46 8.08 ...</span></span>
-<span><span class="co">#&gt;   .. .. ..$ MinTemperature      : num [1:1461] -0.1435 -0.0685 0.3771 0.1058 -2.7598 ...</span></span>
-<span><span class="co">#&gt;   .. .. ..$ MaxTemperature      : num [1:1461] 9.26 11.11 11.86 7.3 15.13 ...</span></span>
-<span><span class="co">#&gt;   .. .. ..$ Precipitation       : num [1:1461] 0 0 0 0 0 0 0 0 0 0 ...</span></span>
-<span><span class="co">#&gt;   .. .. ..$ MeanRelativeHumidity: num [1:1461] 86.5 82.2 79.1 77.6 56.6 ...</span></span>
-<span><span class="co">#&gt;   .. .. ..$ MinRelativeHumidity : num [1:1461] 67.1 61 58.3 63.8 35.5 ...</span></span>
-<span><span class="co">#&gt;   .. .. ..$ MaxRelativeHumidity : num [1:1461] 100 100 100 100 100 100 100 NA NA NA ...</span></span>
-<span><span class="co">#&gt;   .. .. ..$ Radiation           : num [1:1461] 2.29 2.49 2.56 2.11 2.87 ...</span></span>
-<span><span class="co">#&gt;   .. .. ..$ WindSpeed           : num [1:1461] 0.833 0.833 0 1.111 0 ...</span></span>
-<span><span class="co">#&gt;   .. .. ..$ WindDirection       : num [1:1461] 230 170 0 220 0 ...</span></span>
-<span><span class="co">#&gt;   .. .. ..$ PET                 : num [1:1461] 0.218 0.285 0.182 0.247 0.348 ...</span></span>
-<span><span class="co">#&gt;   ..@ coords     : num [1, 1:2] 1.02 41.34</span></span>
-<span><span class="co">#&gt;   .. ..- attr(*, "dimnames")=List of 2</span></span>
-<span><span class="co">#&gt;   .. .. ..$ : chr "1"</span></span>
-<span><span class="co">#&gt;   .. .. ..$ : chr [1:2] "coords.x1" "coords.x2"</span></span>
-<span><span class="co">#&gt;   ..@ bbox       : num [1:2, 1:2] 1.02 41.34 1.02 41.34</span></span>
-<span><span class="co">#&gt;   .. ..- attr(*, "dimnames")=List of 2</span></span>
-<span><span class="co">#&gt;   .. .. ..$ : chr [1:2] "coords.x1" "coords.x2"</span></span>
-<span><span class="co">#&gt;   .. .. ..$ : chr [1:2] "min" "max"</span></span>
-<span><span class="co">#&gt;   ..@ proj4string:Formal class 'CRS' [package "sp"] with 1 slot</span></span>
-<span><span class="co">#&gt;   .. .. ..@ projargs: chr "+proj=longlat +datum=WGS84 +no_defs"</span></span>
-<span><span class="co">#&gt;   .. .. ..$ comment: chr "GEOGCRS[\"WGS 84\",\n    ENSEMBLE[\"World Geodetic System 1984 ensemble\",\n        MEMBER[\"World Geodetic Sys"| __truncated__</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">meteo</span></span>
+<span><span class="co">#&gt; Simple feature collection with 1 feature and 4 fields</span></span>
+<span><span class="co">#&gt; Geometry type: POINT</span></span>
+<span><span class="co">#&gt; Dimension:     XY</span></span>
+<span><span class="co">#&gt; Bounding box:  xmin: 1.0219 ymin: 41.3443 xmax: 1.0219 ymax: 41.3443</span></span>
+<span><span class="co">#&gt; Geodetic CRS:  WGS 84</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 5</span></span></span>
+<span><span class="co">#&gt;              sf_pt elevation slope aspect interpolated_data </span></span>
+<span><span class="co">#&gt;        <span style="color: #949494; font-style: italic;">&lt;POINT [°]&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> (1.0219 41.3443)       850  15.1     15 <span style="color: #949494;">&lt;tibble [30 × 13]&gt;</span></span></span></code></pre></div>
 <p>We can access the weather data frame by subsetting the appropriate
-element of slot <code>data</code>:</p>
+element of <code>interpolated_data</code>:</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pobl_weather</span> <span class="op">&lt;-</span> <span class="va">meteo</span><span class="op">@</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<code class="sourceCode R"><span><span class="va">pobl_weather</span> <span class="op">&lt;-</span> <span class="va">meteo</span><span class="op">$</span><span class="va">interpolated_data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">pobl_weather</span><span class="op">)</span></span>
-<span><span class="co">#&gt;            DOY MeanTemperature MinTemperature MaxTemperature Precipitation</span></span>
-<span><span class="co">#&gt; 2000-01-01   1        5.555184     -0.1435010       9.260269             0</span></span>
-<span><span class="co">#&gt; 2000-01-02   2        6.707019     -0.0685338      11.112247             0</span></span>
-<span><span class="co">#&gt; 2000-01-03   3        7.338177      0.3771072      11.864021             0</span></span>
-<span><span class="co">#&gt; 2000-01-04   4        4.464909      0.1058438       7.299021             0</span></span>
-<span><span class="co">#&gt; 2000-01-05   5        8.079838     -2.7597730      15.127374             0</span></span>
-<span><span class="co">#&gt; 2000-01-06   6        4.403091     -3.2647648       9.388462             0</span></span>
-<span><span class="co">#&gt;            MeanRelativeHumidity MinRelativeHumidity MaxRelativeHumidity</span></span>
-<span><span class="co">#&gt; 2000-01-01             86.51313            67.13659                 100</span></span>
-<span><span class="co">#&gt; 2000-01-02             82.20012            61.02807                 100</span></span>
-<span><span class="co">#&gt; 2000-01-03             79.07784            58.33286                 100</span></span>
-<span><span class="co">#&gt; 2000-01-04             77.59076            63.75526                 100</span></span>
-<span><span class="co">#&gt; 2000-01-05             56.60804            35.51277                 100</span></span>
-<span><span class="co">#&gt; 2000-01-06             68.22612            48.43355                 100</span></span>
-<span><span class="co">#&gt;            Radiation WindSpeed WindDirection       PET</span></span>
-<span><span class="co">#&gt; 2000-01-01  2.285965 0.8333333           230 0.2183801</span></span>
-<span><span class="co">#&gt; 2000-01-02  2.494350 0.8333333           170 0.2846305</span></span>
-<span><span class="co">#&gt; 2000-01-03  2.557200 0.0000000             0 0.1821787</span></span>
-<span><span class="co">#&gt; 2000-01-04  2.114212 1.1111111           220 0.2465335</span></span>
-<span><span class="co">#&gt; 2000-01-05  2.865159 0.0000000             0 0.3480644</span></span>
-<span><span class="co">#&gt; 2000-01-06  2.815494 0.5555556           240 0.3108101</span></span></code></pre></div>
-<p>As we indicated above, the daily weather data is not valid in this
-case because of the mismatch between the boundaries of the interpolator
-data set and the location of our plots. Nevertheless, the process for
-obtaining weather data would be similar in other cases.</p>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 13</span></span></span>
+<span><span class="co">#&gt;   dates                 DOY MeanTemperature MinTemperature MaxTemperature</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 2022-04-01 <span style="color: #949494;">00:00:00</span>    91            3.37         -<span style="color: #BB0000;">2.21</span>            6.99</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 2022-04-02 <span style="color: #949494;">00:00:00</span>    92            3.60         -<span style="color: #BB0000;">4.01</span>            8.54</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 2022-04-03 <span style="color: #949494;">00:00:00</span>    93            2.33         -<span style="color: #BB0000;">7.67</span>            8.83</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 2022-04-04 <span style="color: #949494;">00:00:00</span>    94            4.16         -<span style="color: #BB0000;">4.46</span>            9.76</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 2022-04-05 <span style="color: #949494;">00:00:00</span>    95            5.86         -<span style="color: #BB0000;">5.21</span>           13.1 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 2022-04-06 <span style="color: #949494;">00:00:00</span>    96            9.16          0.472          14.8 </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 8 more variables: Precipitation &lt;dbl&gt;, MeanRelativeHumidity &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   MinRelativeHumidity &lt;dbl&gt;, MaxRelativeHumidity &lt;dbl&gt;, Radiation &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   WindSpeed &lt;dbl&gt;, WindDirection &lt;dbl&gt;, PET &lt;dbl&gt;</span></span></span></code></pre></div>
 </div>
   </div>
 

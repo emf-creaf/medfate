@@ -281,7 +281,16 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span>         SP        N   DBH Cover   H        CR   LAI_live LAI_expanded LAI_dead</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 148 168.0000 37.55    NA 800 0.6605196 0.84874773   0.84874773        0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 168 384.0000 14.60    NA 660 0.6055642 0.70557382   0.70557382        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 749.4923    NA  3.75  80 0.8032817 0.02718804   0.02718804        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 749.4923    NA  3.75  80 0.8032817 0.03054273   0.03054273        0</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Example of aboveground parameters taken from a forest</span></span></span>
+<span class="r-in"><span><span class="co"># described using LAI and crown ratio</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">forest2aboveground</span><span class="op">(</span><span class="va">exampleforestMED2</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         SP  N DBH Cover   H   CR LAI_live LAI_expanded LAI_dead</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 148 NA  NA    NA 800 0.66     0.80         0.80        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 168 NA  NA    NA 660 0.60     0.50         0.50        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 NA  NA    NA  80 0.80     0.03         0.03        0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Initialize soil with default soil params</span></span></span>
 <span class="r-in"><span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -630,16 +639,16 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 Quercus coccifera</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $above</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR        N   LAI_live LAI_expanded LAI_dead</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 168.0000 0.84874773   0.84874773        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 384.0000 0.70557382   0.70557382        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 749.4923 0.02718804   0.02718804        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 0.84874773   0.84874773        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 0.70557382   0.70557382        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03054273   0.03054273        0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 fineRootBiomass coarseRootSoilVolume</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600     1381.890945             4.381122</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000      546.693144             7.526346</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000        9.397368             5.544086</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$V</span>
@@ -1088,16 +1097,16 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 Quercus coccifera</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $above</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR        N   LAI_live LAI_expanded LAI_dead</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 168.0000 0.84874773   0.84874773        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 384.0000 0.70557382   0.70557382        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 749.4923 0.02718804   0.02718804        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 0.84874773   0.84874773        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 0.70557382   0.70557382        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03054273   0.03054273        0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 fineRootBiomass coarseRootSoilVolume</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600       1612.7328                16.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000       1590.6433                13.25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000        152.1546                 0.25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$V</span>
@@ -1572,16 +1581,16 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 Quercus coccifera</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $above</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR        N   LAI_live LAI_expanded LAI_dead</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 168.0000 0.84874773   0.84874773        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 384.0000 0.70557382   0.70557382        0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 749.4923 0.02718804   0.02718804        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          H        CR   LAI_live LAI_expanded LAI_dead</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.6605196 0.84874773   0.84874773        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.6055642 0.70557382   0.70557382        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.8032817 0.03054273   0.03054273        0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95 fineRootBiomass coarseRootSoilVolume</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600       1612.7328                16.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000       1590.6433                13.25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000        152.1546                 0.25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$V</span>
@@ -1690,6 +1699,437 @@ the <code>forest2spwbInput</code> and <code>forest2growthInput</code> also estim
 <span class="r-out co"><span class="r-pr">#&gt;</span> T1_148       0       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> T2_168       0       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> S1_165       0       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $internalFCCS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "spwbInput" "list"     </span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Example of initialization from a forest </span></span></span>
+<span class="r-in"><span><span class="co"># described using LAI and crown ratio</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">forest2spwbInput</span><span class="op">(</span><span class="va">exampleforestMED2</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$fillMissingRootParams</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$fillMissingSpParams</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$verbose</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$subdailyResults</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$standResults</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilResults</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$plantResults</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$leafResults</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$temperatureResults</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$fireHazardResults</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$transpirationMode</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Granier"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$soilFunctions</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VG"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defaultWindSpeed</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$defaultCO2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 386</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$snowpack</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$leafPhenology</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$rockyLayerDrainage</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$unlimitedSoilWater</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$rhizosphereOverlap</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "total"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$unfoldingDD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$verticalLayerSize</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$windMeasurementHeight</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 200</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$cavitationRefill</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "total"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$hydraulicRedistributionFraction</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$ndailysteps</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 24</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$nsubsteps</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3600</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$capacitance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$taper</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$multiLayerBalance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$maximumStemConductance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$klatstem</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$klatleaf</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$numericParams</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$numericParams$maxNsteps</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$numericParams$ntrial</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 200</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$numericParams$psiTol</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$numericParams$ETol</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$fracLeafResistance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$fracRootResistance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$averageFracRhizosphereResistance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$thermalCapacityLAI</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1e+06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$boundaryLayerSize</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$refillMaximumRate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$subdailyCarbonBalance</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$allowDessication</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$allowStarvation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$sinkLimitation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$shrubDynamics</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$allocationStrategy</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Al2As"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$phloemConductanceFactor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$nonSugarConcentration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$equilibriumOsmoticConcentration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$equilibriumOsmoticConcentration$leaf</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$equilibriumOsmoticConcentration$sapwood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$minimumRelativeStarchForGrowth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$constructionCosts</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$constructionCosts$leaf</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$constructionCosts$sapwood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.47</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$constructionCosts$fineroot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$senescenceRates</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$senescenceRates$sapwood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.000135</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$senescenceRates$fineroot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.001897231</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$maximumRelativeGrowthRates</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$maximumRelativeGrowthRates$leaf</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$maximumRelativeGrowthRates$cambium</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$maximumRelativeGrowthRates$sapwood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$maximumRelativeGrowthRates$fineroot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$mortalityMode</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "density/deterministic"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$mortalityBaselineRate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$mortalityRelativeSugarThreshold</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$mortalityRWCThreshold</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeDBH</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeDensity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$ingrowthTreeDBH</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$ingrowthTreeDensity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$allowRecruitment</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recruitmentMode</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "stochastic"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$allowResprouting</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$removeEmptyCohorts</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$minimumCohortDensity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$seedRain</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$seedProductionTreeHeight</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$seedProductionShrubHeight</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 30</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$probRecr</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$minTempRecr</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$minMoistureRecr</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$minFPARRecr</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeHeight</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 620</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrShrubCover</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrShrubHeight</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeZ50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrShrubZ50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrTreeZ95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $control$recrShrubZ95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $soil</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil depth (mm): 4000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  1  [ 0  to  300 mm ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 25 Macroporosity (%): 5 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 32 Vol. FC (mm): 68 Vol. SAT (mm): 111 Vol. current (mm): 68 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  2  [ 300  to  1000 mm ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 45 Macroporosity (%): 5 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 55 Vol. FC (mm): 117 Vol. SAT (mm): 190 Vol. current (mm): 117 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  3  [ 1000  to  2000 mm ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 75 Macroporosity (%): 5 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 36 Vol. FC (mm): 76 Vol. SAT (mm): 123 Vol. current (mm): 76 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Layer  4  [ 2000  to  4000 mm ] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 95 Macroporosity (%): 5 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 14 Theta FC (%): 30 Theta SAT (%): 49 Theta current (%) 30 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 14 Vol. FC (mm): 30 Vol. SAT (mm): 49 Vol. current (mm): 30 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil saturated capacity (mm): 473 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil water holding capacity (mm): 291 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil extractable water (mm): 183 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil current Volume (mm): 291 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Snow pack water equivalent (mm): 0 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water table depth (mm): 4000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $canopy</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $herbLAI</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $cohorts</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         SP              Name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 148  Pinus halepensis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 168      Quercus ilex</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 165 Quercus coccifera</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $above</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          H   CR LAI_live LAI_expanded LAI_dead</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 800 0.66     0.80         0.80        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 660 0.60     0.50         0.50        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  80 0.80     0.03         0.03        0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $below</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        Z50  Z95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 100  600</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 300 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 200 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$V</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                1         2          3           4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.8604899 0.1194556 0.01511005 0.004944476</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.5008953 0.4505941 0.04064831 0.007862284</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.6799879 0.2737911 0.03567632 0.010544678</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$L</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           1        2        3        4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 2150 1137.834 1645.161 3058.717</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 2150 1891.826 1812.060 3097.046</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 2150 1480.808 1750.917 3096.459</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $belowLayers$Wpool</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        1 2 3 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 1 1 1 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 1 1 1 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 1 1 1 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $paramsPhenology</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             PhenologyType LeafDuration t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 oneflush-evergreen     2.536875  50.0 200.0  0.00  8268  12.5  28.5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 oneflush-evergreen     2.183837  54.5 240.7  4.34 10178  12.5  28.5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 oneflush-evergreen     1.250000  54.5 240.7  4.34 10178  12.5  28.5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        ysen</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $paramsAnatomy</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Al2As Ar2Al      SLA LeafDensity WoodDensity FineRootDensity      SRL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 1317.523     1 5.140523   0.2982842   0.6077016       0.2982842 3172.572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 3908.823     1 6.340000   0.4893392   0.9008264       0.4893392 4398.812</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 4189.325     1 4.980084   0.3709679   0.4389106       0.3709679 4398.812</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        RLD     r635</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148  10 1.964226</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168  10 1.805872</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  10 2.289452</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $paramsInterception</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        kPAR   g</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.50 1.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.55 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.55 0.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $paramsTranspiration</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Gswmin   Tmax_LAI   Tmax_LAIsq Psi_Extract Exp_Extract  VCstem_c</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.003086667 0.13847869 -0.006200539  -0.8507809     1.47061 12.710000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.004473333 0.09146279 -0.004095349  -1.6598896     1.06530  3.560000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.010455247 0.13400000 -0.006000000  -2.1210726     1.30000  3.537784</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         VCstem_d      WUE   WUE_par     WUE_co2    WUE_vpd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 -5.290000 8.523012 0.6843513 0.002517798 -0.3035192</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 -7.720000 8.447722 0.2523021 0.002721234 -0.5791330</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 -4.126512 7.900000 0.3643000 0.002757000 -0.4636000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $paramsWaterStorage</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           maxFMC   LeafPI0   LeafEPS LeafAF     Vleaf   StemPI0   StemEPS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 126.03063 -1.591429  8.918571 0.3525 0.5258525 -2.008039 13.256355</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168  93.15304 -1.483333 19.260000 0.1700 0.2199087 -3.227438 46.420610</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165  96.53441 -2.370000 17.230000 0.2400 0.4108968 -1.305868  6.297155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           StemAF Vsapwood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148 0.9236406 6.440145</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168 0.6238125 1.339581</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165 0.6238125 1.163264</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $internalPhenology</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        gdd sen budFormation leafUnfolding leafSenescence leafDormancy phi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148   0   0        FALSE         FALSE          FALSE        FALSE   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168   0   0        FALSE         FALSE          FALSE        FALSE   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165   0   0        FALSE         FALSE          FALSE        FALSE   0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $internalWater</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        PlantPsi StemPLC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T1_148   -0.033       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> T2_168   -0.033       0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> S1_165   -0.033       0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $internalFCCS</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> data frame with 0 columns and 0 rows</span>

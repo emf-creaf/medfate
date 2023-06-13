@@ -1,4 +1,4 @@
-pandoc: 2.19.2
+pandoc: 3.1.1
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
@@ -15,7 +15,8 @@ articles:
   BasicWaterBalance: runmodels/BasicWaterBalance.html
   ForestDynamics: runmodels/ForestDynamics.html
   ForestGrowth: runmodels/ForestGrowth.html
+  Sureau: runmodels/Sureau.html
   FontBlanche: workedexamples/FontBlanche.html
   PlantWaterPools: workedexamples/PlantWaterPools.html
-last_built: 2023-05-25T13:56Z
+last_built: 2023-06-13T16:24Z
 

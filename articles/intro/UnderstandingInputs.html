@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2023-05-25</h4>
+            <h4 data-toc-skip class="date">2023-06-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>UnderstandingInputs.Rmd</code></div>
@@ -287,7 +287,7 @@ weight)</td>
 <td align="left">[0-1]</td>
 </tr>
 <tr class="odd">
-<td align="left">ba</td>
+<td align="left">BTsh</td>
 <td align="left">Shrub bark thickness</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
@@ -359,14 +359,14 @@ weight)</td>
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
-<td align="left">a_ba</td>
+<td align="left">a_bt</td>
 <td align="left">Regression coefficient for bark thickness (mm) as
 function of DBH (cm)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td align="left">b_ba</td>
+<td align="left">b_bt</td>
 <td align="left">Regression coefficient for bark thickness (mm) as
 function of DBH (cm)</td>
 <td align="left">Numeric</td>
@@ -1023,68 +1023,102 @@ distribution has to be specified for both growth forms, in terms of the
 depths (mm) corresponding to 50% and 95% of cumulative fine root
 distribution. Functions are provided in package <a href="https://emf-creaf.github.io/medfateutils/" class="external-link">medfateutils</a> to map
 variables in user data frames into tables <code>treeData</code> and
-<code>shrubData</code>.</p>
+<code>shrubData</code>. Information about the herb layer may be either
+absent or included in an aggregated way (i.e. without distinguishing
+cohorts).</p>
+<p>While the former example illustrates the standard structure of a
+<code>forest</code> object, users may use an alternative description,
+based on leaf area index and crown ratio of woody cohorts and the herb
+layer:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED2</span><span class="op">)</span></span>
+<span><span class="va">exampleforestMED2</span></span></code></pre></div>
+<pre><code><span><span class="co">## $treeData</span></span>
+<span><span class="co">##            Species  N DBH Height Z50  Z95 LAI CrownRatio</span></span>
+<span><span class="co">## 1 Pinus halepensis NA  NA    800 100  600 0.8       0.66</span></span>
+<span><span class="co">## 2     Quercus ilex NA  NA    660 300 1000 0.5       0.60</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $shrubData</span></span>
+<span><span class="co">##             Species Cover Height Z50  Z95  LAI CrownRatio</span></span>
+<span><span class="co">## 1 Quercus coccifera    NA     80 200 1000 0.03        0.8</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $herbCover</span></span>
+<span><span class="co">## [1] NA</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $herbHeight</span></span>
+<span><span class="co">## [1] 20</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $herbLAI</span></span>
+<span><span class="co">## [1] 0.25</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## attr(,"class")</span></span>
+<span><span class="co">## [1] "forest" "list"</span></span></code></pre>
+<p>This alternative <code>forest</code> form is suitable for water
+balance simulations, but does not allow simulating forest dynamics.</p>
 </div>
 <div class="section level3">
 <h3 id="aboveground-and-belowground-data">Aboveground and belowground data<a class="anchor" aria-label="anchor" href="#aboveground-and-belowground-data"></a>
 </h3>
-<p>We recommend users to define <code>forest</code> objects as starting
-point for simulations with <code>medfate</code>. However, simulation
-functions in <code>medfate</code> allow starting in a more general way
-using two data frames, one with <strong>aboveground</strong> information
-(i.e. the leave area and size of plants) and the other with
-<strong>belowground</strong> information (i.e. root distribution). The
-aboveground data frame does not distinguish between trees and shrubs. It
-includes, for each plant cohort to be considered in rows, its
-<em>species identity</em>, <em>height</em> and <em>leaf area index</em>
-(LAI). While users can build their input data themselves, we use
-function <code><a href="../../reference/modelInput.html">forest2aboveground()</a></code> on the object
-<code>exampleforestMED</code> to show how should the data look like:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<p>We can use some functions to inspect how above-ground and
+below-ground information is represented in <code>medfate</code>.</p>
+<p>For example, we can use function <code><a href="../../reference/modelInput.html">forest2aboveground()</a></code> on
+the object <code>exampleforestMED</code> to show how medfate completes
+above-ground information:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">above</span> <span class="op">=</span> <span class="fu"><a href="../../reference/modelInput.html">forest2aboveground</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
 <span><span class="va">above</span></span></code></pre></div>
 <pre><code><span><span class="co">##         SP        N   DBH Cover   H        CR   LAI_live LAI_expanded LAI_dead</span></span>
 <span><span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 0.84874773   0.84874773        0</span></span>
 <span><span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642 0.70557382   0.70557382        0</span></span>
-<span><span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817 0.02718804   0.02718804        0</span></span></code></pre>
-<p>Note that the call to <code><a href="../../reference/modelInput.html">forest2aboveground()</a></code> included
-species parameters, because species-specific values are needed to
-calculate leaf area from tree diameters or shrub cover. Columns
-<code>N</code>, <code>DBH</code> and <code>Cover</code> are required for
-simulating growth, but not for soil water balance, which only requires
-columns <code>SP</code>, <code>H</code> (in cm), <code>CR</code>
-(i.e. the crown ratio), <code>LAI_live</code>, <code>LAI_expanded</code>
-and <code>LAI_dead</code>. Here plant cohorts are given unique codes
-that tell us whether they correspond to trees or shrubs, but the user
-can use other row identifiers as long as they are unique. In practice,
-the user only needs to worry to calculate the values for
-<code>LAI_live</code>. <code>LAI_live</code> and
-<code>LAI_expanded</code> can contain the same LAI values, and
-<code>LAI_dead</code> is normally zero. This is so because models update
-<code>LAI_expanded</code> and <code>LAI_dead</code> according to the
-leaf phenology of species.</p>
+<span><span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817 0.03054273   0.03054273        0</span></span></code></pre>
+<p>Note that the call to <code><a href="../../reference/modelInput.html">forest2aboveground()</a></code> included the
+species parameter table, because species-specific allometric
+coefficients are needed to calculate leaf area from tree size or shrub
+percent cover and height. Moreover, note that the plant cohorts were
+given unique codes that tell us whether they correspond to trees (‘T’)
+or shrubs (‘S’).</p>
+<p>Columns <code>N</code>, <code>DBH</code> and <code>Cover</code>
+describe forest structure and are required for simulating growth, but
+not for soil water balance, which only requires columns <code>SP</code>,
+<code>H</code> (in cm), <code>CR</code> (i.e. the crown ratio),
+<code>LAI_live</code>, <code>LAI_expanded</code> and
+<code>LAI_dead</code>. Therefore, one could use alternative forest
+description as starting point, i.e.:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">above2</span> <span class="op">=</span> <span class="fu"><a href="../../reference/modelInput.html">forest2aboveground</a></span><span class="op">(</span><span class="va">exampleforestMED2</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span>
+<span><span class="va">above2</span></span></code></pre></div>
+<pre><code><span><span class="co">##         SP  N DBH Cover   H   CR LAI_live LAI_expanded LAI_dead</span></span>
+<span><span class="co">## T1_148 148 NA  NA    NA 800 0.66     0.80         0.80        0</span></span>
+<span><span class="co">## T2_168 168 NA  NA    NA 660 0.60     0.50         0.50        0</span></span>
+<span><span class="co">## S1_165 165 NA  NA    NA  80 0.80     0.03         0.03        0</span></span></code></pre>
+<p>Of course, the resulting data frame has missing values, whereas the
+other values are directly copied from <code>forest</code>.</p>
 <p>Aboveground leaf area distribution (with or without distinguishing
 among cohorts) can be examined by calling function
 <code><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_leafAreaDensity()</a></code>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_leafAreaDensity</a></span><span class="op">(</span><span class="va">above</span>, byCohorts <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UnderstandingInputs_files/figure-html/unnamed-chunk-6-1.png" width="384" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_leafAreaDensity</a></span><span class="op">(</span><span class="va">above</span>, byCohorts <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UnderstandingInputs_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_leafAreaDensity</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span>, byCohorts <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span></code></pre></div>
+<p><img src="UnderstandingInputs_files/figure-html/unnamed-chunk-8-1.png" width="384" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_leafAreaDensity</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span>, byCohorts <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
+<p><img src="UnderstandingInputs_files/figure-html/unnamed-chunk-9-1.png" width="480" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="belowground-data">Belowground data<a class="anchor" aria-label="anchor" href="#belowground-data"></a>
+</h3>
 <p>Regarding <strong>belowground</strong> information, we need vectors
 with depths corresponding to 50% and 95% of fine roots, which we simply
 concatenate from our forest data:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Z50</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">$</span><span class="va">treeData</span><span class="op">$</span><span class="va">Z50</span>, <span class="va">exampleforestMED</span><span class="op">$</span><span class="va">shrubData</span><span class="op">$</span><span class="va">Z50</span><span class="op">)</span></span>
 <span><span class="va">Z95</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">$</span><span class="va">treeData</span><span class="op">$</span><span class="va">Z95</span>, <span class="va">exampleforestMED</span><span class="op">$</span><span class="va">shrubData</span><span class="op">$</span><span class="va">Z95</span><span class="op">)</span></span></code></pre></div>
 <p>These parameters specify a continuous distribution of fine roots.
 Users can visually inspect the distribution of fine roots of
 <code>forest</code> objects by calling function
 <code><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_rootDistribution()</a></code>:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/vprofile_leafAreaDensity.html">vprofile_rootDistribution</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UnderstandingInputs_files/figure-html/unnamed-chunk-9-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="UnderstandingInputs_files/figure-html/unnamed-chunk-11-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div class="section level2">
@@ -1098,7 +1132,7 @@ physical attributes of soil, namely soil depth, texture, bulk density
 and rock fragment content. Soil physical attributes can be initialized
 to default values, for a given number of layers, using function
 <code><a href="../../reference/defaultSoilParams.html">defaultSoilParams()</a></code>:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">spar</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">spar</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   widths clay sand om  bd rfc</span></span>
@@ -1121,13 +1155,13 @@ in package <a href="https://github.com/emf-creaf/medfateutils" class="external-l
 <p>The soil input for simulations is an object of class
 <code>soil</code> (a list) that is created using a function with the
 same name:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">spar</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">soil</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "function"</span></span></code></pre>
 <p>In addition to the physical soil description, this object contains
 soil parameters needed for soil water balance simulations:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "SoilDepth"    "W"            "SWE"          "Temp"         "Ksoil"       </span></span>
 <span><span class="co">##  [6] "Gsoil"        "dVec"         "sand"         "clay"         "om"          </span></span>
@@ -1135,12 +1169,12 @@ soil parameters needed for soil water balance simulations:</p>
 <span><span class="co">## [16] "Kdrain"       "macro"        "bd"           "rfc"</span></span></code></pre>
 <p>For example, <code>macro</code> specifies the macroporosity of each
 layer; <code>Gsoil</code> and <code>Ksoil</code> are parameters needed
-to model the process of water infiltration into the soil. The meaning of
+to model the process of evaporation from the bare soil. The meaning of
 all elements in the soil object can be found in the help page for
 function <code><a href="../../reference/soil.html">soil()</a></code>.</p>
 <p>At any time, one can show the characteristics and status of the soil
 object using its <code>print</code> function:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">examplesoil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Soil depth (mm): 1000 </span></span>
 <span><span class="co">## </span></span>
@@ -1170,13 +1204,13 @@ of each soil layer. In particular, element <code>W</code> contains the
 state variable that represents moisture content - the proportion of
 moisture <strong>relative to field capacity</strong> - which is normally
 initialized to 1 for each layer:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">examplesoil</span><span class="op">$</span><span class="va">W</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 1 1</span></span></code></pre>
 <p>Advanced soil plant energy and water balance modelling requires
 considering the temperature of soil. Hence, <code>Temp</code> contains
 the temperature (in degrees) of soil layers:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">examplesoil</span><span class="op">$</span><span class="va">Temp</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] NA NA</span></span></code></pre>
 <p>Soil layer temperatures are initialized to missing values, so that at
@@ -1196,7 +1230,7 @@ relationship between soil volumetric water content (<span class="math inline">\(
 retention curve, but the user may choose to follow Van Genuchten -
 Mualem equations, which will give slightly different values for the same
 texture:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">examplesoil</span>, model<span class="op">=</span><span class="st">"VG"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Soil depth (mm): 1000 </span></span>
 <span><span class="co">## </span></span>
@@ -1228,9 +1262,9 @@ estimated using pedotransfer functions and their names start with
 <code>soil</code> to estimate Van Genuchten parameters). The following
 code calls function <code><a href="../../reference/soil_texture.html">soil_retentionCurvePlot()</a></code> to illustrate
 the difference between the two water retention models in this soil:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/soil_texture.html">soil_retentionCurvePlot</a></span><span class="op">(</span><span class="va">examplesoil</span>, model<span class="op">=</span><span class="st">"both"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UnderstandingInputs_files/figure-html/unnamed-chunk-17-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="UnderstandingInputs_files/figure-html/unnamed-chunk-19-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>Low-level functions, such as <code><a href="../../reference/soil_texture.html">soil_psi2thetaSX()</a></code> and
 <code><a href="../../reference/soil_texture.html">soil_psi2thetaVG()</a></code> (and their counterparts
 <code><a href="../../reference/soil_texture.html">soil_theta2psiSX()</a></code> and <code><a href="../../reference/soil_texture.html">soil_theta2psiVG()</a></code>),
@@ -1248,7 +1282,7 @@ minimum weather variables that are required are minimum/maximum
 temperature, minimum/maximum relative humidity, precipitation and
 radiation. Other variables like wind speed are recommended but not
 required. Here we show an example of meteorological forcing data.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            MinTemperature MaxTemperature Precipitation MinRelativeHumidity</span></span>
@@ -1277,7 +1311,7 @@ weather input for medfate simulations.</p>
 controlled using a set of global parameters. The default
 parameterization is obtained using function
 <code><a href="../../reference/defaultControl.html">defaultControl()</a></code>:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">control</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  [1] "fillMissingRootParams"            "fillMissingSpParams"             </span></span>
@@ -1331,8 +1365,8 @@ until their effect on simulations is fully understood.</p>
 species-parameter and simulation control inputs into a single input
 object (of class <code>spwbInput</code> or <code>growthInput</code>)
 that is then used as input to the corresponding simulation function
-along with weather data. The combination of vegentation, soil and
-control inputs is done via functions <code><a href="../../reference/modelInput.html">forest2spwbInput()</a></code> and
+along with weather data. The combination of vegetation, soil and control
+inputs is done via functions <code><a href="../../reference/modelInput.html">forest2spwbInput()</a></code> and
 <code><a href="../../reference/modelInput.html">forest2growthInput()</a></code>. While it complicates the code, having
 this additional step is handy because cohort-level parameters and state
 variables initialized can then be modified by the user (or an automated

@@ -82,7 +82,7 @@
 <span></span>
 <span><span class="fu">plant_foliarBiomass</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_fuel</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, includeDead <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">plant_fuelLoading</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, gdd <span class="op">=</span> <span class="cn">NA_real_</span>, includeDead <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">plant_equilibriumLeafLitter</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, AET <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
@@ -162,7 +162,7 @@
 <li><p><code>plant_equilibriumLeafLitter</code>: Litter biomass of leaves at equilibrium (in kg/m2).</p></li>
 <li><p><code>plant_equilibriumSmallBranchLitter</code>: Litter biomass of small branches (&lt; 6.35 mm diameter) at equilibrium (in kg/m2).</p></li>
 <li><p><code>plant_foliarBiomass</code>: Standing biomass of leaves (in kg/m2).</p></li>
-<li><p><code>plant_fuel</code>: Fine fuel load (in kg/m2).</p></li>
+<li><p><code>plant_fuelLoading</code>: Fine fuel load (in kg/m2).</p></li>
 <li><p><code>plant_height</code>: Total height (in cm).</p></li>
 <li><p><code>plant_ID</code>: Cohort coding for simulation functions (concatenation of 'T' (Trees) or 'S' (Shrub), cohort index and species index).</p></li>
 <li><p><code>plant_LAI</code>: Leaf area index (m2/m2).</p></li>
@@ -195,20 +195,20 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#The analogous plant-level function for LAI</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">plant_LAI</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.58151</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.584864</span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="co">#The analogous plant-level function for fuel loading</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">plant_fuel</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5419197</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">plant_fuelLoading</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5395415</span>
 <span class="r-in"><span>      </span></span>
 <span class="r-in"><span><span class="co">#Summary function for 'forest' objects can be also used</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Tree BA (m2/ha): 25.0333016  adult trees: 25.0333016  saplings: 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Density (ind/ha) adult trees: 552  saplings: 0  shrubs (estimated): 749.4923076 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75  herbs: 10 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LAI (m2/m2) total: 1.8335096  adult trees: 1.5543216  saplings: 0  shrubs: 0.027188  herbs: 0.252 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fuel (kg/m2) total: 0.5699197  adult trees: 0.5255004  saplings: 0  shrubs: 0.0164193  herbs: 0.028 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PAR ground (%): 38.5431077  SWR ground (%): 49.3507632 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LAI (m2/m2) total: 1.8368643  adult trees: 1.5543216  saplings: 0  shrubs: 0.0305427  herbs: 0.252 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fuel loading (kg/m2) total: 0.5675415  adult trees: 0.5255004  saplings: 0  shrubs: 0.0140412  herbs: 0.028 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PAR ground (%): 38.4720582  SWR ground (%): 49.2833603 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Cohort IDs in the models</span></span></span>
 <span class="r-in"><span><span class="fu">plant_ID</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>

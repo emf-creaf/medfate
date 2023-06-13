@@ -281,13 +281,13 @@ Then, only a vector of parameter names is supplied for <code>cohortParNames</cod
 <span class="r-in"><span><span class="fu">multiple_runs</span><span class="op">(</span><span class="va">parMatrix</span>, </span></span>
 <span class="r-in"><span>              <span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">42</span>, elevation <span class="op">=</span> <span class="fl">100</span>,</span></span>
 <span class="r-in"><span>              summary_function <span class="op">=</span> <span class="va">sf</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1. Parameter values = [200, 500] f = 238.438352534097</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2. Parameter values = [300, 1000] f = 239.322797115935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1. Parameter values = [200, 500] f = 239.00254414372</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2. Parameter values = [300, 1000] f = 239.888473554289</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 238.4384</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 239.0025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 239.3228</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 239.8885</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Load observed data (in this case the same simulation results with some added error)  </span></span></span>
@@ -301,9 +301,9 @@ Then, only a vector of parameter names is supplied for <code>cohortParNames</cod
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Evaluate for the values of the parameter matrix</span></span></span>
 <span class="r-in"><span><span class="fu">of</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 238.5101</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 239.0744</span>
 <span class="r-in"><span><span class="fu">of</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 238.5101 239.3948</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 239.0744 239.9607</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Generate a loglikelihood function for soil water content</span></span></span>
@@ -317,9 +317,9 @@ Then, only a vector of parameter names is supplied for <code>cohortParNames</cod
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Loglikelihood for the values of the parameter matrix</span></span></span>
 <span class="r-in"><span><span class="fu">oef</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 808.6411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 807.3642</span>
 <span class="r-in"><span><span class="fu">oef</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 808.6411 919.9685</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 807.3642 918.8587</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

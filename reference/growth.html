@@ -156,6 +156,13 @@ during a period specified in the input climatic data.</p>
 Simulations using the 'Sperry' or 'Cochard' transpiration modes are computationally much more expensive 
 than those using the 'Granier' transpiration mode.</p>
     </div>
+    <div id="references">
+    <h2>References</h2>
+    <p>De Cáceres M, Molowny-Horas R, Cabon A, Martínez-Vilalta J, Mencuccini M, García-Valdés R, Nadal-Sala D, Sabaté S, 
+Martin-StPaul N, Morin X, D'Adamo F, Batllori E, Améztegui A (2023) MEDFATE 2.9.3: A trait-enabled model to simulate 
+Mediterranean forest function and dynamics at regional scales. 
+Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-3165-2023).</p>
+    </div>
     <div id="see-also">
     <h2>See also</h2>
     <div class="dont-index"><p><code><a href="modelInput.html">growthInput</a></code>, <code><a href="spwb_day.html">growth_day</a></code>, <code><a href="plot.spwb.html">plot.growth</a></code></p></div>
@@ -187,36 +194,36 @@ than those using the 'Granier' transpiration mode.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Call simulation function</span></span></span>
 <span class="r-in"><span><span class="va">G1</span> <span class="op">&lt;-</span> <span class="fu">growth</span><span class="op">(</span><span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant cohort biomass (g/m2): 6108.49</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant water content (mm): 7.05319</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant cohort biomass (g/m2): 6110.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant water content (mm): 7.05846</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 286.862</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial snowpack content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Year 2001:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant biomass (g/m2): 6263.13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant biomass (g/m2): 154.639</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance result (g/m2): 154.639</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant biomass (g/m2): 6265.03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant biomass (g/m2): 154.222</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance result (g/m2): 154.222</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Structural balance (g/m2) 83 Labile balance (g/m2) 96</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Plant individual balance (g/m2) 179 Mortality loss (g/m2) 25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 7.06479</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 269.417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 7.07013</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 269.389</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): 0.0115975</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.00174902</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -17.4447</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -17.4447</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): 0.0116634</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.00175712</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -17.4732</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -17.4732</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 97 Net rainfall (mm) 365</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 405 Runoff (mm) 11 Deep drainage (mm) 138</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 27  Herbaceous transpiration (mm) 26 Woody plant transpiration (mm) 232</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 232  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 405 Runoff (mm) 11 Deep drainage (mm) 137</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 27  Herbaceous transpiration (mm) 26 Woody plant transpiration (mm) 233</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 233  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2</span>
 <span class="r-in"><span> </span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co">#Switch to 'Sperry' transpiration mode</span></span></span>
@@ -227,36 +234,36 @@ than those using the 'Granier' transpiration mode.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Call simulation function</span></span></span>
 <span class="r-in"><span><span class="va">G2</span> <span class="op">&lt;-</span><span class="fu">growth</span><span class="op">(</span><span class="va">x2</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant cohort biomass (g/m2): 7414.04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant water content (mm): 8.34165</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant cohort biomass (g/m2): 7417.58</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant water content (mm): 8.34849</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 286.862</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial snowpack content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Year 2001:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant biomass (g/m2): 7595.29</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant biomass (g/m2): 181.255</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance result (g/m2): 181.255</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant biomass (g/m2): 7598.49</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant biomass (g/m2): 180.903</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance result (g/m2): 180.903</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Structural balance (g/m2) 108 Labile balance (g/m2) 103</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Plant individual balance (g/m2) 211 Mortality loss (g/m2) 30</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 8.35934</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 271.202</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 8.36628</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 271.181</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): 0.0176939</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): 9.40856e-17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -15.6596</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -15.6596</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): 0.0177904</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -1.46065e-15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -15.6814</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -15.6814</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 7.10543e-15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 97 Net rainfall (mm) 365</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 405 Runoff (mm) 11 Deep drainage (mm) 159</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 24  Herbaceous transpiration (mm) 26 Woody plant transpiration (mm) 212</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 212  Plant water balance (mm) 0 Hydraulic redistribution (mm) 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 212  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Switch to 'Cochard' transpiration mode</span></span></span>
 <span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Cochard"</span><span class="op">)</span></span></span>
@@ -266,27 +273,27 @@ than those using the 'Granier' transpiration mode.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Call simulation function</span></span></span>
 <span class="r-in"><span><span class="va">G3</span> <span class="op">&lt;-</span><span class="fu">growth</span><span class="op">(</span><span class="va">x3</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant cohort biomass (g/m2): 7414.04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant water content (mm): 8.34165</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant cohort biomass (g/m2): 7417.58</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant water content (mm): 8.34849</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 286.862</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial snowpack content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  Year 2001:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant biomass (g/m2): 7552.67</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant biomass (g/m2): 138.631</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance result (g/m2): 138.631</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant biomass (g/m2): 7556.29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant biomass (g/m2): 138.702</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance result (g/m2): 138.702</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Plant biomass balance components:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Structural balance (g/m2) 68 Labile balance (g/m2) 100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Structural balance (g/m2) 69 Labile balance (g/m2) 100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Plant individual balance (g/m2) 169 Mortality loss (g/m2) 30</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 8.26153</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 276.351</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 8.26846</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 276.342</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.0801187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): 5.02546</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -10.5113</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -10.5113</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.0800295</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): 5.00806</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -10.5198</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -10.5198</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
