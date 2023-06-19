@@ -39,6 +39,8 @@ CharacterVector getWeatherDates(DataFrame meteo){
         dS[i] = d.format("%Y-%m-%d");
       }
       dateStrings = dS;
+    } else if(is<StringVector>(vector)) {
+      dateStrings = Rcpp::as<Rcpp::StringVector>(vector);
     }
   } else {
     dateStrings = meteo.attr("row.names"); 
