@@ -26,7 +26,7 @@ fordyn(
 
 \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsDefinition}}).}
 
-\item{meteo}{A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}).}
+\item{meteo}{A data frame with daily weather data series (see \code{\link{spwb}}).}
 
 \item{control}{A list with default control parameters (see \code{\link{defaultControl}}).}
 

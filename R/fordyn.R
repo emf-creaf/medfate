@@ -7,7 +7,7 @@
 #' @param forest An object of class \code{\link{forest}}. Alternatively, the output of a previous run, if continuing a previous simulation.
 #' @param soil An object of class \code{\link{soil}}.
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsDefinition}}).
-#' @param meteo A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}).
+#' @param meteo A data frame with daily weather data series (see \code{\link{spwb}}).
 #' @param control A list with default control parameters (see \code{\link{defaultControl}}).
 #' @param latitude Latitude (in degrees).
 #' @param elevation,slope,aspect Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
@@ -120,7 +120,11 @@ fordyn<-function(forest, soil, SpParams,
   control$verbose <- FALSE
   control$subdailyResults <- FALSE
   
-  dates <- as.Date(row.names(meteo))
+  if("dates" %in% names(meteo)) {
+    dates <- as.Date(meteo$dates)
+  } else {
+    dates <- as.Date(row.names(meteo))
+  }
   years <- as.numeric(format(dates, "%Y"))
   months <- as.numeric(format(dates, "%m"))
   yearsUnique <- unique(years)
