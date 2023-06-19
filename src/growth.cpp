@@ -1970,10 +1970,10 @@ List growth(List x, DataFrame meteo, double latitude,
   List subdailyRes(numDays);
   
   //EnergyBalance output variables
-  DataFrame DEB = defineEnergyBalanceDailyOutput(meteo);
-  DataFrame DT = defineTemperatureDailyOutput(meteo);
+  DataFrame DEB = defineEnergyBalanceDailyOutput(dateStrings);
+  DataFrame DT = defineTemperatureDailyOutput(dateStrings);
   NumericMatrix DLT;
-  if((transpirationMode=="Sperry") || (transpirationMode == "Cochard")) DLT =  defineTemperatureLayersDailyOutput(meteo, canopy);
+  if((transpirationMode=="Sperry") || (transpirationMode == "Cochard")) DLT =  defineTemperatureLayersDailyOutput(dateStrings, canopy);
   
   //Plant carbon output variables
   NumericMatrix LabileCarbonBalance(numDays, numCohorts);
@@ -2010,8 +2010,8 @@ List growth(List x, DataFrame meteo, double latitude,
   NumericMatrix StandCarbonBalance(numDays, 4);
   
   //Water balance output variables
-  DataFrame DWB = defineWaterBalanceDailyOutput(meteo, PET, transpirationMode);
-  DataFrame SWB = defineSoilWaterBalanceDailyOutput(meteo, soil, transpirationMode);
+  DataFrame DWB = defineWaterBalanceDailyOutput(dateStrings, PET, transpirationMode);
+  DataFrame SWB = defineSoilWaterBalanceDailyOutput(dateStrings, soil, transpirationMode);
   
   
   NumericVector LAI(numDays), LAIherb(numDays) , LAIlive(numDays), LAIexpanded(numDays), LAIdead(numDays);
@@ -2020,14 +2020,14 @@ List growth(List x, DataFrame meteo, double latitude,
   NumericVector LgroundSWR(numDays);
 
   //Plant water output variables
-  List sunlitDO = defineSunlitShadeLeavesDailyOutput(meteo, above);
-  List shadeDO = defineSunlitShadeLeavesDailyOutput(meteo, above);
-  List plantDWOL = definePlantWaterDailyOutput(meteo, above, soil, control);
+  List sunlitDO = defineSunlitShadeLeavesDailyOutput(dateStrings, above);
+  List shadeDO = defineSunlitShadeLeavesDailyOutput(dateStrings, above);
+  List plantDWOL = definePlantWaterDailyOutput(dateStrings, above, soil, control);
   NumericVector EplantCohTot(numCohorts, 0.0);
 
   //Fire hazard output variables
   DataFrame fireHazard;
-  if(control["fireHazardResults"]) fireHazard = defineFireHazardOutput(meteo);
+  if(control["fireHazardResults"]) fireHazard = defineFireHazardOutput(dateStrings);
   
   //Count years (times structural variables will be updated)
   int numYears = 0;

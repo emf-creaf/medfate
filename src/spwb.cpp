@@ -35,7 +35,8 @@ CharacterVector getWeatherDates(DataFrame meteo){
       DatetimeVector datetimeVector = Rcpp::as<Rcpp::DatetimeVector>(vector);
       CharacterVector dS(datetimeVector.size(), NA_STRING);
       for(int i=0;i< datetimeVector.size();i++) {
-        Datetime d = datetimeVector[i];
+        Datetime dt = datetimeVector[i];
+        Date d(dt.getYear(), dt.getMonth(), dt.getDay());
         dS[i] = d.format("%Y-%m-%d");
       }
       dateStrings = dS;
@@ -845,8 +846,7 @@ void checkspwbInput(List x,  String transpirationMode, String soilFunctions) {
   }
 }
 
-DataFrame defineWaterBalanceDailyOutput(DataFrame meteo, NumericVector PET, String transpirationMode) {
-  CharacterVector dateStrings = meteo.attr("row.names");
+DataFrame defineWaterBalanceDailyOutput(CharacterVector dateStrings, NumericVector PET, String transpirationMode) {
   int numDays = dateStrings.length();
   
   NumericVector Precipitation(numDays), Evapotranspiration(numDays);
@@ -863,11 +863,10 @@ DataFrame defineWaterBalanceDailyOutput(DataFrame meteo, NumericVector PET, Stri
                             _["SoilEvaporation"]=SoilEvaporation, _["HerbTranspiration"] = HerbTranspiration,
                             _["PlantExtraction"] = PlantExtraction, _["Transpiration"]=Transpiration, 
                             _["HydraulicRedistribution"] = HydraulicRedistribution);
-  DWB.attr("row.names") = meteo.attr("row.names") ;
+  DWB.attr("row.names") = dateStrings;
   return(DWB);
 }
-DataFrame defineSoilWaterBalanceDailyOutput(DataFrame meteo, List soil, String transpirationMode) {
-  CharacterVector dateStrings = meteo.attr("row.names");
+DataFrame defineSoilWaterBalanceDailyOutput(CharacterVector dateStrings, List soil, String transpirationMode) {
   int numDays = dateStrings.length();
   NumericVector W = soil["W"];
   int nlayers = W.length();
@@ -890,13 +889,12 @@ DataFrame defineSoilWaterBalanceDailyOutput(DataFrame meteo, List soil, String t
                                     _["PlantExt"]=Eplantdays,
                                     _["HydraulicInput"] = HydrIndays,
                                     _["psi"]=psidays); 
-  SWB.attr("row.names") = meteo.attr("row.names") ;
+  SWB.attr("row.names") = dateStrings;
 
   return(SWB);  
 }
 
-DataFrame defineEnergyBalanceDailyOutput(DataFrame meteo) {
-  CharacterVector dateStrings = meteo.attr("row.names");
+DataFrame defineEnergyBalanceDailyOutput(CharacterVector dateStrings) {
   int numDays = dateStrings.length();
   NumericVector SWRcan(numDays, NA_REAL);
   NumericVector LWRcan(numDays, NA_REAL);
@@ -913,11 +911,10 @@ DataFrame defineEnergyBalanceDailyOutput(DataFrame meteo) {
                                     _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["Ebalcan"] = Ebalcan, 
                                     _["Hcansoil"] = Hcansoil, _["SWRsoil"] = SWRsoil, _["LWRsoil"] = LWRsoil, 
                                     _["LEsoil"] = LEsoil_heat, _["Ebalsoil"] = Ebalsoil);  
-  DEB.attr("row.names") = meteo.attr("row.names") ;
+  DEB.attr("row.names") = dateStrings;
   return(DEB);
 }
-DataFrame defineTemperatureDailyOutput(DataFrame meteo) {
-  CharacterVector dateStrings = meteo.attr("row.names");
+DataFrame defineTemperatureDailyOutput(CharacterVector dateStrings) {
   int numDays = dateStrings.length();
   
   NumericVector Tatm_mean(numDays, NA_REAL);
@@ -932,19 +929,17 @@ DataFrame defineTemperatureDailyOutput(DataFrame meteo) {
   DataFrame DT = DataFrame::create(_["Tatm_mean"] = Tatm_mean, _["Tatm_min"] = Tatm_min, _["Tatm_max"] = Tatm_max,
                                    _["Tcan_mean"] = Tcan_mean, _["Tcan_min"] = Tcan_min, _["Tcan_max"] = Tcan_max,
                                      _["Tsoil_mean"] = Tsoil_mean, _["Tsoil_min"] = Tsoil_min, _["Tsoil_max"] = Tsoil_max);
-  DT.attr("row.names") = meteo.attr("row.names") ;
+  DT.attr("row.names") = dateStrings;
   return(DT);
 }
-NumericMatrix defineTemperatureLayersDailyOutput(DataFrame meteo, DataFrame canopy) {
-  CharacterVector dateStrings = meteo.attr("row.names");
+NumericMatrix defineTemperatureLayersDailyOutput(CharacterVector dateStrings, DataFrame canopy) {
   int numDays = dateStrings.length();
   int ncanlayers = canopy.nrow();
   NumericMatrix DLT(numDays, ncanlayers);
-  DLT.attr("dimnames") = List::create(meteo.attr("row.names"), seq(1,ncanlayers));
+  DLT.attr("dimnames") = List::create(dateStrings, seq(1,ncanlayers));
   return(DLT);
 }
-List defineSunlitShadeLeavesDailyOutput(DataFrame meteo, DataFrame above) {
-  CharacterVector dateStrings = meteo.attr("row.names");
+List defineSunlitShadeLeavesDailyOutput(CharacterVector dateStrings, DataFrame above) {
   int numDays = dateStrings.length();
   int numCohorts = above.nrow();
   NumericMatrix LeafPsiMin(numDays, numCohorts);
@@ -953,12 +948,12 @@ List defineSunlitShadeLeavesDailyOutput(DataFrame meteo, DataFrame above) {
   NumericMatrix LeafGSWMax(numDays, numCohorts);
   NumericMatrix TempMin(numDays, numCohorts);
   NumericMatrix TempMax(numDays, numCohorts);
-  LeafPsiMin.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafPsiMax.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafGSWMin.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafGSWMax.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  TempMin.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  TempMax.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  LeafPsiMin.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+  LeafPsiMax.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+  LeafGSWMin.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+  LeafGSWMax.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+  TempMin.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+  TempMax.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   List shade = List::create(Named("LeafPsiMin") = LeafPsiMin, 
                             Named("LeafPsiMax") = LeafPsiMax,
                             Named("TempMin") = TempMin, 
@@ -968,10 +963,9 @@ List defineSunlitShadeLeavesDailyOutput(DataFrame meteo, DataFrame above) {
   return(shade);
 }
 
-List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, List control) {
+List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, List soil, List control) {
   
   String transpirationMode = control["transpirationMode"];
-  CharacterVector dateStrings = meteo.attr("row.names");
   int numDays = dateStrings.length();
   NumericVector W = soil["W"];
   int nlayers = W.length();
@@ -985,18 +979,18 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
   NumericMatrix StemRWC(numDays, numCohorts), LeafRWC(numDays, numCohorts), LFMC(numDays, numCohorts);
   NumericMatrix PlantWaterBalance(numDays, numCohorts);
   
-  PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names"));
-  PlantStress.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  PlantTranspiration.attr("dimnames") = List::create(dateStrings, above.attr("row.names"));
+  PlantStress.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   
-  PlantLAI.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantLAIlive.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names"));
-  PlantStress.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  StemPLC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  StemRWC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafRWC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LFMC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantWaterBalance.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  PlantLAI.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+  PlantLAIlive.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+  PlantTranspiration.attr("dimnames") = List::create(dateStrings, above.attr("row.names"));
+  PlantStress.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+  StemPLC.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+  StemRWC.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+  LeafRWC.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+  LFMC.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+  PlantWaterBalance.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   
   List plants;
   if(transpirationMode=="Granier") {
@@ -1004,10 +998,10 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
     NumericMatrix PlantGrossPhotosynthesis(numDays, numCohorts);
     NumericMatrix PlantAbsSWRFraction(numDays, numCohorts);
     NumericMatrix PlantFPAR(numDays, numCohorts);
-    PlantFPAR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-    PlantAbsSWRFraction.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-    PlantGrossPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-    PlantPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+    PlantFPAR.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+    PlantAbsSWRFraction.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+    PlantGrossPhotosynthesis.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+    PlantPsi.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
     plants = List::create(Named("LAI") = PlantLAI,
                           Named("LAIlive") = PlantLAIlive,
                           Named("FPAR") = PlantFPAR,
@@ -1030,7 +1024,7 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
     List RhizoPsi(numCohorts);
     for(int c=0;c<numCohorts;c++) {
       NumericMatrix nm = NumericMatrix(numDays, nlayers);
-      nm.attr("dimnames") = List::create(meteo.attr("row.names"), seq(1,nlayers)) ;
+      nm.attr("dimnames") = List::create(dateStrings, seq(1,nlayers)) ;
       RhizoPsi[c] = nm;
     }
     RhizoPsi.attr("names") = above.attr("row.names");
@@ -1039,15 +1033,15 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
     NumericMatrix PlantGrossPhotosynthesis(numDays, numCohorts);
     NumericMatrix PlantAbsSWR(numDays, numCohorts);
     NumericMatrix PlantNetLWR(numDays, numCohorts);
-    dEdP.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-    LeafPsiMin.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-    LeafPsiMax.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-    StemPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-    RootPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-    PlantGrossPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-    PlantNetPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-    PlantAbsSWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-    PlantNetLWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+    dEdP.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+    LeafPsiMin.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+    LeafPsiMax.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+    StemPsi.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+    RootPsi.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+    PlantGrossPhotosynthesis.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+    PlantNetPhotosynthesis.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+    PlantAbsSWR.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+    PlantNetLWR.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
     
     plants = List::create(Named("LAI") = PlantLAI,
                           Named("LAIlive") = PlantLAIlive,
@@ -1072,8 +1066,7 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
   }
   return(plants);
 }
-DataFrame defineFireHazardOutput(DataFrame meteo){
-  CharacterVector dateStrings = meteo.attr("row.names");
+DataFrame defineFireHazardOutput(CharacterVector dateStrings){
   int numDays = dateStrings.length();
   
   NumericVector DFMC(numDays), CFMC_understory(numDays), CFMC_overstory(numDays);
@@ -1788,23 +1781,23 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   
   
   //Water balance output variables
-  DataFrame DWB = defineWaterBalanceDailyOutput(meteo, PET, transpirationMode);
-  DataFrame SWB = defineSoilWaterBalanceDailyOutput(meteo, soil, transpirationMode);
+  DataFrame DWB = defineWaterBalanceDailyOutput(dateStrings, PET, transpirationMode);
+  DataFrame SWB = defineSoilWaterBalanceDailyOutput(dateStrings, soil, transpirationMode);
   
   //EnergyBalance output variables
-  DataFrame DEB = defineEnergyBalanceDailyOutput(meteo);
-  DataFrame DT = defineTemperatureDailyOutput(meteo);
+  DataFrame DEB = defineEnergyBalanceDailyOutput(dateStrings);
+  DataFrame DT = defineTemperatureDailyOutput(dateStrings);
   NumericMatrix DLT;
-  if(transpirationMode!="Granier") DLT =  defineTemperatureLayersDailyOutput(meteo, canopy);
+  if(transpirationMode!="Granier") DLT =  defineTemperatureLayersDailyOutput(dateStrings, canopy);
   
   //Plant output variables
-  List sunlitDO = defineSunlitShadeLeavesDailyOutput(meteo, above);
-  List shadeDO = defineSunlitShadeLeavesDailyOutput(meteo, above);
-  List plantDWOL = definePlantWaterDailyOutput(meteo, above, soil, control);
+  List sunlitDO = defineSunlitShadeLeavesDailyOutput(dateStrings, above);
+  List shadeDO = defineSunlitShadeLeavesDailyOutput(dateStrings, above);
+  List plantDWOL = definePlantWaterDailyOutput(dateStrings, above, soil, control);
 
   //Fire hazard output variables
   DataFrame fireHazard;
-  if(control["fireHazardResults"]) fireHazard = defineFireHazardOutput(meteo);
+  if(control["fireHazardResults"]) fireHazard = defineFireHazardOutput(dateStrings);
 
   NumericVector initialSoilContent = water(soil, soilFunctions);
   NumericVector initialPlantContent = plantWaterContent(x);
@@ -1991,7 +1984,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   }
 
 
-  subdailyRes.attr("names") = meteo.attr("row.names") ;
+  subdailyRes.attr("names") = dateStrings ;
   
   NumericVector topo = NumericVector::create(elevation, slope, aspect);
   topo.attr("names") = CharacterVector::create("elevation", "slope", "aspect");
@@ -1999,7 +1992,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   DataFrame Stand = DataFrame::create(_["LAI"]=LAI, _["LAIherb"]=LAIherb, 
                                       _["LAIlive"]=LAIlive, _["LAIexpanded"] = LAIexpanded, _["LAIdead"] = LAIdead,  
                                       _["Cm"]=Cm, _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
-  Stand.attr("row.names") = meteo.attr("row.names");
+  Stand.attr("row.names") = dateStrings;
   
   List l;
   if(transpirationMode=="Granier") {
@@ -2189,10 +2182,10 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   NumericMatrix HydrIndays(numDays, nlayers);
   
   //EnergyBalance output variables
-  DataFrame DEB = defineEnergyBalanceDailyOutput(meteo);
-  DataFrame DT = defineTemperatureDailyOutput(meteo);
+  DataFrame DEB = defineEnergyBalanceDailyOutput(dateStrings);
+  DataFrame DT = defineTemperatureDailyOutput(dateStrings);
   NumericMatrix DLT;
-  if(transpirationMode=="Sperry") DLT =  defineTemperatureLayersDailyOutput(meteo, canopy);
+  if(transpirationMode=="Sperry") DLT =  defineTemperatureLayersDailyOutput(dateStrings, canopy);
   
   //Stand output variables
   NumericVector LAI(numDays),LAIherb(numDays), LAIlive(numDays),LAIexpanded(numDays),LAIdead(numDays);
@@ -2204,14 +2197,14 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   NumericMatrix Eplantdays(numDays, nlayers);
   
   //Plant output variables
-  List sunlitDO = defineSunlitShadeLeavesDailyOutput(meteo, above);
-  List shadeDO = defineSunlitShadeLeavesDailyOutput(meteo, above);
-  List plantDWOL = definePlantWaterDailyOutput(meteo, above, soil, control);
+  List sunlitDO = defineSunlitShadeLeavesDailyOutput(dateStrings, above);
+  List shadeDO = defineSunlitShadeLeavesDailyOutput(dateStrings, above);
+  List plantDWOL = definePlantWaterDailyOutput(dateStrings, above, soil, control);
   NumericVector EplantCohTot(numCohorts, 0.0);
 
   //Fire hazard output variables
   DataFrame fireHazard;
-  if(control["fireHazardResults"]) fireHazard = defineFireHazardOutput(meteo);
+  if(control["fireHazardResults"]) fireHazard = defineFireHazardOutput(dateStrings);
   
   bool error_occurence = false;
   if(verbose) Rcout << "Performing daily simulations ";
@@ -2420,16 +2413,16 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
                             _["HydraulicInput"] = HydrIndays,
                             _["psi"]=psidays); 
   }
-  SWB.attr("row.names") = meteo.attr("row.names") ;
+  SWB.attr("row.names") = dateStrings;
   DataFrame Stand = DataFrame::create(_["LAI"]=LAI,_["LAIherb"]=LAIherb, 
                                       _["LAIlive"]=LAIlive,_["LAIexpanded"]=LAIexpanded, _["LAIdead"] = LAIdead);
-  Stand.attr("row.names") = meteo.attr("row.names") ;
+  Stand.attr("row.names") = dateStrings;
   
   DataFrame DWB = DataFrame::create(_["PlantExtraction"] = PlantExtraction, _["Transpiration"]=Transpiration, 
                                     _["HydraulicRedistribution"] = HydraulicRedistribution);
-  DWB.attr("row.names") = meteo.attr("row.names");
+  DWB.attr("row.names") = dateStrings;
   
-  subdailyRes.attr("names") = meteo.attr("row.names");
+  subdailyRes.attr("names") = dateStrings;
   
   NumericVector topo = NumericVector::create(elevation, slope, aspect);
   topo.attr("names") = CharacterVector::create("elevation", "slope", "aspect");
