@@ -15,6 +15,7 @@ articles:
     - starts_with("runmodels/Advanced")
     - starts_with("runmodels/ForestGrowth")
     - starts_with("runmodels/ForestDynamics")
+    - starts_with("runmodels/Sureau")
 - title: Model analysis and parametrization
   contents:
     - starts_with("modelanalysis/Sensitivity")
@@ -52,6 +53,7 @@ reference:
   contents:
   - starts_with("stand_")
   - starts_with("plant_")
+  - starts_with("herb_")
   - starts_with("species_")
   - starts_with("vprofile_")
   - starts_with("plot.forest")
@@ -161,8 +163,8 @@ reference:
   contents:
   - starts_with("moisture_")
   
-- title: Fuels and fire behaviour
-  desc:  Fuel characteristics and fire behaviour
+- title: Wildfire
+  desc:  Fuel characteristics, fire behaviour and fire severity
   contents:
   - starts_with("fire_")
   - starts_with("fuel_")

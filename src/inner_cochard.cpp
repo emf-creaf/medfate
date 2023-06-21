@@ -338,6 +338,7 @@ List initCochardNetwork(int c, NumericVector LAIphe,
 }
 
 // Initializes network for all plant cohorts in x
+// [[Rcpp::export("initCochardNetworks")]]
 List initCochardNetworks(List x) {
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
@@ -364,6 +365,7 @@ List initCochardNetworks(List x) {
                                      VCroot_kmax(c,_), VGrhizo_kmax(c,_),
                                      psiSoil, VG_n, VG_alpha);
   }
+  networks.attr("names") = above.attr("row.names");
   return(networks);
 }
 
@@ -423,6 +425,7 @@ void calculateRhizoPsi(int c,
 
 // dt - Smallest time step (seconds)
 // opt - Option flag vector
+// [[Rcpp::export("semi_implicit_integration")]]
 void semi_implicit_integration(List network, double dt, NumericVector opt) {
   
   List params = as<Rcpp::List>(network["params"]);
@@ -596,7 +599,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
-  NumericVector N = Rcpp::as<Rcpp::NumericVector>(above["N"]);
+  NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
   
   List soil = x["soil"];
   NumericVector Ws = soil["W"];
@@ -993,7 +996,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
         }
       }
     }
-    if(N[c]>0.0) {
+    if(LAIlive[c]>0.0) {
       //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
       PLC(c,n) = StemPLCVEC[c];
       StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]);

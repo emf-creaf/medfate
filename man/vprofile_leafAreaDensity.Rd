@@ -16,6 +16,7 @@ vprofile_leafAreaDensity(
   gdd = NA,
   byCohorts = FALSE,
   bySpecies = FALSE,
+  includeHerbs = FALSE,
   draw = TRUE,
   xlim = NULL
 )
@@ -43,6 +44,7 @@ vprofile_PARExtinction(
   SpParams,
   z = NULL,
   gdd = NA,
+  includeHerbs = FALSE,
   draw = TRUE,
   xlim = c(0, 100)
 )
@@ -52,6 +54,7 @@ vprofile_SWRExtinction(
   SpParams,
   z = NULL,
   gdd = NA,
+  includeHerbs = FALSE,
   draw = TRUE,
   xlim = c(0, 100)
 )
@@ -65,6 +68,7 @@ vprofile_windExtinction(
   target = "windspeed",
   z = NULL,
   gdd = NA,
+  includeHerbs = FALSE,
   draw = TRUE,
   xlim = NULL
 )
@@ -81,6 +85,8 @@ vprofile_windExtinction(
 \item{byCohorts}{Separate profiles for each cohort.}
 
 \item{bySpecies}{Aggregate cohort profiles by species.}
+
+\item{includeHerbs}{Include herbaceous layer in the profile.}
 
 \item{draw}{Logical flag to indicate that a plot is desired.}
 

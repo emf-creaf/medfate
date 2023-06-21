@@ -9,7 +9,7 @@
   
   #Calculate FCCS without FMC
   fccs = fuel_FCCS(forest, SpParams)
-  cohLoading = plant_fuel(forest, SpParams)
+  cohLoading = plant_fuelLoading(forest, SpParams)
   cohHeight = plant_height(forest, SpParams)
   cohHeight[is.na(cohHeight)] = 0
   cohCR = plant_crownRatio(forest,SpParams)

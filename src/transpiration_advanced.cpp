@@ -37,7 +37,7 @@ const double Cp_Jmol = 29.37152; // J * mol^-1 * ºC^-1
 List transpirationAdvanced(List x, NumericVector meteovec, 
                   double latitude, double elevation, double slope, double aspect, 
                   double solarConstant, double delta,
-                  double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
+                  double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0, double herbTranspiration = 0.0,
                   bool verbose = false, int stepFunctions = NA_INTEGER, 
                   bool modifyInput = true) {
   //Control parameters
@@ -832,6 +832,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     //Canopy evaporation (mm) in the current step
     double canEvapStep = canopyEvaporation*(abs_SWR_can[n]/sum(abs_SWR_can));
 
+    //Herbaceous transpiration (mm) in the current step
+    double herbTranspStep = herbTranspiration*(abs_SWR_can[n]/sum(abs_SWR_can));
+    
     //Canopy convective heat exchange
     double RAcan = aerodynamicResistance(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
     Hcan_heat[n] = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tcan[n]-Tatm[n]))/RAcan;
@@ -842,7 +845,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       double RAsoil = aerodynamicResistance(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
       Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/RAsoil;
       //Latent heat (evaporation + transpiration)
-      double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tcan[n])*(sum(Einst(_,n)) + canEvapStep)/tstep;
+      double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tcan[n])*(sum(Einst(_,n)) + canEvapStep + herbTranspStep)/tstep;
       LEcan_heat[n] = LEwat; 
       //Canopy temperature changes
       Ebal[n] = abs_SWR_can[n]+ net_LWR_can[n] - LEcan_heat[n] - Hcan_heat[n] - Hcansoil[n];
@@ -890,18 +893,21 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         double ElayerInst = 0.001*0.01802*sum(LAIme(i,_)*(E_SL(_,n)*fsunlit[i] + E_SH(_,n)*(1.0-fsunlit[i])));
         //Assumes Layers contribute to evaporation proportionally to their LAI fraction
         double layerEvapInst = (canEvapStep/tstep)*(LAIpe[i]/LAIcellexpanded);
+        //Instantaneous herbaceous transpiration (for bottom layer)
+        double herbTranspInst = 0.0;
+        if(i==0) herbTranspInst = (herbTranspStep/tstep);
         //Estimate instantaneous mgCO2/m2 absorption for the layer, taking into account the proportion of sunlit and shade leaves of each cohort
         //from micro.molCO2/m2/s to mgCO2/m2/s
         double Anlayer =(1e-3)*44.01*sum(LAIme(i,_)*(An_SL(_,n)*fsunlit[i] + An_SH(_,n)*(1.0-fsunlit[i])));
         // 1000.0*(44.01/12.0)*sum(Aninst(_,n)*pLayer); 
-        double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tair[i])*(ElayerInst + layerEvapInst);
+        double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tair[i])*(ElayerInst + layerEvapInst+ herbTranspInst);
         LElayer[i] = LEwat; //Energy spent in vaporisation
         LEcan_heat[n] = LElayer[i];
         // layerThermalCapacity[i] = (0.5*(0.8*LAIcelllive + 1.2*LAIcell) + LAIcelldead)*thermalCapacityLAI/((double) ncanlayers);
         layerThermalCapacity[i] =  (0.5*(0.8*LAIpx[i] + 1.2*LAIpe[i]) + LAIpd[i])*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
         
         moistureLayer[i] = 0.622*(VPair[i]/Patm)*rho[i]; //kg water vapour/m3
-        moistureET[i] = (ElayerInst + layerEvapInst)/(deltaZ); //kg water vapour /m3/s
+        moistureET[i] = (ElayerInst + layerEvapInst + herbTranspInst)/(deltaZ); //kg water vapour /m3/s
         
         CO2Layer[i] = 0.409*Cair[i]*44.01; //mg/m3
         CO2An[i] = -1.0*Anlayer/(deltaZ); //mg/m3/s
@@ -1083,14 +1089,16 @@ List transpirationAdvanced(List x, NumericVector meteovec,
 //' @rdname transp_modes
 //' 
 //' @param canopyEvaporation Canopy evaporation (from interception) for \code{day} (mm).
-//' @param soilEvaporation Bare soil evaporation for \code{day} (mm).
 //' @param snowMelt Snow melt values  for \code{day} (mm).
+//' @param soilEvaporation Bare soil evaporation for \code{day} (mm).
+//' @param herbTranspiration Transpiration of herbaceous plants for \code{day} (mm).
 //' @param stepFunctions An integer to indicate a simulation step for which photosynthesis and profit maximization functions are desired.
+//' 
 //' 
 // [[Rcpp::export("transp_transpirationSperry")]]
 List transpirationSperry(List x, DataFrame meteo, int day,
                         double latitude, double elevation, double slope, double aspect,
-                        double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
+                        double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0, double herbTranspiration = 0.0,
                         int stepFunctions = NA_INTEGER, 
                         bool modifyInput = true) {
   List control = x["control"];
@@ -1156,7 +1164,7 @@ List transpirationSperry(List x, DataFrame meteo, int day,
   return(transpirationAdvanced(x, meteovec,
                      latitude, elevation, slope, aspect,
                      solarConstant, delta,
-                     canopyEvaporation, snowMelt, soilEvaporation,
+                     canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration,
                      false, stepFunctions, 
                      modifyInput));
 } 
@@ -1165,7 +1173,7 @@ List transpirationSperry(List x, DataFrame meteo, int day,
 // [[Rcpp::export("transp_transpirationCochard")]]
 List transpirationCochard(List x, DataFrame meteo, int day,
                          double latitude, double elevation, double slope, double aspect,
-                         double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
+                         double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0, double herbTranspiration = 0.0,
                          bool modifyInput = true) {
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
@@ -1229,7 +1237,7 @@ List transpirationCochard(List x, DataFrame meteo, int day,
   return(transpirationAdvanced(x, meteovec,
                              latitude, elevation, slope, aspect,
                              solarConstant, delta,
-                             canopyEvaporation, snowMelt, soilEvaporation,
+                             canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration,
                              false, NA_INTEGER, 
                              modifyInput));
 } 

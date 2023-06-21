@@ -104,30 +104,32 @@
 #'       \item{\code{mortalityBaselineRate [= 0.0015]}: Default deterministic proportion or probability specifying the baseline reduction of cohort's density occurring in a year (for \code{mortalityMode = "density/deterministic" or "density/stochastic").}}
 #'       \item{\code{mortalityRelativeSugarThreshold [= 0.3]}: Threshold of stem sugar concentration, in relation to the equilibrium sugar concentration, resulting in an increased mortality rate/probability whenever levels are below.}
 #'       \item{\code{mortalityRWCThreshold [= 0.3]}: Threshold of stem relative water content resulting in increased mortality rate/probability whenever levels are below.}
+#'       \item{\code{recrTreeDBH [= 1]}: Default DBH (cm) for recruited trees  (when species parameter \code{RecrTreeDBH} is missing).}
+#'       \item{\code{recrTreeDensity [= 1000]}: Default density (ind·ha-1) for recruited trees  (when species parameter \code{RecrTreeDensity} is missing).}
+#'       \item{\code{ingrowthTreeDBH [= 7.5]}: Default DBH (cm) for ingrowth trees  (when species parameter \code{RecrTreeDBH} is missing).}
+#'       \item{\code{ingrowthTreeDensity [= 127]}: Default density (ind·ha-1) for ingrowth trees  (when species parameter \code{RecrTreeDensity} is missing).}
 #'    }
 #'   \bold{Forest dynamics} (function \code{\link{fordyn}}):
 #'    \itemize{
-#'      \item{\code{allowRecruitment [= TRUE]}: Boolean flag to indicate that recruitment is allowed.}
-#'      \item{\code{recruitmentMode [= "stochastic"]}: String describing how recruitment is applied. Current accepted values are "deterministic" or "stochastic".}
+#'      \item{\code{allowRecruitment [= TRUE]}: Boolean flag to indicate that recruitment from seeds is allowed.}
+#'      \item{\code{recruitmentMode [= "stochastic"]}: String describing how recruitment from seeds is applied. Current accepted values are "deterministic" or "stochastic".}
 #'      \item{\code{allowResprouting [= TRUE]}: Boolean flag to indicate that resprouting is allowed.}
 #'      \item{\code{removeEmptyCohorts [= TRUE]}: Boolean flag to indicate the removal of cohorts whose density is too low.}
 #'      \item{\code{minimumCohortDensity [= 1]}: Threshold of density resulting in cohort removal.}
 #'      \item{\code{seedRain [= NULL]}: Vector of species codes whose seed rain is to be simulated. If \code{NULL} the species identity of seed rain is taken from species currently present in the forest stand and with minimum size (see below).}
 #'      \item{\code{seedProductionTreeHeight [= 300]}: Default minimum tree height for producing seeds (when species parameter \code{SeedProductionHeight} is missing).}
 #'      \item{\code{seedProductionShrubHeight [= 30]}: Default minimum shrub height for producing seeds (when species parameter \code{SeedProductionHeight} is missing).}
-#'      \item{\code{probRecr [= 0.05]}: Default annual probability of recruitment (when species parameter \code{ProbRecr} is missing).}
-#'      \item{\code{minTempRecr [= 0]}: Default threshold of minimum average temperature of the coldest month necessary for recruiting (when species parameter \code{MinTempRecr} is missing).} 
-#'      \item{\code{minMoistureRecr [= 0.3]}: Default threshold of minimum moisture index (annual precipitation over annual ETP) necessary for recruiting (when species parameter \code{MinMoistureRecr} is missing).} 
+#'      \item{\code{probRecr [= 0.05]}: Default annual probability of seed-recruitment (when species parameter \code{ProbRecr} is missing).}
+#'      \item{\code{minTempRecr [= 0]}: Default threshold of minimum average temperature of the coldest month necessary for recruiting from seeds (when species parameter \code{MinTempRecr} is missing).} 
+#'      \item{\code{minMoistureRecr [= 0.3]}: Default threshold of minimum moisture index (annual precipitation over annual ETP) necessary for seed-recruiting (when species parameter \code{MinMoistureRecr} is missing).} 
 #'      \item{\code{minFPARRecr [= 10]}: Default threshold of minimum fraction of PAR (in \%)  reaching the ground necessary for recruiting (when species parameter \code{MinFPARRecr} is missing).} 
-#'      \item{\code{recrTreeDBH [= 7.5]}: Default DBH (cm) for recruited trees  (when species parameter \code{RecrTreeDBH} is missing).}
-#'      \item{\code{recrTreeDensity [= 127]}: Default density (ind·ha-1) for recruited trees  (when species parameter \code{RecrTreeDensity} is missing).}
 #'      \item{\code{recrTreeHeight [= 620]}: Default height (cm) for recruited trees  (when species parameter \code{RecrTreeHeight} is missing).}
-#'      \item{\code{recrShrubCover [= 1]}: Default cover (\%) for recruited shrubs  (when species parameter \code{RecrShrubCover} is missing).}
+#'      \item{\code{recrShrubCover [= 1]}: Default cover (\%) for shrubs recruited from seed  (when species parameter \code{RecrShrubCover} is missing).}
 #'      \item{\code{recrShrubHeight [= 25]}: Default height (cm) for recruited shrubs  (when species parameter \code{RecrShrubHeight} is missing).}
-#'      \item{\code{recrTreeZ50 [= 100]}: Default value for Z50 (mm) in recruited trees  (when species parameter \code{RecrZ50} is missing).}
-#'      \item{\code{recrShrubZ50 [= 50]}: Default value for Z50 (mm) in recruited shrubs  (when species parameter \code{RecrZ50} is missing).}
-#'      \item{\code{recrTreeZ95 [= 1000]}: Default value for Z95 (mm) in recruited trees  (when species parameter \code{RecrZ50} is missing).}
-#'      \item{\code{recrShrubZ50 [= 500]}: Default value for Z95 (mm) in recruited shrubs  (when species parameter \code{RecrZ50} is missing).}
+#'      \item{\code{recrTreeZ50 [= 100]}: Default value for Z50 (mm) in seed-recruited trees  (when species parameter \code{RecrZ50} is missing).}
+#'      \item{\code{recrShrubZ50 [= 50]}: Default value for Z50 (mm) in seed-recruited shrubs  (when species parameter \code{RecrZ50} is missing).}
+#'      \item{\code{recrTreeZ95 [= 1000]}: Default value for Z95 (mm) in seed-recruited trees  (when species parameter \code{RecrZ50} is missing).}
+#'      \item{\code{recrShrubZ50 [= 500]}: Default value for Z95 (mm) in seed-recruited shrubs  (when species parameter \code{RecrZ50} is missing).}
 #'   }
 #' }
 #' 
@@ -210,6 +212,10 @@ defaultControl<-function(transpirationMode = "Granier") {
     mortalityBaselineRate = 0.0015,
     mortalityRelativeSugarThreshold = 0.3,
     mortalityRWCThreshold = 0.3,
+    recrTreeDBH = 1,
+    recrTreeDensity = 1000,
+    ingrowthTreeDBH = 7.5,
+    ingrowthTreeDensity = 127,
     
     #dynamics
     allowRecruitment = TRUE,
@@ -224,8 +230,6 @@ defaultControl<-function(transpirationMode = "Granier") {
     minTempRecr	= 0,
     minMoistureRecr	= 0.3,
     minFPARRecr = 10,
-    recrTreeDBH = 7.5,
-    recrTreeDensity = 127,
     recrTreeHeight = 620,
     recrShrubCover = 1,
     recrShrubHeight = 25,

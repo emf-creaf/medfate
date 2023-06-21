@@ -11,6 +11,7 @@
   type = "LeafAreaDensity",
   byCohorts = FALSE,
   bySpecies = FALSE,
+  includeHerbs = FALSE,
   ...
 )
 
@@ -26,6 +27,8 @@
 \item{byCohorts}{A logical flag to separate profiles for each cohort.}
 
 \item{bySpecies}{A logical flag to aggregate results by species.}
+
+\item{includeHerbs}{A logical flag to include herbaceous layer in the profile.}
 
 \item{\dots}{Additional parameters to vertical profiles}
 }

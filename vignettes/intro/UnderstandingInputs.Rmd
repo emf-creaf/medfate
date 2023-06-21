@@ -50,26 +50,46 @@ data(exampleforestMED)
 exampleforestMED
 ```
 
-Trees are expected to be primarily described in terms of species, diameter (DBH; cm) and height (cm), whereas shrubs are described in terms of species, percent cover (%) and mean height (cm). Root distribution has to be specified for both growth forms, in terms of the depths (mm) corresponding to 50% and 95% of cumulative fine root distribution. Functions are provided in package [medfateutils](https://emf-creaf.github.io/medfateutils/) to map variables in user data frames into tables `treeData` and `shrubData`.
+Trees are expected to be primarily described in terms of species, diameter (DBH; cm) and height (cm), whereas shrubs are described in terms of species, percent cover (%) and mean height (cm). Root distribution has to be specified for both growth forms, in terms of the depths (mm) corresponding to 50% and 95% of cumulative fine root distribution. Functions are provided in package [medfateutils](https://emf-creaf.github.io/medfateutils/) to map variables in user data frames into tables `treeData` and `shrubData`. Information about the herb layer may be either absent or included in an aggregated way (i.e. without distinguishing cohorts).
+
+While the former example illustrates the standard structure of a `forest` object, users may use an alternative description, based on leaf area index and crown ratio of woody cohorts and the herb layer:
+
+```{r}
+data(exampleforestMED2)
+exampleforestMED2
+```
+
+This alternative `forest` form is suitable for water balance simulations, but does not allow simulating forest dynamics.
 
 ### Aboveground and belowground data
 
-We recommend users to define `forest` objects as starting point for simulations with `medfate`. 
-However, simulation functions in `medfate` allow starting in a more general way using two data frames, one with **aboveground** information (i.e. the leave area and size of plants) and the other with **belowground** information (i.e. root distribution). The aboveground data frame does not distinguish between trees and shrubs. It includes, for each plant cohort to be considered in rows, its *species identity*, *height* and *leaf area index* (LAI). While users can build their input data themselves, we use function `forest2aboveground()` on the object `exampleforestMED` to show how should the data look like:
+We can use some functions to inspect how above-ground and below-ground information is represented in `medfate`. 
+
+For example, we can use function `forest2aboveground()` on the object `exampleforestMED` to show how medfate completes above-ground information:
 ```{r}
 above = forest2aboveground(exampleforestMED, SpParamsMED)
 above
 ```
-Note that the call to `forest2aboveground()` included species parameters, because species-specific values are needed to calculate leaf area from tree diameters or shrub cover. Columns `N`, `DBH` and `Cover` are required for simulating growth, but not for soil water balance, which only requires columns `SP`, `H` (in cm), `CR` (i.e. the crown ratio), `LAI_live`, `LAI_expanded` and `LAI_dead`. Here plant cohorts are given unique codes that tell us whether they correspond to trees or shrubs, but the user can use other row identifiers as long as they are unique. In practice, the user only needs to worry to calculate the values for `LAI_live`. `LAI_live` and `LAI_expanded` can contain the same LAI values, and `LAI_dead` is normally zero. This is so because models update `LAI_expanded` and `LAI_dead` according to the leaf phenology of species.
+Note that the call to `forest2aboveground()` included the species parameter table, because species-specific allometric coefficients are needed to calculate leaf area from tree size or shrub percent cover and height. Moreover, note that the plant cohorts were given unique codes that tell us whether they correspond to trees ('T') or shrubs ('S'). 
+
+Columns `N`, `DBH` and `Cover` describe forest structure and are required for simulating growth, but not for soil water balance, which only requires columns `SP`, `H` (in cm), `CR` (i.e. the crown ratio), `LAI_live`, `LAI_expanded` and `LAI_dead`. Therefore, one could use alternative forest description as starting point, i.e.:
+```{r}
+above2 = forest2aboveground(exampleforestMED2, SpParamsMED)
+above2
+```
+
+Of course, the resulting data frame has missing values, whereas the other values are directly copied from `forest`.
 
 Aboveground leaf area distribution (with or without distinguishing among cohorts) can be examined by calling function `vprofile_leafAreaDensity()`:
 
 ```{r, fig = TRUE, fig.width= 4, fig.height=3, fig.align= 'center', echo=TRUE}
-vprofile_leafAreaDensity(above, byCohorts = F)
+vprofile_leafAreaDensity(exampleforestMED, SpParamsMED, byCohorts = F)
 ```
 ```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE}
-vprofile_leafAreaDensity(above, byCohorts = T)
+vprofile_leafAreaDensity(exampleforestMED, SpParamsMED, byCohorts = T)
 ```
+
+### Belowground data
 
 Regarding **belowground** information, we need vectors with depths corresponding to 50% and 95% of fine roots, which we simply concatenate from our forest data:
 ```{r}
@@ -109,7 +129,7 @@ In addition to the physical soil description, this object contains soil paramete
 ```{r}
 names(examplesoil)
 ```
-For example, `macro` specifies the macroporosity of each layer; `Gsoil` and `Ksoil` are parameters needed to model the process of water infiltration into the soil. The meaning of all elements in the soil object can be found in the help page for function `soil()`.
+For example, `macro` specifies the macroporosity of each layer; `Gsoil` and `Ksoil` are parameters needed to model the process of evaporation from the bare soil. The meaning of all elements in the soil object can be found in the help page for function `soil()`.
 
 At any time, one can show the characteristics and status of the soil object using its `print` function:
 ```{r}
@@ -165,6 +185,6 @@ Control parameters should normally be left to their default value until their ef
 
 ## Input objects for simulation functions
 
-Simulation functions `spwb()` and `growth()` (and similar functions) require first combining forest, soil, species-parameter and simulation control inputs into a single input object (of class `spwbInput` or `growthInput`) that is then used as input to the corresponding simulation function along with weather data. The combination of vegentation, soil and control inputs is done via functions  `forest2spwbInput()` and `forest2growthInput()`. While it complicates the code, having this additional step is handy because cohort-level parameters and state variables initialized can then be modified by the user (or an automated calibration algorithm) before calling the actual simulation functions. The input objects for functions `spwb()` and `growth()` are presented in more detail in articles [*Basic water balance*](https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html) and [*Forest growth*](https://emf-creaf.github.io/medfate/articles/runmodels/ForestGrowth.html), respectively.
+Simulation functions `spwb()` and `growth()` (and similar functions) require first combining forest, soil, species-parameter and simulation control inputs into a single input object (of class `spwbInput` or `growthInput`) that is then used as input to the corresponding simulation function along with weather data. The combination of vegetation, soil and control inputs is done via functions  `forest2spwbInput()` and `forest2growthInput()`. While it complicates the code, having this additional step is handy because cohort-level parameters and state variables initialized can then be modified by the user (or an automated calibration algorithm) before calling the actual simulation functions. The input objects for functions `spwb()` and `growth()` are presented in more detail in articles [*Basic water balance*](https://emf-creaf.github.io/medfate/articles/runmodels/BasicWaterBalance.html) and [*Forest growth*](https://emf-creaf.github.io/medfate/articles/runmodels/ForestGrowth.html), respectively.
 
 Function `fordyn()` is different from the other two simulation functions, in the sense that the user enters forest, soil, species-parameter and simulation control inputs directly into the simulation function (in fact, `fordyn()` internally calls `forest2growthInput()` to initialize the input object to function `growth()`).

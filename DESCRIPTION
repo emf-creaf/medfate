@@ -1,8 +1,8 @@
 Package: medfate
 Type: Package
 Title: Mediterranean Forest Simulation
-Version: 3.0.0
-Date: 2023-03-24
+Version: 3.1.1
+Date: 2023-06-13
 Authors@R: c(
 	person('Miquel', 'De Cáceres', role=c('aut','cre', 'cph'),
 	email='miquelcaceres@gmail.com', comment = c(ORCID = "0000-0001-7132-2080")),
@@ -23,7 +23,7 @@ License: GPL (>= 2) | LGPL (>= 3)
 URL: https://emf-creaf.github.io/medfate/
 LazyLoad: yes
 Depends: R (>= 3.5.0)
-Imports: ggplot2 (>= 3.0.0), meteoland (>= 0.8.1), Rcpp (>= 1.0.6), shiny
+Imports: ggplot2 (>= 3.0.0), meteoland (>= 2.0.0), Rcpp (>= 1.0.6), shiny
 Suggests: 
     testthat (>= 3.0.0),
     knitr,

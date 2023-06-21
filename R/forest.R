@@ -2,7 +2,7 @@
 #' 
 #' Description of a forest stand
 #' 
-#' @param object An object of class \code{forest} has the following structure:
+#' @param object An object of class \code{forest} has the following structure (see details):
 #' \itemize{
 #'   \item{\code{treeData}: A data frame of tree cohorts (in rows) and the following columns:
 #'       \itemize{
@@ -35,6 +35,22 @@
 #' 
 #' @details Function \code{summary.forest} can be used to summarize a \code{forest} object in the console. 
 #' Function \code{emptyforest} creates an empty \code{forest} object.
+#' 
+#' The structure presented above for \code{forest} objects corresponds to the required data elements. 
+#' A \code{forest} object can contain additional information when this is available. Data frames \code{treeData} 
+#' and \code{shrubData} can contain additional columns:
+#' \itemize{
+#'   \item{\code{LAI}: Leaf area index (m2/m2)}
+#'   \item{\code{FoliarBiomass}: Standing dry biomass of leaves (kg/m2)}
+#'   \item{\code{FuelLoading}: Fine fuel loading (kg/m2)}
+#'   \item{\code{CrownRatio}: The ratio between crown length and total height (between 0 and 1)}
+#' }
+#' Similarly, one can define \code{forest} list elements \code{herbLAI}, \code{herbFoliarBiomass} or \code{herbFuelLoading}.
+#' All these values are used to override allometry-based estimates of those variables when initializing
+#' inputs for functions \code{\link{spwb}} or \code{\link{spwb_day}}. Note that leaf area index, foliar biomass and
+#' fuel loading are related entities, and they are treated as such in medfate. Therefore, users are expected to supply 
+#' one or the other, and not all of them at the same time.
+#' 
 #' 
 #' @return Function \code{summary.forest} returns a list with several structural attributes, such as the basal area and LAI of the forest. 
 #' Function \code{emptyforest} returns an empty \code{forest} object.
@@ -78,6 +94,10 @@ emptyforest <- function(ntree = 0, nshrub = 0) {
 #' @rdname forest
 summary.forest<-function(object, SpParams, ...) {
 
+  # Checks
+  if(length(object$herbCover)!=1) object$herbCover = NA
+  if(length(object$herbHeight)!=1) object$herbHeight = NA
+  
   ntree <- nrow(object$treeData)
   nshrub <- nrow(object$shrubData)
   
@@ -89,10 +109,14 @@ summary.forest<-function(object, SpParams, ...) {
   coh_N <- plant_density(object, SpParams)
   coh_cov <- plant_cover(object, SpParams)
   coh_lai <- plant_LAI(object, SpParams)
-  coh_fuel <- plant_fuel(object, SpParams)
+  coh_fuel <- plant_fuelLoading(object, SpParams)
+  
+  coh_ba <- plant_basalArea(object, SpParams)
   
   s <- list()
-  s["BA"] <- stand_basalArea(object)
+  s["Tree_BA"] <- sum(coh_ba[selTree], na.rm=TRUE)
+  s["Adult_BA"] <- sum(coh_ba[selAdult], na.rm=TRUE)
+  s["Sapling_BA"] <- sum(coh_ba[selSapling], na.rm=TRUE)
   
   s["Tree_density"] <- sum(coh_N[selTree], na.rm=TRUE)
   s["Adult_density"] <- sum(coh_N[selAdult], na.rm=TRUE)
@@ -104,18 +128,23 @@ summary.forest<-function(object, SpParams, ...) {
   s["Adult_cover"] <- pmin(100,sum(coh_cov[selAdult], na.rm=TRUE))
   s["Sapling_cover"] <- pmin(100,sum(coh_cov[selSapling], na.rm=TRUE))
   s["Shrub_cover"] <- pmin(100,sum(coh_cov[selShrub], na.rm=TRUE))
+  hc <- object$herbCover
+  if(is.na(hc)) hc <- 0
+  s["Herb_cover"] <- hc
 
   s["Tree_lai"] <- sum(coh_lai[selTree], na.rm=TRUE)
   s["Adult_lai"] <- sum(coh_lai[selAdult], na.rm=TRUE)
   s["Sapling_lai"] <- sum(coh_lai[selSapling], na.rm=TRUE)
   s["Shrub_lai"] <- sum(coh_lai[selShrub], na.rm=TRUE)
-
+  s["Herb_lai"] <- herb_LAI(object)
+  s["Total_lai"] <- s[["Tree_lai"]] + s[["Shrub_lai"]] + s[["Herb_lai"]]
+  
   s["Tree_fuel"] <- sum(coh_fuel[selTree], na.rm=TRUE)
   s["Adult_fuel"] <- sum(coh_fuel[selAdult], na.rm=TRUE)
   s["Sapling_fuel"] <- sum(coh_fuel[selSapling], na.rm=TRUE)
   s["Shrub_fuel"] <- sum(coh_fuel[selShrub], na.rm=TRUE)
-  
-  s["Phytovolume"] <- sum(plant_phytovolume(object, SpParams),na.rm=TRUE)
+  s["Herb_fuel"] <- herb_fuelLoading(object)
+  s["Total_fuel"] <- s[["Tree_fuel"]] + s[["Shrub_fuel"]] + s[["Herb_fuel"]]
   
   s["PARground"] <- light_PARground(object, SpParams)
   s["SWRground"] <- light_SWRground(object, SpParams)
@@ -125,22 +154,27 @@ summary.forest<-function(object, SpParams, ...) {
 
 #' @rdname forest
 print.summary.forest<-function(x, digits=getOption("digits"),...) {
-  cat(paste("Tree BA (m2/ha):", round(x[["BA"]],digits),"\n"))
+  cat(paste("Tree BA (m2/ha):", round(x[["Tree_BA"]],digits)," adult trees:", round(x[["Adult_BA"]], digits), 
+            " saplings:", round(x[["Sapling_BA"]], digits),"\n"))
   cat(paste("Density (ind/ha) adult trees:", round(x[["Adult_density"]], digits), 
             " saplings:", round(x[["Sapling_density"]], digits), 
             " shrubs (estimated):", round(x[["Shrub_density"]],digits),"\n"))
   cat(paste("Cover (%) adult trees:", round(x[["Adult_cover"]],digits), 
             " saplings:", round(x[["Sapling_cover"]], digits), 
-            " shrubs:", round(x[["Shrub_cover"]],digits),"\n"))
-  cat(paste("Shrub crown phytovolume (m3/m2):", 
-            round(x[["Phytovolume"]],digits),"\n"))
-  cat(paste("LAI (m2/m2) total:", round(x[["Tree_lai"]] + x[["Shrub_lai"]], digits),
+            " shrubs:", round(x[["Shrub_cover"]],digits),
+            " herbs:", round(x[["Herb_cover"]],digits),
+            "\n"))
+  cat(paste("LAI (m2/m2) total:", round(x[["Total_lai"]], digits),
             " adult trees:", round(x[["Adult_lai"]], digits),
             " saplings:", round(x[["Sapling_lai"]], digits), 
-            " shrubs:", round(x[["Shrub_lai"]], digits),"\n"))
-  cat(paste("Fuel (kg/m2) total:", round(x[["Tree_fuel"]] + x[["Shrub_fuel"]], digits),
+            " shrubs:", round(x[["Shrub_lai"]], digits),
+            " herbs:", round(x[["Herb_lai"]], digits),
+            "\n"))
+  cat(paste("Fuel loading (kg/m2) total:", round(x[["Total_fuel"]], digits),
             " adult trees:", round(x[["Adult_fuel"]], digits),
             " saplings:", round(x[["Sapling_fuel"]], digits), 
-            " shrubs:", round(x[["Shrub_fuel"]], digits),"\n"))
+            " shrubs:", round(x[["Shrub_fuel"]], digits),
+            " herbs:", round(x[["Herb_fuel"]],digits),
+            "\n"))
   cat(paste("PAR ground (%):", round(x[["PARground"]],digits)," SWR ground (%):", round(x[["SWRground"]],digits),"\n"))
 }

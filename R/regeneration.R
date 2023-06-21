@@ -1,6 +1,6 @@
 #' Plant regeneration
 #'
-#' Annual plant recruitment or resprouting observed in a forest stand
+#' Annual plant regeneration from seed recruitment or from resprouting
 #' 
 #' @param forest An object of class \code{\link{forest}}.
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsDefinition}}).
@@ -34,12 +34,13 @@
 #' 
 #' #Initialize control parameters
 #' control <- defaultControl("Granier")
+#' control$recruitmentMode = "deterministic" 
 #' 
 #' #Recruitment limits
 #' plant_parameter(exampleforestMED, SpParamsMED, "MinTempRecr")
 #' plant_parameter(exampleforestMED, SpParamsMED, "MinMoistureRecr")
 #' 
-#' #Compare recruitment outcomes
+#' #Compare seed recruitment outcomes
 #' recruitment(exampleforestMED, SpParamsMED, control, 0, 0.25)
 #' recruitment(exampleforestMED, SpParamsMED, control, 3, 0.25)
 #' 
@@ -77,7 +78,6 @@ recruitment<-function(forest, SpParams, control,
     if(control$shrubDynamics) shrubSpp <- control$seedRain[!isTree]
   }
   recr_forest <- emptyforest(ntree = length(treeSpp), nshrub=length(shrubSpp))
-  
   ## Determine if species can recruit 
   tree_recr_selection <- logical(0)
   tree_minFPAR <- numeric(0)
@@ -100,6 +100,7 @@ recruitment<-function(forest, SpParams, control,
     tree_minFPAR <- species_parameter(treeSpp, SpParams, "MinFPARRecr")
     tree_minFPAR[is.na(tree_minFPAR)] <- control$minFPARRecr
     tree_recr_selection <- (minMonthTemp > minTemp) & (moistureIndex > minMoisture) & (PARperc > tree_minFPAR)
+    # if(verbose) print(cbind(treeSpp, tree_recr_selection))
   }
   shrub_recr_selection <- logical(0)
   shrub_minFPAR <- numeric(0)
@@ -164,15 +165,19 @@ resprouting <- function(forest, internalMortality, SpParams, control,
   resp_clip_shrubs <- species_parameter(forest$shrubData$Species, SpParams, "RespClip")
   resp_clip_shrubs[is.na(resp_clip_shrubs)] <- 0
   
-  N_resprouting <- internalMortality$N_dessication
+  N_resprouting_dessication <- internalMortality$N_dessication
+  N_resprouting_burnt <- internalMortality$N_burnt
   if(n_trees>0) {
-    N_resprouting <- N_resprouting[1:n_trees]*resp_dist_trees
+    N_resprouting <- N_resprouting_dessication[1:n_trees]*resp_dist_trees
+    N_resprouting <- N_resprouting + N_resprouting_burnt[1:n_trees]*resp_fire_trees
   } else { 
     N_resprouting <- numeric(0)
   }
-  Cover_resprouting <- internalMortality$Cover_dessication
+  Cover_resprouting_dessication <- internalMortality$Cover_dessication
+  Cover_resprouting_burnt <- internalMortality$Cover_burnt
   if(n_shrubs>0) {
-    Cover_resprouting <- Cover_resprouting[(n_trees+1):(n_trees+n_shrubs)]*resp_dist_shrubs
+    Cover_resprouting <- Cover_resprouting_dessication[(n_trees+1):(n_trees+n_shrubs)]*resp_dist_shrubs
+    Cover_resprouting <- Cover_resprouting + Cover_resprouting_burnt[(n_trees+1):(n_trees+n_shrubs)]*resp_fire_shrubs
   } else {
     Cover_resprouting <- numeric(0)
   }
@@ -184,10 +189,16 @@ resprouting <- function(forest, internalMortality, SpParams, control,
   # Copy forest to inherit species and belowground information
   resp_forest <- forest 
   resp_forest$treeData$N <- N_resprouting
-  resp_forest$treeData$DBH <- rep(0.5, n_trees)
-  resp_forest$treeData$Height <- rep(50, n_trees)
+  
+  resp_forest$treeData$DBH <- species_parameter(resp_forest$treeData$Species, SpParams, "RecrTreeDBH")
+  resp_forest$treeData$DBH[is.na(resp_forest$treeData$DBH)] <- control$recrTreeDBH
+  resp_forest$treeData$Height <- species_parameter(resp_forest$treeData$Species, SpParams, "RecrTreeHeight")
+  resp_forest$treeData$Height[is.na(resp_forest$treeData$Height)] <- control$recrTreeHeight
+  
   resp_forest$shrubData$Cover <- Cover_resprouting
-  resp_forest$shrubData$Height <- rep(10, n_shrubs)
+  resp_forest$shrubData$Height <- species_parameter(resp_forest$shrubData$Species, SpParams, "RecrShrubHeight")
+  resp_forest$shrubData$Height[is.na(resp_forest$shrubData$Height)] <- control$recrShrubHeight
+  
   # Trim species with no resprouting
   resp_forest$treeData <- resp_forest$treeData[resp_forest$treeData$N > 0, , drop = FALSE]
   resp_forest$shrubData <- resp_forest$shrubData[resp_forest$shrubData$Cover > 0, , drop = FALSE]

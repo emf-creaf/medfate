@@ -505,7 +505,8 @@
     df = data.frame(row.names=row.names(WaterBalance))
     df[["Total evapotranspiration"]] = WaterBalance$Evapotranspiration
     df[["Interception evaporation"]] = WaterBalance$Interception
-    df[["Plant transpiration"]] = WaterBalance$Transpiration
+    df[["Woody transpiration"]] = WaterBalance$Transpiration
+    df[["Herbaceous transpiration"]] = WaterBalance$HerbTranspiration
     df[["Bare soil evaporation"]] = WaterBalance$SoilEvaporation
     if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     if(!is.null(summary.freq)) {
@@ -513,7 +514,8 @@
       df = data.frame(row.names = as.Date(as.character(levels(date.factor))),
                       "Total evapotranspiration" = tapply(df[["Total evapotranspiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
                       "Interception evaporation" = tapply(df[["Interception evaporation"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
-                      "Plant transpiration" = tapply(df[["Plant transpiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
+                      "Woody transpiration" = tapply(df[["Woody transpiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
+                      "Herbaceous transpiration" = tapply(df[["Herbaceous transpiration"]],INDEX=date.factor, FUN=sum, na.rm=TRUE),
                       "Bare soil evaporation" = tapply(df[["Bare soil evaporation"]],INDEX=date.factor, FUN=sum, na.rm=TRUE))
     }
     return(.multiple_dynamics(as.matrix(df), ylab=ylab, xlab=xlab, ylim = ylim))
@@ -644,8 +646,8 @@
   Stand = as.data.frame(Stand)
   if(type=="LAI") {
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
-    df = Stand[,c("LAI", "LAIexpanded", "LAIdead")]
-    names(df)<-c("Total (live+dead)", "Live unfolded","Dead standing")
+    df = Stand[,c("LAI", "LAIherb", "LAIexpanded", "LAIdead")]
+    names(df)<-c("Total (herb+unfolded+dead)", "Herbaceous", "Woody plants unfolded","Woody plants dead")
     if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),,drop = FALSE]
     if(!is.null(summary.freq)) df = .temporalSummary(df, summary.freq, mean, na.rm=TRUE)
     return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))

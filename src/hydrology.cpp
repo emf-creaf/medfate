@@ -2,6 +2,7 @@
 
 #include <Rcpp.h>
 #include "soil.h"
+#include "hydraulics.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -93,6 +94,24 @@ NumericVector soilEvaporation(List soil, String soilFunctions, double pet, doubl
     }
   }
   return(EsoilVec);
+}
+
+//' @rdname hydrology_soil
+//' @param LherbSWR Percentage of short-wave radiation (SWR) reaching the herbaceous layer.
+//' @param herbLAI Leaf area index of the herbaceous layer.
+// [[Rcpp::export("hydrology_herbaceousTranspiration")]]
+double herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, 
+                               List soil, String soilFunctions, bool modifySoil = true){
+  if(NumericVector::is_na(herbLAI)) return(0.0);
+  double Tmax_herb = pet*(LherbSWR/100.0)*(0.134*herbLAI - 0.006*pow(herbLAI, 2.0));
+  NumericVector psiSoil = psi(soil, soilFunctions);
+  NumericVector W = soil["W"];
+  NumericVector Water_FC = waterFC(soil, soilFunctions);
+  double Eherb = Tmax_herb*Psi2K(psiSoil[0], -1.5, 2.0);
+  if(modifySoil) {
+    W[0] = W[0] - (Eherb/Water_FC[0]);
+  }
+  return(Eherb);
 }
 
 // [[Rcpp::export(".hydrology_infiltrationAmount")]]

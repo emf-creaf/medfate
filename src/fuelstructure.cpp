@@ -80,7 +80,7 @@ NumericVector woodyFuelProfile(NumericVector z, NumericVector fuelBiomass, Numer
 // [[Rcpp::export(".woodyFuelProfile")]]
 NumericVector woodyFuelProfile(NumericVector z, List x, DataFrame SpParams, 
                                double gdd = NA_REAL) {
-  NumericVector Fuel = cohortFuel(x, SpParams, gdd, true); //in kg/m2
+  NumericVector Fuel = cohortFuelLoading(x, SpParams, gdd, true); //in kg/m2
   NumericVector H = cohortHeight(x, SpParams);
   NumericVector CR = cohortCrownRatio(x, SpParams);
   return(woodyFuelProfile(z, Fuel, H, CR));
@@ -116,7 +116,7 @@ double layerLAI(double minHeight, double maxHeight, NumericVector cohortLAI, Num
 }
 // [[Rcpp::export(".layerFuelAverageSpeciesParameter")]]
 double layerFuelAverageSpeciesParameter(String spParName, double minHeight, double maxHeight, List x, DataFrame SpParams, double gdd = NA_REAL) {
-  NumericVector cohortLoading = cohortFuel(x, SpParams, gdd); //in kg/m2
+  NumericVector cohortLoading = cohortFuelLoading(x, SpParams, gdd); //in kg/m2
   NumericVector parValues = cohortNumericParameterWithImputation(x, SpParams, spParName);
   NumericVector CR = cohortCrownRatio(x, SpParams);
   NumericVector H = cohortHeight(x, SpParams);
@@ -368,7 +368,7 @@ DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFM
   CanopyCover = std::min(100.0, CanopyCover);
   ShrubCover = std::min(100.0, ShrubCover);
   
-  NumericVector cohLoading = cohortFuel(object, SpParams, gdd, true);
+  NumericVector cohLoading = cohortFuelLoading(object, SpParams, gdd, true);
   NumericVector cohLeafLitter = cohortEquilibriumLeafLitter(object, SpParams, AET);
   NumericVector cohSmallBranchLitter = cohortEquilibriumSmallBranchLitter(object, SpParams, smallBranchDecompositionRate);
   NumericVector cohHeight = cohortHeight(object, SpParams);
@@ -437,7 +437,7 @@ DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFM
   double herbHeight = object["herbHeight"];
   if(NumericVector::is_na(herbHeight)) herbHeight = 0.0;
   double herbDepth = herbHeight/100.0; //in cm
-  double herbLoading = 0.014*herbCover*(herbHeight/100.0); // From piropinus
+  double herbLoading = herbFoliarBiomassAllometric(herbCover, herbHeight); // From piropinus
   
   //Woody loading  
   double woodyLoading = std::accumulate(cohSmallBranchLitter.begin(),cohSmallBranchLitter.end(),0.0);
@@ -776,7 +776,7 @@ DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFM
 //     }
 //   }
 //   
-//   NumericVector cohortLoading = cohortFuel(object, SpParams, gdd);
+//   NumericVector cohortLoading = cohortFuelLoading(object, SpParams, gdd);
 //   NumericVector minFMC = cohortNumericParameter(object, SpParams, "minFMC");
 //   NumericVector maxFMC = cohortNumericParameter(object, SpParams, "maxFMC");
 //   NumericVector CR = cohortCrownRatio(object, SpParams);

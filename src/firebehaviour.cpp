@@ -371,6 +371,7 @@ List FCCSbehaviour(DataFrame FCCSpropsSI,
   
   //Crown fire residence time (min)
   double t_r_crown = 192.0*RT_ca;
+  // Rcout<<"T_r_crown: "<<t_r_crown<<"\n";
   
   //Crown fire fireline intensity (Btu/ft/min)
   double I_b_crown = I_r_crown*ros_crown*t_r_crown;
@@ -441,6 +442,7 @@ List FCCSbehaviour(DataFrame FCCSpropsSI,
                               _["WAF"]=WAF,
                               _["ROS_crown [m/min]"]=ros_crown,
                               _["I_b_crown [kW/m]"] = I_b_crown,
+                              _["t_r_crown [s]"] = t_r_crown*60.0, //from min to sec
                               _["Ic_ratio"] = ic_ratio,
                               _["FL_crown [m]"]=FL_crown);
     
@@ -458,6 +460,7 @@ List FCCSbehaviour(DataFrame FCCSpropsSI,
                            _["ROS_windslopecap [m/min]"]=windslopecap,
                            _["ROS [m/min]"]=ros,
                            _["I_b [kW/m]"] = I_b,
+                           _["t_r [s]"] = t_r*60.0, //From minutes to sec
                            _["FL [m]"]=FL);
   return(List::create(_["SurfaceFire"] = surfaceFire, _["CrownFire"] = crownFire, _["FirePotentials"] = firePotentials));
 }
@@ -725,7 +728,7 @@ List rothermel(String modeltype, NumericVector wSI, NumericVector sSI, double de
 //   IntegerVector SP = swbInput["SP"];
 //   NumericVector LAI = swbInput["LAI"];
 //   
-//   NumericVector cohLoading = cohortFuel(x, SpParams);
+//   NumericVector cohLoading = cohortFuelLoading(x, SpParams);
 // 
 //   //Initialize other cohort-based variables
 //   int numCohorts = LAI.size();

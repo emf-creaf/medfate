@@ -206,6 +206,7 @@ Function \code{forest2growthInput} returns a list of class \code{growthInput} wi
       \item{\code{leafAreaTarget}: Target leaf area (m2) per individual.}
       \item{\code{sapwoodAreaTarget}: Target sapwood area (cm2) per individual.}
       \item{\code{fineRootBiomassTarget}: Target fine root biomass (g dry) per individual.}
+      \item{\code{crownBudPercent}: Percentage of the crown with buds.}
     }
   }
   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
@@ -236,6 +237,11 @@ data(SpParamsMED)
 # Aboveground parameters
 forest2aboveground(exampleforestMED, SpParamsMED)
 
+# Example of aboveground parameters taken from a forest
+# described using LAI and crown ratio
+data(exampleforestMED2)
+forest2aboveground(exampleforestMED2, SpParamsMED)
+
 # Initialize soil with default soil params
 examplesoil <- soil(defaultSoilParams())
 
@@ -255,6 +261,11 @@ forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
 # Prepare input for 'Cochard' transpiration mode
 control <- defaultControl("Cochard")
 forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
+
+# Example of initialization from a forest 
+# described using LAI and crown ratio
+control <- defaultControl("Granier")
+forest2spwbInput(exampleforestMED2, examplesoil, SpParamsMED, control)
 
 }
 \seealso{

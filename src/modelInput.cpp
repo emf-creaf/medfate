@@ -395,8 +395,9 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   int nlayers = dVec.size();
 
   NumericVector LAI_live = above["LAI_live"];
-  NumericVector N = above["N"];
-  int numCohorts = N.size();
+  int numCohorts = LAI_live.size();
+  NumericVector N(numCohorts, NA_REAL);
+  if(above.containsElementNamed("N")) N = above["N"];
   
   
   String rhizosphereOverlap = control["rhizosphereOverlap"];
@@ -575,9 +576,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
 
   double minimumRelativeStarchForGrowth_default = control["minimumRelativeStarchForGrowth"];
   NumericVector RSSG = speciesNumericParameterFromIndex(SP, SpParams, "RSSG");
-  
-  NumericVector MortalityBaselineRate = speciesNumericParameterFromIndex(SP, SpParams, "MortalityBaselineRate");
-  
+
   List maximumRelativeGrowthRates = control["maximumRelativeGrowthRates"];
   double RGRleafmax_default = maximumRelativeGrowthRates["leaf"];
   double RGRsapwoodmax_default = maximumRelativeGrowthRates["sapwood"];
@@ -593,9 +592,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   List senescenceRates = control["senescenceRates"];
   double SRsapwood_default = senescenceRates["sapwood"];
   double SRfineroot_default = senescenceRates["fineroot"];
-  
-  double mortalityBaselineRate_default = control["mortalityBaselineRate"];
-  
+
   
   if(fillMissingSpParams) {
     for(int c=0;c<numCohorts;c++){
@@ -609,7 +606,6 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
       if(NumericVector::is_na(SRsapwood[c])) SRsapwood[c] = SRsapwood_default;
       if(NumericVector::is_na(SRfineroot[c])) SRfineroot[c] = SRfineroot_default;
       if(NumericVector::is_na(RSSG[c])) RSSG[c] = minimumRelativeStarchForGrowth_default;
-      if(NumericVector::is_na(MortalityBaselineRate[c])) MortalityBaselineRate[c] = mortalityBaselineRate_default;
     }
   }
   
@@ -628,12 +624,56 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
                                                _["RSSG"] = RSSG,
                                                _["fHDmin"] = fHDmin,
                                                _["fHDmax"] = fHDmax,
-                                               _["WoodC"] = WoodC,
-                                               _["MortalityBaselineRate"] = MortalityBaselineRate);
+                                               _["WoodC"] = WoodC);
   paramsGrowthdf.attr("row.names") = above.attr("row.names");
   return(paramsGrowthdf);
 }
 
+DataFrame paramsMortalityRegeneration(DataFrame above, DataFrame SpParams, List control) {
+  
+  bool fillMissingSpParams = control["fillMissingSpParams"];
+  
+  IntegerVector SP = above["SP"];
+  NumericVector DBH = above["DBH"];
+  int numCohorts = SP.size();
+  
+  NumericVector MortalityBaselineRate = speciesNumericParameterFromIndex(SP, SpParams, "MortalityBaselineRate");
+  NumericVector RecrTreeDensity(numCohorts, NA_REAL);
+  NumericVector RecrTreeDBH(numCohorts, NA_REAL);
+  NumericVector IngrowthTreeDensity(numCohorts, NA_REAL);
+  NumericVector IngrowthTreeDBH(numCohorts, NA_REAL);
+  if(SpParams.containsElementNamed("RecrTreeDensity")) RecrTreeDensity = speciesNumericParameterFromIndex(SP, SpParams, "RecrTreeDensity");
+  if(SpParams.containsElementNamed("RecrTreeDBH")) RecrTreeDBH = speciesNumericParameterFromIndex(SP, SpParams, "RecrTreeDBH");
+  if(SpParams.containsElementNamed("IngrowthTreeDensity")) IngrowthTreeDensity = speciesNumericParameterFromIndex(SP, SpParams, "IngrowthTreeDensity");
+  if(SpParams.containsElementNamed("IngrowthTreeDBH")) IngrowthTreeDensity = speciesNumericParameterFromIndex(SP, SpParams, "IngrowthTreeDBH");
+  
+  double mortalityBaselineRate_default = control["mortalityBaselineRate"];
+  double recrTreeDensity_default = control["recrTreeDensity"];
+  double recrTreeDBH_default = control["recrTreeDBH"];
+  double ingrowthTreeDensity_default = control["ingrowthTreeDensity"];
+  double ingrowthTreeDBH_default = control["ingrowthTreeDBH"];
+  
+  
+  if(fillMissingSpParams) {
+    for(int c=0;c<numCohorts;c++){
+      if(NumericVector::is_na(MortalityBaselineRate[c])) MortalityBaselineRate[c] = mortalityBaselineRate_default;
+      if(!NumericVector::is_na(DBH[c])) {
+        if(NumericVector::is_na(RecrTreeDensity[c])) RecrTreeDensity[c] = recrTreeDensity_default;
+        if(NumericVector::is_na(RecrTreeDBH[c])) RecrTreeDBH[c] = recrTreeDBH_default;
+        if(NumericVector::is_na(IngrowthTreeDensity[c])) IngrowthTreeDensity[c] = ingrowthTreeDensity_default;
+        if(NumericVector::is_na(IngrowthTreeDBH[c])) IngrowthTreeDBH[c] = ingrowthTreeDBH_default;
+      }
+    }
+  }
+  
+  DataFrame paramsMortalityRecruitmentdf = DataFrame::create(_["MortalityBaselineRate"] = MortalityBaselineRate,
+                                                             _["RecrTreeDensity"] = RecrTreeDensity,
+                                                             _["RecrTreeDBH"] = RecrTreeDBH,
+                                                             _["IngrowthTreeDensity"] = IngrowthTreeDensity,
+                                                             _["IngrowthTreeDBH"] = IngrowthTreeDBH);
+  paramsMortalityRecruitmentdf.attr("row.names") = above.attr("row.names");
+  return(paramsMortalityRecruitmentdf);
+}
 
 DataFrame paramsAllometries(DataFrame above, DataFrame SpParams, bool fillMissingSpParams) {
   IntegerVector SP = above["SP"];
@@ -645,6 +685,7 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams, bool fillMissin
   NumericVector Bash = speciesNumericParameterWithImputation(SP, SpParams, "b_ash",fillMissingSpParams);
   NumericVector Absh = speciesNumericParameterWithImputation(SP, SpParams, "a_bsh",fillMissingSpParams);
   NumericVector Bbsh = speciesNumericParameterWithImputation(SP, SpParams, "b_bsh",fillMissingSpParams);
+  NumericVector BTsh = speciesNumericParameterWithImputation(SP, SpParams, "BTsh",fillMissingSpParams);
   NumericVector Acr = speciesNumericParameterWithImputation(SP, SpParams, "a_cr",fillMissingSpParams);
   NumericVector B1cr = speciesNumericParameterWithImputation(SP, SpParams, "b_1cr",fillMissingSpParams);
   NumericVector B2cr = speciesNumericParameterWithImputation(SP, SpParams, "b_2cr",fillMissingSpParams);
@@ -653,12 +694,15 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams, bool fillMissin
   NumericVector C2cr = speciesNumericParameterWithImputation(SP, SpParams, "c_2cr",fillMissingSpParams);
   NumericVector Acw = speciesNumericParameterWithImputation(SP, SpParams, "a_cw",fillMissingSpParams);
   NumericVector Bcw = speciesNumericParameterWithImputation(SP, SpParams, "b_cw",fillMissingSpParams);
-
+  NumericVector Abt = speciesNumericParameterWithImputation(SP, SpParams, "a_bt",fillMissingSpParams);
+  NumericVector Bbt = speciesNumericParameterWithImputation(SP, SpParams, "b_bt",fillMissingSpParams);
+  
   DataFrame paramsAllometriesdf = DataFrame::create(_["Afbt"] = Afbt, _["Bfbt"] = Bfbt, _["Cfbt"] = Cfbt,
                                                     _["Aash"] = Aash, _["Bash"] = Bash, _["Absh"] = Absh, _["Bbsh"] = Bbsh,
+                                                    _["BTsh"] = BTsh,
                                                     _["Acr"] = Acr, _["B1cr"] = B1cr, _["B2cr"] = B2cr, _["B3cr"] = B3cr,
                                                     _["C1cr"] = C1cr, _["C2cr"] = C2cr, 
-                                                    _["Acw"] = Acw, _["Bcw"] = Bcw);
+                                                    _["Acw"] = Acw, _["Bcw"] = Bcw, _["Abt"] = Abt, _["Bbt"] = Bbt);
   paramsAllometriesdf.attr("row.names") = above.attr("row.names");
   return(paramsAllometriesdf);
 }
@@ -764,15 +808,19 @@ DataFrame internalMortalityDataFrame(DataFrame above) {
   NumericVector N_dead(numCohorts, 0.0);
   NumericVector N_starvation(numCohorts, 0.0);
   NumericVector N_dessication(numCohorts, 0.0);
+  NumericVector N_burnt(numCohorts, 0.0);
   NumericVector Cover_dead(numCohorts, 0.0);
   NumericVector Cover_starvation(numCohorts, 0.0);
   NumericVector Cover_dessication(numCohorts, 0.0);
+  NumericVector Cover_burnt(numCohorts, 0.0);
   DataFrame df = DataFrame::create(Named("N_dead") = N_dead,
                                    Named("N_starvation") = N_starvation,
                                    Named("N_dessication") = N_dessication,
+                                   Named("N_burnt") = N_burnt,
                                    Named("Cover_dead") = Cover_dead,
                                    Named("Cover_starvation") = Cover_starvation,
-                                   Named("Cover_dessication") = Cover_dessication);
+                                   Named("Cover_dessication") = Cover_dessication,
+                                   Named("Cover_burnt") = Cover_burnt);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }
@@ -787,7 +835,7 @@ DataFrame internalAllocationDataFrame(DataFrame above,
   NumericVector leafAreaTarget(numCohorts,0.0);
   NumericVector sapwoodAreaTarget(numCohorts,0.0);
   NumericVector fineRootBiomassTarget(numCohorts, 0.0);
-  
+  NumericVector crownBudPercent(numCohorts, 100.0);
   
   String transpirationMode = control["transpirationMode"];
   NumericVector SA = above["SA"];
@@ -820,7 +868,8 @@ DataFrame internalAllocationDataFrame(DataFrame above,
   df = DataFrame::create(Named("allocationTarget") = allocationTarget,
                          Named("leafAreaTarget") = leafAreaTarget,
                          Named("sapwoodAreaTarget") = sapwoodAreaTarget,
-                         Named("fineRootBiomassTarget") = fineRootBiomassTarget);
+                         Named("fineRootBiomassTarget") = fineRootBiomassTarget,
+                         Named("crownBudPercent") = crownBudPercent);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }  
@@ -899,7 +948,6 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector H = above["H"];
   NumericVector DBH = above["DBH"];
-  NumericVector N = above["N"];
   NumericVector CR = above["CR"];
   
   String transpirationMode = control["transpirationMode"];
@@ -921,7 +969,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   cohortDescdf.attr("row.names") = above.attr("row.names");
   
   //Above 
-  DataFrame plantsdf = DataFrame::create(_["H"]=H, _["CR"]=CR, _["N"] = N,
+  DataFrame plantsdf = DataFrame::create(_["H"]=H, _["CR"]=CR,
                                          _["LAI_live"]=LAI_live, 
                                          _["LAI_expanded"] = LAI_expanded, 
                                          _["LAI_dead"] = LAI_dead);
@@ -942,8 +990,13 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   List below = paramsBelow(above, Z50, Z95, soil, 
                            paramsAnatomydf, paramsTranspirationdf, control);
   List belowLayers = below["belowLayers"];
-  DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(below["below"]);
-
+  DataFrame belowdfComplete = Rcpp::as<Rcpp::DataFrame>(below["below"]);
+  DataFrame belowdf = DataFrame::create(_["Z50"] = Z50, _["Z95"] = Z95);
+  if(belowdfComplete.containsElementNamed("poolProportions")) {
+    belowdf.push_back(belowdfComplete["poolProportions"], "poolProportions");
+  }
+  belowdf.attr("row.names") = above.attr("row.names");
+  
   DataFrame paramsWaterStoragedf = paramsWaterStorage(above, belowLayers, SpParams, paramsAnatomydf, fillMissingSpParams);
 
   DataFrame paramsCanopydf;
@@ -961,6 +1014,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   List input = List::create(_["control"] = ctl,
                             _["soil"] = clone(soil),
                             _["canopy"] = paramsCanopydf,
+                            _["herbLAI"] = NA_REAL, //To be filled outside
                             _["cohorts"] = cohortDescdf,
                             _["above"] = plantsdf,
                             _["below"] = belowdf,
@@ -993,6 +1047,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   NumericVector Cover = above["Cover"];
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
+  NumericVector Loading = above["Loading"];
   
   control["cavitationRefill"] = "growth";
   
@@ -1011,6 +1066,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   
   DataFrame paramsGrowthdf = paramsGrowth(above, SpParams, control);
+  DataFrame paramsMortalityRegenerationdf = paramsMortalityRegeneration(above, SpParams, control);
   
   DataFrame paramsAllometriesdf = paramsAllometries(above, SpParams, fillMissingSpParams);
   
@@ -1052,8 +1108,8 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                                          _["SA"] = SA, 
                                          _["LAI_live"]=LAI_live, 
                                          _["LAI_expanded"]=LAI_expanded, 
-                                         _["LAI_dead"] = LAI_dead);
-  if(control["fireHazardResults"]) plantsdf.push_back(above["Loading"], "Loading");
+                                         _["LAI_dead"] = LAI_dead,
+                                         _["Loading"] = Loading);
   plantsdf.attr("row.names") = above.attr("row.names");
   
 
@@ -1084,6 +1140,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   List input = List::create(_["control"] = ctl,
                        _["soil"] = clone(soil),
                        _["canopy"] = paramsCanopydf,
+                       _["herbLAI"] = NA_REAL, //To be filled outside
                        _["cohorts"] = cohortDescdf,
                        _["above"] = plantsdf,
                        _["below"] = belowdf,
@@ -1094,6 +1151,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                        _["paramsTranspiration"] = paramsTranspirationdf,
                        _["paramsWaterStorage"] = paramsWaterStoragedf,
                        _["paramsGrowth"]= paramsGrowthdf,
+                       _["paramsMortalityRegeneration"] =paramsMortalityRegenerationdf,
                        _["paramsAllometries"] = paramsAllometriesdf,
                        _["internalPhenology"] = internalPhenologyDataFrame(above),
                        _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
@@ -1103,9 +1161,10 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                                                        paramsGrowthdf, control),
                        _["internalAllocation"] = internalAllocationDataFrame(plantsdf, belowdf,
                                                       paramsAnatomydf,
-                                                      paramsTranspirationdf, control),
-                       _["internalMortality"] = internalMortalityDataFrame(plantsdf),
-                       _["internalFCCS"] = FCCSprops);
+                                                      paramsTranspirationdf, control));
+  
+  input.push_back(internalMortalityDataFrame(plantsdf), "internalMortality");
+  input.push_back(FCCSprops, "internalFCCS");
   
   input.attr("class") = CharacterVector::create("growthInput","list");
   return(input);
@@ -1364,6 +1423,7 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //'       \item{\code{leafAreaTarget}: Target leaf area (m2) per individual.}
 //'       \item{\code{sapwoodAreaTarget}: Target sapwood area (cm2) per individual.}
 //'       \item{\code{fineRootBiomassTarget}: Target fine root biomass (g dry) per individual.}
+//'       \item{\code{crownBudPercent}: Percentage of the crown with buds.}
 //'     }
 //'   }
 //'   \item{\code{internalCarbon}: A data frame with the concentration (mol·gluc·l-1) of metabolic and storage carbon compartments for leaves and sapwood.}
@@ -1386,6 +1446,11 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //' # Aboveground parameters
 //' forest2aboveground(exampleforestMED, SpParamsMED)
 //' 
+//' # Example of aboveground parameters taken from a forest
+//' # described using LAI and crown ratio
+//' data(exampleforestMED2)
+//' forest2aboveground(exampleforestMED2, SpParamsMED)
+//' 
 //' # Initialize soil with default soil params
 //' examplesoil <- soil(defaultSoilParams())
 //' 
@@ -1406,6 +1471,11 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //' control <- defaultControl("Cochard")
 //' forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
 //' 
+//' # Example of initialization from a forest 
+//' # described using LAI and crown ratio
+//' control <- defaultControl("Granier")
+//' forest2spwbInput(exampleforestMED2, examplesoil, SpParamsMED, control)
+//' 
 //' @name modelInput
 //' @aliases spwbInput growthInput
 // [[Rcpp::export("forest2spwbInput")]]
@@ -1415,7 +1485,9 @@ List forest2spwbInput(List x, List soil, DataFrame SpParams, List control) {
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL, fireHazardResults);
   DataFrame FCCSprops = R_NilValue;
   if(fireHazardResults) FCCSprops = FCCSproperties(x, SpParams);
-  return(spwbInput(above, rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control));
+  List s = spwbInput(above, rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control);
+  s["herbLAI"] = herbLAIAllometric(x["herbCover"], x["herbHeight"]);
+  return(s);
 }
 
 
@@ -1423,11 +1495,12 @@ List forest2spwbInput(List x, List soil, DataFrame SpParams, List control) {
 // [[Rcpp::export("forest2growthInput")]]
 List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   List rdc = rootDistributionComplete(x, SpParams, control["fillMissingRootParams"]);
-  bool fireHazardResults = control["fireHazardResults"];
-  DataFrame above = forest2aboveground(x, SpParams, NA_REAL, fireHazardResults);
-  DataFrame FCCSprops = R_NilValue;
-  if(fireHazardResults) FCCSprops = FCCSproperties(x, SpParams);
-  return(growthInput(above,  rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control));
+  // Loading and FCCS properties are needed if fire hazard results are true or fires are simulated 
+  DataFrame above = forest2aboveground(x, SpParams, NA_REAL, true);
+  DataFrame FCCSprops = FCCSproperties(x, SpParams);
+  List g = growthInput(above,  rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control);
+  g["herbLAI"] = herbLAIAllometric(x["herbCover"], x["herbHeight"]);
+  return(g);
 }
 
 //' Reset simulation inputs

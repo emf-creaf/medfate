@@ -7,14 +7,16 @@ using namespace Rcpp;
 
 void checkspwbInput(List x, String transpirationMode);
 
-DataFrame defineWaterBalanceDailyOutput(DataFrame meteo, NumericVector PET, String transpirationMode);
-DataFrame defineSoilWaterBalanceDailyOutput(DataFrame meteo, List soil, String transpirationMode);
-DataFrame defineEnergyBalanceDailyOutput(DataFrame meteo);
-DataFrame defineTemperatureDailyOutput(DataFrame meteo);
-DataFrame defineFireHazardOutput(DataFrame meteo);
-NumericMatrix defineTemperatureLayersDailyOutput(DataFrame meteo, DataFrame canopy);
-List defineSunlitShadeLeavesDailyOutput(DataFrame meteo, DataFrame above);
-List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, List control);
+CharacterVector getWeatherDates(DataFrame meteo);
+
+DataFrame defineWaterBalanceDailyOutput(CharacterVector dateStrings, NumericVector PET, String transpirationMode);
+DataFrame defineSoilWaterBalanceDailyOutput(CharacterVector dateStrings, List soil, String transpirationMode);
+DataFrame defineEnergyBalanceDailyOutput(CharacterVector dateStrings);
+DataFrame defineTemperatureDailyOutput(CharacterVector dateStrings);
+DataFrame defineFireHazardOutput(CharacterVector dateStrings);
+NumericMatrix defineTemperatureLayersDailyOutput(CharacterVector dateStrings, DataFrame canopy);
+List defineSunlitShadeLeavesDailyOutput(CharacterVector dateStrings, DataFrame above);
+List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, List soil, List control);
 
 void fillWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday, String transpirationMode);
 void fillSoilWaterBalanceDailyOutput(DataFrame SWB, List soil, List sDay, 
@@ -28,6 +30,8 @@ void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday);
 void printWaterBalanceResult(DataFrame DWB, List plantDWOL, List x,
                              NumericVector initialPlantContent, NumericVector initialSoilContent, double initialSnowContent,
                              String transpirationMode);
+
+NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slope);
 
 List spwbDay(List x, CharacterVector date, NumericVector meteovec,
              double latitude, double elevation, double slope, double aspect,  

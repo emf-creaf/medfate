@@ -16,9 +16,9 @@ processes:
 - Plant hydraulics, transpiration and photosynthesis (De Cáceres et
   al. 2021, Ruffault et al. 2022)
 - Carbon balance, plant growth, senescence and mortality (De Cáceres et
-  al. under review)
+  al. 2023)
 - Forest dynamics, including recruitment and management (De Cáceres et
-  al. under review)
+  al. 2023)
 
 The models are parameterized for species of the Mediterranean region
 (particularly for Catalonia, NE Spain), but forests with different
@@ -71,7 +71,7 @@ The set of R packages are developed and maintained by the [*Ecosystem
 Modelling Facility*](https://emf.creaf.cat) unit at CREAF (in Spain), in
 close collaboration with researchers from
 [*URFM-INRAE*](https://www6.paca.inrae.fr/ecologie_des_forets_mediterraneennes/)
-(in FRANCE).
+(in France).
 
 ## References
 
@@ -96,8 +96,8 @@ close collaboration with researchers from
   (<https://doi.org/10.5194/gmd-15-5593-2022>).
 
 - De Cáceres M, Molowny-Horas R, Cabon A, Martínez-Vilalta J, Mencuccini
-  M, García-Valdés R, Nadal-Sala D, Sabaté S, Martin-StPaul N, Morin N,
-  Batllori E, Améztegui A (under review) MEDFATE 2.8.1: A trait-enabled
-  model to simulate Mediterranean forest function and dynamics at
-  regional scales. Geophysical Model Development
-  (<https://doi.org/10.5194/gmd-2022-243>).
+  M, García-Valdés R, Nadal-Sala D, Sabaté S, Martin-StPaul N, Morin X,
+  D’Adamo F, Batllori E, Améztegui A (2023) MEDFATE 2.9.3: A
+  trait-enabled model to simulate Mediterranean forest function and
+  dynamics at regional scales. Geoscientific Model Development 16,
+  3165–3201 (<https://doi.org/10.5194/gmd-16-3165-2023>).

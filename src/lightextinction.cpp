@@ -200,9 +200,24 @@ NumericVector parheight(NumericVector z, List x, DataFrame SpParams, double gdd 
 
 //' @rdname light
 // [[Rcpp::export("light_PARground")]]
-NumericVector PARground(List x, DataFrame SpParams, double gdd = NA_REAL) {
-  return(parheight(NumericVector::create(0.0), x, SpParams, gdd));
+double PARground(List x, DataFrame SpParams, double gdd = NA_REAL) {
+  DataFrame above = forest2aboveground(x, SpParams, gdd, false);
+  NumericVector LAIphe = above["LAI_expanded"];
+  NumericVector LAIdead = above["LAI_dead"];
+  IntegerVector SP = above["SP"];
+  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true);
+  int numCohorts = LAIphe.size();
+  double s = 0.0;
+  for(int c=0;c<numCohorts;c++) {
+    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
+  }
+  //Herb layer effects on light extinction and interception
+  s += 0.5*herbLAIAllometric(x["herbCover"], x["herbHeight"]);
+  //Percentage of irradiance reaching the ground
+  double LgroundPAR = 100.0*exp((-1.0)*s);
+  return(LgroundPAR);
 }
+
 // [[Rcpp::export(".swrheight")]]
 NumericVector swrheight(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL) {
   DataFrame above = forest2aboveground(x, SpParams, gdd, false);
@@ -215,28 +230,54 @@ NumericVector swrheight(NumericVector z, List x, DataFrame SpParams, double gdd 
 
 //' @rdname light
 // [[Rcpp::export("light_SWRground")]]
-NumericVector SWRground(List x, DataFrame SpParams, double gdd = NA_REAL) {
-  return(swrheight(NumericVector::create(0.0), x, SpParams, gdd));
+double SWRground(List x, DataFrame SpParams, double gdd = NA_REAL) {
+  DataFrame above = forest2aboveground(x, SpParams, gdd, false);
+  NumericVector LAIphe = above["LAI_expanded"];
+  NumericVector LAIdead = above["LAI_dead"];
+  IntegerVector SP = above["SP"];
+  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true);
+  int numCohorts = LAIphe.size();
+  double s = 0.0;
+  for(int c=0;c<numCohorts;c++) {
+    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
+  }
+  //Herb layer effects on light extinction and interception
+  s += 0.5*herbLAIAllometric(x["herbCover"], x["herbHeight"]);
+  //Percentage of irradiance reaching the ground
+  double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
+  return(LgroundSWR);
 }
 
 
 // [[Rcpp::export(".parExtinctionProfile")]]
-NumericVector parExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL) {
+NumericVector parExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL, bool includeHerbs = false) {
   DataFrame above = forest2aboveground(x, SpParams, gdd, false);
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
   NumericVector LAI = above["LAI_expanded"];
   NumericVector CR = above["CR"];
+  if(includeHerbs) {
+    SP.push_back(0);
+    H.push_back(x["herbHeight"]);
+    LAI.push_back(herbLAIAllometric(x["herbCover"], x["herbHeight"]));
+    CR.push_back(1.0);
+  }
   return(parheight(z, SP, H, CR, LAI, SpParams));
 }
 
 // [[Rcpp::export(".swrExtinctionProfile")]]
-NumericVector swrExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL) {
+NumericVector swrExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL, bool includeHerbs = false) {
   DataFrame above = forest2aboveground(x, SpParams,  gdd, false);
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
   NumericVector LAI = above["LAI_expanded"];
   NumericVector CR = above["CR"];
+  if(includeHerbs) {
+    SP.push_back(0);
+    H.push_back(x["herbHeight"]);
+    LAI.push_back(herbLAIAllometric(x["herbCover"], x["herbHeight"]));
+    CR.push_back(1.0);
+  }
   return(swrheight(z, SP, H, CR, LAI, SpParams));
 }
 

@@ -2,6 +2,18 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 3.1.1
+- Fire severity implemented
+- Crown bud percent decreases with PLC and fire, increases with SA growth and regulates primary growth rate
+- Forest objects can now have additional variables defined (LAI, foliar biomass, fuel loading), to override estimations from allometric models
+- New example forest object 'exampleforestMED2'
+
+# Version 3.1.0
+- Herbaceous information in summary.forest
+- Herbaceous transpiration added to the water balance
+- Weather input can now have dates as Date or POSIXct objects in column 'dates' instead of row names
+- Weather input can now have missing values in MinRelativeHumidity, MaxRelativeHumidity and Radiation
+
 # Version 3.0.0
 - Leaf area limited by allometries
 - Functions 'growthInput()' and 'spwbInput()' no longer visible at the user level

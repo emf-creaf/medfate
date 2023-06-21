@@ -5,6 +5,8 @@
 #endif
 using namespace Rcpp;
 
+double criticalFirelineIntensity(double CBH, double M);
+
 List FCCSbehaviour(DataFrame FCCSpropsSI,
                    NumericVector MliveSI = NumericVector::create(90, 90, 60), 
                    NumericVector MdeadSI = NumericVector::create(6, 6, 6, 6, 6), 

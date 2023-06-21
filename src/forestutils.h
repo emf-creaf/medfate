@@ -31,17 +31,18 @@ double treeDensity(List x);
 double minDBHDensity(List x, double minDBH);
 NumericVector dbhClassDensity(List x, NumericVector DBHbreaks);
 
-NumericVector treeCrownRatio(NumericVector N, NumericVector dbh, NumericVector H, 
+NumericVector treeCrownRatioAllometric(NumericVector N, NumericVector dbh, NumericVector H, 
                                 NumericVector Acw, NumericVector Bcw,
                                 NumericVector Acr, NumericVector B1cr, NumericVector B2cr, NumericVector B3cr,
                                 NumericVector C1cr, NumericVector C2cr);
 
-NumericVector cohortFuel(List x, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true);
+NumericVector cohortFuelLoading(List x, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true);
 
 NumericVector cohortCrownRatio(List x, DataFrame SpParams);
 NumericVector cohortCrownBaseHeight(List x, DataFrame SpParams);
 NumericVector cohortCrownLength(List x, DataFrame SpParams);
 
+double herbFoliarBiomassAllometric(double herbCover, double herbHeight);
 NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_REAL);
 
 NumericVector cohortEquilibriumLeafLitter(List x, DataFrame SpParams, double AET = 800);
@@ -49,6 +50,7 @@ NumericVector cohortEquilibriumSmallBranchLitter(List x, DataFrame SpParams, dou
 
 NumericVector cohortCover(List x, DataFrame SpParams);
 
+double herbLAIAllometric(double herbCover, double herbHeight, double sla_herb = 9.0);
 NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL, bool bounded = true);
 
 NumericMatrix LAIdistributionVectors(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR);
