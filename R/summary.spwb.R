@@ -41,7 +41,8 @@
     found = FALSE
     object_names_search = object_names
     object_names_search = object_names_search[!(object_names_search %in% c("Soil", "Stand", "Temperature",
-                                                                            "CarbonBalance", "WaterBalance", "EnergyBalance", "BiomassBalance"))]
+                                                                           "CarbonBalance", "WaterBalance", "EnergyBalance", "BiomassBalance",
+                                                                           "FireHazard"))]
     for(nm in object_names_search) {
       if(!found) {
         if(output_vec[1] %in% names(object[[nm]])) {
@@ -51,7 +52,7 @@
       }
     }
     if(!found) {
-      stop(paste0("Unrecognized output string: '", output ,"'\n"))
+      stop(paste0("Output table '", output_vec[1], "' was not generated in simulation results"))
     }
   } else if(length(output_vec)==2) {
     if(!(output_vec[2] %in% names(object[[output_vec[1]]]))) stop(paste0("Unrecognized output string: '", output ,"'\n"))
@@ -60,7 +61,8 @@
   }
   
   if(output_vec[1] %in% c("Soil", "Stand", "Temperature", 
-                           "CarbonBalance", "WaterBalance", "EnergyBalance", "BiomassBalance")) {
+                          "CarbonBalance", "WaterBalance", "EnergyBalance", "BiomassBalance",
+                          "FireHazard")) {
     OM = object[[output_vec[1]]]
   } else if(output_vec[1]=="Plants" && output_vec[2]=="LAI") {
     OM = object$Plants$LAI
