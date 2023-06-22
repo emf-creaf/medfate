@@ -35,7 +35,7 @@ plant_water(x)
 
 moisture_pressureVolumeCurvePlot(
   x,
-  segment = "leaf",
+  segment = "stem",
   fraction = "all",
   psiVec = seq(-0.1, -8, by = -0.01),
   speciesNames = FALSE
@@ -68,9 +68,10 @@ moisture_pressureVolumeCurvePlot(
 
 \item{af}{Apoplastic fraction (proportion) in the segment (e.g. leaf or stem).}
 
-\item{x}{An object of class \code{\link{spwbInput}}.}
+\item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.}
 
-\item{segment}{Segment whose relative water content curve to plot, either \code{"stem"} or \code{"leaf"}.}
+\item{segment}{Segment whose relative water content curve to plot, either \code{"stem"} or \code{"leaf"}
+(the latter only available if \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).}
 
 \item{fraction}{Tissue fraction, either \code{"symplastic"}, \code{"apoplastic"} or \code{"all"}.}
 

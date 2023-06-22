@@ -310,7 +310,8 @@ hydraulics_supplyFunctionPlot(
 
 \item{draw}{A flag to indicate whether the supply function should be drawn or just returned.}
 
-\item{type}{Plot type for \code{hydraulics_supplyFunctionPlot}, either \code{"E"}, \code{"ERhizo"}, \code{"psiStem"}, \code{"psiRoot"}, \code{"psiRhizo"} or \code{"dEdP"}).}
+\item{type}{Plot type for \code{hydraulics_supplyFunctionPlot}, either \code{"E"}, 
+\code{"ERhizo"}, \code{"StemPsi"}, \code{"RootPsi"} or \code{"dEdP"}).}
 
 \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
 

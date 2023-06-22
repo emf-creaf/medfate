@@ -77,7 +77,8 @@ hydraulics_vulnerabilityCurvePlot(
 
 \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
 
-\item{type}{Plot type for \code{hydraulics_vulnerabilityCurvePlot}, either \code{"leaf"}, \code{"stem"}, \code{"root"}, \code{"rootlayer"} or \code{"rhizosphere"}).}
+\item{type}{Plot type for \code{hydraulics_vulnerabilityCurvePlot}, either \code{"leaf"}, 
+\code{"stem"}, \code{"root"} or \code{"rhizosphere"}).}
 
 \item{psiVec}{Vector of water potential values to evaluate for the vulnerability curve.}
 
