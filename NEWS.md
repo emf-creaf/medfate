@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 3.1.2
+- New option 'months' in simulation summaries.
+
 # Version 3.1.1
 - Fire severity implemented
 - Crown bud percent decreases with PLC and fire, increases with SA growth and regulates primary growth rate

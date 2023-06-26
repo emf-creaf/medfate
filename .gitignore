@@ -12,4 +12,5 @@ medfate.Rproj
 src-i386/*.*
 src-x64/*.*
 inst/doc/*.*
+tests/testthat/*.pdf
 CRAN-SUBMISSION

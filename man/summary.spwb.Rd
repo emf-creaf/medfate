@@ -13,6 +13,7 @@
   output = "WaterBalance",
   FUN = sum,
   bySpecies = FALSE,
+  months = NULL,
   ...
 )
 
@@ -22,6 +23,7 @@
   output = "WaterBalance",
   FUN = sum,
   bySpecies = FALSE,
+  months = NULL,
   ...
 )
 
@@ -31,6 +33,7 @@
   output = "WaterBalance",
   FUN = sum,
   bySpecies = FALSE,
+  months = NULL,
   ...
 )
 
@@ -40,6 +43,7 @@
   output = "WaterBalance",
   FUN = sum,
   bySpecies = FALSE,
+  months = NULL,
   ...
 )
 }
@@ -53,6 +57,8 @@
 \item{FUN}{The function to summarize results (e.g., \code{sum}, \code{mean}, ...)}
 
 \item{bySpecies}{Allows aggregating output by species before calculating summaries (only has an effect with some values of \code{output}). Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
+
+\item{months}{A vector of month numbers (1 to 12) to subset the season where summaries apply.}
 
 \item{...}{Additional parameters for function \code{summary}.}
 }

@@ -28,10 +28,13 @@
   }
   return(out)
 }
-.summarysim<-function(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...){  
-  dates = as.Date(rownames(object$WaterBalance))
-  ndaysTotal = length(dates)
-  date.factor = cut(dates, breaks=freq)
+.summarysim<-function(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE,
+                      months = NULL, ...){  
+  dates <- as.Date(rownames(object$WaterBalance))
+  month_dates <- as.character(as.numeric(format(dates, "%m")))
+  ndaysTotal <- length(dates)
+  date.factor <- cut(dates, breaks=freq)
+  
   if("spwbInput" %in% names(object)) input = object$spwbInput
   else input = object$growthInput
   object_names = names(object)
@@ -85,6 +88,13 @@
   }
   if(ncol(OM)==length(date.factor) && nrow(OM)==1) OM = t(OM)
   
+  # Subset dates if 'months' is specified
+  if(!is.null(months)) {
+    months <- match.arg(as.character(months), as.character(1:12), several.ok = TRUE)
+    sel_months <- month_dates %in% months
+    date.factor <- date.factor[sel_months]
+    OM <- OM[sel_months,,drop = FALSE]
+  }
   #Perform summary at the desired temporal scale
   M <- apply(OM,2,tapply, INDEX=date.factor, FUN, na.rm=T)
   if(length(M)==0) {
@@ -112,6 +122,7 @@
 #' @param output The data table to be summarized. Accepted values are the path to data tables in \code{object}, such as 'WaterBalance', 'Soil', 'Stand' or 'Plants$LAI'. It is also possible to use strings like 'Transpiration' and the function will interpret it as 'Plants$Transpiration'.
 #' @param FUN The function to summarize results (e.g., \code{sum}, \code{mean}, ...)
 #' @param bySpecies Allows aggregating output by species before calculating summaries (only has an effect with some values of \code{output}). Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).
+#' @param months A vector of month numbers (1 to 12) to subset the season where summaries apply.
 #' @param ... Additional parameters for function \code{summary}.
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
@@ -156,26 +167,26 @@
 #' 
 #' 
 #' @name summary.spwb
-summary.spwb<-function(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...){  
-  .summarysim(object = object, freq = freq, output = output, FUN = FUN, bySpecies = bySpecies, ...)
+summary.spwb<-function(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, months = NULL, ...){  
+  .summarysim(object = object, freq = freq, output = output, FUN = FUN, bySpecies = bySpecies, months = months, ...)
 }
 
 #' @rdname summary.spwb
-summary.pwb<-function(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...){  
-  .summarysim(object = object, freq = freq, output = output, FUN = FUN, bySpecies = bySpecies, ...)
+summary.pwb<-function(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE,  months = NULL,...){  
+  .summarysim(object = object, freq = freq, output = output, FUN = FUN, bySpecies = bySpecies,  months = months,...)
 }
 
 #' @rdname summary.spwb
-summary.growth<-function(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...){  
-  .summarysim(object = object, freq = freq, output = output, FUN = FUN, bySpecies = bySpecies, ...)
+summary.growth<-function(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE,  months = NULL,...){  
+  .summarysim(object = object, freq = freq, output = output, FUN = FUN, bySpecies = bySpecies, months = months, ...)
 }
 
 #' @rdname summary.spwb
-summary.fordyn<-function(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...){
+summary.fordyn<-function(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE,  months = NULL, ...){
   vec<-vector("list", length(object$GrowthResults))
   for(i in 1:length(object$GrowthResults)) {
     vec[[i]] <- .summarysim(object = object$GrowthResults[[i]], 
-                           freq = freq, output = output, FUN = FUN, bySpecies = bySpecies, ...)
+                           freq = freq, output = output, FUN = FUN, bySpecies = bySpecies, months = months, ...)
   }
   return(.mergeVectorOfMatrices(vec))
 }
