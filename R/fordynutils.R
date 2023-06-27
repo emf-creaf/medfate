@@ -261,8 +261,10 @@
 }
 
 .createTreeTable<-function(step, year, x) {
-  isTree = !is.na(x$above$DBH)
-  range = 1:sum(isTree)
+  range <- numeric(0)
+  isTree <- !is.na(x$above$DBH)
+  if(sum(isTree)>0) range <- 1:sum(isTree)
+
   tt<-data.frame(Step = rep(step, length(range)), 
                  Year = rep(year, length(range)),
                  Cohort = row.names(x$cohorts)[range],
@@ -276,9 +278,10 @@
   return(tt)
 }
 .createDeadTreeTable<-function(step, year, x) {
-  isTree = !is.na(x$above$DBH)
-  range = numeric(0)
-  if(sum(isTree)>0) range = 1:sum(isTree)
+  range <- numeric(0)
+  isTree <- !is.na(x$above$DBH)
+  if(sum(isTree)>0) range <- 1:sum(isTree)
+  
   dtt<-data.frame(Step = rep(step, length(range)), 
                   Year = rep(year, length(range)),
                   Cohort = row.names(x$cohorts)[range],
