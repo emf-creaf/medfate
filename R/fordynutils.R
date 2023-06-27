@@ -154,15 +154,15 @@
   cohnames = c(treecohnames, shrubcohnames)
   isTree = c(rep(TRUE, length(treecohnames)), rep(FALSE, length(shrubcohnames)))
   cohortSummary = data.frame("Step" = rep(step, length(cohnames)),
-                             "Species" = NA,
+                             "Species" = rep(NA, length(cohnames)),
                              "Cohort" = cohnames,
-                             "TreeDensityLive" = 0,
-                             "TreeBasalAreaLive"= 0,
-                             "ShrubCoverLive"= 0,
-                             "BasalAreaDead" = 0,
-                             "ShrubCoverDead" = 0,
-                             "BasalAreaCut" = 0,
-                             "ShrubCoverCut" = 0)
+                             "TreeDensityLive" = rep(0, length(cohnames)),
+                             "TreeBasalAreaLive"= rep(0, length(cohnames)),
+                             "ShrubCoverLive"= rep(0, length(cohnames)),
+                             "BasalAreaDead" = rep(0, length(cohnames)),
+                             "ShrubCoverDead" = rep(0, length(cohnames)),
+                             "BasalAreaCut" = rep(0, length(cohnames)),
+                             "ShrubCoverCut" = rep(0, length(cohnames)))
   cohortSummary$ShrubCoverLive[isTree] = NA
   cohortSummary$ShrubCoverDead[isTree] = NA
   cohortSummary$ShrubCoverCut[isTree] = NA
