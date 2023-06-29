@@ -45,7 +45,8 @@ Function \code{defaultManagementArguments} returns a list with default arguments
    \item{\code{"plantingDBH"}: Initial DBH (cm) of planted species.}
    \item{\code{"plantingHeight"}: Initial height (cm) of planted species.}
    \item{\code{"plantingDensity"}: Initial density (ind./ha) of the planted species.}
-   \item{\code{"understoryMaxCover"}: Percentage of overall shrub cover to be left after any silvicultural intervention.}
+   \item{\code{"understoryMaximumCover"}: Percentage of overall shrub cover to be left after any silvicultural intervention. 
+   If missing, shrub cover will not be left unmodified.}
  }
 }
 \description{

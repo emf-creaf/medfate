@@ -57,7 +57,8 @@
 #'    \item{\code{"plantingDBH"}: Initial DBH (cm) of planted species.}
 #'    \item{\code{"plantingHeight"}: Initial height (cm) of planted species.}
 #'    \item{\code{"plantingDensity"}: Initial density (ind./ha) of the planted species.}
-#'    \item{\code{"understoryMaxCover"}: Percentage of overall shrub cover to be left after any silvicultural intervention.}
+#'    \item{\code{"understoryMaximumCover"}: Percentage of overall shrub cover to be left after any silvicultural intervention. 
+#'    If missing, shrub cover will not be left unmodified.}
 #'  }
 #' 
 #' @author 
@@ -352,9 +353,12 @@ defaultManagementFunction<-function(x, args, verbose = FALSE) {
   
   # If tree felling occurred, apply understory clearing
   if(sum(N_tree_cut)>0) {
-    stand_shrub_cover = sum(x$shrubData$Cover, na.rm=TRUE)
-    stand_to_rem = pmax(0,stand_shrub_cover - args$understoryMaximumCover)
-    Cover_shrub_cut = x$shrubData$Cover*(stand_to_rem/stand_shrub_cover)
+    understory_max_cover <- args$understoryMaximumCover
+    if(!is.na(understory_max_cover)) {
+      stand_shrub_cover = sum(x$shrubData$Cover, na.rm=TRUE)
+      stand_to_rem = pmax(0,stand_shrub_cover - understory_max_cover)
+      Cover_shrub_cut = x$shrubData$Cover*(stand_to_rem/stand_shrub_cover)
+    }
   }
   # Apply planting if needed (regular management)
   if(planting) {
