@@ -398,15 +398,15 @@ NumericVector treeFuelAllometric(IntegerVector SP, NumericVector FB,
 
 
 NumericVector shrubFuelAllometric(IntegerVector SP, NumericVector FB, DataFrame SpParams, 
-                                  double gdd = NA_REAL, bool includeDead = true, double basalArea = 0.0){
+                                  double gdd = NA_REAL, bool includeDead = true){
 
   int ncoh = SP.size();
-  NumericVector fTreeFuel = speciesNumericParameterWithImputation(SP, SpParams, "r635", true);
+  NumericVector fShrubFuelRatio = speciesNumericParameterWithImputation(SP, SpParams, "r635", true);
   NumericVector Sgdd = speciesNumericParameterWithImputation(SP, SpParams, "Sgdd");
   NumericVector W(ncoh,NA_REAL);
     
   for(int i=0;i<ncoh;i++) {
-    W[i] = FB[i]*fTreeFuel[i]; //fine fuel biomass
+    W[i] = FB[i]*fShrubFuelRatio[i]; //fine fuel biomass
     //Remove (if necessary), the weight due to leaves that are not there
     if(!NumericVector::is_na(gdd)) {
       double bsf = W[i] - FB[i]; //branch biomass
@@ -1030,7 +1030,7 @@ NumericVector cohortFuelLoading(List x, DataFrame SpParams, double gdd = NA_REAL
   
   //Estimate fuel derived from foliar allometries or measured foliar biomass
   NumericVector shFuelAllom = shrubFuelAllometric(shrubSP, shFB, 
-                                                  SpParams, gdd, includeDead, basalArea);
+                                                  SpParams, gdd, includeDead);
   
   //Replace missing fuel values with allometric estimates
   for(int i=0;i<shFuel.size();i++) {

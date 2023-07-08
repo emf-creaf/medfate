@@ -92,7 +92,7 @@ forest_mergeTrees<-function(x, byDBHclass = TRUE) {
     if(byDBHclass) {
       td2 <- mergeTreesBySizeClass(x$treeData)
     } else {
-      BA <- plant_basalArea(x)[1:ntree]
+      BA <- td$N*pi*(td$DBH/200)^2
       BAsp <- tapply(BA, td$Species, FUN = sum)
       Nsp <- as.numeric(tapply(td$N, td$Species, FUN = sum))
       Hsp <- as.numeric(tapply(td$Height*BA, td$Species, FUN = sum)/BAsp)
