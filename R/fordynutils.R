@@ -141,9 +141,13 @@
   
   # This causes loss of cohort identity and reinitizalization of vegetation state variables
   if(control$dynamicallyMergeCohorts) {
-    forest <- forest_mergeTrees(forest, byDBHclass = TRUE)
-    forest <- forest_mergeShrubs(forest, byHeightclass = TRUE)
-    xi <- forest2growthInput(forest, xo$soil, SpParams, control)
+    merged_forest <- forest_mergeTrees(forest, byDBHclass = TRUE)
+    merged_forest <- forest_mergeShrubs(merged_forest, byHeightclass = TRUE)
+    # Only replace if merging caused a reduction in woody cohorts
+    if((nrow(merged_forest$treeData) < nrow(forest$treeData)) || (nrow(merged_forest$shrubData) < nrow(forest$shrubData))) {
+      forest <- merged_forest
+      xi <- forest2growthInput(forest, xo$soil, SpParams, control)
+    }
   }
   return(list(forest = forest, xi = xi))
 }
