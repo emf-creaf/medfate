@@ -139,8 +139,13 @@
   xi$internalCarbon[repl_vec,] <- xo$internalCarbon[sel_vec,, drop=FALSE]
   xi$internalAllocation[repl_vec,] <- xo$internalAllocation[sel_vec,, drop=FALSE]
   
-  return(list(forest = forest, xi = xi,
-              shrubOffset = shrubOffset))
+  # This causes loss of cohort identity and reinitizalization of vegetation state variables
+  if(control$dynamicallyMergeCohorts) {
+    forest <- forest_mergeTrees(forest, byDBHclass = TRUE)
+    forest <- forest_mergeShrubs(forest, byHeightclass = TRUE)
+    xi <- forest2growthInput(forest, xo$soil, SpParams, control)
+  }
+  return(list(forest = forest, xi = xi))
 }
 
 .summarizeCohorts<-function(step, 

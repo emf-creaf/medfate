@@ -115,7 +115,7 @@
 #'      \item{\code{recruitmentMode [= "stochastic"]}: String describing how recruitment from seeds is applied. Current accepted values are "deterministic" or "stochastic".}
 #'      \item{\code{allowResprouting [= TRUE]}: Boolean flag to indicate that resprouting is allowed.}
 #'      \item{\code{removeEmptyCohorts [= TRUE]}: Boolean flag to indicate the removal of cohorts whose density is too low.}
-#'      \item{\code{dynamicallyMergeCohorts [= FALSE]}: Boolean flag to indicate that cohorts should be merged when possible. This option speeds up calculations but results in a loss of cohort identity.}
+#'      \item{\code{dynamicallyMergeCohorts [= FALSE]}: Boolean flag to indicate that cohorts should be merged when possible. This option speeds up calculations but results in a loss of cohort identity and reinitialization of many state variables.}
 #'      \item{\code{minimumCohortDensity [= 1]}: Threshold of density resulting in cohort removal.}
 #'      \item{\code{seedRain [= NULL]}: Vector of species codes whose seed rain is to be simulated. If \code{NULL} the species identity of seed rain is taken from species currently present in the forest stand and with minimum size (see below).}
 #'      \item{\code{seedProductionTreeHeight [= 300]}: Default minimum tree height for producing seeds (when species parameter \code{SeedProductionHeight} is missing).}
