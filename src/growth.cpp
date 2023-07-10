@@ -238,6 +238,7 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
   //Control params
   List control = x["control"];  
   bool shrubDynamics = control["shrubDynamics"];
+  bool herbDynamics = control["herbDynamics"];
   
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -337,17 +338,16 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
   }
   //Shrub variables
   if(shrubDynamics) {
-    NumericVector tba = treeBasalArea(N, DBH);
-    double basalArea = 0.0;
+    double treeLAI = 0.0;
     for(int j=0;j<numCohorts;j++) {
-      if(!NumericVector::is_na(DBH[j])) basalArea +=tba[j];
+      if(!NumericVector::is_na(DBH[j])) treeLAI +=LAI_live[j];
     }
     for(int j=0;j<numCohorts; j++) {
       if(NumericVector::is_na(DBH[j]) && N[j]>0.0) {
         if(budFormation[j]) {
           leafAreaTarget[j] = (Al2As[j]*SA[j])/10000.0; // Set leaf area target according to current sapwood area
           double Wleaves = leafAreaTarget[j]/SLA[j];  //Calculates the biomass (kg dry weight) of leaves
-          Wleaves = Wleaves/exp(-0.0147*basalArea); //Correct depending on tree basal area
+          Wleaves = Wleaves/exp(-0.235*treeLAI); //Correct depending on tree leaf area
           double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates phytovolume (in m3/ind)
           H[j] = pow(1e6*PV/Aash[j], 1.0/(1.0+Bash[j])); //Updates shrub height
           // Rcout<< Wleaves << " " << PV << " " << H[j]<<"\n";
@@ -355,7 +355,7 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
             H[j] = Hmax[j];
             PV = (Aash[j]/1e6)*pow(H[j], (1.0+Bash[j])); //recalculate phytovolume from H
             Wleaves = (Absh[j]/r635[j])*pow(PV, Bbsh[j]); //recalculate Wleaves from phytovolume
-            Wleaves = Wleaves*exp(-0.0147*basalArea); //Correct depending on tree basal area
+            Wleaves = Wleaves*exp(-0.235*treeLAI); //Correct depending on tree leaf area
             leafAreaTarget[j] = Wleaves * SLA[j]; //recalculate leaf area target from Wleaves
             sapwoodAreaTarget[j] = 10000.0*leafAreaTarget[j]/Al2As[j]; //Set target sapwood area (may generate sapwood senescence)
           }
@@ -364,6 +364,12 @@ void updateStructuralVariables(List x, NumericVector deltaSAgrowth) {
         }
       }
     }
+  }
+  //Herb variables
+  if(herbDynamics) {
+    double woodyLAI = sum(LAI_live);
+    double herbLAImax = x["herbLAImax"];
+    x["herbLAI"] = herbLAImax*exp(-0.235*woodyLAI);
   }
 }
 List growthDayInner(List x, NumericVector meteovec, 

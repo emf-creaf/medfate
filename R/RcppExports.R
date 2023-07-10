@@ -402,39 +402,6 @@ fire_necrosisHeight <- function(Ib_surf, t_res, thermal_factor, T_air = 25.0, rh
     .Call(`_medfate_shrubPhytovolumeAllometric`, SP, Cover, H, SpParams)
 }
 
-#' Herbaceous description functions
-#'
-#' Functions to calculate attributes of the herbaceous component of a \code{\link{forest}} object 
-#'  
-#' @param x An object of class \code{\link{forest}}.
-#' 
-#' @return
-#' A single scalar:
-#' \itemize{
-#'   \item{\code{herb_foliarBiomass}: Herbaceous biomass of leaves (in kg/m2).}
-#'   \item{\code{herb_fuelLoading}: Herbaceous fine fuel loading (in kg/m2).}
-#'   \item{\code{herb_LAI}: Herbaceous leaf area index (m2/m2).}
-#' }
-#' 
-#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-#' 
-#' @seealso \code{\link{spwb}}, \code{\link{forest}}, \code{\link{plant_basalArea}}, \code{\link{summary.forest}}
-#' 
-#' @name herb_values
-herb_foliarBiomass <- function(x) {
-    .Call(`_medfate_herbFoliarBiomass`, x)
-}
-
-#' @rdname herb_values
-herb_fuelLoading <- function(x) {
-    .Call(`_medfate_herbFuelLoading`, x)
-}
-
-#' @rdname herb_values
-herb_LAI <- function(x) {
-    .Call(`_medfate_herbLAI`, x)
-}
-
 #' Woody plant cohort description functions
 #'
 #' Functions to calculate attributes of woody plants in a \code{\link{forest}} object.
@@ -590,6 +557,40 @@ plant_phytovolume <- function(x, SpParams) {
 #' @rdname plant_values
 plant_LAI <- function(x, SpParams, gdd = NA_real_, bounded = TRUE) {
     .Call(`_medfate_cohortLAI`, x, SpParams, gdd, bounded)
+}
+
+#' Herbaceous description functions
+#'
+#' Functions to calculate attributes of the herbaceous component of a \code{\link{forest}} object 
+#' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
+#'  
+#' @param x An object of class \code{\link{forest}}.
+#' 
+#' @return
+#' A single scalar:
+#' \itemize{
+#'   \item{\code{herb_foliarBiomass}: Herbaceous biomass of leaves (in kg/m2).}
+#'   \item{\code{herb_fuelLoading}: Herbaceous fine fuel loading (in kg/m2).}
+#'   \item{\code{herb_LAI}: Herbaceous leaf area index (m2/m2).}
+#' }
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{spwb}}, \code{\link{forest}}, \code{\link{plant_basalArea}}, \code{\link{summary.forest}}
+#' 
+#' @name herb_values
+herb_foliarBiomass <- function(x, SpParams) {
+    .Call(`_medfate_herbFoliarBiomass`, x, SpParams)
+}
+
+#' @rdname herb_values
+herb_fuelLoading <- function(x, SpParams) {
+    .Call(`_medfate_herbFuelLoading`, x, SpParams)
+}
+
+#' @rdname herb_values
+herb_LAI <- function(x, SpParams) {
+    .Call(`_medfate_herbLAI`, x, SpParams)
 }
 
 #' Species description functions

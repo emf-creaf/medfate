@@ -437,7 +437,9 @@ DataFrame FCCSproperties(List object, DataFrame SpParams, NumericVector cohortFM
   double herbHeight = object["herbHeight"];
   if(NumericVector::is_na(herbHeight)) herbHeight = 0.0;
   double herbDepth = herbHeight/100.0; //in cm
-  double herbLoading = herbFoliarBiomassAllometric(herbCover, herbHeight); // From piropinus
+  NumericVector LAIlive = cohortLAI(object, SpParams);//Without correction
+  double woodyLAI = sum(LAIlive);
+  double herbLoading = herbFoliarBiomassAllometric(herbCover, herbHeight, woodyLAI); // From piropinus
   
   //Woody loading  
   double woodyLoading = std::accumulate(cohSmallBranchLitter.begin(),cohSmallBranchLitter.end(),0.0);

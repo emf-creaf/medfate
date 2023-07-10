@@ -136,14 +136,14 @@ summary.forest<-function(object, SpParams, ...) {
   s["Adult_lai"] <- sum(coh_lai[selAdult], na.rm=TRUE)
   s["Sapling_lai"] <- sum(coh_lai[selSapling], na.rm=TRUE)
   s["Shrub_lai"] <- sum(coh_lai[selShrub], na.rm=TRUE)
-  s["Herb_lai"] <- herb_LAI(object)
+  s["Herb_lai"] <- herb_LAI(object, SpParams)
   s["Total_lai"] <- s[["Tree_lai"]] + s[["Shrub_lai"]] + s[["Herb_lai"]]
   
   s["Tree_fuel"] <- sum(coh_fuel[selTree], na.rm=TRUE)
   s["Adult_fuel"] <- sum(coh_fuel[selAdult], na.rm=TRUE)
   s["Sapling_fuel"] <- sum(coh_fuel[selSapling], na.rm=TRUE)
   s["Shrub_fuel"] <- sum(coh_fuel[selShrub], na.rm=TRUE)
-  s["Herb_fuel"] <- herb_fuelLoading(object)
+  s["Herb_fuel"] <- herb_fuelLoading(object, SpParams)
   s["Total_fuel"] <- s[["Tree_fuel"]] + s[["Shrub_fuel"]] + s[["Herb_fuel"]]
   
   s["PARground"] <- light_PARground(object, SpParams)

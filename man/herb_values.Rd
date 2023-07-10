@@ -7,14 +7,16 @@
 \alias{herb_LAI}
 \title{Herbaceous description functions}
 \usage{
-herb_foliarBiomass(x)
+herb_foliarBiomass(x, SpParams)
 
-herb_fuelLoading(x)
+herb_fuelLoading(x, SpParams)
 
-herb_LAI(x)
+herb_LAI(x, SpParams)
 }
 \arguments{
 \item{x}{An object of class \code{\link{forest}}.}
+
+\item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
 }
 \value{
 A single scalar:

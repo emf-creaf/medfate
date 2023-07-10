@@ -442,39 +442,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// herbFoliarBiomass
-double herbFoliarBiomass(List x);
-RcppExport SEXP _medfate_herbFoliarBiomass(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(herbFoliarBiomass(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// herbFuelLoading
-double herbFuelLoading(List x);
-RcppExport SEXP _medfate_herbFuelLoading(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(herbFuelLoading(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// herbLAI
-double herbLAI(List x);
-RcppExport SEXP _medfate_herbLAI(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(herbLAI(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // cohortIDs
 CharacterVector cohortIDs(List x, DataFrame SpParams, int treeOffset, int shrubOffset);
 RcppExport SEXP _medfate_cohortIDs(SEXP xSEXP, SEXP SpParamsSEXP, SEXP treeOffsetSEXP, SEXP shrubOffsetSEXP) {
@@ -698,6 +665,42 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
     Rcpp::traits::input_parameter< bool >::type bounded(boundedSEXP);
     rcpp_result_gen = Rcpp::wrap(cohortLAI(x, SpParams, gdd, bounded));
+    return rcpp_result_gen;
+END_RCPP
+}
+// herbFoliarBiomass
+double herbFoliarBiomass(List x, DataFrame SpParams);
+RcppExport SEXP _medfate_herbFoliarBiomass(SEXP xSEXP, SEXP SpParamsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    rcpp_result_gen = Rcpp::wrap(herbFoliarBiomass(x, SpParams));
+    return rcpp_result_gen;
+END_RCPP
+}
+// herbFuelLoading
+double herbFuelLoading(List x, DataFrame SpParams);
+RcppExport SEXP _medfate_herbFuelLoading(SEXP xSEXP, SEXP SpParamsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    rcpp_result_gen = Rcpp::wrap(herbFuelLoading(x, SpParams));
+    return rcpp_result_gen;
+END_RCPP
+}
+// herbLAI
+double herbLAI(List x, DataFrame SpParams);
+RcppExport SEXP _medfate_herbLAI(SEXP xSEXP, SEXP SpParamsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    rcpp_result_gen = Rcpp::wrap(herbLAI(x, SpParams));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4973,9 +4976,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_shrubCrownRatioAllometric", (DL_FUNC) &_medfate_shrubCrownRatioAllometric, 2},
     {"_medfate_shrubCover", (DL_FUNC) &_medfate_shrubCover, 2},
     {"_medfate_shrubPhytovolumeAllometric", (DL_FUNC) &_medfate_shrubPhytovolumeAllometric, 4},
-    {"_medfate_herbFoliarBiomass", (DL_FUNC) &_medfate_herbFoliarBiomass, 1},
-    {"_medfate_herbFuelLoading", (DL_FUNC) &_medfate_herbFuelLoading, 1},
-    {"_medfate_herbLAI", (DL_FUNC) &_medfate_herbLAI, 1},
     {"_medfate_cohortIDs", (DL_FUNC) &_medfate_cohortIDs, 4},
     {"_medfate_cohortBasalArea", (DL_FUNC) &_medfate_cohortBasalArea, 2},
     {"_medfate_cohortLargerTreeBasalArea", (DL_FUNC) &_medfate_cohortLargerTreeBasalArea, 3},
@@ -4994,6 +4994,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_cohortEquilibriumSmallBranchLitter", (DL_FUNC) &_medfate_cohortEquilibriumSmallBranchLitter, 3},
     {"_medfate_cohortPhytovolume", (DL_FUNC) &_medfate_cohortPhytovolume, 2},
     {"_medfate_cohortLAI", (DL_FUNC) &_medfate_cohortLAI, 4},
+    {"_medfate_herbFoliarBiomass", (DL_FUNC) &_medfate_herbFoliarBiomass, 2},
+    {"_medfate_herbFuelLoading", (DL_FUNC) &_medfate_herbFuelLoading, 2},
+    {"_medfate_herbLAI", (DL_FUNC) &_medfate_herbLAI, 2},
     {"_medfate_speciesBasalArea", (DL_FUNC) &_medfate_speciesBasalArea, 2},
     {"_medfate_speciesCover", (DL_FUNC) &_medfate_speciesCover, 2},
     {"_medfate_speciesDensity", (DL_FUNC) &_medfate_speciesDensity, 2},

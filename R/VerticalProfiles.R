@@ -56,7 +56,7 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA,
     if(is.null(SpParams)) stop("Please, provide 'SpParams' to calculate leaf area.")
     spnames <- plant_speciesName(x, SpParams)
     herbHeight <- x$herbHeight
-    herbLAI <- herb_LAI(x)
+    herbLAI <- herb_LAI(x, SpParams)
     x <- forest2aboveground(x, SpParams, gdd)
   } else {
     if(any(!(c("LAI_expanded", "H", "CR", "SP") %in% names(x)))) {

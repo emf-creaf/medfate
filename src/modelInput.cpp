@@ -1015,6 +1015,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
                             _["soil"] = clone(soil),
                             _["canopy"] = paramsCanopydf,
                             _["herbLAI"] = NA_REAL, //To be filled outside
+                            _["herbLAImax"] = NA_REAL, //To be filled outside
                             _["cohorts"] = cohortDescdf,
                             _["above"] = plantsdf,
                             _["below"] = belowdf,
@@ -1141,6 +1142,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                        _["soil"] = clone(soil),
                        _["canopy"] = paramsCanopydf,
                        _["herbLAI"] = NA_REAL, //To be filled outside
+                       _["herbLAImax"] = NA_REAL, //To be filled outside
                        _["cohorts"] = cohortDescdf,
                        _["above"] = plantsdf,
                        _["below"] = belowdf,
@@ -1158,10 +1160,10 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                        _["internalCarbon"] = internalCarbonDataFrame(plantsdf, belowdf, belowLayers,
                                                        paramsAnatomydf, 
                                                        paramsWaterStoragedf,
-                                                       paramsGrowthdf, control),
-                       _["internalAllocation"] = internalAllocationDataFrame(plantsdf, belowdf,
-                                                      paramsAnatomydf,
-                                                      paramsTranspirationdf, control));
+                                                       paramsGrowthdf, control));
+  input.push_back(internalAllocationDataFrame(plantsdf, belowdf,
+                                              paramsAnatomydf,
+                                              paramsTranspirationdf, control), "internalAllocation");
   
   input.push_back(internalMortalityDataFrame(plantsdf), "internalMortality");
   input.push_back(FCCSprops, "internalFCCS");
@@ -1483,10 +1485,13 @@ List forest2spwbInput(List x, List soil, DataFrame SpParams, List control) {
   List rdc = rootDistributionComplete(x, SpParams, control["fillMissingRootParams"]);
   bool fireHazardResults = control["fireHazardResults"];
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL, fireHazardResults);
+  NumericVector LAIlive = above["LAI_live"];
+  double woodyLAI = sum(LAIlive);
   DataFrame FCCSprops = R_NilValue;
   if(fireHazardResults) FCCSprops = FCCSproperties(x, SpParams);
   List s = spwbInput(above, rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control);
-  s["herbLAI"] = herbLAIAllometric(x["herbCover"], x["herbHeight"]);
+  s["herbLAImax"] = herbLAIAllometric(x["herbCover"], x["herbHeight"], 0.0);
+  s["herbLAI"] = herbLAIAllometric(x["herbCover"], x["herbHeight"], woodyLAI);
   return(s);
 }
 
@@ -1497,9 +1502,12 @@ List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   List rdc = rootDistributionComplete(x, SpParams, control["fillMissingRootParams"]);
   // Loading and FCCS properties are needed if fire hazard results are true or fires are simulated 
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL, true);
+  NumericVector LAIlive = above["LAI_live"];
+  double woodyLAI = sum(LAIlive);
   DataFrame FCCSprops = FCCSproperties(x, SpParams);
   List g = growthInput(above,  rdc["Z50"], rdc["Z95"], soil, FCCSprops, SpParams, control);
-  g["herbLAI"] = herbLAIAllometric(x["herbCover"], x["herbHeight"]);
+  g["herbLAImax"] = herbLAIAllometric(x["herbCover"], x["herbHeight"], 0.0);
+  g["herbLAI"] = herbLAIAllometric(x["herbCover"], x["herbHeight"], woodyLAI);
   return(g);
 }
 
