@@ -36,9 +36,13 @@ SpParamsMED = medfate::modifySpParams(SpParamsMED, RGRcambiummaxTrees, subsetSpe
 # Load ingrowth calibration results
 recruitmentParamsSpecies = readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/Rdata/final_recruitment_params.rds"))
 SpParamsMED = medfate::modifySpParams(SpParamsMED, recruitmentParamsSpecies, subsetSpecies = FALSE)
-# Load Mortality calibration results
+# Load Baseline mortality calibration results
 mortalityParamsSpecies = readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/Rdata/mort_rates.rds"))
 SpParamsMED = medfate::modifySpParams(SpParamsMED, mortalityParamsSpecies, subsetSpecies = FALSE)
+# Load SurvivalModel calibration results
+survivalParamsSpecies = readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/Rdata/survival_models.rds"))
+SpParamsMED = medfate::modifySpParams(SpParamsMED, survivalParamsSpecies, subsetSpecies = FALSE)
+
 # Manual tuning
 tree_all_cols = 27:39
 #Use allometries of A. alba for P. abies

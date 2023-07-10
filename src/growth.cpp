@@ -1256,7 +1256,7 @@ List growthDayInner(List x, NumericVector meteovec,
             //If survival model is available, replace basal mortality value
             if(!NumericVector::is_na(SurvivalModelStep[j]) && !NumericVector::is_na(SurvivalB0[j]) && !NumericVector::is_na(SurvivalB1[j])) {
               //Probability of dying in model step years
-              double lp  = SurvivalB0[j] - SurvivalB1[j]*sqrt(treeBasalArea);
+              double lp  = SurvivalB0[j] + SurvivalB1[j]*sqrt(treeBasalArea);
               double Pmodel = 1.0 - exp(lp)/(1.0 + exp(lp));
               //Probability of dying in 1 year
               double Pmodel1yr = (1.0- exp(log(1.0-Pmodel)/SurvivalModelStep[j]));

@@ -9,7 +9,7 @@
 #' @param verbose A logical flag to indicate that messages should be printed on the console.
 #' 
 #' @details When calling function \code{modifySpParams}, \code{customParams} should be a data frame with as many rows as species 
-#' and as many columns as parameters to modify, plus a column called 'SpIndex' to match species between the two tables.
+#' and as many columns as parameters to modify, plus a column called 'SpIndex' or 'Species' to match species between the two tables.
 #' 
 #' When calling \code{modifyCohortParams}, \code{customParams} can be a data frame with as many rows as cohorts 
 #' and as many columns as parameters to modify, plus a column called 'Cohort' which will be matched with the cohort names 
@@ -90,29 +90,38 @@ modifySpParams<-function(SpParams, customParams, subsetSpecies = TRUE) {
   }
   
   # get the names of the custom params and the SpParams
-  custom_par <- names(customParams)
-  if("SpIndex" %in% custom_par) custom_par = custom_par[-which(custom_par=="SpIndex")] # remove SpIndex from
+  target_par <- names(customParams)
+  if("SpIndex" %in% target_par) target_par = target_par[-which(target_par=="SpIndex")] # remove SpIndex from target_par
+  if("Species" %in% target_par) target_par = target_par[-which(target_par=="Species")] # remove Species from target_par
   
   sp_par <- names(SpParams)
   
-  # iterate between the custom params exisiting in SpParams
-  for (param in custom_par) {
-    
+  # iterate between the custom params existing in SpParams
+  for (param in target_par) {
     # check if the param exists in SpParams
     if (param %in% sp_par) {
-      
       # iterate by species, in case same variable has different values by sp
-      for (sp in customParams[['SpIndex']]) {
-        val <- customParams[which(customParams[['SpIndex']] == sp), param][1]
-        if(!is.na(val)) {
-          SpParams[which(SpParams[['SpIndex']] == sp), param] <- val
+      if("SpIndex" %in% names(customParams)) {
+        for (sp in customParams[['SpIndex']]) {
+          val <- customParams[which(customParams[['SpIndex']] == sp), param][1]
+          if(!is.na(val)) {
+            SpParams[which(SpParams[['SpIndex']] == sp), param] <- val
+          }
+        }
+      } else if ("Species" %in% names(customParams)) {
+        for (sp in customParams[['Species']]) {
+          val <- customParams[which(customParams[['Species']] == sp), param][1]
+          if(!is.na(val)) {
+            SpParams[which(SpParams[['Name']] == sp), param] <- val
+          }
         }
       }
     }
   }
   # subset species
   if(subsetSpecies) {
-    SpParams = SpParams[SpParams$SpIndex %in% customParams[['SpIndex']],]
+    if("SpIndex" %in% names(customParams)) SpParams = SpParams[SpParams$SpIndex %in% customParams[['SpIndex']],]
+    if("Species" %in% names(customParams)) SpParams = SpParams[SpParams$Name %in% customParams[['Species']],]
   }
   # return the new SpParams
   return(SpParams)
