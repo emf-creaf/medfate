@@ -4,30 +4,20 @@
 \alias{mortality_dailyProbability}
 \title{Mortality}
 \usage{
-mortality_dailyProbability(
-  basalMortalityRate,
-  stressValue,
-  stressThreshold,
-  minValue = 0,
-  exponent = 10
-)
+mortality_dailyProbability(stressValue, stressThreshold, exponent = 40)
 }
 \arguments{
-\item{basalMortalityRate}{Basal daily mortality rate per individual.}
+\item{stressValue}{Current value of the stress variable (0 to 1, with higher values indicate stronger stress).}
 
-\item{stressValue}{Current value of the stress variable (lower values indicate stronger stress).}
+\item{stressThreshold}{Threshold to indicate 50% annual mortality probability.}
 
-\item{stressThreshold}{Threshold to indicate that lower values increase mortality likelihood.}
-
-\item{minValue}{Minimum value of the stress variable (i.e. maximum stress), corresponding to probability of mortality equal to 1.}
-
-\item{exponent}{Coefficient modulating the steepness of the relationship.}
+\item{exponent}{Coefficient modulating the steepness of the sigmoid relationship.}
 }
 \value{
 Returns a probability (between 0 and 1).
 }
 \description{
-A simple function to determine a daily mortality likelihood according to the value of a stress variable.
+A simple sigmoid function to determine a daily mortality likelihood according to the value of a stress variable.
 }
 \seealso{
 \code{\link{growth}}, \code{\link{regeneration}}

@@ -1111,24 +1111,22 @@ BEGIN_RCPP
 END_RCPP
 }
 // dailyMortalityProbability
-double dailyMortalityProbability(double basalMortalityRate, double stressValue, double stressThreshold, double minValue, double exponent);
-static SEXP _medfate_dailyMortalityProbability_try(SEXP basalMortalityRateSEXP, SEXP stressValueSEXP, SEXP stressThresholdSEXP, SEXP minValueSEXP, SEXP exponentSEXP) {
+double dailyMortalityProbability(double stressValue, double stressThreshold, double exponent);
+static SEXP _medfate_dailyMortalityProbability_try(SEXP stressValueSEXP, SEXP stressThresholdSEXP, SEXP exponentSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< double >::type basalMortalityRate(basalMortalityRateSEXP);
     Rcpp::traits::input_parameter< double >::type stressValue(stressValueSEXP);
     Rcpp::traits::input_parameter< double >::type stressThreshold(stressThresholdSEXP);
-    Rcpp::traits::input_parameter< double >::type minValue(minValueSEXP);
     Rcpp::traits::input_parameter< double >::type exponent(exponentSEXP);
-    rcpp_result_gen = Rcpp::wrap(dailyMortalityProbability(basalMortalityRate, stressValue, stressThreshold, minValue, exponent));
+    rcpp_result_gen = Rcpp::wrap(dailyMortalityProbability(stressValue, stressThreshold, exponent));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_dailyMortalityProbability(SEXP basalMortalityRateSEXP, SEXP stressValueSEXP, SEXP stressThresholdSEXP, SEXP minValueSEXP, SEXP exponentSEXP) {
+RcppExport SEXP _medfate_dailyMortalityProbability(SEXP stressValueSEXP, SEXP stressThresholdSEXP, SEXP exponentSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_dailyMortalityProbability_try(basalMortalityRateSEXP, stressValueSEXP, stressThresholdSEXP, minValueSEXP, exponentSEXP));
+        rcpp_result_gen = PROTECT(_medfate_dailyMortalityProbability_try(stressValueSEXP, stressThresholdSEXP, exponentSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -4844,7 +4842,7 @@ END_RCPP
 static int _medfate_RcppExport_validate(const char* sig) { 
     static std::set<std::string> signatures;
     if (signatures.empty()) {
-        signatures.insert("double(*mortality_dailyProbability)(double,double,double,double,double)");
+        signatures.insert("double(*mortality_dailyProbability)(double,double,double)");
         signatures.insert("List(*growth_day)(List,CharacterVector,NumericVector,double,double,double,double,double,bool)");
         signatures.insert("List(*growth)(List,DataFrame,double,double,double,double,NumericVector)");
         signatures.insert("double(*hydrology_erFactor)(int,double,double,double,double)");
@@ -5026,7 +5024,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_layerFuelAverageCrownLength", (DL_FUNC) &_medfate_layerFuelAverageCrownLength, 6},
     {"_medfate_fuelLiveStratification", (DL_FUNC) &_medfate_fuelLiveStratification, 6},
     {"_medfate_FCCSproperties", (DL_FUNC) &_medfate_FCCSproperties, 8},
-    {"_medfate_dailyMortalityProbability", (DL_FUNC) &_medfate_dailyMortalityProbability, 5},
+    {"_medfate_dailyMortalityProbability", (DL_FUNC) &_medfate_dailyMortalityProbability, 3},
     {"_medfate_growthDay", (DL_FUNC) &_medfate_growthDay, 9},
     {"_medfate_growth", (DL_FUNC) &_medfate_growth, 7},
     {"_medfate_Psi2K", (DL_FUNC) &_medfate_Psi2K, 3},

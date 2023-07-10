@@ -21,13 +21,11 @@ using namespace Rcpp;
 
 //' Mortality
 //' 
-//' A simple function to determine a daily mortality likelihood according to the value of a stress variable.
+//' A simple sigmoid function to determine a daily mortality likelihood according to the value of a stress variable.
 //'
-//' @param basalMortalityRate Basal daily mortality rate per individual.
-//' @param stressValue Current value of the stress variable (lower values indicate stronger stress).
-//' @param stressThreshold Threshold to indicate that lower values increase mortality likelihood.
-//' @param minValue Minimum value of the stress variable (i.e. maximum stress), corresponding to probability of mortality equal to 1.
-//' @param exponent Coefficient modulating the steepness of the relationship.
+//' @param stressValue Current value of the stress variable (0 to 1, with higher values indicate stronger stress).
+//' @param stressThreshold Threshold to indicate 50% annual mortality probability.
+//' @param exponent Coefficient modulating the steepness of the sigmoid relationship.
 //' 
 //' @return Returns a probability (between 0 and 1).
 //' 
@@ -36,17 +34,11 @@ using namespace Rcpp;
 //' @seealso \code{\link{growth}}, \code{\link{regeneration}}
 //' 
 // [[Rcpp::export("mortality_dailyProbability")]]
-double dailyMortalityProbability(double basalMortalityRate, double stressValue, double stressThreshold,
-                                 double minValue = 0.0, double exponent=10.0) {
-  double P_stress = basalMortalityRate;
-  if(stressValue < stressThreshold) {
-    double a = (1.0-basalMortalityRate)/pow(stressThreshold - minValue,exponent);
-    P_stress += a*pow(stressThreshold-stressValue,exponent); 
-  }
-  if(stressValue < minValue) {
-    P_stress = 1.0;
-  }
-  return(std::min(1.0,P_stress));
+double dailyMortalityProbability(double stressValue, double stressThreshold, double exponent=40.0) {
+  double y = (stressValue - stressThreshold);
+  double P_annual = 1.0 - exp(exponent*y)/(1.0 + exp(exponent*y));
+  double P_daily = 1.0 - exp(log(1.0 - P_annual)/356.0);
+  return(P_daily);
 }
 
 /**
@@ -1263,8 +1255,8 @@ List growthDayInner(List x, NumericVector meteovec,
               //Daily basal mortality rate based on model
               basalMortalityRate = 1.0 - exp(log(1.0 - Pmodel1yr)/356.0);
             }
-            if(allowStarvation) starvationRate[j] = dailyMortalityProbability(basalMortalityRate, sugarSapwood[j], mortalitySugarThreshold, 0.0);
-            if(allowDessication) dessicationRate[j] = dailyMortalityProbability(basalMortalityRate, stemSympRWC, mortalityRWCThreshold, 0.0);
+            if(allowStarvation) starvationRate[j] = dailyMortalityProbability(sugarSapwood[j], mortalitySugarThreshold);
+            if(allowDessication) dessicationRate[j] = dailyMortalityProbability(std::max(stemSympRWC, 1.0 - StemPLC[j]), mortalityRWCThreshold);
             mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));
             if((dessicationRate[j] > basalMortalityRate) && (dessicationRate[j] > starvationRate[j])) {
               cause = "dessication";
