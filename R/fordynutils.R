@@ -114,6 +114,7 @@
                      Z95 = c(forest$treeData$Z95, forest$shrubData$Z95),
                      xo$soil, FCCSprops, SpParams, control)
   xi$herbLAI <- xo$herbLAI
+  xi$herbLAImax <- xo$herbLAImax
   
   # 5.2 Replace previous state for surviving cohorts
   xi$cohorts[repl_vec,] <- xo$cohorts[sel_vec,, drop=FALSE]

@@ -105,7 +105,7 @@ A list, with the following options (default values in brackets):
       \item{\code{mortalityMode [= "density/deterministic"]}: String describing how mortality is applied. Current accepted values are combinations of "cohort" vs "density" (for whole-cohort mortality vs reduction of stem density) and "deterministic" vs. "stochastic".}
       \item{\code{mortalityBaselineRate [= 0.0015]}: Default deterministic proportion or probability specifying the baseline reduction of cohort's density occurring in a year (for \code{mortalityMode = "density/deterministic" or "density/stochastic").}}
       \item{\code{mortalityRelativeSugarThreshold [= 0.3]}: Threshold of stem sugar concentration, in relation to the equilibrium sugar concentration, resulting in an increased mortality rate/probability whenever levels are below.}
-      \item{\code{mortalityRWCThreshold [= 0.3]}: Threshold of stem relative water content resulting in increased mortality rate/probability whenever levels are below.}
+      \item{\code{mortalityRWCThreshold [= 0.4]}: Threshold of stem relative water content resulting in increased mortality rate/probability whenever levels are below.}
       \item{\code{recrTreeDBH [= 1]}: Default DBH (cm) for recruited trees  (when species parameter \code{RecrTreeDBH} is missing).}
       \item{\code{recrTreeDensity [= 1000]}: Default density (ind·ha-1) for recruited trees  (when species parameter \code{RecrTreeDensity} is missing).}
       \item{\code{ingrowthTreeDBH [= 7.5]}: Default DBH (cm) for ingrowth trees  (when species parameter \code{RecrTreeDBH} is missing).}
@@ -117,8 +117,8 @@ A list, with the following options (default values in brackets):
      \item{\code{recruitmentMode [= "stochastic"]}: String describing how recruitment from seeds is applied. Current accepted values are "deterministic" or "stochastic".}
      \item{\code{allowResprouting [= TRUE]}: Boolean flag to indicate that resprouting is allowed.}
      \item{\code{removeEmptyCohorts [= TRUE]}: Boolean flag to indicate the removal of cohorts whose density is too low.}
-     \item{\code{dynamicallyMergeCohorts [= FALSE]}: Boolean flag to indicate that cohorts should be merged when possible. This option speeds up calculations but results in a loss of cohort identity and reinitialization of many state variables.}
      \item{\code{minimumCohortDensity [= 1]}: Threshold of density resulting in cohort removal.}
+     \item{\code{dynamicallyMergeCohorts [= FALSE]}: Boolean flag to indicate that cohorts should be merged when possible. This option speeds up calculations but results in a loss of cohort identity and reinitialization of many state variables.}
      \item{\code{seedRain [= NULL]}: Vector of species codes whose seed rain is to be simulated. If \code{NULL} the species identity of seed rain is taken from species currently present in the forest stand and with minimum size (see below).}
      \item{\code{seedProductionTreeHeight [= 300]}: Default minimum tree height for producing seeds (when species parameter \code{SeedProductionHeight} is missing).}
      \item{\code{seedProductionShrubHeight [= 30]}: Default minimum shrub height for producing seeds (when species parameter \code{SeedProductionHeight} is missing).}

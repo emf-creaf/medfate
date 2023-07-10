@@ -638,6 +638,10 @@ DataFrame paramsMortalityRegeneration(DataFrame above, DataFrame SpParams, List 
   int numCohorts = SP.size();
   
   NumericVector MortalityBaselineRate = speciesNumericParameterFromIndex(SP, SpParams, "MortalityBaselineRate");
+  NumericVector SurvivalModelStep(numCohorts, NA_REAL), SurvivalB0(numCohorts, NA_REAL), SurvivalB1(numCohorts, NA_REAL);
+  if(SpParams.containsElementNamed("SurvivalModelStep")) SurvivalModelStep = speciesNumericParameterFromIndex(SP, SpParams, "SurvivalModelStep");
+  if(SpParams.containsElementNamed("SurvivalB0")) SurvivalB0 = speciesNumericParameterFromIndex(SP, SpParams, "SurvivalB0");
+  if(SpParams.containsElementNamed("SurvivalB1")) SurvivalB1= speciesNumericParameterFromIndex(SP, SpParams, "SurvivalB1");
   NumericVector RecrTreeDensity(numCohorts, NA_REAL);
   NumericVector RecrTreeDBH(numCohorts, NA_REAL);
   NumericVector IngrowthTreeDensity(numCohorts, NA_REAL);
@@ -667,6 +671,9 @@ DataFrame paramsMortalityRegeneration(DataFrame above, DataFrame SpParams, List 
   }
   
   DataFrame paramsMortalityRecruitmentdf = DataFrame::create(_["MortalityBaselineRate"] = MortalityBaselineRate,
+                                                             _["SurvivalModelStep"] = SurvivalModelStep,
+                                                             _["SurvivalB0"] = SurvivalB0,
+                                                             _["SurvivalB1"] = SurvivalB1,
                                                              _["RecrTreeDensity"] = RecrTreeDensity,
                                                              _["RecrTreeDBH"] = RecrTreeDBH,
                                                              _["IngrowthTreeDensity"] = IngrowthTreeDensity,
@@ -1408,7 +1415,18 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //'       \item{\code{fHDmin}: Minimum value of the height-to-diameter ratio (dimensionless).}
 //'       \item{\code{fHDmax}: Maximum value of the height-to-diameter ratio (dimensionless).}
 //'       \item{\code{WoodC}: Wood carbon content per dry weight (g C /g dry).}
+//'     }
+//'   }
+//'   \item{\code{paramsMortalityRegeneration}: A data frame with mortality/regeneration parameters for each cohort:
+//'     \itemize{
 //'       \item{\code{MortalityBaselineRate}: Deterministic proportion or probability specifying the baseline reduction of cohort's density occurring in a year.}
+//'       \item{\code{SurvivalModelStep}: Time step in years of the empirical survival model depending on stand basal area (e.g. 10).}
+//'       \item{\code{SurvivalB0}: Intercept of the logistic baseline survival model depending on stand basal area.}
+//'       \item{\code{SurvivalB1}: Slope of the logistic baseline survival model depending on stand basal area.}
+//'       \item{\code{RecrTreeDensity}: Density of tree recruits from seeds.}
+//'       \item{\code{IngrowthTreeDensity}: Density of trees reaching ingrowth DBH.}
+//'       \item{\code{RecrTreeDBH}: DBH for tree recruits from seeds or resprouting (e.g. 1 cm).}
+//'       \item{\code{IngrowthTreeDBH}: Ingrowth DBH for trees (e.g. 7.5 cm).}
 //'     }
 //'   }
 //'   \item{\code{paramsAllometry}: A data frame with allometric parameters for each cohort:

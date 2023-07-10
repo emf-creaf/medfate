@@ -599,6 +599,9 @@ List growthDayInner(List x, NumericVector meteovec,
   //Mortality/regeneration parameters
   DataFrame paramsMortalityRegeneration = Rcpp::as<Rcpp::DataFrame>(x["paramsMortalityRegeneration"]);
   NumericVector MortalityBaselineRate = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["MortalityBaselineRate"]);
+  NumericVector SurvivalModelStep = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["SurvivalModelStep"]);
+  NumericVector SurvivalB0 = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["SurvivalB0"]);
+  NumericVector SurvivalB1 = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["SurvivalB1"]);
   NumericVector RecrTreeDensity = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["RecrTreeDensity"]);
   NumericVector RecrTreeDBH = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["RecrTreeDBH"]);
   NumericVector IngrowthTreeDensity = Rcpp::as<Rcpp::NumericVector>(paramsMortalityRegeneration["IngrowthTreeDensity"]);
@@ -703,7 +706,12 @@ List growthDayInner(List x, NumericVector meteovec,
   NumericVector TotalLivingBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalLivingBiomass"]);
   NumericVector TotalBiomass = Rcpp::as<Rcpp::NumericVector>(ccIni["TotalBiomass"]);
 
-  
+
+  //For survival model based on basal area  
+  double treeBasalArea = 0.0;
+  for(int j=0;j<numCohorts;j++){
+    if(!NumericVector::is_na(DBH[j])) treeBasalArea += N[j]*3.141593*pow(DBH[j]/200,2.0);
+  }
 
   //3. Carbon balance, growth, senescence and mortality by cohort
   for(int j=0;j<numCohorts;j++){
@@ -1243,8 +1251,18 @@ List growthDayInner(List x, NumericVector meteovec,
               cause = "dessication";
             }
           } else {
+            //Daily basal mortality rate based on constant year probability
             double basalMortalityRate = 1.0 - exp(log(1.0 - MortalityBaselineRate[j])/356.0);
-            
+            //If survival model is available, replace basal mortality value
+            if(!NumericVector::is_na(SurvivalModelStep[j]) && !NumericVector::is_na(SurvivalB0[j]) && !NumericVector::is_na(SurvivalB1[j])) {
+              //Probability of dying in model step years
+              double lp  = SurvivalB0[j] - SurvivalB1[j]*sqrt(treeBasalArea);
+              double Pmodel = 1.0 - exp(lp)/(1.0 + exp(lp));
+              //Probability of dying in 1 year
+              double Pmodel1yr = (1.0- exp(log(1.0-Pmodel)/SurvivalModelStep[j]));
+              //Daily basal mortality rate based on model
+              basalMortalityRate = 1.0 - exp(log(1.0 - Pmodel1yr)/356.0);
+            }
             if(allowStarvation) starvationRate[j] = dailyMortalityProbability(basalMortalityRate, sugarSapwood[j], mortalitySugarThreshold, 0.0);
             if(allowDessication) dessicationRate[j] = dailyMortalityProbability(basalMortalityRate, stemSympRWC, mortalityRWCThreshold, 0.0);
             mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));

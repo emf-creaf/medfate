@@ -2041,7 +2041,18 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
 #'       \item{\code{fHDmin}: Minimum value of the height-to-diameter ratio (dimensionless).}
 #'       \item{\code{fHDmax}: Maximum value of the height-to-diameter ratio (dimensionless).}
 #'       \item{\code{WoodC}: Wood carbon content per dry weight (g C /g dry).}
+#'     }
+#'   }
+#'   \item{\code{paramsMortalityRegeneration}: A data frame with mortality/regeneration parameters for each cohort:
+#'     \itemize{
 #'       \item{\code{MortalityBaselineRate}: Deterministic proportion or probability specifying the baseline reduction of cohort's density occurring in a year.}
+#'       \item{\code{SurvivalModelStep}: Time step in years of the empirical survival model depending on stand basal area (e.g. 10).}
+#'       \item{\code{SurvivalB0}: Intercept of the logistic baseline survival model depending on stand basal area.}
+#'       \item{\code{SurvivalB1}: Slope of the logistic baseline survival model depending on stand basal area.}
+#'       \item{\code{RecrTreeDensity}: Density of tree recruits from seeds.}
+#'       \item{\code{IngrowthTreeDensity}: Density of trees reaching ingrowth DBH.}
+#'       \item{\code{RecrTreeDBH}: DBH for tree recruits from seeds or resprouting (e.g. 1 cm).}
+#'       \item{\code{IngrowthTreeDBH}: Ingrowth DBH for trees (e.g. 7.5 cm).}
 #'     }
 #'   }
 #'   \item{\code{paramsAllometry}: A data frame with allometric parameters for each cohort:

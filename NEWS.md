@@ -2,9 +2,10 @@
  NEWS for R Package "medfate"
 -------------------------------
 
-# Version 3.1.2
+# Version 3.1.3
 - New option 'months' in simulation summaries.
 - Leaf area, foliar biomass and fuels of shrubs and herbs depend on the leaf area of plants above
+- Survival model based on basal area available as an alternative to fixed mortality baseline rates
 
 # Version 3.1.1
 - Fire severity implemented
