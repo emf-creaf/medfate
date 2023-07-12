@@ -152,6 +152,7 @@ resprouting <- function(forest, internalMortality, SpParams, control,
   n_trees <- nrow(forest$treeData)
   n_shrubs <- nrow(forest$shrubData)
   
+  ## Resprouting survivorship
   resp_dist_trees <- species_parameter(forest$treeData$Species, SpParams, "RespDist")
   resp_dist_trees[is.na(resp_dist_trees)] <- 0
   resp_dist_shrubs <- species_parameter(forest$shrubData$Species, SpParams, "RespDist")
@@ -168,8 +169,12 @@ resprouting <- function(forest, internalMortality, SpParams, control,
   N_resprouting_dessication <- internalMortality$N_dessication
   N_resprouting_burnt <- internalMortality$N_burnt
   if(n_trees>0) {
-    N_resprouting <- N_resprouting_dessication[1:n_trees]*resp_dist_trees
-    N_resprouting <- N_resprouting + N_resprouting_burnt[1:n_trees]*resp_fire_trees
+    # Resprouting survivorship (fire + dessication)
+    N_surv_dessication <- N_resprouting_dessication[1:n_trees]*resp_dist_trees
+    N_surv_fire <- N_resprouting_burnt[1:n_trees]*resp_fire_trees
+    N_surv <- N_surv_dessication + N_surv_fire
+    # Resprouting vigor depends on cm2 of stump area
+    N_resprouting <- N_surv*pi*(forest$treeData$DBH/2)^2*1.82*10^(-0.053*5) 
   } else { 
     N_resprouting <- numeric(0)
   }
@@ -182,7 +187,9 @@ resprouting <- function(forest, internalMortality, SpParams, control,
     Cover_resprouting <- numeric(0)
   }
   if(!is.null(management_results)) { ## Add tree/shrub cuts
-    N_resprouting <- N_resprouting + management_results$N_tree_cut*resp_clip_trees
+    N_surv_cut <- management_results$N_tree_cut*resp_clip_trees
+    N_resprouting_cut <- N_surv_cut*pi*(forest$treeData$DBH/2)^2*1.82*10^(-0.053*5) 
+    N_resprouting <- N_resprouting + N_resprouting_cut
     Cover_resprouting <- Cover_resprouting + management_results$Cover_shrub_cut*resp_clip_shrubs
   }
   

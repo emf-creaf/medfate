@@ -681,7 +681,6 @@ List growthDayInner(List x, NumericVector meteovec,
   
   double equilibriumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConcentration;
   double equilibriumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConcentration;
-  double mortalitySugarThreshold = equilibriumSapwoodSugarConc*mortalityRelativeSugarThreshold;
 
   double rcellmax = relative_expansion_rate(0.0 ,30.0, -1.0, 0.5, 0.05, 5.0);
   
@@ -1183,6 +1182,8 @@ List growthDayInner(List x, NumericVector meteovec,
       double stemSympRWC = NA_REAL;
       if(transpirationMode=="Granier") stemSympRWC = symplasticRelativeWaterContent(PlantPsi[j], StemPI0[j], StemEPS[j]);
       else stemSympRWC = sum(StemSympRWCInst(j,_))/((double) numSteps);
+      //Sapwood sugar relative to equilibrium, indicator of starvation
+      double relativeSugarSapwood = (sugarSapwood[j]/equilibriumSapwoodSugarConc);
       if(dynamicCohort) {
         String cause = "undertermined";
         //Determine fire severity if fire occurred
@@ -1233,7 +1234,7 @@ List growthDayInner(List x, NumericVector meteovec,
         }
         if(abovegroundFireSurvival) {
           if(mortalityMode=="whole-cohort/deterministic") {
-            if((sugarSapwood[j]<mortalitySugarThreshold) && allowStarvation) {
+            if((relativeSugarSapwood < mortalityRelativeSugarThreshold) && allowStarvation) {
               Ndead_day = N[j];
               if(verbose) Rcout<<" [Cohort "<< j<<" died from starvation] ";
               cause = "starvation";
@@ -1255,7 +1256,7 @@ List growthDayInner(List x, NumericVector meteovec,
               //Daily basal mortality rate based on model
               basalMortalityRate = 1.0 - exp(log(1.0 - Pmodel1yr)/356.0);
             }
-            if(allowStarvation) starvationRate[j] = dailyMortalityProbability(sugarSapwood[j], mortalitySugarThreshold);
+            if(allowStarvation) starvationRate[j] = dailyMortalityProbability(relativeSugarSapwood, mortalityRelativeSugarThreshold);
             if(allowDessication) dessicationRate[j] = dailyMortalityProbability(std::max(stemSympRWC, 1.0 - StemPLC[j]), mortalityRWCThreshold);
             mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));
             if((dessicationRate[j] > basalMortalityRate) && (dessicationRate[j] > starvationRate[j])) {
