@@ -3714,5 +3714,5 @@ woodformation_growRing <- function(ring, psi, Tc, Nc = 8.85, phi0 = 0.13, pi0 = 
 
 # Register entry points for exported C++ functions
 methods::setLoadAction(function(ns) {
-    .Call('_medfate_RcppExport_registerCCallable', PACKAGE = 'medfate')
+    .Call(`_medfate_RcppExport_registerCCallable`)
 })
