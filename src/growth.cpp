@@ -1259,7 +1259,7 @@ List growthDayInner(List x, NumericVector meteovec,
               basalMortalityRate = 1.0 - exp(log(1.0 - Pmodel1yr)/356.0);
             }
             if(allowStarvation) starvationRate[j] = dailyMortalityProbability(relativeSugarSapwood, mortalityRelativeSugarThreshold);
-            if(allowDessication) dessicationRate[j] = dailyMortalityProbability(std::max(stemSympRWC, 1.0 - StemPLC[j]), mortalityRWCThreshold);
+            if(allowDessication) dessicationRate[j] = dailyMortalityProbability((stemSympRWC + (1.0 - StemPLC[j]))/2.0, mortalityRWCThreshold);
             mortalityRate[j] = max(NumericVector::create(basalMortalityRate, dessicationRate[j],  starvationRate[j]));
             if((dessicationRate[j] > basalMortalityRate) && (dessicationRate[j] > starvationRate[j])) {
               cause = "dessication";
