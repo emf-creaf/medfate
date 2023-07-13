@@ -195,7 +195,7 @@ resprouting <- function(forest, internalMortality, SpParams, control,
   
   # Copy forest to inherit species and belowground information
   resp_forest <- forest 
-  resp_forest$treeData$N <- N_resprouting
+  resp_forest$treeData$N <- pmin(control$recrTreeDensity, N_resprouting) #Truncates maximum density to control variable
   
   resp_forest$treeData$DBH <- species_parameter(resp_forest$treeData$Species, SpParams, "RecrTreeDBH")
   resp_forest$treeData$DBH[is.na(resp_forest$treeData$DBH)] <- control$recrTreeDBH

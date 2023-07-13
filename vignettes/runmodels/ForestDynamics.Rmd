@@ -156,6 +156,21 @@ When management is included in simulations, two additional tables are produced, 
 fd$CutTreeTable
 ```
 
+Management parameters were those of an irregular model with thinning interventions from 'below', indicating that smaller trees were to be cut earlier:
+
+```{r}
+args$type
+args$thinning
+```
+
+Note that in this example, there is resprouting of *Quercus ilex* after the thinning intervention, evidenced by
+the new cohort (T3_168) appearing in year 2001:
+
+```{r}
+fd$TreeTable
+```
+
+
 ## References
 
 + De Cáceres M, Molowny-Horas R, Cabon A, Martínez-Vilalta J, Mencuccini M, García-Valdés R, Nadal-Sala D, Sabaté S, Martin-StPaul N, Morin X, D'Adamo F, Batllori E, Améztegui A (2023) MEDFATE 2.9.3: A trait-enabled model to simulate Mediterranean forest function and dynamics at regional scales. Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-3165-2023).
