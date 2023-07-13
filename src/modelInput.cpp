@@ -649,7 +649,7 @@ DataFrame paramsMortalityRegeneration(DataFrame above, DataFrame SpParams, List 
   if(SpParams.containsElementNamed("RecrTreeDensity")) RecrTreeDensity = speciesNumericParameterFromIndex(SP, SpParams, "RecrTreeDensity");
   if(SpParams.containsElementNamed("RecrTreeDBH")) RecrTreeDBH = speciesNumericParameterFromIndex(SP, SpParams, "RecrTreeDBH");
   if(SpParams.containsElementNamed("IngrowthTreeDensity")) IngrowthTreeDensity = speciesNumericParameterFromIndex(SP, SpParams, "IngrowthTreeDensity");
-  if(SpParams.containsElementNamed("IngrowthTreeDBH")) IngrowthTreeDensity = speciesNumericParameterFromIndex(SP, SpParams, "IngrowthTreeDBH");
+  if(SpParams.containsElementNamed("IngrowthTreeDBH")) IngrowthTreeDBH = speciesNumericParameterFromIndex(SP, SpParams, "IngrowthTreeDBH");
   
   double mortalityBaselineRate_default = control["mortalityBaselineRate"];
   double recrTreeDensity_default = control["recrTreeDensity"];
@@ -669,7 +669,6 @@ DataFrame paramsMortalityRegeneration(DataFrame above, DataFrame SpParams, List 
       }
     }
   }
-  
   DataFrame paramsMortalityRecruitmentdf = DataFrame::create(_["MortalityBaselineRate"] = MortalityBaselineRate,
                                                              _["SurvivalModelStep"] = SurvivalModelStep,
                                                              _["SurvivalB0"] = SurvivalB0,
