@@ -34,7 +34,11 @@ SpParamsMED = medfate::modifySpParams(SpParamsMED, metamodellingParamsSpecies, s
 RGRcambiummaxTrees = readRDS(paste0(MFWdir,"GrowthCalibration/Rdata/RGRcambiummax_trees.rds"))
 SpParamsMED = medfate::modifySpParams(SpParamsMED, RGRcambiummaxTrees, subsetSpecies = FALSE)
 # Load ingrowth calibration results
+## SHOULD BE RECALIBRATED: THEY REFER TO INGROWTH (~7.5 cm) 
 recruitmentParamsSpecies = readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/Rdata/final_recruitment_params.rds"))
+recruitmentParamsSpecies$RecrTreeHeight <- recruitmentParamsSpecies$RecrTreeHeight/10
+recruitmentParamsSpecies$IngrowthTreeDensity <- recruitmentParamsSpecies$RecrTreeDensity
+recruitmentParamsSpecies$RecrTreeDensity <- NULL
 SpParamsMED = medfate::modifySpParams(SpParamsMED, recruitmentParamsSpecies, subsetSpecies = FALSE)
 # Load Baseline mortality calibration results
 mortalityParamsSpecies = readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/Rdata/mort_rates.rds"))
@@ -42,6 +46,10 @@ SpParamsMED = medfate::modifySpParams(SpParamsMED, mortalityParamsSpecies, subse
 # Load SurvivalModel calibration results
 survivalParamsSpecies = readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/Rdata/survival_models.rds"))
 SpParamsMED = medfate::modifySpParams(SpParamsMED, survivalParamsSpecies, subsetSpecies = FALSE)
+# Load SurvivalModel calibration results
+resproutingParamsSpecies = readxl::read_xlsx(paste0(MFWdir,"MortalityRegenerationCalibration/Data/ResproutingMED.xlsx"))
+names(resproutingParamsSpecies)[1] = "Species"
+SpParamsMED = medfate::modifySpParams(SpParamsMED, resproutingParamsSpecies, subsetSpecies = FALSE)
 
 # Manual tuning
 tree_all_cols = 27:39

@@ -21,20 +21,22 @@ using namespace Rcpp;
 
 //' Mortality
 //' 
-//' A simple sigmoid function to determine a daily mortality likelihood according to the value of a stress variable.
+//' A simple sigmoid function to determine a daily mortality likelihood according 
+//' to the value of a stress variable.
 //'
-//' @param stressValue Current value of the stress variable (0 to 1, with higher values indicate stronger stress).
-//' @param stressThreshold Threshold to indicate 50% annual mortality probability.
-//' @param exponent Coefficient modulating the steepness of the sigmoid relationship.
+//' @param stressValue Current value of the stress variable (0 to 1, 
+//'                    with higher values indicate stronger stress).
+//' @param stressThreshold Threshold to indicate 50\% annual mortality probability.
 //' 
-//' @return Returns a probability (between 0 and 1).
+//' @return Returns a probability (between 0 and 1)
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
 //' @seealso \code{\link{growth}}, \code{\link{regeneration}}
 //' 
 // [[Rcpp::export("mortality_dailyProbability")]]
-double dailyMortalityProbability(double stressValue, double stressThreshold, double exponent=40.0) {
+double dailyMortalityProbability(double stressValue, double stressThreshold) {
+  double exponent = 40.0;
   double y = (stressValue - stressThreshold);
   double P_annual = 1.0 - exp(exponent*y)/(1.0 + exp(exponent*y));
   double P_daily = 1.0 - exp(log(1.0 - P_annual)/356.0);

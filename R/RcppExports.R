@@ -858,20 +858,21 @@ fuel_FCCS <- function(object, SpParams, cohortFMC = as.numeric( c()), gdd = NA_r
 
 #' Mortality
 #' 
-#' A simple sigmoid function to determine a daily mortality likelihood according to the value of a stress variable.
+#' A simple sigmoid function to determine a daily mortality likelihood according 
+#' to the value of a stress variable.
 #'
-#' @param stressValue Current value of the stress variable (0 to 1, with higher values indicate stronger stress).
-#' @param stressThreshold Threshold to indicate 50% annual mortality probability.
-#' @param exponent Coefficient modulating the steepness of the sigmoid relationship.
+#' @param stressValue Current value of the stress variable (0 to 1, 
+#'                    with higher values indicate stronger stress).
+#' @param stressThreshold Threshold to indicate 50\% annual mortality probability.
 #' 
-#' @return Returns a probability (between 0 and 1).
+#' @return Returns a probability (between 0 and 1)
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
 #' @seealso \code{\link{growth}}, \code{\link{regeneration}}
 #' 
-mortality_dailyProbability <- function(stressValue, stressThreshold, exponent = 40.0) {
-    .Call(`_medfate_dailyMortalityProbability`, stressValue, stressThreshold, exponent)
+mortality_dailyProbability <- function(stressValue, stressThreshold) {
+    .Call(`_medfate_dailyMortalityProbability`, stressValue, stressThreshold)
 }
 
 #' @rdname spwb_day
