@@ -1544,6 +1544,12 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
   
   double tmin = meteovec["MinTemperature"];
   double tmax = meteovec["MaxTemperature"];
+  if(tmin > tmax) {
+    warning("tmin > tmax. Swapping values.");
+    double swap = tmin;
+    tmin = tmax;
+    tmax = swap;
+  }
   double rhmin = meteovec["MinRelativeHumidity"];
   double rhmax = meteovec["MaxRelativeHumidity"];
   if(NumericVector::is_na(rhmax)) {
@@ -1553,6 +1559,12 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
     double vp_tmin = meteoland::utils_saturationVP(tmin);
     double vp_tmax = meteoland::utils_saturationVP(tmax);
     rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+  }
+  if(rhmin > rhmax) {
+    warning("rhmin > rhmax. Swapping values.");
+    double swap = rhmin;
+    rhmin = rhmax;
+    rhmax = swap;
   }
   double rad = meteovec["Radiation"];
   double prec = meteovec["Precipitation"];
@@ -2114,6 +2126,12 @@ List growth(List x, DataFrame meteo, double latitude,
     
     double tmin = MinTemperature[i];
     double tmax = MaxTemperature[i];
+    if(tmin > tmax) {
+      warning("tmin > tmax. Swapping values.");
+      double swap = tmin;
+      tmin = tmax;
+      tmax = swap;
+    }
     double prec = Precipitation[i];
     double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
     double rhmin = MinRelativeHumidity[i];
@@ -2126,6 +2144,12 @@ List growth(List x, DataFrame meteo, double latitude,
       double vp_tmin = meteoland::utils_saturationVP(tmin);
       double vp_tmax = meteoland::utils_saturationVP(tmax);
       rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+    }
+    if(rhmin > rhmax) {
+      warning("rhmin > rhmax. Swapping values.");
+      double swap = rhmin;
+      rhmin = rhmax;
+      rhmax = swap;
     }
     if(NumericVector::is_na(rad)) {
       double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);

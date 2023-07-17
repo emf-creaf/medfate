@@ -662,6 +662,12 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
             bool modifyInput = true) {
   double tmin = meteovec["MinTemperature"];
   double tmax = meteovec["MaxTemperature"];
+  if(tmin > tmax) {
+    warning("tmin > tmax. Swapping values.");
+    double swap = tmin;
+    tmin = tmax;
+    tmax = swap;
+  }
   double rhmin = meteovec["MinRelativeHumidity"];
   double rhmax = meteovec["MaxRelativeHumidity"];
   if(NumericVector::is_na(rhmax)) {
@@ -673,6 +679,12 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
     double vp_tmin = meteoland::utils_saturationVP(tmin);
     double vp_tmax = meteoland::utils_saturationVP(tmax);
     rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+  }
+  if(rhmin > rhmax) {
+    warning("rhmin > rhmax. Swapping values.");
+    double swap = rhmin;
+    rhmin = rhmax;
+    rhmax = swap;
   }
   double rad = meteovec["Radiation"];
   double prec = meteovec["Precipitation"];
@@ -1870,6 +1882,12 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       double rhmax = MaxRelativeHumidity[i];
       double prec = Precipitation[i];
       double rad = Radiation[i];
+      if(tmin > tmax) {
+        warning("tmin > tmax. Swapping values.");
+        double swap = tmin;
+        tmin = tmax;
+        tmax = swap;
+      }
       if(NumericVector::is_na(rhmax)) {
         rhmax = 100.0;
       }
@@ -1877,6 +1895,12 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
         double vp_tmin = meteoland::utils_saturationVP(tmin);
         double vp_tmax = meteoland::utils_saturationVP(tmax);
         rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+      }
+      if(rhmin > rhmax) {
+        warning("rhmin > rhmax. Swapping values.");
+        double swap = rhmin;
+        rhmin = rhmax;
+        rhmax = swap;
       }
       if(NumericVector::is_na(rad)) {
         double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
@@ -2253,6 +2277,12 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     double rhmax = MaxRelativeHumidity[i];
     double rad = Radiation[i];
     double prec = Precipitation[i];
+    if(tmin > tmax) {
+      warning("tmin > tmax. Swapping values.");
+      double swap = tmin;
+      tmin = tmax;
+      tmax = swap;
+    }
     if(NumericVector::is_na(rhmax)) {
       rhmax = 100.0;
     }
@@ -2260,6 +2290,12 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       double vp_tmin = meteoland::utils_saturationVP(tmin);
       double vp_tmax = meteoland::utils_saturationVP(tmax);
       rhmin = std::min(rhmax, 100.0*(vp_tmin/vp_tmax));
+    }
+    if(rhmin > rhmax) {
+      warning("rhmin > rhmax. Swapping values.");
+      double swap = rhmin;
+      rhmin = rhmax;
+      rhmax = swap;
     }
     if(NumericVector::is_na(rad)) {
       double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin, rhmax);
