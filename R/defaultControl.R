@@ -106,7 +106,7 @@
 #'       \item{\code{mortalityRelativeSugarThreshold [= 0.4]}: Threshold of stem sugar concentration relative to the equilibrium sugar concentration, resulting in an increased starvation mortality rate/probability whenever levels are below.}
 #'       \item{\code{mortalityRWCThreshold [= 0.4]}: Threshold of stem relative water content resulting in increased mortality rate/probability whenever levels are below.}
 #'       \item{\code{recrTreeDBH [= 1]}: Default DBH (cm) for recruited trees  (when species parameter \code{RecrTreeDBH} is missing).}
-#'       \item{\code{recrTreeDensity [= 1000]}: Default density (ind·ha-1) for recruited trees  (when species parameter \code{RecrTreeDensity} is missing).}
+#'       \item{\code{recrTreeDensity [= 3000]}: Default density (ind·ha-1) for recruited trees  (when species parameter \code{RecrTreeDensity} is missing).}
 #'       \item{\code{ingrowthTreeDBH [= 7.5]}: Default DBH (cm) for ingrowth trees  (when species parameter \code{RecrTreeDBH} is missing).}
 #'       \item{\code{ingrowthTreeDensity [= 127]}: Default density (ind·ha-1) for ingrowth trees  (when species parameter \code{RecrTreeDensity} is missing).}
 #'    }
@@ -216,7 +216,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     mortalityRelativeSugarThreshold = 0.4,
     mortalityRWCThreshold = 0.4,
     recrTreeDBH = 1,
-    recrTreeDensity = 1000,
+    recrTreeDensity = 3000,
     ingrowthTreeDBH = 7.5,
     ingrowthTreeDensity = 127,
     
