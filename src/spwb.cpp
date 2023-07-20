@@ -102,7 +102,7 @@ NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slo
     MdeadSI = NumericVector::create(fireHazardStandardDFMC, fireHazardStandardDFMC, 
                                     fireHazardStandardDFMC, fireHazardStandardDFMC, fireHazardStandardDFMC); 
   }
-  NumericVector MliveSI = NumericVector::create(NA_REAL, NA_REAL, NA_REAL); //Default values (not actually used)
+  NumericVector MliveSI = NumericVector::create(90.0, 90.0, 60.0); //Default values (not actually used)
   List fccs;
   if(!NumericVector::is_na(fireHazardStandardWind)) {
     fccs = FCCSbehaviour(FCCSprops, MliveSI, MdeadSI, slope, fireHazardStandardWind); 
