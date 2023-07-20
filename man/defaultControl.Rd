@@ -24,6 +24,7 @@ A list, with the following options (default values in brackets):
       \item{\code{temperatureResults [= TRUE]}: Boolean flag to keep temperature results (in elements called 'Temperature' and 'TemperatureLayers').}
       \item{\code{subdailyResults [= FALSE]}: Boolean flag to force subdaily results to be stored (as a list called 'subdaily' of \code{\link{spwb_day}} objects, one by simulated date) in calls to \code{\link{spwb}}. In function \code{fordyn} \code{subdailyResults} is always set to FALSE.}
       \item{\code{fireHazardResults [= FALSE]}: Boolean flag to force calculation of daily fire hazard.}
+      \item{\code{fireHazardStandardWind [= NA]}: Wind speed (in m/s) for fire-hazard estimation. If missing, actual wind-speed is used.}
     }
   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}}):
     \itemize{

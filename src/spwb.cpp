@@ -50,6 +50,9 @@ CharacterVector getWeatherDates(DataFrame meteo){
 }
 
 NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slope) {
+  List control = x["control"];
+  double fireHazardStandardWind = control["fireHazardStandardWind"];
+  
   DataFrame FCCSprops = Rcpp::as<Rcpp::DataFrame>(x["internalFCCS"]);
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
@@ -94,7 +97,12 @@ NumericVector fccsHazard(List x, NumericVector meteovec, List transp, double slo
       
   NumericVector MdeadSI = NumericVector::create(fm_dead, fm_dead, fm_dead, fm_dead, fm_dead); 
   NumericVector MliveSI = NumericVector::create(90, 90, 60); //Default values (not actually used)
-  List fccs = FCCSbehaviour(FCCSprops, MliveSI, MdeadSI, slope, wind);
+  List fccs;
+  if(!NumericVector::is_na(fireHazardStandardWind)) {
+    fccs = FCCSbehaviour(FCCSprops, MliveSI, MdeadSI, slope, fireHazardStandardWind); 
+  } else {
+    fccs = FCCSbehaviour(FCCSprops, MliveSI, MdeadSI, slope, wind); 
+  }
   List surfaceFire = fccs["SurfaceFire"];
   List crownFire = fccs["CrownFire"];
   List firePotentials = fccs["FirePotentials"];
