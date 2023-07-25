@@ -20,8 +20,8 @@
   emptyTrees <- rep(FALSE, nrow(forest$treeData))
   emptyShrubs <- rep(FALSE, nrow(forest$shrubData))
   if(control$removeEmptyCohorts) {
-    emptyTrees <- (forest$treeData$N < control$minimumCohortDensity)
-    if(control$shrubDynamics) emptyShrubs <- (forest$shrubData$Cover < control$minimumCohortDensity)
+    emptyTrees <- (forest$treeData$N < control$minimumTreeCohortDensity)
+    if(control$shrubDynamics) emptyShrubs <- (forest$shrubData$Cover < control$minimumShrubCohortCover)
   }
   emptyCohorts <- c(emptyTrees, emptyShrubs)
   if(sum(emptyCohorts)>0) {

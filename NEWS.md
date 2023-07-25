@@ -6,6 +6,7 @@
 - New option 'months' in simulation summaries.
 - Leaf area, foliar biomass and fuels of shrubs and herbs depend on the leaf area of plants above
 - Survival model based on basal area available as an alternative to fixed mortality baseline rates
+- New control thresholds 'minimumShrubCohortCover' and 'minimumTreeCohortDensity' for cohort removal
 
 # Version 3.1.1
 - Fire severity implemented
