@@ -95,6 +95,7 @@ reference:
   - growth
   - growth_day
   - fordyn
+  - sureau_ecos
 
 - title: Plots and summaries
   desc:  Summaries and plots of simulation results
