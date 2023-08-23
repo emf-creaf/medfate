@@ -50,6 +50,10 @@ SpParamsMED = medfate::modifySpParams(SpParamsMED, survivalParamsSpecies, subset
 resproutingParamsSpecies = readxl::read_xlsx(paste0(MFWdir,"MortalityRegenerationCalibration/Data/ResproutingMED.xlsx"))
 names(resproutingParamsSpecies)[1] = "Species"
 SpParamsMED = medfate::modifySpParams(SpParamsMED, resproutingParamsSpecies, subsetSpecies = FALSE)
+# Add bark thickness parameters
+bt_models <- openxlsx::read.xlsx(paste0(MFWdir,"MedfateSpeciesParametrization/AllometryDatabases/TreeAllometries/TreeAllometries.xlsx"), 
+                                 sheet= "Tree_BT_models", rowNames = TRUE)
+SpParamsMED <- medfateutils::populateTreeAllometries(SpParamsMED, bt_models, "barkthickness")
 
 # Manual tuning
 tree_all_cols = 27:39
