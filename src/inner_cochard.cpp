@@ -337,7 +337,31 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   return(network);
 }
 
-// Initializes network for all plant cohorts in x
+//' Sureau-ECOS inner functions for testing only
+//' 
+//' Function \code{initCochardNetworks} initializes hydraulic networks for all plant cohorts in x
+//' Function \code{semi_implicit_integration} updates water potentials and cavitation across the hydraulic network
+//' 
+//' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}} created using \code{transpirationMode = "Cochard"}.
+//'  
+//' @return Function \code{initCochardNetworks} returns a vector of length equal to the number of cohorts. Each element is a list with Sureau-ECOS parameters.
+//' Function \code{semi_implicit_integration} does not return anything, but modifies input parameter \code{network}.
+//' 
+//' @author
+//' \itemize{
+//'   \item{Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF}
+//'   \item{Nicolas Martin-StPaul, URFM-INRAE}
+//' }
+//' 
+//' @references
+//' Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022) 
+//' SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level.
+//' Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).
+//' 
+//' 
+//' @seealso  \code{\link{spwb}}
+//' 
+//' @name sureau_ecos
 // [[Rcpp::export("initCochardNetworks")]]
 List initCochardNetworks(List x) {
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
@@ -423,8 +447,10 @@ void calculateRhizoPsi(int c,
   }
 }
 
-// dt - Smallest time step (seconds)
-// opt - Option flag vector
+//' @rdname sureau_ecos
+//' @param network A hydraulic network element of the list returned by \code{initCochardNetworks}
+//' @param dt Smallest time step (seconds)
+//' @param opt Option flag vector
 // [[Rcpp::export("semi_implicit_integration")]]
 void semi_implicit_integration(List network, double dt, NumericVector opt) {
   
