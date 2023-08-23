@@ -19,7 +19,7 @@ during a period specified in the input climatic data."><!-- mathjax --><script s
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.3</span>
       </span>
     </div>
 
@@ -91,7 +91,7 @@ during a period specified in the input climatic data.</p>
 
 
 <dt>meteo</dt>
-<dd><p>A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see <code><a href="https://rdrr.io/r/base/Dates.html" class="external-link">Date</a></code>).</p></dd>
+<dd><p>A data frame with daily weather data series (see <code><a href="spwb.html">spwb</a></code>).</p></dd>
 
 
 <dt>control</dt>
@@ -211,34 +211,34 @@ Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-31
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    2              2              2               1               1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   TreeDensityLive TreeBasalAreaLive DominantTreeHeight DominantTreeDiameter</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1        552.0000          25.03330           800.0000             37.55000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        550.7451          25.25002           812.2730             37.77919</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        549.4950          25.43521           823.1765             37.98484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        551.3646          25.31476           812.3274             37.78020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        550.7197          25.57060           823.5107             37.99111</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   QuadraticMeanTreeDiameter HartBeckingIndex ShrubCoverLive BasalAreaDead</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                  24.02949         53.20353       3.750000     0.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2                  24.16076         52.45932       3.119921     0.1032218</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3                  24.27677         51.82331       3.185685     0.1038552</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                  24.02949         53.20353       3.750000    0.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                  24.17812         52.42633       3.112903    0.03948878</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                  24.31421         51.74465       3.174090    0.04056503</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ShrubCoverDead BasalAreaCut ShrubCoverCut</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    0.000000000            0             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    0.005324506            0             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    0.004837873            0             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    0.005320314            0             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    0.004824140            0             0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Tree table by annual steps</span></span></span>
 <span class="r-in"><span><span class="va">fd</span><span class="op">$</span><span class="va">TreeTable</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Step Year Cohort          Species      DBH   Height        N Z50  Z95</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    0   NA T1_148 Pinus halepensis 37.55000 800.0000 168.0000 100  600</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    0   NA T2_168     Quercus ilex 14.60000 660.0000 384.0000 300 1000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    1 2001 T1_148 Pinus halepensis 37.77919 812.2730 167.1388 100  600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    1 2001 T2_168     Quercus ilex 14.70425 663.2516 383.6063 300 1000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    2 2002 T1_148 Pinus halepensis 37.98484 823.1765 166.2821 100  600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    2 2002 T2_168     Quercus ilex 14.79933 666.2204 383.2130 300 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    1 2001 T1_148 Pinus halepensis 37.78020 812.3274 167.6983 100  600</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    1 2001 T2_168     Quercus ilex 14.70425 663.2526 383.6663 300 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    2 2002 T1_148 Pinus halepensis 37.99111 823.5107 167.3918 100  600</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    2 2002 T2_168     Quercus ilex 14.80090 666.2722 383.3279 300 1000</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Dead tree table by annual steps</span></span></span>
 <span class="r-in"><span><span class="va">fd</span><span class="op">$</span><span class="va">DeadTreeTable</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Step Year Cohort          Species      DBH   Height         N N_starvation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    1 2001 T1_148 Pinus halepensis 37.77919 812.2730 0.8611814            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1 2001 T2_168     Quercus ilex 14.70425 663.2516 0.3937029            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    2 2002 T1_148 Pinus halepensis 37.98484 823.1765 0.8567669            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    2 2002 T2_168     Quercus ilex 14.79933 666.2204 0.3932992            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    1 2001 T1_148 Pinus halepensis 37.78020 812.3274 0.3016992            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1 2001 T2_168     Quercus ilex 14.70425 663.2526 0.3337340            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    2 2002 T1_148 Pinus halepensis 37.99111 823.5107 0.3064912            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    2 2002 T2_168     Quercus ilex 14.80090 666.2722 0.3383617            0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   N_dessication N_burnt Z50  Z95</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1             0       0 100  600</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2             0       0 300 1000</span>

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.3</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2023-06-13</h4>
+            <h4 data-toc-skip class="date">2023-08-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>UnderstandingInputs.Rmd</code></div>
@@ -860,110 +860,130 @@ baseline reduction of cohort’s density occurring in a year</td>
 <td align="left">Year-1</td>
 </tr>
 <tr class="even">
+<td align="left">SurvivalModelStep</td>
+<td align="left">Time step in years of the empirical survival model
+depending on stand basal area (e.g. 10)</td>
+<td align="left">Numeric</td>
+<td align="left">Year</td>
+</tr>
+<tr class="odd">
+<td align="left">SurvivalB0</td>
+<td align="left">Intercept of the logistic baseline survival model
+depending on stand basal area</td>
+<td align="left">Numeric</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">SurvivalB1</td>
+<td align="left">Slope of the logistic baseline survival model depending
+on stand basal area</td>
+<td align="left">Numeric</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
 <td align="left">SeedProductionHeight</td>
 <td align="left">Minimum height for seed production</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">ProbRecr</td>
 <td align="left">Probability of recruitment within the bioclimatic
 envelope</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">MinTempRecr</td>
 <td align="left">Minimum average temperature of the coldest month for
 successful recruitment</td>
 <td align="left">Numeric</td>
 <td align="left">Degrees C</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">MinMoistureRecr</td>
 <td align="left">Minimum value of the moisture index (annual
 precipitation over annual PET) for successful recruitment</td>
 <td align="left">Numeric</td>
 <td align="left">unitless</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">MinFPARRecr</td>
 <td align="left">Minimum percentage of PAR at the ground level for
 successful recruitment</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrTreeDBH</td>
 <td align="left">Recruitment tree dbh (typically 1 cm)</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrTreeHeight</td>
 <td align="left">Recruitment tree (sapling) height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrShrubHeight</td>
 <td align="left">Recruitment shrub height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrTreeDensity</td>
 <td align="left">Recruitment tree (sapling) density</td>
 <td align="left">Numeric</td>
 <td align="left">ind/ha</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrShrubCover</td>
 <td align="left">Recruitment shrub cover</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RecrZ50</td>
 <td align="left">Recruitment depth corresponding to 50% of fine
 roots</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RecrZ95</td>
 <td align="left">Recruitment depth corresponding to 95% of fine
 roots</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">RespFire</td>
-<td align="left">Number of resprouts per stem after fire
-disturbance</td>
+<td align="left">Probability of resprouting after fire disturbance</td>
 <td align="left">Numeric</td>
-<td align="left">unitless</td>
-</tr>
-<tr class="odd">
-<td align="left">RespDist</td>
-<td align="left">Number of resprouts per stem after undefined
-disturbance (typically desiccation)</td>
-<td align="left">Numeric</td>
-<td align="left">unitless</td>
+<td align="left">[0-1]</td>
 </tr>
 <tr class="even">
-<td align="left">RespClip</td>
-<td align="left">Number of resprouts per stem after clipping</td>
+<td align="left">RespDist</td>
+<td align="left">Probability of resprouting after undefined disturbance
+(typically desiccation)</td>
 <td align="left">Numeric</td>
-<td align="left">unitless</td>
+<td align="left">[0-1]</td>
 </tr>
 <tr class="odd">
+<td align="left">RespClip</td>
+<td align="left">Probability of resprouting after clipping</td>
+<td align="left">Numeric</td>
+<td align="left">[0-1]</td>
+</tr>
+<tr class="even">
 <td align="left">IngrowthTreeDensity</td>
 <td align="left">Tree density when reaching DBH of ingrowth</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">IngrowthTreeDBH</td>
 <td align="left">Tree DBH of ingrowth (typically 7.5 cm)</td>
 <td align="left">Numeric</td>
@@ -1070,7 +1090,7 @@ above-ground information:</p>
 <pre><code><span><span class="co">##         SP        N   DBH Cover   H        CR   LAI_live LAI_expanded LAI_dead</span></span>
 <span><span class="co">## T1_148 148 168.0000 37.55    NA 800 0.6605196 0.84874773   0.84874773        0</span></span>
 <span><span class="co">## T2_168 168 384.0000 14.60    NA 660 0.6055642 0.70557382   0.70557382        0</span></span>
-<span><span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817 0.03054273   0.03054273        0</span></span></code></pre>
+<span><span class="co">## S1_165 165 749.4923    NA  3.75  80 0.8032817 0.03062604   0.03062604        0</span></span></code></pre>
 <p>Note that the call to <code><a href="../../reference/modelInput.html">forest2aboveground()</a></code> included the
 species parameter table, because species-specific allometric
 coefficients are needed to calculate leaf area from tree size or shrub
@@ -1319,41 +1339,43 @@ parameterization is obtained using function
 <span><span class="co">##  [5] "standResults"                     "soilResults"                     </span></span>
 <span><span class="co">##  [7] "plantResults"                     "leafResults"                     </span></span>
 <span><span class="co">##  [9] "temperatureResults"               "fireHazardResults"               </span></span>
-<span><span class="co">## [11] "transpirationMode"                "soilFunctions"                   </span></span>
-<span><span class="co">## [13] "defaultWindSpeed"                 "defaultCO2"                      </span></span>
-<span><span class="co">## [15] "snowpack"                         "leafPhenology"                   </span></span>
-<span><span class="co">## [17] "rockyLayerDrainage"               "unlimitedSoilWater"              </span></span>
-<span><span class="co">## [19] "rhizosphereOverlap"               "unfoldingDD"                     </span></span>
-<span><span class="co">## [21] "verticalLayerSize"                "windMeasurementHeight"           </span></span>
-<span><span class="co">## [23] "cavitationRefill"                 "hydraulicRedistributionFraction" </span></span>
-<span><span class="co">## [25] "ndailysteps"                      "nsubsteps"                       </span></span>
-<span><span class="co">## [27] "capacitance"                      "taper"                           </span></span>
-<span><span class="co">## [29] "multiLayerBalance"                "maximumStemConductance"          </span></span>
-<span><span class="co">## [31] "klatstem"                         "klatleaf"                        </span></span>
-<span><span class="co">## [33] "numericParams"                    "fracLeafResistance"              </span></span>
-<span><span class="co">## [35] "fracRootResistance"               "averageFracRhizosphereResistance"</span></span>
-<span><span class="co">## [37] "thermalCapacityLAI"               "boundaryLayerSize"               </span></span>
-<span><span class="co">## [39] "refillMaximumRate"                "subdailyCarbonBalance"           </span></span>
-<span><span class="co">## [41] "allowDessication"                 "allowStarvation"                 </span></span>
-<span><span class="co">## [43] "sinkLimitation"                   "shrubDynamics"                   </span></span>
-<span><span class="co">## [45] "allocationStrategy"               "phloemConductanceFactor"         </span></span>
-<span><span class="co">## [47] "nonSugarConcentration"            "equilibriumOsmoticConcentration" </span></span>
-<span><span class="co">## [49] "minimumRelativeStarchForGrowth"   "constructionCosts"               </span></span>
-<span><span class="co">## [51] "senescenceRates"                  "maximumRelativeGrowthRates"      </span></span>
-<span><span class="co">## [53] "mortalityMode"                    "mortalityBaselineRate"           </span></span>
-<span><span class="co">## [55] "mortalityRelativeSugarThreshold"  "mortalityRWCThreshold"           </span></span>
-<span><span class="co">## [57] "recrTreeDBH"                      "recrTreeDensity"                 </span></span>
-<span><span class="co">## [59] "ingrowthTreeDBH"                  "ingrowthTreeDensity"             </span></span>
-<span><span class="co">## [61] "allowRecruitment"                 "recruitmentMode"                 </span></span>
-<span><span class="co">## [63] "allowResprouting"                 "removeEmptyCohorts"              </span></span>
-<span><span class="co">## [65] "minimumCohortDensity"             "seedRain"                        </span></span>
-<span><span class="co">## [67] "seedProductionTreeHeight"         "seedProductionShrubHeight"       </span></span>
-<span><span class="co">## [69] "probRecr"                         "minTempRecr"                     </span></span>
-<span><span class="co">## [71] "minMoistureRecr"                  "minFPARRecr"                     </span></span>
-<span><span class="co">## [73] "recrTreeHeight"                   "recrShrubCover"                  </span></span>
-<span><span class="co">## [75] "recrShrubHeight"                  "recrTreeZ50"                     </span></span>
-<span><span class="co">## [77] "recrShrubZ50"                     "recrTreeZ95"                     </span></span>
-<span><span class="co">## [79] "recrShrubZ95"</span></span></code></pre>
+<span><span class="co">## [11] "fireHazardStandardWind"           "fireHazardStandardDFMC"          </span></span>
+<span><span class="co">## [13] "transpirationMode"                "soilFunctions"                   </span></span>
+<span><span class="co">## [15] "defaultWindSpeed"                 "defaultCO2"                      </span></span>
+<span><span class="co">## [17] "snowpack"                         "leafPhenology"                   </span></span>
+<span><span class="co">## [19] "rockyLayerDrainage"               "unlimitedSoilWater"              </span></span>
+<span><span class="co">## [21] "rhizosphereOverlap"               "unfoldingDD"                     </span></span>
+<span><span class="co">## [23] "verticalLayerSize"                "windMeasurementHeight"           </span></span>
+<span><span class="co">## [25] "cavitationRefill"                 "hydraulicRedistributionFraction" </span></span>
+<span><span class="co">## [27] "ndailysteps"                      "nsubsteps"                       </span></span>
+<span><span class="co">## [29] "capacitance"                      "taper"                           </span></span>
+<span><span class="co">## [31] "multiLayerBalance"                "maximumStemConductance"          </span></span>
+<span><span class="co">## [33] "klatstem"                         "klatleaf"                        </span></span>
+<span><span class="co">## [35] "numericParams"                    "fracLeafResistance"              </span></span>
+<span><span class="co">## [37] "fracRootResistance"               "averageFracRhizosphereResistance"</span></span>
+<span><span class="co">## [39] "thermalCapacityLAI"               "boundaryLayerSize"               </span></span>
+<span><span class="co">## [41] "refillMaximumRate"                "subdailyCarbonBalance"           </span></span>
+<span><span class="co">## [43] "allowDessication"                 "allowStarvation"                 </span></span>
+<span><span class="co">## [45] "sinkLimitation"                   "shrubDynamics"                   </span></span>
+<span><span class="co">## [47] "herbDynamics"                     "allocationStrategy"              </span></span>
+<span><span class="co">## [49] "phloemConductanceFactor"          "nonSugarConcentration"           </span></span>
+<span><span class="co">## [51] "equilibriumOsmoticConcentration"  "minimumRelativeStarchForGrowth"  </span></span>
+<span><span class="co">## [53] "constructionCosts"                "senescenceRates"                 </span></span>
+<span><span class="co">## [55] "maximumRelativeGrowthRates"       "mortalityMode"                   </span></span>
+<span><span class="co">## [57] "mortalityBaselineRate"            "mortalityRelativeSugarThreshold" </span></span>
+<span><span class="co">## [59] "mortalityRWCThreshold"            "recrTreeDBH"                     </span></span>
+<span><span class="co">## [61] "recrTreeDensity"                  "ingrowthTreeDBH"                 </span></span>
+<span><span class="co">## [63] "ingrowthTreeDensity"              "allowRecruitment"                </span></span>
+<span><span class="co">## [65] "recruitmentMode"                  "allowResprouting"                </span></span>
+<span><span class="co">## [67] "removeEmptyCohorts"               "minimumTreeCohortDensity"        </span></span>
+<span><span class="co">## [69] "minimumShrubCohortCover"          "dynamicallyMergeCohorts"         </span></span>
+<span><span class="co">## [71] "seedRain"                         "seedProductionTreeHeight"        </span></span>
+<span><span class="co">## [73] "seedProductionShrubHeight"        "probRecr"                        </span></span>
+<span><span class="co">## [75] "minTempRecr"                      "minMoistureRecr"                 </span></span>
+<span><span class="co">## [77] "minFPARRecr"                      "recrTreeHeight"                  </span></span>
+<span><span class="co">## [79] "recrShrubCover"                   "recrShrubHeight"                 </span></span>
+<span><span class="co">## [81] "recrTreeZ50"                      "recrShrubZ50"                    </span></span>
+<span><span class="co">## [83] "recrTreeZ95"                      "recrShrubZ95"</span></span></code></pre>
 <p>Control parameters should normally be left to their default value
 until their effect on simulations is fully understood.</p>
 </div>

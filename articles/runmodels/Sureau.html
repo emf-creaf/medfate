@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.3</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2023-06-13</h4>
+            <h4 data-toc-skip class="date">2023-08-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/Sureau.Rmd" class="external-link"><code>vignettes/runmodels/Sureau.Rmd</code></a></small>
       <div class="hidden name"><code>Sureau.Rmd</code></div>
@@ -88,7 +88,7 @@ Caceres</h4>
 <p>Initialisation for <code><a href="../../reference/spwb.html">spwb()</a></code> function:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/" class="external-link">medfate</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Package 'medfate' [ver. 3.1.1]</span></span></code></pre>
+<pre><code><span><span class="co">## Package 'medfate' [ver. 3.1.3]</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Soil</span></span>
 <span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="../../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
@@ -108,7 +108,7 @@ Caceres</h4>
 <p>Create Cochard network (similar) for each of the three plant cohort
 in <code>x</code>. This returns a list with three elements:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cn</span> <span class="op">&lt;-</span> <span class="fu">initCochardNetworks</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">cn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/sureau_ecos.html">initCochardNetworks</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">cn</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 3</span></span></code></pre>
 <p>You can inspect the structure of the network for the first object
@@ -188,7 +188,7 @@ using:</p>
 </h3>
 <p>If we modify the values of <code>Elim</code>, <code>Emin_L</code> or
 <code>Emin_S</code>, then a call to
-<code>semi_implicit_integration()</code> should update the water
+<code><a href="../../reference/sureau_ecos.html">semi_implicit_integration()</a></code> should update the water
 potentials according to these flows. The water potentials prior to the
 call are:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -215,13 +215,13 @@ call are:</p>
 <span><span class="co"># Seconds of the small time step (four sub-steps per hour)</span></span>
 <span><span class="va">dt</span> <span class="op">&lt;-</span> <span class="fl">3600.0</span> <span class="op">/</span> <span class="va">nsmalltimesteps</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> </span></code></pre></div>
 <p>We also specify the flows and call
-<code>semi_implicit_integration()</code>:</p>
+<code><a href="../../reference/sureau_ecos.html">semi_implicit_integration()</a></code>:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">network</span><span class="op">$</span><span class="va">Elim</span> <span class="op">&lt;-</span> <span class="fl">0.1</span></span>
 <span><span class="va">network</span><span class="op">$</span><span class="va">Emin_L</span> <span class="op">&lt;-</span> <span class="fl">0.01</span></span>
 <span><span class="va">network</span><span class="op">$</span><span class="va">Emin_S</span> <span class="op">&lt;-</span> <span class="fl">0.01</span></span>
 <span></span>
-<span><span class="fu">semi_implicit_integration</span><span class="op">(</span><span class="va">network</span>, <span class="va">dt</span>, <span class="va">opt</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../../reference/sureau_ecos.html">semi_implicit_integration</a></span><span class="op">(</span><span class="va">network</span>, <span class="va">dt</span>, <span class="va">opt</span><span class="op">)</span></span></code></pre></div>
 <p>The function modifies the <code>network</code> object, whose water
 potentials are now:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">

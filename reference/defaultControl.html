@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.3</span>
       </span>
     </div>
 
@@ -79,6 +79,8 @@
 <li><p><code>temperatureResults [= TRUE]</code>: Boolean flag to keep temperature results (in elements called 'Temperature' and 'TemperatureLayers').</p></li>
 <li><p><code>subdailyResults [= FALSE]</code>: Boolean flag to force subdaily results to be stored (as a list called 'subdaily' of <code><a href="spwb_day.html">spwb_day</a></code> objects, one by simulated date) in calls to <code><a href="spwb.html">spwb</a></code>. In function <code>fordyn</code> <code>subdailyResults</code> is always set to FALSE.</p></li>
 <li><p><code>fireHazardResults [= FALSE]</code>: Boolean flag to force calculation of daily fire hazard.</p></li>
+<li><p><code>fireHazardStandardWind [= NA]</code>: Wind speed (in m/s) for fire-hazard estimation. If missing, actual wind-speed is used.</p></li>
+<li><p><code>fireHazardStandardDFMC [= NA]</code>: Dead fuel moisture content for fire-hazard estimation. If missing, estimation from current weather is used.</p></li>
 </ul><p><b>Water balance</b> (functions <code><a href="spwb.html">spwb</a></code>, <code><a href="spwb.html">pwb</a></code> or <code><a href="spwb_day.html">spwb_day</a></code>):</p><ul><li><p><code>transpirationMode [= "Granier"]</code>: Transpiration model (either 'Granier', 'Sperry' or 'Cochard'). See <code><a href="modelInput.html">spwbInput</a></code>.</p></li>
 <li><p><code>soilFunctions [= "VG"]</code>: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten). 
                  If <code>transpirationMode</code> is 'Sperry' or 'Cochard' then soilFunctions is forced to <code>'VG'</code>.
@@ -129,6 +131,7 @@
 <li><p><code>allowStarvation [= TRUE]</code>: Boolean flag to indicate that mortality by starvation is allowed.</p></li>
 <li><p><code>sinkLimitation [= TRUE]</code>: Boolean flag to indicate that temperature and turgor limitations to growth are applied.</p></li>
 <li><p><code>shrubDynamics [= TRUE]</code>: Boolean flag to allow the application of demographic processes to shrubs.</p></li>
+<li><p><code>herbDynamics [= TRUE]</code>: Boolean flag to allow dynamic herb leaf area as a function of shading due to leaf area of woody cohorts.</p></li>
 <li><p><code>allocationStrategy [= "Al2As"]</code>: Strategy for allocation (either "Plant_kmax", for constant maximum plant conductance, or "Al2As" for constant Huber value).</p></li>
 <li><p><code>phloemConductanceFactor [= 0.2])</code>: Factor to transform stem xylem conductance to stem phloem conductance (only for transpirationMode = "Sperry").</p></li>
 <li><p><code>nonSugarConcentration [= 0.25]</code>: Non-sugar (inorganic) solute concentration  (mol·l-1) in cells.</p></li>
@@ -139,17 +142,19 @@
 <li><p><code>maximumRelativeGrowthRates [=   c(leaf = 0.03, cambium = 0.005, sapwood = 0.002, fineroot = 0.1)]</code>: Default maximum relative growth rates for leaves (m2 leaf ·cm-2 sapwood· day-1), tree sapwood (cm2 sapwood· cm-1 cambium · day-1), shrub sapwood (cm2 sapwood ·cm-2 sapwood· day-1) and fine roots (g dw · g dw -1 · day -1) when not specified via SpParams (<code>RGRleafmax</code>, <code>RGRcambiummax</code> , <code>RGRsapwoodmax</code> and <code>RGRfinerootmax</code>, respectively).</p></li>
 <li><p><code>mortalityMode [= "density/deterministic"]</code>: String describing how mortality is applied. Current accepted values are combinations of "cohort" vs "density" (for whole-cohort mortality vs reduction of stem density) and "deterministic" vs. "stochastic".</p></li>
 <li><p><code>mortalityBaselineRate [= 0.0015]</code>: Default deterministic proportion or probability specifying the baseline reduction of cohort's density occurring in a year (for <code>mortalityMode = "density/deterministic" or "density/stochastic").</code></p></li>
-<li><p><code>mortalityRelativeSugarThreshold [= 0.3]</code>: Threshold of stem sugar concentration, in relation to the equilibrium sugar concentration, resulting in an increased mortality rate/probability whenever levels are below.</p></li>
-<li><p><code>mortalityRWCThreshold [= 0.3]</code>: Threshold of stem relative water content resulting in increased mortality rate/probability whenever levels are below.</p></li>
+<li><p><code>mortalityRelativeSugarThreshold [= 0.4]</code>: Threshold of stem sugar concentration relative to the equilibrium sugar concentration, resulting in an increased starvation mortality rate/probability whenever levels are below.</p></li>
+<li><p><code>mortalityRWCThreshold [= 0.4]</code>: Threshold of stem relative water content resulting in increased mortality rate/probability whenever levels are below.</p></li>
 <li><p><code>recrTreeDBH [= 1]</code>: Default DBH (cm) for recruited trees  (when species parameter <code>RecrTreeDBH</code> is missing).</p></li>
-<li><p><code>recrTreeDensity [= 1000]</code>: Default density (ind·ha-1) for recruited trees  (when species parameter <code>RecrTreeDensity</code> is missing).</p></li>
+<li><p><code>recrTreeDensity [= 3000]</code>: Default density (ind·ha-1) for recruited trees  (when species parameter <code>RecrTreeDensity</code> is missing).</p></li>
 <li><p><code>ingrowthTreeDBH [= 7.5]</code>: Default DBH (cm) for ingrowth trees  (when species parameter <code>RecrTreeDBH</code> is missing).</p></li>
 <li><p><code>ingrowthTreeDensity [= 127]</code>: Default density (ind·ha-1) for ingrowth trees  (when species parameter <code>RecrTreeDensity</code> is missing).</p></li>
 </ul><p><b>Forest dynamics</b> (function <code><a href="fordyn.html">fordyn</a></code>):</p><ul><li><p><code>allowRecruitment [= TRUE]</code>: Boolean flag to indicate that recruitment from seeds is allowed.</p></li>
 <li><p><code>recruitmentMode [= "stochastic"]</code>: String describing how recruitment from seeds is applied. Current accepted values are "deterministic" or "stochastic".</p></li>
 <li><p><code>allowResprouting [= TRUE]</code>: Boolean flag to indicate that resprouting is allowed.</p></li>
 <li><p><code>removeEmptyCohorts [= TRUE]</code>: Boolean flag to indicate the removal of cohorts whose density is too low.</p></li>
-<li><p><code>minimumCohortDensity [= 1]</code>: Threshold of density resulting in cohort removal.</p></li>
+<li><p><code>minimumTreeCohortDensity [= 1]</code>: Threshold of tree density resulting in cohort removal.</p></li>
+<li><p><code>minimumShrubCohortCover [= 0.01]</code>: Threshold of shrub cover resulting in cohort removal.</p></li>
+<li><p><code>dynamicallyMergeCohorts [= FALSE]</code>: Boolean flag to indicate that cohorts should be merged when possible. This option speeds up calculations but results in a loss of cohort identity and reinitialization of many state variables.</p></li>
 <li><p><code>seedRain [= NULL]</code>: Vector of species codes whose seed rain is to be simulated. If <code>NULL</code> the species identity of seed rain is taken from species currently present in the forest stand and with minimum size (see below).</p></li>
 <li><p><code>seedProductionTreeHeight [= 300]</code>: Default minimum tree height for producing seeds (when species parameter <code>SeedProductionHeight</code> is missing).</p></li>
 <li><p><code>seedProductionShrubHeight [= 30]</code>: Default minimum shrub height for producing seeds (when species parameter <code>SeedProductionHeight</code> is missing).</p></li>

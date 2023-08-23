@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.3</span>
       </span>
     </div>
 
@@ -74,7 +74,7 @@ Font-Blanche</h1>
                         <h4 data-toc-skip class="author">Miquel De
 Caceres (CREAF), Nicolas Martin-StPaul (INRA)</h4>
             
-            <h4 data-toc-skip class="date">2023-06-13</h4>
+            <h4 data-toc-skip class="date">2023-08-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/workedexamples/FontBlanche.Rmd" class="external-link"><code>vignettes/workedexamples/FontBlanche.Rmd</code></a></small>
       <div class="hidden name"><code>FontBlanche.Rmd</code></div>
@@ -259,66 +259,70 @@ unaltered:</p>
 <span><span class="co">## 143 NA   NA         NA       NA          NA      NA     NA       NA</span></span>
 <span><span class="co">## 149 NA   NA 0.07607828 1.462411 -0.02280106      NA     NA       NA</span></span>
 <span><span class="co">## 169 NA   NA 0.07848713 1.497670 -0.00309341 1.98539 -0.552 -0.01386</span></span>
-<span><span class="co">##            b_3cr    c_1cr    c_2cr      a_cw   b_cw a_bt b_bt LeafDuration</span></span>
-<span><span class="co">## 143           NA       NA       NA        NA     NA   NA   NA     2.556345</span></span>
-<span><span class="co">## 149           NA       NA       NA 0.6415296 0.7310   NA   NA     2.536875</span></span>
-<span><span class="co">## 169 -0.000110736 -0.00685 -0.20101 0.5681897 0.7974   NA   NA     2.183837</span></span>
-<span><span class="co">##     t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen ysen      SLA LeafDensity</span></span>
-<span><span class="co">## 143    NA    NA    NA    NA    NA    NA   NA   NA 6.881886   0.5327417</span></span>
-<span><span class="co">## 149    NA    NA    NA    NA    NA    NA   NA   NA 5.140523   0.2982842</span></span>
-<span><span class="co">## 169  54.5 240.7  4.34 10178  12.5  28.5    2    2 6.340000   0.4893392</span></span>
-<span><span class="co">##     WoodDensity FineRootDensity conduit2sapwood     r635    pDead    Al2As</span></span>
-<span><span class="co">## 143   0.7050000              NA              NA 1.917579 0.119768 1698.950</span></span>
-<span><span class="co">## 149   0.6077016              NA       0.9236406 1.964226 0.000500  631.000</span></span>
-<span><span class="co">## 169   0.9008264              NA       0.6238125 1.805872 0.000260 1540.671</span></span>
-<span><span class="co">##     Ar2Al LeafWidth      SRL RLD    maxFMC   minFMC   LeafPI0   LeafEPS LeafAF</span></span>
-<span><span class="co">## 143    NA 1.2000000       NA  NA 108.24724 56.53442        NA        NA     NA</span></span>
-<span><span class="co">## 149    NA 0.1384772 3172.572  NA 126.03063 86.22550 -1.591429  8.918571 0.3525</span></span>
-<span><span class="co">## 169    NA 1.7674359 4398.812  NA  93.15304 57.44192 -2.660000 10.570000 0.4300</span></span>
-<span><span class="co">##     StemPI0 StemEPS StemAF  SAV HeatContent LigninPercent gammaSWR alphaSWR</span></span>
-<span><span class="co">## 143      NA      NA     NA 9630       21400            NA       NA       NA</span></span>
-<span><span class="co">## 149      NA      NA     NA 6050       22150      24.52473       NA       NA</span></span>
-<span><span class="co">## 169      NA      NA     NA 4050       19300      28.97492       NA       NA</span></span>
-<span><span class="co">##     kPAR   g   Tmax_LAI   Tmax_LAIsq Psi_Extract Exp_Extract      WUE   WUE_par</span></span>
-<span><span class="co">## 143   NA 0.8         NA           NA  -1.8969940          NA       NA        NA</span></span>
-<span><span class="co">## 149   NA 1.0 0.13847869 -0.006200539  -0.8507809     1.47061 8.523012 0.6843513</span></span>
-<span><span class="co">## 169   NA 0.8 0.09146279 -0.004095349  -1.6598896     1.06530 8.447722 0.2523021</span></span>
-<span><span class="co">##         WUE_co2    WUE_vpd      Gswmin    Gswmax VCleaf_kmax VCleaf_c  VCleaf_d</span></span>
-<span><span class="co">## 143          NA         NA          NA        NA        3.00       NA        NA</span></span>
-<span><span class="co">## 149 0.002517798 -0.3035192 0.003086667 0.2850000        4.00 2.236041 -2.253816</span></span>
-<span><span class="co">## 169 0.002721234 -0.5791330 0.004473333 0.2007222        2.63 5.410000 -4.180000</span></span>
-<span><span class="co">##     Kmax_stemxylem  VCstem_c  VCstem_d Kmax_rootxylem VCroot_c  VCroot_d</span></span>
-<span><span class="co">## 143      0.4083769  2.619333 -7.533736             NA       NA        NA</span></span>
-<span><span class="co">## 149      0.1500000 12.710000 -5.290000             NA 11.13705 -3.065569</span></span>
-<span><span class="co">## 169      0.4000000  3.560000 -7.720000             NA  1.33937 -2.214081</span></span>
-<span><span class="co">##      Vmax298  Jmax298    Nleaf Nsapwood Nfineroot     WoodC    RERleaf</span></span>
-<span><span class="co">## 143 65.23250 146.2701 16.09170  2.78000        NA        NA         NA</span></span>
-<span><span class="co">## 149 72.19617 124.1687 11.91507  1.26556  9.187476 0.4979943 0.01210607</span></span>
-<span><span class="co">## 169 68.51600 118.7863 14.11983  5.66150 12.166747 0.4740096 0.01757808</span></span>
-<span><span class="co">##     RERsapwood RERfineroot CCleaf CCsapwood CCfineroot RGRleafmax RGRsapwoodmax</span></span>
-<span><span class="co">## 143         NA          NA 1.6300        NA         NA         NA            NA</span></span>
-<span><span class="co">## 149         NA          NA 1.5905      1.47        1.3         NA            NA</span></span>
-<span><span class="co">## 169         NA          NA 1.4300        NA         NA         NA            NA</span></span>
-<span><span class="co">##     RGRcambiummax RGRfinerootmax SRsapwood SRfineroot   RSSG</span></span>
-<span><span class="co">## 143  0.0009891472             NA        NA         NA     NA</span></span>
-<span><span class="co">## 149  0.0034108138             NA        NA         NA 0.3725</span></span>
-<span><span class="co">## 169  0.0015540115             NA        NA         NA 0.9500</span></span>
-<span><span class="co">##     MortalityBaselineRate SeedProductionHeight   ProbRecr MinTempRecr</span></span>
-<span><span class="co">## 143           0.001622378                   NA 0.04459023   -2.570181</span></span>
-<span><span class="co">## 149           0.005000000                   NA 0.02473379    1.083300</span></span>
-<span><span class="co">## 169           0.001000000                   NA 0.03005748   -3.744526</span></span>
-<span><span class="co">##     MinMoistureRecr MinFPARRecr RecrTreeDBH RecrTreeHeight RecrShrubHeight</span></span>
-<span><span class="co">## 143      0.05070956   0.4943654          NA       525.4367              NA</span></span>
-<span><span class="co">## 149      0.10154153   4.5625766          NA       569.3647              NA</span></span>
-<span><span class="co">## 169      0.09657161   0.1307250          NA       472.3629              NA</span></span>
-<span><span class="co">##     RecrTreeDensity RecrShrubCover RecrZ50 RecrZ95 RespFire RespDist RespClip</span></span>
-<span><span class="co">## 143        235.1347             NA      NA      NA       NA       NA       NA</span></span>
-<span><span class="co">## 149        246.2793             NA      NA      NA       NA       NA       NA</span></span>
-<span><span class="co">## 169        352.2668             NA      NA      NA        3        3        3</span></span>
-<span><span class="co">##     IngrowthTreeDensity IngrowthTreeDBH</span></span>
-<span><span class="co">## 143                  NA              NA</span></span>
-<span><span class="co">## 149                  NA              NA</span></span>
-<span><span class="co">## 169                  NA              NA</span></span></code></pre>
+<span><span class="co">##            b_3cr    c_1cr    c_2cr      a_cw   b_cw      a_bt      b_bt</span></span>
+<span><span class="co">## 143           NA       NA       NA        NA     NA        NA        NA</span></span>
+<span><span class="co">## 149           NA       NA       NA 0.6415296 0.7310 0.5535741 1.1848613</span></span>
+<span><span class="co">## 169 -0.000110736 -0.00685 -0.20101 0.5681897 0.7974 0.5622245 0.9626839</span></span>
+<span><span class="co">##     LeafDuration t0gdd  Sgdd Tbgdd  Ssen Phsen Tbsen xsen ysen      SLA</span></span>
+<span><span class="co">## 143     2.556345    NA    NA    NA    NA    NA    NA   NA   NA 6.881886</span></span>
+<span><span class="co">## 149     2.536875    NA    NA    NA    NA    NA    NA   NA   NA 5.140523</span></span>
+<span><span class="co">## 169     2.183837  54.5 240.7  4.34 10178  12.5  28.5    2    2 6.340000</span></span>
+<span><span class="co">##     LeafDensity WoodDensity FineRootDensity conduit2sapwood     r635    pDead</span></span>
+<span><span class="co">## 143   0.5327417   0.7050000              NA              NA 1.917579 0.119768</span></span>
+<span><span class="co">## 149   0.2982842   0.6077016              NA       0.9236406 1.964226 0.000500</span></span>
+<span><span class="co">## 169   0.4893392   0.9008264              NA       0.6238125 1.805872 0.000260</span></span>
+<span><span class="co">##        Al2As Ar2Al LeafWidth      SRL RLD    maxFMC   minFMC   LeafPI0</span></span>
+<span><span class="co">## 143 1698.950    NA 1.2000000       NA  NA 108.24724 56.53442        NA</span></span>
+<span><span class="co">## 149  631.000    NA 0.1384772 3172.572  NA 126.03063 86.22550 -1.591429</span></span>
+<span><span class="co">## 169 1540.671    NA 1.7674359 4398.812  NA  93.15304 57.44192 -2.660000</span></span>
+<span><span class="co">##       LeafEPS LeafAF StemPI0 StemEPS StemAF  SAV HeatContent LigninPercent</span></span>
+<span><span class="co">## 143        NA     NA      NA      NA     NA 9630       21400            NA</span></span>
+<span><span class="co">## 149  8.918571 0.3525      NA      NA     NA 6050       22150      24.52473</span></span>
+<span><span class="co">## 169 10.570000 0.4300      NA      NA     NA 4050       19300      28.97492</span></span>
+<span><span class="co">##     gammaSWR alphaSWR kPAR   g   Tmax_LAI   Tmax_LAIsq Psi_Extract Exp_Extract</span></span>
+<span><span class="co">## 143       NA       NA   NA 0.8         NA           NA  -1.8969940          NA</span></span>
+<span><span class="co">## 149       NA       NA   NA 1.0 0.13847869 -0.006200539  -0.8507809     1.47061</span></span>
+<span><span class="co">## 169       NA       NA   NA 0.8 0.09146279 -0.004095349  -1.6598896     1.06530</span></span>
+<span><span class="co">##          WUE   WUE_par     WUE_co2    WUE_vpd      Gswmin    Gswmax VCleaf_kmax</span></span>
+<span><span class="co">## 143       NA        NA          NA         NA          NA        NA        3.00</span></span>
+<span><span class="co">## 149 8.523012 0.6843513 0.002517798 -0.3035192 0.003086667 0.2850000        4.00</span></span>
+<span><span class="co">## 169 8.447722 0.2523021 0.002721234 -0.5791330 0.004473333 0.2007222        2.63</span></span>
+<span><span class="co">##     VCleaf_c  VCleaf_d Kmax_stemxylem  VCstem_c  VCstem_d Kmax_rootxylem</span></span>
+<span><span class="co">## 143       NA        NA      0.4083769  2.619333 -7.533736             NA</span></span>
+<span><span class="co">## 149 2.236041 -2.253816      0.1500000 12.710000 -5.290000             NA</span></span>
+<span><span class="co">## 169 5.410000 -4.180000      0.4000000  3.560000 -7.720000             NA</span></span>
+<span><span class="co">##     VCroot_c  VCroot_d  Vmax298  Jmax298    Nleaf Nsapwood Nfineroot     WoodC</span></span>
+<span><span class="co">## 143       NA        NA 65.23250 146.2701 16.09170  2.78000        NA        NA</span></span>
+<span><span class="co">## 149 11.13705 -3.065569 72.19617 124.1687 11.91507  1.26556  9.187476 0.4979943</span></span>
+<span><span class="co">## 169  1.33937 -2.214081 68.51600 118.7863 14.11983  5.66150 12.166747 0.4740096</span></span>
+<span><span class="co">##        RERleaf RERsapwood RERfineroot CCleaf CCsapwood CCfineroot RGRleafmax</span></span>
+<span><span class="co">## 143         NA         NA          NA 1.6300        NA         NA         NA</span></span>
+<span><span class="co">## 149 0.01210607         NA          NA 1.5905      1.47        1.3         NA</span></span>
+<span><span class="co">## 169 0.01757808         NA          NA 1.4300        NA         NA         NA</span></span>
+<span><span class="co">##     RGRsapwoodmax RGRcambiummax RGRfinerootmax SRsapwood SRfineroot   RSSG</span></span>
+<span><span class="co">## 143            NA  0.0009891472             NA        NA         NA     NA</span></span>
+<span><span class="co">## 149            NA  0.0034108138             NA        NA         NA 0.3725</span></span>
+<span><span class="co">## 169            NA  0.0015540115             NA        NA         NA 0.9500</span></span>
+<span><span class="co">##     MortalityBaselineRate SurvivalModelStep SurvivalB0 SurvivalB1</span></span>
+<span><span class="co">## 143           0.001622378                NA         NA         NA</span></span>
+<span><span class="co">## 149           0.005000000                10   7.311515 -0.6532989</span></span>
+<span><span class="co">## 169           0.001000000                10   7.484348 -0.5420550</span></span>
+<span><span class="co">##     SeedProductionHeight   ProbRecr MinTempRecr MinMoistureRecr MinFPARRecr</span></span>
+<span><span class="co">## 143                   NA 0.04459023   -2.570181      0.05070956   0.4943654</span></span>
+<span><span class="co">## 149                   NA 0.02473379    1.083300      0.10154153   4.5625766</span></span>
+<span><span class="co">## 169                   NA 0.03005748   -3.744526      0.09657161   0.1307250</span></span>
+<span><span class="co">##     RecrTreeDBH RecrTreeHeight RecrShrubHeight RecrTreeDensity RecrShrubCover</span></span>
+<span><span class="co">## 143          NA       52.54367              NA              NA             NA</span></span>
+<span><span class="co">## 149          NA       56.93647              NA              NA             NA</span></span>
+<span><span class="co">## 169          NA       47.23629              NA              NA             NA</span></span>
+<span><span class="co">##     RecrZ50 RecrZ95 RespFire RespDist RespClip IngrowthTreeDensity</span></span>
+<span><span class="co">## 143      NA      NA      0.9     0.95     0.96            235.1347</span></span>
+<span><span class="co">## 149      NA      NA       NA       NA       NA            246.2793</span></span>
+<span><span class="co">## 169      NA      NA      0.9     0.95     0.96            352.2668</span></span>
+<span><span class="co">##     IngrowthTreeDBH</span></span>
+<span><span class="co">## 143              NA</span></span>
+<span><span class="co">## 149              NA</span></span>
+<span><span class="co">## 169              NA</span></span></code></pre>
 <p>Note that the function returns a subset of rows for the species
 mentioned in <code>customParams</code>. Not all parameters are needed
 for the soil water balance model. The user can find parameter
@@ -591,7 +595,7 @@ automatically in <code><a href="../../reference/modifyParams.html">modifyCohortP
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fb_SWB</span> <span class="op">=</span> <span class="fu"><a href="../../reference/spwb.html">spwb</a></span><span class="op">(</span><span class="va">fb_x</span>, <span class="va">fb_meteo</span>, elevation <span class="op">=</span> <span class="fl">420</span>, latitude <span class="op">=</span> <span class="fl">43.24083</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## DOY taken from input column 'DOY'</span></span></code></pre>
-<pre><code><span><span class="co">## Package 'meteoland' [ver. 2.0.1]</span></span></code></pre>
+<pre><code><span><span class="co">## Package 'meteoland' [ver. 2.1.0]</span></span></code></pre>
 <pre><code><span><span class="co">## Initial plant water content (mm): 31.7617</span></span>
 <span><span class="co">## Initial soil water content (mm): 268.656</span></span>
 <span><span class="co">## Initial snowpack content (mm): 0</span></span>
