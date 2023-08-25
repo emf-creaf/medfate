@@ -279,15 +279,18 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
   //Minimum height above index1 where BD > BDT (BD > 0 in abs)
   int index2 = index1+1;
   int index2abs = index1abs+1;
-  while((wfp[index2] < bulkDensityThreshold) && (index2<(numSteps-1))) {index2 = index2 +1;}
-  while((wfp[index2abs] < 0.000001) && (index2abs<(numSteps-1))) {index2abs = index2abs +1;}
+  while((wfp[index2] < bulkDensityThreshold) && (index2<(numSteps-2))) {index2 = index2 +1;}
+  while((wfp[index2abs] < 0.000001) && (index2abs<(numSteps-2))) {index2abs = index2abs +1;}
   // Rcout<< " 2: " <<index2<< " "<< index2abs<<"\n";
   
   //Maximum height where BD > BDT (BD > 0 in abs)
-  int index3 = numSteps-1;
-  int index3abs = numSteps-1;
+  int index3 = numSteps-2;
+  int index3abs = numSteps-2;
   while((wfp[index3]<bulkDensityThreshold) && (index3>index2)) {index3 = index3 - 1;}  
   while((wfp[index3abs] < 0.000001) && (index3abs>index2abs)) {index3abs = index3abs - 1;}  
+  //Ensure minimum height <= maximum height
+  if(index2>index3) index0 = index1;
+  if(index0abs>index1abs) index0abs = index1abs;
   // Rcout<<" 3: " << index3<< " "<< index3abs<<"\n";
   
   //Fuelbed height
@@ -298,11 +301,11 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
   
   //Crown base and top heights (cm)
   double cbh = NA_REAL, cth = NA_REAL, cbhabs = NA_REAL, cthabs = NA_REAL;
-  if(index2<(numSteps-1)) cbh = z[index2];
-  if(index3<(numSteps-1)) cth = z[index3];
+  if(index2<(numSteps-2)) cbh = z[index2];
+  if(index3<(numSteps-2)) cth = z[index3];
   // Rcout<<" cbh: " << cbh<< " "<<" cth: " << cth<< "\n";
-  if(index2abs<(numSteps-1)) cbhabs = z[index2abs];
-  if(index3abs<(numSteps-1)) cthabs = z[index3abs];
+  if(index2abs<(numSteps-2)) cbhabs = z[index2abs];
+  if(index3abs<(numSteps-2)) cthabs = z[index3abs];
   // Rcout<<" cbhabs: " << cbhabs<< " "<<" cthabs: " << cthabs<< "\n";
   
   NumericVector cLAI = cohortLAI(object,SpParams, NA_REAL, true);
