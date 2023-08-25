@@ -295,6 +295,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   //Create z vector with all layer height limits
   NumericVector z(ncanlayers+1,0.0);
   for(int i=1;i<=ncanlayers;i++) z[i] = z[i-1] + verticalLayerSize;
+  
+  NumericVector PARcohort = parcohortC(H, LAIphe,  LAIdead, kPAR, CR);
+  
   //LAI distribution per layer and cohort
   NumericMatrix LAIme = LAIdistributionVectors(z, LAIphe, H, CR); //Expanded leaves
   NumericMatrix LAImd = LAIdistributionVectors(z, LAIdead, H, CR); //Dead (standing) leaves
@@ -698,6 +701,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     _["PWB"] = PWBinst);
   DataFrame Plants = DataFrame::create(_["LAI"] = clone(LAIphe),
                                        _["LAIlive"] = clone(LAIlive),
+                                       _["FPAR"] = PARcohort,
                                        _["Extraction"] = SoilExtractCoh,
                                        _["Transpiration"] = Eplant,
                                        _["GrossPhotosynthesis"] = Agplant,

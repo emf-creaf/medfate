@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 3.1.4
+- Fixing memory access errors
+
 # Version 3.1.3
 - New option 'months' in simulation summaries.
 - Leaf area, foliar biomass and fuels of shrubs and herbs depend on the leaf area of plants above

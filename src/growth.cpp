@@ -528,12 +528,10 @@ List growthDayInner(List x, NumericVector meteovec,
   List PlantsInst;
   NumericVector Ag = Plants["GrossPhotosynthesis"];
   NumericVector LFMC = Plants["LFMC"];
-  NumericVector PARcohort;
+  NumericVector PARcohort= Plants["FPAR"];
   NumericMatrix AgStep, AnStep;
   int numSteps = 1;
-  if(transpirationMode=="Granier") {
-    PARcohort= Plants["FPAR"];
-  } else {
+  if(transpirationMode!="Granier") {
     PlantsInst = spwbOut["PlantsInst"];
     AgStep  =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["Ag"]);
     AnStep  =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["An"]);
@@ -759,7 +757,7 @@ List growthDayInner(List x, NumericVector meteovec,
         double B_resp_fineroots = fineRootBiomass[j];
         double QR = qResp(tday);
         if(LAexpanded>0.0) {
-          leafRespDay = B_resp_leaves*RERleaf[j]*QR*std::min(1.0, pow(PARcohort[j]/100.0,WUE_par[j]));
+          leafRespDay = B_resp_leaves*RERleaf[j]*QR*std::min(1.0, pow(PARcohort[j]/100.0, 0.5)); //Reduction under shade
         }
         sapwoodResp = B_resp_sapwood*RERsapwood[j]*QR;
         finerootResp = B_resp_fineroots*RERfineroot[j]*QR*(LAexpanded/LAlive);

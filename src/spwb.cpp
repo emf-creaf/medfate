@@ -1004,7 +1004,9 @@ List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, L
   NumericMatrix StemPLC(numDays, numCohorts);
   NumericMatrix StemRWC(numDays, numCohorts), LeafRWC(numDays, numCohorts), LFMC(numDays, numCohorts);
   NumericMatrix PlantWaterBalance(numDays, numCohorts);
+  NumericMatrix PlantFPAR(numDays, numCohorts);
   
+  PlantFPAR.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   PlantTranspiration.attr("dimnames") = List::create(dateStrings, above.attr("row.names"));
   PlantStress.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   
@@ -1023,8 +1025,6 @@ List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, L
     NumericMatrix PlantPsi(numDays, numCohorts);
     NumericMatrix PlantGrossPhotosynthesis(numDays, numCohorts);
     NumericMatrix PlantAbsSWRFraction(numDays, numCohorts);
-    NumericMatrix PlantFPAR(numDays, numCohorts);
-    PlantFPAR.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
     PlantAbsSWRFraction.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
     PlantGrossPhotosynthesis.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
     PlantPsi.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
@@ -1071,6 +1071,7 @@ List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, L
     
     plants = List::create(Named("LAI") = PlantLAI,
                           Named("LAIlive") = PlantLAIlive,
+                          Named("FPAR") = PlantFPAR,
                           Named("AbsorbedSWR") = PlantAbsSWR,
                                Named("NetLWR") = PlantNetLWR,
                                Named("Transpiration") = PlantTranspiration,
@@ -1265,6 +1266,7 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
   NumericMatrix LeafRWC= Rcpp::as<Rcpp::NumericMatrix>(x["LeafRWC"]);
   NumericMatrix LFMC= Rcpp::as<Rcpp::NumericMatrix>(x["LFMC"]);
   NumericMatrix PlantWaterBalance= Rcpp::as<Rcpp::NumericMatrix>(x["PlantWaterBalance"]);
+  NumericMatrix PlantFPAR= Rcpp::as<Rcpp::NumericMatrix>(x["FPAR"]);
   
   int numCohorts = PlantLAI.ncol();
   
@@ -1277,18 +1279,17 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
   LeafRWC(iday,_) = as<Rcpp::NumericVector>(Plants["LeafRWC"]); 
   LFMC(iday,_) = as<Rcpp::NumericVector>(Plants["LFMC"]); 
   PlantWaterBalance(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["WaterBalance"]); 
+  PlantFPAR(iday,_) =  Rcpp::as<Rcpp::NumericVector>(Plants["FPAR"]);  
   
   
   if(transpirationMode=="Granier") {
     NumericMatrix PlantGrossPhotosynthesis= Rcpp::as<Rcpp::NumericMatrix>(x["GrossPhotosynthesis"]);
     NumericMatrix PlantPsi = Rcpp::as<Rcpp::NumericMatrix>(x["PlantPsi"]);
     NumericMatrix PlantAbsSWRFraction= Rcpp::as<Rcpp::NumericMatrix>(x["AbsorbedSWRFraction"]);
-    NumericMatrix PlantFPAR= Rcpp::as<Rcpp::NumericMatrix>(x["FPAR"]);
     
     PlantPsi(iday,_) =  Rcpp::as<Rcpp::NumericVector>(Plants["PlantPsi"]);  
     PlantGrossPhotosynthesis(iday,_) =  Rcpp::as<Rcpp::NumericVector>(Plants["GrossPhotosynthesis"]);  
     PlantAbsSWRFraction(iday,_) =  Rcpp::as<Rcpp::NumericVector>(Plants["AbsorbedSWRFraction"]);  
-    PlantFPAR(iday,_) =  Rcpp::as<Rcpp::NumericVector>(Plants["FPAR"]);  
   } else {
     NumericMatrix RhizoPsiStep = Rcpp::as<Rcpp::NumericMatrix>(sDay["RhizoPsi"]);
     List PlantsInst = sDay["PlantsInst"];
