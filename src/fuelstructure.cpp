@@ -66,7 +66,7 @@ double crownLengthInLayer(double zLow, double zHigh, double cl, double H, double
 NumericVector woodyFuelProfile(NumericVector z, NumericVector fuelBiomass, NumericVector H, NumericVector CR) {
   int nh = z.size();
   int ncoh = fuelBiomass.size(); //input in kg/m2
-  NumericVector wfp(nh-1);
+  NumericVector wfp(nh-1, 0.0);
   for(int ci=0;ci<ncoh;ci++) {
     double cbh = H[ci]*(1.0-CR[ci]);
     for(int hi=0;hi<(nh-1);hi++) {
@@ -247,40 +247,48 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
   int numSteps = (int) (maxHeightProfile/heightProfileStep);
   NumericVector z(numSteps);
   for(int i=0;i<numSteps; i++)  {
-   if(i==0) z[i] = 0;
+   if(i==0) z[i] = 0.0;
    else z[i] = z[i-1] + heightProfileStep;
   }
   //Profile has length numSteps-1
   NumericVector wfp = woodyFuelProfile(z, object, SpParams, gdd); //kg/m3
+  // Rcout<<wfp.size()<< " "<< numSteps-1<<"\n";
+  // for(int i=0;i<wfp.size();i++) Rcout<< i << " : "<<wfp[i]<<" - ";
+  // Rcout<<"\n";
+    
   int index0 = 0;
   int index0abs = 0;
   
   //Minimum height between 0 and 200 cm where BD > BDT (BD > 0 in abs)
-  while((wfp[index0]<bulkDensityThreshold) && (z[index0+1]<=200)){index0++;}
-  while((wfp[index0abs]<0.0) && (z[index0abs+1]<=200)){index0abs++;}
+  while((wfp[index0]<bulkDensityThreshold) && (z[index0+1]<=200.0)){index0++;}
+  while((wfp[index0abs] < 0.000001) && (z[index0abs+1]<=200.0)){index0abs++;}
   
   int index1 = 0;
   int index1abs = 0;
   //Maximum height between 0 and 200 cm where BD > BDT (BD > 0 in abs)
-  for(int i=0;z[i+1]<=200;i++) {
+  for(int i=0;z[i+1]<=200.0;i++) {
     if((wfp[i]>bulkDensityThreshold) && (i>index1)) {index1 = i;}
-    if((wfp[i]>0.0) && (i>index1abs)) {index1abs = i;}
+    if((wfp[i]>0.000001) && (i>index1abs)) {index1abs = i;}
   }
   //Ensure minimum height <= maximum height
   if(index0>index1) index0 = index1;
   if(index0abs>index1abs) index0abs = index1abs;
+  // Rcout<<" 0: " << index0<< " "<< index0abs<<"\n";
+  // Rcout<<" 1: " << index1<< " "<< index1abs<<"\n";
   
   //Minimum height above index1 where BD > BDT (BD > 0 in abs)
   int index2 = index1+1;
   int index2abs = index1abs+1;
-  while((wfp[index2]<bulkDensityThreshold) && (index2<(numSteps-1))) {index2 = index2 +1;}
-  while((wfp[index2abs]==0.0) && (index2abs<(numSteps-1))) {index2abs = index2abs +1;}
+  while((wfp[index2] < bulkDensityThreshold) && (index2<(numSteps-1))) {index2 = index2 +1;}
+  while((wfp[index2abs] < 0.000001) && (index2abs<(numSteps-1))) {index2abs = index2abs +1;}
+  // Rcout<< " 2: " <<index2<< " "<< index2abs<<"\n";
   
   //Maximum height where BD > BDT (BD > 0 in abs)
-  int index3 = numSteps-2;
-  int index3abs = numSteps-2;
+  int index3 = numSteps-1;
+  int index3abs = numSteps-1;
   while((wfp[index3]<bulkDensityThreshold) && (index3>index2)) {index3 = index3 - 1;}  
-  while((wfp[index3abs]==0.0) && (index3abs>index2abs)) {index3abs = index3abs - 1;}  
+  while((wfp[index3abs] < 0.000001) && (index3abs>index2abs)) {index3abs = index3abs - 1;}  
+  // Rcout<<" 3: " << index3<< " "<< index3abs<<"\n";
   
   //Fuelbed height
   double fbbh = z[index0];
@@ -290,14 +298,12 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
   
   //Crown base and top heights (cm)
   double cbh = NA_REAL, cth = NA_REAL, cbhabs = NA_REAL, cthabs = NA_REAL;
-  if(index2<(numSteps-1)) {
-    cbh = z[index2];
-    cth = z[index3+1];
-  }
-  if(index2abs<(numSteps-1)) {
-    cbhabs = z[index2abs];
-    cthabs = z[index3abs+1];
-  }
+  if(index2<(numSteps-1)) cbh = z[index2];
+  if(index3<(numSteps-1)) cth = z[index3];
+  // Rcout<<" cbh: " << cbh<< " "<<" cth: " << cth<< "\n";
+  if(index2abs<(numSteps-1)) cbhabs = z[index2abs];
+  if(index3abs<(numSteps-1)) cthabs = z[index3abs];
+  // Rcout<<" cbhabs: " << cbhabs<< " "<<" cthabs: " << cthabs<< "\n";
   
   NumericVector cLAI = cohortLAI(object,SpParams, NA_REAL, true);
   NumericVector cH = cohortHeight(object, SpParams);
