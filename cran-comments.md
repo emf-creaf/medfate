@@ -1,6 +1,6 @@
 ## Error fixing submission
 
-This submission tries to fix memory access issues arisen from previous submission (ASAN and valgrind flavors). We debugged the code using valgrind and we expect the bug to be corrected. Note, however, that we could not test the package on platform Debian Linux, R-devel, GCC ASAN/UBSAN due to pre-processing errors in Rhub.
+This submission (v3.1.4) tries to fix memory access issues arisen from previous submission (v3.1.3) under ASAN and valgrind flavors. We debugged the code using valgrind and we expect the bug to be corrected. Note, however, that we could not test the package on platform Debian Linux, R-devel, GCC ASAN/UBSAN due to pre-processing errors in Rhub.
 
 
 ## Tested environments
