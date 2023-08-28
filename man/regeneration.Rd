@@ -2,11 +2,20 @@
 % Please edit documentation in R/regeneration.R
 \name{regeneration}
 \alias{regeneration}
-\alias{recruitment}
-\alias{resprouting}
+\alias{regeneration_seedproduction}
+\alias{regeneration_seedrefill}
+\alias{regeneration_seedmortality}
+\alias{regeneration_recruitment}
+\alias{regeneration_resprouting}
 \title{Plant regeneration}
 \usage{
-recruitment(
+regeneration_seedproduction(forest, SpParams, control)
+
+regeneration_seedrefill(forest, species, percent = NULL)
+
+regeneration_seedmortality(forest, SpParams, minPercent = 1)
+
+regeneration_recruitment(
   forest,
   SpParams,
   control,
@@ -15,7 +24,7 @@ recruitment(
   verbose = FALSE
 )
 
-resprouting(
+regeneration_resprouting(
   forest,
   internalMortality,
   SpParams,
@@ -30,6 +39,10 @@ resprouting(
 
 \item{control}{A list with default control parameters (see \code{\link{defaultControl}}).}
 
+\item{species}{A string vector of species names corresponding to seed rain.}
+
+\item{minPercent}{A minimum percent of seed bank to retain entry in \code{seedBank} element of \code{forest}.}
+
 \item{minMonthTemp}{Minimum month temperature.}
 
 \item{moistureIndex}{Moisture index (annual precipitation over annual potential evapotranspiration).}
@@ -41,17 +54,23 @@ resprouting(
 \item{management_results}{The result of calling a management function (see \code{\link{defaultManagementFunction}}).}
 }
 \value{
-An object of class \code{\link{forest}} with the new plant cohorts.
+\itemize{
+  \item{\code{regeneration_seedproduction} returns a list of species names}
+  \item{\code{regeneration_seedrefill} and \code{regeneration_seedmortality} return a copy of the input \code{forest} object with an update seed bank. }
+  \item{\code{regeneration_resprouting} and \code{regeneration_recruitment} return a new object of class \code{\link{forest}} with the new plant cohorts.}
+}
 }
 \description{
-Annual plant regeneration from seed recruitment or from resprouting
+Functions to simulate annual plant regeneration from seed recruitment or from resprouting
 }
 \details{
 \itemize{
-  \item{Species can recruit if adults (sufficiently tall individuals) are present (seed rain can also be specified in a control parameter). 
-Minimum month temperature and moisture index values are used to determine if recruitment was successful. 
+  \item{\code{regeneration_seedproduction} evaluates if reproductive individuals (i.e. sufficiently tall individuals) are present.} 
+  \item{\code{regeneration_seedrefill} fills seed bank of input \code{forest} object with seed rain.}
+  \item{\code{regeneration_seedmortality} updates seed bank of input \code{forest} object according to annual seed mortality.}
+  \item{\code{regeneration_recruitment} evaluates recruitment from the seed bank (or local seed production if seed bank is missing). Minimum month temperature and moisture index values are used to determine if recruitment was successful. 
 Species also require a minimum amount of light at the ground level.}
-  \item{Resprouting occurs after “mortality” from die-back (including drought- or pathogen-induced dessication), 
+  \item{\code{regeneration_resprouting} evaluates resprouting occurs after “mortality” from die-back (including drought- or pathogen-induced dessication), 
 cutting or burning of the aerial part in a species with resprouting ability, 
 but not after carbon starvation or baseline mortality (unspecific mortality causes).}
 }
@@ -72,8 +91,8 @@ plant_parameter(exampleforestMED, SpParamsMED, "MinTempRecr")
 plant_parameter(exampleforestMED, SpParamsMED, "MinMoistureRecr")
 
 #Compare seed recruitment outcomes
-recruitment(exampleforestMED, SpParamsMED, control, 0, 0.25)
-recruitment(exampleforestMED, SpParamsMED, control, 3, 0.25)
+regeneration_recruitment(exampleforestMED, SpParamsMED, control, 0, 0.25)
+regeneration_recruitment(exampleforestMED, SpParamsMED, control, 3, 0.25)
 
 }
 \seealso{

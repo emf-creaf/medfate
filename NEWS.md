@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 3.2.0
+- Functions for seed production and bank dynamics
+
 # Version 3.1.4
 - Fixing memory access errors
 

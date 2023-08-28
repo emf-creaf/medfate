@@ -261,22 +261,35 @@ fordyn<-function(forest, soil, SpParams,
       management_args <- management_result$management_args
     } 
     
-    # 3. Simulate species recruitment and resprouting
-    if(verboseDyn && (control$allowRecruitment || control$allowResprouting)) cat(paste0(", (b) Recruitment/resprouting"))
+    # 3. Simulate species seed recruitment and resprouting
+    if(verboseDyn && (control$allowRecruitment || control$allowResprouting)) cat(paste0(", (b) Regeneration"))
     if(control$allowRecruitment) {
+      # Reduce seed bank according to longevity
+      forest <- regeneration_seedmortality(forest, SpParams)
+      # Seed local production
+      seed_local <- regeneration_seedproduction(forest, SpParams, control)
+      # Seed rain from control
+      seed_rain <- control$seedRain
+      if(!is.null(seed_rain)) seed <- unique(c(seed_local, seed_rain)) 
+      else seed <- seed_local
+      # Refill seed bank with new seeds
+      forest <- regeneration_seedrefill(forest, seed)
+      
+      # Seed recruitment
       monthlyMinTemp <- tapply(Gi$weather$MinTemperature, monthsYear, FUN="mean", na.rm=TRUE)
       monthlyMaxTemp <- tapply(Gi$weather$MaxTemperature, monthsYear, FUN="mean", na.rm=TRUE)
       monthlyTemp <- 0.606*monthlyMaxTemp + 0.394*monthlyMinTemp
       minMonthTemp <- min(monthlyTemp, na.rm=TRUE)
       moistureIndex <- sum(Gi$WaterBalance$Precipitation, na.rm=TRUE)/sum(Gi$WaterBalance$PET, na.rm=TRUE)
-      recr_forest <- recruitment(forest, SpParams, control, minMonthTemp, moistureIndex, verbose = FALSE)
+      recr_forest <- regeneration_recruitment(forest, SpParams, control, minMonthTemp, moistureIndex, verbose = FALSE)
+      
     } else {
       recr_forest <- emptyforest()
     }
     # 3.2. Simulate species resprouting
     if(control$allowResprouting) {
-      resp_forest <- resprouting(forest, xo$internalMortality, SpParams, control,
-                                 management_result)
+      resp_forest <- regeneration_resprouting(forest, xo$internalMortality, SpParams, control,
+                                              management_result)
     } else {
       resp_forest <- emptyforest()
     }

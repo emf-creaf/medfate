@@ -32,6 +32,7 @@
 #' @param digits Minimal number of significant digits.
 #' @param ... Additional parameters for functions \code{\link{summary}} and \code{\link{print}}.
 #' @param ntree,nshrub Number of tree and shrub cohorts, respectively.
+#' @param nseed Number of species in the seed bank.
 #' 
 #' @details Function \code{summary.forest} can be used to summarize a \code{forest} object in the console. 
 #' Function \code{emptyforest} creates an empty \code{forest} object.
@@ -72,7 +73,7 @@
 #' @name forest
 
 #' @rdname forest
-emptyforest <- function(ntree = 0, nshrub = 0) {
+emptyforest <- function(ntree = 0, nshrub = 0, nseed = 0) {
   l <- list()
   l$treeData <- data.frame(Species=as.character(rep(NA, ntree)),
                            DBH=as.numeric(rep(NA, ntree)), 
@@ -87,6 +88,8 @@ emptyforest <- function(ntree = 0, nshrub = 0) {
                             Z95=as.numeric(rep(NA, nshrub)))
   l$herbCover <- NA;
   l$herbHeight <- NA;
+  l$seedBank <- data.frame(Species = as.character(rep(NA, nseed)),
+                           Percent = as.numeric(rep(NA, nseed)))
   class(l)<-c("forest","list")
   return(l)
 }

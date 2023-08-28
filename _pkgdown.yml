@@ -157,6 +157,10 @@ reference:
   contents:
   - starts_with("woodformation_")
   - starts_with("mortality_")
+
+- title: Regeneration
+  desc: Seed production, recruitment and resprouting processes
+  contents:
   - regeneration
 
 - title: Water content

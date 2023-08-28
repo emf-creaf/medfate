@@ -1,9 +1,11 @@
 #' Plant regeneration
 #'
-#' Annual plant regeneration from seed recruitment or from resprouting
+#' Functions to simulate annual plant regeneration from seed recruitment or from resprouting
 #' 
 #' @param forest An object of class \code{\link{forest}}.
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsDefinition}}).
+#' @param species A string vector of species names corresponding to seed rain.
+#' @param minPercent A minimum percent of seed bank to retain entry in \code{seedBank} element of \code{forest}.
 #' @param control A list with default control parameters (see \code{\link{defaultControl}}).
 #' @param minMonthTemp Minimum month temperature.
 #' @param moistureIndex Moisture index (annual precipitation over annual potential evapotranspiration).
@@ -11,15 +13,22 @@
 #' 
 #' @details 
 #' \itemize{
-#'   \item{Species can recruit if adults (sufficiently tall individuals) are present (seed rain can also be specified in a control parameter). 
-#' Minimum month temperature and moisture index values are used to determine if recruitment was successful. 
+#'   \item{\code{regeneration_seedproduction} evaluates if reproductive individuals (i.e. sufficiently tall individuals) are present.} 
+#'   \item{\code{regeneration_seedrefill} fills seed bank of input \code{forest} object with seed rain.}
+#'   \item{\code{regeneration_seedmortality} updates seed bank of input \code{forest} object according to annual seed mortality.}
+#'   \item{\code{regeneration_recruitment} evaluates recruitment from the seed bank (or local seed production if seed bank is missing). Minimum month temperature and moisture index values are used to determine if recruitment was successful. 
 #' Species also require a minimum amount of light at the ground level.}
-#'   \item{Resprouting occurs after “mortality” from die-back (including drought- or pathogen-induced dessication), 
+#'   \item{\code{regeneration_resprouting} evaluates resprouting occurs after “mortality” from die-back (including drought- or pathogen-induced dessication), 
 #' cutting or burning of the aerial part in a species with resprouting ability, 
 #' but not after carbon starvation or baseline mortality (unspecific mortality causes).}
 #' }
 #' 
-#' @return An object of class \code{\link{forest}} with the new plant cohorts.
+#' @return 
+#' \itemize{
+#'   \item{\code{regeneration_seedproduction} returns a list of species names}
+#'   \item{\code{regeneration_seedrefill} and \code{regeneration_seedmortality} return a copy of the input \code{forest} object with an update seed bank. }
+#'   \item{\code{regeneration_resprouting} and \code{regeneration_recruitment} return a new object of class \code{\link{forest}} with the new plant cohorts.}
+#' }
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
@@ -41,11 +50,73 @@
 #' plant_parameter(exampleforestMED, SpParamsMED, "MinMoistureRecr")
 #' 
 #' #Compare seed recruitment outcomes
-#' recruitment(exampleforestMED, SpParamsMED, control, 0, 0.25)
-#' recruitment(exampleforestMED, SpParamsMED, control, 3, 0.25)
+#' regeneration_recruitment(exampleforestMED, SpParamsMED, control, 0, 0.25)
+#' regeneration_recruitment(exampleforestMED, SpParamsMED, control, 3, 0.25)
 #' 
 #' @name regeneration
-recruitment<-function(forest, SpParams, control,
+regeneration_seedproduction<-function(forest, SpParams, control) {
+  treeSpp <- forest$treeData$Species
+  if(length(treeSpp)>0) {
+    sph <- species_parameter(treeSpp, SpParams, "SeedProductionHeight")
+    sph[is.na(sph)] <- control$seedProductionTreeHeight
+    treeSpp <- treeSpp[forest$treeData$Height > sph]
+    treeSpp <- unique(treeSpp)
+  }
+  if(control$shrubDynamics) {
+    shrubSpp <- forest$shrubData$Species
+    if(length(shrubSpp)>0) {
+      sph <- species_parameter(shrubSpp, SpParams, "SeedProductionHeight")
+      sph[is.na(sph)] <- control$seedProductionShrubHeight
+      shrubSpp <- shrubSpp[forest$shrubData$Height > sph]
+      shrubSpp <- unique(shrubSpp)
+    }
+  } else {
+    shrubSpp <- character(0)
+  } 
+  return(unique(c(treeSpp, shrubSpp)))
+}
+
+#' @rdname regeneration
+regeneration_seedrefill <-function(forest, species, percent = NULL) {
+  # Initialize seed bank if not present
+  if(!("seedBank" %in% names(forest))) {
+    forest$seedBank <- data.frame(Species = character(0), Percent = numeric(0))
+  }
+  
+  #If not supplied, all species refill to 100%
+  if(is.null(percent)) percent <- rep(100, length(species))
+  
+  #If percent is missing for some species, it will be refilled to 100%
+  percent[!is.na(percent)] <- 100
+  
+  if(length(species) > 0) {
+    for(isp in 1:length(species)) {
+      sp <- species[isp]
+      if(sp %in% forest$seedBank$Species) {
+        forest$seedBank$Percent[forest$seedBank$Species==sp] <- min(100.0, forest$seedBank$Percent[forest$seedBank$Species==sp] + percent[isp])
+      } else {
+        forest$seedBank <- rbind(forest$seedBank, data.frame("Species" = sp, "Percent" = percent[isp]))
+      }
+    }
+  }
+  return(forest)
+}
+
+#' @rdname regeneration
+regeneration_seedmortality <- function(forest, SpParams, minPercent = 1) {
+  if(!("seedBank" %in% names(forest))) {
+    forest$seedBank <- data.frame(Species = character(0), Percent = numeric(0))
+    return(forest)
+  }
+  seed_longevity <- species_parameter(forest$seedBank$Species, SpParams, "SeedLongevity")
+  seed_longevity[is.na(seed_longevity)] <- 1.0 
+  forest$seedBank$Percent <- forest$seedBank$Percent*exp(-1.0/seed_longevity)
+  forest$seedBank <- forest$seedBank[forest$seedBank$Percent >= minPercent, , drop = FALSE]
+  return(forest)
+}
+
+#' @rdname regeneration
+regeneration_recruitment<-function(forest, SpParams, control,
                       minMonthTemp, moistureIndex, verbose = FALSE) {
   if((nrow(forest$treeData)>0) || (nrow(forest$shrubData)>0)) {
     PARperc <- light_PARground(forest, SpParams)
@@ -53,29 +124,24 @@ recruitment<-function(forest, SpParams, control,
     PARperc <- 100
   } 
   if(verbose) cat(paste0(" [Cold (C): ", round(minMonthTemp,2), " / Moist: ", round(moistureIndex,2), " / FPAR (%): ", round(PARperc,1), "]"))
-  treeSpp <- character(0)
-  shrubSpp <- character(0)
-  if(is.null(control$seedRain)) {
-    treeSpp <- forest$treeData$Species
-    if(length(treeSpp)>0) {
-      sph <- species_parameter(treeSpp, SpParams, "SeedProductionHeight")
-      sph[is.na(sph)] <- control$seedProductionTreeHeight
-      treeSpp <- treeSpp[forest$treeData$Height > sph]
-      treeSpp <- unique(treeSpp)
-    }
-    if(control$shrubDynamics) {
-      shrubSpp <- forest$shrubData$Species
-      if(length(shrubSpp)>0) {
-        sph <- species_parameter(shrubSpp, SpParams, "SeedProductionHeight")
-        sph[is.na(sph)] <- control$seedProductionShrubHeight
-        shrubSpp <- shrubSpp[forest$shrubData$Height > sph]
-        shrubSpp <- unique(shrubSpp)
-      }
-    } 
+  
+  # If seed bank is defined take seeds from it. Otherwise, use local seed production
+  if("seedBank" %in% names(forest)) {
+    seedSpp <- forest$seedBank$Species 
+    seedPercent <- forest$seedBank$Percent
   } else {
-    isTree <- !(species_characterParameter(control$seedRain, SpParams, "GrowthForm")=="Shrub")
-    treeSpp <- control$seedRain[isTree]
-    if(control$shrubDynamics) shrubSpp <- control$seedRain[!isTree]
+    seedSpp <- regeneration_seedproduction(forest, SpParams, control)
+    seedPercent <- rep(100.0, length(seedSpp))
+  }
+  isTree <- !(species_characterParameter(seedSpp, SpParams, "GrowthForm")=="Shrub")
+  treeSpp <- seedSpp[isTree]
+  treePercent <- seedPercent[isTree]
+  if(control$shrubDynamics) {
+    shrubSpp <- seedSpp[!isTree]
+    shrubPercent <- seedPercent[!isTree]
+  } else {
+    shrubSpp <- character(0)
+    shrubPercent <- numeric(0)
   }
   recr_forest <- emptyforest(ntree = length(treeSpp), nshrub=length(shrubSpp))
   ## Determine if species can recruit 
@@ -85,6 +151,7 @@ recruitment<-function(forest, SpParams, control,
     recr_forest$treeData$Species <- treeSpp
     recr_forest$treeData$N <- species_parameter(treeSpp, SpParams, "RecrTreeDensity")
     recr_forest$treeData$N[is.na(recr_forest$treeData$N)] <- control$recrTreeDensity
+    recr_forest$treeData$N <- recr_forest$treeData$N*(treePercent/100.0) #Apply reduction due to seed bank size
     recr_forest$treeData$DBH <- species_parameter(treeSpp, SpParams, "RecrTreeDBH")
     recr_forest$treeData$DBH[is.na(recr_forest$treeData$DBH)] <- control$recrTreeDBH
     recr_forest$treeData$Height <- species_parameter(treeSpp, SpParams, "RecrTreeHeight")
@@ -108,6 +175,7 @@ recruitment<-function(forest, SpParams, control,
     recr_forest$shrubData$Species <- shrubSpp
     recr_forest$shrubData$Cover <- species_parameter(shrubSpp, SpParams, "RecrShrubCover")
     recr_forest$shrubData$Cover[is.na(recr_forest$shrubData$Cover)] <- control$recrShrubCover
+    recr_forest$shrubData$Cover <- recr_forest$shrubData$Cover*(shrubPercent/100.0) #Apply reduction due to seed bank size
     recr_forest$shrubData$Height <- species_parameter(shrubSpp, SpParams, "RecrShrubHeight")
     recr_forest$shrubData$Height[is.na(recr_forest$shrubData$Height)] <- control$recrShrubHeight
     recr_forest$shrubData$Z50 <- species_parameter(shrubSpp, SpParams, "RecrZ50")
@@ -139,6 +207,11 @@ recruitment<-function(forest, SpParams, control,
   }
   recr_forest$treeData <- recr_forest$treeData[recr_forest$treeData$N>0, ,drop=FALSE]
   recr_forest$shrubData <- recr_forest$shrubData[recr_forest$shrubData$Cover>0, ,drop=FALSE]
+  
+  if("herbCover" %in% names(recr_forest)) recr_forest$herbCover <- NULL
+  if("herbHeight" %in% names(recr_forest)) recr_forest$herbHeight <- NULL
+  if("seedBank" %in% names(recr_forest)) recr_forest$seedBank <- NULL
+  
   return(recr_forest)
 }
 
@@ -147,7 +220,7 @@ recruitment<-function(forest, SpParams, control,
 #' 
 #' @param internalMortality A data frame with mortality occurred in the last year of simulation. 
 #' @param management_results The result of calling a management function (see \code{\link{defaultManagementFunction}}).
-resprouting <- function(forest, internalMortality, SpParams, control, 
+regeneration_resprouting <- function(forest, internalMortality, SpParams, control, 
                         management_results = NULL) {
   n_trees <- nrow(forest$treeData)
   n_shrubs <- nrow(forest$shrubData)
@@ -209,5 +282,10 @@ resprouting <- function(forest, internalMortality, SpParams, control,
   # Trim species with no resprouting
   resp_forest$treeData <- resp_forest$treeData[resp_forest$treeData$N > 0, , drop = FALSE]
   resp_forest$shrubData <- resp_forest$shrubData[resp_forest$shrubData$Cover > 0, , drop = FALSE]
+  
+  if("herbCover" %in% names(resp_forest)) resp_forest$herbCover <- NULL
+  if("herbHeight" %in% names(resp_forest)) resp_forest$herbHeight <- NULL
+  if("seedBank" %in% names(resp_forest)) resp_forest$seedBank <- NULL
+
   return(resp_forest)
 }
