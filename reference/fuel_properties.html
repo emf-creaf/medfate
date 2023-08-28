@@ -20,7 +20,7 @@ Function fuel_windAdjustmentFactor determines the adjustment factor of wind for 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
       </span>
     </div>
 
@@ -213,7 +213,7 @@ Each of them contains live moisture content values for each day (in rows) and pl
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $surfaceLayerAbsoluteBaseHeight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $surfaceLayerAbsoluteTopHeight</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 80</span>
@@ -225,24 +225,24 @@ Each of them contains live moisture content values for each day (in rows) and pl
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 270</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopyTopHeight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 720</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 710</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopyAbsoluteBaseHeight</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 260</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopyAbsoluteTopHeight</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 800</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 790</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $canopyLAI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.466871</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.453648</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="co">#Calculate fuel properties according to FCCS</span></span></span>
 <span class="r-in"><span><span class="va">fccs</span> <span class="op">=</span> <span class="fu">fuel_FCCS</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fccs</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 w  cover hbc htc habc hatc       delta        rhob     rhop</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 0.52550038 100.00 2.7 7.2  2.6  8.0 4.791658510  0.10966983 592.0044</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> shrub  0.01407945   3.75 0.0 0.1  0.0  0.8 0.642625347  0.02190927 412.0091</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> canopy 0.52550038 100.00 2.7 7.1  2.6  7.9 4.791658510  0.10966983 592.0044</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> shrub  0.01407945   3.75 0.0 0.1  0.1  0.8 0.642625347  0.02190927 412.0091</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> herb   0.01929299  10.00 0.0  NA  0.0   NA 0.200000000  0.09646495 400.0000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> woody  0.16542073     NA 0.0  NA  0.0   NA 0.006258824 26.43000000 438.9106</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> litter 0.23060466     NA 0.0  NA  0.0   NA 0.011699765 19.71019565 370.9679</span>
@@ -260,7 +260,7 @@ Each of them contains live moisture content values for each day (in rows) and pl
 <span class="r-out co"><span class="r-pr">#&gt;</span> litter 4.6008905 18608.00 6.216297e-04       NA        NA     NA</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">fuel_windAdjustmentFactor</span><span class="op">(</span><span class="va">fccs</span><span class="op">$</span><span class="va">htc</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, <span class="va">fccs</span><span class="op">$</span><span class="va">hbc</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">fccs</span><span class="op">$</span><span class="va">htc</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="va">fccs</span><span class="op">$</span><span class="va">cover</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.2015514</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.2029332</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
