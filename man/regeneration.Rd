@@ -41,6 +41,8 @@ regeneration_resprouting(
 
 \item{species}{A string vector of species names corresponding to seed rain.}
 
+\item{percent}{A numeric vector of indicating the percentage of seed bank refilling (if missing then seed bank is set to 100\%).}
+
 \item{minPercent}{A minimum percent of seed bank to retain entry in \code{seedBank} element of \code{forest}.}
 
 \item{minMonthTemp}{Minimum month temperature.}
