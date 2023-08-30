@@ -88,7 +88,7 @@ regeneration_seedrefill <-function(forest, species, percent = NULL) {
   if(is.null(percent)) percent <- rep(100, length(species))
   
   #If percent is missing for some species, it will be refilled to 100%
-  percent[!is.na(percent)] <- 100
+  percent[is.na(percent)] <- 100
   
   if(length(species) > 0) {
     for(isp in 1:length(species)) {
