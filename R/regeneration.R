@@ -110,7 +110,7 @@ regeneration_seedmortality <- function(forest, SpParams, minPercent = 1) {
     return(forest)
   }
   seed_longevity <- species_parameter(forest$seedBank$Species, SpParams, "SeedLongevity")
-  seed_longevity[is.na(seed_longevity)] <- 1.0 
+  seed_longevity[is.na(seed_longevity)] <- 2.0 # Default 2 years
   forest$seedBank$Percent <- forest$seedBank$Percent*exp(-1.0/seed_longevity)
   forest$seedBank <- forest$seedBank[forest$seedBank$Percent >= minPercent, , drop = FALSE]
   return(forest)

@@ -1272,7 +1272,42 @@ NumericVector ysenWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(ysen);
 }
-
+NumericVector seedMassWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector seedMass = speciesNumericParameterFromIndex(SP, SpParams, "SeedMass");
+  for(int c=0;c<seedMass.size();c++) {
+    if(NumericVector::is_na(seedMass[c])) {
+      seedMass[c] = 50.0; //Default 50 mg
+    }
+  }
+  return(seedMass);
+}
+NumericVector seedLongevityWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector seedLongevity = speciesNumericParameterFromIndex(SP, SpParams, "SeedLongevity");
+  for(int c=0;c<seedLongevity.size();c++) {
+    if(NumericVector::is_na(seedLongevity[c])) {
+      seedLongevity[c] = 2.0; //Default 2 years
+    }
+  }
+  return(seedLongevity);
+}
+NumericVector dispersalDistanceWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector dispersalDistance = speciesNumericParameterFromIndex(SP, SpParams, "DispersalDistance");
+  for(int c=0;c<dispersalDistance.size();c++) {
+    if(NumericVector::is_na(dispersalDistance[c])) {
+      dispersalDistance[c] = 50.0; //Default 50 m
+    }
+  }
+  return(dispersalDistance);
+}
+NumericVector dispersalShapeWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector dispersalShape = speciesNumericParameterFromIndex(SP, SpParams, "DispersalShape");
+  for(int c=0;c<dispersalShape.size();c++) {
+    if(NumericVector::is_na(dispersalShape[c])) {
+      dispersalShape[c] = 2.0; //Default 2 (bell shaped)
+    }
+  }
+  return(dispersalShape);
+}
 
 /** Allometric coefficient retrieval with imputation */
 NumericVector shrubAllometricCoefficientWithImputation(IntegerVector SP, DataFrame SpParams, String parName) {
@@ -1470,6 +1505,10 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "Tbsen") return(TbsenWithImputation(SP, SpParams));
     else if(parName == "xsen") return(xsenWithImputation(SP, SpParams));
     else if(parName == "ysen") return(ysenWithImputation(SP, SpParams));
+    else if(parName == "SeedMass") return(seedMassWithImputation(SP, SpParams));
+    else if(parName == "SeedLongevity") return(seedLongevityWithImputation(SP, SpParams));
+    else if(parName == "DispersalDistance") return(dispersalDistanceWithImputation(SP, SpParams));
+    else if(parName == "DispersalShape") return(dispersalShapeWithImputation(SP, SpParams));
     else if((parName == "a_fbt") || (parName == "b_fbt") || (parName == "c_fbt") || (parName == "d_fbt")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
     else if((parName == "a_cw") || (parName == "b_cw")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));
     else if((parName == "a_cr") || (parName == "b_1cr") || (parName == "b_2cr") || (parName == "b_3cr")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName));

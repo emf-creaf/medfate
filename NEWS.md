@@ -3,7 +3,8 @@
 -------------------------------
 
 # Version 3.2.0
-- Functions for seed production and bank dynamics
+- Functions for seed production and bank dynamics (new parameter SeedLongevity)
+- New parameters for dispersal (SeedMass, DispersalType, DispersalDistance, DispersalShape)
 
 # Version 3.1.4
 - Fixing memory access errors
