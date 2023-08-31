@@ -1295,6 +1295,7 @@ NumericVector dispersalDistanceWithImputation(IntegerVector SP, DataFrame SpPara
   for(int c=0;c<dispersalDistance.size();c++) {
     if(NumericVector::is_na(dispersalDistance[c])) {
       dispersalDistance[c] = 50.0; //Default 50 m
+      //TO BE DONE: IMPLEMENT RULES in Bullock et al. 2019
     }
   }
   return(dispersalDistance);
@@ -1304,6 +1305,7 @@ NumericVector dispersalShapeWithImputation(IntegerVector SP, DataFrame SpParams)
   for(int c=0;c<dispersalShape.size();c++) {
     if(NumericVector::is_na(dispersalShape[c])) {
       dispersalShape[c] = 2.0; //Default 2 (bell shaped)
+      //TO BE DONE: IMPLEMENT RULES in Bullock et al. 2019
     }
   }
   return(dispersalShape);

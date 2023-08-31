@@ -262,8 +262,9 @@ fordyn<-function(forest, soil, SpParams,
     } 
     
     # 3. Simulate species seed recruitment and resprouting
-    if(verboseDyn && (control$allowRecruitment || control$allowResprouting)) cat(paste0(", (b) Regeneration"))
-    if(control$allowRecruitment) {
+    if(verboseDyn && (control$allowSeedBankDynamics || control$allowRecruitment || control$allowResprouting)) 
+      cat(paste0(", (b) Regeneration"))
+    if(control$allowSeedBankDynamics) {
       # Reduce seed bank according to longevity
       forest <- regeneration_seedmortality(forest, SpParams)
       # Seed local production
@@ -274,7 +275,8 @@ fordyn<-function(forest, soil, SpParams,
       else seed <- seed_local
       # Refill seed bank with new seeds
       forest <- regeneration_seedrefill(forest, seed)
-      
+    }
+    if(control$allowRecruitment) {
       # Seed recruitment
       monthlyMinTemp <- tapply(Gi$weather$MinTemperature, monthsYear, FUN="mean", na.rm=TRUE)
       monthlyMaxTemp <- tapply(Gi$weather$MaxTemperature, monthsYear, FUN="mean", na.rm=TRUE)
