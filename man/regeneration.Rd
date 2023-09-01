@@ -11,9 +11,9 @@
 \usage{
 regeneration_seedproduction(forest, SpParams, control)
 
-regeneration_seedrefill(forest, species, percent = NULL)
+regeneration_seedrefill(seedBank, refillSpecies, refillPercent = NULL)
 
-regeneration_seedmortality(forest, SpParams, minPercent = 1)
+regeneration_seedmortality(seedBank, SpParams, minPercent = 1)
 
 regeneration_recruitment(
   forest,
@@ -39,9 +39,11 @@ regeneration_resprouting(
 
 \item{control}{A list with default control parameters (see \code{\link{defaultControl}}).}
 
-\item{species}{A string vector of species names corresponding to seed rain.}
+\item{seedBank}{A data frame with columns 'Species' and 'Percent', describing a seed bank.}
 
-\item{percent}{A numeric vector of indicating the percentage of seed bank refilling (if missing then seed bank is set to 100\%).}
+\item{refillSpecies}{A string vector of species names corresponding to seed rain to refill seed bank.}
+
+\item{refillPercent}{A numeric vector of indicating the percentage of seed bank refilling (if missing then seed bank is set to 100\%).}
 
 \item{minPercent}{A minimum percent of seed bank to retain entry in \code{seedBank} element of \code{forest}.}
 
@@ -58,7 +60,7 @@ regeneration_resprouting(
 \value{
 \itemize{
   \item{\code{regeneration_seedproduction} returns a list of species names}
-  \item{\code{regeneration_seedrefill} and \code{regeneration_seedmortality} return a copy of the input \code{forest} object with an update seed bank. }
+  \item{\code{regeneration_seedrefill} and \code{regeneration_seedmortality} return a copy of the input \code{data.frame} object with an update seed bank. }
   \item{\code{regeneration_resprouting} and \code{regeneration_recruitment} return a new object of class \code{\link{forest}} with the new plant cohorts.}
 }
 }

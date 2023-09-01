@@ -266,7 +266,7 @@ fordyn<-function(forest, soil, SpParams,
       cat(paste0(", (b) Regeneration"))
     if(control$allowSeedBankDynamics) {
       # Reduce seed bank according to longevity
-      forest <- regeneration_seedmortality(forest, SpParams)
+      forest$seedBank <- regeneration_seedmortality(forest$seedBank, SpParams)
       # Seed local production
       seed_local <- regeneration_seedproduction(forest, SpParams, control)
       # Seed rain from control
@@ -274,7 +274,7 @@ fordyn<-function(forest, soil, SpParams,
       if(!is.null(seed_rain)) seed <- unique(c(seed_local, seed_rain)) 
       else seed <- seed_local
       # Refill seed bank with new seeds
-      forest <- regeneration_seedrefill(forest, seed)
+      forest$seedBank <- regeneration_seedrefill(forest$seedBank, seed)
     }
     if(control$allowRecruitment) {
       # Seed recruitment

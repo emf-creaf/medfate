@@ -3,9 +3,10 @@
 #' Functions to simulate annual plant regeneration from seed recruitment or from resprouting
 #' 
 #' @param forest An object of class \code{\link{forest}}.
+#' @param seedBank A data frame with columns 'Species' and 'Percent', describing a seed bank.
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsDefinition}}).
-#' @param species A string vector of species names corresponding to seed rain.
-#' @param percent A numeric vector of indicating the percentage of seed bank refilling (if missing then seed bank is set to 100\%).
+#' @param refillSpecies A string vector of species names corresponding to seed rain to refill seed bank.
+#' @param refillPercent A numeric vector of indicating the percentage of seed bank refilling (if missing then seed bank is set to 100\%).
 #' @param minPercent A minimum percent of seed bank to retain entry in \code{seedBank} element of \code{forest}.
 #' @param control A list with default control parameters (see \code{\link{defaultControl}}).
 #' @param minMonthTemp Minimum month temperature.
@@ -27,7 +28,7 @@
 #' @return 
 #' \itemize{
 #'   \item{\code{regeneration_seedproduction} returns a list of species names}
-#'   \item{\code{regeneration_seedrefill} and \code{regeneration_seedmortality} return a copy of the input \code{forest} object with an update seed bank. }
+#'   \item{\code{regeneration_seedrefill} and \code{regeneration_seedmortality} return a copy of the input \code{data.frame} object with an update seed bank. }
 #'   \item{\code{regeneration_resprouting} and \code{regeneration_recruitment} return a new object of class \code{\link{forest}} with the new plant cohorts.}
 #' }
 #' 
@@ -78,42 +79,42 @@ regeneration_seedproduction<-function(forest, SpParams, control) {
 }
 
 #' @rdname regeneration
-regeneration_seedrefill <-function(forest, species, percent = NULL) {
+regeneration_seedrefill <-function(seedBank, refillSpecies, refillPercent = NULL) {
   # Initialize seed bank if not present
-  if(!("seedBank" %in% names(forest))) {
-    forest$seedBank <- data.frame(Species = character(0), Percent = numeric(0))
+  if(is.null(seedBank)) {
+    seedBank <- data.frame(Species = character(0), Percent = numeric(0))
   }
   
   #If not supplied, all species refill to 100%
-  if(is.null(percent)) percent <- rep(100, length(species))
+  if(is.null(refillPercent)) refillPercent <- rep(100, length(refillSpecies))
   
-  #If percent is missing for some species, it will be refilled to 100%
-  percent[is.na(percent)] <- 100
+  #If refillPercent is missing for some species, it will be refilled to 100%
+  refillPercent[is.na(refillPercent)] <- 100
   
-  if(length(species) > 0) {
-    for(isp in 1:length(species)) {
-      sp <- species[isp]
-      if(sp %in% forest$seedBank$Species) {
-        forest$seedBank$Percent[forest$seedBank$Species==sp] <- min(100.0, forest$seedBank$Percent[forest$seedBank$Species==sp] + percent[isp])
+  if(length(refillSpecies) > 0) {
+    for(isp in 1:length(refillSpecies)) {
+      sp <- refillSpecies[isp]
+      if(sp %in% seedBank$Species) {
+        seedBank$Percent[seedBank$Species==sp] <- min(100.0, seedBank$Percent[seedBank$Species==sp] + refillPercent[isp])
       } else {
-        forest$seedBank <- rbind(forest$seedBank, data.frame("Species" = sp, "Percent" = percent[isp]))
+        seedBank <- rbind(seedBank, data.frame("Species" = sp, "Percent" = refillPercent[isp]))
       }
     }
   }
-  return(forest)
+  return(seedBank)
 }
 
 #' @rdname regeneration
-regeneration_seedmortality <- function(forest, SpParams, minPercent = 1) {
-  if(!("seedBank" %in% names(forest))) {
-    forest$seedBank <- data.frame(Species = character(0), Percent = numeric(0))
-    return(forest)
+regeneration_seedmortality <- function(seedBank, SpParams, minPercent = 1) {
+  if(is.null(seedBank)) {
+    seedBank <- data.frame(Species = character(0), Percent = numeric(0))
+    return(seedBank)
   }
-  seed_longevity <- species_parameter(forest$seedBank$Species, SpParams, "SeedLongevity")
+  seed_longevity <- species_parameter(seedBank$Species, SpParams, "SeedLongevity")
   seed_longevity[is.na(seed_longevity)] <- 2.0 # Default 2 years
-  forest$seedBank$Percent <- forest$seedBank$Percent*exp(-1.0/seed_longevity)
-  forest$seedBank <- forest$seedBank[forest$seedBank$Percent >= minPercent, , drop = FALSE]
-  return(forest)
+  seedBank$Percent <- seedBank$Percent*exp(-1.0/seed_longevity)
+  seedBank <- seedBank[seedBank$Percent >= minPercent, , drop = FALSE]
+  return(seedBank)
 }
 
 #' @rdname regeneration

@@ -39,8 +39,8 @@ emptyforest(ntree = 0, nshrub = 0, nseed = 0)
         \item{\code{Z95}: Depth (in mm) corresponding to 95\% of fine roots.}
       }
   }
-  \item{\code{herbCover}: Percent cover of the herb layer.}
-  \item{\code{herbHeight}: Mean height (in cm) of the herb layer.}
+  \item{\code{herbCover}: Percent cover of the herb layer (optional).}
+  \item{\code{herbHeight}: Mean height (in cm) of the herb layer (optional).}
 }}
 
 \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
