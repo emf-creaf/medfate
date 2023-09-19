@@ -2358,6 +2358,17 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// initSperryNetworks
+List initSperryNetworks(List x);
+RcppExport SEXP _medfate_initSperryNetworks(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(initSperryNetworks(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // profitMaximization
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax);
 RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GswminSEXP, SEXP GswmaxSEXP) {
@@ -5084,6 +5095,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_gammds", (DL_FUNC) &_medfate_gammds, 2},
     {"_medfate_initCochardNetworks", (DL_FUNC) &_medfate_initCochardNetworks, 1},
     {"_medfate_semi_implicit_integration", (DL_FUNC) &_medfate_semi_implicit_integration, 3},
+    {"_medfate_initSperryNetworks", (DL_FUNC) &_medfate_initSperryNetworks, 1},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 4},
     {"_medfate_parcohort", (DL_FUNC) &_medfate_parcohort, 5},
     {"_medfate_PARcohort", (DL_FUNC) &_medfate_PARcohort, 3},

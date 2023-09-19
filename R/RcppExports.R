@@ -1630,6 +1630,11 @@ semi_implicit_integration <- function(network, dt, opt) {
     invisible(.Call(`_medfate_semi_implicit_integration`, network, dt, opt))
 }
 
+#' @rdname hydraulics_supplyfunctions
+hydraulics_initSperryNetworks <- function(x) {
+    .Call(`_medfate_initSperryNetworks`, x)
+}
+
 #' Stomatal regulation
 #' 
 #' Set of high-level functions used in the calculation of stomatal conductance and transpiration. 

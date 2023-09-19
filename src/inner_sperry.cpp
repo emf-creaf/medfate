@@ -35,6 +35,34 @@ List initSperryNetwork(int c,
   return(HN);
 }
 
+//' @rdname hydraulics_supplyfunctions
+// [[Rcpp::export("hydraulics_initSperryNetworks")]]
+List initSperryNetworks(List x) {
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  
+  List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
+  NumericMatrix VCroot_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
+  NumericMatrix VGrhizo_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
+  DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+  DataFrame paramsTranspiration = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+  DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
+  
+  List soil = x["soil"];
+  NumericVector psiSoil = psi(soil, "VG");
+  NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);
+  NumericVector VG_alpha = Rcpp::as<Rcpp::NumericVector>(soil["VG_alpha"]);
+  
+  int numCohorts = internalWater.nrow();
+  List networks(numCohorts);
+  for(int c = 0;c<numCohorts;c++) {
+    networks[c] = initSperryNetwork(c, 
+                                    internalWater, paramsTranspiration, paramsWaterStorage,
+                                    VCroot_kmax(c,_), VGrhizo_kmax(c,_),
+                                    psiSoil, VG_n, VG_alpha);
+  }
+  networks.attr("names") = above.attr("row.names");
+  return(networks);
+}
 
 List profitMaximization2(List supplyFunction, int initialPos,
                          double Catm, double Patm, double Tair, double vpa, double u, 

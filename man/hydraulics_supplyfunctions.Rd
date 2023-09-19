@@ -26,6 +26,7 @@
 \alias{hydraulics_supplyFunctionNetwork}
 \alias{hydraulics_regulatedPsiXylem}
 \alias{hydraulics_regulatedPsiTwoElements}
+\alias{hydraulics_initSperryNetworks}
 \alias{hydraulics_supplyFunctionPlot}
 \title{Hydraulic supply functions}
 \usage{
@@ -216,6 +217,8 @@ hydraulics_regulatedPsiTwoElements(
   dE = 0.1,
   psiMax = -10
 )
+
+hydraulics_initSperryNetworks(x)
 
 hydraulics_supplyFunctionPlot(
   x,
