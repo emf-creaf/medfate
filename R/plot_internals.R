@@ -78,6 +78,11 @@
   TYPES <-c(TYPES,
             "Plant stress" = "PlantStress",
             "Stem PLC" = "StemPLC")
+  
+  if(transpirationMode %in% c("Sperry","Cochard")) {
+    TYPES <-c(TYPES,
+              "Leaf PLC" = "LeafPLC")
+  }
   return(TYPES)
 }
 .getSunlitShadePlotTypes<-function(transpirationMode = "Granier"){
@@ -357,6 +362,7 @@
   else if(type=="MortalityRate") ylab = expression(paste("Mortality rate ",(ind %.% d^{-1})))
   else if(type=="LeafPI0")  ylab = expression(paste("Leaf osmotic potential at full turgor  ",(MPa)))
   else if(type=="StemPI0")  ylab = expression(paste("Stem osmotic potential at full turgor  ",(MPa)))
+  else if(type=="LeafPLC") ylab = "Percent loss conductance in leaves [%]"
   else if(type=="StemPLC") ylab = "Percent loss conductance in stem [%]"
   else if(type=="StemRWC") ylab = "Relative water content in stem [%]"
   else if(type=="StemSympRWC") ylab = "Relative water content in stem symplasm [%]"

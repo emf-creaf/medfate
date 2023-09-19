@@ -1001,6 +1001,7 @@ List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, L
   NumericMatrix PlantTranspiration(numDays, numCohorts);
   NumericMatrix PlantLAI(numDays, numCohorts);
   NumericMatrix PlantLAIlive(numDays, numCohorts);
+  NumericMatrix LeafPLC(numDays, numCohorts);
   NumericMatrix StemPLC(numDays, numCohorts);
   NumericMatrix StemRWC(numDays, numCohorts), LeafRWC(numDays, numCohorts), LFMC(numDays, numCohorts);
   NumericMatrix PlantWaterBalance(numDays, numCohorts);
@@ -1014,6 +1015,7 @@ List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, L
   PlantLAIlive.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   PlantTranspiration.attr("dimnames") = List::create(dateStrings, above.attr("row.names"));
   PlantStress.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
+  LeafPLC.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   StemPLC.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   StemRWC.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
   LeafRWC.attr("dimnames") = List::create(dateStrings, above.attr("row.names")) ;
@@ -1084,11 +1086,12 @@ List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, L
                                Named("LeafRWC") = LeafRWC, 
                                Named("StemRWC") = StemRWC, 
                                Named("StemPsi") = StemPsi, 
+                               Named("LeafPLC") = LeafPLC,
                                Named("StemPLC") = StemPLC, 
                                Named("RootPsi") = RootPsi, 
                                Named("RhizoPsi") = RhizoPsi, 
-                               Named("LFMC") = LFMC,
-                               Named("PlantStress") = PlantStress);
+                               Named("LFMC") = LFMC);
+    plants.push_back(PlantStress, "PlantStress");
     
   }
   return(plants);
@@ -1295,6 +1298,7 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
     List PlantsInst = sDay["PlantsInst"];
     
     NumericMatrix dEdP = Rcpp::as<Rcpp::NumericMatrix>(x["dEdP"]);
+    NumericMatrix LeafPLC= Rcpp::as<Rcpp::NumericMatrix>(x["LeafPLC"]);
     NumericMatrix LeafPsiMin = Rcpp::as<Rcpp::NumericMatrix>(x["LeafPsiMin"]);
     NumericMatrix LeafPsiMax = Rcpp::as<Rcpp::NumericMatrix>(x["LeafPsiMax"]);
     NumericMatrix StemPsi= Rcpp::as<Rcpp::NumericMatrix>(x["StemPsi"]);
@@ -1356,6 +1360,7 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
     LeafPsiMax(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMax"]);
     RootPsi(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["RootPsi"]); 
     StemPsi(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPsi"]); 
+    LeafPLC(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPLC"]); 
     
     dEdP(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["dEdP"]); 
     for(int c=0;c<numCohorts;c++) {
@@ -1871,6 +1876,10 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
           DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
           NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
           for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
+          if(transpirationMode !="Granier") {
+            NumericVector LeafPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
+            for(int j=0;j<LeafPLC.length();j++) LeafPLC[j] = 0.0;
+          }
         }
       }
 
@@ -2330,12 +2339,11 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     if(cavitationRefill=="annual") {
         if(DOY[i]==1) {
           DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
-          if(transpirationMode=="Granier") {
-            NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLC"]);
-            for(int j=0;j<PLC.length();j++) PLC[j] = 0.0;
-          } else {
-            NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
-            for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
+          NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
+          for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
+          if(transpirationMode !="Granier") {
+            NumericVector LeafPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
+            for(int j=0;j<LeafPLC.length();j++) LeafPLC[j] = 0.0;
           }
         }
     }

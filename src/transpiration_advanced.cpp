@@ -164,6 +164,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
 
   //Comunication with outside
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+  NumericVector LeafPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
   NumericVector StemPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
   NumericVector StemSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
 
@@ -260,7 +261,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   NumericMatrix minPsiRhizo(numCohorts, nlayers);
   if(numCohorts>0) std::fill(minPsiRhizo.begin(), minPsiRhizo.end(), 0.0);
   NumericMatrix PLC(numCohorts, ntimesteps);
-  NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts),RWCssm(numCohorts), RWClsm(numCohorts);
+  NumericVector leafPLC(numCohorts), PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts),RWCssm(numCohorts), RWClsm(numCohorts);
   NumericVector dEdPm(numCohorts);
   NumericVector PWB(numCohorts,0.0);
   
@@ -708,6 +709,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                        _["NetPhotosynthesis"] = Anplant,
                                        _["RootPsi"] = minRootPsi, 
                                        _["StemPsi"] = minStemPsi, 
+                                       _["LeafPLC"] = leafPLC, //Average daily stem PLC
                                        _["StemPLC"] = PLCm, //Average daily stem PLC
                                        _["LeafPsiMin"] = minLeafPsi, 
                                        _["LeafPsiMax"] = maxLeafPsi, 
@@ -1008,6 +1010,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   for(int c=0;c<numCohorts;c++) {
     SoilExtractCoh[c] =  sum(SoilWaterExtract(c,_));
     PLCm[c] = sum(PLC(c,_))/((double)PLC.ncol());
+    leafPLC[c] = LeafPLCVEC[c];
     RWCsm[c] = sum(StemRWCInst(c,_))/((double)StemRWCInst.ncol());
     RWClm[c] = sum(LeafRWCInst(c,_))/((double)LeafRWCInst.ncol());
     LFMC[c] = maxFMC[c]*((1.0/r635[c])*RWClm[c]+(1.0 - (1.0/r635[c]))*RWCsm[c]);

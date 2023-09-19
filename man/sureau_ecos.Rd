@@ -8,7 +8,7 @@
 \usage{
 initCochardNetworks(x)
 
-semi_implicit_integration(network, dt, opt)
+semi_implicit_integration(network, dt, opt, cavitationRefill = "annual")
 }
 \arguments{
 \item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}} created using \code{transpirationMode = "Cochard"}.}
@@ -18,6 +18,14 @@ semi_implicit_integration(network, dt, opt)
 \item{dt}{Smallest time step (seconds)}
 
 \item{opt}{Option flag vector}
+
+\item{cavitationRefill}{A string indicating how refilling of embolized conduits is done:
+\itemize{
+  \item{"none" - no refilling.}
+  \item{"annual" - every first day of the year.}
+  \item{"rate" - following a rate of new sapwood formation.}
+  \item{"total" - instantaneous complete refilling.}
+}}
 }
 \value{
 Function \code{initCochardNetworks} returns a vector of length equal to the number of cohorts. Each element is a list with Sureau-ECOS parameters.

@@ -895,6 +895,7 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
                            Named("LeafPsi") = NumericVector(numCohorts, -0.033),
                            Named("StemSympPsi") = NumericVector(numCohorts, -0.033),
                            Named("LeafSympPsi") = NumericVector(numCohorts, -0.033),
+                           Named("LeafPLC") = NumericVector(numCohorts, 0.0),
                            Named("StemPLC") = NumericVector(numCohorts, 0.0));
   } else if(transpirationMode =="Cochard") {
     df = DataFrame::create(Named("Einst") = NumericVector(numCohorts, 0.0),

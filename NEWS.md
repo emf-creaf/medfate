@@ -5,6 +5,7 @@
 # Version 3.2.0
 - Functions for seed production and bank dynamics (new parameter SeedLongevity)
 - New parameters for dispersal (SeedMass, DispersalType, DispersalDistance, DispersalShape)
+- Recording of leaf PLC for Sperry and Cochard sub-models
 
 # Version 3.1.4
 - Fixing memory access errors

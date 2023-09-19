@@ -242,7 +242,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
                           xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                           summary.freq = summary.freq, ...))
   } 
-  else if(type %in% c("StemPLC", "StemRWC", "LeafRWC")) {
+  else if(type %in% c("LeafPLC","StemPLC", "StemRWC", "LeafRWC")) {
     OM = x$Plants[[type]][,cohorts,drop=FALSE]*100
     return(.plot_plant_om(OM, PlantsLAIlive, spnames,
                    type, bySpecies = bySpecies, dates = dates, 

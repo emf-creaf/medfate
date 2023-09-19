@@ -403,6 +403,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   // Rcout<<"internal\n";
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
   NumericVector StemPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
+  NumericVector LeafPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
   NumericVector Stem1PsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem1Psi"]);
   NumericVector Stem2PsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem2Psi"]);
   NumericVector EinstVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
@@ -694,12 +695,14 @@ void innerSperry(List x, List input, List output, int n, double tstep,
           StemSympPsiVEC[c] = Stem1PsiVEC[c]; //Stem symplastic compartment coupled with apoplastic compartment
           LeafSympPsiVEC[c] = LeafPsiVEC[c]; //Leaf symplastic compartment coupled with apoplastic compartment
           
-          // Store the PLC corresponding to stem1 water potential
+          // Store the stem PLC corresponding to stem1 water potential
           if(cavitationRefill!="total") {
             StemPLCVEC[c] = std::max(StemPLCVEC[c], 1.0 - xylemConductance(Stem1PsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
           } else { //Immediate refilling
             StemPLCVEC[c] = 1.0 - xylemConductance(Stem1PsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
           }
+          //Recalculate Leaf PLC
+          LeafPLCVEC[c] = 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c]); 
           
         } else {
           //Store steady state stem2 water potential
@@ -773,7 +776,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
             // if(NumericVector::is_na(Stem1PsiVEC[c]))  Stem1PsiVEC[c] = -40.0;
             
             
-            //Recalculate PLC and calculate volume corresponding to new cavitation
+            //Recalculate Stem PLC and calculate volume corresponding to new cavitation
             double plc_old = StemPLCVEC[c];
             if(cavitationRefill!="total") {
               StemPLCVEC[c] = std::max(StemPLCVEC[c], 1.0 - xylemConductance(Stem1PsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
