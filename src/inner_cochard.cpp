@@ -632,7 +632,14 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   String cavitationRefill = control["cavitationRefill"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
-
+  // bool capacitance = control["capacitance"];
+  // if(!capacitance) {
+  //   opt["CLapo"] = 0.0;
+  //   opt["CTapo"] = 0.0;
+  //   opt["Lsym"] = 0.0;
+  //   opt["Ssym"] = 0.0;
+  // }
+  
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   int numCohorts = cohorts.nrow();
   
@@ -877,14 +884,15 @@ void innerCochard(List x, List input, List output, int n, double tstep,
         double gs_SL = gsJarvis(params, PAR_SL(c,n), Temp_SL(c,n));
         double gs_SH = gsJarvis(params, PAR_SH(c,n), Temp_SH(c,n));
         //Rcout<< "  PAR_SL "<< PAR_SL(c,n)<<"  gs_SL "<< gs_SL<<"  PAR_SH "<< PAR_SH(c,n)<<" gs_SH "<< gs_SH<<"\n";
-        GSW_SL(c,n) = gs_SL * regul["regulFact"];
-        GSW_SH(c,n) = gs_SH * regul["regulFact"];
-        
+        gs_SL = gs_SL * regul["regulFact"];
+        gs_SH = gs_SH * regul["regulFact"];
+        GSW_SL(c,n) = gs_SL/1000.0; // From mmol to mol
+        GSW_SH(c,n) = gs_SH/1000.0; // From mmol to mol
         // Stomatal transpiration
-        Gwdiff_SL = 1.0/(1.0/gCR + 1.0/GSW_SL(c,n) + 1.0/gBL); 
-        Gwdiff_SH = 1.0/(1.0/gCR + 1.0/GSW_SH(c,n) + 1.0/gBL); 
+        Gwdiff_SL = 1.0/(1.0/gCR + 1.0/gs_SL + 1.0/gBL); 
+        Gwdiff_SH = 1.0/(1.0/gCR + 1.0/gs_SH + 1.0/gBL); 
         Elim_SL = Gwdiff_SL * VPD_SL(c,n)/Patm;
-        Elim_SH = Gwdiff_SH * VPD_SL(c,n)/Patm;
+        Elim_SH = Gwdiff_SH * VPD_SH(c,n)/Patm;
         network_n["Elim_SL"] = Elim_SL;
         network_n["Elim_SH"] = Elim_SH;
         Elim = ((Elim_SL*LAI_SL[c]) + (Elim_SH*LAI_SH[c]))/LAI; 
@@ -893,6 +901,8 @@ void innerCochard(List x, List input, List output, int n, double tstep,
         
         //Add transpiration sources
         network_n["Einst"] = Elim + Emin_S + Emin_L;
+        network_n["Einst_SL"] = Elim_SL + Emin_L_SL; //For sunlit photosynthesis/transpiration
+        network_n["Einst_SH"] = Elim_SH + Emin_L_SH; //For shade photosynthesis/transpiration
         
         //Effects on water potentials and flows
         semi_implicit_integration(network_n, dt, opt, cavitationRefill);
@@ -945,13 +955,15 @@ void innerCochard(List x, List input, List output, int n, double tstep,
     
 
     //Store leaf values (final substep)
-    E_SL(c,n) = network["Elim_SL"];
-    E_SH(c,n) = network["Elim_SH"];
+    E_SL(c,n) = network["Einst_SL"];
+    E_SH(c,n) = network["Einst_SH"];
     Psi_SH(c,n) = network["Psi_LSym"];
     Psi_SL(c,n) = network["Psi_LSym"];
     dEdPInst(c,n) = network["k_Plant"];
     
     //Sunlit/shade photosynthesis
+    Gwdiff_SL = Patm*(((double) network_n["Einst_SL"])/1000.0)/VPD_SL(c,n); //From mmol to mol
+    Gwdiff_SH = Patm*(((double) network_n["Einst_SH"])/1000.0)/VPD_SH(c,n); //From mmol to mol
     NumericVector LP_SL = leafphotosynthesis(irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL[c], 
                                              Cair[iLayerSunlit[c]], Gwdiff_SL/1.6, 
                                              std::max(0.0,Temp_SL(c,n)), 
