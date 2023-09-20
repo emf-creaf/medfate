@@ -89,11 +89,7 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
     leafType = strsplit(output,"[$]")[[1]][2]
     m<-data.frame(matrix(nrow = numDates*numSteps, ncol = numCohorts+1))
     for(i in 1:numDates) {
-      if(leafType=="E") {
-        ori1 = x$subdaily[[as.character(dates[i])]]$SunlitLeavesInst$Gsw
-        ori2 = x$subdaily[[as.character(dates[i])]]$SunlitLeavesInst$VPD
-        m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori1*ori2) 
-      } else if(leafType=="iWUE") {
+      if(leafType=="iWUE") {
           ori1 = x$subdaily[[as.character(dates[i])]]$SunlitLeavesInst$An
           ori2 = x$subdaily[[as.character(dates[i])]]$SunlitLeavesInst$Gsw
           m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori1/ori2) 
@@ -107,11 +103,7 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
     leafType = strsplit(output,"[$]")[[1]][2]
     m<-data.frame(matrix(nrow = numDates*numSteps, ncol = numCohorts+1))
     for(i in 1:numDates) {
-      if(leafType=="E") {
-        ori1 = x$subdaily[[as.character(dates[i])]]$ShadeLeavesInst$Gsw
-        ori2 = x$subdaily[[as.character(dates[i])]]$ShadeLeavesInst$VPD
-        m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori1*ori2) 
-      } else if(leafType=="iWUE") {
+      if(leafType=="iWUE") {
         ori1 = x$subdaily[[as.character(dates[i])]]$ShadeLeavesInst$An
         ori2 = x$subdaily[[as.character(dates[i])]]$ShadeLeavesInst$Gsw
         m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori1/ori2) 
