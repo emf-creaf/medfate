@@ -328,13 +328,10 @@ DataFrame paramsTranspirationCochard(DataFrame above, List soil, DataFrame SpPar
     VCleaf_P50[c] = xylemPsi(0.5, 1.0, VCleaf_c[c],VCleaf_d[c]);
     VCstem_P50[c] = xylemPsi(0.5, 1.0, VCstem_c[c],VCstem_d[c]);
     VCroot_P50[c] = xylemPsi(0.5, 1.0, VCroot_c[c],VCroot_d[c]);
-    VCleaf_slope[c] = 30.0;
-    VCstem_slope[c] = 30.0;
-    VCroot_slope[c] = 30.0;
-    // VCleaf_slope[c] =  0.5*pow(-1.0*VCleaf_d[c], -1.0*VCleaf_c[c])*VCleaf_c[c]*pow(1-0*VCleaf_P50[c], VCleaf_c[c] - 1.0);//derivavite of the Weibull curve
-    // VCstem_slope[c] =  0.5*pow(-1.0*VCstem_d[c], -1.0*VCstem_c[c])*VCstem_c[c]*pow(1-0*VCstem_P50[c], VCstem_c[c] - 1.0);//derivavite of the Weibull curve
-    // VCroot_slope[c] =  0.5*pow(-1.0*VCroot_d[c], -1.0*VCroot_c[c])*VCroot_c[c]*pow(1-0*VCroot_P50[c], VCroot_c[c] - 1.0);//derivavite of the Weibull curve
-    
+    VCleaf_slope[c] = 25.0*0.5*(-1.0/VCleaf_d[c])*VCleaf_c[c]*pow(VCleaf_P50[c]/VCleaf_d[c], VCleaf_c[c]-1.0);
+    VCstem_slope[c] = 25.0*0.5*(-1.0/VCstem_d[c])*VCstem_c[c]*pow(VCstem_P50[c]/VCstem_d[c], VCstem_c[c]-1.0);
+    VCroot_slope[c] = 25.0*0.5*(-1.0/VCroot_d[c])*VCroot_c[c]*pow(VCroot_P50[c]/VCroot_d[c], VCroot_c[c]-1.0);
+
     //Stem maximum conductance (in mmol·m-2·s-1·MPa-1)
     VCstem_kmax[c]=maximumStemHydraulicConductance(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c],control["taper"]);
     VCstem_kmax[c]=std::min(VCstem_kmax[c], maximumStemConductance);

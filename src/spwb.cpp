@@ -2438,7 +2438,6 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     } 
     List stand = s["Stand"];
     LAI[i] = stand["LAI"];
-    LAIherb[i] = stand["LAIherb"];
     LAIlive[i] = stand["LAIlive"];
     LAIexpanded[i] = stand["LAIexpanded"];
     LAIdead[i] = stand["LAIdead"];
@@ -2473,7 +2472,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
                             _["psi"]=psidays); 
   }
   SWB.attr("row.names") = dateStrings;
-  DataFrame Stand = DataFrame::create(_["LAI"]=LAI,_["LAIherb"]=LAIherb, 
+  DataFrame Stand = DataFrame::create(_["LAI"]=LAI,
                                       _["LAIlive"]=LAIlive,_["LAIexpanded"]=LAIexpanded, _["LAIdead"] = LAIdead);
   Stand.attr("row.names") = dateStrings;
   
