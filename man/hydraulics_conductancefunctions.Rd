@@ -37,6 +37,7 @@ hydraulics_vulnerabilityCurvePlot(
   x,
   soil = NULL,
   type = "leaf",
+  vulnerabilityFunction = "Weibull",
   psiVec = seq(-0.1, -8, by = -0.01),
   relative = FALSE,
   speciesNames = FALSE,
@@ -79,6 +80,8 @@ hydraulics_vulnerabilityCurvePlot(
 
 \item{type}{Plot type for \code{hydraulics_vulnerabilityCurvePlot}, either \code{"leaf"}, 
 \code{"stem"}, \code{"root"} or \code{"rhizosphere"}).}
+
+\item{vulnerabilityFunction}{String indicating the function used to represent vulnerability in plant segments, either "Weibull" or "Sigmoid".}
 
 \item{psiVec}{Vector of water potential values to evaluate for the vulnerability curve.}
 

@@ -32,9 +32,9 @@ test_that("hydraulic vulnerability curves can be shown",{
   expect_null(hydraulics_vulnerabilityCurvePlot(x2, soil = examplesoil, type = "rhizosphere"))
   
   x3 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control_cochard)
-  expect_s3_class(hydraulics_vulnerabilityCurvePlot(x3, type = "leaf"), "ggplot")
-  expect_s3_class(hydraulics_vulnerabilityCurvePlot(x3, type = "stem"), "ggplot")
-  expect_s3_class(hydraulics_vulnerabilityCurvePlot(x3, type = "root"), "ggplot")
+  expect_s3_class(hydraulics_vulnerabilityCurvePlot(x3, type = "leaf", vulnerabilityFunction = "Sigmoid"), "ggplot")
+  expect_s3_class(hydraulics_vulnerabilityCurvePlot(x3, type = "stem", vulnerabilityFunction = "Sigmoid"), "ggplot")
+  expect_s3_class(hydraulics_vulnerabilityCurvePlot(x3, type = "root", vulnerabilityFunction = "Sigmoid"), "ggplot")
   expect_null(hydraulics_vulnerabilityCurvePlot(x3, soil = examplesoil, type = "rhizosphere"))
 })
 
