@@ -88,6 +88,7 @@ The following plots are available for \code{spwb_day} and \code{pwb_day}:
   \item{\code{"LeafGrossPhotosynthesis"}:}{ Instantaneous gross photosynthesis per leaf area (differentiates sunlit and shade leaves).}
   \item{\code{"LeafNetPhotosynthesis"}:}{ Instantaneous net photosynthesis per leaf area (differentiates sunlit and shade leaves).}
   \item{\code{"LeafAbsorbedSWR"}:}{ Absorbed short wave radiation per leaf area (differentiates sunlit and shade leaves).}
+  \item{\code{"LeafAbsorbedPAR"}:}{ Absorbed photosynthetically-active radiation per leaf area (differentiates sunlit and shade leaves).}
   \item{\code{"LeafNetLWR"}:}{ Net long wave radiation per leaf area (differentiates sunlit and shade leaves).}
   \item{\code{"LeafCi"}:}{ Leaf intercellular CO2 concentration (differentiates sunlit and shade leaves).}
   \item{\code{"LeafIntrinsicWUE"}:}{ Leaf intrinsic water use efficiency, i.e. the ratio between instantaneous photosynthesis and stomatal conductance (differentiates sunlit and shade leaves).}

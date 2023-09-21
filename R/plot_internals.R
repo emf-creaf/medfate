@@ -256,6 +256,7 @@
             "Leaf gross photosynthesis" = "LeafGrossPhotosynthesis", 
             "Leaf net photosynthesis" = "LeafNetPhotosynthesis",
             "Absorbed SWR per leaf area" = "LeafAbsorbedSWR",
+            "Absorbed PAR per leaf area" = "LeafAbsorbedPAR",
             "Net LWR per leaf area" = "LeafNetLWR",
             "Leaf internal CO2" = "LeafCi", 
             "Leaf intrinsic WUE" = "LeafIntrinsicWUE",
@@ -325,7 +326,9 @@
   else if(type=="PlantLAI") ylab = expression(paste("Leaf area index ",(m^{-2}%.%m^{-2})))
   else if(type=="PlantLAIlive") ylab = expression(paste("(Live) leaf area index ",(m^{-2}%.%m^{-2})))
   else if(type=="AbsorbedSWRPerLeaf") ylab = expression(paste("Absorbed SWR per leaf area ",(MJ%.%m^{-2}%.%d^{-1})))
+  else if(type=="AbsorbedPARPerLeaf") ylab = expression(paste("Absorbed PAR per leaf area ",(MJ%.%m^{-2}%.%d^{-1})))
   else if(type=="LeafAbsorbedSWR") ylab = expression(paste("Absorbed SWR per leaf area ",(W%.%m^{-2})))
+  else if(type=="LeafAbsorbedPAR") ylab = expression(paste("Absorbed PAR per leaf area ",(W%.%m^{-2})))
   else if(type=="NetLWRPerLeaf") ylab = expression(paste("Net LWR per leaf area ",(MJ%.%m^{-2}%.%d^{-1})))
   else if(type=="LeafNetLWR") ylab = expression(paste("Net LWR per leaf area ",(W%.%m^{-2})))
   else if(type=="GrossPhotosynthesis") ylab=expression(paste("Gross photosynthesis ", (gGluc%.%gdry^{-1}%.%d^{-1})))
@@ -950,6 +953,12 @@
   else if(type=="LeafAbsorbedSWR") {
     mSu = extractSubdaily(x, "SunlitLeaves$Abs_SWR", dates)
     mSh = extractSubdaily(x, "ShadeLeaves$Abs_SWR", dates)
+    if(is.null(ylab)) ylab=.getYLab(type)
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="LeafAbsorbedPAR") {
+    mSu = extractSubdaily(x, "SunlitLeaves$Abs_PAR", dates)
+    mSh = extractSubdaily(x, "ShadeLeaves$Abs_PAR", dates)
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 

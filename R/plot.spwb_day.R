@@ -36,6 +36,7 @@
 #'   \item{\code{"LeafGrossPhotosynthesis"}:}{ Instantaneous gross photosynthesis per leaf area (differentiates sunlit and shade leaves).}
 #'   \item{\code{"LeafNetPhotosynthesis"}:}{ Instantaneous net photosynthesis per leaf area (differentiates sunlit and shade leaves).}
 #'   \item{\code{"LeafAbsorbedSWR"}:}{ Absorbed short wave radiation per leaf area (differentiates sunlit and shade leaves).}
+#'   \item{\code{"LeafAbsorbedPAR"}:}{ Absorbed photosynthetically-active radiation per leaf area (differentiates sunlit and shade leaves).}
 #'   \item{\code{"LeafNetLWR"}:}{ Net long wave radiation per leaf area (differentiates sunlit and shade leaves).}
 #'   \item{\code{"LeafCi"}:}{ Leaf intercellular CO2 concentration (differentiates sunlit and shade leaves).}
 #'   \item{\code{"LeafIntrinsicWUE"}:}{ Leaf intrinsic water use efficiency, i.e. the ratio between instantaneous photosynthesis and stomatal conductance (differentiates sunlit and shade leaves).}
@@ -385,6 +386,23 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   else if(type=="LeafAbsorbedSWR") {
     OM_SL = SunlitLeavesInst$Abs_SWR
     OM_SH = ShadeLeavesInst$Abs_SWR
+    if(bySpecies) {
+      m1 = apply(OM_SL,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 = apply(x$SunlitLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SL = m1/lai1
+      m1 = apply(OM_SH,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 = apply(x$ShadeLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SH = m1/lai1
+    } else {
+      OM_SL = OM_SL/x$SunlitLeaves$LAI
+      OM_SH = OM_SH/x$ShadeLeaves$LAI
+    }
+    if(is.null(ylab)) ylab=.getYLab(type)
+    return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
+  }
+  else if(type=="LeafAbsorbedPAR") {
+    OM_SL = SunlitLeavesInst$Abs_PAR
+    OM_SH = ShadeLeavesInst$Abs_PAR
     if(bySpecies) {
       m1 = apply(OM_SL,2, tapply, x$cohorts$Name, sum, na.rm=T)
       lai1 = apply(x$SunlitLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
