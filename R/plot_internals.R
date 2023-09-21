@@ -886,8 +886,14 @@
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type %in% c("StemPsi", "RootPsi", "LeafRWC", "StemRWC", "StemPLC",
-                      "LeafSympRWC", "StemSympRWC", "LeafSympPsi", "StemSympPsi")) {
+  else if(type %in% c("LeafRWC", "StemRWC", "StemPLC",
+                      "LeafSympRWC", "StemSympRWC")) {
+    m = extractSubdaily(x, type, dates)[,c("datetime", cohorts), drop=FALSE]
+    m[, -1] <- 100*m[, -1]
+    if(is.null(ylab)) ylab = .getYLab(type)
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type %in% c("StemPsi", "RootPsi", "LeafSympPsi", "StemSympPsi")) {
     m = extractSubdaily(x, type, dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
