@@ -1,8 +1,8 @@
 Package: medfate
 Type: Package
 Title: Mediterranean Forest Simulation
-Version: 3.2.0
-Date: 2023-11-29
+Version: 3.3.0
+Date: 2023-12-01
 Authors@R: c(
 	person('Miquel', 'De Cáceres', role=c('aut','cre', 'cph'),
 	email='miquelcaceres@gmail.com', comment = c(ORCID = "0000-0001-7132-2080")),
