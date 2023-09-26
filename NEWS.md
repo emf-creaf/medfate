@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 3.3.0
+- Replacement of vulnerability curve parameters
+
 # Version 3.2.0
 - Functions for seed production and bank dynamics (new parameter SeedLongevity)
 - New parameters for dispersal (SeedMass, DispersalType, DispersalDistance, DispersalShape)

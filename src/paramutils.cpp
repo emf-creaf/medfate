@@ -761,45 +761,45 @@ NumericVector WUEVPDWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(WUE_vpd);
 }
-NumericVector psi50Imputation(NumericVector psi50, IntegerVector SP, DataFrame SpParams) {
-  CharacterVector Group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
-  CharacterVector GrowthForm = speciesCharacterParameterFromIndex(SP, SpParams, "GrowthForm");
-  CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
-  //Access internal data frame "trait_family_means"
-  Environment pkg = Environment::namespace_env("medfate");
-  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
-  CharacterVector fams = TFM.attr("row.names");
-  NumericVector fam_P50 = TFM["P50"];
-  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
-  for(int c=0;c<psi50.size();c++) {
-    if(NumericVector::is_na(psi50[c])) {
-      for(int i=0;i<fams.size();i++) {
-        if(fams[i]==family[c]) {
-          psi50[c] = fam_P50[i];
-        }
-      }
-    }
-    if(NumericVector::is_na(psi50[c])) {
-      // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
-      if(Group[c]=="Angiosperm") {
-        if((GrowthForm[c]=="Shrub") && (phenoType[c] != "winter-deciduous") && (phenoType[c] != "winter-semideciduous")) {
-          psi50[c] = -5.09; //Angiosperm evergreen shrub
-        } else if((GrowthForm[c]!="Shrub") && ((phenoType[c] == "winter-deciduous") || (phenoType[c] == "winter-semideciduous"))) {
-          psi50[c] = -2.34; //Angiosperm winter-deciduous tree
-        } else { 
-          psi50[c] = -1.51; //Angiosperm evergreen tree
-        }
-      } else {
-        if(GrowthForm[c]=="Shrub") {
-          psi50[c] = -8.95; //Gymnosperm shrub
-        } else {
-          psi50[c] = -4.17; //Gymnosperm tree
-        }
-      }
-    }
-  }
-  return(psi50);
-}
+// NumericVector psi50Imputation(NumericVector psi50, IntegerVector SP, DataFrame SpParams) {
+//   CharacterVector Group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
+//   CharacterVector GrowthForm = speciesCharacterParameterFromIndex(SP, SpParams, "GrowthForm");
+//   CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
+//   //Access internal data frame "trait_family_means"
+//   Environment pkg = Environment::namespace_env("medfate");
+//   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+//   CharacterVector fams = TFM.attr("row.names");
+//   NumericVector fam_P50 = TFM["P50"];
+//   CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
+//   for(int c=0;c<psi50.size();c++) {
+//     if(NumericVector::is_na(psi50[c])) {
+//       for(int i=0;i<fams.size();i++) {
+//         if(fams[i]==family[c]) {
+//           psi50[c] = fam_P50[i];
+//         }
+//       }
+//     }
+//     if(NumericVector::is_na(psi50[c])) {
+//       // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
+//       if(Group[c]=="Angiosperm") {
+//         if((GrowthForm[c]=="Shrub") && (phenoType[c] != "winter-deciduous") && (phenoType[c] != "winter-semideciduous")) {
+//           psi50[c] = -5.09; //Angiosperm evergreen shrub
+//         } else if((GrowthForm[c]!="Shrub") && ((phenoType[c] == "winter-deciduous") || (phenoType[c] == "winter-semideciduous"))) {
+//           psi50[c] = -2.34; //Angiosperm winter-deciduous tree
+//         } else { 
+//           psi50[c] = -1.51; //Angiosperm evergreen tree
+//         }
+//       } else {
+//         if(GrowthForm[c]=="Shrub") {
+//           psi50[c] = -8.95; //Gymnosperm shrub
+//         } else {
+//           psi50[c] = -4.17; //Gymnosperm tree
+//         }
+//       }
+//     }
+//   }
+//   return(psi50);
+// }
 
 NumericVector expExtractWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector Exp_Extract = speciesNumericParameterFromIndex(SP, SpParams, "Exp_Extract");
@@ -1015,97 +1015,132 @@ NumericVector Jmax298WithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(Jmax298);
 }
-NumericVector VCstemDWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector VCstem_d = speciesNumericParameterFromIndex(SP, SpParams, "VCstem_d");
-  NumericVector psi50(VCstem_d.size(), NA_REAL);
-  NumericVector psi50Imp = psi50Imputation(psi50, SP, SpParams);
-  for(int c=0;c<VCstem_d.size();c++) {
-    if(NumericVector::is_na(VCstem_d[c])) {
-      double psi88 = 1.2593*psi50Imp[c] - 1.4264; //Regression using data from Choat et al. 2012
-      NumericVector par = psi2Weibull(psi50Imp[c], psi88);
-      VCstem_d[c] = par["d"];
+NumericVector VCstemP50WithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector VCstem_P50 = speciesNumericParameterFromIndex(SP, SpParams, "VCstem_P50");
+  CharacterVector Group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
+  CharacterVector GrowthForm = speciesCharacterParameterFromIndex(SP, SpParams, "GrowthForm");
+  CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
+  //Access internal data frame "trait_family_means"
+  Environment pkg = Environment::namespace_env("medfate");
+  DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
+  CharacterVector fams = TFM.attr("row.names");
+  NumericVector fam_P50 = TFM["P50"];
+  CharacterVector family = speciesCharacterParameterFromIndex(SP, SpParams, "Family");
+  for(int c=0;c<VCstem_P50.size();c++) {
+    if(NumericVector::is_na(VCstem_P50[c])) {
+      for(int i=0;i<fams.size();i++) {
+        if(fams[i]==family[c]) {
+          VCstem_P50[c] = fam_P50[i];
+        }
+      }
+    }
+    if(NumericVector::is_na(VCstem_P50[c])) {
+      // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
+      if(Group[c]=="Angiosperm") {
+        if((GrowthForm[c]=="Shrub") && (phenoType[c] != "winter-deciduous") && (phenoType[c] != "winter-semideciduous")) {
+          VCstem_P50[c] = -5.09; //Angiosperm evergreen shrub
+        } else if((GrowthForm[c]!="Shrub") && ((phenoType[c] == "winter-deciduous") || (phenoType[c] == "winter-semideciduous"))) {
+          VCstem_P50[c] = -2.34; //Angiosperm winter-deciduous tree
+        } else { 
+          VCstem_P50[c] = -1.51; //Angiosperm evergreen tree
+        }
+      } else {
+        if(GrowthForm[c]=="Shrub") {
+          VCstem_P50[c] = -8.95; //Gymnosperm shrub
+        } else {
+          VCstem_P50[c] = -4.17; //Gymnosperm tree
+        }
+      }
     }
   }
-  return(VCstem_d);
-}
-NumericVector VCstemCWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector VCstem_c = speciesNumericParameterFromIndex(SP, SpParams, "VCstem_c");
-  NumericVector psi50(VCstem_c.size(), NA_REAL);
-  NumericVector psi50Imp = psi50Imputation(psi50, SP, SpParams);
-  for(int c=0;c<VCstem_c.size();c++) {
-    if(NumericVector::is_na(VCstem_c[c])) {
-      double psi88 = 1.2593*psi50Imp[c] - 1.4264; //Regression using data from Choat et al. 2012
-      NumericVector par = psi2Weibull(psi50Imp[c], psi88);
-      VCstem_c[c] = par["c"];
+  return(VCstem_P50);
+} 
+NumericVector VCstemP88WithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector VCstem_P88 = speciesNumericParameterFromIndex(SP, SpParams, "VCstem_P88");
+  NumericVector VCstem_P50 = VCstemP50WithImputation(SP, SpParams);
+  for(int c=0;c<VCstem_P88.size();c++) {
+    if(NumericVector::is_na(VCstem_P88[c])) {
+      VCstem_P88[c] = 1.22431*VCstem_P50[c] - 1.11200; //Regression using data from XFT (R2adj = 0.783)
     }
   }
-  return(VCstem_c);
+  return(VCstem_P88);
 }
-NumericVector VCleafDWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector VCleaf_d = speciesNumericParameterFromIndex(SP, SpParams, "VCleaf_d");
+NumericVector VCstemP12WithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector VCstem_P12 = speciesNumericParameterFromIndex(SP, SpParams, "VCstem_P12");
+  NumericVector VCstem_P50 = VCstemP50WithImputation(SP, SpParams);
+  for(int c=0;c<VCstem_P12.size();c++) {
+    if(NumericVector::is_na(VCstem_P12[c])) {
+      VCstem_P12[c] = std::min(-0.1, 0.63992*VCstem_P50[c] + 0.31503); //Regression using data from XFT (R2adj = 0.73)
+    }
+  }
+  return(VCstem_P12);
+}
+
+NumericVector VCleafP50WithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector VCleaf_P50 = speciesNumericParameterFromIndex(SP, SpParams, "VCleaf_P50");
   NumericVector leafPI0 = leafPI0WithImputation(SP, SpParams);
   NumericVector leafEPS = leafEPSWithImputation(SP, SpParams);
-  for(int c=0;c<VCleaf_d.size();c++) {
-    if(NumericVector::is_na(VCleaf_d[c])) {
+  for(int c=0;c<VCleaf_P50.size();c++) {
+    if(NumericVector::is_na(VCleaf_P50[c])) {
       double leaf_tlp = turgorLossPoint(leafPI0[c], leafEPS[c]);
       //From Bartlett,et al (2016). The correlations and sequence of plant stomatal, hydraulic, and wilting responses to drought. Proceedings of the National Academy of Sciences of the United States of America, 113(46), 13098–13103. https://doi.org/10.1073/pnas.1604088113
-      double leaf_P50 = std::min(0.0, 0.9944*leaf_tlp + 0.2486);
-      double leaf_P88 = 1.2593*leaf_P50 - 1.4264; //Regression using data from Choat et al. 2012
-      NumericVector par = psi2Weibull(leaf_P50, leaf_P88);
-      VCleaf_d[c] = par["d"];
+      VCleaf_P50[c] = std::min(0.0, 0.9944*leaf_tlp + 0.2486);
     }
   }
-  return(VCleaf_d);
+  return(VCleaf_P50);
 }
-NumericVector VCleafCWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector VCleaf_c = speciesNumericParameterFromIndex(SP, SpParams, "VCleaf_c");
-  NumericVector leafPI0 = leafPI0WithImputation(SP, SpParams);
-  NumericVector leafEPS = leafEPSWithImputation(SP, SpParams);
-  for(int c=0;c<VCleaf_c.size();c++) {
-    if(NumericVector::is_na(VCleaf_c[c])) {
-      double leaf_tlp = turgorLossPoint(leafPI0[c], leafEPS[c]);
-      //From Bartlett,et al (2016). The correlations and sequence of plant stomatal, hydraulic, and wilting responses to drought. Proceedings of the National Academy of Sciences of the United States of America, 113(46), 13098–13103. https://doi.org/10.1073/pnas.1604088113
-      double leaf_P50 = std::min(0.0, 0.9944*leaf_tlp + 0.2486);
-      double leaf_P88 = 1.2593*leaf_P50 - 1.4264; //Regression using data from Choat et al. 2012
-      NumericVector par = psi2Weibull(leaf_P50, leaf_P88);
-      VCleaf_c[c] = par["c"];
+NumericVector VCleafP88WithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector VCleaf_P88 = speciesNumericParameterFromIndex(SP, SpParams, "VCleaf_P88");
+  NumericVector VCleaf_P50 = VCleafP50WithImputation(SP, SpParams);
+  for(int c=0;c<VCleaf_P88.size();c++) {
+    if(NumericVector::is_na(VCleaf_P88[c])) {
+      VCleaf_P88[c] = 1.22431*VCleaf_P50[c] - 1.11200; //Regression using data from XFT (R2adj = 0.783)
     }
   }
-  return(VCleaf_c);
+  return(VCleaf_P88);
 }
-NumericVector VCrootDWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector VCroot_d = speciesNumericParameterFromIndex(SP, SpParams, "VCroot_d");
-  NumericVector VCstem_d = VCstemDWithImputation(SP, SpParams);
-  NumericVector VCstem_c = VCstemCWithImputation(SP, SpParams);
-  for(int c=0;c<VCroot_d.size();c++) {
-    if(NumericVector::is_na(VCroot_d[c])) {
-      double psi50stem = std::min(-0.25, VCstem_d[c]*pow(0.6931472,1.0/VCstem_c[c]));
-      double psi50root = std::min(-0.25, 0.742*psi50stem + 0.4892); //Regression using data from Bartlett et al. 2016
-      double psi88root = std::min(-0.5, 1.2593*psi50root - 1.4264); //Regression using data from Choat et al. 2012
-      NumericVector par = psi2Weibull(psi50root, psi88root);
-      VCroot_d[c] = par["d"];
-      VCroot_d[c] = std::min(-0.25, VCroot_d[c]);
-      // Rcout<< c<< " d: "<< VCroot_d[c]<<"\n";
+NumericVector VCleafP12WithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector VCleaf_P12 = speciesNumericParameterFromIndex(SP, SpParams, "VCleaf_P12");
+  NumericVector VCleaf_P50 = VCleafP50WithImputation(SP, SpParams);
+  for(int c=0;c<VCleaf_P12.size();c++) {
+    if(NumericVector::is_na(VCleaf_P12[c])) {
+      VCleaf_P12[c] = std::min(-0.1, 0.63992*VCleaf_P50[c] + 0.31503); //Regression using data from XFT (R2adj = 0.73)
     }
   }
-  return(VCroot_d);
+  return(VCleaf_P12);
 }
-NumericVector VCrootCWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector VCroot_c = speciesNumericParameterFromIndex(SP, SpParams, "VCroot_c");
-  NumericVector VCstem_d = VCstemDWithImputation(SP, SpParams);
-  NumericVector VCstem_c = VCstemCWithImputation(SP, SpParams);
-  for(int c=0;c<VCroot_c.size();c++) {
-    if(NumericVector::is_na(VCroot_c[c])) {
-      double psi50stem = std::min(-0.25, VCstem_d[c]*pow(0.6931472,1.0/VCstem_c[c]));
-      double psi50root = std::min(-0.25, 0.742*psi50stem + 0.4892); //Regression using data from Bartlett et al. 2016
-      double psi88root = std::min(-0.5, 1.2593*psi50root - 1.4264); //Regression using data from Choat et al. 2012
-      NumericVector par = psi2Weibull(psi50root, psi88root);
-      VCroot_c[c] = par["c"];
-      // Rcout<< c<< " c: "<< VCroot_c[c]<<"\n";
+
+NumericVector VCrootP50WithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector VCroot_P50 = speciesNumericParameterFromIndex(SP, SpParams, "VCroot_P50");
+  NumericVector VCstem_P50 = VCstemP50WithImputation(SP, SpParams);
+  for(int c=0;c<VCroot_P50.size();c++) {
+    if(NumericVector::is_na(VCroot_P50[c])) {
+      VCroot_P50[c] = std::min(-0.25, 0.742*VCstem_P50[c] + 0.4892); //Regression using data from Bartlett et al. 2016
     }
   }
-  return(VCroot_c);
+  return(VCroot_P50);
 }
+NumericVector VCrootP88WithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector VCroot_P88 = speciesNumericParameterFromIndex(SP, SpParams, "VCroot_P88");
+  NumericVector VCroot_P50 = VCrootP50WithImputation(SP, SpParams);
+  for(int c=0;c<VCroot_P88.size();c++) {
+    if(NumericVector::is_na(VCroot_P88[c])) {
+      VCroot_P88[c] = 1.22431*VCroot_P50[c] - 1.11200; //Regression using data from XFT (R2adj = 0.783)
+    }
+  }
+  return(VCroot_P88);
+}
+NumericVector VCrootP12WithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector VCroot_P12 = speciesNumericParameterFromIndex(SP, SpParams, "VCroot_P12");
+  NumericVector VCroot_P50 = VCstemP50WithImputation(SP, SpParams);
+  for(int c=0;c<VCroot_P12.size();c++) {
+    if(NumericVector::is_na(VCroot_P12[c])) {
+      VCroot_P12[c] = std::min(-0.1, 0.63992*VCroot_P50[c] + 0.31503); //Regression using data from XFT (R2adj = 0.73)
+    }
+  }
+  return(VCroot_P12);
+}
+
 NumericVector LeafRespirationRateWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector RERleaf = speciesNumericParameterFromIndex(SP, SpParams, "RERleaf");
   NumericVector Nleaf = NleafWithImputation(SP, SpParams);
@@ -1491,12 +1526,15 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "SRsapwood") return(SapwoodSenescenceRateWithImputation(SP, SpParams));
     else if(parName == "Vmax298") return(Vmax298WithImputation(SP, SpParams));
     else if(parName == "Jmax298") return(Jmax298WithImputation(SP, SpParams));
-    else if(parName == "VCstem_c") return(VCstemCWithImputation(SP, SpParams));
-    else if(parName == "VCstem_d") return(VCstemDWithImputation(SP, SpParams));
-    else if(parName == "VCleaf_c") return(VCleafCWithImputation(SP, SpParams));
-    else if(parName == "VCleaf_d") return(VCleafDWithImputation(SP, SpParams));
-    else if(parName == "VCroot_c") return(VCrootCWithImputation(SP, SpParams));
-    else if(parName == "VCroot_d") return(VCrootDWithImputation(SP, SpParams));
+    else if(parName == "VCstem_P12") return(VCstemP12WithImputation(SP, SpParams));
+    else if(parName == "VCstem_P50") return(VCstemP50WithImputation(SP, SpParams));
+    else if(parName == "VCstem_P88") return(VCstemP88WithImputation(SP, SpParams));
+    else if(parName == "VCleaf_P12") return(VCleafP12WithImputation(SP, SpParams));
+    else if(parName == "VCleaf_P50") return(VCleafP50WithImputation(SP, SpParams));
+    else if(parName == "VCleaf_P88") return(VCleafP88WithImputation(SP, SpParams));
+    else if(parName == "VCroot_P12") return(VCrootP12WithImputation(SP, SpParams));
+    else if(parName == "VCroot_P50") return(VCrootP50WithImputation(SP, SpParams));
+    else if(parName == "VCroot_P88") return(VCrootP88WithImputation(SP, SpParams));
     else if(parName == "WoodC") return(WoodCWithImputation(SP, SpParams));
     else if(parName == "LeafDuration") return(leafDurationWithImputation(SP, SpParams));
     else if(parName == "t0gdd") return(t0gddWithImputation(SP, SpParams));

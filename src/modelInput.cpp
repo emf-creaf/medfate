@@ -178,6 +178,7 @@ DataFrame paramsWaterStorage(DataFrame above, List belowLayers,
 
 DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool fillMissingSpParams) {
   IntegerVector SP = above["SP"];
+  int numCohorts = SP.size();
   
   NumericVector Tmax_LAI = speciesNumericParameterWithImputation(SP, SpParams, "Tmax_LAI", true);
   NumericVector Tmax_LAIsq = speciesNumericParameterWithImputation(SP, SpParams, "Tmax_LAIsq", true);
@@ -187,9 +188,18 @@ DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool 
   NumericVector WUE_vpd = speciesNumericParameterWithImputation(SP, SpParams, "WUE_vpd", true);
   NumericVector Psi_Extract = speciesNumericParameterWithImputation(SP, SpParams, "Psi_Extract", fillMissingSpParams);
   NumericVector Exp_Extract = speciesNumericParameterWithImputation(SP, SpParams, "Exp_Extract", fillMissingSpParams);
-  NumericVector VCstem_c = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_c", fillMissingSpParams);
-  NumericVector VCstem_d = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_d", fillMissingSpParams);
+  NumericVector VCstem_P12 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P12", fillMissingSpParams);
+  NumericVector VCstem_P50 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P50", fillMissingSpParams);
+  NumericVector VCstem_P88 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P88", fillMissingSpParams);
   NumericVector Gswmin = speciesNumericParameterWithImputation(SP, SpParams, "Gswmin", fillMissingSpParams);
+  
+  NumericVector VCstem_c(numCohorts, 0.0), VCstem_d(numCohorts, 0.0);
+  for(int c=0;c<numCohorts;c++){
+    //Stem Weibull
+    NumericVector wb_stem = psi2Weibull(VCstem_P50[c], VCstem_P88[c], VCstem_P12[c]);
+    VCstem_c[c] = wb_stem["c"];
+    VCstem_d[c] = wb_stem["d"];
+  }
   
   DataFrame paramsTranspirationdf = DataFrame::create(_["Gswmin"] = Gswmin,
                                                       _["Tmax_LAI"] = Tmax_LAI,
@@ -227,12 +237,15 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
   NumericVector Gswmin = speciesNumericParameterWithImputation(SP, SpParams, "Gswmin", fillMissingSpParams);
   NumericVector Kmax_stemxylem = speciesNumericParameterWithImputation(SP, SpParams, "Kmax_stemxylem", fillMissingSpParams);
   NumericVector Kmax_rootxylem = speciesNumericParameterWithImputation(SP, SpParams, "Kmax_rootxylem", fillMissingSpParams);
-  NumericVector VCstem_c = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_c", fillMissingSpParams);
-  NumericVector VCstem_d = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_d", fillMissingSpParams);
-  NumericVector VCleaf_c = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_c", fillMissingSpParams);
-  NumericVector VCleaf_d = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_d", fillMissingSpParams);
-  NumericVector VCroot_c = speciesNumericParameterWithImputation(SP, SpParams, "VCroot_c", fillMissingSpParams);
-  NumericVector VCroot_d = speciesNumericParameterWithImputation(SP, SpParams, "VCroot_d", fillMissingSpParams);
+  NumericVector VCstem_P12 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P12", fillMissingSpParams);
+  NumericVector VCstem_P50 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P50", fillMissingSpParams);
+  NumericVector VCstem_P88 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P88", fillMissingSpParams);
+  NumericVector VCleaf_P12 = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_P12", fillMissingSpParams);
+  NumericVector VCleaf_P50 = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_P50", fillMissingSpParams);
+  NumericVector VCleaf_P88 = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_P88", fillMissingSpParams);
+  NumericVector VCroot_P12 = speciesNumericParameterWithImputation(SP, SpParams, "VCroot_P12", fillMissingSpParams);
+  NumericVector VCroot_P50 = speciesNumericParameterWithImputation(SP, SpParams, "VCroot_P50", fillMissingSpParams);
+  NumericVector VCroot_P88 = speciesNumericParameterWithImputation(SP, SpParams, "VCroot_P88", fillMissingSpParams);
   
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   NumericVector SLA = paramsAnatomydf["SLA"];
@@ -242,19 +255,26 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
   NumericVector VCroottot_kmax(numCohorts, 0.0);
   NumericVector VGrhizotot_kmax(numCohorts, 0.0);
   NumericVector Plant_kmax(numCohorts, 0.0);
-
+  NumericVector VCstem_c(numCohorts, 0.0), VCstem_d(numCohorts, 0.0), VCleaf_c(numCohorts, 0.0), VCleaf_d(numCohorts, 0.0), VCroot_c(numCohorts, 0.0), VCroot_d(numCohorts, 0.0);
   // Scaled conductance parameters parameters
   for(int c=0;c<numCohorts;c++){
     //Stem maximum conductance (in mmol·m-2·s-1·MPa-1)
     VCstem_kmax[c]=maximumStemHydraulicConductance(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c],control["taper"]); 
     VCstem_kmax[c]=std::min(VCstem_kmax[c], maximumStemConductance);
-    
+    //Stem Weibull
+    NumericVector wb_stem = psi2Weibull(VCstem_P50[c], VCstem_P88[c], VCstem_P12[c]);
+    VCstem_c[c] = wb_stem["c"];
+    VCstem_d[c] = wb_stem["d"];
     //Root maximum conductance
     double rstem = (1.0/VCstem_kmax[c]);
     double rleaf = (1.0/VCleaf_kmax[c]);
     double rtot = (rstem+rleaf)/(1.0 - fracRootResistance);
     double VCroot_kmaxc = 1.0/(rtot - rstem - rleaf);
     VCroottot_kmax[c] = VCroot_kmaxc;
+    //Root Weibull
+    NumericVector wb_root = psi2Weibull(VCroot_P50[c], VCroot_P88[c], VCroot_P12[c]);
+    VCroot_c[c] = wb_root["c"];
+    VCroot_d[c] = wb_root["d"];
     
     //Leaf maximum conductance
     if(!NumericVector::is_na(fracLeafResistance)) {
@@ -262,13 +282,17 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
       double rtot = rstem/(1.0-fracRootResistance - fracLeafResistance);
       VCleaf_kmax[c] = 1.0/(rtot*fracLeafResistance);
     }
+    //Leaf Weibull
+    NumericVector wb_leaf = psi2Weibull(VCleaf_P50[c], VCleaf_P88[c], VCleaf_P12[c]);
+    VCleaf_c[c] = wb_leaf["c"];
+    VCleaf_d[c] = wb_leaf["d"];
     //Plant kmax
     Plant_kmax[c] = 1.0/((1.0/VCleaf_kmax[c])+(1.0/VCstem_kmax[c])+(1.0/VCroottot_kmax[c]));
   }
   
   DataFrame paramsTranspirationdf = DataFrame::create(
-    _["Gswmin"]=Gswmin, _["Gswmax"]=Gswmax,_["Vmax298"]=Vmax298,
-      _["Jmax298"]=Jmax298, _["Kmax_stemxylem"] = Kmax_stemxylem, _["Kmax_rootxylem"] = Kmax_rootxylem,
+        _["Gswmin"]=Gswmin, _["Gswmax"]=Gswmax,_["Vmax298"]=Vmax298,
+        _["Jmax298"]=Jmax298, _["Kmax_stemxylem"] = Kmax_stemxylem, _["Kmax_rootxylem"] = Kmax_rootxylem,
         _["VCleaf_kmax"]=VCleaf_kmax,_["VCleaf_c"]=VCleaf_c,_["VCleaf_d"]=VCleaf_d,
         _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, 
         _["VCroot_kmax"] = VCroottot_kmax ,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,
@@ -299,19 +323,19 @@ DataFrame paramsTranspirationCochard(DataFrame above, List soil, DataFrame SpPar
   NumericVector Gswmin = speciesNumericParameterWithImputation(SP, SpParams, "Gswmin", fillMissingSpParams);
   NumericVector Kmax_stemxylem = speciesNumericParameterWithImputation(SP, SpParams, "Kmax_stemxylem", fillMissingSpParams);
   NumericVector Kmax_rootxylem = speciesNumericParameterWithImputation(SP, SpParams, "Kmax_rootxylem", fillMissingSpParams);
-  //TO BE FILLED FROM INPUT (P12 and P88)!!!!
-  NumericVector VCstem_c = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_c", fillMissingSpParams);
-  NumericVector VCstem_d = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_d", fillMissingSpParams);
-  NumericVector VCleaf_c = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_c", fillMissingSpParams);
-  NumericVector VCleaf_d = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_d", fillMissingSpParams);
-  NumericVector VCroot_c = speciesNumericParameterWithImputation(SP, SpParams, "VCroot_c", fillMissingSpParams);
-  NumericVector VCroot_d = speciesNumericParameterWithImputation(SP, SpParams, "VCroot_d", fillMissingSpParams);
-  NumericVector VCleaf_slope(numCohorts, 0.0); 
-  NumericVector VCstem_slope(numCohorts, 0.0);
-  NumericVector VCroot_slope(numCohorts, 0.0);
-  NumericVector VCleaf_P50(numCohorts, 0.0);
-  NumericVector VCstem_P50(numCohorts, 0.0);
-  NumericVector VCroot_P50(numCohorts, 0.0);
+  
+  NumericVector VCstem_P12 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P12", fillMissingSpParams);
+  NumericVector VCstem_P50 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P50", fillMissingSpParams);
+  NumericVector VCstem_P88 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P88", fillMissingSpParams);
+  NumericVector VCleaf_P12 = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_P12", fillMissingSpParams);
+  NumericVector VCleaf_P50 = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_P50", fillMissingSpParams);
+  NumericVector VCleaf_P88 = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_P88", fillMissingSpParams);
+  NumericVector VCroot_P12 = speciesNumericParameterWithImputation(SP, SpParams, "VCroot_P12", fillMissingSpParams);
+  NumericVector VCroot_P50 = speciesNumericParameterWithImputation(SP, SpParams, "VCroot_P50", fillMissingSpParams);
+  NumericVector VCroot_P88 = speciesNumericParameterWithImputation(SP, SpParams, "VCroot_P88", fillMissingSpParams);
+  
+  NumericVector VCleaf_slope(numCohorts, 0.0), VCstem_slope(numCohorts, 0.0), VCroot_slope(numCohorts, 0.0);
+  NumericVector VCstem_c(numCohorts, 0.0), VCstem_d(numCohorts, 0.0), VCleaf_c(numCohorts, 0.0), VCleaf_d(numCohorts, 0.0), VCroot_c(numCohorts, 0.0), VCroot_d(numCohorts, 0.0);
   
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   NumericVector SLA = paramsAnatomydf["SLA"];
@@ -324,14 +348,23 @@ DataFrame paramsTranspirationCochard(DataFrame above, List soil, DataFrame SpPar
 
   // Scaled conductance parameters parameters
   for(int c=0;c<numCohorts;c++){
-    //TO BE FILLED DIFFERENTLY!
-    VCleaf_P50[c] = xylemPsi(0.5, 1.0, VCleaf_c[c],VCleaf_d[c]);
-    VCstem_P50[c] = xylemPsi(0.5, 1.0, VCstem_c[c],VCstem_d[c]);
-    VCroot_P50[c] = xylemPsi(0.5, 1.0, VCroot_c[c],VCroot_d[c]);
-    VCleaf_slope[c] = 25.0*0.5*(-1.0/VCleaf_d[c])*VCleaf_c[c]*pow(VCleaf_P50[c]/VCleaf_d[c], VCleaf_c[c]-1.0);
-    VCstem_slope[c] = 25.0*0.5*(-1.0/VCstem_d[c])*VCstem_c[c]*pow(VCstem_P50[c]/VCstem_d[c], VCstem_c[c]-1.0);
-    VCroot_slope[c] = 25.0*0.5*(-1.0/VCroot_d[c])*VCroot_c[c]*pow(VCroot_P50[c]/VCroot_d[c], VCroot_c[c]-1.0);
+    //Sigmoid slopes
+    VCleaf_slope[c] = (88.0 - 12.0)/(std::abs(VCleaf_P88[c]) - std::abs(VCleaf_P12[c]));
+    VCstem_slope[c] = (88.0 - 12.0)/(std::abs(VCstem_P88[c]) - std::abs(VCstem_P12[c]));
+    VCroot_slope[c] = (88.0 - 12.0)/(std::abs(VCroot_P88[c]) - std::abs(VCroot_P12[c]));
 
+    //Stem Weibull
+    NumericVector wb_stem = psi2Weibull(VCstem_P50[c], VCstem_P88[c], VCstem_P12[c]);
+    VCstem_c[c] = wb_stem["c"];
+    VCstem_d[c] = wb_stem["d"];
+    //Leaf Weibull
+    NumericVector wb_leaf = psi2Weibull(VCleaf_P50[c], VCleaf_P88[c], VCleaf_P12[c]);
+    VCleaf_c[c] = wb_leaf["c"];
+    VCleaf_d[c] = wb_leaf["d"];
+    //Root Weibull
+    NumericVector wb_root = psi2Weibull(VCroot_P50[c], VCroot_P88[c], VCroot_P12[c]);
+    VCroot_c[c] = wb_root["c"];
+    VCroot_d[c] = wb_root["d"];
     //Stem maximum conductance (in mmol·m-2·s-1·MPa-1)
     VCstem_kmax[c]=maximumStemHydraulicConductance(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c],control["taper"]);
     VCstem_kmax[c]=std::min(VCstem_kmax[c], maximumStemConductance);
