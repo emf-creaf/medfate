@@ -6,6 +6,7 @@
 - Replacement of vulnerability curve parameters
 - New parameters for Jarvis-type stomatal conductance in Cochard sub-model
 - Revision of Cochard sub-model
+- XFT traits for vulnerability curves
 
 # Version 3.2.0
 - Correction of a bug arisen in old Rcpp versions
