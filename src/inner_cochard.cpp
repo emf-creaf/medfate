@@ -126,7 +126,7 @@ double Turgor(double PiFT, double Esymp, double Rstemp) {
   return(-1.0*PiFT - Esymp * Rstemp);
 }
 
-NumericVector regulFact(double psi, List params, String regulationType = "Turgor") {
+NumericVector regulFact(double psi, List params, String regulationType = "Sigmoid") {
   double stomatalClosure = NA_REAL;
   double regulFact = NA_REAL;
   double regulFactPrime = NA_REAL;
@@ -223,6 +223,10 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   NumericVector VCroot_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_slope"]);
   NumericVector Gswmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gswmax"]);
   NumericVector Gswmin = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gswmin"]);
+  NumericVector Gs_Toptim = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_Toptim"]);
+  NumericVector Gs_Tsens = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_Tsens"]);
+  NumericVector Gs_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_P50"]);
+  NumericVector Gs_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_slope"]);
   
   
   NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
@@ -238,25 +242,25 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   List network = List::create();
   //Params
   List params = List::create();
+  
   // CONSTANTS TO BE REVISED
   params.push_back(37.5, "TPhase_gmin"); 
   params.push_back(1.2, "Q10_1_gmin"); 
   params.push_back(4.8, "Q10_2_gmin"); 
-  
-  params.push_back(1.15, "turgorPressureAtGsMax"); 
-  
   params.push_back(0.003, "JarvisPAR"); 
-  params.push_back(20.0, "gsNight"); //mmol
-  params.push_back(25.0, "Tgs_optim"); 
-  params.push_back(17.0, "Tgs_sens"); 
+  params.push_back(150.0, "gCrown0"); //Can it be estimated ?
+  params.push_back(0.8, "fTRBToLeaf"); //ratio of bark area to leaf area
   
-  params.push_back(150.0, "gCrown0"); 
-  params.push_back(2.0, "gmin_S"); 
-  params.push_back(0.8, "fTRBToLeaf");
+  params.push_back(Gs_slope[c], "slope_gs");
+  params.push_back(Gs_P50[c], "P50_gs");
+  params.push_back(Gs_Toptim[c], "Tgs_optim"); 
+  params.push_back(Gs_Tsens[c], "Tgs_sens"); 
   
   //PLANT RELATED PARAMETERS
   params.push_back(Gswmin[c]*1000.0, "gmin20"); //mol to mmol 
   params.push_back(Gswmax[c]*1000.0, "gsMax"); //mol to mmol 
+  params.push_back(Gswmin[c]*1000.0, "gmin_S"); // gmin for stem equal to leaf gmin, in mmol
+  params.push_back(0.1*Gswmax[c]*1000.0, "gsNight"); //gsNight equal to 10% percent of gsMax
   
   params.push_back(VCleaf_P50[c], "VCleaf_P50"); 
   params.push_back(VCleaf_slope[c], "VCleaf_slope"); 
@@ -270,6 +274,8 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   params.push_back(LeafEPS[c], "epsilonSym_Leaf"); 
   params.push_back(StemPI0[c], "PiFullTurgor_Stem"); 
   params.push_back(StemEPS[c], "epsilonSym_Stem"); 
+  
+  // CONSTANTS TO BE REVISED
   params.push_back(2e-05, "C_SApoInit"); //Maximum capacitance of the stem apoplasm
   params.push_back(1e-05, "C_LApoInit"); //Maximum capacitance of the leaf apoplasm
 
@@ -839,7 +845,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
 
         //Current leaf water potential (same for sunlit and shade leaves)
         double Psi_LSym = network_n["Psi_LSym"];
-        NumericVector regul_ini = regulFact(Psi_LSym, params);
+        NumericVector regul_ini = regulFact(Psi_LSym, params, "Sigmoid");
         
         //Leaf temperature for sunlit and shade leaves
         double Elim_SL = network_n["Elim_SL"];
@@ -880,7 +886,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
         // Rcout<< "  Emin_S "<< Emin_S<<" Emin_L_SL "<< Emin_L_SL<<" Emin_L_SH "<< Emin_L_SH<<" Emin_L "<< Emin_L<<"\n";
         
         // Current stomatal regulation
-        NumericVector regul = regulFact(Psi_LSym, params);
+        NumericVector regul = regulFact(Psi_LSym, params, "Sigmoid");
         double gs_SL = gsJarvis(params, PAR_SL(c,n), Temp_SL(c,n));
         double gs_SH = gsJarvis(params, PAR_SH(c,n), Temp_SH(c,n));
         //Rcout<< "  PAR_SL "<< PAR_SL(c,n)<<"  gs_SL "<< gs_SL<<"  PAR_SH "<< PAR_SH(c,n)<<" gs_SH "<< gs_SH<<"\n";

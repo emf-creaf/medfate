@@ -865,7 +865,34 @@ NumericVector GswminWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(Gswmin);
 }
-
+NumericVector GsToptimWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector Gs_Toptim = speciesNumericParameterFromIndex(SP, SpParams, "Gs_Toptim");
+  for(int c=0;c<Gs_Toptim.size();c++) {
+    if(NumericVector::is_na(Gs_Toptim[c])) Gs_Toptim[c] = 25.0;
+  }
+  return(Gs_Toptim);
+}
+NumericVector GsTsensWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector Gs_Tsens = speciesNumericParameterFromIndex(SP, SpParams, "Gs_Tsens");
+  for(int c=0;c<Gs_Tsens.size();c++) {
+    if(NumericVector::is_na(Gs_Tsens[c])) Gs_Tsens[c] = 17.0;
+  }
+  return(Gs_Tsens);
+}
+NumericVector GsP50WithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector Gs_P50 = speciesNumericParameterFromIndex(SP, SpParams, "Gs_P50");
+  for(int c=0;c<Gs_P50.size();c++) {
+    if(NumericVector::is_na(Gs_P50[c])) Gs_P50[c] = -1.5;
+  }
+  return(Gs_P50);
+}
+NumericVector GsslopeWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector Gs_slope = speciesNumericParameterFromIndex(SP, SpParams, "Gs_slope");
+  for(int c=0;c<Gs_slope.size();c++) {
+    if(NumericVector::is_na(Gs_slope[c])) Gs_slope[c] = 30.0;
+  }
+  return(Gs_slope);
+}
 NumericVector KmaxStemXylemWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector Kmax_stemxylem = speciesNumericParameterFromIndex(SP, SpParams, "Kmax_stemxylem");
   CharacterVector Group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
@@ -1517,6 +1544,10 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if(parName == "VCleaf_kmax") return(VCleafkmaxWithImputation(SP, SpParams));
     else if(parName == "Gswmax") return(GswmaxWithImputation(SP, SpParams));
     else if(parName == "Gswmin") return(GswminWithImputation(SP, SpParams));
+    else if(parName == "Gs_Toptim") return(GsToptimWithImputation(SP, SpParams));
+    else if(parName == "Gs_Tsens") return(GsTsensWithImputation(SP, SpParams));
+    else if(parName == "Gs_P50") return(GsP50WithImputation(SP, SpParams));
+    else if(parName == "Gs_slope") return(GsslopeWithImputation(SP, SpParams));
     else if(parName == "Nleaf") return(NleafWithImputation(SP, SpParams));
     else if(parName == "Nsapwood") return(NsapwoodWithImputation(SP, SpParams));
     else if(parName == "Nfineroot") return(NfinerootWithImputation(SP, SpParams));

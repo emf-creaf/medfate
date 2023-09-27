@@ -2,15 +2,16 @@
  NEWS for R Package "medfate"
 -------------------------------
 
-# Version 3.3.0
+# Version 4.0.0
 - Replacement of vulnerability curve parameters
+- New parameters for Jarvis-type stomatal conductance in Cochard sub-model
+- Revision of Cochard sub-model
 
 # Version 3.2.0
 - Correction of a bug arisen in old Rcpp versions
 - Functions for seed production and bank dynamics (new parameter SeedLongevity)
 - New parameters for dispersal (SeedMass, DispersalType, DispersalDistance, DispersalShape)
 - Recording of leaf PLC for Sperry and Cochard sub-models
-- Revision of Cochard sub-model
 
 # Version 3.1.4
 - Fixing memory access errors
