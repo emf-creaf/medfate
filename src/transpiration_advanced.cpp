@@ -1021,6 +1021,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
       double r = refillMaximumRate*std::max(0.0, (StemSympPsiVEC[c] + 1.5)/1.5);
       StemPLCVEC[c] = std::max(0.0, StemPLCVEC[c] - (r/SAmax));
+      LeafPLCVEC[c] = std::max(0.0, LeafPLCVEC[c] - (r/SAmax));
     }
   }
   

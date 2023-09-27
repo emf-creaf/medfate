@@ -188,17 +188,24 @@ DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool 
   NumericVector WUE_vpd = speciesNumericParameterWithImputation(SP, SpParams, "WUE_vpd", true);
   NumericVector Psi_Extract = speciesNumericParameterWithImputation(SP, SpParams, "Psi_Extract", fillMissingSpParams);
   NumericVector Exp_Extract = speciesNumericParameterWithImputation(SP, SpParams, "Exp_Extract", fillMissingSpParams);
+  NumericVector VCleaf_P12 = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_P12", fillMissingSpParams);
+  NumericVector VCleaf_P50 = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_P50", fillMissingSpParams);
+  NumericVector VCleaf_P88 = speciesNumericParameterWithImputation(SP, SpParams, "VCleaf_P88", fillMissingSpParams);
   NumericVector VCstem_P12 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P12", fillMissingSpParams);
   NumericVector VCstem_P50 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P50", fillMissingSpParams);
   NumericVector VCstem_P88 = speciesNumericParameterWithImputation(SP, SpParams, "VCstem_P88", fillMissingSpParams);
   NumericVector Gswmin = speciesNumericParameterWithImputation(SP, SpParams, "Gswmin", fillMissingSpParams);
   
-  NumericVector VCstem_c(numCohorts, 0.0), VCstem_d(numCohorts, 0.0);
+  NumericVector VCstem_c(numCohorts, 0.0), VCstem_d(numCohorts, 0.0), VCleaf_c(numCohorts, 0.0), VCleaf_d(numCohorts, 0.0);
   for(int c=0;c<numCohorts;c++){
     //Stem Weibull
     NumericVector wb_stem = psi2Weibull(VCstem_P50[c], VCstem_P88[c], VCstem_P12[c]);
     VCstem_c[c] = wb_stem["c"];
     VCstem_d[c] = wb_stem["d"];
+    //Leaf Weibull
+    NumericVector wb_leaf = psi2Weibull(VCleaf_P50[c], VCleaf_P88[c], VCleaf_P12[c]);
+    VCleaf_c[c] = wb_leaf["c"];
+    VCleaf_d[c] = wb_leaf["d"];
   }
   
   DataFrame paramsTranspirationdf = DataFrame::create(_["Gswmin"] = Gswmin,
@@ -206,6 +213,8 @@ DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool 
                                                       _["Tmax_LAIsq"] = Tmax_LAIsq,
                                                       _["Psi_Extract"]=Psi_Extract,
                                                       _["Exp_Extract"]=Exp_Extract,
+                                                      _["VCleaf_c"] = VCleaf_c,
+                                                      _["VCleaf_d"] = VCleaf_d,
                                                       _["VCstem_c"] = VCstem_c,
                                                       _["VCstem_d"] = VCstem_d,
                                                       _["WUE"] = WUE, 
@@ -928,7 +937,8 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
   DataFrame df;
   if(transpirationMode=="Granier") {
     df = DataFrame::create(Named("PlantPsi") = NumericVector(numCohorts, -0.033),
-                           Named("StemPLC") = NumericVector(numCohorts, 0.0));
+                           Named("StemPLC") = NumericVector(numCohorts, 0.0),
+                           Named("LeafPLC") = NumericVector(numCohorts, 0.0));
   } else if(transpirationMode =="Sperry") {
     df = DataFrame::create(Named("Einst") = NumericVector(numCohorts, 0.0),
                            Named("RootCrownPsi") = NumericVector(numCohorts, -0.033),

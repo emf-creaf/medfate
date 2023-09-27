@@ -242,7 +242,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
                           xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
                           summary.freq = summary.freq, ...))
   } 
-  else if(type %in% c("LeafPLC","StemPLC", "StemRWC", "LeafRWC")) {
+  else if(type %in% c("PlantStress","LeafPLC","StemPLC", "StemRWC", "LeafRWC")) {
     OM = x$Plants[[type]][,cohorts,drop=FALSE]*100
     return(.plot_plant_om(OM, PlantsLAIlive, spnames,
                    type, bySpecies = bySpecies, dates = dates, 
@@ -259,7 +259,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
                           summary.freq = summary.freq, ...))
   } 
   else if(type %in% c("SoilPlantConductance","PlantPsi", "LeafPsiMin",
-                      "LeafPsiMax", "StemPsi", "RootPsi", "PlantStress",
+                      "LeafPsiMax", "StemPsi", "RootPsi", 
                       "PlantWaterBalance", "LFMC")) {
     if(type=="SoilPlantConductance") OM = x$Plants[["dEdP"]][,cohorts,drop=FALSE]
     else OM = x$Plants[[type]][,cohorts,drop=FALSE]
@@ -458,7 +458,7 @@ plot.fordyn<-function(x, type="StandBasalArea",
                          xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab,
                          summary.freq = summary.freq,...))
     }
-    else if(type %in% c("StemPLC", "StemRWC", "LeafRWC", "StemSympRWC", "LeafSympRWC")) {
+    else if(type %in% c("LeafPLC","StemPLC", "StemRWC", "LeafRWC", "StemSympRWC", "LeafSympRWC")) {
       OM = summary(x, freq = "days", output = paste0("Plants$",type))[,cohorts,drop=FALSE]*100
       return(.plot_plant_om(OM, PlantsLAIlive, spnames,
                             type, bySpecies = bySpecies, dates = dates, 

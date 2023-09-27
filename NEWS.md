@@ -3,10 +3,11 @@
 -------------------------------
 
 # Version 4.0.0
-- Replacement of vulnerability curve parameters
-- New parameters for Jarvis-type stomatal conductance in Cochard sub-model
 - Revision of Cochard sub-model
+- Replacement of vulnerability curve parameters by P12, P50 and P88
+- New parameters for Jarvis-type stomatal conductance in Cochard sub-model
 - XFT traits for vulnerability curves
+- Recording of leaf PLC for all sub-models
 
 # Version 3.2.0
 - Functions for seed production and bank dynamics (new parameter SeedLongevity)

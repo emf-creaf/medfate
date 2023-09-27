@@ -77,12 +77,8 @@
   }
   TYPES <-c(TYPES,
             "Plant stress" = "PlantStress",
+            "Leaf PLC" = "LeafPLC",
             "Stem PLC" = "StemPLC")
-  
-  if(transpirationMode %in% c("Sperry","Cochard")) {
-    TYPES <-c(TYPES,
-              "Leaf PLC" = "LeafPLC")
-  }
   return(TYPES)
 }
 .getSunlitShadePlotTypes<-function(transpirationMode = "Granier"){
@@ -375,7 +371,7 @@
   else if(type=="LeafSympRWC") ylab = "Relative water content in leaf symplasm [%]"
   else if(type=="LeafSympPsi") ylab = "Leaf symplastic water potential (MPa)"
   else if(type=="PlantPsi") ylab = "Plant water potential (MPa)"
-  else if(type=="PlantStress") ylab = "Drought stress [0-1]"
+  else if(type=="PlantStress") ylab = "Drought stress [%]"
   else if(type=="StemPsi") ylab = "Stem water potential (MPa)"
   else if(type=="RootPsi") ylab = "Root crown water potential (MPa)"
   else if(type=="LeafPsiAverage") ylab = "Average leaf water potential (MPa)"

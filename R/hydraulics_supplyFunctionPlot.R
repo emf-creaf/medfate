@@ -19,6 +19,7 @@ hydraulics_supplyFunctionPlot<-function(x, draw = TRUE, type="E", speciesNames =
   VCroot_kmax = x$belowLayers$VCroot_kmax
   VGrhizo_kmax = x$belowLayers$VGrhizo_kmax
   StemPLC = x$internalWater$StemPLC
+  LeafPLC = x$internalWater$LeafPLC
   nlayer = length(psiSoil)
   col = rainbow(nlayer, start = 0.8, end = 0.1)
   
@@ -49,7 +50,8 @@ hydraulics_supplyFunctionPlot<-function(x, draw = TRUE, type="E", speciesNames =
                "krootmax" = VCroot_kmaxc, "rootc" = VCroot_c[i], "rootd" = VCroot_d[i],
                "kstemmax" = VCstem_kmax[i], "stemc" = VCstem_c[i], "stemd" = VCstem_d[i], 
                "kleafmax" = VCleaf_kmax[i], "leafc" = VCleaf_c[i], "leafd" = VCleaf_d[i],
-               "PLCstem" = c(StemPLC[i], StemPLC[i]))
+               "PLCstem" = c(StemPLC[i], StemPLC[i]),
+               "PLCleaf" = LeafPLC[i])
     l[[i]] = hydraulics_supplyFunctionNetwork(hn,
                                           minFlow = 0.0, maxNsteps = numericParams$maxNsteps, 
                                           ntrial = numericParams$ntrial,

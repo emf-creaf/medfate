@@ -116,6 +116,8 @@ List transpirationBasic(List x, NumericVector meteovec,
   NumericVector Exp_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Exp_Extract"]);
   NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
   NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
+  NumericVector VCleaf_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_c"]);
+  NumericVector VCleaf_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_d"]);
   NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
   NumericVector WUE_par(numCohorts, 0.3643);
   NumericVector WUE_co2(numCohorts, 0.002757);
@@ -155,6 +157,7 @@ List transpirationBasic(List x, NumericVector meteovec,
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
   NumericVector PlantPsi = clone(Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]));
   NumericVector StemPLC = clone(Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]));
+  NumericVector LeafPLC = clone(Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]));
   
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
   NumericVector Phe(numCohorts,0.0);
@@ -323,8 +326,10 @@ List transpirationBasic(List x, NumericVector meteovec,
   for(int c=0;c<numCohorts;c++) {
     if(cavitationRefill!="total") {
       StemPLC[c] = std::max(1.0 - xylemConductance(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]), StemPLC[c]); //Track current embolism if no refill
+      LeafPLC[c] = std::max(1.0 - xylemConductance(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]), LeafPLC[c]); //Track current embolism if no refill
     } else {
       StemPLC[c] = 1.0 - xylemConductance(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]);
+      LeafPLC[c] = 1.0 - xylemConductance(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]);
     }
     
     //Relative water content and fuel moisture from plant water potential
@@ -343,12 +348,14 @@ List transpirationBasic(List x, NumericVector meteovec,
       double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
       double r = refillMaximumRate*std::max(0.0, (PlantPsi[c] + 1.5)/1.5);
       StemPLC[c] = std::max(0.0, StemPLC[c] - (r/SAmax));
+      LeafPLC[c] = std::max(0.0, LeafPLC[c] - (r/SAmax));
     }
   }
   
   
   if(modifyInput) {
     internalWater["StemPLC"] = StemPLC;
+    internalWater["LeafPLC"] = LeafPLC;
     internalWater["PlantPsi"] = PlantPsi;
   }
   //Atempt to implement hydraulic redistribution
@@ -447,6 +454,7 @@ List transpirationBasic(List x, NumericVector meteovec,
                                        _["LeafRWC"] = RWClm,
                                        _["LFMC"] = LFMC,
                                        _["StemPLC"] = StemPLC,
+                                       _["LeafPLC"] = LeafPLC,
                                        _["WaterBalance"] = PWB);
   Plants.attr("row.names") = above.attr("row.names");
   Extraction.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
