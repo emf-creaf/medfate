@@ -150,7 +150,9 @@ double apoplasticRelativeWaterContent(double psiApo, double c, double d) {
 //' @rdname moisture
 // [[Rcpp::export("moisture_apoplasticPsi")]]
 double apoplasticWaterPotential(double RWC, double c, double d) {
-  return(d*pow(-1.0*log(RWC),1.0/c));
+  double psi = d*pow(-1.0*log(RWC),1.0/c);
+  if( psi< -40.0) psi = -40.0; //Minimum value
+  return(psi);
 }
 /**
  * Calculates leaf relative water content from leaf water potential

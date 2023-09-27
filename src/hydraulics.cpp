@@ -113,7 +113,8 @@ NumericVector Psi2K(double psi, NumericVector psi_extract, double exp_extract = 
 double K2Psi(double K, double psi_extract, double exp_extract = 3.0) {
   double psi = psi_extract*pow(log(K)/(-0.6931472),1.0/exp_extract);
   if(psi>0.0) psi = -psi; //Usually psi_extr is a positive number
-  return psi;
+  if(psi< -40.0) psi = -40.0; //Minimum value
+  return(psi);
 }
 NumericVector K2Psi(NumericVector K, NumericVector psi_extract, double exp_extract = 3.0) {
   int n = psi_extract.size();
@@ -154,7 +155,9 @@ double xylemConductance(double psi, double kxylemmax, double c, double d) {
 //' @rdname hydraulics_conductancefunctions
 // [[Rcpp::export("hydraulics_xylemPsi")]]
 double xylemPsi(double kxylem, double kxylemmax, double c, double d) {
-  return(d*pow(-log(kxylem/kxylemmax),1.0/c));
+  double psi = d*pow(-log(kxylem/kxylemmax),1.0/c);
+  if(psi< -40.0) psi = -40.0; //Minimum value
+  return(psi);
 }
 
 //' @rdname hydraulics_conductancefunctions
@@ -745,17 +748,19 @@ List E2psiAboveground(double E, double psiRootCrown,
   double leafc = hydraulicNetwork["leafc"];
   double leafd = hydraulicNetwork["leafd"];
   NumericVector PLCstem = hydraulicNetwork["PLCstem"];
-  
+  double PLCleaf = hydraulicNetwork["PLCleaf"];
+    
   int nStemSegments = PLCstem.size();
   NumericVector psiStem(nStemSegments, 0.0), psiPLCStem(nStemSegments, 0.0);
   double kxsegmax = kstemmax*((double) nStemSegments);
   double psiUp = psiRootCrown;
   for(int i=0;i<nStemSegments; i++) {
-    psiPLCStem[i]=  apoplasticWaterPotential(1.0-PLCstem[i], stemc, stemd);
+    psiPLCStem[i]=  apoplasticWaterPotential(std::max(0.0001, 1.0-PLCstem[i]), stemc, stemd);
     psiStem[i] = E2psiXylem(E, psiUp, kxsegmax, stemc, stemd, psiPLCStem[i]); //Apliquem la fatiga per cavitacio a la caiguda de potencial a la tija 
     psiUp = psiStem[i];
   }  
-  double psiLeaf = E2psiXylem(E, psiStem[nStemSegments-1], kleafmax, leafc, leafd, 0.0); 
+  double psiPLCLeaf=  apoplasticWaterPotential(std::max(0.0001,1.0-PLCleaf), leafc, leafd);
+  double psiLeaf = E2psiXylem(E, psiStem[nStemSegments-1], kleafmax, leafc, leafd, psiPLCLeaf); 
   double kterm = xylemConductance(psiLeaf, kleafmax, leafc, leafd);
   return(List::create( Named("E")=E, Named("psiStem") =psiStem,Named("psiLeaf") =psiLeaf,Named("kterm") = kterm));
 }
