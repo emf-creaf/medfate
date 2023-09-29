@@ -49,7 +49,7 @@ A list, with the following options (default values in brackets):
       }
       \item{\code{verticalLayerSize [= 100]}: Size of vertical layers (in cm) for the calculation of light extinction (and photosynthesis).}
       \item{\code{windMeasurementHeight [= 200]}: Height (in cm) over the canopy corresponding to wind measurements.}
-      \item{\code{cavitationRefill [= "total"]}: A string indicating how refilling of embolized conduits is done:
+      \item{\code{cavitationRefill [= "annual"]}: A string indicating how refilling of embolized conduits is done:
           \itemize{
             \item{"none" - no refilling.}
             \item{"annual" - every first day of the year.}
