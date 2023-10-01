@@ -336,7 +336,6 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   // Extract control variables
   List control = x["control"];
   String soilFunctions = control["soilFunctions"];
-  bool capacitance = control["capacitance"];
   String cavitationRefill = control["cavitationRefill"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
@@ -345,9 +344,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   int maxNsteps  = numericParams["maxNsteps"];
   // double psiTol = numericParams["psiTol"];
   double ETol = numericParams["ETol"];
-  double klatleaf = control["klatleaf"];
-  double klatstem = control["klatstem"];
-  
+
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   int numCohorts = cohorts.nrow();
 
@@ -538,29 +535,8 @@ void innerSperry(List x, List input, List output, int n, double tstep,
       NumericVector LeafPsi, psiRootCrown;
       
       //Retrieve supply functions
-      List sFunctionBelow, sFunctionAbove;
-      if(!capacitance) {
-        sFunctionAbove = supply[c];
-        sFunctionBelow = supply[c];
-      } else {
-        double psiPLCStem = apoplasticWaterPotential(1.0-StemPLCVEC[c], VCstem_c[c], VCstem_d[c]);
-        double psiRootCrownFake = std::min(0.0,E2psiXylemUp(EinstVEC[c], Stem1PsiVEC[c],VCstem_kmax[c]*2.0, VCstem_c[c], VCstem_d[c], psiPLCStem));
-        if(NumericVector::is_na(psiRootCrownFake)) psiRootCrownFake = 0.0;
-        double psiFineRootFake= std::min(0.0,E2psiXylemUp(EinstVEC[c], psiRootCrownFake,VCroot_kmax_sum[c], VCroot_c[c], VCroot_d[c]));
-        if(NumericVector::is_na(psiFineRootFake)) psiFineRootFake = 0.0;
-        double sapFluidityBelow = 1.0/waterDynamicViscosity(Tsoil[0]);
-        double sapFluidityAbove = 1.0/waterDynamicViscosity(Tair[iLayerCohort[c]]);
-        List hn = List::create(_["krootmax"] = NumericVector::create(sapFluidityBelow*VCroot_kmax_sum[c]), _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
-                               _["kstemmax"] = sapFluidityAbove*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
-                               _["kleafmax"] = sapFluidityAbove*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
-                               _["PLCstem"] = NumericVector::create(StemPLCVEC[c]));
-
-        sFunctionAbove = supplyFunctionFineRootLeaf(psiFineRootFake, hn,
-                                                    0.0, maxNsteps,
-                                                    ETol, 0.001);
-
-        sFunctionBelow = supply[c];
-      }
+      List sFunctionAbove = supply[c];
+      List sFunctionBelow = supply[c];
       
       //Retrieve transpiration, LeafPsi and dEdP vectors
       fittedE = sFunctionAbove["E"];
@@ -673,134 +649,36 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         NumericVector ElayersVEC(nlayerscon[c],0.0);
         
         
-        //Get info from sFunctionBelow (this will be different depending on wether capacitance is considered)
+        //Get info from sFunctionBelow
         NumericMatrix ERhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunctionBelow["ERhizo"]);
         NumericMatrix RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(sFunctionBelow["psiRhizo"]);
         
-        if(!capacitance) {
-          //Store steady state stem and rootcrown and root surface water potential values
-          NumericMatrix newStemPsi = Rcpp::as<Rcpp::NumericMatrix>(sFunctionAbove["psiStem"]);
-          Stem1PsiVEC[c] = newStemPsi(iPM,0); 
-          Stem2PsiVEC[c] = newStemPsi(iPM,1);
-          for(int lc=0;lc<nlayerscon[c];lc++) {
-            ElayersVEC[lc] = ERhizo(iPM,lc)*tstep; //Scale according to the time step
-          }
-          
-          //Copy RhizoPsi and from connected layers to RhizoPsi from soil layers
-          copyRhizoPsi(c,iPM, 
-                       RhizoPsi, RhizoPsiMAT,
-                       layerConnected, 
-                       RHOP, layerConnectedPools,
-                       VCroot_c, VCroot_d,  
-                       plantWaterPools);
-          
-          StemSympPsiVEC[c] = Stem1PsiVEC[c]; //Stem symplastic compartment coupled with apoplastic compartment
-          LeafSympPsiVEC[c] = LeafPsiVEC[c]; //Leaf symplastic compartment coupled with apoplastic compartment
-          
-          // Update the leaf and stem PLC
-          if(cavitationRefill!="total") {
-            StemPLCVEC[c] = std::max(StemPLCVEC[c], 1.0 - xylemConductance(Stem1PsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
-            LeafPLCVEC[c] = std::max(LeafPLCVEC[c], 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c])); 
-          } else { //Immediate refilling
-            StemPLCVEC[c] = 1.0 - xylemConductance(Stem1PsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
-            LeafPLCVEC[c] = 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c]); 
-          }
-          
-        } else {
-          //Store steady state stem2 water potential
-          NumericVector newStemPsi2 = Rcpp::as<Rcpp::NumericVector>(sFunctionAbove["psiStem2"]);
-          Stem2PsiVEC[c] = newStemPsi2[iPM];
-          
-          NumericVector newStemPsi1 = Rcpp::as<Rcpp::NumericVector>(sFunctionBelow["psiStem1"]);
-          
-          int iPMB = -1;
-          
-          //TO DO: stem segment water balance
-          //Estimate current apoplastic and symplastic volumes
-          // NOTE: Vsapwood and Vleaf are in l·m-2
-          double VLeafSymp_mmolmax = 1000.0*((Vleaf[c]*(1.0-LeafAF[c]))/0.018); //mmol·m-2
-          double VStemSymp_mmolmax = 1000.0*((Vsapwood[c]*(1.0-StemAF[c]))/0.018); //mmol·m-2
-          //Substract from maximum apoplastic compartment embolized conduits
-          double VStemApo_mmolmax = 1000.0*((Vsapwood[c]*StemAF[c])/0.018); //mmol·m-2
-          double RWCLeafSymp = symplasticRelativeWaterContent(LeafSympPsiVEC[c], LeafPI0[c], LeafEPS[c]); //mmol·m-2
-          double RWCStemSymp = symplasticRelativeWaterContent(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]); //mmol·m-2
-          double VLeafSymp_mmol = VLeafSymp_mmolmax * RWCLeafSymp;
-          double VStemSymp_mmol = VStemSymp_mmolmax * RWCStemSymp;
-          double Vcav = 0.0;
-          //Perform water balance
-          // Rcout<<"\n"<<c<<" Before - iPM " << iPM<< " EinstVEC[c]: "<< EinstVEC[c]<<" Vol: "<<VStemApo_mmol<<" RWC:"<< RWCStemApo <<" Psi: "<< Stem1PsiVEC[c]<< " LeafPsiVEC[c]: "<<LeafPsiVEC[c]<<"\n";
-          for(double scnt=0.0; scnt<tstep;scnt += 1.0) {
-            //Find flow corresponding to Stem1PsiVEC[c]
-            //Find iPM for water potential corresponding to the current water potential
-            double absDiff = 99999999.9;
-            iPMB = -1;
-            for(int k=0;k<newStemPsi1.size();k++){ //Only check up to the size of fittedE
-              double adk = std::abs(newStemPsi1[k]-Stem1PsiVEC[c]);
-              if(adk<absDiff) {
-                absDiff = adk;
-                iPMB = k;
-              }
-            }
-            if(iPMB==-1) {
-              Rcout<<"\n Stem1PsiVEC[c]="<< Stem1PsiVEC[c] << " newStemPsi1.size= "<< newStemPsi1.size()<<"\n";
-              stop("iPMB = -1");
-            }
-            // Stem1PsiVEC[c] = newStemPsi1[iPMB];
-            
-            //Add flow from soil to ElayersVEC
-            for(int lc=0;lc<nlayerscon[c];lc++) ElayersVEC[lc] += ERhizo(iPMB,lc); 
-            
-            //Calculate stem and leaf lateral flows
-            double Flatstem = (StemSympPsiVEC[c] - Stem1PsiVEC[c])*klatstem;
-            double Flatleaf = (LeafSympPsiVEC[c] - LeafPsiVEC[c])*klatleaf;
-            
-            
-            //Leaf symplastic water balance
-            VLeafSymp_mmol += (-Flatleaf);
-            RWCLeafSymp = VLeafSymp_mmol/VLeafSymp_mmolmax;
-            LeafSympPsiVEC[c] = symplasticWaterPotential(std::min(1.0,RWCLeafSymp), LeafPI0[c], LeafEPS[c]);
-            if(NumericVector::is_na(LeafSympPsiVEC[c]))  LeafSympPsiVEC[c] = -40.0;
-            
-            //Stem symplastic water balance
-            VStemSymp_mmol += (-Flatstem);
-            RWCStemSymp = VStemSymp_mmol/VStemSymp_mmolmax;
-            StemSympPsiVEC[c] = symplasticWaterPotential(std::min(1.0,RWCStemSymp), StemPI0[c], StemEPS[c]);
-            if(NumericVector::is_na(StemSympPsiVEC[c]))  StemSympPsiVEC[c] = -40.0;
-            
-            //Stem apoplastic water balance
-            double Vchange = (Flatstem + sum(ERhizo(iPMB,_)) - (EinstVEC[c] - Flatleaf)) + Vcav;
-            
-            Stem1PsiVEC[c] = Stem1PsiVEC[c] + eps_xylem*(Vchange/VStemApo_mmolmax);
-            
-            // VStemApo_mmol += (Flatstem + sum(ERhizo(iPMB,_)) - (EinstVEC[c] - Flatleaf));
-            // RWCStemApo = VStemApo_mmol/VStemApo_mmolmax;
-            // Stem1PsiVEC[c] = apoplasticWaterPotential(std::min(1.0,RWCStemApo), VCstem_c[c], VCstem_d[c]);
-            // if(NumericVector::is_na(Stem1PsiVEC[c]))  Stem1PsiVEC[c] = -40.0;
-            
-            
-            //Recalculate Stem PLC and calculate volume corresponding to new cavitation
-            double plc_old = StemPLCVEC[c];
-            if(cavitationRefill!="total") {
-              StemPLCVEC[c] = std::max(StemPLCVEC[c], 1.0 - xylemConductance(Stem1PsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
-              Vcav = VStemApo_mmolmax*(StemPLCVEC[c]-plc_old);
-              LeafPLCVEC[c] = std::max(LeafPLCVEC[c], 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c])); 
-            } else { //Immediate refilling
-              StemPLCVEC[c] = 1.0 - xylemConductance(Stem1PsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
-              Vcav = 0.0;
-              LeafPLCVEC[c] = 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c]); 
-            }
-            
-          }
-          
-          // Rcout<<c<<" after - EinstVEC: "<<EinstVEC[c] << " RWCStemApo: " << RWCStemApo << "  Stem1PsiVEC:"<< Stem1PsiVEC[c]<<" StemSympPsiVEC: "<< StemSympPsiVEC[c]<<" LeafSympPsiVEC: "<< LeafSympPsiVEC[c] <<"\n";
-          
-          //Copy RhizoPsi and from connected layers to RhizoPsi from soil layers
-          copyRhizoPsi(c,iPMB, 
-                       RhizoPsi, RhizoPsiMAT,
-                       layerConnected, 
-                       RHOP, layerConnectedPools,
-                       VCroot_c, VCroot_d,  
-                       plantWaterPools);
+        //Store steady state stem and rootcrown and root surface water potential values
+        NumericMatrix newStemPsi = Rcpp::as<Rcpp::NumericMatrix>(sFunctionAbove["psiStem"]);
+        Stem1PsiVEC[c] = newStemPsi(iPM,0); 
+        Stem2PsiVEC[c] = newStemPsi(iPM,1);
+        for(int lc=0;lc<nlayerscon[c];lc++) {
+          ElayersVEC[lc] = ERhizo(iPM,lc)*tstep; //Scale according to the time step
+        }
+        
+        //Copy RhizoPsi and from connected layers to RhizoPsi from soil layers
+        copyRhizoPsi(c,iPM, 
+                     RhizoPsi, RhizoPsiMAT,
+                     layerConnected, 
+                     RHOP, layerConnectedPools,
+                     VCroot_c, VCroot_d,  
+                     plantWaterPools);
+        
+        StemSympPsiVEC[c] = Stem1PsiVEC[c]; //Stem symplastic compartment coupled with apoplastic compartment
+        LeafSympPsiVEC[c] = LeafPsiVEC[c]; //Leaf symplastic compartment coupled with apoplastic compartment
+        
+        // Update the leaf and stem PLC
+        if(cavitationRefill!="total") {
+          StemPLCVEC[c] = std::max(StemPLCVEC[c], 1.0 - xylemConductance(Stem1PsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
+          LeafPLCVEC[c] = std::max(LeafPLCVEC[c], 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c])); 
+        } else { //Immediate refilling
+          StemPLCVEC[c] = 1.0 - xylemConductance(Stem1PsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
+          LeafPLCVEC[c] = 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c]); 
         }
         
         //Scale soil water extracted from leaf to cohort level
@@ -864,20 +742,12 @@ void innerSperry(List x, List input, List output, int n, double tstep,
       List sFunctionBelow = supply[c];
       NumericVector  psiRootCrown = sFunctionBelow["psiRootCrown"];
       RootCrownPsiVEC[c] = psiRootCrown[0];
-      if(!capacitance) {
-        NumericVector  psiStem1 = sFunctionBelow["psiStem"];
-        Stem1PsiVEC[c] = psiStem1[0];
-        StemSympPsiVEC[c] = psiStem1[0];
-        NumericVector LeafPsi = sFunctionBelow["psiLeaf"];
-        LeafPsiVEC[c] = LeafPsi[0];
-        LeafSympPsiVEC[c] = LeafPsi[0];
-      } else {
-        NumericVector  psiStem1 = sFunctionBelow["psiStem1"];
-        Stem1PsiVEC[c] = psiStem1[0];
-        StemSympPsiVEC[c] = psiStem1[0];
-        LeafPsiVEC[c] = Stem1PsiVEC[c];
-        LeafSympPsiVEC[c] = StemSympPsiVEC[c];
-      }
+      NumericVector  psiStem1 = sFunctionBelow["psiStem"];
+      Stem1PsiVEC[c] = psiStem1[0];
+      StemSympPsiVEC[c] = psiStem1[0];
+      NumericVector LeafPsi = sFunctionBelow["psiLeaf"];
+      LeafPsiVEC[c] = LeafPsi[0];
+      LeafSympPsiVEC[c] = LeafPsi[0];
     }
     
     if(LAIlive[c]>0.0) {

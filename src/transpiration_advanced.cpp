@@ -49,7 +49,6 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   int maxNsteps  = numericParams["maxNsteps"];
   double psiTol = numericParams["psiTol"];
   double ETol = numericParams["ETol"];
-  bool capacitance = control["capacitance"];
   String cavitationRefill = control["cavitationRefill"];
   double refillMaximumRate = control["refillMaximumRate"];
   int ntimesteps = control["ndailysteps"];
@@ -502,18 +501,10 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                     VCroot_kmaxc, VGrhizo_kmaxc,
                                     psic, VG_nc, VG_alphac,
                                     sapFluidityDay);
-        if(!capacitance) {
-          hydraulicNetwork[c] = HN;
-          supply[c] = supplyFunctionNetwork(HN,
-                                            0.0, maxNsteps,
-                                            ntrial, psiTol, ETol, 0.001); 
-        } else {
-          HN["PLCstem"] = NumericVector::create(0.0);
-          hydraulicNetwork[c] = HN;
-          supply[c] = supplyFunctionNetworkStem1(HN,
-                                                 0.0, maxNsteps,
-                                                 ntrial, psiTol, ETol, 0.001); 
-        }
+        hydraulicNetwork[c] = HN;
+        supply[c] = supplyFunctionNetwork(HN,
+                                          0.0, maxNsteps,
+                                          ntrial, psiTol, ETol, 0.001); 
       } else if(transpirationMode == "Cochard") {
         hydraulicNetwork[c] = initCochardNetwork(c, LAIphe,
                                                 internalWater, 
@@ -570,18 +561,10 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                     VCroot_kmaxc, VGrhizo_kmaxc,
                                     psic, VG_nc, VG_alphac,
                                     sapFluidityDay);
-        if(!capacitance) {
-          hydraulicNetwork[c] = HN;
-          supply[c] = supplyFunctionNetwork(HN,
-                                            0.0, maxNsteps,
-                                            ntrial, psiTol, ETol, 0.001); 
-        } else {
-          HN["PLCstem"] = NumericVector::create(0.0);
-          hydraulicNetwork[c] = HN;
-          supply[c] = supplyFunctionNetworkStem1(HN,
-                                                 0.0, maxNsteps,
-                                                 ntrial, psiTol, ETol, 0.001); 
-        }
+        hydraulicNetwork[c] = HN;
+        supply[c] = supplyFunctionNetwork(HN,
+                                          0.0, maxNsteps,
+                                          ntrial, psiTol, ETol, 0.001); 
       } else if(transpirationMode == "Cochard") {
         hydraulicNetwork[c] = initCochardNetwork(c, LAIphe,
                                                 internalWater, 

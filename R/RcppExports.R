@@ -1270,11 +1270,6 @@ hydraulics_ECrit <- function(psiUpstream, kxylemmax, c, d, pCrit = 0.001) {
 }
 
 #' @rdname hydraulics_supplyfunctions
-hydraulics_ECapacitance <- function(psi, psiPrev, PLCprev, V, fapo, c, d, pi0, eps, timestep) {
-    .Call(`_medfate_ECapacitance`, psi, psiPrev, PLCprev, V, fapo, c, d, pi0, eps, timestep)
-}
-
-#' @rdname hydraulics_supplyfunctions
 hydraulics_E2psiVanGenuchten <- function(E, psiSoil, krhizomax, n, alpha, psiStep = -0.0001, psiMax = -10.0) {
     .Call(`_medfate_E2psiVanGenuchten`, E, psiSoil, krhizomax, n, alpha, psiStep, psiMax)
 }

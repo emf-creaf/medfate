@@ -70,8 +70,6 @@
 #'       \item{\code{multiLayerBalance [= FALSE]}: Flag to indicate multiple canopy energy balance. If \code{FALSE}, canopy is considered a single layer for energy balance.}
 #'       \item{\code{taper [= TRUE]}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
 #'       \item{\code{maximumStemConductance [= 10]}: Maximum allowed value for the stem maximum hydraulic conductance (in mmol·s-1·m-2·MPa-1). Introduced to avoid excessive hydraulic redistribution caused by species with small size (i.e. very large stem conductance).}
-#'       \item{\code{klatstem [= 0.01]}: Stem symplastic-apoplastic lateral conductance (in mmol·s-1·m-2·MPa-1). Only relevant when \code{capacitance = TRUE}.}
-#'       \item{\code{klatleaf [= 0.01]}: Leaf symplastic-apoplastic lateral conductance (in mmol·s-1·m-2·MPa-1). Only relevant when \code{capacitance = TRUE}.}
 #'       \item{\code{numericParams}: A list with the following elements:
 #'           \itemize{
 #'             \item{\code{maxNsteps [= 400]}: Maximum number of steps in supply function.}
@@ -182,12 +180,10 @@ defaultControl<-function(transpirationMode = "Granier") {
     #spwb with sperry
     ndailysteps = 24,
     nsubsteps = 3600,
-    capacitance = FALSE,
+    capacitance = TRUE,
     taper = TRUE,
     multiLayerBalance = FALSE,
     maximumStemConductance = 10,
-    klatstem = 0.01, # stem symplastic-apoplastic lateral conductance
-    klatleaf = 0.01, # leaf symplastic-apoplastic lateral conductance
     numericParams=list(maxNsteps = 400, ntrial = 200, psiTol = 0.0001, ETol = 0.0000001),
     fracLeafResistance = NA,
     fracRootResistance = 0.4,
