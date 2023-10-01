@@ -8,7 +8,6 @@
 \alias{hydraulics_E2psiXylemUp}
 \alias{hydraulics_EVanGenuchten}
 \alias{hydraulics_ECrit}
-\alias{hydraulics_ECapacitance}
 \alias{hydraulics_E2psiVanGenuchten}
 \alias{hydraulics_E2psiTwoElements}
 \alias{hydraulics_E2psiBelowground}
@@ -47,19 +46,6 @@ hydraulics_E2psiXylemUp(E, psiDownstream, kxylemmax, c, d, psiCav = 0)
 hydraulics_EVanGenuchten(psiRhizo, psiSoil, krhizomax, n, alpha, l = 0.5)
 
 hydraulics_ECrit(psiUpstream, kxylemmax, c, d, pCrit = 0.001)
-
-hydraulics_ECapacitance(
-  psi,
-  psiPrev,
-  PLCprev,
-  V,
-  fapo,
-  c,
-  d,
-  pi0,
-  eps,
-  timestep
-)
 
 hydraulics_E2psiVanGenuchten(
   E,
@@ -255,22 +241,6 @@ hydraulics_supplyFunctionPlot(
 
 \item{pCrit}{Critical water potential (in MPa).}
 
-\item{psi}{Water potential (in MPa).}
-
-\item{psiPrev}{Water potential (in MPa) in the previous time step.}
-
-\item{PLCprev}{Previous proportion of loss conductance [0-1].}
-
-\item{V}{Capacity of the compartment per leaf area (in L/m2).}
-
-\item{fapo}{Apoplastic fraction (proportion) in the segment.}
-
-\item{pi0}{Full turgor osmotic potential (MPa).}
-
-\item{eps}{Bulk modulus of elasticity (MPa).}
-
-\item{timestep}{Time step in seconds.}
-
 \item{psiStep}{Water potential precision (in MPa).}
 
 \item{psiMax}{Minimum (maximum in absolute value) water potential to be considered (in MPa).}
@@ -319,6 +289,22 @@ hydraulics_supplyFunctionPlot(
 \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
 
 \item{ylim}{Graphical parameter to override function defaults.}
+
+\item{psi}{Water potential (in MPa).}
+
+\item{psiPrev}{Water potential (in MPa) in the previous time step.}
+
+\item{PLCprev}{Previous proportion of loss conductance [0-1].}
+
+\item{V}{Capacity of the compartment per leaf area (in L/m2).}
+
+\item{fapo}{Apoplastic fraction (proportion) in the segment.}
+
+\item{pi0}{Full turgor osmotic potential (MPa).}
+
+\item{eps}{Bulk modulus of elasticity (MPa).}
+
+\item{timestep}{Time step in seconds.}
 }
 \value{
 Values returned for each function are:

@@ -54,24 +54,6 @@ List E2psiBelowground(double E, List hydraulicNetwork,
 
 List E2psiAboveground(double E, double psiRootCrown, List hydraulicNetwork);
 
-List E2psiAbovegroundCapacitance(double E, double psiRootCrown, 
-                                 NumericVector psiStemPrev, NumericVector PLCstem,
-                                 double psiLeafPrev, 
-                                 double kstemmax, double stemc, double stemd,
-                                 double kleafmax, double leafc, double leafd,
-                                 double Vsapwood, double stemfapo, double stempi0, double stemeps,
-                                 double Vleaf, double leaffapo, double leafpi0, double leafeps,
-                                 double tstep = 3600.0);
-
-List E2psiAbovegroundCapacitanceDisconnected(double E,                           
-                                             NumericVector psiStemPrev, NumericVector PLCstem, NumericVector RWCsympstemPrev, 
-                                             double psiLeafPrev, double RWCsympleafPrev,
-                                             double kstemmax, double stemc, double stemd,
-                                             double kleafmax, double leafc, double leafd,
-                                             double Vsapwood, double stemfapo, double stempi0, double stemeps,
-                                             double Vleaf, double leaffapo, double leafpi0, double leafeps,
-                                             double klat,
-                                             double tstep = 3600.0);
 
 List E2psiFineRootLeaf(double E, double psiFineRoot, 
                        List hydraulicNetwork);
@@ -86,33 +68,9 @@ List E2psiNetwork(double E, List hydraulicNetwork,
                   int ntrial = 10,
                   double psiTol = 0.0001, double ETol = 0.0001);
 
-List E2psiNetworkCapacitance(double E, NumericVector psiSoil, 
-                             NumericVector psiStemPrev, NumericVector PLCstem,
-                             double psiLeafPrev, 
-                             NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
-                             NumericVector krootmax, double rootc, double rootd, 
-                             double kstemmax, double stemc, double stemd,
-                             double kleafmax, double leafc, double leafd,
-                             double Vsapwood, double stemfapo, double stempi0, double stemeps,
-                             double Vleaf, double leaffapo, double leafpi0, double leafeps,
-                             double tstep = 3600.0,
-                             NumericVector psiIni = NumericVector::create(0),
-                             int ntrial = 10, 
-                             double psiTol = 0.0001, double ETol = 0.0001);
-
-
 
 List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCrown, 
                                List hydraulicNetwork);
-
-List supplyFunctionAbovegroundCapacitance(NumericVector Erootcrown, NumericVector psiRootCrown,
-                                          NumericVector psiStemPrev, NumericVector PLCstemPrev,
-                                          double psiLeafPrev, 
-                                          double kstemmax, double stemc, double stemd,
-                                          double kleafmax, double leafc, double leafd,
-                                          double Vsapwood, double stemfapo, double stempi0, double stemeps,
-                                          double Vleaf, double leaffapo, double leafpi0, double leafeps,
-                                          double tstep = 3600.0);
 
 
 List supplyFunctionBelowground(List hydraulicNetwork,
@@ -134,17 +92,3 @@ List supplyFunctionNetwork(List hydraulicNetwork,
                            double minFlow = 0.0, int maxNsteps=400, 
                            int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001,
                            double pCrit = 0.001);
-
-List supplyFunctionNetworkCapacitance(NumericVector psiSoil, 
-                                      NumericVector psiStemPrev, NumericVector PLCstemPrev,
-                                      double psiLeafPrev, 
-                                      NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
-                                      NumericVector krootmax, double rootc, double rootd, 
-                                      double kstemmax, double stemc, double stemd,
-                                      double kleafmax, double leafc, double leafd,
-                                      double Vsapwood, double stemfapo, double stempi0, double stemeps,
-                                      double Vleaf, double leaffapo, double leafpi0, double leafeps,
-                                      double tstep = 3600.0,
-                                      double minFlow = 0.0, int maxNsteps=400, 
-                                      int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001,
-                                      double pCrit = 0.001);

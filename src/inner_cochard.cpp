@@ -643,13 +643,13 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   String cavitationRefill = control["cavitationRefill"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
-  // bool capacitance = control["capacitance"];
-  // if(!capacitance) {
-  //   opt["CLapo"] = 0.0;
-  //   opt["CTapo"] = 0.0;
-  //   opt["Lsym"] = 0.0;
-  //   opt["Ssym"] = 0.0;
-  // }
+  bool capacitance = control["capacitance"];
+  if(!capacitance) {
+     opt["CLapo"] = 0.0;
+     opt["CTapo"] = 0.0;
+     opt["Lsym"] = 0.0;
+     opt["Ssym"] = 0.0;
+  }
   
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   int numCohorts = cohorts.nrow();
