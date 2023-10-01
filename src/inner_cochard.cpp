@@ -199,7 +199,7 @@ List initCochardNetwork(int c, NumericVector LAIphe,
                        DataFrame paramsAnatomy, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
                        NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
                        NumericVector PsiSoil, NumericVector VG_n, NumericVector VG_alpha,
-                       double sapFluidityDay = 1.0) {
+                       double sapFluidityDay = 1.0, List control = NULL) {
   //Root distribution input
   NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
   NumericVector Elim = Rcpp::as<Rcpp::NumericVector>(internalWater["Elim"]);
@@ -243,13 +243,15 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   //Params
   List params = List::create();
   
-  // CONSTANTS TO BE REVISED
-  params.push_back(37.5, "TPhase_gmin"); 
-  params.push_back(1.2, "Q10_1_gmin"); 
-  params.push_back(4.8, "Q10_2_gmin"); 
-  params.push_back(0.003, "JarvisPAR"); 
-  params.push_back(150.0, "gCrown0"); //Can it be estimated ?
-  params.push_back(0.8, "fTRBToLeaf"); //ratio of bark area to leaf area
+  // CONSTANTS (Control variables)
+  params.push_back(control["TPhase_gmin"], "TPhase_gmin"); 
+  params.push_back(control["Q10_1_gmin"], "Q10_1_gmin"); 
+  params.push_back(control["Q10_2_gmin"], "Q10_2_gmin"); 
+  params.push_back(control["JarvisPAR"], "JarvisPAR"); 
+  params.push_back(((double)control["gCrown0"])*1000.0, "gCrown0"); //from mol to mmol
+  params.push_back(control["fTRBToLeaf"], "fTRBToLeaf"); //ratio of bark area to leaf area
+  params.push_back(control["C_SApoInit"], "C_SApoInit"); //Maximum capacitance of the stem apoplasm
+  params.push_back(control["C_LApoInit"], "C_LApoInit"); //Maximum capacitance of the leaf apoplasm
   
   params.push_back(Gs_slope[c], "slope_gs");
   params.push_back(Gs_P50[c], "P50_gs");
@@ -275,9 +277,6 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   params.push_back(StemPI0[c], "PiFullTurgor_Stem"); 
   params.push_back(StemEPS[c], "epsilonSym_Stem"); 
   
-  // CONSTANTS TO BE REVISED
-  params.push_back(2e-05, "C_SApoInit"); //Maximum capacitance of the stem apoplasm
-  params.push_back(1e-05, "C_LApoInit"); //Maximum capacitance of the leaf apoplasm
 
   network.push_back(params, "params");
   
@@ -303,7 +302,7 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   //Conductances (mmol m-2 MPa-1 s-1)
   network.push_back(NA_REAL, "k_Plant"); //Whole-plant conductance  = Plant_kmax
   network.push_back(NA_REAL, "k_SLApo"); //Conductance from trunk apoplasm to leaf apoplasm = VCstem_kmax
-  network.push_back(sapFluidityDay*0.26, "k_SSym"); //Conductance from stem apoplasm to stem symplasm (CONTROL PARAMETER?)
+  network.push_back(sapFluidityDay*((double)control["k_SSym"]), "k_SSym"); //Conductance from stem apoplasm to stem symplasm (CONTROL PARAMETER?)
   network.push_back(sapFluidityDay*VCleaf_kmax[c], "k_LSym"); //Conductance from leaf apoplasm to leaf symplasm = VCleaf_kmax
   NumericVector k_RSApo(VGrhizo_kmax.size(), NA_REAL);
   network.push_back(k_RSApo, "k_RSApo"); //Conductance from rhizosphere surface to root crown?
@@ -381,6 +380,7 @@ List initCochardNetworks(List x) {
   DataFrame paramsTranspiration = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
   
+  List control = x["control"];
   List soil = x["soil"];
   NumericVector psiSoil = psi(soil, "VG");
   NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);
@@ -393,7 +393,8 @@ List initCochardNetworks(List x) {
                                      internalWater, 
                                      paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                      VCroot_kmax(c,_), VGrhizo_kmax(c,_),
-                                     psiSoil, VG_n, VG_alpha);
+                                     psiSoil, VG_n, VG_alpha, 
+                                     1.0, control);
   }
   networks.attr("names") = above.attr("row.names");
   return(networks);
