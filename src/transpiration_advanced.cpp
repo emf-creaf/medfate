@@ -511,7 +511,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                                 paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                                 VCroot_kmax(c,_), VGrhizo_kmax(c,_),
                                                 psic, VG_nc, VG_alphac,
-                                                sapFluidityDay);
+                                                sapFluidityDay, control);
       }
     } else {
       //Determine connected layers (non-zero fine root abundance)
@@ -571,7 +571,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                                 paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                                 VCroot_kmaxc, VGrhizo_kmaxc,
                                                 psic, VG_nc, VG_alphac,
-                                                sapFluidityDay);
+                                                sapFluidityDay, control);
       }
     }
   }

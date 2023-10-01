@@ -56,20 +56,28 @@
 #'             \item{"total" - instantaneous complete refilling.}
 #'           }
 #'       }
+#'       \item{\code{refillMaximumRate [= 0.05]}: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).}
 #'     }
-#'   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Granier"}):
+#'   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Granier"} only):
 #'     \itemize{
 #'       \item{\code{hydraulicRedistributionFraction [= 0.1]}: Fraction of plant transpiration corresponding to hydraulic redistribution.}
 #'     }
-#'   
 #'   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Sperry"} or \code{traspirationMode = "Cochard"}):
 #'     \itemize{
 #'       \item{\code{ndailysteps [= 24]}: Number of steps into which each day is divided for determination of stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).}
 #'       \item{\code{nsubsteps [= 3600]}: Number of substeps into which each step is divided for multi-layer canopy energy balance solving.}
-#'       \item{\code{capacitance [= FALSE]}: Whether the effect of plant water compartments is considered in simulations.}
 #'       \item{\code{multiLayerBalance [= FALSE]}: Flag to indicate multiple canopy energy balance. If \code{FALSE}, canopy is considered a single layer for energy balance.}
 #'       \item{\code{taper [= TRUE]}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
 #'       \item{\code{maximumStemConductance [= 10]}: Maximum allowed value for the stem maximum hydraulic conductance (in mmol·s-1·m-2·MPa-1). Introduced to avoid excessive hydraulic redistribution caused by species with small size (i.e. very large stem conductance).}
+#'       \item{\code{thermalCapacityLAI [= 1000000]}: Thermal canopy capacitance per LAI unit.}
+#'       \item{\code{fracLeafResistance [= NA]}: Fraction of plant total resistance (leaf+stem+root) that corresponds to leaves. This fraction is used if \code{VCleaf_kmax = NA}.}
+#'       \item{\code{fracRootResistance [= 0.40]}: Fraction of plant total resistance (leaf+stem+root) that corresponds to root system.}
+#'       \item{\code{averageFracRhizosphereResistance [= 0.15]}: Fraction to total continuum (leaf+stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).}
+#'       \item{\code{boundaryLayerSize [= 2000]}: Size of the boundary layer (in cm) over the canopy (relevant for multi-layer canopy energy balance).}
+#'     }
+#'   
+#'   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Sperry"} only):
+#'     \itemize{
 #'       \item{\code{numericParams}: A list with the following elements:
 #'           \itemize{
 #'             \item{\code{maxNsteps [= 400]}: Maximum number of steps in supply function.}
@@ -78,13 +86,22 @@
 #'             \item{\code{ETol [= 0.0001]}: Tolerance value for flow.}
 #'           }
 #'       }
-#'       \item{\code{thermalCapacityLAI [= 1000000]}: Thermal canopy capacitance per LAI unit.}
-#'       \item{\code{fracLeafResistance [= NA]}: Fraction of plant total resistance (leaf+stem+root) that corresponds to leaves. This fraction is used if \code{VCleaf_kmax = NA}.}
-#'       \item{\code{fracRootResistance [= 0.40]}: Fraction of plant total resistance (leaf+stem+root) that corresponds to root system.}
-#'       \item{\code{averageFracRhizosphereResistance [= 0.15]}: Fraction to total continuum (leaf+stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).}
-#'       \item{\code{boundaryLayerSize [= 2000]}: Size of the boundary layer (in cm) over the canopy (relevant for multi-layer canopy energy balance).}
-#'       \item{\code{refillMaximumRate [= 0.05]}: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).}
 #'     }
+#'     
+#'   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Cochard"} only):
+#'     \itemize{
+#'       \item{\code{capacitance [= TRUE]}: Whether the effect of (symplasmic or apoplasmic) plant water compartments is considered in simulations.}
+#'       \item{\code{C_SApoInit [= 2.0e-5]}: Maximum capacitance of the stem apoplasm (mmol·m-2).}
+#'       \item{\code{C_LApoInit [= 1.0e-5]}: Maximum capacitance of the leaf apoplasm (mmol·m-2).}
+#'       \item{\code{k_SSym [= 0.26]}: Conductance from stem apoplasm to stem symplasm (mmol·s-1·m-2).}
+#'       \item{\code{TPhase_gmin [= 37.5]}: Temperature for transition phase of gmin.}
+#'       \item{\code{Q10_1_gmin [= 1.2]}: Temperature dependance of gmin when T ≤ TPhase.}
+#'       \item{\code{Q10_2_gmin [= 4.8]}: Temperature dependance of gmin when T > TPhase.}
+#'       \item{\code{JarvisPAR [= 0.003]}: Parameter regulating the response of stomatal conductance to light (PAR) in the Jarvis model.}
+#'       \item{\code{gCrown0 [= 0.150]}: Reference crown conductance (mol·s-1·m-2).}
+#'       \item{\code{fTRBToLeaf [= 0.8]}: Fraction of surface of bark exposed to air per leaf area.}
+#'     }
+#'     
 #'   \bold{Forest growth} (functions \code{\link{growth}} or \code{\link{growth_day}}):
 #'     \itemize{
 #'       \item{\code{subdailyCarbonBalance [= FALSE]}: Boolean flag to indicate that labile carbon balance should be conducted at sub-daily steps (applies only to transpirationMode = "Sperry").}
@@ -177,20 +194,33 @@ defaultControl<-function(transpirationMode = "Granier") {
     #spwb with granier
     hydraulicRedistributionFraction = 0.1,
     
-    #spwb with sperry
+    #spwb with sperry/cochard
     ndailysteps = 24,
     nsubsteps = 3600,
-    capacitance = TRUE,
     taper = TRUE,
     multiLayerBalance = FALSE,
     maximumStemConductance = 10,
-    numericParams=list(maxNsteps = 400, ntrial = 200, psiTol = 0.0001, ETol = 0.0000001),
     fracLeafResistance = NA,
     fracRootResistance = 0.4,
     averageFracRhizosphereResistance = 0.15,
     thermalCapacityLAI = 1000000,
     boundaryLayerSize = 2000,
     refillMaximumRate = 0.05,
+
+    #spwb with sperry
+    numericParams=list(maxNsteps = 400, ntrial = 200, psiTol = 0.0001, ETol = 0.0000001),
+    
+    #spwb with cochard
+    capacitance = TRUE,
+    C_SApoInit = 2.0e-05,
+    C_LApoInit = 1.0e-05,
+    k_SSym = 0.26,
+    TPhase_gmin = 37.5,
+    Q10_1_gmin = 1.2,
+    Q10_2_gmin = 4.8,
+    JarvisPAR = 0.003,
+    fTRBToLeaf = 0.8,
+    gCrown0 = 0.150,
     
     # growth/mortality
     subdailyCarbonBalance = FALSE,
