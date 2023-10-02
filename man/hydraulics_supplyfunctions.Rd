@@ -163,7 +163,7 @@ hydraulics_supplyFunctionPlot(
 
 \item{c, d}{Parameters of the Weibull function (generic xylem vulnerability curve).}
 
-\item{allowNegativeFlux}{A boolean to indicate wether negative flux (i.e. from plant to soil) is allowed.}
+\item{allowNegativeFlux}{A boolean to indicate whether negative flux (i.e. from plant to soil) is allowed.}
 
 \item{psiCav}{Minimum water potential (in MPa) experienced (for irreversible cavitation).}
 
@@ -221,14 +221,6 @@ hydraulics_supplyFunctionPlot(
 \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
 
 \item{ylim}{Graphical parameter to override function defaults.}
-
-\item{psiFineRoot}{Water potential (in MPa) inside fine roots.}
-
-\item{psiTol}{Precision for water potential estimates (in MPa).}
-
-\item{ETol}{Precision for water flow per surface unit.}
-
-\item{ntrial}{Maximum number of steps in Newton-Raphson optimization.}
 }
 \value{
 Values returned for each function are:

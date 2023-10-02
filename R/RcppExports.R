@@ -1166,24 +1166,20 @@ hydraulics_psi2Weibull <- function(psi50, psi88 = NA_real_, psi12 = NA_real_) {
 #' @param minFlow Minimum flow in supply function.
 #' @param psiPlant Plant water potential (in MPa).
 #' @param hydraulicNetwork List with the hydraulic characteristics of nodes in the hydraulic network.
-#' @param psiFineRoot Water potential (in MPa) inside fine roots.
 #' @param psiSoil Soil water potential (in MPa). A scalar or a vector depending on the function.
 #' @param psiRhizo Soil water potential (in MPa) in the rhizosphere (root surface).
 #' @param psiRootCrown Soil water potential (in MPa) at the root crown.
 #' @param psiStep Water potential precision (in MPa).
-#' @param psiTol Precision for water potential estimates (in MPa).
 #' @param psiIni Vector of initial water potential values (in MPa).
 #' @param psiMax Minimum (maximum in absolute value) water potential to be considered (in MPa).
 #' @param pCrit Critical water potential (in MPa).
 #' @param dE Increment of flow per surface unit.
-#' @param ETol Precision for water flow per surface unit.
 #' @param c,d Parameters of the Weibull function (generic xylem vulnerability curve).
 #' @param stemc,stemd Parameters of the Weibull function for stems (stem xylem vulnerability curve).
 #' @param leafc,leafd Parameters of the Weibull function for leaves (leaf vulnerability curve).
 #' @param n,alpha,l Parameters of the Van Genuchten function (rhizosphere vulnerability curve).
-#' @param allowNegativeFlux A boolean to indicate wether negative flux (i.e. from plant to soil) is allowed.
+#' @param allowNegativeFlux A boolean to indicate whether negative flux (i.e. from plant to soil) is allowed.
 #' @param maxNsteps Maximum number of steps in the construction of supply functions.
-#' @param ntrial Maximum number of steps in Newton-Raphson optimization.
 #' 
 #' @details 
 #' Function \code{hydraulics_supplyFunctionPlot} draws a plot of the supply function for the given \code{soil} object and network properties of each plant cohort in \code{x}. Function \code{hydraulics_vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.
