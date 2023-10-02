@@ -12,16 +12,12 @@
 \alias{hydraulics_E2psiTwoElements}
 \alias{hydraulics_E2psiBelowground}
 \alias{hydraulics_E2psiAboveground}
-\alias{hydraulics_E2psiFineRootLeaf}
-\alias{hydraulics_E2psiNetworkStem1}
 \alias{hydraulics_E2psiNetwork}
 \alias{hydraulics_supplyFunctionOneXylem}
 \alias{hydraulics_supplyFunctionTwoElements}
 \alias{hydraulics_supplyFunctionThreeElements}
 \alias{hydraulics_supplyFunctionBelowground}
 \alias{hydraulics_supplyFunctionAboveground}
-\alias{hydraulics_supplyFunctionFineRootLeaf}
-\alias{hydraulics_supplyFunctionNetworkStem1}
 \alias{hydraulics_supplyFunctionNetwork}
 \alias{hydraulics_regulatedPsiXylem}
 \alias{hydraulics_regulatedPsiTwoElements}
@@ -81,17 +77,6 @@ hydraulics_E2psiBelowground(
 )
 
 hydraulics_E2psiAboveground(E, psiRootCrown, hydraulicNetwork)
-
-hydraulics_E2psiFineRootLeaf(E, psiFineRoot, hydraulicNetwork)
-
-hydraulics_E2psiNetworkStem1(
-  E,
-  hydraulicNetwork,
-  psiIni = as.numeric(c(0)),
-  ntrial = 10L,
-  psiTol = 1e-04,
-  ETol = 1e-04
-)
 
 hydraulics_E2psiNetwork(
   E,
@@ -158,25 +143,6 @@ hydraulics_supplyFunctionAboveground(
   Erootcrown,
   psiRootCrown,
   hydraulicNetwork
-)
-
-hydraulics_supplyFunctionFineRootLeaf(
-  psiFineRoot,
-  hydraulicNetwork,
-  minFlow = 0,
-  maxNsteps = 400L,
-  ETol = 1e-04,
-  pCrit = 0.001
-)
-
-hydraulics_supplyFunctionNetworkStem1(
-  hydraulicNetwork,
-  minFlow = 0,
-  maxNsteps = 400L,
-  ntrial = 200L,
-  psiTol = 1e-04,
-  ETol = 1e-04,
-  pCrit = 0.001
 )
 
 hydraulics_supplyFunctionNetwork(
@@ -257,8 +223,6 @@ hydraulics_supplyFunctionPlot(
 
 \item{psiRootCrown}{Soil water potential (in MPa) at the root crown.}
 
-\item{psiFineRoot}{Water potential (in MPa) inside fine roots.}
-
 \item{v}{Proportion of fine roots within each soil layer.}
 
 \item{kstemmax}{Maximum stem xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
@@ -290,21 +254,7 @@ hydraulics_supplyFunctionPlot(
 
 \item{ylim}{Graphical parameter to override function defaults.}
 
-\item{psi}{Water potential (in MPa).}
-
-\item{psiPrev}{Water potential (in MPa) in the previous time step.}
-
-\item{PLCprev}{Previous proportion of loss conductance [0-1].}
-
-\item{V}{Capacity of the compartment per leaf area (in L/m2).}
-
-\item{fapo}{Apoplastic fraction (proportion) in the segment.}
-
-\item{pi0}{Full turgor osmotic potential (MPa).}
-
-\item{eps}{Bulk modulus of elasticity (MPa).}
-
-\item{timestep}{Time step in seconds.}
+\item{psiFineRoot}{Water potential (in MPa) inside fine roots.}
 }
 \value{
 Values returned for each function are:
