@@ -48,17 +48,13 @@ double E2psiXylemUp(double E, double psiDownstream, double kxylemmax, double c, 
 
 
 List E2psiBelowground(double E, List hydraulicNetwork,
-                      NumericVector psiIni = NumericVector::create(0),
-                      int ntrial = 10,
-                      double psiTol = 0.0001, double ETol = 0.0001);
+                      NumericVector psiIni = NumericVector::create(0));
 
 List E2psiAboveground(double E, double psiRootCrown, List hydraulicNetwork);
 
 
 List E2psiNetwork(double E, List hydraulicNetwork,
-                  NumericVector psiIni = NumericVector::create(0),
-                  int ntrial = 10,
-                  double psiTol = 0.0001, double ETol = 0.0001);
+                  NumericVector psiIni = NumericVector::create(0));
 
 
 List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCrown, 
@@ -66,11 +62,9 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCr
 
 
 List supplyFunctionBelowground(List hydraulicNetwork,
-                              double minFlow = 0.0, int maxNsteps=400,
-                              int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001,
+                              double minFlow = 0.0,
                               double pCrit = 0.001);
 
 List supplyFunctionNetwork(List hydraulicNetwork,
-                           double minFlow = 0.0, int maxNsteps=400, 
-                           int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001,
+                           double minFlow = 0.0,
                            double pCrit = 0.001);

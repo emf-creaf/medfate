@@ -492,20 +492,13 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       
       //Build supply function networks (Sperry transpiration mode)
       if(transpirationMode=="Sperry") {
-        List numericParams = control["numericParams"];
-        int ntrial = numericParams["ntrial"];
-        int maxNsteps  = numericParams["maxNsteps"];
-        double psiTol = numericParams["psiTol"];
-        double ETol = numericParams["ETol"];
         List HN = initSperryNetwork(c,
                                     internalWater, paramsTranspiration, paramsWaterStorage,
                                     VCroot_kmaxc, VGrhizo_kmaxc,
                                     psic, VG_nc, VG_alphac,
-                                    sapFluidityDay);
+                                    sapFluidityDay, control);
         hydraulicNetwork[c] = HN;
-        supply[c] = supplyFunctionNetwork(HN,
-                                          0.0, maxNsteps,
-                                          ntrial, psiTol, ETol, 0.001); 
+        supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
       } else if(transpirationMode == "Cochard") {
         hydraulicNetwork[c] = initCochardNetwork(c, LAIphe,
                                                 internalWater, 
@@ -557,20 +550,13 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       }
       //Build supply function networks (Sperry transpiration mode)
       if(transpirationMode == "Sperry") {
-        List numericParams = control["numericParams"];
-        int ntrial = numericParams["ntrial"];
-        int maxNsteps  = numericParams["maxNsteps"];
-        double psiTol = numericParams["psiTol"];
-        double ETol = numericParams["ETol"];
         List HN = initSperryNetwork(c,
                                     internalWater, paramsTranspiration, paramsWaterStorage,
                                     VCroot_kmaxc, VGrhizo_kmaxc,
                                     psic, VG_nc, VG_alphac,
-                                    sapFluidityDay);
+                                    sapFluidityDay, control);
         hydraulicNetwork[c] = HN;
-        supply[c] = supplyFunctionNetwork(HN,
-                                          0.0, maxNsteps,
-                                          ntrial, psiTol, ETol, 0.001); 
+        supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
       } else if(transpirationMode == "Cochard") {
         hydraulicNetwork[c] = initCochardNetwork(c, LAIphe,
                                                 internalWater, 

@@ -1272,8 +1272,8 @@ hydraulics_E2psiTwoElements <- function(E, psiSoil, krhizomax, kxylemmax, n, alp
 }
 
 #' @rdname hydraulics_supplyfunctions
-hydraulics_E2psiBelowground <- function(E, hydraulicNetwork, psiIni = as.numeric( c(0)), ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
-    .Call(`_medfate_E2psiBelowground`, E, hydraulicNetwork, psiIni, ntrial, psiTol, ETol)
+hydraulics_E2psiBelowground <- function(E, hydraulicNetwork, psiIni = as.numeric( c(0))) {
+    .Call(`_medfate_E2psiBelowground`, E, hydraulicNetwork, psiIni)
 }
 
 #' @rdname hydraulics_supplyfunctions
@@ -1282,8 +1282,8 @@ hydraulics_E2psiAboveground <- function(E, psiRootCrown, hydraulicNetwork) {
 }
 
 #' @rdname hydraulics_supplyfunctions
-hydraulics_E2psiNetwork <- function(E, hydraulicNetwork, psiIni = as.numeric( c(0)), ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
-    .Call(`_medfate_E2psiNetwork`, E, hydraulicNetwork, psiIni, ntrial, psiTol, ETol)
+hydraulics_E2psiNetwork <- function(E, hydraulicNetwork, psiIni = as.numeric( c(0))) {
+    .Call(`_medfate_E2psiNetwork`, E, hydraulicNetwork, psiIni)
 }
 
 #' @rdname hydraulics_supplyfunctions
@@ -1302,8 +1302,8 @@ hydraulics_supplyFunctionThreeElements <- function(Emax, psiSoil, krhizomax, kxy
 }
 
 #' @rdname hydraulics_supplyfunctions
-hydraulics_supplyFunctionBelowground <- function(hydraulicNetwork, minFlow = 0.0, maxNsteps = 400L, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001) {
-    .Call(`_medfate_supplyFunctionBelowground`, hydraulicNetwork, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit)
+hydraulics_supplyFunctionBelowground <- function(hydraulicNetwork, minFlow = 0.0, pCrit = 0.001) {
+    .Call(`_medfate_supplyFunctionBelowground`, hydraulicNetwork, minFlow, pCrit)
 }
 
 #' @rdname hydraulics_supplyfunctions
@@ -1312,8 +1312,8 @@ hydraulics_supplyFunctionAboveground <- function(Erootcrown, psiRootCrown, hydra
 }
 
 #' @rdname hydraulics_supplyfunctions
-hydraulics_supplyFunctionNetwork <- function(hydraulicNetwork, minFlow = 0.0, maxNsteps = 400L, ntrial = 200L, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001) {
-    .Call(`_medfate_supplyFunctionNetwork`, hydraulicNetwork, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit)
+hydraulics_supplyFunctionNetwork <- function(hydraulicNetwork, minFlow = 0.0, pCrit = 0.001) {
+    .Call(`_medfate_supplyFunctionNetwork`, hydraulicNetwork, minFlow, pCrit)
 }
 
 #' @rdname hydraulics_supplyfunctions

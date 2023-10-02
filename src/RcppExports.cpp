@@ -1496,18 +1496,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // E2psiBelowground
-List E2psiBelowground(double E, List hydraulicNetwork, NumericVector psiIni, int ntrial, double psiTol, double ETol);
-RcppExport SEXP _medfate_E2psiBelowground(SEXP ESEXP, SEXP hydraulicNetworkSEXP, SEXP psiIniSEXP, SEXP ntrialSEXP, SEXP psiTolSEXP, SEXP ETolSEXP) {
+List E2psiBelowground(double E, List hydraulicNetwork, NumericVector psiIni);
+RcppExport SEXP _medfate_E2psiBelowground(SEXP ESEXP, SEXP hydraulicNetworkSEXP, SEXP psiIniSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type E(ESEXP);
     Rcpp::traits::input_parameter< List >::type hydraulicNetwork(hydraulicNetworkSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type psiIni(psiIniSEXP);
-    Rcpp::traits::input_parameter< int >::type ntrial(ntrialSEXP);
-    Rcpp::traits::input_parameter< double >::type psiTol(psiTolSEXP);
-    Rcpp::traits::input_parameter< double >::type ETol(ETolSEXP);
-    rcpp_result_gen = Rcpp::wrap(E2psiBelowground(E, hydraulicNetwork, psiIni, ntrial, psiTol, ETol));
+    rcpp_result_gen = Rcpp::wrap(E2psiBelowground(E, hydraulicNetwork, psiIni));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1525,18 +1522,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // E2psiNetwork
-List E2psiNetwork(double E, List hydraulicNetwork, NumericVector psiIni, int ntrial, double psiTol, double ETol);
-RcppExport SEXP _medfate_E2psiNetwork(SEXP ESEXP, SEXP hydraulicNetworkSEXP, SEXP psiIniSEXP, SEXP ntrialSEXP, SEXP psiTolSEXP, SEXP ETolSEXP) {
+List E2psiNetwork(double E, List hydraulicNetwork, NumericVector psiIni);
+RcppExport SEXP _medfate_E2psiNetwork(SEXP ESEXP, SEXP hydraulicNetworkSEXP, SEXP psiIniSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type E(ESEXP);
     Rcpp::traits::input_parameter< List >::type hydraulicNetwork(hydraulicNetworkSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type psiIni(psiIniSEXP);
-    Rcpp::traits::input_parameter< int >::type ntrial(ntrialSEXP);
-    Rcpp::traits::input_parameter< double >::type psiTol(psiTolSEXP);
-    Rcpp::traits::input_parameter< double >::type ETol(ETolSEXP);
-    rcpp_result_gen = Rcpp::wrap(E2psiNetwork(E, hydraulicNetwork, psiIni, ntrial, psiTol, ETol));
+    rcpp_result_gen = Rcpp::wrap(E2psiNetwork(E, hydraulicNetwork, psiIni));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1604,19 +1598,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // supplyFunctionBelowground
-List supplyFunctionBelowground(List hydraulicNetwork, double minFlow, int maxNsteps, int ntrial, double psiTol, double ETol, double pCrit);
-RcppExport SEXP _medfate_supplyFunctionBelowground(SEXP hydraulicNetworkSEXP, SEXP minFlowSEXP, SEXP maxNstepsSEXP, SEXP ntrialSEXP, SEXP psiTolSEXP, SEXP ETolSEXP, SEXP pCritSEXP) {
+List supplyFunctionBelowground(List hydraulicNetwork, double minFlow, double pCrit);
+RcppExport SEXP _medfate_supplyFunctionBelowground(SEXP hydraulicNetworkSEXP, SEXP minFlowSEXP, SEXP pCritSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type hydraulicNetwork(hydraulicNetworkSEXP);
     Rcpp::traits::input_parameter< double >::type minFlow(minFlowSEXP);
-    Rcpp::traits::input_parameter< int >::type maxNsteps(maxNstepsSEXP);
-    Rcpp::traits::input_parameter< int >::type ntrial(ntrialSEXP);
-    Rcpp::traits::input_parameter< double >::type psiTol(psiTolSEXP);
-    Rcpp::traits::input_parameter< double >::type ETol(ETolSEXP);
     Rcpp::traits::input_parameter< double >::type pCrit(pCritSEXP);
-    rcpp_result_gen = Rcpp::wrap(supplyFunctionBelowground(hydraulicNetwork, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit));
+    rcpp_result_gen = Rcpp::wrap(supplyFunctionBelowground(hydraulicNetwork, minFlow, pCrit));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1634,19 +1624,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // supplyFunctionNetwork
-List supplyFunctionNetwork(List hydraulicNetwork, double minFlow, int maxNsteps, int ntrial, double psiTol, double ETol, double pCrit);
-RcppExport SEXP _medfate_supplyFunctionNetwork(SEXP hydraulicNetworkSEXP, SEXP minFlowSEXP, SEXP maxNstepsSEXP, SEXP ntrialSEXP, SEXP psiTolSEXP, SEXP ETolSEXP, SEXP pCritSEXP) {
+List supplyFunctionNetwork(List hydraulicNetwork, double minFlow, double pCrit);
+RcppExport SEXP _medfate_supplyFunctionNetwork(SEXP hydraulicNetworkSEXP, SEXP minFlowSEXP, SEXP pCritSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type hydraulicNetwork(hydraulicNetworkSEXP);
     Rcpp::traits::input_parameter< double >::type minFlow(minFlowSEXP);
-    Rcpp::traits::input_parameter< int >::type maxNsteps(maxNstepsSEXP);
-    Rcpp::traits::input_parameter< int >::type ntrial(ntrialSEXP);
-    Rcpp::traits::input_parameter< double >::type psiTol(psiTolSEXP);
-    Rcpp::traits::input_parameter< double >::type ETol(ETolSEXP);
     Rcpp::traits::input_parameter< double >::type pCrit(pCritSEXP);
-    rcpp_result_gen = Rcpp::wrap(supplyFunctionNetwork(hydraulicNetwork, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit));
+    rcpp_result_gen = Rcpp::wrap(supplyFunctionNetwork(hydraulicNetwork, minFlow, pCrit));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4974,15 +4960,15 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_ECrit", (DL_FUNC) &_medfate_ECrit, 5},
     {"_medfate_E2psiVanGenuchten", (DL_FUNC) &_medfate_E2psiVanGenuchten, 7},
     {"_medfate_E2psiTwoElements", (DL_FUNC) &_medfate_E2psiTwoElements, 11},
-    {"_medfate_E2psiBelowground", (DL_FUNC) &_medfate_E2psiBelowground, 6},
+    {"_medfate_E2psiBelowground", (DL_FUNC) &_medfate_E2psiBelowground, 3},
     {"_medfate_E2psiAboveground", (DL_FUNC) &_medfate_E2psiAboveground, 3},
-    {"_medfate_E2psiNetwork", (DL_FUNC) &_medfate_E2psiNetwork, 6},
+    {"_medfate_E2psiNetwork", (DL_FUNC) &_medfate_E2psiNetwork, 3},
     {"_medfate_supplyFunctionOneXylem", (DL_FUNC) &_medfate_supplyFunctionOneXylem, 8},
     {"_medfate_supplyFunctionTwoElements", (DL_FUNC) &_medfate_supplyFunctionTwoElements, 11},
     {"_medfate_supplyFunctionThreeElements", (DL_FUNC) &_medfate_supplyFunctionThreeElements, 14},
-    {"_medfate_supplyFunctionBelowground", (DL_FUNC) &_medfate_supplyFunctionBelowground, 7},
+    {"_medfate_supplyFunctionBelowground", (DL_FUNC) &_medfate_supplyFunctionBelowground, 3},
     {"_medfate_supplyFunctionAboveground", (DL_FUNC) &_medfate_supplyFunctionAboveground, 3},
-    {"_medfate_supplyFunctionNetwork", (DL_FUNC) &_medfate_supplyFunctionNetwork, 7},
+    {"_medfate_supplyFunctionNetwork", (DL_FUNC) &_medfate_supplyFunctionNetwork, 3},
     {"_medfate_regulatedPsiXylem", (DL_FUNC) &_medfate_regulatedPsiXylem, 6},
     {"_medfate_regulatedPsiTwoElements", (DL_FUNC) &_medfate_regulatedPsiTwoElements, 10},
     {"_medfate_maximumSoilPlantConductance", (DL_FUNC) &_medfate_maximumSoilPlantConductance, 4},

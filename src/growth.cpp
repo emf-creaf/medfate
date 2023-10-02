@@ -488,7 +488,7 @@ List growthDayInner(List x, NumericVector meteovec,
   } else {
     psiApoLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
     if(transpirationMode == "Sperry") {
-      psiApoStem = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem1Psi"]);
+      psiApoStem = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
       psiSympLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
     } else {
       psiApoStem = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
