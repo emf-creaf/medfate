@@ -942,8 +942,7 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
   } else if(transpirationMode =="Sperry") {
     df = DataFrame::create(Named("Einst") = NumericVector(numCohorts, 0.0),
                            Named("RootCrownPsi") = NumericVector(numCohorts, -0.033),
-                           Named("Stem1Psi") = NumericVector(numCohorts, -0.033),
-                           Named("Stem2Psi") = NumericVector(numCohorts, -0.033),
+                           Named("StemPsi") = NumericVector(numCohorts, -0.033),
                            Named("LeafPsi") = NumericVector(numCohorts, -0.033),
                            Named("StemSympPsi") = NumericVector(numCohorts, -0.033),
                            Named("LeafSympPsi") = NumericVector(numCohorts, -0.033),
@@ -1634,8 +1633,7 @@ void resetInputs(List x) {
   if(transpirationMode!="Granier") {
     NumericMatrix RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["RhizoPsi"]);
     NumericVector RootCrownPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
-    NumericVector Stem1Psi = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem1Psi"]);
-    NumericVector Stem2Psi = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem2Psi"]);
+    NumericVector StemPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
     NumericVector StemSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
     NumericVector LeafSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
     NumericVector LeafPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
@@ -1643,8 +1641,7 @@ void resetInputs(List x) {
     for(int i=0;i<LeafPsi.size();i++) {
       Einst[i] = 0.0;
       RootCrownPsi[i] = -0.033;
-      Stem1Psi[i] = -0.033;
-      Stem2Psi[i] = -0.033;
+      StemPsi[i] = -0.033;
       LeafPsi[i] = -0.033;
       LeafSympPsi[i] = -0.033;
       StemSympPsi[i] = -0.033;

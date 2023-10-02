@@ -13,7 +13,7 @@ List initSperryNetwork(int c,
                        DataFrame internalWater, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
                        NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
                        NumericVector psiSoil, NumericVector VG_n, NumericVector VG_alpha,
-                       double sapFluidityDay = 1.0) {
+                       double sapFluidityDay = 1.0, List control = NULL) {
   
   NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_kmax"]);
   NumericVector VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_kmax"]);
@@ -26,13 +26,13 @@ List initSperryNetwork(int c,
   NumericVector VCroot_c = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_c"]);
   NumericVector VCroot_d = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_d"]);
   
-  List HN = List::create(_["psisoil"] = psiSoil,
+  List HN = List::create(_["numericParams"] = control["numericParams"], 
+                         _["psisoil"] = psiSoil,
                          _["krhizomax"] = VGrhizo_kmax,_["nsoil"] = VG_n,_["alphasoil"] = VG_alpha,
                          _["krootmax"] = sapFluidityDay*VCroot_kmax, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
                          _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
                          _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
-                         _["PLCstem"] = NumericVector::create(StemPLCVEC[c],StemPLCVEC[c]),
-                         _["PLCleaf"] = LeafPLCVEC[c]);
+                         _["PLCstem"] = StemPLCVEC[c],_["PLCleaf"] = LeafPLCVEC[c]);
   
   return(HN);
 }
@@ -41,6 +41,8 @@ List initSperryNetwork(int c,
 // [[Rcpp::export("hydraulics_initSperryNetworks")]]
 List initSperryNetworks(List x) {
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  
+  List control = Rcpp::as<Rcpp::List>(x["control"]);
   
   List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
   NumericMatrix VCroot_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
@@ -60,7 +62,8 @@ List initSperryNetworks(List x) {
     networks[c] = initSperryNetwork(c, 
                                     internalWater, paramsTranspiration, paramsWaterStorage,
                                     VCroot_kmax(c,_), VGrhizo_kmax(c,_),
-                                    psiSoil, VG_n, VG_alpha);
+                                    psiSoil, VG_n, VG_alpha, 1.0, 
+                                    control);
   }
   networks.attr("names") = above.attr("row.names");
   return(networks);
@@ -339,11 +342,6 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   String cavitationRefill = control["cavitationRefill"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
-  List numericParams = control["numericParams"];
-  // int ntrial = numericParams["ntrial"];
-  int maxNsteps  = numericParams["maxNsteps"];
-  // double psiTol = numericParams["psiTol"];
-  double ETol = numericParams["ETol"];
 
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   int numCohorts = cohorts.nrow();
@@ -403,8 +401,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
   NumericVector StemPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
   NumericVector LeafPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
-  NumericVector Stem1PsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem1Psi"]);
-  NumericVector Stem2PsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem2Psi"]);
+  NumericVector StemPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
   NumericVector EinstVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
   NumericVector LeafPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
   NumericVector RootCrownPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
@@ -654,9 +651,8 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         NumericMatrix RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(sFunctionBelow["psiRhizo"]);
         
         //Store steady state stem and rootcrown and root surface water potential values
-        NumericMatrix newStemPsi = Rcpp::as<Rcpp::NumericMatrix>(sFunctionAbove["psiStem"]);
-        Stem1PsiVEC[c] = newStemPsi(iPM,0); 
-        Stem2PsiVEC[c] = newStemPsi(iPM,1);
+        NumericVector newStemPsi = Rcpp::as<Rcpp::NumericMatrix>(sFunctionAbove["psiStem"]);
+        StemPsiVEC[c] = newStemPsi[iPM]; 
         for(int lc=0;lc<nlayerscon[c];lc++) {
           ElayersVEC[lc] = ERhizo(iPM,lc)*tstep; //Scale according to the time step
         }
@@ -669,15 +665,15 @@ void innerSperry(List x, List input, List output, int n, double tstep,
                      VCroot_c, VCroot_d,  
                      plantWaterPools);
         
-        StemSympPsiVEC[c] = Stem1PsiVEC[c]; //Stem symplastic compartment coupled with apoplastic compartment
+        StemSympPsiVEC[c] = StemPsiVEC[c]; //Stem symplastic compartment coupled with apoplastic compartment
         LeafSympPsiVEC[c] = LeafPsiVEC[c]; //Leaf symplastic compartment coupled with apoplastic compartment
         
         // Update the leaf and stem PLC
         if(cavitationRefill!="total") {
-          StemPLCVEC[c] = std::max(StemPLCVEC[c], 1.0 - xylemConductance(Stem1PsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
+          StemPLCVEC[c] = std::max(StemPLCVEC[c], 1.0 - xylemConductance(StemPsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
           LeafPLCVEC[c] = std::max(LeafPLCVEC[c], 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c])); 
         } else { //Immediate refilling
-          StemPLCVEC[c] = 1.0 - xylemConductance(Stem1PsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
+          StemPLCVEC[c] = 1.0 - xylemConductance(StemPsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
           LeafPLCVEC[c] = 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c]); 
         }
         
@@ -743,7 +739,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
       NumericVector  psiRootCrown = sFunctionBelow["psiRootCrown"];
       RootCrownPsiVEC[c] = psiRootCrown[0];
       NumericVector  psiStem1 = sFunctionBelow["psiStem"];
-      Stem1PsiVEC[c] = psiStem1[0];
+      StemPsiVEC[c] = psiStem1[0];
       StemSympPsiVEC[c] = psiStem1[0];
       NumericVector LeafPsi = sFunctionBelow["psiLeaf"];
       LeafPsiVEC[c] = LeafPsi[0];
@@ -755,9 +751,9 @@ void innerSperry(List x, List input, List output, int n, double tstep,
       PLC(c,n) = StemPLCVEC[c];
       StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]);
       LeafSympRWCInst(c,n) = symplasticRelativeWaterContent(LeafSympPsiVEC[c], LeafPI0[c], LeafEPS[c]);
-      StemRWCInst(c,n) = StemSympRWCInst(c,n)*(1.0 - StemAF[c]) + apoplasticRelativeWaterContent(Stem1PsiVEC[c], VCstem_c[c], VCstem_d[c])*StemAF[c];
+      StemRWCInst(c,n) = StemSympRWCInst(c,n)*(1.0 - StemAF[c]) + apoplasticRelativeWaterContent(StemPsiVEC[c], VCstem_c[c], VCstem_d[c])*StemAF[c];
       LeafRWCInst(c,n) = LeafSympRWCInst(c,n)*(1.0 - LeafAF[c]) + apoplasticRelativeWaterContent(LeafPsiVEC[c], VCleaf_c[c], VCleaf_d[c])*LeafAF[c];
-      StemPsiInst(c,n) = Stem1PsiVEC[c]; 
+      StemPsiInst(c,n) = StemPsiVEC[c]; 
       LeafPsiInst(c,n) = LeafPsiVEC[c]; //Store instantaneous (average) leaf potential
       RootPsiInst(c,n) = RootCrownPsiVEC[c]; //Store instantaneous root crown potential
       LeafSympPsiInst(c,n) = LeafSympPsiVEC[c];

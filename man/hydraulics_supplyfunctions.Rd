@@ -67,25 +67,11 @@ hydraulics_E2psiTwoElements(
   psiMax = -10
 )
 
-hydraulics_E2psiBelowground(
-  E,
-  hydraulicNetwork,
-  psiIni = as.numeric(c(0)),
-  ntrial = 10L,
-  psiTol = 1e-04,
-  ETol = 1e-04
-)
+hydraulics_E2psiBelowground(E, hydraulicNetwork, psiIni = as.numeric(c(0)))
 
 hydraulics_E2psiAboveground(E, psiRootCrown, hydraulicNetwork)
 
-hydraulics_E2psiNetwork(
-  E,
-  hydraulicNetwork,
-  psiIni = as.numeric(c(0)),
-  ntrial = 10L,
-  psiTol = 1e-04,
-  ETol = 1e-04
-)
+hydraulics_E2psiNetwork(E, hydraulicNetwork, psiIni = as.numeric(c(0)))
 
 hydraulics_supplyFunctionOneXylem(
   psiSoil,
@@ -132,10 +118,6 @@ hydraulics_supplyFunctionThreeElements(
 hydraulics_supplyFunctionBelowground(
   hydraulicNetwork,
   minFlow = 0,
-  maxNsteps = 400L,
-  ntrial = 10L,
-  psiTol = 1e-04,
-  ETol = 1e-04,
   pCrit = 0.001
 )
 
@@ -145,15 +127,7 @@ hydraulics_supplyFunctionAboveground(
   hydraulicNetwork
 )
 
-hydraulics_supplyFunctionNetwork(
-  hydraulicNetwork,
-  minFlow = 0,
-  maxNsteps = 400L,
-  ntrial = 200L,
-  psiTol = 1e-04,
-  ETol = 1e-04,
-  pCrit = 0.001
-)
+hydraulics_supplyFunctionNetwork(hydraulicNetwork, minFlow = 0, pCrit = 0.001)
 
 hydraulics_regulatedPsiXylem(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01)
 
@@ -215,12 +189,6 @@ hydraulics_supplyFunctionPlot(
 
 \item{psiIni}{Vector of initial water potential values (in MPa).}
 
-\item{ntrial}{Maximum number of steps in Newton-Raphson optimization.}
-
-\item{psiTol}{Precision for water potential estimates (in MPa).}
-
-\item{ETol}{Precision for water flow per surface unit.}
-
 \item{psiRootCrown}{Soil water potential (in MPa) at the root crown.}
 
 \item{v}{Proportion of fine roots within each soil layer.}
@@ -255,6 +223,12 @@ hydraulics_supplyFunctionPlot(
 \item{ylim}{Graphical parameter to override function defaults.}
 
 \item{psiFineRoot}{Water potential (in MPa) inside fine roots.}
+
+\item{psiTol}{Precision for water potential estimates (in MPa).}
+
+\item{ETol}{Precision for water flow per surface unit.}
+
+\item{ntrial}{Maximum number of steps in Newton-Raphson optimization.}
 }
 \value{
 Values returned for each function are:

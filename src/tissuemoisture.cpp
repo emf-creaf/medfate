@@ -219,7 +219,7 @@ NumericVector plantWaterContent(List x) {
     NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
     NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
     NumericVector StemPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
-    NumericVector Stem1PsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem1Psi"]);
+    NumericVector StemPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
     NumericVector LeafPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
     NumericVector StemSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
     NumericVector LeafSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
@@ -229,7 +229,7 @@ NumericVector plantWaterContent(List x) {
                                                   LeafAF[c]);
         
       double stemrwc = tissueRelativeWaterContent(StemSympPsiVEC[c], StemPI0[c], StemEPS[c], 
-                                                  Stem1PsiVEC[c], VCstem_c[c], VCstem_d[c], 
+                                                  StemPsiVEC[c], VCstem_c[c], VCstem_d[c], 
                                                   StemAF[c]);
       vol[c] = ((Vleaf[c] * leafrwc) + (Vsapwood[c] * stemrwc))*LAIlive[c];
     }
