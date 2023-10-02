@@ -1160,8 +1160,6 @@ hydraulics_psi2Weibull <- function(psi50, psi88 = NA_real_, psi12 = NA_real_) {
 #' @param E Flow per surface unit.
 #' @param Emax Maximum flow per surface unit.
 #' @param Erootcrown Flow per surface unit at the root crown.
-#' @param psi Water potential (in MPa).
-#' @param psiPrev Water potential (in MPa) in the previous time step.
 #' @param psiDownstream Water potential upstream (in MPa).
 #' @param psiUpstream Water potential upstream (in MPa). In a one-component model corresponds to soil potential. In a two-component model corresponds to the potential inside the roots.
 #' @param psiCav Minimum water potential (in MPa) experienced (for irreversible cavitation).
@@ -1177,11 +1175,6 @@ hydraulics_psi2Weibull <- function(psi50, psi88 = NA_real_, psi12 = NA_real_) {
 #' @param psiIni Vector of initial water potential values (in MPa).
 #' @param psiMax Minimum (maximum in absolute value) water potential to be considered (in MPa).
 #' @param pCrit Critical water potential (in MPa).
-#' @param PLCprev Previous proportion of loss conductance [0-1].
-#' @param V Capacity of the compartment per leaf area (in L/m2).
-#' @param fapo Apoplastic fraction (proportion) in the segment.
-#' @param pi0 Full turgor osmotic potential (MPa).
-#' @param eps Bulk modulus of elasticity (MPa).
 #' @param dE Increment of flow per surface unit.
 #' @param ETol Precision for water flow per surface unit.
 #' @param c,d Parameters of the Weibull function (generic xylem vulnerability curve).
@@ -1191,7 +1184,6 @@ hydraulics_psi2Weibull <- function(psi50, psi88 = NA_real_, psi12 = NA_real_) {
 #' @param allowNegativeFlux A boolean to indicate wether negative flux (i.e. from plant to soil) is allowed.
 #' @param maxNsteps Maximum number of steps in the construction of supply functions.
 #' @param ntrial Maximum number of steps in Newton-Raphson optimization.
-#' @param timestep Time step in seconds.
 #' 
 #' @details 
 #' Function \code{hydraulics_supplyFunctionPlot} draws a plot of the supply function for the given \code{soil} object and network properties of each plant cohort in \code{x}. Function \code{hydraulics_vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.
@@ -1290,16 +1282,6 @@ hydraulics_E2psiAboveground <- function(E, psiRootCrown, hydraulicNetwork) {
 }
 
 #' @rdname hydraulics_supplyfunctions
-hydraulics_E2psiFineRootLeaf <- function(E, psiFineRoot, hydraulicNetwork) {
-    .Call(`_medfate_E2psiFineRootLeaf`, E, psiFineRoot, hydraulicNetwork)
-}
-
-#' @rdname hydraulics_supplyfunctions
-hydraulics_E2psiNetworkStem1 <- function(E, hydraulicNetwork, psiIni = as.numeric( c(0)), ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
-    .Call(`_medfate_E2psiNetworkStem1`, E, hydraulicNetwork, psiIni, ntrial, psiTol, ETol)
-}
-
-#' @rdname hydraulics_supplyfunctions
 hydraulics_E2psiNetwork <- function(E, hydraulicNetwork, psiIni = as.numeric( c(0)), ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
     .Call(`_medfate_E2psiNetwork`, E, hydraulicNetwork, psiIni, ntrial, psiTol, ETol)
 }
@@ -1327,16 +1309,6 @@ hydraulics_supplyFunctionBelowground <- function(hydraulicNetwork, minFlow = 0.0
 #' @rdname hydraulics_supplyfunctions
 hydraulics_supplyFunctionAboveground <- function(Erootcrown, psiRootCrown, hydraulicNetwork) {
     .Call(`_medfate_supplyFunctionAboveground`, Erootcrown, psiRootCrown, hydraulicNetwork)
-}
-
-#' @rdname hydraulics_supplyfunctions
-hydraulics_supplyFunctionFineRootLeaf <- function(psiFineRoot, hydraulicNetwork, minFlow = 0.0, maxNsteps = 400L, ETol = 0.0001, pCrit = 0.001) {
-    .Call(`_medfate_supplyFunctionFineRootLeaf`, psiFineRoot, hydraulicNetwork, minFlow, maxNsteps, ETol, pCrit)
-}
-
-#' @rdname hydraulics_supplyfunctions
-hydraulics_supplyFunctionNetworkStem1 <- function(hydraulicNetwork, minFlow = 0.0, maxNsteps = 400L, ntrial = 200L, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001) {
-    .Call(`_medfate_supplyFunctionNetworkStem1`, hydraulicNetwork, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit)
 }
 
 #' @rdname hydraulics_supplyfunctions

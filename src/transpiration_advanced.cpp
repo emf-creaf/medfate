@@ -44,13 +44,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
-  List numericParams = control["numericParams"];
-  int ntrial = numericParams["ntrial"];
-  int maxNsteps  = numericParams["maxNsteps"];
-  double psiTol = numericParams["psiTol"];
-  double ETol = numericParams["ETol"];
-  String cavitationRefill = control["cavitationRefill"];
-  double refillMaximumRate = control["refillMaximumRate"];
+
   int ntimesteps = control["ndailysteps"];
   int nsubsteps = control["nsubsteps"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
@@ -60,7 +54,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   double thermalCapacityLAI = control["thermalCapacityLAI"];
   bool multiLayerBalance = control["multiLayerBalance"];
   double defaultWindSpeed = control["defaultWindSpeed"];
-
+  String cavitationRefill = control["cavitationRefill"];
+  double refillMaximumRate = control["refillMaximumRate"];
+  
   //Meteo input
   double tmin = meteovec["tmin"];
   double tmax = meteovec["tmax"];
@@ -496,6 +492,11 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       
       //Build supply function networks (Sperry transpiration mode)
       if(transpirationMode=="Sperry") {
+        List numericParams = control["numericParams"];
+        int ntrial = numericParams["ntrial"];
+        int maxNsteps  = numericParams["maxNsteps"];
+        double psiTol = numericParams["psiTol"];
+        double ETol = numericParams["ETol"];
         List HN = initSperryNetwork(c,
                                     internalWater, paramsTranspiration, paramsWaterStorage,
                                     VCroot_kmaxc, VGrhizo_kmaxc,
@@ -556,6 +557,11 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       }
       //Build supply function networks (Sperry transpiration mode)
       if(transpirationMode == "Sperry") {
+        List numericParams = control["numericParams"];
+        int ntrial = numericParams["ntrial"];
+        int maxNsteps  = numericParams["maxNsteps"];
+        double psiTol = numericParams["psiTol"];
+        double ETol = numericParams["ETol"];
         List HN = initSperryNetwork(c,
                                     internalWater, paramsTranspiration, paramsWaterStorage,
                                     VCroot_kmaxc, VGrhizo_kmaxc,

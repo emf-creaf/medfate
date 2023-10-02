@@ -55,14 +55,6 @@ List E2psiBelowground(double E, List hydraulicNetwork,
 List E2psiAboveground(double E, double psiRootCrown, List hydraulicNetwork);
 
 
-List E2psiFineRootLeaf(double E, double psiFineRoot, 
-                       List hydraulicNetwork);
-
-List E2psiNetworkStem1(double E, List hydraulicNetwork,
-                       NumericVector psiIni = NumericVector::create(0),
-                       int ntrial = 10, 
-                       double psiTol = 0.0001, double ETol = 0.0001);
-
 List E2psiNetwork(double E, List hydraulicNetwork,
                   NumericVector psiIni = NumericVector::create(0),
                   int ntrial = 10,
@@ -77,16 +69,6 @@ List supplyFunctionBelowground(List hydraulicNetwork,
                               double minFlow = 0.0, int maxNsteps=400,
                               int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001,
                               double pCrit = 0.001);
-
-
-List supplyFunctionFineRootLeaf(double psiFineRoot,
-                                List hydraulicNetwork,
-                                double minFlow = 0.0, int maxNsteps=400, 
-                                double ETol = 0.0001, double pCrit = 0.001);
-List supplyFunctionNetworkStem1(List hydraulicNetwork,
-                                double minFlow = 0.0, int maxNsteps=400, 
-                                int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001,
-                                double pCrit = 0.001);
 
 List supplyFunctionNetwork(List hydraulicNetwork,
                            double minFlow = 0.0, int maxNsteps=400, 

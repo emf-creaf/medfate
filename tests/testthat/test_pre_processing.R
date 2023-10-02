@@ -44,10 +44,4 @@ test_that("hydraulic supply functions can be shown",{
   expect_s3_class(hydraulics_supplyFunctionPlot(x2, type = "ERhizo"), "ggplot")
   expect_s3_class(hydraulics_supplyFunctionPlot(x2, type = "StemPsi"), "ggplot")
   expect_s3_class(hydraulics_supplyFunctionPlot(x2, type = "dEdP"), "ggplot")
-  
-  x3 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control_cochard)
-  expect_s3_class(hydraulics_supplyFunctionPlot(x3, type = "E"), "ggplot")
-  expect_s3_class(hydraulics_supplyFunctionPlot(x3, type = "ERhizo"), "ggplot")
-  expect_s3_class(hydraulics_supplyFunctionPlot(x3, type = "StemPsi"), "ggplot")
-  expect_s3_class(hydraulics_supplyFunctionPlot(x3, type = "dEdP"), "ggplot")
 })
