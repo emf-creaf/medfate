@@ -23,9 +23,8 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
   sunlitTypes = paste("SunlitLeaves",leafTypes, sep="$")
   shadeTypes = paste("ShadeLeaves",leafTypes, sep="$")
   plantTypes = c("E","Ag","An","dEdP","RootPsi",
-                "StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC",
-                "LeafSympPsi", "StemSympPsi","PWB",
-                "StemPLC")
+                "StemPsi","LeafPsi","StemPLC", "LeafPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC",
+                "LeafSympPsi", "StemSympPsi","PWB")
   PWBTYPES = c("PlantLAI","Temperature", "CanopyEnergyBalance", "SoilEnergyBalance",
                "ExtractionInst", plantTypes, sunlitTypes, shadeTypes)
   CBTYPES = c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "RootExudation", "LabileCarbonBalance",

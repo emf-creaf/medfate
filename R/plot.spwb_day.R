@@ -186,6 +186,17 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
+  else if(type=="LeafPLC") {
+    OM = PlantsInst$LeafPLC*100
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+    } 
+    if(is.null(ylab)) ylab = .getYLab(type)
+    return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
+  }
   else if(type=="StemPLC") {
     OM = PlantsInst$StemPLC*100
     if(bySpecies) {

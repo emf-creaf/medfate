@@ -480,7 +480,8 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   NumericMatrix StemPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemPsi"]);
   NumericMatrix LeafPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafPsi"]);
   NumericMatrix RootPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["RootPsi"]);
-  NumericMatrix PLC = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemPLC"]);
+  NumericMatrix StemPLC = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemPLC"]);
+  NumericMatrix LeafPLC = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafPLC"]);
   NumericMatrix StemSympPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympPsi"]);
   NumericMatrix LeafSympPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympPsi"]);
   
@@ -525,8 +526,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   List supply = input["supply"];
   
   for(int c=0;c<numCohorts;c++) { //Plant cohort loop
-    
-    if(LAIphe[c]>0.0) { //Process transpiration and photosynthesis only if there are some leaves
+    if((LAIphe[c]>0.0) && (LeafPLCVEC[c] < 0.999)) { //Process transpiration and photosynthesis only if there are some leaves
 
       NumericVector fittedE, dEdP;
       NumericVector LeafPsi, psiRootCrown;
@@ -735,6 +735,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         Temp_SL(c,n)= NA_REAL;
       }        
     } else if(LAIlive[c]>0.0) { //Cohorts with living individuals but no LAI should be in equilibrium with soil (i.e. no transpiration)
+      
       List sFunctionBelow = supply[c];
       NumericVector  psiRootCrown = sFunctionBelow["psiRootCrown"];
       RootCrownPsiVEC[c] = psiRootCrown[0];
@@ -744,41 +745,6 @@ void innerSperry(List x, List input, List output, int n, double tstep,
       NumericVector LeafPsi = sFunctionBelow["psiLeaf"];
       LeafPsiVEC[c] = LeafPsi[0];
       LeafSympPsiVEC[c] = LeafPsi[0];
-    }
-    
-    if(LAIlive[c]>0.0) {
-      //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
-      PLC(c,n) = StemPLCVEC[c];
-      StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]);
-      LeafSympRWCInst(c,n) = symplasticRelativeWaterContent(LeafSympPsiVEC[c], LeafPI0[c], LeafEPS[c]);
-      StemRWCInst(c,n) = StemSympRWCInst(c,n)*(1.0 - StemAF[c]) + apoplasticRelativeWaterContent(StemPsiVEC[c], VCstem_c[c], VCstem_d[c])*StemAF[c];
-      LeafRWCInst(c,n) = LeafSympRWCInst(c,n)*(1.0 - LeafAF[c]) + apoplasticRelativeWaterContent(LeafPsiVEC[c], VCleaf_c[c], VCleaf_d[c])*LeafAF[c];
-      StemPsiInst(c,n) = StemPsiVEC[c]; 
-      LeafPsiInst(c,n) = LeafPsiVEC[c]; //Store instantaneous (average) leaf potential
-      RootPsiInst(c,n) = RootCrownPsiVEC[c]; //Store instantaneous root crown potential
-      LeafSympPsiInst(c,n) = LeafSympPsiVEC[c];
-      StemSympPsiInst(c,n) = StemSympPsiVEC[c];
-      
-      //Store the minimum water potential of the day (i.e. mid-day)
-      minGSW_SL[c] = std::min(minGSW_SL[c], GSW_SL(c,n));
-      minGSW_SH[c] = std::min(minGSW_SH[c], GSW_SH(c,n));
-      maxGSW_SL[c] = std::max(maxGSW_SL[c], GSW_SL(c,n));
-      maxGSW_SH[c] = std::max(maxGSW_SH[c], GSW_SH(c,n));
-      minTemp_SL[c] = std::min(minTemp_SL[c], Temp_SL(c,n));
-      minTemp_SH[c] = std::min(minTemp_SH[c], Temp_SH(c,n));
-      maxTemp_SL[c] = std::max(maxTemp_SL[c], Temp_SL(c,n));
-      maxTemp_SH[c] = std::max(maxTemp_SH[c], Temp_SH(c,n));
-      minLeafPsi_SL[c] = std::min(minLeafPsi_SL[c], Psi_SL(c,n));
-      minLeafPsi_SH[c] = std::min(minLeafPsi_SH[c], Psi_SH(c,n));
-      maxLeafPsi_SL[c] = std::max(maxLeafPsi_SL[c], Psi_SL(c,n));
-      maxLeafPsi_SH[c] = std::max(maxLeafPsi_SH[c], Psi_SH(c,n));
-      minLeafPsi[c] = std::min(minLeafPsi[c], LeafPsiInst(c,n));
-      maxLeafPsi[c] = std::max(maxLeafPsi[c], LeafPsiInst(c,n));
-      minStemPsi[c] = std::min(minStemPsi[c], StemPsiInst(c,n));
-      minRootPsi[c] = std::min(minRootPsi[c], RootPsiInst(c,n));
-      for(int l=0;l<nlayers;l++) {
-        minPsiRhizo(c,l) = std::min(minPsiRhizo(c,l), RhizoPsiMAT(c,l));
-      }
     }
   } //End of cohort loop
 }

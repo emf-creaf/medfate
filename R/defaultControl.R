@@ -89,11 +89,15 @@
 #'     }
 #'     
 #'   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Cochard"} only):
-#'     \itemize{
-#'       \item{\code{capacitance [= TRUE]}: Whether the effect of (symplasmic or apoplasmic) plant water compartments is considered in simulations.}
+#'     \itemize{leafCuticularTranspiration
+#'       \item{\code{plantCapacitance [= TRUE]}: Whether the effect of (symplasmic or apoplasmic) plant water compartments is considered in simulations.}
+#'       \item{\code{leafCuticularTranspiration [= TRUE]}: Whether the effect of leaf cuticular transpiration is considered in simulations.}
+#'       \item{\code{stemCuticularTranspiration [= TRUE]}: Whether the effect of stem cuticular transpiration is considered in simulations.}
 #'       \item{\code{C_SApoInit [= 2.0e-5]}: Maximum capacitance of the stem apoplasm (mmol·m-2).}
 #'       \item{\code{C_LApoInit [= 1.0e-5]}: Maximum capacitance of the leaf apoplasm (mmol·m-2).}
 #'       \item{\code{k_SSym [= 0.26]}: Conductance from stem apoplasm to stem symplasm (mmol·s-1·m-2).}
+#'       \item{\code{k_LSym [= 2.0]}: Conductance from leaf apoplasm to leaf symplasm (mmol·s-1·m-2).}
+#'       \item{\code{gs_NightFrac [= 0.05]}: Stomatal conductance at night as fraction of maximum stomatal conductance ([0-1]).}
 #'       \item{\code{TPhase_gmin [= 37.5]}: Temperature for transition phase of gmin.}
 #'       \item{\code{Q10_1_gmin [= 1.2]}: Temperature dependance of gmin when T ≤ TPhase.}
 #'       \item{\code{Q10_2_gmin [= 4.8]}: Temperature dependance of gmin when T > TPhase.}
@@ -211,10 +215,14 @@ defaultControl<-function(transpirationMode = "Granier") {
     numericParams=list(maxNsteps = 400, ntrial = 200, psiTol = 0.0001, ETol = 0.0000001),
     
     #spwb with cochard
-    capacitance = TRUE,
+    plantCapacitance = TRUE,
+    leafCuticularTranspiration = TRUE,
+    stemCuticularTranspiration = TRUE,
     C_SApoInit = 2.0e-05,
     C_LApoInit = 1.0e-05,
     k_SSym = 0.26,
+    k_LSym = 2.0,
+    gs_NightFrac = 0.05,
     TPhase_gmin = 37.5,
     Q10_1_gmin = 1.2,
     Q10_2_gmin = 4.8,
@@ -283,10 +291,14 @@ defaultControl<-function(transpirationMode = "Granier") {
     l$numericParams <- NULL
   }
   if(transpirationMode != "Cochard") {
-    l$capacitance <- NULL
+    l$plantCapacitance <- NULL
+    l$leafCuticularTranspiration <- NULL
+    l$stemCuticularTranspiration <- NULL
     l$C_SApoInit <- NULL
     l$C_LApoInit <- NULL
     l$k_SSym <- NULL
+    l$k_LSym <- NULL
+    l$gs_NightFrac <- NULL
     l$TPhase_gmin <- NULL
     l$Q10_1_gmin <- NULL
     l$Q10_2_gmin <- NULL

@@ -942,10 +942,10 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
   } else if(transpirationMode =="Sperry") {
     df = DataFrame::create(Named("Einst") = NumericVector(numCohorts, 0.0),
                            Named("RootCrownPsi") = NumericVector(numCohorts, -0.033),
-                           Named("StemPsi") = NumericVector(numCohorts, -0.033),
                            Named("LeafPsi") = NumericVector(numCohorts, -0.033),
-                           Named("StemSympPsi") = NumericVector(numCohorts, -0.033),
+                           Named("StemPsi") = NumericVector(numCohorts, -0.033),
                            Named("LeafSympPsi") = NumericVector(numCohorts, -0.033),
+                           Named("StemSympPsi") = NumericVector(numCohorts, -0.033),
                            Named("LeafPLC") = NumericVector(numCohorts, 0.0),
                            Named("StemPLC") = NumericVector(numCohorts, 0.0));
   } else if(transpirationMode =="Cochard") {
@@ -954,8 +954,9 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
                            Named("Emin_L") = NumericVector(numCohorts, 0.0),
                            Named("Emin_S") = NumericVector(numCohorts, 0.0),
                            Named("RootCrownPsi") = NumericVector(numCohorts, -0.033),
-                           Named("StemPsi") = NumericVector(numCohorts, -0.033),
                            Named("LeafPsi") = NumericVector(numCohorts, -0.033),
+                           Named("StemPsi") = NumericVector(numCohorts, -0.033),
+                           Named("LeafSympPsi") = NumericVector(numCohorts, -0.033),
                            Named("StemSympPsi") = NumericVector(numCohorts, -0.033),
                            Named("LeafPLC") = NumericVector(numCohorts, 0.0),
                            Named("StemPLC") = NumericVector(numCohorts, 0.0));
