@@ -37,6 +37,7 @@ A list, with the following options (default values in brackets):
       \item{\code{defaultCO2 [= 386]}: Default atmospheric (abovecanopy) CO2 concentration (in micromol·mol-1 = ppm). This value will be used whenever CO2 concentration is not specified in the weather input. }
       \item{\code{snowpack [= TRUE]}: Boolean flag to indicate the simulation of snow accumulation and melting.}
       \item{\code{leafPhenology [= TRUE]}: Boolean flag to indicate the simulation of leaf phenology for winter-deciduous species.}
+      \item{\code{bareSoilEvaporation [= TRUE]}: Boolean flag to indicate the simulation of evaporation from bare soil.}
       \item{\code{rockyLayerDrainage [= TRUE]}: Boolean flag to indicate the simulation of drainage from rocky layers (> 95\% of rocks).}
       \item{\code{unlimitedSoilWater [= FALSE]}: Boolean flag to indicate the simulation of plant transpiration assuming that soil water is always at field capacity.}
       \item{\code{unfoldingDD [= 300]}: Degree-days for complete leaf unfolding after budburst has occurred.}
