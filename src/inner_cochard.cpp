@@ -90,6 +90,7 @@ void update_capacitances(List network) {
   double Psi_SSym = network["Psi_SSym"];
   double Psi_LSym = network["Psi_LSym"];
   double Q_LSym_sat_mmol_perLeafArea = network["Q_LSym_sat_mmol_perLeafArea"];
+  // double Q_SSym_sat_mmol_perLeafArea = network["Q_SSym_sat_mmol_perLeafArea"]; //not used
   
   double epsilonSym_Leaf = params["epsilonSym_Leaf"];
   double PiFullTurgor_Leaf = params["PiFullTurgor_Leaf"];
@@ -127,7 +128,8 @@ void update_capacitances(List network) {
   }
   //# Compute the capacitance (mmol/MPa/m2_leaf)
   network["C_SSym"] = Q_LSym_sat_mmol_perLeafArea * RWC_SSym_prime; // #  changed 25/10/2021 by NM. --> Stem capacitance per leaf area can only decrease with LAI (cannot increase when LAI<1 )
-  network["C_SApo"] = params["C_SApoInit"];
+  // MIQUEL - we could use instead: network["C_SSym"] = Q_SSym_sat_mmol_perLeafArea * RWC_SSym_prime; 
+  network["C_SApo"] = params["C_SApoInit"]; //MIQUEL: Why are these not scaled?
   network["C_LApo"] = params["C_LApoInit"];
 }
 
