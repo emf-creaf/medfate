@@ -879,20 +879,7 @@ NumericVector GsTsensWithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(Gs_Tsens);
 }
-NumericVector GsP50WithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector Gs_P50 = speciesNumericParameterFromIndex(SP, SpParams, "Gs_P50");
-  for(int c=0;c<Gs_P50.size();c++) {
-    if(NumericVector::is_na(Gs_P50[c])) Gs_P50[c] = -1.5;
-  }
-  return(Gs_P50);
-}
-NumericVector GsslopeWithImputation(IntegerVector SP, DataFrame SpParams) {
-  NumericVector Gs_slope = speciesNumericParameterFromIndex(SP, SpParams, "Gs_slope");
-  for(int c=0;c<Gs_slope.size();c++) {
-    if(NumericVector::is_na(Gs_slope[c])) Gs_slope[c] = 30.0;
-  }
-  return(Gs_slope);
-}
+
 NumericVector KmaxStemXylemWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector Kmax_stemxylem = speciesNumericParameterFromIndex(SP, SpParams, "Kmax_stemxylem");
   CharacterVector Group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
@@ -1167,7 +1154,21 @@ NumericVector VCrootP12WithImputation(IntegerVector SP, DataFrame SpParams) {
   }
   return(VCroot_P12);
 }
-
+NumericVector GsP50WithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector Gs_P50 = speciesNumericParameterFromIndex(SP, SpParams, "Gs_P50");
+  NumericVector VCleaf_P50 = VCleafP50WithImputation(SP, SpParams);
+  for(int c=0;c<Gs_P50.size();c++) {
+    if(NumericVector::is_na(Gs_P50[c])) Gs_P50[c] = VCleaf_P50[c];
+  }
+  return(Gs_P50);
+}
+NumericVector GsslopeWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector Gs_slope = speciesNumericParameterFromIndex(SP, SpParams, "Gs_slope");
+  for(int c=0;c<Gs_slope.size();c++) {
+    if(NumericVector::is_na(Gs_slope[c])) Gs_slope[c] = 30.0;
+  }
+  return(Gs_slope);
+}
 NumericVector LeafRespirationRateWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector RERleaf = speciesNumericParameterFromIndex(SP, SpParams, "RERleaf");
   NumericVector Nleaf = NleafWithImputation(SP, SpParams);

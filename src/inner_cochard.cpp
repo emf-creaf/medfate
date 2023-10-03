@@ -53,23 +53,32 @@ double gmin(double leafTemperature, double gmin_20,
 void update_conductances(List network) {
   List params = as<Rcpp::List>(network["params"]);
   
-  NumericVector k_RSApoInit = params["k_RSApoInit"];
+  NumericVector k_RCApoInit = params["k_RCApoInit"];
+  double k_CSApoInit = params["k_CSApoInit"];
+  double k_SLApoInit = params["k_SLApoInit"];
+  
+  double k_LSym = network["k_LSym"];
   
   NumericVector k_RSApo = network["k_RSApo"];
   NumericVector k_SoilToStem = network["k_SoilToStem"];
   NumericVector k_Soil = network["k_Soil"];
+  NumericVector k_RCApo(k_RSApo.size(), NA_REAL);
   
-  network["k_SLApo"] = ((double) params["k_SLApoInit"]) * (1.0 - ((double) network["PLC_Leaf"])/100.0);
-
+  double k_SLApo  = k_SLApoInit * (1.0 - ((double) network["PLC_Leaf"])/100.0); //Conductance from stem apo to leaf apo
+  network["k_SLApo"] = k_SLApo;
+    
+  double k_CSApo = k_CSApoInit * (1.0 - ((double) network["PLC_Stem"])/100.0); //conductance from root crown to stem apo
+  network["k_CSApo"] = k_CSApo;
+  //# calculate k_SoilToStem and k_RSApo with cavitation
   for(int i = 0;i<k_RSApo.size();i++) {
-    //# calculate k_RSApo and k_SLApo with cavitation
-    k_RSApo[i] = k_RSApoInit[i] * (1.0 - ((double) network["PLC_Stem"])/100.0);
+    k_RCApo[i] = k_RCApoInit[i] * (1.0 - ((double) network["PLC_Stem"])/100.0); // conductance from root surface to root crown
+    k_RSApo[i] = 1.0/((1.0/k_RCApo[i]) + (1.0/k_CSApo)); // conductance from root surface to stem
     //# Root from root length
-    k_SoilToStem[i] = 1.0/((1.0/k_Soil[i]) + (1.0/k_RSApo[i])); // # conductance from soil to collar (two resistances in series Rsoil and Rroot)
+    k_SoilToStem[i] = 1.0/((1.0/k_Soil[i]) + (1.0/k_RSApo[i])); // # conductance from soil to stem
   }
 
   // Compute k_plant (from root to leaf) for diagnostic only
-  network["k_Plant"] =  1.0/ (1.0 /sum(k_RSApo) + 1.0/((double) network["k_SLApo"]) + 1.0/((double) network["k_LSym"]));
+  network["k_Plant"] =  1.0/ (1.0 /sum(k_RSApo) + 1.0/k_SLApo + 1.0/k_LSym);
 }
 
 // # update symplasmic plant capacitances for Trunk and leaves
@@ -209,10 +218,10 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   NumericVector LeafPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
   NumericVector StemPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
   NumericVector LeafPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
-  NumericVector RootCrownPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
   NumericVector StemSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
+  NumericVector LeafSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
+  NumericVector RootCrownPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
 
-  NumericVector Plant_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Plant_kmax"]);
   NumericVector VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_kmax"]);
   NumericVector VCleaf_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_P50"]);
   NumericVector VCleaf_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_slope"]);
@@ -252,6 +261,9 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   params.push_back(control["fTRBToLeaf"], "fTRBToLeaf"); //ratio of bark area to leaf area
   params.push_back(control["C_SApoInit"], "C_SApoInit"); //Maximum capacitance of the stem apoplasm
   params.push_back(control["C_LApoInit"], "C_LApoInit"); //Maximum capacitance of the leaf apoplasm
+  params.push_back(sapFluidityDay*VCleaf_kmax[c], "k_SLApoInit"); //Maximum conductance from trunk apoplasm to leaf apoplasm
+  params.push_back(sapFluidityDay*VCstem_kmax[c], "k_CSApoInit"); //Maximum conductance from root crown to stem apoplasm
+  params.push_back(sapFluidityDay*VCroot_kmax, "k_RCApoInit"); //Maximum conductance from rhizosphere surface to root crown
   
   params.push_back(Gs_slope[c], "slope_gs");
   params.push_back(Gs_P50[c], "P50_gs");
@@ -259,10 +271,16 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   params.push_back(Gs_Tsens[c], "Tgs_sens"); 
   
   //PLANT RELATED PARAMETERS
-  params.push_back(Gswmin[c]*1000.0, "gmin20"); //mol to mmol 
+  double gmin20 = Gswmin[c]*1000.0; //Leaf cuticular transpiration
+  bool leafCuticularTranspiration = control["leafCuticularTranspiration"];
+  if(!leafCuticularTranspiration) gmin20 = 0.0;
+  params.push_back(gmin20, "gmin20"); //mol to mmol 
   params.push_back(Gswmax[c]*1000.0, "gsMax"); //mol to mmol 
-  params.push_back(Gswmin[c]*1000.0, "gmin_S"); // gmin for stem equal to leaf gmin, in mmol
-  params.push_back(0.1*Gswmax[c]*1000.0, "gsNight"); //gsNight equal to 10% percent of gsMax
+  bool stemCuticularTranspiration = control["stemCuticularTranspiration"];
+  double gmin_S = Gswmin[c]*1000.0;  // gmin for stem equal to leaf gmin, in mmol
+  if(!stemCuticularTranspiration) gmin_S = 0.0;
+  params.push_back(gmin_S, "gmin_S");
+  params.push_back(((double)control["gs_NightFrac"])*Gswmax[c]*1000.0, "gsNight"); //gsNight equal to 5% percent of gsMax
   
   params.push_back(VCleaf_P50[c], "VCleaf_P50"); 
   params.push_back(VCleaf_slope[c], "VCleaf_slope"); 
@@ -270,8 +288,6 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   params.push_back(VCstem_slope[c], "VCstem_slope"); 
   params.push_back(VCroot_P50[c], "VCroot_P50"); 
   params.push_back(VCroot_slope[c], "VCroot_slope"); 
-  params.push_back(sapFluidityDay*VCstem_kmax[c], "k_SLApoInit"); //Maximum conductance from trunk apoplasm to leaf apoplasm = VCstem_kmax
-  params.push_back(sapFluidityDay*VCroot_kmax, "k_RSApoInit"); //Maximum conductance from rhizosphere surface to root crown
   params.push_back(LeafPI0[c], "PiFullTurgor_Leaf"); 
   params.push_back(LeafEPS[c], "epsilonSym_Leaf"); 
   params.push_back(StemPI0[c], "PiFullTurgor_Stem"); 
@@ -284,9 +300,10 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   network.push_back(LAIphe[c], "LAI");
   
   //Water potentials
-  network.push_back(StemPsiVEC[c], "Psi_LApo"); // Leaf apo psi  = Stem psi
-  network.push_back(LeafPsiVEC[c], "Psi_LSym"); // Leaf sym psi = Leaf psi
-  network.push_back(RootCrownPsiVEC[c], "Psi_SApo"); // Stem apo psi = root crown psi
+  network.push_back(LeafPsiVEC[c], "Psi_LApo"); 
+  network.push_back(LeafSympPsiVEC[c], "Psi_LSym"); 
+  network.push_back(RootCrownPsiVEC[c], "Psi_RCApo");
+  network.push_back(StemPsiVEC[c], "Psi_SApo"); 
   network.push_back(StemSympPsiVEC[c], "Psi_SSym");
   network.push_back(std::min(0.0, invPLC(StemPLCVEC[c]*100.0, VCstem_slope[c], VCstem_P50[c])), "Psi_SApo_cav"); //Sureau operates with %
   network.push_back(std::min(0.0, invPLC(LeafPLCVEC[c]*100.0, VCleaf_slope[c], VCleaf_P50[c])), "Psi_LApo_cav"); //Sureau operates with %
@@ -300,20 +317,21 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   network.push_back(NA_REAL, "C_SSym"); //Capacitance of the stem symplasm (HOW TO ESTIMATE THEM?)
   network.push_back(NA_REAL, "C_LSym"); //Capacitance of the leaf symplasm (HOW TO ESTIMATE THEM?)
   //Conductances (mmol m-2 MPa-1 s-1)
-  network.push_back(NA_REAL, "k_Plant"); //Whole-plant conductance  = Plant_kmax
-  network.push_back(NA_REAL, "k_SLApo"); //Conductance from trunk apoplasm to leaf apoplasm = VCstem_kmax
-  network.push_back(sapFluidityDay*((double)control["k_SSym"]), "k_SSym"); //Conductance from stem apoplasm to stem symplasm (CONTROL PARAMETER?)
-  network.push_back(sapFluidityDay*VCleaf_kmax[c], "k_LSym"); //Conductance from leaf apoplasm to leaf symplasm = VCleaf_kmax
+  network.push_back(NA_REAL, "k_SLApo"); //Conductance from trunk apoplasm to leaf apoplasm
+  network.push_back(NA_REAL, "k_CSApo"); //Conductance from root crown to trunk apoplasm
+  network.push_back(sapFluidityDay*((double)control["k_SSym"]), "k_SSym"); //Conductance from trunk apoplasm to trunk symplasm (CONTROL PARAMETER?)
+  network.push_back(sapFluidityDay*((double)control["k_LSym"]), "k_LSym"); //Conductance from leaf apoplasm to leaf symplasm
   NumericVector k_RSApo(VGrhizo_kmax.size(), NA_REAL);
-  network.push_back(k_RSApo, "k_RSApo"); //Conductance from rhizosphere surface to root crown?
+  network.push_back(k_RSApo, "k_RSApo"); //Conductance from rhizosphere surface to trunk apoplasm
   NumericVector k_SoilToStem(VGrhizo_kmax.size(), NA_REAL);
-  network.push_back(k_SoilToStem, "k_SoilToStem"); //Conductance from rhizosphere surface to root crown?
+  network.push_back(k_SoilToStem, "k_SoilToStem"); //Conductance from soil to trunk apoplasm
   NumericVector k_Soil(VGrhizo_kmax.size(), NA_REAL);
   for(int l=0;l < k_Soil.size(); l++) {
     k_Soil[l] = vanGenuchtenConductance(PsiSoil[l], VGrhizo_kmax[l], 
                                         VG_n[l], VG_alpha[l]); 
   }
-  network.push_back(k_Soil, "k_Soil"); //Conductance in the rhizosphere
+  network.push_back(k_Soil, "k_Soil"); //Conductance from soil to rhizosphere surface
+  network.push_back(NA_REAL, "k_Plant"); //Whole-plant conductance  = Plant_kmax
   //Water content (mmol m-2)
   double l2mmol = 1.0e6/18.0;
   network.push_back(Vsapwood[c]*StemAF[c]*l2mmol, "Q_SApo_sat_mmol_perLeafArea"); //Water content in stem apoplasm
@@ -498,7 +516,6 @@ void semi_implicit_integration(List network, double dt, NumericVector opt, Strin
   double Ssym = opt["Ssym"];
   double CLapo = opt["CLapo"];
   double CTapo = opt["CTapo"];
-  // double Eord = opt["Eord"]; MIQUEL: NOT USED
   double Lcav = opt["Lcav"];
   double Scav = opt["Scav"];
 
@@ -551,9 +568,10 @@ void semi_implicit_integration(List network, double dt, NumericVector opt, Strin
     delta_S_cavs=NumericVector::create(0.0,0.0,1.0,1.0,0.0);
   }
 
+  double k_CSApo = network["k_CSApo"];
   NumericVector k_SoilToStem = network["k_SoilToStem"];
 
-  double alpha, Psi_td, Psi_LApo_np1, Psi_SApo_np1, Psi_LSym_np1, Psi_SSym_np1;
+  double alpha, Psi_td, Psi_RCApo_np1, Psi_LApo_np1, Psi_SApo_np1, Psi_LSym_np1, Psi_SSym_np1;
   double psirefL, psirefS;
 
   int nwhilecomp = 0; // # count the number of step in while loop (if more than 4 no solution and warning)
@@ -572,6 +590,12 @@ void semi_implicit_integration(List network, double dt, NumericVector opt, Strin
     alpha = exp(-1.0*(K_SL+K_SSym + k_sum +delta_S_cav*K_S_Cav)/C_SApo*dt);
     Psi_td = (K_SL*Psi_LApo_n + K_SSym*Psi_SSym_n + kpsi_sum + delta_S_cav*K_S_Cav*Psi_SApo_cav)/(K_SL + K_SSym + k_sum + delta_S_cav*K_S_Cav + dbxmin);// # dbxmin to avoid 0/0
     Psi_SApo_np1 = alpha * Psi_SApo_n + (1.0 - alpha) * Psi_td;
+    
+    //Update Psi_RCApo from flow and conductance
+    double fluxSoilToStem_mmolm2s = 0.0;
+    for(int cl=0;cl<k_SoilToStem.size();cl++) fluxSoilToStem_mmolm2s += k_SoilToStem[cl]*(PsiSoil[cl] - Psi_SApo_np1);
+    Psi_RCApo_np1 = Psi_SApo_np1 + fluxSoilToStem_mmolm2s/k_CSApo;
+    
     // Rcout<< kpsi_sum<<" "<< k_sum << " " << alpha << " " << Psi_td << "\n";
     //# 2.3 Compute Psi_SApo_np1 (Explicit approach only)
     //# 2.4 check if cavitation is well computed according to delta_cav, np1 and "cav"
@@ -600,6 +624,7 @@ void semi_implicit_integration(List network, double dt, NumericVector opt, Strin
   //#Step 4 : set computed values in network and update Psi_cav, PLC and Psi_AllSoil
   network["Psi_LApo"] = std::min(-0.00001, Psi_LApo_np1);
   network["Psi_SApo"] = std::min(-0.00001,Psi_SApo_np1);
+  network["Psi_RCApo"] = std::min(-0.00001,Psi_RCApo_np1);
   network["Psi_LSym"] = std::min(-0.00001,Psi_LSym_np1);
   network["Psi_SSym"] = std::min(-0.00001,Psi_SSym_np1);
 
@@ -644,8 +669,8 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   String cavitationRefill = control["cavitationRefill"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
-  bool capacitance = control["capacitance"];
-  if(!capacitance) {
+  bool plantCapacitance = control["plantCapacitance"];
+  if(!plantCapacitance) {
      opt["CLapo"] = 0.0;
      opt["CTapo"] = 0.0;
      opt["Lsym"] = 0.0;
@@ -695,10 +720,11 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   NumericVector Emin_SVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Emin_S"]);
   NumericVector StemPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
   NumericVector LeafPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
-  NumericVector StemPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
   NumericVector LeafPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
-  NumericVector RootCrownPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
+  NumericVector LeafSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
+  NumericVector StemPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
   NumericVector StemSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
+  NumericVector RootCrownPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
   
   // //Water pools
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
@@ -759,7 +785,8 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   NumericMatrix StemPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemPsi"]);
   NumericMatrix LeafPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafPsi"]);
   NumericMatrix RootPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["RootPsi"]);
-  NumericMatrix PLC = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemPLC"]);
+  NumericMatrix StemPLC = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemPLC"]);
+  NumericMatrix LeafPLC = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafPLC"]);
   NumericMatrix StemSympPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympPsi"]);
   NumericMatrix LeafSympPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympPsi"]);
   List ShadeInst = output["ShadeLeavesInst"];
@@ -799,299 +826,271 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   List layerConnectedPools = input["layerConnectedPools"];
 
   for(int c=0;c<numCohorts;c++) { //Plant cohort loop
-    // # A. LOOP ON THE IMPLICIT SOLVER IN PSI, trying different time steps until results are OK
-    bool regulationWellComputed = false;
-    bool cavitationWellComputed = false;
-    List network = networks[c];
     
-    List params = network["params"];
-    double gmin_S = params["gmin_S"];
-    double gCrown0 = params["gCrown0"];
-    double gmin20 = params["gmin20"];
-    double TPhase_gmin = params["TPhase_gmin"];
-    double Q10_1_gmin = params["Q10_1_gmin"];
-    double Q10_2_gmin = params["Q10_2_gmin"];
-    double fTRBToLeaf = params["fTRBToLeaf"];
-    
-    NumericVector kSoil = network["k_Soil"];
-
-    double LAI = network["LAI"];
-    // Rcout << "\n*** HOUR STEP " << n << " cohort " << c << "***\n";
-
-    int nwhilecomp = 0;
-
-    NumericVector ElayersVEC(kSoil.size(),0.0); //Instantaneous flow rate
-    NumericVector fluxSoilToStem_mm(kSoil.size(), 0.0); //Cummulative flow
-    List network_n;
-    
-    double Gwdiff_SL, Gwdiff_SH;
-    while ((!regulationWellComputed || !cavitationWellComputed) && (nwhilecomp<nsmalltimesteps.size())) { //# LOOP TO TRY DIFFERENT TIME STEPS
-      network_n = clone(network); // # initial value of WBveg
-    //   List WBsoil_n = clone(WBsoil); // # initial value of WBsoil
-    //   
-      regulationWellComputed = false;
-      cavitationWellComputed = false;
-      double deltaRegulMax = 1.0e-100;
-      double deltaPLCMax = 1.0e-100;
-
-      //Reset output fluxes to zero
-      EinstVEC[c] = 0.0;
-      ElimVEC[c] = 0.0;
-      Emin_LVEC[c] = 0.0;
-      Emin_SVEC[c] = 0.0;
-      for(int i=0;i < kSoil.size();i++) {
-        ElayersVEC[i] = 0.0;
-        fluxSoilToStem_mm[i] = 0.0; 
-      }
-
-      int nts = nsmalltimesteps[nwhilecomp];// # number of small time steps
-      double dt = tstep / ((double) nts); //Determine number of seconds of small time steps
-      // Rcout<< " Attempt #" << nwhilecomp<<" nts "<< nts << " dt " << dt << "\n";
-      for(int its = 1; its <= nts; its++) { //#INTERNAL LOOP ON SMALL TIME STEPS
-
-        //Current leaf water potential (same for sunlit and shade leaves)
-        double Psi_LSym = network_n["Psi_LSym"];
-        NumericVector regul_ini = regulFact(Psi_LSym, params, "Sigmoid");
-        
-        //Leaf temperature for sunlit and shade leaves
-        double Elim_SL = network_n["Elim_SL"];
-        double Elim_SH = network_n["Elim_SH"];
-        double Elim = network_n["Elim"];
-        if(NumericVector::is_na(Elim_SL)) Elim_SL = Elim * (LAI_SL[c]/LAI);
-        if(NumericVector::is_na(Elim_SH)) Elim_SH = Elim * (LAI_SH[c]/LAI);
-        Temp_SL(c,n) = leafTemperature2(SWR_SL(c,n)/LAI_SL[c], LWR_SL(c,n)/LAI_SL[c], 
-                                   Tair[iLayerSunlit[c]], zWind[iLayerSunlit[c]], 
-                                   Elim_SL,  LeafWidth[c]);
-        Temp_SH(c,n) = leafTemperature2(SWR_SH(c,n)/LAI_SH[c], LWR_SH(c,n)/LAI_SH[c], 
-                                   Tair[iLayerShade[c]], zWind[iLayerShade[c]], 
-                                   Elim_SH,  LeafWidth[c]);
-        
-        //VPD
-        double VPD_air = meteoland::utils_saturationVP(Tair[iLayerCohort[c]]) - VPair[iLayerCohort[c]];
-        VPD_SL(c,n) = std::max(0.0,leafVapourPressure(Temp_SL(c,n), Psi_LSym) - VPair[iLayerSunlit[c]]);
-        VPD_SH(c,n) = std::max(0.0,leafVapourPressure(Temp_SH(c,n), Psi_LSym) - VPair[iLayerShade[c]]);
-        // Rcout<< "  AirT "<< Tair[iLayerCohort[c]] << " LT_SL "<< Temp_SL(c,n)<< " LT_SH "<< Temp_SH(c,n)<<"\n";
-        // Rcout<< "  VPD_air "<< VPD_air << " VPD_SL "<< VPD_SL(c,n)<< " VPD_SH "<< VPD_SH(c,n)<<"\n";
-        
-        //gCR = g Crown
-        double gCR = gCrown(gCrown0, zWind[iLayerCohort[c]]);
-        //gBL = g Boundary Layer
-        double gBL = 397.0*pow(zWind[iLayerCohort[c]]/(LeafWidth[c]*0.0072), 0.5); // mmol boundary layer conductance
-        
-        //# Leaf cuticular conductances and cuticular transpiration
-        double gmin_SL = gmin(Temp_SL(c,n), gmin20, TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
-        double gmin_SH = gmin(Temp_SH(c,n), gmin20, TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
-        double Emin_L_SL = Emin(gmin_SL, gBL, gCR, VPD_SL(c,n), Patm);
-        double Emin_L_SH = Emin(gmin_SH, gBL, gCR, VPD_SH(c,n), Patm);
-        double Emin_L = ((Emin_L_SL*LAI_SL[c]) + (Emin_L_SH*LAI_SH[c]))/LAI; 
-        network_n["Emin_L"] = Emin_L;
-        
-        //Compute stem cuticular transpiration
-        double Emin_S = fTRBToLeaf * Emin(gmin_S, gBL, gCR, VPD_air, Patm);
-        network_n["Emin_S"] =  Emin_S;
-        // Rcout<< "  Emin_S "<< Emin_S<<" Emin_L_SL "<< Emin_L_SL<<" Emin_L_SH "<< Emin_L_SH<<" Emin_L "<< Emin_L<<"\n";
-        
-        // Current stomatal regulation
-        NumericVector regul = regulFact(Psi_LSym, params, "Sigmoid");
-        double gs_SL = gsJarvis(params, PAR_SL(c,n), Temp_SL(c,n));
-        double gs_SH = gsJarvis(params, PAR_SH(c,n), Temp_SH(c,n));
-        //Rcout<< "  PAR_SL "<< PAR_SL(c,n)<<"  gs_SL "<< gs_SL<<"  PAR_SH "<< PAR_SH(c,n)<<" gs_SH "<< gs_SH<<"\n";
-        gs_SL = gs_SL * regul["regulFact"];
-        gs_SH = gs_SH * regul["regulFact"];
-        GSW_SL(c,n) = gs_SL/1000.0; // From mmol to mol
-        GSW_SH(c,n) = gs_SH/1000.0; // From mmol to mol
-        // Stomatal transpiration
-        Gwdiff_SL = 1.0/(1.0/gCR + 1.0/gs_SL + 1.0/gBL); 
-        Gwdiff_SH = 1.0/(1.0/gCR + 1.0/gs_SH + 1.0/gBL); 
-        Elim_SL = Gwdiff_SL * VPD_SL(c,n)/Patm;
-        Elim_SH = Gwdiff_SH * VPD_SH(c,n)/Patm;
-        network_n["Elim_SL"] = Elim_SL;
-        network_n["Elim_SH"] = Elim_SH;
-        Elim = ((Elim_SL*LAI_SL[c]) + (Elim_SH*LAI_SH[c]))/LAI; 
-        network_n["Elim"] = Elim;
-        // Rcout<< "  Elim_SL "<< Elim_SL<<"  Elim_SH "<< Elim_SH<<"  Elim "<< Elim<<"\n";
-        
-        //Add transpiration sources
-        network_n["Einst"] = Elim + Emin_S + Emin_L;
-        network_n["Einst_SL"] = Elim_SL + Emin_L_SL; //For sunlit photosynthesis/transpiration
-        network_n["Einst_SH"] = Elim_SH + Emin_L_SH; //For shade photosynthesis/transpiration
-        
-        //Effects on water potentials and flows
-        semi_implicit_integration(network_n, dt, opt, cavitationRefill);
-        update_conductances(network_n);
-        update_capacitances(network_n);
-
-        // # QUANTITIES TO CHECK IF THE RESOLUTION IS OK
-        // # 1. delta regulation between n and np1 (MIQUEL: Only Psi_LSym changes between the two calculations, params should be the same)
-        deltaRegulMax = std::max(deltaRegulMax,std::abs(((double) regul["regulFact"]) - ((double) regul_ini["regulFact"])));
-     
-        // # 2. PLC at n and np1
-        deltaPLCMax = std::max(deltaPLCMax, (double) network_n["PLC_Leaf"] - (double) network_n["PLC_Leaf"]);
-        deltaPLCMax = std::max(deltaPLCMax, (double) network_n["PLC_Stem"] - (double) network_n["PLC_Stem"]);
-        // network_n = network_np1; //# Update network_n
-
-        // # 3. update of soil on small time step (done by FP in version 16)
-        double Psi_SApo = network_n["Psi_SApo"];
-        NumericVector k_SoilToStem = network_n["k_SoilToStem"]; 
-        NumericVector PsiSoil = network_n["PsiSoil"];
-        for(int l=0;l < kSoil.size();l++) {
-          double fluxSoilToStem_mmolm2s = k_SoilToStem[l]*(PsiSoil[l] - Psi_SApo);
-          ElayersVEC[l] += fluxSoilToStem_mmolm2s;
-          fluxSoilToStem_mm[l] += (fluxSoilToStem_mmolm2s*0.001*0.01802*LAIphe[c]*dt);
-        }
-        EinstVEC[c] += ((double) network["Einst"]);
-        ElimVEC[c] += ((double) network["Elim"]);
-        Emin_LVEC[c] += ((double) network["Emin_L"]);
-        Emin_SVEC[c] += ((double) network["Emin_S"]);
-        
-      } //# end loop small time step
-      //Divide average fluxes by time steps
-      for(int l=0;l < kSoil.size();l++) ElayersVEC[l] = ElayersVEC[l]/((double) nts);
-      EinstVEC[c] = EinstVEC[c]/((double) nts);
-      ElimVEC[c] = ElimVEC[c]/((double) nts);
-      Emin_LVEC[c] = Emin_LVEC[c]/((double) nts);
-      Emin_SVEC[c] = Emin_SVEC[c]/((double) nts);
+    if(LAIphe[c]>0.0 && LeafPLCVEC[c] < 0.999) {
       
-      // # TESTS ON RESOLUTION
-      network_n["Diag_deltaRegulMax"] = deltaRegulMax;
-      regulationWellComputed = (deltaRegulMax<0.05);
-      network_n["Diag_deltaPLCMax"] = deltaPLCMax;
-      cavitationWellComputed = (deltaPLCMax<1.0);// # 1%
-      network_n["Diag_timeStepInSeconds"] = dt;
-      nwhilecomp = nwhilecomp + 1;
-    } //# end while
-
-    // # B. SAVING SOLUTION AT NEXT TIME STEP IN WBveg
-    networks[c] = network_n;
-    network = network_n;
-    
-
-    //Store leaf values (final substep)
-    E_SL(c,n) = network["Einst_SL"];
-    E_SH(c,n) = network["Einst_SH"];
-    Psi_SH(c,n) = network["Psi_LSym"];
-    Psi_SL(c,n) = network["Psi_LSym"];
-    dEdPInst(c,n) = network["k_Plant"];
-    
-    //Sunlit/shade photosynthesis
-    Gwdiff_SL = Patm*(((double) network_n["Einst_SL"])/1000.0)/VPD_SL(c,n); //From mmol to mol
-    Gwdiff_SH = Patm*(((double) network_n["Einst_SH"])/1000.0)/VPD_SH(c,n); //From mmol to mol
-    NumericVector LP_SL = leafphotosynthesis(irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL[c], 
-                                             Cair[iLayerSunlit[c]], Gwdiff_SL/1.6, 
-                                             std::max(0.0,Temp_SL(c,n)), 
-                                             Vmax298SL[c]/LAI_SL[c], Jmax298SL[c]/LAI_SL[c]);
-    NumericVector LP_SH = leafphotosynthesis(irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH[c], 
-                                             Cair[iLayerShade[c]], Gwdiff_SH/1.6, 
-                                             std::max(0.0,Temp_SH(c,n)), 
-                                             Vmax298SH[c]/LAI_SH[c], Jmax298SH[c]/LAI_SH[c]);
-    Ci_SL(c,n) = LP_SL[0];
-    Ci_SH(c,n) = LP_SH[0];
-    Ag_SL(c,n) = LP_SL[1];
-    Ag_SH(c,n) = LP_SH[1];
-    An_SL(c,n) = Ag_SL(c,n) - 0.015*VmaxTemp(Vmax298SL[c]/LAI_SL[c], Temp_SL(c,n));
-    An_SH(c,n) = Ag_SH(c,n) - 0.015*VmaxTemp(Vmax298SH[c]/LAI_SH[c], Temp_SH(c,n));
-    
-    //Store state
-    StemPsiVEC[c] = network["Psi_LApo"];
-    LeafPsiVEC[c] = network["Psi_LSym"];
-    StemSympPsiVEC[c] = network["Psi_SSym"];
-    RootCrownPsiVEC[c] = network["Psi_SApo"];
-    StemPLCVEC[c] = ((double) network["PLC_Stem"])/100.0;
-    LeafPLCVEC[c] = ((double) network["PLC_Leaf"])/100.0;
-    
-    // Rcout<<iPMSunlit[c]<<" "<<iPMShade[c] <<" "<<GwSunlit[iPMSunlit[c]]<<" "<<GwShade[iPMShade[c]]<<" "<<fittedE[iPMSunlit[c]]<<" "<<fittedE[iPMShade[c]]<<"\n";
-    //Get leaf status
-    
-    //Scale photosynthesis
-    double Agsum = Ag_SL(c,n)*LAI_SL[c] + Ag_SH(c,n)*LAI_SH[c];
-    double Ansum = An_SL(c,n)*LAI_SL[c] + An_SH(c,n)*LAI_SH[c];
-    Aginst(c,n) = (1e-6)*12.01017*Agsum*tstep;
-    Aninst(c,n) = (1e-6)*12.01017*Ansum*tstep;
-
-    //Scale from instantaneous flow to water volume in the time step
-    Einst(c,n) = EinstVEC[c]*0.001*0.01802*LAIphe[c]*tstep;
-
-    
-    //Calculate and copy RhizoPsi from connected layers to RhizoPsi from soil layers
-    calculateRhizoPsi(c,
-                      network, RhizoPsiMAT,
-                      layerConnected,
-                      RHOP, layerConnectedPools,
-                      plantWaterPools);
-    
-    //Balance between extraction and transpiration
-    PWBinst(c,n) = sum(fluxSoilToStem_mm) - Einst(c,n);
-    
-    //Add step transpiration to daily plant cohort transpiration
-    Eplant[c] += Einst(c,n);
-    Anplant[c] += Aninst(c,n);
-    Agplant[c] += Aginst(c,n);
-    //Add PWB
-    PWB[c] += PWBinst(c,n);
-    
-    
-    //Copy transpiration and from connected layers to transpiration from soil layers
-    //And update soil water content (soil water potential will not be updated until next day!)
-    if(!plantWaterPools) {
-      int cl = 0;
-      for(int l=0;l<nlayers;l++) {
-        if(layerConnected(c,l)) {
-          SoilWaterExtract(c,l) += fluxSoilToStem_mm[cl]; //Add to cummulative transpiration from layers
-          soilLayerExtractInst(l,n) += fluxSoilToStem_mm[cl];
-          //Apply extraction to soil layer
-          if(modifyInput) Ws[l] = std::max(Ws[l] - (fluxSoilToStem_mm[cl]/Water_FC[l]),0.0);
-          cl++;
+      // # A. LOOP ON THE IMPLICIT SOLVER IN PSI, trying different time steps until results are OK
+      bool regulationWellComputed = false;
+      bool cavitationWellComputed = false;
+      List network = networks[c];
+      
+      List params = network["params"];
+      double gmin_S = params["gmin_S"];
+      double gCrown0 = params["gCrown0"];
+      double gmin20 = params["gmin20"];
+      double TPhase_gmin = params["TPhase_gmin"];
+      double Q10_1_gmin = params["Q10_1_gmin"];
+      double Q10_2_gmin = params["Q10_2_gmin"];
+      double fTRBToLeaf = params["fTRBToLeaf"];
+      
+      NumericVector kSoil = network["k_Soil"];
+      
+      double LAI = network["LAI"];
+      // Rcout << "\n*** HOUR STEP " << n << " cohort " << c << "***\n";
+      
+      int nwhilecomp = 0;
+      
+      NumericVector ElayersVEC(kSoil.size(),0.0); //Instantaneous flow rate
+      NumericVector fluxSoilToStem_mm(kSoil.size(), 0.0); //Cummulative flow
+      List network_n;
+      
+      double Gwdiff_SL, Gwdiff_SH;
+      while ((!regulationWellComputed || !cavitationWellComputed) && (nwhilecomp<nsmalltimesteps.size())) { //# LOOP TO TRY DIFFERENT TIME STEPS
+        network_n = clone(network); // # initial value of WBveg
+        //   List WBsoil_n = clone(WBsoil); // # initial value of WBsoil
+        //   
+        regulationWellComputed = false;
+        cavitationWellComputed = false;
+        double deltaRegulMax = 1.0e-100;
+        double deltaPLCMax = 1.0e-100;
+        
+        //Reset output fluxes to zero
+        EinstVEC[c] = 0.0;
+        ElimVEC[c] = 0.0;
+        Emin_LVEC[c] = 0.0;
+        Emin_SVEC[c] = 0.0;
+        for(int i=0;i < kSoil.size();i++) {
+          ElayersVEC[i] = 0.0;
+          fluxSoilToStem_mm[i] = 0.0; 
         }
-      }
-    } else {
-      NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
-      LogicalMatrix layerConnectedCoh = Rcpp::as<Rcpp::LogicalMatrix>(layerConnectedPools[c]);
-      int cl = 0;
-      for(int j = 0;j<numCohorts;j++) {
+        
+        int nts = nsmalltimesteps[nwhilecomp];// # number of small time steps
+        double dt = tstep / ((double) nts); //Determine number of seconds of small time steps
+        // Rcout<< " Attempt #" << nwhilecomp<<" nts "<< nts << " dt " << dt << "\n";
+        for(int its = 1; its <= nts; its++) { //#INTERNAL LOOP ON SMALL TIME STEPS
+          
+          //Current leaf water potential (same for sunlit and shade leaves)
+          double Psi_LSym = network_n["Psi_LSym"];
+          NumericVector regul_ini = regulFact(Psi_LSym, params, "Sigmoid");
+          
+          //Leaf temperature for sunlit and shade leaves
+          double Elim_SL = network_n["Elim_SL"];
+          double Elim_SH = network_n["Elim_SH"];
+          double Elim = network_n["Elim"];
+          if(NumericVector::is_na(Elim_SL)) Elim_SL = Elim * (LAI_SL[c]/LAI);
+          if(NumericVector::is_na(Elim_SH)) Elim_SH = Elim * (LAI_SH[c]/LAI);
+          Temp_SL(c,n) = leafTemperature2(SWR_SL(c,n)/LAI_SL[c], LWR_SL(c,n)/LAI_SL[c], 
+                  Tair[iLayerSunlit[c]], zWind[iLayerSunlit[c]], 
+                                              Elim_SL,  LeafWidth[c]);
+          Temp_SH(c,n) = leafTemperature2(SWR_SH(c,n)/LAI_SH[c], LWR_SH(c,n)/LAI_SH[c], 
+                  Tair[iLayerShade[c]], zWind[iLayerShade[c]], 
+                                             Elim_SH,  LeafWidth[c]);
+          
+          //VPD
+          double VPD_air = meteoland::utils_saturationVP(Tair[iLayerCohort[c]]) - VPair[iLayerCohort[c]];
+          VPD_SL(c,n) = std::max(0.0,leafVapourPressure(Temp_SL(c,n), Psi_LSym) - VPair[iLayerSunlit[c]]);
+          VPD_SH(c,n) = std::max(0.0,leafVapourPressure(Temp_SH(c,n), Psi_LSym) - VPair[iLayerShade[c]]);
+          // Rcout<< "  AirT "<< Tair[iLayerCohort[c]] << " LT_SL "<< Temp_SL(c,n)<< " LT_SH "<< Temp_SH(c,n)<<"\n";
+          // Rcout<< "  VPD_air "<< VPD_air << " VPD_SL "<< VPD_SL(c,n)<< " VPD_SH "<< VPD_SH(c,n)<<"\n";
+          
+          //gCR = g Crown
+          double gCR = gCrown(gCrown0, zWind[iLayerCohort[c]]);
+          //gBL = g Boundary Layer
+          double gBL = 397.0*pow(zWind[iLayerCohort[c]]/(LeafWidth[c]*0.0072), 0.5); // mmol boundary layer conductance
+          
+          //# Leaf cuticular conductances and cuticular transpiration
+          double gmin_SL = gmin(Temp_SL(c,n), gmin20, TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
+          double gmin_SH = gmin(Temp_SH(c,n), gmin20, TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
+          double Emin_L_SL = Emin(gmin_SL, gBL, gCR, VPD_SL(c,n), Patm);
+          double Emin_L_SH = Emin(gmin_SH, gBL, gCR, VPD_SH(c,n), Patm);
+          double Emin_L = ((Emin_L_SL*LAI_SL[c]) + (Emin_L_SH*LAI_SH[c]))/LAI; 
+          network_n["Emin_L"] = Emin_L;
+          
+          //Compute stem cuticular transpiration
+          double Emin_S = fTRBToLeaf * Emin(gmin_S, gBL, gCR, VPD_air, Patm);
+          network_n["Emin_S"] =  Emin_S;
+          // Rcout<< "  Emin_S "<< Emin_S<<" Emin_L_SL "<< Emin_L_SL<<" Emin_L_SH "<< Emin_L_SH<<" Emin_L "<< Emin_L<<"\n";
+          
+          // Current stomatal regulation
+          NumericVector regul = regulFact(Psi_LSym, params, "Sigmoid");
+          double gs_SL = gsJarvis(params, PAR_SL(c,n), Temp_SL(c,n));
+          double gs_SH = gsJarvis(params, PAR_SH(c,n), Temp_SH(c,n));
+          //Rcout<< "  PAR_SL "<< PAR_SL(c,n)<<"  gs_SL "<< gs_SL<<"  PAR_SH "<< PAR_SH(c,n)<<" gs_SH "<< gs_SH<<"\n";
+          gs_SL = gs_SL * regul["regulFact"];
+          gs_SH = gs_SH * regul["regulFact"];
+          GSW_SL(c,n) = gs_SL/1000.0; // From mmol to mol
+          GSW_SH(c,n) = gs_SH/1000.0; // From mmol to mol
+          // Stomatal transpiration
+          Gwdiff_SL = 1.0/(1.0/gCR + 1.0/gs_SL + 1.0/gBL); 
+          Gwdiff_SH = 1.0/(1.0/gCR + 1.0/gs_SH + 1.0/gBL); 
+          Elim_SL = Gwdiff_SL * VPD_SL(c,n)/Patm;
+          Elim_SH = Gwdiff_SH * VPD_SH(c,n)/Patm;
+          network_n["Elim_SL"] = Elim_SL;
+          network_n["Elim_SH"] = Elim_SH;
+          Elim = ((Elim_SL*LAI_SL[c]) + (Elim_SH*LAI_SH[c]))/LAI; 
+          network_n["Elim"] = Elim;
+          // Rcout<< "  Elim_SL "<< Elim_SL<<"  Elim_SH "<< Elim_SH<<"  Elim "<< Elim<<"\n";
+          
+          //Add transpiration sources
+          network_n["Einst"] = Elim + Emin_S + Emin_L;
+          network_n["Einst_SL"] = Elim_SL + Emin_L_SL; //For sunlit photosynthesis/transpiration
+          network_n["Einst_SH"] = Elim_SH + Emin_L_SH; //For shade photosynthesis/transpiration
+          
+          //Effects on water potentials and flows
+          semi_implicit_integration(network_n, dt, opt, cavitationRefill);
+          update_conductances(network_n);
+          update_capacitances(network_n);
+          
+          // # QUANTITIES TO CHECK IF THE RESOLUTION IS OK
+          // # 1. delta regulation between n and np1 (MIQUEL: Only Psi_LSym changes between the two calculations, params should be the same)
+          deltaRegulMax = std::max(deltaRegulMax,std::abs(((double) regul["regulFact"]) - ((double) regul_ini["regulFact"])));
+          
+          // # 2. PLC at n and np1
+          deltaPLCMax = std::max(deltaPLCMax, (double) network_n["PLC_Leaf"] - (double) network_n["PLC_Leaf"]);
+          deltaPLCMax = std::max(deltaPLCMax, (double) network_n["PLC_Stem"] - (double) network_n["PLC_Stem"]);
+          // network_n = network_np1; //# Update network_n
+          
+          // # 3. update of soil on small time step (done by FP in version 16)
+          double Psi_SApo = network_n["Psi_SApo"];
+          NumericVector k_SoilToStem = network_n["k_SoilToStem"]; 
+          NumericVector PsiSoil = network_n["PsiSoil"];
+          for(int l=0;l < kSoil.size();l++) {
+            double fluxSoilToStem_mmolm2s = k_SoilToStem[l]*(PsiSoil[l] - Psi_SApo);
+            ElayersVEC[l] += fluxSoilToStem_mmolm2s;
+            fluxSoilToStem_mm[l] += (fluxSoilToStem_mmolm2s*0.001*0.01802*LAIphe[c]*dt);
+          }
+          EinstVEC[c] += ((double) network["Einst"]);
+          ElimVEC[c] += ((double) network["Elim"]);
+          Emin_LVEC[c] += ((double) network["Emin_L"]);
+          Emin_SVEC[c] += ((double) network["Emin_S"]);
+          
+        } //# end loop small time step
+        //Divide average fluxes by time steps
+        for(int l=0;l < kSoil.size();l++) ElayersVEC[l] = ElayersVEC[l]/((double) nts);
+        EinstVEC[c] = EinstVEC[c]/((double) nts);
+        ElimVEC[c] = ElimVEC[c]/((double) nts);
+        Emin_LVEC[c] = Emin_LVEC[c]/((double) nts);
+        Emin_SVEC[c] = Emin_SVEC[c]/((double) nts);
+        
+        // # TESTS ON RESOLUTION
+        network_n["Diag_deltaRegulMax"] = deltaRegulMax;
+        regulationWellComputed = (deltaRegulMax<0.05);
+        network_n["Diag_deltaPLCMax"] = deltaPLCMax;
+        cavitationWellComputed = (deltaPLCMax<1.0);// # 1%
+        network_n["Diag_timeStepInSeconds"] = dt;
+        nwhilecomp = nwhilecomp + 1;
+      } //# end while
+      
+      // # B. SAVING SOLUTION AT NEXT TIME STEP IN WBveg
+      networks[c] = network_n;
+      network = network_n;
+      
+      
+      //Store leaf values (final substep)
+      E_SL(c,n) = network["Einst_SL"];
+      E_SH(c,n) = network["Einst_SH"];
+      Psi_SH(c,n) = network["Psi_LSym"];
+      Psi_SL(c,n) = network["Psi_LSym"];
+      dEdPInst(c,n) = network["k_Plant"];
+      
+      //Sunlit/shade photosynthesis
+      Gwdiff_SL = Patm*(((double) network_n["Einst_SL"])/1000.0)/VPD_SL(c,n); //From mmol to mol
+      Gwdiff_SH = Patm*(((double) network_n["Einst_SH"])/1000.0)/VPD_SH(c,n); //From mmol to mol
+      NumericVector LP_SL = leafphotosynthesis(irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL[c], 
+                                               Cair[iLayerSunlit[c]], Gwdiff_SL/1.6, 
+                                               std::max(0.0,Temp_SL(c,n)), 
+                                               Vmax298SL[c]/LAI_SL[c], Jmax298SL[c]/LAI_SL[c]);
+      NumericVector LP_SH = leafphotosynthesis(irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH[c], 
+                                               Cair[iLayerShade[c]], Gwdiff_SH/1.6, 
+                                               std::max(0.0,Temp_SH(c,n)), 
+                                               Vmax298SH[c]/LAI_SH[c], Jmax298SH[c]/LAI_SH[c]);
+      Ci_SL(c,n) = LP_SL[0];
+      Ci_SH(c,n) = LP_SH[0];
+      Ag_SL(c,n) = LP_SL[1];
+      Ag_SH(c,n) = LP_SH[1];
+      An_SL(c,n) = Ag_SL(c,n) - 0.015*VmaxTemp(Vmax298SL[c]/LAI_SL[c], Temp_SL(c,n));
+      An_SH(c,n) = Ag_SH(c,n) - 0.015*VmaxTemp(Vmax298SH[c]/LAI_SH[c], Temp_SH(c,n));
+      
+      //Store state
+      LeafPsiVEC[c] = network["Psi_LApo"];
+      LeafSympPsiVEC[c] = network["Psi_LSym"];
+      StemPsiVEC[c] = network["Psi_SApo"];
+      StemSympPsiVEC[c] = network["Psi_SSym"];
+      RootCrownPsiVEC[c] = network["Psi_RCApo"];
+      StemPLCVEC[c] = ((double) network["PLC_Stem"])/100.0;
+      LeafPLCVEC[c] = ((double) network["PLC_Leaf"])/100.0;
+      
+      // Rcout<<iPMSunlit[c]<<" "<<iPMShade[c] <<" "<<GwSunlit[iPMSunlit[c]]<<" "<<GwShade[iPMShade[c]]<<" "<<fittedE[iPMSunlit[c]]<<" "<<fittedE[iPMShade[c]]<<"\n";
+      //Get leaf status
+      
+      //Scale photosynthesis
+      double Agsum = Ag_SL(c,n)*LAI_SL[c] + Ag_SH(c,n)*LAI_SH[c];
+      double Ansum = An_SL(c,n)*LAI_SL[c] + An_SH(c,n)*LAI_SH[c];
+      Aginst(c,n) = (1e-6)*12.01017*Agsum*tstep;
+      Aninst(c,n) = (1e-6)*12.01017*Ansum*tstep;
+      
+      //Scale from instantaneous flow to water volume in the time step
+      Einst(c,n) = EinstVEC[c]*0.001*0.01802*LAIphe[c]*tstep;
+      
+      
+      //Calculate and copy RhizoPsi from connected layers to RhizoPsi from soil layers
+      calculateRhizoPsi(c,
+                        network, RhizoPsiMAT,
+                        layerConnected,
+                        RHOP, layerConnectedPools,
+                        plantWaterPools);
+      
+      //Balance between extraction and transpiration
+      PWBinst(c,n) = sum(fluxSoilToStem_mm) - Einst(c,n);
+      
+      //Add step transpiration to daily plant cohort transpiration
+      Eplant[c] += Einst(c,n);
+      Anplant[c] += Aninst(c,n);
+      Agplant[c] += Aginst(c,n);
+      //Add PWB
+      PWB[c] += PWBinst(c,n);
+      
+      
+      //Copy transpiration and from connected layers to transpiration from soil layers
+      //And update soil water content (soil water potential will not be updated until next day!)
+      if(!plantWaterPools) {
+        int cl = 0;
         for(int l=0;l<nlayers;l++) {
-          if(layerConnectedCoh(j,l)) {
+          if(layerConnected(c,l)) {
             SoilWaterExtract(c,l) += fluxSoilToStem_mm[cl]; //Add to cummulative transpiration from layers
             soilLayerExtractInst(l,n) += fluxSoilToStem_mm[cl];
             //Apply extraction to soil layer
-            if(modifyInput) Wpool(j,l) = Wpool(j,l) - (fluxSoilToStem_mm[cl]/(Water_FC[l]*poolProportions[j])); //Apply extraction from pools
+            if(modifyInput) Ws[l] = std::max(Ws[l] - (fluxSoilToStem_mm[cl]/Water_FC[l]),0.0);
             cl++;
+          }
+        }
+      } else {
+        NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
+        LogicalMatrix layerConnectedCoh = Rcpp::as<Rcpp::LogicalMatrix>(layerConnectedPools[c]);
+        int cl = 0;
+        for(int j = 0;j<numCohorts;j++) {
+          for(int l=0;l<nlayers;l++) {
+            if(layerConnectedCoh(j,l)) {
+              SoilWaterExtract(c,l) += fluxSoilToStem_mm[cl]; //Add to cummulative transpiration from layers
+              soilLayerExtractInst(l,n) += fluxSoilToStem_mm[cl];
+              //Apply extraction to soil layer
+              if(modifyInput) Wpool(j,l) = Wpool(j,l) - (fluxSoilToStem_mm[cl]/(Water_FC[l]*poolProportions[j])); //Apply extraction from pools
+              cl++;
+            }
           }
         }
       }
     }
-    if(LAIlive[c]>0.0) {
-      //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
-      PLC(c,n) = StemPLCVEC[c];
-      StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]);
-      LeafSympRWCInst(c,n) = symplasticRelativeWaterContent(LeafPsiVEC[c], LeafPI0[c], LeafEPS[c]);
-      StemRWCInst(c,n) = StemSympRWCInst(c,n)*(1.0 - StemAF[c]) + (1.0 - StemPLCVEC[c])*StemAF[c];
-      LeafRWCInst(c,n) = LeafSympRWCInst(c,n)*(1.0 - LeafAF[c]) + (1.0 - LeafPLCVEC[c])*LeafAF[c];
-      StemPsiInst(c,n) = StemPsiVEC[c]; 
-      LeafPsiInst(c,n) = LeafPsiVEC[c]; //Store instantaneous (average) leaf potential
-      RootPsiInst(c,n) = RootCrownPsiVEC[c]; //Store instantaneous root crown potential
-      StemSympPsiInst(c,n) = StemSympPsiVEC[c];
-      LeafSympPsiInst(c,n) = LeafPsiVEC[c];
-      
-      //Store the minimum water potential of the day (i.e. mid-day)
-      minGSW_SL[c] = std::min(minGSW_SL[c], GSW_SL(c,n));
-      minGSW_SH[c] = std::min(minGSW_SH[c], GSW_SH(c,n));
-      maxGSW_SL[c] = std::max(maxGSW_SL[c], GSW_SL(c,n));
-      maxGSW_SH[c] = std::max(maxGSW_SH[c], GSW_SH(c,n));
-      minTemp_SL[c] = std::min(minTemp_SL[c], Temp_SL(c,n));
-      minTemp_SH[c] = std::min(minTemp_SH[c], Temp_SH(c,n));
-      maxTemp_SL[c] = std::max(maxTemp_SL[c], Temp_SL(c,n));
-      maxTemp_SH[c] = std::max(maxTemp_SH[c], Temp_SH(c,n));
-      minLeafPsi_SL[c] = std::min(minLeafPsi_SL[c], Psi_SL(c,n));
-      minLeafPsi_SH[c] = std::min(minLeafPsi_SH[c], Psi_SH(c,n));
-      maxLeafPsi_SL[c] = std::max(maxLeafPsi_SL[c], Psi_SL(c,n));
-      maxLeafPsi_SH[c] = std::max(maxLeafPsi_SH[c], Psi_SH(c,n));
-      minLeafPsi[c] = std::min(minLeafPsi[c], LeafPsiInst(c,n));
-      maxLeafPsi[c] = std::max(maxLeafPsi[c], LeafPsiInst(c,n));
-      minStemPsi[c] = std::min(minStemPsi[c], StemPsiInst(c,n));
-      minRootPsi[c] = std::min(minRootPsi[c], RootPsiInst(c,n));
-      for(int l=0;l<nlayers;l++) {
-        minPsiRhizo(c,l) = std::min(minPsiRhizo(c,l), RhizoPsiMAT(c,l));
-      }
-    }
+    
   }
 }

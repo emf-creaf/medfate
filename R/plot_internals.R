@@ -77,8 +77,8 @@
   }
   TYPES <-c(TYPES,
             "Plant stress" = "PlantStress",
-            "Leaf PLC" = "LeafPLC",
-            "Stem PLC" = "StemPLC")
+            "Leaf percent conductance loss" = "LeafPLC",
+            "Stem percent conductance loss" = "StemPLC")
   return(TYPES)
 }
 .getSunlitShadePlotTypes<-function(transpirationMode = "Granier"){
@@ -230,6 +230,7 @@
             "Upper stem water potential" = "StemPsi", 
             "Leaf symplastic water potential" = "LeafSympPsi", 
             "Stem symplastic water potential" = "StemSympPsi",
+            "Leaf percent conductance loss" = "LeafPLC",
             "Stem percent conductance loss" = "StemPLC",
             "Stem relative water content" = "StemRWC", 
             "Leaf relative water content" = "LeafRWC",
@@ -882,7 +883,7 @@
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type %in% c("LeafRWC", "StemRWC", "StemPLC",
+  else if(type %in% c("LeafRWC", "StemRWC", "LeafPLC", "StemPLC",
                       "LeafSympRWC", "StemSympRWC")) {
     m = extractSubdaily(x, type, dates)[,c("datetime", cohorts), drop=FALSE]
     m[, -1] <- 100*m[, -1]

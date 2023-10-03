@@ -90,11 +90,15 @@ A list, with the following options (default values in brackets):
     }
     
   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Cochard"} only):
-    \itemize{
-      \item{\code{capacitance [= TRUE]}: Whether the effect of (symplasmic or apoplasmic) plant water compartments is considered in simulations.}
+    \itemize{leafCuticularTranspiration
+      \item{\code{plantCapacitance [= TRUE]}: Whether the effect of (symplasmic or apoplasmic) plant water compartments is considered in simulations.}
+      \item{\code{leafCuticularTranspiration [= TRUE]}: Whether the effect of leaf cuticular transpiration is considered in simulations.}
+      \item{\code{stemCuticularTranspiration [= TRUE]}: Whether the effect of stem cuticular transpiration is considered in simulations.}
       \item{\code{C_SApoInit [= 2.0e-5]}: Maximum capacitance of the stem apoplasm (mmol·m-2).}
       \item{\code{C_LApoInit [= 1.0e-5]}: Maximum capacitance of the leaf apoplasm (mmol·m-2).}
       \item{\code{k_SSym [= 0.26]}: Conductance from stem apoplasm to stem symplasm (mmol·s-1·m-2).}
+      \item{\code{k_LSym [= 2.0]}: Conductance from leaf apoplasm to leaf symplasm (mmol·s-1·m-2).}
+      \item{\code{gs_NightFrac [= 0.05]}: Stomatal conductance at night as fraction of maximum stomatal conductance ([0-1]).}
       \item{\code{TPhase_gmin [= 37.5]}: Temperature for transition phase of gmin.}
       \item{\code{Q10_1_gmin [= 1.2]}: Temperature dependance of gmin when T ≤ TPhase.}
       \item{\code{Q10_2_gmin [= 4.8]}: Temperature dependance of gmin when T > TPhase.}

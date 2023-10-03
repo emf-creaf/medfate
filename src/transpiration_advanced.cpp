@@ -122,6 +122,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   NumericMatrix V =Rcpp::as<Rcpp::NumericMatrix>(belowLayers["V"]);
   NumericMatrix VCroot_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
   NumericMatrix VGrhizo_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
+  NumericMatrix RhizoPsiMAT = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["RhizoPsi"]);
   
   //Water pools
   NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
@@ -156,13 +157,25 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   //Water storage parameters
   DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
   NumericVector maxFMC = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["maxFMC"]);
-
+  NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
+  NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
+  NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
+  NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]); //l·m-2 = mm
+  NumericVector LeafPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafPI0"]);
+  NumericVector LeafEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafEPS"]);
+  NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
+  NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
+  
   //Comunication with outside
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
   NumericVector LeafPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
   NumericVector StemPLCVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
+  NumericVector RootCrownPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
+  NumericVector StemPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPsi"]);
+  NumericVector LeafPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
   NumericVector StemSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
-
+  NumericVector LeafSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
+  
   if(NumericVector::is_na(aspect)) aspect = 0.0;
   if(NumericVector::is_na(slope)) slope = 0.0;
   double latrad = latitude * (M_PI/180.0);
@@ -215,49 +228,89 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   NumericMatrix K(numCohorts, nlayers);
   NumericVector Eplant(numCohorts, 0.0), Anplant(numCohorts, 0.0), Agplant(numCohorts, 0.0);
   NumericMatrix Rninst(numCohorts,ntimesteps);
+  std::fill(Rninst.begin(), Rninst.end(), NA_REAL);
   NumericMatrix dEdPInst(numCohorts, ntimesteps);
+  std::fill(dEdPInst.begin(), dEdPInst.end(), NA_REAL);
   NumericMatrix Qinst(numCohorts,ntimesteps);
+  std::fill(Qinst.begin(), Qinst.end(), NA_REAL);
   NumericMatrix Einst(numCohorts, ntimesteps);
+  std::fill(Einst.begin(), Einst.end(), NA_REAL);
   NumericMatrix Aninst(numCohorts, ntimesteps), Aginst(numCohorts, ntimesteps);
+  std::fill(Aninst.begin(), Aninst.end(), NA_REAL);
+  std::fill(Aginst.begin(), Aginst.end(), NA_REAL);
   NumericMatrix LeafPsiInst(numCohorts, ntimesteps), StemPsiInst(numCohorts, ntimesteps);
+  std::fill(LeafPsiInst.begin(), LeafPsiInst.end(), NA_REAL);
+  std::fill(StemPsiInst.begin(), StemPsiInst.end(), NA_REAL);
   NumericMatrix LeafSympPsiInst(numCohorts, ntimesteps), StemSympPsiInst(numCohorts, ntimesteps);
+  std::fill(LeafSympPsiInst.begin(), LeafSympPsiInst.end(), NA_REAL);
+  std::fill(StemSympPsiInst.begin(), StemSympPsiInst.end(), NA_REAL);
   NumericMatrix LeafRWCInst(numCohorts, ntimesteps), StemRWCInst(numCohorts, ntimesteps);
+  std::fill(LeafRWCInst.begin(), LeafRWCInst.end(), NA_REAL);
+  std::fill(StemRWCInst.begin(), StemRWCInst.end(), NA_REAL);
   NumericMatrix LeafSympRWCInst(numCohorts, ntimesteps), StemSympRWCInst(numCohorts, ntimesteps);
+  std::fill(LeafSympRWCInst.begin(), LeafSympRWCInst.end(), NA_REAL);
+  std::fill(StemSympRWCInst.begin(), StemSympRWCInst.end(), NA_REAL);
   NumericMatrix RootPsiInst(numCohorts, ntimesteps);
+  std::fill(RootPsiInst.begin(), RootPsiInst.end(), NA_REAL);
   NumericMatrix PWBinst(numCohorts, ntimesteps);
+  std::fill(PWBinst.begin(), PWBinst.end(), NA_REAL);
   NumericMatrix E_SL(numCohorts, ntimesteps);
+  std::fill(E_SL.begin(), E_SL.end(), NA_REAL);
   NumericMatrix E_SH(numCohorts, ntimesteps);
+  std::fill(E_SH.begin(), E_SH.end(), NA_REAL);
   NumericMatrix An_SL(numCohorts, ntimesteps), Ag_SL(numCohorts, ntimesteps);
+  std::fill(An_SL.begin(), An_SL.end(), NA_REAL);
+  std::fill(Ag_SL.begin(), Ag_SL.end(), NA_REAL);
   NumericMatrix An_SH(numCohorts, ntimesteps), Ag_SH(numCohorts, ntimesteps);
+  std::fill(An_SH.begin(), An_SH.end(), NA_REAL);
+  std::fill(Ag_SH.begin(), Ag_SH.end(), NA_REAL);
   NumericMatrix Psi_SL(numCohorts, ntimesteps);
+  std::fill(Psi_SL.begin(), Psi_SL.end(), NA_REAL);
   NumericMatrix Psi_SH(numCohorts, ntimesteps);
+  std::fill(Psi_SH.begin(), Psi_SH.end(), NA_REAL);
   NumericMatrix Ci_SL(numCohorts, ntimesteps);
+  std::fill(Ci_SL.begin(), Ci_SL.end(), NA_REAL);
   NumericMatrix Ci_SH(numCohorts, ntimesteps);
+  std::fill(Ci_SH.begin(), Ci_SH.end(), NA_REAL);
   NumericMatrix SWR_SL(numCohorts, ntimesteps);
+  std::fill(SWR_SL.begin(), SWR_SL.end(), NA_REAL);
   NumericMatrix SWR_SH(numCohorts, ntimesteps);
+  std::fill(SWR_SH.begin(), SWR_SH.end(), NA_REAL);
   NumericMatrix PAR_SL(numCohorts, ntimesteps);
+  std::fill(PAR_SL.begin(), PAR_SL.end(), NA_REAL);
   NumericMatrix PAR_SH(numCohorts, ntimesteps);
+  std::fill(PAR_SH.begin(), PAR_SH.end(), NA_REAL);
   NumericMatrix LWR_SL(numCohorts, ntimesteps);
+  std::fill(LWR_SL.begin(), LWR_SL.end(), NA_REAL);
   NumericMatrix LWR_SH(numCohorts, ntimesteps);
+  std::fill(LWR_SH.begin(), LWR_SH.end(), NA_REAL);
   NumericMatrix GSW_SH(numCohorts, ntimesteps);
+  std::fill(GSW_SH.begin(), GSW_SH.end(), NA_REAL);
   NumericMatrix GSW_SL(numCohorts, ntimesteps);
+  std::fill(GSW_SL.begin(), GSW_SL.end(), NA_REAL);
   NumericMatrix VPD_SH(numCohorts, ntimesteps);
+  std::fill(VPD_SH.begin(), VPD_SH.end(), NA_REAL);
   NumericMatrix VPD_SL(numCohorts, ntimesteps);
+  std::fill(VPD_SL.begin(), VPD_SL.end(), NA_REAL);
   NumericMatrix Temp_SH(numCohorts, ntimesteps);
+  std::fill(Temp_SH.begin(), Temp_SH.end(), NA_REAL);
   NumericMatrix Temp_SL(numCohorts, ntimesteps);
-  NumericVector minLeafPsi(numCohorts,0.0), maxLeafPsi(numCohorts,-99999.0); 
-  NumericVector maxGSW_SL(numCohorts,-99999.0), maxGSW_SH(numCohorts,-99999.0); 
-  NumericVector minGSW_SL(numCohorts,99999.0), minGSW_SH(numCohorts,99999.0); 
-  NumericVector maxTemp_SL(numCohorts,-99999.0), maxTemp_SH(numCohorts,-99999.0); 
-  NumericVector minTemp_SL(numCohorts,99999.0), minTemp_SH(numCohorts,99999.0); 
-  NumericVector minLeafPsi_SL(numCohorts,0.0), maxLeafPsi_SL(numCohorts,-99999.0); 
-  NumericVector minLeafPsi_SH(numCohorts,0.0), maxLeafPsi_SH(numCohorts,-99999.0);
-  NumericVector minStemPsi(numCohorts, 0.0), minRootPsi(numCohorts,0.0); //Minimum potentials experienced
+  std::fill(Temp_SL.begin(), Temp_SL.end(), NA_REAL);
+  NumericVector minLeafPsi(numCohorts,NA_REAL), maxLeafPsi(numCohorts,NA_REAL); 
+  NumericVector maxGSW_SL(numCohorts,NA_REAL), maxGSW_SH(numCohorts,NA_REAL); 
+  NumericVector minGSW_SL(numCohorts,NA_REAL), minGSW_SH(numCohorts,NA_REAL); 
+  NumericVector maxTemp_SL(numCohorts,NA_REAL), maxTemp_SH(numCohorts,NA_REAL); 
+  NumericVector minTemp_SL(numCohorts,NA_REAL), minTemp_SH(numCohorts,NA_REAL); 
+  NumericVector minLeafPsi_SL(numCohorts,NA_REAL), maxLeafPsi_SL(numCohorts,NA_REAL); 
+  NumericVector minLeafPsi_SH(numCohorts,NA_REAL), maxLeafPsi_SH(numCohorts,NA_REAL);
+  NumericVector minStemPsi(numCohorts, NA_REAL), minRootPsi(numCohorts,NA_REAL); //Minimum potentials experienced
   NumericMatrix minPsiRhizo(numCohorts, nlayers);
-  if(numCohorts>0) std::fill(minPsiRhizo.begin(), minPsiRhizo.end(), 0.0);
-  NumericMatrix PLC(numCohorts, ntimesteps);
-  NumericVector leafPLC(numCohorts), PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts),RWCssm(numCohorts), RWClsm(numCohorts);
-  NumericVector dEdPm(numCohorts);
+  if(numCohorts>0) std::fill(minPsiRhizo.begin(), minPsiRhizo.end(), NA_REAL);
+  NumericMatrix StemPLC(numCohorts, ntimesteps), LeafPLC(numCohorts, ntimesteps);
+  std::fill(StemPLC.begin(), StemPLC.end(), NA_REAL);
+  std::fill(LeafPLC.begin(), LeafPLC.end(), NA_REAL);
+  NumericVector PLClm(numCohorts, NA_REAL), PLCsm(numCohorts, NA_REAL), RWCsm(numCohorts, NA_REAL), RWClm(numCohorts, NA_REAL),RWCssm(numCohorts, NA_REAL), RWClsm(numCohorts, NA_REAL);
+  NumericVector dEdPm(numCohorts, NA_REAL);
   NumericVector PWB(numCohorts,0.0);
   
   IntegerVector iPMSunlit(numCohorts,0), iPMShade(numCohorts,0); //Initial values set to closed stomata
@@ -507,6 +560,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                                 psic, VG_nc, VG_alphac,
                                                 sapFluidityDay, control);
       }
+      
     } else {
       //Determine connected layers (non-zero fine root abundance)
       NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
@@ -604,7 +658,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   RootPsiInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Aginst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Aninst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  PLC.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  StemPLC.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  LeafPLC.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   LeafRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   StemRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PWBinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -669,7 +724,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     _["LeafPsi"] = LeafPsiInst,
     _["StemSympPsi"] = StemSympPsiInst,
     _["LeafSympPsi"] = LeafSympPsiInst,
-    _["StemPLC"] = PLC, 
+    _["StemPLC"] = StemPLC, 
+    _["LeafPLC"] = LeafPLC, 
     _["StemRWC"] = StemRWCInst,
     _["LeafRWC"] = LeafRWCInst,
     _["StemSympRWC"] = StemSympRWCInst,
@@ -684,8 +740,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                        _["NetPhotosynthesis"] = Anplant,
                                        _["RootPsi"] = minRootPsi, 
                                        _["StemPsi"] = minStemPsi, 
-                                       _["LeafPLC"] = leafPLC, //Average daily stem PLC
-                                       _["StemPLC"] = PLCm, //Average daily stem PLC
+                                       _["LeafPLC"] = PLClm, //Average daily leaf PLC
+                                       _["StemPLC"] = PLCsm, //Average daily stem PLC
                                        _["LeafPsiMin"] = minLeafPsi, 
                                        _["LeafPsiMax"] = maxLeafPsi, 
                                        _["dEdP"] = dEdPm,//Average daily soilplant conductance
@@ -797,6 +853,65 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     } else if(transpirationMode == "Cochard"){
       innerCochard(x, innerInput, innerOutput, n, tstep,
                    verbose, modifyInput);
+    }
+    
+    for(int c=0;c<numCohorts;c++) {
+      if(LAIlive[c]>0.0 && (LeafPLCVEC[c] < 0.999)) {
+        //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
+        StemPLC(c,n) = StemPLCVEC[c];
+        LeafPLC(c,n) = LeafPLCVEC[c];
+        StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], StemPI0[c], StemEPS[c]);
+        LeafSympRWCInst(c,n) = symplasticRelativeWaterContent(LeafSympPsiVEC[c], LeafPI0[c], LeafEPS[c]);
+        StemRWCInst(c,n) = StemSympRWCInst(c,n)*(1.0 - StemAF[c]) + (1.0 - StemPLCVEC[c])*StemAF[c];
+        LeafRWCInst(c,n) = LeafSympRWCInst(c,n)*(1.0 - LeafAF[c]) + (1.0 - LeafPLCVEC[c])*LeafAF[c];
+        StemPsiInst(c,n) = StemPsiVEC[c]; 
+        LeafPsiInst(c,n) = LeafPsiVEC[c]; //Store instantaneous (average) leaf potential
+        RootPsiInst(c,n) = RootCrownPsiVEC[c]; //Store instantaneous root crown potential
+        LeafSympPsiInst(c,n) = LeafSympPsiVEC[c];
+        StemSympPsiInst(c,n) = StemSympPsiVEC[c];
+        
+        if(n==0) {
+          minGSW_SL[c] = GSW_SL(c,n);
+          minGSW_SH[c] = GSW_SH(c,n);
+          maxGSW_SL[c] = GSW_SL(c,n);
+          maxGSW_SH[c] = GSW_SH(c,n);
+          minTemp_SL[c] = Temp_SL(c,n);
+          minTemp_SH[c] = Temp_SH(c,n);
+          maxTemp_SL[c] = Temp_SL(c,n);
+          maxTemp_SH[c] = Temp_SH(c,n);
+          minLeafPsi_SL[c] = Psi_SL(c,n);
+          minLeafPsi_SH[c] = Psi_SH(c,n);
+          maxLeafPsi_SL[c] = Psi_SL(c,n);
+          maxLeafPsi_SH[c] = Psi_SH(c,n);
+          minLeafPsi[c] = LeafPsiInst(c,n);
+          maxLeafPsi[c] = LeafPsiInst(c,n);
+          minStemPsi[c] = StemPsiInst(c,n);
+          minRootPsi[c] = RootPsiInst(c,n);
+          for(int l=0;l<nlayers;l++) {
+            minPsiRhizo(c,l) = RhizoPsiMAT(c,l);
+          }
+        } else {
+          minGSW_SL[c] = std::min(minGSW_SL[c], GSW_SL(c,n));
+          minGSW_SH[c] = std::min(minGSW_SH[c], GSW_SH(c,n));
+          maxGSW_SL[c] = std::max(maxGSW_SL[c], GSW_SL(c,n));
+          maxGSW_SH[c] = std::max(maxGSW_SH[c], GSW_SH(c,n));
+          minTemp_SL[c] = std::min(minTemp_SL[c], Temp_SL(c,n));
+          minTemp_SH[c] = std::min(minTemp_SH[c], Temp_SH(c,n));
+          maxTemp_SL[c] = std::max(maxTemp_SL[c], Temp_SL(c,n));
+          maxTemp_SH[c] = std::max(maxTemp_SH[c], Temp_SH(c,n));
+          minLeafPsi_SL[c] = std::min(minLeafPsi_SL[c], Psi_SL(c,n));
+          minLeafPsi_SH[c] = std::min(minLeafPsi_SH[c], Psi_SH(c,n));
+          maxLeafPsi_SL[c] = std::max(maxLeafPsi_SL[c], Psi_SL(c,n));
+          maxLeafPsi_SH[c] = std::max(maxLeafPsi_SH[c], Psi_SH(c,n));
+          minLeafPsi[c] = std::min(minLeafPsi[c], LeafPsiInst(c,n));
+          maxLeafPsi[c] = std::max(maxLeafPsi[c], LeafPsiInst(c,n));
+          minStemPsi[c] = std::min(minStemPsi[c], StemPsiInst(c,n));
+          minRootPsi[c] = std::min(minRootPsi[c], RootPsiInst(c,n));
+          for(int l=0;l<nlayers;l++) {
+            minPsiRhizo(c,l) = std::min(minPsiRhizo(c,l), RhizoPsiMAT(c,l));
+          }
+        }
+      } 
     }
     
     ////////////////////////////////////////
@@ -984,8 +1099,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   ////////////////////////////////////////
   for(int c=0;c<numCohorts;c++) {
     SoilExtractCoh[c] =  sum(SoilWaterExtract(c,_));
-    PLCm[c] = sum(PLC(c,_))/((double)PLC.ncol());
-    leafPLC[c] = LeafPLCVEC[c];
+    PLCsm[c] = sum(StemPLC(c,_))/((double)StemPLC.ncol());
+    PLClm[c] = sum(LeafPLC(c,_))/((double)LeafPLC.ncol());
     RWCsm[c] = sum(StemRWCInst(c,_))/((double)StemRWCInst.ncol());
     RWClm[c] = sum(LeafRWCInst(c,_))/((double)LeafRWCInst.ncol());
     LFMC[c] = maxFMC[c]*((1.0/r635[c])*RWClm[c]+(1.0 - (1.0/r635[c]))*RWCsm[c]);
