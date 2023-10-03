@@ -139,6 +139,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   //Control parameters
   List control = x["control"];
   bool snowpack = control["snowpack"];
+  bool bareSoilEvaporation = control["bareSoilEvaporation"];
   bool rockyLayerDrainage = control["rockyLayerDrainage"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
@@ -208,7 +209,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
                                              runon,
                                              snowpack, true);
   
-  NumericVector infilPerc, EsoilVec;
+  NumericVector infilPerc, EsoilVec(nlayers,0.0);
   double Eherb=0.0;
   
   if(!plantWaterPools) {
@@ -216,9 +217,10 @@ List spwbDay_basic(List x, NumericVector meteovec,
     infilPerc = soilInfiltrationPercolation(soil, soilFunctions, 
                                             hydroInputs["Input"],
                                             rockyLayerDrainage, true);
-    //Evaporation from bare soil (if there is no snow)
-    EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
-
+    
+    //B.1 - Evaporation from bare soil if there is no snow
+    if(bareSoilEvaporation) EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
+    
     //Herbaceous transpiration
     Eherb = herbaceousTranspiration(pet, LherbSWR, herbLAI, soil, soilFunctions, true);
     //Copy soil status to x
@@ -234,7 +236,6 @@ List spwbDay_basic(List x, NumericVector meteovec,
     infilPerc = NumericVector::create(_["Infiltration"] = 0.0, 
                                       _["Runoff"] = 0.0, 
                                       _["DeepDrainage"] = 0.0);
-    EsoilVec = NumericVector(nlayers,0.0);
     for(int c=0;c<numCohorts;c++) {
 
       //Clone soil and copy moisture values from x
@@ -246,8 +247,11 @@ List spwbDay_basic(List x, NumericVector meteovec,
       NumericVector infilPerc_c = soilInfiltrationPercolation(soil_c, soilFunctions, 
                                               hydroInputs["Input"],
                                               rockyLayerDrainage, true);
+      
       //Evaporation from bare soil_c (if there is no snow)
-      NumericVector EsoilVec_c = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, true);
+      NumericVector EsoilVec_c(nlayers,0.0); 
+      if(bareSoilEvaporation) EsoilVec_c = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, true);
+      
       //Herbaceous transpiration
       double Eherb_c = herbaceousTranspiration(pet, LherbSWR, herbLAI, soil_c, soilFunctions, true);
       
@@ -337,6 +341,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   
   //Control parameters
   List control = x["control"];
+  bool bareSoilEvaporation = control["bareSoilEvaporation"];
   bool rockyLayerDrainage = control["rockyLayerDrainage"];
   bool snowpack = control["snowpack"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
@@ -410,15 +415,17 @@ List spwbDay_advanced(List x, NumericVector meteovec,
                                               runon,
                                               snowpack, true);
   
-  NumericVector infilPerc, EsoilVec;
+  NumericVector infilPerc, EsoilVec(nlayers,0.0);
   double Eherb = 0.0;
   if(!plantWaterPools) {
     //A.2 - Soil infiltration and percolation
     infilPerc = soilInfiltrationPercolation(soil, soilFunctions, 
                                             hydroInputs["Input"],
                                             rockyLayerDrainage, true);
+    
     //B.1 - Evaporation from bare soil if there is no snow
-    EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
+    if(bareSoilEvaporation) EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
+    
     //Herbaceous transpiration
     Eherb = herbaceousTranspiration(pet, LherbSWR, herbLAI, soil, soilFunctions, true);
     
@@ -434,7 +441,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
     infilPerc = NumericVector::create(_["Infiltration"] = 0.0, 
                                       _["Runoff"] = 0.0, 
                                       _["DeepDrainage"] = 0.0);
-    EsoilVec = NumericVector(nlayers,0.0);
+    
     for(int c=0;c<numCohorts;c++) {
 
       //Clone soil and copy moisture values from x
@@ -446,8 +453,11 @@ List spwbDay_advanced(List x, NumericVector meteovec,
       NumericVector infilPerc_c = soilInfiltrationPercolation(soil_c, soilFunctions, 
                                                               hydroInputs["Input"],
                                                               rockyLayerDrainage, true);
+      
       //Evaporation from bare soil_c (if there is no snow)
-      NumericVector EsoilVec_c = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, true);
+      NumericVector EsoilVec_c(nlayers,0.0); 
+      if(bareSoilEvaporation) EsoilVec_c = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, true);
+      
       //Herbaceous transpiration
       double Eherb_c = herbaceousTranspiration(pet, LherbSWR, herbLAI, soil_c, soilFunctions, true);
       //Copy result vectors
