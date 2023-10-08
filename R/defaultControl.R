@@ -94,6 +94,7 @@
 #'       \item{\code{plantCapacitance [= TRUE]}: Whether the effect of (symplasmic or apoplasmic) plant water compartments is considered in simulations.}
 #'       \item{\code{leafCuticularTranspiration [= TRUE]}: Whether the effect of leaf cuticular transpiration is considered in simulations.}
 #'       \item{\code{stemCuticularTranspiration [= TRUE]}: Whether the effect of stem cuticular transpiration is considered in simulations.}
+#'       \item{\code{rootDisconnection [= FALSE]}: Whether roots can physically disconnect from the soil.}
 #'       \item{\code{C_SApoInit [= 2.0e-5]}: Maximum capacitance of the stem apoplasm (mmol·m-2).}
 #'       \item{\code{C_LApoInit [= 1.0e-5]}: Maximum capacitance of the leaf apoplasm (mmol·m-2).}
 #'       \item{\code{k_SSym [= 0.26]}: Conductance from stem apoplasm to stem symplasm (mmol·s-1·m-2).}
@@ -220,6 +221,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     plantCapacitance = TRUE,
     leafCuticularTranspiration = TRUE,
     stemCuticularTranspiration = TRUE,
+    rootDisconnection = FALSE,
     C_SApoInit = 2.0e-05,
     C_LApoInit = 1.0e-05,
     k_SSym = 0.26,
@@ -296,6 +298,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     l$plantCapacitance <- NULL
     l$leafCuticularTranspiration <- NULL
     l$stemCuticularTranspiration <- NULL
+    l$rootDisconnection <- NULL
     l$C_SApoInit <- NULL
     l$C_LApoInit <- NULL
     l$k_SSym <- NULL
