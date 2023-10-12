@@ -173,6 +173,13 @@ CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parN
 }
 
 /** Parameter retrieval with imputation */
+NumericVector kDIRWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector kDIR = speciesNumericParameterFromIndex(SP, SpParams, "kDIR");
+  for(int j=0;j<kDIR.size();j++) {
+    if(NumericVector::is_na(kDIR[j])) kDIR[j] = 0.8;
+  }
+  return(kDIR);
+}
 NumericVector kPARWithImputation(IntegerVector SP, DataFrame SpParams) {
   CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
   NumericVector kPAR = speciesNumericParameterFromIndex(SP, SpParams, "kPAR");
@@ -1505,7 +1512,8 @@ NumericVector treeAllometricCoefficientWithImputation(IntegerVector SP, DataFram
 
 NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame SpParams, String parName, bool fillMissing = true){
   if(fillMissing) {
-    if(parName == "kPAR") return(kPARWithImputation(SP,SpParams));
+    if(parName == "kDIR") return(kDIRWithImputation(SP,SpParams));
+    else if(parName == "kPAR") return(kPARWithImputation(SP,SpParams));
     else if(parName == "gammaSWR") return(gammaSWRWithImputation(SP,SpParams));
     else if(parName == "alphaSWR") return(alphaSWRWithImputation(SP,SpParams));
     else if(parName == "g") return(gWithImputation(SP,SpParams));
