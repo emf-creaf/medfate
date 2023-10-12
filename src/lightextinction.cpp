@@ -49,7 +49,7 @@ NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, Num
 //' @param LAImd A numeric matrix of dead LAI values per vegetation layer (row) and cohort (column).
 //' @param LAImx A numeric matrix of maximum LAI values per vegetation layer (row) and cohort (column).
 //' @param k A vector of light extinction coefficients.
-//' @param kb A vector of direct light extinction coefficients.
+//' @param kb,kDIR A vector of direct light extinction coefficients.
 //' @param kd A vector of diffuse light extinction coefficients.
 //' @param Ib0 Above-canopy direct incident radiation.
 //' @param Id0 Above-canopy diffuse incident radiation.
