@@ -110,7 +110,7 @@ light_longwaveRadiationSHAW(
 
 \item{beta}{Solar elevation (in radians).}
 
-\item{kb}{A vector of direct light extinction coefficients.}
+\item{kb, kDIR}{A vector of direct light extinction coefficients.}
 
 \item{kd}{A vector of diffuse light extinction coefficients.}
 
