@@ -56,6 +56,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   double defaultWindSpeed = control["defaultWindSpeed"];
   String cavitationRefill = control["cavitationRefill"];
   double refillMaximumRate = control["refillMaximumRate"];
+  bool sapFluidityVariation = control["sapFluidityVariation"];
   
   //Meteo input
   double tmin = meteovec["tmin"];
@@ -138,6 +139,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   NumericVector alphaSWR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["alphaSWR"]);
   NumericVector gammaSWR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["gammaSWR"]);
   NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
+  NumericVector kDIR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kDIR"]);
   
   //Anatomy parameters
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
@@ -415,7 +417,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   // STEP 3c. Short-wave radiation extinction and absortion for sub-steps
   ////////////////////////////////////////
   List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
-                                                                        kPAR, alphaSWR, gammaSWR,
+                                                                        kDIR, kPAR, alphaSWR, gammaSWR,
                                                                         ddd, 
                                                                         ntimesteps, 0.1);
   List sunshade = lightExtinctionAbsortion["sunshade"];
@@ -500,7 +502,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
 
 
   //Average sap fluidity
-  double sapFluidityDay = 1.0/waterDynamicViscosity((tmin+tmax)/2.0);
+  double sapFluidityDay = 1.0;
+  if(sapFluidityVariation) sapFluidityDay = 1.0/waterDynamicViscosity((tmin+tmax)/2.0);
   
   //Hydraulics: Define supply functions
   List hydraulicNetwork(numCohorts);

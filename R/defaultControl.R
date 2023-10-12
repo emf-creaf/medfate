@@ -68,6 +68,7 @@
 #'       \item{\code{ndailysteps [= 24]}: Number of steps into which each day is divided for determination of stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).}
 #'       \item{\code{nsubsteps [= 3600]}: Number of substeps into which each step is divided for multi-layer canopy energy balance solving.}
 #'       \item{\code{multiLayerBalance [= FALSE]}: Flag to indicate multiple canopy energy balance. If \code{FALSE}, canopy is considered a single layer for energy balance.}
+#'       \item{\code{sapFluidityVariation [= TRUE]}: Flag to indicate that temperature affects sap fluidity (and indirectly plant conductance).}
 #'       \item{\code{taper [= TRUE]}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
 #'       \item{\code{maximumStemConductance [= 10]}: Maximum allowed value for the stem maximum hydraulic conductance (in mmol·s-1·m-2·MPa-1). Introduced to avoid excessive hydraulic redistribution caused by species with small size (i.e. very large stem conductance).}
 #'       \item{\code{thermalCapacityLAI [= 1000000]}: Thermal canopy capacitance per LAI unit.}
@@ -206,6 +207,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     nsubsteps = 3600,
     taper = TRUE,
     multiLayerBalance = FALSE,
+    sapFluidityVariation = TRUE,
     maximumStemConductance = 10,
     fracLeafResistance = NA,
     fracRootResistance = 0.4,

@@ -60,6 +60,7 @@ light_instantaneousLightExtinctionAbsortion(
   LAIme,
   LAImd,
   LAImx,
+  kDIR,
   kPAR,
   alphaSWR,
   gammaSWR,

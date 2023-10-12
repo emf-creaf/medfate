@@ -78,7 +78,8 @@ void update_conductances(List network) {
   }
 
   // Compute k_plant (from root to leaf) for diagnostic only
-  network["k_Plant"] =  1.0/ (1.0 /sum(k_RSApo) + 1.0/k_SLApo + 1.0/k_LSym);
+  // Rcout << " PLCstem "<< ((double) network["PLC_Stem"]) << " PLCleaf "<< ((double) network["PLC_Leaf"]) << " "<< sum(k_RSApo) << " Leaf " << k_SLApoInit << "/"<<k_SLApo << " " << k_LSym<<"\n";
+  network["k_Plant"] =  1.0/ (1.0 /sum(k_RCApo) + 1.0/k_CSApo + 1.0/k_SLApo + 1.0/k_LSym);
 }
 
 // # update symplasmic plant capacitances for Trunk and leaves
