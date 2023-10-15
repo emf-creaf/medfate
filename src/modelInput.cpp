@@ -365,6 +365,11 @@ DataFrame paramsTranspirationCochard(DataFrame above, List soil, DataFrame SpPar
   NumericVector VGrhizotot_kmax(numCohorts, 0.0);
   NumericVector Plant_kmax(numCohorts, 0.0);
 
+  double k_LSym = control["k_LSym"];
+  NumericVector kleaf_symp(numCohorts, k_LSym);
+  double k_SSym = control["k_SSym"];
+  NumericVector kstem_symp(numCohorts, k_SSym);
+  
   // Scaled conductance parameters parameters
   for(int c=0;c<numCohorts;c++){
     //Sigmoid slopes if missing
@@ -402,7 +407,7 @@ DataFrame paramsTranspirationCochard(DataFrame above, List soil, DataFrame SpPar
       VCleaf_kmax[c] = 1.0/(rtot*fracLeafResistance);
     }
     //Plant kmax
-    Plant_kmax[c] = 1.0/((1.0/VCleaf_kmax[c])+(1.0/VCstem_kmax[c])+(1.0/VCroottot_kmax[c]));
+    Plant_kmax[c] = 1.0/((1.0/kleaf_symp[c]) + (1.0/VCleaf_kmax[c])+(1.0/VCstem_kmax[c])+(1.0/VCroottot_kmax[c]));
   }
   
   DataFrame paramsTranspirationdf = DataFrame::create();
@@ -432,6 +437,8 @@ DataFrame paramsTranspirationCochard(DataFrame above, List soil, DataFrame SpPar
   paramsTranspirationdf.push_back(VCroot_c, "VCroot_c");
   paramsTranspirationdf.push_back(VCroot_d, "VCroot_d");
   paramsTranspirationdf.push_back(VGrhizotot_kmax, "VGrhizo_kmax");
+  paramsTranspirationdf.push_back(kleaf_symp, "kleaf_symp");
+  paramsTranspirationdf.push_back(kstem_symp, "kstem_symp");
   paramsTranspirationdf.push_back(Plant_kmax, "Plant_kmax");
   paramsTranspirationdf.attr("row.names") = above.attr("row.names");
   return(paramsTranspirationdf);

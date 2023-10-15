@@ -205,7 +205,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   ////////////////////////////////////////
   NumericVector psiSoil = psi(soil, soilFunctions); //Get soil water potential
   NumericMatrix psiSoilM(numCohorts, nlayers);
-  if(!plantWaterPools){
+  if(plantWaterPools){
     //Copy soil water potentials from pools
     List soil_pool = clone(soil);
     NumericVector Ws_pool = soil_pool["W"];

@@ -233,6 +233,8 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   NumericVector VCstem_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_slope"]);
   NumericVector VCroot_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_P50"]);
   NumericVector VCroot_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_slope"]);
+  NumericVector kstem_symp = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["kstem_symp"]);
+  NumericVector kleaf_symp = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["kleaf_symp"]);
   NumericVector Gswmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gswmax"]);
   NumericVector Gswmin = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gswmin"]);
   NumericVector Gs_Toptim = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_Toptim"]);
@@ -322,8 +324,8 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   //Conductances (mmol m-2 MPa-1 s-1)
   network.push_back(NA_REAL, "k_SLApo"); //Conductance from trunk apoplasm to leaf apoplasm
   network.push_back(NA_REAL, "k_CSApo"); //Conductance from root crown to trunk apoplasm
-  network.push_back(sapFluidityDay*((double)control["k_SSym"]), "k_SSym"); //Conductance from trunk apoplasm to trunk symplasm (CONTROL PARAMETER?)
-  network.push_back(sapFluidityDay*((double)control["k_LSym"]), "k_LSym"); //Conductance from leaf apoplasm to leaf symplasm
+  network.push_back(sapFluidityDay*kstem_symp[c], "k_SSym"); //Conductance from trunk apoplasm to trunk symplasm (CONTROL PARAMETER?)
+  network.push_back(sapFluidityDay*kleaf_symp[c], "k_LSym"); //Conductance from leaf apoplasm to leaf symplasm
   NumericVector k_RSApo(VGrhizo_kmax.size(), NA_REAL);
   network.push_back(k_RSApo, "k_RSApo"); //Conductance from rhizosphere surface to trunk apoplasm
   NumericVector k_SoilToStem(VGrhizo_kmax.size(), NA_REAL);
@@ -463,7 +465,7 @@ void calculateRhizoPsi(int c,
         if(layerConnectedCoh(j,l)) {
           double fluxSoilToStem_mmolm2s = k_SoilToStem[cl]*(PsiSoil[cl] - Psi_SApo);
           rplv[clj] = PsiSoil[cl] - fluxSoilToStem_mmolm2s/k_Soil[cl];
-          vplv[clj] = RHOPcoh(c,l);
+          vplv[clj] = RHOPcoh(j,l);
           cl++;
           clj++;
         }
@@ -1091,7 +1093,10 @@ void innerCochard(List x, List input, List output, int n, double tstep,
               SoilWaterExtract(c,l) += fluxSoilToStem_mm[cl]; //Add to cummulative transpiration from layers
               soilLayerExtractInst(l,n) += fluxSoilToStem_mm[cl];
               //Apply extraction to soil layer
-              if(modifyInput) Wpool(j,l) = Wpool(j,l) - (fluxSoilToStem_mm[cl]/(Water_FC[l]*poolProportions[j])); //Apply extraction from pools
+              if(modifyInput) {
+                Wpool(j,l) = std::max(Wpool(j,l) - (fluxSoilToStem_mm[cl]/(Water_FC[l]*poolProportions[j])), 0.0); //Apply extraction from pools 
+                Ws[l] = std::max(Ws[l] - (fluxSoilToStem_mm[cl]/Water_FC[l]),0.0);
+              }
               cl++;
             }
           }
