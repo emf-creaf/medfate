@@ -316,7 +316,7 @@ void copyRhizoPsi(int c, int iPM,
       for(int j=0;j<numCohorts;j++) {
         if(layerConnectedCoh(j,l)) {
           rplv[clj] = RhizoPsi(iPM,cl);
-          vplv[clj] = RHOPcoh(c,l);
+          vplv[clj] = RHOPcoh(j,l);
           cl++;
           clj++;
         }
@@ -326,8 +326,10 @@ void copyRhizoPsi(int c, int iPM,
       for(int j=0;j<clj;j++) {
         pv[j] = rplv[j];
         vv[j] = vplv[j];
+        // Rcout<< c << " "<< l <<" "<<j<< " "<< pv[j]<< " "<< vv[j]<<"\n";
       }
       RhizoPsiMAT(c,l) = averagePsi(pv,vv,VCroot_c[c], VCroot_d[c]);
+      // Rcout<< c << " "<<l<< " "<< RhizoPsiMAT(c,l)<<"\n";
     }
   }
 }
@@ -717,7 +719,10 @@ void innerSperry(List x, List input, List output, int n, double tstep,
                 SoilWaterExtract(c,l) += Esoilcn[cl]; //Add to cummulative transpiration from layers
                 soilLayerExtractInst(l,n) += Esoilcn[cl];
                 //Apply extraction to soil layer
-                if(modifyInput) Wpool(j,l) = Wpool(j,l) - (Esoilcn[cl]/(Water_FC[l]*poolProportions[j])); //Apply extraction from pools
+                if(modifyInput) {
+                  Wpool(j,l) = std::max(Wpool(j,l) - (Esoilcn[cl]/(Water_FC[l]*poolProportions[j])),0.0); //Apply extraction from pools 
+                  Ws[l] = std::max(Ws[l] - (Esoilcn[cl]/Water_FC[l]),0.0);
+                }
                 cl++;
               }
             }
