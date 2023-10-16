@@ -260,7 +260,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
       infilPerc["Runoff"] = infilPerc["Runoff"] + poolProportions[c]*infilPerc_c["Runoff"];
       infilPerc["DeepDrainage"] = infilPerc["DeepDrainage"] + poolProportions[c]*infilPerc_c["DeepDrainage"];
       for(int l=0;l<nlayers;l++) EsoilVec[l] = EsoilVec[l] + poolProportions[c]*EsoilVec_c[l];
-      Eherb = Eherb + Eherb_c;
+      Eherb = Eherb + poolProportions[c]*Eherb_c;
       
       // Copy soil_c status back to x
       for(int l=0;l<nlayers;l++) {
@@ -465,7 +465,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
       infilPerc["Runoff"] = infilPerc["Runoff"] + poolProportions[c]*infilPerc_c["Runoff"];
       infilPerc["DeepDrainage"] = infilPerc["DeepDrainage"] + poolProportions[c]*infilPerc_c["DeepDrainage"];
       for(int l=0;l<nlayers;l++) EsoilVec[l] = EsoilVec[l] + poolProportions[c]*EsoilVec_c[l];
-      Eherb = Eherb + Eherb_c;
+      Eherb = Eherb + poolProportions[c]*Eherb_c;
       // Copy soil_c status back to x
       for(int l=0;l<nlayers;l++) {
         Wpool(c,l) = W_c[l];
