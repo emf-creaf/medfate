@@ -568,11 +568,21 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       //Determine connected layers (non-zero fine root abundance)
       NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
       LogicalMatrix layerConnectedCoh(numCohorts, nlayers);
-      
+      NumericMatrix RHOPcohDyn(numCohorts, nlayers);
       nlayerscon[c] = 0;
+      for(int l=0;l<nlayers;l++) {
+        double overlapFactor = Psi2K(psiSoil[l], -1.0, 4.0);
+        RHOPcohDyn(c,l) = RHOPcoh(c,l);
+        for(int j=0; j<numCohorts;j++) {
+          if(j!=c) {
+            RHOPcohDyn(j,l) = RHOPcoh(j,l)*overlapFactor;
+            RHOPcohDyn(c,l) = RHOPcohDyn(c,l) + (RHOPcoh(j,l) - RHOPcohDyn(j,l));
+          } 
+        }
+      }
       for(int j=0; j<numCohorts;j++) {
         for(int l=0;l<nlayers;l++) {
-          if((V(c,l)>0.0) && (RHOPcoh(j,l)>0.0)) {
+          if((V(c,l)>0.0) && (RHOPcohDyn(j,l)>0.0)) {
             layerConnectedCoh(j,l)= true;
             nlayerscon[c]=nlayerscon[c] + 1;
           } else {
@@ -595,9 +605,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       for(int j=0; j<numCohorts;j++) {
         for(int l=0;l<nlayers;l++) {
           if(layerConnectedCoh(j,l)) {
-            Vc[cnt] = V(c,l)*RHOPcoh(j,l);
-            VCroot_kmaxc[cnt] = VCroot_kmax(c,l)*RHOPcoh(j,l);
-            VGrhizo_kmaxc[cnt] = VGrhizo_kmax(c,l)*RHOPcoh(j,l);
+            Vc[cnt] = V(c,l)*RHOPcohDyn(j,l);
+            VCroot_kmaxc[cnt] = VCroot_kmax(c,l)*RHOPcohDyn(j,l);
+            VGrhizo_kmaxc[cnt] = VGrhizo_kmax(c,l)*RHOPcohDyn(j,l);
             psic[cnt] = psiSoilM(j,l);
             VG_nc[cnt] = VG_n[l];
             VG_alphac[cnt] = VG_alpha[l];

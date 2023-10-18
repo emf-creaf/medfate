@@ -331,11 +331,9 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   NumericVector k_SoilToStem(VGrhizo_kmax.size(), NA_REAL);
   network.push_back(k_SoilToStem, "k_SoilToStem"); //Conductance from soil to trunk apoplasm
   NumericVector k_Soil(VGrhizo_kmax.size(), NA_REAL);
-  bool rootDisconnection = control["rootDisconnection"];
   for(int l=0;l < k_Soil.size(); l++) {
     double k_soil_cl = VGrhizo_kmax[l];
-    if(rootDisconnection) k_soil_cl = k_soil_cl * (100.0 - PLC(PsiSoil[l], Gs_slope[c], Gs_P50[c]))/100.0;
-    k_Soil[l] = vanGenuchtenConductance(PsiSoil[l], //Disconnection
+    k_Soil[l] = vanGenuchtenConductance(PsiSoil[l],
                                         k_soil_cl, 
                                         VG_n[l], VG_alpha[l]); 
   }
