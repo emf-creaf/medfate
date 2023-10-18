@@ -268,12 +268,23 @@ List transpirationBasic(List x, NumericVector meteovec,
       // Rcout<< c << " : " << rootCrownPsi<<"\n";
     } else {
       NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
+      NumericMatrix RHOPcohDyn(numCohorts, nlayers);
+      for(int l=0;l<nlayers;l++) {
+        double overlapFactor = Psi2K(psiSoil[l], -1.0, 4.0);
+        RHOPcohDyn(c,l) = RHOPcoh(c,l);
+        for(int j=0; j<numCohorts;j++) {
+          if(j!=c) {
+            RHOPcohDyn(j,l) = RHOPcoh(j,l)*overlapFactor;
+            RHOPcohDyn(c,l) = RHOPcohDyn(c,l) + (RHOPcoh(j,l) - RHOPcohDyn(j,l));
+          } 
+        }
+      }
       NumericMatrix Klc(numCohorts, nlayers);
       NumericMatrix Kunlc(numCohorts, nlayers);
       NumericMatrix RHOPcohV(numCohorts, nlayers);
       for(int j = 0;j<numCohorts;j++) {
         for(int l=0;l<nlayers;l++) {
-          RHOPcohV(j,l) = RHOPcoh(j,l)*V(c,l);
+          RHOPcohV(j,l) = RHOPcohDyn(j,l)*V(c,l);
           Klc(j,l) = Psi2K(psiSoilM(c,l), Psi_Extract[c], Exp_Extract[c]);
           //Limit Mean Kl due to previous cavitation
           if(cavitationRefill!="total") Klc(j,l) = std::min(Klc(j,l), 1.0-StemPLC[c]); 

@@ -40,7 +40,7 @@
 #'       \item{\code{rockyLayerDrainage [= TRUE]}: Boolean flag to indicate the simulation of drainage from rocky layers (> 95\% of rocks).}
 #'       \item{\code{unlimitedSoilWater [= FALSE]}: Boolean flag to indicate the simulation of plant transpiration assuming that soil water is always at field capacity.}
 #'       \item{\code{unfoldingDD [= 300]}: Degree-days for complete leaf unfolding after budburst has occurred.}
-#'       \item{\code{rhizosphereOverlap [= "total"]}: A string indicating the degree of rhizosphere spatial overlap between plant cohorts:
+#'       \item{\code{rhizosphereOverlap [= "partial"]}: A string indicating the degree of rhizosphere spatial overlap between plant cohorts:
 #'           \itemize{
 #'             \item{"none" - no overlap (independent water pools).}
 #'             \item{"partial" - partial overlap determined by coarse root volume.}
@@ -95,7 +95,6 @@
 #'       \item{\code{plantCapacitance [= TRUE]}: Whether the effect of (symplasmic or apoplasmic) plant water compartments is considered in simulations.}
 #'       \item{\code{leafCuticularTranspiration [= TRUE]}: Whether the effect of leaf cuticular transpiration is considered in simulations.}
 #'       \item{\code{stemCuticularTranspiration [= TRUE]}: Whether the effect of stem cuticular transpiration is considered in simulations.}
-#'       \item{\code{rootDisconnection [= FALSE]}: Whether roots can physically disconnect from the soil.}
 #'       \item{\code{C_SApoInit [= 2.0e-5]}: Maximum capacitance of the stem apoplasm (mmol·m-2).}
 #'       \item{\code{C_LApoInit [= 1.0e-5]}: Maximum capacitance of the leaf apoplasm (mmol·m-2).}
 #'       \item{\code{k_SSym [= 0.26]}: Conductance from stem apoplasm to stem symplasm (mmol·s-1·m-2).}
@@ -193,7 +192,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     bareSoilEvaporation = TRUE,
     rockyLayerDrainage = TRUE,
     unlimitedSoilWater = FALSE,
-    rhizosphereOverlap = "total",
+    rhizosphereOverlap = "partial",
     unfoldingDD = 300,
     verticalLayerSize = 100,
     windMeasurementHeight = 200,
@@ -223,7 +222,6 @@ defaultControl<-function(transpirationMode = "Granier") {
     plantCapacitance = TRUE,
     leafCuticularTranspiration = TRUE,
     stemCuticularTranspiration = TRUE,
-    rootDisconnection = FALSE,
     C_SApoInit = 2.0e-05,
     C_LApoInit = 1.0e-05,
     k_SSym = 0.26,
@@ -300,7 +298,6 @@ defaultControl<-function(transpirationMode = "Granier") {
     l$plantCapacitance <- NULL
     l$leafCuticularTranspiration <- NULL
     l$stemCuticularTranspiration <- NULL
-    l$rootDisconnection <- NULL
     l$C_SApoInit <- NULL
     l$C_LApoInit <- NULL
     l$k_SSym <- NULL
