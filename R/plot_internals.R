@@ -227,7 +227,7 @@
 .getSubdailyPlantPlotTypes<-function(){
   TYPES = c("Average leaf water potential" = "LeafPsiAverage",
             "Root crown water potential" = "RootPsi", 
-            "Upper stem water potential" = "StemPsi", 
+            "Stem water potential" = "StemPsi", 
             "Leaf symplastic water potential" = "LeafSympPsi", 
             "Stem symplastic water potential" = "StemSympPsi",
             "Leaf percent conductance loss" = "LeafPLC",

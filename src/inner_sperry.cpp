@@ -26,13 +26,17 @@ List initSperryNetwork(int c,
   NumericVector VCroot_c = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_c"]);
   NumericVector VCroot_d = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCroot_d"]);
   
+  bool leafCavitationEffects = control["leafCavitationEffects"];
+  double leafplc = LeafPLCVEC[c];
+  if(!leafCavitationEffects) leafplc = 0.0;
+  
   List HN = List::create(_["numericParams"] = control["numericParams"], 
                          _["psisoil"] = psiSoil,
                          _["krhizomax"] = VGrhizo_kmax,_["nsoil"] = VG_n,_["alphasoil"] = VG_alpha,
                          _["krootmax"] = sapFluidityDay*VCroot_kmax, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
                          _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
                          _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
-                         _["PLCstem"] = StemPLCVEC[c],_["PLCleaf"] = LeafPLCVEC[c]);
+                         _["PLCstem"] = StemPLCVEC[c],_["PLCleaf"] = leafplc);
   
   return(HN);
 }

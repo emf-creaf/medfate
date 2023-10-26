@@ -510,7 +510,8 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                                   _["poolProportions"] = poolProportions);
       List RHOP;
       if(rhizosphereOverlap=="none") RHOP = nonoverlapHorizontalProportions(V);
-      else RHOP = horizontalProportions(poolProportions, CRSV, N, V, dVec, rfc);
+      else RHOP = equaloverlapHorizontalProportions(poolProportions, V);
+      // else RHOP = horizontalProportions(poolProportions, CRSV, N, V, dVec, rfc);
       belowLayers = List::create(_["V"] = V,
                                  _["L"] = L,
                                  _["Wpool"] = Wpool,
@@ -591,7 +592,8 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                                   _["poolProportions"] = poolProportions);
       List RHOP;
       if(rhizosphereOverlap=="none") RHOP = nonoverlapHorizontalProportions(V);
-      else RHOP = horizontalProportions(poolProportions, CRSV, N, V, dVec, rfc);
+      else RHOP = equaloverlapHorizontalProportions(poolProportions, V);
+      // else RHOP = horizontalProportions(poolProportions, CRSV, N, V, dVec, rfc);
       belowLayers["RHOP"] = RHOP;
     } else {
       belowdf = DataFrame::create(_["Z50"]=Z50,

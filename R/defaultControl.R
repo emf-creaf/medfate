@@ -93,6 +93,7 @@
 #'   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Cochard"} only):
 #'     \itemize{
 #'       \item{\code{plantCapacitance [= TRUE]}: Whether the effect of (symplasmic or apoplasmic) plant water compartments is considered in simulations.}
+#'       \item{\code{soilDisconnection [= FALSE]}: Whether the ability of the plants to physically disconnect their root system from the soil is considered in simulations.}
 #'       \item{\code{leafCuticularTranspiration [= TRUE]}: Whether the effect of leaf cuticular transpiration is considered in simulations.}
 #'       \item{\code{stemCuticularTranspiration [= TRUE]}: Whether the effect of stem cuticular transpiration is considered in simulations.}
 #'       \item{\code{C_SApoInit [= 2.0e-5]}: Maximum capacitance of the stem apoplasm (mmol·m-2).}
@@ -196,6 +197,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     unfoldingDD = 300,
     verticalLayerSize = 100,
     windMeasurementHeight = 200,
+    leafCavitationEffects = FALSE,
     cavitationRefill = "annual",
     
     #spwb with granier
@@ -220,6 +222,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     
     #spwb with cochard
     plantCapacitance = TRUE,
+    soilDisconnection = FALSE,
     leafCuticularTranspiration = TRUE,
     stemCuticularTranspiration = TRUE,
     C_SApoInit = 2.0e-05,
@@ -296,6 +299,7 @@ defaultControl<-function(transpirationMode = "Granier") {
   }
   if(transpirationMode != "Cochard") {
     l$plantCapacitance <- NULL
+    l$soilDisconnection <- NULL
     l$leafCuticularTranspiration <- NULL
     l$stemCuticularTranspiration <- NULL
     l$C_SApoInit <- NULL

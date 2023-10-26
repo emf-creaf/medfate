@@ -94,6 +94,7 @@ A list, with the following options (default values in brackets):
   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Cochard"} only):
     \itemize{
       \item{\code{plantCapacitance [= TRUE]}: Whether the effect of (symplasmic or apoplasmic) plant water compartments is considered in simulations.}
+      \item{\code{soilDisconnection [= FALSE]}: Whether the ability of the plants to physically disconnect their root system from the soil is considered in simulations.}
       \item{\code{leafCuticularTranspiration [= TRUE]}: Whether the effect of leaf cuticular transpiration is considered in simulations.}
       \item{\code{stemCuticularTranspiration [= TRUE]}: Whether the effect of stem cuticular transpiration is considered in simulations.}
       \item{\code{C_SApoInit [= 2.0e-5]}: Maximum capacitance of the stem apoplasm (mmol·m-2).}
