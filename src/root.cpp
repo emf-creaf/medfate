@@ -577,6 +577,19 @@ List nonoverlapHorizontalProportions(NumericMatrix V) {
   l.attr("names") = rownames(V);
   return(l);
 }
+List equaloverlapHorizontalProportions(NumericVector poolProportions, NumericMatrix V) {
+  int numCohorts = V.nrow();
+  int numlayers = V.ncol();
+  List l(numCohorts);
+  for(int coh=0;coh<numCohorts;coh++) {
+    NumericMatrix RHOP(numCohorts,numlayers);
+    for(int l=0;l<numlayers;l++) RHOP(_,l) = poolProportions;
+    RHOP.attr("dimnames") = V.attr("dimnames");
+    l[coh] = RHOP;
+  }
+  l.attr("names") = rownames(V);
+  return(l);
+}
 //' @rdname root
 // [[Rcpp::export("root_horizontalProportions")]]
 List horizontalProportions(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, 
@@ -588,6 +601,7 @@ List horizontalProportions(NumericVector poolProportions, NumericVector VolInd, 
   NumericVector poolAreaInd(numCohorts);
   for(int c=0;c<numCohorts;c++) {
     poolAreaInd[c] = 10000.0*poolProportions[c]/N[c]; //area of the pool per individual of the cohort
+    // Rcout<<poolAreaInd[c]<<"\n";
   }
   
   NumericMatrix iga = individualRootedGroundArea(VolInd,V,d,rfc);

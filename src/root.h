@@ -35,6 +35,7 @@ NumericVector coarseRootLengthsFromVolume(double VolInd, NumericVector v, Numeri
 NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
 
 List nonoverlapHorizontalProportions(NumericMatrix V);
+List equaloverlapHorizontalProportions(NumericVector poolProportions, NumericMatrix V);
 List horizontalProportions(NumericVector poolProportions, NumericVector VolInd, 
                            NumericVector N, NumericMatrix V, 
                            NumericVector d, NumericVector rfc);

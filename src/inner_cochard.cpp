@@ -252,6 +252,7 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
   NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
   
+  bool soilDisconnection = control["soilDisconnection"];
   
   List network = List::create();
   //Params
@@ -278,11 +279,13 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   //PLANT RELATED PARAMETERS
   double gmin20 = Gswmin[c]*1000.0; //Leaf cuticular transpiration
   bool leafCuticularTranspiration = control["leafCuticularTranspiration"];
+  if(soilDisconnection) gmin20 = gmin20*RWC(LeafPI0[c], LeafEPS[c], LeafSympPsiVEC[c]);
   if(!leafCuticularTranspiration) gmin20 = 0.0;
   params.push_back(gmin20, "gmin20"); //mol to mmol 
   params.push_back(Gswmax[c]*1000.0, "gsMax"); //mol to mmol 
   bool stemCuticularTranspiration = control["stemCuticularTranspiration"];
   double gmin_S = Gswmin[c]*1000.0;  // gmin for stem equal to leaf gmin, in mmol
+  if(soilDisconnection) gmin_S = gmin_S*RWC(StemPI0[c], StemEPS[c], StemSympPsiVEC[c]);
   if(!stemCuticularTranspiration) gmin_S = 0.0;
   params.push_back(gmin_S, "gmin_S");
   params.push_back(((double)control["gs_NightFrac"])*Gswmax[c]*1000.0, "gsNight"); //gsNight equal to 5% percent of gsMax
@@ -331,8 +334,10 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   NumericVector k_SoilToStem(VGrhizo_kmax.size(), NA_REAL);
   network.push_back(k_SoilToStem, "k_SoilToStem"); //Conductance from soil to trunk apoplasm
   NumericVector k_Soil(VGrhizo_kmax.size(), NA_REAL);
+  
   for(int l=0;l < k_Soil.size(); l++) {
     double k_soil_cl = VGrhizo_kmax[l];
+    if(soilDisconnection) k_soil_cl = k_soil_cl*(1.0 - PLC(PsiSoil[l], Gs_slope[c], Gs_P50[c])/100.0);
     k_Soil[l] = vanGenuchtenConductance(PsiSoil[l],
                                         k_soil_cl, 
                                         VG_n[l], VG_alpha[l]); 
@@ -661,7 +666,8 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   // Extract hydraulic networks
   List networks = input["networks"];
   
-  IntegerVector nsmalltimesteps = IntegerVector::create(2,4, 8, 16);
+  IntegerVector nsmalltimesteps = IntegerVector::create(6,12, 24, 60);
+  // IntegerVector nsmalltimesteps = IntegerVector::create(2,4, 8, 16);
   NumericVector opt = NumericVector::create(_["Lsym"] = 1.0,
                                             _["Ssym"] = 1.0,
                                             _["Eord"] = 1.0,
