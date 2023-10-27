@@ -288,6 +288,85 @@ NumericVector leafphotosynthesis(double Q, double Catm, double Gc, double Tleaf,
 }
 
 
+double third_cubic_root(double p, double q, double r) {
+  // Terms of the solution
+  double Q = (pow(p, 2.0) - 3.0*q)/9.0;
+  double R = (2.0*pow(p, 3.0) - 9.0*p*q + 27.0*r)/54.0;
+  bool sol = pow(R,2.0) < pow(Q, 3.0);
+  double theta = std::acos(R/pow(Q, 3.0/2.0));
+  //Third root of the cubic equation (Numerical Recipes in C, Press et al. 1989)
+  double x3 = -2.0*pow(Q, 0.5)*cos((theta - 2.0*M_PI)/3.0) - (p/3.0);
+  return(x3);
+}
+
+// From Baldocchi D (1994). An analytical solution for the coupled leaf photosynthesis and stomatal conductance models. Tree Physiology 14: 1069-1079 
+// [[Rcpp::export("photo_photosynthesis_baldocchi")]]
+NumericVector photosynthesis_baldocchi(double Q, 
+                                       double Catm, 
+                                       double Tleaf, 
+                                       double u,
+                                       double Vmax298, 
+                                       double Jmax298, 
+                                       double m,
+                                       double regulFact,
+                                       double b_prime,
+                                       double leafWidth = 1.0,
+                                       bool verbose=false) {
+  double mrf = m*regulFact;
+  double Vmax = VmaxTemp(Vmax298, Tleaf);
+  double Jmax = JmaxTemp(Jmax298, Tleaf);
+  //Dark respiration
+  double Rd = 0.015*Vmax;
+  //Boundary layer conductance (UNITS in mol water per s-1 m-2!!!)
+  double Gbw = 0.397*pow(u/(leafWidth*0.0072), 0.5); // mol boundary layer conductance
+  double Gbc = Gbw/1.6;
+    
+  //Compensation point
+  double Gamma_comp = gammaTemp(Tleaf);
+  
+  //Coefficients when Rubisco limits (c)
+  double a_c = Vmax;
+  double b_c = KmTemp(Tleaf, O2_conc);  
+  double d_c = Gamma_comp;
+  double e_c = 1.0;
+  
+  //Coefficients when electron transport limits (j)  
+  double J = ((quantumYield*Q+Jmax)-sqrt(pow(quantumYield*Q+Jmax, 2.0) - 4.0*lightResponseCurvature*quantumYield*Q*Jmax))/(2.0*lightResponseCurvature);  
+  double a_j = J;
+  double b_j = 8.0*Gamma_comp;
+  double d_j = Gamma_comp;
+  double e_j = 4.0;
+
+  //Solving for An when Rubisco limits (c) and when electron transport limits (j)
+  double alpha = 1.0 + (b_prime/Gbc) - mrf;
+  double beta = Catm*(Gbc*mrf - 2.0*b_prime - Gbc);
+  double gamma = pow(Catm, 2.0)*b_prime*Gbc;
+  double theta = Gbc*mrf - b_prime;
+  double p_c = (e_c*beta + b_c*theta - a_c*alpha + e_c*alpha*Rd)/(e_c*alpha);
+  double p_j = (e_j*beta + b_j*theta - a_j*alpha + e_j*alpha*Rd)/(e_j*alpha);
+  double q_c = ((e_c*gamma) + (b_c*gamma/Catm) - (a_c*beta) + (a_c*d_c*theta) + (e_c*Rd*beta) + (Rd*b_c*theta))/(e_c*alpha);
+  double q_j = ((e_j*gamma) + (b_j*gamma/Catm) - (a_j*beta) + (a_j*d_j*theta) + (e_j*Rd*beta) + (Rd*b_j*theta))/(e_j*alpha);
+  double r_c = ((-1.0*a_c*gamma) + (a_c*d_c*gamma/Catm) + (e_c*Rd*gamma) + (Rd*b_c*gamma/Catm))/(e_c*alpha);
+  double r_j = ((-1.0*a_j*gamma) + (a_j*d_j*gamma/Catm) + (e_j*Rd*gamma) + (Rd*b_j*gamma/Catm))/(e_j*alpha);
+  double An_c = third_cubic_root(p_c, q_c, r_c);
+  double An_j = third_cubic_root(p_j, q_j, r_j);
+  //Take the minimum as An
+  double An = std::min(An_c, An_j);
+  //Stomatal CO2
+  double Cs = Catm - (An/Gbc);
+  //Stomatal conductance (for carbon)
+  double Gsc = (mrf*An/Cs) + b_prime;
+  //Stomatal conductance (for water)
+  double Gsw = Gsc*1.6;
+  //Internal CO2
+  double Ci = Cs - (An/Gsc);
+  //Gross photosynthesis
+  double Ag = An + Rd;
+  NumericVector res = NumericVector::create(Gsw, Cs, Ci, An, Ag);
+  res.attr("names") = CharacterVector::create("Gsw", "Cs" ,"Ci", "An", "Ag");
+  return(res);
+}
+
 //' @rdname photo
 // [[Rcpp::export("photo_leafPhotosynthesisFunction")]]
 DataFrame leafPhotosynthesisFunction(NumericVector E, NumericVector psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, 
