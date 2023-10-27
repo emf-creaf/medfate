@@ -2904,9 +2904,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// photosynthesis_baldocchi
-NumericVector photosynthesis_baldocchi(double Q, double Catm, double Tleaf, double u, double Vmax298, double Jmax298, double m, double regulFact, double b_prime, double leafWidth, bool verbose);
-RcppExport SEXP _medfate_photosynthesis_baldocchi(SEXP QSEXP, SEXP CatmSEXP, SEXP TleafSEXP, SEXP uSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP mSEXP, SEXP regulFactSEXP, SEXP b_primeSEXP, SEXP leafWidthSEXP, SEXP verboseSEXP) {
+// photosynthesisBaldocchi
+NumericVector photosynthesisBaldocchi(double Q, double Catm, double Tleaf, double u, double Vmax298, double Jmax298, double Gsw_AC_slope, double Gsw_AC_intercept, double leafWidth, bool verbose);
+RcppExport SEXP _medfate_photosynthesisBaldocchi(SEXP QSEXP, SEXP CatmSEXP, SEXP TleafSEXP, SEXP uSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP Gsw_AC_slopeSEXP, SEXP Gsw_AC_interceptSEXP, SEXP leafWidthSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2916,12 +2916,11 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type u(uSEXP);
     Rcpp::traits::input_parameter< double >::type Vmax298(Vmax298SEXP);
     Rcpp::traits::input_parameter< double >::type Jmax298(Jmax298SEXP);
-    Rcpp::traits::input_parameter< double >::type m(mSEXP);
-    Rcpp::traits::input_parameter< double >::type regulFact(regulFactSEXP);
-    Rcpp::traits::input_parameter< double >::type b_prime(b_primeSEXP);
+    Rcpp::traits::input_parameter< double >::type Gsw_AC_slope(Gsw_AC_slopeSEXP);
+    Rcpp::traits::input_parameter< double >::type Gsw_AC_intercept(Gsw_AC_interceptSEXP);
     Rcpp::traits::input_parameter< double >::type leafWidth(leafWidthSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(photosynthesis_baldocchi(Q, Catm, Tleaf, u, Vmax298, Jmax298, m, regulFact, b_prime, leafWidth, verbose));
+    rcpp_result_gen = Rcpp::wrap(photosynthesisBaldocchi(Q, Catm, Tleaf, u, Vmax298, Jmax298, Gsw_AC_slope, Gsw_AC_intercept, leafWidth, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5063,7 +5062,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_electronLimitedPhotosynthesis", (DL_FUNC) &_medfate_electronLimitedPhotosynthesis, 4},
     {"_medfate_rubiscoLimitedPhotosynthesis", (DL_FUNC) &_medfate_rubiscoLimitedPhotosynthesis, 4},
     {"_medfate_leafphotosynthesis", (DL_FUNC) &_medfate_leafphotosynthesis, 7},
-    {"_medfate_photosynthesis_baldocchi", (DL_FUNC) &_medfate_photosynthesis_baldocchi, 11},
+    {"_medfate_photosynthesisBaldocchi", (DL_FUNC) &_medfate_photosynthesisBaldocchi, 10},
     {"_medfate_leafPhotosynthesisFunction", (DL_FUNC) &_medfate_leafPhotosynthesisFunction, 14},
     {"_medfate_leafPhotosynthesisFunction2", (DL_FUNC) &_medfate_leafPhotosynthesisFunction2, 15},
     {"_medfate_sunshadePhotosynthesisFunction", (DL_FUNC) &_medfate_sunshadePhotosynthesisFunction, 19},
