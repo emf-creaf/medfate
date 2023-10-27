@@ -9,6 +9,7 @@
 \alias{photo_electronLimitedPhotosynthesis}
 \alias{photo_rubiscoLimitedPhotosynthesis}
 \alias{photo_photosynthesis}
+\alias{photo_photosynthesisBaldocchi}
 \alias{photo_leafPhotosynthesisFunction}
 \alias{photo_leafPhotosynthesisFunction2}
 \alias{photo_sunshadePhotosynthesisFunction}
@@ -28,6 +29,19 @@ photo_electronLimitedPhotosynthesis(Q, Ci, GT, Jmax)
 photo_rubiscoLimitedPhotosynthesis(Ci, GT, Km, Vmax)
 
 photo_photosynthesis(Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose = FALSE)
+
+photo_photosynthesisBaldocchi(
+  Q,
+  Catm,
+  Tleaf,
+  u,
+  Vmax298,
+  Jmax298,
+  Gsw_AC_slope,
+  Gsw_AC_intercept,
+  leafWidth = 1,
+  verbose = FALSE
+)
 
 photo_leafPhotosynthesisFunction(
   E,
@@ -133,6 +147,14 @@ photo_multilayerPhotosynthesisFunction(
 
 \item{verbose}{Boolean flag to indicate console output.}
 
+\item{u}{Wind speed above the leaf boundary (in m/s) (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).}
+
+\item{Gsw_AC_slope}{Slope of the An/C vs Gsw relationship}
+
+\item{Gsw_AC_intercept}{Intercept of the An/C vs Gsw relationship}
+
+\item{leafWidth}{Leaf width (in cm).}
+
 \item{E}{Transpiration flow rate per leaf area (mmol*s-1*m-2).}
 
 \item{psiLeaf}{Leaf water potential (MPa).}
@@ -143,11 +165,7 @@ photo_multilayerPhotosynthesisFunction(
 
 \item{vpa}{Vapour pressure deficit (in kPa).}
 
-\item{u}{Wind speed above the leaf boundary (in m/s) (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).}
-
 \item{absRad}{Absorbed long- and short-wave radiation (in W*m^-2).}
-
-\item{leafWidth}{Leaf width (in cm).}
 
 \item{refLeafArea}{Leaf reference area.}
 

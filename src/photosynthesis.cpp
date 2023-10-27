@@ -300,19 +300,20 @@ double third_cubic_root(double p, double q, double r) {
 }
 
 // From Baldocchi D (1994). An analytical solution for the coupled leaf photosynthesis and stomatal conductance models. Tree Physiology 14: 1069-1079 
-// [[Rcpp::export("photo_photosynthesis_baldocchi")]]
-NumericVector photosynthesis_baldocchi(double Q, 
+//' @rdname photo
+//' @param Gsw_AC_slope Slope of the An/C vs Gsw relationship 
+//' @param Gsw_AC_intercept Intercept of the An/C vs Gsw relationship 
+// [[Rcpp::export("photo_photosynthesisBaldocchi")]]
+NumericVector photosynthesisBaldocchi(double Q, 
                                        double Catm, 
                                        double Tleaf, 
                                        double u,
                                        double Vmax298, 
                                        double Jmax298, 
-                                       double m,
-                                       double regulFact,
-                                       double b_prime,
+                                       double Gsw_AC_slope,
+                                       double Gsw_AC_intercept,
                                        double leafWidth = 1.0,
                                        bool verbose=false) {
-  double mrf = m*regulFact;
   double Vmax = VmaxTemp(Vmax298, Tleaf);
   double Jmax = JmaxTemp(Jmax298, Tleaf);
   //Dark respiration
@@ -321,6 +322,10 @@ NumericVector photosynthesis_baldocchi(double Q,
   double Gbw = 0.397*pow(u/(leafWidth*0.0072), 0.5); // mol boundary layer conductance
   double Gbc = Gbw/1.6;
     
+  //Translate stomatal model to carbon units
+  double b_prime = Gsw_AC_intercept/1.6;
+  double mrh = Gsw_AC_slope/1.6;
+  
   //Compensation point
   double Gamma_comp = gammaTemp(Tleaf);
   
@@ -338,10 +343,10 @@ NumericVector photosynthesis_baldocchi(double Q,
   double e_j = 4.0;
 
   //Solving for An when Rubisco limits (c) and when electron transport limits (j)
-  double alpha = 1.0 + (b_prime/Gbc) - mrf;
-  double beta = Catm*(Gbc*mrf - 2.0*b_prime - Gbc);
+  double alpha = 1.0 + (b_prime/Gbc) - mrh;
+  double beta = Catm*(Gbc*mrh - 2.0*b_prime - Gbc);
   double gamma = pow(Catm, 2.0)*b_prime*Gbc;
-  double theta = Gbc*mrf - b_prime;
+  double theta = Gbc*mrh - b_prime;
   double p_c = (e_c*beta + b_c*theta - a_c*alpha + e_c*alpha*Rd)/(e_c*alpha);
   double p_j = (e_j*beta + b_j*theta - a_j*alpha + e_j*alpha*Rd)/(e_j*alpha);
   double q_c = ((e_c*gamma) + (b_c*gamma/Catm) - (a_c*beta) + (a_c*d_c*theta) + (e_c*Rd*beta) + (Rd*b_c*theta))/(e_c*alpha);
@@ -355,7 +360,7 @@ NumericVector photosynthesis_baldocchi(double Q,
   //Stomatal CO2
   double Cs = Catm - (An/Gbc);
   //Stomatal conductance (for carbon)
-  double Gsc = (mrf*An/Cs) + b_prime;
+  double Gsc = (mrh*An/Cs) + b_prime;
   //Stomatal conductance (for water)
   double Gsw = Gsc*1.6;
   //Internal CO2

@@ -2378,8 +2378,11 @@ photo_photosynthesis <- function(Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose =
     .Call(`_medfate_leafphotosynthesis`, Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose)
 }
 
-photo_photosynthesis_baldocchi <- function(Q, Catm, Tleaf, u, Vmax298, Jmax298, m, regulFact, b_prime, leafWidth = 1.0, verbose = FALSE) {
-    .Call(`_medfate_photosynthesis_baldocchi`, Q, Catm, Tleaf, u, Vmax298, Jmax298, m, regulFact, b_prime, leafWidth, verbose)
+#' @rdname photo
+#' @param Gsw_AC_slope Slope of the An/C vs Gsw relationship 
+#' @param Gsw_AC_intercept Intercept of the An/C vs Gsw relationship 
+photo_photosynthesisBaldocchi <- function(Q, Catm, Tleaf, u, Vmax298, Jmax298, Gsw_AC_slope, Gsw_AC_intercept, leafWidth = 1.0, verbose = FALSE) {
+    .Call(`_medfate_photosynthesisBaldocchi`, Q, Catm, Tleaf, u, Vmax298, Jmax298, Gsw_AC_slope, Gsw_AC_intercept, leafWidth, verbose)
 }
 
 #' @rdname photo
