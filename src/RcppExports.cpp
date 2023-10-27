@@ -2904,6 +2904,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// photosynthesis_baldocchi
+NumericVector photosynthesis_baldocchi(double Q, double Catm, double Tleaf, double u, double Vmax298, double Jmax298, double m, double regulFact, double b_prime, double leafWidth, bool verbose);
+RcppExport SEXP _medfate_photosynthesis_baldocchi(SEXP QSEXP, SEXP CatmSEXP, SEXP TleafSEXP, SEXP uSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP mSEXP, SEXP regulFactSEXP, SEXP b_primeSEXP, SEXP leafWidthSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Q(QSEXP);
+    Rcpp::traits::input_parameter< double >::type Catm(CatmSEXP);
+    Rcpp::traits::input_parameter< double >::type Tleaf(TleafSEXP);
+    Rcpp::traits::input_parameter< double >::type u(uSEXP);
+    Rcpp::traits::input_parameter< double >::type Vmax298(Vmax298SEXP);
+    Rcpp::traits::input_parameter< double >::type Jmax298(Jmax298SEXP);
+    Rcpp::traits::input_parameter< double >::type m(mSEXP);
+    Rcpp::traits::input_parameter< double >::type regulFact(regulFactSEXP);
+    Rcpp::traits::input_parameter< double >::type b_prime(b_primeSEXP);
+    Rcpp::traits::input_parameter< double >::type leafWidth(leafWidthSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(photosynthesis_baldocchi(Q, Catm, Tleaf, u, Vmax298, Jmax298, m, regulFact, b_prime, leafWidth, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
 // leafPhotosynthesisFunction
 DataFrame leafPhotosynthesisFunction(NumericVector E, NumericVector psiLeaf, double Catm, double Patm, double Tair, double vpa, double u, double absRad, double Q, double Vmax298, double Jmax298, double leafWidth, double refLeafArea, bool verbose);
 RcppExport SEXP _medfate_leafPhotosynthesisFunction(SEXP ESEXP, SEXP psiLeafSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP uSEXP, SEXP absRadSEXP, SEXP QSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP leafWidthSEXP, SEXP refLeafAreaSEXP, SEXP verboseSEXP) {
@@ -5042,6 +5063,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_electronLimitedPhotosynthesis", (DL_FUNC) &_medfate_electronLimitedPhotosynthesis, 4},
     {"_medfate_rubiscoLimitedPhotosynthesis", (DL_FUNC) &_medfate_rubiscoLimitedPhotosynthesis, 4},
     {"_medfate_leafphotosynthesis", (DL_FUNC) &_medfate_leafphotosynthesis, 7},
+    {"_medfate_photosynthesis_baldocchi", (DL_FUNC) &_medfate_photosynthesis_baldocchi, 11},
     {"_medfate_leafPhotosynthesisFunction", (DL_FUNC) &_medfate_leafPhotosynthesisFunction, 14},
     {"_medfate_leafPhotosynthesisFunction2", (DL_FUNC) &_medfate_leafPhotosynthesisFunction2, 15},
     {"_medfate_sunshadePhotosynthesisFunction", (DL_FUNC) &_medfate_sunshadePhotosynthesisFunction, 19},
