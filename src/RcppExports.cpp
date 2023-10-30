@@ -2905,8 +2905,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // photosynthesisBaldocchi
-NumericVector photosynthesisBaldocchi(double Q, double Catm, double Tleaf, double u, double Vmax298, double Jmax298, double Gsw_AC_slope, double Gsw_AC_intercept, double leafWidth, bool verbose);
-RcppExport SEXP _medfate_photosynthesisBaldocchi(SEXP QSEXP, SEXP CatmSEXP, SEXP TleafSEXP, SEXP uSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP Gsw_AC_slopeSEXP, SEXP Gsw_AC_interceptSEXP, SEXP leafWidthSEXP, SEXP verboseSEXP) {
+NumericVector photosynthesisBaldocchi(double Q, double Catm, double Tleaf, double u, double Vmax298, double Jmax298, double leafWidth, double regulFact, double Gsw_AC_slope, double Gsw_AC_intercept);
+RcppExport SEXP _medfate_photosynthesisBaldocchi(SEXP QSEXP, SEXP CatmSEXP, SEXP TleafSEXP, SEXP uSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP leafWidthSEXP, SEXP regulFactSEXP, SEXP Gsw_AC_slopeSEXP, SEXP Gsw_AC_interceptSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2916,11 +2916,11 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type u(uSEXP);
     Rcpp::traits::input_parameter< double >::type Vmax298(Vmax298SEXP);
     Rcpp::traits::input_parameter< double >::type Jmax298(Jmax298SEXP);
+    Rcpp::traits::input_parameter< double >::type leafWidth(leafWidthSEXP);
+    Rcpp::traits::input_parameter< double >::type regulFact(regulFactSEXP);
     Rcpp::traits::input_parameter< double >::type Gsw_AC_slope(Gsw_AC_slopeSEXP);
     Rcpp::traits::input_parameter< double >::type Gsw_AC_intercept(Gsw_AC_interceptSEXP);
-    Rcpp::traits::input_parameter< double >::type leafWidth(leafWidthSEXP);
-    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(photosynthesisBaldocchi(Q, Catm, Tleaf, u, Vmax298, Jmax298, Gsw_AC_slope, Gsw_AC_intercept, leafWidth, verbose));
+    rcpp_result_gen = Rcpp::wrap(photosynthesisBaldocchi(Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, regulFact, Gsw_AC_slope, Gsw_AC_intercept));
     return rcpp_result_gen;
 END_RCPP
 }

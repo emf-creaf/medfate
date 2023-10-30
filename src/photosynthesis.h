@@ -7,6 +7,17 @@ using namespace Rcpp;
 
 NumericVector leafphotosynthesis(double Q, double Catm, double Gc, double Tleaf, double Vmax298, double Jmax298, bool verbose=false);
 
+NumericVector photosynthesisBaldocchi(double Q, 
+                                      double Catm, 
+                                      double Tleaf, 
+                                      double u,
+                                      double Vmax298, 
+                                      double Jmax298, 
+                                      double leafWidth,
+                                      double regulFact,
+                                      double Gsw_AC_slope,
+                                      double Gsw_AC_intercept);
+
 double VmaxTemp(double Vmax298, double Tleaf);
 double JmaxTemp(double Jmax298, double Tleaf);
 
