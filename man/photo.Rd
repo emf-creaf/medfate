@@ -37,10 +37,10 @@ photo_photosynthesisBaldocchi(
   u,
   Vmax298,
   Jmax298,
+  leafWidth,
+  regulFact,
   Gsw_AC_slope,
-  Gsw_AC_intercept,
-  leafWidth = 1,
-  verbose = FALSE
+  Gsw_AC_intercept
 )
 
 photo_leafPhotosynthesisFunction(
@@ -149,11 +149,13 @@ photo_multilayerPhotosynthesisFunction(
 
 \item{u}{Wind speed above the leaf boundary (in m/s) (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).}
 
+\item{leafWidth}{Leaf width (in cm).}
+
+\item{regulFact}{Stomatal regulation factor based on turgor. Multiplies Gsw_AC_slope.}
+
 \item{Gsw_AC_slope}{Slope of the An/C vs Gsw relationship}
 
 \item{Gsw_AC_intercept}{Intercept of the An/C vs Gsw relationship}
-
-\item{leafWidth}{Leaf width (in cm).}
 
 \item{E}{Transpiration flow rate per leaf area (mmol*s-1*m-2).}
 

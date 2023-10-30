@@ -172,12 +172,9 @@ NumericVector regulFact(double psi, List params, String regulationType = "Sigmoi
     double PiFullTurgor_Leaf = params["PiFullTurgor_Leaf"];
     double rs = RWC(PiFullTurgor_Leaf, epsilonSym_Leaf, psi);
     double turgor = Turgor(PiFullTurgor_Leaf, epsilonSym_Leaf, rs);
+    turgorPressureAtGsMax = Turgor(PiFullTurgor_Leaf, epsilonSym_Leaf, 0.0);
     regulFact = std::max(0.0, std::min(1.0, turgor / turgorPressureAtGsMax));
-    if((regulFact == 1.0) || (regulFact == 0.0)) {
-      regulFactPrime = 0.0;
-    } else {
-      regulFactPrime = 0.0;// # TODO insert the derivative to compute regulFactPrime
-    }
+    // Rcout<< psi << " "<< turgor<< " "<< regulFact << "\n";
   }
   NumericVector res = NumericVector::create(_["regulFact"] = regulFact, 
                                             _["stomatalClosure"] = stomatalClosure, 
@@ -301,6 +298,7 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   params.push_back(StemPI0[c], "PiFullTurgor_Stem"); 
   params.push_back(StemEPS[c], "epsilonSym_Stem"); 
   
+  params.push_back(2.0, "turgorPressureAtGsMax");
 
   network.push_back(params, "params");
   
@@ -683,6 +681,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   bool plantCapacitance = control["plantCapacitance"];
+  String stomatalSubmodel = control["stomatalSubmodel"];
   if(!plantCapacitance) {
      opt["CLapo"] = 0.0;
      opt["CTapo"] = 0.0;
@@ -894,7 +893,9 @@ void innerCochard(List x, List input, List output, int n, double tstep,
           
           //Current leaf water potential (same for sunlit and shade leaves)
           double Psi_LSym = network_n["Psi_LSym"];
-          NumericVector regul_ini = regulFact(Psi_LSym, params, "Sigmoid");
+          NumericVector regul_ini;
+          if(stomatalSubmodel=="Jarvis") regul_ini = regulFact(Psi_LSym, params, "Sigmoid");
+          else regul_ini = regulFact(Psi_LSym, params, "Turgor");
           
           //Leaf temperature for sunlit and shade leaves
           double Elim_SL = network_n["Elim_SL"];
@@ -935,12 +936,46 @@ void innerCochard(List x, List input, List output, int n, double tstep,
           // Rcout<< "  Emin_S "<< Emin_S<<" Emin_L_SL "<< Emin_L_SL<<" Emin_L_SH "<< Emin_L_SH<<" Emin_L "<< Emin_L<<"\n";
           
           // Current stomatal regulation
-          NumericVector regul = regulFact(Psi_LSym, params, "Sigmoid");
-          double gs_SL = gsJarvis(params, PAR_SL(c,n), Temp_SL(c,n));
-          double gs_SH = gsJarvis(params, PAR_SH(c,n), Temp_SH(c,n));
-          //Rcout<< "  PAR_SL "<< PAR_SL(c,n)<<"  gs_SL "<< gs_SL<<"  PAR_SH "<< PAR_SH(c,n)<<" gs_SH "<< gs_SH<<"\n";
-          gs_SL = gs_SL * regul["regulFact"];
-          gs_SH = gs_SH * regul["regulFact"];
+          NumericVector regul;
+          double gs_SL, gs_SH;
+          if(stomatalSubmodel=="Jarvis") {
+            regul = regulFact(Psi_LSym, params, "Sigmoid");
+            gs_SL = gsJarvis(params, PAR_SL(c,n), Temp_SL(c,n));
+            gs_SH = gsJarvis(params, PAR_SH(c,n), Temp_SH(c,n));
+            //Rcout<< "  PAR_SL "<< PAR_SL(c,n)<<"  gs_SL "<< gs_SL<<"  PAR_SH "<< PAR_SH(c,n)<<" gs_SH "<< gs_SH<<"\n";
+            gs_SL = gs_SL * regul["regulFact"];
+            gs_SH = gs_SH * regul["regulFact"];
+          } else {
+            regul = regulFact(Psi_LSym, params, "Turgor");
+            double gsNight = params["gsNight"];
+            double RF = regul["regulFact"];
+            NumericVector PB_SL = photosynthesisBaldocchi(irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL[c], 
+                                                          Cair[iLayerSunlit[c]], 
+                                                          std::max(0.0,Temp_SL(c,n)), 
+                                                          zWind[iLayerCohort[c]],
+                                                          Vmax298SL[c]/LAI_SL[c], 
+                                                          Jmax298SL[c]/LAI_SL[c], 
+                                                          LeafWidth[c],
+                                                          RF,
+                                                          8.0,
+                                                          0.02);
+            gs_SL = PB_SL["Gsw"]*1000.0;
+            gs_SL = std::max(gsNight*RF, gs_SL);
+            NumericVector PB_SH = photosynthesisBaldocchi(irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH[c], 
+                                                          Cair[iLayerSunlit[c]], 
+                                                          std::max(0.0,Temp_SH(c,n)), 
+                                                          zWind[iLayerCohort[c]],
+                                                          Vmax298SH[c]/LAI_SH[c], 
+                                                          Jmax298SH[c]/LAI_SH[c], 
+                                                          LeafWidth[c],
+                                                          regul["regulFact"],
+                                                          8.0,
+                                                          0.02);
+            gs_SH = PB_SH["Gsw"]*1000.0;
+            gs_SH = std::max(gsNight*RF, gs_SH);
+          }
+
+          // Store stomatal conductance          
           GSW_SL(c,n) = gs_SL/1000.0; // From mmol to mol
           GSW_SH(c,n) = gs_SH/1000.0; // From mmol to mol
           // Stomatal transpiration
@@ -948,6 +983,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
           Gwdiff_SH = 1.0/(1.0/gCR + 1.0/gs_SH + 1.0/gBL); 
           Elim_SL = Gwdiff_SL * VPD_SL(c,n)/Patm;
           Elim_SH = Gwdiff_SH * VPD_SH(c,n)/Patm;
+          
           network_n["Elim_SL"] = Elim_SL;
           network_n["Elim_SH"] = Elim_SH;
           Elim = ((Elim_SL*LAI_SL[c]) + (Elim_SH*LAI_SH[c]))/LAI; 
@@ -971,7 +1007,6 @@ void innerCochard(List x, List input, List output, int n, double tstep,
           // # 2. PLC at n and np1
           deltaPLCMax = std::max(deltaPLCMax, (double) network_n["PLC_Leaf"] - (double) network_n["PLC_Leaf"]);
           deltaPLCMax = std::max(deltaPLCMax, (double) network_n["PLC_Stem"] - (double) network_n["PLC_Stem"]);
-          // network_n = network_np1; //# Update network_n
           
           // # 3. update of soil on small time step (done by FP in version 16)
           double Psi_SApo = network_n["Psi_SApo"];
