@@ -222,6 +222,9 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   NumericVector LeafSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
   NumericVector RootCrownPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
 
+  NumericVector Gsw_AC_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gsw_AC_slope"]);
+  NumericVector Vmax298 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Vmax298"]);
+  NumericVector Jmax298 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Jmax298"]);
   NumericVector VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_kmax"]);
   NumericVector VCleaf_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_P50"]);
   NumericVector VCleaf_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_slope"]);
@@ -268,6 +271,7 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   params.push_back(sapFluidityDay*VCstem_kmax[c], "k_CSApoInit"); //Maximum conductance from root crown to stem apoplasm
   params.push_back(sapFluidityDay*VCroot_kmax, "k_RCApoInit"); //Maximum conductance from rhizosphere surface to root crown
   
+  params.push_back(Gsw_AC_slope[c], "Gsw_AC_slope");
   params.push_back(Gs_slope[c], "slope_gs");
   params.push_back(Gs_P50[c], "P50_gs");
   params.push_back(Gs_Toptim[c], "Tgs_optim"); 
@@ -298,9 +302,9 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   params.push_back(StemPI0[c], "PiFullTurgor_Stem"); 
   params.push_back(StemEPS[c], "epsilonSym_Stem"); 
   
-  params.push_back(2.0, "turgorPressureAtGsMax");
-
+  
   network.push_back(params, "params");
+
   
   //LAI
   network.push_back(LAIphe[c], "LAI");
@@ -893,10 +897,8 @@ void innerCochard(List x, List input, List output, int n, double tstep,
           
           //Current leaf water potential (same for sunlit and shade leaves)
           double Psi_LSym = network_n["Psi_LSym"];
-          NumericVector regul_ini;
-          if(stomatalSubmodel=="Jarvis") regul_ini = regulFact(Psi_LSym, params, "Sigmoid");
-          else regul_ini = regulFact(Psi_LSym, params, "Turgor");
-          
+          NumericVector regul_ini = regulFact(Psi_LSym, params, "Sigmoid");
+
           //Leaf temperature for sunlit and shade leaves
           double Elim_SL = network_n["Elim_SL"];
           double Elim_SH = network_n["Elim_SH"];
@@ -936,19 +938,18 @@ void innerCochard(List x, List input, List output, int n, double tstep,
           // Rcout<< "  Emin_S "<< Emin_S<<" Emin_L_SL "<< Emin_L_SL<<" Emin_L_SH "<< Emin_L_SH<<" Emin_L "<< Emin_L<<"\n";
           
           // Current stomatal regulation
-          NumericVector regul;
+          NumericVector regul = regulFact(Psi_LSym, params, "Sigmoid");
+          double RF = regul["regulFact"];
           double gs_SL, gs_SH;
           if(stomatalSubmodel=="Jarvis") {
-            regul = regulFact(Psi_LSym, params, "Sigmoid");
             gs_SL = gsJarvis(params, PAR_SL(c,n), Temp_SL(c,n));
             gs_SH = gsJarvis(params, PAR_SH(c,n), Temp_SH(c,n));
             //Rcout<< "  PAR_SL "<< PAR_SL(c,n)<<"  gs_SL "<< gs_SL<<"  PAR_SH "<< PAR_SH(c,n)<<" gs_SH "<< gs_SH<<"\n";
-            gs_SL = gs_SL * regul["regulFact"];
-            gs_SH = gs_SH * regul["regulFact"];
+            gs_SL = gs_SL * RF;
+            gs_SH = gs_SH * RF;
           } else {
-            regul = regulFact(Psi_LSym, params, "Turgor");
+            double Gsw_AC_slope = params["Gsw_AC_slope"];
             double gsNight = params["gsNight"];
-            double RF = regul["regulFact"];
             NumericVector PB_SL = photosynthesisBaldocchi(irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL[c], 
                                                           Cair[iLayerSunlit[c]], 
                                                           std::max(0.0,Temp_SL(c,n)), 
@@ -956,11 +957,10 @@ void innerCochard(List x, List input, List output, int n, double tstep,
                                                           Vmax298SL[c]/LAI_SL[c], 
                                                           Jmax298SL[c]/LAI_SL[c], 
                                                           LeafWidth[c],
-                                                          RF,
-                                                          8.0,
-                                                          0.02);
-            gs_SL = PB_SL["Gsw"]*1000.0;
-            gs_SL = std::max(gsNight*RF, gs_SL);
+                                                          Gsw_AC_slope,
+                                                          gsNight/1000.0);
+            gs_SL = PB_SL["Gsw"]*1000.0; //From mmol to mol
+            gs_SL = std::max(gsNight, gs_SL)*RF + gmin_SL*(1.0 - RF);
             NumericVector PB_SH = photosynthesisBaldocchi(irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH[c], 
                                                           Cair[iLayerSunlit[c]], 
                                                           std::max(0.0,Temp_SH(c,n)), 
@@ -968,11 +968,10 @@ void innerCochard(List x, List input, List output, int n, double tstep,
                                                           Vmax298SH[c]/LAI_SH[c], 
                                                           Jmax298SH[c]/LAI_SH[c], 
                                                           LeafWidth[c],
-                                                          regul["regulFact"],
-                                                          8.0,
-                                                          0.02);
-            gs_SH = PB_SH["Gsw"]*1000.0;
-            gs_SH = std::max(gsNight*RF, gs_SH);
+                                                          Gsw_AC_slope,
+                                                          gsNight/1000.0);
+            gs_SH = PB_SH["Gsw"]*1000.0; //From mmol to mol
+            gs_SH = std::max(gsNight, gs_SH)*RF + gmin_SH*(1.0 - RF);
           }
 
           // Store stomatal conductance          

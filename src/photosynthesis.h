@@ -14,7 +14,6 @@ NumericVector photosynthesisBaldocchi(double Q,
                                       double Vmax298, 
                                       double Jmax298, 
                                       double leafWidth,
-                                      double regulFact,
                                       double Gsw_AC_slope,
                                       double Gsw_AC_intercept);
 

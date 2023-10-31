@@ -2905,8 +2905,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // photosynthesisBaldocchi
-NumericVector photosynthesisBaldocchi(double Q, double Catm, double Tleaf, double u, double Vmax298, double Jmax298, double leafWidth, double regulFact, double Gsw_AC_slope, double Gsw_AC_intercept);
-RcppExport SEXP _medfate_photosynthesisBaldocchi(SEXP QSEXP, SEXP CatmSEXP, SEXP TleafSEXP, SEXP uSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP leafWidthSEXP, SEXP regulFactSEXP, SEXP Gsw_AC_slopeSEXP, SEXP Gsw_AC_interceptSEXP) {
+NumericVector photosynthesisBaldocchi(double Q, double Catm, double Tleaf, double u, double Vmax298, double Jmax298, double leafWidth, double Gsw_AC_slope, double Gsw_AC_intercept);
+RcppExport SEXP _medfate_photosynthesisBaldocchi(SEXP QSEXP, SEXP CatmSEXP, SEXP TleafSEXP, SEXP uSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP leafWidthSEXP, SEXP Gsw_AC_slopeSEXP, SEXP Gsw_AC_interceptSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2917,10 +2917,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type Vmax298(Vmax298SEXP);
     Rcpp::traits::input_parameter< double >::type Jmax298(Jmax298SEXP);
     Rcpp::traits::input_parameter< double >::type leafWidth(leafWidthSEXP);
-    Rcpp::traits::input_parameter< double >::type regulFact(regulFactSEXP);
     Rcpp::traits::input_parameter< double >::type Gsw_AC_slope(Gsw_AC_slopeSEXP);
     Rcpp::traits::input_parameter< double >::type Gsw_AC_intercept(Gsw_AC_interceptSEXP);
-    rcpp_result_gen = Rcpp::wrap(photosynthesisBaldocchi(Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, regulFact, Gsw_AC_slope, Gsw_AC_intercept));
+    rcpp_result_gen = Rcpp::wrap(photosynthesisBaldocchi(Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, Gsw_AC_slope, Gsw_AC_intercept));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5062,7 +5061,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_electronLimitedPhotosynthesis", (DL_FUNC) &_medfate_electronLimitedPhotosynthesis, 4},
     {"_medfate_rubiscoLimitedPhotosynthesis", (DL_FUNC) &_medfate_rubiscoLimitedPhotosynthesis, 4},
     {"_medfate_leafphotosynthesis", (DL_FUNC) &_medfate_leafphotosynthesis, 7},
-    {"_medfate_photosynthesisBaldocchi", (DL_FUNC) &_medfate_photosynthesisBaldocchi, 10},
+    {"_medfate_photosynthesisBaldocchi", (DL_FUNC) &_medfate_photosynthesisBaldocchi, 9},
     {"_medfate_leafPhotosynthesisFunction", (DL_FUNC) &_medfate_leafPhotosynthesisFunction, 14},
     {"_medfate_leafPhotosynthesisFunction2", (DL_FUNC) &_medfate_leafPhotosynthesisFunction2, 15},
     {"_medfate_sunshadePhotosynthesisFunction", (DL_FUNC) &_medfate_sunshadePhotosynthesisFunction, 19},
