@@ -2379,11 +2379,10 @@ photo_photosynthesis <- function(Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose =
 }
 
 #' @rdname photo
-#' @param regulFact Stomatal regulation factor based on turgor. Multiplies Gsw_AC_slope.
 #' @param Gsw_AC_slope Slope of the An/C vs Gsw relationship 
 #' @param Gsw_AC_intercept Intercept of the An/C vs Gsw relationship 
-photo_photosynthesisBaldocchi <- function(Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, regulFact, Gsw_AC_slope, Gsw_AC_intercept) {
-    .Call(`_medfate_photosynthesisBaldocchi`, Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, regulFact, Gsw_AC_slope, Gsw_AC_intercept)
+photo_photosynthesisBaldocchi <- function(Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, Gsw_AC_slope, Gsw_AC_intercept) {
+    .Call(`_medfate_photosynthesisBaldocchi`, Q, Catm, Tleaf, u, Vmax298, Jmax298, leafWidth, Gsw_AC_slope, Gsw_AC_intercept)
 }
 
 #' @rdname photo

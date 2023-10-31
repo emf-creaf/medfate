@@ -301,7 +301,6 @@ double third_cubic_root(double p, double q, double r) {
 
 // From Baldocchi D (1994). An analytical solution for the coupled leaf photosynthesis and stomatal conductance models. Tree Physiology 14: 1069-1079 
 //' @rdname photo
-//' @param regulFact Stomatal regulation factor based on turgor. Multiplies Gsw_AC_slope.
 //' @param Gsw_AC_slope Slope of the An/C vs Gsw relationship 
 //' @param Gsw_AC_intercept Intercept of the An/C vs Gsw relationship 
 // [[Rcpp::export("photo_photosynthesisBaldocchi")]]
@@ -312,7 +311,6 @@ NumericVector photosynthesisBaldocchi(double Q,
                                       double Vmax298, 
                                       double Jmax298, 
                                       double leafWidth,
-                                      double regulFact,
                                       double Gsw_AC_slope,
                                       double Gsw_AC_intercept) {
   double Vmax = VmaxTemp(Vmax298, Tleaf);
@@ -325,7 +323,7 @@ NumericVector photosynthesisBaldocchi(double Q,
     
   //Translate stomatal model to carbon units
   double b_prime = Gsw_AC_intercept/1.6;
-  double mrh = regulFact*Gsw_AC_slope/1.6;
+  double mrh = Gsw_AC_slope/1.6;
   
   //Compensation point
   double Gamma_comp = gammaTemp(Tleaf);

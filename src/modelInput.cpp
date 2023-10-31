@@ -4,6 +4,7 @@
 #include "carbon.h"
 #include "root.h"
 #include "soil.h"
+#include "photosynthesis.h"
 #include "woodformation.h"
 #include "forestutils.h"
 #include "paramutils.h"
@@ -355,6 +356,7 @@ DataFrame paramsTranspirationCochard(DataFrame above, List soil, DataFrame SpPar
   NumericVector VCroot_slope = speciesNumericParameterFromIndex(SP, SpParams, "VCroot_slope");
   
   NumericVector VCstem_c(numCohorts, 0.0), VCstem_d(numCohorts, 0.0), VCleaf_c(numCohorts, 0.0), VCleaf_d(numCohorts, 0.0), VCroot_c(numCohorts, 0.0), VCroot_d(numCohorts, 0.0);
+  NumericVector Gsw_AC_slope(numCohorts, 0.0);
   
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   NumericVector SLA = paramsAnatomydf["SLA"];
@@ -408,6 +410,12 @@ DataFrame paramsTranspirationCochard(DataFrame above, List soil, DataFrame SpPar
     }
     //Plant kmax
     Plant_kmax[c] = 1.0/((1.0/kleaf_symp[c]) + (1.0/VCleaf_kmax[c])+(1.0/VCstem_kmax[c])+(1.0/VCroottot_kmax[c]));
+    
+    //Slope of Gsw vs Ac/Cs relationship
+    NumericVector LP = leafphotosynthesis(2000.0,  386.0, Gswmax[c]/1.6, 25.0, Vmax298[c], Jmax298[c]); 
+    double An_max = LP[1] - 0.015*VmaxTemp(Vmax298[c], 25.0);
+    Gsw_AC_slope[c] = (Gswmax[c] - Gswmin[c])*386.0/An_max;
+    
   }
   
   DataFrame paramsTranspirationdf = DataFrame::create();
@@ -417,6 +425,7 @@ DataFrame paramsTranspirationCochard(DataFrame above, List soil, DataFrame SpPar
   paramsTranspirationdf.push_back(Gs_Tsens, "Gs_Tsens");
   paramsTranspirationdf.push_back(Gs_P50, "Gs_P50");
   paramsTranspirationdf.push_back(Gs_slope, "Gs_slope");
+  paramsTranspirationdf.push_back(Gsw_AC_slope, "Gsw_AC_slope");
   paramsTranspirationdf.push_back(Vmax298, "Vmax298");
   paramsTranspirationdf.push_back(Jmax298, "Jmax298");
   paramsTranspirationdf.push_back(Kmax_stemxylem, "Kmax_stemxylem");
