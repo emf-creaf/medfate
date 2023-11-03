@@ -289,8 +289,10 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   if(soilDisconnection) gmin_S = gmin_S*RWC(StemPI0[c], StemEPS[c], StemSympPsiVEC[c]);
   if(!stemCuticularTranspiration) gmin_S = 0.0;
   params.push_back(gmin_S, "gmin_S");
-  params.push_back(((double)control["gs_NightFrac"])*Gswmax[c]*1000.0, "gsNight"); //gsNight equal to 5% percent of gsMax
-  
+  double gs_NightFrac = control["gs_NightFrac"];
+  double gsNight = gs_NightFrac*Gswmax[c]*1000.0;
+  params.push_back(gsNight, "gsNight"); 
+
   params.push_back(VCleaf_P50[c], "VCleaf_P50"); 
   params.push_back(VCleaf_slope[c], "VCleaf_slope"); 
   params.push_back(VCstem_P50[c], "VCstem_P50"); 
@@ -686,6 +688,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   bool plantWaterPools = (rhizosphereOverlap!="total");
   bool plantCapacitance = control["plantCapacitance"];
   String stomatalSubmodel = control["stomatalSubmodel"];
+  bool sunlitShade = control["sunlitShade"];
   if(!plantCapacitance) {
      opt["CLapo"] = 0.0;
      opt["CTapo"] = 0.0;
@@ -905,17 +908,21 @@ void innerCochard(List x, List input, List output, int n, double tstep,
           double Elim = network_n["Elim"];
           if(NumericVector::is_na(Elim_SL)) Elim_SL = Elim * (LAI_SL[c]/LAI);
           if(NumericVector::is_na(Elim_SH)) Elim_SH = Elim * (LAI_SH[c]/LAI);
+          if(!sunlitShade) Elim_SH = Elim_SL;
+          
           Temp_SL(c,n) = leafTemperature2(SWR_SL(c,n)/LAI_SL[c], LWR_SL(c,n)/LAI_SL[c], 
                   Tair[iLayerSunlit[c]], zWind[iLayerSunlit[c]], 
                                               Elim_SL,  LeafWidth[c]);
           Temp_SH(c,n) = leafTemperature2(SWR_SH(c,n)/LAI_SH[c], LWR_SH(c,n)/LAI_SH[c], 
                   Tair[iLayerShade[c]], zWind[iLayerShade[c]], 
                                              Elim_SH,  LeafWidth[c]);
+          if(!sunlitShade) Temp_SH(c,n) = Temp_SL(c,n);
           
           //VPD
           double VPD_air = meteoland::utils_saturationVP(Tair[iLayerCohort[c]]) - VPair[iLayerCohort[c]];
           VPD_SL(c,n) = std::max(0.0,leafVapourPressure(Temp_SL(c,n), Psi_LSym) - VPair[iLayerSunlit[c]]);
           VPD_SH(c,n) = std::max(0.0,leafVapourPressure(Temp_SH(c,n), Psi_LSym) - VPair[iLayerShade[c]]);
+          if(!sunlitShade) VPD_SH(c,n) = VPD_SL(c,n);
           // Rcout<< "  AirT "<< Tair[iLayerCohort[c]] << " LT_SL "<< Temp_SL(c,n)<< " LT_SH "<< Temp_SH(c,n)<<"\n";
           // Rcout<< "  VPD_air "<< VPD_air << " VPD_SL "<< VPD_SL(c,n)<< " VPD_SH "<< VPD_SH(c,n)<<"\n";
           
@@ -960,7 +967,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
                                                           Gsw_AC_slope,
                                                           gsNight/1000.0);
             gs_SL = PB_SL["Gsw"]*1000.0; //From mmol to mol
-            gs_SL = std::max(gsNight, gs_SL)*RF + gmin_SL*(1.0 - RF);
+            gs_SL = std::max(gsNight, gs_SL)*RF;
             NumericVector PB_SH = photosynthesisBaldocchi(irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH[c], 
                                                           Cair[iLayerSunlit[c]], 
                                                           std::max(0.0,Temp_SH(c,n)), 
@@ -971,9 +978,10 @@ void innerCochard(List x, List input, List output, int n, double tstep,
                                                           Gsw_AC_slope,
                                                           gsNight/1000.0);
             gs_SH = PB_SH["Gsw"]*1000.0; //From mmol to mol
-            gs_SH = std::max(gsNight, gs_SH)*RF + gmin_SH*(1.0 - RF);
+            gs_SH = std::max(gsNight, gs_SH)*RF;
           }
-
+          if(!sunlitShade) gs_SH = gs_SL;
+          
           // Store stomatal conductance          
           GSW_SL(c,n) = gs_SL/1000.0; // From mmol to mol
           GSW_SH(c,n) = gs_SH/1000.0; // From mmol to mol
@@ -1061,6 +1069,8 @@ void innerCochard(List x, List input, List output, int n, double tstep,
                                                Cair[iLayerShade[c]], Gwdiff_SH/1.6, 
                                                std::max(0.0,Temp_SH(c,n)), 
                                                Vmax298SH[c]/LAI_SH[c], Jmax298SH[c]/LAI_SH[c]);
+      if(!sunlitShade) LP_SH = LP_SL;
+      
       Ci_SL(c,n) = LP_SL[0];
       Ci_SH(c,n) = LP_SH[0];
       Ag_SL(c,n) = LP_SL[1];
