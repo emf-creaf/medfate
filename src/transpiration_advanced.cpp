@@ -57,6 +57,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   String cavitationRefill = control["cavitationRefill"];
   double refillMaximumRate = control["refillMaximumRate"];
   bool sapFluidityVariation = control["sapFluidityVariation"];
+  bool sunlitShade = control["sunlitShade"];
   
   //Meteo input
   double tmin = meteovec["tmin"];

@@ -217,6 +217,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     thermalCapacityLAI = 1000000,
     boundaryLayerSize = 2000,
     refillMaximumRate = 0.05,
+    sunlitShade = TRUE,
 
     #spwb with sperry
     numericParams=list(maxNsteps = 400, ntrial = 200, psiTol = 0.0001, ETol = 0.0000001),

@@ -348,6 +348,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   String cavitationRefill = control["cavitationRefill"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
+  bool sunlitShade = control["sunlitShade"];
 
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   int numCohorts = cohorts.nrow();
@@ -564,7 +565,8 @@ void innerSperry(List x, List input, List output, int n, double tstep,
                                            Tair[iLayerShade[c]], VPair[iLayerShade[c]], zWind[iLayerShade[c]], 
                                            SWR_SH(c,n), LWR_SH(c,n), irradianceToPhotonFlux(PAR_SH(c,n)), 
                                            Vmax298SH[c], Jmax298SH[c], leafWidth[c], LAI_SH[c],
-                                           Gswmin[c], Gswmax[c]);          
+                                           Gswmin[c], Gswmax[c]);    
+        if(!sunlitShade) PMShade = PMSunlit;
         NumericVector photoShade = PMShade["photosynthesisFunction"];
         iPMShade[c] = PMShade["iMaxProfit"];
         
@@ -591,6 +593,10 @@ void innerSperry(List x, List input, List output, int n, double tstep,
                                                            leafWidth[c], LAI_SH[c]);
             outPMSunlit[c] = PMSunlit;
             outPMShade[c] = PMShade;
+            if(!sunlitShade) {
+              outPMShade[c] = outPMSunlit[c];
+              outPhotoShade[c] = outPhotoSunlit[c];
+            }
           }
         }
         // Rcout<<iPMSunlit[c]<<" "<<iPMShade[c] <<" "<<GwSunlit[iPMSunlit[c]]<<" "<<GwShade[iPMShade[c]]<<" "<<fittedE[iPMSunlit[c]]<<" "<<fittedE[iPMShade[c]]<<"\n";
