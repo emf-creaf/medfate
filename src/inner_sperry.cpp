@@ -554,8 +554,10 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         double TPhase_gmin = control["TPhase_gmin"]; 
         double Q10_1_gmin = control["Q10_1_gmin"]; 
         double Q10_2_gmin = control["Q10_2_gmin"];
-        double gmin_SL = gmin(Temp_SL(c,n), Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
-        double gmin_SH = gmin(Temp_SH(c,n), Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
+        //Here canopy air temperature is used instead of Tleaf, because leaf energy balance has not been closed
+        double gmin_SL = gmin(Tair[iLayerSunlit[c]], Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
+        double gmin_SH = gmin(Tair[iLayerShade[c]], Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
+        // Rcout<< gmin_SL<< " " << gmin_SH << " " << Gswmax[c]<<"\n";
         //Photosynthesis function for sunlit and shade leaves
         List PMSunlit = profitMaximization2(sFunctionAbove, iPMSunlit[c], 
                                             Cair[iLayerSunlit[c]], Patm,
