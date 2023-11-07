@@ -687,11 +687,14 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   bool plantCapacitance = control["plantCapacitance"];
+  bool cavitationFlux = control["cavitationFlux"];
   String stomatalSubmodel = control["stomatalSubmodel"];
   bool sunlitShade = control["sunlitShade"];
-  if(!plantCapacitance) {
+  if(!cavitationFlux) {
      opt["CLapo"] = 0.0;
      opt["CTapo"] = 0.0;
+  }
+  if(!plantCapacitance) {
      opt["Lsym"] = 0.0;
      opt["Ssym"] = 0.0;
   }
