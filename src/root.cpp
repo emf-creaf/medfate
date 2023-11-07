@@ -425,7 +425,9 @@ double coarseRootSoilVolumeFromConductance(double Kmax_rootxylem, double VCroot_
   double fTol = 0.005;
   double vol = 0.0;
   double f = frv(vol, B, v, ax, ra);
-  while(std::abs(f)>fTol) {
+  int nsteps = 0;
+  int maxnsteps = 100;
+  while((std::abs(f)>fTol) && (nsteps < maxnsteps)) {
     // Rcout<<vol<<"\n";
     if((f > 0.0)) {
       vol += step; 
@@ -434,7 +436,9 @@ double coarseRootSoilVolumeFromConductance(double Kmax_rootxylem, double VCroot_
       step = step/2.0;
     }
     f = frv(vol,B,v, ax,ra);
+    nsteps++;
   }
+  if(nsteps==maxnsteps) warning("Maximum number of steps reached in coarse root volume estimation");
   // for(int j=0;j<numLayers;j++) {
     // Rcout<<j<<" "<<ax[j]<<" "<<sqrt(vol)*ra[j]<<" "<<((d[j]/1000.0)*M_PI*pow(sqrt(vol)*ra[j],2.0))<<"\n";
   // }

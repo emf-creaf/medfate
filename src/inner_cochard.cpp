@@ -38,16 +38,6 @@ double Emin(double gmin, double gBL, double gCrown,
   double gmintot = 1.0/(1.0/gmin+ 1.0/gBL + 1.0/gCrown);
   return(gmintot * VPD /airPressure); 
 }
-double gmin(double leafTemperature, double gmin_20, 
-            double TPhase, double Q10_1, double Q10_2) {
-  double gmin = NA_REAL;
-  if (leafTemperature<= TPhase) {
-    gmin = gmin_20 * pow(Q10_1,(leafTemperature - 20.0) / 10.0);
-  } else if (leafTemperature > TPhase) {
-    gmin = gmin_20 * pow(Q10_1, (TPhase - 20.0) / 10.0) * pow(Q10_2, (leafTemperature- TPhase) / 10.0);
-  }
-  return(gmin);
-}
 
 // # Update plant conductances
 void update_conductances(List network) {
@@ -691,11 +681,13 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   String stomatalSubmodel = control["stomatalSubmodel"];
   bool sunlitShade = control["sunlitShade"];
   if(!cavitationFlux) {
-     opt["CLapo"] = 0.0;
-     opt["CTapo"] = 0.0;
+    opt["Lcav"] = 0.0;
+    opt["Scav"] = 0.0;
   }
   if(!plantCapacitance) {
-     opt["Lsym"] = 0.0;
+    opt["CLapo"] = 0.0;
+    opt["CTapo"] = 0.0;
+    opt["Lsym"] = 0.0;
      opt["Ssym"] = 0.0;
   }
   

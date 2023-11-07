@@ -70,6 +70,9 @@ A list, with the following options (default values in brackets):
       \item{\code{nsubsteps [= 3600]}: Number of substeps into which each step is divided for multi-layer canopy energy balance solving.}
       \item{\code{multiLayerBalance [= FALSE]}: Flag to indicate multiple canopy energy balance. If \code{FALSE}, canopy is considered a single layer for energy balance.}
       \item{\code{sapFluidityVariation [= TRUE]}: Flag to indicate that temperature affects sap fluidity (and indirectly plant conductance).}
+      \item{\code{TPhase_gmin [= 37.5]}: Temperature for transition phase of gmin.}
+      \item{\code{Q10_1_gmin [= 1.2]}: Temperature dependance of gmin when T ≤ TPhase.}
+      \item{\code{Q10_2_gmin [= 4.8]}: Temperature dependance of gmin when T > TPhase.}
       \item{\code{taper [= TRUE]}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
       \item{\code{maximumStemConductance [= 10]}: Maximum allowed value for the stem maximum hydraulic conductance (in mmol·s-1·m-2·MPa-1). Introduced to avoid excessive hydraulic redistribution caused by species with small size (i.e. very large stem conductance).}
       \item{\code{thermalCapacityLAI [= 1000000]}: Thermal canopy capacitance per LAI unit.}
@@ -103,9 +106,6 @@ A list, with the following options (default values in brackets):
       \item{\code{k_SSym [= 0.26]}: Conductance from stem apoplasm to stem symplasm (mmol·s-1·m-2).}
       \item{\code{k_LSym [= 2.0]}: Conductance from leaf apoplasm to leaf symplasm (mmol·s-1·m-2).}
       \item{\code{gs_NightFrac [= 0.05]}: Stomatal conductance at night as fraction of maximum stomatal conductance ([0-1]).}
-      \item{\code{TPhase_gmin [= 37.5]}: Temperature for transition phase of gmin.}
-      \item{\code{Q10_1_gmin [= 1.2]}: Temperature dependance of gmin when T ≤ TPhase.}
-      \item{\code{Q10_2_gmin [= 4.8]}: Temperature dependance of gmin when T > TPhase.}
       \item{\code{JarvisPAR [= 0.003]}: Parameter regulating the response of stomatal conductance to light (PAR) in the Jarvis model.}
       \item{\code{gCrown0 [= 0.150]}: Reference crown conductance (mol·s-1·m-2).}
       \item{\code{fTRBToLeaf [= 0.8]}: Fraction of surface of bark exposed to air per leaf area.}

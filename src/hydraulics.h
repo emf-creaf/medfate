@@ -9,6 +9,10 @@ double K2Psi(double K, double psi_extract, double exp_extract= 3.0);
 NumericVector K2Psi(NumericVector K, NumericVector psi_extract, double exp_extract= 3.0);
 double Psi2K(double psi, double psi_extract, double exp_extract= 3.0);
 NumericVector Psi2K(double psi, NumericVector psi_extract, double exp_extract= 3.0);
+
+double gmin(double leafTemperature, double gmin_20, 
+            double TPhase, double Q10_1, double Q10_2);
+
 double averagePsi(NumericVector psi, NumericVector v, double exp_extract, double psi_extract);
 double averagePsiPool(NumericMatrix Psi, NumericMatrix RHOPcoh, double exp_extract, double psi_extract);
 
