@@ -551,13 +551,18 @@ void innerSperry(List x, List input, List output, int n, double tstep,
       psiRootCrown = sFunctionAbove["psiRootCrown"];
       
       if(fittedE.size()>0) {
+        double TPhase_gmin = control["TPhase_gmin"]; 
+        double Q10_1_gmin = control["Q10_1_gmin"]; 
+        double Q10_2_gmin = control["Q10_2_gmin"];
+        double gmin_SL = gmin(Temp_SL(c,n), Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
+        double gmin_SH = gmin(Temp_SH(c,n), Gswmin[c], TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
         //Photosynthesis function for sunlit and shade leaves
         List PMSunlit = profitMaximization2(sFunctionAbove, iPMSunlit[c], 
                                             Cair[iLayerSunlit[c]], Patm,
                                             Tair[iLayerSunlit[c]], VPair[iLayerSunlit[c]], zWind[iLayerSunlit[c]], 
                                             SWR_SL(c,n), LWR_SL(c,n), irradianceToPhotonFlux(PAR_SL(c,n)), 
                                             Vmax298SL[c], Jmax298SL[c], leafWidth[c], LAI_SL[c],
-                                            Gswmin[c], Gswmax[c]);
+                                            gmin_SL, Gswmax[c]);
         NumericVector photoSunlit = PMSunlit["photosynthesisFunction"];
         iPMSunlit[c] = PMSunlit["iMaxProfit"];
         List PMShade = profitMaximization2(sFunctionAbove, iPMShade[c], 
@@ -565,7 +570,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
                                            Tair[iLayerShade[c]], VPair[iLayerShade[c]], zWind[iLayerShade[c]], 
                                            SWR_SH(c,n), LWR_SH(c,n), irradianceToPhotonFlux(PAR_SH(c,n)), 
                                            Vmax298SH[c], Jmax298SH[c], leafWidth[c], LAI_SH[c],
-                                           Gswmin[c], Gswmax[c]);    
+                                           gmin_SH, Gswmax[c]);    
         if(!sunlitShade) PMShade = PMSunlit;
         NumericVector photoShade = PMShade["photosynthesisFunction"];
         iPMShade[c] = PMShade["iMaxProfit"];

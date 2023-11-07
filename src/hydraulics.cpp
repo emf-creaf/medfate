@@ -125,6 +125,18 @@ NumericVector K2Psi(NumericVector K, NumericVector psi_extract, double exp_extra
   return psi;
 }
 
+double gmin(double leafTemperature, double gmin_20, 
+            double TPhase, double Q10_1, double Q10_2) {
+  double gmin = NA_REAL;
+  if (leafTemperature<= TPhase) {
+    gmin = gmin_20 * pow(Q10_1,(leafTemperature - 20.0) / 10.0);
+  } else if (leafTemperature > TPhase) {
+    gmin = gmin_20 * pow(Q10_1, (TPhase - 20.0) / 10.0) * pow(Q10_2, (leafTemperature- TPhase) / 10.0);
+  }
+  return(gmin);
+}
+
+
 //' @rdname hydraulics_conductancefunctions
 // [[Rcpp::export("hydraulics_averagePsi")]]
 double averagePsi(NumericVector psi, NumericVector v, double exp_extract, double psi_extract) {
@@ -1489,6 +1501,7 @@ double findRhizosphereMaximumConductance(double averageResistancePercent, double
                                          double initialValue = 0.0) {
   double step = 1.0;
   double fTol = 0.1;
+  
   // Rcout<<exp(initialValue)<<"\n";
   double krhizomaxlog = initialValue;
   int nsteps = 0;
