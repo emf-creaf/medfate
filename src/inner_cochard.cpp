@@ -199,6 +199,9 @@ List initCochardNetwork(int c, NumericVector LAIphe,
                        NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
                        NumericVector PsiSoil, NumericVector VG_n, NumericVector VG_alpha,
                        double sapFluidityDay = 1.0, List control = NULL) {
+  
+  String stomatalSubmodel = control["stomatalSubmodel"];
+  
   //Root distribution input
   NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
   NumericVector Elim = Rcpp::as<Rcpp::NumericVector>(internalWater["Elim"]);
@@ -212,7 +215,6 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   NumericVector LeafSympPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
   NumericVector RootCrownPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
 
-  NumericVector Gsw_AC_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gsw_AC_slope"]);
   NumericVector Vmax298 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Vmax298"]);
   NumericVector Jmax298 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Jmax298"]);
   NumericVector VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_kmax"]);
@@ -227,8 +229,7 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   NumericVector kleaf_symp = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["kleaf_symp"]);
   NumericVector Gswmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gswmax"]);
   NumericVector Gswmin = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gswmin"]);
-  NumericVector Gs_Toptim = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_Toptim"]);
-  NumericVector Gs_Tsens = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_Tsens"]);
+
   NumericVector Gs_P50 = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_P50"]);
   NumericVector Gs_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_slope"]);
   
@@ -252,7 +253,16 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   params.push_back(control["TPhase_gmin"], "TPhase_gmin"); 
   params.push_back(control["Q10_1_gmin"], "Q10_1_gmin"); 
   params.push_back(control["Q10_2_gmin"], "Q10_2_gmin"); 
-  params.push_back(control["JarvisPAR"], "JarvisPAR"); 
+  if(stomatalSubmodel=="Jarvis") {
+    NumericVector Gs_Toptim = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_Toptim"]);
+    NumericVector Gs_Tsens = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gs_Tsens"]);
+    params.push_back(Gs_Toptim[c], "Tgs_optim"); 
+    params.push_back(Gs_Tsens[c], "Tgs_sens"); 
+    params.push_back(control["JarvisPAR"], "JarvisPAR"); 
+  } else {
+    NumericVector Gsw_AC_slope = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["Gsw_AC_slope"]);
+    params.push_back(Gsw_AC_slope[c], "Gsw_AC_slope");
+  }
   params.push_back(((double)control["gCrown0"])*1000.0, "gCrown0"); //from mol to mmol
   params.push_back(control["fTRBToLeaf"], "fTRBToLeaf"); //ratio of bark area to leaf area
   params.push_back(control["C_SApoInit"], "C_SApoInit"); //Maximum capacitance of the stem apoplasm
@@ -261,11 +271,8 @@ List initCochardNetwork(int c, NumericVector LAIphe,
   params.push_back(sapFluidityDay*VCstem_kmax[c], "k_CSApoInit"); //Maximum conductance from root crown to stem apoplasm
   params.push_back(sapFluidityDay*VCroot_kmax, "k_RCApoInit"); //Maximum conductance from rhizosphere surface to root crown
   
-  params.push_back(Gsw_AC_slope[c], "Gsw_AC_slope");
   params.push_back(Gs_slope[c], "slope_gs");
   params.push_back(Gs_P50[c], "P50_gs");
-  params.push_back(Gs_Toptim[c], "Tgs_optim"); 
-  params.push_back(Gs_Tsens[c], "Tgs_sens"); 
   
   //PLANT RELATED PARAMETERS
   double gmin20 = Gswmin[c]*1000.0; //Leaf cuticular transpiration

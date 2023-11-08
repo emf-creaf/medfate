@@ -323,7 +323,7 @@ DataFrame paramsTranspirationCochard(DataFrame above, List soil, DataFrame SpPar
   double fracRootResistance = control["fracRootResistance"];
   double fracLeafResistance = control["fracLeafResistance"];
   String transpirationMode = control["transpirationMode"];
-  
+  String stomatalSubmodel = control["stomatalSubmodel"];
   bool fillMissingSpParams = control["fillMissingSpParams"];
   
   NumericVector dVec = soil["dVec"];
@@ -421,11 +421,14 @@ DataFrame paramsTranspirationCochard(DataFrame above, List soil, DataFrame SpPar
   DataFrame paramsTranspirationdf = DataFrame::create();
   paramsTranspirationdf.push_back(Gswmin, "Gswmin");
   paramsTranspirationdf.push_back(Gswmax, "Gswmax");
-  paramsTranspirationdf.push_back(Gs_Toptim, "Gs_Toptim");
-  paramsTranspirationdf.push_back(Gs_Tsens, "Gs_Tsens");
+  if(stomatalSubmodel=="Jarvis") {
+    paramsTranspirationdf.push_back(Gs_Toptim, "Gs_Toptim");
+    paramsTranspirationdf.push_back(Gs_Tsens, "Gs_Tsens");
+  } else {
+    paramsTranspirationdf.push_back(Gsw_AC_slope, "Gsw_AC_slope");
+  }
   paramsTranspirationdf.push_back(Gs_P50, "Gs_P50");
   paramsTranspirationdf.push_back(Gs_slope, "Gs_slope");
-  paramsTranspirationdf.push_back(Gsw_AC_slope, "Gsw_AC_slope");
   paramsTranspirationdf.push_back(Vmax298, "Vmax298");
   paramsTranspirationdf.push_back(Jmax298, "Jmax298");
   paramsTranspirationdf.push_back(Kmax_stemxylem, "Kmax_stemxylem");
