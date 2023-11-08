@@ -112,7 +112,7 @@
 #'     
 #'   \bold{Forest growth} (functions \code{\link{growth}} or \code{\link{growth_day}}):
 #'     \itemize{
-#'       \item{\code{stomatalSubmodel [= "Jarvis"]}: Stomatal regulation sub-model, either "Jarvis" or "Baldocchi".}
+#'       \item{\code{stomatalSubmodel [= "Baldocchi"]}: Stomatal regulation sub-model, either "Jarvis" or "Baldocchi".}
 #'       \item{\code{subdailyCarbonBalance [= FALSE]}: Boolean flag to indicate that labile carbon balance should be conducted at sub-daily steps (applies only to transpirationMode = "Sperry").}
 #'       \item{\code{allowDessication [= TRUE]}: Boolean flag to indicate that mortality by dessication is allowed.}
 #'       \item{\code{allowStarvation [= TRUE]}: Boolean flag to indicate that mortality by starvation is allowed.}
@@ -227,7 +227,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     numericParams=list(maxNsteps = 400, ntrial = 200, psiTol = 0.0001, ETol = 0.0000001),
     
     #spwb with cochard
-    stomatalSubmodel = "Jarvis",
+    stomatalSubmodel = "Baldocchi",
     plantCapacitance = TRUE,
     cavitationFlux = TRUE,
     soilDisconnection = FALSE,
