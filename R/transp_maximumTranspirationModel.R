@@ -113,7 +113,8 @@ transp_maximumTranspirationModel<-function(x, meteo, latitude, elevation, slope,
   xIni = x
   xIni$control$modifyInput = FALSE
   xIni$control$unlimitedSoilWater = TRUE
-  xIni$control$cavitationRefill = "total"
+  xIni$control$cavitationRefillStem = "total"
+  xIni$control$cavitationRefillLeaves = "total"
   xIni$control$verbose = FALSE
   Tmax = matrix(NA, nrow=ndays, ncol = nlai)  
   colnames(Tmax) = LAI_seq

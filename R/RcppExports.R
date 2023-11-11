@@ -1589,15 +1589,15 @@ initCochardNetworks <- function(x) {
 #' @param network A hydraulic network element of the list returned by \code{initCochardNetworks}
 #' @param dt Smallest time step (seconds)
 #' @param opt Option flag vector
-#' @param cavitationRefill A string indicating how refilling of embolized conduits is done:
+#' @param cavitationRefillStem, cavitationRefillLeaves A string indicating how refilling of embolized conduits is done:
 #'           \itemize{
 #'             \item{"none" - no refilling.}
 #'             \item{"annual" - every first day of the year.}
 #'             \item{"rate" - following a rate of new sapwood formation.}
 #'             \item{"total" - instantaneous complete refilling.}
 #'           }
-semi_implicit_integration <- function(network, dt, opt, cavitationRefill = "annual") {
-    invisible(.Call(`_medfate_semi_implicit_integration`, network, dt, opt, cavitationRefill))
+semi_implicit_integration <- function(network, dt, opt, cavitationRefillStem = "annual", cavitationRefillLeaves = "total") {
+    invisible(.Call(`_medfate_semi_implicit_integration`, network, dt, opt, cavitationRefillStem, cavitationRefillLeaves))
 }
 
 #' @rdname hydraulics_supplyfunctions

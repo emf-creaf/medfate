@@ -8,7 +8,13 @@
 \usage{
 initCochardNetworks(x)
 
-semi_implicit_integration(network, dt, opt, cavitationRefill = "annual")
+semi_implicit_integration(
+  network,
+  dt,
+  opt,
+  cavitationRefillStem = "annual",
+  cavitationRefillLeaves = "total"
+)
 }
 \arguments{
 \item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}} created using \code{transpirationMode = "Cochard"}.}
@@ -19,7 +25,7 @@ semi_implicit_integration(network, dt, opt, cavitationRefill = "annual")
 
 \item{opt}{Option flag vector}
 
-\item{cavitationRefill}{A string indicating how refilling of embolized conduits is done:
+\item{cavitationRefillStem, }{cavitationRefillLeaves A string indicating how refilling of embolized conduits is done:
 \itemize{
   \item{"none" - no refilling.}
   \item{"annual" - every first day of the year.}

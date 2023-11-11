@@ -1704,7 +1704,8 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
-  String cavitationRefill = control["cavitationRefill"];
+  String cavitationRefillStem = control["cavitationRefillStem"];
+  String cavitationRefillLeaves = control["cavitationRefillLeaves"];
   bool verbose = control["verbose"];
   
   bool leafPhenology = control["leafPhenology"];
@@ -1884,18 +1885,21 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       }
       
       //If DOY == 1 reset PLC (Growth assumed)
-      if(cavitationRefill=="annual") {
+      if(cavitationRefillStem=="annual") {
         if(DOY[i]==1) {
           DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
           NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
-          NumericVector LeafPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
-          for(int j=0;j<StemPLC.length();j++) {
-            StemPLC[j] = 0.0; 
-            LeafPLC[j] = 0.0;
-          }
+          for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0; 
         }
       }
-
+      if(cavitationRefillLeaves=="annual") {
+        if(DOY[i]==1) {
+          DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+          NumericVector LeafPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
+          for(int j=0;j<LeafPLC.length();j++) LeafPLC[j] = 0.0;
+        }
+      }
+      
       if(unlimitedSoilWater) {
         NumericVector W = soil["W"];
         for(int h=0;h<W.size();h++) W[h] = 1.0;
@@ -2113,7 +2117,8 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
-  String cavitationRefill = control["cavitationRefill"];
+  String cavitationRefillStem = control["cavitationRefillStem"];
+  String cavitationRefillLeaves = control["cavitationRefillLeaves"];
   bool verbose = control["verbose"];
   bool subdailyResults = control["subdailyResults"];
   bool leafPhenology = control["leafPhenology"];
@@ -2349,18 +2354,20 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
     psidays(i,_) = psi(soil, soilFunctions); //Get soil water potential
       
     //If DOY == 1 reset PLC (Growth assumed)
-    if(cavitationRefill=="annual") {
+    if(cavitationRefillStem=="annual") {
         if(DOY[i]==1) {
           DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
           NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
-          NumericVector LeafPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
-          for(int j=0;j<StemPLC.length();j++) {
-            StemPLC[j] = 0.0;
-            LeafPLC[j] = 0.0;
-          }
+          for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
         }
     }
-      
+    if(cavitationRefillLeaves=="annual") {
+      if(DOY[i]==1) {
+        DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+        NumericVector LeafPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
+        for(int j=0;j<LeafPLC.length();j++) LeafPLC[j] = 0.0;
+      }
+    }
       
     //1. Phenology and leaf fall
     if(leafPhenology) {
