@@ -50,7 +50,7 @@ A list, with the following options (default values in brackets):
       }
       \item{\code{verticalLayerSize [= 100]}: Size of vertical layers (in cm) for the calculation of light extinction (and photosynthesis).}
       \item{\code{windMeasurementHeight [= 200]}: Height (in cm) over the canopy corresponding to wind measurements.}
-      \item{\code{cavitationRefill [= "annual"]}: A string indicating how refilling of embolized conduits is done:
+      \item{\code{cavitationRefillLeaves, cavitationRefillStem [= "annual"]}: A string indicating how refilling of embolized leaf/stem xylem is done:
           \itemize{
             \item{"none" - no refilling.}
             \item{"annual" - every first day of the year.}
@@ -74,10 +74,8 @@ A list, with the following options (default values in brackets):
       \item{\code{Q10_1_gmin [= 1.2]}: Temperature dependance of gmin when T ≤ TPhase.}
       \item{\code{Q10_2_gmin [= 4.8]}: Temperature dependance of gmin when T > TPhase.}
       \item{\code{taper [= TRUE]}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
-      \item{\code{maximumStemConductance [= 10]}: Maximum allowed value for the stem maximum hydraulic conductance (in mmol·s-1·m-2·MPa-1). Introduced to avoid excessive hydraulic redistribution caused by species with small size (i.e. very large stem conductance).}
       \item{\code{thermalCapacityLAI [= 1000000]}: Thermal canopy capacitance per LAI unit.}
-      \item{\code{fracLeafResistance [= NA]}: Fraction of plant total resistance (leaf+stem+root) that corresponds to leaves. This fraction is used if \code{VCleaf_kmax = NA}.}
-      \item{\code{fracRootResistance [= 0.40]}: Fraction of plant total resistance (leaf+stem+root) that corresponds to root system.}
+      \item{\code{rootRadialConductance [= 4]}: Radial conductance in roots (mmol·s-1·m-2·MPa-1).}
       \item{\code{averageFracRhizosphereResistance [= 0.15]}: Fraction to total continuum (leaf+stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).}
       \item{\code{boundaryLayerSize [= 2000]}: Size of the boundary layer (in cm) over the canopy (relevant for multi-layer canopy energy balance).}
     }
@@ -103,8 +101,8 @@ A list, with the following options (default values in brackets):
       \item{\code{stemCuticularTranspiration [= TRUE]}: Whether the effect of stem cuticular transpiration is considered in simulations.}
       \item{\code{C_SApoInit [= 2.0e-5]}: Maximum capacitance of the stem apoplasm (mmol·m-2).}
       \item{\code{C_LApoInit [= 1.0e-5]}: Maximum capacitance of the leaf apoplasm (mmol·m-2).}
-      \item{\code{k_SSym [= 0.26]}: Conductance from stem apoplasm to stem symplasm (mmol·s-1·m-2).}
-      \item{\code{k_LSym [= 2.0]}: Conductance from leaf apoplasm to leaf symplasm (mmol·s-1·m-2).}
+      \item{\code{k_SSym [= 0.26]}: Conductance from stem apoplasm to stem symplasm (mmol·s-1·m-2·MPa-1).}
+      \item{\code{fractionLeafSymplasm [= 0.5]}: Fraction of the leaf resistance from leaf apoplasm to leaf symplasm ([0-1]).}
       \item{\code{gs_NightFrac [= 0.05]}: Stomatal conductance at night as fraction of maximum stomatal conductance ([0-1]).}
       \item{\code{JarvisPAR [= 0.003]}: Parameter regulating the response of stomatal conductance to light (PAR) in the Jarvis model.}
       \item{\code{gCrown0 [= 0.150]}: Reference crown conductance (mol·s-1·m-2).}

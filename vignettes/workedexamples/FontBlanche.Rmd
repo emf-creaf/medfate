@@ -154,7 +154,8 @@ fb_control = defaultControl()
 fb_control$transpirationMode = "Sperry"
 fb_control$soilFunctions = "VG"
 fb_control$subdailyResults = TRUE
-fb_control$cavitationRefill = "rate"
+fb_control$cavitationRefillStem = "rate"
+fb_control$cavitationRefillLeaves = "total"
 fb_control$fracRootResistance = 0.4
 ```
 Where the following changes are set to control parameters: 

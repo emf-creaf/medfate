@@ -426,7 +426,7 @@ double coarseRootSoilVolumeFromConductance(double Kmax_rootxylem, double VCroot_
   double vol = 0.0;
   double f = frv(vol, B, v, ax, ra);
   int nsteps = 0;
-  int maxnsteps = 100;
+  int maxnsteps = 200;
   while((std::abs(f)>fTol) && (nsteps < maxnsteps)) {
     // Rcout<<vol<<"\n";
     if((f > 0.0)) {

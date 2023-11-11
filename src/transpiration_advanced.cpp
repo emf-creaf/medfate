@@ -54,7 +54,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   double thermalCapacityLAI = control["thermalCapacityLAI"];
   bool multiLayerBalance = control["multiLayerBalance"];
   double defaultWindSpeed = control["defaultWindSpeed"];
-  String cavitationRefill = control["cavitationRefill"];
+  String cavitationRefillStem = control["cavitationRefillStem"];
+  String cavitationRefillLeaves = control["cavitationRefillLeaves"];
   double refillMaximumRate = control["refillMaximumRate"];
   bool sapFluidityVariation = control["sapFluidityVariation"];
   bool sunlitShade = control["sunlitShade"];
@@ -1121,10 +1122,12 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     dEdPm[c] = sum(dEdPInst(c,_))/((double)dEdPInst.ncol());  
     DDS[c] = Phe[c]*(1.0 - (dEdPm[c]/(sapFluidityDay*Plant_kmax[c])));
     
-    if(cavitationRefill=="rate") {
-      double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
-      double r = refillMaximumRate*std::max(0.0, (StemSympPsiVEC[c] + 1.5)/1.5);
+    double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
+    double r = refillMaximumRate*std::max(0.0, (StemSympPsiVEC[c] + 1.5)/1.5);
+    if(cavitationRefillStem=="rate") {
       StemPLCVEC[c] = std::max(0.0, StemPLCVEC[c] - (r/SAmax));
+    }
+    if(cavitationRefillLeaves=="rate") {
       LeafPLCVEC[c] = std::max(0.0, LeafPLCVEC[c] - (r/SAmax));
     }
   }
