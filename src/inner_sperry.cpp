@@ -17,6 +17,9 @@ List initSperryNetwork(int c,
   
   NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_kmax"]);
   NumericVector VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_kmax"]);
+  NumericVector VCleafapo_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleafapo_kmax"]);
+  NumericVector kleaf_symp = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["kleaf_symp"]);
+  
   NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_c"]);
   NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_d"]);
   NumericVector VCleaf_c = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_c"]);
@@ -33,7 +36,10 @@ List initSperryNetwork(int c,
                          _["krhizomax"] = VGrhizo_kmax,_["nsoil"] = VG_n,_["alphasoil"] = VG_alpha,
                          _["krootmax"] = sapFluidityDay*VCroot_kmax, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
                          _["kstemmax"] = sapFluidityDay*VCstem_kmax[c], _["stemc"] = VCstem_c[c], _["stemd"] = VCstem_d[c],
-                         _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
+                         _["kleafmax"] = sapFluidityDay*VCleaf_kmax[c], 
+                         _["kleafapomax"] = sapFluidityDay*VCleafapo_kmax[c], 
+                         _["kleafsymp"] = sapFluidityDay*kleaf_symp[c], 
+                         _["leafc"] = VCleaf_c[c], _["leafd"] = VCleaf_d[c],
                          _["PLCstem"] = StemPLCVEC[c],_["PLCleaf"] = leaf_plc);
   
   return(HN);
@@ -235,7 +241,6 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, d
   NumericVector leafTemp = photosynthesisFunction["LeafTemperature"];
   NumericVector leafVPD = photosynthesisFunction["LeafVPD"];
   NumericVector Gsw = photosynthesisFunction["Gsw"];
-  NumericVector supplyKterm = supplyFunction["kterm"];
   int nsteps = supplydEdp.size();
   double maxdEdp = 0.0, mindEdp = 99999999.0;
   double Agmax = 0.0;

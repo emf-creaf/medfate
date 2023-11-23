@@ -236,6 +236,7 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, List soi
   String transpirationMode = control["transpirationMode"];
   bool fillMissingSpParams = control["fillMissingSpParams"];
   double rootRadialConductance = control["rootRadialConductance"];
+  double fractionLeafSymplasm = control["fractionLeafSymplasm"]; // Fraction of leaf symplasmic resistance
   
   NumericVector dVec = soil["dVec"];
   
@@ -265,12 +266,17 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, List soi
   NumericVector VGrhizotot_kmax(numCohorts, 0.0);
   NumericVector Plant_kmax(numCohorts, 0.0), FR_leaf(numCohorts, 0.0), FR_stem(numCohorts, 0.0), FR_root(numCohorts, 0.0);
   NumericVector VCstem_c(numCohorts, 0.0), VCstem_d(numCohorts, 0.0), VCleaf_c(numCohorts, 0.0), VCleaf_d(numCohorts, 0.0), VCroot_c(numCohorts, 0.0), VCroot_d(numCohorts, 0.0);
+  NumericVector VCleafapo_kmax(numCohorts, NA_REAL);
+  NumericVector kleaf_symp(numCohorts, NA_REAL);
+  
   // Scaled conductance parameters parameters
   for(int c=0;c<numCohorts;c++){
     //Stem maximum conductance (in mmol·m-2·s-1·MPa-1)
     VCstem_kmax[c]=maximumStemHydraulicConductance(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c],control["taper"]); 
     double xylem_root_kmax =maximumStemHydraulicConductance(Kmax_rootxylem[c], Hmed[c], Al2As[c], Z95[c]/10.0, control["taper"]); 
     VCroottot_kmax[c] = 1.0/((1.0/xylem_root_kmax) + (1.0/rootRadialConductance));
+    kleaf_symp[c] = 1.0/(fractionLeafSymplasm*(1.0/VCleaf_kmax[c]));
+    VCleafapo_kmax[c] = 1.0/((1.0- fractionLeafSymplasm)*(1.0/VCleaf_kmax[c]));
     //Stem Weibull
     NumericVector wb_stem = psi2Weibull(VCstem_P50[c], VCstem_P88[c], VCstem_P12[c]);
     VCstem_c[c] = wb_stem["c"];
@@ -290,14 +296,29 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, List soi
     FR_root[c] = (1.0/VCroottot_kmax[c])/(1.0/Plant_kmax[c]);
   }
   
-  DataFrame paramsTranspirationdf = DataFrame::create(
-        _["Gswmin"]=Gswmin, _["Gswmax"]=Gswmax,_["Vmax298"]=Vmax298,
-        _["Jmax298"]=Jmax298, _["Kmax_stemxylem"] = Kmax_stemxylem, _["Kmax_rootxylem"] = Kmax_rootxylem,
-        _["VCleaf_kmax"]=VCleaf_kmax,_["VCleaf_c"]=VCleaf_c,_["VCleaf_d"]=VCleaf_d,
-        _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, 
-        _["VCroot_kmax"] = VCroottot_kmax ,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,
-        _["VGrhizo_kmax"] = VGrhizotot_kmax,
-        _["Plant_kmax"] = Plant_kmax, _["FR_leaf"] = FR_leaf, _["FR_stem"] = FR_stem, _["FR_root"] = FR_root);
+  DataFrame paramsTranspirationdf = DataFrame::create();
+  paramsTranspirationdf.push_back(Gswmin, "Gswmin");
+  paramsTranspirationdf.push_back(Gswmax, "Gswmax");
+  paramsTranspirationdf.push_back(Vmax298, "Vmax298");
+  paramsTranspirationdf.push_back(Jmax298, "Jmax298");
+  paramsTranspirationdf.push_back(Kmax_stemxylem, "Kmax_stemxylem");
+  paramsTranspirationdf.push_back(Kmax_rootxylem, "Kmax_rootxylem");
+  paramsTranspirationdf.push_back(VCleaf_kmax, "VCleaf_kmax");
+  paramsTranspirationdf.push_back(VCleafapo_kmax, "VCleafapo_kmax");
+  paramsTranspirationdf.push_back(VCleaf_c, "VCleaf_c");
+  paramsTranspirationdf.push_back(VCleaf_d, "VCleaf_d");
+  paramsTranspirationdf.push_back(kleaf_symp, "kleaf_symp");
+  paramsTranspirationdf.push_back(VCstem_kmax, "VCstem_kmax");
+  paramsTranspirationdf.push_back(VCstem_c, "VCstem_c");
+  paramsTranspirationdf.push_back(VCstem_d, "VCstem_d");
+  paramsTranspirationdf.push_back(VCroottot_kmax, "VCroot_kmax");
+  paramsTranspirationdf.push_back(VCroot_c, "VCroot_c");
+  paramsTranspirationdf.push_back(VCroot_d, "VCroot_d");
+  paramsTranspirationdf.push_back(VGrhizotot_kmax, "VGrhizo_kmax");
+  paramsTranspirationdf.push_back(Plant_kmax, "Plant_kmax");
+  paramsTranspirationdf.push_back(FR_leaf, "FR_leaf");
+  paramsTranspirationdf.push_back(FR_stem, "FR_stem");
+  paramsTranspirationdf.push_back(FR_root, "FR_root");
   paramsTranspirationdf.attr("row.names") = above.attr("row.names");
   return(paramsTranspirationdf);
 }
@@ -311,6 +332,8 @@ DataFrame paramsTranspirationCochard(DataFrame above, NumericVector Z95, List so
   String stomatalSubmodel = control["stomatalSubmodel"];
   bool fillMissingSpParams = control["fillMissingSpParams"];
   double rootRadialConductance = control["rootRadialConductance"];
+  double k_SSym = control["k_SSym"];
+  double fractionLeafSymplasm = control["fractionLeafSymplasm"]; // Fraction of leaf symplasmic resistance
   
   NumericVector dVec = soil["dVec"];
   
@@ -353,8 +376,6 @@ DataFrame paramsTranspirationCochard(DataFrame above, NumericVector Z95, List so
   NumericVector VGrhizotot_kmax(numCohorts, 0.0);
   NumericVector Plant_kmax(numCohorts, 0.0), FR_leaf(numCohorts, 0.0), FR_stem(numCohorts, 0.0), FR_root(numCohorts, 0.0);
   
-  double k_SSym = control["k_SSym"];
-  double fractionLeafSymplasm = control["fractionLeafSymplasm"]; // Fraction of leaf symplasmic resistance
   NumericVector kstem_symp(numCohorts, k_SSym);
   NumericVector VCleafapo_kmax(numCohorts, NA_REAL);
   NumericVector kleaf_symp(numCohorts, NA_REAL);
@@ -419,19 +440,19 @@ DataFrame paramsTranspirationCochard(DataFrame above, NumericVector Z95, List so
   paramsTranspirationdf.push_back(VCleaf_P50, "VCleaf_P50");
   paramsTranspirationdf.push_back(VCleaf_c, "VCleaf_c");
   paramsTranspirationdf.push_back(VCleaf_d, "VCleaf_d");
+  paramsTranspirationdf.push_back(kleaf_symp, "kleaf_symp");
   paramsTranspirationdf.push_back(VCstem_kmax, "VCstem_kmax");
   paramsTranspirationdf.push_back(VCstem_slope, "VCstem_slope");
   paramsTranspirationdf.push_back(VCstem_P50, "VCstem_P50");
   paramsTranspirationdf.push_back(VCstem_c, "VCstem_c");
   paramsTranspirationdf.push_back(VCstem_d, "VCstem_d");
+  paramsTranspirationdf.push_back(kstem_symp, "kstem_symp");
   paramsTranspirationdf.push_back(VCroottot_kmax, "VCroot_kmax");
   paramsTranspirationdf.push_back(VCroot_slope, "VCroot_slope");
   paramsTranspirationdf.push_back(VCroot_P50, "VCroot_P50");
   paramsTranspirationdf.push_back(VCroot_c, "VCroot_c");
   paramsTranspirationdf.push_back(VCroot_d, "VCroot_d");
   paramsTranspirationdf.push_back(VGrhizotot_kmax, "VGrhizo_kmax");
-  paramsTranspirationdf.push_back(kleaf_symp, "kleaf_symp");
-  paramsTranspirationdf.push_back(kstem_symp, "kstem_symp");
   paramsTranspirationdf.push_back(Plant_kmax, "Plant_kmax");
   paramsTranspirationdf.push_back(FR_leaf, "FR_leaf");
   paramsTranspirationdf.push_back(FR_stem, "FR_stem");
@@ -1897,12 +1918,25 @@ void modifyInputParam(List x, String paramType, String paramName,
       if(message) multiplyMessage("VCroot_kmax", cohNames[cohort], 1.0/f);
       multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, 1.0/f);
     }
+  } else if(paramName=="Plant_kmax") {
+    if(transpirationMode!="Granier") {
+      double old = getInputParamValue(x, "paramsTranspiration", "Plant_kmax", cohort);
+      double f = newValue/old;
+      if(message) multiplyMessage("Plant_kmax", cohNames[cohort], f);
+      multiplyInputParamSingle(x, "paramsTranspiration", "Plant_kmax", cohort, f);
+      if(message) multiplyMessage("VCleaf_kmax", cohNames[cohort], f);
+      multiplyInputParamSingle(x, "paramsTranspiration", "VCleaf_kmax", cohort, f);
+      if(message) multiplyMessage("VCstem_kmax", cohNames[cohort], f);
+      multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, f);
+      if(message) multiplyMessage("VCroot_kmax", cohNames[cohort], f);
+      multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, f);
+    }
   } else {
     if(message) modifyMessage(paramName, cohNames[cohort], newValue);
     modifyInputParamSingle(x, paramType, paramName, cohort, newValue);
   }
   if(transpirationMode!="Granier") {
-    if(message) Rcerr<< "[Message] Recalculating plant maximum conductances.\n";
+    if(message) Rcerr<< "[Message] Recalculating plant maximum conductance.\n";
     updatePlantKmax(x);
   }
   if(message) Rcerr<< "[Message] Updating below-ground parameters.\n";
