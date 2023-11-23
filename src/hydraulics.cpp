@@ -711,9 +711,31 @@ List E2psiAboveground(double E, double psiRootCrown,
   double psiStem = E2psiXylem(E, psiRootCrown, kstemmax, stemc, stemd, psiPLCStem); //Apliquem la fatiga per cavitacio a la caiguda de potencial a la tija 
   double psiPLCLeaf=  apoplasticWaterPotential(std::max(0.0001,1.0-PLCleaf), leafc, leafd);
   double psiLeaf = E2psiXylem(E, psiStem, kleafmax, leafc, leafd, psiPLCLeaf); 
-  double kterm = xylemConductance(psiLeaf, kleafmax, leafc, leafd);
-  return(List::create( Named("E")=E, Named("psiStem") =psiStem,Named("psiLeaf") =psiLeaf,Named("kterm") = kterm));
+  return(List::create( Named("E")=E, Named("psiStem") =psiStem,Named("psiLeaf") =psiLeaf));
 }
+
+List E2psiAbovegroundSymp(double E, double psiRootCrown, 
+                          List hydraulicNetwork) {
+  double kstemmax = hydraulicNetwork["kstemmax"];
+  double stemc = hydraulicNetwork["stemc"];
+  double stemd = hydraulicNetwork["stemd"];
+  double kleafmax = hydraulicNetwork["kleafmax"];
+  double kleafapomax = hydraulicNetwork["kleafapomax"];
+  double kleafsymp = hydraulicNetwork["kleafsymp"];
+  double leafc = hydraulicNetwork["leafc"];
+  double leafd = hydraulicNetwork["leafd"];
+  double PLCstem = hydraulicNetwork["PLCstem"];
+  double PLCleaf = hydraulicNetwork["PLCleaf"];
+  
+  double psiPLCStem =  apoplasticWaterPotential(std::max(0.0001, 1.0 - PLCstem), stemc, stemd);
+  double psiStem = E2psiXylem(E, psiRootCrown, kstemmax, stemc, stemd, psiPLCStem); //Apliquem la fatiga per cavitacio a la caiguda de potencial a la tija 
+  double psiPLCLeaf=  apoplasticWaterPotential(std::max(0.0001,1.0-PLCleaf), leafc, leafd);
+  double psiLeafApo = E2psiXylem(E, psiStem, kleafapomax, leafc, leafd, psiPLCLeaf); 
+  double psiLeafSymp = psiLeafApo - E/kleafsymp;
+  return(List::create( Named("E")=E, Named("psiStem") =psiStem,
+                       Named("psiLeaf") =psiLeafSymp));
+}
+
 
 
 //' @rdname hydraulics_supplyfunctions
@@ -735,13 +757,12 @@ List E2psiNetwork(double E, List hydraulicNetwork,
   double kterm = NA_REAL;
   if(!NumericVector::is_na(psiRootCrown)) {
     List E2psiAG = E2psiAboveground(E, psiRootCrown, hydraulicNetwork);
-    kterm = E2psiAG["kterm"];
     psiLeaf = E2psiAG["psiLeaf"];
     psiStem = E2psiAG["psiStem"];
   } 
   return(List::create(Named("E") = E, Named("ERhizo")=ERhizo, Named("psiRhizo") = psiRhizo, 
                       Named("psiRootCrown") = psiRootCrown, Named("psiStem") = psiStem, Named("psiLeaf") = psiLeaf, 
-                      Named("kterm") = kterm, Named("x") = E2psiRS["x"]));
+                      Named("x") = E2psiRS["x"]));
 } 
 
 
@@ -1125,7 +1146,6 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCr
   NumericVector supplyE(maxNsteps);
   NumericVector supplydEdp(maxNsteps);
   NumericVector supplyPsiLeaf(maxNsteps);
-  NumericVector supplyKterm(maxNsteps);
   NumericVector supplyPsiStem(maxNsteps);
 
   
@@ -1141,7 +1161,6 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCr
     } else {
       Nsteps = Nsteps + 1;
     }
-    supplyKterm[i] = sol["kterm"];
     supplyE[i] = sol["E"];
     
     if(i==1) {
@@ -1167,7 +1186,6 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCr
   for(int i=0;i<Nsteps;i++) {
     supplyEDef[i] = supplyE[i];
     supplydEdpDef[i] = supplydEdp[i];
-    supplyKtermDef[i] = supplyKterm[i];
     supplyPsiLeafDef[i] = supplyPsiLeaf[i];
     supplyPsiStemDef[i] = supplyPsiStem[i]; 
   }
@@ -1175,8 +1193,7 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCr
   return(List::create(Named("E") = supplyEDef,
                       Named("psiStem")=supplyPsiStemDef,
                       Named("psiLeaf")=supplyPsiLeafDef,
-                      Named("dEdP")=supplydEdpDef,
-                      Named("kterm") = supplyKtermDef));
+                      Named("dEdP")=supplydEdpDef));
   
 }
 
@@ -1200,8 +1217,7 @@ List supplyFunctionNetwork(List hydraulicNetwork,
   NumericVector supplyPsiRoot(maxNsteps);
   NumericVector supplyPsiStem(maxNsteps);
   NumericVector supplyPsiLeaf(maxNsteps);
-  NumericVector supplyKterm(maxNsteps);
-  
+
   List sol = E2psiNetwork(minFlow, hydraulicNetwork,
                           NumericVector::create(0));
   NumericVector solERhizo = sol["ERhizo"];
@@ -1211,7 +1227,6 @@ List supplyFunctionNetwork(List hydraulicNetwork,
   supplyPsiStem[0] = sol["psiStem"];
   supplyPsiLeaf[0] = sol["psiLeaf"];
   supplyPsiRoot[0] = sol["psiRootCrown"];
-  supplyKterm[0] = sol["kterm"];
   supplyE[0] = minFlow;
   
   //Calculate initial slope
@@ -1234,8 +1249,7 @@ List supplyFunctionNetwork(List hydraulicNetwork,
     supplyPsiStem[i] = sol["psiStem"];
     supplyPsiLeaf[i] = sol["psiLeaf"];
     supplyPsiRoot[i] = sol["psiRootCrown"];
-    supplyKterm[i] = sol["kterm"];
-    
+
     if(!NumericVector::is_na(supplyPsiLeaf[i])) {
       if(i==1) {
         supplydEdp[0] = (supplyE[1]-supplyE[0])/std::abs(supplyPsiLeaf[1] - supplyPsiLeaf[0]);
@@ -1268,7 +1282,6 @@ List supplyFunctionNetwork(List hydraulicNetwork,
     if(NumericVector::is_na(supplyE[i])) stop("NA E in supplyFunctionNetwork");
     supplyEDef[i] = supplyE[i];
     supplydEdpDef[i] = supplydEdp[i];
-    supplyKtermDef[i] = supplyKterm[i];
     supplyPsiRootDef[i] = supplyPsiRoot[i];
     supplyERhizoDef(i,_) = supplyERhizo(i,_);
     supplyPsiRhizoDef(i,_) = supplyPsiRhizo(i,_);
