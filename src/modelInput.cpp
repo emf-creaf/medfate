@@ -1824,7 +1824,7 @@ void multiplyInputParam(List x, String paramType, String paramName,
     multiplyInputParamSingle(x, "paramsTranspiration", "VCleaf_d", cohort, f);
     multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_d", cohort, f);
     multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_d", cohort, f);
-  }else if(paramName=="Al2As") {
+  } else if(paramName=="Al2As") {
     multiplyInputParamSingle(x, "paramsAnatomy", "Al2As", cohort, f);
     if(message) multiplyMessage("Vsapwood", cohNames[cohort], f);
     multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, 1.0/f);
@@ -1930,6 +1930,15 @@ void modifyInputParam(List x, String paramType, String paramName,
       multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, f);
       if(message) multiplyMessage("VCroot_kmax", cohNames[cohort], f);
       multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, f);
+    }
+  } else if(paramName=="VC_P50") {
+    if(transpirationMode=="Cochard") {
+      if(message) modifyMessage(paramName, "VCstem_P50", newValue);
+      modifyInputParamSingle(x, "paramsTranspiration", "VCstem_P50", cohort, newValue);
+      if(message) modifyMessage(paramName, "VCroot_P50", newValue);
+      modifyInputParamSingle(x, "paramsTranspiration", "VCroot_P50", cohort, newValue);
+      if(message) modifyMessage(paramName, "VCleaf_P50", newValue);
+      modifyInputParamSingle(x, "paramsTranspiration", "VCleaf_P50", cohort, newValue);
     }
   } else {
     if(message) modifyMessage(paramName, cohNames[cohort], newValue);
