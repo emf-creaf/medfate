@@ -1940,6 +1940,24 @@ void modifyInputParam(List x, String paramType, String paramName,
       if(message) modifyMessage(paramName, "VCleaf_P50", newValue);
       modifyInputParamSingle(x, "paramsTranspiration", "VCleaf_P50", cohort, newValue);
     }
+  } else if(paramName=="VC_c") {
+    if(transpirationMode!="Granier") {
+      if(message) modifyMessage(paramName, "VCstem_c", newValue);
+      modifyInputParamSingle(x, "paramsTranspiration", "VCstem_c", cohort, newValue);
+      if(message) modifyMessage(paramName, "VCroot_c", newValue);
+      modifyInputParamSingle(x, "paramsTranspiration", "VCroot_c", cohort, newValue);
+      if(message) modifyMessage(paramName, "VCleaf_c", newValue);
+      modifyInputParamSingle(x, "paramsTranspiration", "VCleaf_c", cohort, newValue);
+    }
+  } else if(paramName=="VC_d") {
+    if(transpirationMode!="Granier") {
+      if(message) modifyMessage(paramName, "VCstem_d", newValue);
+      modifyInputParamSingle(x, "paramsTranspiration", "VCstem_d", cohort, newValue);
+      if(message) modifyMessage(paramName, "VCroot_d", newValue);
+      modifyInputParamSingle(x, "paramsTranspiration", "VCroot_d", cohort, newValue);
+      if(message) modifyMessage(paramName, "VCleaf_d", newValue);
+      modifyInputParamSingle(x, "paramsTranspiration", "VCleaf_d", cohort, newValue);
+    }
   } else {
     if(message) modifyMessage(paramName, cohNames[cohort], newValue);
     modifyInputParamSingle(x, paramType, paramName, cohort, newValue);
