@@ -145,7 +145,7 @@ modifyCohortParams<-function(x, customParams, verbose = TRUE) {
   below_par <- c("Z50","Z95")
   pheno_par <- names(x[['paramsPhenology']])
   base_par <- names(x[['paramsInterception']])
-  transp_par <- c(names(x[['paramsTranspiration']]), "VC_P50", "VC_c", "VC_d")
+  transp_par <- c(names(x[['paramsTranspiration']]), "VC_P50", "VC_c", "VC_d", "Vmax298_Jmax298")
   anatomy_par <- names(x[['paramsAnatomy']])
   waterstorage_par <- names(x[['paramsWaterStorage']])
   growth_par <- names(x[['paramsGrowth']])
