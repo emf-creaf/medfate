@@ -3,6 +3,7 @@
 -------------------------------
 
 # Version 3.2.0
+- Correction of a bug arisen in old Rcpp versions
 - Functions for seed production and bank dynamics (new parameter SeedLongevity)
 - New parameters for dispersal (SeedMass, DispersalType, DispersalDistance, DispersalShape)
 - Recording of leaf PLC for Sperry and Cochard sub-models
