@@ -1931,6 +1931,15 @@ void modifyInputParam(List x, String paramType, String paramName,
       if(message) multiplyMessage("VCroot_kmax", cohNames[cohort], f);
       multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, f);
     }
+  } else if(paramName=="Vmax298_Jmax298") {
+    if(transpirationMode!="Granier") {
+      double old = getInputParamValue(x, "paramsTranspiration", "Vmax298", cohort);
+      double f = newValue/old;
+      if(message) multiplyMessage("Vmax298", cohNames[cohort], f);
+      multiplyInputParamSingle(x, "paramsTranspiration", "Vmax298", cohort, f);
+      if(message) multiplyMessage("Jmax298", cohNames[cohort], f);
+      multiplyInputParamSingle(x, "paramsTranspiration", "Jmax298", cohort, f);
+    }
   } else if(paramName=="VC_P50") {
     if(transpirationMode=="Cochard") {
       if(message) modifyMessage(paramName, "VCstem_P50", newValue);
