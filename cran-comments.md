@@ -1,7 +1,6 @@
 ## Error fixing submission
 
-This submission (v3.1.4) tries to fix memory access issues arisen from previous submission (v3.1.3) under ASAN and valgrind flavors. We debugged the code using valgrind and we expect the bug to be corrected. Note, however, that we could not test the package on platform Debian Linux, R-devel, GCC ASAN/UBSAN due to pre-processing errors in Rhub.
-
+This submission (v3.2.0) tries to fix a bug originated in package Rcpp and propagated to our package.
 
 ## Tested environments
 
@@ -17,10 +16,4 @@ This submission (v3.1.4) tries to fix memory access issues arisen from previous 
 
 ## R CMD check results
 
-In all CI tests 1 NOTE is generated about the size of 'libs', due to the large
-amount of compiled code (e.g.):
-
-     installed size is 41.7Mb
-     sub-directories of 1Mb or more:
-       libs  40.4Mb
-
+In all CI tests only NOTEs are generated
