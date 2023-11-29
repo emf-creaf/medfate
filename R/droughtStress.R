@@ -67,11 +67,11 @@
 #' 
 #' @details The currently available drought stress indices are:
 #' \itemize{
-#'   \item{\code{"ADS"}:}{ Average of daily drought stress values for the period considered.}
-#'   \item{\code{"MDS"}:}{ Maximum daily drought stress during the period considered.}
-#'   \item{\code{"DI"}:}{ Drought intensity, as defined in De \enc{Cáceres}{Caceres} et al. (2015).}
-#'   \item{\code{"NDD"}:}{ Number of drought days, as defined in De \enc{Cáceres}{Caceres} et al. (2015).}
-#'   \item{\code{"WSI"}:}{ Water stress integral, as defined in Myers (1988).}
+#'   \item{\code{"ADS"}: Average of daily drought stress values for the period considered.}
+#'   \item{\code{"MDS"}: Maximum daily drought stress during the period considered.}
+#'   \item{\code{"DI"}: Drought intensity, as defined in De \enc{Cáceres}{Caceres} et al. (2015).}
+#'   \item{\code{"NDD"}: Number of drought days, as defined in De \enc{Cáceres}{Caceres} et al. (2015).}
+#'   \item{\code{"WSI"}: Water stress integral, as defined in Myers (1988).}
 #' }
 #' 
 #' @return A data frame with periods (e.g., years or months) in rows and plant cohorts (or species) in columns. 

@@ -102,35 +102,35 @@ or the forest dynamics model (see \code{\link{fordyn}}).
 \details{
 The following plots are currently available for \code{\link{spwb}} (most of them also for \code{\link{pwb}}):
 \itemize{
-  \item{\code{"PET_Precipitation"}:}{ Potential evapotranspiration and Precipitation.}
-  \item{\code{"PET_NetRain"}:}{ Potential evapotranspiration and Net rainfall.}
-  \item{\code{"Snow"}:}{ Snow precipitation and snowpack dynamics.}
-  \item{\code{"Export"}:}{ Water exported through deep drainage and surface runoff.}
-  \item{\code{"Evapotranspiration"}:}{ Plant transpiration and soil evaporation.}
-  \item{\code{"SoilPsi"}:}{ Soil water potential.}
-  \item{\code{"SoilRWC"}:}{ Soil relative water content (in percent of field capacity).}
-  \item{\code{"SoilTheta"}:}{ Soil moisture water content (in percent volume).}
-  \item{\code{"SoilVol"}:}{ Soil water volumetric content (in mm).}
-  \item{\code{"PlantExtraction"}:}{ Water extracted by plants from each soil layer.}
+  \item{\code{"PET_Precipitation"}: Potential evapotranspiration and Precipitation.}
+  \item{\code{"PET_NetRain"}: Potential evapotranspiration and Net rainfall.}
+  \item{\code{"Snow"}: Snow precipitation and snowpack dynamics.}
+  \item{\code{"Export"}: Water exported through deep drainage and surface runoff.}
+  \item{\code{"Evapotranspiration"}: Plant transpiration and soil evaporation.}
+  \item{\code{"SoilPsi"}: Soil water potential.}
+  \item{\code{"SoilRWC"}: Soil relative water content (in percent of field capacity).}
+  \item{\code{"SoilTheta"}: Soil moisture water content (in percent volume).}
+  \item{\code{"SoilVol"}: Soil water volumetric content (in mm).}
+  \item{\code{"PlantExtraction"}: Water extracted by plants from each soil layer.}
   \item{\code{"HydraulicRedistribution"}: Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network.}
-  \item{\code{"WTD"}:}{ Water table depth.}
-  \item{\code{"LAI"}:}{ Expanded and dead leaf area index of the whole stand.}
-  \item{\code{"PlantLAI"}:}{ Plant cohort leaf area index (expanded leaves).}
-  \item{\code{"PlantLAIlive"}:}{ Plant cohort leaf area index ("live" leaves).}
-  \item{\code{"PlantStress"}:}{ Plant cohort average daily drought stress.}
-  \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration.}
-  \item{\code{"TranspirationPerLeaf"}:}{ Plant cohort transpiration per leaf area.}
-  \item{\code{"PlantGrossPhotosynthesis"}:}{ Plant cohort photosynthesis.}
-  \item{\code{"GrossPhotosynthesisPerLeaf"}:}{ Plant cohort photosynthesis per leaf area.}
-  \item{\code{"StemRWC"}:  Average daily stem relative water content.}
-  \item{\code{"LeafRWC"}:  Average daily leaf relative water content.}
-  \item{\code{"LFMC"}:  Live fuel moisture content.}
+  \item{\code{"WTD"}: Water table depth.}
+  \item{\code{"LAI"}: Expanded and dead leaf area index of the whole stand.}
+  \item{\code{"PlantLAI"}: Plant cohort leaf area index (expanded leaves).}
+  \item{\code{"PlantLAIlive"}: Plant cohort leaf area index ("live" leaves).}
+  \item{\code{"PlantStress"}: Plant cohort average daily drought stress.}
+  \item{\code{"PlantTranspiration"}: Plant cohort transpiration.}
+  \item{\code{"TranspirationPerLeaf"}: Plant cohort transpiration per leaf area.}
+  \item{\code{"PlantGrossPhotosynthesis"}: Plant cohort photosynthesis.}
+  \item{\code{"GrossPhotosynthesisPerLeaf"}: Plant cohort photosynthesis per leaf area.}
+  \item{\code{"StemRWC"}: Average daily stem relative water content.}
+  \item{\code{"LeafRWC"}: Average daily leaf relative water content.}
+  \item{\code{"LFMC"}: Live fuel moisture content.}
 }
 The following plots are available for \code{\link{spwb}} and \code{\link{pwb}} \emph{only if} \code{transpirationMode = "Granier"}:
   \itemize{
-    \item{\code{"PlantPsi"}:}{ Plant cohort water potential.}
-    \item{\code{"FPAR"}:}{ Fraction of PAR at the canopy level of each plant cohort.}
-    \item{\code{"AbsorbedSWRFraction"}:}{ Fraction of SWR absorbed by each plant cohort.}
+    \item{\code{"PlantPsi"}: Plant cohort water potential.}
+    \item{\code{"FPAR"}: Fraction of PAR at the canopy level of each plant cohort.}
+    \item{\code{"AbsorbedSWRFraction"}: Fraction of SWR absorbed by each plant cohort.}
   }
 The following plots are available for \code{\link{spwb}} and \code{\link{pwb}} \emph{only if} \code{transpirationMode = "Sperry"}:
   \itemize{
