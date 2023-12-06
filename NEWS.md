@@ -3,6 +3,7 @@
 -------------------------------
 
 # Version 4.0.0
+- New taxonomic treatment (Name/AcceptedName)
 - Revision of Cochard sub-model
 - Replacement of vulnerability curve parameters by P12, P50 and P88
 - New parameters for Jarvis-type stomatal conductance in Cochard sub-model

@@ -56,7 +56,7 @@ bt_models <- openxlsx::read.xlsx(paste0(MFWdir,"MedfateSpeciesParametrization/Al
 SpParamsMED <- medfateutils::populateTreeAllometries(SpParamsMED, bt_models, "barkthickness")
 
 # Manual tuning
-tree_all_cols = 27:39
+tree_all_cols = 30:42
 #Use allometries of A. alba for P. abies
 SpParamsMED[147,tree_all_cols] = SpParamsMED[1,tree_all_cols]
 #Use allometries of A. alba for A. pinsapo
