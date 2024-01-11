@@ -146,6 +146,7 @@ double KmTemp(double Tleaf, double Oi = 209.0) {
 //' @rdname photo
 // [[Rcpp::export("photo_VmaxTemp")]]
 double VmaxTemp(double Vmax298, double Tleaf) {
+  if(NumericVector::is_na(Vmax298)) Vmax298 = 0.0;
   double Ha = 73637.0; //Energy of activation J * mol-1
   double Hd = 149252.0; //Energy of deactivation J * mol-1
   double Sv = 486.0;  //Entropy term J * mol-1 * K-1

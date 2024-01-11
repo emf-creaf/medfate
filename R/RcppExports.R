@@ -1723,13 +1723,24 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gs
 #' @seealso  \code{\link{spwb}}
 #' 
 #' @examples
+#' solarElevation <- 0.67 # in radians
+#' SWR_direct <- 1100
+#' SWR_diffuse <- 300
+#' PAR_direct <- 550
+#' PAR_diffuse <- 150
+#' 
 #' LAI <- 2
 #' nlayer <- 10
 #' LAIlayerlive <- matrix(rep(LAI/nlayer,nlayer),nlayer,1)
 #' LAIlayerdead <- matrix(0,nlayer,1)
-#' kb <- 0.8
+#' leafAngle <- 60 # in degrees
+#' 
+#' ## Extinction coefficients
+#' kb <- light_directExtinctionCoefficient(leafAngle*(pi/180), solarElevation)
 #' kd_PAR <- 0.5
 #' kd_SWR <- kd_PAR/1.35
+#' 
+#' ## Absorption/Reflection coefficients
 #' alpha_PAR <- 0.9
 #' gamma_PAR <- 0.04
 #' gamma_SWR <- 0.05
@@ -1755,17 +1766,12 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gs
 #' lines((1-fsunlit)*100, 1:nlayer, lty=2)
 #' par(oldpar)  
 #'   
-#' solarElevation <- 0.67
-#' SWR_direct <- 1100
-#' SWR_diffuse <- 300
-#' PAR_direct <- 550
-#' PAR_diffuse <- 150
 #' 
 #' abs_PAR <- light_cohortSunlitShadeAbsorbedRadiation(PAR_direct, PAR_diffuse,
-#'                         Ibfpar, Idfpar, beta = solarElevation, 
+#'                         Ibfpar, Idfpar, 
 #'                         LAIlayerlive, LAIlayerdead, kb, kd_PAR, alpha_PAR, gamma_PAR)
 #' abs_SWR <- light_cohortSunlitShadeAbsorbedRadiation(SWR_direct, SWR_diffuse,
-#'                          Ibfswr, Idfswr, beta = solarElevation, 
+#'                          Ibfswr, Idfswr, 
 #'                          LAIlayerlive, LAIlayerdead, kb, kd_SWR, alpha_SWR, gamma_SWR)
 #' oldpar <- par(mar=c(4,4,1,1), mfrow=c(1,2))
 #' absRadSL <- abs_SWR$I_sunlit[,1]
@@ -1806,6 +1812,13 @@ light_SWRground <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_SWRground`, x, SpParams, gdd)
 }
 
+#' @rdname light
+#' @param leafAngle Average leaf inclination angle (in radians)
+#' @param G_function Either "Sellers" or "Goudriaan"
+light_directExtinctionCoefficient <- function(leafAngle, solarElevation, G_function = "Sellers") {
+    .Call(`_medfate_directExtinctionCoefficient`, leafAngle, solarElevation, G_function)
+}
+
 .parExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_, includeHerbs = FALSE) {
     .Call(`_medfate_parExtinctionProfile`, z, x, SpParams, gdd, includeHerbs)
 }
@@ -1830,8 +1843,8 @@ light_layerIrradianceFractionBottomUp <- function(LAIme, LAImd, LAImx, k, alpha,
 }
 
 #' @rdname light
-light_cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma) {
-    .Call(`_medfate_cohortSunlitShadeAbsorbedRadiation`, Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma)
+light_cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, Ibf, Idf, LAIme, LAImd, kb, kd, alpha, gamma) {
+    .Call(`_medfate_cohortSunlitShadeAbsorbedRadiation`, Ib0, Id0, Ibf, Idf, LAIme, LAImd, kb, kd, alpha, gamma)
 }
 
 #' @rdname light
@@ -1840,8 +1853,8 @@ light_layerSunlitFraction <- function(LAIme, LAImd, kb) {
 }
 
 #' @rdname light
-light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, kDIR, kPAR, alphaSWR, gammaSWR, ddd, ntimesteps = 24L, trunkExtinctionFraction = 0.1) {
-    .Call(`_medfate_instantaneousLightExtinctionAbsortion`, LAIme, LAImd, LAImx, kDIR, kPAR, alphaSWR, gammaSWR, ddd, ntimesteps, trunkExtinctionFraction)
+light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, LeafAngle, kPAR, alphaSWR, gammaSWR, ddd, ntimesteps = 24L, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_instantaneousLightExtinctionAbsortion`, LAIme, LAImd, LAImx, LeafAngle, kPAR, alphaSWR, gammaSWR, ddd, ntimesteps, trunkExtinctionFraction)
 }
 
 #' @rdname light

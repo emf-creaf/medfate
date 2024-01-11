@@ -457,19 +457,12 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   // Rcout<<"Leaves\n";
   List Sunlit = output["SunlitLeaves"];
   List Shade = output["ShadeLeaves"];
-  NumericVector LAI_SL = Sunlit["LAI"];
-  NumericVector Vmax298SL = Sunlit["Vmax298"];
-  NumericVector Jmax298SL = Sunlit["Jmax298"];
   NumericVector maxGSW_SL = Sunlit["GSWMax"];
   NumericVector minGSW_SL = Sunlit["GSWMin"];
   NumericVector minTemp_SL = Sunlit["TempMin"];
   NumericVector maxTemp_SL = Sunlit["TempMax"];
   NumericVector minLeafPsi_SL = Sunlit["LeafPsiMin"];
   NumericVector maxLeafPsi_SL = Sunlit["LeafPsiMax"];
-  
-  NumericVector LAI_SH = Shade["LAI"];
-  NumericVector Vmax298SH = Shade["Vmax298"];
-  NumericVector Jmax298SH = Shade["Jmax298"];
   NumericVector maxGSW_SH = Shade["GSWMax"];
   NumericVector minGSW_SH = Shade["GSWMin"];
   NumericVector minTemp_SH = Shade["TempMin"];
@@ -497,6 +490,9 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   NumericMatrix LeafSympPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympPsi"]);
   
   List ShadeInst = output["ShadeLeavesInst"];
+  NumericMatrix LAI_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["LAI"]);
+  NumericMatrix Vmax298_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Vmax298"]);
+  NumericMatrix Jmax298_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Jmax298"]);
   NumericMatrix SWR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Abs_SWR"]);
   NumericMatrix PAR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Abs_PAR"]);
   NumericMatrix LWR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Net_LWR"]);
@@ -510,6 +506,9 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   NumericMatrix Ci_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Ci"]);
   
   List SunlitInst = output["SunlitLeavesInst"];
+  NumericMatrix LAI_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["LAI"]);
+  NumericMatrix Vmax298_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Vmax298"]);
+  NumericMatrix Jmax298_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Jmax298"]);
   NumericMatrix SWR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Abs_SWR"]);
   NumericMatrix PAR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Abs_PAR"]);
   NumericMatrix LWR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Net_LWR"]);
@@ -567,7 +566,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
                                             Cair[iLayerSunlit[c]], Patm,
                                             Tair[iLayerSunlit[c]], VPair[iLayerSunlit[c]], zWind[iLayerSunlit[c]], 
                                             SWR_SL(c,n), LWR_SL(c,n), irradianceToPhotonFlux(PAR_SL(c,n)), 
-                                            Vmax298SL[c], Jmax298SL[c], leafWidth[c], LAI_SL[c],
+                                            Vmax298_SL(c,n), Jmax298_SL(c,n), leafWidth[c], LAI_SL(c,n),
                                             gmin_SL, Gswmax[c]);
         NumericVector photoSunlit = PMSunlit["photosynthesisFunction"];
         iPMSunlit[c] = PMSunlit["iMaxProfit"];
@@ -575,7 +574,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
                                            Cair[iLayerShade[c]], Patm,
                                            Tair[iLayerShade[c]], VPair[iLayerShade[c]], zWind[iLayerShade[c]], 
                                            SWR_SH(c,n), LWR_SH(c,n), irradianceToPhotonFlux(PAR_SH(c,n)), 
-                                           Vmax298SH[c], Jmax298SH[c], leafWidth[c], LAI_SH[c],
+                                           Vmax298_SH(c,n), Jmax298_SH(c,n), leafWidth[c], LAI_SH(c,n),
                                            gmin_SH, Gswmax[c]);    
         if(!sunlitShade) PMShade = PMSunlit;
         NumericVector photoShade = PMShade["photosynthesisFunction"];
@@ -591,17 +590,15 @@ void innerSperry(List x, List input, List output, int n, double tstep,
                                                             zWind[iLayerSunlit[c]], 
                                                             SWR_SL(c,n), LWR_SL(c,n), 
                                                             irradianceToPhotonFlux(PAR_SL(c,n)), 
-                                                            Vmax298SL[c], 
-                                                            Jmax298SL[c], 
-                                                            leafWidth[c], LAI_SL[c]);
+                                                            Vmax298_SL(c,n), Jmax298_SL(c,n), 
+                                                            leafWidth[c], LAI_SL(c,n));
             outPhotoShade[c] = leafPhotosynthesisFunction2(fittedE, LeafPsi, Cair[iLayerShade[c]], Patm,
                                                            Tair[iLayerShade[c]], VPair[iLayerShade[c]], 
                                                            zWind[iLayerShade[c]], 
                                                            SWR_SH(c,n), LWR_SH(c,n), 
                                                            irradianceToPhotonFlux(PAR_SH(c,n)),
-                                                           Vmax298SH[c], 
-                                                           Jmax298SH[c], 
-                                                           leafWidth[c], LAI_SH[c]);
+                                                           Vmax298_SH(c,n), Jmax298_SH(c,n), 
+                                                           leafWidth[c], LAI_SH(c,n));
             outPMSunlit[c] = PMSunlit;
             outPMShade[c] = PMShade;
             if(!sunlitShade) {
@@ -630,13 +627,13 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         Temp_SL(c,n)= photoSunlit["LeafTemperature"];
         
         //Scale photosynthesis
-        double Agsum = Ag_SL(c,n)*LAI_SL[c] + Ag_SH(c,n)*LAI_SH[c];
-        double Ansum = An_SL(c,n)*LAI_SL[c] + An_SH(c,n)*LAI_SH[c];
+        double Agsum = Ag_SL(c,n)*LAI_SL(c,n) + Ag_SH(c,n)*LAI_SH(c,n);
+        double Ansum = An_SL(c,n)*LAI_SL(c,n) + An_SH(c,n)*LAI_SH(c,n);
         Aginst(c,n) = (1e-6)*12.01017*Agsum*tstep;
         Aninst(c,n) = (1e-6)*12.01017*Ansum*tstep;
         
         //Average flow from sunlit and shade leaves
-        double Eaverage = (fittedE[iPMSunlit[c]]*LAI_SL[c] + fittedE[iPMShade[c]]*LAI_SH[c])/(LAI_SL[c] + LAI_SH[c]);
+        double Eaverage = (fittedE[iPMSunlit[c]]*LAI_SL(c,n) + fittedE[iPMShade[c]]*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
         
         
         //Find iPM for  flow corresponding to the  average flow

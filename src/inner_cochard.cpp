@@ -780,18 +780,12 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   NumericVector minRootPsi = Plants["RootPsi"];
   List Sunlit = output["SunlitLeaves"];
   List Shade = output["ShadeLeaves"];
-  NumericVector LAI_SL = Sunlit["LAI"];
-  NumericVector Vmax298SL = Sunlit["Vmax298"];
-  NumericVector Jmax298SL = Sunlit["Jmax298"];
   NumericVector maxGSW_SL = Sunlit["GSWMax"];
   NumericVector minGSW_SL = Sunlit["GSWMin"];
   NumericVector minTemp_SL = Sunlit["TempMin"];
   NumericVector maxTemp_SL = Sunlit["TempMax"];
   NumericVector minLeafPsi_SL = Sunlit["LeafPsiMin"];
   NumericVector maxLeafPsi_SL = Sunlit["LeafPsiMax"];
-  NumericVector LAI_SH = Shade["LAI"];
-  NumericVector Vmax298SH = Shade["Vmax298"];
-  NumericVector Jmax298SH = Shade["Jmax298"];
   NumericVector maxGSW_SH = Shade["GSWMax"];
   NumericVector minGSW_SH = Shade["GSWMin"];
   NumericVector minTemp_SH = Shade["TempMin"];
@@ -816,6 +810,9 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   NumericMatrix StemSympPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympPsi"]);
   NumericMatrix LeafSympPsiInst = Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympPsi"]);
   List ShadeInst = output["ShadeLeavesInst"];
+  NumericMatrix LAI_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["LAI"]);
+  NumericMatrix Vmax298_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Vmax298"]);
+  NumericMatrix Jmax298_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Jmax298"]);
   NumericMatrix SWR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Abs_SWR"]);
   NumericMatrix PAR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Abs_PAR"]);
   NumericMatrix LWR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Net_LWR"]);
@@ -828,6 +825,9 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   NumericMatrix GSW_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Gsw"]);
   NumericMatrix Ci_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeInst["Ci"]);
   List SunlitInst = output["SunlitLeavesInst"];
+  NumericMatrix LAI_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["LAI"]);
+  NumericMatrix Vmax298_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Vmax298"]);
+  NumericMatrix Jmax298_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Jmax298"]);
   NumericMatrix SWR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Abs_SWR"]);
   NumericMatrix PAR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Abs_PAR"]);
   NumericMatrix LWR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitInst["Net_LWR"]);
@@ -913,14 +913,14 @@ void innerCochard(List x, List input, List output, int n, double tstep,
           double Elim_SL = network_n["Elim_SL"];
           double Elim_SH = network_n["Elim_SH"];
           double Elim = network_n["Elim"];
-          if(NumericVector::is_na(Elim_SL)) Elim_SL = Elim * (LAI_SL[c]/LAI);
-          if(NumericVector::is_na(Elim_SH)) Elim_SH = Elim * (LAI_SH[c]/LAI);
+          if(NumericVector::is_na(Elim_SL)) Elim_SL = Elim * (LAI_SL(c,n)/LAI);
+          if(NumericVector::is_na(Elim_SH)) Elim_SH = Elim * (LAI_SH(c,n)/LAI);
           if(!sunlitShade) Elim_SH = Elim_SL;
           
-          Temp_SL(c,n) = leafTemperature2(SWR_SL(c,n)/LAI_SL[c], LWR_SL(c,n)/LAI_SL[c], 
+          Temp_SL(c,n) = leafTemperature2(SWR_SL(c,n)/LAI_SL(c,n), LWR_SL(c,n)/LAI_SL(c,n), 
                   Tair[iLayerSunlit[c]], zWind[iLayerSunlit[c]], 
                                               Elim_SL,  LeafWidth[c]);
-          Temp_SH(c,n) = leafTemperature2(SWR_SH(c,n)/LAI_SH[c], LWR_SH(c,n)/LAI_SH[c], 
+          Temp_SH(c,n) = leafTemperature2(SWR_SH(c,n)/LAI_SH(c,n), LWR_SH(c,n)/LAI_SH(c,n), 
                   Tair[iLayerShade[c]], zWind[iLayerShade[c]], 
                                              Elim_SH,  LeafWidth[c]);
           if(!sunlitShade) Temp_SH(c,n) = Temp_SL(c,n);
@@ -943,7 +943,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
           double gmin_SH = gmin(Temp_SH(c,n), gmin20, TPhase_gmin, Q10_1_gmin, Q10_2_gmin);
           double Emin_L_SL = Emin(gmin_SL, gBL, gCR, VPD_SL(c,n), Patm);
           double Emin_L_SH = Emin(gmin_SH, gBL, gCR, VPD_SH(c,n), Patm);
-          double Emin_L = ((Emin_L_SL*LAI_SL[c]) + (Emin_L_SH*LAI_SH[c]))/LAI; 
+          double Emin_L = ((Emin_L_SL*LAI_SL(c,n)) + (Emin_L_SH*LAI_SH(c,n)))/LAI; 
           network_n["Emin_L"] = Emin_L;
           
           //Compute stem cuticular transpiration
@@ -964,23 +964,23 @@ void innerCochard(List x, List input, List output, int n, double tstep,
           } else {
             double Gsw_AC_slope = params["Gsw_AC_slope"];
             double gsNight = params["gsNight"];
-            NumericVector PB_SL = photosynthesisBaldocchi(irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL[c], 
+            NumericVector PB_SL = photosynthesisBaldocchi(irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL(c,n), 
                                                           Cair[iLayerSunlit[c]], 
                                                           std::max(0.0,Temp_SL(c,n)), 
                                                           zWind[iLayerCohort[c]],
-                                                          Vmax298SL[c]/LAI_SL[c], 
-                                                          Jmax298SL[c]/LAI_SL[c], 
+                                                          Vmax298_SL(c,n)/LAI_SL(c,n), 
+                                                          Jmax298_SL(c,n)/LAI_SL(c,n), 
                                                           LeafWidth[c],
                                                           Gsw_AC_slope,
                                                           gsNight/1000.0);
             gs_SL = PB_SL["Gsw"]*1000.0; //From mmol to mol
             gs_SL = std::max(gsNight, gs_SL)*RF;
-            NumericVector PB_SH = photosynthesisBaldocchi(irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH[c], 
+            NumericVector PB_SH = photosynthesisBaldocchi(irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH(c,n), 
                                                           Cair[iLayerSunlit[c]], 
                                                           std::max(0.0,Temp_SH(c,n)), 
                                                           zWind[iLayerCohort[c]],
-                                                          Vmax298SH[c]/LAI_SH[c], 
-                                                          Jmax298SH[c]/LAI_SH[c], 
+                                                          Vmax298_SH(c,n)/LAI_SH(c,n), 
+                                                          Jmax298_SH(c,n)/LAI_SH(c,n), 
                                                           LeafWidth[c],
                                                           Gsw_AC_slope,
                                                           gsNight/1000.0);
@@ -1000,7 +1000,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
           
           network_n["Elim_SL"] = Elim_SL;
           network_n["Elim_SH"] = Elim_SH;
-          Elim = ((Elim_SL*LAI_SL[c]) + (Elim_SH*LAI_SH[c]))/LAI; 
+          Elim = ((Elim_SL*LAI_SL(c,n)) + (Elim_SH*LAI_SH(c,n)))/LAI; 
           network_n["Elim"] = Elim;
           // Rcout<< "  Elim_SL "<< Elim_SL<<"  Elim_SH "<< Elim_SH<<"  Elim "<< Elim<<"\n";
           
@@ -1068,22 +1068,22 @@ void innerCochard(List x, List input, List output, int n, double tstep,
       //Sunlit/shade photosynthesis
       Gwdiff_SL = Patm*(((double) network_n["Einst_SL"])/1000.0)/VPD_SL(c,n); //From mmol to mol
       Gwdiff_SH = Patm*(((double) network_n["Einst_SH"])/1000.0)/VPD_SH(c,n); //From mmol to mol
-      NumericVector LP_SL = leafphotosynthesis(irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL[c], 
+      NumericVector LP_SL = leafphotosynthesis(irradianceToPhotonFlux(PAR_SL(c,n))/LAI_SL(c,n), 
                                                Cair[iLayerSunlit[c]], Gwdiff_SL/1.6, 
                                                std::max(0.0,Temp_SL(c,n)), 
-                                               Vmax298SL[c]/LAI_SL[c], Jmax298SL[c]/LAI_SL[c]);
-      NumericVector LP_SH = leafphotosynthesis(irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH[c], 
+                                               Vmax298_SL(c,n)/LAI_SL(c,n), Jmax298_SL(c,n)/LAI_SL(c,n));
+      NumericVector LP_SH = leafphotosynthesis(irradianceToPhotonFlux(PAR_SH(c,n))/LAI_SH(c,n), 
                                                Cair[iLayerShade[c]], Gwdiff_SH/1.6, 
                                                std::max(0.0,Temp_SH(c,n)), 
-                                               Vmax298SH[c]/LAI_SH[c], Jmax298SH[c]/LAI_SH[c]);
+                                               Vmax298_SH(c,n)/LAI_SH(c,n), Jmax298_SH(c,n)/LAI_SH(c,n));
       if(!sunlitShade) LP_SH = LP_SL;
       
       Ci_SL(c,n) = LP_SL[0];
       Ci_SH(c,n) = LP_SH[0];
       Ag_SL(c,n) = LP_SL[1];
       Ag_SH(c,n) = LP_SH[1];
-      An_SL(c,n) = Ag_SL(c,n) - 0.015*VmaxTemp(Vmax298SL[c]/LAI_SL[c], Temp_SL(c,n));
-      An_SH(c,n) = Ag_SH(c,n) - 0.015*VmaxTemp(Vmax298SH[c]/LAI_SH[c], Temp_SH(c,n));
+      An_SL(c,n) = Ag_SL(c,n) - 0.015*VmaxTemp(Vmax298_SL(c,n)/LAI_SL(c,n), Temp_SL(c,n));
+      An_SH(c,n) = Ag_SH(c,n) - 0.015*VmaxTemp(Vmax298_SH(c,n)/LAI_SH(c,n), Temp_SH(c,n));
       
       //Store state
       LeafPsiVEC[c] = network["Psi_LApo"];
@@ -1098,8 +1098,8 @@ void innerCochard(List x, List input, List output, int n, double tstep,
       //Get leaf status
       
       //Scale photosynthesis
-      double Agsum = Ag_SL(c,n)*LAI_SL[c] + Ag_SH(c,n)*LAI_SH[c];
-      double Ansum = An_SL(c,n)*LAI_SL[c] + An_SH(c,n)*LAI_SH[c];
+      double Agsum = Ag_SL(c,n)*LAI_SL(c,n) + Ag_SH(c,n)*LAI_SH(c,n);
+      double Ansum = An_SL(c,n)*LAI_SL(c,n) + An_SH(c,n)*LAI_SH(c,n);
       Aginst(c,n) = (1e-6)*12.01017*Agsum*tstep;
       Aninst(c,n) = (1e-6)*12.01017*Ansum*tstep;
       

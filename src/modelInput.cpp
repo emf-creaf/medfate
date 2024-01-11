@@ -62,7 +62,7 @@ DataFrame paramsInterception(DataFrame above, DataFrame SpParams, List control) 
   
   NumericVector alphaSWR = speciesNumericParameterWithImputation(SP, SpParams, "alphaSWR", fillMissingSpParams);
   NumericVector gammaSWR = speciesNumericParameterWithImputation(SP, SpParams, "gammaSWR", fillMissingSpParams);
-  NumericVector kDIR = speciesNumericParameterWithImputation(SP, SpParams, "kDIR", fillMissingSpParams);
+  NumericVector LeafAngle = speciesNumericParameterWithImputation(SP, SpParams, "LeafAngle", fillMissingSpParams);
   NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", fillMissingSpParams);
   NumericVector g = speciesNumericParameterWithImputation(SP, SpParams, "g", fillMissingSpParams);
   DataFrame paramsInterceptiondf;
@@ -70,7 +70,7 @@ DataFrame paramsInterception(DataFrame above, DataFrame SpParams, List control) 
     paramsInterceptiondf = DataFrame::create(_["kPAR"] = kPAR, 
                                              _["g"] = g);
   } else {
-    paramsInterceptiondf = DataFrame::create(_["kDIR"] = kDIR, 
+    paramsInterceptiondf = DataFrame::create(_["LeafAngle"] = LeafAngle, 
                                              _["kPAR"] = kPAR, 
                                              _["alphaSWR"] = alphaSWR,
                                              _["gammaSWR"] = gammaSWR, 

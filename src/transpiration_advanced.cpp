@@ -58,8 +58,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   String cavitationRefillLeaves = control["cavitationRefillLeaves"];
   double refillMaximumRate = control["refillMaximumRate"];
   bool sapFluidityVariation = control["sapFluidityVariation"];
-  bool sunlitShade = control["sunlitShade"];
-  
+
   //Meteo input
   double tmin = meteovec["tmin"];
   double tmax = meteovec["tmax"];
@@ -141,7 +140,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   NumericVector alphaSWR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["alphaSWR"]);
   NumericVector gammaSWR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["gammaSWR"]);
   NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
-  NumericVector kDIR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kDIR"]);
+  NumericVector LeafAngle = Rcpp::as<Rcpp::NumericVector>(paramsInterception["LeafAngle"]);
   
   //Anatomy parameters
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
@@ -258,6 +257,18 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   std::fill(RootPsiInst.begin(), RootPsiInst.end(), NA_REAL);
   NumericMatrix PWBinst(numCohorts, ntimesteps);
   std::fill(PWBinst.begin(), PWBinst.end(), NA_REAL);
+  NumericMatrix Vmax298_SL(numCohorts, ntimesteps);
+  std::fill(Vmax298_SL.begin(), Vmax298_SL.end(), 0.0);
+  NumericMatrix Vmax298_SH(numCohorts, ntimesteps);
+  std::fill(Vmax298_SH.begin(), Vmax298_SH.end(), 0.0);
+  NumericMatrix Jmax298_SL(numCohorts, ntimesteps);
+  std::fill(Jmax298_SL.begin(), Jmax298_SL.end(), 0.0);
+  NumericMatrix Jmax298_SH(numCohorts, ntimesteps);
+  std::fill(Jmax298_SH.begin(), Jmax298_SH.end(), 0.0);
+  NumericMatrix LAI_SL(numCohorts, ntimesteps);
+  std::fill(LAI_SL.begin(), LAI_SL.end(), 0.0);
+  NumericMatrix LAI_SH(numCohorts, ntimesteps);
+  std::fill(LAI_SH.begin(), LAI_SH.end(), 0.0);
   NumericMatrix E_SL(numCohorts, ntimesteps);
   std::fill(E_SL.begin(), E_SL.end(), NA_REAL);
   NumericMatrix E_SH(numCohorts, ntimesteps);
@@ -419,7 +430,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   // STEP 3c. Short-wave radiation extinction and absortion for sub-steps
   ////////////////////////////////////////
   List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
-                                                                        kDIR, kPAR, alphaSWR, gammaSWR,
+                                                                        LeafAngle, kPAR, alphaSWR, gammaSWR,
                                                                         ddd, 
                                                                         ntimesteps, 0.1);
   List sunshade = lightExtinctionAbsortion["sunshade"];
@@ -430,70 +441,11 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   List multilayer = lightExtinctionAbsortion["multilayer"];
   List abs_SWR_SL_ML_list = multilayer["SWR_SL"];
   List abs_SWR_SH_ML_list = multilayer["SWR_SH"];
-  NumericVector fsunlit = lightExtinctionAbsortion["fsunlit"];
+  List fsunlit_list = lightExtinctionAbsortion["fsunlit"];
   NumericVector abs_SWR_can = lightExtinctionAbsortion["SWR_can"];
   NumericVector abs_SWR_soil = lightExtinctionAbsortion["SWR_soil"];
 
-  NumericVector LAI_SL(numCohorts,0.0);
-  NumericVector LAI_SH(numCohorts,0.0);
-  NumericVector Vmax298SL(numCohorts,0.0);
-  NumericVector Vmax298SH(numCohorts,0.0);
-  NumericVector Jmax298SL(numCohorts,0.0);
-  NumericVector Jmax298SH(numCohorts,0.0);
 
-  for(int c=0;c<numCohorts;c++) {
-    // Rcout<<"cohort "<<c<<":\n";
-    //Constant properties through time steps
-    NumericVector Vmax298layer(ncanlayers), Jmax298layer(ncanlayers);
-    NumericVector SLarealayer(ncanlayers), SHarealayer(ncanlayers);
-    double sn =0.0;
-    for(int i=(ncanlayers-1);i>=0.0;i--) {
-      //Effect of nitrogen concentration decay through the canopy (Improvement: see 10.5194/bg-7-1833-2010)
-      double fn = exp(-0.713*(sn+LAIme(i,c)/2.0)/sum(LAIme(_,c)));
-      // Rcout<<" l"<<i<<" fsunlit: "<< fsunlit[i]<<" lai: "<< LAIme(i,c)<<" fn: "<< fn <<"\n";
-      sn+=LAIme(i,c);
-      SLarealayer[i] = LAIme(i,c)*fsunlit[i];
-      SHarealayer[i] = LAIme(i,c)*(1.0-fsunlit[i]);
-      Vmax298layer[i] = Vmax298[c]*fn;
-      Jmax298layer[i] = Jmax298[c]*fn;
-    }
-    for(int i=0;i<ncanlayers;i++) {
-      LAI_SL[c] +=SLarealayer[i];
-      LAI_SH[c] +=SHarealayer[i];
-      Vmax298SL[c] +=Vmax298layer[i]*LAIme(i,c)*fsunlit[i];
-      Jmax298SL[c] +=Jmax298layer[i]*LAIme(i,c)*fsunlit[i];
-      Vmax298SH[c] +=Vmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
-      Jmax298SH[c] +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
-    }
-    
-  }
-  // double kb = lightExtinctionAbsortion["kb"];  //Proportion of sunlit extinction coefficient
-  // double gbf = lightExtinctionAbsortion["gbf"]; //Ground fractions
-  // double gdf = lightExtinctionAbsortion["gdf"];
-  
-  //Determine canopy vertical layer corresponding to cohort canopy, sunlit and shade leaves for each cohort
-  IntegerVector iLayerCohort(numCohorts), iLayerSunlit(numCohorts), iLayerShade(numCohorts);
-  for(int c=0;c<numCohorts;c++) {
-    double num = 0.0, den = 0.0, numsl=0.0, densl =0.0, numsh = 0.0, densh=0.0;
-    for(int i=0;i<ncanlayers;i++) {
-      num += LAIme(i,c)*zmid[i];
-      den += LAIme(i,c);
-      numsl += LAIme(i,c)*zmid[i]*fsunlit[i];
-      densl += LAIme(i,c)*fsunlit[i];
-      numsh += LAIme(i,c)*zmid[i]*(1.0 - fsunlit[i]);
-      densh += LAIme(i,c)*(1.0-fsunlit[i]);
-    }
-    double hc_sl = numsl/densl;
-    double hc_sh = numsh/densh;
-    double hc  = num/den;
-    for(int i=0;i<ncanlayers;i++) {
-      if((hc > zlow[i]) && (hc <=zup[i])) iLayerCohort[c] = i;
-      if((hc_sl > zlow[i]) && (hc_sl <=zup[i])) iLayerSunlit[c] = i;
-      if((hc_sh > zlow[i]) && (hc_sh <=zup[i])) iLayerShade[c] = i;
-    }
-    // Rcout << c << " "<< hc_sl<<" "<< iLayerSunlit[c]<< " "<< hc_sh<<" "<< iLayerShade[c]<<"\n";
-  }
-  
   ////////////////////////////////////////
   //  STEP 4. Hydraulics: determine layers where the plant is connected 
   //          and supply functions (Sperry transpiration mode)
@@ -639,6 +591,12 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   ////////////////////////////////
   // Create input and output objects to be filled in inner functions
   ////////////////////////////////
+  LAI_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  LAI_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  Vmax298_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  Vmax298_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  Jmax298_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  Jmax298_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   E_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   E_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Psi_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -682,9 +640,6 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   soilLayerExtractInst.attr("dimnames") = List::create(seq(1,nlayers), seq(1,ntimesteps));
 
   DataFrame Sunlit = DataFrame::create(
-    _["LAI"] = LAI_SL, 
-    _["Vmax298"] = Vmax298SL,
-    _["Jmax298"] = Jmax298SL,
     _["LeafPsiMin"] = minLeafPsi_SL, 
     _["LeafPsiMax"] = maxLeafPsi_SL, 
     _["GSWMin"] = minGSW_SL,
@@ -693,9 +648,6 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     _["TempMax"] = maxTemp_SL  
   );
   DataFrame Shade = DataFrame::create(
-    _["LAI"] = LAI_SH, 
-    _["Vmax298"] = Vmax298SH,
-    _["Jmax298"] = Jmax298SH,
     _["LeafPsiMin"] = minLeafPsi_SH, 
     _["LeafPsiMax"] = maxLeafPsi_SH, 
     _["GSWMin"] = minGSW_SH,
@@ -707,6 +659,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   Shade.attr("row.names") = above.attr("row.names");
   
   List ShadeInst = List::create(
+    _["LAI"] = LAI_SH,
+    _["Vmax298"] = Vmax298_SH,
+    _["Jmax298"] = Jmax298_SH,
     _["Abs_SWR"] = SWR_SH,
     _["Abs_PAR"]=PAR_SH,
     _["Net_LWR"] = LWR_SH,
@@ -719,6 +674,9 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     _["Temp"] = Temp_SH,
     _["Psi"] = Psi_SH);
   List SunlitInst = List::create(
+    _["LAI"] = LAI_SL,
+    _["Vmax298"] = Vmax298_SL,
+    _["Jmax298"] = Jmax298_SL,
     _["Abs_SWR"]=SWR_SL,
     _["Abs_PAR"]=PAR_SL,
     _["Net_LWR"] = LWR_SL,
@@ -785,47 +743,100 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                              _["PMSunlitFunctions"] = outPMSunlit,
                              _["PMShadeFunctions"] = outPMShade);
   
-  List innerInput;
-  if(transpirationMode =="Sperry") {
-    innerInput = List::create(_["Patm"] = Patm,
-                                  _["zWind"] = zWind,
-                                  _["iLayerCohort"] = iLayerCohort,
-                                  _["iLayerSunlit"] = iLayerSunlit,
-                                  _["iLayerShade"] = iLayerShade,
-                                  _["iPMSunlit"] = iPMSunlit,
-                                  _["iPMShade"] = iPMShade,
-                                  _["nlayerscon"] = nlayerscon,
-                                  _["layerConnected"] = layerConnected,
-                                  _["layerConnectedPools"] = layerConnectedPools,
-                                  _["supply"] = supply);
-  } else if(transpirationMode =="Cochard") {
-    //To do, create initial plant state
-    innerInput = List::create(_["Patm"] = Patm,
-                              _["zWind"] = zWind,
-                              _["iLayerCohort"] = iLayerCohort,
-                              _["iLayerSunlit"] = iLayerSunlit,
-                              _["iLayerShade"] = iLayerShade,
-                              _["nlayerscon"] = nlayerscon,
-                              _["layerConnected"] = layerConnected,
-                              _["layerConnectedPools"] = layerConnectedPools,
-                              _["psiSoil"] = psiSoil,
-                              _["psiSoilM"] = psiSoilM,
-                              _["networks"] = hydraulicNetwork);
-  }
   
   ////////////////////////////////////////
   // STEP 5. Sub-daily (e.g. hourly) loop
   ////////////////////////////////////////
   for(int n=0;n<ntimesteps;n++) { //Time loop
     
-    //Retrieve short-wave radiation absorbed for the current time step
+    //Retrieve fraction of sunlit and short-wave radiation absorbed for the current time step
     NumericVector absPAR_SL_COH = abs_PAR_SL_COH_list[n];
     NumericVector absPAR_SH_COH = abs_PAR_SH_COH_list[n];
     NumericVector absSWR_SL_COH = abs_SWR_SL_COH_list[n];
     NumericVector absSWR_SH_COH = abs_SWR_SH_COH_list[n];
     NumericMatrix absSWR_SL_ML = abs_SWR_SL_ML_list[n];
     NumericMatrix absSWR_SH_ML = abs_SWR_SH_ML_list[n];
-
+    NumericVector fsunlit = fsunlit_list[n];
+    
+    //Leaf area and Vmax/Jmax corresponding to sunlit and shade leaves
+    for(int c=0;c<numCohorts;c++) {
+      // Rcout<<"cohort "<<c<<":\n";
+      //Constant properties through time steps
+      NumericVector Vmax298layer(ncanlayers), Jmax298layer(ncanlayers);
+      NumericVector SLarealayer(ncanlayers), SHarealayer(ncanlayers);
+      double sn =0.0;
+      for(int i=(ncanlayers-1);i>=0.0;i--) {
+        //Effect of nitrogen concentration decay through the canopy (Improvement: see 10.5194/bg-7-1833-2010)
+        double fn = exp(-0.713*(sn+LAIme(i,c)/2.0)/sum(LAIme(_,c)));
+        // Rcout<<" l"<<i<<" fsunlit: "<< fsunlit[i]<<" lai: "<< LAIme(i,c)<<" fn: "<< fn <<"\n";
+        sn+=LAIme(i,c);
+        SLarealayer[i] = LAIme(i,c)*fsunlit[i];
+        SHarealayer[i] = LAIme(i,c)*(1.0-fsunlit[i]);
+        Vmax298layer[i] = Vmax298[c]*fn;
+        Jmax298layer[i] = Jmax298[c]*fn;
+      }
+      for(int i=0;i<ncanlayers;i++) {
+        LAI_SL(c,n) +=SLarealayer[i];
+        LAI_SH(c,n) +=SHarealayer[i];
+        Vmax298_SL(c,n) +=Vmax298layer[i]*LAIme(i,c)*fsunlit[i];
+        Jmax298_SL(c,n) +=Jmax298layer[i]*LAIme(i,c)*fsunlit[i];
+        Vmax298_SH(c,n) +=Vmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
+        Jmax298_SH(c,n) +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
+      }
+    }
+    
+    //Determine canopy vertical layer corresponding to cohort canopy, sunlit and shade leaves for each cohort
+    IntegerVector iLayerCohort(numCohorts), iLayerSunlit(numCohorts), iLayerShade(numCohorts);
+    for(int c=0;c<numCohorts;c++) {
+      double num = 0.0, den = 0.0, numsl=0.0, densl =0.0, numsh = 0.0, densh=0.0;
+      for(int i=0;i<ncanlayers;i++) {
+        num += LAIme(i,c)*zmid[i];
+        den += LAIme(i,c);
+        numsl += LAIme(i,c)*zmid[i]*fsunlit[i];
+        densl += LAIme(i,c)*fsunlit[i];
+        numsh += LAIme(i,c)*zmid[i]*(1.0 - fsunlit[i]);
+        densh += LAIme(i,c)*(1.0-fsunlit[i]);
+      }
+      double hc_sl = numsl/densl;
+      double hc_sh = numsh/densh;
+      double hc  = num/den;
+      for(int i=0;i<ncanlayers;i++) {
+        if((hc > zlow[i]) && (hc <=zup[i])) iLayerCohort[c] = i;
+        if((hc_sl > zlow[i]) && (hc_sl <=zup[i])) iLayerSunlit[c] = i;
+        if((hc_sh > zlow[i]) && (hc_sh <=zup[i])) iLayerShade[c] = i;
+      }
+      // Rcout << c << " "<< hc_sl<<" "<< iLayerSunlit[c]<< " "<< hc_sh<<" "<< iLayerShade[c]<<"\n";
+    }
+    
+    List innerInput;
+    if(transpirationMode =="Sperry") {
+      innerInput = List::create(_["Patm"] = Patm,
+                                _["zWind"] = zWind,
+                                _["iLayerCohort"] = iLayerCohort,
+                                _["iLayerSunlit"] = iLayerSunlit,
+                                _["iLayerShade"] = iLayerShade,
+                                _["iPMSunlit"] = iPMSunlit,
+                                _["iPMShade"] = iPMShade,
+                                _["nlayerscon"] = nlayerscon,
+                                _["layerConnected"] = layerConnected,
+                                _["layerConnectedPools"] = layerConnectedPools,
+                                _["supply"] = supply);
+    } else if(transpirationMode =="Cochard") {
+      //To do, create initial plant state
+      innerInput = List::create(_["Patm"] = Patm,
+                                _["zWind"] = zWind,
+                                _["iLayerCohort"] = iLayerCohort,
+                                _["iLayerSunlit"] = iLayerSunlit,
+                                _["iLayerShade"] = iLayerShade,
+                                _["nlayerscon"] = nlayerscon,
+                                _["layerConnected"] = layerConnected,
+                                _["layerConnectedPools"] = layerConnectedPools,
+                                _["psiSoil"] = psiSoil,
+                                _["psiSoilM"] = psiSoilM,
+                                _["networks"] = hydraulicNetwork);
+    }
+    
+    
     ////////////////////////////////////////
     // STEP 5.1 Long-wave radiation balance
     ////////////////////////////////////////
@@ -835,7 +846,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     net_LWR_soil[n] = lwrExtinction["Lnet_ground"];
     net_LWR_can[n]= lwrExtinction["Lnet_canopy"];
     NumericMatrix Lnet_cohort_layer = lwrExtinction["Lnet_cohort_layer"];
-    
+
     ////////////////////////////////////////
     // STEP 5.2 Sunlit/shade leaf energy balance, stomatal conductance and plant hydraulics
     ////////////////////////////////////////
@@ -869,7 +880,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       innerCochard(x, innerInput, innerOutput, n, tstep,
                    verbose, modifyInput);
     }
-    
+
     for(int c=0;c<numCohorts;c++) {
       if(LAIlive[c]>0.0 && (LeafPLCVEC[c] < 0.999)) {
         //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
@@ -926,7 +937,16 @@ List transpirationAdvanced(List x, NumericVector meteovec,
             minPsiRhizo(c,l) = std::min(minPsiRhizo(c,l), RhizoPsiMAT(c,l));
           }
         }
-      } 
+      } else {
+        // Assume constant PLC (so that it can be decreased in the future)
+        StemPLC(c,n) = StemPLCVEC[c];
+        LeafPLC(c,n) = LeafPLCVEC[c];
+        StemPsiInst(c,n) = StemPsiVEC[c]; 
+        LeafPsiInst(c,n) = LeafPsiVEC[c]; //Store instantaneous (average) leaf potential
+        RootPsiInst(c,n) = RootCrownPsiVEC[c]; //Store instantaneous root crown potential
+        LeafSympPsiInst(c,n) = LeafSympPsiVEC[c];
+        StemSympPsiInst(c,n) = StemSympPsiVEC[c];
+      }
     }
     
     ////////////////////////////////////////
@@ -1165,13 +1185,13 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                               _["LAIlive"] = LAIcelllive, 
                                               _["LAIexpanded"] = LAIcellexpanded, 
                                               _["LAIdead"] = LAIcelldead);
-  // Rescale Vmax and Jmax for output
-  for(int c=0;c<numCohorts;c++) {
-    Vmax298SL[c] = Vmax298SL[c]/LAI_SL[c];
-    Jmax298SL[c] = Jmax298SL[c]/LAI_SL[c];
-    Vmax298SH[c] = Vmax298SH[c]/LAI_SH[c];
-    Jmax298SH[c] = Jmax298SH[c]/LAI_SH[c];
-  }
+  // // Rescale Vmax and Jmax for output
+  // for(int c=0;c<numCohorts;c++) {
+  //   Vmax298SL[c] = Vmax298SL[c]/LAI_SL[c];
+  //   Jmax298SL[c] = Jmax298SL[c]/LAI_SL[c];
+  //   Vmax298SH[c] = Vmax298SH[c]/LAI_SH[c];
+  //   Jmax298SH[c] = Jmax298SH[c]/LAI_SH[c];
+  // }
   List l = List::create(_["cohorts"] = clone(cohorts),
                         _["EnergyBalance"] = EB,
                         _["Extraction"] = SoilWaterExtract,

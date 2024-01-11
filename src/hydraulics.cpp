@@ -719,7 +719,6 @@ List E2psiAbovegroundSymp(double E, double psiRootCrown,
   double kstemmax = hydraulicNetwork["kstemmax"];
   double stemc = hydraulicNetwork["stemc"];
   double stemd = hydraulicNetwork["stemd"];
-  double kleafmax = hydraulicNetwork["kleafmax"];
   double kleafapomax = hydraulicNetwork["kleafapomax"];
   double kleafsymp = hydraulicNetwork["kleafsymp"];
   double leafc = hydraulicNetwork["leafc"];
@@ -754,7 +753,6 @@ List E2psiNetwork(double E, List hydraulicNetwork,
 
   double psiStem =  NA_REAL;
   double psiLeaf = NA_REAL;
-  double kterm = NA_REAL;
   if(!NumericVector::is_na(psiRootCrown)) {
     List E2psiAG = E2psiAboveground(E, psiRootCrown, hydraulicNetwork);
     psiLeaf = E2psiAG["psiLeaf"];
@@ -1270,7 +1268,6 @@ List supplyFunctionNetwork(List hydraulicNetwork,
   //Calculate last dEdP
   if(nsteps>1) supplydEdp[nsteps-1] = (supplyE[nsteps-1]-supplyE[nsteps-2])/std::abs(supplyPsiLeaf[nsteps-1] - supplyPsiLeaf[nsteps-2]);
   //Copy values tp nsteps
-  NumericVector supplyKtermDef(nsteps);
   NumericVector supplyEDef(nsteps);
   NumericVector supplydEdpDef(nsteps);
   NumericMatrix supplyERhizoDef(nsteps,nlayers);
@@ -1294,8 +1291,7 @@ List supplyFunctionNetwork(List hydraulicNetwork,
                       Named("psiRootCrown")=supplyPsiRootDef,
                       Named("psiStem")=supplyPsiStemDef,
                       Named("psiLeaf")=supplyPsiLeafDef,
-                      Named("dEdP")=supplydEdpDef,
-                      Named("kterm") = supplyKtermDef));
+                      Named("dEdP")=supplydEdpDef));
   
 }
 

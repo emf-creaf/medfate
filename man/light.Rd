@@ -5,6 +5,7 @@
 \alias{light_PARcohort}
 \alias{light_PARground}
 \alias{light_SWRground}
+\alias{light_directExtinctionCoefficient}
 \alias{light_cohortAbsorbedSWRFraction}
 \alias{light_layerIrradianceFraction}
 \alias{light_layerIrradianceFractionBottomUp}
@@ -19,6 +20,12 @@ light_PARcohort(x, SpParams, gdd = NA_real_)
 light_PARground(x, SpParams, gdd = NA_real_)
 
 light_SWRground(x, SpParams, gdd = NA_real_)
+
+light_directExtinctionCoefficient(
+  leafAngle,
+  solarElevation,
+  G_function = "Sellers"
+)
 
 light_cohortAbsorbedSWRFraction(z, x, SpParams, gdd = NA_real_)
 
@@ -45,7 +52,6 @@ light_cohortSunlitShadeAbsorbedRadiation(
   Id0,
   Ibf,
   Idf,
-  beta,
   LAIme,
   LAImd,
   kb,
@@ -60,7 +66,7 @@ light_instantaneousLightExtinctionAbsortion(
   LAIme,
   LAImd,
   LAImx,
-  kDIR,
+  LeafAngle,
   kPAR,
   alphaSWR,
   gammaSWR,
@@ -86,6 +92,10 @@ light_longwaveRadiationSHAW(
 
 \item{gdd}{Growth degree days.}
 
+\item{leafAngle}{Average leaf inclination angle (in radians)}
+
+\item{G_function}{Either "Sellers" or "Goudriaan"}
+
 \item{z}{A numeric vector with height values.}
 
 \item{LAIme}{A numeric matrix of live expanded LAI values per vegetation layer (row) and cohort (column).}
@@ -108,8 +118,6 @@ light_longwaveRadiationSHAW(
 
 \item{Idf}{Fraction of above-canopy diffuse radiation reaching each vegetation layer.}
 
-\item{beta}{Solar elevation (in radians).}
-
 \item{kb, kDIR}{A vector of direct light extinction coefficients.}
 
 \item{kd}{A vector of diffuse light extinction coefficients.}
@@ -131,6 +139,8 @@ light_longwaveRadiationSHAW(
 \item{Tsoil}{Soil temperature (Celsius).}
 
 \item{Tair}{Canopy layer air temperature vector (Celsius).}
+
+\item{beta}{Solar elevation (in radians).}
 }
 \value{
 Functions \code{light_layerIrradianceFraction}, \code{light_layerIrradianceFractionBottomUp}  and \code{light_layerSunlitFraction} 
@@ -152,13 +162,24 @@ whereas long-wave radiation balance follows Flerchinger et al. (2009).
 Vegetation layers are assumed to be ordered from bottom to top.
 }
 \examples{
+solarElevation <- 0.67 # in radians
+SWR_direct <- 1100
+SWR_diffuse <- 300
+PAR_direct <- 550
+PAR_diffuse <- 150
+
 LAI <- 2
 nlayer <- 10
 LAIlayerlive <- matrix(rep(LAI/nlayer,nlayer),nlayer,1)
 LAIlayerdead <- matrix(0,nlayer,1)
-kb <- 0.8
+leafAngle <- 60 # in degrees
+
+## Extinction coefficients
+kb <- light_directExtinctionCoefficient(leafAngle*(pi/180), solarElevation)
 kd_PAR <- 0.5
 kd_SWR <- kd_PAR/1.35
+
+## Absorption/Reflection coefficients
 alpha_PAR <- 0.9
 gamma_PAR <- 0.04
 gamma_SWR <- 0.05
@@ -184,17 +205,12 @@ plot(fsunlit*100, 1:nlayer,type="l", ylab="Layer",
 lines((1-fsunlit)*100, 1:nlayer, lty=2)
 par(oldpar)  
   
-solarElevation <- 0.67
-SWR_direct <- 1100
-SWR_diffuse <- 300
-PAR_direct <- 550
-PAR_diffuse <- 150
 
 abs_PAR <- light_cohortSunlitShadeAbsorbedRadiation(PAR_direct, PAR_diffuse,
-                        Ibfpar, Idfpar, beta = solarElevation, 
+                        Ibfpar, Idfpar, 
                         LAIlayerlive, LAIlayerdead, kb, kd_PAR, alpha_PAR, gamma_PAR)
 abs_SWR <- light_cohortSunlitShadeAbsorbedRadiation(SWR_direct, SWR_diffuse,
-                         Ibfswr, Idfswr, beta = solarElevation, 
+                         Ibfswr, Idfswr, 
                          LAIlayerlive, LAIlayerdead, kb, kd_SWR, alpha_SWR, gamma_SWR)
 oldpar <- par(mar=c(4,4,1,1), mfrow=c(1,2))
 absRadSL <- abs_SWR$I_sunlit[,1]

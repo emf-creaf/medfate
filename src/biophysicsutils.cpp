@@ -144,6 +144,8 @@ double leafTemperature(double absRad, double airTemperature, double u, double E,
 //' @param LWRnet Net long-wave radiation balance (in W·m-2).
 // [[Rcpp::export("biophysics_leafTemperature2")]]
 double leafTemperature2(double SWRabs, double LWRnet, double airTemperature, double u, double E,  double leafWidth = 1.0) {
+  if(NumericVector::is_na(SWRabs)) SWRabs = 0.0;
+  if(NumericVector::is_na(LWRnet)) LWRnet = 0.0;
   double lambda = meteoland::utils_latentHeatVaporisationMol(airTemperature);
   u = std::max(u, 0.1);//Force minimum wind speed to avoid excessive heating
   double gHa = 0.189*pow(u/(leafWidth*0.0072), 0.5);
