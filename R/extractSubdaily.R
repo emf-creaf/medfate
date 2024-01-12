@@ -19,7 +19,7 @@
 #' 
 #' @seealso \code{\link{summary.spwb}}
 extractSubdaily<-function(x, output = "E", dates = NULL)  {
-  leafTypes= c("Abs_PAR", "Abs_SWR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE")  
+  leafTypes= c("LAI", "Abs_PAR", "Abs_SWR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE")  
   sunlitTypes = paste("SunlitLeaves",leafTypes, sep="$")
   shadeTypes = paste("ShadeLeaves",leafTypes, sep="$")
   plantTypes = c("E","Ag","An","dEdP","RootPsi",

@@ -248,7 +248,8 @@
   return(TYPES)
 }
 .getSubdailySunlitShadePlotTypes<-function(){
-  TYPES = c("Leaf water potential" = "LeafPsi",
+  TYPES = c("Leaf area" = "LeafLAI",
+            "Leaf water potential" = "LeafPsi",
             "Leaf transpiration" = "LeafTranspiration",
             "Leaf gross photosynthesis" = "LeafGrossPhotosynthesis", 
             "Leaf net photosynthesis" = "LeafNetPhotosynthesis",
@@ -324,6 +325,7 @@
   else if(type=="PlantLAIlive") ylab = expression(paste("(Live) leaf area index ",(m^{-2}%.%m^{-2})))
   else if(type=="AbsorbedSWRPerLeaf") ylab = expression(paste("Absorbed SWR per leaf area ",(MJ%.%m^{-2}%.%d^{-1})))
   else if(type=="AbsorbedPARPerLeaf") ylab = expression(paste("Absorbed PAR per leaf area ",(MJ%.%m^{-2}%.%d^{-1})))
+  else if(type=="LeafLAI") ylab = expression(paste("Leaf area index ",(m^{-2}%.%m^{-2})))
   else if(type=="LeafAbsorbedSWR") ylab = expression(paste("Absorbed SWR per leaf area ",(W%.%m^{-2})))
   else if(type=="LeafAbsorbedPAR") ylab = expression(paste("Absorbed PAR per leaf area ",(W%.%m^{-2})))
   else if(type=="NetLWRPerLeaf") ylab = expression(paste("Net LWR per leaf area ",(MJ%.%m^{-2}%.%d^{-1})))
@@ -946,6 +948,12 @@
     m = extractSubdaily(x, "ExtractionInst", dates)
     if(is.null(ylab)) ylab =.getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="LeafLAI") {
+    mSu = extractSubdaily(x, "SunlitLeaves$LAI", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = extractSubdaily(x, "ShadeLeaves$LAI", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab=.getYLab(type)
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafPsi") {
     mSu = extractSubdaily(x, "SunlitLeaves$Psi", dates)[,c("datetime", cohorts), drop=FALSE]

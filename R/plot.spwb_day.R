@@ -349,6 +349,21 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
+  else if(type=="LeafLAI") {
+    OM_SL = SunlitLeavesInst$LAI
+    OM_SH = ShadeLeavesInst$LAI
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SL = sweep(m1,1,lai1,"/")
+      OMlai = sweep(OM_SH, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SH = sweep(m1,1,lai1,"/")
+    } 
+    if(is.null(ylab)) ylab=.getYLab(type)
+    return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
+  }
   else if(type=="LeafTranspiration") {
     OM_SL = SunlitLeavesInst$E
     OM_SH = ShadeLeavesInst$E
@@ -395,52 +410,52 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafAbsorbedSWR") {
-    OM_SL = SunlitLeavesInst$Abs_SWR
-    OM_SH = ShadeLeavesInst$Abs_SWR
+    OM_SL <- SunlitLeavesInst$Abs_SWR
+    OM_SH <- ShadeLeavesInst$Abs_SWR
     if(bySpecies) {
-      m1 = apply(OM_SL,2, tapply, x$cohorts$Name, sum, na.rm=T)
-      lai1 = apply(x$SunlitLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
-      OM_SL = m1/lai1
-      m1 = apply(OM_SH,2, tapply, x$cohorts$Name, sum, na.rm=T)
-      lai1 = apply(x$ShadeLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
-      OM_SH = m1/lai1
+      m1 <- apply(OM_SL,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 <- apply(x$SunlitLeavesInst$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SL <- m1/lai1
+      m1 <- apply(OM_SH,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 <- apply(x$ShadeLeavesInst$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SH <- m1/lai1
     } else {
-      OM_SL = OM_SL/x$SunlitLeaves$LAI
-      OM_SH = OM_SH/x$ShadeLeaves$LAI
+      OM_SL <- OM_SL/x$SunlitLeavesInst$LAI
+      OM_SH <- OM_SH/x$ShadeLeavesInst$LAI
     }
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafAbsorbedPAR") {
-    OM_SL = SunlitLeavesInst$Abs_PAR
-    OM_SH = ShadeLeavesInst$Abs_PAR
+    OM_SL <- SunlitLeavesInst$Abs_PAR
+    OM_SH <- ShadeLeavesInst$Abs_PAR
     if(bySpecies) {
-      m1 = apply(OM_SL,2, tapply, x$cohorts$Name, sum, na.rm=T)
-      lai1 = apply(x$SunlitLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
-      OM_SL = m1/lai1
-      m1 = apply(OM_SH,2, tapply, x$cohorts$Name, sum, na.rm=T)
-      lai1 = apply(x$ShadeLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
-      OM_SH = m1/lai1
+      m1 <- apply(OM_SL,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 <- apply(x$ShadeLeavesInst$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SL <- m1/lai1
+      m1 <- apply(OM_SH,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 <- apply(x$ShadeLeavesInst$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SH <- m1/lai1
     } else {
-      OM_SL = OM_SL/x$SunlitLeaves$LAI
-      OM_SH = OM_SH/x$ShadeLeaves$LAI
+      OM_SL <- OM_SL/x$ShadeLeavesInst$LAI
+      OM_SH <- OM_SH/x$ShadeLeavesInst$LAI
     }
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafNetLWR") {
-    OM_SL = SunlitLeavesInst$Net_LWR
-    OM_SH = ShadeLeavesInst$Net_LWR
+    OM_SL <- SunlitLeavesInst$Net_LWR
+    OM_SH <- ShadeLeavesInst$Net_LWR
     if(bySpecies) {
-      m1 = apply(OM_SL,2, tapply, x$cohorts$Name, sum, na.rm=T)
-      lai1 = apply(x$SunlitLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
-      OM_SL = m1/lai1
-      m1 = apply(OM_SH,2, tapply, x$cohorts$Name, sum, na.rm=T)
-      lai1 = apply(x$ShadeLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
-      OM_SH = m1/lai1
+      m1 <- apply(OM_SL,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 <- apply(x$ShadeLeavesInst$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SL <- m1/lai1
+      m1 <- apply(OM_SH,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 <- apply(x$ShadeLeavesInst$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SH <- m1/lai1
     } else {
-      OM_SL = OM_SL/x$SunlitLeaves$LAI
-      OM_SH = OM_SH/x$ShadeLeaves$LAI
+      OM_SL <- OM_SL/x$ShadeLeavesInst$LAI
+      OM_SH <- OM_SH/x$ShadeLeavesInst$LAI
     }
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
