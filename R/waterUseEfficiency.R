@@ -29,8 +29,8 @@
     for(i in 1:ndays) {
       sl = sd[[i]]$SunlitLeavesInst
       sh = sd[[i]]$ShadeLeavesInst
-      sl_lai = sd[[i]]$SunlitLeaves$LAI
-      sh_lai = sd[[i]]$ShadeLeaves$LAI
+      sl_lai = sd[[i]]$SunlitLeavesInst$LAI
+      sh_lai = sd[[i]]$ShadeLeavesInst$LAI
       an_sl = sl$An
       an_sl[an_sl<0] = 0
       an_sh = sh$An
@@ -92,8 +92,8 @@
     for(i in 1:ndays) {
       sl = sd[[i]]$SunlitLeavesInst
       sh = sd[[i]]$ShadeLeavesInst
-      sl_lai = sd[[i]]$SunlitLeaves$LAI
-      sh_lai = sd[[i]]$ShadeLeaves$LAI
+      sl_lai = sd[[i]]$SunlitLeavesInst$LAI
+      sh_lai = sd[[i]]$ShadeLeavesInst$LAI
       an_sl = sl$An
       an_sl[an_sl<0] = 0
       an_sh = sh$An
