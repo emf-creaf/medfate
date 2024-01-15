@@ -5,6 +5,7 @@
 \alias{light_PARcohort}
 \alias{light_PARground}
 \alias{light_SWRground}
+\alias{light_leafAngleCDF}
 \alias{light_directExtinctionCoefficient}
 \alias{light_cohortAbsorbedSWRFraction}
 \alias{light_layerIrradianceFraction}
@@ -21,11 +22,9 @@ light_PARground(x, SpParams, gdd = NA_real_)
 
 light_SWRground(x, SpParams, gdd = NA_real_)
 
-light_directExtinctionCoefficient(
-  leafAngle,
-  solarElevation,
-  G_function = "Sellers"
-)
+light_leafAngleCDF(leafAngle, p, q)
+
+light_directExtinctionCoefficient(p, q, solarElevation)
 
 light_cohortAbsorbedSWRFraction(z, x, SpParams, gdd = NA_real_)
 
@@ -94,7 +93,7 @@ light_longwaveRadiationSHAW(
 
 \item{leafAngle}{Average leaf inclination angle (in radians)}
 
-\item{G_function}{Either "Sellers" or "Goudriaan"}
+\item{p, q}{Parameters of the beta distribution for leaf angles}
 
 \item{z}{A numeric vector with height values.}
 

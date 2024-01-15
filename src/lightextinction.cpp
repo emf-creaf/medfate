@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 #include "forestutils.h"
 #include "paramutils.h"
+#include "incbeta.h"
 #include <math.h>
 #include <meteoland.h>
 using namespace Rcpp;
@@ -261,27 +262,37 @@ double SWRground(List x, DataFrame SpParams, double gdd = NA_REAL) {
 
 //' @rdname light
 //' @param leafAngle Average leaf inclination angle (in radians)
-//' @param G_function Either "Sellers" or "Goudriaan"
-// [[Rcpp::export("light_directExtinctionCoefficient")]]
-double directExtinctionCoefficient(double leafAngle, double solarElevation, String G_function = "Sellers") {
-  double mu = sin(solarElevation);
+//' @param p,q Parameters of the beta distribution for leaf angles
+// [[Rcpp::export("light_leafAngleCDF")]]
+double leafAngleCDF(double leafAngle, double p, double q) {
+  double theta = leafAngle*(2.0/M_PI);
+  return(incbeta(p,q,theta));
+}
+
+double G_function1(double leafAngle, double solarElevation) {
   double G = NA_REAL;
-  if(G_function=="Sellers") { // Sellers, P.J. 1985. Canopy reflectance, photosynthesis and transpiration. Int. J. Remote Sens. 6:1335-1372.
-    double xi_l = std::max(-0.4,std::min(0.6, 2.0*cos(leafAngle) - 1.0));
-    double phi1 = 0.5 - 0.6333*xi_l - 0.33*pow(xi_l, 2.0);
-    double phi2 = 0.877*(1.0 - 2*phi1);
-    G = phi1 + phi2*mu;
-  } else { //Goudriaan 1988. Agricultural and Forest Meteorology, 43 ( 1988 ) 155-169
-    if(solarElevation > leafAngle) {
-      G = sin(solarElevation)*cos(leafAngle);
-    } else {
-      double a = sin(solarElevation)*cos(leafAngle)*asin(tan(solarElevation)/tan(leafAngle));
-      double b = sqrt(pow(sin(leafAngle), 2.0) - pow(sin(solarElevation), 2.0));
-      G = (2.0/M_PI)*(a + b);
-    }
+  if(solarElevation > leafAngle) {
+    G = sin(solarElevation)*cos(leafAngle);
+  } else {
+    double a = sin(solarElevation)*cos(leafAngle)*asin(tan(solarElevation)/tan(leafAngle));
+    double b = sqrt(pow(sin(leafAngle), 2.0) - pow(sin(solarElevation), 2.0));
+    G = (2.0/M_PI)*(a + b);
   }
-  double K = std::max(0.0, std::min(1.0, G/mu));
-  return(K);
+  return(G);
+}
+
+//' @rdname light
+// [[Rcpp::export("light_directExtinctionCoefficient")]]
+double directExtinctionCoefficient(double p, double q, double solarElevation) {
+  double mu = sin(solarElevation);
+  double G = 0.0;
+  for(int i=0;i<9;i++){
+    double a1 = i*10.0*(M_PI/180.0);
+    double a2 = (i + 1)*10.0*(M_PI/180.0);
+    double Fi = leafAngleCDF(a2, p, q) - leafAngleCDF(a1, p, q);
+    G = G + G_function1((a1+a2)/2.0, solarElevation)*Fi;
+  }
+  return(G/mu);
 }
 
 // [[Rcpp::export(".parExtinctionProfile")]]
@@ -605,7 +616,7 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
   for(int n=0;n<ntimesteps;n++) {
     //Calculate direct extinction coefficients
     for(int c=0;c<numCohorts;c++) {
-      kDIR[c] = directExtinctionCoefficient(LeafAngle[c]*(M_PI/180.0), solarElevation[n]);
+      kDIR[c] = 0.8;//directExtinctionCoefficient(LeafAngle[c]*(M_PI/180.0), solarElevation[n]);
     }
     
     //Average sunlit fraction

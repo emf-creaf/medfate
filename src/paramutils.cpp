@@ -176,11 +176,26 @@ CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parN
 NumericVector LeafAngleWithImputation(IntegerVector SP, DataFrame SpParams) {
   NumericVector LeafAngle = speciesNumericParameterFromIndex(SP, SpParams, "LeafAngle");
   for(int j=0;j<LeafAngle.size();j++) {
-    if(NumericVector::is_na(LeafAngle[j])) LeafAngle[j] = 60.0; //Corresponding to spherical distribution
+    if(NumericVector::is_na(LeafAngle[j])) LeafAngle[j] = 53.7; //Corresponding to spherical distribution
   }
   return(LeafAngle);
 }
-
+/** Parameter retrieval with imputation */
+NumericVector LeafAngleSDWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector LeafAngleSD = speciesNumericParameterFromIndex(SP, SpParams, "LeafAngleSD");
+  for(int j=0;j<LeafAngleSD.size();j++) {
+    if(NumericVector::is_na(LeafAngleSD[j])) LeafAngleSD[j] = 21.55; //Corresponding to spherical distribution
+  }
+  return(LeafAngleSD);
+}
+/** Parameter retrieval with imputation */
+NumericVector ClumpingIndexWithImputation(IntegerVector SP, DataFrame SpParams) {
+  NumericVector ClumpingIndex = speciesNumericParameterFromIndex(SP, SpParams, "ClumpingIndex");
+  for(int j=0;j<ClumpingIndex.size();j++) {
+    if(NumericVector::is_na(ClumpingIndex[j])) ClumpingIndex[j] = 0.75;
+  }
+  return(ClumpingIndex);
+}
 NumericVector kPARWithImputation(IntegerVector SP, DataFrame SpParams) {
   CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
   NumericVector kPAR = speciesNumericParameterFromIndex(SP, SpParams, "kPAR");
@@ -1514,6 +1529,8 @@ NumericVector treeAllometricCoefficientWithImputation(IntegerVector SP, DataFram
 NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame SpParams, String parName, bool fillMissing = true){
   if(fillMissing) {
     if(parName == "LeafAngle") return(LeafAngleWithImputation(SP,SpParams));
+    else if(parName == "LeafAngleSD") return(LeafAngleSDWithImputation(SP,SpParams));
+    else if(parName == "ClumpingIndex") return(ClumpingIndexWithImputation(SP,SpParams));
     else if(parName == "kPAR") return(kPARWithImputation(SP,SpParams));
     else if(parName == "gammaSWR") return(gammaSWRWithImputation(SP,SpParams));
     else if(parName == "alphaSWR") return(alphaSWRWithImputation(SP,SpParams));

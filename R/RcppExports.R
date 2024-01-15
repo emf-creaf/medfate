@@ -1544,6 +1544,18 @@ hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInpu
     .Call(`_medfate_soilInfiltrationPercolation`, soil, soilFunctions, waterInput, rockyLayerDrainage, modifySoil)
 }
 
+.gammln <- function(xx) {
+    .Call(`_medfate_gammln`, xx)
+}
+
+.betacf <- function(a, b, x) {
+    .Call(`_medfate_betacf`, a, b, x)
+}
+
+.incbeta <- function(a, b, x) {
+    .Call(`_medfate_incbeta`, a, b, x)
+}
+
 .incgam <- function(a, x) {
     .Call(`_medfate_incgam`, a, x)
 }
@@ -1814,9 +1826,14 @@ light_SWRground <- function(x, SpParams, gdd = NA_real_) {
 
 #' @rdname light
 #' @param leafAngle Average leaf inclination angle (in radians)
-#' @param G_function Either "Sellers" or "Goudriaan"
-light_directExtinctionCoefficient <- function(leafAngle, solarElevation, G_function = "Sellers") {
-    .Call(`_medfate_directExtinctionCoefficient`, leafAngle, solarElevation, G_function)
+#' @param p,q Parameters of the beta distribution for leaf angles
+light_leafAngleCDF <- function(leafAngle, p, q) {
+    .Call(`_medfate_leafAngleCDF`, leafAngle, p, q)
+}
+
+#' @rdname light
+light_directExtinctionCoefficient <- function(p, q, solarElevation) {
+    .Call(`_medfate_directExtinctionCoefficient`, p, q, solarElevation)
 }
 
 .parExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_, includeHerbs = FALSE) {

@@ -56,13 +56,11 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
 
 DataFrame paramsInterception(DataFrame above, DataFrame SpParams, List control) {
   IntegerVector SP = above["SP"];
-
+  int numCohorts = SP.size();
+  
   String transpirationMode = control["transpirationMode"];
   bool fillMissingSpParams = control["fillMissingSpParams"];
   
-  NumericVector alphaSWR = speciesNumericParameterWithImputation(SP, SpParams, "alphaSWR", fillMissingSpParams);
-  NumericVector gammaSWR = speciesNumericParameterWithImputation(SP, SpParams, "gammaSWR", fillMissingSpParams);
-  NumericVector LeafAngle = speciesNumericParameterWithImputation(SP, SpParams, "LeafAngle", fillMissingSpParams);
   NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", fillMissingSpParams);
   NumericVector g = speciesNumericParameterWithImputation(SP, SpParams, "g", fillMissingSpParams);
   DataFrame paramsInterceptiondf;
@@ -70,8 +68,27 @@ DataFrame paramsInterception(DataFrame above, DataFrame SpParams, List control) 
     paramsInterceptiondf = DataFrame::create(_["kPAR"] = kPAR, 
                                              _["g"] = g);
   } else {
+    NumericVector alphaSWR = speciesNumericParameterWithImputation(SP, SpParams, "alphaSWR", fillMissingSpParams);
+    NumericVector gammaSWR = speciesNumericParameterWithImputation(SP, SpParams, "gammaSWR", fillMissingSpParams);
+    NumericVector LeafAngle = speciesNumericParameterWithImputation(SP, SpParams, "LeafAngle", fillMissingSpParams);
+    NumericVector LeafAngleSD = speciesNumericParameterWithImputation(SP, SpParams, "LeafAngleSD", fillMissingSpParams);
+    NumericVector ClumpingIndex = speciesNumericParameterWithImputation(SP, SpParams, "ClumpingIndex", fillMissingSpParams);
+    NumericVector Beta_p(numCohorts, NA_REAL), Beta_q(numCohorts, NA_REAL);
+    for(int i=0;i<numCohorts;i++){
+      double mla_rad = LeafAngle[i]*(M_PI/180.0);
+      double sd_rad = LeafAngleSD[i]*(M_PI/180.0);
+      double pow_sum = pow(sd_rad,2.0) + pow(mla_rad,2.0);
+      double p_num = 1.0 - pow_sum/(mla_rad*M_PI/2.0);
+      double p_den = pow_sum/pow(mla_rad,2.0) - 1.0;
+      Beta_p[i] = p_num/p_den;
+      Beta_q[i] = (M_PI/(2.0*mla_rad) - 1.0)*Beta_p[i];
+    }
     paramsInterceptiondf = DataFrame::create(_["LeafAngle"] = LeafAngle, 
-                                             _["kPAR"] = kPAR, 
+                                             _["LeafAngleSD"] = LeafAngleSD,
+                                             _["Beta_p"] = Beta_p,
+                                             _["Beta_q"] = Beta_q,
+                                             _["ClumpingIndex"] = ClumpingIndex, 
+                                             // _["kPAR"] = kPAR, 
                                              _["alphaSWR"] = alphaSWR,
                                              _["gammaSWR"] = gammaSWR, 
                                              _["g"] = g);

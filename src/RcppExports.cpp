@@ -2202,6 +2202,43 @@ RcppExport SEXP _medfate_soilInfiltrationPercolation(SEXP soilSEXP, SEXP soilFun
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// gammln
+double gammln(double xx);
+RcppExport SEXP _medfate_gammln(SEXP xxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type xx(xxSEXP);
+    rcpp_result_gen = Rcpp::wrap(gammln(xx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// betacf
+double betacf(double a, double b, double x);
+RcppExport SEXP _medfate_betacf(SEXP aSEXP, SEXP bSEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type a(aSEXP);
+    Rcpp::traits::input_parameter< double >::type b(bSEXP);
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(betacf(a, b, x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// incbeta
+double incbeta(double a, double b, double x);
+RcppExport SEXP _medfate_incbeta(SEXP aSEXP, SEXP bSEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type a(aSEXP);
+    Rcpp::traits::input_parameter< double >::type b(bSEXP);
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(incbeta(a, b, x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // incgam
 NumericVector incgam(double a, double x);
 RcppExport SEXP _medfate_incgam(SEXP aSEXP, SEXP xSEXP) {
@@ -2371,16 +2408,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// directExtinctionCoefficient
-double directExtinctionCoefficient(double leafAngle, double solarElevation, String G_function);
-RcppExport SEXP _medfate_directExtinctionCoefficient(SEXP leafAngleSEXP, SEXP solarElevationSEXP, SEXP G_functionSEXP) {
+// leafAngleCDF
+double leafAngleCDF(double leafAngle, double p, double q);
+RcppExport SEXP _medfate_leafAngleCDF(SEXP leafAngleSEXP, SEXP pSEXP, SEXP qSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type leafAngle(leafAngleSEXP);
+    Rcpp::traits::input_parameter< double >::type p(pSEXP);
+    Rcpp::traits::input_parameter< double >::type q(qSEXP);
+    rcpp_result_gen = Rcpp::wrap(leafAngleCDF(leafAngle, p, q));
+    return rcpp_result_gen;
+END_RCPP
+}
+// directExtinctionCoefficient
+double directExtinctionCoefficient(double p, double q, double solarElevation);
+RcppExport SEXP _medfate_directExtinctionCoefficient(SEXP pSEXP, SEXP qSEXP, SEXP solarElevationSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type p(pSEXP);
+    Rcpp::traits::input_parameter< double >::type q(qSEXP);
     Rcpp::traits::input_parameter< double >::type solarElevation(solarElevationSEXP);
-    Rcpp::traits::input_parameter< String >::type G_function(G_functionSEXP);
-    rcpp_result_gen = Rcpp::wrap(directExtinctionCoefficient(leafAngle, solarElevation, G_function));
+    rcpp_result_gen = Rcpp::wrap(directExtinctionCoefficient(p, q, solarElevation));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5023,6 +5073,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_snowMelt", (DL_FUNC) &_medfate_snowMelt, 4},
     {"_medfate_soilWaterInputs", (DL_FUNC) &_medfate_soilWaterInputs, 13},
     {"_medfate_soilInfiltrationPercolation", (DL_FUNC) &_medfate_soilInfiltrationPercolation, 5},
+    {"_medfate_gammln", (DL_FUNC) &_medfate_gammln, 1},
+    {"_medfate_betacf", (DL_FUNC) &_medfate_betacf, 3},
+    {"_medfate_incbeta", (DL_FUNC) &_medfate_incbeta, 3},
     {"_medfate_incgam", (DL_FUNC) &_medfate_incgam, 2},
     {"_medfate_invincgam", (DL_FUNC) &_medfate_invincgam, 3},
     {"_medfate_gammds", (DL_FUNC) &_medfate_gammds, 2},
@@ -5036,6 +5089,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_PARground", (DL_FUNC) &_medfate_PARground, 3},
     {"_medfate_swrheight", (DL_FUNC) &_medfate_swrheight, 4},
     {"_medfate_SWRground", (DL_FUNC) &_medfate_SWRground, 3},
+    {"_medfate_leafAngleCDF", (DL_FUNC) &_medfate_leafAngleCDF, 3},
     {"_medfate_directExtinctionCoefficient", (DL_FUNC) &_medfate_directExtinctionCoefficient, 3},
     {"_medfate_parExtinctionProfile", (DL_FUNC) &_medfate_parExtinctionProfile, 5},
     {"_medfate_swrExtinctionProfile", (DL_FUNC) &_medfate_swrExtinctionProfile, 5},
