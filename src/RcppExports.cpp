@@ -2390,8 +2390,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // cohortSunlitShadeAbsorbedRadiation
-List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericVector kb, NumericMatrix K, NumericVector ZF, NumericVector ClumpingIndex, NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction);
-RcppExport SEXP _medfate_cohortSunlitShadeAbsorbedRadiation(SEXP Ib0SEXP, SEXP Id0SEXP, SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP LAImxSEXP, SEXP kbSEXP, SEXP KSEXP, SEXP ZFSEXP, SEXP ClumpingIndexSEXP, SEXP alphaSEXP, SEXP gammaSEXP, SEXP trunkExtinctionFractionSEXP) {
+List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericVector kb, NumericMatrix K, NumericVector ClumpingIndex, NumericVector ZF, NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction);
+RcppExport SEXP _medfate_cohortSunlitShadeAbsorbedRadiation(SEXP Ib0SEXP, SEXP Id0SEXP, SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP LAImxSEXP, SEXP kbSEXP, SEXP KSEXP, SEXP ClumpingIndexSEXP, SEXP ZFSEXP, SEXP alphaSEXP, SEXP gammaSEXP, SEXP trunkExtinctionFractionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2402,12 +2402,12 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericMatrix >::type LAImx(LAImxSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type kb(kbSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type K(KSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type ZF(ZFSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type ClumpingIndex(ClumpingIndexSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type ZF(ZFSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type gamma(gammaSEXP);
     Rcpp::traits::input_parameter< double >::type trunkExtinctionFraction(trunkExtinctionFractionSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortSunlitShadeAbsorbedRadiation(Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ZF, ClumpingIndex, alpha, gamma, trunkExtinctionFraction));
+    rcpp_result_gen = Rcpp::wrap(cohortSunlitShadeAbsorbedRadiation(Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction));
     return rcpp_result_gen;
 END_RCPP
 }

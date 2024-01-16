@@ -423,6 +423,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM_SL <- OM_SL/x$SunlitLeavesInst$LAI
       OM_SH <- OM_SH/x$ShadeLeavesInst$LAI
     }
+    OM_SL[is.na(OM_SL)] <- 0.0
+    OM_SH[is.na(OM_SH)] <- 0.0
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
@@ -440,6 +442,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM_SL <- OM_SL/x$ShadeLeavesInst$LAI
       OM_SH <- OM_SH/x$ShadeLeavesInst$LAI
     }
+    OM_SL[is.na(OM_SL)] <- 0.0
+    OM_SH[is.na(OM_SH)] <- 0.0
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }

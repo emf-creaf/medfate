@@ -1724,7 +1724,7 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gs
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
-#' @seealso  \code{\link{spwb}}
+#' @seealso  \code{\link{spwb}}, \code{\link{light_basic}}
 #' 
 #' @examples
 #' solarElevation <- 0.67 # in radians
@@ -1814,8 +1814,8 @@ light_layerDiffuseIrradianceFraction <- function(LAIme, LAImd, LAImx, K, Clumpin
 }
 
 #' @rdname light_advanced
-light_cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ZF, ClumpingIndex, alpha, gamma, trunkExtinctionFraction = 0.1) {
-    .Call(`_medfate_cohortSunlitShadeAbsorbedRadiation`, Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ZF, ClumpingIndex, alpha, gamma, trunkExtinctionFraction)
+light_cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_cohortSunlitShadeAbsorbedRadiation`, Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction)
 }
 
 #' @rdname light_advanced
@@ -1837,7 +1837,7 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
     .Call(`_medfate_parcohort`, SP, H, CR, LAI, SpParams)
 }
 
-#' Basic radiation extinction
+#' Radiation extinction functions used in basic transpiration sub-model
 #' 
 #' @param x An object of class \code{\link{forest}}
 #' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
@@ -1847,7 +1847,7 @@ light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
-#' @seealso  \code{\link{spwb}}
+#' @seealso  \code{\link{spwb}}, \code{\link{light_advanced}}
 #' 
 #' @examples
 #' @name light_basic

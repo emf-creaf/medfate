@@ -37,7 +37,7 @@ NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, Num
   return(parcohortC(H,LAI,LAI_dead,kPAR,CR));
 }
 
-//' Basic radiation extinction
+//' Radiation extinction functions used in basic transpiration sub-model
 //' 
 //' @param x An object of class \code{\link{forest}}
 //' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
@@ -47,7 +47,7 @@ NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, Num
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
-//' @seealso  \code{\link{spwb}}
+//' @seealso  \code{\link{spwb}}, \code{\link{light_advanced}}
 //' 
 //' @examples
 //' @name light_basic

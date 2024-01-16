@@ -435,8 +435,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
                                                                         Beta_p, Beta_q, ClumpingIndex, 
                                                                         alphaSWR, gammaSWR,
-                                                                        ddd, 
-                                                                        ntimesteps, 0.1);
+                                                                        ddd, ntimesteps, 0.1);
   List sunshade = lightExtinctionAbsortion["sunshade"];
   List abs_PAR_SL_COH_list = sunshade["PAR_SL"];
   List abs_PAR_SH_COH_list = sunshade["PAR_SH"];

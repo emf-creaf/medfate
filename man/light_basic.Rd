@@ -6,7 +6,7 @@
 \alias{light_PARground}
 \alias{light_SWRground}
 \alias{light_cohortAbsorbedSWRFraction}
-\title{Basic radiation extinction}
+\title{Radiation extinction functions used in basic transpiration sub-model}
 \usage{
 light_PARcohort(x, SpParams, gdd = NA_real_)
 
@@ -26,10 +26,10 @@ light_cohortAbsorbedSWRFraction(z, x, SpParams, gdd = NA_real_)
 \item{z}{A numeric vector with height values.}
 }
 \description{
-Basic radiation extinction
+Radiation extinction functions used in basic transpiration sub-model
 }
 \seealso{
-\code{\link{spwb}}
+\code{\link{spwb}}, \code{\link{light_advanced}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF

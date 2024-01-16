@@ -15,7 +15,7 @@ NumericMatrix layerDiffuseIrradianceFraction(NumericMatrix LAIme, NumericMatrix 
 
 List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0,
                                         NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx,
-                                        NumericVector kb, NumericMatrix K, NumericVector ZF, NumericVector ClumpingIndex, 
+                                        NumericVector kb, NumericMatrix K, NumericVector ClumpingIndex, NumericVector ZF, 
                                         NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction = 0.1);
 
 NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, 

@@ -47,8 +47,8 @@ light_cohortSunlitShadeAbsorbedRadiation(
   LAImx,
   kb,
   K,
-  ZF,
   ClumpingIndex,
+  ZF,
   alpha,
   gamma,
   trunkExtinctionFraction = 0.1
@@ -218,7 +218,7 @@ Anten, N.P.R., Bastiaans, L., 2016. The use of canopy models to analyze light co
 Flerchinger, G. N., Xiao, W., Sauer, T. J., Yu, Q. 2009. Simulation of within-canopy radiation exchange. NJAS - Wageningen Journal of Life Sciences 57 (1): 5–15. https://doi.org/10.1016/j.njas.2009.07.004.
 }
 \seealso{
-\code{\link{spwb}}
+\code{\link{spwb}}, \code{\link{light_basic}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
