@@ -12,18 +12,25 @@ NumericVector parheight(NumericVector heights, IntegerVector SP, NumericVector H
 NumericVector swrheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams);
 NumericVector cohortAbsorbedSWRFraction(NumericVector z, NumericVector LAI_expanded, NumericVector LAI_dead, NumericVector H, NumericVector CR, NumericVector kPAR);
 
-NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericVector k, NumericVector alpha, double trunkExtinctionFraction = 0.1);
+NumericVector layerDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, 
+                                            NumericVector kb, NumericVector ClumpingIndex, 
+                                            NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction = 0.1);
 
-double groundIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericVector k, NumericVector alpha, double trunkExtinctionFraction = 0.1);
+NumericMatrix layerDiffuseIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, 
+                                             NumericMatrix K, NumericVector ClumpingIndex, NumericVector ZF,
+                                             NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction = 0.1);
 
-List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ibf, NumericVector Idf,
-                                   NumericMatrix LAIme, NumericMatrix LAImd, 
-                                   NumericVector kb,  NumericVector kd, NumericVector alpha, NumericVector gamma);
+List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0,
+                                        NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx,
+                                        NumericVector kb, NumericMatrix K, NumericVector ZF, NumericVector ClumpingIndex, 
+                                        NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction = 0.1);
 
-NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb);
+NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, 
+                                  NumericVector kb, NumericVector ClumpingIndex);
 
 List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
-                                           NumericVector LeafAngle, NumericVector kPAR, NumericVector alphaSWR, NumericVector gammaSWR,
+                                           NumericVector p, NumericVector q, NumericVector ClumpingIndex, 
+                                           NumericVector alphaSWR, NumericVector gammaSWR,
                                            DataFrame ddd, int ntimesteps = 24, double trunkExtinctionFraction = 0.1);
 
 List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 

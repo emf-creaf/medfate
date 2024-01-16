@@ -88,7 +88,7 @@ DataFrame paramsInterception(DataFrame above, DataFrame SpParams, List control) 
                                              _["Beta_p"] = Beta_p,
                                              _["Beta_q"] = Beta_q,
                                              _["ClumpingIndex"] = ClumpingIndex, 
-                                             // _["kPAR"] = kPAR, 
+                                             _["kPAR"] = kPAR,
                                              _["alphaSWR"] = alphaSWR,
                                              _["gammaSWR"] = gammaSWR, 
                                              _["g"] = g);

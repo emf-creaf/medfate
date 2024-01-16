@@ -1680,10 +1680,10 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gs
 
 #' Radiation transfer functions
 #' 
-#' Functions \code{light_layerIrradianceFraction} and \code{light_layerIrradianceFractionBottomUp} calculate 
-#' the fraction of above-canopy irradiance (and the soil irradiance, respectively) reaching each vegetation layer. 
+#' Functions \code{light_layerDirectIrradianceFraction} and \code{light_layerDiffuseIrradianceFraction} calculate 
+#' the fraction of above-canopy direct and diffuse radiation reaching each vegetation layer. 
 #' Function \code{light_layerSunlitFraction} calculates the proportion of sunlit leaves in each vegetation layer. 
-#' Function \code{light_cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorved 
+#' Function \code{light_cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorbed 
 #' by cohort and vegetation layers, while differentiating between sunlit and shade leaves.
 #' 
 #' @param LAIme A numeric matrix of live expanded LAI values per vegetation layer (row) and cohort (column).
@@ -1719,8 +1719,8 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gs
 #' Vegetation layers are assumed to be ordered from bottom to top.
 #' 
 #' @return
-#' Functions \code{light_layerIrradianceFraction}, \code{light_layerIrradianceFractionBottomUp}  and \code{light_layerSunlitFraction} 
-#' return a numeric vector of length equal to the number of vegetation layers. 
+#' Functions \code{light_layerDirectIrradianceFraction}, \code{light_layerDiffuseIrradianceFraction}
+#' and \code{light_layerSunlitFraction} return a numeric vector of length equal to the number of vegetation layers. 
 #' 
 #' Function \code{light_cohortSunlitShadeAbsorbedRadiation} returns a list with 
 #' two elements (matrices): \code{I_sunlit} and \code{I_shade}.
@@ -1832,8 +1832,8 @@ light_leafAngleCDF <- function(leafAngle, p, q) {
 }
 
 #' @rdname light
-light_directExtinctionCoefficient <- function(p, q, solarElevation) {
-    .Call(`_medfate_directExtinctionCoefficient`, p, q, solarElevation)
+light_directionalExtinctionCoefficient <- function(p, q, solarElevation) {
+    .Call(`_medfate_directionalExtinctionCoefficient`, p, q, solarElevation)
 }
 
 .parExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_, includeHerbs = FALSE) {
@@ -1850,28 +1850,29 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 }
 
 #' @rdname light
-light_layerIrradianceFraction <- function(LAIme, LAImd, LAImx, k, alpha, trunkExtinctionFraction = 0.1) {
-    .Call(`_medfate_layerIrradianceFraction`, LAIme, LAImd, LAImx, k, alpha, trunkExtinctionFraction)
+light_layerDirectIrradianceFraction <- function(LAIme, LAImd, LAImx, kb, ClumpingIndex, alpha, gamma, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_layerDirectIrradianceFraction`, LAIme, LAImd, LAImx, kb, ClumpingIndex, alpha, gamma, trunkExtinctionFraction)
 }
 
 #' @rdname light
-light_layerIrradianceFractionBottomUp <- function(LAIme, LAImd, LAImx, k, alpha, trunkExtinctionFraction = 0.1) {
-    .Call(`_medfate_layerIrradianceFractionBottomUp`, LAIme, LAImd, LAImx, k, alpha, trunkExtinctionFraction)
+light_layerDiffuseIrradianceFraction <- function(LAIme, LAImd, LAImx, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_layerDiffuseIrradianceFraction`, LAIme, LAImd, LAImx, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction)
 }
 
 #' @rdname light
-light_cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, Ibf, Idf, LAIme, LAImd, kb, kd, alpha, gamma) {
-    .Call(`_medfate_cohortSunlitShadeAbsorbedRadiation`, Ib0, Id0, Ibf, Idf, LAIme, LAImd, kb, kd, alpha, gamma)
+light_cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ZF, ClumpingIndex, alpha, gamma, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_cohortSunlitShadeAbsorbedRadiation`, Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ZF, ClumpingIndex, alpha, gamma, trunkExtinctionFraction)
 }
 
 #' @rdname light
-light_layerSunlitFraction <- function(LAIme, LAImd, kb) {
-    .Call(`_medfate_layerSunlitFraction`, LAIme, LAImd, kb)
+#' @param ClumpingIndex The extent to which foliage has a nonrandom spatial distribution.
+light_layerSunlitFraction <- function(LAIme, LAImd, kb, ClumpingIndex) {
+    .Call(`_medfate_layerSunlitFraction`, LAIme, LAImd, kb, ClumpingIndex)
 }
 
 #' @rdname light
-light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, LeafAngle, kPAR, alphaSWR, gammaSWR, ddd, ntimesteps = 24L, trunkExtinctionFraction = 0.1) {
-    .Call(`_medfate_instantaneousLightExtinctionAbsortion`, LAIme, LAImd, LAImx, LeafAngle, kPAR, alphaSWR, gammaSWR, ddd, ntimesteps, trunkExtinctionFraction)
+light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, p, q, ClumpingIndex, alphaSWR, gammaSWR, ddd, ntimesteps = 24L, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_instantaneousLightExtinctionAbsortion`, LAIme, LAImd, LAImx, p, q, ClumpingIndex, alphaSWR, gammaSWR, ddd, ntimesteps, trunkExtinctionFraction)
 }
 
 #' @rdname light

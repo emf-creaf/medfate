@@ -41,10 +41,10 @@ NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, Num
 
 //' Radiation transfer functions
 //' 
-//' Functions \code{light_layerIrradianceFraction} and \code{light_layerIrradianceFractionBottomUp} calculate 
-//' the fraction of above-canopy irradiance (and the soil irradiance, respectively) reaching each vegetation layer. 
+//' Functions \code{light_layerDirectIrradianceFraction} and \code{light_layerDiffuseIrradianceFraction} calculate 
+//' the fraction of above-canopy direct and diffuse radiation reaching each vegetation layer. 
 //' Function \code{light_layerSunlitFraction} calculates the proportion of sunlit leaves in each vegetation layer. 
-//' Function \code{light_cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorved 
+//' Function \code{light_cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorbed 
 //' by cohort and vegetation layers, while differentiating between sunlit and shade leaves.
 //' 
 //' @param LAIme A numeric matrix of live expanded LAI values per vegetation layer (row) and cohort (column).
@@ -80,8 +80,8 @@ NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, Num
 //' Vegetation layers are assumed to be ordered from bottom to top.
 //' 
 //' @return
-//' Functions \code{light_layerIrradianceFraction}, \code{light_layerIrradianceFractionBottomUp}  and \code{light_layerSunlitFraction} 
-//' return a numeric vector of length equal to the number of vegetation layers. 
+//' Functions \code{light_layerDirectIrradianceFraction}, \code{light_layerDiffuseIrradianceFraction}
+//' and \code{light_layerSunlitFraction} return a numeric vector of length equal to the number of vegetation layers. 
 //' 
 //' Function \code{light_cohortSunlitShadeAbsorbedRadiation} returns a list with 
 //' two elements (matrices): \code{I_sunlit} and \code{I_shade}.
@@ -282,8 +282,8 @@ double G_function1(double leafAngle, double solarElevation) {
 }
 
 //' @rdname light
-// [[Rcpp::export("light_directExtinctionCoefficient")]]
-double directExtinctionCoefficient(double p, double q, double solarElevation) {
+// [[Rcpp::export("light_directionalExtinctionCoefficient")]]
+double directionalExtinctionCoefficient(double p, double q, double solarElevation) {
   double mu = sin(solarElevation);
   double G = 0.0;
   for(int i=0;i<9;i++){
@@ -417,72 +417,129 @@ NumericVector cohortAbsorbedSWRFraction(NumericVector z, List x, DataFrame SpPar
 }
 
 //' @rdname light
-// [[Rcpp::export("light_layerIrradianceFraction")]]
-NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, NumericVector k, NumericVector alpha, double trunkExtinctionFraction = 0.1) {
+// [[Rcpp::export("light_layerDirectIrradianceFraction")]]
+NumericVector layerDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, 
+                                            NumericVector kb, NumericVector ClumpingIndex, 
+                                            NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction = 0.1) {
   int nlayer = LAIme.nrow();
   int ncoh = LAIme.ncol();
   NumericVector Ifraction(nlayer);
   double s = 0.0;
+  double gamma_i = 0.0;
   for(int i=nlayer-1;i>=0;i--) { //Start from top layer
-    Ifraction[i] = exp(-1.0*s);
+    // I fraction for the current layer (no extinction for top layer)
+    Ifraction[i] = (1.0 - gamma_i)*exp(-1.0*s);
     //for subsequent layers increase s
     //Extinction is the maximum between the sum of dead(standing) and expanded leaves and a fraction of maximum live leaves corresponding to trunks (for winter-deciduous stands)
-    for(int j =0;j<ncoh;j++) s = s + (k[j]*pow(alpha[j],0.5)*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
+    double gsum = 0.0;
+    double lsum = 0.0;
+    for(int j =0;j<ncoh;j++) {
+      gsum = gamma[j]*(LAIme(i,j)+LAImd(i,j));
+      lsum = LAIme(i,j)+LAImd(i,j);
+      s = s + (kb[j]*pow(alpha[j],0.5)*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
+    }
+    //Average gamma according to LAI
+    gamma_i = gsum/lsum;
+    if(lsum == 0.0) gamma_i = 0.0;
   }
   return(Ifraction);
 }
+
+double groundDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, 
+                                            NumericVector kb, NumericVector ClumpingIndex, 
+                                            NumericVector alpha, double trunkExtinctionFraction = 0.1) {
+  int nlayer = LAIme.nrow();
+  int ncoh = LAIme.ncol();
+  double s = 0.0;
+  for(int i=nlayer-1;i>=0;i--) { //Start from top layer
+    //for subsequent layers increase s
+    //Extinction is the maximum between the sum of dead(standing) and expanded leaves and a fraction of maximum live leaves corresponding to trunks (for winter-deciduous stands)
+    for(int j =0;j<ncoh;j++) {
+      s = s + (kb[j]*pow(alpha[j],0.5)*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
+    }
+  }
+  return(exp(-1.0*s));
+}
+
+
 
 //' @rdname light
-// [[Rcpp::export("light_layerIrradianceFractionBottomUp")]]
-NumericVector layerIrradianceFractionBottomUp(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, NumericVector k, NumericVector alpha, double trunkExtinctionFraction = 0.1) {
-  int nlayer = LAIme.nrow();
-  int ncoh = LAIme.ncol();
-  NumericVector Ifraction(nlayer);
-  double s = 0.0;
-  for(int i=0;i<nlayer;i++) { //Start from bottom layer
-    Ifraction[i] = exp(-1.0*s);
-    //for subsequent layers increase s
-    //Extinction is the maximum between the sum of dead(standing) and expanded leaves and a fraction of maximum live leaves corresponding to trunks (for winter-deciduous stands)
-    for(int j =0;j<ncoh;j++) s = s + (k[j]*pow(alpha[j],0.5)*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
-  }
-  return(Ifraction);
-}
+// [[Rcpp::export("light_layerDiffuseIrradianceFraction")]]
+NumericMatrix layerDiffuseIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, 
+                                             NumericMatrix K, NumericVector ClumpingIndex, NumericVector ZF,
+                                             NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction = 0.1) {
+   int nlayer = LAIme.nrow();
+   int ncoh = LAIme.ncol();
+   int nZ = ZF.length();
+  
+  NumericMatrix Ifraction(nZ,nlayer); //Fraction of irradiance from direction k in each layer
+   for(int k = 0;k<nZ;k++) { //Sky fractions
+     double s = 0.0;
+     double gamma_i = 0.0;
+     for(int i=nlayer-1;i>=0;i--) { //Start from top layer
+       // I fraction for the current layer (no extinction for top layer) and sky fraction
+       Ifraction(k,i) = ZF[k]*(1.0 - gamma_i)*exp(-1.0*s);
+       //for subsequent layers increase s
+       //Extinction is the maximum between the sum of dead(standing) and expanded leaves and a fraction of maximum live leaves corresponding to trunks (for winter-deciduous stands)
+       double gsum = 0.0;
+       double lsum = 0.0;
+       for(int j =0;j<ncoh;j++) {
+         gsum = gamma[j]*(LAIme(i,j)+LAImd(i,j));
+         lsum = LAIme(i,j)+LAImd(i,j);
+         s = s + (K(k,j)*pow(alpha[j],0.5)*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
+       }
+       //Average gamma according to LAI
+       gamma_i = gsum/lsum;
+       if(lsum == 0.0) gamma_i = 0.0;
+     }
+   }
+   return(Ifraction);
+ }
 
-
-double groundDiffuseIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericVector k, double trunkExtinctionFraction = 0.1){
+double groundDiffuseIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, 
+                                       NumericMatrix K, NumericVector ClumpingIndex, NumericVector ZF,
+                                       NumericVector alpha, double trunkExtinctionFraction = 0.1) {
   int nlayer = LAIme.nrow();
   int ncoh = LAIme.ncol();
-  double s = 0.0;
-  for(int i=nlayer-1;i>=0;i--) { //Start from top layer
-    //for subsequent layers increase s
-    for(int j =0;j<ncoh;j++) s = s + (k[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
+  int nZ = ZF.length();
+  
+  double gif = 0.0; //Overall fraction of ground irradiance
+  for(int k = 0;k<nZ;k++) { //Sky fractions
+    double s = 0.0;
+    for(int i=nlayer-1;i>=0;i--) { //Start from top layer
+      //for subsequent layers increase s
+      //Extinction is the maximum between the sum of dead(standing) and expanded leaves and a fraction of maximum live leaves corresponding to trunks (for winter-deciduous stands)
+      for(int j =0;j<ncoh;j++) {
+        s = s + (K(k,j)*pow(alpha[j],0.5)*ClumpingIndex[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
+      }
+    }
+    // I fraction for the current layer (no extinction for top layer)
+    gif = gif + ZF[k]*exp(-1.0*s);
   }
-  return(exp(-1.0*s));
-}
-double groundDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericVector k,  NumericVector alpha, double trunkExtinctionFraction = 0.1){
-  int nlayer = LAIme.nrow();
-  int ncoh = LAIme.ncol();
-  double s = 0.0;
-  for(int i=nlayer-1;i>=0;i--) { //Start from top layer
-    //for subsequent layers increase s
-    for(int j =0;j<ncoh;j++) s = s + (k[j]*pow(alpha[j],0.5)*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
-  }
-  return(exp(-1.0*s));
+  return(gif);
 }
 
 /**
  *  Diffuse light absorbed radiation per unit of leaf area, given diffuse light level at the top of the layer
  *  I_{da, ij}
  */
-NumericMatrix cohortDiffuseAbsorbedRadiation(double Id0, NumericVector Idf, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kd, NumericVector alpha, NumericVector gamma) {
-  int ncoh = alpha.size();
-  int nlayer = Idf.size();
+NumericMatrix cohortDiffuseAbsorbedRadiation(double Id0, NumericMatrix Idf, 
+                                             NumericMatrix LAIme, NumericMatrix LAImd, 
+                                             NumericMatrix K, NumericVector ClumpingIndex,
+                                             NumericVector alpha, NumericVector gamma) {
+  int ncoh = alpha.length();
+  int nlayer = LAIme.nrow();
+  int nZ = K.nrow();
   NumericMatrix Ida(nlayer, ncoh);
   for(int i = 0;i<nlayer;i++) {
-    double s = 0.0;
-    for(int j = 0;j<ncoh;j++) s += kd[j]*pow(alpha[j],0.5)*(LAIme(i,j)/2.0+LAImd(i,j)/2.0);
-    for(int j = 0;j<ncoh;j++) {
-      Ida(i,j) = Id0*(1.0-gamma[j])*Idf[i]*pow(alpha[j],0.5)*kd[j]*exp(-1.0*s);
+    //Initialize to zero for all cohorts
+    for(int j = 0;j<ncoh;j++) Ida(i,j) = 0.0;
+    for(int k = 0;k<nZ;k++) { //Over all sky zones
+      double s = 0.0;
+      for(int j = 0;j<ncoh;j++) s += K(k,i)*pow(alpha[j],0.5)*ClumpingIndex[j]*(LAIme(i,j)+LAImd(i,j));
+      for(int j = 0;j<ncoh;j++) {
+        Ida(i,j) = Ida(i,j) + Id0*(1.0-gamma[j])*Idf(k,i)*pow(alpha[j],0.5)*K(k,i)*exp(-1.0*s);
+      }
     }
   }
   return(Ida);
@@ -493,15 +550,18 @@ NumericMatrix cohortDiffuseAbsorbedRadiation(double Id0, NumericVector Idf, Nume
  *  Scattered light absorbed radiation per unit of leaf area, given direct light level at the top of the layer
  *  I_{bsa, ij}
  */
-NumericMatrix cohortScatteredAbsorbedRadiation(double Ib0, NumericVector Ibf, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb, NumericVector alpha, NumericVector gamma) {
+NumericMatrix cohortScatteredAbsorbedRadiation(double Ib0, NumericVector Ibf, 
+                                               NumericMatrix LAIme, NumericMatrix LAImd, 
+                                               NumericVector kb, NumericVector ClumpingIndex,
+                                               NumericVector alpha, NumericVector gamma) {
   int ncoh = alpha.size();
   int nlayer = Ibf.size();
   NumericMatrix Ibsa(nlayer, ncoh);
   for(int i = 0;i<nlayer;i++) {
     double s1 = 0.0, s2=0.0;
     for(int j = 0;j<ncoh;j++) {
-      s1 += kb[j]*alpha[j]*(LAIme(i,j)/2.0+LAImd(i,j)/2.0);
-      s2 += kb[j]*(LAIme(i,j)/2.0+LAImd(i,j)/2.0);
+      s1 += kb[j]*alpha[j]*ClumpingIndex[j]*(LAIme(i,j)+LAImd(i,j));
+      s2 += kb[j]*ClumpingIndex[j]*(LAIme(i,j)/2.0+LAImd(i,j)/2.0);
     }
     for(int j = 0;j<ncoh;j++) {
       Ibsa(i,j) = Ib0*(1.0-gamma[j])*Ibf[i]*kb[j]*(pow(alpha[j], 0.5)*exp(-1.0*s1) - (alpha[j]/(1.0-gamma[j]))*exp(-1.0*s2));
@@ -517,13 +577,29 @@ NumericMatrix cohortScatteredAbsorbedRadiation(double Ib0, NumericVector Ibf, Nu
  */
 //' @rdname light
 // [[Rcpp::export("light_cohortSunlitShadeAbsorbedRadiation")]]
-List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ibf, NumericVector Idf,
-                             NumericMatrix LAIme, NumericMatrix LAImd, 
-                             NumericVector kb,  NumericVector kd, NumericVector alpha, NumericVector gamma) {
-  NumericMatrix Ida = cohortDiffuseAbsorbedRadiation(Id0, Idf, LAIme, LAImd, kd, alpha, gamma);
-  NumericMatrix Ibsa = cohortScatteredAbsorbedRadiation(Ib0, Ibf, LAIme, LAImd, kb, alpha, gamma);
+List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0,
+                                        NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx,
+                                        NumericVector kb, NumericMatrix K, NumericVector ZF, NumericVector ClumpingIndex, 
+                                        NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction = 0.1) {
   int ncoh = alpha.size();
-  int nlayer = Ibf.size();
+  int nlayer = LAIme.nrow();
+  
+  NumericVector Ibf = layerDirectIrradianceFraction(LAIme,LAImd,LAImx, 
+                                                    kb, ClumpingIndex, 
+                                                    alpha, gamma, trunkExtinctionFraction);
+  NumericMatrix Idf = layerDiffuseIrradianceFraction(LAIme,LAImd,LAImx, 
+                                                     K, ClumpingIndex, ZF, 
+                                                     alpha, gamma, trunkExtinctionFraction);
+  
+  NumericMatrix Ida = cohortDiffuseAbsorbedRadiation(Id0, Idf, 
+                                                     LAIme, LAImd,
+                                                     K, ClumpingIndex, 
+                                                     alpha, gamma);
+  NumericMatrix Ibsa = cohortScatteredAbsorbedRadiation(Ib0, Ibf, 
+                                                        LAIme, LAImd, 
+                                                        kb, ClumpingIndex,
+                                                        alpha, gamma);
+  
   NumericMatrix Ish(nlayer,ncoh); 
   NumericMatrix Isu(nlayer, ncoh);
   // Rcout<<Ib0<<" "<<beta<<" "<<sinb <<" "<<Ib0*alpha[0]*(0.5/sinb)<<"\n";
@@ -543,8 +619,10 @@ List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ib
  *  f_{SL, ij}
  */
 //' @rdname light
+//' @param ClumpingIndex The extent to which foliage has a nonrandom spatial distribution.
 // [[Rcpp::export("light_layerSunlitFraction")]]
-NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb) {
+NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, 
+                                  NumericVector kb, NumericVector ClumpingIndex) {
   int ncoh = kb.size();
   int nlayer = LAIme.nrow();
   NumericVector fSL(nlayer);
@@ -552,8 +630,8 @@ NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, Nume
   for(int i = nlayer-1;i>=0;i--) {//Start from top layer
     double s2=0.0;
     for(int j = 0;j<ncoh;j++) {
-      s1 += kb[j]*(LAIme(i,j)+LAImd(i,j));
-      s2 += kb[j]*(LAIme(i,j)/2.0+LAImd(i,j)/2.0);
+      s1 += kb[j]*ClumpingIndex[j]*(LAIme(i,j)+LAImd(i,j));
+      s2 += kb[j]*ClumpingIndex[j]*(LAIme(i,j)+LAImd(i,j));
     }
     fSL[i] = exp(-1.0*s1)*exp(-1.0*s2);
   }
@@ -566,7 +644,8 @@ NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, Nume
 //' @rdname light
 // [[Rcpp::export("light_instantaneousLightExtinctionAbsortion")]]
 List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
-                                           NumericVector LeafAngle, NumericVector kPAR, NumericVector alphaSWR, NumericVector gammaSWR,
+                                           NumericVector p, NumericVector q, NumericVector ClumpingIndex, 
+                                           NumericVector alphaSWR, NumericVector gammaSWR,
                                            DataFrame ddd, int ntimesteps = 24, double trunkExtinctionFraction = 0.1) {
 
   int numCohorts = LAIme.ncol();
@@ -582,20 +661,20 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
   NumericVector gammaPAR(numCohorts); //PAR albedo 
   NumericVector gammaLWR(numCohorts, 0.03); //3% albedo of LWR
   NumericVector alphaPAR(numCohorts), alphaLWR(numCohorts);
-  NumericVector kSWR(numCohorts, NA_REAL), kLWR(numCohorts, NA_REAL), kDIR(numCohorts, NA_REAL);
+  NumericVector kDIR(numCohorts, NA_REAL);
+  NumericMatrix K9DIR(9, numCohorts);
+  NumericVector ZF(numCohorts, 0.1111111); //Uniform overcast sky
+  for(int k=0;k<9;k++){
+    double zk = ((double)(k*10 + 5))*(M_PI/180.0); // 5, 15, 25,...
+    for(int c=0;c<numCohorts;c++) {
+      K9DIR(k,c) = directionalExtinctionCoefficient(p[c], q[c], zk);
+    }
+  }
   for(int c=0;c<numCohorts;c++) {
-    kSWR[c] = kPAR[c]/1.35;
     alphaPAR[c] = alphaSWR[c]*1.35;
     gammaPAR[c] = gammaSWR[c]*0.8; // (PAR albedo 80% of SWR albedo)
     alphaLWR[c] = 0.97; //Longwave coefficients
-    // kLWR[c] = 0.8;
   }
-  
-  // NumericVector Idflwr_td = layerIrradianceFraction(LAIme,LAImd,LAImx, kLWR, alphaLWR, trunkExtinctionFraction);
-  // NumericVector Idflwr_bu = layerIrradianceFractionBottomUp(LAIme,LAImd,LAImx, kLWR, alphaLWR, trunkExtinctionFraction);
-  
-  // double glwr = groundDiffuseIrradianceFraction(LAIme,LAImd,LAImx, kLWR, trunkExtinctionFraction);
-  // 
 
   // Rcout<<rad<<" "<< solarElevation[0]<<" "<<SWR_direct[0]<<"\n";
   List fsunlit_list(ntimesteps);
@@ -608,42 +687,39 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
   List abs_SWR_SL_ML_list(ntimesteps);
   List abs_PAR_SH_ML_list(ntimesteps);
   List abs_SWR_SH_ML_list(ntimesteps);
-  // List abs_LWR_SL_ML_list(ntimesteps);
-  // List abs_LWR_SH_ML_list(ntimesteps);
+  
   NumericVector abs_SWR_can(ntimesteps,0.0), abs_LWR_can(ntimesteps,0.0);
   NumericVector abs_SWR_soil(ntimesteps,0.0), abs_LWR_soil(ntimesteps,0.0);
   NumericVector gbf(ntimesteps,0.0), gdf(ntimesteps,0.0);
   for(int n=0;n<ntimesteps;n++) {
-    //Calculate direct extinction coefficients
+    //Calculate direct beam extinction coefficients
     for(int c=0;c<numCohorts;c++) {
-      kDIR[c] = 0.8;//directExtinctionCoefficient(LeafAngle[c]*(M_PI/180.0), solarElevation[n]);
+      kDIR[c] = directionalExtinctionCoefficient(p[c], q[c], solarElevation[n]);
     }
-    
+
     //Average sunlit fraction
-    NumericVector fsunlit = layerSunlitFraction(LAIme, LAImd, kDIR);
+    NumericVector fsunlit = layerSunlitFraction(LAIme, LAImd, kDIR, ClumpingIndex);
     fsunlit_list[n] = fsunlit;
     
     //Fraction of incoming diffuse/direct SWR radiation and LWR radiation reaching the ground
-    gbf[n] = groundDirectIrradianceFraction(LAIme,LAImd,LAImx, kDIR, alphaSWR, trunkExtinctionFraction);
-    gdf[n] = groundDiffuseIrradianceFraction(LAIme,LAImd,LAImx, kSWR, trunkExtinctionFraction);
+    gbf[n] = groundDirectIrradianceFraction(LAIme,LAImd,LAImx, 
+                                            kDIR, ClumpingIndex, 
+                                            alphaSWR, trunkExtinctionFraction);
+    gdf[n] = groundDiffuseIrradianceFraction(LAIme,LAImd,LAImx, 
+                                             K9DIR, ClumpingIndex, ZF, 
+                                             alphaSWR, trunkExtinctionFraction);
     
-    //Average radiation extinction fractions for direct and diffuse PAR/SWR radiation and LWR radiation
-    //Include extinction from trunks in winter
-    NumericVector Ibfpar = layerIrradianceFraction(LAIme,LAImd,LAImx, kDIR, alphaPAR, trunkExtinctionFraction);
-    NumericVector Idfpar = layerIrradianceFraction(LAIme,LAImd,LAImx, kPAR, alphaPAR, trunkExtinctionFraction);
-    NumericVector Ibfswr = layerIrradianceFraction(LAIme,LAImd,LAImx, kDIR, alphaSWR,trunkExtinctionFraction);
-    NumericVector Idfswr = layerIrradianceFraction(LAIme,LAImd,LAImx, kSWR, alphaSWR, trunkExtinctionFraction);
-    
-    //Calculate PAR absorved radiation for sunlit and shade leaves
+    //Calculate PAR absorbed radiation for sunlit and shade leaves
     List abs_PAR = cohortSunlitShadeAbsorbedRadiation(PAR_direct[n]*1000.0, PAR_diffuse[n]*1000.0, 
-                                                      Ibfpar, Idfpar,
-                                                      LAIme, LAImd, 
-                                                      kDIR,  kPAR, alphaPAR, gammaPAR);
-    //Calculate sWR absorved radiation for sunlit and shade leaves
+                                                      LAIme, LAImd, LAImx,
+                                                      kDIR, K9DIR, ZF, ClumpingIndex,
+                                                      alphaPAR, gammaPAR);
+    //Calculate SWR absorbed radiation for sunlit and shade leaves
     List abs_SWR = cohortSunlitShadeAbsorbedRadiation(SWR_direct[n]*1000.0, SWR_diffuse[n]*1000.0, 
-                                                      Ibfswr, Idfswr,
-                                                      LAIme, LAImd, 
-                                                      kDIR,  kSWR, alphaSWR, gammaSWR);
+                                                      LAIme, LAImd, LAImx,
+                                                      kDIR, K9DIR, ZF, ClumpingIndex,
+                                                      alphaSWR, gammaSWR);
+    
     NumericMatrix mswrsl = abs_SWR["I_sunlit"];
     NumericMatrix mswrsh = abs_SWR["I_shade"];
     NumericMatrix mparsl = abs_PAR["I_sunlit"];

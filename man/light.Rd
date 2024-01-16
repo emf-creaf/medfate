@@ -6,10 +6,10 @@
 \alias{light_PARground}
 \alias{light_SWRground}
 \alias{light_leafAngleCDF}
-\alias{light_directExtinctionCoefficient}
+\alias{light_directionalExtinctionCoefficient}
 \alias{light_cohortAbsorbedSWRFraction}
-\alias{light_layerIrradianceFraction}
-\alias{light_layerIrradianceFractionBottomUp}
+\alias{light_layerDirectIrradianceFraction}
+\alias{light_layerDiffuseIrradianceFraction}
 \alias{light_cohortSunlitShadeAbsorbedRadiation}
 \alias{light_layerSunlitFraction}
 \alias{light_instantaneousLightExtinctionAbsortion}
@@ -24,49 +24,57 @@ light_SWRground(x, SpParams, gdd = NA_real_)
 
 light_leafAngleCDF(leafAngle, p, q)
 
-light_directExtinctionCoefficient(p, q, solarElevation)
+light_directionalExtinctionCoefficient(p, q, solarElevation)
 
 light_cohortAbsorbedSWRFraction(z, x, SpParams, gdd = NA_real_)
 
-light_layerIrradianceFraction(
+light_layerDirectIrradianceFraction(
   LAIme,
   LAImd,
   LAImx,
-  k,
+  kb,
+  ClumpingIndex,
   alpha,
+  gamma,
   trunkExtinctionFraction = 0.1
 )
 
-light_layerIrradianceFractionBottomUp(
+light_layerDiffuseIrradianceFraction(
   LAIme,
   LAImd,
   LAImx,
-  k,
+  K,
+  ClumpingIndex,
+  ZF,
   alpha,
+  gamma,
   trunkExtinctionFraction = 0.1
 )
 
 light_cohortSunlitShadeAbsorbedRadiation(
   Ib0,
   Id0,
-  Ibf,
-  Idf,
   LAIme,
   LAImd,
+  LAImx,
   kb,
-  kd,
+  K,
+  ZF,
+  ClumpingIndex,
   alpha,
-  gamma
+  gamma,
+  trunkExtinctionFraction = 0.1
 )
 
-light_layerSunlitFraction(LAIme, LAImd, kb)
+light_layerSunlitFraction(LAIme, LAImd, kb, ClumpingIndex)
 
 light_instantaneousLightExtinctionAbsortion(
   LAIme,
   LAImd,
   LAImx,
-  LeafAngle,
-  kPAR,
+  p,
+  q,
+  ClumpingIndex,
   alphaSWR,
   gammaSWR,
   ddd,
@@ -103,27 +111,19 @@ light_longwaveRadiationSHAW(
 
 \item{LAImx}{A numeric matrix of maximum LAI values per vegetation layer (row) and cohort (column).}
 
-\item{k}{A vector of light extinction coefficients.}
+\item{kb, kDIR}{A vector of direct light extinction coefficients.}
+
+\item{ClumpingIndex}{The extent to which foliage has a nonrandom spatial distribution.}
 
 \item{alpha}{A vecfor of leaf absorbance by species.}
+
+\item{gamma}{Vector of canopy reflectance values.}
 
 \item{trunkExtinctionFraction}{Fraction of extinction due to trunks (for winter deciduous forests).}
 
 \item{Ib0}{Above-canopy direct incident radiation.}
 
 \item{Id0}{Above-canopy diffuse incident radiation.}
-
-\item{Ibf}{Fraction of above-canopy direct radiation reaching each vegetation layer.}
-
-\item{Idf}{Fraction of above-canopy diffuse radiation reaching each vegetation layer.}
-
-\item{kb, kDIR}{A vector of direct light extinction coefficients.}
-
-\item{kd}{A vector of diffuse light extinction coefficients.}
-
-\item{gamma}{Vector of canopy reflectance values.}
-
-\item{kPAR}{A vector of visible light extinction coefficients for each cohort.}
 
 \item{alphaSWR}{A vecfor of hort-wave absorbance coefficients for each cohort.}
 
@@ -139,20 +139,30 @@ light_longwaveRadiationSHAW(
 
 \item{Tair}{Canopy layer air temperature vector (Celsius).}
 
+\item{k}{A vector of light extinction coefficients.}
+
+\item{kd}{A vector of diffuse light extinction coefficients.}
+
+\item{Ibf}{Fraction of above-canopy direct radiation reaching each vegetation layer.}
+
+\item{Idf}{Fraction of above-canopy diffuse radiation reaching each vegetation layer.}
+
 \item{beta}{Solar elevation (in radians).}
+
+\item{kPAR}{A vector of visible light extinction coefficients for each cohort.}
 }
 \value{
-Functions \code{light_layerIrradianceFraction}, \code{light_layerIrradianceFractionBottomUp}  and \code{light_layerSunlitFraction} 
-return a numeric vector of length equal to the number of vegetation layers. 
+Functions \code{light_layerDirectIrradianceFraction}, \code{light_layerDiffuseIrradianceFraction}
+and \code{light_layerSunlitFraction} return a numeric vector of length equal to the number of vegetation layers. 
 
 Function \code{light_cohortSunlitShadeAbsorbedRadiation} returns a list with 
 two elements (matrices): \code{I_sunlit} and \code{I_shade}.
 }
 \description{
-Functions \code{light_layerIrradianceFraction} and \code{light_layerIrradianceFractionBottomUp} calculate 
-the fraction of above-canopy irradiance (and the soil irradiance, respectively) reaching each vegetation layer. 
+Functions \code{light_layerDirectIrradianceFraction} and \code{light_layerDiffuseIrradianceFraction} calculate 
+the fraction of above-canopy direct and diffuse radiation reaching each vegetation layer. 
 Function \code{light_layerSunlitFraction} calculates the proportion of sunlit leaves in each vegetation layer. 
-Function \code{light_cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorved 
+Function \code{light_cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorbed 
 by cohort and vegetation layers, while differentiating between sunlit and shade leaves.
 }
 \details{

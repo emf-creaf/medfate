@@ -139,8 +139,10 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
   NumericVector alphaSWR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["alphaSWR"]);
   NumericVector gammaSWR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["gammaSWR"]);
-  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
-  NumericVector LeafAngle = Rcpp::as<Rcpp::NumericVector>(paramsInterception["LeafAngle"]);
+  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]); //Not used in light extinction
+  NumericVector Beta_p = Rcpp::as<Rcpp::NumericVector>(paramsInterception["Beta_p"]);
+  NumericVector Beta_q = Rcpp::as<Rcpp::NumericVector>(paramsInterception["Beta_q"]);
+  NumericVector ClumpingIndex = Rcpp::as<Rcpp::NumericVector>(paramsInterception["ClumpingIndex"]);
   
   //Anatomy parameters
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
@@ -430,7 +432,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   // STEP 3c. Short-wave radiation extinction and absortion for sub-steps
   ////////////////////////////////////////
   List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
-                                                                        LeafAngle, kPAR, alphaSWR, gammaSWR,
+                                                                        Beta_p, Beta_q, ClumpingIndex, 
+                                                                        alphaSWR, gammaSWR,
                                                                         ddd, 
                                                                         ntimesteps, 0.1);
   List sunshade = lightExtinctionAbsortion["sunshade"];
