@@ -3,7 +3,8 @@
 #include <Rcpp.h>
 #include <numeric>
 #include <math.h>
-#include "lightextinction.h"
+#include "lightextinction_basic.h"
+#include "lightextinction_advanced.h"
 #include "windextinction.h"
 #include "hydraulics.h"
 #include "hydrology.h"

@@ -1674,11 +1674,7 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gs
     .Call(`_medfate_profitMaximization`, supplyFunction, photosynthesisFunction, Gswmin, Gswmax)
 }
 
-.parcohort <- function(SP, H, CR, LAI, SpParams) {
-    .Call(`_medfate_parcohort`, SP, H, CR, LAI, SpParams)
-}
-
-#' Radiation transfer functions
+#' Advanced radiation transfer functions
 #' 
 #' Functions \code{light_layerDirectIrradianceFraction} and \code{light_layerDiffuseIrradianceFraction} calculate 
 #' the fraction of above-canopy direct and diffuse radiation reaching each vegetation layer. 
@@ -1694,12 +1690,12 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gs
 #' @param kd A vector of diffuse light extinction coefficients.
 #' @param Ib0 Above-canopy direct incident radiation.
 #' @param Id0 Above-canopy diffuse incident radiation.
-#' @param Ibf Fraction of above-canopy direct radiation reaching each vegetation layer.
-#' @param Idf Fraction of above-canopy diffuse radiation reaching each vegetation layer.
-#' @param alpha A vecfor of leaf absorbance by species.
+#' @param leafAngle Average leaf inclination angle (in radians)
+#' @param p,q Parameters of the beta distribution for leaf angles
+#' @param ClumpingIndex The extent to which foliage has a nonrandom spatial distribution.
+#' @param alpha A vector of leaf absorbance by species.
+#' @param gamma A vector of leaf reflectance values.
 #' @param beta Solar elevation (in radians).
-#' @param gamma Vector of canopy reflectance values.
-#' @param kPAR A vector of visible light extinction coefficients for each cohort.
 #' @param alphaSWR A vecfor of hort-wave absorbance coefficients for each cohort.
 #' @param gammaSWR A vector of short-wave reflectance coefficients (albedo) for each cohort.
 #' @param ddd A dataframe with direct and diffuse radiation for different subdaily time steps (see function \code{radiation_directDiffuseDay} in package meteoland).
@@ -1708,10 +1704,6 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gs
 #' @param LWRatm Atmospheric downward long-wave radiation (W/m2).
 #' @param Tsoil Soil temperature (Celsius).
 #' @param Tair Canopy layer air temperature vector (Celsius).
-#' @param x An object of class \code{\link{forest}}
-#' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
-#' @param z A numeric vector with height values.
-#' @param gdd Growth degree days.
 #' 
 #' @details
 #' Functions for short-wave radiation are adapted from Anten & Bastiaans (2016), 
@@ -1801,7 +1793,64 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gs
 #' lines(absRadSH, 1:nlayer, col="red", lty=2)
 #' par(oldpar)
 #'   
-#' @name light
+#' @name light_advanced
+light_leafAngleCDF <- function(leafAngle, p, q) {
+    .Call(`_medfate_leafAngleCDF`, leafAngle, p, q)
+}
+
+#' @rdname light_advanced
+light_directionalExtinctionCoefficient <- function(p, q, solarElevation) {
+    .Call(`_medfate_directionalExtinctionCoefficient`, p, q, solarElevation)
+}
+
+#' @rdname light_advanced
+light_layerDirectIrradianceFraction <- function(LAIme, LAImd, LAImx, kb, ClumpingIndex, alpha, gamma, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_layerDirectIrradianceFraction`, LAIme, LAImd, LAImx, kb, ClumpingIndex, alpha, gamma, trunkExtinctionFraction)
+}
+
+#' @rdname light_advanced
+light_layerDiffuseIrradianceFraction <- function(LAIme, LAImd, LAImx, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_layerDiffuseIrradianceFraction`, LAIme, LAImd, LAImx, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction)
+}
+
+#' @rdname light_advanced
+light_cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ZF, ClumpingIndex, alpha, gamma, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_cohortSunlitShadeAbsorbedRadiation`, Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ZF, ClumpingIndex, alpha, gamma, trunkExtinctionFraction)
+}
+
+#' @rdname light_advanced
+light_layerSunlitFraction <- function(LAIme, LAImd, kb, ClumpingIndex) {
+    .Call(`_medfate_layerSunlitFraction`, LAIme, LAImd, kb, ClumpingIndex)
+}
+
+#' @rdname light_advanced
+light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, p, q, ClumpingIndex, alphaSWR, gammaSWR, ddd, ntimesteps = 24L, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_instantaneousLightExtinctionAbsortion`, LAIme, LAImd, LAImx, p, q, ClumpingIndex, alphaSWR, gammaSWR, ddd, ntimesteps, trunkExtinctionFraction)
+}
+
+#' @rdname light_advanced
+light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_longwaveRadiationSHAW`, LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction)
+}
+
+.parcohort <- function(SP, H, CR, LAI, SpParams) {
+    .Call(`_medfate_parcohort`, SP, H, CR, LAI, SpParams)
+}
+
+#' Basic radiation extinction
+#' 
+#' @param x An object of class \code{\link{forest}}
+#' @param SpParams A data frame with species parameters (see \code{\link{SpParamsMED}}).
+#' @param z A numeric vector with height values.
+#' @param gdd Growth degree days.
+#' 
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso  \code{\link{spwb}}
+#' 
+#' @examples
+#' @name light_basic
 light_PARcohort <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_PARcohort`, x, SpParams, gdd)
 }
@@ -1810,7 +1859,7 @@ light_PARcohort <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_parheight`, z, x, SpParams, gdd)
 }
 
-#' @rdname light
+#' @rdname light_basic
 light_PARground <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_PARground`, x, SpParams, gdd)
 }
@@ -1819,21 +1868,9 @@ light_PARground <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_swrheight`, z, x, SpParams, gdd)
 }
 
-#' @rdname light
+#' @rdname light_basic
 light_SWRground <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_SWRground`, x, SpParams, gdd)
-}
-
-#' @rdname light
-#' @param leafAngle Average leaf inclination angle (in radians)
-#' @param p,q Parameters of the beta distribution for leaf angles
-light_leafAngleCDF <- function(leafAngle, p, q) {
-    .Call(`_medfate_leafAngleCDF`, leafAngle, p, q)
-}
-
-#' @rdname light
-light_directionalExtinctionCoefficient <- function(p, q, solarElevation) {
-    .Call(`_medfate_directionalExtinctionCoefficient`, p, q, solarElevation)
 }
 
 .parExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_, includeHerbs = FALSE) {
@@ -1844,40 +1881,9 @@ light_directionalExtinctionCoefficient <- function(p, q, solarElevation) {
     .Call(`_medfate_swrExtinctionProfile`, z, x, SpParams, gdd, includeHerbs)
 }
 
-#' @rdname light
+#' @rdname light_basic
 light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_cohortAbsorbedSWRFraction`, z, x, SpParams, gdd)
-}
-
-#' @rdname light
-light_layerDirectIrradianceFraction <- function(LAIme, LAImd, LAImx, kb, ClumpingIndex, alpha, gamma, trunkExtinctionFraction = 0.1) {
-    .Call(`_medfate_layerDirectIrradianceFraction`, LAIme, LAImd, LAImx, kb, ClumpingIndex, alpha, gamma, trunkExtinctionFraction)
-}
-
-#' @rdname light
-light_layerDiffuseIrradianceFraction <- function(LAIme, LAImd, LAImx, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction = 0.1) {
-    .Call(`_medfate_layerDiffuseIrradianceFraction`, LAIme, LAImd, LAImx, K, ClumpingIndex, ZF, alpha, gamma, trunkExtinctionFraction)
-}
-
-#' @rdname light
-light_cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ZF, ClumpingIndex, alpha, gamma, trunkExtinctionFraction = 0.1) {
-    .Call(`_medfate_cohortSunlitShadeAbsorbedRadiation`, Ib0, Id0, LAIme, LAImd, LAImx, kb, K, ZF, ClumpingIndex, alpha, gamma, trunkExtinctionFraction)
-}
-
-#' @rdname light
-#' @param ClumpingIndex The extent to which foliage has a nonrandom spatial distribution.
-light_layerSunlitFraction <- function(LAIme, LAImd, kb, ClumpingIndex) {
-    .Call(`_medfate_layerSunlitFraction`, LAIme, LAImd, kb, ClumpingIndex)
-}
-
-#' @rdname light
-light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, p, q, ClumpingIndex, alphaSWR, gammaSWR, ddd, ntimesteps = 24L, trunkExtinctionFraction = 0.1) {
-    .Call(`_medfate_instantaneousLightExtinctionAbsortion`, LAIme, LAImd, LAImx, p, q, ClumpingIndex, alphaSWR, gammaSWR, ddd, ntimesteps, trunkExtinctionFraction)
-}
-
-#' @rdname light
-light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction = 0.1) {
-    .Call(`_medfate_longwaveRadiationSHAW`, LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction)
 }
 
 .paramsBelow <- function(above, Z50, Z95, soil, paramsAnatomydf, paramsTranspirationdf, control) {

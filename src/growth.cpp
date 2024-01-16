@@ -2,7 +2,8 @@
 #define STRICT_R_HEADERS
 #include <Rcpp.h>
 #include <numeric>
-#include "lightextinction.h"
+#include "lightextinction_basic.h"
+#include "lightextinction_advanced.h"
 #include "phenology.h"
 #include "biophysicsutils.h"
 #include "forestutils.h"

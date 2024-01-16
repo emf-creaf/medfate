@@ -2326,88 +2326,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// parcohort
-NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams);
-RcppExport SEXP _medfate_parcohort(SEXP SPSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP LAISEXP, SEXP SpParamsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type SP(SPSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type H(HSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type CR(CRSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type LAI(LAISEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(parcohort(SP, H, CR, LAI, SpParams));
-    return rcpp_result_gen;
-END_RCPP
-}
-// PARcohort
-NumericVector PARcohort(List x, DataFrame SpParams, double gdd);
-RcppExport SEXP _medfate_PARcohort(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
-    rcpp_result_gen = Rcpp::wrap(PARcohort(x, SpParams, gdd));
-    return rcpp_result_gen;
-END_RCPP
-}
-// parheight
-NumericVector parheight(NumericVector z, List x, DataFrame SpParams, double gdd);
-RcppExport SEXP _medfate_parheight(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
-    rcpp_result_gen = Rcpp::wrap(parheight(z, x, SpParams, gdd));
-    return rcpp_result_gen;
-END_RCPP
-}
-// PARground
-double PARground(List x, DataFrame SpParams, double gdd);
-RcppExport SEXP _medfate_PARground(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
-    rcpp_result_gen = Rcpp::wrap(PARground(x, SpParams, gdd));
-    return rcpp_result_gen;
-END_RCPP
-}
-// swrheight
-NumericVector swrheight(NumericVector z, List x, DataFrame SpParams, double gdd);
-RcppExport SEXP _medfate_swrheight(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
-    rcpp_result_gen = Rcpp::wrap(swrheight(z, x, SpParams, gdd));
-    return rcpp_result_gen;
-END_RCPP
-}
-// SWRground
-double SWRground(List x, DataFrame SpParams, double gdd);
-RcppExport SEXP _medfate_SWRground(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
-    rcpp_result_gen = Rcpp::wrap(SWRground(x, SpParams, gdd));
-    return rcpp_result_gen;
-END_RCPP
-}
 // leafAngleCDF
 double leafAngleCDF(double leafAngle, double p, double q);
 RcppExport SEXP _medfate_leafAngleCDF(SEXP leafAngleSEXP, SEXP pSEXP, SEXP qSEXP) {
@@ -2431,50 +2349,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type q(qSEXP);
     Rcpp::traits::input_parameter< double >::type solarElevation(solarElevationSEXP);
     rcpp_result_gen = Rcpp::wrap(directionalExtinctionCoefficient(p, q, solarElevation));
-    return rcpp_result_gen;
-END_RCPP
-}
-// parExtinctionProfile
-NumericVector parExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd, bool includeHerbs);
-RcppExport SEXP _medfate_parExtinctionProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP includeHerbsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
-    Rcpp::traits::input_parameter< bool >::type includeHerbs(includeHerbsSEXP);
-    rcpp_result_gen = Rcpp::wrap(parExtinctionProfile(z, x, SpParams, gdd, includeHerbs));
-    return rcpp_result_gen;
-END_RCPP
-}
-// swrExtinctionProfile
-NumericVector swrExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd, bool includeHerbs);
-RcppExport SEXP _medfate_swrExtinctionProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP includeHerbsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
-    Rcpp::traits::input_parameter< bool >::type includeHerbs(includeHerbsSEXP);
-    rcpp_result_gen = Rcpp::wrap(swrExtinctionProfile(z, x, SpParams, gdd, includeHerbs));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cohortAbsorbedSWRFraction
-NumericVector cohortAbsorbedSWRFraction(NumericVector z, List x, DataFrame SpParams, double gdd);
-RcppExport SEXP _medfate_cohortAbsorbedSWRFraction(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortAbsorbedSWRFraction(z, x, SpParams, gdd));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2586,6 +2460,132 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type Tair(TairSEXP);
     Rcpp::traits::input_parameter< double >::type trunkExtinctionFraction(trunkExtinctionFractionSEXP);
     rcpp_result_gen = Rcpp::wrap(longwaveRadiationSHAW(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction));
+    return rcpp_result_gen;
+END_RCPP
+}
+// parcohort
+NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams);
+RcppExport SEXP _medfate_parcohort(SEXP SPSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP LAISEXP, SEXP SpParamsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type SP(SPSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type H(HSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type CR(CRSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type LAI(LAISEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    rcpp_result_gen = Rcpp::wrap(parcohort(SP, H, CR, LAI, SpParams));
+    return rcpp_result_gen;
+END_RCPP
+}
+// PARcohort
+NumericVector PARcohort(List x, DataFrame SpParams, double gdd);
+RcppExport SEXP _medfate_PARcohort(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    rcpp_result_gen = Rcpp::wrap(PARcohort(x, SpParams, gdd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// parheight
+NumericVector parheight(NumericVector z, List x, DataFrame SpParams, double gdd);
+RcppExport SEXP _medfate_parheight(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    rcpp_result_gen = Rcpp::wrap(parheight(z, x, SpParams, gdd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// PARground
+double PARground(List x, DataFrame SpParams, double gdd);
+RcppExport SEXP _medfate_PARground(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    rcpp_result_gen = Rcpp::wrap(PARground(x, SpParams, gdd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// swrheight
+NumericVector swrheight(NumericVector z, List x, DataFrame SpParams, double gdd);
+RcppExport SEXP _medfate_swrheight(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    rcpp_result_gen = Rcpp::wrap(swrheight(z, x, SpParams, gdd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SWRground
+double SWRground(List x, DataFrame SpParams, double gdd);
+RcppExport SEXP _medfate_SWRground(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    rcpp_result_gen = Rcpp::wrap(SWRground(x, SpParams, gdd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// parExtinctionProfile
+NumericVector parExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd, bool includeHerbs);
+RcppExport SEXP _medfate_parExtinctionProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP includeHerbsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    Rcpp::traits::input_parameter< bool >::type includeHerbs(includeHerbsSEXP);
+    rcpp_result_gen = Rcpp::wrap(parExtinctionProfile(z, x, SpParams, gdd, includeHerbs));
+    return rcpp_result_gen;
+END_RCPP
+}
+// swrExtinctionProfile
+NumericVector swrExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd, bool includeHerbs);
+RcppExport SEXP _medfate_swrExtinctionProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP includeHerbsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    Rcpp::traits::input_parameter< bool >::type includeHerbs(includeHerbsSEXP);
+    rcpp_result_gen = Rcpp::wrap(swrExtinctionProfile(z, x, SpParams, gdd, includeHerbs));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cohortAbsorbedSWRFraction
+NumericVector cohortAbsorbedSWRFraction(NumericVector z, List x, DataFrame SpParams, double gdd);
+RcppExport SEXP _medfate_cohortAbsorbedSWRFraction(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    rcpp_result_gen = Rcpp::wrap(cohortAbsorbedSWRFraction(z, x, SpParams, gdd));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5092,23 +5092,23 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_semi_implicit_integration", (DL_FUNC) &_medfate_semi_implicit_integration, 5},
     {"_medfate_initSperryNetworks", (DL_FUNC) &_medfate_initSperryNetworks, 1},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 4},
-    {"_medfate_parcohort", (DL_FUNC) &_medfate_parcohort, 5},
-    {"_medfate_PARcohort", (DL_FUNC) &_medfate_PARcohort, 3},
-    {"_medfate_parheight", (DL_FUNC) &_medfate_parheight, 4},
-    {"_medfate_PARground", (DL_FUNC) &_medfate_PARground, 3},
-    {"_medfate_swrheight", (DL_FUNC) &_medfate_swrheight, 4},
-    {"_medfate_SWRground", (DL_FUNC) &_medfate_SWRground, 3},
     {"_medfate_leafAngleCDF", (DL_FUNC) &_medfate_leafAngleCDF, 3},
     {"_medfate_directionalExtinctionCoefficient", (DL_FUNC) &_medfate_directionalExtinctionCoefficient, 3},
-    {"_medfate_parExtinctionProfile", (DL_FUNC) &_medfate_parExtinctionProfile, 5},
-    {"_medfate_swrExtinctionProfile", (DL_FUNC) &_medfate_swrExtinctionProfile, 5},
-    {"_medfate_cohortAbsorbedSWRFraction", (DL_FUNC) &_medfate_cohortAbsorbedSWRFraction, 4},
     {"_medfate_layerDirectIrradianceFraction", (DL_FUNC) &_medfate_layerDirectIrradianceFraction, 8},
     {"_medfate_layerDiffuseIrradianceFraction", (DL_FUNC) &_medfate_layerDiffuseIrradianceFraction, 9},
     {"_medfate_cohortSunlitShadeAbsorbedRadiation", (DL_FUNC) &_medfate_cohortSunlitShadeAbsorbedRadiation, 12},
     {"_medfate_layerSunlitFraction", (DL_FUNC) &_medfate_layerSunlitFraction, 4},
     {"_medfate_instantaneousLightExtinctionAbsortion", (DL_FUNC) &_medfate_instantaneousLightExtinctionAbsortion, 11},
     {"_medfate_longwaveRadiationSHAW", (DL_FUNC) &_medfate_longwaveRadiationSHAW, 7},
+    {"_medfate_parcohort", (DL_FUNC) &_medfate_parcohort, 5},
+    {"_medfate_PARcohort", (DL_FUNC) &_medfate_PARcohort, 3},
+    {"_medfate_parheight", (DL_FUNC) &_medfate_parheight, 4},
+    {"_medfate_PARground", (DL_FUNC) &_medfate_PARground, 3},
+    {"_medfate_swrheight", (DL_FUNC) &_medfate_swrheight, 4},
+    {"_medfate_SWRground", (DL_FUNC) &_medfate_SWRground, 3},
+    {"_medfate_parExtinctionProfile", (DL_FUNC) &_medfate_parExtinctionProfile, 5},
+    {"_medfate_swrExtinctionProfile", (DL_FUNC) &_medfate_swrExtinctionProfile, 5},
+    {"_medfate_cohortAbsorbedSWRFraction", (DL_FUNC) &_medfate_cohortAbsorbedSWRFraction, 4},
     {"_medfate_paramsBelow", (DL_FUNC) &_medfate_paramsBelow, 7},
     {"_medfate_spwbInput", (DL_FUNC) &_medfate_spwbInput, 7},
     {"_medfate_growthInput", (DL_FUNC) &_medfate_growthInput, 7},
