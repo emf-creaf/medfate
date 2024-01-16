@@ -418,13 +418,14 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
   NumericVector gammaLWR(numCohorts, 0.03); //3% albedo of LWR
   NumericVector alphaPAR(numCohorts), alphaLWR(numCohorts);
   NumericVector kDIR(numCohorts, NA_REAL);
-  NumericMatrix K9DIR(9, numCohorts);
-  NumericVector ZF(9, 1.0/9.0); //Uniform overcast sky
-  for(int k=0;k<9;k++){
-    double zk = ((double)(k*10 + 5))*(M_PI/180.0); // 5, 15, 25,...
+  NumericVector ZF = NumericVector::create(0.178, 0.514, 0.308); //Standard overcast sky
+  NumericVector Zangles = NumericVector::create(15.0, 45.0, 75.0); 
+  int nZ = ZF.size(); 
+  NumericMatrix K9DIR(nZ, numCohorts); //Goudriaan 1988
+  for(int k=0;k<nZ;k++){
     // Rcout<< k;
     for(int c=0;c<numCohorts;c++) {
-      K9DIR(k,c) = directionalExtinctionCoefficient(p[c], q[c], zk);
+      K9DIR(k,c) = directionalExtinctionCoefficient(p[c], q[c], Zangles[k]*(M_PI/180.0));
       // Rcout<< " "<< K9DIR(k,c);
     }
     // Rcout<<"\n";
