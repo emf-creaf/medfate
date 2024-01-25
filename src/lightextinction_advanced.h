@@ -5,6 +5,8 @@
 #endif
 using namespace Rcpp;
 
+NumericVector leafAngleBetaParameters(double leafAngle, double leafAngleSD);
+
 NumericVector layerDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, 
                                             NumericVector kb, NumericVector ClumpingIndex, 
                                             NumericVector alpha, NumericVector gamma, double trunkExtinctionFraction = 0.1);

@@ -1799,6 +1799,11 @@ light_leafAngleCDF <- function(leafAngle, p, q) {
 }
 
 #' @rdname light_advanced
+light_leafAngleBetaParameters <- function(leafAngle, leafAngleSD) {
+    .Call(`_medfate_leafAngleBetaParameters`, leafAngle, leafAngleSD)
+}
+
+#' @rdname light_advanced
 light_directionalExtinctionCoefficient <- function(p, q, solarElevation) {
     .Call(`_medfate_directionalExtinctionCoefficient`, p, q, solarElevation)
 }

@@ -19,11 +19,14 @@
   # 1. Remove empty cohorts if required
   emptyTrees <- rep(FALSE, nrow(forest$treeData))
   emptyShrubs <- rep(FALSE, nrow(forest$shrubData))
+  # print(forest)
   if(control$removeEmptyCohorts) {
     emptyTrees <- (forest$treeData$N < control$minimumTreeCohortDensity)
     if(control$shrubDynamics) emptyShrubs <- (forest$shrubData$Cover < control$minimumShrubCohortCover)
   }
   emptyCohorts <- c(emptyTrees, emptyShrubs)
+  # print(emptyTrees)
+  # print(emptyShrubs)
   if(sum(emptyCohorts)>0) {
     forest$treeData <- forest$treeData[!emptyTrees,, drop=FALSE] 
     forest$shrubData <- forest$shrubData[!emptyShrubs,, drop=FALSE] 

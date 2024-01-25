@@ -3,6 +3,7 @@
 \name{light_advanced}
 \alias{light_advanced}
 \alias{light_leafAngleCDF}
+\alias{light_leafAngleBetaParameters}
 \alias{light_directionalExtinctionCoefficient}
 \alias{light_layerDirectIrradianceFraction}
 \alias{light_layerDiffuseIrradianceFraction}
@@ -13,6 +14,8 @@
 \title{Advanced radiation transfer functions}
 \usage{
 light_leafAngleCDF(leafAngle, p, q)
+
+light_leafAngleBetaParameters(leafAngle, leafAngleSD)
 
 light_directionalExtinctionCoefficient(p, q, solarElevation)
 

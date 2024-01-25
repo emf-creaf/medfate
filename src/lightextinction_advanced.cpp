@@ -134,6 +134,18 @@ double leafAngleCDF(double leafAngle, double p, double q) {
   return(incbeta(p,q,theta));
 }
 
+//' @rdname light_advanced
+// [[Rcpp::export("light_leafAngleBetaParameters")]]
+NumericVector leafAngleBetaParameters(double leafAngle, double leafAngleSD) {
+  double pow_sum = pow(leafAngleSD,2.0) + pow(leafAngle,2.0);
+  double p_num = 1.0 - pow_sum/(leafAngle*M_PI/2.0);
+  double p_den = pow_sum/pow(leafAngle,2.0) - 1.0;
+  double p = p_num/p_den;
+  double q = (M_PI/(2.0*leafAngle) - 1.0)*p;
+  return(NumericVector::create(_["p"] = p,
+                               _["q"] = q));
+}
+
 double G_function1(double leafAngle, double solarElevation) {
   double G = NA_REAL;
   if(solarElevation > leafAngle) {

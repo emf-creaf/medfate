@@ -4,6 +4,7 @@
 #include "carbon.h"
 #include "root.h"
 #include "soil.h"
+#include "lightextinction_advanced.h"
 #include "photosynthesis.h"
 #include "woodformation.h"
 #include "forestutils.h"
@@ -75,13 +76,9 @@ DataFrame paramsInterception(DataFrame above, DataFrame SpParams, List control) 
     NumericVector ClumpingIndex = speciesNumericParameterWithImputation(SP, SpParams, "ClumpingIndex", fillMissingSpParams);
     NumericVector Beta_p(numCohorts, NA_REAL), Beta_q(numCohorts, NA_REAL);
     for(int i=0;i<numCohorts;i++){
-      double mla_rad = LeafAngle[i]*(M_PI/180.0);
-      double sd_rad = LeafAngleSD[i]*(M_PI/180.0);
-      double pow_sum = pow(sd_rad,2.0) + pow(mla_rad,2.0);
-      double p_num = 1.0 - pow_sum/(mla_rad*M_PI/2.0);
-      double p_den = pow_sum/pow(mla_rad,2.0) - 1.0;
-      Beta_p[i] = p_num/p_den;
-      Beta_q[i] = (M_PI/(2.0*mla_rad) - 1.0)*Beta_p[i];
+      NumericVector beta = leafAngleBetaParameters(LeafAngle[i]*(M_PI/180.0), LeafAngleSD[i]*(M_PI/180.0));
+      Beta_p[i] = beta["p"];
+      Beta_q[i] = beta["q"];
     }
     paramsInterceptiondf = DataFrame::create(_["LeafAngle"] = LeafAngle, 
                                              _["LeafAngleSD"] = LeafAngleSD,

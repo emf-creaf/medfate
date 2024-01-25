@@ -224,11 +224,13 @@ List transpirationBasic(List x, NumericVector meteovec,
       KunsatM(j,_) = conductivity(soil_pool);
       //Calculate soil water potential
       psiSoilM(j,_) = psi(soil_pool, soilFunctions);
+      // Rcout<< Ws_pool[3]<< " "<< psiSoilM(j,3)<<"\n";
       //Calculate available water
       WaterM(j,_) = water(soil_pool, soilFunctions);
     }
   }
-  
+  // for(int i= 0;i<psiSoil.size();i++) Rcout<< "S "<<i<<" "<<psiSoil[i]<<"\n";
+    
   for(int c=0;c<numCohorts;c++) {
     NumericMatrix ExtractionPoolsCoh(numCohorts, nlayers); //this is used to store extraction of a SINGLE plant cohort from all pools
     
@@ -266,7 +268,6 @@ List transpirationBasic(List x, NumericVector meteovec,
         Extraction(c,l) = std::max(TmaxCoh[c]*Klcmean, E_gmin)*(Kunlc[l]/sumKunlc);
       }
       rootCrownPsi = averagePsi(psiSoil, V(c,_), Exp_Extract[c], Psi_Extract[c]);
-      // Rcout<< c << " : " << rootCrownPsi<<"\n";
     } else {
       NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[c]);
       NumericMatrix RHOPcohDyn(numCohorts, nlayers);
@@ -300,10 +301,11 @@ List transpirationBasic(List x, NumericVector meteovec,
         }
         Extraction(c,l) = sum(ExtractionPoolsCoh(_,l)); // Sum extraction from all pools (layer l)
       }
+      
       rootCrownPsi = averagePsiPool(psiSoilM, RHOPcohV, Exp_Extract[c], Psi_Extract[c]);
-      // Rcout<< c << " : " << rootCrownPsi<<"\n";
+      // Rcout<< c << " : "<< psiSoilM(c,0) << " " << psiSoilM(c,1) << " " << psiSoilM(c,2) << " " << psiSoilM(c,3) << " " << rootCrownPsi<<"\n";
+      // Rcout<< c << " : "<< RHOPcohV(c,0) << " " << RHOPcohV(c,1) << " " << RHOPcohV(c,2) << " " << RHOPcohV(c,3) << " " << rootCrownPsi<<"\n";
     }
-    
 
 
     double oldVol = plantVol(PlantPsi[c], parsVol); 
@@ -431,7 +433,7 @@ List transpirationBasic(List x, NumericVector meteovec,
   //Modifies input soil
   if(modifyInput) {
     NumericVector Ws = soil["W"];
-    for(int l=0;l<nlayers;l++) Ws[l] = Ws[l] - (sum(Extraction(_,l))/Water_FC[l]); 
+    for(int l=0;l<nlayers;l++) Ws[l] = std::max(0.0, Ws[l] - (sum(Extraction(_,l))/Water_FC[l])); 
     for(int c=0;c<numCohorts;c++) {
       for(int l=0;l<nlayers;l++) {
         if(!plantWaterPools){ //copy soil to the pools of all cohorts
@@ -439,7 +441,7 @@ List transpirationBasic(List x, NumericVector meteovec,
         } else {//Applies pool extraction by each plant cohort
           NumericMatrix ExtractionPoolsCoh = ExtractionPools[c];
           for(int j=0;j<numCohorts;j++) {
-            Wpool(c,l) = Wpool(c,l) - (ExtractionPoolsCoh(j,l)/(Water_FC[l]*poolProportions[c])); //Apply extraction from pools
+            Wpool(c,l) = std::max(0.0, Wpool(c,l) - (ExtractionPoolsCoh(j,l)/(Water_FC[l]*poolProportions[c]))); //Apply extraction from pools
           }
         }
       }

@@ -40,7 +40,7 @@
 #'       \item{\code{rockyLayerDrainage [= TRUE]}: Boolean flag to indicate the simulation of drainage from rocky layers (> 95\% of rocks).}
 #'       \item{\code{unlimitedSoilWater [= FALSE]}: Boolean flag to indicate the simulation of plant transpiration assuming that soil water is always at field capacity.}
 #'       \item{\code{unfoldingDD [= 300]}: Degree-days for complete leaf unfolding after budburst has occurred.}
-#'       \item{\code{rhizosphereOverlap [= "partial"]}: A string indicating the degree of rhizosphere spatial overlap between plant cohorts:
+#'       \item{\code{rhizosphereOverlap [= "total"]}: A string indicating the degree of rhizosphere spatial overlap between plant cohorts:
 #'           \itemize{
 #'             \item{"none" - no overlap (independent water pools).}
 #'             \item{"partial" - partial overlap determined by coarse root volume.}
@@ -193,7 +193,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     bareSoilEvaporation = TRUE,
     rockyLayerDrainage = TRUE,
     unlimitedSoilWater = FALSE,
-    rhizosphereOverlap = "partial",
+    rhizosphereOverlap = "total",
     unfoldingDD = 300,
     verticalLayerSize = 100,
     windMeasurementHeight = 200,

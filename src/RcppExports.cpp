@@ -2339,6 +2339,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// leafAngleBetaParameters
+NumericVector leafAngleBetaParameters(double leafAngle, double leafAngleSD);
+RcppExport SEXP _medfate_leafAngleBetaParameters(SEXP leafAngleSEXP, SEXP leafAngleSDSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type leafAngle(leafAngleSEXP);
+    Rcpp::traits::input_parameter< double >::type leafAngleSD(leafAngleSDSEXP);
+    rcpp_result_gen = Rcpp::wrap(leafAngleBetaParameters(leafAngle, leafAngleSD));
+    return rcpp_result_gen;
+END_RCPP
+}
 // directionalExtinctionCoefficient
 double directionalExtinctionCoefficient(double p, double q, double solarElevation);
 RcppExport SEXP _medfate_directionalExtinctionCoefficient(SEXP pSEXP, SEXP qSEXP, SEXP solarElevationSEXP) {
@@ -5093,6 +5105,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_initSperryNetworks", (DL_FUNC) &_medfate_initSperryNetworks, 1},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 4},
     {"_medfate_leafAngleCDF", (DL_FUNC) &_medfate_leafAngleCDF, 3},
+    {"_medfate_leafAngleBetaParameters", (DL_FUNC) &_medfate_leafAngleBetaParameters, 2},
     {"_medfate_directionalExtinctionCoefficient", (DL_FUNC) &_medfate_directionalExtinctionCoefficient, 3},
     {"_medfate_layerDirectIrradianceFraction", (DL_FUNC) &_medfate_layerDirectIrradianceFraction, 8},
     {"_medfate_layerDiffuseIrradianceFraction", (DL_FUNC) &_medfate_layerDiffuseIrradianceFraction, 9},
