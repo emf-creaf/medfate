@@ -883,10 +883,10 @@ void checkspwbInput(List x,  String transpirationMode, String soilFunctions) {
   }
 }
 
-DataFrame defineWaterBalanceDailyOutput(CharacterVector dateStrings, NumericVector PET, String transpirationMode) {
+DataFrame defineWaterBalanceDailyOutput(CharacterVector dateStrings, String transpirationMode) {
   int numDays = dateStrings.length();
   
-  NumericVector Precipitation(numDays), Evapotranspiration(numDays);
+  NumericVector PET(numDays), Precipitation(numDays), Evapotranspiration(numDays);
   NumericVector Runoff(numDays),Rain(numDays),Snow(numDays);
   NumericVector Snowmelt(numDays),NetRain(numDays);
   NumericVector Interception(numDays),Infiltration(numDays),DeepDrainage(numDays);
@@ -1135,6 +1135,7 @@ DataFrame defineFireHazardOutput(CharacterVector dateStrings){
 }
 void fillWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday, String transpirationMode) {
   List db = sDay["WaterBalance"];
+  NumericVector PET = DWB["PET"];
   NumericVector Precipitation = DWB["Precipitation"];
   NumericVector DeepDrainage = DWB["DeepDrainage"];
   NumericVector Infiltration = DWB["Infiltration"];
@@ -1155,6 +1156,7 @@ void fillWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday, String tran
   Rain[iday] = db["Rain"];
   Snow[iday] = db["Snow"];
   Precipitation[iday] = Rain[iday]+Snow[iday];
+  PET[iday] = db["PET"];
   Snowmelt[iday] = db["Snowmelt"];
   NetRain[iday] = db["NetRain"];
   PlantExtraction[iday] = db["PlantExtraction"];
@@ -1828,7 +1830,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   
   
   //Water balance output variables
-  DataFrame DWB = defineWaterBalanceDailyOutput(dateStrings, PET, transpirationMode);
+  DataFrame DWB = defineWaterBalanceDailyOutput(dateStrings, transpirationMode);
   DataFrame SWB = defineSoilWaterBalanceDailyOutput(dateStrings, soil, transpirationMode);
   
   //EnergyBalance output variables

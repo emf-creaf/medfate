@@ -9,7 +9,7 @@ void checkspwbInput(List x, String transpirationMode);
 
 CharacterVector getWeatherDates(DataFrame meteo);
 
-DataFrame defineWaterBalanceDailyOutput(CharacterVector dateStrings, NumericVector PET, String transpirationMode);
+DataFrame defineWaterBalanceDailyOutput(CharacterVector dateStrings, String transpirationMode);
 DataFrame defineSoilWaterBalanceDailyOutput(CharacterVector dateStrings, List soil, String transpirationMode);
 DataFrame defineEnergyBalanceDailyOutput(CharacterVector dateStrings);
 DataFrame defineTemperatureDailyOutput(CharacterVector dateStrings);

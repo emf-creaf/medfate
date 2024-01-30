@@ -2045,7 +2045,7 @@ List growth(List x, DataFrame meteo, double latitude,
   NumericMatrix StandCarbonBalance(numDays, 4);
   
   //Water balance output variables
-  DataFrame DWB = defineWaterBalanceDailyOutput(dateStrings, PET, transpirationMode);
+  DataFrame DWB = defineWaterBalanceDailyOutput(dateStrings, transpirationMode);
   DataFrame SWB = defineSoilWaterBalanceDailyOutput(dateStrings, soil, transpirationMode);
   
   

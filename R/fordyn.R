@@ -302,6 +302,9 @@ fordyn<-function(forest, soil, SpParams,
                            planted_forest, recr_forest, resp_forest)
 
     forest <- nyf$forest
+    if(verboseDyn) {
+      cat(paste0(" nT = ", nrow(forest$treeData), " nS = ", nrow(forest$shrubData)))
+    }
     xi <- nyf$xi
 
     # 6.1 Store current forest state (after recruitment/resprouting)
