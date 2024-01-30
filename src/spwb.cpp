@@ -1165,10 +1165,10 @@ List defineSPWBDailyOutput(double latitude, double elevation, double slope, doub
   List shadeDO = defineSunlitShadeLeavesDailyOutput(dateStrings, above);
   List plantDWOL = definePlantWaterDailyOutput(dateStrings, above, soil, control);
   DataFrame Stand = defineStandDailyOutput(dateStrings);
-  //Detailed subday results
+  //Detailed subdaily results
   int numDays = dateStrings.size();
   List subdailyRes(numDays);
-  subdailyRes.attr("names") = dateStrings ;
+  subdailyRes.attr("names") = dateStrings;
   
   List l;
   if(transpirationMode=="Granier") {
@@ -1594,8 +1594,9 @@ void fillSWPBDailyOutput(List l, List sDay, int iday) {
     DataFrame fireHazard = Rcpp::as<Rcpp::DataFrame>(l["FireHazard"]);
     fillFireHazardOutput(fireHazard, sDay, iday);
   }
+  
   if(control["subdailyResults"]) {
-    DataFrame subdailyRes = Rcpp::as<Rcpp::DataFrame>(l["subdaily"]);
+    List subdailyRes = Rcpp::as<Rcpp::List>(l["subdaily"]);
     subdailyRes[iday] = sDay;
   }
 }

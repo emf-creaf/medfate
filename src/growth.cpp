@@ -1980,10 +1980,12 @@ void fillGrowthDailyOutput(List l, List sDay, int iday) {
     DataFrame fireHazard = Rcpp::as<Rcpp::DataFrame>(l["FireHazard"]);
     fillFireHazardOutput(fireHazard, sDay, iday);
   }
+  
   if(control["subdailyResults"]) {
-    DataFrame subdailyRes = Rcpp::as<Rcpp::DataFrame>(l["subdaily"]);
+    List subdailyRes = Rcpp::as<Rcpp::List>(l["subdaily"]);
     subdailyRes[iday] = sDay;
   }
+  
   List sb = sDay["Soil"];
   List db = sDay["WaterBalance"];
   List Plants = sDay["Plants"];
