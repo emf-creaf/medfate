@@ -988,17 +988,17 @@ namespace medfate {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline void _fillSWPBDailyOutput(List l, List sDay, int iday) {
-        typedef SEXP(*Ptr__fillSWPBDailyOutput)(SEXP,SEXP,SEXP);
-        static Ptr__fillSWPBDailyOutput p__fillSWPBDailyOutput = NULL;
-        if (p__fillSWPBDailyOutput == NULL) {
-            validateSignature("void(*_fillSWPBDailyOutput)(List,List,int)");
-            p__fillSWPBDailyOutput = (Ptr__fillSWPBDailyOutput)R_GetCCallable("medfate", "_medfate__fillSWPBDailyOutput");
+    inline void _fillSPWBDailyOutput(List l, List sDay, int iday) {
+        typedef SEXP(*Ptr__fillSPWBDailyOutput)(SEXP,SEXP,SEXP);
+        static Ptr__fillSPWBDailyOutput p__fillSPWBDailyOutput = NULL;
+        if (p__fillSPWBDailyOutput == NULL) {
+            validateSignature("void(*_fillSPWBDailyOutput)(List,List,int)");
+            p__fillSPWBDailyOutput = (Ptr__fillSPWBDailyOutput)R_GetCCallable("medfate", "_medfate__fillSPWBDailyOutput");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p__fillSWPBDailyOutput(Shield<SEXP>(Rcpp::wrap(l)), Shield<SEXP>(Rcpp::wrap(sDay)), Shield<SEXP>(Rcpp::wrap(iday)));
+            rcpp_result_gen = p__fillSPWBDailyOutput(Shield<SEXP>(Rcpp::wrap(l)), Shield<SEXP>(Rcpp::wrap(sDay)), Shield<SEXP>(Rcpp::wrap(iday)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

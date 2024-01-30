@@ -1546,8 +1546,8 @@ void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday) {
   CFP[iday] = fhd["CFP"];
 }
 
-// [[Rcpp::export(".fillSWPBDailyOutput")]]
-void fillSWPBDailyOutput(List l, List sDay, int iday) {
+// [[Rcpp::export(".fillSPWBDailyOutput")]]
+void fillSPWBDailyOutput(List l, List sDay, int iday) {
   
   List x = l["spwbInput"];
   List control = x["control"];
@@ -2177,7 +2177,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       }
 
       //Fill output list      
-      fillSWPBDailyOutput(outputList, s,i);
+      fillSPWBDailyOutput(outputList, s,i);
   }
   if(verbose) Rcout << "\n\n";
   
