@@ -9,6 +9,7 @@ void checkspwbInput(List x, String transpirationMode);
 
 CharacterVector getWeatherDates(DataFrame meteo);
 
+DataFrame defineStandDailyOutput(CharacterVector dateStrings);
 DataFrame defineWaterBalanceDailyOutput(CharacterVector dateStrings, String transpirationMode);
 DataFrame defineSoilWaterBalanceDailyOutput(CharacterVector dateStrings, List soil, String transpirationMode);
 DataFrame defineEnergyBalanceDailyOutput(CharacterVector dateStrings);
@@ -18,16 +19,19 @@ NumericMatrix defineTemperatureLayersDailyOutput(CharacterVector dateStrings, Da
 List defineSunlitShadeLeavesDailyOutput(CharacterVector dateStrings, DataFrame above);
 List definePlantWaterDailyOutput(CharacterVector dateStrings, DataFrame above, List soil, List control);
 
+void fillStandDailyOutput(DataFrame Stand, List sDay, int iday);
 void fillWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday, String transpirationMode);
 void fillSoilWaterBalanceDailyOutput(DataFrame SWB, List soil, List sDay, 
                                      int iday, int numDays, String transpirationMode,
                                      String soilFunctions);
-void fillEnergyBalanceTemperatureDailyOutput(DataFrame DEB, DataFrame DT, NumericMatrix DLT, List sDay, 
-                                             int iday, bool multiLayerBalance);
-void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int day, String transpirationMode);
+void fillEnergyBalanceDailyOutput(DataFrame DEB, List sDay, int iday);
+void fillTemperatureDailyOutput(DataFrame DT, List sDay, int iday);
+void fillTemperatureLayersDailyOutput(NumericMatrix DLT, List sDay, int iday);
+void fillPlantWaterDailyOutput(List x, List sDay, int iday, String transpirationMode);
+void fillSunlitShadeLeavesDailyOutput(List sunlit, List shade, List sDay, int day);
 void fillFireHazardOutput(DataFrame fireHazard, List sDay, int iday);
 
-void printWaterBalanceResult(DataFrame DWB, List plantDWOL, List x,
+void printWaterBalanceResult(List outputList, List x,
                              NumericVector initialPlantContent, NumericVector initialSoilContent, double initialSnowContent,
                              String transpirationMode);
 

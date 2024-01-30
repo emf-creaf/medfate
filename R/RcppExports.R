@@ -880,6 +880,14 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, ru
     .Call(`_medfate_growthDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, modifyInput)
 }
 
+.defineGrowthDailyOutput <- function(latitude, elevation, slope, aspect, dateStrings, x) {
+    .Call(`_medfate_defineGrowthDailyOutput`, latitude, elevation, slope, aspect, dateStrings, x)
+}
+
+.fillGrowthDailyOutput <- function(l, sDay, iday) {
+    invisible(.Call(`_medfate_fillGrowthDailyOutput`, l, sDay, iday))
+}
+
 #' Forest growth
 #' 
 #' Function \code{growth} is a process-based model that performs energy, water and carbon balances; 
@@ -3048,6 +3056,14 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
 #' @name spwb_day
 spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runon = 0.0, modifyInput = TRUE) {
     .Call(`_medfate_spwbDay`, x, date, meteovec, latitude, elevation, slope, aspect, runon, modifyInput)
+}
+
+.defineSPWBDailyOutput <- function(latitude, elevation, slope, aspect, dateStrings, x) {
+    .Call(`_medfate_defineSPWBDailyOutput`, latitude, elevation, slope, aspect, dateStrings, x)
+}
+
+.fillSWPBDailyOutput <- function(l, sDay, iday) {
+    invisible(.Call(`_medfate_fillSWPBDailyOutput`, l, sDay, iday))
 }
 
 #' Soil-plant water balance
