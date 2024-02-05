@@ -7,6 +7,7 @@
 \alias{soil_thetaSATSX}
 \alias{soil_theta2psiSX}
 \alias{soil_psi2thetaSX}
+\alias{soil_psi2kVG}
 \alias{soil_psi2thetaVG}
 \alias{soil_theta2psiVG}
 \alias{soil_USDAType}
@@ -22,6 +23,7 @@
 \alias{soil_rockWeight2Volume}
 \alias{soil_psi}
 \alias{soil_conductivity}
+\alias{soil_capacitance}
 \alias{soil_waterTableDepth}
 \alias{soil_vanGenuchtenParamsCarsel}
 \alias{soil_vanGenuchtenParamsToth}
@@ -37,6 +39,8 @@ soil_thetaSATSX(clay, sand, om = NA_real_)
 soil_theta2psiSX(clay, sand, theta, om = NA_real_)
 
 soil_psi2thetaSX(clay, sand, psi, om = NA_real_)
+
+soil_psi2kVG(ksat, n, alpha, theta_res, theta_sat, psi)
 
 soil_psi2thetaVG(n, alpha, theta_res, theta_sat, psi)
 
@@ -66,7 +70,9 @@ soil_rockWeight2Volume(pWeight, bulkDensity, rockDensity = 2.3)
 
 soil_psi(soil, model = "SX")
 
-soil_conductivity(soil)
+soil_conductivity(soil, model = "SX")
+
+soil_capacitance(soil, model = "SX")
 
 soil_waterTableDepth(soil, model = "SX")
 
@@ -95,6 +101,8 @@ soil_retentionCurvePlot(
 \item{theta}{Relative water content (in percent volume).}
 
 \item{psi}{Water potential (in MPa).}
+
+\item{ksat}{saturated hydraulic conductance}
 
 \item{n, alpha, theta_res, theta_sat}{Parameters of the Van Genuchten-Mualem model (m = 1 - 1/n).}
 

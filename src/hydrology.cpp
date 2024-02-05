@@ -365,3 +365,140 @@ NumericVector soilInfiltrationPercolation(List soil, String soilFunctions,
   NumericVector DB = NumericVector::create(_["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage);
   return(DB);
 }
+
+
+NumericVector tridiagonalSolving(NumericVector a, NumericVector b, NumericVector c, NumericVector d) {
+  int n = a.size();
+  NumericVector e(n), f(n), u(n);
+  
+  //Forward steps
+  double e_prev = 0.0;
+  double f_prev = 0.0;
+  for(int i=0;i<n;i++) {
+    e[i] = c[i]/(b[i] - a[i]*e_prev);
+    f[i] = (d[i] - a[i]*f_prev)/(b[i] - a[i]*e_prev);
+    // Rcout<<i<< " "<< e[i]<< " "<< f[i]<<"\n";
+    e_prev = e[i];
+    f_prev = f[i];
+  }
+  //Backward steps
+  u[n-1] = f[n-1];
+  for(int i = (n - 2);i>=0;i--) {
+    u[i] = f[i] - e[i]*u[i + 1];
+  }  
+  return(u);
+}
+
+
+//' @rdname hydrology_soil
+//' 
+//' @param sourceSink Source/sink term for each soil layer (from snowmelt, soil evaporation or plant transpiration/redistribution)
+//'        as mm/day.
+//' @param nsteps  Number of time steps per day
+//' 
+// [[Rcpp::export("hydrology_soilFlows")]]
+double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24, bool modifySoil = true) {
+  
+  NumericVector dVec = soil["dVec"];
+  double mm_day_2_m3_s = 0.001*(1.0/86400.0);//From mm/day = l/day = dm3/day to m3/s
+  NumericVector sourceSink_m3s =  sourceSink*mm_day_2_m3_s;
+  NumericVector dZ_m = dVec*0.001; //mm to m
+  NumericVector rfc = soil["rfc"];
+
+  double tstep = 86400.0/((double) nsteps);
+  
+  //Estimate layer interfaces
+  int nlayers = dVec.size();
+  NumericVector dZUp(nlayers), dZDown(nlayers), lambda(nlayers);
+  for(int l=0;l<nlayers;l++) {
+    lambda[l] = 1.0 - rfc[l]/100.0;
+    if(l==0) { //first layer
+      dZUp[l] = dZ_m[0]/2.0;
+    } else {
+      dZUp[l] = (dZ_m[l - 1]/2.0) + (dZ_m[l]/2.0);
+    }
+    if(l<(nlayers - 1)) {
+      dZDown[l] = (dZ_m[l]/2.0) + (dZ_m[l + 1]/2.0);
+    } else { //last layer
+      dZDown[l] = dZ_m[l]/2.0;
+    }
+  }
+  
+  //Retrieve VG parameters
+  NumericVector Ksat =soil["Ksat"];
+  NumericVector n =soil["VG_n"];
+  NumericVector alpha = soil["VG_alpha"];
+  NumericVector theta_res = soil["VG_theta_res"];
+  NumericVector theta_sat = soil["VG_theta_sat"];
+  
+  //Estimate Theta, Psi, C, K
+  NumericVector Theta = theta(soil, "VG");
+  NumericVector Psi(nlayers), K(nlayers), C(nlayers);
+  NumericVector Psi_m(nlayers), K_ms(nlayers), C_m(nlayers);
+  for(int l=0;l<nlayers;l++) {
+    Psi[l] = theta2psiVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], Theta[l]); 
+    C[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
+    K[l] = psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
+    Psi_m[l]= Psi[l]/mTOMPa; // MPa to m
+    K_ms[l] = 0.01*K[l]/(86400.0*cmdTOmmolm2sMPa); //mmolH20*m-2*MPa-1*s-1 to m*s-1
+    C_m[l] = C[l]*mTOMPa; //From MPa-1 to m-1
+  }
+  
+  double drainage = 0.0;
+  double K_up, K_down;
+  NumericVector a(nlayers), b(nlayers), c(nlayers), d(nlayers);
+  //Psi-based solution of the Richards equation using implicit solution for psi
+  //but with explicit linearization for K and C (pp. 126, Bonan)
+  for(int s =0;s<nsteps;s++) {
+    //A. Predictor step
+    //build tridiagonal terms
+    for(int l=0;l<nlayers;l++) {
+      if(l==0) { //first layer
+        K_up = K_ms[l];
+        K_down = 0.5*(K_ms[l] + K_ms[l+1]);
+        a[l] = 0.0;
+        c[l] = -1.0*K_down/dZDown[l];
+        b[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep) - c[l];
+        d[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep)*Psi_m[l]  - K_down - sourceSink_m3s[l];
+      } else if(l<(nlayers - 1)) {
+        K_up = 0.5*(K_ms[l-1] + K_ms[l]);
+        K_down = 0.5*(K_ms[l] + K_ms[l+1]);
+        a[l] = -1.0*K_up/dZUp[l];
+        c[l] = -1.0*K_down/dZDown[l];
+        b[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep) - a[l] - c[l];
+        d[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep)*Psi_m[l] + K_up - K_down - sourceSink_m3s[l];
+      } else { // last layer
+        K_up = 0.5*(K_ms[l-1] + K_ms[l]);
+        K_down = K_ms[l];
+        a[l] = -1.0*K_up/dZUp[l];
+        b[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep) - a[l];
+        c[l] = 0.0;
+        d[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep)*Psi_m[l] + K_up - K_down - sourceSink_m3s[l];
+      }
+    }
+    NumericVector Psi_m_t1 = tridiagonalSolving(a,b,c,d);
+    NumericVector Psi_t1 = Psi_m_t1*mTOMPa; // m to MPa
+    //calculate free drainage (m3)
+    drainage += std::max(0.0, K_ms[nlayers -1]*tstep);
+    //Update psi, capacitances and conductances for next step
+    for(int l=0;l<nlayers;l++) {
+      // Rcout<<" step "<<s<<" layer " <<l<< " "<< Psi[l]<< " to " << Psi_t1[l]<<"\n";
+      Psi[l] = Psi_t1[l];
+      C[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
+      K[l] = psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
+      Psi_m[l]= Psi[l]/mTOMPa; // MPa to m
+      K_ms[l] = 0.01*K[l]/(86400.0*cmdTOmmolm2sMPa); //mmolH20*m-2*MPa-1*s-1 to m*s-1
+      C_m[l] = C[l]*mTOMPa; //From MPa-1 to m-1
+    }
+  }
+  double drainage_mm = drainage*1000.0; //m3/m2 to mm/m2
+  if(modifySoil) {
+    NumericVector W = soil["W"];
+    for(int l=0;l<nlayers;l++) {
+      double theta_fc = psi2thetaVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], -0.033);
+      Theta[l] = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
+      W[l] = Theta[l]/theta_fc;
+    }
+  }
+  return(drainage_mm);
+}

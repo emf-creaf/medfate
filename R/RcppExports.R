@@ -1552,6 +1552,16 @@ hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInpu
     .Call(`_medfate_soilInfiltrationPercolation`, soil, soilFunctions, waterInput, rockyLayerDrainage, modifySoil)
 }
 
+#' @rdname hydrology_soil
+#' 
+#' @param sourceSink Source/sink term for each soil layer (from snowmelt, soil evaporation or plant transpiration/redistribution)
+#'        as mm/day.
+#' @param nsteps  Number of time steps per day
+#' 
+hydrology_soilFlows <- function(soil, sourceSink, nsteps = 24L, modifySoil = TRUE) {
+    .Call(`_medfate_soilFlows`, soil, sourceSink, nsteps, modifySoil)
+}
+
 .gammln <- function(xx) {
     .Call(`_medfate_gammln`, xx)
 }
@@ -2711,6 +2721,16 @@ soil_psi2thetaSX <- function(clay, sand, psi, om = NA_real_) {
 }
 
 #' @rdname soil_texture
+#' @param ksat saturated hydraulic conductance
+soil_psi2kVG <- function(ksat, n, alpha, theta_res, theta_sat, psi) {
+    .Call(`_medfate_psi2kVanGenuchten`, ksat, n, alpha, theta_res, theta_sat, psi)
+}
+
+soil_psi2cVG <- function(n, alpha, theta_res, theta_sat, psi) {
+    .Call(`_medfate_psi2cVanGenuchten`, n, alpha, theta_res, theta_sat, psi)
+}
+
+#' @rdname soil_texture
 soil_psi2thetaVG <- function(n, alpha, theta_res, theta_sat, psi) {
     .Call(`_medfate_psi2thetaVanGenuchten`, n, alpha, theta_res, theta_sat, psi)
 }
@@ -2781,8 +2801,13 @@ soil_psi <- function(soil, model = "SX") {
 }
 
 #' @rdname soil_texture
-soil_conductivity <- function(soil) {
-    .Call(`_medfate_conductivity`, soil)
+soil_conductivity <- function(soil, model = "SX") {
+    .Call(`_medfate_conductivity`, soil, model)
+}
+
+#' @rdname soil_texture
+soil_capacitance <- function(soil, model = "SX") {
+    .Call(`_medfate_capacitance`, soil, model)
 }
 
 #' @rdname soil_texture

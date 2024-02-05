@@ -338,6 +338,27 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
+    inline double hydrology_soilFlows(List soil, NumericVector sourceSink, int nsteps = 24, bool modifySoil = true) {
+        typedef SEXP(*Ptr_hydrology_soilFlows)(SEXP,SEXP,SEXP,SEXP);
+        static Ptr_hydrology_soilFlows p_hydrology_soilFlows = NULL;
+        if (p_hydrology_soilFlows == NULL) {
+            validateSignature("double(*hydrology_soilFlows)(List,NumericVector,int,bool)");
+            p_hydrology_soilFlows = (Ptr_hydrology_soilFlows)R_GetCCallable("medfate", "_medfate_hydrology_soilFlows");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_hydrology_soilFlows(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(sourceSink)), Shield<SEXP>(Rcpp::wrap(nsteps)), Shield<SEXP>(Rcpp::wrap(modifySoil)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<double >(rcpp_result_gen);
+    }
+
     inline double soil_saturatedConductivitySX(double clay, double sand, double om = NA_REAL, bool mmol = true) {
         typedef SEXP(*Ptr_soil_saturatedConductivitySX)(SEXP,SEXP,SEXP,SEXP);
         static Ptr_soil_saturatedConductivitySX p_soil_saturatedConductivitySX = NULL;
@@ -433,6 +454,48 @@ namespace medfate {
         {
             RNGScope RCPP_rngScope_gen;
             rcpp_result_gen = p_soil_psi2thetaSX(Shield<SEXP>(Rcpp::wrap(clay)), Shield<SEXP>(Rcpp::wrap(sand)), Shield<SEXP>(Rcpp::wrap(psi)), Shield<SEXP>(Rcpp::wrap(om)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<double >(rcpp_result_gen);
+    }
+
+    inline double soil_psi2kVG(double ksat, double n, double alpha, double theta_res, double theta_sat, double psi) {
+        typedef SEXP(*Ptr_soil_psi2kVG)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
+        static Ptr_soil_psi2kVG p_soil_psi2kVG = NULL;
+        if (p_soil_psi2kVG == NULL) {
+            validateSignature("double(*soil_psi2kVG)(double,double,double,double,double,double)");
+            p_soil_psi2kVG = (Ptr_soil_psi2kVG)R_GetCCallable("medfate", "_medfate_soil_psi2kVG");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_soil_psi2kVG(Shield<SEXP>(Rcpp::wrap(ksat)), Shield<SEXP>(Rcpp::wrap(n)), Shield<SEXP>(Rcpp::wrap(alpha)), Shield<SEXP>(Rcpp::wrap(theta_res)), Shield<SEXP>(Rcpp::wrap(theta_sat)), Shield<SEXP>(Rcpp::wrap(psi)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<double >(rcpp_result_gen);
+    }
+
+    inline double soil_psi2cVG(double n, double alpha, double theta_res, double theta_sat, double psi) {
+        typedef SEXP(*Ptr_soil_psi2cVG)(SEXP,SEXP,SEXP,SEXP,SEXP);
+        static Ptr_soil_psi2cVG p_soil_psi2cVG = NULL;
+        if (p_soil_psi2cVG == NULL) {
+            validateSignature("double(*soil_psi2cVG)(double,double,double,double,double)");
+            p_soil_psi2cVG = (Ptr_soil_psi2cVG)R_GetCCallable("medfate", "_medfate_soil_psi2cVG");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_soil_psi2cVG(Shield<SEXP>(Rcpp::wrap(n)), Shield<SEXP>(Rcpp::wrap(alpha)), Shield<SEXP>(Rcpp::wrap(theta_res)), Shield<SEXP>(Rcpp::wrap(theta_sat)), Shield<SEXP>(Rcpp::wrap(psi)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -737,17 +800,38 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector soil_conductivity(List soil) {
-        typedef SEXP(*Ptr_soil_conductivity)(SEXP);
+    inline NumericVector soil_conductivity(List soil, String model = "SX") {
+        typedef SEXP(*Ptr_soil_conductivity)(SEXP,SEXP);
         static Ptr_soil_conductivity p_soil_conductivity = NULL;
         if (p_soil_conductivity == NULL) {
-            validateSignature("NumericVector(*soil_conductivity)(List)");
+            validateSignature("NumericVector(*soil_conductivity)(List,String)");
             p_soil_conductivity = (Ptr_soil_conductivity)R_GetCCallable("medfate", "_medfate_soil_conductivity");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_soil_conductivity(Shield<SEXP>(Rcpp::wrap(soil)));
+            rcpp_result_gen = p_soil_conductivity(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(model)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<NumericVector >(rcpp_result_gen);
+    }
+
+    inline NumericVector soil_capacitance(List soil, String model = "SX") {
+        typedef SEXP(*Ptr_soil_capacitance)(SEXP,SEXP);
+        static Ptr_soil_capacitance p_soil_capacitance = NULL;
+        if (p_soil_capacitance == NULL) {
+            validateSignature("NumericVector(*soil_capacitance)(List,String)");
+            p_soil_capacitance = (Ptr_soil_capacitance)R_GetCCallable("medfate", "_medfate_soil_capacitance");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_soil_capacitance(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(model)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

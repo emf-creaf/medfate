@@ -6,6 +6,7 @@
 \alias{hydrology_herbaceousTranspiration}
 \alias{hydrology_infiltrationRepartition}
 \alias{hydrology_snowMelt}
+\alias{hydrology_soilFlows}
 \alias{hydrology_soil}
 \alias{hydrology_infiltrationAmount}
 \title{Soil infiltration, percolation and bare soil evaporation}
@@ -32,6 +33,8 @@ hydrology_herbaceousTranspiration(
 hydrology_infiltrationRepartition(I, dVec, macro, a = -0.005, b = 3)
 
 hydrology_snowMelt(tday, rad, LgroundSWR, elevation)
+
+hydrology_soilFlows(soil, sourceSink, nsteps = 24L, modifySoil = TRUE)
 
 hydrology_infiltrationAmount(input, Ssoil)
 }
@@ -69,6 +72,11 @@ hydrology_infiltrationAmount(input, Ssoil)
 \item{rad}{Solar radiation (in MJ/m2/day).}
 
 \item{elevation}{Altitude above sea level (m).}
+
+\item{sourceSink}{Source/sink term for each soil layer (from snowmelt, soil evaporation or plant transpiration/redistribution)
+as mm/day.}
+
+\item{nsteps}{Number of time steps per day}
 
 \item{input}{A numeric vector of (daily) water input (in mm of water).}
 

@@ -13,10 +13,20 @@ const double capacitySilt = 1.19*1e6; //kg·m-3
 const double capacityClay = 1.23*1e6; //kg·m-3 
 
 /**
- * Conversion factor from conductivity in cm·day-1 to molH20·m-1·MPa-1·s-1
+ * Conversion factor from conductivity in cm·day-1 to molH20·m-2·MPa-1·s-1
+ *  1 day = 86400 sec
+ *  1 mol H20 = 18.01528 g
  */
 const double cmdTOmmolm2sMPa = 655.2934; //100.0/(18.01528*86400.0*0.00009804139432); 
+/**
+ * Conversion factor from cm to MPa
+ */
+const double cmTOMPa = 0.00009804139432; 
 
+/**
+ * Conversion factor from m to MPa
+ */
+const double mTOMPa = 0.009804139; //1/9.804139*0.000001; 
 
 CharacterVector layerNames(int nlayers) {
   CharacterVector ln(nlayers);
@@ -307,6 +317,28 @@ double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL
 }
 
 /**
+ *  Returns soil hydraulic conductivity according to Van Genuchten's pedotransfer model (m = 1 - 1/n)
+ */
+//' @rdname soil_texture
+//' @param ksat saturated hydraulic conductance
+// [[Rcpp::export("soil_psi2kVG")]]
+double psi2kVanGenuchten(double ksat, double n, double alpha, double theta_res, double theta_sat, double psi){
+  double m = 1.0 - (1.0/n);
+  double Se = pow(1.0 + pow(alpha*std::abs(psi),n),-m);
+  double k = ksat*pow(Se,0.5)*pow(1.0 - pow(1.0 - pow(Se, 1.0/m), m), 2.0);
+  return(k);
+}
+
+// [[Rcpp::export("soil_psi2cVG")]]
+double psi2cVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi){
+  double m = 1.0 - (1.0/n);
+  double num = alpha*m*n*(theta_sat - theta_res)*pow(alpha*std::abs(psi), n - 1.0);
+  double den = pow(1.0 + pow(alpha*std::abs(psi),n),m + 1.0);
+  double c = num/den;
+  return(c);
+}
+
+/**
  *  Returns water content (% volume) according to Van Genuchten's pedotransfer model (m = 1 - 1/n)
  *  psi - Soil water potential (in MPa)
  */
@@ -314,7 +346,7 @@ double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL
 // [[Rcpp::export("soil_psi2thetaVG")]]
 double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi) {
   double m = 1.0 - (1.0/n);
-  double T = pow(pow(alpha*std::abs(psi),n)+1.0,-m);
+  double T = pow(1.0  + pow(alpha*std::abs(psi),n),-m);
   return(theta_res+T*(theta_sat-theta_res));
 }
 
@@ -541,18 +573,53 @@ NumericVector psi(List soil, String model="SX") {
 
 //' @rdname soil_texture
 // [[Rcpp::export("soil_conductivity")]]
-NumericVector conductivity(List soil) {
-  NumericVector Theta = theta(soil, "SX");
-  int nlayers = Theta.size();
-  NumericVector Kunsat(nlayers);
-  NumericVector clay =soil["clay"];
-  NumericVector sand = soil["sand"];
-  NumericVector om = soil["om"];
-  for(int l=0;l<nlayers;l++) {
-    Kunsat[l] = unsaturatedConductivitySaxton(Theta[l], clay[l], sand[l], om[l]);
-  }
-  return(Kunsat);
+NumericVector conductivity(List soil, String model="SX") {
+  NumericVector W = soil["W"];
+  int nlayers = W.size();
+  NumericVector K(nlayers);
+  if(model=="SX") {
+    NumericVector Theta = theta(soil, model);
+    NumericVector clay =soil["clay"];
+    NumericVector sand = soil["sand"];
+    NumericVector om = soil["om"];
+    for(int l=0;l<nlayers;l++) {
+      K[l] = unsaturatedConductivitySaxton(Theta[l], clay[l], sand[l], om[l]);
+    }
+  } else {
+    NumericVector psiSoil = psi(soil, model);
+    NumericVector Ksat = soil["Ksat"];
+    for(int l=0;l<nlayers;l++) {
+      NumericVector n =soil["VG_n"];
+      NumericVector alpha = soil["VG_alpha"];
+      NumericVector theta_res = soil["VG_theta_res"];
+      NumericVector theta_sat = soil["VG_theta_sat"];
+      K[l] = psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], psiSoil[l]);
+    }
+  } 
+  return(K);
 }
+
+//' @rdname soil_texture
+ // [[Rcpp::export("soil_capacitance")]]
+ NumericVector capacitance(List soil, String model="SX") {
+   NumericVector W = soil["W"];
+   int nlayers = W.size();
+   NumericVector C(nlayers);
+   if(model=="SX") {
+     stop("Capacitance not available for model 'SX'");
+   } else {
+     NumericVector psiSoil = psi(soil, model);
+     NumericVector Ksat = soil["Ksat"];
+     for(int l=0;l<nlayers;l++) {
+       NumericVector n =soil["VG_n"];
+       NumericVector alpha = soil["VG_alpha"];
+       NumericVector theta_res = soil["VG_theta_res"];
+       NumericVector theta_sat = soil["VG_theta_sat"];
+       C[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], psiSoil[l]);
+     }
+   } 
+   return(C);
+ }
 
 //' @rdname soil_texture
 // [[Rcpp::export("soil_waterTableDepth")]]
@@ -641,10 +708,6 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
   vg.attr("names") = CharacterVector::create("alpha", "n", "theta_res", "theta_sat");
   return(vg);
 }
-  
-
-
-
 
 
 //' Soil initialization
@@ -745,11 +808,16 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
     NumericVector vgl;
     if(VG_PTF=="Carsel") {
       vgl = vanGenuchtenParamsCarsel(usda_Type[l]); 
+      Ksat[l] = vgl[4]; //Use Carsel estimate for Ksat
     } else if(VG_PTF=="Toth") {
       if(!SoilParams.containsElementNamed("bd")) stop("bd missing in SoilParams");
       NumericVector bd = as<NumericVector>(SoilParams["bd"]);
-      if(l==0) vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], TRUE);
-      else vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], FALSE);
+      // if(l==0) vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], TRUE);
+      //Use non-top soil equation for all layers
+      vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], FALSE);
+      // Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
+      macro[l] = std::max(0.0,0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0));
+      Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], om[l]);
     } else {
       stop("Wrong value for 'VG_PTF'");
     }
@@ -757,9 +825,6 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
     VG_n[l] = vgl[1];
     VG_theta_res[l] = vgl[2];
     VG_theta_sat[l] = vgl[3];
-    // Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
-    macro[l] = std::max(0.0,0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0));
-    Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], om[l]);
     SoilDepth +=dVec[l];
   }
   // Saturated vertical hydraulic conductivity (mm/day) 
