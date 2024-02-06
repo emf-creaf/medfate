@@ -9,6 +9,7 @@
 - New parameters for Jarvis-type stomatal conductance in Cochard sub-model
 - XFT traits for vulnerability curves
 - Recording of leaf PLC for all sub-models
+- Richard-type soil water movement
 
 # Version 3.2.0
 - Correction of a bug arisen in old Rcpp versions
