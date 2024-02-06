@@ -349,7 +349,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   double Vfin = sum(water(soil, soilFunctions));
   //Force water balance closure through calculation of deep drainage
   double deepDrainage = Vini - Vfin - sum(sourceSinkVec);
-  
+
   //Calculate current soil water potential for output
   NumericVector psiVec = psi(soil, soilFunctions); 
   
@@ -632,7 +632,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   double Vfin = sum(water(soil, soilFunctions));
   //Force water balance closure through calculation of deep drainage
   double deepDrainage = Vini - Vfin - sum(sourceSinkVec);
-  
+
   //Calculate current soil water potential for output
   NumericVector psiVec = psi(soil, soilFunctions); 
   

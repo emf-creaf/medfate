@@ -471,13 +471,17 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
         a[l] = -1.0*K_up/dZUp[l];
         b[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep) - a[l];
         c[l] = 0.0;
-        d[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep)*Psi_m[l] + K_up - K_down - sourceSink_m3s[l];
+        if(lowerBoundary=="impervious") {
+          d[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep)*Psi_m[l] + K_up - sourceSink_m3s[l];
+        } else {
+          d[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep)*Psi_m[l] + K_up - K_down - sourceSink_m3s[l];
+        }
       }
     }
     NumericVector Psi_m_t1 = tridiagonalSolving(a,b,c,d);
     NumericVector Psi_t1 = Psi_m_t1*mTOMPa; // m to MPa
     //calculate free drainage (m3)
-    drainage += std::max(0.0, K_ms[nlayers -1]*tstep);
+    if(lowerBoundary!="impervious") drainage += std::max(0.0, K_ms[nlayers -1]*tstep);
     //Update psi, capacitances and conductances for next step
     for(int l=0;l<nlayers;l++) {
       // Rcout<<" step "<<s<<" layer " <<l<< " "<< Psi[l]<< " to " << Psi_t1[l]<<"\n";
