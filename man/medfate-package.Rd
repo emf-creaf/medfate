@@ -3,7 +3,6 @@
 \docType{package}
 \name{medfate-package}
 \alias{medfate-package}
-\alias{_PACKAGE}
 \alias{medfate}
 \title{medfate: Mediterranean Forest Simulation}
 \description{

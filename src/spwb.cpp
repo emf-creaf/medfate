@@ -1706,9 +1706,11 @@ void fillSPWBDailyOutput(List l, List soil, List sDay, int iday) {
     List plantDWOL = l["Plants"];
     fillPlantWaterDailyOutput(plantDWOL, sDay, iday, transpirationMode); 
     if(transpirationMode!= "Granier") {
-      List sunlitDO = l["SunlitLeaves"];
-      List shadeDO = l["ShadeLeaves"];
-      fillSunlitShadeLeavesDailyOutput(sunlitDO, shadeDO, sDay, iday); 
+      if(control["leafResults"]) {
+        List sunlitDO = l["SunlitLeaves"];
+        List shadeDO = l["ShadeLeaves"];
+        fillSunlitShadeLeavesDailyOutput(sunlitDO, shadeDO, sDay, iday); 
+      }
     } 
   }
   if(transpirationMode!= "Granier") {
