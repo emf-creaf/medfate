@@ -404,6 +404,7 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   NumericVector rfc = soil["rfc"];
 
   double tstep = 86400.0/((double) nsteps);
+  double halftstep = tstep/2.0;
   
   //Estimate layer interfaces
   int nlayers = dVec.size();
@@ -432,7 +433,7 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   //Estimate Theta, Psi, C, K
   NumericVector Theta = theta(soil, "VG");
   NumericVector Psi(nlayers), K(nlayers), C(nlayers);
-  NumericVector Psi_m(nlayers), K_ms(nlayers), C_m(nlayers);
+  NumericVector Psi_m(nlayers), K_ms(nlayers), C_m(nlayers), K_ms05(nlayers), C_m05(nlayers);
   for(int l=0;l<nlayers;l++) {
     Psi[l] = theta2psiVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], Theta[l]); 
     C[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
@@ -449,39 +450,76 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   //but with explicit linearization for K and C (pp. 126, Bonan)
   for(int s =0;s<nsteps;s++) {
     //A. Predictor step
-    //build tridiagonal terms
     for(int l=0;l<nlayers;l++) {
       if(l==0) { //first layer
         K_up = K_ms[l];
         K_down = 0.5*(K_ms[l] + K_ms[l+1]);
         a[l] = 0.0;
         c[l] = -1.0*K_down/dZDown[l];
-        b[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep) - c[l];
-        d[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep)*Psi_m[l]  - K_down - sourceSink_m3s[l];
+        b[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep) - c[l];
+        d[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep)*Psi_m[l]  - K_down - sourceSink_m3s[l];
       } else if(l<(nlayers - 1)) {
         K_up = 0.5*(K_ms[l-1] + K_ms[l]);
         K_down = 0.5*(K_ms[l] + K_ms[l+1]);
         a[l] = -1.0*K_up/dZUp[l];
         c[l] = -1.0*K_down/dZDown[l];
-        b[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep) - a[l] - c[l];
-        d[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep)*Psi_m[l] + K_up - K_down - sourceSink_m3s[l];
+        b[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep) - a[l] - c[l];
+        d[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep)*Psi_m[l] + K_up - K_down - sourceSink_m3s[l];
       } else { // last layer
         K_up = 0.5*(K_ms[l-1] + K_ms[l]);
         K_down = K_ms[l];
         a[l] = -1.0*K_up/dZUp[l];
-        b[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep) - a[l];
         c[l] = 0.0;
+        b[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep) - a[l] - c[l];
         if(lowerBoundary=="impervious") {
-          d[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep)*Psi_m[l] + K_up - sourceSink_m3s[l];
+          d[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep)*Psi_m[l] + K_up - sourceSink_m3s[l];
         } else {
-          d[l] = (lambda[l]*C_m[l]*dZ_m[l]/tstep)*Psi_m[l] + K_up - K_down - sourceSink_m3s[l];
+          d[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep)*Psi_m[l] + K_up - K_down - sourceSink_m3s[l];
+        }
+      }
+    }
+    NumericVector Psi_m_t05 = tridiagonalSolving(a,b,c,d);
+    NumericVector Psi_t05 = Psi_m_t05*mTOMPa; // m to MPa
+    //Calculate K and C at t05
+    for(int l=0;l<nlayers;l++) {
+      double C_05 = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi_t05[l]);
+      double K_05 = psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi_t05[l]);
+      K_ms05[l] = 0.01*K_05/(86400.0*cmdTOmmolm2sMPa); //mmolH20*m-2*MPa-1*s-1 to m*s-1
+      C_m05[l] = C_05*mTOMPa; //From MPa-1 to m-1
+    }
+    //B. Corrector step also Crank-Nicolson
+    for(int l=0;l<nlayers;l++) {
+      if(l==0) { //first layer
+        K_up = K_ms05[l];
+        K_down = 0.5*(K_ms05[l] + K_ms05[l+1]);
+        a[l] = 0.0;
+        c[l] = -1.0*K_down/(2.0*dZDown[l]);
+        b[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep) - c[l];
+        d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] - c[l]*(Psi_m[l] - Psi_m[l+1])  - K_down - sourceSink_m3s[l];
+      } else if(l<(nlayers - 1)) {
+        K_up = 0.5*(K_ms05[l-1] + K_ms05[l]);
+        K_down = 0.5*(K_ms05[l] + K_ms05[l+1]);
+        a[l] = -1.0*K_up/(2.0*dZUp[l]);
+        c[l] = -1.0*K_down/(2.0*dZDown[l]);
+        b[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep) - a[l] - c[l];
+        d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] + a[l]*(Psi_m[l - 1] - Psi_m[l]) - c[l]*(Psi_m[l] - Psi_m[l+1]) + K_up - K_down - sourceSink_m3s[l];
+      } else { // last layer
+        K_up = 0.5*(K_ms05[l-1] + K_ms05[l]);
+        K_down = K_ms05[l];
+        a[l] = -1.0*K_up/(2.0*dZUp[l]);
+        c[l] = 0.0;
+        b[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep) - a[l];
+        if(lowerBoundary=="impervious") {
+          d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] + a[l]*(Psi_m[l - 1] - Psi_m[l]) + K_up - sourceSink_m3s[l];
+        } else {
+          d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] + a[l]*(Psi_m[l - 1] - Psi_m[l])  + K_up - K_down - sourceSink_m3s[l];
         }
       }
     }
     NumericVector Psi_m_t1 = tridiagonalSolving(a,b,c,d);
     NumericVector Psi_t1 = Psi_m_t1*mTOMPa; // m to MPa
     //calculate free drainage (m3)
-    if(lowerBoundary!="impervious") drainage += std::max(0.0, K_ms[nlayers -1]*tstep);
+    if(lowerBoundary!="impervious") drainage += std::max(0.0, K_ms05[nlayers -1]*tstep);
     //Update psi, capacitances and conductances for next step
     for(int l=0;l<nlayers;l++) {
       // Rcout<<" step "<<s<<" layer " <<l<< " "<< Psi[l]<< " to " << Psi_t1[l]<<"\n";
