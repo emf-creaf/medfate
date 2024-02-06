@@ -2856,7 +2856,6 @@ soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
 #'   \item{\code{Ksat}: Saturated soil conductivity for each layer (estimated using function \code{\link{soil_saturatedConductivitySX}}.}
 #'   \item{\code{macro}: Macroporosity for each layer (estimated using Stolf et al. 2011).}
 #'   \item{\code{rfc}: Percentage of rock fragment content for each layer.}
-#'   \item{\code{Kdrain}: Saturated vertical hydraulic conductivity (mm/day) (i.e. how easy is deep drainage towards groundwater). Function \code{soil} estimates it as a function of soil saturated hydraulic conductivity, but should be parametrized as a function of bedrock material. }
 #' }
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF

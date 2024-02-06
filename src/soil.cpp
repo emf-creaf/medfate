@@ -741,7 +741,6 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 //'   \item{\code{Ksat}: Saturated soil conductivity for each layer (estimated using function \code{\link{soil_saturatedConductivitySX}}.}
 //'   \item{\code{macro}: Macroporosity for each layer (estimated using Stolf et al. 2011).}
 //'   \item{\code{rfc}: Percentage of rock fragment content for each layer.}
-//'   \item{\code{Kdrain}: Saturated vertical hydraulic conductivity (mm/day) (i.e. how easy is deep drainage towards groundwater). Function \code{soil} estimates it as a function of soil saturated hydraulic conductivity, but should be parametrized as a function of bedrock material. }
 //' }
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
@@ -827,8 +826,6 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
     VG_theta_sat[l] = vgl[3];
     SoilDepth +=dVec[l];
   }
-  // Saturated vertical hydraulic conductivity (mm/day) 
-  double Kdrain = 0.05*saturatedConductivitySaxton(clay[nlayers-1], sand[nlayers-1], om[nlayers-1], false);
   double Ksoil = 0.05;
   double Gsoil = 0.5; //TO DO, implement pedotransfer functions for Gsoil
   List l = List::create(_["SoilDepth"] = SoilDepth,
@@ -841,7 +838,6 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
                       _["VG_alpha"] = VG_alpha,_["VG_n"] = VG_n, 
                       _["VG_theta_res"] = VG_theta_res,_["VG_theta_sat"] = VG_theta_sat,
                       _["Ksat"] = Ksat,
-                      _["Kdrain"] = Kdrain,
                       _["macro"] = macro,
                       _["bd"] = bd,
                       _["rfc"] = rfc);
@@ -897,9 +893,6 @@ void modifySoilLayerParam(List soil, String paramName, int layer, double newValu
     Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], om[l]);
     SoilDepth +=dVec[l];
   }
-  // Saturated vertical hydraulic conductivity (mm/day) 
-  double Kdrain = 0.05*saturatedConductivitySaxton(clay[nlayers-1], sand[nlayers-1], om[nlayers-1], false);
-  soil["Kdrain"] = Kdrain;
   //Update SoilDepth
   soil["SoilDepth"] = SoilDepth;
   
