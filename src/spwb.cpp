@@ -316,7 +316,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
     }
     // determine water flows, returning deep drainage
     deepDrainage = soilFlows(soil, sourceSinkVec, 24, 
-                             lowerBoundary,
+                             soilFunctions, lowerBoundary,
                              true);
   } else {
     NumericVector poolProportions = belowdf["poolProportions"];
@@ -335,7 +335,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
         if(l ==0) sourceSinkPoolVec[l] = sourceSinkPoolVec[l] + EherbPools[c];
       }
       double drainage_c = soilFlows(soil_c, sourceSinkPoolVec, 24, 
-                                    lowerBoundary,
+                                    soilFunctions, lowerBoundary,
                                     true);
       deepDrainage = deepDrainage + poolProportions[c]*drainage_c;
       
@@ -594,7 +594,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
     }
     // determine water flows, returning deep drainage
     deepDrainage = soilFlows(soil, sourceSinkVec, 24, 
-                             lowerBoundary,
+                             soilFunctions, lowerBoundary,
                              true);
   } else {
     NumericVector poolProportions = belowdf["poolProportions"];
@@ -613,7 +613,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
         if(l ==0) sourceSinkPoolVec[l] = sourceSinkPoolVec[l] + EherbPools[c];
       }
       double drainage_c = soilFlows(soil_c, sourceSinkPoolVec, 24, 
-                                    lowerBoundary,
+                                    soilFunctions, lowerBoundary,
                                     true);
       deepDrainage = deepDrainage + poolProportions[c]*drainage_c;
       

@@ -38,6 +38,7 @@ hydrology_soilFlows(
   soil,
   sourceSink,
   nsteps = 24L,
+  soilFunctions = "VG",
   lowerBoundary = "free",
   modifySoil = TRUE
 )

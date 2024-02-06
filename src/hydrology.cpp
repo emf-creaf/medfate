@@ -296,7 +296,7 @@ NumericVector soilInfiltrationPercolation(List soil, String soilFunctions,
     //Decide infiltration repartition among layers
     NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);
     //Input of the first soil layer is infiltration
-    double percolationExcess = 0.0;
+    double infiltrationExcess = 0.0;
     double Wn;
     for(int l=0;l<nlayers;l++) {
       if((dVec[l]>0.0) && (Ivec[l]>0.0)) {
@@ -306,22 +306,23 @@ NumericVector soilInfiltrationPercolation(List soil, String soilFunctions,
           W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta
         } else {
           W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta
-          percolationExcess = std::max(Wn - Water_FC[l],0.0); //Set excess of the bottom layer using field capacity
+          infiltrationExcess = std::max(Wn - Water_FC[l],0.0); //Set excess of the bottom layer using field capacity
         }
       } 
     } 
     //If there still excess fill layers over field capacity
-    if((percolationExcess>0.0)) {
+    if((infiltrationExcess>0.0)) {
       for(int l=(nlayers-1);l>=0;l--) {
-        if((dVec[l]>0.0) && (percolationExcess>0.0)) {
-          Wn = W[l]*Water_FC[l] + percolationExcess; //Update water volume
-          percolationExcess = std::max(Wn - Water_SAT[l],0.0); //Update excess, using the excess of water over saturation
+        if((dVec[l]>0.0) && (infiltrationExcess>0.0)) {
+          Wn = W[l]*Water_FC[l] + infiltrationExcess; //Update water volume
+          infiltrationExcess = std::max(Wn - Water_SAT[l],0.0); //Update excess, using the excess of water over saturation
           W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta here no upper
         }
       }
-      //If soil is completely saturated increase surface Runoff
-      if(percolationExcess>0.0) { 
-        Runoff = Runoff + percolationExcess;
+      //If soil is completely saturated increase surface Runoff and decrease Infiltration
+      if(infiltrationExcess>0.0) { 
+        Runoff = Runoff + infiltrationExcess;
+        Infiltration = Infiltration - infiltrationExcess;
       }
     } 
   }
@@ -392,7 +393,8 @@ NumericVector tridiagonalSolving(NumericVector a, NumericVector b, NumericVector
 //' @param lowerBoundary Lower boundary condition: "free", "impervious" or "aquifer"
 //' 
 // [[Rcpp::export("hydrology_soilFlows")]]
-double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24, 
+double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
+                 String soilFunctions = "VG",
                  String lowerBoundary = "free",
                  bool modifySoil = true) {
   
@@ -402,6 +404,9 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   NumericVector dZ_m = dVec*0.001; //mm to m
   NumericVector rfc = soil["rfc"];
 
+  //Calculate initial volume
+  double Vini = sum(water(soil, soilFunctions));
+  
   double tstep = 86400.0/((double) nsteps);
   
   //Estimate layer interfaces
@@ -441,7 +446,7 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
     C_m[l] = C[l]*mTOMPa; //From MPa-1 to m-1
   }
   
-  double drainage = 0.0;
+  // double drainage = 0.0;
   double K_up, K_down;
   NumericVector a(nlayers), b(nlayers), c(nlayers), d(nlayers);
   //Psi-based solution of the Richards equation using implicit solution for psi
@@ -476,7 +481,7 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
     NumericVector Psi_m_t1 = tridiagonalSolving(a,b,c,d);
     NumericVector Psi_t1 = Psi_m_t1*mTOMPa; // m to MPa
     //calculate free drainage (m3)
-    drainage += std::max(0.0, K_ms[nlayers -1]*tstep);
+    // drainage += std::max(0.0, K_ms[nlayers -1]*tstep);
     //Update psi, capacitances and conductances for next step
     for(int l=0;l<nlayers;l++) {
       // Rcout<<" step "<<s<<" layer " <<l<< " "<< Psi[l]<< " to " << Psi_t1[l]<<"\n";
@@ -488,7 +493,7 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
       C_m[l] = C[l]*mTOMPa; //From MPa-1 to m-1
     }
   }
-  double drainage_mm = drainage*1000.0; //m3/m2 to mm/m2
+  // double drainage_mm = drainage*1000.0; //m3/m2 to mm/m2
   if(modifySoil) {
     NumericVector W = soil["W"];
     for(int l=0;l<nlayers;l++) {
@@ -497,5 +502,9 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
       W[l] = Theta[l]/theta_fc;
     }
   }
+  //Calculate final volume
+  double Vfin = sum(water(soil, soilFunctions));
+  //Force daily water balance closure because solution is not mass conserving
+  double drainage_mm = Vini - Vfin - sum(sourceSink);
   return(drainage_mm);
 }
