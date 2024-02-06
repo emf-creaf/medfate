@@ -489,7 +489,7 @@ void calculateRhizoPsi(int c,
 //' @param network A hydraulic network element of the list returned by \code{initCochardNetworks}
 //' @param dt Smallest time step (seconds)
 //' @param opt Option flag vector
-//' @param cavitationRefillStem, cavitationRefillLeaves A string indicating how refilling of embolized conduits is done:
+//' @param cavitationRefillStem,cavitationRefillLeaves A string indicating how refilling of embolized conduits is done:
 //'           \itemize{
 //'             \item{"none" - no refilling.}
 //'             \item{"annual" - every first day of the year.}

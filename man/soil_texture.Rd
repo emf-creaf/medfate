@@ -8,6 +8,7 @@
 \alias{soil_theta2psiSX}
 \alias{soil_psi2thetaSX}
 \alias{soil_psi2kVG}
+\alias{soil_psi2cVG}
 \alias{soil_psi2thetaVG}
 \alias{soil_theta2psiVG}
 \alias{soil_USDAType}
@@ -41,6 +42,8 @@ soil_theta2psiSX(clay, sand, theta, om = NA_real_)
 soil_psi2thetaSX(clay, sand, psi, om = NA_real_)
 
 soil_psi2kVG(ksat, n, alpha, theta_res, theta_sat, psi)
+
+soil_psi2cVG(n, alpha, theta_res, theta_sat, psi)
 
 soil_psi2thetaVG(n, alpha, theta_res, theta_sat, psi)
 

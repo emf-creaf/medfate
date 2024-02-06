@@ -49,7 +49,6 @@ NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, Num
 //' 
 //' @seealso  \code{\link{spwb}}, \code{\link{light_advanced}}
 //' 
-//' @examples
 //' @name light_basic
 // [[Rcpp::export("light_PARcohort")]]
 NumericVector PARcohort(List x, DataFrame SpParams, double gdd = NA_REAL) {

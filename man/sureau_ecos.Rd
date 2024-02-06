@@ -25,7 +25,7 @@ semi_implicit_integration(
 
 \item{opt}{Option flag vector}
 
-\item{cavitationRefillStem, }{cavitationRefillLeaves A string indicating how refilling of embolized conduits is done:
+\item{cavitationRefillStem, cavitationRefillLeaves}{A string indicating how refilling of embolized conduits is done:
 \itemize{
   \item{"none" - no refilling.}
   \item{"annual" - every first day of the year.}

@@ -329,6 +329,7 @@ double psi2kVanGenuchten(double ksat, double n, double alpha, double theta_res, 
   return(k);
 }
 
+//' @rdname soil_texture
 // [[Rcpp::export("soil_psi2cVG")]]
 double psi2cVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi){
   double m = 1.0 - (1.0/n);

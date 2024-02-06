@@ -84,9 +84,13 @@ light_longwaveRadiationSHAW(
 )
 }
 \arguments{
-\item{leafAngle}{Average leaf inclination angle (in radians)}
+\item{leafAngle}{Average leaf inclination angle (in radians).}
 
 \item{p, q}{Parameters of the beta distribution for leaf angles}
+
+\item{leafAngleSD}{Standard deviation of leaf inclination angle (in radians).}
+
+\item{solarElevation}{Solar elevation (in radians).}
 
 \item{LAIme}{A numeric matrix of live expanded LAI values per vegetation layer (row) and cohort (column).}
 
@@ -94,7 +98,7 @@ light_longwaveRadiationSHAW(
 
 \item{LAImx}{A numeric matrix of maximum LAI values per vegetation layer (row) and cohort (column).}
 
-\item{kb, kDIR}{A vector of direct light extinction coefficients.}
+\item{kb}{A vector of direct light extinction coefficients.}
 
 \item{ClumpingIndex}{The extent to which foliage has a nonrandom spatial distribution.}
 
@@ -103,6 +107,10 @@ light_longwaveRadiationSHAW(
 \item{gamma}{A vector of leaf reflectance values.}
 
 \item{trunkExtinctionFraction}{Fraction of extinction due to trunks (for winter deciduous forests).}
+
+\item{K}{A vector of light extinction coefficients.}
+
+\item{ZF}{Fraction of sky angles.}
 
 \item{Ib0}{Above-canopy direct incident radiation.}
 
@@ -121,12 +129,6 @@ light_longwaveRadiationSHAW(
 \item{Tsoil}{Soil temperature (Celsius).}
 
 \item{Tair}{Canopy layer air temperature vector (Celsius).}
-
-\item{k}{A vector of light extinction coefficients.}
-
-\item{kd}{A vector of diffuse light extinction coefficients.}
-
-\item{beta}{Solar elevation (in radians).}
 }
 \value{
 Functions \code{light_layerDirectIrradianceFraction}, \code{light_layerDiffuseIrradianceFraction}
@@ -158,62 +160,15 @@ LAI <- 2
 nlayer <- 10
 LAIlayerlive <- matrix(rep(LAI/nlayer,nlayer),nlayer,1)
 LAIlayerdead <- matrix(0,nlayer,1)
-leafAngle <- 60 # in degrees
+meanLeafAngle <- 60 # in degrees
+sdLeafAngle <- 20
+
+beta <- light_leafAngleBetaParameters(meanLeafAngle*(pi/180), sdLeafAngle*(pi/180))
 
 ## Extinction coefficients
-kb <- light_directExtinctionCoefficient(leafAngle*(pi/180), solarElevation)
+kb <- light_directionalExtinctionCoefficient(beta["p"], beta["q"], solarElevation)
 kd_PAR <- 0.5
 kd_SWR <- kd_PAR/1.35
-
-## Absorption/Reflection coefficients
-alpha_PAR <- 0.9
-gamma_PAR <- 0.04
-gamma_SWR <- 0.05
-alpha_SWR <- 0.7
-
-Ibfpar <- light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kb, alpha_PAR)
-Idfpar <- light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kd_PAR, alpha_PAR)
-Ibfswr <- light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kb, alpha_SWR)
-Idfswr <- light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kd_SWR, alpha_SWR)
-fsunlit <- light_layerSunlitFraction(LAIlayerlive, LAIlayerdead, kb)
-SHarea <- (1-fsunlit)*LAIlayerlive[,1] 
-SLarea <- fsunlit*LAIlayerlive[,1] 
-
-oldpar <- par(mar=c(4,4,1,1), mfrow=c(1,2))
-plot(Ibfpar*100, 1:nlayer,type="l", ylab="Layer", 
-     xlab="Percentage of irradiance", xlim=c(0,100), ylim=c(1,nlayer), col="dark green")
-lines(Idfpar*100, 1:nlayer, col="dark green", lty=2)
-lines(Ibfswr*100, 1:nlayer, col="red")
-lines(Idfswr*100, 1:nlayer, col="red", lty=2)
-  
-plot(fsunlit*100, 1:nlayer,type="l", ylab="Layer", 
-     xlab="Percentage of leaves", xlim=c(0,100), ylim=c(1,nlayer))
-lines((1-fsunlit)*100, 1:nlayer, lty=2)
-par(oldpar)  
-  
-
-abs_PAR <- light_cohortSunlitShadeAbsorbedRadiation(PAR_direct, PAR_diffuse,
-                        Ibfpar, Idfpar, 
-                        LAIlayerlive, LAIlayerdead, kb, kd_PAR, alpha_PAR, gamma_PAR)
-abs_SWR <- light_cohortSunlitShadeAbsorbedRadiation(SWR_direct, SWR_diffuse,
-                         Ibfswr, Idfswr, 
-                         LAIlayerlive, LAIlayerdead, kb, kd_SWR, alpha_SWR, gamma_SWR)
-oldpar <- par(mar=c(4,4,1,1), mfrow=c(1,2))
-absRadSL <- abs_SWR$I_sunlit[,1]
-absRadSH <- abs_SWR$I_shade[,1]
-lambda <- 546.6507
-QSL <- abs_PAR$I_sunlit[,1]*lambda*0.836*0.01
-QSH <- abs_PAR$I_shade[,1]*lambda*0.836*0.01
-plot(QSL, 1:nlayer,type="l", ylab="Layer", 
-   xlab="Absorbed PAR quantum flux per leaf area", ylim=c(1,nlayer), col="dark green", 
-   xlim=c(0,max(QSL)))
-lines(QSH, 1:nlayer, col="dark green", lty=2)
-plot(absRadSL, 1:nlayer,type="l", ylab="Layer", 
-   xlab="Absorbed SWR per leaf area (W/m2)", ylim=c(1,nlayer), col="red", 
-   xlim=c(0,max(absRadSL)))
-lines(absRadSH, 1:nlayer, col="red", lty=2)
-par(oldpar)
-  
 }
 \references{
 Anten, N.P.R., Bastiaans, L., 2016. The use of canopy models to analyze light competition among plants, in: Hikosaka, K., Niinemets, U., Anten, N.P.R. (Eds.), Canopy Photosynthesis: From Basics to Application. Springer, pp. 379–398.

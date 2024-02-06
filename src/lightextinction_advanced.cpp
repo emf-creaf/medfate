@@ -19,17 +19,18 @@ const double SIGMA_Wm2 = 5.67*1e-8;
 //' @param LAIme A numeric matrix of live expanded LAI values per vegetation layer (row) and cohort (column).
 //' @param LAImd A numeric matrix of dead LAI values per vegetation layer (row) and cohort (column).
 //' @param LAImx A numeric matrix of maximum LAI values per vegetation layer (row) and cohort (column).
-//' @param k A vector of light extinction coefficients.
-//' @param kb,kDIR A vector of direct light extinction coefficients.
-//' @param kd A vector of diffuse light extinction coefficients.
+//' @param K A vector of light extinction coefficients.
+//' @param kb A vector of direct light extinction coefficients.
+//' @param ZF Fraction of sky angles.
 //' @param Ib0 Above-canopy direct incident radiation.
 //' @param Id0 Above-canopy diffuse incident radiation.
-//' @param leafAngle Average leaf inclination angle (in radians)
+//' @param leafAngle Average leaf inclination angle (in radians).
+//' @param leafAngleSD Standard deviation of leaf inclination angle (in radians).
 //' @param p,q Parameters of the beta distribution for leaf angles
 //' @param ClumpingIndex The extent to which foliage has a nonrandom spatial distribution.
 //' @param alpha A vector of leaf absorbance by species.
 //' @param gamma A vector of leaf reflectance values.
-//' @param beta Solar elevation (in radians).
+//' @param solarElevation Solar elevation (in radians).
 //' @param alphaSWR A vecfor of hort-wave absorbance coefficients for each cohort.
 //' @param gammaSWR A vector of short-wave reflectance coefficients (albedo) for each cohort.
 //' @param ddd A dataframe with direct and diffuse radiation for different subdaily time steps (see function \code{radiation_directDiffuseDay} in package meteoland).
@@ -71,62 +72,15 @@ const double SIGMA_Wm2 = 5.67*1e-8;
 //' nlayer <- 10
 //' LAIlayerlive <- matrix(rep(LAI/nlayer,nlayer),nlayer,1)
 //' LAIlayerdead <- matrix(0,nlayer,1)
-//' leafAngle <- 60 # in degrees
+//' meanLeafAngle <- 60 # in degrees
+//' sdLeafAngle <- 20
+//' 
+//' beta <- light_leafAngleBetaParameters(meanLeafAngle*(pi/180), sdLeafAngle*(pi/180))
 //' 
 //' ## Extinction coefficients
-//' kb <- light_directExtinctionCoefficient(leafAngle*(pi/180), solarElevation)
+//' kb <- light_directionalExtinctionCoefficient(beta["p"], beta["q"], solarElevation)
 //' kd_PAR <- 0.5
 //' kd_SWR <- kd_PAR/1.35
-//' 
-//' ## Absorption/Reflection coefficients
-//' alpha_PAR <- 0.9
-//' gamma_PAR <- 0.04
-//' gamma_SWR <- 0.05
-//' alpha_SWR <- 0.7
-//' 
-//' Ibfpar <- light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kb, alpha_PAR)
-//' Idfpar <- light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kd_PAR, alpha_PAR)
-//' Ibfswr <- light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kb, alpha_SWR)
-//' Idfswr <- light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kd_SWR, alpha_SWR)
-//' fsunlit <- light_layerSunlitFraction(LAIlayerlive, LAIlayerdead, kb)
-//' SHarea <- (1-fsunlit)*LAIlayerlive[,1] 
-//' SLarea <- fsunlit*LAIlayerlive[,1] 
-//' 
-//' oldpar <- par(mar=c(4,4,1,1), mfrow=c(1,2))
-//' plot(Ibfpar*100, 1:nlayer,type="l", ylab="Layer", 
-//'      xlab="Percentage of irradiance", xlim=c(0,100), ylim=c(1,nlayer), col="dark green")
-//' lines(Idfpar*100, 1:nlayer, col="dark green", lty=2)
-//' lines(Ibfswr*100, 1:nlayer, col="red")
-//' lines(Idfswr*100, 1:nlayer, col="red", lty=2)
-//'   
-//' plot(fsunlit*100, 1:nlayer,type="l", ylab="Layer", 
-//'      xlab="Percentage of leaves", xlim=c(0,100), ylim=c(1,nlayer))
-//' lines((1-fsunlit)*100, 1:nlayer, lty=2)
-//' par(oldpar)  
-//'   
-//' 
-//' abs_PAR <- light_cohortSunlitShadeAbsorbedRadiation(PAR_direct, PAR_diffuse,
-//'                         Ibfpar, Idfpar, 
-//'                         LAIlayerlive, LAIlayerdead, kb, kd_PAR, alpha_PAR, gamma_PAR)
-//' abs_SWR <- light_cohortSunlitShadeAbsorbedRadiation(SWR_direct, SWR_diffuse,
-//'                          Ibfswr, Idfswr, 
-//'                          LAIlayerlive, LAIlayerdead, kb, kd_SWR, alpha_SWR, gamma_SWR)
-//' oldpar <- par(mar=c(4,4,1,1), mfrow=c(1,2))
-//' absRadSL <- abs_SWR$I_sunlit[,1]
-//' absRadSH <- abs_SWR$I_shade[,1]
-//' lambda <- 546.6507
-//' QSL <- abs_PAR$I_sunlit[,1]*lambda*0.836*0.01
-//' QSH <- abs_PAR$I_shade[,1]*lambda*0.836*0.01
-//' plot(QSL, 1:nlayer,type="l", ylab="Layer", 
-//'    xlab="Absorbed PAR quantum flux per leaf area", ylim=c(1,nlayer), col="dark green", 
-//'    xlim=c(0,max(QSL)))
-//' lines(QSH, 1:nlayer, col="dark green", lty=2)
-//' plot(absRadSL, 1:nlayer,type="l", ylab="Layer", 
-//'    xlab="Absorbed SWR per leaf area (W/m2)", ylim=c(1,nlayer), col="red", 
-//'    xlim=c(0,max(absRadSL)))
-//' lines(absRadSH, 1:nlayer, col="red", lty=2)
-//' par(oldpar)
-//'   
 //' @name light_advanced
 // [[Rcpp::export("light_leafAngleCDF")]]
 double leafAngleCDF(double leafAngle, double p, double q) {
