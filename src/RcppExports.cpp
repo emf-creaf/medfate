@@ -2277,25 +2277,24 @@ RcppExport SEXP _medfate_soilInfiltrationPercolation(SEXP soilSEXP, SEXP soilFun
     return rcpp_result_gen;
 }
 // soilFlows
-double soilFlows(List soil, NumericVector sourceSink, int nsteps, String soilFunctions, String lowerBoundary, bool modifySoil);
-static SEXP _medfate_soilFlows_try(SEXP soilSEXP, SEXP sourceSinkSEXP, SEXP nstepsSEXP, SEXP soilFunctionsSEXP, SEXP lowerBoundarySEXP, SEXP modifySoilSEXP) {
+double soilFlows(List soil, NumericVector sourceSink, int nsteps, String lowerBoundary, bool modifySoil);
+static SEXP _medfate_soilFlows_try(SEXP soilSEXP, SEXP sourceSinkSEXP, SEXP nstepsSEXP, SEXP lowerBoundarySEXP, SEXP modifySoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type sourceSink(sourceSinkSEXP);
     Rcpp::traits::input_parameter< int >::type nsteps(nstepsSEXP);
-    Rcpp::traits::input_parameter< String >::type soilFunctions(soilFunctionsSEXP);
     Rcpp::traits::input_parameter< String >::type lowerBoundary(lowerBoundarySEXP);
     Rcpp::traits::input_parameter< bool >::type modifySoil(modifySoilSEXP);
-    rcpp_result_gen = Rcpp::wrap(soilFlows(soil, sourceSink, nsteps, soilFunctions, lowerBoundary, modifySoil));
+    rcpp_result_gen = Rcpp::wrap(soilFlows(soil, sourceSink, nsteps, lowerBoundary, modifySoil));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_soilFlows(SEXP soilSEXP, SEXP sourceSinkSEXP, SEXP nstepsSEXP, SEXP soilFunctionsSEXP, SEXP lowerBoundarySEXP, SEXP modifySoilSEXP) {
+RcppExport SEXP _medfate_soilFlows(SEXP soilSEXP, SEXP sourceSinkSEXP, SEXP nstepsSEXP, SEXP lowerBoundarySEXP, SEXP modifySoilSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_soilFlows_try(soilSEXP, sourceSinkSEXP, nstepsSEXP, soilFunctionsSEXP, lowerBoundarySEXP, modifySoilSEXP));
+        rcpp_result_gen = PROTECT(_medfate_soilFlows_try(soilSEXP, sourceSinkSEXP, nstepsSEXP, lowerBoundarySEXP, modifySoilSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -5177,7 +5176,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("double(*hydrology_snowMelt)(double,double,double,double)");
         signatures.insert("NumericVector(*hydrology_soilWaterInputs)(List,String,double,double,double,double,double,double,double,double,double,bool,bool)");
         signatures.insert("NumericVector(*hydrology_soilInfiltrationPercolation)(List,String,double,bool)");
-        signatures.insert("double(*hydrology_soilFlows)(List,NumericVector,int,String,String,bool)");
+        signatures.insert("double(*hydrology_soilFlows)(List,NumericVector,int,String,bool)");
         signatures.insert("double(*soil_saturatedConductivitySX)(double,double,double,bool)");
         signatures.insert("double(*soil_unsaturatedConductivitySX)(double,double,double,double,bool)");
         signatures.insert("double(*soil_thetaSATSX)(double,double,double)");
@@ -5413,7 +5412,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_snowMelt", (DL_FUNC) &_medfate_snowMelt, 4},
     {"_medfate_soilWaterInputs", (DL_FUNC) &_medfate_soilWaterInputs, 13},
     {"_medfate_soilInfiltrationPercolation", (DL_FUNC) &_medfate_soilInfiltrationPercolation, 4},
-    {"_medfate_soilFlows", (DL_FUNC) &_medfate_soilFlows, 6},
+    {"_medfate_soilFlows", (DL_FUNC) &_medfate_soilFlows, 5},
     {"_medfate_gammln", (DL_FUNC) &_medfate_gammln, 1},
     {"_medfate_betacf", (DL_FUNC) &_medfate_betacf, 3},
     {"_medfate_incbeta", (DL_FUNC) &_medfate_incbeta, 3},

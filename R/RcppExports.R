@@ -1558,8 +1558,8 @@ hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInpu
 #' @param nsteps  Number of time steps per day
 #' @param lowerBoundary Lower boundary condition: "free", "impervious" or "aquifer"
 #' 
-hydrology_soilFlows <- function(soil, sourceSink, nsteps = 24L, soilFunctions = "VG", lowerBoundary = "free", modifySoil = TRUE) {
-    .Call(`_medfate_soilFlows`, soil, sourceSink, nsteps, soilFunctions, lowerBoundary, modifySoil)
+hydrology_soilFlows <- function(soil, sourceSink, nsteps = 24L, lowerBoundary = "free", modifySoil = TRUE) {
+    .Call(`_medfate_soilFlows`, soil, sourceSink, nsteps, lowerBoundary, modifySoil)
 }
 
 .gammln <- function(xx) {
