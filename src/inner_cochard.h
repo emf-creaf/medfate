@@ -13,4 +13,4 @@ List initCochardNetwork(int c, NumericVector LAIphe,
                        double sapFluidityDay = 1.0, List control = NULL);
 
 void innerCochard(List x, List input, List output, int n, double tstep, 
-                 bool verbose = false, bool modifyInput = true);
+                 bool verbose = false);

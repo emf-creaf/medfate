@@ -18,4 +18,4 @@ List profitMaximization2(List supplyFunction, int initialPos,
                          double Gswmin, double Gswmax);
 
 void innerSperry(List x, List input, List output, int n, double tstep, 
-                 bool verbose = false, int stepFunctions = NA_INTEGER, bool modifyInput = true);
+                 bool verbose = false, int stepFunctions = NA_INTEGER);

@@ -41,10 +41,17 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                   double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0, double herbTranspiration = 0.0,
                   bool verbose = false, int stepFunctions = NA_INTEGER, 
                   bool modifyInput = true) {
+  
+  //Will not modify input x 
+  if(!modifyInput) {
+    x = clone(x);
+  }
+  
   //Control parameters
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
+  
 
   int ntimesteps = control["ndailysteps"];
   int nsubsteps = control["nsubsteps"];
@@ -227,6 +234,12 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   //Transpiration and photosynthesis
   NumericMatrix SoilWaterExtract(numCohorts, nlayers);
   std::fill(SoilWaterExtract.begin(), SoilWaterExtract.end(), 0.0);
+  List ExtractionPools(numCohorts);
+  for(int c =0;c<numCohorts;c++) {
+    NumericMatrix ExtractionPoolsCoh(numCohorts, nlayers);
+    std::fill(ExtractionPoolsCoh.begin(), ExtractionPoolsCoh.end(), 0.0);
+    ExtractionPools[c] = ExtractionPoolsCoh;
+  }
   NumericMatrix soilLayerExtractInst(nlayers, ntimesteps);
   std::fill(soilLayerExtractInst.begin(), soilLayerExtractInst.end(), 0.0);
   NumericVector SoilExtractCoh(numCohorts,0.0);
@@ -730,6 +743,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   
   List innerOutput = List::create(
                              _["Extraction"] = SoilWaterExtract,
+                             _["ExtractionPools"] = ExtractionPools,
                              _["ExtractionInst"] = soilLayerExtractInst,
                              _["RhizoPsi"] = minPsiRhizo,
                              _["Plants"] = Plants,
@@ -878,10 +892,10 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     
     if(transpirationMode == "Sperry") {
       innerSperry(x, innerInput, innerOutput, n, tstep, 
-                  verbose, stepFunctions, modifyInput);
+                  verbose, stepFunctions);
     } else if(transpirationMode == "Cochard"){
       innerCochard(x, innerInput, innerOutput, n, tstep,
-                   verbose, modifyInput);
+                   verbose);
     }
 
     for(int c=0;c<numCohorts;c++) {
@@ -1155,17 +1169,6 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     }
   }
   
-  //copy soil to the pools of all cohorts
-  if(modifyInput){
-    if(!plantWaterPools) { 
-      for(int c=0;c<numCohorts;c++) {
-        for(int l=0;l<nlayers;l++) {
-          Wpool(c,l) = Ws[l];
-        }
-      }
-    }
-  }
-  
   // ARRANGE OUTPUT
   DataFrame Tinst = DataFrame::create(_["SolarHour"] = solarHour, 
                                       _["Tatm"] = Tatm, _["Tcan"] = Tcan, _["Tsoil"] = Tsoil_mat);
@@ -1198,6 +1201,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   List l = List::create(_["cohorts"] = clone(cohorts),
                         _["EnergyBalance"] = EB,
                         _["Extraction"] = SoilWaterExtract,
+                        _["ExtractionPools"] = ExtractionPools,
                         _["RhizoPsi"] = minPsiRhizo,
                         _["Stand"] = Stand,
                         _["Plants"] = Plants,

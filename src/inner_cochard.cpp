@@ -666,7 +666,7 @@ void semi_implicit_integration(List network, double dt, NumericVector opt,
 }
 
 void innerCochard(List x, List input, List output, int n, double tstep, 
-                 bool verbose = false, bool modifyInput = true) {
+                 bool verbose = false) {
   
   // Extract hydraulic networks
   List networks = input["networks"];
@@ -767,6 +767,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   //Extract output to be filled
   
   NumericMatrix SoilWaterExtract = Rcpp::as<Rcpp::NumericMatrix>(output["Extraction"]);
+  List ExtractionPools = Rcpp::as<Rcpp::List>(output["ExtractionPools"]);
   NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(output["ExtractionInst"]);
   NumericMatrix minPsiRhizo = Rcpp::as<Rcpp::NumericMatrix>(output["RhizoPsi"]);
   List Plants = output["Plants"];
@@ -1133,8 +1134,6 @@ void innerCochard(List x, List input, List output, int n, double tstep,
           if(layerConnected(c,l)) {
             SoilWaterExtract(c,l) += fluxSoilToStem_mm[cl]; //Add to cummulative transpiration from layers
             soilLayerExtractInst(l,n) += fluxSoilToStem_mm[cl];
-            //Apply extraction to soil layer
-            if(modifyInput) Ws[l] = std::max(Ws[l] - (fluxSoilToStem_mm[cl]/Water_FC[l]),0.0);
             cl++;
           }
         }
@@ -1143,15 +1142,12 @@ void innerCochard(List x, List input, List output, int n, double tstep,
         LogicalMatrix layerConnectedCoh = Rcpp::as<Rcpp::LogicalMatrix>(layerConnectedPools[c]);
         int cl = 0;
         for(int j = 0;j<numCohorts;j++) {
+          NumericMatrix ExtractionPoolsCoh = Rcpp::as<Rcpp::NumericMatrix>(ExtractionPools[j]);
           for(int l=0;l<nlayers;l++) {
             if(layerConnectedCoh(j,l)) {
               SoilWaterExtract(c,l) += fluxSoilToStem_mm[cl]; //Add to cummulative transpiration from layers
               soilLayerExtractInst(l,n) += fluxSoilToStem_mm[cl];
-              //Apply extraction to soil layer
-              if(modifyInput) {
-                Wpool(j,l) = std::max(Wpool(j,l) - (fluxSoilToStem_mm[cl]/(Water_FC[l]*poolProportions[j])), 0.0); //Apply extraction from pools 
-                Ws[l] = std::max(Ws[l] - (fluxSoilToStem_mm[cl]/Water_FC[l]),0.0);
-              }
+              ExtractionPoolsCoh(c,l) += fluxSoilToStem_mm[cl];
               cl++;
             }
           }

@@ -343,7 +343,7 @@ void copyRhizoPsi(int c, int iPM,
 
 
 void innerSperry(List x, List input, List output, int n, double tstep, 
-                 bool verbose = false, int stepFunctions = NA_INTEGER, bool modifyInput = true) {
+                 bool verbose = false, int stepFunctions = NA_INTEGER) {
   
   // Extract control variables
   List control = x["control"];
@@ -439,6 +439,7 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   List outPMShade = output["PMShadeFunctions"];
   
   NumericMatrix SoilWaterExtract = Rcpp::as<Rcpp::NumericMatrix>(output["Extraction"]);
+  List ExtractionPools = Rcpp::as<Rcpp::List>(output["ExtractionPools"]);
   NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(output["ExtractionInst"]);
 
   NumericMatrix minPsiRhizo = Rcpp::as<Rcpp::NumericMatrix>(output["RhizoPsi"]);
@@ -725,8 +726,6 @@ void innerSperry(List x, List input, List output, int n, double tstep,
             if(layerConnected(c,l)) {
               SoilWaterExtract(c,l) += Esoilcn[cl]; //Add to cummulative transpiration from layers
               soilLayerExtractInst(l,n) += Esoilcn[cl];
-              //Apply extraction to soil layer
-              if(modifyInput) Ws[l] = std::max(Ws[l] - (Esoilcn[cl]/Water_FC[l]),0.0);
               cl++;
             } 
           }
@@ -735,15 +734,12 @@ void innerSperry(List x, List input, List output, int n, double tstep,
           LogicalMatrix layerConnectedCoh = Rcpp::as<Rcpp::LogicalMatrix>(layerConnectedPools[c]);
           int cl = 0;
           for(int j = 0;j<numCohorts;j++) {
+            NumericMatrix ExtractionPoolsCoh = Rcpp::as<Rcpp::NumericMatrix>(ExtractionPools[j]);
             for(int l=0;l<nlayers;l++) {
               if(layerConnectedCoh(j,l)) {
                 SoilWaterExtract(c,l) += Esoilcn[cl]; //Add to cummulative transpiration from layers
                 soilLayerExtractInst(l,n) += Esoilcn[cl];
-                //Apply extraction to soil layer
-                if(modifyInput) {
-                  Wpool(j,l) = std::max(Wpool(j,l) - (Esoilcn[cl]/(Water_FC[l]*poolProportions[j])),0.0); //Apply extraction from pools 
-                  Ws[l] = std::max(Ws[l] - (Esoilcn[cl]/Water_FC[l]),0.0);
-                }
+                ExtractionPoolsCoh(c,l) += Esoilcn[cl];
                 cl++;
               }
             }

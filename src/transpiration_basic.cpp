@@ -47,6 +47,12 @@ double findNewPlantPsiConnected(double flowFromRoots, double plantPsi, double ro
 
 List transpirationBasic(List x, NumericVector meteovec,  
                         double elevation, bool modifyInput = true) {
+  
+  //Will not modify input x 
+  if(!modifyInput) {
+    x = clone(x);
+  }
+  
   //Control parameters
   List control = x["control"];
   String cavitationRefillStem = control["cavitationRefillStem"];
@@ -57,7 +63,7 @@ List transpirationBasic(List x, NumericVector meteovec,
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   double hydraulicRedistributionFraction = control["hydraulicRedistributionFraction"];
-  
+
   //Soil water at field capacity
   List soil = x["soil"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
@@ -371,12 +377,11 @@ List transpirationBasic(List x, NumericVector meteovec,
     }
   }
   
+  //Updates plant water internal status
+  internalWater["StemPLC"] = StemPLC;
+  internalWater["LeafPLC"] = LeafPLC;
+  internalWater["PlantPsi"] = PlantPsi;
   
-  if(modifyInput) {
-    internalWater["StemPLC"] = StemPLC;
-    internalWater["LeafPLC"] = LeafPLC;
-    internalWater["PlantPsi"] = PlantPsi;
-  }
   //Atempt to implement hydraulic redistribution
   if(hydraulicRedistributionFraction > 0.0) {
     if(!plantWaterPools) {
@@ -430,23 +435,8 @@ List transpirationBasic(List x, NumericVector meteovec,
       }
     }
   }
-  //Modifies input soil
-  if(modifyInput) {
-    NumericVector Ws = soil["W"];
-    for(int l=0;l<nlayers;l++) Ws[l] = std::max(0.0, Ws[l] - (sum(Extraction(_,l))/Water_FC[l])); 
-    for(int c=0;c<numCohorts;c++) {
-      for(int l=0;l<nlayers;l++) {
-        if(!plantWaterPools){ //copy soil to the pools of all cohorts
-          Wpool(c,l) = Ws[l];
-        } else {//Applies pool extraction by each plant cohort
-          NumericMatrix ExtractionPoolsCoh = ExtractionPools[c];
-          for(int j=0;j<numCohorts;j++) {
-            Wpool(c,l) = std::max(0.0, Wpool(c,l) - (ExtractionPoolsCoh(j,l)/(Water_FC[l]*poolProportions[c]))); //Apply extraction from pools
-          }
-        }
-      }
-    } 
-  }
+  
+
   
   //Copy LAIexpanded for output
   NumericVector LAIcohort(numCohorts);
@@ -480,7 +470,8 @@ List transpirationBasic(List x, NumericVector meteovec,
   List l = List::create(_["cohorts"] = clone(cohorts),
                         _["Stand"] = Stand,
                         _["Plants"] = Plants,
-                        _["Extraction"] = Extraction);
+                        _["Extraction"] = Extraction,
+                        _["ExtractionPools"] = ExtractionPools);
   return(l);
 }
 
@@ -669,7 +660,7 @@ List transpirationBasic(List x, NumericVector meteovec,
 //' @name transp_modes
 // [[Rcpp::export("transp_transpirationGranier")]]
 List transpirationGranier(List x, DataFrame meteo, int day,
-                          double latitude, double elevation, double slope, double aspect,
+                          double latitude, double elevation, double slope, double aspect, 
                           bool modifyInput = true) {
   List control = x["control"];
   if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
