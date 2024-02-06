@@ -87,17 +87,17 @@ namespace medfate {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline void _fillGrowthDailyOutput(List l, List sDay, int iday) {
-        typedef SEXP(*Ptr__fillGrowthDailyOutput)(SEXP,SEXP,SEXP);
+    inline void _fillGrowthDailyOutput(List l, List soil, List sDay, int iday) {
+        typedef SEXP(*Ptr__fillGrowthDailyOutput)(SEXP,SEXP,SEXP,SEXP);
         static Ptr__fillGrowthDailyOutput p__fillGrowthDailyOutput = NULL;
         if (p__fillGrowthDailyOutput == NULL) {
-            validateSignature("void(*_fillGrowthDailyOutput)(List,List,int)");
+            validateSignature("void(*_fillGrowthDailyOutput)(List,List,List,int)");
             p__fillGrowthDailyOutput = (Ptr__fillGrowthDailyOutput)R_GetCCallable("medfate", "_medfate__fillGrowthDailyOutput");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p__fillGrowthDailyOutput(Shield<SEXP>(Rcpp::wrap(l)), Shield<SEXP>(Rcpp::wrap(sDay)), Shield<SEXP>(Rcpp::wrap(iday)));
+            rcpp_result_gen = p__fillGrowthDailyOutput(Shield<SEXP>(Rcpp::wrap(l)), Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(sDay)), Shield<SEXP>(Rcpp::wrap(iday)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -317,17 +317,17 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector hydrology_soilInfiltrationPercolation(List soil, String soilFunctions, double waterInput, bool rockyLayerDrainage = true, bool modifySoil = true) {
-        typedef SEXP(*Ptr_hydrology_soilInfiltrationPercolation)(SEXP,SEXP,SEXP,SEXP,SEXP);
+    inline NumericVector hydrology_soilInfiltrationPercolation(List soil, String soilFunctions, double waterInput, bool modifySoil = true) {
+        typedef SEXP(*Ptr_hydrology_soilInfiltrationPercolation)(SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_soilInfiltrationPercolation p_hydrology_soilInfiltrationPercolation = NULL;
         if (p_hydrology_soilInfiltrationPercolation == NULL) {
-            validateSignature("NumericVector(*hydrology_soilInfiltrationPercolation)(List,String,double,bool,bool)");
+            validateSignature("NumericVector(*hydrology_soilInfiltrationPercolation)(List,String,double,bool)");
             p_hydrology_soilInfiltrationPercolation = (Ptr_hydrology_soilInfiltrationPercolation)R_GetCCallable("medfate", "_medfate_hydrology_soilInfiltrationPercolation");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_hydrology_soilInfiltrationPercolation(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(soilFunctions)), Shield<SEXP>(Rcpp::wrap(waterInput)), Shield<SEXP>(Rcpp::wrap(rockyLayerDrainage)), Shield<SEXP>(Rcpp::wrap(modifySoil)));
+            rcpp_result_gen = p_hydrology_soilInfiltrationPercolation(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(soilFunctions)), Shield<SEXP>(Rcpp::wrap(waterInput)), Shield<SEXP>(Rcpp::wrap(modifySoil)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -338,17 +338,17 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline double hydrology_soilFlows(List soil, NumericVector sourceSink, int nsteps = 24, bool modifySoil = true) {
-        typedef SEXP(*Ptr_hydrology_soilFlows)(SEXP,SEXP,SEXP,SEXP);
+    inline double hydrology_soilFlows(List soil, NumericVector sourceSink, int nsteps = 24, String lowerBoundary = "free", bool modifySoil = true) {
+        typedef SEXP(*Ptr_hydrology_soilFlows)(SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_soilFlows p_hydrology_soilFlows = NULL;
         if (p_hydrology_soilFlows == NULL) {
-            validateSignature("double(*hydrology_soilFlows)(List,NumericVector,int,bool)");
+            validateSignature("double(*hydrology_soilFlows)(List,NumericVector,int,String,bool)");
             p_hydrology_soilFlows = (Ptr_hydrology_soilFlows)R_GetCCallable("medfate", "_medfate_hydrology_soilFlows");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_hydrology_soilFlows(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(sourceSink)), Shield<SEXP>(Rcpp::wrap(nsteps)), Shield<SEXP>(Rcpp::wrap(modifySoil)));
+            rcpp_result_gen = p_hydrology_soilFlows(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(sourceSink)), Shield<SEXP>(Rcpp::wrap(nsteps)), Shield<SEXP>(Rcpp::wrap(lowerBoundary)), Shield<SEXP>(Rcpp::wrap(modifySoil)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -1072,17 +1072,17 @@ namespace medfate {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline void _fillSPWBDailyOutput(List l, List sDay, int iday) {
-        typedef SEXP(*Ptr__fillSPWBDailyOutput)(SEXP,SEXP,SEXP);
+    inline void _fillSPWBDailyOutput(List l, List soil, List sDay, int iday) {
+        typedef SEXP(*Ptr__fillSPWBDailyOutput)(SEXP,SEXP,SEXP,SEXP);
         static Ptr__fillSPWBDailyOutput p__fillSPWBDailyOutput = NULL;
         if (p__fillSPWBDailyOutput == NULL) {
-            validateSignature("void(*_fillSPWBDailyOutput)(List,List,int)");
+            validateSignature("void(*_fillSPWBDailyOutput)(List,List,List,int)");
             p__fillSPWBDailyOutput = (Ptr__fillSPWBDailyOutput)R_GetCCallable("medfate", "_medfate__fillSPWBDailyOutput");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p__fillSPWBDailyOutput(Shield<SEXP>(Rcpp::wrap(l)), Shield<SEXP>(Rcpp::wrap(sDay)), Shield<SEXP>(Rcpp::wrap(iday)));
+            rcpp_result_gen = p__fillSPWBDailyOutput(Shield<SEXP>(Rcpp::wrap(l)), Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(sDay)), Shield<SEXP>(Rcpp::wrap(iday)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

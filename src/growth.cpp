@@ -1933,11 +1933,10 @@ List defineGrowthDailyOutput(double latitude, double elevation, double slope, do
 
 
 // [[Rcpp::export(".fillGrowthDailyOutput")]]
-void fillGrowthDailyOutput(List l, List sDay, int iday) {
+void fillGrowthDailyOutput(List l, List soil, List sDay, int iday) {
   
   List x = l["growthInput"];
   List control = x["control"];
-  List soil = x["soil"];
   String transpirationMode = control["transpirationMode"];
   
   DataFrame DWB = Rcpp::as<Rcpp::DataFrame>(l["WaterBalance"]);
@@ -2491,7 +2490,7 @@ List growth(List x, DataFrame meteo, double latitude,
     }    
     
     //Fills output 
-    fillGrowthDailyOutput(outputList, s, i);
+    fillGrowthDailyOutput(outputList, soil, s, i);
     //Add cohort biomass sum
     List plantBiomassBalance = Rcpp::as<Rcpp::List>(outputList["PlantBiomassBalance"]);
     NumericMatrix CohortBiomassBalance = Rcpp::as<Rcpp::NumericMatrix>(plantBiomassBalance["CohortBiomassBalance"]);

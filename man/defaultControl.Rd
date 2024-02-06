@@ -38,7 +38,7 @@ A list, with the following options (default values in brackets):
       \item{\code{snowpack [= TRUE]}: Boolean flag to indicate the simulation of snow accumulation and melting.}
       \item{\code{leafPhenology [= TRUE]}: Boolean flag to indicate the simulation of leaf phenology for winter-deciduous species.}
       \item{\code{bareSoilEvaporation [= TRUE]}: Boolean flag to indicate the simulation of evaporation from bare soil.}
-      \item{\code{rockyLayerDrainage [= TRUE]}: Boolean flag to indicate the simulation of drainage from rocky layers (> 95\% of rocks).}
+      \item{\code{lowerBoundary [= "free"]}: String specifying the lower boundary condition for soil water flow (either "free", "impervious" or "aquifer".}
       \item{\code{unlimitedSoilWater [= FALSE]}: Boolean flag to indicate the simulation of plant transpiration assuming that soil water is always at field capacity.}
       \item{\code{unfoldingDD [= 300]}: Degree-days for complete leaf unfolding after budburst has occurred.}
       \item{\code{rhizosphereOverlap [= "total"]}: A string indicating the degree of rhizosphere spatial overlap between plant cohorts:

@@ -884,8 +884,8 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, ru
     .Call(`_medfate_defineGrowthDailyOutput`, latitude, elevation, slope, aspect, dateStrings, x)
 }
 
-.fillGrowthDailyOutput <- function(l, sDay, iday) {
-    invisible(.Call(`_medfate_fillGrowthDailyOutput`, l, sDay, iday))
+.fillGrowthDailyOutput <- function(l, soil, sDay, iday) {
+    invisible(.Call(`_medfate_fillGrowthDailyOutput`, l, soil, sDay, iday))
 }
 
 #' Forest growth
@@ -1546,10 +1546,9 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, prec, er, tday, rad, 
 #' @rdname hydrology_verticalInputs
 #' 
 #' @param waterInput Soil water input for a given day (mm).
-#' @param rockyLayerDrainage Boolean flag to indicate the simulation of drainage from rocky layers (> 95\% of rocks).
 #' 
-hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInput, rockyLayerDrainage = TRUE, modifySoil = TRUE) {
-    .Call(`_medfate_soilInfiltrationPercolation`, soil, soilFunctions, waterInput, rockyLayerDrainage, modifySoil)
+hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInput, modifySoil = TRUE) {
+    .Call(`_medfate_soilInfiltrationPercolation`, soil, soilFunctions, waterInput, modifySoil)
 }
 
 #' @rdname hydrology_soil
@@ -1557,9 +1556,10 @@ hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInpu
 #' @param sourceSink Source/sink term for each soil layer (from snowmelt, soil evaporation or plant transpiration/redistribution)
 #'        as mm/day.
 #' @param nsteps  Number of time steps per day
+#' @param lowerBoundary Lower boundary condition: "free", "impervious" or "aquifer"
 #' 
-hydrology_soilFlows <- function(soil, sourceSink, nsteps = 24L, modifySoil = TRUE) {
-    .Call(`_medfate_soilFlows`, soil, sourceSink, nsteps, modifySoil)
+hydrology_soilFlows <- function(soil, sourceSink, nsteps = 24L, lowerBoundary = "free", modifySoil = TRUE) {
+    .Call(`_medfate_soilFlows`, soil, sourceSink, nsteps, lowerBoundary, modifySoil)
 }
 
 .gammln <- function(xx) {
@@ -3087,8 +3087,8 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
     .Call(`_medfate_defineSPWBDailyOutput`, latitude, elevation, slope, aspect, dateStrings, x)
 }
 
-.fillSPWBDailyOutput <- function(l, sDay, iday) {
-    invisible(.Call(`_medfate_fillSPWBDailyOutput`, l, sDay, iday))
+.fillSPWBDailyOutput <- function(l, soil, sDay, iday) {
+    invisible(.Call(`_medfate_fillSPWBDailyOutput`, l, soil, sDay, iday))
 }
 
 #' Soil-plant water balance

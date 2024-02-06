@@ -11,6 +11,7 @@ double herbaceousTranspiration(double pet, double LherbSWR, double herbLAI,
 NumericVector soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR,
                               bool modifySoil = true);
 
+
 double infiltrationAmount(double input, double Ssoil);
 NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro, 
                                       double a = -0.005, double b = 3.0);
@@ -27,4 +28,7 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, double prec, doub
                               bool snowpack = true, bool modifySoil = true);
 NumericVector soilInfiltrationPercolation(List soil, String soilFunctions, 
                                           double waterInput,
-                                          bool rockyLayerDrainage = true, bool modifySoil = true);
+                                          bool modifySoil = true);
+double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24, 
+                 String lowerBoundary = "free",
+                 bool modifySoil = true);

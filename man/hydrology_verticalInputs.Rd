@@ -26,7 +26,6 @@ hydrology_soilInfiltrationPercolation(
   soil,
   soilFunctions,
   waterInput,
-  rockyLayerDrainage = TRUE,
   modifySoil = TRUE
 )
 }
@@ -58,8 +57,6 @@ hydrology_soilInfiltrationPercolation(
 \item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
 
 \item{waterInput}{Soil water input for a given day (mm).}
-
-\item{rockyLayerDrainage}{Boolean flag to indicate the simulation of drainage from rocky layers (> 95\% of rocks).}
 }
 \value{
 Function \code{hydrology_soilWaterInputs} returns a named vector with the following elements, all in mm:

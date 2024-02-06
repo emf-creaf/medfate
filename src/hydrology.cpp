@@ -271,25 +271,23 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, double prec, doub
 //' @rdname hydrology_verticalInputs
 //' 
 //' @param waterInput Soil water input for a given day (mm).
-//' @param rockyLayerDrainage Boolean flag to indicate the simulation of drainage from rocky layers (> 95\% of rocks).
 //' 
 // [[Rcpp::export("hydrology_soilInfiltrationPercolation")]]
 NumericVector soilInfiltrationPercolation(List soil, String soilFunctions, 
                                           double waterInput,
-                                          bool rockyLayerDrainage = true, bool modifySoil = true) {
+                                          bool modifySoil = true) {
   //Soil input
   NumericVector W = clone(Rcpp::as<Rcpp::NumericVector>(soil["W"])); //Access to soil state variable
   NumericVector dVec = soil["dVec"];
   NumericVector macro = soil["macro"];
   NumericVector rfc = soil["rfc"];
-  double Kdrain = soil["Kdrain"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   NumericVector Water_SAT = waterSAT(soil, soilFunctions);
   int nlayers = W.size();
   
 
   //Hydrologic input
-  double Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
+  double Infiltration= 0.0, Runoff= 0.0;
   if(waterInput>0.0) {
     //Interception
     //Net Runoff and infiltration
@@ -305,64 +303,60 @@ NumericVector soilInfiltrationPercolation(List soil, String soilFunctions,
         Wn = W[l]*Water_FC[l] + Ivec[l]; //Update water volume
         if(l<(nlayers-1)) {
           Ivec[l+1] = Ivec[l+1] + std::max(Wn - Water_FC[l],0.0); //update Ivec adding the excess to the infiltrating water (saturated flow)
-          W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta (this modifies 'soil')
+          W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta
         } else {
-          if((rfc[l]<95.0) || rockyLayerDrainage) { //If not a rock layer or rocky layer drainage is allowed
-            W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta (this modifies 'soil')
-            percolationExcess = std::max(Wn - Water_FC[l],0.0); //Set excess of the bottom layer using field capacity
-          } else {
-            W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta (this modifies 'soil')
-            percolationExcess = std::max(Wn - Water_SAT[l],0.0); //Set excess of the bottom layer using saturation
-          }
+          W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta
+          percolationExcess = std::max(Wn - Water_FC[l],0.0); //Set excess of the bottom layer using field capacity
         }
       } 
     } 
     //If there still excess fill layers over field capacity
-    if(percolationExcess>0.0) {
+    if((percolationExcess>0.0)) {
       for(int l=(nlayers-1);l>=0;l--) {
         if((dVec[l]>0.0) && (percolationExcess>0.0)) {
           Wn = W[l]*Water_FC[l] + percolationExcess; //Update water volume
           percolationExcess = std::max(Wn - Water_SAT[l],0.0); //Update excess, using the excess of water over saturation
-          W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta (this modifies 'soil') here no upper
+          W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta here no upper
         }
       }
       //If soil is completely saturated increase surface Runoff
       if(percolationExcess>0.0) { 
         Runoff = Runoff + percolationExcess;
       }
-    }
+    } 
   }
-  //If there is still room for additional drainage (water in macropores accumulated from previous days)
-  double head = 0.0;
-  for(int l=0;l<nlayers;l++) { //Add mm over field capacity
-    if((l<(nlayers-1)) || rockyLayerDrainage) {
-      head += Water_FC[l]*std::max(W[l] - 1.0, 0.0);
-    }
-  }
-  // Rcout<<head<<"\n";
-  if(head>0.0) {
-    double maxDrainage = head*Kdrain;
-    for(int l=0;l<nlayers;l++) {
-      if(maxDrainage>0.0) {
-        double Wn = W[l]*Water_FC[l];
-        double toDrain = std::min(std::max(Wn - Water_FC[l], 0.0), maxDrainage);
-        if((l==(nlayers-1)) && (rfc[l] >= 95.0) && (!rockyLayerDrainage)) { //Prevent drainage for last rocky layer if not allowed
-          toDrain = 0.0;
-        }
-        if(toDrain > 0.0) {
-          DeepDrainage +=toDrain;
-          maxDrainage -=toDrain;
-          Wn -= toDrain;
-          W[l] = std::max(0.0, Wn/Water_FC[l]); //Update theta (this modifies 'soil') here no upper          
-        }
-      }
-    }
-  }
+  // //If there is still room for additional drainage (water in macropores accumulated from previous days)
+  // double head = 0.0;
+  // for(int l=0;l<nlayers;l++) { //Add mm over field capacity
+  //   if((l<(nlayers-1)) || rockyLayerDrainage) {
+  //     head += Water_FC[l]*std::max(W[l] - 1.0, 0.0);
+  //   }
+  // }
+  // // Rcout<<head<<"\n";
+  // if(head>0.0) {
+  //   double maxDrainage = head*Kdrain;
+  //   for(int l=0;l<nlayers;l++) {
+  //     if(maxDrainage>0.0) {
+  //       double Wn = W[l]*Water_FC[l];
+  //       double toDrain = std::min(std::max(Wn - Water_FC[l], 0.0), maxDrainage);
+  //       if((l==(nlayers-1)) && (rfc[l] >= 95.0) && (!rockyLayerDrainage)) { //Prevent drainage for last rocky layer if not allowed
+  //         toDrain = 0.0;
+  //       }
+  //       if(toDrain > 0.0) {
+  //         DeepDrainage +=toDrain;
+  //         maxDrainage -=toDrain;
+  //         Wn -= toDrain;
+  //         W[l] = std::max(0.0, Wn/Water_FC[l]); //Update theta (this modifies 'soil') here no upper          
+  //       }
+  //     }
+  //   }
+  // }
   if(modifySoil) {
     NumericVector Ws = soil["W"];
     for(int l=0;l<nlayers;l++) Ws[l] = W[l];
   }
-  NumericVector DB = NumericVector::create(_["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage);
+  NumericVector DB = NumericVector::create(_["Infiltration"] = Infiltration, 
+                                           _["Runoff"] = Runoff);
   return(DB);
 }
 
@@ -395,9 +389,12 @@ NumericVector tridiagonalSolving(NumericVector a, NumericVector b, NumericVector
 //' @param sourceSink Source/sink term for each soil layer (from snowmelt, soil evaporation or plant transpiration/redistribution)
 //'        as mm/day.
 //' @param nsteps  Number of time steps per day
+//' @param lowerBoundary Lower boundary condition: "free", "impervious" or "aquifer"
 //' 
 // [[Rcpp::export("hydrology_soilFlows")]]
-double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24, bool modifySoil = true) {
+double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24, 
+                 String lowerBoundary = "free",
+                 bool modifySoil = true) {
   
   NumericVector dVec = soil["dVec"];
   double mm_day_2_m3_s = 0.001*(1.0/86400.0);//From mm/day = l/day = dm3/day to m3/s
