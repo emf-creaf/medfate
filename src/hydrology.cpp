@@ -457,14 +457,14 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
         a[l] = 0.0;
         c[l] = -1.0*K_down/dZDown[l];
         b[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep) - c[l];
-        d[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep)*Psi_m[l]  - K_down - sourceSink_m3s[l];
+        d[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep)*Psi_m[l]  - K_down + sourceSink_m3s[l];
       } else if(l<(nlayers - 1)) {
         K_up = 0.5*(K_ms[l-1] + K_ms[l]);
         K_down = 0.5*(K_ms[l] + K_ms[l+1]);
         a[l] = -1.0*K_up/dZUp[l];
         c[l] = -1.0*K_down/dZDown[l];
         b[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep) - a[l] - c[l];
-        d[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep)*Psi_m[l] + K_up - K_down - sourceSink_m3s[l];
+        d[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep)*Psi_m[l] + K_up - K_down + sourceSink_m3s[l];
       } else { // last layer
         K_up = 0.5*(K_ms[l-1] + K_ms[l]);
         K_down = K_ms[l];
@@ -472,9 +472,9 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
         c[l] = 0.0;
         b[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep) - a[l] - c[l];
         if(lowerBoundary=="impervious") {
-          d[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep)*Psi_m[l] + K_up - sourceSink_m3s[l];
+          d[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep)*Psi_m[l] + K_up + sourceSink_m3s[l];
         } else {
-          d[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep)*Psi_m[l] + K_up - K_down - sourceSink_m3s[l];
+          d[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep)*Psi_m[l] + K_up - K_down + sourceSink_m3s[l];
         }
       }
     }
@@ -495,14 +495,14 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
         a[l] = 0.0;
         c[l] = -1.0*K_down/(2.0*dZDown[l]);
         b[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep) - c[l];
-        d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] - c[l]*(Psi_m[l] - Psi_m[l+1])  - K_down - sourceSink_m3s[l];
+        d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] - c[l]*(Psi_m[l] - Psi_m[l+1])  - K_down + sourceSink_m3s[l];
       } else if(l<(nlayers - 1)) {
         K_up = 0.5*(K_ms05[l-1] + K_ms05[l]);
         K_down = 0.5*(K_ms05[l] + K_ms05[l+1]);
         a[l] = -1.0*K_up/(2.0*dZUp[l]);
         c[l] = -1.0*K_down/(2.0*dZDown[l]);
         b[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep) - a[l] - c[l];
-        d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] + a[l]*(Psi_m[l - 1] - Psi_m[l]) - c[l]*(Psi_m[l] - Psi_m[l+1]) + K_up - K_down - sourceSink_m3s[l];
+        d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] + a[l]*(Psi_m[l - 1] - Psi_m[l]) - c[l]*(Psi_m[l] - Psi_m[l+1]) + K_up - K_down + sourceSink_m3s[l];
       } else { // last layer
         K_up = 0.5*(K_ms05[l-1] + K_ms05[l]);
         K_down = K_ms05[l];
@@ -510,9 +510,9 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
         c[l] = 0.0;
         b[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep) - a[l];
         if(lowerBoundary=="impervious") {
-          d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] + a[l]*(Psi_m[l - 1] - Psi_m[l]) + K_up - sourceSink_m3s[l];
+          d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] + a[l]*(Psi_m[l - 1] - Psi_m[l]) + K_up + sourceSink_m3s[l];
         } else {
-          d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] + a[l]*(Psi_m[l - 1] - Psi_m[l])  + K_up - K_down - sourceSink_m3s[l];
+          d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] + a[l]*(Psi_m[l - 1] - Psi_m[l])  + K_up - K_down + sourceSink_m3s[l];
         }
       }
     }

@@ -26,7 +26,7 @@ const double cmTOMPa = 0.00009804139432;
 /**
  * Conversion factor from m to MPa
  */
-const double mTOMPa = 0.009804139; //1/9.804139*0.000001; 
+const double mTOMPa = 0.009804139432; //1/9.804139*0.000001; 
 
 CharacterVector layerNames(int nlayers) {
   CharacterVector ln(nlayers);

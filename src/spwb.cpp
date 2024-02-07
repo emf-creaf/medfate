@@ -309,8 +309,8 @@ List spwbDay_basic(List x, NumericVector meteovec,
   
   NumericVector sourceSinkVec(nlayers, 0.0);
   for(int l=0;l<nlayers;l++) {
-    sourceSinkVec[l] = ExtractionVec[l] + EsoilVec[l];
-    if(l ==0) sourceSinkVec[l] = sourceSinkVec[l] + Eherb;
+    sourceSinkVec[l] -= (ExtractionVec[l] + EsoilVec[l]);
+    if(l ==0) sourceSinkVec[l] -= Eherb;
   }
   double Vini = sum(water(soil, soilFunctions));
   if(!plantWaterPools) {
@@ -331,8 +331,8 @@ List spwbDay_basic(List x, NumericVector meteovec,
       NumericVector sourceSinkPoolVec(nlayers, 0.0);
       for(int l=0;l<nlayers;l++) {
         ExtractionPoolVec[l] = sum(ExtractionPool(_,l));
-        sourceSinkPoolVec[l] = ExtractionPoolVec[l] + EsoilPools(c,l);
-        if(l ==0) sourceSinkPoolVec[l] = sourceSinkPoolVec[l] + EherbPools[c];
+        sourceSinkPoolVec[l] -= (ExtractionPoolVec[l] + EsoilPools(c,l));
+        if(l ==0) sourceSinkPoolVec[l] -= EherbPools[c];
       }
       // determine water flows (no mass conservation)
       soilFlows(soil_c, sourceSinkPoolVec, 24, 
@@ -348,7 +348,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   }
   double Vfin = sum(water(soil, soilFunctions));
   //Force water balance closure through calculation of deep drainage
-  double deepDrainage = Vini - Vfin - sum(sourceSinkVec);
+  double deepDrainage = Vini - Vfin + sum(sourceSinkVec);
 
   //Calculate current soil water potential for output
   NumericVector psiVec = psi(soil, soilFunctions); 
@@ -591,8 +591,8 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   double Vini = sum(water(soil, soilFunctions));
   NumericVector sourceSinkVec(nlayers, 0.0);
   for(int l=0;l<nlayers;l++) {
-    sourceSinkVec[l] = ExtractionVec[l] + EsoilVec[l];
-    if(l ==0) sourceSinkVec[l] = sourceSinkVec[l] + Eherb;
+    sourceSinkVec[l] -= (ExtractionVec[l] + EsoilVec[l]);
+    if(l ==0) sourceSinkVec[l] -= Eherb;
   }
   
   if(!plantWaterPools) {
@@ -613,8 +613,8 @@ List spwbDay_advanced(List x, NumericVector meteovec,
       NumericVector sourceSinkPoolVec(nlayers, 0.0);
       for(int l=0;l<nlayers;l++) {
         ExtractionPoolVec[l] = sum(ExtractionPool(_,l));
-        sourceSinkPoolVec[l] = ExtractionPoolVec[l] + EsoilPools(c,l);
-        if(l ==0) sourceSinkPoolVec[l] = sourceSinkPoolVec[l] + EherbPools[c];
+        sourceSinkPoolVec[l] -= (ExtractionPoolVec[l] + EsoilPools(c,l));
+        if(l ==0) sourceSinkPoolVec[l] -= EherbPools[c];
       }
       // determine water flows (no mass conservation)
       soilFlows(soil_c, sourceSinkPoolVec, 24, 
@@ -631,7 +631,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   }
   double Vfin = sum(water(soil, soilFunctions));
   //Force water balance closure through calculation of deep drainage
-  double deepDrainage = Vini - Vfin - sum(sourceSinkVec);
+  double deepDrainage = Vini - Vfin + sum(sourceSinkVec);
 
   //Calculate current soil water potential for output
   NumericVector psiVec = psi(soil, soilFunctions); 

@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 const double cmdTOmmolm2sMPa = 655.2934;
 const double cmTOMPa = 0.00009804139432;
-const double mTOMPa = 0.009804139;
+const double mTOMPa = 0.009804139432;
 
 CharacterVector layerNames(int nlayers);
 
