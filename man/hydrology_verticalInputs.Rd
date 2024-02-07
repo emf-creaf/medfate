@@ -63,10 +63,11 @@ Function \code{hydrology_soilWaterInputs} returns a named vector with the follow
 \item{Rain}{Precipitation as rainfall.}
 \item{Snow}{Precipitation as snow.}
 \item{Interception}{Rainfall water intercepted by the canopy and evaporated.}
-\item{NetRain}{Rainfall reaching the ground.}
+\item{NetRain}{Rainfall reaching the ground (throughfall).}
 \item{Snowmelt}{Snow melted during the day, and added to the water infiltrated.}
 \item{Runon}{Surface water amount running on the target area from upslope.}
-\item{Input}{Total soil input, including runon, snowmelt and net rain.}
+\item{RainfallInput}{Rainfall input, including runon and net rain.}
+\item{TotalInput}{Total soil input, including runon, snowmelt and net rain.}
 
 Function \code{hydrology_soilInfiltrationPercolation} returns a named vector with the following elements, all in mm:
 \item{Infiltration}{Water infiltrated into the soil (i.e. throughfall + runon + snowmelt - runoff).}
