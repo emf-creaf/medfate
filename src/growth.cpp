@@ -2215,6 +2215,9 @@ List growth(List x, DataFrame meteo, double latitude,
             double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL,
             NumericVector CO2ByYear = NumericVector(0)) {
 
+  //Clone input
+  x = clone(x);
+  
   //Control params 
   List control =x["control"];  
   String transpirationMode = control["transpirationMode"];

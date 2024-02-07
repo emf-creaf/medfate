@@ -1975,6 +1975,10 @@ void printWaterBalanceResult(List outputList, List x,
 // [[Rcpp::export("spwb")]]
 List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL,
           NumericVector CO2ByYear = NumericVector(0)) {
+  
+  //Clone input
+  x = clone(x);
+  
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
@@ -2288,6 +2292,10 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
          NumericVector soilEvaporation = NumericVector(0),
          NumericVector herbTranspiration = NumericVector(0),
          NumericVector CO2ByYear = NumericVector(0)) {
+  
+  //Clone input
+  x = clone(x);
+  
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
