@@ -30,5 +30,4 @@ NumericVector soilInfiltrationPercolation(List soil, String soilFunctions,
                                           double waterInput,
                                           bool modifySoil = true);
 double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
-                 String lowerBoundary = "free",
                  bool modifySoil = true);

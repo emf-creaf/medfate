@@ -141,7 +141,6 @@ List spwbDay_basic(List x, NumericVector meteovec,
   List control = x["control"];
   bool snowpack = control["snowpack"];
   bool bareSoilEvaporation = control["bareSoilEvaporation"];
-  String lowerBoundary = control["lowerBoundary"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   String soilFunctions = control["soilFunctions"];
@@ -182,29 +181,6 @@ List spwbDay_basic(List x, NumericVector meteovec,
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
   NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(paramsPhenology["Sgdd"]);
   
-  double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0, LAIcelldead = 0.0, Cm = 0.0;
-  for(int c=0;c<numCohorts;c++) {
-    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
-    LAIcell += LAIphe[c]+LAIdead[c];
-    LAIcelldead += LAIdead[c];
-    LAIcelllive += LAIlive[c];
-    LAIcellexpanded +=LAIphe[c];
-    Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
-  }
-
-  //Percentage of irradiance reaching the herb layer
-  double LherbSWR = 100.0*exp((-1.0)*s/1.35);
-  
-  //Herb layer effects on light extinction and interception
-  double herbLAI = x["herbLAI"];
-  s += 0.5*herbLAI;
-  Cm += herbLAI*1.0;
-  LAIcell += herbLAI;
-  
-  //Percentage of irradiance reaching the ground
-  double LgroundPAR = 100.0*exp((-1.0)*s);
-  double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
-  
   
   //Copy clone soil and copy from Wpool to soil pools
   List soilPools(numCohorts);
@@ -218,13 +194,34 @@ List spwbDay_basic(List x, NumericVector meteovec,
     }
   }
   
-  //Snow pack dynamics and hydrology input (modifies SWE)
+  //STEP 1 - Update leaf area values according to the phenology of species and recalculate radiation extinction 
+  double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0, LAIcelldead = 0.0, Cm = 0.0;
+  for(int c=0;c<numCohorts;c++) {
+    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
+    LAIcell += LAIphe[c]+LAIdead[c];
+    LAIcelldead += LAIdead[c];
+    LAIcelllive += LAIlive[c];
+    LAIcellexpanded +=LAIphe[c];
+    Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
+  }
+  //Percentage of irradiance reaching the herb layer
+  double LherbSWR = 100.0*exp((-1.0)*s/1.35);
+  //Herb layer effects on light extinction and interception
+  double herbLAI = x["herbLAI"];
+  s += 0.5*herbLAI;
+  Cm += herbLAI*1.0;
+  LAIcell += herbLAI;
+  //Percentage of irradiance reaching the ground
+  double LgroundPAR = 100.0*exp((-1.0)*s);
+  double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
+  
+  //STEP 2 - Hidrological inputs (modifies SWE)
   NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, prec, er, tday, rad, elevation,
                                              Cm, LgroundPAR, LgroundSWR, 
                                              runon,
                                              snowpack, true);
 
-  //Net Runoff and infiltration
+  //STEP 3 - Net Runoff and infiltration
   NumericVector dVec = soil["dVec"];
   NumericVector macro = soil["macro"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
@@ -235,13 +232,13 @@ List spwbDay_basic(List x, NumericVector meteovec,
   //Decide infiltration repartition among layers
   NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);
   
-  //Evaporation from bare soil and herbaceous transpiration
+  //STEP 4 - Evaporation from bare soil and herbaceous transpiration
   double Eherb=0.0;
   NumericVector EsoilVec(nlayers,0.0);
   NumericMatrix EsoilPools(numCohorts,nlayers);
   NumericVector EherbPools(numCohorts, 0.0);
   if(!plantWaterPools) {
-    //B.1 - Evaporation from bare soil if there is no snow (do not yet modify soil)
+    //Evaporation from bare soil if there is no snow (do not yet modify soil)
     if(bareSoilEvaporation) EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, false);
     //Herbaceous transpiration (do not yet modify soil)
     Eherb = herbaceousTranspiration(pet, LherbSWR, herbLAI, soil, soilFunctions, false);
@@ -264,9 +261,8 @@ List spwbDay_basic(List x, NumericVector meteovec,
     }
   }
 
-  //Woody plant transpiration  (does not modify soil, only plants)
+  //STEP 5 - Woody plant transpiration  (does not modify soil, only plants)
   List transp = transpirationBasic(x, meteovec, elevation, true);
-  
   //Determine hydraulic redistribution and source sink for overall soil
   NumericMatrix soilLayerExtract = Rcpp::as<Rcpp::NumericMatrix>(transp["Extraction"]);
   NumericVector ExtractionVec(nlayers, 0.0);
@@ -280,6 +276,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
     }
   }
   
+  //STEP 6 - Soil flows
   NumericVector sourceSinkVec(nlayers, 0.0);
   for(int l=0;l<nlayers;l++) {
     sourceSinkVec[l] += Ivec[l] - ExtractionVec[l] - EsoilVec[l];
@@ -289,7 +286,6 @@ List spwbDay_basic(List x, NumericVector meteovec,
   if(!plantWaterPools) {
     // determine water flows (no mass conservation)
     DeepDrainage = soilFlows(soil, sourceSinkVec, 24, 
-                             lowerBoundary,
                              true);
   } else {
     NumericVector poolProportions = belowdf["poolProportions"];
@@ -311,7 +307,6 @@ List spwbDay_basic(List x, NumericVector meteovec,
       }
       // determine water flows (no mass conservation)
       double DeepDrainage_c = soilFlows(soil_c, sourceSinkPoolVec, 24, 
-                                        lowerBoundary,
                                         true);
       //Update Wpool and Wsoil
       NumericVector W_c = soil_c["W"];
@@ -326,7 +321,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   //Calculate current soil water potential for output
   NumericVector psiVec = psi(soil, soilFunctions); 
   
-  //Fire hazard
+  //STEP 7 - Fire hazard
   bool fireHazardResults = control["fireHazardResults"];
   NumericVector fireHazard(1,NA_REAL);
   if(fireHazardResults) fireHazard = fccsHazard(x, meteovec, transp, slope);
@@ -379,7 +374,6 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   //Control parameters
   List control = x["control"];
   bool bareSoilEvaporation = control["bareSoilEvaporation"];
-  String lowerBoundary = control["lowerBoundary"];
   bool snowpack = control["snowpack"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
@@ -421,31 +415,6 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
   NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
   NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(paramsInterception["g"]);
-
-  //1. Leaf Phenology: Adjusted leaf area index
-  double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
-  double s = 0.0, LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0,  LAIcellexpanded = 0.0, Cm = 0.0, LAIcellmax = 0.0;
-  for(int c=0;c<numCohorts;c++) {
-    LAIcell += (LAIphe[c]+LAIdead[c]);
-    LAIcelldead += LAIdead[c];
-    LAIcellmax += LAIlive[c];
-    LAIcelllive += LAIlive[c];
-    LAIcellexpanded +=LAIphe[c];
-    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
-    Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
-  }
-  
-  //Percentage of irradiance reaching the herb layer
-  double LherbSWR = 100.0*exp((-1.0)*s/1.35);
-  
-  //Herb layer effects on light extinction and interception
-  double herbLAI = x["herbLAI"];
-  s += 0.5*herbLAI;
-  Cm += herbLAI*1.0;
-  LAIcell +=herbLAI;
-  
-  double LgroundPAR = 100.0*exp((-1.0)*s);
-  double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
   
   //Copy clone soil and copy from Wpool to soil pools
   List soilPools(numCohorts);
@@ -459,13 +428,35 @@ List spwbDay_advanced(List x, NumericVector meteovec,
     }
   }
   
-  //A.1 - Snow pack dynamics and soil water input (modifies SWE)
+  //STEP 1 - Leaf Phenology: Adjusted leaf area index
+  double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+  double s = 0.0, LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0,  LAIcellexpanded = 0.0, Cm = 0.0, LAIcellmax = 0.0;
+  for(int c=0;c<numCohorts;c++) {
+    LAIcell += (LAIphe[c]+LAIdead[c]);
+    LAIcelldead += LAIdead[c];
+    LAIcellmax += LAIlive[c];
+    LAIcelllive += LAIlive[c];
+    LAIcellexpanded +=LAIphe[c];
+    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
+    Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
+  }
+  //Percentage of irradiance reaching the herb layer
+  double LherbSWR = 100.0*exp((-1.0)*s/1.35);
+  //Herb layer effects on light extinction and interception
+  double herbLAI = x["herbLAI"];
+  s += 0.5*herbLAI;
+  Cm += herbLAI*1.0;
+  LAIcell +=herbLAI;
+  double LgroundPAR = 100.0*exp((-1.0)*s);
+  double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
+  
+  //STEP 2 - Interception, snow pack dynamics and soil water input (modifies SWE)
   NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, prec, er, tday, rad, elevation,
                                               Cm, LgroundPAR, LgroundSWR, 
                                               runon,
                                               snowpack, true);
   
-  //Net Runoff and infiltration
+  //STEP 3 - Net Runoff and infiltration
   NumericVector dVec = soil["dVec"];
   NumericVector macro = soil["macro"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
@@ -476,7 +467,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   //Decide infiltration repartition among layers
   NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);
   
-  //Evaporation from bare soil and herbaceous transpiration
+  //STEP 4 - Evaporation from bare soil and herbaceous transpiration
   double Eherb=0.0;
   NumericVector EsoilVec(nlayers,0.0);
   NumericMatrix EsoilPools(numCohorts,nlayers);
@@ -505,13 +496,12 @@ List spwbDay_advanced(List x, NumericVector meteovec,
     }
   }
   
-  //B.2 - Canopy transpiration  
+  //STEPS 5-9 - Energy balance, transpiration, photosynthesis, uptake 
   List transp = transpirationAdvanced(x, meteovec, 
                                     latitude, elevation, slope, aspect, 
                                     solarConstant, delta, 
                                     hydroInputs["Interception"], hydroInputs["Snowmelt"], sum(EsoilVec), Eherb,
                                     verbose, NA_INTEGER, true);
-
   NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(transp["ExtractionInst"]);
   NumericMatrix RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(transp["RhizoPsi"]);
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
@@ -519,7 +509,6 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   List PlantsInst = Rcpp::as<Rcpp::List>(transp["PlantsInst"]);
   List EnergyBalance = Rcpp::as<Rcpp::List>(transp["EnergyBalance"]);
   
-  //B.3 - Substract evaporated and extracted water from soil moisture 
   NumericVector ExtractionVec(nlayers, 0.0);
   NumericVector soilHydraulicInput(nlayers, 0.0); //Water that entered into the layer across all time steps
   NumericVector soilHydraulicOutput(nlayers, 0.0);  //Water that left the layer across all time steps
@@ -531,7 +520,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
     ExtractionVec[l] = sum(soilLayerExtractInst(l,_));
   }
 
-  //SOIL FLOWS
+  //STEP 10 - SOIL FLOWS
   NumericVector sourceSinkVec(nlayers, 0.0);
   for(int l=0;l<nlayers;l++) {
     sourceSinkVec[l] += Ivec[l] - ExtractionVec[l] - EsoilVec[l];
@@ -541,7 +530,6 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   if(!plantWaterPools) {
     // determine water flows (no mass conservation)
     DeepDrainage = soilFlows(soil, sourceSinkVec, 24, 
-                             lowerBoundary,
                              true);
   } else {
     NumericVector poolProportions = belowdf["poolProportions"];
@@ -563,7 +551,6 @@ List spwbDay_advanced(List x, NumericVector meteovec,
       }
       // determine water flows (no mass conservation)
       double DeepDrainage_c = soilFlows(soil_c, sourceSinkPoolVec, 24, 
-                                        lowerBoundary,
                                         true);
       //Update Wpool and Wsoil
       NumericVector W_c = soil_c["W"];
@@ -578,7 +565,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   //Calculate current soil water potential for output
   NumericVector psiVec = psi(soil, soilFunctions); 
   
-  //Fire hazard
+  //STEP 11 - Fire hazard
   bool fireHazardResults = control["fireHazardResults"];
   NumericVector fireHazard(1,NA_REAL);
   if(fireHazardResults) fireHazard = fccsHazard(x, meteovec, transp, slope);

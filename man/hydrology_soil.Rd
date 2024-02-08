@@ -34,13 +34,7 @@ hydrology_infiltrationRepartition(I, dVec, macro, a = -0.005, b = 3)
 
 hydrology_snowMelt(tday, rad, LgroundSWR, elevation)
 
-hydrology_soilFlows(
-  soil,
-  sourceSink,
-  nsteps = 24L,
-  lowerBoundary = "free",
-  modifySoil = TRUE
-)
+hydrology_soilFlows(soil, sourceSink, nsteps = 24L, modifySoil = TRUE)
 
 hydrology_infiltrationAmount(input, Ssoil)
 }
@@ -83,8 +77,6 @@ hydrology_infiltrationAmount(input, Ssoil)
 as mm/day.}
 
 \item{nsteps}{Number of time steps per day}
-
-\item{lowerBoundary}{Lower boundary condition: "free", "impervious" or "aquifer"}
 
 \item{input}{A numeric vector of (daily) water input (in mm of water).}
 

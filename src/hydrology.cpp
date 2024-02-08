@@ -392,15 +392,13 @@ NumericVector tridiagonalSolving(NumericVector a, NumericVector b, NumericVector
 //' @param sourceSink Source/sink term for each soil layer (from snowmelt, soil evaporation or plant transpiration/redistribution)
 //'        as mm/day.
 //' @param nsteps  Number of time steps per day
-//' @param lowerBoundary Lower boundary condition: "free", "impervious" or "aquifer"
 //' 
 // [[Rcpp::export("hydrology_soilFlows")]]
 double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
-                 String lowerBoundary = "free",
                  bool modifySoil = true) {
   
   NumericVector dVec = soil["dVec"];
-  double mm_day_2_m3_s = 0.001*(1.0/86400.0);//From mm/day = l/day = dm3/day to m3/s
+  double mm_day_2_m3_s = 0.001*(1.0/86400.0);//From mm/day = l/day = dm3/day to m3/m2/s
   NumericVector sourceSink_m3s =  sourceSink*mm_day_2_m3_s;
   NumericVector dZ_m = dVec*0.001; //mm to m
   NumericVector rfc = soil["rfc"];
@@ -473,11 +471,7 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
         a[l] = -1.0*K_up/dZUp[l];
         c[l] = 0.0;
         b[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep) - a[l] - c[l];
-        if(lowerBoundary=="impervious") {
-          d[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep)*Psi_m[l] + K_up + sourceSink_m3s[l];
-        } else {
-          d[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep)*Psi_m[l] + K_up - K_down + sourceSink_m3s[l];
-        }
+        d[l] = (lambda[l]*C_m[l]*dZ_m[l]/halftstep)*Psi_m[l] + K_up - K_down + sourceSink_m3s[l];
       }
     }
     NumericVector Psi_m_t05 = tridiagonalSolving(a,b,c,d);
@@ -511,17 +505,13 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
         a[l] = -1.0*K_up/(2.0*dZUp[l]);
         c[l] = 0.0;
         b[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep) - a[l];
-        if(lowerBoundary=="impervious") {
-          d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] + a[l]*(Psi_m[l - 1] - Psi_m[l]) + K_up + sourceSink_m3s[l];
-        } else {
-          d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] + a[l]*(Psi_m[l - 1] - Psi_m[l])  + K_up - K_down + sourceSink_m3s[l];
-        }
+        d[l] = (lambda[l]*C_m05[l]*dZ_m[l]/tstep)*Psi_m[l] + a[l]*(Psi_m[l - 1] - Psi_m[l])  + K_up - K_down + sourceSink_m3s[l];
       }
     }
     NumericVector Psi_m_t1 = tridiagonalSolving(a,b,c,d);
     NumericVector Psi_t1 = Psi_m_t1*mTOMPa; // m to MPa
     //calculate free drainage (m3)
-    if(lowerBoundary!="impervious") drainage += std::max(0.0, K_ms05[nlayers -1]*tstep);
+    drainage += std::max(0.0, K_ms05[nlayers -1]*tstep);
     //Update psi, capacitances and conductances for next step
     for(int l=0;l<nlayers;l++) {
       // Rcout<<" step "<<s<<" layer " <<l<< " "<< Psi[l]<< " to " << Psi_t1[l]<<"\n";

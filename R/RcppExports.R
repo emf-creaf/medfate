@@ -1557,10 +1557,9 @@ hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInpu
 #' @param sourceSink Source/sink term for each soil layer (from snowmelt, soil evaporation or plant transpiration/redistribution)
 #'        as mm/day.
 #' @param nsteps  Number of time steps per day
-#' @param lowerBoundary Lower boundary condition: "free", "impervious" or "aquifer"
 #' 
-hydrology_soilFlows <- function(soil, sourceSink, nsteps = 24L, lowerBoundary = "free", modifySoil = TRUE) {
-    .Call(`_medfate_soilFlows`, soil, sourceSink, nsteps, lowerBoundary, modifySoil)
+hydrology_soilFlows <- function(soil, sourceSink, nsteps = 24L, modifySoil = TRUE) {
+    .Call(`_medfate_soilFlows`, soil, sourceSink, nsteps, modifySoil)
 }
 
 .gammln <- function(xx) {
