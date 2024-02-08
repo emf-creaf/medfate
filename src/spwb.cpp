@@ -1930,6 +1930,9 @@ void printWaterBalanceResult(List outputList, List x,
 //' #Switch to 'Cochard' transpiration mode
 //' control <- defaultControl("Cochard")
 //' 
+//' # Makes leaf xylem vulnerability equal to stem xylem vulnerability
+//' control$equalLeafStemVC = TRUE 
+//' 
 //' #Initialize input
 //' x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 //' 

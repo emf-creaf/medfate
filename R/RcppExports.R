@@ -1059,6 +1059,7 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, ru
 #' 
 #' #Switch to 'Cochard' transpiration mode
 #' control <- defaultControl("Cochard")
+#' control$equalLeafStemVC = TRUE # Makes leaf xylem vulnerability equal to stem xylem vulnerability
 #' 
 #' #Initialize vegetation input
 #' x3 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
@@ -3285,6 +3286,7 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #' 
 #' #Switch to 'Cochard' transpiration mode
 #' control <- defaultControl("Cochard")
+#' control$equalLeafStemVC = TRUE # Makes leaf xylem vulnerability equal to stem xylem vulnerability
 #' 
 #' #Initialize input
 #' x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)

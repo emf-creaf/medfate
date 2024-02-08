@@ -193,9 +193,12 @@ DataFrame paramsWaterStorage(DataFrame above, List belowLayers,
   return(paramsWaterStoragedf);
 }
 
-DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool fillMissingSpParams) {
+DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, List control) {
   IntegerVector SP = above["SP"];
   int numCohorts = SP.size();
+  
+  bool fillMissingSpParams = control["fillMissingSpParams"];
+  bool equalLeafStemVC = control["equalLeafStemVC"];
   
   NumericVector Tmax_LAI = speciesNumericParameterWithImputation(SP, SpParams, "Tmax_LAI", true);
   NumericVector Tmax_LAIsq = speciesNumericParameterWithImputation(SP, SpParams, "Tmax_LAIsq", true);
@@ -215,6 +218,13 @@ DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool 
   
   NumericVector VCstem_c(numCohorts, 0.0), VCstem_d(numCohorts, 0.0), VCleaf_c(numCohorts, 0.0), VCleaf_d(numCohorts, 0.0);
   for(int c=0;c<numCohorts;c++){
+    
+    if(equalLeafStemVC) {
+      VCleaf_P12[c] = VCstem_P12[c];
+      VCleaf_P50[c] = VCstem_P50[c];
+      VCleaf_P88[c] = VCstem_P88[c];
+    }
+    
     //Stem Weibull
     NumericVector wb_stem = psi2Weibull(VCstem_P50[c], VCstem_P88[c], VCstem_P12[c]);
     VCstem_c[c] = wb_stem["c"];
@@ -249,6 +259,7 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, List soi
   
   String transpirationMode = control["transpirationMode"];
   bool fillMissingSpParams = control["fillMissingSpParams"];
+  bool equalLeafStemVC = control["equalLeafStemVC"];
   double rootRadialConductance = control["rootRadialConductance"];
   double fractionLeafSymplasm = control["fractionLeafSymplasm"]; // Fraction of leaf symplasmic resistance
   
@@ -291,6 +302,13 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, List soi
     VCroottot_kmax[c] = 1.0/((1.0/xylem_root_kmax) + (1.0/rootRadialConductance));
     kleaf_symp[c] = 1.0/(fractionLeafSymplasm*(1.0/VCleaf_kmax[c]));
     VCleafapo_kmax[c] = 1.0/((1.0- fractionLeafSymplasm)*(1.0/VCleaf_kmax[c]));
+    
+    if(equalLeafStemVC) {
+      VCleaf_P12[c] = VCstem_P12[c];
+      VCleaf_P50[c] = VCstem_P50[c];
+      VCleaf_P88[c] = VCstem_P88[c];
+    }
+    
     //Stem Weibull
     NumericVector wb_stem = psi2Weibull(VCstem_P50[c], VCstem_P88[c], VCstem_P12[c]);
     VCstem_c[c] = wb_stem["c"];
@@ -345,6 +363,7 @@ DataFrame paramsTranspirationCochard(DataFrame above, NumericVector Z95, List so
   String transpirationMode = control["transpirationMode"];
   String stomatalSubmodel = control["stomatalSubmodel"];
   bool fillMissingSpParams = control["fillMissingSpParams"];
+  bool equalLeafStemVC = control["equalLeafStemVC"];
   double rootRadialConductance = control["rootRadialConductance"];
   double k_SSym = control["k_SSym"];
   double fractionLeafSymplasm = control["fractionLeafSymplasm"]; // Fraction of leaf symplasmic resistance
@@ -407,6 +426,11 @@ DataFrame paramsTranspirationCochard(DataFrame above, NumericVector Z95, List so
     if(NumericVector::is_na(VCstem_slope[c])) VCstem_slope[c] = (88.0 - 12.0)/(std::abs(VCstem_P88[c]) - std::abs(VCstem_P12[c]));
     if(NumericVector::is_na(VCroot_slope[c])) VCroot_slope[c] = (88.0 - 12.0)/(std::abs(VCroot_P88[c]) - std::abs(VCroot_P12[c]));
 
+    if(equalLeafStemVC) {
+      VCleaf_P12[c] = VCstem_P12[c];
+      VCleaf_P50[c] = VCstem_P50[c];
+      VCleaf_P88[c] = VCstem_P88[c];
+    }
     //Stem Weibull
     NumericVector wb_stem = psi2Weibull(VCstem_P50[c], VCstem_P88[c], VCstem_P12[c]);
     VCstem_c[c] = wb_stem["c"];
@@ -1081,7 +1105,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   
   DataFrame paramsTranspirationdf;
   if(transpirationMode=="Granier") {
-    paramsTranspirationdf = paramsTranspirationGranier(above, SpParams, fillMissingSpParams);
+    paramsTranspirationdf = paramsTranspirationGranier(above, SpParams, control);
   } else if(transpirationMode=="Sperry") {
     paramsTranspirationdf = paramsTranspirationSperry(above, Z95, soil, SpParams, paramsAnatomydf, control);
   } else if(transpirationMode=="Cochard") {
@@ -1175,7 +1199,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   
   DataFrame paramsTranspirationdf;
   if(transpirationMode=="Granier") {
-    paramsTranspirationdf = paramsTranspirationGranier(above,SpParams, fillMissingSpParams);
+    paramsTranspirationdf = paramsTranspirationGranier(above,SpParams, control);
   } else if(transpirationMode=="Sperry") {
     paramsTranspirationdf = paramsTranspirationSperry(above, Z95, soil, SpParams, paramsAnatomydf, control);
   } else if(transpirationMode=="Cochard") {

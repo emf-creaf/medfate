@@ -2203,6 +2203,9 @@ void fillGrowthDailyOutput(List l, List soil, List sDay, int iday) {
 //' #Switch to 'Cochard' transpiration mode
 //' control <- defaultControl("Cochard")
 //' 
+//' #Makes leaf xylem vulnerability equal to stem xylem vulnerability
+//' control$equalLeafStemVC = TRUE 
+//' 
 //' #Initialize vegetation input
 //' x3 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
 //' 

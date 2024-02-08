@@ -29,6 +29,7 @@
 #'   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}}):
 #'     \itemize{
 #'       \item{\code{transpirationMode [= "Granier"]}: Transpiration model (either 'Granier', 'Sperry' or 'Cochard'). See \code{\link{spwbInput}}.}
+#'       \item{\code{equalLeafStemVC [= FALSE]}: Leaf vulnerability curves equal to those of the stem.}
 #'       \item{\code{soilFunctions [= "VG"]}: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten). 
 #'                  If \code{transpirationMode} is 'Sperry' or 'Cochard' then soilFunctions is forced to \code{'VG'}.
 #'                  Only simulations with 'Granier' are allowed to use Saxton functions.}
@@ -185,6 +186,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     # For water balance
     transpirationMode = transpirationMode,
     soilFunctions = "VG",
+    equalLeafStemVC = FALSE,
     defaultWindSpeed = 2.5, #m/s
     defaultCO2 = 386, #ppm
     snowpack = TRUE,
