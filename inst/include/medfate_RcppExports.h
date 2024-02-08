@@ -254,11 +254,11 @@ namespace medfate {
         return Rcpp::as<double >(rcpp_result_gen);
     }
 
-    inline NumericVector hydrology_soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR, bool modifySoil = true) {
+    inline double hydrology_soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR, bool modifySoil = true) {
         typedef SEXP(*Ptr_hydrology_soilEvaporation)(SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_soilEvaporation p_hydrology_soilEvaporation = NULL;
         if (p_hydrology_soilEvaporation == NULL) {
-            validateSignature("NumericVector(*hydrology_soilEvaporation)(List,String,double,double,bool)");
+            validateSignature("double(*hydrology_soilEvaporation)(List,String,double,double,bool)");
             p_hydrology_soilEvaporation = (Ptr_hydrology_soilEvaporation)R_GetCCallable("medfate", "_medfate_hydrology_soilEvaporation");
         }
         RObject rcpp_result_gen;
@@ -272,7 +272,7 @@ namespace medfate {
             throw Rcpp::LongjumpException(rcpp_result_gen);
         if (rcpp_result_gen.inherits("try-error"))
             throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<NumericVector >(rcpp_result_gen);
+        return Rcpp::as<double >(rcpp_result_gen);
     }
 
     inline NumericVector hydrology_herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, List soil, String soilFunctions, bool modifySoil = true) {

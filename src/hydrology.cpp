@@ -67,34 +67,24 @@ double soilEvaporationAmount(double DEF,double PETs, double Gsoil){
 //' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
 //' 
 // [[Rcpp::export("hydrology_soilEvaporation")]]
-NumericVector soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR,
-                              bool modifySoil = true) {
+double soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR,
+                       bool modifySoil = true) {
   NumericVector W = soil["W"]; //Access to soil state variable
   NumericVector dVec = soil["dVec"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   NumericVector psiSoil = psi(soil, soilFunctions);
-  int nlayers = W.size();
-  NumericVector EsoilVec(nlayers,0.0);
+  double Esoil = 0.0;
   double swe = soil["SWE"]; //snow pack
   if(swe == 0.0) {
     double PETsoil = pet*(LgroundSWR/100.0);
     double Gsoil = soil["Gsoil"];
-    double Ksoil = soil["Ksoil"];
-    double Esoil = 0.0;
-    // Allow evaporation only if water potential is less than -2 MPa
+    // Allow evaporation only if water potential is higher than -2 MPa
     if(psiSoil[0] > -2.0) Esoil = soilEvaporationAmount((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
-    for(int l=0;l<nlayers;l++) {
-      double cumAnt = 0.0;
-      double cumPost = 0.0;
-      for(int l2=0;l2<l;l2++) cumAnt +=dVec[l2];
-      cumPost = cumAnt+dVec[l];
-      //Exponential decay to divide bare soil evaporation among layers
-      if(l<(nlayers-1)) EsoilVec[l] = Esoil*(exp(-Ksoil*cumAnt)-exp(-Ksoil*cumPost));
-      else EsoilVec[l] = Esoil*exp(-Ksoil*cumAnt);
-      if(modifySoil) W[l] = W[l] - ((EsoilVec[l])/Water_FC[l]);
+    if(modifySoil){
+      W[0] = W[0] - (Esoil/Water_FC[0]);
     }
   }
-  return(EsoilVec);
+  return(Esoil);
 }
 
 //' @rdname hydrology_soil

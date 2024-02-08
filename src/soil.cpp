@@ -732,7 +732,6 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 //'   \item{\code{SoilDepth}: Soil depth (in mm).}
 //'   \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
 //'   \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
-//'   \item{\code{Ksoil}: Kappa parameter for bare soil evaporation.}
 //'   \item{\code{Gsoil}: Gamma parameter for bare soil evaporation (see \code{\link{hydrology_soilEvaporationAmount}}).}
 //'   \item{\code{dVec}: Width of soil layers (in mm).}
 //'   \item{\code{sand}: Sand percentage for each layer (in percent volume).}
@@ -827,13 +826,12 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
     VG_theta_sat[l] = vgl[3];
     SoilDepth +=dVec[l];
   }
-  double Ksoil = 0.05;
   double Gsoil = 0.5; //TO DO, implement pedotransfer functions for Gsoil
   List l = List::create(_["SoilDepth"] = SoilDepth,
                       _["W"] = W, 
                       _["SWE"] = SWE,
                       _["Temp"] = temperature,
-                      _["Ksoil"] = Ksoil, _["Gsoil"] = Gsoil,
+                      _["Gsoil"] = Gsoil,
                       _["dVec"] = dVec,
                       _["sand"] = sand, _["clay"] = clay, _["om"] = om,
                       _["VG_alpha"] = VG_alpha,_["VG_n"] = VG_n, 

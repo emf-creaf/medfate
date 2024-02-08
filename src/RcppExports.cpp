@@ -2124,7 +2124,7 @@ RcppExport SEXP _medfate_soilEvaporationAmount(SEXP DEFSEXP, SEXP PETsSEXP, SEXP
     return rcpp_result_gen;
 }
 // soilEvaporation
-NumericVector soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR, bool modifySoil);
+double soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR, bool modifySoil);
 static SEXP _medfate_soilEvaporation_try(SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP petSEXP, SEXP LgroundSWRSEXP, SEXP modifySoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -5251,7 +5251,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("double(*hydrology_erFactor)(int,double,double,double,double)");
         signatures.insert("double(*.hydrology_interceptionGashDay)(double,double,double,double)");
         signatures.insert("double(*hydrology_soilEvaporationAmount)(double,double,double)");
-        signatures.insert("NumericVector(*hydrology_soilEvaporation)(List,String,double,double,bool)");
+        signatures.insert("double(*hydrology_soilEvaporation)(List,String,double,double,bool)");
         signatures.insert("NumericVector(*hydrology_herbaceousTranspiration)(double,double,double,List,String,bool)");
         signatures.insert("double(*.hydrology_infiltrationAmount)(double,double)");
         signatures.insert("NumericVector(*hydrology_infiltrationRepartition)(double,NumericVector,NumericVector,double,double)");

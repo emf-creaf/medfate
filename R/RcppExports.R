@@ -2840,7 +2840,6 @@ soil_vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
 #'   \item{\code{SoilDepth}: Soil depth (in mm).}
 #'   \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
 #'   \item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
-#'   \item{\code{Ksoil}: Kappa parameter for bare soil evaporation.}
 #'   \item{\code{Gsoil}: Gamma parameter for bare soil evaporation (see \code{\link{hydrology_soilEvaporationAmount}}).}
 #'   \item{\code{dVec}: Width of soil layers (in mm).}
 #'   \item{\code{sand}: Sand percentage for each layer (in percent volume).}
@@ -2981,10 +2980,10 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
 #'   \item{\code{"WaterBalance"}: A vector of water balance components (rain, snow, net rain, infiltration, ...) for the simulated day, equivalent to one row of 'WaterBalance' object given in \code{\link{spwb}}.}
 #'   \item{\code{"Soil"}: A data frame with results for each soil layer:
 #'     \itemize{
-#'       \item{\code{"SoilEvaporation"}: Water evaporated from the soil surface (in mm).}
+#'       \item{\code{"HerbTranspiration"}: Water extracted by herbaceous plants from each soil layer (in mm).}
 #'       \item{\code{"HydraulicInput"}: Water entering each soil layer from other layers, transported via plant hydraulic network (in mm) (only for \code{transpirationMode = "Sperry"}).}
 #'       \item{\code{"HydraulicOutput"}: Water leaving each soil layer (going to other layers or the transpiration stream) (in mm) (only for \code{transpirationMode = "Sperry"}).}
-#'       \item{\code{"PlantExtraction"}: Water extracted by plants from each soil layer (in mm).}
+#'       \item{\code{"PlantExtraction"}: Water extracted by woody plants from each soil layer (in mm).}
 #'       \item{\code{"psi"}: Soil water potential (in MPa).}
 #'     }
 #'   }

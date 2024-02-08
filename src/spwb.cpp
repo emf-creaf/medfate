@@ -189,7 +189,9 @@ List spwbDay_basic(List x, NumericVector meteovec,
       //Clone soil and copy moisture values from x
       List soil_c =  clone(soil);
       NumericVector W_c = soil_c["W"];
-      for(int l=0;l<nlayers;l++) W_c[l] = Wpool(c,l);
+      for(int l=0;l<nlayers;l++) {
+        W_c[l] = Wpool(c,l); 
+      }
       soilPools[c] = soil_c;
     }
   }
@@ -234,12 +236,12 @@ List spwbDay_basic(List x, NumericVector meteovec,
   
   //STEP 4 - Evaporation from bare soil and herbaceous transpiration
   NumericVector EherbVec(nlayers,0.0);
-  NumericVector EsoilVec(nlayers,0.0);
-  NumericMatrix EsoilPools(numCohorts,nlayers);
+  double Esoil = 0;
+  NumericVector EsoilPools(numCohorts, 0.0);
   NumericMatrix EherbPools(numCohorts, nlayers);
   if(!plantWaterPools) {
     //Evaporation from bare soil if there is no snow (do not yet modify soil)
-    if(bareSoilEvaporation) EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, false);
+    if(bareSoilEvaporation) Esoil = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, false);
     //Herbaceous transpiration (do not yet modify soil)
     EherbVec = herbaceousTranspiration(pet, LherbSWR, herbLAI, soil, soilFunctions, false);
   } else {
@@ -248,18 +250,17 @@ List spwbDay_basic(List x, NumericVector meteovec,
       //Get soil pool
       List soil_c =  soilPools[c];
       //Evaporation from bare soil_c (if there is no snow), do not modify soil
-      for(int l = 0;l<nlayers;l++) EsoilPools(c,l) = 0.0;
       if(bareSoilEvaporation) {
-        NumericVector EsoilVec_c = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, false);
-        for(int l = 0;l<nlayers;l++) EsoilPools(c,l) = EsoilVec_c[l];
+        EsoilPools[c] = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, false);
+        for(int l=0;l<nlayers;l++) {
+          Esoil = Esoil + poolProportions[c]*EsoilPools[c]; 
+        }
       }
       //Herbaceous transpiration, do not modify soil
       NumericVector EherbVec_c = herbaceousTranspiration(pet, LherbSWR, herbLAI, soil_c, soilFunctions, false);
-      for(int l = 0;l<nlayers;l++) EherbPools(c,l) = EherbVec_c[l];
-      
       //Update average soil evaporation and herbaceous transpiration 
       for(int l=0;l<nlayers;l++) {
-        EsoilVec[l] = EsoilVec[l] + poolProportions[c]*EsoilPools(c,l); 
+        EherbPools(c,l) = EherbVec_c[l];
         EherbVec[l] = EherbVec[l] + poolProportions[c]*EherbPools(c,l); 
       }
     }
@@ -283,22 +284,17 @@ List spwbDay_basic(List x, NumericVector meteovec,
   //STEP 6 - Soil flows
   NumericVector sourceSinkVec(nlayers, 0.0);
   for(int l=0;l<nlayers;l++) {
-    sourceSinkVec[l] += Ivec[l] - ExtractionVec[l] - EsoilVec[l] - EherbVec[l];
-    if(l ==0) sourceSinkVec[l] += Snowmelt;
+    sourceSinkVec[l] += Ivec[l] - ExtractionVec[l] - EherbVec[l];
+    if(l ==0) sourceSinkVec[l] += Snowmelt - Esoil;
   }
-  double DeepDrainage = 0.0;
-  if(!plantWaterPools) {
-    // determine water flows (no mass conservation)
-    DeepDrainage = soilFlows(soil, sourceSinkVec, 24, 
-                             true);
-  } else {
+  // determine water flows (no mass conservation)
+  double DeepDrainage = soilFlows(soil, sourceSinkVec, 24, true);
+  //Calculate current soil water potential for output
+  NumericVector psiVec = psi(soil, soilFunctions); 
+  //Apply soil flows to water pools
+  if(plantWaterPools) {
     NumericVector poolProportions = belowdf["poolProportions"];
     List ExtractionPools = Rcpp::as<Rcpp::List>(transp["ExtractionPools"]);
-    
-    double Vini = sum(water(soil, soilFunctions));
-    //Reset soil moisture (to be replaced with soil pool averages)
-    for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
-    
     for(int c=0;c<numCohorts;c++) {
       List soil_c = soilPools[c];
       NumericMatrix ExtractionPool = Rcpp::as<Rcpp::NumericMatrix>(ExtractionPools[c]);
@@ -306,25 +302,19 @@ List spwbDay_basic(List x, NumericVector meteovec,
       NumericVector sourceSinkPoolVec(nlayers, 0.0);
       for(int l=0;l<nlayers;l++) {
         ExtractionPoolVec[l] = sum(ExtractionPool(_,l));
-        sourceSinkPoolVec[l] += Ivec[l] - ExtractionPoolVec[l] - EsoilPools(c,l)- EherbPools(c,l);
-        if(l ==0) sourceSinkPoolVec[l] += Snowmelt;
+        sourceSinkPoolVec[l] += Ivec[l] - ExtractionPoolVec[l] - EherbPools(c,l);
+        if(l ==0) sourceSinkPoolVec[l] += Snowmelt - EsoilPools[c];
       }
       // determine water flows (no mass conservation)
-      double DeepDrainage_c = soilFlows(soil_c, sourceSinkPoolVec, 24, 
-                                        true);
-      //Update Wpool and Wsoil
+      soilFlows(soil_c, sourceSinkPoolVec, 24, true);
+      //copy to Wpool
       NumericVector W_c = soil_c["W"];
       for(int l=0;l<nlayers;l++) {
         Wpool(c,l) = W_c[l];
-        Wsoil[l] = Wsoil[l] + poolProportions[c]*Wpool(c,l); //weighted average for soil moisture
       }
     }
-    double Vfin = sum(water(soil, soilFunctions));
-    DeepDrainage = Vini - Vfin + sum(sourceSinkVec);
   }
-  //Calculate current soil water potential for output
-  NumericVector psiVec = psi(soil, soilFunctions); 
-  
+
   //STEP 7 - Fire hazard
   bool fireHazardResults = control["fireHazardResults"];
   NumericVector fireHazard(1,NA_REAL);
@@ -343,14 +333,14 @@ List spwbDay_basic(List x, NumericVector meteovec,
                                            _["Runon"] = hydroInputs["Runon"], 
                                            _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, 
                                            _["DeepDrainage"] = DeepDrainage,
-                                           _["SoilEvaporation"] = sum(EsoilVec), _["HerbTranspiration"] = sum(EherbVec),
+                                           _["SoilEvaporation"] = Esoil, _["HerbTranspiration"] = sum(EherbVec),
                                            _["PlantExtraction"] = sum(ExtractionVec), _["Transpiration"] = sum(Eplant),
                                            _["HydraulicRedistribution"] = sum(soilHydraulicInput));
   
   NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell, _["LAIherb"] = herbLAI, 
                                               _["LAIlive"] = LAIcelllive,  _["LAIexpanded"] = LAIcellexpanded, _["LAIdead"] = LAIcelldead,
                                               _["Cm"] = Cm, _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
-  DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, 
+  DataFrame SB = DataFrame::create(_["HerbTranspiration"] = EherbVec,
                                    _["HydraulicInput"] = soilHydraulicInput, 
                                    _["HydraulicOutput"] = soilHydraulicOutput, 
                                    _["PlantExtraction"] = ExtractionVec, 
@@ -473,12 +463,12 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   
   //STEP 4 - Evaporation from bare soil and herbaceous transpiration
   NumericVector EherbVec(nlayers,0.0);
-  NumericVector EsoilVec(nlayers,0.0);
-  NumericMatrix EsoilPools(numCohorts,nlayers);
+  double Esoil = 0;
+  NumericVector EsoilPools(numCohorts, 0.0);
   NumericMatrix EherbPools(numCohorts, nlayers);
   if(!plantWaterPools) {
     //Evaporation from bare soil if there is no snow (do not yet modify soil)
-    if(bareSoilEvaporation) EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, false);
+    if(bareSoilEvaporation) Esoil = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, false);
     //Herbaceous transpiration (do not yet modify soil)
     EherbVec = herbaceousTranspiration(pet, LherbSWR, herbLAI, soil, soilFunctions, false);
   } else {
@@ -487,10 +477,8 @@ List spwbDay_advanced(List x, NumericVector meteovec,
       //Get soil pool
       List soil_c =  soilPools[c];
       //Evaporation from bare soil_c (if there is no snow), do not modify soil
-      for(int l = 0;l<nlayers;l++) EsoilPools(c,l) = 0.0;
       if(bareSoilEvaporation) {
-        NumericVector EsoilVec_c = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, false);
-        for(int l = 0;l<nlayers;l++) EsoilPools(c,l) = EsoilVec_c[l];
+        EsoilPools[c] = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, false);
       }
       //Herbaceous transpiration, do not modify soil
       NumericVector EherbVec_c = herbaceousTranspiration(pet, LherbSWR, herbLAI, soil_c, soilFunctions, false);
@@ -498,18 +486,17 @@ List spwbDay_advanced(List x, NumericVector meteovec,
       
       //Update average soil evaporation and herbaceous transpiration 
       for(int l=0;l<nlayers;l++) {
-        EsoilVec[l] = EsoilVec[l] + poolProportions[c]*EsoilPools(c,l); 
+        Esoil = Esoil + poolProportions[c]*EsoilPools[c]; 
         EherbVec[l] = EherbVec[l] + poolProportions[c]*EherbPools(c,l); 
       }
     }
   }
   
-  
   //STEPS 5-9 - Energy balance, transpiration, photosynthesis, uptake 
   List transp = transpirationAdvanced(x, meteovec, 
                                     latitude, elevation, slope, aspect, 
                                     solarConstant, delta, 
-                                    hydroInputs["Interception"], hydroInputs["Snowmelt"], sum(EsoilVec), sum(EherbVec),
+                                    hydroInputs["Interception"], hydroInputs["Snowmelt"], Esoil, sum(EherbVec),
                                     verbose, NA_INTEGER, true);
   NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(transp["ExtractionInst"]);
   NumericMatrix RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(transp["RhizoPsi"]);
@@ -532,22 +519,17 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   //STEP 10 - SOIL FLOWS
   NumericVector sourceSinkVec(nlayers, 0.0);
   for(int l=0;l<nlayers;l++) {
-    sourceSinkVec[l] += Ivec[l] - ExtractionVec[l] - EsoilVec[l] - EherbVec[l];
-    if(l ==0) sourceSinkVec[l] += Snowmelt;
+    sourceSinkVec[l] += Ivec[l] - ExtractionVec[l] - EherbVec[l];
+    if(l ==0) sourceSinkVec[l] += Snowmelt - Esoil;
   }
-  double DeepDrainage = 0.0;
-  if(!plantWaterPools) {
-    // determine water flows (no mass conservation)
-    DeepDrainage = soilFlows(soil, sourceSinkVec, 24, 
-                             true);
-  } else {
+  // determine water flows (no mass conservation)
+  double DeepDrainage = soilFlows(soil, sourceSinkVec, 24, true);
+  //Calculate current soil water potential for output
+  NumericVector psiVec = psi(soil, soilFunctions); 
+  //Apply soil flows to water pools
+  if(plantWaterPools) {
     NumericVector poolProportions = belowdf["poolProportions"];
     List ExtractionPools = Rcpp::as<Rcpp::List>(transp["ExtractionPools"]);
-    
-    double Vini = sum(water(soil, soilFunctions));
-    //Reset soil moisture (to be replaced with soil pool averages)
-    for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
-    
     for(int c=0;c<numCohorts;c++) {
       List soil_c = soilPools[c];
       NumericMatrix ExtractionPool = Rcpp::as<Rcpp::NumericMatrix>(ExtractionPools[c]);
@@ -555,25 +537,19 @@ List spwbDay_advanced(List x, NumericVector meteovec,
       NumericVector sourceSinkPoolVec(nlayers, 0.0);
       for(int l=0;l<nlayers;l++) {
         ExtractionPoolVec[l] = sum(ExtractionPool(_,l));
-        sourceSinkPoolVec[l] += Ivec[l] - ExtractionPoolVec[l] - EsoilPools(c,l) - EherbPools(c,l);
-        if(l ==0) sourceSinkPoolVec[l] += Snowmelt;
+        sourceSinkPoolVec[l] += Ivec[l] - ExtractionPoolVec[l] - EherbPools(c,l);
+        if(l ==0) sourceSinkPoolVec[l] += Snowmelt - EsoilPools[c];
       }
       // determine water flows (no mass conservation)
-      double DeepDrainage_c = soilFlows(soil_c, sourceSinkPoolVec, 24, 
-                                        true);
-      //Update Wpool and Wsoil
+      soilFlows(soil_c, sourceSinkPoolVec, 24, true);
+      //copy to Wpool
       NumericVector W_c = soil_c["W"];
       for(int l=0;l<nlayers;l++) {
         Wpool(c,l) = W_c[l];
-        Wsoil[l] = Wsoil[l] + poolProportions[c]*Wpool(c,l); //weighted average for soil moisture
       }
     }
-    double Vfin = sum(water(soil, soilFunctions));
-    DeepDrainage = Vini - Vfin + sum(sourceSinkVec);
   }
-  //Calculate current soil water potential for output
-  NumericVector psiVec = psi(soil, soilFunctions); 
-  
+
   //STEP 11 - Fire hazard
   bool fireHazardResults = control["fireHazardResults"];
   NumericVector fireHazard(1,NA_REAL);
@@ -589,7 +565,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
                                            _["Runon"] = hydroInputs["Runon"], 
                                            _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, 
                                            _["DeepDrainage"] = DeepDrainage,
-                                           _["SoilEvaporation"] = sum(EsoilVec), _["HerbTranspiration"] = sum(EherbVec),
+                                           _["SoilEvaporation"] = Esoil, _["HerbTranspiration"] = sum(EherbVec),
                                            _["PlantExtraction"] = sum(ExtractionVec), _["Transpiration"] = sum(Eplant),
                                            _["HydraulicRedistribution"] = sum(soilHydraulicInput));
   
@@ -597,7 +573,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
                                               _["LAIlive"] = LAIcelllive, _["LAIexpanded"] = LAIcellexpanded, _["LAIdead"] = LAIcelldead,
                                               _["Cm"] = Cm, _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
   
-  DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, 
+  DataFrame SB = DataFrame::create(_["HerbTranspiration"] = EherbVec, 
                                    _["HydraulicInput"] = soilHydraulicInput, 
                                    _["HydraulicOutput"] = soilHydraulicOutput, 
                                    _["PlantExtraction"] = ExtractionVec, 
@@ -660,10 +636,10 @@ List spwbDay_advanced(List x, NumericVector meteovec,
 //'   \item{\code{"WaterBalance"}: A vector of water balance components (rain, snow, net rain, infiltration, ...) for the simulated day, equivalent to one row of 'WaterBalance' object given in \code{\link{spwb}}.}
 //'   \item{\code{"Soil"}: A data frame with results for each soil layer:
 //'     \itemize{
-//'       \item{\code{"SoilEvaporation"}: Water evaporated from the soil surface (in mm).}
+//'       \item{\code{"HerbTranspiration"}: Water extracted by herbaceous plants from each soil layer (in mm).}
 //'       \item{\code{"HydraulicInput"}: Water entering each soil layer from other layers, transported via plant hydraulic network (in mm) (only for \code{transpirationMode = "Sperry"}).}
 //'       \item{\code{"HydraulicOutput"}: Water leaving each soil layer (going to other layers or the transpiration stream) (in mm) (only for \code{transpirationMode = "Sperry"}).}
-//'       \item{\code{"PlantExtraction"}: Water extracted by plants from each soil layer (in mm).}
+//'       \item{\code{"PlantExtraction"}: Water extracted by woody plants from each soil layer (in mm).}
 //'       \item{\code{"psi"}: Soil water potential (in MPa).}
 //'     }
 //'   }

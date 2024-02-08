@@ -7,9 +7,9 @@ using namespace Rcpp;
 
 double soilEvaporationAmount(double DEF,double PETs, double Gsoil);
 NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, 
-                               List soil, String soilFunctions, bool modifySoil = true);
-NumericVector soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR,
-                              bool modifySoil = true);
+                                      List soil, String soilFunctions, bool modifySoil = true);
+double soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR,
+                       bool modifySoil = true);
 
 
 double infiltrationAmount(double input, double Ssoil);

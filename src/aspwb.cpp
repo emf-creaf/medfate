@@ -108,7 +108,7 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);
   
   //Evaporation from bare soil (if there is no snow), do not update soil yet
-  NumericVector EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, false);
+  double Esoil = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, false);
   
   //Define plant net extraction 
   NumericVector ExtractionVec(nlayers, 0.0);
@@ -124,8 +124,8 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   //and determine water flows, returning deep drainage
   NumericVector sourceSinkVec(nlayers, 0.0);
   for(int l=0;l<nlayers;l++) {
-    sourceSinkVec[l] += Ivec[l] - ExtractionVec[l] - EsoilVec[l];
-    if(l ==0) sourceSinkVec[l] += Snowmelt;
+    sourceSinkVec[l] += Ivec[l] - ExtractionVec[l];
+    if(l ==0) sourceSinkVec[l] += Snowmelt - Esoil;
   }
   double DeepDrainage = soilFlows(soil, sourceSinkVec, 24, true);
     
@@ -138,10 +138,9 @@ List aspwb_day_internal(List x, NumericVector meteovec,
                                            _["Runon"] = hydroInputs["Runon"], 
                                            _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, 
                                            _["DeepDrainage"] = DeepDrainage,
-                                           _["SoilEvaporation"] = sum(EsoilVec), _["Transpiration"] = sum(ExtractionVec));
+                                           _["SoilEvaporation"] = Esoil, _["Transpiration"] = sum(ExtractionVec));
   
-  DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, 
-                                   _["PlantExtraction"] = ExtractionVec, 
+  DataFrame SB = DataFrame::create(_["PlantExtraction"] = ExtractionVec, 
                                    _["psi"] = psiVec);
   List l = List::create(_["WaterBalance"] = DB, 
                         _["Soil"] = SB);
