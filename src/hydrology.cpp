@@ -400,6 +400,7 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   double maxSource =  max(abs(sourceSink));
   if(maxSource > 10) nsteps = 48;
   if(maxSource > 20) nsteps = 96;
+  if(maxSource > 30) nsteps = 144;
   if(maxSource > 40) nsteps = 192;
   
   double tstep = 86400.0/((double) nsteps);
