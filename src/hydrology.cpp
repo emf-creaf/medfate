@@ -397,6 +397,11 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   NumericVector dZ_m = dVec*0.001; //mm to m
   NumericVector rfc = soil["rfc"];
 
+  double maxSource =  max(abs(sourceSink));
+  if(maxSource > 10) nsteps = 48;
+  if(maxSource > 20) nsteps = 96;
+  if(maxSource > 40) nsteps = 192;
+  
   double tstep = 86400.0/((double) nsteps);
   double halftstep = tstep/2.0;
   
@@ -437,6 +442,7 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
     C_m[l] = C[l]*mTOMPa; //From MPa-1 to m-1
   }
   
+
   double drainage = 0.0;
   double K_up, K_down;
   NumericVector a(nlayers), b(nlayers), c(nlayers), d(nlayers);

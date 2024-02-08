@@ -68,6 +68,9 @@ S1<-spwb(x, examplemeteo[1:10, ], latitude = 41.82592, elevation = 100)
 #Extracts daily forest-level output as a data frame
 extractDaily(S1, level = "forest")
 
+#Extracts daily cohort-level output as a data frame
+extractDaily(S1, level = "cohort")
+
 }
 \seealso{
 \code{\link{summary.spwb}}
