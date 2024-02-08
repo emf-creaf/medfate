@@ -85,15 +85,18 @@ Sub-model functions are grouped by *subject*, which is included in the name of t
 
 ### Plots, summaries and post-processing
 
-Simulation models produce multiple outputs and it is important to learn how to visualize them and extract information for further analysis. Each simulation function returns an output object whose S3 class has the same name as the simulation function (e.g. `spwb()` returns an object of class `spwb`). The package includes implementations of `summary()` and `plot()` for simulation output objects, which facilitates displaying and extracting information. In addition, a generic function `shinyplot()` (as well as its implementation for different output objects) allows an interactive exploration of simulation results.
+Simulation models produce multiple outputs and it is important to learn how to visualize them and extract information for further analysis. Each simulation function returns an output object whose S3 class has the same name as the simulation function (e.g. `spwb()` returns an object of class `spwb`). 
 
-Some package function are meant to be used on simulation results and produce time series of additional (derived) properties:
+  + Implementations of `summary()` and `plot()` are available for simulation output objects, which facilitates displaying and summarizing information.
+  + A generic function `shinyplot()` (as well as its implementation for different output objects) allows an interactive exploration of simulation results.
+  + Model outputs can be extracted to simple `data.frame` objects through functions `extractDaily()` and `extractSubdaily()`.
+
+Additional package function are meant to be used on simulation results and produce time series of additional (derived) properties:
 
 - `droughtStress()` : Plant/stand drought stress indices
 - `waterUseEfficiency()` : Water use efficiency metrics
 - `resistances()` : Hydraulic resistances to water transport
 - `fireHazard()` : Potential fire behaviour (see below)
-
 
 ### Fuel properties and fire hazard
 

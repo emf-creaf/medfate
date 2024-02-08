@@ -3249,7 +3249,7 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #' 
 #' @seealso 
 #' \code{\link{spwbInput}}, \code{\link{spwb_day}}, \code{\link{plot.spwb}}, 
-#' \code{\link{forest}}
+#' \code{\link{extractDaily}}, \code{\link{summary.spwb}},  \code{\link{forest}}, \code{\link{aspwb}}
 #' 
 #' @examples
 #' #Load example daily meteorological data
@@ -3273,12 +3273,6 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #' #Call simulation function
 #' S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 #' 
-#' #Plot results
-#' plot(S1)
-#' 
-#' #Monthly summary (averages) of soil water balance
-#' summary(S1, freq="months",FUN=mean, output="Soil")
-#'                   
 #' \donttest{
 #' #Switch to 'Sperry' transpiration mode
 #' control <- defaultControl("Sperry")

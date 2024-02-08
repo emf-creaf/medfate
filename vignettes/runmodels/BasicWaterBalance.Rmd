@@ -168,13 +168,12 @@ plot(S, type="SoilPsi")
 plot(S, type="SoilVol")
 ```
 
-Finally, the same function can also be used to draw the dynamics of plant variables by cohorts, such as transpiration, gross photosynthesis, water potential or drought stress:
+Finally, the same function can also be used to draw the dynamics of plant variables by cohorts, such as transpiration, gross photosynthesis or water potential:
 
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 4}
 plot(S, type="Transpiration")
 plot(S, type="GrossPhotosynthesis")
 plot(S, type="PlantPsi")
-plot(S, type="PlantStress")
 ```
 
 Finally, one can interactively create plots using function `shinyplot`, e.g.:
@@ -182,7 +181,25 @@ Finally, one can interactively create plots using function `shinyplot`, e.g.:
 shinyplot(S)
 ```
 
-### General summaries
+### Extracting output
+
+Simulation outputs in form of lists have a nested structure that is not easy to handle. Functions are provided to extract model outputs as `data.frame` objects. The following code extracts daily series of stand-level variables:
+
+```{r}
+df <- extractDaily(S, "forest")
+head(df)
+```
+
+And a similar code can be used to daily series of cohort-level variables:
+
+```{r}
+df <- extractDaily(S, "cohort")
+head(df)
+```
+
+
+### Temporal summaries
+
 While the simulation model uses daily steps, users will normally be interested in outputs at larger time scales. The package provides a `summary` for objects of class `spwb`. This function can be used to summarize the model's output at different temporal steps (i.e. weekly, annual, ...). For example, to obtain the average soil moisture and water potentials by months one can use:
 
 ```{r}

@@ -131,11 +131,23 @@ names(G1)
 Some elements are common with the output of `spwb()`. In particular, `growthInput` contains a copy of the input object, whereas `growthOutput` contains the same object, but with values of state variables at the end of simulation. The new list elements, with respect to the output of function `spwb()`, are `LabileCarbonBalance` (components of the labile carbon balance), `PlantBiomassBalance` (plant- and cohort-level biomass balance), `PlantStructure` (daily series of structural variables) and `GrowthMortality` (daily growth and mortality rates).
 
 
-## Plots and summaries
+## Inspecting model outputs
 
-Users can inspect the output of `growth()` simulations using functions `summary()` and `plot()` on the simulation output. Several plots are available, in addition to all the plots that were available to display the results of `spwb()` simulations. Some of them are illustrated in the following subsections:
+Users can extract, summarize or inspect the output of `growth()` simulations as done for simulations with `spwb()`. 
 
-### Carbon balance
+### Extracting output
+
+Functions `extractDaily()` (and `extractSubdaily()`) allow extracting model outputs in form of data frame:
+```{r}
+df <- extractDaily(G1, "forest")
+names(df)
+```
+These data frames are easy handle in R or can be written into text files for post-processing with other programs.
+
+### Plots
+
+Several plots are available, in addition to all the plots that were available to display the results of `spwb()` simulations. Some of them are illustrated in the following subsections:
+
 To inspect components of the plant carbon balance we can first display daily gross photosynthesis expressed as the carbon fixation relative to dry biomass:
 ```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=4}
 plot(G1, "GrossPhotosynthesis", bySpecies = T)
@@ -154,8 +166,6 @@ Carbon assimilation and respiration rates define the dynamics of stored carbon. 
 plot(G1, "StarchSapwood", bySpecies = T)
 ```
 
-
-### Structural changes
 Leaf and sapwood area dynamics arising from the interplay between growth and senescence of tissues can be inspected using:
 ```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=4}
 plot(G1, "LeafArea", bySpecies = T)
