@@ -5,11 +5,10 @@
 \alias{hydrology_soilEvaporation}
 \alias{hydrology_herbaceousTranspiration}
 \alias{hydrology_infiltrationRepartition}
-\alias{hydrology_snowMelt}
 \alias{hydrology_soilFlows}
 \alias{hydrology_soil}
 \alias{hydrology_infiltrationAmount}
-\title{Soil infiltration, percolation and bare soil evaporation}
+\title{Soil hydrological processes}
 \usage{
 hydrology_soilEvaporationAmount(DEF, PETs, Gsoil)
 
@@ -31,8 +30,6 @@ hydrology_herbaceousTranspiration(
 )
 
 hydrology_infiltrationRepartition(I, dVec, macro, a = -0.005, b = 3)
-
-hydrology_snowMelt(tday, rad, LgroundSWR, elevation)
 
 hydrology_soilFlows(soil, sourceSink, nsteps = 24L, modifySoil = TRUE)
 
@@ -67,12 +64,6 @@ hydrology_infiltrationAmount(input, Ssoil)
 
 \item{a, b}{Parameters of the extinction function used for water infitration.}
 
-\item{tday}{Average day temperature (ºC).}
-
-\item{rad}{Solar radiation (in MJ/m2/day).}
-
-\item{elevation}{Altitude above sea level (m).}
-
 \item{sourceSink}{Source/sink term for each soil layer (from snowmelt, soil evaporation or plant transpiration/redistribution)
 as mm/day.}
 
@@ -90,16 +81,19 @@ Function \code{hydrology_infiltrationRepartition} estimates the amount of infilt
 Function \code{hydrology_soilEvaporationAmount} returns the amount of water evaporated from the soil. 
 
 Function \code{hydrology_soilEvaporation} returns a vector of water evaporated from each soil layer.
+
+Function \code{hydrology_soilFlows} returns the water draining from the bottom layer.
 }
 \description{
-Function \code{hydrology_infiltrationAmount} calculates the amount of water that infiltrates 
-into the topsoil, according to the USDA SCS curve number method (Boughton 1989). 
-The remaining is assumed to be lost as surface runoff. 
-Function \code{hydrology_soilEvaporationAmount} calculates the amount of evaporation from bare soil, following Ritchie (1972). 
-Function \code{hydrology_snowMelt} calculates the maximum amount of snowmelt according to Kergoat (1998).
+Soil hydrological processes:
+\itemize{
+  \item{Function \code{hydrology_infiltrationAmount} calculates the amount of water that infiltrates into the topsoil, according to the USDA SCS curve number method (Boughton 1989).}
+  \item{Function \code{hydrology_infiltrationRepartition} distributes infiltration among soil layers depending on macroporosity.}
+  \item{Function \code{hydrology_soilEvaporationAmount} calculates the amount of evaporation from bare soil, following Ritchie (1972).}
+  \item{Function \code{hydrology_soilEvaporation} calculates the amount of evaporation from bare soil and distributes it among soil layers.}
+  \item{Function \code{hydrology_herbaceousTranspiration} calculates the amount of transpiration due to herbaceous plants.}
+  \item{Function \code{hydrology_soilFlows} estimates water movement within the soil according to Richards equation.}
 }
-\details{
-See description of infiltration and soil evaporation processes in De Caceres et al. (2015).
 }
 \examples{
 SoilDepth = c(200,400,800,1200,1500)
@@ -156,8 +150,6 @@ legend("topleft", bty="n", lty=1:5,
 Boughton (1989). A review of the USDA SCS curve number method. - Australian Journal of Soil Research 27: 511-523.
 
 De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to evaluate plant drought stress at the regional level. Agricultural and Forest Meteorology.
-
-Kergoat L. (1998). A model for hydrological equilibrium of leaf area index on a global scale. Journal of Hydrology 212–213: 268–286.
 
 Ritchie (1972). Model for predicting evaporation from a row crop with incomplete cover. - Water resources research.
 }

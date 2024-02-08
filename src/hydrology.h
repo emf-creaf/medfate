@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 double soilEvaporationAmount(double DEF,double PETs, double Gsoil);
-double herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, 
+NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, 
                                List soil, String soilFunctions, bool modifySoil = true);
 NumericVector soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR,
                               bool modifySoil = true);
@@ -26,8 +26,5 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, double prec, doub
                               double Cm, double LgroundPAR, double LgroundSWR, 
                               double runon = 0.0,
                               bool snowpack = true, bool modifySoil = true);
-NumericVector soilInfiltrationPercolation(List soil, String soilFunctions, 
-                                          double waterInput,
-                                          bool modifySoil = true);
 double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
                  bool modifySoil = true);

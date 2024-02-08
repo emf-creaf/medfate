@@ -13,6 +13,123 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// aspwbInput
+List aspwbInput(double crop_factor, List control, List soil);
+static SEXP _medfate_aspwbInput_try(SEXP crop_factorSEXP, SEXP controlSEXP, SEXP soilSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< double >::type crop_factor(crop_factorSEXP);
+    Rcpp::traits::input_parameter< List >::type control(controlSEXP);
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    rcpp_result_gen = Rcpp::wrap(aspwbInput(crop_factor, control, soil));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_aspwbInput(SEXP crop_factorSEXP, SEXP controlSEXP, SEXP soilSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_aspwbInput_try(crop_factorSEXP, controlSEXP, soilSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
+// aspwb_day
+List aspwb_day(List x, CharacterVector date, NumericVector meteovec, double latitude, double elevation, double slope, double aspect, double runon, bool modifyInput);
+static SEXP _medfate_aspwb_day_try(SEXP xSEXP, SEXP dateSEXP, SEXP meteovecSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP runonSEXP, SEXP modifyInputSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type date(dateSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type meteovec(meteovecSEXP);
+    Rcpp::traits::input_parameter< double >::type latitude(latitudeSEXP);
+    Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
+    Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
+    Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
+    Rcpp::traits::input_parameter< double >::type runon(runonSEXP);
+    Rcpp::traits::input_parameter< bool >::type modifyInput(modifyInputSEXP);
+    rcpp_result_gen = Rcpp::wrap(aspwb_day(x, date, meteovec, latitude, elevation, slope, aspect, runon, modifyInput));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_aspwb_day(SEXP xSEXP, SEXP dateSEXP, SEXP meteovecSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP runonSEXP, SEXP modifyInputSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_aspwb_day_try(xSEXP, dateSEXP, meteovecSEXP, latitudeSEXP, elevationSEXP, slopeSEXP, aspectSEXP, runonSEXP, modifyInputSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
+// apwb
+List apwb(List x, DataFrame meteo, double latitude, double elevation, double slope, double aspect);
+static SEXP _medfate_apwb_try(SEXP xSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type meteo(meteoSEXP);
+    Rcpp::traits::input_parameter< double >::type latitude(latitudeSEXP);
+    Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
+    Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
+    Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
+    rcpp_result_gen = Rcpp::wrap(apwb(x, meteo, latitude, elevation, slope, aspect));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_apwb(SEXP xSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_apwb_try(xSEXP, meteoSEXP, latitudeSEXP, elevationSEXP, slopeSEXP, aspectSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
 // radiationDiurnalPattern
 double radiationDiurnalPattern(double t, double daylength);
 RcppExport SEXP _medfate_radiationDiurnalPattern(SEXP tSEXP, SEXP daylengthSEXP) {
@@ -2045,7 +2162,7 @@ RcppExport SEXP _medfate_soilEvaporation(SEXP soilSEXP, SEXP soilFunctionsSEXP, 
     return rcpp_result_gen;
 }
 // herbaceousTranspiration
-double herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, List soil, String soilFunctions, bool modifySoil);
+NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, List soil, String soilFunctions, bool modifySoil);
 static SEXP _medfate_herbaceousTranspiration_try(SEXP petSEXP, SEXP LherbSWRSEXP, SEXP herbLAISEXP, SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP modifySoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -2220,43 +2337,6 @@ RcppExport SEXP _medfate_soilWaterInputs(SEXP soilSEXP, SEXP soilFunctionsSEXP, 
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
         rcpp_result_gen = PROTECT(_medfate_soilWaterInputs_try(soilSEXP, soilFunctionsSEXP, precSEXP, erSEXP, tdaySEXP, radSEXP, elevationSEXP, CmSEXP, LgroundPARSEXP, LgroundSWRSEXP, runonSEXP, snowpackSEXP, modifySoilSEXP));
-    }
-    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
-    if (rcpp_isInterrupt_gen) {
-        UNPROTECT(1);
-        Rf_onintr();
-    }
-    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
-    if (rcpp_isLongjump_gen) {
-        Rcpp::internal::resumeJump(rcpp_result_gen);
-    }
-    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
-    if (rcpp_isError_gen) {
-        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
-        UNPROTECT(1);
-        Rf_error("%s", CHAR(rcpp_msgSEXP_gen));
-    }
-    UNPROTECT(1);
-    return rcpp_result_gen;
-}
-// soilInfiltrationPercolation
-NumericVector soilInfiltrationPercolation(List soil, String soilFunctions, double waterInput, bool modifySoil);
-static SEXP _medfate_soilInfiltrationPercolation_try(SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP waterInputSEXP, SEXP modifySoilSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
-    Rcpp::traits::input_parameter< String >::type soilFunctions(soilFunctionsSEXP);
-    Rcpp::traits::input_parameter< double >::type waterInput(waterInputSEXP);
-    Rcpp::traits::input_parameter< bool >::type modifySoil(modifySoilSEXP);
-    rcpp_result_gen = Rcpp::wrap(soilInfiltrationPercolation(soil, soilFunctions, waterInput, modifySoil));
-    return rcpp_result_gen;
-END_RCPP_RETURN_ERROR
-}
-RcppExport SEXP _medfate_soilInfiltrationPercolation(SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP waterInputSEXP, SEXP modifySoilSEXP) {
-    SEXP rcpp_result_gen;
-    {
-        Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_soilInfiltrationPercolation_try(soilSEXP, soilFunctionsSEXP, waterInputSEXP, modifySoilSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -5160,6 +5240,9 @@ END_RCPP
 static int _medfate_RcppExport_validate(const char* sig) { 
     static std::set<std::string> signatures;
     if (signatures.empty()) {
+        signatures.insert("List(*aspwbInput)(double,List,List)");
+        signatures.insert("List(*aspwb_day)(List,CharacterVector,NumericVector,double,double,double,double,double,bool)");
+        signatures.insert("List(*aspwb)(List,DataFrame,double,double,double,double)");
         signatures.insert("double(*mortality_dailyProbability)(double,double)");
         signatures.insert("List(*growth_day)(List,CharacterVector,NumericVector,double,double,double,double,double,bool)");
         signatures.insert("List(*.defineGrowthDailyOutput)(double,double,double,double,CharacterVector,List)");
@@ -5169,12 +5252,11 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("double(*.hydrology_interceptionGashDay)(double,double,double,double)");
         signatures.insert("double(*hydrology_soilEvaporationAmount)(double,double,double)");
         signatures.insert("NumericVector(*hydrology_soilEvaporation)(List,String,double,double,bool)");
-        signatures.insert("double(*hydrology_herbaceousTranspiration)(double,double,double,List,String,bool)");
+        signatures.insert("NumericVector(*hydrology_herbaceousTranspiration)(double,double,double,List,String,bool)");
         signatures.insert("double(*.hydrology_infiltrationAmount)(double,double)");
         signatures.insert("NumericVector(*hydrology_infiltrationRepartition)(double,NumericVector,NumericVector,double,double)");
         signatures.insert("double(*hydrology_snowMelt)(double,double,double,double)");
         signatures.insert("NumericVector(*hydrology_soilWaterInputs)(List,String,double,double,double,double,double,double,double,double,double,bool,bool)");
-        signatures.insert("NumericVector(*hydrology_soilInfiltrationPercolation)(List,String,double,bool)");
         signatures.insert("double(*hydrology_soilFlows)(List,NumericVector,int,bool)");
         signatures.insert("double(*soil_saturatedConductivitySX)(double,double,double,bool)");
         signatures.insert("double(*soil_unsaturatedConductivitySX)(double,double,double,double,bool)");
@@ -5219,6 +5301,9 @@ static int _medfate_RcppExport_validate(const char* sig) {
 
 // registerCCallable (register entry points for exported C++ functions)
 RcppExport SEXP _medfate_RcppExport_registerCCallable() { 
+    R_RegisterCCallable("medfate", "_medfate_aspwbInput", (DL_FUNC)_medfate_aspwbInput_try);
+    R_RegisterCCallable("medfate", "_medfate_aspwb_day", (DL_FUNC)_medfate_aspwb_day_try);
+    R_RegisterCCallable("medfate", "_medfate_aspwb", (DL_FUNC)_medfate_apwb_try);
     R_RegisterCCallable("medfate", "_medfate_mortality_dailyProbability", (DL_FUNC)_medfate_dailyMortalityProbability_try);
     R_RegisterCCallable("medfate", "_medfate_growth_day", (DL_FUNC)_medfate_growthDay_try);
     R_RegisterCCallable("medfate", "_medfate_.defineGrowthDailyOutput", (DL_FUNC)_medfate_defineGrowthDailyOutput_try);
@@ -5233,7 +5318,6 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_hydrology_infiltrationRepartition", (DL_FUNC)_medfate_infiltrationRepartition_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology_snowMelt", (DL_FUNC)_medfate_snowMelt_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology_soilWaterInputs", (DL_FUNC)_medfate_soilWaterInputs_try);
-    R_RegisterCCallable("medfate", "_medfate_hydrology_soilInfiltrationPercolation", (DL_FUNC)_medfate_soilInfiltrationPercolation_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology_soilFlows", (DL_FUNC)_medfate_soilFlows_try);
     R_RegisterCCallable("medfate", "_medfate_soil_saturatedConductivitySX", (DL_FUNC)_medfate_saturatedConductivitySaxton_try);
     R_RegisterCCallable("medfate", "_medfate_soil_unsaturatedConductivitySX", (DL_FUNC)_medfate_unsaturatedConductivitySaxton_try);
@@ -5277,6 +5361,9 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_medfate_aspwbInput", (DL_FUNC) &_medfate_aspwbInput, 3},
+    {"_medfate_aspwb_day", (DL_FUNC) &_medfate_aspwb_day, 9},
+    {"_medfate_apwb", (DL_FUNC) &_medfate_apwb, 6},
     {"_medfate_radiationDiurnalPattern", (DL_FUNC) &_medfate_radiationDiurnalPattern, 2},
     {"_medfate_temperatureDiurnalPattern", (DL_FUNC) &_medfate_temperatureDiurnalPattern, 7},
     {"_medfate_leafTemperature", (DL_FUNC) &_medfate_leafTemperature, 5},
@@ -5410,7 +5497,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_infiltrationRepartition", (DL_FUNC) &_medfate_infiltrationRepartition, 5},
     {"_medfate_snowMelt", (DL_FUNC) &_medfate_snowMelt, 4},
     {"_medfate_soilWaterInputs", (DL_FUNC) &_medfate_soilWaterInputs, 13},
-    {"_medfate_soilInfiltrationPercolation", (DL_FUNC) &_medfate_soilInfiltrationPercolation, 4},
     {"_medfate_soilFlows", (DL_FUNC) &_medfate_soilFlows, 4},
     {"_medfate_gammln", (DL_FUNC) &_medfate_gammln, 1},
     {"_medfate_betacf", (DL_FUNC) &_medfate_betacf, 3},

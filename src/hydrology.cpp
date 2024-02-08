@@ -2,6 +2,7 @@
 
 #include <Rcpp.h>
 #include "soil.h"
+#include "root.h"
 #include "hydraulics.h"
 #include <meteoland.h>
 using namespace Rcpp;
@@ -100,18 +101,24 @@ NumericVector soilEvaporation(List soil, String soilFunctions, double pet, doubl
 //' @param LherbSWR Percentage of short-wave radiation (SWR) reaching the herbaceous layer.
 //' @param herbLAI Leaf area index of the herbaceous layer.
 // [[Rcpp::export("hydrology_herbaceousTranspiration")]]
-double herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, 
+NumericVector herbaceousTranspiration(double pet, double LherbSWR, double herbLAI, 
                                List soil, String soilFunctions, bool modifySoil = true){
   if(NumericVector::is_na(herbLAI)) return(0.0);
   double Tmax_herb = pet*(LherbSWR/100.0)*(0.134*herbLAI - 0.006*pow(herbLAI, 2.0));
+  NumericVector dVec = soil["W"];
+  int nlayers = dVec.size();
   NumericVector psiSoil = psi(soil, soilFunctions);
   NumericVector W = soil["W"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
-  double Eherb = Tmax_herb*Psi2K(psiSoil[0], -1.5, 2.0);
-  if(modifySoil) {
-    W[0] = W[0] - (Eherb/Water_FC[0]);
+  NumericVector EherbVec(nlayers,0.0);
+  NumericVector V = ldrRS_one(50, 500, dVec);
+  for(int l=0;l<nlayers;l++) {
+    EherbVec[l] = V[l]*Tmax_herb*Psi2K(psiSoil[0], -1.5, 2.0); 
+    if(modifySoil) {
+      W[l] = W[l] - (EherbVec[l]/Water_FC[l]);
+    }
   }
-  return(Eherb);
+  return(EherbVec);
 }
 
 // [[Rcpp::export(".hydrology_infiltrationAmount")]]
@@ -157,7 +164,7 @@ NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVecto
   return(Ivec);
 }
 
-//' @rdname hydrology_soil
+//' @rdname hydrology_verticalInputs
 //' 
 //' @param tday Average day temperature (ºC).
 //' @param rad Solar radiation (in MJ/m2/day).
@@ -178,9 +185,12 @@ double snowMelt(double tday, double rad, double LgroundSWR, double elevation) {
 
 //' Soil vertical inputs
 //' 
-//' High-level functions for hydrological processes. Function \code{hydrology_soilWaterInputs} performs 
-//' canopy water interception and snow accumulation/melt. Function \code{hydrology_soilInfiltrationPercolation} 
-//' performs soil infiltration and percolation from the input given by the previous function.
+//' High-level functions to define water inputs into the soil:
+//'  
+//' \itemize{
+//'   \item{Function \code{hydrology_soilWaterInputs} performs canopy water interception and snow accumulation/melt.}
+//'   \item{Function \code{hydrology_snowMelt} estimates snow melt using a simple energy balance, according to Kergoat (1998).}
+//' }
 //' 
 //' @param soil A list containing the description of the soil (see \code{\link{soil}}).
 //' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
@@ -212,12 +222,11 @@ double snowMelt(double tday, double rad, double LgroundSWR, double elevation) {
 //' \item{RainfallInput}{Rainfall input, including runon and net rain.}
 //' \item{TotalInput}{Total soil input, including runon, snowmelt and net rain.}
 //' 
-//' Function \code{hydrology_soilInfiltrationPercolation} returns a named vector with the following elements, all in mm:
-//' \item{Infiltration}{Water infiltrated into the soil (i.e. throughfall + runon + snowmelt - runoff).}
-//' \item{Runoff}{Surface water leaving the target area.}
-//' \item{DeepDrainage}{Water leaving the target soil towards the water table.}
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+//' 
+//' @references
+//'  Kergoat L. (1998). A model for hydrological equilibrium of leaf area index on a global scale. Journal of Hydrology 212–213: 268–286.
 //' 
 //' @seealso \code{\link{spwb_day}}, \code{\link{hydrology_rainInterception}}, \code{\link{hydrology_soilEvaporation}}
 //' 
@@ -270,64 +279,59 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, double prec, doub
   return(WI);
 }
 
-//' @rdname hydrology_verticalInputs
-//' 
-//' @param waterInput Soil water input for a given day (mm).
-//' 
-// [[Rcpp::export("hydrology_soilInfiltrationPercolation")]]
-NumericVector soilInfiltrationPercolation(List soil, String soilFunctions, 
-                                          double waterInput,
-                                          bool modifySoil = true) {
-  //Soil input
-  NumericVector W = clone(Rcpp::as<Rcpp::NumericVector>(soil["W"])); //Access to soil state variable
-  NumericVector dVec = soil["dVec"];
-  NumericVector macro = soil["macro"];
-  NumericVector rfc = soil["rfc"];
-  NumericVector Water_FC = waterFC(soil, soilFunctions);
-  NumericVector Water_SAT = waterSAT(soil, soilFunctions);
-  int nlayers = W.size();
-  
-
-  //Hydrologic input
-  double Infiltration= 0.0, Runoff= 0.0;
-  if(waterInput>0.0) {
-    //Interception
-    //Net Runoff and infiltration
-    Infiltration = infiltrationAmount(waterInput, Water_FC[0]);
-    Runoff = waterInput - Infiltration;
-    //Decide infiltration repartition among layers
-    NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);
-    //Input of the first soil layer is infiltration
-    double infiltrationExcess = 0.0;
-    double Wn;
-    for(int l=0;l<nlayers;l++) {
-      if((dVec[l]>0.0) && (Ivec[l]>0.0)) {
-        Wn = W[l]*Water_FC[l] + Ivec[l]; //Update water volume
-        if(l<(nlayers-1)) {
-          Ivec[l+1] = Ivec[l+1] + std::max(Wn - Water_FC[l],0.0); //update Ivec adding the excess to the infiltrating water (saturated flow)
-          W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta
-        } else {
-          W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta
-          infiltrationExcess = std::max(Wn - Water_FC[l],0.0); //Set excess of the bottom layer using field capacity
-        }
-      } 
-    } 
-    //If there still excess fill layers over field capacity
-    if((infiltrationExcess>0.0)) {
-      for(int l=(nlayers-1);l>=0;l--) {
-        if((dVec[l]>0.0) && (infiltrationExcess>0.0)) {
-          Wn = W[l]*Water_FC[l] + infiltrationExcess; //Update water volume
-          infiltrationExcess = std::max(Wn - Water_SAT[l],0.0); //Update excess, using the excess of water over saturation
-          W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta here no upper
-        }
-      }
-      //If soil is completely saturated increase surface Runoff and decrease Infiltration
-      if(infiltrationExcess>0.0) { 
-        Runoff = Runoff + infiltrationExcess;
-        Infiltration = Infiltration - infiltrationExcess;
-      }
-    } 
-  }
+// NumericVector soilInfiltrationPercolation(List soil, String soilFunctions, 
+//                                           double waterInput,
+//                                           bool modifySoil = true) {
+//   //Soil input
+//   NumericVector W = clone(Rcpp::as<Rcpp::NumericVector>(soil["W"])); //Access to soil state variable
+//   NumericVector dVec = soil["dVec"];
+//   NumericVector macro = soil["macro"];
+//   NumericVector rfc = soil["rfc"];
+//   NumericVector Water_FC = waterFC(soil, soilFunctions);
+//   NumericVector Water_SAT = waterSAT(soil, soilFunctions);
+//   int nlayers = W.size();
+//   
+// 
+//   //Hydrologic input
+//   double Infiltration= 0.0, Runoff= 0.0;
+//   if(waterInput>0.0) {
+//     //Interception
+//     //Net Runoff and infiltration
+//     Infiltration = infiltrationAmount(waterInput, Water_FC[0]);
+//     Runoff = waterInput - Infiltration;
+//     //Decide infiltration repartition among layers
+//     NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);
+//     //Input of the first soil layer is infiltration
+//     double infiltrationExcess = 0.0;
+//     double Wn;
+//     for(int l=0;l<nlayers;l++) {
+//       if((dVec[l]>0.0) && (Ivec[l]>0.0)) {
+//         Wn = W[l]*Water_FC[l] + Ivec[l]; //Update water volume
+//         if(l<(nlayers-1)) {
+//           Ivec[l+1] = Ivec[l+1] + std::max(Wn - Water_FC[l],0.0); //update Ivec adding the excess to the infiltrating water (saturated flow)
+//           W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta
+//         } else {
+//           W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta
+//           infiltrationExcess = std::max(Wn - Water_FC[l],0.0); //Set excess of the bottom layer using field capacity
+//         }
+//       } 
+//     } 
+//     //If there still excess fill layers over field capacity
+//     if((infiltrationExcess>0.0)) {
+//       for(int l=(nlayers-1);l>=0;l--) {
+//         if((dVec[l]>0.0) && (infiltrationExcess>0.0)) {
+//           Wn = W[l]*Water_FC[l] + infiltrationExcess; //Update water volume
+//           infiltrationExcess = std::max(Wn - Water_SAT[l],0.0); //Update excess, using the excess of water over saturation
+//           W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta here no upper
+//         }
+//       }
+//       //If soil is completely saturated increase surface Runoff and decrease Infiltration
+//       if(infiltrationExcess>0.0) { 
+//         Runoff = Runoff + infiltrationExcess;
+//         Infiltration = Infiltration - infiltrationExcess;
+//       }
+//     } 
+//   }
   // //If there is still room for additional drainage (water in macropores accumulated from previous days)
   // double head = 0.0;
   // for(int l=0;l<nlayers;l++) { //Add mm over field capacity
@@ -349,19 +353,19 @@ NumericVector soilInfiltrationPercolation(List soil, String soilFunctions,
   //         DeepDrainage +=toDrain;
   //         maxDrainage -=toDrain;
   //         Wn -= toDrain;
-  //         W[l] = std::max(0.0, Wn/Water_FC[l]); //Update theta (this modifies 'soil') here no upper          
+  //         W[l] = std::max(0.0, Wn/Water_FC[l]); //Update theta (this modifies 'soil') here no upper
   //       }
   //     }
   //   }
   // }
-  if(modifySoil) {
-    NumericVector Ws = soil["W"];
-    for(int l=0;l<nlayers;l++) Ws[l] = W[l];
-  }
-  NumericVector DB = NumericVector::create(_["Infiltration"] = Infiltration, 
-                                           _["Runoff"] = Runoff);
-  return(DB);
-}
+//   if(modifySoil) {
+//     NumericVector Ws = soil["W"];
+//     for(int l=0;l<nlayers;l++) Ws[l] = W[l];
+//   }
+//   NumericVector DB = NumericVector::create(_["Infiltration"] = Infiltration, 
+//                                            _["Runoff"] = Runoff);
+//   return(DB);
+// }
 
 
 NumericVector tridiagonalSolving(NumericVector a, NumericVector b, NumericVector c, NumericVector d) {

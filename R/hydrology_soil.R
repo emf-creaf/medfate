@@ -1,15 +1,18 @@
-#' Soil infiltration, percolation and bare soil evaporation
+#' Soil hydrological processes
 #'
-#' Function \code{hydrology_infiltrationAmount} calculates the amount of water that infiltrates 
-#' into the topsoil, according to the USDA SCS curve number method (Boughton 1989). 
-#' The remaining is assumed to be lost as surface runoff. 
-#' Function \code{hydrology_soilEvaporationAmount} calculates the amount of evaporation from bare soil, following Ritchie (1972). 
-#' Function \code{hydrology_snowMelt} calculates the maximum amount of snowmelt according to Kergoat (1998).
+#' Soil hydrological processes:
+#' \itemize{
+#'   \item{Function \code{hydrology_infiltrationAmount} calculates the amount of water that infiltrates into the topsoil, according to the USDA SCS curve number method (Boughton 1989).}
+#'   \item{Function \code{hydrology_infiltrationRepartition} distributes infiltration among soil layers depending on macroporosity.}
+#'   \item{Function \code{hydrology_soilEvaporationAmount} calculates the amount of evaporation from bare soil, following Ritchie (1972).}
+#'   \item{Function \code{hydrology_soilEvaporation} calculates the amount of evaporation from bare soil and distributes it among soil layers.}
+#'   \item{Function \code{hydrology_herbaceousTranspiration} calculates the amount of transpiration due to herbaceous plants.}
+#'   \item{Function \code{hydrology_soilFlows} estimates water movement within the soil according to Richards equation.}
+#' }
 #' 
 #' @param input A numeric vector of (daily) water input (in mm of water).
 #' @param Ssoil Soil water storage capacity (can be referred to topsoil) (in mm of water).
 #' 
-#' @details See description of infiltration and soil evaporation processes in De Caceres et al. (2015).
 #' 
 #' @return 
 #' Function \code{hydrology_infiltrationAmount} a vector of the same length as \code{input} containing the daily amount of water that infiltrates into the soil (in mm of water). 
@@ -20,12 +23,12 @@
 #' 
 #' Function \code{hydrology_soilEvaporation} returns a vector of water evaporated from each soil layer.
 #' 
+#' Function \code{hydrology_soilFlows} returns the water draining from the bottom layer.
+#' 
 #' @references 
 #' Boughton (1989). A review of the USDA SCS curve number method. - Australian Journal of Soil Research 27: 511-523.
 #' 
 #' De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to evaluate plant drought stress at the regional level. Agricultural and Forest Meteorology.
-#' 
-#' Kergoat L. (1998). A model for hydrological equilibrium of leaf area index on a global scale. Journal of Hydrology 212–213: 268–286.
 #' 
 #' Ritchie (1972). Model for predicting evaporation from a row crop with incomplete cover. - Water resources research.
 #' 
