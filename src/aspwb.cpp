@@ -523,7 +523,8 @@ List apwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       Named("tday") = tday, 
       Named("prec") = Precipitation[i], 
       Named("rad") = rad, 
-      Named("pet") = PET[i]);
+      Named("pet") = PET[i],
+      Named("rint") = rainfallIntensity(DOY[i], Precipitation[i]));
     try{
       s = aspwb_day_internal(x, meteovec, 
                              elevation, 
