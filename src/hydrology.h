@@ -14,7 +14,7 @@ double soilEvaporation(List soil, String soilFunctions, double pet, double Lgrou
 
 double infiltrationBoughton(double input, double Ssoil);
 double infitrationGreenAmpt(double t, double Psi_w, double Ksat, double theta_sat, double theta_dry);
-double infiltrationAmount(double rainfallInput, double r, List soil, String soilFunctions, 
+double infiltrationAmount(double rainfallInput, double rainfallIntensity, List soil, String soilFunctions, 
                           String model = "Green-Ampt");
 NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro, 
                                       double a = -0.005, double b = 3.0);

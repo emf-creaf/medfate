@@ -191,17 +191,17 @@ namespace medfate {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline double hydrology_rFactor(int doy, double prec, double Rconv = 5.6, double Rsyn = 1.5) {
-        typedef SEXP(*Ptr_hydrology_rFactor)(SEXP,SEXP,SEXP,SEXP);
-        static Ptr_hydrology_rFactor p_hydrology_rFactor = NULL;
-        if (p_hydrology_rFactor == NULL) {
-            validateSignature("double(*hydrology_rFactor)(int,double,double,double)");
-            p_hydrology_rFactor = (Ptr_hydrology_rFactor)R_GetCCallable("medfate", "_medfate_hydrology_rFactor");
+    inline double hydrology_rainfallIntensity(int doy, double prec, double Rconv = 5.6, double Rsyn = 1.5) {
+        typedef SEXP(*Ptr_hydrology_rainfallIntensity)(SEXP,SEXP,SEXP,SEXP);
+        static Ptr_hydrology_rainfallIntensity p_hydrology_rainfallIntensity = NULL;
+        if (p_hydrology_rainfallIntensity == NULL) {
+            validateSignature("double(*hydrology_rainfallIntensity)(int,double,double,double)");
+            p_hydrology_rainfallIntensity = (Ptr_hydrology_rainfallIntensity)R_GetCCallable("medfate", "_medfate_hydrology_rainfallIntensity");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_hydrology_rFactor(Shield<SEXP>(Rcpp::wrap(doy)), Shield<SEXP>(Rcpp::wrap(prec)), Shield<SEXP>(Rcpp::wrap(Rconv)), Shield<SEXP>(Rcpp::wrap(Rsyn)));
+            rcpp_result_gen = p_hydrology_rainfallIntensity(Shield<SEXP>(Rcpp::wrap(doy)), Shield<SEXP>(Rcpp::wrap(prec)), Shield<SEXP>(Rcpp::wrap(Rconv)), Shield<SEXP>(Rcpp::wrap(Rsyn)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -359,7 +359,7 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline double hydrology_infiltrationAmount(double rainfallInput, double r, List soil, String soilFunctions, String model = "Green-Ampt") {
+    inline double hydrology_infiltrationAmount(double rainfallInput, double rainfallIntensity, List soil, String soilFunctions, String model = "Green-Ampt") {
         typedef SEXP(*Ptr_hydrology_infiltrationAmount)(SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_infiltrationAmount p_hydrology_infiltrationAmount = NULL;
         if (p_hydrology_infiltrationAmount == NULL) {
@@ -369,7 +369,7 @@ namespace medfate {
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_hydrology_infiltrationAmount(Shield<SEXP>(Rcpp::wrap(rainfallInput)), Shield<SEXP>(Rcpp::wrap(r)), Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(soilFunctions)), Shield<SEXP>(Rcpp::wrap(model)));
+            rcpp_result_gen = p_hydrology_infiltrationAmount(Shield<SEXP>(Rcpp::wrap(rainfallInput)), Shield<SEXP>(Rcpp::wrap(rainfallIntensity)), Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(soilFunctions)), Shield<SEXP>(Rcpp::wrap(model)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

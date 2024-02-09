@@ -38,7 +38,11 @@ hydrology_soilWaterInputs(
 
 \item{soilFunctions}{Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).}
 
-\item{prec}{Precipitation for a given day (mm)}
+\item{prec}{Precipitation for the given day (mm)}
+
+\item{rainfallIntensity}{Rainfall intensity rate (mm/h).}
+
+\item{pet}{Potential evapotranspiration for the given day (mm)}
 
 \item{Cm}{Canopy water storage capacity.}
 
@@ -49,8 +53,6 @@ hydrology_soilWaterInputs(
 \item{snowpack}{Boolean flag to indicate the simulation of snow accumulation and melting.}
 
 \item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
-
-\item{er}{The ratio of evaporation rate to rainfall rate.}
 }
 \value{
 Function \code{hydrology_soilWaterInputs} returns a named vector with the following elements, all in mm:

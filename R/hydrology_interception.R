@@ -8,17 +8,17 @@
 #' @param Cm Canopy water storage capacity.
 #' @param p Proportion of throughfall (normally 1 - c, where c is the canopy cover).
 #' @param ER The ratio of evaporation rate to rainfall rate.
-#' @param method Rainfall interception method (either \code{"Gash1995"} or \code{"Liu2001"}).
+#' @param model Rainfall interception model (either \code{"Gash1995"} or \code{"Liu2001"}).
 #' 
 #' @details 
 #' Function \code{hydrology_rainInterception} can accept either vectors or scalars as parameters \code{Cm}, \code{p} and \code{ER}. If they are supplied as vectors they should be of the same length as \code{Rainfall}.
 #' 
-#' Function \code{hydrology_erFactor} calculates the evaporation-to-rainfall ratio for input values of potential evapotranspiration and rainfall, while accounting for seasonal variation in rainfall intensity (mm/h). Default values \code{Rconv = 5.6} and \code{Rsyn = 1.5} come from Miralles et al. (2010).
+#' Function \code{hydrology_rainfallIntensity} estimates the rainfall intensity (mm/h) for input values of rainfall, while accounting for seasonal variation in rainfall intensity (mm/h). Default values \code{Rconv = 5.6} and \code{Rsyn = 1.5} come from Miralles et al. (2010).
 #' 
 #' @return 
 #' Function \code{hydrology_rainInterception} returns a vector of the same length as \code{Rainfall} containing intercepted rain values. 
 #' 
-#' Function \code{hydrology_erFactor} returns a scalar with the evaporation-to-rainfall ratio.
+#' Function \code{hydrology_rainfallIntensity} returns a scalar with the rainfall intensity.
 #' 
 #' @references 
 #' Liu (2001). Evaluation of the Liu model for predicting rainfall interception in forests world-wide. - Hydrol. Process. 15: 2341-2360.
@@ -44,7 +44,7 @@
 #' hydrology_interceptionPlot(exampleforestMED, SpParamsMED, ER = c(0.05, 0.2))
 #' 
 #' @name hydrology_interception
-hydrology_rainInterception<-function(Rainfall, Cm, p, ER=0.05, method="Gash1995"){
+hydrology_rainInterception<-function(Rainfall, Cm, p, ER=0.05, model="Gash1995"){
   METHODS <- c("Liu2001","Gash1995")
   method <- match.arg(method, METHODS)
   if(length(ER)==1) ER =rep(ER, length(Rainfall))
@@ -70,7 +70,7 @@ hydrology_rainInterception<-function(Rainfall, Cm, p, ER=0.05, method="Gash1995"
 #' @param throughfall Boolean flag to plot relative throughfall instead of percentage of intercepted rainfall.
 #' 
 #' @rdname hydrology_interception
-hydrology_interceptionPlot<-function(x, SpParams, ER = 0.05, gdd = NA, throughfall = FALSE){
+hydrology_interceptionPlot<-function(x, SpParams, ER = 0.05, gdd = NA, throughfall = FALSE, model = "Gash1995"){
   
   LAI_coh = plant_LAI(x, SpParams, gdd)
   g_coh = plant_parameter(x, SpParams, "g", TRUE)
@@ -81,12 +81,12 @@ hydrology_interceptionPlot<-function(x, SpParams, ER = 0.05, gdd = NA, throughfa
 
   precipitation = seq(0.5,50, by=0.5)
   
-  m2<-precipitation-hydrology_rainInterception(precipitation, Cm,p,ER=ER[1])
+  m2<-precipitation-hydrology_rainInterception(precipitation, Cm,p,ER=ER[1], model = model)
   rt = 100*m2/precipitation
   er = rep(ER[1], length(rt))
   if(length(ER)>1) {
     for(i in 2:length(ER)) {
-      m2<-precipitation-hydrology_rainInterception(precipitation, Cm,p,ER=ER[i])
+      m2<-precipitation-hydrology_rainInterception(precipitation, Cm,p,ER=ER[i], model = model)
       rt2 = 100*m2/precipitation
       rt = c(rt, rt2)
       er = c(er, rep(ER[i], length(rt2)))

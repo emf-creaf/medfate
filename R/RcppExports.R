@@ -1480,7 +1480,7 @@ hydraulics_rootxylemConductanceProportions <- function(L, V) {
 #' @param Rconv,Rsyn Rainfall intensity for convective storms and synoptic storms, respectively, in mm/h.
 #' 
 #' @rdname hydrology_interception
-hydrology_rFactor <- function(doy, prec, Rconv = 5.6, Rsyn = 1.5) {
+hydrology_rainfallIntensity <- function(doy, prec, Rconv = 5.6, Rsyn = 1.5) {
     .Call(`_medfate_rainfallIntensity`, doy, prec, Rconv, Rsyn)
 }
 
@@ -1544,6 +1544,8 @@ hydrology_herbaceousTranspiration <- function(pet, LherbSWR, herbLAI, soil, soil
 #' Soil infiltration functions:
 #' \itemize{
 #'   \item{Function \code{hydrology_infiltrationBoughton} calculates the amount of water that infiltrates into the topsoil, according to the USDA SCS curve number method (Boughton 1989).}
+#'   \item{Function \code{hydrology_infiltrationGreenAmpt} calculates the amount of water that infiltrates into the topsoil, according to the model by Green & Ampt (1911).}
+#'   \item{Function \code{hydrology_infiltrationAmount} uses either Green & Ampt (1911) or Boughton (1989) to estimate infiltration.}
 #'   \item{Function \code{hydrology_infiltrationRepartition} distributes infiltration among soil layers depending on macroporosity.}
 #' }
 #' 
@@ -1552,66 +1554,23 @@ hydrology_herbaceousTranspiration <- function(pet, LherbSWR, herbLAI, soil, soil
 #' 
 #' 
 #' @return 
-#' Function \code{hydrology_infiltrationBoughton} a vector of the same length as \code{input} containing the daily amount of water that infiltrates into the soil (in mm of water). 
+#' Functions \code{hydrology_infiltrationBoughton}, \code{hydrology_infiltrationGreenAmpt} and \code{hydrology_infiltrationAmount} 
+#' return the daily amount of water that infiltrates into the soil (in mm of water). 
 #' 
-#' Function \code{hydrology_infiltrationRepartition} estimates the amount of infiltrated water that reaches each soil layer. 
+#' Function \code{hydrology_infiltrationRepartition} returns the amount of infiltrated water that reaches each soil layer. 
 #' 
 #' @references 
 #' Boughton (1989). A review of the USDA SCS curve number method. - Australian Journal of Soil Research 27: 511-523.
 #' 
+#' Green, W.H. and Ampt, G.A. (1911) Studies on Soil Physics, 1: The Flow of Air and Water through Soils. The Journal of Agricultural Science, 4, 1-24. 
+#' 
+#' @details
+#'  When using function \code{hydrology_infiltrationGreenAmpt}, the units of \code{Ksat}, \code{t} and \code{psi_wat} have to be in the same system (e.g. cm/h, h and cm). 
+#' 
+#' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
 #' @seealso  \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}
-#' 
-#' @examples 
-#' SoilDepth = c(200,400,800,1200,1500)
-#' 
-#' #TOPSOIL LAYERS
-#' d1 = pmin(SoilDepth, 300) #<300
-#' #SUBSOIL LAYERS
-#' d2 = pmax(0, pmin(SoilDepth-300,1200)) #300-1500 mm
-#' #ROCK LAYER
-#' d3 = 4000-(d1+d2) #From SoilDepth down to 4.0 m
-#' 
-#' TS_clay = 15
-#' TS_sand = 25
-#' SS_clay = 15
-#' SS_sand = 25
-#' RL_clay = 15
-#' RL_sand = 25
-#' TS_gravel = 20
-#' SS_gravel = 40
-#' RL_gravel = 95
-#' 
-#' Theta_FC1=soil_psi2thetaSX(TS_clay, TS_sand, -33) #in m3/m3
-#' Theta_FC2=soil_psi2thetaSX(SS_clay, SS_sand, -33) #in m3/m3
-#' Theta_FC3=soil_psi2thetaSX(RL_clay, RL_sand, -33) #in m3/m3
-#' pcTS_gravel = 1-(TS_gravel/100)
-#' pcSS_gravel = 1-(SS_gravel/100)
-#' pcRL_gravel = 1-(RL_gravel/100)
-#' MaxVol1 = (d1*Theta_FC1*pcTS_gravel)
-#' MaxVol2 = (d2*Theta_FC2*pcSS_gravel)
-#' MaxVol3 = (d3*Theta_FC3*pcRL_gravel)
-#' V = MaxVol1+MaxVol2+MaxVol3
-#' 
-#' par(mar=c(5,5,1,1), mfrow=c(1,2))
-#' NP = seq(0,60, by=1)
-#' plot(NP,hydrology_infiltrationBoughton(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
-#'      ylab="Infiltration (mm)", xlab="Net rainfall (mm)", frame=FALSE)
-#' lines(NP,hydrology_infiltrationBoughton(NP, V[2]), lty=2)
-#' lines(NP,hydrology_infiltrationBoughton(NP, V[3]), lty=3)
-#' lines(NP,hydrology_infiltrationBoughton(NP, V[4]), lty=4)
-#' lines(NP,hydrology_infiltrationBoughton(NP, V[5]), lty=5)
-#' legend("topleft", bty="n", lty=1:5, 
-#'        legend=c(paste("d =", SoilDepth, "Vsoil =",round(V),"mm")))
-#' plot(NP,NP-hydrology_infiltrationBoughton(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
-#'      ylab="Runoff (mm)", xlab="Net rainfall (mm)", frame=FALSE)
-#' lines(NP,NP-hydrology_infiltrationBoughton(NP, V[2]), lty=2)
-#' lines(NP,NP-hydrology_infiltrationBoughton(NP, V[3]), lty=3)
-#' lines(NP,NP-hydrology_infiltrationBoughton(NP, V[4]), lty=4)
-#' lines(NP,NP-hydrology_infiltrationBoughton(NP, V[5]), lty=5)
-#' legend("topleft", bty="n", lty=1:5, 
-#'        legend=c(paste("d =", SoilDepth,"Vsoil =",round(V),"mm")))
 #' 
 #' @name hydrology_infiltration
 hydrology_infiltrationBoughton <- function(input, Ssoil) {
@@ -1644,11 +1603,13 @@ hydrology_infiltrationRepartition <- function(I, dVec, macro, a = -0.005, b = 3.
 #' @rdname hydrology_infiltration
 #' 
 #' @param rainfallInput Water from the rainfall event reaching the soil surface (mm)
-#' @param r rainfall rate (mm/h)
+#' @param soil A list containing the description of the soil (see \code{\link{soil}}).
+#' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
+#' @param rainfallIntensity rainfall intensity rate (mm/h)
 #' @param model Infiltration model, either "Green-Ampt" or "Boughton"
 #' 
-hydrology_infiltrationAmount <- function(rainfallInput, r, soil, soilFunctions, model = "Green-Ampt") {
-    .Call(`_medfate_infiltrationAmount`, rainfallInput, r, soil, soilFunctions, model)
+hydrology_infiltrationAmount <- function(rainfallInput, rainfallIntensity, soil, soilFunctions, model = "Green-Ampt") {
+    .Call(`_medfate_infiltrationAmount`, rainfallInput, rainfallIntensity, soil, soilFunctions, model)
 }
 
 #' @rdname hydrology_verticalInputs
@@ -1672,8 +1633,9 @@ hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
 #' 
 #' @param soil A list containing the description of the soil (see \code{\link{soil}}).
 #' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
-#' @param prec Precipitation for a given day (mm)
-#' @param er The ratio of evaporation rate to rainfall rate.
+#' @param prec Precipitation for the given day (mm)
+#' @param pet Potential evapotranspiration for the given day (mm)
+#' @param rainfallIntensity Rainfall intensity rate (mm/h).
 #' @param tday Average day temperature (ºC).
 #' @param rad Solar radiation (in MJ/m2/day).
 #' @param elevation Altitude above sea level (m).

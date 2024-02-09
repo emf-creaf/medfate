@@ -2311,24 +2311,24 @@ RcppExport SEXP _medfate_infiltrationRepartition(SEXP ISEXP, SEXP dVecSEXP, SEXP
     return rcpp_result_gen;
 }
 // infiltrationAmount
-double infiltrationAmount(double rainfallInput, double r, List soil, String soilFunctions, String model);
-static SEXP _medfate_infiltrationAmount_try(SEXP rainfallInputSEXP, SEXP rSEXP, SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP modelSEXP) {
+double infiltrationAmount(double rainfallInput, double rainfallIntensity, List soil, String soilFunctions, String model);
+static SEXP _medfate_infiltrationAmount_try(SEXP rainfallInputSEXP, SEXP rainfallIntensitySEXP, SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< double >::type rainfallInput(rainfallInputSEXP);
-    Rcpp::traits::input_parameter< double >::type r(rSEXP);
+    Rcpp::traits::input_parameter< double >::type rainfallIntensity(rainfallIntensitySEXP);
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type soilFunctions(soilFunctionsSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
-    rcpp_result_gen = Rcpp::wrap(infiltrationAmount(rainfallInput, r, soil, soilFunctions, model));
+    rcpp_result_gen = Rcpp::wrap(infiltrationAmount(rainfallInput, rainfallIntensity, soil, soilFunctions, model));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_infiltrationAmount(SEXP rainfallInputSEXP, SEXP rSEXP, SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP modelSEXP) {
+RcppExport SEXP _medfate_infiltrationAmount(SEXP rainfallInputSEXP, SEXP rainfallIntensitySEXP, SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP modelSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_infiltrationAmount_try(rainfallInputSEXP, rSEXP, soilSEXP, soilFunctionsSEXP, modelSEXP));
+        rcpp_result_gen = PROTECT(_medfate_infiltrationAmount_try(rainfallInputSEXP, rainfallIntensitySEXP, soilSEXP, soilFunctionsSEXP, modelSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -5358,7 +5358,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("List(*.defineGrowthDailyOutput)(double,double,double,double,CharacterVector,List)");
         signatures.insert("void(*.fillGrowthDailyOutput)(List,List,List,int)");
         signatures.insert("List(*growth)(List,DataFrame,double,double,double,double,NumericVector)");
-        signatures.insert("double(*hydrology_rFactor)(int,double,double,double)");
+        signatures.insert("double(*hydrology_rainfallIntensity)(int,double,double,double)");
         signatures.insert("double(*.hydrology_interceptionGashDay)(double,double,double,double)");
         signatures.insert("double(*hydrology_soilEvaporationAmount)(double,double,double)");
         signatures.insert("double(*hydrology_soilEvaporation)(List,String,double,double,bool)");
@@ -5422,7 +5422,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_.defineGrowthDailyOutput", (DL_FUNC)_medfate_defineGrowthDailyOutput_try);
     R_RegisterCCallable("medfate", "_medfate_.fillGrowthDailyOutput", (DL_FUNC)_medfate_fillGrowthDailyOutput_try);
     R_RegisterCCallable("medfate", "_medfate_growth", (DL_FUNC)_medfate_growth_try);
-    R_RegisterCCallable("medfate", "_medfate_hydrology_rFactor", (DL_FUNC)_medfate_rainfallIntensity_try);
+    R_RegisterCCallable("medfate", "_medfate_hydrology_rainfallIntensity", (DL_FUNC)_medfate_rainfallIntensity_try);
     R_RegisterCCallable("medfate", "_medfate_.hydrology_interceptionGashDay", (DL_FUNC)_medfate_interceptionGashDay_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology_soilEvaporationAmount", (DL_FUNC)_medfate_soilEvaporationAmount_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology_soilEvaporation", (DL_FUNC)_medfate_soilEvaporation_try);
