@@ -184,11 +184,16 @@ List aspwb_day(List x, CharacterVector date, NumericVector meteovec,
     x = clone(x);
   }
   
+  //Derive doy from date  
+  int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
+  int doy = J - J0101+1;
+  
   NumericVector meteovec_inner = NumericVector::create(
     Named("tday") = tday, 
     Named("prec") = prec,
     Named("rad") = rad, 
-    Named("pet") = pet);
+    Named("pet") = pet,
+    Named("rint") = rainfallIntensity(doy, prec));
   
   return(aspwb_day_internal(x, meteovec_inner,
                   elevation, slope, aspect, 
