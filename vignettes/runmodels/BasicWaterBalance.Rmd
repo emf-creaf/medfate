@@ -186,14 +186,14 @@ shinyplot(S)
 Simulation outputs in form of lists have a nested structure that is not easy to handle. Functions are provided to extract model outputs as `data.frame` objects. The following code extracts daily series of stand-level variables:
 
 ```{r}
-df <- extractDaily(S, "forest")
+df <- extract(S, "forest")
 head(df)
 ```
 
 And a similar code can be used to daily series of cohort-level variables:
 
 ```{r}
-df <- extractDaily(S, "cohort")
+df <- extract(S, "cohort")
 head(df)
 ```
 

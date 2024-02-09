@@ -133,7 +133,9 @@ G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 
 #Switch to 'Cochard' transpiration mode
 control <- defaultControl("Cochard")
-control$equalLeafStemVC = TRUE # Makes leaf xylem vulnerability equal to stem xylem vulnerability
+
+#Makes leaf xylem vulnerability equal to stem xylem vulnerability
+control$equalLeafStemVC = TRUE 
 
 #Initialize vegetation input
 x3 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)

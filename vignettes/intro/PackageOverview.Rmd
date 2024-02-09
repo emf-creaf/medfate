@@ -89,7 +89,7 @@ Simulation models produce multiple outputs and it is important to learn how to v
 
   + Implementations of `summary()` and `plot()` are available for simulation output objects, which facilitates displaying and summarizing information.
   + A generic function `shinyplot()` (as well as its implementation for different output objects) allows an interactive exploration of simulation results.
-  + Model outputs can be extracted to simple `data.frame` objects through functions `extractDaily()` and `extractSubdaily()`.
+  + Model outputs can be extracted to simple `data.frame` objects through function `extract()`.
 
 Additional package function are meant to be used on simulation results and produce time series of additional (derived) properties:
 

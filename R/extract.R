@@ -1,15 +1,15 @@
-#' Extracts daily and subdaily output
+#' Extracts model outputs
 #' 
 #' Functions to extract model outputs for easier post-processing:
 #' 
 #' \itemize{
-#'   \item{Function \code{extractDaily()} extracts daily output and returns it as a tidy data frame.}
+#'   \item{Function \code{extract()} extracts daily output and returns it as a tidy data frame.}
 #'   \item{Function \code{extractSubdaily()} extracts subdaily output corresponding to each simulated day and returns it as a data frame.}
 #' }
 #' 
 #' @param x An object returned by simulation functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{growth}}.
 #' @param output See options in section details.
-#' @param dates A date vector indicating the subset of simulated days for which subdaily output is desired.
+#' @param dates A date vector indicating the subset of simulated days for which output is desired.
 #' 
 #' @details Function \code{extractSubdaily()} only works when simulations have been carried using control option 'subdailyResults = TRUE' (see \code{\link{defaultControl}}). Subdaily simulation results will then be stored as elements of the a list called 'subdaily' in the simulation output. Function \code{extractSubdaily} will assemble subdaily results from this list and return them as a data frame. Options for parameter 'output' are the following:
 #' \itemize{
@@ -20,7 +20,7 @@
 #' 
 #' @return 
 #' \itemize{
-#'   \item{Function \code{extractDaily()} returns a data frame, with dates and variables (for \code{level = "forest"}) or dates, cohorts, species and variables 
+#'   \item{Function \code{extract()} returns a data frame, with dates and variables (for \code{level = "forest"}) or dates, cohorts, species and variables 
 #'   (for other values of \code{level}).}
 #'   \item{Function \code{extractSubdaily()} returns a data frame with a column 'datetime' and as many columns as plant cohorts.}
 #' }
@@ -51,10 +51,13 @@
 #' S1<-spwb(x, examplemeteo[1:10, ], latitude = 41.82592, elevation = 100)
 #' 
 #' #Extracts daily forest-level output as a data frame
-#' extractDaily(S1, level = "forest")
+#' extract(S1, level = "forest")
 #' 
 #' #Extracts daily cohort-level output as a data frame
-#' extractDaily(S1, level = "cohort")
+#' extract(S1, level = "cohort")
+#' 
+#' #Select the output tables/variables to be extracted
+#' extract(S1, level ="cohort", output="Plants", vars = c("PlantStress", "StemPLC"))
 #' 
 #' @seealso \code{\link{summary.spwb}}
 extractSubdaily<-function(x, output = "E", dates = NULL)  {
@@ -168,11 +171,15 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
 #' @rdname extract
 #' @param level Level of simulation output, either "forest" (stand-level results), "cohort" (cohort-level results), 
 #' "sunlitleaf" or "shadeleaf" (leaf-level results)
+#' @param vars Variables to be extracted (by default, all of them)
 #' @export
-extractDaily<-function(x, level = "forest")  {
+extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL)  {
   level <- match.arg(level, c("forest", "cohort", "sunlitleaf", "shadeleaf"))
   
-  dates <- row.names(x$WaterBalance)
+  if(is.null(dates)) dates <- row.names(x$WaterBalance)
+  else {
+    if(!all(dates %in% row.names(x$WaterBalance))) stop("Some dates are outside the range in 'x'")
+  }
   if(inherits(x, "spwb")) {
     cohorts <- x$spwbInput$cohorts
   } else if(inherits(x, "growth")) {
@@ -182,53 +189,86 @@ extractDaily<-function(x, level = "forest")  {
   spnames <- cohorts$Name
   
   if(level=="forest") {
-    out <- data.frame(dates = dates)
     stand_level_names <-c("WaterBalance", "Stand",  "Soil",
                           "EnergyBalance", "Temperature","CarbonBalance", "BiomassBalance", "FireHazard")
-    for(n in stand_level_names) {
+    if(is.null(output)) {
+      output <- stand_level_names
+    } else {
+      for(i in 1:length(output)) output[i] <-match.arg(output[i], stand_level_names)
+    }
+    out <- data.frame(dates = dates)
+    for(n in output) {
       if(n %in% names(x)) {
         M <- x[[n]]
-        row.names(M) <- NULL
-        out <- cbind(out, M)
+        M <- M[rownames(M) %in% dates, , drop = FALSE]
+        if(!is.null(vars)) M <- M[,colnames(M) %in% vars, drop = FALSE]
+        if(ncol(M)>0) {
+          row.names(M) <- NULL
+          out <- cbind(out, M)
+        }
       }
     }
   } else if (level =="cohort") {
+    plant_level_names <-c("Plants", "LabileCarbonBalance","PlantBiomassBalance", 
+                          "PlantStructure", "GrowthMortality")
+    if(is.null(output)) {
+      output <- plant_level_names
+    } else {
+      for(i in 1:length(output)) output[i] <-match.arg(output[i], plant_level_names)
+    }
     out <- data.frame(dates = rep(dates, length(cohnames)),
                       cohort = as.character(gl(length(cohnames), length(dates), labels = cohnames)),
                       species = as.character(gl(length(cohnames), length(dates), labels = spnames)))
-    plant_level_names <-c("Plants", "LabileCarbonBalance","PlantBiomassBalance", 
-                          "PlantStructure", "GrowthMortality")
-    for(n in plant_level_names) {
+    for(n in output) {
       if(n %in% names(x)) {
         P = x[[n]]
-        for(n in names(P)) {
-          out[[n]] <- as.vector(P[[n]])
+        if(is.null(vars)) vars <- names(P)
+        for(v in vars) {
+          M <- P[[v]]
+          M <- M[rownames(M) %in% dates, , drop = FALSE]
+          out[[v]] <- as.vector(M)
         }
       }
     }
   } else if (level =="sunlitleaf") {
+    leaf_level_names <-c("SunlitLeaves")
+    if(is.null(output)) {
+      output <- leaf_level_names
+    } else {
+      for(i in 1:length(output)) output[i] <-match.arg(output[i], leaf_level_names)
+    }
     out <- data.frame(dates = rep(dates, length(cohnames)),
                       cohort = as.character(gl(length(cohnames), length(dates), labels = cohnames)),
                       species = as.character(gl(length(cohnames), length(dates), labels = spnames)))
-    leaf_level_names <-c("SunlitLeaves")
-    for(n in leaf_level_names) {
+    for(n in output) {
       if(n %in% names(x)) {
         P = x[[n]]
-        for(n in names(P)) {
-          out[[n]] <- as.vector(P[[n]])
+        if(is.null(vars)) vars <- names(P)
+        for(v in vars) {
+          M <- P[[v]]
+          M <- M[rownames(M) %in% dates, , drop = FALSE]
+          out[[v]] <- as.vector(M)
         }
       }
     }
   } else if (level =="shadeleaf") {
+    leaf_level_names <-c("ShadeLeaves")
+    if(is.null(output)) {
+      output <- leaf_level_names
+    } else {
+      for(i in 1:length(output)) output[i] <-match.arg(output[i], leaf_level_names)
+    }
     out <- data.frame(dates = rep(dates, length(cohnames)),
                       cohort = as.character(gl(length(cohnames), length(dates), labels = cohnames)),
                       species = as.character(gl(length(cohnames), length(dates), labels = spnames)))
-    leaf_level_names <-c("ShadeLeaves")
-    for(n in leaf_level_names) {
+    for(n in output) {
       if(n %in% names(x)) {
         P = x[[n]]
-        for(n in names(P)) {
-          out[[n]] <- as.vector(P[[n]])
+        if(is.null(vars)) vars <- names(P)
+        for(v in vars) {
+          M <- P[[v]]
+          M <- M[rownames(M) %in% dates, , drop = FALSE]
+          out[[v]] <- as.vector(M)
         }
       }
     }

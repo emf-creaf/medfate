@@ -3,26 +3,27 @@
 \name{extract}
 \alias{extract}
 \alias{extractSubdaily}
-\alias{extractDaily}
-\title{Extracts daily and subdaily output}
+\title{Extracts model outputs}
 \usage{
 extractSubdaily(x, output = "E", dates = NULL)
 
-extractDaily(x, level = "forest")
+extract(x, level = "forest", output = NULL, vars = NULL, dates = NULL)
 }
 \arguments{
 \item{x}{An object returned by simulation functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{growth}}.}
 
 \item{output}{See options in section details.}
 
-\item{dates}{A date vector indicating the subset of simulated days for which subdaily output is desired.}
+\item{dates}{A date vector indicating the subset of simulated days for which output is desired.}
 
 \item{level}{Level of simulation output, either "forest" (stand-level results), "cohort" (cohort-level results), 
 "sunlitleaf" or "shadeleaf" (leaf-level results)}
+
+\item{vars}{Variables to be extracted (by default, all of them)}
 }
 \value{
 \itemize{
-  \item{Function \code{extractDaily()} returns a data frame, with dates and variables (for \code{level = "forest"}) or dates, cohorts, species and variables 
+  \item{Function \code{extract()} returns a data frame, with dates and variables (for \code{level = "forest"}) or dates, cohorts, species and variables 
   (for other values of \code{level}).}
   \item{Function \code{extractSubdaily()} returns a data frame with a column 'datetime' and as many columns as plant cohorts.}
 }
@@ -32,7 +33,7 @@ Functions to extract model outputs for easier post-processing:
 }
 \details{
 \itemize{
-  \item{Function \code{extractDaily()} extracts daily output and returns it as a tidy data frame.}
+  \item{Function \code{extract()} extracts daily output and returns it as a tidy data frame.}
   \item{Function \code{extractSubdaily()} extracts subdaily output corresponding to each simulated day and returns it as a data frame.}
 }
 
@@ -66,10 +67,13 @@ x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 S1<-spwb(x, examplemeteo[1:10, ], latitude = 41.82592, elevation = 100)
 
 #Extracts daily forest-level output as a data frame
-extractDaily(S1, level = "forest")
+extract(S1, level = "forest")
 
 #Extracts daily cohort-level output as a data frame
-extractDaily(S1, level = "cohort")
+extract(S1, level = "cohort")
+
+#Select the output tables/variables to be extracted
+extract(S1, level ="cohort", output="Plants", vars = c("PlantStress", "StemPLC"))
 
 }
 \seealso{

@@ -137,9 +137,9 @@ Users can extract, summarize or inspect the output of `growth()` simulations as 
 
 ### Extracting output
 
-Functions `extractDaily()` (and `extractSubdaily()`) allow extracting model outputs in form of data frame:
+Function `extract()` allow extracting model outputs in form of data frame:
 ```{r}
-df <- extractDaily(G1, "forest")
+df <- extract(G1, "forest")
 names(df)
 ```
 These data frames are easy handle in R or can be written into text files for post-processing with other programs.

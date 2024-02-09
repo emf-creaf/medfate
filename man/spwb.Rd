@@ -223,7 +223,9 @@ S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 
 #Switch to 'Cochard' transpiration mode
 control <- defaultControl("Cochard")
-control$equalLeafStemVC = TRUE # Makes leaf xylem vulnerability equal to stem xylem vulnerability
+
+# Makes leaf xylem vulnerability equal to stem xylem vulnerability
+control$equalLeafStemVC = TRUE 
 
 #Initialize input
 x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
@@ -248,7 +250,7 @@ Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y
 }
 \seealso{
 \code{\link{spwbInput}}, \code{\link{spwb_day}}, \code{\link{plot.spwb}}, 
-\code{\link{extractDaily}}, \code{\link{summary.spwb}},  \code{\link{forest}}, \code{\link{aspwb}}
+\code{\link{extract}}, \code{\link{summary.spwb}},  \code{\link{forest}}, \code{\link{aspwb}}
 }
 \author{
 \itemize{

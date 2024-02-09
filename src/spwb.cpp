@@ -1893,7 +1893,7 @@ void printWaterBalanceResult(List outputList, List x,
 //' 
 //' @seealso 
 //' \code{\link{spwbInput}}, \code{\link{spwb_day}}, \code{\link{plot.spwb}}, 
-//' \code{\link{extractDaily}}, \code{\link{summary.spwb}},  \code{\link{forest}}, \code{\link{aspwb}}
+//' \code{\link{extract}}, \code{\link{summary.spwb}},  \code{\link{forest}}, \code{\link{aspwb}}
 //' 
 //' @examples
 //' #Load example daily meteorological data

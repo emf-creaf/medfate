@@ -12,7 +12,7 @@
 - Richard-type soil water movement
 - Soil hydrology revised
 - New functions for spwb in agricultural lands
-- New function 'extractDaily'
+- New function 'extract'
 
 # Version 3.2.0
 - Correction of a bug arisen in old Rcpp versions

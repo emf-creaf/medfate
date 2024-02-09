@@ -106,7 +106,8 @@ summary(S1, freq="months",FUN=mean, output="Plants$PlantStress",
 
 }
 \seealso{
-\code{\link{spwb}}, \code{\link{pwb}}, \code{\link{growth}}, \code{\link{fordyn}}, \code{\link{plot.spwb}}, \code{\link{extractDaily}}
+\code{\link{spwb}}, \code{\link{pwb}}, \code{\link{growth}}, \code{\link{fordyn}}, 
+\code{\link{plot.spwb}}, \code{\link{extract}}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
