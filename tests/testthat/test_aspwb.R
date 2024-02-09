@@ -6,6 +6,7 @@ examplemeteo2$dates <- as.Date(row.names(examplemeteo2))
 row.names(examplemeteo2) <- NULL
 
 control <- defaultControl("Granier")
+control$verbose <- FALSE
 
 #Initialize soil with default soil params (4 layers)
 examplesoil <- soil(defaultSoilParams(4))
