@@ -13,7 +13,8 @@
 - Soil hydrology revised
 - New functions for spwb in agricultural lands
 - New function 'extract'
-- New infiltration model "Green-Ampt"
+- New infiltration model Green-Ampt (1911)
+- Interception model Liu (2001) accepted as alternative to Gash (1995)
 
 # Version 3.2.0
 - Correction of a bug arisen in old Rcpp versions

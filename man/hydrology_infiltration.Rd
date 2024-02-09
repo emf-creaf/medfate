@@ -19,7 +19,7 @@ hydrology_infiltrationAmount(
   rainfallIntensity,
   soil,
   soilFunctions,
-  model = "Green-Ampt"
+  model = "GreenAmpt1911"
 )
 }
 \arguments{
@@ -53,7 +53,7 @@ hydrology_infiltrationAmount(
 
 \item{soilFunctions}{Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).}
 
-\item{model}{Infiltration model, either "Green-Ampt" or "Boughton"}
+\item{model}{Infiltration model, either "GreenAmpt1911" or "Boughton1989"}
 }
 \value{
 Functions \code{hydrology_infiltrationBoughton}, \code{hydrology_infiltrationGreenAmpt} and \code{hydrology_infiltrationAmount} 

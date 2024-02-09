@@ -1610,9 +1610,9 @@ hydrology_infiltrationRepartition <- function(I, dVec, macro, a = -0.005, b = 3.
 #' @param soil A list containing the description of the soil (see \code{\link{soil}}).
 #' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
 #' @param rainfallIntensity rainfall intensity rate (mm/h)
-#' @param model Infiltration model, either "Green-Ampt" or "Boughton"
+#' @param model Infiltration model, either "GreenAmpt1911" or "Boughton1989"
 #' 
-hydrology_infiltrationAmount <- function(rainfallInput, rainfallIntensity, soil, soilFunctions, model = "Green-Ampt") {
+hydrology_infiltrationAmount <- function(rainfallInput, rainfallIntensity, soil, soilFunctions, model = "GreenAmpt1911") {
     .Call(`_medfate_infiltrationAmount`, rainfallInput, rainfallIntensity, soil, soilFunctions, model)
 }
 

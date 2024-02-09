@@ -254,13 +254,13 @@ NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVecto
 //' @param soil A list containing the description of the soil (see \code{\link{soil}}).
 //' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
 //' @param rainfallIntensity rainfall intensity rate (mm/h)
-//' @param model Infiltration model, either "Green-Ampt" or "Boughton"
+//' @param model Infiltration model, either "GreenAmpt1911" or "Boughton1989"
 //' 
 // [[Rcpp::export("hydrology_infiltrationAmount")]]
 double infiltrationAmount(double rainfallInput, double rainfallIntensity, List soil, 
-                          String soilFunctions, String model = "Green-Ampt") {
+                          String soilFunctions, String model = "GreenAmpt1911") {
   double infiltration = 0.0;
-  if(model=="Green-Ampt") {
+  if(model=="GreenAmpt1911") {
     NumericVector clay = soil["clay"];
     NumericVector sand = soil["sand"];
     String usda = USDAType(clay[0], sand[0]);
@@ -272,7 +272,7 @@ double infiltrationAmount(double rainfallInput, double rainfallIntensity, List s
     double theta_sat = cp["theta_sat"];
     double K_sat = cp["K_sat_cm_h"];
     infiltration = infitrationGreenAmpt(t, psi_w, K_sat, theta_sat, theta_dry[0]);
-  } else if(model=="Boughton") {
+  } else if(model=="Boughton1989") {
     NumericVector Water_FC = waterFC(soil, soilFunctions);
     infiltration = infiltrationBoughton(rainfallInput, Water_FC[0]);
   } else {

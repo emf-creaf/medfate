@@ -380,7 +380,7 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline double hydrology_infiltrationAmount(double rainfallInput, double rainfallIntensity, List soil, String soilFunctions, String model = "Green-Ampt") {
+    inline double hydrology_infiltrationAmount(double rainfallInput, double rainfallIntensity, List soil, String soilFunctions, String model = "GreenAmpt1911") {
         typedef SEXP(*Ptr_hydrology_infiltrationAmount)(SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_infiltrationAmount p_hydrology_infiltrationAmount = NULL;
         if (p_hydrology_infiltrationAmount == NULL) {
