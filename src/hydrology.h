@@ -21,11 +21,12 @@ NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVecto
 
 double rainfallIntensity(int doy, double prec, double Rconv = 5.6, double Rsyn = 1.5);
 
-double interceptionGashDay(double Precipitation, double Cm, double p, double ER=0.05);
+double interceptionGashDay(double Rainfall, double Cm, double p, double ER=0.05);
+double interceptionLiuDay(double Rainfall, double Cm, double p, double ER=0.05);
 
 double snowMelt(double tday, double rad, double LgroundSWR, double elevation);
 
-NumericVector soilWaterInputs(List soil, String soilFunctions, 
+NumericVector soilWaterInputs(List soil, String soilFunctions, String interceptionMode,
                               double prec, double rainfallIntensity,
                               double pet, double tday, double rad, double elevation,
                               double Cm, double LgroundPAR, double LgroundSWR, 

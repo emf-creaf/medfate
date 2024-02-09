@@ -144,6 +144,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   String soilFunctions = control["soilFunctions"];
+  String interceptionMode = control["interceptionMode"];
   String infiltrationMode = control["infiltrationMode"];
 
   //Soil parameters
@@ -219,12 +220,12 @@ List spwbDay_basic(List x, NumericVector meteovec,
   double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
   
   //STEP 2 - Hidrological inputs (modifies SWE)
-  NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, 
+  NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, interceptionMode, 
                                               prec, rainfallIntensity, 
                                               pet, tday, rad, elevation,
-                                             Cm, LgroundPAR, LgroundSWR, 
-                                             runon,
-                                             snowpack, true);
+                                              Cm, LgroundPAR, LgroundSWR, 
+                                              runon,
+                                              snowpack, true);
 
   //STEP 3 - Net Runoff and infiltration
   double RainfallInput = hydroInputs["RainfallInput"];
@@ -398,6 +399,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   int ntimesteps = control["ndailysteps"];
   String transpirationMode = control["transpirationMode"];
   String infiltrationMode = control["infiltrationMode"];
+  String interceptionMode = control["interceptionMode"];
   
   //Soil parameters
   List soil = x["soil"];
@@ -469,7 +471,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
   
   //STEP 2 - Interception, snow pack dynamics and soil water input (modifies SWE)
-  NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, 
+  NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, interceptionMode,
                                               prec, rainfallIntensity, 
                                               pet, tday, rad, elevation,
                                               Cm, LgroundPAR, LgroundSWR, 

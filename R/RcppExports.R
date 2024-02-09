@@ -1484,8 +1484,12 @@ hydrology_rainfallIntensity <- function(doy, prec, Rconv = 5.6, Rsyn = 1.5) {
     .Call(`_medfate_rainfallIntensity`, doy, prec, Rconv, Rsyn)
 }
 
-.hydrology_interceptionGashDay <- function(Precipitation, Cm, p, ER = 0.05) {
-    .Call(`_medfate_interceptionGashDay`, Precipitation, Cm, p, ER)
+.hydrology_interceptionGashDay <- function(Rainfall, Cm, p, ER = 0.05) {
+    .Call(`_medfate_interceptionGashDay`, Rainfall, Cm, p, ER)
+}
+
+.hydrology_interceptionLiuDay <- function(Rainfall, Cm, p, ER = 0.05) {
+    .Call(`_medfate_interceptionLiuDay`, Rainfall, Cm, p, ER)
 }
 
 #' @rdname hydrology_soilEvaporation
@@ -1670,9 +1674,11 @@ hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
 #' 
 #' @seealso \code{\link{spwb_day}}, \code{\link{hydrology_rainInterception}}, \code{\link{hydrology_soilEvaporation}}
 #' 
+#' @param interceptionMode Infiltration model, either "Gash1995" or "Liu2001".
+#' 
 #' @name hydrology_verticalInputs
-hydrology_soilWaterInputs <- function(soil, soilFunctions, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon = 0.0, snowpack = TRUE, modifySoil = TRUE) {
-    .Call(`_medfate_soilWaterInputs`, soil, soilFunctions, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon, snowpack, modifySoil)
+hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon = 0.0, snowpack = TRUE, modifySoil = TRUE) {
+    .Call(`_medfate_soilWaterInputs`, soil, soilFunctions, interceptionMode, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon, snowpack, modifySoil)
 }
 
 #' Soil flows

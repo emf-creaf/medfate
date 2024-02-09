@@ -29,18 +29,23 @@ double rainfallIntensity(int doy, double prec, double Rconv = 5.6, double Rsyn =
 }
 
 // [[Rcpp::export(".hydrology_interceptionGashDay")]]
-double interceptionGashDay(double Precipitation, double Cm, double p, double ER=0.05) {
+double interceptionGashDay(double Rainfall, double Cm, double p, double ER=0.05) {
   double I = 0.0;
-  double PG = (-Cm/(ER*(1.0-p)))*log(1.0-ER); //Precipitation need to saturate the canopy
+  double PG = (-Cm/(ER*(1.0-p)))*log(1.0-ER); //Rainfall need to saturate the canopy
   if(Cm==0.0 || p==1.0) PG = 0.0; //Avoid NAs
-  if(Precipitation>PG) {
-    I = (1-p)*PG + (1-p)*ER*(Precipitation-PG);
+  if(Rainfall>PG) {
+    I = (1-p)*PG + (1-p)*ER*(Rainfall-PG);
   } else {
-    I = (1-p)*Precipitation;
+    I = (1-p)*Rainfall;
   }
   return(I);
 }
 
+// [[Rcpp::export(".hydrology_interceptionLiuDay")]]
+double interceptionLiuDay(double Rainfall, double Cm, double p, double ER=0.05){
+  double I = Cm*(1.0 - exp(-1.0*(Rainfall)*((1.0 - p)/Cm)))*(1.0 - (ER/(1.0 - p))) + (ER*Rainfall);
+  return(I);
+}
 
 //' @rdname hydrology_soilEvaporation
 //' 
@@ -344,9 +349,11 @@ double snowMelt(double tday, double rad, double LgroundSWR, double elevation) {
 //' 
 //' @seealso \code{\link{spwb_day}}, \code{\link{hydrology_rainInterception}}, \code{\link{hydrology_soilEvaporation}}
 //' 
+//' @param interceptionMode Infiltration model, either "Gash1995" or "Liu2001".
+//' 
 //' @name hydrology_verticalInputs
 // [[Rcpp::export("hydrology_soilWaterInputs")]]
-NumericVector soilWaterInputs(List soil, String soilFunctions, 
+NumericVector soilWaterInputs(List soil, String soilFunctions, String interceptionMode,
                               double prec, double rainfallIntensity,
                               double pet, double tday, double rad, double elevation,
                               double Cm, double LgroundPAR, double LgroundSWR, 
@@ -380,7 +387,13 @@ NumericVector soilWaterInputs(List soil, String soilFunctions,
   //Hydrologic input
   double NetRain = 0.0, Interception = 0.0;
   if(rain>0.0)  {
-    Interception = interceptionGashDay(rain,Cm,LgroundPAR/100.0,er);
+    if(interceptionMode=="Gash1995") {
+      Interception = interceptionGashDay(rain,Cm,LgroundPAR/100.0,er);
+    } else if(interceptionMode =="Liu2001") {
+      Interception = interceptionLiuDay(rain,Cm,LgroundPAR/100.0,er);
+    } else {
+      stop("Wrong interception model!");
+    }
     NetRain = rain - Interception; 
   }
   if(modifySoil) {

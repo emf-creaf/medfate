@@ -11,6 +11,7 @@ hydrology_snowMelt(tday, rad, LgroundSWR, elevation)
 hydrology_soilWaterInputs(
   soil,
   soilFunctions,
+  interceptionMode,
   prec,
   rainfallIntensity,
   pet,
@@ -37,6 +38,8 @@ hydrology_soilWaterInputs(
 \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
 
 \item{soilFunctions}{Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).}
+
+\item{interceptionMode}{Infiltration model, either "Gash1995" or "Liu2001".}
 
 \item{prec}{Precipitation for the given day (mm)}
 

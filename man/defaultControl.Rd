@@ -40,6 +40,7 @@ A list, with the following options (default values in brackets):
       \item{\code{bareSoilEvaporation [= TRUE]}: Boolean flag to indicate the simulation of evaporation from bare soil.}
       \item{\code{unlimitedSoilWater [= FALSE]}: Boolean flag to indicate the simulation of plant transpiration assuming that soil water is always at field capacity.}
       \item{\code{unfoldingDD [= 300]}: Degree-days for complete leaf unfolding after budburst has occurred.}
+      \item{\code{interceptionMode [= "Gash1995"]}: Infiltration model, either "Gash1995" or "Liu2001".}
       \item{\code{infiltrationMode [= "Green-Ampt"]}: Infiltration model, either "Green-Ampt" or "Boughton".}
       \item{\code{rhizosphereOverlap [= "total"]}: A string indicating the degree of rhizosphere spatial overlap between plant cohorts:
           \itemize{
