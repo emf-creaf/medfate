@@ -27,6 +27,7 @@
 \alias{soil_capacitance}
 \alias{soil_waterTableDepth}
 \alias{soil_vanGenuchtenParamsCarsel}
+\alias{soil_campbellParamsClappHornberger}
 \alias{soil_vanGenuchtenParamsToth}
 \alias{soil_retentionCurvePlot}
 \title{Soil texture and hydraulics}
@@ -80,6 +81,8 @@ soil_capacitance(soil, model = "SX")
 soil_waterTableDepth(soil, model = "SX")
 
 soil_vanGenuchtenParamsCarsel(soilType)
+
+soil_campbellParamsClappHornberger(soilType)
 
 soil_vanGenuchtenParamsToth(clay, sand, om, bd, topsoil)
 

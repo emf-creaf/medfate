@@ -29,7 +29,6 @@
 #'   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}}):
 #'     \itemize{
 #'       \item{\code{transpirationMode [= "Granier"]}: Transpiration model (either 'Granier', 'Sperry' or 'Cochard'). See \code{\link{spwbInput}}.}
-#'       \item{\code{equalLeafStemVC [= FALSE]}: Leaf vulnerability curves equal to those of the stem.}
 #'       \item{\code{soilFunctions [= "VG"]}: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten). 
 #'                  If \code{transpirationMode} is 'Sperry' or 'Cochard' then soilFunctions is forced to \code{'VG'}.
 #'                  Only simulations with 'Granier' are allowed to use Saxton functions.}
@@ -40,6 +39,7 @@
 #'       \item{\code{bareSoilEvaporation [= TRUE]}: Boolean flag to indicate the simulation of evaporation from bare soil.}
 #'       \item{\code{unlimitedSoilWater [= FALSE]}: Boolean flag to indicate the simulation of plant transpiration assuming that soil water is always at field capacity.}
 #'       \item{\code{unfoldingDD [= 300]}: Degree-days for complete leaf unfolding after budburst has occurred.}
+#'       \item{\code{infiltrationMode [= "Green-Ampt"]}: Infiltration model, either "Green-Ampt" or "Boughton".}
 #'       \item{\code{rhizosphereOverlap [= "total"]}: A string indicating the degree of rhizosphere spatial overlap between plant cohorts:
 #'           \itemize{
 #'             \item{"none" - no overlap (independent water pools).}
@@ -49,6 +49,7 @@
 #'       }
 #'       \item{\code{verticalLayerSize [= 100]}: Size of vertical layers (in cm) for the calculation of light extinction (and photosynthesis).}
 #'       \item{\code{windMeasurementHeight [= 200]}: Height (in cm) over the canopy corresponding to wind measurements.}
+#'       \item{\code{equalLeafStemVC [= FALSE]}: Leaf vulnerability curves equal to those of the stem.}
 #'       \item{\code{cavitationRefillLeaves, cavitationRefillStem [= "annual"]}: A string indicating how refilling of embolized leaf/stem xylem is done:
 #'           \itemize{
 #'             \item{"none" - no refilling.}
@@ -186,17 +187,18 @@ defaultControl<-function(transpirationMode = "Granier") {
     # For water balance
     transpirationMode = transpirationMode,
     soilFunctions = "VG",
-    equalLeafStemVC = FALSE,
     defaultWindSpeed = 2.5, #m/s
     defaultCO2 = 386, #ppm
     snowpack = TRUE,
     leafPhenology = TRUE,
     bareSoilEvaporation = TRUE,
     unlimitedSoilWater = FALSE,
+    infiltrationMode = "Green-Ampt",
     rhizosphereOverlap = "total",
     unfoldingDD = 300,
     verticalLayerSize = 100,
     windMeasurementHeight = 200,
+    equalLeafStemVC = FALSE,
     cavitationRefillStem = "annual",
     cavitationRefillLeaves = "total",
     

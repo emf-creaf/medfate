@@ -677,6 +677,25 @@ NumericVector vanGenuchtenParamsCarsel(String soilType) {
   return(vg);
 }
 
+//' @rdname soil_texture
+// [[Rcpp::export("soil_campbellParamsClappHornberger")]]
+NumericVector campbellParamsClappHornberger(String soilType) {
+   NumericVector cp(4,NA_REAL);
+   if(soilType=="Sand") {cp[0]=0.395; cp[1]=-12.1; cp[2] = 4.05; cp[3]=63.36;}
+   else if(soilType=="Loamy sand") {cp[0]=0.410; cp[1]=-9.1;cp[2] = 4.38; cp[3]=56.28;}
+   else if(soilType=="Sandy loam") {cp[0]=0.435; cp[1]=-21.8; cp[2] = 4.90; cp[3]=12.48;}
+   else if(soilType=="Silt loam") {cp[0]=0.485; cp[1]=-78.6; cp[2] = 5.30; cp[3]=2.59;}
+   else if(soilType=="Loam") {cp[0]=0.451; cp[1]=-47.8; cp[2] = 5.39; cp[3]=2.50;}
+   else if(soilType=="Silt") {cp[0]=0.485; cp[1]=-78.6; cp[2] = 5.30; cp[3]=2.59;} // EQUAL TO SILT LOAM
+   else if(soilType=="Sandy clay loam") {cp[0]=0.420; cp[1]=-29.9; cp[2] = 7.12; cp[3]=2.27;}
+   else if(soilType=="Silty clay loam") {cp[0]=0.477; cp[1]=-35.6; cp[2] = 7.75; cp[3]=0.61;}
+   else if(soilType=="Clay loam") {cp[0]=0.476; cp[1]=-63.0; cp[2] = 8.52; cp[3]=0.88;}
+   else if(soilType=="Sandy clay") {cp[0]=0.426; cp[1]=-15.3; cp[2] = 10.4; cp[3]=0.38;}
+   else if(soilType=="Silty clay") {cp[0]=0.492; cp[1]=-49.0; cp[2] = 10.4; cp[3]=0.37;}
+   else if(soilType=="Clay") {cp[0]=0.482; cp[1]=-40.5; cp[2] = 11.4; cp[3]=0.46;}
+   cp.attr("names") = CharacterVector::create("theta_sat", "psi_sat_cm", "b", "K_sat_cm_h");
+   return(cp);
+ }
 /* 
  * Parameters for the Van Genuchten-Mualem equations, taken from:
  * Tóth, B., Weynants, M., Nemes, A., Makó, A., Bilas, G., & Tóth, G. 2015. New generation of hydraulic pedotransfer functions for Europe. European Journal of Soil Science 66: 226–238.

@@ -76,6 +76,7 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   List soil = x["soil"];
   bool snowpack = control["snowpack"];
   String soilFunctions = control["soilFunctions"];
+  String infiltrationMode = control["infiltrationMode"];
   
   int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["dVec"]).size();
   
@@ -102,7 +103,7 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   
   double RainfallInput = hydroInputs["RainfallInput"];
   double Snowmelt = hydroInputs["Snowmelt"];
-  double Infiltration = infiltrationAmount(RainfallInput, Water_FC[0]);
+  double Infiltration = infiltrationBoughton(RainfallInput, Water_FC[0]);
   double Runoff = RainfallInput - Infiltration;
   //Decide infiltration repartition among layers
   NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);

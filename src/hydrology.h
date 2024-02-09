@@ -12,17 +12,22 @@ double soilEvaporation(List soil, String soilFunctions, double pet, double Lgrou
                        bool modifySoil = true);
 
 
-double infiltrationAmount(double input, double Ssoil);
+double infiltrationBoughton(double input, double Ssoil);
+double infitrationGreenAmpt(double t, double Psi_w, double Ksat, double theta_sat, double theta_dry);
+double infiltrationAmount(double rainfallInput, double r, List soil, String soilFunctions, 
+                          String model = "Green-Ampt");
 NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro, 
                                       double a = -0.005, double b = 3.0);
 
-double interceptionGashDay(double Precipitation, double Cm, double p, double ER=0.05);
+double rainfallIntensity(int doy, double prec, double Rconv = 5.6, double Rsyn = 1.5);
 
-double erFactor(int doy, double pet, double prec, double Rconv = 5.6, double Rsyn = 1.5);
+double interceptionGashDay(double Precipitation, double Cm, double p, double ER=0.05);
 
 double snowMelt(double tday, double rad, double LgroundSWR, double elevation);
 
-NumericVector soilWaterInputs(List soil, String soilFunctions, double prec, double er, double tday, double rad, double elevation,
+NumericVector soilWaterInputs(List soil, String soilFunctions, 
+                              double prec, double rainfallIntensity,
+                              double pet, double tday, double rad, double elevation,
                               double Cm, double LgroundPAR, double LgroundSWR, 
                               double runon = 0.0,
                               bool snowpack = true, bool modifySoil = true);

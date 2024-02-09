@@ -1618,7 +1618,6 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
     updateLeaves(x, wind, true);
   }
   
-  double er = erFactor(doy, pet, prec);
   NumericVector meteovec_inner = NumericVector::create(
     Named("tday") = tday,
     Named("tmin") = tmin, 
@@ -1634,7 +1633,7 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
     Named("Catm") = Catm,
     Named("Patm") = Patm,
     Named("pet") = pet,
-    Named("er") = er,
+    Named("rint") = rainfallIntensity(doy, prec),
     Named("pfire") = pfire);
   List s = growthDayInner(x, meteovec_inner, 
                      latitude, elevation, slope, aspect,
@@ -2447,7 +2446,7 @@ List growth(List x, DataFrame meteo, double latitude,
         Named("pet") = PET[i],
         Named("Catm") = Catm);
       meteovec_inner.push_back(Patm[i], "Patm");
-      meteovec_inner.push_back(erFactor(DOY[i], PET[i], prec), "er");
+      meteovec_inner.push_back(rainfallIntensity(DOY[i], Precipitation[i]), "rint");
       meteovec_inner.push_back(FireProbability[i], "pfire"); 
       try{
         s = growthDayInner(x, meteovec_inner,  
@@ -2482,7 +2481,7 @@ List growth(List x, DataFrame meteo, double latitude,
         Named("Catm") = Catm,
         Named("Patm") = Patm[i],
         Named("pet") = PET[i],
-        Named("er") = erFactor(DOY[i], PET[i], Precipitation[i]));
+        Named("rint") = rainfallIntensity(DOY[i], Precipitation[i]));
       meteovec.push_back(FireProbability[i], "pfire"); 
       try{
         s = growthDayInner(x, meteovec, 

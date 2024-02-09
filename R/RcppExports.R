@@ -1476,20 +1476,19 @@ hydraulics_rootxylemConductanceProportions <- function(L, V) {
 }
 
 #' @param doy Day of the year.
-#' @param pet Potential evapotranspiration for a given day (mm).
 #' @param prec Precipitation for a given day (mm).
-#' @param Rconv,Rsyn Rainfall rate for convective storms and synoptic storms, respectively, in mm/h.
+#' @param Rconv,Rsyn Rainfall intensity for convective storms and synoptic storms, respectively, in mm/h.
 #' 
 #' @rdname hydrology_interception
-hydrology_erFactor <- function(doy, pet, prec, Rconv = 5.6, Rsyn = 1.5) {
-    .Call(`_medfate_erFactor`, doy, pet, prec, Rconv, Rsyn)
+hydrology_rFactor <- function(doy, prec, Rconv = 5.6, Rsyn = 1.5) {
+    .Call(`_medfate_rainfallIntensity`, doy, prec, Rconv, Rsyn)
 }
 
 .hydrology_interceptionGashDay <- function(Precipitation, Cm, p, ER = 0.05) {
     .Call(`_medfate_interceptionGashDay`, Precipitation, Cm, p, ER)
 }
 
-#' @rdname hydrology_soil
+#' @rdname hydrology_soilEvaporation
 #' 
 #' @param DEF Water deficit in the (topsoil) layer.
 #' @param PETs Potential evapotranspiration at the soil surface.
@@ -1499,7 +1498,14 @@ hydrology_soilEvaporationAmount <- function(DEF, PETs, Gsoil) {
     .Call(`_medfate_soilEvaporationAmount`, DEF, PETs, Gsoil)
 }
 
-#' @rdname hydrology_soil
+#' Bare soil evaporation and herbaceous transpiration
+#'
+#' Functions:
+#' \itemize{
+#'   \item{Function \code{hydrology_soilEvaporationAmount} calculates the amount of evaporation from bare soil, following Ritchie (1972).}
+#'   \item{Function \code{hydrology_soilEvaporation} calculates the amount of evaporation from bare soil and distributes it among soil layers.}
+#'   \item{Function \code{hydrology_herbaceousTranspiration} calculates the amount of transpiration due to herbaceous plants.}
+#' }
 #' 
 #' @param soil An object of class \code{\link{soil}}.
 #' @param soilFunctions Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).
@@ -1507,30 +1513,142 @@ hydrology_soilEvaporationAmount <- function(DEF, PETs, Gsoil) {
 #' @param LgroundSWR Percentage of short-wave radiation (SWR) reaching the ground.
 #' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
 #' 
+#' 
+#' @return 
+#' Function \code{hydrology_soilEvaporationAmount} returns the amount of water evaporated from the soil. 
+#' 
+#' Function \code{hydrology_soilEvaporation} returns a vector of water evaporated from each soil layer.
+#' 
+#' @references 
+#' Ritchie (1972). Model for predicting evaporation from a row crop with incomplete cover. - Water resources research.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso  \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}, \code{\link{hydrology_infiltration}}
+#' 
+#' 
+#' @name hydrology_soilEvaporation
 hydrology_soilEvaporation <- function(soil, soilFunctions, pet, LgroundSWR, modifySoil = TRUE) {
     .Call(`_medfate_soilEvaporation`, soil, soilFunctions, pet, LgroundSWR, modifySoil)
 }
 
-#' @rdname hydrology_soil
+#' @rdname hydrology_soilEvaporation
 #' @param LherbSWR Percentage of short-wave radiation (SWR) reaching the herbaceous layer.
 #' @param herbLAI Leaf area index of the herbaceous layer.
 hydrology_herbaceousTranspiration <- function(pet, LherbSWR, herbLAI, soil, soilFunctions, modifySoil = TRUE) {
     .Call(`_medfate_herbaceousTranspiration`, pet, LherbSWR, herbLAI, soil, soilFunctions, modifySoil)
 }
 
-.hydrology_infiltrationAmount <- function(input, Ssoil) {
-    .Call(`_medfate_infiltrationAmount`, input, Ssoil)
+#' Soil infiltration
+#'
+#' Soil infiltration functions:
+#' \itemize{
+#'   \item{Function \code{hydrology_infiltrationBoughton} calculates the amount of water that infiltrates into the topsoil, according to the USDA SCS curve number method (Boughton 1989).}
+#'   \item{Function \code{hydrology_infiltrationRepartition} distributes infiltration among soil layers depending on macroporosity.}
+#' }
+#' 
+#' @param input A numeric vector of (daily) water input (in mm of water).
+#' @param Ssoil Soil water storage capacity (can be referred to topsoil) (in mm of water).
+#' 
+#' 
+#' @return 
+#' Function \code{hydrology_infiltrationBoughton} a vector of the same length as \code{input} containing the daily amount of water that infiltrates into the soil (in mm of water). 
+#' 
+#' Function \code{hydrology_infiltrationRepartition} estimates the amount of infiltrated water that reaches each soil layer. 
+#' 
+#' @references 
+#' Boughton (1989). A review of the USDA SCS curve number method. - Australian Journal of Soil Research 27: 511-523.
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso  \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}
+#' 
+#' @examples 
+#' SoilDepth = c(200,400,800,1200,1500)
+#' 
+#' #TOPSOIL LAYERS
+#' d1 = pmin(SoilDepth, 300) #<300
+#' #SUBSOIL LAYERS
+#' d2 = pmax(0, pmin(SoilDepth-300,1200)) #300-1500 mm
+#' #ROCK LAYER
+#' d3 = 4000-(d1+d2) #From SoilDepth down to 4.0 m
+#' 
+#' TS_clay = 15
+#' TS_sand = 25
+#' SS_clay = 15
+#' SS_sand = 25
+#' RL_clay = 15
+#' RL_sand = 25
+#' TS_gravel = 20
+#' SS_gravel = 40
+#' RL_gravel = 95
+#' 
+#' Theta_FC1=soil_psi2thetaSX(TS_clay, TS_sand, -33) #in m3/m3
+#' Theta_FC2=soil_psi2thetaSX(SS_clay, SS_sand, -33) #in m3/m3
+#' Theta_FC3=soil_psi2thetaSX(RL_clay, RL_sand, -33) #in m3/m3
+#' pcTS_gravel = 1-(TS_gravel/100)
+#' pcSS_gravel = 1-(SS_gravel/100)
+#' pcRL_gravel = 1-(RL_gravel/100)
+#' MaxVol1 = (d1*Theta_FC1*pcTS_gravel)
+#' MaxVol2 = (d2*Theta_FC2*pcSS_gravel)
+#' MaxVol3 = (d3*Theta_FC3*pcRL_gravel)
+#' V = MaxVol1+MaxVol2+MaxVol3
+#' 
+#' par(mar=c(5,5,1,1), mfrow=c(1,2))
+#' NP = seq(0,60, by=1)
+#' plot(NP,hydrology_infiltrationBoughton(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+#'      ylab="Infiltration (mm)", xlab="Net rainfall (mm)", frame=FALSE)
+#' lines(NP,hydrology_infiltrationBoughton(NP, V[2]), lty=2)
+#' lines(NP,hydrology_infiltrationBoughton(NP, V[3]), lty=3)
+#' lines(NP,hydrology_infiltrationBoughton(NP, V[4]), lty=4)
+#' lines(NP,hydrology_infiltrationBoughton(NP, V[5]), lty=5)
+#' legend("topleft", bty="n", lty=1:5, 
+#'        legend=c(paste("d =", SoilDepth, "Vsoil =",round(V),"mm")))
+#' plot(NP,NP-hydrology_infiltrationBoughton(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+#'      ylab="Runoff (mm)", xlab="Net rainfall (mm)", frame=FALSE)
+#' lines(NP,NP-hydrology_infiltrationBoughton(NP, V[2]), lty=2)
+#' lines(NP,NP-hydrology_infiltrationBoughton(NP, V[3]), lty=3)
+#' lines(NP,NP-hydrology_infiltrationBoughton(NP, V[4]), lty=4)
+#' lines(NP,NP-hydrology_infiltrationBoughton(NP, V[5]), lty=5)
+#' legend("topleft", bty="n", lty=1:5, 
+#'        legend=c(paste("d =", SoilDepth,"Vsoil =",round(V),"mm")))
+#' 
+#' @name hydrology_infiltration
+hydrology_infiltrationBoughton <- function(input, Ssoil) {
+    .Call(`_medfate_infiltrationBoughton`, input, Ssoil)
 }
 
-#' @rdname hydrology_soil
+#' @rdname hydrology_infiltration
+#' 
+#' @param t Time of the infiltration event
+#' @param psi_w Matric potential at the wetting front
+#' @param Ksat hydraulic conductivity at saturation
+#' @param theta_sat volumetric content at saturation
+#' @param theta_dry volumetric content at the dry side of the wetting front
+#' 
+hydrology_infiltrationGreenAmpt <- function(t, psi_w, Ksat, theta_sat, theta_dry) {
+    .Call(`_medfate_infitrationGreenAmpt`, t, psi_w, Ksat, theta_sat, theta_dry)
+}
+
+#' @rdname hydrology_infiltration
 #' 
 #' @param I Soil infiltration (in mm of water).
 #' @param dVec Width of soil layers (in mm).
 #' @param macro Macroporosity of soil layers (in \%).
-#' @param a,b Parameters of the extinction function used for water infitration.
+#' @param a,b Parameters of the extinction function used for water infiltration.
 #' 
 hydrology_infiltrationRepartition <- function(I, dVec, macro, a = -0.005, b = 3.0) {
     .Call(`_medfate_infiltrationRepartition`, I, dVec, macro, a, b)
+}
+
+#' @rdname hydrology_infiltration
+#' 
+#' @param rainfallInput Water from the rainfall event reaching the soil surface (mm)
+#' @param r rainfall rate (mm/h)
+#' @param model Infiltration model, either "Green-Ampt" or "Boughton"
+#' 
+hydrology_infiltrationAmount <- function(rainfallInput, r, soil, soilFunctions, model = "Green-Ampt") {
+    .Call(`_medfate_infiltrationAmount`, rainfallInput, r, soil, soilFunctions, model)
 }
 
 #' @rdname hydrology_verticalInputs
@@ -1560,7 +1678,7 @@ hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
 #' @param rad Solar radiation (in MJ/m2/day).
 #' @param elevation Altitude above sea level (m).
 #' @param Cm Canopy water storage capacity.
-#' @param LgroundPAR Percentage of photosynthetically-acvive radiation (PAR) reaching the ground.
+#' @param LgroundPAR Percentage of photosynthetically-active radiation (PAR) reaching the ground.
 #' @param LgroundSWR Percentage of short-wave radiation (SWR) reaching the ground.
 #' @param runon Surface water amount running on the target area from upslope (in mm).
 #' @param snowpack Boolean flag to indicate the simulation of snow accumulation and melting.
@@ -1591,16 +1709,28 @@ hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
 #' @seealso \code{\link{spwb_day}}, \code{\link{hydrology_rainInterception}}, \code{\link{hydrology_soilEvaporation}}
 #' 
 #' @name hydrology_verticalInputs
-hydrology_soilWaterInputs <- function(soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon = 0.0, snowpack = TRUE, modifySoil = TRUE) {
-    .Call(`_medfate_soilWaterInputs`, soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon, snowpack, modifySoil)
+hydrology_soilWaterInputs <- function(soil, soilFunctions, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon = 0.0, snowpack = TRUE, modifySoil = TRUE) {
+    .Call(`_medfate_soilWaterInputs`, soil, soilFunctions, prec, rainfallIntensity, pet, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon, snowpack, modifySoil)
 }
 
-#' @rdname hydrology_soil
+#' Soil flows
 #' 
+#' Function \code{hydrology_soilFlows} estimates water movement within the soil according to Richards equation.
+#' 
+#' @param soil Object of class \code{\link{soil}}.
 #' @param sourceSink Source/sink term for each soil layer (from snowmelt, soil evaporation or plant transpiration/redistribution)
 #'        as mm/day.
 #' @param nsteps  Number of time steps per day
+#' @param modifySoil Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.
 #' 
+#' @seealso  \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}, \code{\link{hydrology_infiltration}}
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @return
+#'   Returns the water draining from the bottom layer.
+#'   
+#' @name hydrology_soilFlows
 hydrology_soilFlows <- function(soil, sourceSink, nsteps = 24L, modifySoil = TRUE) {
     .Call(`_medfate_soilFlows`, soil, sourceSink, nsteps, modifySoil)
 }
@@ -2815,6 +2945,11 @@ soil_waterTableDepth <- function(soil, model = "SX") {
 #' @rdname soil_texture
 soil_vanGenuchtenParamsCarsel <- function(soilType) {
     .Call(`_medfate_vanGenuchtenParamsCarsel`, soilType)
+}
+
+#' @rdname soil_texture
+soil_campbellParamsClappHornberger <- function(soilType) {
+    .Call(`_medfate_campbellParamsClappHornberger`, soilType)
 }
 
 #' @rdname soil_texture

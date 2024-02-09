@@ -12,7 +12,8 @@ hydrology_soilWaterInputs(
   soil,
   soilFunctions,
   prec,
-  er,
+  rainfallIntensity,
+  pet,
   tday,
   rad,
   elevation,
@@ -39,17 +40,17 @@ hydrology_soilWaterInputs(
 
 \item{prec}{Precipitation for a given day (mm)}
 
-\item{er}{The ratio of evaporation rate to rainfall rate.}
-
 \item{Cm}{Canopy water storage capacity.}
 
-\item{LgroundPAR}{Percentage of photosynthetically-acvive radiation (PAR) reaching the ground.}
+\item{LgroundPAR}{Percentage of photosynthetically-active radiation (PAR) reaching the ground.}
 
 \item{runon}{Surface water amount running on the target area from upslope (in mm).}
 
 \item{snowpack}{Boolean flag to indicate the simulation of snow accumulation and melting.}
 
 \item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
+
+\item{er}{The ratio of evaporation rate to rainfall rate.}
 }
 \value{
 Function \code{hydrology_soilWaterInputs} returns a named vector with the following elements, all in mm:

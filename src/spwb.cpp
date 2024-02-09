@@ -144,6 +144,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   String soilFunctions = control["soilFunctions"];
+  String infiltrationMode = control["infiltrationMode"];
 
   //Soil parameters
   List soil = x["soil"];
@@ -158,7 +159,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   double tday = meteovec["tday"];
   double pet = meteovec["pet"]; 
   double prec  = meteovec["prec"];
-  double er  = meteovec["er"]; 
+  double rainfallIntensity  = meteovec["rint"]; 
   double rad = NA_REAL; 
   if(meteovec.containsElementNamed("rad")) rad = meteovec["rad"];
     
@@ -218,21 +219,43 @@ List spwbDay_basic(List x, NumericVector meteovec,
   double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
   
   //STEP 2 - Hidrological inputs (modifies SWE)
-  NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, prec, er, tday, rad, elevation,
+  NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, 
+                                              prec, rainfallIntensity, 
+                                              pet, tday, rad, elevation,
                                              Cm, LgroundPAR, LgroundSWR, 
                                              runon,
                                              snowpack, true);
 
   //STEP 3 - Net Runoff and infiltration
-  NumericVector dVec = soil["dVec"];
-  NumericVector macro = soil["macro"];
-  NumericVector Water_FC = waterFC(soil, soilFunctions);
   double RainfallInput = hydroInputs["RainfallInput"];
   double Snowmelt = hydroInputs["Snowmelt"];
-  double Infiltration = infiltrationAmount(RainfallInput, Water_FC[0]);
+  double Infiltration = 0.0;
+  NumericVector dVec = soil["dVec"];
+  NumericVector macro = soil["macro"];
+  NumericVector IVec(nlayers,0.0);
+  NumericMatrix IVecPools(numCohorts, nlayers);
+  if(!plantWaterPools) {
+    Infiltration = infiltrationAmount(RainfallInput, rainfallIntensity, soil, 
+                                             soilFunctions, infiltrationMode);
+    IVec = infiltrationRepartition(Infiltration, dVec, macro);
+  } else {
+    NumericVector poolProportions = belowdf["poolProportions"];
+    for(int c=0;c<numCohorts;c++) {
+      //Get soil pool
+      List soil_c =  soilPools[c];
+      double Infiltration_c = infiltrationAmount(RainfallInput, rainfallIntensity, soil, 
+                                          soilFunctions, infiltrationMode);
+      NumericVector IVec_c = infiltrationRepartition(Infiltration_c, dVec, macro);
+      //Update average soil evaporation and herbaceous transpiration 
+      for(int l=0;l<nlayers;l++) {
+        IVecPools(c,l) = IVec_c[l];
+        IVec[l] = IVec[l] + poolProportions[c]*IVecPools(c,l); 
+      }
+    }
+    Infiltration = sum(IVec);
+  }
   double Runoff = RainfallInput - Infiltration;
-  //Decide infiltration repartition among layers
-  NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);
+  
   
   //STEP 4 - Evaporation from bare soil and herbaceous transpiration
   NumericVector EherbVec(nlayers,0.0);
@@ -284,7 +307,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   //STEP 6 - Soil flows
   NumericVector sourceSinkVec(nlayers, 0.0);
   for(int l=0;l<nlayers;l++) {
-    sourceSinkVec[l] += Ivec[l] - ExtractionVec[l] - EherbVec[l];
+    sourceSinkVec[l] += IVec[l] - ExtractionVec[l] - EherbVec[l];
     if(l ==0) sourceSinkVec[l] += Snowmelt - Esoil;
   }
   // determine water flows (no mass conservation)
@@ -302,7 +325,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
       NumericVector sourceSinkPoolVec(nlayers, 0.0);
       for(int l=0;l<nlayers;l++) {
         ExtractionPoolVec[l] = sum(ExtractionPool(_,l));
-        sourceSinkPoolVec[l] += Ivec[l] - ExtractionPoolVec[l] - EherbPools(c,l);
+        sourceSinkPoolVec[l] += IVecPools(c,l) - ExtractionPoolVec[l] - EherbPools(c,l);
         if(l ==0) sourceSinkPoolVec[l] += Snowmelt - EsoilPools[c];
       }
       // determine water flows (no mass conservation)
@@ -374,7 +397,8 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   String soilFunctions = control["soilFunctions"];
   int ntimesteps = control["ndailysteps"];
   String transpirationMode = control["transpirationMode"];
-
+  String infiltrationMode = control["infiltrationMode"];
+  
   //Soil parameters
   List soil = x["soil"];
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
@@ -390,7 +414,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   double prec = meteovec["prec"];
   double rad = meteovec["rad"];
   double pet = meteovec["pet"];
-  double er = meteovec["er"];
+  double rainfallIntensity = meteovec["rint"];
   
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -445,21 +469,43 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   double LgroundSWR = 100.0*exp((-1.0)*s/1.35);
   
   //STEP 2 - Interception, snow pack dynamics and soil water input (modifies SWE)
-  NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, prec, er, tday, rad, elevation,
+  NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, 
+                                              prec, rainfallIntensity, 
+                                              pet, tday, rad, elevation,
                                               Cm, LgroundPAR, LgroundSWR, 
                                               runon,
                                               snowpack, true);
   
   //STEP 3 - Net Runoff and infiltration
-  NumericVector dVec = soil["dVec"];
-  NumericVector macro = soil["macro"];
-  NumericVector Water_FC = waterFC(soil, soilFunctions);
   double RainfallInput = hydroInputs["RainfallInput"];
   double Snowmelt = hydroInputs["Snowmelt"];
-  double Infiltration = infiltrationAmount(RainfallInput, Water_FC[0]);
+  double Infiltration = 0.0;
+  NumericVector dVec = soil["dVec"];
+  NumericVector macro = soil["macro"];
+  NumericVector IVec(nlayers,0.0);
+  NumericMatrix IVecPools(numCohorts, nlayers);
+  if(!plantWaterPools) {
+    Infiltration = infiltrationAmount(RainfallInput, rainfallIntensity, soil, 
+                                      soilFunctions, infiltrationMode);
+    IVec = infiltrationRepartition(Infiltration, dVec, macro);
+  } else {
+    NumericVector poolProportions = belowdf["poolProportions"];
+    for(int c=0;c<numCohorts;c++) {
+      //Get soil pool
+      List soil_c =  soilPools[c];
+      double Infiltration_c = infiltrationAmount(RainfallInput, rainfallIntensity, soil, 
+                                                 soilFunctions, infiltrationMode);
+      NumericVector IVec_c = infiltrationRepartition(Infiltration_c, dVec, macro);
+      //Update average soil evaporation and herbaceous transpiration 
+      for(int l=0;l<nlayers;l++) {
+        IVecPools(c,l) = IVec_c[l];
+        IVec[l] = IVec[l] + poolProportions[c]*IVecPools(c,l); 
+      }
+    }
+    Infiltration = sum(IVec);
+  }
   double Runoff = RainfallInput - Infiltration;
-  //Decide infiltration repartition among layers
-  NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);
+  
   
   //STEP 4 - Evaporation from bare soil and herbaceous transpiration
   NumericVector EherbVec(nlayers,0.0);
@@ -519,7 +565,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   //STEP 10 - SOIL FLOWS
   NumericVector sourceSinkVec(nlayers, 0.0);
   for(int l=0;l<nlayers;l++) {
-    sourceSinkVec[l] += Ivec[l] - ExtractionVec[l] - EherbVec[l];
+    sourceSinkVec[l] += IVec[l] - ExtractionVec[l] - EherbVec[l];
     if(l ==0) sourceSinkVec[l] += Snowmelt - Esoil;
   }
   // determine water flows (no mass conservation)
@@ -537,7 +583,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
       NumericVector sourceSinkPoolVec(nlayers, 0.0);
       for(int l=0;l<nlayers;l++) {
         ExtractionPoolVec[l] = sum(ExtractionPool(_,l));
-        sourceSinkPoolVec[l] += Ivec[l] - ExtractionPoolVec[l] - EherbPools(c,l);
+        sourceSinkPoolVec[l] += IVecPools(c,l) - ExtractionPoolVec[l] - EherbPools(c,l);
         if(l ==0) sourceSinkPoolVec[l] += Snowmelt - EsoilPools[c];
       }
       // determine water flows (no mass conservation)
@@ -814,8 +860,6 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
     updateLeaves(x, wind, false);
   }
   
-  
-  double er = erFactor(doy, pet, prec);
   List s;
   if(transpirationMode=="Granier") {
     NumericVector meteovec_bas = NumericVector::create(
@@ -830,7 +874,7 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
       Named("Catm") = Catm,
       Named("Patm") = Patm,
       Named("pet") = pet,
-      Named("er") = er);
+      Named("rint") = rainfallIntensity(doy, prec));
     s = spwbDay_basic(x, meteovec_bas,
                  elevation, slope, aspect, 
                  runon, verbose);
@@ -849,7 +893,7 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
       Named("Catm") = Catm,
       Named("Patm") = Patm,
       Named("pet") = pet,
-      Named("er") = er);
+      Named("rint") = rainfallIntensity(doy, prec));
     s = spwbDay_advanced(x, meteovec_adv,
                  latitude, elevation, slope, aspect,
                  solarConstant, delta, 
@@ -2180,7 +2224,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
           Named("Catm") = Catm,
           Named("Patm") = Patm[i],
           Named("pet") = PET[i],
-          Named("er") = erFactor(DOY[i], PET[i], prec));
+          Named("rint") = rainfallIntensity(DOY[i], Precipitation[i]));
         try{
           s = spwbDay_basic(x, meteovec, 
                             elevation, slope, aspect, 
@@ -2213,7 +2257,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
           Named("Catm") = Catm,
           Named("Patm") = Patm[i],
           Named("pet") = PET[i],
-          Named("er") = erFactor(DOY[i], PET[i], Precipitation[i])
+          Named("rint") = rainfallIntensity(DOY[i], Precipitation[i])
         );
         try{
           s = spwbDay_advanced(x, meteovec, 
