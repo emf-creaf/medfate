@@ -180,7 +180,7 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL)
   else {
     if(!all(dates %in% row.names(x$WaterBalance))) stop("Some dates are outside the range in 'x'")
   }
-  if(inherits(x, "spwb")) {
+  if(inherits(x, "spwb") || inherits(x, "pwb")) {
     cohorts <- x$spwbInput$cohorts
   } else if(inherits(x, "growth")) {
     cohorts <- x$growthInput$cohorts
