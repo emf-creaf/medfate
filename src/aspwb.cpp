@@ -85,7 +85,8 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   double pet = meteovec["pet"]; 
   double prec  = meteovec["prec"];
   double rad = meteovec["rad"];
-
+  double rainfallIntensity = meteovec["rint"];
+  
   // Assume SWR is reduced with crop factor
   double LgroundSWR = 100.0 * (1.0 - crop_factor);
   
@@ -96,17 +97,16 @@ List aspwb_day_internal(List x, NumericVector meteovec,
                                                          snowpack, true);
 
   //Soil infiltration and percolation (update W)
+  double RainfallInput = hydroInputs["RainfallInput"];
+  double Snowmelt = hydroInputs["Snowmelt"];
   NumericVector dVec = soil["dVec"];
   NumericVector macro = soil["macro"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   NumericVector psiVec = psi(soil, soilFunctions); 
-  
-  double RainfallInput = hydroInputs["RainfallInput"];
-  double Snowmelt = hydroInputs["Snowmelt"];
-  double Infiltration = infiltrationBoughton(RainfallInput, Water_FC[0]);
+  double Infiltration = infiltrationAmount(RainfallInput, rainfallIntensity, soil, 
+                                           soilFunctions, infiltrationMode);
+  NumericVector IVec = infiltrationRepartition(Infiltration, dVec, macro);
   double Runoff = RainfallInput - Infiltration;
-  //Decide infiltration repartition among layers
-  NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);
   
   //Evaporation from bare soil (if there is no snow), do not update soil yet
   double Esoil = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, false);
@@ -125,7 +125,7 @@ List aspwb_day_internal(List x, NumericVector meteovec,
   //and determine water flows, returning deep drainage
   NumericVector sourceSinkVec(nlayers, 0.0);
   for(int l=0;l<nlayers;l++) {
-    sourceSinkVec[l] += Ivec[l] - ExtractionVec[l];
+    sourceSinkVec[l] += IVec[l] - ExtractionVec[l];
     if(l ==0) sourceSinkVec[l] += Snowmelt - Esoil;
   }
   double DeepDrainage = soilFlows(soil, sourceSinkVec, 24, true);
