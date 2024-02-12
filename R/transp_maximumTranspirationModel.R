@@ -68,6 +68,11 @@ transp_maximumTranspirationModel<-function(x, meteo, latitude, elevation, slope,
                                            draw = TRUE) {
   
   
+  if("dates" %in% names(meteo)) {
+    dates <- meteo$dates
+  } else {
+    dates <- row.names(meteo)
+  }
   #Calculate PET using penman
   if("PET" %in% names(meteo)) meteo$PET = NULL
   PET <- numeric(nrow(meteo))
@@ -78,7 +83,7 @@ transp_maximumTranspirationModel<-function(x, meteo, latitude, elevation, slope,
       elevation = elevation,
       slorad = slope*pi/180,
       asprad = aspect*pi/180,
-      J = meteoland::radiation_dateStringToJulianDays(row.names(meteo)[i]),
+      J = meteoland::radiation_dateStringToJulianDays(dates[i]),
       Tmin = meteo[['MinTemperature']][i],
       Tmax = meteo[['MaxTemperature']][i],
       RHmin = meteo[['MinRelativeHumidity']][i],

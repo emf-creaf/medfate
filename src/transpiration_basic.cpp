@@ -13,6 +13,7 @@
 #include "photosynthesis.h"
 #include "root.h"
 #include "soil.h"
+#include "spwb.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -687,7 +688,7 @@ List transpirationGranier(List x, DataFrame meteo, int day,
   double asprad = aspect * (M_PI/180.0);
   double slorad = slope * (M_PI/180.0);
   
-  CharacterVector dateStrings = meteo.attr("row.names");
+  CharacterVector dateStrings = getWeatherDates(meteo);
   std::string c = as<std::string>(dateStrings[day-1]);
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
 
