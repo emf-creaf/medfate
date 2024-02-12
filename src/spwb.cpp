@@ -814,6 +814,8 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
   if(meteovec.containsElementNamed("CO2")) Catm = meteovec["CO2"];
   double Patm = NA_REAL; 
   if(meteovec.containsElementNamed("Patm")) Patm = meteovec["Patm"];
+  double Rint = NA_REAL; 
+  if(meteovec.containsElementNamed("RainfallIntensity")) Rint = meteovec["RainfallIntensity"];
   //Control parameters
   List control = x["control"];
   bool verbose = control["verbose"];
@@ -853,15 +855,18 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
   //Derive doy from date  
   int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
   int doy = J - J0101+1;
+  
   if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; 
   if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
   
+  if(NumericVector::is_na(Rint)) Rint = rainfallIntensity(doy, prec);
+
   //Update phenology
   if(leafPhenology) {
     updatePhenology(x, doy, photoperiod, tday);
     updateLeaves(x, wind, false);
   }
-  
+
   List s;
   if(transpirationMode=="Granier") {
     NumericVector meteovec_bas = NumericVector::create(
@@ -876,7 +881,7 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
       Named("Catm") = Catm,
       Named("Patm") = Patm,
       Named("pet") = pet,
-      Named("rint") = rainfallIntensity(doy, prec));
+      Named("rint") = Rint);
     s = spwbDay_basic(x, meteovec_bas,
                  elevation, slope, aspect, 
                  runon, verbose);
@@ -2063,6 +2068,13 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       Rcout<<"Patm taken from input column 'Patm'\n";
     }
   }
+  NumericVector RainfallIntensity(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("RainfallIntensity")) {
+    RainfallIntensity = meteo["RainfallIntensity"];
+    if(verbose) {
+      Rcout<<"Rainfall intensity taken from input column 'RainfallIntensity'\n";
+    }
+  }
   
   IntegerVector DOY, JulianDay;
   NumericVector Photoperiod;
@@ -2140,6 +2152,12 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       //If still missing, use default control value
       if(NumericVector::is_na(Catm)) {
         Catm = control["defaultCO2"];
+      }
+      
+      double Rint = RainfallIntensity[i];
+      //If missing, use doy and precipitation
+      if(NumericVector::is_na(Rint)) {
+        Rint = rainfallIntensity(DOY[i], Precipitation[i]);
       }
       
       //If DOY == 1 reset PLC (Growth assumed)
@@ -2226,7 +2244,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
           Named("Catm") = Catm,
           Named("Patm") = Patm[i],
           Named("pet") = PET[i],
-          Named("rint") = rainfallIntensity(DOY[i], Precipitation[i]));
+          Named("rint") = Rint);
         try{
           s = spwbDay_basic(x, meteovec, 
                             elevation, slope, aspect, 

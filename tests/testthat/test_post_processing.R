@@ -207,7 +207,7 @@ test_that("Can produce all advanced spwb_day plots",{
     x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
     expect_s3_class(x2, "spwbInput")
     d1 = d[1]
-    sd2<-spwb_day(x2, rownames(examplemeteo)[d1],
+    sd2<-spwb_day(x2, examplemeteo$dates[d1],
                   unlist(examplemeteo[d1,]), 
                   latitude = 41.82592, elevation = 100, slope=0, aspect=0)
     expect_s3_class(sd2, "spwb_day")
@@ -369,7 +369,7 @@ test_that("Can produce all advanced growth_day plots",{
     x2 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
     expect_s3_class(x2, "growthInput")
     d1 <- d[1]
-    sd2<-growth_day(x2, rownames(examplemeteo)[d1],
+    sd2<-growth_day(x2, examplemeteo$dates[d1],
                     unlist(examplemeteo[d1,]), 
                     latitude = 41.82592, elevation = 100, slope=0, aspect=0)
     expect_s3_class(sd2, "growth_day")

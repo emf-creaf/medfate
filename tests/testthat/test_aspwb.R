@@ -1,9 +1,6 @@
 library(medfate)
 
 data(examplemeteo)
-examplemeteo2 <- examplemeteo
-examplemeteo2$dates <- as.Date(row.names(examplemeteo2))
-row.names(examplemeteo2) <- NULL
 
 control <- defaultControl("Granier")
 control$verbose <- FALSE

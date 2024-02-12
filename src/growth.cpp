@@ -1578,6 +1578,8 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
   if(meteovec.containsElementNamed("CO2")) Catm = meteovec["CO2"];
   double Patm = NA_REAL; 
   if(meteovec.containsElementNamed("Patm")) Patm = meteovec["Patm"];
+  double Rint = NA_REAL; 
+  if(meteovec.containsElementNamed("RainfallIntensity")) Rint = meteovec["RainfallIntensity"];
   double pfire = 0.0; 
   if(meteovec.containsElementNamed("FireProbability")) pfire = meteovec["FireProbability"];
   
@@ -1611,6 +1613,7 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
   int doy = J - J0101+1;
   if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; 
   if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
+  if(NumericVector::is_na(Rint)) Rint = rainfallIntensity(doy, prec);
   
   //Update phenology
   if(leafPhenology) {
@@ -1633,7 +1636,7 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
     Named("Catm") = Catm,
     Named("Patm") = Patm,
     Named("pet") = pet,
-    Named("rint") = rainfallIntensity(doy, prec),
+    Named("rint") = Rint,
     Named("pfire") = pfire);
   List s = growthDayInner(x, meteovec_inner, 
                      latitude, elevation, slope, aspect,
@@ -2291,6 +2294,14 @@ List growth(List x, DataFrame meteo, double latitude,
       Rcout<<"Patm taken from input column 'Patm'\n";
     }
   }
+  NumericVector RainfallIntensity(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("RainfallIntensity")) {
+    RainfallIntensity = meteo["RainfallIntensity"];
+    if(verbose) {
+      Rcout<<"Rainfall intensity taken from input column 'RainfallIntensity'\n";
+    }
+  }
+  
   IntegerVector DOY, JulianDay;
   NumericVector Photoperiod;
   bool doy_input = false, photoperiod_input = false, julianday_input = false;
@@ -2376,6 +2387,11 @@ List growth(List x, DataFrame meteo, double latitude,
     if(NumericVector::is_na(Catm)) {
       Catm = control["defaultCO2"];
     }
+    double Rint = RainfallIntensity[i];
+    //If missing, use doy and precipitation
+    if(NumericVector::is_na(Rint)) {
+      Rint = rainfallIntensity(DOY[i], Precipitation[i]);
+    }
     
     if(unlimitedSoilWater) {
       NumericVector W = soil["W"];
@@ -2446,7 +2462,7 @@ List growth(List x, DataFrame meteo, double latitude,
         Named("pet") = PET[i],
         Named("Catm") = Catm);
       meteovec_inner.push_back(Patm[i], "Patm");
-      meteovec_inner.push_back(rainfallIntensity(DOY[i], Precipitation[i]), "rint");
+      meteovec_inner.push_back(Rint, "rint");
       meteovec_inner.push_back(FireProbability[i], "pfire"); 
       try{
         s = growthDayInner(x, meteovec_inner,  
@@ -2481,7 +2497,7 @@ List growth(List x, DataFrame meteo, double latitude,
         Named("Catm") = Catm,
         Named("Patm") = Patm[i],
         Named("pet") = PET[i],
-        Named("rint") = rainfallIntensity(DOY[i], Precipitation[i]));
+        Named("rint") = Rint);
       meteovec.push_back(FireProbability[i], "pfire"); 
       try{
         s = growthDayInner(x, meteovec, 

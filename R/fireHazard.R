@@ -4,7 +4,11 @@
   fmc = x$Plants$LFMC
   if(is.na(slope)) slope = 0.0
 
-  dates = as.Date(row.names(weather))
+  if("dates" %in% names(weather)) {
+    dates <- weather$dates
+  } else {
+    dates <- as.Date(row.names(weather))
+  }
   ndays = length(dates)
   
   #Calculate FCCS without FMC

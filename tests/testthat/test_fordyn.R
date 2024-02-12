@@ -10,11 +10,11 @@ data(examplemeteo)
 meteo2001 <- examplemeteo
 meteo2002 <- examplemeteo
 meteo2002$Precipitation <- meteo2002$Precipitation/2
-row.names(meteo2002) <- seq(as.Date("2002-01-01"), 
-                            as.Date("2002-12-31"), by="day")
+meteo2002$dates <- seq(as.Date("2002-01-01"), 
+                       as.Date("2002-12-31"), by="day")
 meteo_01_02 <- rbind(meteo2001, meteo2002)
 meteo_01_02_B <- meteo_01_02
-meteo_01_02_B$dates <- as.Date(row.names(meteo_01_02_B))
+meteo_01_02_B$dates <- as.Date(meteo_01_02_B$dates)
 row.names(meteo_01_02_B) <- NULL
 
 #Load example plot plant data

@@ -163,7 +163,9 @@ List aspwb_day(List x, CharacterVector date, NumericVector meteovec,
   double prec = meteovec["Precipitation"];
   double wind = NA_REAL;
   if(meteovec.containsElementNamed("WindSpeed")) wind = meteovec["WindSpeed"];
-
+  double Rint = NA_REAL; 
+  if(meteovec.containsElementNamed("RainfallIntensity")) Rint = meteovec["RainfallIntensity"];
+  
   List control = x["control"];
   bool verbose = control["verbose"];
   
@@ -178,22 +180,23 @@ List aspwb_day(List x, CharacterVector date, NumericVector meteovec,
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
   
+  //Derive doy from date  
+  int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
+  int doy = J - J0101+1;
+  if(NumericVector::is_na(Rint)) Rint = rainfallIntensity(doy, prec);
   
   //Will not modify input x 
   if(!modifyInput) {
     x = clone(x);
   }
   
-  //Derive doy from date  
-  int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
-  int doy = J - J0101+1;
   
   NumericVector meteovec_inner = NumericVector::create(
     Named("tday") = tday, 
     Named("prec") = prec,
     Named("rad") = rad, 
     Named("pet") = pet,
-    Named("rint") = rainfallIntensity(doy, prec));
+    Named("rint") = Rint);
   
   return(aspwb_day_internal(x, meteovec_inner,
                   elevation, slope, aspect, 
@@ -437,6 +440,14 @@ List apwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   if(any(is_na(MaxRelativeHumidity))) stop("Missing values in 'MaxRelativeHumidity'");
   if(any(is_na(Radiation))) stop("Missing values in 'Radiation'");
   
+  NumericVector RainfallIntensity(Precipitation.length(), NA_REAL);
+  if(meteo.containsElementNamed("RainfallIntensity")) {
+    RainfallIntensity = meteo["RainfallIntensity"];
+    if(verbose) {
+      Rcout<<"Rainfall intensity taken from input column 'RainfallIntensity'\n";
+    }
+  }
+  
   IntegerVector DOY, JulianDay;
   bool doy_input = false;
   if(meteo.containsElementNamed("DOY")) {
@@ -493,6 +504,12 @@ List apwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
     if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
     
+    double Rint = RainfallIntensity[i];
+    //If missing, use doy and precipitation
+    if(NumericVector::is_na(Rint)) {
+      Rint = rainfallIntensity(DOY[i], Precipitation[i]);
+    }
+    
     if(unlimitedSoilWater) {
       NumericVector W = soil["W"];
       for(int h=0;h<W.size();h++) W[h] = 1.0;
@@ -524,7 +541,7 @@ List apwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       Named("prec") = Precipitation[i], 
       Named("rad") = rad, 
       Named("pet") = PET[i],
-      Named("rint") = rainfallIntensity(DOY[i], Precipitation[i]));
+      Named("rint") = Rint);
     try{
       s = aspwb_day_internal(x, meteovec, 
                              elevation, 
