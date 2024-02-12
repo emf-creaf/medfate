@@ -88,7 +88,7 @@
 #' #Simulate one day only
 #' x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 #' d <- 100
-#' date <- rownames(examplemeteo)[d]
+#' date <- examplemeteo$dates[d]
 #' meteovec <- unlist(examplemeteo[d,])
 #' sd2 <- spwb_day(x2, date, meteovec,
 #'               latitude = 41.82592, elevation = 100, slope= 0, aspect = 0)
