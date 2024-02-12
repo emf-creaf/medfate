@@ -89,7 +89,7 @@ Finally, note that users can set cohort-specific parameters for soil water balan
 Soil water balance simulations will normally span periods of several months or years, but since the model operates at a daily temporal scale, it is possible to perform soil water balance for one day only. This is done using function `spwb_day()`. In the following code we select day 100 from the meteorological input data and perform soil water balance for that day only:
 ```{r}
 d <- 100
-date <- rownames(examplemeteo)[d]
+date <- examplemeteo$dates[d]
 meteovec <- unlist(examplemeteo[d,])
 sd1<-spwb_day(x, date, meteovec,  
              latitude = 41.82592, elevation = 100, slope= 0, aspect = 0)

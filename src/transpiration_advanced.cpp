@@ -6,11 +6,13 @@
 #include "windextinction.h"
 #include "windKatul.h"
 #include "hydraulics.h"
+#include "hydrology.h"
 #include "biophysicsutils.h"
 #include "phenology.h"
 #include "forestutils.h"
 #include "tissuemoisture.h"
 #include "carbon.h"
+#include "spwb.h"
 #include "root.h"
 #include "soil.h"
 #include "inner_sperry.h"
@@ -1265,8 +1267,8 @@ List transpirationSperry(List x, DataFrame meteo, int day,
   if(meteo.containsElementNamed("CO2")) CO2 = meteo["CO2"];
   NumericVector Patm(MinTemperature.length(), NA_REAL);
   if(meteo.containsElementNamed("Patm")) Patm = meteo["Patm"];
-  
-  CharacterVector dateStrings = meteo.attr("row.names");
+
+  CharacterVector dateStrings = getWeatherDates(meteo);
   std::string c = as<std::string>(dateStrings[day-1]);
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
   double delta = meteoland::radiation_solarDeclination(J);
@@ -1339,7 +1341,7 @@ List transpirationCochard(List x, DataFrame meteo, int day,
   NumericVector Patm(MinTemperature.length(), NA_REAL);
   if(meteo.containsElementNamed("Patm")) Patm = meteo["Patm"];
   
-  CharacterVector dateStrings = meteo.attr("row.names");
+  CharacterVector dateStrings = getWeatherDates(meteo);
   std::string c = as<std::string>(dateStrings[day-1]);
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
   double delta = meteoland::radiation_solarDeclination(J);

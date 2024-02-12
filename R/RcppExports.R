@@ -3145,8 +3145,8 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
 #' 
 #' # Day to be simulated
 #' d <- 100
-#' meteovec <- unlist(examplemeteo[d,])
-#' date <- rownames(examplemeteo)[d]
+#' meteovec <- unlist(examplemeteo[d,-1])
+#' date <- as.character(examplemeteo$dates[d])
 #' 
 #' #Simulate water balance one day only (Granier mode)
 #' examplesoil <- soil(defaultSoilParams(4))

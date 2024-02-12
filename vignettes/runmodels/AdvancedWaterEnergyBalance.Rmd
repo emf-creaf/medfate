@@ -173,7 +173,7 @@ moisture_pressureVolumeCurvePlot(x, segment="stem", fraction="apoplastic")
 ### Running the model
 Soil water balance simulations will normally span periods of several months or years, but since the model operates at a daily and subdaily temporal scales, it is possible to perform soil water balance for one day only. This is done using function `spwb_day()`. In the following code we select the same day as before from the meteorological input data and perform soil water balance for that day only:
 ```{r}
-date <- rownames(examplemeteo)[d]
+date <- examplemeteo$dates[d]
 meteovec <- unlist(examplemeteo[d,])
 sd1<-spwb_day(x, date, meteovec, 
              latitude = 41.82592, elevation = 100, slope= 0, aspect = 0)
