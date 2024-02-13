@@ -7,7 +7,7 @@
 \alias{hydrology_interceptionPlot}
 \title{Rainfall interception}
 \usage{
-hydrology_rainfallIntensity(doy, prec, Rconv = 5.6, Rsyn = 1.5)
+hydrology_rainfallIntensity(month, prec, rainfallIntensityPerMonth)
 
 hydrology_rainInterception(Rainfall, Cm, p, ER = 0.05, model = "Gash1995")
 
@@ -21,11 +21,11 @@ hydrology_interceptionPlot(
 )
 }
 \arguments{
-\item{doy}{Day of the year.}
+\item{month}{Month of the year (from 1 to 12).}
 
 \item{prec}{Precipitation for a given day (mm).}
 
-\item{Rconv, Rsyn}{Rainfall intensity for convective storms and synoptic storms, respectively, in mm/h.}
+\item{rainfallIntensityPerMonth}{A vector with twelve positions with average intensity of rainfall (in mm/h) for each month.}
 
 \item{Rainfall}{A numeric vector of (daily) rainfall.}
 
@@ -58,7 +58,7 @@ In both cases the current implementation assumes no trunk interception.
 \details{
 Function \code{hydrology_rainInterception} can accept either vectors or scalars as parameters \code{Cm}, \code{p} and \code{ER}. If they are supplied as vectors they should be of the same length as \code{Rainfall}.
 
-Function \code{hydrology_rainfallIntensity} estimates the rainfall intensity (mm/h) for input values of rainfall, while accounting for seasonal variation in rainfall intensity (mm/h). Default values \code{Rconv = 5.6} and \code{Rsyn = 1.5} come from Miralles et al. (2010).
+Function \code{hydrology_rainfallIntensity} estimates the rainfall intensity (mm/h) for input values of rainfall and seasonal variation in rainfall intensity (mm/h).
 }
 \examples{
 #Load example plot plant data
@@ -77,8 +77,6 @@ Liu (2001). Evaluation of the Liu model for predicting rainfall interception in 
 Gash (1979). An analytical model of rainfall interception by forests. - Quarterly Journal of the Royal Meteorological Society.                                       
 
 Gash et al. (1995). Estimating sparse forest rainfall interception with an analytical model. - Journal of Hydrology.
-
-Miralles DG, Gash JH, Holmes TRH, et al (2010) Global canopy interception from satellite observations. J Geophys Res 115:D16122. doi: 10.1029/2009JD013530.
 }
 \seealso{
 \code{\link{spwb}}

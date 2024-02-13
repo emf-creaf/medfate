@@ -13,7 +13,7 @@
 #' @details 
 #' Function \code{hydrology_rainInterception} can accept either vectors or scalars as parameters \code{Cm}, \code{p} and \code{ER}. If they are supplied as vectors they should be of the same length as \code{Rainfall}.
 #' 
-#' Function \code{hydrology_rainfallIntensity} estimates the rainfall intensity (mm/h) for input values of rainfall, while accounting for seasonal variation in rainfall intensity (mm/h). Default values \code{Rconv = 5.6} and \code{Rsyn = 1.5} come from Miralles et al. (2010).
+#' Function \code{hydrology_rainfallIntensity} estimates the rainfall intensity (mm/h) for input values of rainfall and seasonal variation in rainfall intensity (mm/h).
 #' 
 #' @return 
 #' Function \code{hydrology_rainInterception} returns a vector of the same length as \code{Rainfall} containing intercepted rain values. 
@@ -26,8 +26,6 @@
 #' Gash (1979). An analytical model of rainfall interception by forests. - Quarterly Journal of the Royal Meteorological Society.                                       
 #' 
 #' Gash et al. (1995). Estimating sparse forest rainfall interception with an analytical model. - Journal of Hydrology.
-#' 
-#' Miralles DG, Gash JH, Holmes TRH, et al (2010) Global canopy interception from satellite observations. J Geophys Res 115:D16122. doi: 10.1029/2009JD013530.
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 

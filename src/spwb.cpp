@@ -833,6 +833,7 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
   List soil = x["soil"];
   
   std::string c = as<std::string>(date[0]);
+  int month = std::atoi(c.substr(5,2).c_str());
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
   double delta = meteoland::radiation_solarDeclination(J);
   double solarConstant = meteoland::radiation_solarConstant(J);
@@ -859,7 +860,8 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
   if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; 
   if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
   
-  if(NumericVector::is_na(Rint)) Rint = rainfallIntensity(doy, prec);
+  NumericVector defaultRainfallIntensityPerMonth = control["defaultRainfallIntensityPerMonth"];
+  if(NumericVector::is_na(Rint)) Rint = rainfallIntensity(month, prec, defaultRainfallIntensityPerMonth);
 
   //Update phenology
   if(leafPhenology) {
@@ -900,7 +902,7 @@ List spwbDay(List x, CharacterVector date, NumericVector meteovec,
       Named("Catm") = Catm,
       Named("Patm") = Patm,
       Named("pet") = pet,
-      Named("rint") = rainfallIntensity(doy, prec));
+      Named("rint") = Rint);
     s = spwbDay_advanced(x, meteovec_adv,
                  latitude, elevation, slope, aspect,
                  solarConstant, delta, 
@@ -2005,6 +2007,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   String cavitationRefillStem = control["cavitationRefillStem"];
   String cavitationRefillLeaves = control["cavitationRefillLeaves"];
   bool verbose = control["verbose"];
+  NumericVector defaultRainfallIntensityPerMonth = control["defaultRainfallIntensityPerMonth"];
   
   bool leafPhenology = control["leafPhenology"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
@@ -2155,9 +2158,9 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       }
       
       double Rint = RainfallIntensity[i];
-      //If missing, use doy and precipitation
       if(NumericVector::is_na(Rint)) {
-        Rint = rainfallIntensity(DOY[i], Precipitation[i]);
+        int month = std::atoi(c.substr(5,2).c_str());
+        Rint = rainfallIntensity(month, Precipitation[i], defaultRainfallIntensityPerMonth);
       }
       
       //If DOY == 1 reset PLC (Growth assumed)
@@ -2277,8 +2280,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
           Named("Catm") = Catm,
           Named("Patm") = Patm[i],
           Named("pet") = PET[i],
-          Named("rint") = rainfallIntensity(DOY[i], Precipitation[i])
-        );
+          Named("rint") = Rint);
         try{
           s = spwbDay_advanced(x, meteovec, 
                                latitude, elevation, slope, aspect,

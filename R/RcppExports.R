@@ -1475,13 +1475,13 @@ hydraulics_rootxylemConductanceProportions <- function(L, V) {
     .Call(`_medfate_rootxylemConductanceProportions`, L, V)
 }
 
-#' @param doy Day of the year.
+#' @param month Month of the year (from 1 to 12).
 #' @param prec Precipitation for a given day (mm).
-#' @param Rconv,Rsyn Rainfall intensity for convective storms and synoptic storms, respectively, in mm/h.
+#' @param rainfallIntensityPerMonth A vector with twelve positions with average intensity of rainfall (in mm/h) for each month.
 #' 
 #' @rdname hydrology_interception
-hydrology_rainfallIntensity <- function(doy, prec, Rconv = 5.6, Rsyn = 1.5) {
-    .Call(`_medfate_rainfallIntensity`, doy, prec, Rconv, Rsyn)
+hydrology_rainfallIntensity <- function(month, prec, rainfallIntensityPerMonth) {
+    .Call(`_medfate_rainfallIntensity`, month, prec, rainfallIntensityPerMonth)
 }
 
 .hydrology_interceptionGashDay <- function(Rainfall, Cm, p, ER = 0.05) {

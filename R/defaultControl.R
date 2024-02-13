@@ -34,6 +34,8 @@
 #'                  Only simulations with 'Granier' are allowed to use Saxton functions.}
 #'       \item{\code{defaultWindSpeed [= 2.5]}: Default wind speed value (in m/s) to be used when missing from data. }
 #'       \item{\code{defaultCO2 [= 386]}: Default atmospheric (abovecanopy) CO2 concentration (in micromol·mol-1 = ppm). This value will be used whenever CO2 concentration is not specified in the weather input. }
+#'       \item{\code{defaultRainfallIntensityPerMonth [= c(1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 5.6, 5.6, 5.6, 5.6, 5.6, 1.5)]}: A vector of twelve values indicating the rainfall intensity (mm/h) per month. 
+#'       By default synoptic storms (1.5 mm/h) are assumed between December and June, and convective storms (5.6 mm/h) are assumed between July and November.}
 #'       \item{\code{snowpack [= TRUE]}: Boolean flag to indicate the simulation of snow accumulation and melting.}
 #'       \item{\code{leafPhenology [= TRUE]}: Boolean flag to indicate the simulation of leaf phenology for winter-deciduous species.}
 #'       \item{\code{bareSoilEvaporation [= TRUE]}: Boolean flag to indicate the simulation of evaporation from bare soil.}
@@ -190,6 +192,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     soilFunctions = "VG",
     defaultWindSpeed = 2.5, #m/s
     defaultCO2 = 386, #ppm
+    defaultRainfallIntensityPerMonth = c(1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 5.6, 5.6, 5.6, 5.6, 5.6, 1.5),
     snowpack = TRUE,
     leafPhenology = TRUE,
     bareSoilEvaporation = TRUE,

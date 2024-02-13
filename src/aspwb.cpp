@@ -171,6 +171,7 @@ List aspwb_day(List x, CharacterVector date, NumericVector meteovec,
   
   
   std::string c = as<std::string>(date[0]);
+  int month = std::atoi(c.substr(5,2).c_str());
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
   double latrad = latitude * (M_PI/180.0);
   if(NumericVector::is_na(aspect)) aspect = 0.0;
@@ -180,10 +181,8 @@ List aspwb_day(List x, CharacterVector date, NumericVector meteovec,
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
   
-  //Derive doy from date  
-  int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
-  int doy = J - J0101+1;
-  if(NumericVector::is_na(Rint)) Rint = rainfallIntensity(doy, prec);
+  NumericVector defaultRainfallIntensityPerMonth = control["defaultRainfallIntensityPerMonth"];
+  if(NumericVector::is_na(Rint)) Rint = rainfallIntensity(month, prec, defaultRainfallIntensityPerMonth);
   
   //Will not modify input x 
   if(!modifyInput) {
@@ -390,6 +389,7 @@ List apwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   String soilFunctions = control["soilFunctions"];
   bool verbose = control["verbose"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
+  NumericVector defaultRainfallIntensityPerMonth = control["defaultRainfallIntensityPerMonth"];
   
   //Store input
   List aspwbInput = x; // Store initial object
@@ -504,10 +504,11 @@ List apwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
     if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
     
+    
     double Rint = RainfallIntensity[i];
-    //If missing, use doy and precipitation
     if(NumericVector::is_na(Rint)) {
-      Rint = rainfallIntensity(DOY[i], Precipitation[i]);
+      int month = std::atoi(c.substr(5,2).c_str());
+      Rint = rainfallIntensity(month, Precipitation[i], defaultRainfallIntensityPerMonth);
     }
     
     if(unlimitedSoilWater) {

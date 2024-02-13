@@ -1597,6 +1597,7 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
   }
   
   std::string c = as<std::string>(date[0]);
+  int month = std::atoi(c.substr(5,2).c_str());
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
   double delta = meteoland::radiation_solarDeclination(J);
   double solarConstant = meteoland::radiation_solarConstant(J);
@@ -1613,7 +1614,9 @@ List growthDay(List x, CharacterVector date, NumericVector meteovec,
   int doy = J - J0101+1;
   if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; 
   if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
-  if(NumericVector::is_na(Rint)) Rint = rainfallIntensity(doy, prec);
+  
+  NumericVector defaultRainfallIntensityPerMonth = control["defaultRainfallIntensityPerMonth"];
+  if(NumericVector::is_na(Rint)) Rint = rainfallIntensity(month, prec, defaultRainfallIntensityPerMonth);
   
   //Update phenology
   if(leafPhenology) {
@@ -2230,6 +2233,7 @@ List growth(List x, DataFrame meteo, double latitude,
   bool verbose = control["verbose"];
   bool leafPhenology = control["leafPhenology"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
+  NumericVector defaultRainfallIntensityPerMonth = control["defaultRainfallIntensityPerMonth"];
   checkgrowthInput(x, transpirationMode, soilFunctions);
 
 
@@ -2387,10 +2391,11 @@ List growth(List x, DataFrame meteo, double latitude,
     if(NumericVector::is_na(Catm)) {
       Catm = control["defaultCO2"];
     }
+    
     double Rint = RainfallIntensity[i];
-    //If missing, use doy and precipitation
     if(NumericVector::is_na(Rint)) {
-      Rint = rainfallIntensity(DOY[i], Precipitation[i]);
+      int month = std::atoi(c.substr(5,2).c_str());
+      Rint = rainfallIntensity(month, Precipitation[i], defaultRainfallIntensityPerMonth);
     }
     
     if(unlimitedSoilWater) {

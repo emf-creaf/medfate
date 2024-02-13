@@ -2013,23 +2013,22 @@ BEGIN_RCPP
 END_RCPP
 }
 // rainfallIntensity
-double rainfallIntensity(int doy, double prec, double Rconv, double Rsyn);
-static SEXP _medfate_rainfallIntensity_try(SEXP doySEXP, SEXP precSEXP, SEXP RconvSEXP, SEXP RsynSEXP) {
+double rainfallIntensity(int month, double prec, NumericVector rainfallIntensityPerMonth);
+static SEXP _medfate_rainfallIntensity_try(SEXP monthSEXP, SEXP precSEXP, SEXP rainfallIntensityPerMonthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< int >::type doy(doySEXP);
+    Rcpp::traits::input_parameter< int >::type month(monthSEXP);
     Rcpp::traits::input_parameter< double >::type prec(precSEXP);
-    Rcpp::traits::input_parameter< double >::type Rconv(RconvSEXP);
-    Rcpp::traits::input_parameter< double >::type Rsyn(RsynSEXP);
-    rcpp_result_gen = Rcpp::wrap(rainfallIntensity(doy, prec, Rconv, Rsyn));
+    Rcpp::traits::input_parameter< NumericVector >::type rainfallIntensityPerMonth(rainfallIntensityPerMonthSEXP);
+    rcpp_result_gen = Rcpp::wrap(rainfallIntensity(month, prec, rainfallIntensityPerMonth));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_rainfallIntensity(SEXP doySEXP, SEXP precSEXP, SEXP RconvSEXP, SEXP RsynSEXP) {
+RcppExport SEXP _medfate_rainfallIntensity(SEXP monthSEXP, SEXP precSEXP, SEXP rainfallIntensityPerMonthSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_rainfallIntensity_try(doySEXP, precSEXP, RconvSEXP, RsynSEXP));
+        rcpp_result_gen = PROTECT(_medfate_rainfallIntensity_try(monthSEXP, precSEXP, rainfallIntensityPerMonthSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -5396,7 +5395,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("List(*.defineGrowthDailyOutput)(double,double,double,double,CharacterVector,List)");
         signatures.insert("void(*.fillGrowthDailyOutput)(List,List,List,int)");
         signatures.insert("List(*growth)(List,DataFrame,double,double,double,double,NumericVector)");
-        signatures.insert("double(*hydrology_rainfallIntensity)(int,double,double,double)");
+        signatures.insert("double(*hydrology_rainfallIntensity)(int,double,NumericVector)");
         signatures.insert("double(*.hydrology_interceptionGashDay)(double,double,double,double)");
         signatures.insert("double(*.hydrology_interceptionLiuDay)(double,double,double,double)");
         signatures.insert("double(*hydrology_soilEvaporationAmount)(double,double,double)");
@@ -5644,7 +5643,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_referenceConductivityHeightFactor", (DL_FUNC) &_medfate_referenceConductivityHeightFactor, 2},
     {"_medfate_maximumStemHydraulicConductance", (DL_FUNC) &_medfate_maximumStemHydraulicConductance, 5},
     {"_medfate_rootxylemConductanceProportions", (DL_FUNC) &_medfate_rootxylemConductanceProportions, 2},
-    {"_medfate_rainfallIntensity", (DL_FUNC) &_medfate_rainfallIntensity, 4},
+    {"_medfate_rainfallIntensity", (DL_FUNC) &_medfate_rainfallIntensity, 3},
     {"_medfate_interceptionGashDay", (DL_FUNC) &_medfate_interceptionGashDay, 4},
     {"_medfate_interceptionLiuDay", (DL_FUNC) &_medfate_interceptionLiuDay, 4},
     {"_medfate_soilEvaporationAmount", (DL_FUNC) &_medfate_soilEvaporationAmount, 3},

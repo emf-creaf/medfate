@@ -19,7 +19,7 @@ double infiltrationAmount(double rainfallInput, double rainfallIntensity, List s
 NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro, 
                                       double a = -0.005, double b = 3.0);
 
-double rainfallIntensity(int doy, double prec, double Rconv = 5.6, double Rsyn = 1.5);
+double rainfallIntensity(int month, double prec, NumericVector rainfallIntensityPerMonth);
 
 double interceptionGashDay(double Rainfall, double Cm, double p, double ER=0.05);
 double interceptionLiuDay(double Rainfall, double Cm, double p, double ER=0.05);

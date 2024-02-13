@@ -12,19 +12,15 @@ using namespace Rcpp;
 //New defaults
 //Rconv = 5.6, Rsyn = 1.5
 
-//' @param doy Day of the year.
+//' @param month Month of the year (from 1 to 12).
 //' @param prec Precipitation for a given day (mm).
-//' @param Rconv,Rsyn Rainfall intensity for convective storms and synoptic storms, respectively, in mm/h.
+//' @param rainfallIntensityPerMonth A vector with twelve positions with average intensity of rainfall (in mm/h) for each month.
 //' 
 //' @rdname hydrology_interception
 // [[Rcpp::export("hydrology_rainfallIntensity")]]
-double rainfallIntensity(int doy, double prec, double Rconv = 5.6, double Rsyn = 1.5){
-  double Ri = 0.0; //mm/h
-  if((doy<=120) || (doy>=335)) {
-    Ri = std::max(prec/24.0,Rsyn);
-  } else {
-    Ri = std::max(prec/24.0,Rconv);
-  }
+double rainfallIntensity(int month, double prec, NumericVector rainfallIntensityPerMonth){
+  double Ri_month = rainfallIntensityPerMonth[month - 1];
+  double Ri = std::max(prec/24.0,Ri_month);
   return(Ri);
 }
 

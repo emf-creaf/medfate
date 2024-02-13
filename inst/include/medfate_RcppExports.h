@@ -191,17 +191,17 @@ namespace medfate {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline double hydrology_rainfallIntensity(int doy, double prec, double Rconv = 5.6, double Rsyn = 1.5) {
-        typedef SEXP(*Ptr_hydrology_rainfallIntensity)(SEXP,SEXP,SEXP,SEXP);
+    inline double hydrology_rainfallIntensity(int month, double prec, NumericVector rainfallIntensityPerMonth) {
+        typedef SEXP(*Ptr_hydrology_rainfallIntensity)(SEXP,SEXP,SEXP);
         static Ptr_hydrology_rainfallIntensity p_hydrology_rainfallIntensity = NULL;
         if (p_hydrology_rainfallIntensity == NULL) {
-            validateSignature("double(*hydrology_rainfallIntensity)(int,double,double,double)");
+            validateSignature("double(*hydrology_rainfallIntensity)(int,double,NumericVector)");
             p_hydrology_rainfallIntensity = (Ptr_hydrology_rainfallIntensity)R_GetCCallable("medfate", "_medfate_hydrology_rainfallIntensity");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_hydrology_rainfallIntensity(Shield<SEXP>(Rcpp::wrap(doy)), Shield<SEXP>(Rcpp::wrap(prec)), Shield<SEXP>(Rcpp::wrap(Rconv)), Shield<SEXP>(Rcpp::wrap(Rsyn)));
+            rcpp_result_gen = p_hydrology_rainfallIntensity(Shield<SEXP>(Rcpp::wrap(month)), Shield<SEXP>(Rcpp::wrap(prec)), Shield<SEXP>(Rcpp::wrap(rainfallIntensityPerMonth)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
