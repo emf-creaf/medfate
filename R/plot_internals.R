@@ -845,76 +845,76 @@
   spnames = as.character(input$cohorts[cohorts,"Name"])
   
   if(type=="PlantTranspiration") {
-    m = extractSubdaily(x, "E", dates)[,c("datetime", cohorts), drop=FALSE]
+    m = .extractSubdaily(x, "E", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="TranspirationPerLeaf") {
-    m = extractSubdaily(x, "E", dates)[,c("datetime", cohorts), drop=FALSE]
-    lai = extractSubdaily(x, "PlantLAI", dates)[,c("datetime", cohorts), drop=FALSE]
+    m = .extractSubdaily(x, "E", dates)[,c("datetime", cohorts), drop=FALSE]
+    lai = .extractSubdaily(x, "PlantLAI", dates)[,c("datetime", cohorts), drop=FALSE]
     m[,-1] = m[,-1, drop = FALSE]/lai[,-1,drop=FALSE]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantGrossPhotosynthesis") {
-    m = extractSubdaily(x, "Ag", dates)[,c("datetime", cohorts), drop=FALSE]
+    m = .extractSubdaily(x, "Ag", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="GrossPhotosynthesisPerLeaf") {
-    m = extractSubdaily(x, "Ag", dates)[,c("datetime", cohorts), drop=FALSE]
-    lai = extractSubdaily(x, "PlantLAI", dates)[,c("datetime", cohorts), drop=FALSE]
+    m = .extractSubdaily(x, "Ag", dates)[,c("datetime", cohorts), drop=FALSE]
+    lai = .extractSubdaily(x, "PlantLAI", dates)[,c("datetime", cohorts), drop=FALSE]
     m[,-1] = m[,-1, drop = FALSE]/lai[,-1,drop=FALSE]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantNetPhotosynthesis") {
-    m = extractSubdaily(x, "An", dates)[,c("datetime", cohorts), drop=FALSE]
+    m = .extractSubdaily(x, "An", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="NetPhotosynthesisPerLeaf") {
-    m = extractSubdaily(x, "An", dates)[,c("datetime", cohorts), drop=FALSE]
-    lai = extractSubdaily(x, "PlantLAI", dates)[,c("datetime", cohorts), drop=FALSE]
+    m = .extractSubdaily(x, "An", dates)[,c("datetime", cohorts), drop=FALSE]
+    lai = .extractSubdaily(x, "PlantLAI", dates)[,c("datetime", cohorts), drop=FALSE]
     m[,-1] = m[,-1, drop = FALSE]/lai[,-1,drop=FALSE]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafPsiAverage") {
-    m = extractSubdaily(x, "LeafPsi", dates)[,c("datetime", cohorts), drop=FALSE]
+    m = .extractSubdaily(x, "LeafPsi", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type %in% c("LeafRWC", "StemRWC", "LeafPLC", "StemPLC",
                       "LeafSympRWC", "StemSympRWC")) {
-    m = extractSubdaily(x, type, dates)[,c("datetime", cohorts), drop=FALSE]
+    m = .extractSubdaily(x, type, dates)[,c("datetime", cohorts), drop=FALSE]
     m[, -1] <- 100*m[, -1]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type %in% c("StemPsi", "RootPsi", "LeafSympPsi", "StemSympPsi")) {
-    m = extractSubdaily(x, type, dates)[,c("datetime", cohorts), drop=FALSE]
+    m = .extractSubdaily(x, type, dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantWaterBalance") {
-    m = extractSubdaily(x, "PWB", dates)[,c("datetime", cohorts), drop=FALSE]
+    m = .extractSubdaily(x, "PWB", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="WaterBalancePerLeaf") {
-    m = extractSubdaily(x, "PWB", dates)[,c("datetime", cohorts), drop=FALSE]
+    m = .extractSubdaily(x, "PWB", dates)[,c("datetime", cohorts), drop=FALSE]
     m[,-1] = m[,-1, drop = FALSE]/x$Plants$LAI
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="SoilPlantConductance") {
-    m = extractSubdaily(x, "dEdP", dates)[,c("datetime", cohorts), drop=FALSE]
+    m = .extractSubdaily(x, "dEdP", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="Temperature") {
-    m = extractSubdaily(x, "Temperature", dates)
+    m = .extractSubdaily(x, "Temperature", dates)
     m = m[,c("datetime","Tatm", "Tcan", "Tsoil.1")]
     names(m) = c("datetime", "Above-canopy","Inside-canopy", "Soil")
     if(is.null(ylab)) ylab = "Temperature (Celsius)"
@@ -922,8 +922,8 @@
   } 
   else if(type=="CanopyEnergyBalance") {
     if(is.null(ylab)) ylab = expression(W%.%m^{-2})
-    ceb = extractSubdaily(x, "CanopyEnergyBalance", dates)
-    seb = extractSubdaily(x, "SoilEnergyBalance", dates)
+    ceb = .extractSubdaily(x, "CanopyEnergyBalance", dates)
+    seb = .extractSubdaily(x, "SoilEnergyBalance", dates)
     df = data.frame(datetime=ceb$datetime)
     df[["Balance"]] = ceb$Ebalcan
     df[["SWR abs."]] = ceb$SWRcan 
@@ -935,7 +935,7 @@
   } 
   else if(type=="SoilEnergyBalance") {
     if(is.null(ylab)) ylab = expression(W%.%m^{-2})    
-    seb = extractSubdaily(x, "SoilEnergyBalance", dates)
+    seb = .extractSubdaily(x, "SoilEnergyBalance", dates)
     df = data.frame(datetime=seb$datetime)
     df[["Balance"]] = seb$Ebalsoil
     df[["SWR abs."]] = seb$SWRsoil
@@ -945,91 +945,91 @@
     return(.multiple_dynamics_subdaily(df,  xlab = xlab, ylab = ylab, ylim = ylim))
   }
   else if(type=="PlantExtraction") {
-    m = extractSubdaily(x, "ExtractionInst", dates)
+    m = .extractSubdaily(x, "ExtractionInst", dates)
     if(is.null(ylab)) ylab =.getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafLAI") {
-    mSu = extractSubdaily(x, "SunlitLeaves$LAI", dates)[,c("datetime", cohorts), drop=FALSE]
-    mSh = extractSubdaily(x, "ShadeLeaves$LAI", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSu = .extractSubdaily(x, "SunlitLeaves$LAI", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = .extractSubdaily(x, "ShadeLeaves$LAI", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafPsi") {
-    mSu = extractSubdaily(x, "SunlitLeaves$Psi", dates)[,c("datetime", cohorts), drop=FALSE]
-    mSh = extractSubdaily(x, "ShadeLeaves$Psi", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSu = .extractSubdaily(x, "SunlitLeaves$Psi", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = .extractSubdaily(x, "ShadeLeaves$Psi", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafAbsorbedSWR") {
-    mSu = extractSubdaily(x, "SunlitLeaves$Abs_SWR", dates)
-    mSh = extractSubdaily(x, "ShadeLeaves$Abs_SWR", dates)
+    mSu = .extractSubdaily(x, "SunlitLeaves$Abs_SWR", dates)
+    mSh = .extractSubdaily(x, "ShadeLeaves$Abs_SWR", dates)
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafAbsorbedPAR") {
-    mSu = extractSubdaily(x, "SunlitLeaves$Abs_PAR", dates)
-    mSh = extractSubdaily(x, "ShadeLeaves$Abs_PAR", dates)
+    mSu = .extractSubdaily(x, "SunlitLeaves$Abs_PAR", dates)
+    mSh = .extractSubdaily(x, "ShadeLeaves$Abs_PAR", dates)
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafNetLWR") {
-    mSu = extractSubdaily(x, "SunlitLeaves$Net_LWR", dates)[,c("datetime", cohorts), drop=FALSE]
-    mSh = extractSubdaily(x, "ShadeLeaves$Net_LWR", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSu = .extractSubdaily(x, "SunlitLeaves$Net_LWR", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = .extractSubdaily(x, "ShadeLeaves$Net_LWR", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafTranspiration") {
-    mSu = extractSubdaily(x, "SunlitLeaves$E", dates)[,c("datetime", cohorts), drop=FALSE]
-    mSh = extractSubdaily(x, "ShadeLeaves$E", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSu = .extractSubdaily(x, "SunlitLeaves$E", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = .extractSubdaily(x, "ShadeLeaves$E", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafGrossPhotosynthesis") {
-    mSu = extractSubdaily(x, "SunlitLeaves$Ag", dates)[,c("datetime", cohorts), drop=FALSE]
-    mSh = extractSubdaily(x, "ShadeLeaves$Ag", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSu = .extractSubdaily(x, "SunlitLeaves$Ag", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = .extractSubdaily(x, "ShadeLeaves$Ag", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafNetPhotosynthesis") {
-    mSu = extractSubdaily(x, "SunlitLeaves$An", dates)[,c("datetime", cohorts), drop=FALSE]
-    mSh = extractSubdaily(x, "ShadeLeaves$An", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSu = .extractSubdaily(x, "SunlitLeaves$An", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = .extractSubdaily(x, "ShadeLeaves$An", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafStomatalConductance") {
-    mSu = extractSubdaily(x, "SunlitLeaves$Gsw", dates)[,c("datetime", cohorts), drop=FALSE]
-    mSh = extractSubdaily(x, "ShadeLeaves$Gsw", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSu = .extractSubdaily(x, "SunlitLeaves$Gsw", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = .extractSubdaily(x, "ShadeLeaves$Gsw", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafTemperature") {
-    mSu = extractSubdaily(x, "SunlitLeaves$Temp", dates)[,c("datetime", cohorts), drop=FALSE]
-    mSh = extractSubdaily(x, "ShadeLeaves$Temp", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSu = .extractSubdaily(x, "SunlitLeaves$Temp", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = .extractSubdaily(x, "ShadeLeaves$Temp", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafVPD") {
-    mSu = extractSubdaily(x, "SunlitLeaves$VPD", dates)[,c("datetime", cohorts), drop=FALSE]
-    mSh = extractSubdaily(x, "ShadeLeaves$VPD", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSu = .extractSubdaily(x, "SunlitLeaves$VPD", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = .extractSubdaily(x, "ShadeLeaves$VPD", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafCi") {
-    mSu = extractSubdaily(x, "SunlitLeaves$Ci", dates)[,c("datetime", cohorts), drop=FALSE]
-    mSh = extractSubdaily(x, "ShadeLeaves$Ci", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSu = .extractSubdaily(x, "SunlitLeaves$Ci", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = .extractSubdaily(x, "ShadeLeaves$Ci", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafIntrinsicWUE") {
-    mSu = extractSubdaily(x, "SunlitLeaves$iWUE", dates)[,c("datetime", cohorts), drop=FALSE]
-    mSh = extractSubdaily(x, "ShadeLeaves$iWUE", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSu = .extractSubdaily(x, "SunlitLeaves$iWUE", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = .extractSubdaily(x, "ShadeLeaves$iWUE", dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "RootExudation" , "LabileCarbonBalance",
                       "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport")) {
-    m = extractSubdaily(x, type, dates)[,c("datetime", cohorts), drop=FALSE]
+    m = .extractSubdaily(x, type, dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 

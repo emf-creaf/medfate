@@ -2,46 +2,53 @@
 % Please edit documentation in R/extract.R
 \name{extract}
 \alias{extract}
-\alias{extractSubdaily}
 \title{Extracts model outputs}
 \usage{
-extractSubdaily(x, output = "E", dates = NULL)
-
-extract(x, level = "forest", output = NULL, vars = NULL, dates = NULL)
+extract(
+  x,
+  level = "forest",
+  output = NULL,
+  vars = NULL,
+  dates = NULL,
+  subdaily = FALSE
+)
 }
 \arguments{
 \item{x}{An object returned by simulation functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{growth}}.}
 
-\item{output}{See options in section details.}
-
-\item{dates}{A date vector indicating the subset of simulated days for which output is desired.}
-
 \item{level}{Level of simulation output, either "forest" (stand-level results), "cohort" (cohort-level results), 
 "sunlitleaf" or "shadeleaf" (leaf-level results)}
 
-\item{vars}{Variables to be extracted (by default, all of them)}
+\item{output}{Section of the model output to be explored. See details.}
+
+\item{vars}{Variables to be extracted (by default, all of them).}
+
+\item{dates}{A date vector indicating the subset of simulated days for which output is desired.}
+
+\item{subdaily}{A flag to indicate that subdaily values are desired (see details).}
 }
 \value{
+Function \code{extract()} returns a data frame:
 \itemize{
-  \item{Function \code{extract()} returns a data frame, with dates and variables (for \code{level = "forest"}) or dates, cohorts, species and variables 
-  (for other values of \code{level}).}
-  \item{Function \code{extractSubdaily()} returns a data frame with a column 'datetime' and as many columns as plant cohorts.}
+  \item{If \code{level = "forest"}, columns are "date" and variable names.}
+  \item{If \code{level = "cohort"}, \code{level = "sunlitleaf"} or \code{level = "shadeleaf"}, columns are "date", "cohorts", "species" and variable names.} 
+  \item{If \code{subdaily = TRUE}, columns are "datetime", "cohorts", "species" and variable names.} 
 }
 }
 \description{
-Functions to extract model outputs for easier post-processing:
+Function \code{extract()} extracts daily or subdaily output and returns it as a tidy data frame.
 }
 \details{
-\itemize{
-  \item{Function \code{extract()} extracts daily output and returns it as a tidy data frame.}
-  \item{Function \code{extractSubdaily()} extracts subdaily output corresponding to each simulated day and returns it as a data frame.}
-}
+When \code{subdaily = FALSE}, parameter \code{output} is used to restrict the section in \code{x} where variables are located. For
+example \code{output = "Plants"} will correspond to variables "LAI", "LAIlive", "Transpiration", "StemPLC",... as returned by a call
+\code{names(x$Plants)}. 
 
-Function \code{extractSubdaily()} only works when simulations have been carried using control option 'subdailyResults = TRUE' (see \code{\link{defaultControl}}). Subdaily simulation results will then be stored as elements of the a list called 'subdaily' in the simulation output. Function \code{extractSubdaily} will assemble subdaily results from this list and return them as a data frame. Options for parameter 'output' are the following:
+Option \code{subdaily = TRUE} only works when simulations have been carried using control option 'subdailyResults = TRUE' (see \code{\link{defaultControl}}). 
+When using \code{subdaily = TRUE}, parameter \code{output} is not taken into account, and options for parameter \code{vars} are the following:
 \itemize{
-  \item{Functions pwb() and spwb(): "E","Ag","An","dEdP","RootPsi","StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC","PWB", "Temperature", "ExtractionInst".}
-  \item{Additional options for shade and sunlit leaves in pwb() and spbw(): Either "SunlitLeaves$x" or "ShadeLeaves$x" where 'x' is one of the following: "Abs_SWR","Abs_PAR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE".}
-  \item{Additional options for function growth(): "GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "LabileCarbonBalance","SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport".}
+  \item{Variables for \code{level = "forest"}: Not allowed. An error is raised.}
+  \item{Variables for \code{level = "cohort"}: "E","Ag","An","dEdP","RootPsi","StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC","PWB".}
+  \item{Variables for \code{level = "shadeleaf"} and \code{level="sunlitleaf"}: "Abs_SWR","Abs_PAR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE".}
 }
 }
 \examples{

@@ -1,66 +1,4 @@
-#' Extracts model outputs
-#' 
-#' Functions to extract model outputs for easier post-processing:
-#' 
-#' \itemize{
-#'   \item{Function \code{extract()} extracts daily output and returns it as a tidy data frame.}
-#'   \item{Function \code{extractSubdaily()} extracts subdaily output corresponding to each simulated day and returns it as a data frame.}
-#' }
-#' 
-#' @param x An object returned by simulation functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{growth}}.
-#' @param output See options in section details.
-#' @param dates A date vector indicating the subset of simulated days for which output is desired.
-#' 
-#' @details Function \code{extractSubdaily()} only works when simulations have been carried using control option 'subdailyResults = TRUE' (see \code{\link{defaultControl}}). Subdaily simulation results will then be stored as elements of the a list called 'subdaily' in the simulation output. Function \code{extractSubdaily} will assemble subdaily results from this list and return them as a data frame. Options for parameter 'output' are the following:
-#' \itemize{
-#'   \item{Functions pwb() and spwb(): "E","Ag","An","dEdP","RootPsi","StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC","PWB", "Temperature", "ExtractionInst".}
-#'   \item{Additional options for shade and sunlit leaves in pwb() and spbw(): Either "SunlitLeaves$x" or "ShadeLeaves$x" where 'x' is one of the following: "Abs_SWR","Abs_PAR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE".}
-#'   \item{Additional options for function growth(): "GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "LabileCarbonBalance","SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport".}
-#' }
-#' 
-#' @return 
-#' \itemize{
-#'   \item{Function \code{extract()} returns a data frame, with dates and variables (for \code{level = "forest"}) or dates, cohorts, species and variables 
-#'   (for other values of \code{level}).}
-#'   \item{Function \code{extractSubdaily()} returns a data frame with a column 'datetime' and as many columns as plant cohorts.}
-#' }
-#' 
-#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
-#' 
-#' @name extract
-#' @examples
-#' #Load example daily meteorological data
-#' data(examplemeteo)
-#' 
-#' #Load example plot plant data
-#' data(exampleforestMED)
-#' 
-#' #Default species parameterization
-#' data(SpParamsMED)
-#' 
-#' #Initialize soil with default soil params (2 layers)
-#' examplesoil = soil(defaultSoilParams(2))
-#' 
-#' #Initialize control parameters
-#' control = defaultControl("Granier")
-#' 
-#' #Initialize input
-#' x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-#' 
-#' #Call simulation function (ten days)
-#' S1<-spwb(x, examplemeteo[1:10, ], latitude = 41.82592, elevation = 100)
-#' 
-#' #Extracts daily forest-level output as a data frame
-#' extract(S1, level = "forest")
-#' 
-#' #Extracts daily cohort-level output as a data frame
-#' extract(S1, level = "cohort")
-#' 
-#' #Select the output tables/variables to be extracted
-#' extract(S1, level ="cohort", output="Plants", vars = c("PlantStress", "StemPLC"))
-#' 
-#' @seealso \code{\link{summary.spwb}}
-extractSubdaily<-function(x, output = "E", dates = NULL)  {
+.extractSubdaily<-function(x, output = "E", dates = NULL, long_format = FALSE)  {
   leafTypes= c("LAI", "Abs_PAR", "Abs_SWR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE")  
   sunlitTypes = paste("SunlitLeaves",leafTypes, sep="$")
   shadeTypes = paste("ShadeLeaves",leafTypes, sep="$")
@@ -165,21 +103,90 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
     colnames(m) = c("datetime", row.names(ori1))
   }
   m$datetime = as.POSIXct(paste(dates[gl(n=numDates, k=numSteps)], times))
+  ## To long format
+  if(long_format) {
+    cohorts <- names(m)[-1]
+    df = data.frame("datetime" = rep(as.POSIXct(m$datetime),length(cohorts)),
+                    "cohort" = gl(n = length(cohorts), k=nrow(m), labels = cohorts),
+                    "Y" = as.vector(as.matrix(m[,-1])))
+    names(df)[3] <- output
+    m <- df
+  }
   return(m)
 }
 
-#' @rdname extract
+#' Extracts model outputs
+#' 
+#' Function \code{extract()} extracts daily or subdaily output and returns it as a tidy data frame.
+#' 
+#' @param x An object returned by simulation functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{growth}}.
 #' @param level Level of simulation output, either "forest" (stand-level results), "cohort" (cohort-level results), 
 #' "sunlitleaf" or "shadeleaf" (leaf-level results)
-#' @param vars Variables to be extracted (by default, all of them)
+#' @param output Section of the model output to be explored. See details.
+#' @param vars Variables to be extracted (by default, all of them).
+#' @param dates A date vector indicating the subset of simulated days for which output is desired.
+#' @param subdaily A flag to indicate that subdaily values are desired (see details).
+#' 
+#' @details 
+#' When \code{subdaily = FALSE}, parameter \code{output} is used to restrict the section in \code{x} where variables are located. For
+#' example \code{output = "Plants"} will correspond to variables "LAI", "LAIlive", "Transpiration", "StemPLC",... as returned by a call
+#' \code{names(x$Plants)}. 
+#' 
+#' Option \code{subdaily = TRUE} only works when simulations have been carried using control option 'subdailyResults = TRUE' (see \code{\link{defaultControl}}). 
+#' When using \code{subdaily = TRUE}, parameter \code{output} is not taken into account, and options for parameter \code{vars} are the following:
+#' \itemize{
+#'   \item{Variables for \code{level = "forest"}: Not allowed. An error is raised.}
+#'   \item{Variables for \code{level = "cohort"}: "E","Ag","An","dEdP","RootPsi","StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC","PWB".}
+#'   \item{Variables for \code{level = "shadeleaf"} and \code{level="sunlitleaf"}: "Abs_SWR","Abs_PAR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE".}
+#' }
+#' 
+#' @return 
+#' Function \code{extract()} returns a data frame:
+#' \itemize{
+#'   \item{If \code{level = "forest"}, columns are "date" and variable names.}
+#'   \item{If \code{level = "cohort"}, \code{level = "sunlitleaf"} or \code{level = "shadeleaf"}, columns are "date", "cohorts", "species" and variable names.} 
+#'   \item{If \code{subdaily = TRUE}, columns are "datetime", "cohorts", "species" and variable names.} 
+#' }
+#' 
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @name extract
+#' @examples
+#' #Load example daily meteorological data
+#' data(examplemeteo)
+#' 
+#' #Load example plot plant data
+#' data(exampleforestMED)
+#' 
+#' #Default species parameterization
+#' data(SpParamsMED)
+#' 
+#' #Initialize soil with default soil params (2 layers)
+#' examplesoil = soil(defaultSoilParams(2))
+#' 
+#' #Initialize control parameters
+#' control = defaultControl("Granier")
+#' 
+#' #Initialize input
+#' x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' 
+#' #Call simulation function (ten days)
+#' S1<-spwb(x, examplemeteo[1:10, ], latitude = 41.82592, elevation = 100)
+#' 
+#' #Extracts daily forest-level output as a data frame
+#' extract(S1, level = "forest")
+#' 
+#' #Extracts daily cohort-level output as a data frame
+#' extract(S1, level = "cohort")
+#' 
+#' #Select the output tables/variables to be extracted
+#' extract(S1, level ="cohort", output="Plants", vars = c("PlantStress", "StemPLC"))
+#' 
+#' @seealso \code{\link{summary.spwb}}
 #' @export
-extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL)  {
+extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL, subdaily = FALSE)  {
   level <- match.arg(level, c("forest", "cohort", "sunlitleaf", "shadeleaf"))
   
-  if(is.null(dates)) dates <- row.names(x$WaterBalance)
-  else {
-    if(!all(dates %in% row.names(x$WaterBalance))) stop("Some dates are outside the range in 'x'")
-  }
   if(inherits(x, "spwb") || inherits(x, "pwb")) {
     cohorts <- x$spwbInput$cohorts
   } else if(inherits(x, "growth")) {
@@ -187,6 +194,50 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL)
   }
   cohnames <- row.names(cohorts)
   spnames <- cohorts$Name
+  
+  if(subdaily) {
+    if(level=="forest") stop("Subdaily results are for levels 'cohort', 'sunlitleaf' and 'shadeleaf' only.")
+    if(level=="cohort") {
+      cohort_types = c("E","Ag","An","dEdP","RootPsi",
+                   "StemPsi","LeafPsi","StemPLC", "LeafPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC",
+                   "LeafSympPsi", "StemSympPsi","PWB")
+      if(is.null(vars)) {
+        vars <- cohort_types
+      } else {
+        for(i in 1:length(vars)) vars[i] <-match.arg(vars[i], cohort_types)
+      }
+    }
+    if(level %in% c("sunlitleaf", "shadeleaf")) {
+      leaf_types= c("LAI", "Abs_PAR", "Abs_SWR","Net_LWR","E","Ag","An","Ci","Gsw","VPD","Temp","Psi","iWUE")  
+      if(is.null(vars)) {
+        vars <- leaf_types
+      } else {
+        for(i in 1:length(vars)) vars[i] <-match.arg(vars[i], leaf_types)
+      }
+    }
+    df <- NULL
+    for(ivar in 1:length(vars)) {
+      var_name <- vars[ivar]
+      outputSubdaily <- var_name
+      if(level=="sunlitleaf") outputSubdaily <- paste0("SunlitLeaves$", outputSubdaily)
+      if(level=="shadeleaf") outputSubdaily <- paste0("ShadeLeaves$", outputSubdaily)
+      if(is.null(df)) {
+        df <- .extractSubdaily(x, output = outputSubdaily, dates = dates, long_format = TRUE)
+        df[["species"]] <-as.character(gl(length(spnames), nrow(df)/length(spnames), labels = spnames))
+        df <- df[,c(1,2,4,3)]
+        names(df)[4] <- var_name
+      } else {
+        df_var <- .extractSubdaily(x, output = outputSubdaily, dates = dates, long_format = TRUE)
+        df[[var_name]] <- df_var[,3]
+      }
+    }
+    return(df)
+  }
+  if(is.null(dates)) dates <- row.names(x$WaterBalance)
+  else {
+    if(!all(dates %in% row.names(x$WaterBalance))) stop("Some dates are outside the range in 'x'")
+  }
+
   
   if(level=="forest") {
     stand_level_names <-c("WaterBalance", "Stand",  "Soil",
@@ -196,7 +247,7 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL)
     } else {
       for(i in 1:length(output)) output[i] <-match.arg(output[i], stand_level_names)
     }
-    out <- data.frame(dates = dates)
+    out <- data.frame(date = dates)
     for(n in output) {
       if(n %in% names(x)) {
         M <- x[[n]]
@@ -216,13 +267,14 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL)
     } else {
       for(i in 1:length(output)) output[i] <-match.arg(output[i], plant_level_names)
     }
-    out <- data.frame(dates = rep(dates, length(cohnames)),
+    out <- data.frame(date = rep(dates, length(cohnames)),
                       cohort = as.character(gl(length(cohnames), length(dates), labels = cohnames)),
                       species = as.character(gl(length(cohnames), length(dates), labels = spnames)))
     for(n in output) {
       if(n %in% names(x)) {
         P = x[[n]]
         if(is.null(vars)) vars <- names(P)
+        vars <- vars[vars!="RhizoPsi"]
         for(v in vars) {
           M <- P[[v]]
           M <- M[rownames(M) %in% dates, , drop = FALSE]
@@ -237,7 +289,7 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL)
     } else {
       for(i in 1:length(output)) output[i] <-match.arg(output[i], leaf_level_names)
     }
-    out <- data.frame(dates = rep(dates, length(cohnames)),
+    out <- data.frame(date = rep(dates, length(cohnames)),
                       cohort = as.character(gl(length(cohnames), length(dates), labels = cohnames)),
                       species = as.character(gl(length(cohnames), length(dates), labels = spnames)))
     for(n in output) {
@@ -258,7 +310,7 @@ extract<-function(x, level = "forest", output = NULL, vars = NULL, dates = NULL)
     } else {
       for(i in 1:length(output)) output[i] <-match.arg(output[i], leaf_level_names)
     }
-    out <- data.frame(dates = rep(dates, length(cohnames)),
+    out <- data.frame(date = rep(dates, length(cohnames)),
                       cohort = as.character(gl(length(cohnames), length(dates), labels = cohnames)),
                       species = as.character(gl(length(cohnames), length(dates), labels = spnames)))
     for(n in output) {

@@ -98,11 +98,11 @@ reference:
   - sureau_ecos
 
 - title: Plots and summaries
-  desc:  Summaries and plots of simulation results
+  desc:  Summaries, extraction and plots of simulation results
   contents:
   - starts_with("plot.spwb")
   - starts_with("summary.spwb")
-  - starts_with("extractSubdaily")
+  - starts_with("extract")
   - starts_with("shinyplot.spwb")
   
 - title: Post-processing
