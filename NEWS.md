@@ -17,6 +17,7 @@
 - Interception model Liu (2001) accepted as alternative to Gash (1995)
 - Optional "RainfallIntensity" (mm/h) as input in weather
 - New option "defaultRainfallIntensityPerMonth"
+- New species parameter tables: SpParamsES, SpParamsFR, SpParamsUS
 
 # Version 3.2.0
 - Correction of a bug arisen in old Rcpp versions
