@@ -86,6 +86,17 @@ openxlsx::saveWorkbook(wb,"data-raw/SpParamsMED.xlsx", overwrite=TRUE)
 
 rm(SpParamsMED)
 
+## SpParamsES, SpParamsUS, SpParamsFR
+NFIparamDir <- "~/OneDrive/mcaceres_work/model_development/medfate_development/MedfateSpeciesParametrization/NFIs_parametrization/"
+SpParamsFR <- readRDS(paste0(NFIparamDir, "Rdata/fr/SpParams_filled_fr.rds"))
+SpParamsFR$ClumpingIndex <- NA
+usethis::use_data(SpParamsFR, overwrite = T)
+SpParamsES <- readRDS(paste0(NFIparamDir, "Rdata/sp/SpParams_filled_sp.rds"))
+SpParamsES$ClumpingIndex <- NA
+usethis::use_data(SpParamsES, overwrite = T)
+SpParamsUS <- readRDS(paste0(NFIparamDir, "Rdata/us/SpParams_filled_us.rds"))
+SpParamsUS$ClumpingIndex <- NA
+usethis::use_data(SpParamsUS, overwrite = T)
 
 
 ## Trait family means

@@ -25,3 +25,25 @@
 #'  data(examplemeteo)
 #' @keywords data
 NULL
+
+#' Data tables with species parameter definition and values for different countries
+#' 
+#' A data sets of species parameter definition and values, the latter resulting from existing databases, fit to empirical data or expert-based guesses.
+#' 
+#' @name SpParams
+#' @aliases SpParamsDefinition SpParamsMED SpParamsES SpParamsFR SpParamsUS
+#' 
+#' @docType data 
+#' 
+#' @format
+#' \itemize{
+#'   \item{Data frame \code{SpParamsDefinition} has parameters in rows and columns 'ParameterName', 'ParameterGroup', 'Definition', 'Type' and 'Units'.}
+#'   \item{Data frames \code{SpParamsMED} (for Catalonia), \code{SpParamsES} (for Spain), \code{SpParamsFR} (for France) and \code{SpParamsUS} (for US) have species or genus as rows and column names equal to parameter names in \code{SpParamsDefinition}.}
+#' }
+#' @details
+#' Plant trait parameter sources are listed in the bibliography section. Details of the procedures used to obtain the species parameter tables can be found in an article at https://emf-creaf.github.io/medfate/. 
+#' @examples
+#' data(SpParamsDefinition)
+#' data(SpParamsMED)
+#' @keywords data
+NULL
