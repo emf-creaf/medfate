@@ -89,10 +89,10 @@ rm(SpParamsMED)
 
 # SpParamsES, SpParamsUS, SpParamsFR --------------------------------------
 NFIparamDir <- "~/OneDrive/mcaceres_work/model_development/medfate_development/MedfateSpeciesParametrization/NFIs_parametrization/"
-SpParamsFR <- readRDS(paste0(NFIparamDir, "Rdata/fr/SpParams_filled_fr.rds"))
-usethis::use_data(SpParamsFR, overwrite = T)
-SpParamsES <- readRDS(paste0(NFIparamDir, "Rdata/sp/SpParams_filled_sp.rds"))
+SpParamsES <- readRDS(paste0(NFIparamDir, "Rdata/sp/SpParams_filled_allom_sp.rds"))
 usethis::use_data(SpParamsES, overwrite = T)
+SpParamsFR <- readRDS(paste0(NFIparamDir, "Rdata/fr/SpParams_filled_allom_fr.rds"))
+usethis::use_data(SpParamsFR, overwrite = T)
 SpParamsUS <- readRDS(paste0(NFIparamDir, "Rdata/us/SpParams_filled_us.rds"))
 usethis::use_data(SpParamsUS, overwrite = T)
 
