@@ -26,7 +26,13 @@ species_LAI(x, SpParams, gdd = NA_real_, bounded = TRUE)
 
 species_characterParameter(species, SpParams, parName)
 
-species_parameter(species, SpParams, parName, fillMissing = TRUE)
+species_parameter(
+  species,
+  SpParams,
+  parName,
+  fillMissing = TRUE,
+  fillWithGenus = TRUE
+)
 }
 \arguments{
 \item{x}{An object of class \code{\link{forest}}.}
@@ -44,6 +50,8 @@ species_parameter(species, SpParams, parName, fillMissing = TRUE)
 \item{parName}{A string with a parameter name.}
 
 \item{fillMissing}{A boolean flag to try imputation on missing values.}
+
+\item{fillWithGenus}{A boolean flag to try imputation of missing values using genus values.}
 }
 \value{
 A vector with values for each species in \code{SpParams}:

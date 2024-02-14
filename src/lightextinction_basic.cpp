@@ -33,7 +33,7 @@ NumericVector parcohortC(NumericVector H, NumericVector LAI_expanded,  NumericVe
 NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
   int n = SP.size();
   NumericVector LAI_dead(n, 0.0);
-  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true);  
+  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true, true);  
   return(parcohortC(H,LAI,LAI_dead,kPAR,CR));
 }
 
@@ -63,7 +63,7 @@ NumericVector PARcohort(List x, DataFrame SpParams, double gdd = NA_REAL) {
 }
 NumericVector parheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
   int n = SP.size();
-  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true);  
+  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true, true);  
   NumericVector LAI_dead(n, 0.0);
   NumericVector AL(heights.size());
   for(int i=0; i<heights.size();i++) AL[i] = availableLight(heights[i], H,LAI,LAI_dead, kPAR,CR);
@@ -72,7 +72,7 @@ NumericVector parheight(NumericVector heights, IntegerVector SP, NumericVector H
 
 NumericVector swrheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
   int n = SP.size();
-  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true);  
+  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true, true);  
   NumericVector kSWR(n), LAI_dead(n);
   for(int i=0; i<n;i++) {
     kSWR[i] = kPAR[i]/1.35;
@@ -102,7 +102,7 @@ double PARground(List x, DataFrame SpParams, double gdd = NA_REAL) {
   NumericVector LAIphe = above["LAI_expanded"];
   NumericVector LAIdead = above["LAI_dead"];
   IntegerVector SP = above["SP"];
-  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true);
+  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true, true);
   int numCohorts = LAIphe.size();
   double s = 0.0;
   for(int c=0;c<numCohorts;c++) {
@@ -134,7 +134,7 @@ double SWRground(List x, DataFrame SpParams, double gdd = NA_REAL) {
   double woodyLAI = sum(LAIlive);
   NumericVector LAIdead = above["LAI_dead"];
   IntegerVector SP = above["SP"];
-  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true);
+  NumericVector kPAR = speciesNumericParameterWithImputation(SP, SpParams, "kPAR", true, true);
   int numCohorts = LAIphe.size();
   double s = 0.0;
   for(int c=0;c<numCohorts;c++) {

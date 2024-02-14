@@ -3109,8 +3109,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // speciesNumericParameterWithImputation
-NumericVector speciesNumericParameterWithImputation(CharacterVector species, DataFrame SpParams, String parName, bool fillMissing);
-RcppExport SEXP _medfate_speciesNumericParameterWithImputation(SEXP speciesSEXP, SEXP SpParamsSEXP, SEXP parNameSEXP, SEXP fillMissingSEXP) {
+NumericVector speciesNumericParameterWithImputation(CharacterVector species, DataFrame SpParams, String parName, bool fillMissing, bool fillWithGenus);
+RcppExport SEXP _medfate_speciesNumericParameterWithImputation(SEXP speciesSEXP, SEXP SpParamsSEXP, SEXP parNameSEXP, SEXP fillMissingSEXP, SEXP fillWithGenusSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3118,13 +3118,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< String >::type parName(parNameSEXP);
     Rcpp::traits::input_parameter< bool >::type fillMissing(fillMissingSEXP);
-    rcpp_result_gen = Rcpp::wrap(speciesNumericParameterWithImputation(species, SpParams, parName, fillMissing));
+    Rcpp::traits::input_parameter< bool >::type fillWithGenus(fillWithGenusSEXP);
+    rcpp_result_gen = Rcpp::wrap(speciesNumericParameterWithImputation(species, SpParams, parName, fillMissing, fillWithGenus));
     return rcpp_result_gen;
 END_RCPP
 }
 // cohortNumericParameterWithImputation
-NumericVector cohortNumericParameterWithImputation(List x, DataFrame SpParams, String parName, bool fillMissing);
-RcppExport SEXP _medfate_cohortNumericParameterWithImputation(SEXP xSEXP, SEXP SpParamsSEXP, SEXP parNameSEXP, SEXP fillMissingSEXP) {
+NumericVector cohortNumericParameterWithImputation(List x, DataFrame SpParams, String parName, bool fillMissing, bool fillWithGenus);
+RcppExport SEXP _medfate_cohortNumericParameterWithImputation(SEXP xSEXP, SEXP SpParamsSEXP, SEXP parNameSEXP, SEXP fillMissingSEXP, SEXP fillWithGenusSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3132,7 +3133,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< String >::type parName(parNameSEXP);
     Rcpp::traits::input_parameter< bool >::type fillMissing(fillMissingSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortNumericParameterWithImputation(x, SpParams, parName, fillMissing));
+    Rcpp::traits::input_parameter< bool >::type fillWithGenus(fillWithGenusSEXP);
+    rcpp_result_gen = Rcpp::wrap(cohortNumericParameterWithImputation(x, SpParams, parName, fillMissing, fillWithGenus));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5701,8 +5703,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_speciesCharacterParameterFromIndex", (DL_FUNC) &_medfate_speciesCharacterParameterFromIndex, 3},
     {"_medfate_speciesCharacterParameter", (DL_FUNC) &_medfate_speciesCharacterParameter, 3},
     {"_medfate_cohortCharacterParameter", (DL_FUNC) &_medfate_cohortCharacterParameter, 3},
-    {"_medfate_speciesNumericParameterWithImputation", (DL_FUNC) &_medfate_speciesNumericParameterWithImputation, 4},
-    {"_medfate_cohortNumericParameterWithImputation", (DL_FUNC) &_medfate_cohortNumericParameterWithImputation, 4},
+    {"_medfate_speciesNumericParameterWithImputation", (DL_FUNC) &_medfate_speciesNumericParameterWithImputation, 5},
+    {"_medfate_cohortNumericParameterWithImputation", (DL_FUNC) &_medfate_cohortNumericParameterWithImputation, 5},
     {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 4},
     {"_medfate_leafDevelopmentStatus", (DL_FUNC) &_medfate_leafDevelopmentStatus, 3},
     {"_medfate_leafSenescenceStatus", (DL_FUNC) &_medfate_leafSenescenceStatus, 2},

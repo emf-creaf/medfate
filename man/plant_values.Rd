@@ -66,7 +66,7 @@ plant_LAI(x, SpParams, gdd = NA_real_, bounded = TRUE)
 
 plant_characterParameter(x, SpParams, parName)
 
-plant_parameter(x, SpParams, parName, fillMissing = TRUE)
+plant_parameter(x, SpParams, parName, fillMissing = TRUE, fillWithGenus = TRUE)
 }
 \arguments{
 \item{x}{An object of class \code{\link{forest}}.}
@@ -90,6 +90,8 @@ plant_parameter(x, SpParams, parName, fillMissing = TRUE)
 \item{parName}{A string with a parameter name.}
 
 \item{fillMissing}{A boolean flag to try imputation on missing values.}
+
+\item{fillWithGenus}{A boolean flag to try imputation of missing values using genus values.}
 }
 \value{
 A vector with values for each woody plant cohort of the input \code{\link{forest}} object:

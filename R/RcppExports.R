@@ -461,6 +461,7 @@ fire_necrosisHeight <- function(Ib_surf, t_res, thermal_factor, T_air = 25.0, rh
 #' @param includeDead A flag to indicate that standing dead fuels (dead branches) are included.
 #' @param treeOffset,shrubOffset Integers to offset cohort IDs.
 #' @param fillMissing A boolean flag to try imputation on missing values.
+#' @param fillWithGenus A boolean flag to try imputation of missing values using genus values.
 #' @param self_proportion Proportion of the target cohort included in the assessment
 #' @param bounded A boolean flag to indicate that extreme values should be prevented (maximum tree LAI = 7 and maximum shrub LAI = 3)
 #' 
@@ -650,6 +651,7 @@ herb_LAI <- function(x, SpParams) {
 #' @param species A character vector of species names.
 #' @param parName A string with a parameter name.
 #' @param fillMissing A boolean flag to try imputation on missing values.
+#' @param fillWithGenus A boolean flag to try imputation of missing values using genus values.
 #' @param bounded A boolean flag to indicate that extreme values should be prevented (maximum tree LAI = 7 and maximum shrub LAI = 3)
 #' 
 #' @return
@@ -2341,13 +2343,13 @@ plant_characterParameter <- function(x, SpParams, parName) {
 }
 
 #' @rdname species_values
-species_parameter <- function(species, SpParams, parName, fillMissing = TRUE) {
-    .Call(`_medfate_speciesNumericParameterWithImputation`, species, SpParams, parName, fillMissing)
+species_parameter <- function(species, SpParams, parName, fillMissing = TRUE, fillWithGenus = TRUE) {
+    .Call(`_medfate_speciesNumericParameterWithImputation`, species, SpParams, parName, fillMissing, fillWithGenus)
 }
 
 #' @rdname plant_values
-plant_parameter <- function(x, SpParams, parName, fillMissing = TRUE) {
-    .Call(`_medfate_cohortNumericParameterWithImputation`, x, SpParams, parName, fillMissing)
+plant_parameter <- function(x, SpParams, parName, fillMissing = TRUE, fillWithGenus = TRUE) {
+    .Call(`_medfate_cohortNumericParameterWithImputation`, x, SpParams, parName, fillMissing, fillWithGenus)
 }
 
 .gdd <- function(DOY, Temp, Tbase = 5.0, cum = 0.0) {
