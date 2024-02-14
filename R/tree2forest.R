@@ -1,8 +1,9 @@
 #' Single-cohort forests
 #'
-#' Creates a forest object with a single plant cohort
+#' Creates a \code{\link{forest}} object with a single plant cohort
 #'
-#' @param Species String with species (taxon) name or a non-negative integer for species identity (i.e., 0,1,2,...) matching SpParams.}
+#'
+#' @param Species String with species (taxon) name or a non-negative integer for species identity (i.e., 0,1,2,...) matching SpParams.
 #' @param Height Plant height (cm).
 #' @param LAI Leaf area index (m2/m2)
 #' @param N Tree density (ind/ha)
@@ -13,6 +14,9 @@
 #' @param Z50 Depth (in mm) corresponding to 50\% of fine roots.
 #' @param Z95 Depth (in mm) corresponding to 95\% of fine roots.
 #'
+#' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso \code{\link{forest}}, \code{\link{forest_mergeTrees}},  \code{\link{plot.forest}}
 #' @return An object of class \code{\link{forest}}
 #' @export
 #'

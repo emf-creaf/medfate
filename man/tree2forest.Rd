@@ -31,6 +31,8 @@ shrub2forest(
 )
 }
 \arguments{
+\item{Species}{String with species (taxon) name or a non-negative integer for species identity (i.e., 0,1,2,...) matching SpParams.}
+
 \item{Height}{Plant height (cm).}
 
 \item{LAI}{Leaf area index (m2/m2)}
@@ -55,10 +57,16 @@ shrub2forest(
 An object of class \code{\link{forest}}
 }
 \description{
-Creates a forest object with a single plant cohort
+Creates a \code{\link{forest}} object with a single plant cohort
 }
 \examples{
 
 oak_forest <-tree2forest("Quercus ilex", Height= 200, LAI = 2)
 
+}
+\seealso{
+\code{\link{forest}}, \code{\link{forest_mergeTrees}},  \code{\link{plot.forest}}
+}
+\author{
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }

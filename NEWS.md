@@ -18,6 +18,7 @@
 - Optional "RainfallIntensity" (mm/h) as input in weather
 - New option "defaultRainfallIntensityPerMonth"
 - New species parameter tables: SpParamsES, SpParamsFR, SpParamsUS
+- New functions "tree2forest"/"shrub2forest" to create forest objects with single cohorts
 
 # Version 3.2.0
 - Correction of a bug arisen in old Rcpp versions
