@@ -31,6 +31,8 @@ NumericVector psi(List soil, String model="SX");
 NumericVector conductivity(List soil, String model="SX");
 NumericVector capacitance(List soil, String model="SX");
 
+NumericVector psi2thetasoil(List soil, NumericVector psi, String model="SX");
+  
 double waterTableDepth(List soil, String model = "SX");
 
 NumericVector thermalConductivity(List soil, String model = "SX");

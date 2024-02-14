@@ -250,7 +250,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
       //Update average soil evaporation and herbaceous transpiration 
       for(int l=0;l<nlayers;l++) {
         IVecPools(c,l) = IVec_c[l];
-        IVec[l] = IVec[l] + poolProportions[c]*IVecPools(c,l); 
+        IVec[l] = IVec[l] + poolProportions[c]*IVec_c[l]; 
       }
     }
     Infiltration = sum(IVec);
@@ -260,7 +260,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
   
   //STEP 4 - Evaporation from bare soil and herbaceous transpiration
   NumericVector EherbVec(nlayers,0.0);
-  double Esoil = 0;
+  double Esoil = 0.0;
   NumericVector EsoilPools(numCohorts, 0.0);
   NumericMatrix EherbPools(numCohorts, nlayers);
   if(!plantWaterPools) {
@@ -283,7 +283,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
       //Update average soil evaporation and herbaceous transpiration 
       for(int l=0;l<nlayers;l++) {
         EherbPools(c,l) = EherbVec_c[l];
-        EherbVec[l] = EherbVec[l] + poolProportions[c]*EherbPools(c,l); 
+        EherbVec[l] = EherbVec[l] + poolProportions[c]*EherbVec_c[l]; 
       }
     }
   }
@@ -316,22 +316,36 @@ List spwbDay_basic(List x, NumericVector meteovec,
   } else { //Apply soil flows to water pools
     NumericVector poolProportions = belowdf["poolProportions"];
     List ExtractionPools = Rcpp::as<Rcpp::List>(transp["ExtractionPools"]);
-    //Initial volume
-    double Vini = sum(water(soil, soilFunctions));
+    // NumericVector sourceSinkCheck(nlayers, 0.0);
     //Set Wsoil to zero
     for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
+    NumericMatrix ExtractionPoolMat(numCohorts, nlayers);
+    ExtractionPoolMat.fill(0.0);
+    for(int c=0;c<numCohorts;c++) {
+      //this is used to store extraction of a SINGLE plant cohort from all pools
+      NumericMatrix ExtractionPoolsCoh = Rcpp::as<Rcpp::NumericMatrix>(ExtractionPools[c]);
+      for(int l=0;l<nlayers;l++) {
+        for(int c2=0;c2<numCohorts;c2++) {
+          ExtractionPoolMat(c2,l) += ExtractionPoolsCoh(c2,l)/poolProportions[c2];
+        }
+      }
+    }
     for(int c=0;c<numCohorts;c++) {
       List soil_c = soilPools[c];
-      NumericMatrix ExtractionPool = Rcpp::as<Rcpp::NumericMatrix>(ExtractionPools[c]);
-      NumericVector ExtractionPoolVec(nlayers, 0.0);
       NumericVector sourceSinkPoolVec(nlayers, 0.0);
       for(int l=0;l<nlayers;l++) {
-        ExtractionPoolVec[l] = sum(ExtractionPool(_,l));
-        sourceSinkPoolVec[l] += IVecPools(c,l) - ExtractionPoolVec[l] - EherbPools(c,l);
+        sourceSinkPoolVec[l] += IVecPools(c,l) - ExtractionPoolMat(c,l) - EherbPools(c,l);
         if(l ==0) sourceSinkPoolVec[l] += Snowmelt - EsoilPools[c];
+        // sourceSinkCheck[l] +=sourceSinkPoolVec[l]*poolProportions[c];
       }
       // determine water flows (no mass conservation)
+      //Initial volume
+      double Vini = sum(water(soil_c, soilFunctions));
+      // determine water flows (no mass conservation)
       soilFlows(soil_c, sourceSinkPoolVec, 24, true);
+      double Vfin = sum(water(soil_c, soilFunctions));
+      double DeepDrainage_c = (Vini - Vfin) + sum(sourceSinkPoolVec);
+      DeepDrainage = DeepDrainage + DeepDrainage_c*poolProportions[c]; 
       
       //copy to Wpool and update Wsoil
       NumericVector W_c = soil_c["W"];
@@ -340,10 +354,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
         Wsoil[l] = Wsoil[l] + W_c[l]*poolProportions[c];
       }
     }
-    //Final volume
-    double Vfin = sum(water(soil, soilFunctions));
-    //Drainage to close water balance
-    DeepDrainage = (Vini - Vfin) + sum(sourceSinkVec);
+    // for(int l=0; l<nlayers;l++) Rcout<< sourceSinkCheck[l] << " " << sourceSinkVec[l]<<"\n";
   }
   //Calculate current soil water potential for output
   NumericVector psiVec = psi(soil, soilFunctions); 
@@ -520,7 +531,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   
   //STEP 4 - Evaporation from bare soil and herbaceous transpiration
   NumericVector EherbVec(nlayers,0.0);
-  double Esoil = 0;
+  double Esoil = 0.0;
   NumericVector EsoilPools(numCohorts, 0.0);
   NumericMatrix EherbPools(numCohorts, nlayers);
   if(!plantWaterPools) {
@@ -585,23 +596,35 @@ List spwbDay_advanced(List x, NumericVector meteovec,
   } else {
     NumericVector poolProportions = belowdf["poolProportions"];
     List ExtractionPools = Rcpp::as<Rcpp::List>(transp["ExtractionPools"]);
-    //Initial volume
-    double Vini = sum(water(soil, soilFunctions));
     //Set Wsoil to zero
     for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
+    NumericMatrix ExtractionPoolMat(numCohorts, nlayers);
+    ExtractionPoolMat.fill(0.0);
+    for(int c=0;c<numCohorts;c++) {
+      //this is used to store extraction of a SINGLE plant cohort from all pools
+      NumericMatrix ExtractionPoolsCoh = Rcpp::as<Rcpp::NumericMatrix>(ExtractionPools[c]);
+      for(int l=0;l<nlayers;l++) {
+        for(int c2=0;c2<numCohorts;c2++) {
+          ExtractionPoolMat(c2,l) += ExtractionPoolsCoh(c2,l)/poolProportions[c2];
+        }
+      }
+    }
     for(int c=0;c<numCohorts;c++) {
       List soil_c = soilPools[c];
-      NumericMatrix ExtractionPool = Rcpp::as<Rcpp::NumericMatrix>(ExtractionPools[c]);
-      NumericVector ExtractionPoolVec(nlayers, 0.0);
       NumericVector sourceSinkPoolVec(nlayers, 0.0);
       for(int l=0;l<nlayers;l++) {
-        ExtractionPoolVec[l] = sum(ExtractionPool(_,l));
-        sourceSinkPoolVec[l] += IVecPools(c,l) - ExtractionPoolVec[l] - EherbPools(c,l);
+        sourceSinkPoolVec[l] += IVecPools(c,l) - ExtractionPoolMat(c,l) - EherbPools(c,l);
         if(l ==0) sourceSinkPoolVec[l] += Snowmelt - EsoilPools[c];
       }
       // determine water flows (no mass conservation)
+      //Initial volume
+      double Vini = sum(water(soil_c, soilFunctions));
+      // determine water flows (no mass conservation)
       soilFlows(soil_c, sourceSinkPoolVec, 24, true);
-
+      double Vfin = sum(water(soil_c, soilFunctions));
+      double DeepDrainage_c = (Vini - Vfin) + sum(sourceSinkPoolVec);
+      DeepDrainage = DeepDrainage + DeepDrainage_c*poolProportions[c]; 
+      
       //copy to Wpool and update Wsoil
       NumericVector W_c = soil_c["W"];
       for(int l=0;l<nlayers;l++) {
@@ -609,10 +632,6 @@ List spwbDay_advanced(List x, NumericVector meteovec,
         Wsoil[l] = Wsoil[l] + W_c[l]*poolProportions[c];
       }
     }
-    //Final volume
-    double Vfin = sum(water(soil, soilFunctions));
-    //Drainage to close water balance
-    DeepDrainage = (Vini - Vfin) + sum(sourceSinkVec);
   }
   //Calculate current soil water potential for output
   NumericVector psiVec = psi(soil, soilFunctions); 

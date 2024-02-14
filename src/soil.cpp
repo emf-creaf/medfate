@@ -397,6 +397,28 @@ String USDAType(double clay, double sand) {
   return("Unknown");
 }
 
+NumericVector psi2thetasoil(List soil, NumericVector psi, String model="SX") {
+  NumericVector SD = soil["dVec"];
+  int nlayers = SD.size();
+  NumericVector theta(nlayers);
+  if(model=="SX") {
+    NumericVector clay =soil["clay"];
+    NumericVector sand = soil["sand"];
+    NumericVector om = soil["om"];
+    for(int l=0;l<nlayers;l++) {
+      theta[l] = psi2thetaSaxton(clay[l], sand[l], psi[l], om[l]); 
+    }
+  } else if(model=="VG") {
+    NumericVector n =soil["VG_n"];
+    NumericVector alpha = soil["VG_alpha"];
+    NumericVector theta_res = soil["VG_theta_res"];
+    NumericVector theta_sat = soil["VG_theta_sat"];
+    for(int l=0;l<nlayers;l++) {
+      theta[l] = psi2thetaVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], psi[l]); 
+    }
+  }
+  return(theta);
+}
 
 NumericVector psi2thetasoil(List soil, double psi, String model="SX") {
   NumericVector SD = soil["dVec"];
