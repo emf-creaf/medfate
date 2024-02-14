@@ -19,7 +19,6 @@ articles:
 - title: Model analysis and parametrization
   contents:
     - starts_with("modelanalysis/Sensitivity")
-    - starts_with("parametrization/SpeciesParameterizationSpain")
     - starts_with("parametrization/Metamodelling")
     - starts_with("parametrization/GrowthCalibration")
 - title: Model performance evaluation
@@ -82,6 +81,7 @@ reference:
   desc:  Simulation control and input objects
   contents:
   - spwbInput
+  - aspwbInput
   - starts_with("defaultControl")
   - starts_with("defaultManagement")
   - starts_with("resetInputs")
@@ -89,6 +89,7 @@ reference:
 - title: Simulation
   desc:  Simulation model functions
   contents:
+  - aspwb
   - spwb
   - spwb_day
   - pwb

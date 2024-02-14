@@ -225,9 +225,14 @@ sf_pt <- sf::st_sfc(sf::st_point(c(1.0219, 41.3443)), crs = 4326)
 
 This object can be used to query SoilGrids using `soilgridsParams()`:
 
-```{r}
-pobl_soil_props <- soilgridsParams(sf_pt, widths = c(300, 700, 1000))
+```{r, eval = FALSE}
+pobl_soil_props <- medfateutils::soilgridsParams(sf_pt, widths = c(300, 700, 1000))
 ```
+
+```{r, include = FALSE}
+pobl_soil_props <- readRDS("pobl_soil_props.rds")
+```
+
 
 This function returns a data frame of soil properties:
 
