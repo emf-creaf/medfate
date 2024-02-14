@@ -558,7 +558,7 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   int nlayers = dVec.size();
   NumericVector dZUp(nlayers), dZDown(nlayers), lambda(nlayers);
   for(int l=0;l<nlayers;l++) {
-    lambda[l] = 1.0 - rfc[l]/100.0;
+    lambda[l] = 1.0 - (rfc[l]/100.0);
     if(l==0) { //first layer
       dZUp[l] = dZ_m[0]/2.0;
     } else {
@@ -572,7 +572,7 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   }
   
   //Retrieve VG parameters
-  NumericVector Ksat =soil["Ksat"];
+  NumericVector Ksat_ori = soil["Ksat"];
   NumericVector n =soil["VG_n"];
   NumericVector alpha = soil["VG_alpha"];
   NumericVector theta_res = soil["VG_theta_res"];
@@ -580,9 +580,11 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   
   //Estimate Theta, Psi, C, K
   NumericVector Theta = theta(soil, "VG");
+  NumericVector Ksat(nlayers);
   NumericVector Psi(nlayers), K(nlayers), C(nlayers);
   NumericVector Psi_m(nlayers), K_ms(nlayers), C_m(nlayers), K_ms05(nlayers), C_m05(nlayers);
   for(int l=0;l<nlayers;l++) {
+    Ksat[l] = Ksat_ori[l]*lambda[l];//Multiply K for the space available for water movement
     Psi[l] = theta2psiVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], Theta[l]); 
     C[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
     K[l] = psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
