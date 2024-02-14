@@ -38,6 +38,7 @@ reference:
   - exampleforest
   - forest
   - emptyforest
+  - tree2forest
   - starts_with("forest_")
 
 - title: Species parameters
