@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -70,9 +70,9 @@
           <p class="section-desc"></p><p>Species parameter data and utility functions.</p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="SpParams.html">SpParamsDefinition</a></code> <code><a href="SpParams.html">SpParamsMED</a></code> </p>
+          <p><code><a href="SpParams.html">SpParams</a></code> <code><a href="SpParams.html">SpParamsDefinition</a></code> <code><a href="SpParams.html">SpParamsMED</a></code> <code><a href="SpParams.html">SpParamsES</a></code> <code><a href="SpParams.html">SpParamsFR</a></code> <code><a href="SpParams.html">SpParamsUS</a></code> </p>
         </td>
-        <td><p>Data tables with species parameter definition and values for Mediterranean and US</p></td>
+        <td><p>Data tables with species parameter definition and values for different countries</p></td>
       </tr><tr><td>
           <p><code><a href="modifyParams.html">modifySpParams()</a></code> <code><a href="modifyParams.html">modifyCohortParams()</a></code> <code><a href="modifyParams.html">modifyInputParams()</a></code> </p>
         </td>
@@ -150,7 +150,7 @@
         </td>
         <td><p>Soil initialization</p></td>
       </tr><tr><td>
-          <p><code><a href="soil_texture.html">soil_saturatedConductivitySX()</a></code> <code><a href="soil_texture.html">soil_unsaturatedConductivitySX()</a></code> <code><a href="soil_texture.html">soil_thetaSATSX()</a></code> <code><a href="soil_texture.html">soil_theta2psiSX()</a></code> <code><a href="soil_texture.html">soil_psi2thetaSX()</a></code> <code><a href="soil_texture.html">soil_psi2thetaVG()</a></code> <code><a href="soil_texture.html">soil_theta2psiVG()</a></code> <code><a href="soil_texture.html">soil_USDAType()</a></code> <code><a href="soil_texture.html">soil_thetaFC()</a></code> <code><a href="soil_texture.html">soil_thetaWP()</a></code> <code><a href="soil_texture.html">soil_thetaSAT()</a></code> <code><a href="soil_texture.html">soil_waterFC()</a></code> <code><a href="soil_texture.html">soil_waterSAT()</a></code> <code><a href="soil_texture.html">soil_waterWP()</a></code> <code><a href="soil_texture.html">soil_waterExtractable()</a></code> <code><a href="soil_texture.html">soil_theta()</a></code> <code><a href="soil_texture.html">soil_water()</a></code> <code><a href="soil_texture.html">soil_rockWeight2Volume()</a></code> <code><a href="soil_texture.html">soil_psi()</a></code> <code><a href="soil_texture.html">soil_conductivity()</a></code> <code><a href="soil_texture.html">soil_waterTableDepth()</a></code> <code><a href="soil_texture.html">soil_vanGenuchtenParamsCarsel()</a></code> <code><a href="soil_texture.html">soil_vanGenuchtenParamsToth()</a></code> <code><a href="soil_texture.html">soil_retentionCurvePlot()</a></code> </p>
+          <p><code><a href="soil_texture.html">soil_saturatedConductivitySX()</a></code> <code><a href="soil_texture.html">soil_unsaturatedConductivitySX()</a></code> <code><a href="soil_texture.html">soil_thetaSATSX()</a></code> <code><a href="soil_texture.html">soil_theta2psiSX()</a></code> <code><a href="soil_texture.html">soil_psi2thetaSX()</a></code> <code><a href="soil_texture.html">soil_psi2kVG()</a></code> <code><a href="soil_texture.html">soil_psi2cVG()</a></code> <code><a href="soil_texture.html">soil_psi2thetaVG()</a></code> <code><a href="soil_texture.html">soil_theta2psiVG()</a></code> <code><a href="soil_texture.html">soil_USDAType()</a></code> <code><a href="soil_texture.html">soil_thetaFC()</a></code> <code><a href="soil_texture.html">soil_thetaWP()</a></code> <code><a href="soil_texture.html">soil_thetaSAT()</a></code> <code><a href="soil_texture.html">soil_waterFC()</a></code> <code><a href="soil_texture.html">soil_waterSAT()</a></code> <code><a href="soil_texture.html">soil_waterWP()</a></code> <code><a href="soil_texture.html">soil_waterExtractable()</a></code> <code><a href="soil_texture.html">soil_theta()</a></code> <code><a href="soil_texture.html">soil_water()</a></code> <code><a href="soil_texture.html">soil_rockWeight2Volume()</a></code> <code><a href="soil_texture.html">soil_psi()</a></code> <code><a href="soil_texture.html">soil_conductivity()</a></code> <code><a href="soil_texture.html">soil_capacitance()</a></code> <code><a href="soil_texture.html">soil_waterTableDepth()</a></code> <code><a href="soil_texture.html">soil_vanGenuchtenParamsCarsel()</a></code> <code><a href="soil_texture.html">soil_campbellParamsClappHornberger()</a></code> <code><a href="soil_texture.html">soil_vanGenuchtenParamsToth()</a></code> <code><a href="soil_texture.html">soil_retentionCurvePlot()</a></code> </p>
         </td>
         <td><p>Soil texture and hydraulics</p></td>
       </tr><tr><td>
@@ -165,6 +165,10 @@
           <p><code><a href="modelInput.html">forest2aboveground()</a></code> <code><a href="modelInput.html">forest2belowground()</a></code> <code><a href="modelInput.html">forest2spwbInput()</a></code> <code><a href="modelInput.html">forest2growthInput()</a></code> </p>
         </td>
         <td><p>Input for simulation models</p></td>
+      </tr><tr><td>
+          <p><code><a href="aspwb.html">aspwbInput()</a></code> <code><a href="aspwb.html">aspwb_day()</a></code> <code><a href="aspwb.html">aspwb()</a></code> </p>
+        </td>
+        <td><p>Simulation in agricultural areas</p></td>
       </tr><tr><td>
           <p><code><a href="defaultControl.html">defaultControl()</a></code> </p>
         </td>
@@ -182,6 +186,10 @@
           <p class="section-desc"></p><p>Simulation model functions</p>
         </th>
       </tr></tbody><tbody><tr><td>
+          <p><code><a href="aspwb.html">aspwbInput()</a></code> <code><a href="aspwb.html">aspwb_day()</a></code> <code><a href="aspwb.html">aspwb()</a></code> </p>
+        </td>
+        <td><p>Simulation in agricultural areas</p></td>
+      </tr><tr><td>
           <p><code><a href="spwb.html">spwb()</a></code> <code><a href="spwb.html">pwb()</a></code> </p>
         </td>
         <td><p>Soil-plant water balance</p></td>
@@ -203,7 +211,7 @@
         <td><p>Sureau-ECOS inner functions for testing only</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
           <h2 id="plots-and-summaries">Plots and summaries <a href="#plots-and-summaries" class="anchor" aria-hidden="true"></a></h2>
-          <p class="section-desc"></p><p>Summaries and plots of simulation results</p>
+          <p class="section-desc"></p><p>Summaries, extraction and plots of simulation results</p>
         </th>
       </tr></tbody><tbody><tr><td>
           <p><code><a href="plot.spwb.html">plot(<i>&lt;spwb&gt;</i>)</a></code> <code><a href="plot.spwb.html">plot(<i>&lt;pwb&gt;</i>)</a></code> <code><a href="plot.spwb.html">plot(<i>&lt;growth&gt;</i>)</a></code> <code><a href="plot.spwb.html">plot(<i>&lt;fordyn&gt;</i>)</a></code> </p>
@@ -218,9 +226,9 @@
         </td>
         <td><p>Summarize simulation results</p></td>
       </tr><tr><td>
-          <p><code><a href="extractSubdaily.html">extractSubdaily()</a></code> </p>
+          <p><code><a href="extract.html">extract()</a></code> </p>
         </td>
-        <td><p>Extracts subdaily output</p></td>
+        <td><p>Extracts model outputs</p></td>
       </tr><tr><td>
           <p><code><a href="shinyplot.html">shinyplot()</a></code> </p>
         </td>
@@ -282,7 +290,7 @@
         </td>
         <td><p>Scaling from conductivity to conductance</p></td>
       </tr><tr><td>
-          <p><code><a href="hydraulics_supplyfunctions.html">hydraulics_EXylem()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_E2psiXylem()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_E2psiXylemUp()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_EVanGenuchten()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_ECrit()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_ECapacitance()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_E2psiVanGenuchten()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_E2psiTwoElements()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_E2psiBelowground()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_E2psiAboveground()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_E2psiFineRootLeaf()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_E2psiNetworkStem1()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_E2psiNetwork()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_supplyFunctionOneXylem()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_supplyFunctionTwoElements()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_supplyFunctionThreeElements()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_supplyFunctionBelowground()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_supplyFunctionAboveground()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_supplyFunctionFineRootLeaf()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_supplyFunctionNetworkStem1()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_supplyFunctionNetwork()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_regulatedPsiXylem()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_regulatedPsiTwoElements()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot()</a></code> </p>
+          <p><code><a href="hydraulics_supplyfunctions.html">hydraulics_EXylem()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_E2psiXylem()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_E2psiXylemUp()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_EVanGenuchten()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_ECrit()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_E2psiVanGenuchten()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_E2psiTwoElements()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_E2psiBelowground()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_E2psiAboveground()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_E2psiNetwork()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_supplyFunctionOneXylem()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_supplyFunctionTwoElements()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_supplyFunctionThreeElements()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_supplyFunctionBelowground()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_supplyFunctionAboveground()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_supplyFunctionNetwork()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_regulatedPsiXylem()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_regulatedPsiTwoElements()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_initSperryNetworks()</a></code> <code><a href="hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot()</a></code> </p>
         </td>
         <td><p>Hydraulic supply functions</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
@@ -290,15 +298,23 @@
           <p class="section-desc"></p><p>Forest hydrology processes</p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="hydrology_interception.html">hydrology_erFactor()</a></code> <code><a href="hydrology_interception.html">hydrology_rainInterception()</a></code> <code><a href="hydrology_interception.html">hydrology_interceptionPlot()</a></code> </p>
+          <p><code><a href="hydrology_infiltration.html">hydrology_infiltrationBoughton()</a></code> <code><a href="hydrology_infiltration.html">hydrology_infiltrationGreenAmpt()</a></code> <code><a href="hydrology_infiltration.html">hydrology_infiltrationRepartition()</a></code> <code><a href="hydrology_infiltration.html">hydrology_infiltrationAmount()</a></code> </p>
+        </td>
+        <td><p>Soil infiltration</p></td>
+      </tr><tr><td>
+          <p><code><a href="hydrology_interception.html">hydrology_rainfallIntensity()</a></code> <code><a href="hydrology_interception.html">hydrology_rainInterception()</a></code> <code><a href="hydrology_interception.html">hydrology_interceptionPlot()</a></code> </p>
         </td>
         <td><p>Rainfall interception</p></td>
       </tr><tr><td>
-          <p><code><a href="hydrology_soil.html">hydrology_soilEvaporationAmount()</a></code> <code><a href="hydrology_soil.html">hydrology_soilEvaporation()</a></code> <code><a href="hydrology_soil.html">hydrology_herbaceousTranspiration()</a></code> <code><a href="hydrology_soil.html">hydrology_infiltrationRepartition()</a></code> <code><a href="hydrology_soil.html">hydrology_snowMelt()</a></code> <code><a href="hydrology_soil.html">hydrology_infiltrationAmount()</a></code> </p>
+          <p><code><a href="hydrology_soilEvaporation.html">hydrology_soilEvaporationAmount()</a></code> <code><a href="hydrology_soilEvaporation.html">hydrology_soilEvaporation()</a></code> <code><a href="hydrology_soilEvaporation.html">hydrology_herbaceousTranspiration()</a></code> </p>
         </td>
-        <td><p>Soil infiltration, percolation and bare soil evaporation</p></td>
+        <td><p>Bare soil evaporation and herbaceous transpiration</p></td>
       </tr><tr><td>
-          <p><code><a href="hydrology_verticalInputs.html">hydrology_soilWaterInputs()</a></code> <code><a href="hydrology_verticalInputs.html">hydrology_soilInfiltrationPercolation()</a></code> </p>
+          <p><code><a href="hydrology_soilFlows.html">hydrology_soilFlows()</a></code> </p>
+        </td>
+        <td><p>Soil flows</p></td>
+      </tr><tr><td>
+          <p><code><a href="hydrology_verticalInputs.html">hydrology_snowMelt()</a></code> <code><a href="hydrology_verticalInputs.html">hydrology_soilWaterInputs()</a></code> </p>
         </td>
         <td><p>Soil vertical inputs</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
@@ -306,11 +322,15 @@
           <p class="section-desc"></p><p>Light extinction and photosynthesis processes</p>
         </th>
       </tr></tbody><tbody><tr><td>
-          <p><code><a href="light.html">light_PARcohort()</a></code> <code><a href="light.html">light_PARground()</a></code> <code><a href="light.html">light_SWRground()</a></code> <code><a href="light.html">light_cohortAbsorbedSWRFraction()</a></code> <code><a href="light.html">light_layerIrradianceFraction()</a></code> <code><a href="light.html">light_layerIrradianceFractionBottomUp()</a></code> <code><a href="light.html">light_cohortSunlitShadeAbsorbedRadiation()</a></code> <code><a href="light.html">light_layerSunlitFraction()</a></code> <code><a href="light.html">light_instantaneousLightExtinctionAbsortion()</a></code> <code><a href="light.html">light_longwaveRadiationSHAW()</a></code> </p>
+          <p><code><a href="light_advanced.html">light_leafAngleCDF()</a></code> <code><a href="light_advanced.html">light_leafAngleBetaParameters()</a></code> <code><a href="light_advanced.html">light_directionalExtinctionCoefficient()</a></code> <code><a href="light_advanced.html">light_layerDirectIrradianceFraction()</a></code> <code><a href="light_advanced.html">light_layerDiffuseIrradianceFraction()</a></code> <code><a href="light_advanced.html">light_cohortSunlitShadeAbsorbedRadiation()</a></code> <code><a href="light_advanced.html">light_layerSunlitFraction()</a></code> <code><a href="light_advanced.html">light_instantaneousLightExtinctionAbsortion()</a></code> <code><a href="light_advanced.html">light_longwaveRadiationSHAW()</a></code> </p>
         </td>
-        <td><p>Radiation transfer functions</p></td>
+        <td><p>Advanced radiation transfer functions</p></td>
       </tr><tr><td>
-          <p><code><a href="photo.html">photo_GammaTemp()</a></code> <code><a href="photo.html">photo_KmTemp()</a></code> <code><a href="photo.html">photo_VmaxTemp()</a></code> <code><a href="photo.html">photo_JmaxTemp()</a></code> <code><a href="photo.html">photo_electronLimitedPhotosynthesis()</a></code> <code><a href="photo.html">photo_rubiscoLimitedPhotosynthesis()</a></code> <code><a href="photo.html">photo_photosynthesis()</a></code> <code><a href="photo.html">photo_leafPhotosynthesisFunction()</a></code> <code><a href="photo.html">photo_leafPhotosynthesisFunction2()</a></code> <code><a href="photo.html">photo_sunshadePhotosynthesisFunction()</a></code> <code><a href="photo.html">photo_multilayerPhotosynthesisFunction()</a></code> </p>
+          <p><code><a href="light_basic.html">light_PARcohort()</a></code> <code><a href="light_basic.html">light_PARground()</a></code> <code><a href="light_basic.html">light_SWRground()</a></code> <code><a href="light_basic.html">light_cohortAbsorbedSWRFraction()</a></code> </p>
+        </td>
+        <td><p>Radiation extinction functions used in basic transpiration sub-model</p></td>
+      </tr><tr><td>
+          <p><code><a href="photo.html">photo_GammaTemp()</a></code> <code><a href="photo.html">photo_KmTemp()</a></code> <code><a href="photo.html">photo_VmaxTemp()</a></code> <code><a href="photo.html">photo_JmaxTemp()</a></code> <code><a href="photo.html">photo_electronLimitedPhotosynthesis()</a></code> <code><a href="photo.html">photo_rubiscoLimitedPhotosynthesis()</a></code> <code><a href="photo.html">photo_photosynthesis()</a></code> <code><a href="photo.html">photo_photosynthesisBaldocchi()</a></code> <code><a href="photo.html">photo_leafPhotosynthesisFunction()</a></code> <code><a href="photo.html">photo_leafPhotosynthesisFunction2()</a></code> <code><a href="photo.html">photo_sunshadePhotosynthesisFunction()</a></code> <code><a href="photo.html">photo_multilayerPhotosynthesisFunction()</a></code> </p>
         </td>
         <td><p>Photosynthesis submodel functions</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
@@ -349,8 +369,12 @@
           <p><code><a href="mortality_dailyProbability.html">mortality_dailyProbability()</a></code> </p>
         </td>
         <td><p>Mortality</p></td>
-      </tr><tr><td>
-          <p><code><a href="regeneration.html">recruitment()</a></code> <code><a href="regeneration.html">resprouting()</a></code> </p>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="regeneration">Regeneration <a href="#regeneration" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Seed production, recruitment and resprouting processes</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="regeneration.html">regeneration_seedproduction()</a></code> <code><a href="regeneration.html">regeneration_seedrefill()</a></code> <code><a href="regeneration.html">regeneration_seedmortality()</a></code> <code><a href="regeneration.html">regeneration_recruitment()</a></code> <code><a href="regeneration.html">regeneration_resprouting()</a></code> </p>
         </td>
         <td><p>Plant regeneration</p></td>
       </tr></tbody><tbody><tr><th colspan="2">

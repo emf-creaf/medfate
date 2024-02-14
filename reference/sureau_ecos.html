@@ -18,7 +18,7 @@ Function semi_implicit_integration updates water potentials and cavitation acros
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -60,7 +60,13 @@ Function <code>semi_implicit_integration</code> updates water potentials and cav
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">initCochardNetworks</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">semi_implicit_integration</span><span class="op">(</span><span class="va">network</span>, <span class="va">dt</span>, <span class="va">opt</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">semi_implicit_integration</span><span class="op">(</span></span>
+<span>  <span class="va">network</span>,</span>
+<span>  <span class="va">dt</span>,</span>
+<span>  <span class="va">opt</span>,</span>
+<span>  cavitationRefillStem <span class="op">=</span> <span class="st">"annual"</span>,</span>
+<span>  cavitationRefillLeaves <span class="op">=</span> <span class="st">"total"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -79,6 +85,14 @@ Function <code>semi_implicit_integration</code> updates water potentials and cav
 
 <dt>opt</dt>
 <dd><p>Option flag vector</p></dd>
+
+
+<dt>cavitationRefillStem, cavitationRefillLeaves</dt>
+<dd><p>A string indicating how refilling of embolized conduits is done:</p><ul><li><p>"none" - no refilling.</p></li>
+<li><p>"annual" - every first day of the year.</p></li>
+<li><p>"rate" - following a rate of new sapwood formation.</p></li>
+<li><p>"total" - instantaneous complete refilling.</p></li>
+</ul></dd>
 
 </dl></div>
     <div id="value">

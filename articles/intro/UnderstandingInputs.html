@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2023-08-28</h4>
+            <h4 data-toc-skip class="date">2024-02-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/UnderstandingInputs.Rmd" class="external-link"><code>vignettes/intro/UnderstandingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>UnderstandingInputs.Rmd</code></div>
@@ -130,7 +130,8 @@ You can find parameter definitions in table
 <tbody>
 <tr class="odd">
 <td align="left">Name</td>
-<td align="left">Taxon names (species binomials or genus)</td>
+<td align="left">Plant names (species binomials, genus or other) used in
+vegetation data</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 </tr>
@@ -141,20 +142,33 @@ You can find parameter definitions in table
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
-<td align="left">Genus</td>
-<td align="left">Taxonomic genus</td>
+<td align="left">AcceptedName</td>
+<td align="left">Accepted scientific name of a taxon (genus, species,
+subspecies or variety) used for parameterization</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td align="left">Order</td>
-<td align="left">Taxonomical order</td>
+<td align="left">Species</td>
+<td align="left">Taxonomic species of accepted name</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
+<td align="left">Genus</td>
+<td align="left">Taxonomic genus of accepted name</td>
+<td align="left">String</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
 <td align="left">Family</td>
-<td align="left">Taxonomical family</td>
+<td align="left">Taxonomic family of accepted name</td>
+<td align="left">String</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Order</td>
+<td align="left">Taxonomic order of accepted name</td>
 <td align="left">String</td>
 <td align="left">NA</td>
 </tr>
@@ -169,26 +183,26 @@ You can find parameter definitions in table
 <td align="left">Growth form: Either “Shrub”, “Tree” or
 “Tree/Shrub”</td>
 <td align="left">String</td>
-<td align="left">NA</td>
+<td align="left">Categorical</td>
 </tr>
 <tr class="even">
 <td align="left">LifeForm</td>
 <td align="left">Raunkiaer life form</td>
 <td align="left">String</td>
-<td align="left">NA</td>
+<td align="left">Categorical</td>
 </tr>
 <tr class="odd">
 <td align="left">LeafShape</td>
 <td align="left">Broad/Needle/Linear/Scale/Spines/Succulent</td>
 <td align="left">String</td>
-<td align="left">NA</td>
+<td align="left">Categorical</td>
 </tr>
 <tr class="even">
 <td align="left">LeafSize</td>
 <td align="left">Either “Small” (&lt; 225 mm), “Medium” (&gt; 225 mm
 &amp; &lt; 2025 mm) or “Large” (&gt; 2025 mm)</td>
 <td align="left">String</td>
-<td align="left">NA</td>
+<td align="left">Categorical</td>
 </tr>
 <tr class="odd">
 <td align="left">PhenologyType</td>
@@ -198,226 +212,233 @@ develop during any season), “winter-deciduous” (leaf senescence in
 autumn, new leaves in spring-summer) or “winter-semideciduous” (same as
 before, but abscission of senescent leaves occurs when new leaves are
 produced).</td>
-<td align="left">NA</td>
+<td align="left">String</td>
 <td align="left">Categorical</td>
 </tr>
 <tr class="even">
+<td align="left">DispersalType</td>
+<td align="left">Dispersal type, either wind-dispersed or
+animal-dispersed</td>
+<td align="left">String</td>
+<td align="left">Categorical</td>
+</tr>
+<tr class="odd">
 <td align="left">Hmed</td>
 <td align="left">Median plant height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Hmax</td>
 <td align="left">Maximum plant height</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Z50</td>
 <td align="left">Depth corresponding to 50% of fine roots</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Z95</td>
 <td align="left">Depth corresponding to 95% of fine roots</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">fHDmin</td>
 <td align="left">Minimum value of height-diameter ratio</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">fHDmax</td>
 <td align="left">Maximum value of height-diameter ratio</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">a_ash</td>
 <td align="left">Allometric coefficient for shrub area as function of
 height</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">b_ash</td>
 <td align="left">Allometric coefficient for shrub area as function of
 height</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">a_bsh</td>
 <td align="left">Allometric coefficient for fine fuel shrub biomass (dry
 weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">b_bsh</td>
 <td align="left">Allometric coefficient for fine fuel shrub biomass (dry
 weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">a_btsh</td>
 <td align="left">Allometric coefficient for total fuel shrub biomass
 (dry weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">b_btsh</td>
 <td align="left">Allometric coefficient for total fuel shrub biomass
 (dry weight)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">cr</td>
 <td align="left">Proportion of total height corresponding to the crown
 (i.e. Crown length divided by total height)</td>
 <td align="left">Numeric</td>
 <td align="left">[0-1]</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">BTsh</td>
 <td align="left">Shrub bark thickness</td>
 <td align="left">Numeric</td>
 <td align="left">mm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">a_fbt</td>
 <td align="left">Regression coefficient for tree foliar biomass</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">b_fbt</td>
 <td align="left">Regression coefficient for tree foliar biomass</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">c_fbt</td>
 <td align="left">Regression coefficient for tree foliar biomass</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">a_cr</td>
 <td align="left">Regression coefficient for crown ratio</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">b_1cr</td>
 <td align="left">Regression coefficient for crown ratio</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">b_2cr</td>
 <td align="left">Regression coefficient for crown ratio</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">b_3cr</td>
 <td align="left">Regression coefficient for crown ratio</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">c_1cr</td>
 <td align="left">Regression coefficient for crown ratio</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">c_2cr</td>
 <td align="left">Regression coefficient for crown ratio</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">a_cw</td>
 <td align="left">Regression coefficient for crown width</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">b_cw</td>
 <td align="left">Regression coefficient for crown width</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">a_bt</td>
 <td align="left">Regression coefficient for bark thickness (mm) as
 function of DBH (cm)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">b_bt</td>
 <td align="left">Regression coefficient for bark thickness (mm) as
 function of DBH (cm)</td>
 <td align="left">Numeric</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LeafDuration</td>
 <td align="left">Duration of leaves in year</td>
 <td align="left">Numeric</td>
 <td align="left">years</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">t0gdd</td>
 <td align="left">Date to start the accumulation of degree days</td>
 <td align="left">Numeric</td>
 <td align="left">days</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Sgdd</td>
 <td align="left">Degree days for leaf budburst</td>
 <td align="left">Numeric</td>
 <td align="left">Degrees C</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Tbgdd</td>
 <td align="left">Base temperature for the calculation of degree days to
 leaf budburst</td>
 <td align="left">Numeric</td>
 <td align="left">Degrees C</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Ssen</td>
 <td align="left">Degree days corresponding to senescence</td>
 <td align="left">Numeric</td>
 <td align="left">Degrees C</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Phsen</td>
 <td align="left">Photoperiod corresponding to start counting
 senescence</td>
 <td align="left">Numeric</td>
 <td align="left">hours</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Tbsen</td>
 <td align="left">Base temperature for the calculation of degree days to
 senescence</td>
 <td align="left">Numeric</td>
 <td align="left">Degrees C</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">xsen</td>
 <td align="left">Discrete values, to allow for any
 absent/proportional/more than proportional effects of temperature on
@@ -425,7 +446,7 @@ senescence</td>
 <td align="left">Integer</td>
 <td align="left">{0,1,2}</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">ysen</td>
 <td align="left">Discrete values, to allow for any
 absent/proportional/more than proportional effects of photoperiod on
@@ -433,101 +454,101 @@ senescence</td>
 <td align="left">Integer</td>
 <td align="left">{0,1,2}</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SLA</td>
 <td align="left">Specific leaf area (mm2/mg = m2/kg)</td>
 <td align="left">Numeric</td>
 <td align="left">m2/kg</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LeafDensity</td>
 <td align="left">Density of leaf tissue (dry weight over volume)</td>
 <td align="left">Numeric</td>
 <td align="left">g/cm3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">WoodDensity</td>
 <td align="left">Wood tissue density (at 0% humidity!)</td>
 <td align="left">Numeric</td>
 <td align="left">g/cm3</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">FineRootDensity</td>
 <td align="left">Density of fine root tissue (dry weight over
 volume).</td>
 <td align="left">Numeric</td>
 <td align="left">g/cm3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">conduit2sapwood</td>
 <td align="left">Proportion of sapwood corresponding to conducive
 elements (vessels or tracheids) as opposed to parenchymatic tissue.</td>
 <td align="left">Numeric</td>
 <td align="left">[0,1]</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">r635</td>
 <td align="left">Ratio of foliar (photosynthetic) + small branches
 (&lt;6.35 mm) dry biomass to foliar (photosynthetic) dry biomass</td>
 <td align="left">Numeric</td>
 <td align="left">&gt;=1</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">pDead</td>
 <td align="left">Proportion of total fine fuels that are dead</td>
 <td align="left">Numeric</td>
 <td align="left">[0,1]</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Al2As</td>
 <td align="left">Leaf area to sapwood area ratio</td>
 <td align="left">Numeric</td>
 <td align="left">m2 / m2</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Ar2Al</td>
 <td align="left">Root area to leaf area ratio</td>
 <td align="left">Numeric</td>
 <td align="left">m2 / m2</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LeafWidth</td>
 <td align="left">Leaf width</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SRL</td>
 <td align="left">Specific root length</td>
 <td align="left">Numeric</td>
 <td align="left">cm/g</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">RLD</td>
 <td align="left">Fine root length density (density of root length per
 soil volume)</td>
 <td align="left">Numeric</td>
 <td align="left">cm/cm3</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">maxFMC</td>
 <td align="left">Maximum fuel moisture (in percent of dry weight)</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">minFMC</td>
 <td align="left">Minimum fuel moisture (in percent of dry weight)</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">LeafPI0</td>
 <td align="left">Osmotic potential at full turgor of leaves</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">LeafEPS</td>
 <td align="left">Modulus of elasticity (capacity of the cell wall to
 resist changes in volume in response to changes in turgor) of
@@ -535,21 +556,21 @@ leaves</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">LeafAF</td>
 <td align="left">Apoplastic fraction (proportion of water outside the
 living cells) in leaves</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">StemPI0</td>
 <td align="left">Osmotic potential at full turgor of symplastic xylem
 tissue</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">StemEPS</td>
 <td align="left">Modulus of elasticity (capacity of the cell wall to
 resist changes in volume in response to changes in turgor) of symplastic
@@ -557,31 +578,50 @@ xylem tissue</td>
 <td align="left">Numeric</td>
 <td align="left">Mpa</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">StemAF</td>
 <td align="left">Apoplastic fraction (proportion of water outside the
 living cells) in stem xylem</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">SAV</td>
 <td align="left">Surface-area-to-volume ratio of the small fuel (1h)
 fraction (leaves and branches &lt; 6.35mm)</td>
 <td align="left">Numeric</td>
 <td align="left">m2/m3</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">HeatContent</td>
 <td align="left">High fuel heat content</td>
 <td align="left">Numeric</td>
 <td align="left">kJ/kg</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">LigninPercent</td>
 <td align="left">Percent of lignin+cutin over dry weight in leaves</td>
 <td align="left">Numeric</td>
 <td align="left">%</td>
+</tr>
+<tr class="even">
+<td align="left">LeafAngle</td>
+<td align="left">The angle between the leaf plane and the horizontal
+plane (i.e. leaf zenith angle)</td>
+<td align="left">Numeric</td>
+<td align="left">degrees</td>
+</tr>
+<tr class="odd">
+<td align="left">LeafAngleSD</td>
+<td align="left">Standard deviation of the leaf angle</td>
+<td align="left">Numeric</td>
+<td align="left">degrees</td>
+</tr>
+<tr class="even">
+<td align="left">ClumpingIndex</td>
+<td align="left">Canopy clumping index</td>
+<td align="left">Numeric</td>
+<td align="left">[0-1]</td>
 </tr>
 <tr class="odd">
 <td align="left">gammaSWR</td>
@@ -669,7 +709,8 @@ deficit (VPD) on gross photosynthesis</td>
 </tr>
 <tr class="odd">
 <td align="left">Gswmin</td>
-<td align="left">Minimum stomatal conductance to water vapour</td>
+<td align="left">Minimum leaf conductance (cuticular+incomplete closure)
+at 20C</td>
 <td align="left">Numeric</td>
 <td align="left">mol H2O * s-1 * m-2</td>
 </tr>
@@ -680,22 +721,64 @@ deficit (VPD) on gross photosynthesis</td>
 <td align="left">mol H2O * s-1 * m-2</td>
 </tr>
 <tr class="odd">
+<td align="left">Gs_Toptim</td>
+<td align="left">Temperature corresponding to maximal stomatal
+conductance</td>
+<td align="left">Numeric</td>
+<td align="left">Degrees C</td>
+</tr>
+<tr class="even">
+<td align="left">Gs_Tsens</td>
+<td align="left">Stomatal sensitivity to temperature</td>
+<td align="left">Numeric</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Gs_P50</td>
+<td align="left">Water potential causing 50% reduction in stomatal
+conductance</td>
+<td align="left">Numeric</td>
+<td align="left">MPa</td>
+</tr>
+<tr class="even">
+<td align="left">Gs_slope</td>
+<td align="left">Rate of decrease in stomatal conductance at Gs_P50</td>
+<td align="left">Numeric</td>
+<td align="left">%/MPa</td>
+</tr>
+<tr class="odd">
 <td align="left">VCleaf_kmax</td>
 <td align="left">Maximum leaf hydraulic conductance</td>
 <td align="left">Numeric</td>
 <td align="left">mmol H2O * s-1 * m-2 * MPa-1</td>
 </tr>
 <tr class="even">
-<td align="left">VCleaf_c</td>
-<td align="left">Parameter c of the leaf vulnerability curve</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">VCleaf_d</td>
-<td align="left">Parameter d of the leaf vulnerability curve</td>
+<td align="left">VCleaf_P12</td>
+<td align="left">12% of maximum conductance of the leaf vulnerability
+curve</td>
 <td align="left">Numeric</td>
 <td align="left">MPa</td>
+</tr>
+<tr class="odd">
+<td align="left">VCleaf_P50</td>
+<td align="left">50% of maximum conductance of the leaf vulnerability
+curve</td>
+<td align="left">Numeric</td>
+<td align="left">MPa</td>
+</tr>
+<tr class="even">
+<td align="left">VCleaf_P88</td>
+<td align="left">88% of maximum conductance of the leaf vulnerability
+curve</td>
+<td align="left">Numeric</td>
+<td align="left">MPa</td>
+</tr>
+<tr class="odd">
+<td align="left">VCleaf_slope</td>
+<td align="left">Slope of the rate of leaf embolism spread at
+VCleaf_P50</td>
+<td align="left">Numeric</td>
+<td align="left">%/MPa</td>
 </tr>
 <tr class="even">
 <td align="left">Kmax_stemxylem</td>
@@ -705,16 +788,32 @@ xylem</td>
 <td align="left">kg H2O * s-1 * m-1 * Mpa-1</td>
 </tr>
 <tr class="odd">
-<td align="left">VCstem_c</td>
-<td align="left">Parameter c of the stem xylem vulnerability curve</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">VCstem_d</td>
-<td align="left">Parameter d of the stem xylem vulnerability curve</td>
+<td align="left">VCstem_P12</td>
+<td align="left">12% of maximum conductance of the stem vulnerability
+curve</td>
 <td align="left">Numeric</td>
 <td align="left">MPa</td>
+</tr>
+<tr class="even">
+<td align="left">VCstem_P50</td>
+<td align="left">50% of maximum conductance of the stem vulnerability
+curve</td>
+<td align="left">Numeric</td>
+<td align="left">MPa</td>
+</tr>
+<tr class="odd">
+<td align="left">VCstem_P88</td>
+<td align="left">88% of maximum conductance of the stem vulnerability
+curve</td>
+<td align="left">Numeric</td>
+<td align="left">MPa</td>
+</tr>
+<tr class="even">
+<td align="left">VCstem_slope</td>
+<td align="left">Slope of the rate of stem embolism spread at
+VCleaf_P50</td>
+<td align="left">Numeric</td>
+<td align="left">%/MPa</td>
 </tr>
 <tr class="odd">
 <td align="left">Kmax_rootxylem</td>
@@ -724,16 +823,32 @@ xylem</td>
 <td align="left">kg H2O * s-1 * m-1 * Mpa-1</td>
 </tr>
 <tr class="even">
-<td align="left">VCroot_c</td>
-<td align="left">Parameter c of the root xylem vulnerability curve</td>
-<td align="left">Numeric</td>
-<td align="left">NA</td>
-</tr>
-<tr class="odd">
-<td align="left">VCroot_d</td>
-<td align="left">Parameter d of the root xylem vulnerability curve</td>
+<td align="left">VCroot_P12</td>
+<td align="left">12% of maximum conductance of the root vulnerability
+curve</td>
 <td align="left">Numeric</td>
 <td align="left">MPa</td>
+</tr>
+<tr class="odd">
+<td align="left">VCroot_P50</td>
+<td align="left">50% of maximum conductance of the root vulnerability
+curve</td>
+<td align="left">Numeric</td>
+<td align="left">MPa</td>
+</tr>
+<tr class="even">
+<td align="left">VCroot_P88</td>
+<td align="left">88% of maximum conductance of the root vulnerability
+curve</td>
+<td align="left">Numeric</td>
+<td align="left">MPa</td>
+</tr>
+<tr class="odd">
+<td align="left">VCroot_slope</td>
+<td align="left">Slope of the rate of root embolism spread at
+VCleaf_P50</td>
+<td align="left">Numeric</td>
+<td align="left">%/MPa</td>
 </tr>
 <tr class="even">
 <td align="left">Vmax298</td>
@@ -885,6 +1000,30 @@ on stand basal area</td>
 <td align="left">Minimum height for seed production</td>
 <td align="left">Numeric</td>
 <td align="left">cm</td>
+</tr>
+<tr class="even">
+<td align="left">SeedMass</td>
+<td align="left">Seed dry mass</td>
+<td align="left">Numeric</td>
+<td align="left">mg</td>
+</tr>
+<tr class="odd">
+<td align="left">SeedLongevity</td>
+<td align="left">Seedbank average longevity</td>
+<td align="left">Numeric</td>
+<td align="left">yr</td>
+</tr>
+<tr class="even">
+<td align="left">DispersalDistance</td>
+<td align="left">Distance parameter for dispersal kernel</td>
+<td align="left">Numeric</td>
+<td align="left">m</td>
+</tr>
+<tr class="odd">
+<td align="left">DispersalShape</td>
+<td align="left">Shape parameter for dispersal kernel</td>
+<td align="left">Numeric</td>
+<td align="left">NA</td>
 </tr>
 <tr class="even">
 <td align="left">ProbRecr</td>
@@ -1183,10 +1322,10 @@ same name:</p>
 soil parameters needed for soil water balance simulations:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">examplesoil</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##  [1] "SoilDepth"    "W"            "SWE"          "Temp"         "Ksoil"       </span></span>
-<span><span class="co">##  [6] "Gsoil"        "dVec"         "sand"         "clay"         "om"          </span></span>
-<span><span class="co">## [11] "VG_alpha"     "VG_n"         "VG_theta_res" "VG_theta_sat" "Ksat"        </span></span>
-<span><span class="co">## [16] "Kdrain"       "macro"        "bd"           "rfc"</span></span></code></pre>
+<pre><code><span><span class="co">##  [1] "SoilDepth"    "W"            "SWE"          "Temp"         "Gsoil"       </span></span>
+<span><span class="co">##  [6] "dVec"         "sand"         "clay"         "om"           "VG_alpha"    </span></span>
+<span><span class="co">## [11] "VG_n"         "VG_theta_res" "VG_theta_sat" "Ksat"         "macro"       </span></span>
+<span><span class="co">## [16] "bd"           "rfc"</span></span></code></pre>
 <p>For example, <code>macro</code> specifies the macroporosity of each
 layer; <code>Gsoil</code> and <code>Ksoil</code> are parameters needed
 to model the process of evaporation from the bare soil. The meaning of
@@ -1257,8 +1396,8 @@ texture:</p>
 <span><span class="co">## Layer  1  [ 0  to  300 mm ] </span></span>
 <span><span class="co">##     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span></span>
 <span><span class="co">##     Rock fragment content (%): 25 Macroporosity (%): 5 </span></span>
-<span><span class="co">##     Theta WP (%): 13 Theta FC (%): 29 Theta SAT (%): 42 Theta current (%) 29 </span></span>
-<span><span class="co">##     Vol. WP (mm): 30 Vol. FC (mm): 64 Vol. SAT (mm): 95 Vol. current (mm): 64 </span></span>
+<span><span class="co">##     Theta WP (%): 13 Theta FC (%): 30 Theta SAT (%): 42 Theta current (%) 30 </span></span>
+<span><span class="co">##     Vol. WP (mm): 29 Vol. FC (mm): 68 Vol. SAT (mm): 95 Vol. current (mm): 68 </span></span>
 <span><span class="co">##     Temperature (Celsius): NA </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Layer  2  [ 300  to  1000 mm ] </span></span>
@@ -1269,9 +1408,9 @@ texture:</p>
 <span><span class="co">##     Temperature (Celsius): NA </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Total soil saturated capacity (mm): 258 </span></span>
-<span><span class="co">## Total soil water holding capacity (mm): 181 </span></span>
-<span><span class="co">## Total soil extractable water (mm): 118 </span></span>
-<span><span class="co">## Total soil current Volume (mm): 181 </span></span>
+<span><span class="co">## Total soil water holding capacity (mm): 185 </span></span>
+<span><span class="co">## Total soil extractable water (mm): 123 </span></span>
+<span><span class="co">## Total soil current Volume (mm): 185 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## Snow pack water equivalent (mm): 0 </span></span>
 <span><span class="co">## Soil water table depth (mm): 1000</span></span></code></pre>
@@ -1305,20 +1444,20 @@ required. Here we show an example of meteorological forcing data.</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##            MinTemperature MaxTemperature Precipitation MinRelativeHumidity</span></span>
-<span><span class="co">## 2001-01-01     -0.5934215       6.287950      4.869109            65.15411</span></span>
-<span><span class="co">## 2001-01-02     -2.3662458       4.569737      2.498292            57.43761</span></span>
-<span><span class="co">## 2001-01-03     -3.8541036       2.661951      0.000000            58.77432</span></span>
-<span><span class="co">## 2001-01-04     -1.8744860       3.097705      5.796973            66.84256</span></span>
-<span><span class="co">## 2001-01-05      0.3288287       7.551532      1.884401            62.97656</span></span>
-<span><span class="co">## 2001-01-06      0.5461322       7.186784     13.359801            74.25754</span></span>
-<span><span class="co">##            MaxRelativeHumidity Radiation WindSpeed</span></span>
-<span><span class="co">## 2001-01-01           100.00000  12.89251  2.000000</span></span>
-<span><span class="co">## 2001-01-02            94.71780  13.03079  7.662544</span></span>
-<span><span class="co">## 2001-01-03            94.66823  16.90722  2.000000</span></span>
-<span><span class="co">## 2001-01-04            95.80950  11.07275  2.000000</span></span>
-<span><span class="co">## 2001-01-05           100.00000  13.45205  7.581347</span></span>
-<span><span class="co">## 2001-01-06           100.00000  12.84841  6.570501</span></span></code></pre>
+<pre><code><span><span class="co">##        dates MinTemperature MaxTemperature Precipitation MinRelativeHumidity</span></span>
+<span><span class="co">## 1 2001-01-01     -0.5934215       6.287950      4.869109            65.15411</span></span>
+<span><span class="co">## 2 2001-01-02     -2.3662458       4.569737      2.498292            57.43761</span></span>
+<span><span class="co">## 3 2001-01-03     -3.8541036       2.661951      0.000000            58.77432</span></span>
+<span><span class="co">## 4 2001-01-04     -1.8744860       3.097705      5.796973            66.84256</span></span>
+<span><span class="co">## 5 2001-01-05      0.3288287       7.551532      1.884401            62.97656</span></span>
+<span><span class="co">## 6 2001-01-06      0.5461322       7.186784     13.359801            74.25754</span></span>
+<span><span class="co">##   MaxRelativeHumidity Radiation WindSpeed</span></span>
+<span><span class="co">## 1           100.00000  12.89251  2.000000</span></span>
+<span><span class="co">## 2            94.71780  13.03079  7.662544</span></span>
+<span><span class="co">## 3            94.66823  16.90722  2.000000</span></span>
+<span><span class="co">## 4            95.80950  11.07275  2.000000</span></span>
+<span><span class="co">## 5           100.00000  13.45205  7.581347</span></span>
+<span><span class="co">## 6           100.00000  12.84841  6.570501</span></span></code></pre>
 <p>Simulation models in <strong>medfate</strong> have been designed to
 work along with data generated from package <a href="https://emf-creaf.github.io/meteoland/" class="external-link">meteoland</a>. The user is
 strongly recommended to resort to this package to obtain suitable
@@ -1334,48 +1473,59 @@ parameterization is obtained using function
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">control</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##  [1] "fillMissingRootParams"            "fillMissingSpParams"             </span></span>
-<span><span class="co">##  [3] "verbose"                          "subdailyResults"                 </span></span>
-<span><span class="co">##  [5] "standResults"                     "soilResults"                     </span></span>
-<span><span class="co">##  [7] "plantResults"                     "leafResults"                     </span></span>
-<span><span class="co">##  [9] "temperatureResults"               "fireHazardResults"               </span></span>
-<span><span class="co">## [11] "fireHazardStandardWind"           "fireHazardStandardDFMC"          </span></span>
-<span><span class="co">## [13] "transpirationMode"                "soilFunctions"                   </span></span>
-<span><span class="co">## [15] "defaultWindSpeed"                 "defaultCO2"                      </span></span>
-<span><span class="co">## [17] "snowpack"                         "leafPhenology"                   </span></span>
-<span><span class="co">## [19] "rockyLayerDrainage"               "unlimitedSoilWater"              </span></span>
-<span><span class="co">## [21] "rhizosphereOverlap"               "unfoldingDD"                     </span></span>
-<span><span class="co">## [23] "verticalLayerSize"                "windMeasurementHeight"           </span></span>
-<span><span class="co">## [25] "cavitationRefill"                 "hydraulicRedistributionFraction" </span></span>
-<span><span class="co">## [27] "ndailysteps"                      "nsubsteps"                       </span></span>
-<span><span class="co">## [29] "capacitance"                      "taper"                           </span></span>
-<span><span class="co">## [31] "multiLayerBalance"                "maximumStemConductance"          </span></span>
-<span><span class="co">## [33] "klatstem"                         "klatleaf"                        </span></span>
-<span><span class="co">## [35] "numericParams"                    "fracLeafResistance"              </span></span>
-<span><span class="co">## [37] "fracRootResistance"               "averageFracRhizosphereResistance"</span></span>
-<span><span class="co">## [39] "thermalCapacityLAI"               "boundaryLayerSize"               </span></span>
-<span><span class="co">## [41] "refillMaximumRate"                "subdailyCarbonBalance"           </span></span>
-<span><span class="co">## [43] "allowDessication"                 "allowStarvation"                 </span></span>
-<span><span class="co">## [45] "sinkLimitation"                   "shrubDynamics"                   </span></span>
-<span><span class="co">## [47] "herbDynamics"                     "allocationStrategy"              </span></span>
-<span><span class="co">## [49] "phloemConductanceFactor"          "nonSugarConcentration"           </span></span>
-<span><span class="co">## [51] "equilibriumOsmoticConcentration"  "minimumRelativeStarchForGrowth"  </span></span>
-<span><span class="co">## [53] "constructionCosts"                "senescenceRates"                 </span></span>
-<span><span class="co">## [55] "maximumRelativeGrowthRates"       "mortalityMode"                   </span></span>
-<span><span class="co">## [57] "mortalityBaselineRate"            "mortalityRelativeSugarThreshold" </span></span>
-<span><span class="co">## [59] "mortalityRWCThreshold"            "recrTreeDBH"                     </span></span>
-<span><span class="co">## [61] "recrTreeDensity"                  "ingrowthTreeDBH"                 </span></span>
-<span><span class="co">## [63] "ingrowthTreeDensity"              "allowRecruitment"                </span></span>
-<span><span class="co">## [65] "recruitmentMode"                  "allowResprouting"                </span></span>
-<span><span class="co">## [67] "removeEmptyCohorts"               "minimumTreeCohortDensity"        </span></span>
-<span><span class="co">## [69] "minimumShrubCohortCover"          "dynamicallyMergeCohorts"         </span></span>
-<span><span class="co">## [71] "seedRain"                         "seedProductionTreeHeight"        </span></span>
-<span><span class="co">## [73] "seedProductionShrubHeight"        "probRecr"                        </span></span>
-<span><span class="co">## [75] "minTempRecr"                      "minMoistureRecr"                 </span></span>
-<span><span class="co">## [77] "minFPARRecr"                      "recrTreeHeight"                  </span></span>
-<span><span class="co">## [79] "recrShrubCover"                   "recrShrubHeight"                 </span></span>
-<span><span class="co">## [81] "recrTreeZ50"                      "recrShrubZ50"                    </span></span>
-<span><span class="co">## [83] "recrTreeZ95"                      "recrShrubZ95"</span></span></code></pre>
+<pre><code><span><span class="co">##   [1] "fillMissingRootParams"            "fillMissingSpParams"             </span></span>
+<span><span class="co">##   [3] "verbose"                          "subdailyResults"                 </span></span>
+<span><span class="co">##   [5] "standResults"                     "soilResults"                     </span></span>
+<span><span class="co">##   [7] "plantResults"                     "leafResults"                     </span></span>
+<span><span class="co">##   [9] "temperatureResults"               "fireHazardResults"               </span></span>
+<span><span class="co">##  [11] "fireHazardStandardWind"           "fireHazardStandardDFMC"          </span></span>
+<span><span class="co">##  [13] "transpirationMode"                "soilFunctions"                   </span></span>
+<span><span class="co">##  [15] "defaultWindSpeed"                 "defaultCO2"                      </span></span>
+<span><span class="co">##  [17] "defaultRainfallIntensityPerMonth" "snowpack"                        </span></span>
+<span><span class="co">##  [19] "leafPhenology"                    "bareSoilEvaporation"             </span></span>
+<span><span class="co">##  [21] "unlimitedSoilWater"               "interceptionMode"                </span></span>
+<span><span class="co">##  [23] "infiltrationMode"                 "rhizosphereOverlap"              </span></span>
+<span><span class="co">##  [25] "unfoldingDD"                      "verticalLayerSize"               </span></span>
+<span><span class="co">##  [27] "windMeasurementHeight"            "equalLeafStemVC"                 </span></span>
+<span><span class="co">##  [29] "cavitationRefillStem"             "cavitationRefillLeaves"          </span></span>
+<span><span class="co">##  [31] "hydraulicRedistributionFraction"  "ndailysteps"                     </span></span>
+<span><span class="co">##  [33] "nsubsteps"                        "taper"                           </span></span>
+<span><span class="co">##  [35] "multiLayerBalance"                "sapFluidityVariation"            </span></span>
+<span><span class="co">##  [37] "TPhase_gmin"                      "Q10_1_gmin"                      </span></span>
+<span><span class="co">##  [39] "Q10_2_gmin"                       "rootRadialConductance"           </span></span>
+<span><span class="co">##  [41] "averageFracRhizosphereResistance" "thermalCapacityLAI"              </span></span>
+<span><span class="co">##  [43] "boundaryLayerSize"                "refillMaximumRate"               </span></span>
+<span><span class="co">##  [45] "sunlitShade"                      "numericParams"                   </span></span>
+<span><span class="co">##  [47] "leafCavitationEffects"            "stomatalSubmodel"                </span></span>
+<span><span class="co">##  [49] "plantCapacitance"                 "cavitationFlux"                  </span></span>
+<span><span class="co">##  [51] "soilDisconnection"                "leafCuticularTranspiration"      </span></span>
+<span><span class="co">##  [53] "stemCuticularTranspiration"       "C_SApoInit"                      </span></span>
+<span><span class="co">##  [55] "C_LApoInit"                       "k_SSym"                          </span></span>
+<span><span class="co">##  [57] "fractionLeafSymplasm"             "gs_NightFrac"                    </span></span>
+<span><span class="co">##  [59] "JarvisPAR"                        "fTRBToLeaf"                      </span></span>
+<span><span class="co">##  [61] "gCrown0"                          "subdailyCarbonBalance"           </span></span>
+<span><span class="co">##  [63] "allowDessication"                 "allowStarvation"                 </span></span>
+<span><span class="co">##  [65] "sinkLimitation"                   "shrubDynamics"                   </span></span>
+<span><span class="co">##  [67] "herbDynamics"                     "allocationStrategy"              </span></span>
+<span><span class="co">##  [69] "phloemConductanceFactor"          "nonSugarConcentration"           </span></span>
+<span><span class="co">##  [71] "equilibriumOsmoticConcentration"  "minimumRelativeStarchForGrowth"  </span></span>
+<span><span class="co">##  [73] "constructionCosts"                "senescenceRates"                 </span></span>
+<span><span class="co">##  [75] "maximumRelativeGrowthRates"       "mortalityMode"                   </span></span>
+<span><span class="co">##  [77] "mortalityBaselineRate"            "mortalityRelativeSugarThreshold" </span></span>
+<span><span class="co">##  [79] "mortalityRWCThreshold"            "recrTreeDBH"                     </span></span>
+<span><span class="co">##  [81] "recrTreeDensity"                  "ingrowthTreeDBH"                 </span></span>
+<span><span class="co">##  [83] "ingrowthTreeDensity"              "allowSeedBankDynamics"           </span></span>
+<span><span class="co">##  [85] "allowRecruitment"                 "allowResprouting"                </span></span>
+<span><span class="co">##  [87] "recruitmentMode"                  "removeEmptyCohorts"              </span></span>
+<span><span class="co">##  [89] "minimumTreeCohortDensity"         "minimumShrubCohortCover"         </span></span>
+<span><span class="co">##  [91] "dynamicallyMergeCohorts"          "seedRain"                        </span></span>
+<span><span class="co">##  [93] "seedProductionTreeHeight"         "seedProductionShrubHeight"       </span></span>
+<span><span class="co">##  [95] "probRecr"                         "minTempRecr"                     </span></span>
+<span><span class="co">##  [97] "minMoistureRecr"                  "minFPARRecr"                     </span></span>
+<span><span class="co">##  [99] "recrTreeHeight"                   "recrShrubCover"                  </span></span>
+<span><span class="co">## [101] "recrShrubHeight"                  "recrTreeZ50"                     </span></span>
+<span><span class="co">## [103] "recrShrubZ50"                     "recrTreeZ95"                     </span></span>
+<span><span class="co">## [105] "recrShrubZ95"</span></span></code></pre>
 <p>Control parameters should normally be left to their default value
 until their effect on simulations is fully understood.</p>
 </div>

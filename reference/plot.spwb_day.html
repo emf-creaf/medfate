@@ -18,7 +18,7 @@ or the transpiration calculations of transp_transpirationSperry or transp_transp
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -138,17 +138,17 @@ or a LAI-weighted mean (as for plant stress or plant water potential).</p></dd>
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>The following plots are available for <code>spwb_day</code> and <code>pwb_day</code>:</p><ul><li><p><code>"LeafPsi"</code>:Leaf water potential (for shade and sunlit leaves).</p></li>
-<li><p><code>"LeafPsiAverage"</code>:Average leaf water potential.</p></li>
-<li><p><code>"RootPsi"</code>:Root crown water potential.</p></li>
-<li><p><code>"StemPsi"</code>:(Upper) stem water potential.</p></li>
-<li><p><code>"StemPLC"</code>:(Average) percentage of loss conductance in the stem conduits.</p></li>
-<li><p><code>"StemRWC"</code>:(Average) relative water content in the stem.</p></li>
-<li><p><code>"LeafRWC"</code>:Relative water content in the leaf.</p></li>
-<li><p><code>"StemSympRWC"</code>:(Average) relative water content in the stem symplasm.</p></li>
-<li><p><code>"LeafSympRWC"</code>:Relative water content in the leaf symplasm.</p></li>
-<li><p><code>"SoilPlantConductance"</code>:Overall soil plant conductance (calculated as the derivative of the supply function).</p></li>
-<li><p><code>"PlantExtraction"</code>: Water extracted from each soil layer.</p></li>
+    <p>The following plots are available for <code>spwb_day</code> and <code>pwb_day</code>:</p><ul><li><p><code>"LeafPsi"</code>: Leaf water potential (for shade and sunlit leaves).</p></li>
+<li><p><code>"LeafPsiAverage"</code>: Average leaf water potential.</p></li>
+<li><p><code>"RootPsi"</code>: Root crown water potential.</p></li>
+<li><p><code>"StemPsi"</code>: Stem water potential.</p></li>
+<li><p><code>"StemPLC"</code>: (Average) percentage of loss conductance in the stem conduits.</p></li>
+<li><p><code>"StemRWC"</code>: (Average) relative water content in the stem.</p></li>
+<li><p><code>"LeafRWC"</code>: Relative water content in the leaf.</p></li>
+<li><p><code>"StemSympRWC"</code>: (Average) relative water content in the stem symplasm.</p></li>
+<li><p><code>"LeafSympRWC"</code>: Relative water content in the leaf symplasm.</p></li>
+<li><p><code>"SoilPlantConductance"</code>: Overall soil plant conductance (calculated as the derivative of the supply function).</p></li>
+<li><p><code>"PlantExtraction"</code>:  Water extracted from each soil layer.</p></li>
 <li><p><code>"PlantTranspiration"</code>: Plant cohort transpiration per ground area.</p></li>
 <li><p><code>"TranspirationPerLeaf"</code>: Plant cohort transpiration per leaf area.</p></li>
 <li><p><code>"PlantGrossPhotosynthesis"</code>: Plant cohort gross photosynthesis per ground area.</p></li>
@@ -159,6 +159,7 @@ or a LAI-weighted mean (as for plant stress or plant water potential).</p></dd>
 <li><p><code>"LeafGrossPhotosynthesis"</code>: Instantaneous gross photosynthesis per leaf area (differentiates sunlit and shade leaves).</p></li>
 <li><p><code>"LeafNetPhotosynthesis"</code>: Instantaneous net photosynthesis per leaf area (differentiates sunlit and shade leaves).</p></li>
 <li><p><code>"LeafAbsorbedSWR"</code>: Absorbed short wave radiation per leaf area (differentiates sunlit and shade leaves).</p></li>
+<li><p><code>"LeafAbsorbedPAR"</code>: Absorbed photosynthetically-active radiation per leaf area (differentiates sunlit and shade leaves).</p></li>
 <li><p><code>"LeafNetLWR"</code>: Net long wave radiation per leaf area (differentiates sunlit and shade leaves).</p></li>
 <li><p><code>"LeafCi"</code>: Leaf intercellular CO2 concentration (differentiates sunlit and shade leaves).</p></li>
 <li><p><code>"LeafIntrinsicWUE"</code>: Leaf intrinsic water use efficiency, i.e. the ratio between instantaneous photosynthesis and stomatal conductance (differentiates sunlit and shade leaves).</p></li>
@@ -213,7 +214,7 @@ or a LAI-weighted mean (as for plant stress or plant water potential).</p></dd>
 <span class="r-in"><span><span class="co">#Simulate one day only</span></span></span>
 <span class="r-in"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fl">100</span></span></span>
-<span class="r-in"><span><span class="va">date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span><span class="op">[</span><span class="va">d</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">date</span> <span class="op">&lt;-</span> <span class="va">examplemeteo</span><span class="op">$</span><span class="va">dates</span><span class="op">[</span><span class="va">d</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="va">meteovec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">[</span><span class="va">d</span>,<span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sd2</span> <span class="op">&lt;-</span> <span class="fu"><a href="spwb_day.html">spwb_day</a></span><span class="op">(</span><span class="va">x2</span>, <span class="va">date</span>, <span class="va">meteovec</span>,</span></span>
 <span class="r-in"><span>              latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, slope<span class="op">=</span> <span class="fl">0</span>, aspect <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>

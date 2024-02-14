@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -99,8 +99,7 @@
 <p>Function <code>soil</code> returns a list of class <code>soil</code> with the following elements:</p><ul><li><p><code>SoilDepth</code>: Soil depth (in mm).</p></li>
 <li><p><code>W</code>: State variable with relative water content of each layer (in as proportion relative to FC).</p></li>
 <li><p><code>Temp</code>: State variable with temperature (in ºC) of each layer.</p></li>
-<li><p><code>Ksoil</code>: Kappa parameter for bare soil evaporation.</p></li>
-<li><p><code>Gsoil</code>: Gamma parameter for bare soil evaporation (see <code><a href="hydrology_soil.html">hydrology_soilEvaporationAmount</a></code>).</p></li>
+<li><p><code>Gsoil</code>: Gamma parameter for bare soil evaporation (see <code><a href="hydrology_soilEvaporation.html">hydrology_soilEvaporationAmount</a></code>).</p></li>
 <li><p><code>dVec</code>: Width of soil layers (in mm).</p></li>
 <li><p><code>sand</code>: Sand percentage for each layer (in percent volume).</p></li>
 <li><p><code>clay</code>: Clay percentage for each layer (in percent volume).</p></li>
@@ -109,7 +108,6 @@
 <li><p><code>Ksat</code>: Saturated soil conductivity for each layer (estimated using function <code><a href="soil_texture.html">soil_saturatedConductivitySX</a></code>.</p></li>
 <li><p><code>macro</code>: Macroporosity for each layer (estimated using Stolf et al. 2011).</p></li>
 <li><p><code>rfc</code>: Percentage of rock fragment content for each layer.</p></li>
-<li><p><code>Kdrain</code>: Saturated vertical hydraulic conductivity (mm/day) (i.e. how easy is deep drainage towards groundwater). Function <code>soil</code> estimates it as a function of soil saturated hydraulic conductivity, but should be parametrized as a function of bedrock material.</p></li>
 </ul></div>
     <div id="details">
     <h2>Details</h2>
@@ -186,8 +184,8 @@ Parameter <code>Temp</code> is initialized as missing for all soil layers.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Layer  1  [ 0  to  300 mm ] </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     clay (%): 25 silt (%): 50 sand (%): 25 organic matter (%): NA [ Silt loam ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     Rock fragment content (%): 25 Macroporosity (%): 5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 13 Theta FC (%): 29 Theta SAT (%): 42 Theta current (%) 29 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 30 Vol. FC (mm): 64 Vol. SAT (mm): 95 Vol. current (mm): 64 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Theta WP (%): 13 Theta FC (%): 30 Theta SAT (%): 42 Theta current (%) 30 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Vol. WP (mm): 29 Vol. FC (mm): 68 Vol. SAT (mm): 95 Vol. current (mm): 68 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Layer  2  [ 300  to  1000 mm ] </span>
@@ -212,9 +210,9 @@ Parameter <code>Temp</code> is initialized as missing for all soil layers.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     Temperature (Celsius): NA </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Total soil saturated capacity (mm): 407 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil water holding capacity (mm): 287 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil extractable water (mm): 189 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil current Volume (mm): 287 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil water holding capacity (mm): 291 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil extractable water (mm): 194 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Total soil current Volume (mm): 291 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snow pack water equivalent (mm): 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Soil water table depth (mm): 4000 </span>

@@ -19,7 +19,7 @@ during a period specified in the input climatic data."><!-- mathjax --><script s
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -200,50 +200,39 @@ Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-31
 <span class="r-in"><span><span class="va">fd</span><span class="op">&lt;-</span><span class="fu">fordyn</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil</span>, </span></span>
 <span class="r-in"><span>           <span class="va">SpParamsMED</span>, <span class="va">meteo_01_02</span>, <span class="va">control</span>,</span></span>
 <span class="r-in"><span>           latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Simulating year 2001 (1/2):  (a) Growth/mortality, (b) Recruitment/resprouting</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Simulating year 2002 (2/2):  (a) Growth/mortality, (b) Recruitment/resprouting</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Simulating year 2001 (1/1):  (a) Growth/mortality, (b) Regeneration nT = 2 nS = 1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Stand-level summaries</span></span></span>
 <span class="r-in"><span><span class="va">fd</span><span class="op">$</span><span class="va">StandSummary</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Step NumTreeSpecies NumTreeCohorts NumShrubSpecies NumShrubCohorts</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    0              2              2               1               1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    1              2              2               1               1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    2              2              2               1               1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   TreeDensityLive TreeBasalAreaLive DominantTreeHeight DominantTreeDiameter</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1        552.0000          25.03330           800.0000             37.55000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        551.3646          25.31503           812.3274             37.78020</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        550.7197          25.57105           823.5106             37.99111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        550.7189          25.60459           825.2153             38.02344</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   QuadraticMeanTreeDiameter HartBeckingIndex ShrubCoverLive BasalAreaDead</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1                  24.02949         53.20353       3.750000    0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2                  24.17825         52.42633       3.112922    0.03948935</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3                  24.31443         51.74465       3.174121    0.04056634</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                  24.33039         51.63780       3.183147    0.08068102</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ShrubCoverDead BasalAreaCut ShrubCoverCut</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    0.000000000            0             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    0.005320327            0             0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    0.004824177            0             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     0.00000000            0             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     0.01015165            0             0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Tree table by annual steps</span></span></span>
 <span class="r-in"><span><span class="va">fd</span><span class="op">$</span><span class="va">TreeTable</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Step Year Cohort          Species      DBH   Height        N Z50  Z95</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    0   NA T1_148 Pinus halepensis 37.55000 800.0000 168.0000 100  600</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    0   NA T2_168     Quercus ilex 14.60000 660.0000 384.0000 300 1000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    1 2001 T1_148 Pinus halepensis 37.78020 812.3274 167.6983 100  600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    1 2001 T2_168     Quercus ilex 14.70455 663.2619 383.6663 300 1000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    2 2002 T1_148 Pinus halepensis 37.99111 823.5106 167.3918 100  600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    2 2002 T2_168     Quercus ilex 14.80141 666.2879 383.3279 300 1000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    1 2001 T1_148 Pinus halepensis 38.02344 825.2153 167.3914 100  600</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    1 2001 T2_168     Quercus ilex 14.80285 666.3367 383.3275 300 1000</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Dead tree table by annual steps</span></span></span>
 <span class="r-in"><span><span class="va">fd</span><span class="op">$</span><span class="va">DeadTreeTable</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Step Year Cohort          Species      DBH   Height         N N_starvation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    1 2001 T1_148 Pinus halepensis 37.78020 812.3274 0.3017018            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1 2001 T2_168     Quercus ilex 14.70455 663.2619 0.3337365            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    2 2002 T1_148 Pinus halepensis 37.99111 823.5106 0.3064982            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    2 2002 T2_168     Quercus ilex 14.80141 666.2879 0.3383682            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    1 2001 T1_148 Pinus halepensis 38.02344 825.2153 0.6086028            0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1 2001 T2_168     Quercus ilex 14.80285 666.3367 0.6724753            0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   N_dessication N_burnt Z50  Z95</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1             0       0 100  600</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2             0       0 300 1000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3             0       0 100  600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4             0       0 300 1000</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2023-08-28</h4>
+            <h4 data-toc-skip class="date">2024-02-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/Sureau.Rmd" class="external-link"><code>vignettes/runmodels/Sureau.Rmd</code></a></small>
       <div class="hidden name"><code>Sureau.Rmd</code></div>
@@ -88,7 +88,7 @@ Caceres</h4>
 <p>Initialisation for <code><a href="../../reference/spwb.html">spwb()</a></code> function:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/" class="external-link">medfate</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Package 'medfate' [ver. 3.1.4]</span></span></code></pre>
+<pre><code><span><span class="co">## Package 'medfate' [ver. 4.0.0]</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Soil</span></span>
 <span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="../../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
@@ -116,38 +116,39 @@ using:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">network</span> <span class="op">&lt;-</span> <span class="va">cn</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">network</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## List of 38</span></span>
+<pre><code><span><span class="co">## List of 40</span></span>
 <span><span class="co">##  $ params                     :List of 27</span></span>
-<span><span class="co">##   ..$ TPhase_gmin          : num 37.5</span></span>
-<span><span class="co">##   ..$ Q10_1_gmin           : num 1.2</span></span>
-<span><span class="co">##   ..$ Q10_2_gmin           : num 4.8</span></span>
-<span><span class="co">##   ..$ turgorPressureAtGsMax: num 1.15</span></span>
-<span><span class="co">##   ..$ JarvisPAR            : num 0.003</span></span>
-<span><span class="co">##   ..$ gsNight              : num 20</span></span>
-<span><span class="co">##   ..$ Tgs_optim            : num 25</span></span>
-<span><span class="co">##   ..$ Tgs_sens             : num 17</span></span>
-<span><span class="co">##   ..$ gCrown0              : num 150</span></span>
-<span><span class="co">##   ..$ gmin_S               : num 2</span></span>
-<span><span class="co">##   ..$ fTRBToLeaf           : num 0.8</span></span>
-<span><span class="co">##   ..$ gmin20               : num 3.09</span></span>
-<span><span class="co">##   ..$ gsMax                : num 285</span></span>
-<span><span class="co">##   ..$ VCleaf_P50           : num -2.3</span></span>
-<span><span class="co">##   ..$ VCleaf_slope         : num 30</span></span>
-<span><span class="co">##   ..$ VCstem_P50           : num -5.14</span></span>
-<span><span class="co">##   ..$ VCstem_slope         : num 30</span></span>
-<span><span class="co">##   ..$ VCroot_P50           : num -2.97</span></span>
-<span><span class="co">##   ..$ VCroot_slope         : num 30</span></span>
-<span><span class="co">##   ..$ k_SLApoInit          : num 1.34</span></span>
-<span><span class="co">##   ..$ k_RSApoInit          : num [1:4] 1.13051 0.33058 0.03723 0.00693</span></span>
-<span><span class="co">##   ..$ PiFullTurgor_Leaf    : num -1.59</span></span>
-<span><span class="co">##   ..$ epsilonSym_Leaf      : num 8.92</span></span>
-<span><span class="co">##   ..$ PiFullTurgor_Stem    : num -2.01</span></span>
-<span><span class="co">##   ..$ epsilonSym_Stem      : num 13.3</span></span>
-<span><span class="co">##   ..$ C_SApoInit           : num 2e-05</span></span>
-<span><span class="co">##   ..$ C_LApoInit           : num 1e-05</span></span>
+<span><span class="co">##   ..$ TPhase_gmin      : num 37.5</span></span>
+<span><span class="co">##   ..$ Q10_1_gmin       : num 1.2</span></span>
+<span><span class="co">##   ..$ Q10_2_gmin       : num 4.8</span></span>
+<span><span class="co">##   ..$ Gsw_AC_slope     : num 6.24</span></span>
+<span><span class="co">##   ..$ gCrown0          : num 150</span></span>
+<span><span class="co">##   ..$ fTRBToLeaf       : num 0.8</span></span>
+<span><span class="co">##   ..$ C_SApoInit       : num 2e-05</span></span>
+<span><span class="co">##   ..$ C_LApoInit       : num 1e-05</span></span>
+<span><span class="co">##   ..$ k_SLApoInit      : num 8</span></span>
+<span><span class="co">##   ..$ k_CSApoInit      : num 1.34</span></span>
+<span><span class="co">##   ..$ k_RCApoInit      : num [1:4] 2.3828 0.48335 0.04257 0.00742</span></span>
+<span><span class="co">##   ..$ slope_gs         : num 30</span></span>
+<span><span class="co">##   ..$ P50_gs           : num -1.2</span></span>
+<span><span class="co">##   ..$ gmin20           : num 3.09</span></span>
+<span><span class="co">##   ..$ gsMax            : num 285</span></span>
+<span><span class="co">##   ..$ gmin_S           : num 3.09</span></span>
+<span><span class="co">##   ..$ gsNight          : num 14.2</span></span>
+<span><span class="co">##   ..$ VCleaf_P50       : num -1.2</span></span>
+<span><span class="co">##   ..$ VCleaf_slope     : num 115</span></span>
+<span><span class="co">##   ..$ VCstem_P50       : num -4.46</span></span>
+<span><span class="co">##   ..$ VCstem_slope     : num 45.9</span></span>
+<span><span class="co">##   ..$ VCroot_P50       : num -0.88</span></span>
+<span><span class="co">##   ..$ VCroot_slope     : num 103</span></span>
+<span><span class="co">##   ..$ PiFullTurgor_Leaf: num -1.59</span></span>
+<span><span class="co">##   ..$ epsilonSym_Leaf  : num 8.92</span></span>
+<span><span class="co">##   ..$ PiFullTurgor_Stem: num -2.01</span></span>
+<span><span class="co">##   ..$ epsilonSym_Stem  : num 13.3</span></span>
 <span><span class="co">##  $ LAI                        : num 0.849</span></span>
 <span><span class="co">##  $ Psi_LApo                   : num -0.033</span></span>
 <span><span class="co">##  $ Psi_LSym                   : num -0.033</span></span>
+<span><span class="co">##  $ Psi_RCApo                  : num -0.033</span></span>
 <span><span class="co">##  $ Psi_SApo                   : num -0.033</span></span>
 <span><span class="co">##  $ Psi_SSym                   : num -0.033</span></span>
 <span><span class="co">##  $ Psi_SApo_cav               : num 0</span></span>
@@ -159,16 +160,17 @@ using:</p>
 <span><span class="co">##  $ C_LApo                     : num 1e-05</span></span>
 <span><span class="co">##  $ C_SSym                     : num 1239</span></span>
 <span><span class="co">##  $ C_LSym                     : num 1798</span></span>
-<span><span class="co">##  $ k_Plant                    : num 0.602</span></span>
-<span><span class="co">##  $ k_SLApo                    : num 1.34</span></span>
+<span><span class="co">##  $ k_SLApo                    : num 8</span></span>
+<span><span class="co">##  $ k_CSApo                    : num 1.34</span></span>
 <span><span class="co">##  $ k_SSym                     : num 0.26</span></span>
-<span><span class="co">##  $ k_LSym                     : num 4</span></span>
-<span><span class="co">##  $ k_RSApo                    : num [1:4] 1.13051 0.33058 0.03723 0.00693</span></span>
-<span><span class="co">##  $ k_SoilToStem               : num [1:4] 1.13043 0.33054 0.03723 0.00693</span></span>
-<span><span class="co">##  $ k_Soil                     : num [1:4] 15234 2706 342 112</span></span>
-<span><span class="co">##  $ Q_SApo_sat_mmol_perLeafArea: num 395176</span></span>
+<span><span class="co">##  $ k_LSym                     : num 8</span></span>
+<span><span class="co">##  $ k_RSApo                    : num [1:4] 0.8575 0.35519 0.04126 0.00738</span></span>
+<span><span class="co">##  $ k_SoilToStem               : num [1:4] 0.85629 0.3537 0.0411 0.00736</span></span>
+<span><span class="co">##  $ k_Soil                     : num [1:4] 607.38 84.32 10.67 3.49</span></span>
+<span><span class="co">##  $ k_Plant                    : num 0.747</span></span>
+<span><span class="co">##  $ Q_SApo_sat_mmol_perLeafArea: num 316823</span></span>
 <span><span class="co">##  $ Q_LApo_sat_mmol_perLeafArea: num 10298</span></span>
-<span><span class="co">##  $ Q_SSym_sat_mmol_perLeafArea: num 32670</span></span>
+<span><span class="co">##  $ Q_SSym_sat_mmol_perLeafArea: num 26192</span></span>
 <span><span class="co">##  $ Q_LSym_sat_mmol_perLeafArea: num 18916</span></span>
 <span><span class="co">##  $ Einst                      : num 0</span></span>
 <span><span class="co">##  $ Elim                       : num 0</span></span>
@@ -229,7 +231,7 @@ potentials are now:</p>
 <pre><code><span><span class="co">## [1] -0.033</span></span></code></pre>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">network</span><span class="op">$</span><span class="va">Psi_LSym</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] -0.05678614</span></span></code></pre>
+<pre><code><span><span class="co">## [1] -0.04649922</span></span></code></pre>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">network</span><span class="op">$</span><span class="va">Psi_SApo</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] -0.033</span></span></code></pre>

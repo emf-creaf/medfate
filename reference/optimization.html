@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -281,13 +281,13 @@ Then, only a vector of parameter names is supplied for <code>cohortParNames</cod
 <span class="r-in"><span><span class="fu">multiple_runs</span><span class="op">(</span><span class="va">parMatrix</span>, </span></span>
 <span class="r-in"><span>              <span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">42</span>, elevation <span class="op">=</span> <span class="fl">100</span>,</span></span>
 <span class="r-in"><span>              summary_function <span class="op">=</span> <span class="va">sf</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1. Parameter values = [200, 500] f = 239.300480695011</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2. Parameter values = [300, 1000] f = 240.072831353376</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1. Parameter values = [200, 500] f = 186.525309816738</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2. Parameter values = [300, 1000] f = 186.804235082687</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 239.3005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 186.5253</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 240.0728</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 186.8042</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Load observed data (in this case the same simulation results with some added error)  </span></span></span>
@@ -301,9 +301,9 @@ Then, only a vector of parameter names is supplied for <code>cohortParNames</cod
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Evaluate for the values of the parameter matrix</span></span></span>
 <span class="r-in"><span><span class="fu">of</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 239.3725</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 186.5986</span>
 <span class="r-in"><span><span class="fu">of</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 239.3725 240.1451</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 186.5986 186.8776</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Generate a loglikelihood function for soil water content</span></span></span>
@@ -317,9 +317,9 @@ Then, only a vector of parameter names is supplied for <code>cohortParNames</cod
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Loglikelihood for the values of the parameter matrix</span></span></span>
 <span class="r-in"><span><span class="fu">oef</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 923.7397</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 325.6906</span>
 <span class="r-in"><span><span class="fu">oef</span><span class="op">(</span><span class="va">parMatrix</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 923.7397 961.5855</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 325.6906 115.3119</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

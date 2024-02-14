@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -47,7 +47,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Example daily meteorology data</h1>
-    
+    <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/R/dataset_documentation.R" class="external-link"><code>R/dataset_documentation.R</code></a></small>
     <div class="hidden name"><code>examplemeteo.Rd</code></div>
     </div>
 
@@ -55,34 +55,34 @@
     <p>Example data set of meteorological input.</p>
     </div>
 
-    <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span></code></pre></div>
-    </div>
 
     <div id="format">
     <h2>Format</h2>
-    <p>A data frame containing daily meteorology of a location in Catalonia (Spain) for year 2001.</p><dl><dt><code>MinTemperature</code></dt>
+    <p>A data frame containing daily meteorology of a location in Catalonia (Spain) for year 2001:</p><dl><dt><code>dates</code></dt>
+<dd><p>Vector of <code><a href="https://rdrr.io/r/base/Dates.html" class="external-link">Date</a></code> objects.</p></dd>
+
+   <dt><code>MinTemperature</code></dt>
 <dd><p>Minimum daily temperature (in degrees Celsius).</p></dd>
 
-<dt><code>MaxTemperature</code></dt>
+   <dt><code>MaxTemperature</code></dt>
 <dd><p>Maximum daily temperature (in degrees Celsius).</p></dd>
 
-<dt><code>Precipitation</code></dt>
+   <dt><code>Precipitation</code></dt>
 <dd><p>Daily precipitation (in mm of water).</p></dd>
 
-<dt><code>MinRelativeHumidity</code></dt>
+   <dt><code>MinRelativeHumidity</code></dt>
 <dd><p>Minimum daily relative humidity (in percent).</p></dd>
 
-<dt><code>MaxRelativeHumidity</code></dt>
+   <dt><code>MaxRelativeHumidity</code></dt>
 <dd><p>Maximum daily relative humidity (in percent).</p></dd>
 
-<dt><code>Radiation</code></dt>
+   <dt><code>Radiation</code></dt>
 <dd><p>Incoming radiation (in MJ/m2).</p></dd>
 
-<dt><code>WindSpeed</code></dt>
+   <dt><code>WindSpeed</code></dt>
 <dd><p>Wind speed (in m/s).</p></dd>
 
-  
+
 </dl></div>
     <div id="source">
     <h2>Source</h2>
@@ -95,7 +95,7 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>

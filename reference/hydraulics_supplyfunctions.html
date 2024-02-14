@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -74,19 +74,6 @@
 <span></span>
 <span><span class="fu">hydraulics_ECrit</span><span class="op">(</span><span class="va">psiUpstream</span>, <span class="va">kxylemmax</span>, <span class="va">c</span>, <span class="va">d</span>, pCrit <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">hydraulics_ECapacitance</span><span class="op">(</span></span>
-<span>  <span class="va">psi</span>,</span>
-<span>  <span class="va">psiPrev</span>,</span>
-<span>  <span class="va">PLCprev</span>,</span>
-<span>  <span class="va">V</span>,</span>
-<span>  <span class="va">fapo</span>,</span>
-<span>  <span class="va">c</span>,</span>
-<span>  <span class="va">d</span>,</span>
-<span>  <span class="va">pi0</span>,</span>
-<span>  <span class="va">eps</span>,</span>
-<span>  <span class="va">timestep</span></span>
-<span><span class="op">)</span></span>
-<span></span>
 <span><span class="fu">hydraulics_E2psiVanGenuchten</span><span class="op">(</span></span>
 <span>  <span class="va">E</span>,</span>
 <span>  <span class="va">psiSoil</span>,</span>
@@ -111,36 +98,11 @@
 <span>  psiMax <span class="op">=</span> <span class="op">-</span><span class="fl">10</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">hydraulics_E2psiBelowground</span><span class="op">(</span></span>
-<span>  <span class="va">E</span>,</span>
-<span>  <span class="va">hydraulicNetwork</span>,</span>
-<span>  psiIni <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  ntrial <span class="op">=</span> <span class="fl">10L</span>,</span>
-<span>  psiTol <span class="op">=</span> <span class="fl">1e-04</span>,</span>
-<span>  ETol <span class="op">=</span> <span class="fl">1e-04</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu">hydraulics_E2psiBelowground</span><span class="op">(</span><span class="va">E</span>, <span class="va">hydraulicNetwork</span>, psiIni <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">hydraulics_E2psiAboveground</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiRootCrown</span>, <span class="va">hydraulicNetwork</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">hydraulics_E2psiFineRootLeaf</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiFineRoot</span>, <span class="va">hydraulicNetwork</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">hydraulics_E2psiNetworkStem1</span><span class="op">(</span></span>
-<span>  <span class="va">E</span>,</span>
-<span>  <span class="va">hydraulicNetwork</span>,</span>
-<span>  psiIni <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  ntrial <span class="op">=</span> <span class="fl">10L</span>,</span>
-<span>  psiTol <span class="op">=</span> <span class="fl">1e-04</span>,</span>
-<span>  ETol <span class="op">=</span> <span class="fl">1e-04</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">hydraulics_E2psiNetwork</span><span class="op">(</span></span>
-<span>  <span class="va">E</span>,</span>
-<span>  <span class="va">hydraulicNetwork</span>,</span>
-<span>  psiIni <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  ntrial <span class="op">=</span> <span class="fl">10L</span>,</span>
-<span>  psiTol <span class="op">=</span> <span class="fl">1e-04</span>,</span>
-<span>  ETol <span class="op">=</span> <span class="fl">1e-04</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu">hydraulics_E2psiNetwork</span><span class="op">(</span><span class="va">E</span>, <span class="va">hydraulicNetwork</span>, psiIni <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">hydraulics_supplyFunctionOneXylem</span><span class="op">(</span></span>
 <span>  <span class="va">psiSoil</span>,</span>
@@ -187,10 +149,6 @@
 <span><span class="fu">hydraulics_supplyFunctionBelowground</span><span class="op">(</span></span>
 <span>  <span class="va">hydraulicNetwork</span>,</span>
 <span>  minFlow <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  maxNsteps <span class="op">=</span> <span class="fl">400L</span>,</span>
-<span>  ntrial <span class="op">=</span> <span class="fl">10L</span>,</span>
-<span>  psiTol <span class="op">=</span> <span class="fl">1e-04</span>,</span>
-<span>  ETol <span class="op">=</span> <span class="fl">1e-04</span>,</span>
 <span>  pCrit <span class="op">=</span> <span class="fl">0.001</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -200,34 +158,7 @@
 <span>  <span class="va">hydraulicNetwork</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">hydraulics_supplyFunctionFineRootLeaf</span><span class="op">(</span></span>
-<span>  <span class="va">psiFineRoot</span>,</span>
-<span>  <span class="va">hydraulicNetwork</span>,</span>
-<span>  minFlow <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  maxNsteps <span class="op">=</span> <span class="fl">400L</span>,</span>
-<span>  ETol <span class="op">=</span> <span class="fl">1e-04</span>,</span>
-<span>  pCrit <span class="op">=</span> <span class="fl">0.001</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">hydraulics_supplyFunctionNetworkStem1</span><span class="op">(</span></span>
-<span>  <span class="va">hydraulicNetwork</span>,</span>
-<span>  minFlow <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  maxNsteps <span class="op">=</span> <span class="fl">400L</span>,</span>
-<span>  ntrial <span class="op">=</span> <span class="fl">200L</span>,</span>
-<span>  psiTol <span class="op">=</span> <span class="fl">1e-04</span>,</span>
-<span>  ETol <span class="op">=</span> <span class="fl">1e-04</span>,</span>
-<span>  pCrit <span class="op">=</span> <span class="fl">0.001</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">hydraulics_supplyFunctionNetwork</span><span class="op">(</span></span>
-<span>  <span class="va">hydraulicNetwork</span>,</span>
-<span>  minFlow <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  maxNsteps <span class="op">=</span> <span class="fl">400L</span>,</span>
-<span>  ntrial <span class="op">=</span> <span class="fl">200L</span>,</span>
-<span>  psiTol <span class="op">=</span> <span class="fl">1e-04</span>,</span>
-<span>  ETol <span class="op">=</span> <span class="fl">1e-04</span>,</span>
-<span>  pCrit <span class="op">=</span> <span class="fl">0.001</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu">hydraulics_supplyFunctionNetwork</span><span class="op">(</span><span class="va">hydraulicNetwork</span>, minFlow <span class="op">=</span> <span class="fl">0</span>, pCrit <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">hydraulics_regulatedPsiXylem</span><span class="op">(</span><span class="va">E</span>, <span class="va">psiUpstream</span>, <span class="va">kxylemmax</span>, <span class="va">c</span>, <span class="va">d</span>, psiStep <span class="op">=</span> <span class="op">-</span><span class="fl">0.01</span><span class="op">)</span></span>
 <span></span>
@@ -243,6 +174,8 @@
 <span>  dE <span class="op">=</span> <span class="fl">0.1</span>,</span>
 <span>  psiMax <span class="op">=</span> <span class="op">-</span><span class="fl">10</span></span>
 <span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">hydraulics_initSperryNetworks</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">hydraulics_supplyFunctionPlot</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
@@ -272,7 +205,7 @@
 
 
 <dt>allowNegativeFlux</dt>
-<dd><p>A boolean to indicate wether negative flux (i.e. from plant to soil) is allowed.</p></dd>
+<dd><p>A boolean to indicate whether negative flux (i.e. from plant to soil) is allowed.</p></dd>
 
 
 <dt>psiCav</dt>
@@ -307,38 +240,6 @@
 <dd><p>Critical water potential (in MPa).</p></dd>
 
 
-<dt>psi</dt>
-<dd><p>Water potential (in MPa).</p></dd>
-
-
-<dt>psiPrev</dt>
-<dd><p>Water potential (in MPa) in the previous time step.</p></dd>
-
-
-<dt>PLCprev</dt>
-<dd><p>Previous proportion of loss conductance [0-1].</p></dd>
-
-
-<dt>V</dt>
-<dd><p>Capacity of the compartment per leaf area (in L/m2).</p></dd>
-
-
-<dt>fapo</dt>
-<dd><p>Apoplastic fraction (proportion) in the segment.</p></dd>
-
-
-<dt>pi0</dt>
-<dd><p>Full turgor osmotic potential (MPa).</p></dd>
-
-
-<dt>eps</dt>
-<dd><p>Bulk modulus of elasticity (MPa).</p></dd>
-
-
-<dt>timestep</dt>
-<dd><p>Time step in seconds.</p></dd>
-
-
 <dt>psiStep</dt>
 <dd><p>Water potential precision (in MPa).</p></dd>
 
@@ -355,24 +256,8 @@
 <dd><p>Vector of initial water potential values (in MPa).</p></dd>
 
 
-<dt>ntrial</dt>
-<dd><p>Maximum number of steps in Newton-Raphson optimization.</p></dd>
-
-
-<dt>psiTol</dt>
-<dd><p>Precision for water potential estimates (in MPa).</p></dd>
-
-
-<dt>ETol</dt>
-<dd><p>Precision for water flow per surface unit.</p></dd>
-
-
 <dt>psiRootCrown</dt>
 <dd><p>Soil water potential (in MPa) at the root crown.</p></dd>
-
-
-<dt>psiFineRoot</dt>
-<dd><p>Water potential (in MPa) inside fine roots.</p></dd>
 
 
 <dt>v</dt>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -69,6 +69,18 @@
 <span><span class="fu">photo_rubiscoLimitedPhotosynthesis</span><span class="op">(</span><span class="va">Ci</span>, <span class="va">GT</span>, <span class="va">Km</span>, <span class="va">Vmax</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">photo_photosynthesis</span><span class="op">(</span><span class="va">Q</span>, <span class="va">Catm</span>, <span class="va">Gc</span>, <span class="va">Tleaf</span>, <span class="va">Vmax298</span>, <span class="va">Jmax298</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">photo_photosynthesisBaldocchi</span><span class="op">(</span></span>
+<span>  <span class="va">Q</span>,</span>
+<span>  <span class="va">Catm</span>,</span>
+<span>  <span class="va">Tleaf</span>,</span>
+<span>  <span class="va">u</span>,</span>
+<span>  <span class="va">Vmax298</span>,</span>
+<span>  <span class="va">Jmax298</span>,</span>
+<span>  <span class="va">leafWidth</span>,</span>
+<span>  <span class="va">Gsw_AC_slope</span>,</span>
+<span>  <span class="va">Gsw_AC_intercept</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">photo_leafPhotosynthesisFunction</span><span class="op">(</span></span>
 <span>  <span class="va">E</span>,</span>
@@ -202,6 +214,22 @@
 <dd><p>Boolean flag to indicate console output.</p></dd>
 
 
+<dt>u</dt>
+<dd><p>Wind speed above the leaf boundary (in m/s) (for each canopy layer in the case of <code>photo_multilayerPhotosynthesisFunction</code>).</p></dd>
+
+
+<dt>leafWidth</dt>
+<dd><p>Leaf width (in cm).</p></dd>
+
+
+<dt>Gsw_AC_slope</dt>
+<dd><p>Slope of the An/C vs Gsw relationship</p></dd>
+
+
+<dt>Gsw_AC_intercept</dt>
+<dd><p>Intercept of the An/C vs Gsw relationship</p></dd>
+
+
 <dt>E</dt>
 <dd><p>Transpiration flow rate per leaf area (mmol*s-1*m-2).</p></dd>
 
@@ -222,16 +250,8 @@
 <dd><p>Vapour pressure deficit (in kPa).</p></dd>
 
 
-<dt>u</dt>
-<dd><p>Wind speed above the leaf boundary (in m/s) (for each canopy layer in the case of <code>photo_multilayerPhotosynthesisFunction</code>).</p></dd>
-
-
 <dt>absRad</dt>
 <dd><p>Absorbed long- and short-wave radiation (in W*m^-2).</p></dd>
-
-
-<dt>leafWidth</dt>
-<dd><p>Leaf width (in cm).</p></dd>
 
 
 <dt>refLeafArea</dt>

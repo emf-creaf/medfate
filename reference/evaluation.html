@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -196,44 +196,43 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Call simulation function</span></span></span>
 <span class="r-in"><span><span class="va">S1</span><span class="op">&lt;-</span><span class="fu"><a href="spwb.html">spwb</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Package 'meteoland' [ver. 2.1.0]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant water content (mm): 7.0586</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 286.862</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial plant water content (mm): 7.05859</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Initial soil water content (mm): 290.875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Initial snowpack content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Performing daily simulations</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [Year 2001]:....................................</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 7.05628</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 269.841</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final plant water content (mm): 7.05708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Final soil water content (mm): 322.866</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Final snowpack content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.00231802</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.00231802</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): -17.0205</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): -17.0205</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in plant water content (mm): -0.00151384</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Plant water balance result (mm): -0.00151384</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 31.9909</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 31.9406</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): -7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 93 Net rainfall (mm) 369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 409 Runoff (mm) 11 Deep drainage (mm) 142</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 27  Herbaceous transpiration (mm) 18 Woody plant transpiration (mm) 239</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 239  Plant water balance (mm) -0 Hydraulic redistribution (mm) 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Interception (mm) 92 Net rainfall (mm) 370</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Infiltration (mm) 325 Runoff (mm) 45 Deep drainage (mm) 127</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 16  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 187</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 187  Plant water balance (mm) -0 Hydraulic redistribution (mm) 2</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Load observed data (in this case the same simulation results with some added error)  </span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Evaluation statistics for soil water content</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_stats</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             n          Bias      Bias.rel           MAE       MAE.rel </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 365.000000000  -0.018234672  -6.591323286   0.018234672   6.591323286 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             r           NSE       NSE.abs </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.964379849   0.349016402  -0.007465216 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            n         Bias     Bias.rel          MAE      MAE.rel            r </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 365.00000000   0.03944408  14.25792968   0.03960729  14.31692719   0.82636503 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          NSE      NSE.abs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -2.50169230  -1.18830203 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#NSE only</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span>, metric<span class="op">=</span><span class="st">"NSE"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3490164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -2.501692</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Comparison of temporal dynamics</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_plot</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
@@ -241,7 +240,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Loglikelihood value</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 907.8638</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 389.0348</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

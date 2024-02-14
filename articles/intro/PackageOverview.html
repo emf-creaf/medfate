@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2023-08-28</h4>
+            <h4 data-toc-skip class="date">2024-02-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/PackageOverview.Rmd" class="external-link"><code>vignettes/intro/PackageOverview.Rmd</code></a></small>
       <div class="hidden name"><code>PackageOverview.Rmd</code></div>
@@ -267,15 +267,20 @@ transpiration/photosynthesis.</li>
 learn how to visualize them and extract information for further
 analysis. Each simulation function returns an output object whose S3
 class has the same name as the simulation function
-(e.g. <code><a href="../../reference/spwb.html">spwb()</a></code> returns an object of class <code>spwb</code>).
-The package includes implementations of <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and
-<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> for simulation output objects, which facilitates
-displaying and extracting information. In addition, a generic function
-<code><a href="../../reference/shinyplot.html">shinyplot()</a></code> (as well as its implementation for different
-output objects) allows an interactive exploration of simulation
-results.</p>
-<p>Some package function are meant to be used on simulation results and
-produce time series of additional (derived) properties:</p>
+(e.g. <code><a href="../../reference/spwb.html">spwb()</a></code> returns an object of class
+<code>spwb</code>).</p>
+<ul>
+<li>Implementations of <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>
+are available for simulation output objects, which facilitates
+displaying and summarizing information.</li>
+<li>A generic function <code><a href="../../reference/shinyplot.html">shinyplot()</a></code> (as well as its
+implementation for different output objects) allows an interactive
+exploration of simulation results.</li>
+<li>Model outputs can be extracted to simple <code>data.frame</code>
+objects through function <code><a href="../../reference/extract.html">extract()</a></code>.</li>
+</ul>
+<p>Additional package function are meant to be used on simulation
+results and produce time series of additional (derived) properties:</p>
 <ul>
 <li>
 <code><a href="../../reference/droughtStress.html">droughtStress()</a></code> : Plant/stand drought stress

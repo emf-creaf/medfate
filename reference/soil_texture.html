@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -56,15 +56,26 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">soil_saturatedConductivitySX</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, om <span class="op">=</span> <span class="cn">NA_real_</span>, mmol <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">soil_saturatedConductivitySX</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, <span class="va">bd</span>, om <span class="op">=</span> <span class="cn">NA_real_</span>, mmol <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">soil_unsaturatedConductivitySX</span><span class="op">(</span><span class="va">theta</span>, <span class="va">clay</span>, <span class="va">sand</span>, om <span class="op">=</span> <span class="cn">NA_real_</span>, mmol <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">soil_unsaturatedConductivitySX</span><span class="op">(</span></span>
+<span>  <span class="va">theta</span>,</span>
+<span>  <span class="va">clay</span>,</span>
+<span>  <span class="va">sand</span>,</span>
+<span>  <span class="va">bd</span>,</span>
+<span>  om <span class="op">=</span> <span class="cn">NA_real_</span>,</span>
+<span>  mmol <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">soil_thetaSATSX</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, om <span class="op">=</span> <span class="cn">NA_real_</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">soil_theta2psiSX</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, <span class="va">theta</span>, om <span class="op">=</span> <span class="cn">NA_real_</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">soil_psi2thetaSX</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, <span class="va">psi</span>, om <span class="op">=</span> <span class="cn">NA_real_</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">soil_psi2kVG</span><span class="op">(</span><span class="va">ksat</span>, <span class="va">n</span>, <span class="va">alpha</span>, <span class="va">theta_res</span>, <span class="va">theta_sat</span>, <span class="va">psi</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">soil_psi2cVG</span><span class="op">(</span><span class="va">n</span>, <span class="va">alpha</span>, <span class="va">theta_res</span>, <span class="va">theta_sat</span>, <span class="va">psi</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">soil_psi2thetaVG</span><span class="op">(</span><span class="va">n</span>, <span class="va">alpha</span>, <span class="va">theta_res</span>, <span class="va">theta_sat</span>, <span class="va">psi</span><span class="op">)</span></span>
 <span></span>
@@ -94,11 +105,15 @@
 <span></span>
 <span><span class="fu">soil_psi</span><span class="op">(</span><span class="va">soil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">soil_conductivity</span><span class="op">(</span><span class="va">soil</span><span class="op">)</span></span>
+<span><span class="fu">soil_conductivity</span><span class="op">(</span><span class="va">soil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">soil_capacitance</span><span class="op">(</span><span class="va">soil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">soil_waterTableDepth</span><span class="op">(</span><span class="va">soil</span>, model <span class="op">=</span> <span class="st">"SX"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">soil_vanGenuchtenParamsCarsel</span><span class="op">(</span><span class="va">soilType</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">soil_campbellParamsClappHornberger</span><span class="op">(</span><span class="va">soilType</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">soil_vanGenuchtenParamsToth</span><span class="op">(</span><span class="va">clay</span>, <span class="va">sand</span>, <span class="va">om</span>, <span class="va">bd</span>, <span class="va">topsoil</span><span class="op">)</span></span>
 <span></span>
@@ -122,6 +137,10 @@
 <dd><p>Percentage of sand (in percent weight).</p></dd>
 
 
+<dt>bd</dt>
+<dd><p>Bulk density (in g/cm3).</p></dd>
+
+
 <dt>om</dt>
 <dd><p>Percentage of organic matter (optional, in percent weight).</p></dd>
 
@@ -136,6 +155,10 @@
 
 <dt>psi</dt>
 <dd><p>Water potential (in MPa).</p></dd>
+
+
+<dt>ksat</dt>
+<dd><p>saturated hydraulic conductance</p></dd>
 
 
 <dt>n, alpha, theta_res, theta_sat</dt>
@@ -168,10 +191,6 @@
 
 <dt>soilType</dt>
 <dd><p>A string indicating the soil type.</p></dd>
-
-
-<dt>bd</dt>
-<dd><p>Bulk density (in g/cm3).</p></dd>
 
 
 <dt>topsoil</dt>

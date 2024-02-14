@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">emptyforest</span><span class="op">(</span>ntree <span class="op">=</span> <span class="fl">0</span>, nshrub <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">emptyforest</span><span class="op">(</span>ntree <span class="op">=</span> <span class="fl">0</span>, nshrub <span class="op">=</span> <span class="fl">0</span>, nseed <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for forest</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">object</span>, <span class="va">SpParams</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -69,6 +69,10 @@
     <h2>Arguments</h2>
     <dl><dt>ntree, nshrub</dt>
 <dd><p>Number of tree and shrub cohorts, respectively.</p></dd>
+
+
+<dt>nseed</dt>
+<dd><p>Number of species in the seed bank.</p></dd>
 
 
 <dt>object</dt>
@@ -87,8 +91,8 @@
 <li><p><code>Z50</code>: Depth (in mm) corresponding to 50% of fine roots.</p></li>
 <li><p><code>Z95</code>: Depth (in mm) corresponding to 95% of fine roots.</p></li>
 </ul></li>
-<li><p><code>herbCover</code>: Percent cover of the herb layer.</p></li>
-<li><p><code>herbHeight</code>: Mean height (in cm) of the herb layer.</p></li>
+<li><p><code>herbCover</code>: Percent cover of the herb layer (optional).</p></li>
+<li><p><code>herbHeight</code>: Mean height (in cm) of the herb layer (optional).</p></li>
 </ul></dd>
 
 

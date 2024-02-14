@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">3.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">4.0.0</span>
       </span>
     </div>
 
@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2023-08-28</h4>
+            <h4 data-toc-skip class="date">2024-02-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/evaluation/StandLevelEvaluation.Rmd" class="external-link"><code>vignettes/evaluation/StandLevelEvaluation.Rmd</code></a></small>
       <div class="hidden name"><code>StandLevelEvaluation.Rmd</code></div>
@@ -85,19 +85,520 @@ Cáceres</h4>
 <div class="section level2">
 <h2 id="evaluation-summaries">Evaluation summaries<a class="anchor" aria-label="anchor" href="#evaluation-summaries"></a>
 </h2>
-<pre><code><span><span class="co">## Error in gzfile(file, "rb"): cannot open the connection</span></span></code></pre>
 <div class="section level3">
 <h3 id="soil-moisture">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture"></a>
 </h3>
+<table class="table">
+<colgroup>
+<col width="11%">
+<col width="5%">
+<col width="12%">
+<col width="11%">
+<col width="11%">
+<col width="10%">
+<col width="11%">
+<col width="12%">
+<col width="12%">
+</colgroup>
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">PRADES</td>
+<td align="right">363</td>
+<td align="right">-0.0161740</td>
+<td align="right">-2.534344</td>
+<td align="right">0.1727621</td>
+<td align="right">27.07048</td>
+<td align="right">0.7395554</td>
+<td align="right">0.4716469</td>
+<td align="right">0.2668374</td>
+</tr>
+<tr class="even">
+<td align="left">FRAPUE</td>
+<td align="right">1012</td>
+<td align="right">0.0976523</td>
+<td align="right">13.425426</td>
+<td align="right">0.1436085</td>
+<td align="right">19.74358</td>
+<td align="right">0.6596554</td>
+<td align="right">0.0615871</td>
+<td align="right">0.1804707</td>
+</tr>
+<tr class="odd">
+<td align="left">FONBLA</td>
+<td align="right">364</td>
+<td align="right">0.0757425</td>
+<td align="right">10.799942</td>
+<td align="right">0.1254916</td>
+<td align="right">17.89355</td>
+<td align="right">0.8469075</td>
+<td align="right">0.6047714</td>
+<td align="right">0.3986768</td>
+</tr>
+<tr class="even">
+<td align="left">ESPALTARM</td>
+<td align="right">1013</td>
+<td align="right">0.2497114</td>
+<td align="right">47.365444</td>
+<td align="right">0.2992614</td>
+<td align="right">56.76413</td>
+<td align="right">0.7596915</td>
+<td align="right">0.1131705</td>
+<td align="right">0.0494851</td>
+</tr>
+<tr class="odd">
+<td align="left">CANBALASC</td>
+<td align="right">676</td>
+<td align="right">0.1409552</td>
+<td align="right">20.065916</td>
+<td align="right">0.2878842</td>
+<td align="right">40.98225</td>
+<td align="right">0.4564628</td>
+<td align="right">-1.4991092</td>
+<td align="right">-0.8602195</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level3">
 <h3 id="plant-transpiration">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration"></a>
 </h3>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="9%">
+<col width="6%">
+<col width="4%">
+<col width="13%">
+<col width="11%">
+<col width="12%">
+<col width="9%">
+<col width="10%">
+<col width="10%">
+<col width="10%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">plot</th>
+<th align="left">cohort</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">PRADES</td>
+<td align="left">T1_153</td>
+<td align="right">362</td>
+<td align="right">4.970070e-02</td>
+<td align="right">23.9460537</td>
+<td align="right">1.263509e-01</td>
+<td align="right">60.87658</td>
+<td align="right">0.7170830</td>
+<td align="right">0.4640003</td>
+<td align="right">0.3018631</td>
+</tr>
+<tr class="even">
+<td align="left">PRADES</td>
+<td align="left">T2_168</td>
+<td align="right">253</td>
+<td align="right">-7.239790e-02</td>
+<td align="right">-37.7635378</td>
+<td align="right">1.280982e-01</td>
+<td align="right">66.81739</td>
+<td align="right">0.7263049</td>
+<td align="right">0.2093176</td>
+<td align="right">0.2134702</td>
+</tr>
+<tr class="odd">
+<td align="left">FRAPUE</td>
+<td align="left">T1_168</td>
+<td align="right">1087</td>
+<td align="right">-7.775850e-02</td>
+<td align="right">-22.6595963</td>
+<td align="right">2.252976e-01</td>
+<td align="right">65.65399</td>
+<td align="right">0.6795413</td>
+<td align="right">-0.7490764</td>
+<td align="right">-0.2428823</td>
+</tr>
+<tr class="even">
+<td align="left">FRAPUE</td>
+<td align="left">S1_28</td>
+<td align="right">0</td>
+<td align="right">NaN</td>
+<td align="right">NaN</td>
+<td align="right">NaN</td>
+<td align="right">NaN</td>
+<td align="right">NA</td>
+<td align="right">NaN</td>
+<td align="right">NaN</td>
+</tr>
+<tr class="odd">
+<td align="left">FONBLA</td>
+<td align="left">T2_148</td>
+<td align="right">300</td>
+<td align="right">-1.981600e-03</td>
+<td align="right">-0.9634655</td>
+<td align="right">9.751560e-02</td>
+<td align="right">47.41326</td>
+<td align="right">0.6817445</td>
+<td align="right">-0.1847833</td>
+<td align="right">0.0145543</td>
+</tr>
+<tr class="even">
+<td align="left">FONBLA</td>
+<td align="left">T3_168</td>
+<td align="right">309</td>
+<td align="right">3.035528e-01</td>
+<td align="right">104.8691380</td>
+<td align="right">3.107775e-01</td>
+<td align="right">107.36509</td>
+<td align="right">0.8999457</td>
+<td align="right">-3.7779782</td>
+<td align="right">-1.1172617</td>
+</tr>
+<tr class="odd">
+<td align="left">ESPALTARM</td>
+<td align="left">T1_149</td>
+<td align="right">924</td>
+<td align="right">-5.060310e+04</td>
+<td align="right">-99.9992319</td>
+<td align="right">5.060310e+04</td>
+<td align="right">99.99923</td>
+<td align="right">0.5869532</td>
+<td align="right">-1.0085165</td>
+<td align="right">-0.2119491</td>
+</tr>
+<tr class="even">
+<td align="left">ESPALTARM</td>
+<td align="left">T2_166</td>
+<td align="right">805</td>
+<td align="right">-3.539346e+04</td>
+<td align="right">-99.9981232</td>
+<td align="right">3.539346e+04</td>
+<td align="right">99.99812</td>
+<td align="right">0.8208423</td>
+<td align="right">-2.1428579</td>
+<td align="right">-0.7402761</td>
+</tr>
+<tr class="odd">
+<td align="left">ESPALTARM</td>
+<td align="left">T3_168</td>
+<td align="right">943</td>
+<td align="right">-5.504353e+04</td>
+<td align="right">-99.9983609</td>
+<td align="right">5.504353e+04</td>
+<td align="right">99.99836</td>
+<td align="right">0.7399129</td>
+<td align="right">-1.4866486</td>
+<td align="right">-0.4947086</td>
+</tr>
+<tr class="even">
+<td align="left">CANBALASC</td>
+<td align="left">T1_19</td>
+<td align="right">644</td>
+<td align="right">-2.738551e-01</td>
+<td align="right">-92.1322731</td>
+<td align="right">2.738551e-01</td>
+<td align="right">92.13227</td>
+<td align="right">0.4720402</td>
+<td align="right">-2.3981351</td>
+<td align="right">-0.9427867</td>
+</tr>
+<tr class="odd">
+<td align="left">CANBALASC</td>
+<td align="left">T2_148</td>
+<td align="right">611</td>
+<td align="right">2.018411e-01</td>
+<td align="right">77.6729548</td>
+<td align="right">3.756301e-01</td>
+<td align="right">144.55082</td>
+<td align="right">-0.2513688</td>
+<td align="right">-9.4982076</td>
+<td align="right">-1.8064229</td>
+</tr>
+<tr class="even">
+<td align="left">CANBALASC</td>
+<td align="left">T3_171</td>
+<td align="right">644</td>
+<td align="right">-1.970242e-01</td>
+<td align="right">-68.0526221</td>
+<td align="right">2.243218e-01</td>
+<td align="right">77.48127</td>
+<td align="right">0.5893409</td>
+<td align="right">-0.5650410</td>
+<td align="right">-0.2256941</td>
+</tr>
+<tr class="odd">
+<td align="left">CANBALASC</td>
+<td align="left">T4_168</td>
+<td align="right">679</td>
+<td align="right">-2.396049e-01</td>
+<td align="right">-56.4614696</td>
+<td align="right">3.389610e-01</td>
+<td align="right">79.87414</td>
+<td align="right">0.4795248</td>
+<td align="right">-2.2547397</td>
+<td align="right">-0.8259434</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level3">
 <h3 id="leaf-water-potentials">Leaf water potentials<a class="anchor" aria-label="anchor" href="#leaf-water-potentials"></a>
 </h3>
-<pre><code><span><span class="co">## Error in if (control$transpirationMode == "Sperry") {: argument is of length zero</span></span></code></pre>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="8%">
+<col width="6%">
+<col width="16%">
+<col width="2%">
+<col width="9%">
+<col width="9%">
+<col width="8%">
+<col width="8%">
+<col width="9%">
+<col width="10%">
+<col width="9%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">plot</th>
+<th align="left">cohort</th>
+<th align="left">WP</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">PRADES</td>
+<td align="left">T1_153</td>
+<td align="left">Midday potentials</td>
+<td align="right">4</td>
+<td align="right">-0.1977309</td>
+<td align="right">-10.644602</td>
+<td align="right">0.3636842</td>
+<td align="right">19.578498</td>
+<td align="right">-0.4154639</td>
+<td align="right">-1.6858419</td>
+<td align="right">-0.7962793</td>
+</tr>
+<tr class="even">
+<td align="left">PRADES</td>
+<td align="left">T2_168</td>
+<td align="left">Midday potentials</td>
+<td align="right">1</td>
+<td align="right">-1.2463547</td>
+<td align="right">-59.756732</td>
+<td align="right">1.2463547</td>
+<td align="right">59.756732</td>
+<td align="right">NA</td>
+<td align="right">-Inf</td>
+<td align="right">-Inf</td>
+</tr>
+<tr class="odd">
+<td align="left">FRAPUE</td>
+<td align="left">T1_168</td>
+<td align="left">Midday potentials</td>
+<td align="right">16</td>
+<td align="right">-0.3411775</td>
+<td align="right">-12.144926</td>
+<td align="right">0.5460760</td>
+<td align="right">19.438714</td>
+<td align="right">0.8099563</td>
+<td align="right">-0.6259606</td>
+<td align="right">-0.0993666</td>
+</tr>
+<tr class="even">
+<td align="left">FONBLA</td>
+<td align="left">T2_148</td>
+<td align="left">Midday potentials</td>
+<td align="right">3</td>
+<td align="right">1.2926191</td>
+<td align="right">48.453029</td>
+<td align="right">1.2926191</td>
+<td align="right">48.453029</td>
+<td align="right">0.8610317</td>
+<td align="right">-32.2424803</td>
+<td align="right">-5.9110331</td>
+</tr>
+<tr class="odd">
+<td align="left">FONBLA</td>
+<td align="left">T3_168</td>
+<td align="left">Midday potentials</td>
+<td align="right">3</td>
+<td align="right">0.1546383</td>
+<td align="right">5.666711</td>
+<td align="right">0.2047175</td>
+<td align="right">7.501861</td>
+<td align="right">0.9413139</td>
+<td align="right">0.6619691</td>
+<td align="right">0.3675776</td>
+</tr>
+<tr class="even">
+<td align="left">ESPALTARM</td>
+<td align="left">T1_149</td>
+<td align="left">Midday potentials</td>
+<td align="right">6</td>
+<td align="right">0.3701292</td>
+<td align="right">21.000236</td>
+<td align="right">0.3701292</td>
+<td align="right">21.000236</td>
+<td align="right">0.9779558</td>
+<td align="right">-0.3769978</td>
+<td align="right">-0.2441316</td>
+</tr>
+<tr class="odd">
+<td align="left">ESPALTARM</td>
+<td align="left">T2_166</td>
+<td align="left">Midday potentials</td>
+<td align="right">6</td>
+<td align="right">0.7237112</td>
+<td align="right">29.629938</td>
+<td align="right">0.7237112</td>
+<td align="right">29.629938</td>
+<td align="right">0.2306132</td>
+<td align="right">-4.5976796</td>
+<td align="right">-1.3728237</td>
+</tr>
+<tr class="even">
+<td align="left">ESPALTARM</td>
+<td align="left">T3_168</td>
+<td align="left">Midday potentials</td>
+<td align="right">6</td>
+<td align="right">-0.3930286</td>
+<td align="right">-16.838069</td>
+<td align="right">0.5090997</td>
+<td align="right">21.810771</td>
+<td align="right">0.8408983</td>
+<td align="right">-0.0908776</td>
+<td align="right">-0.4557260</td>
+</tr>
+<tr class="odd">
+<td align="left">PRADES</td>
+<td align="left">T1_153</td>
+<td align="left">Predawn potentials</td>
+<td align="right">4</td>
+<td align="right">0.1642666</td>
+<td align="right">10.894364</td>
+<td align="right">0.4251909</td>
+<td align="right">28.199189</td>
+<td align="right">-0.1142425</td>
+<td align="right">-0.3534272</td>
+<td align="right">-0.1017092</td>
+</tr>
+<tr class="even">
+<td align="left">PRADES</td>
+<td align="left">T2_168</td>
+<td align="left">Predawn potentials</td>
+<td align="right">1</td>
+<td align="right">-0.9537104</td>
+<td align="right">-67.095203</td>
+<td align="right">0.9537104</td>
+<td align="right">67.095203</td>
+<td align="right">NA</td>
+<td align="right">-Inf</td>
+<td align="right">-Inf</td>
+</tr>
+<tr class="odd">
+<td align="left">FRAPUE</td>
+<td align="left">T1_168</td>
+<td align="left">Predawn potentials</td>
+<td align="right">16</td>
+<td align="right">-0.7877337</td>
+<td align="right">-69.561859</td>
+<td align="right">0.8388457</td>
+<td align="right">74.075373</td>
+<td align="right">0.8762916</td>
+<td align="right">-0.5740040</td>
+<td align="right">-0.3138908</td>
+</tr>
+<tr class="even">
+<td align="left">FONBLA</td>
+<td align="left">T2_148</td>
+<td align="left">Predawn potentials</td>
+<td align="right">3</td>
+<td align="right">0.8450288</td>
+<td align="right">43.446211</td>
+<td align="right">0.8450288</td>
+<td align="right">43.446211</td>
+<td align="right">0.9978253</td>
+<td align="right">-2.8576810</td>
+<td align="right">-1.3766435</td>
+</tr>
+<tr class="odd">
+<td align="left">FONBLA</td>
+<td align="left">T3_168</td>
+<td align="left">Predawn potentials</td>
+<td align="right">3</td>
+<td align="right">0.2602475</td>
+<td align="right">17.146617</td>
+<td align="right">0.2602475</td>
+<td align="right">17.146617</td>
+<td align="right">0.9990873</td>
+<td align="right">0.7476315</td>
+<td align="right">0.4119930</td>
+</tr>
+<tr class="even">
+<td align="left">ESPALTARM</td>
+<td align="left">T1_149</td>
+<td align="left">Predawn potentials</td>
+<td align="right">6</td>
+<td align="right">0.4914878</td>
+<td align="right">43.590933</td>
+<td align="right">0.4914878</td>
+<td align="right">43.590933</td>
+<td align="right">0.9874801</td>
+<td align="right">0.0966259</td>
+<td align="right">-0.0438678</td>
+</tr>
+<tr class="odd">
+<td align="left">ESPALTARM</td>
+<td align="left">T2_166</td>
+<td align="left">Predawn potentials</td>
+<td align="right">6</td>
+<td align="right">0.0243780</td>
+<td align="right">3.816522</td>
+<td align="right">0.2657603</td>
+<td align="right">41.606307</td>
+<td align="right">0.8144705</td>
+<td align="right">0.5689913</td>
+<td align="right">0.1629597</td>
+</tr>
+<tr class="even">
+<td align="left">ESPALTARM</td>
+<td align="left">T3_168</td>
+<td align="left">Predawn potentials</td>
+<td align="right">6</td>
+<td align="right">0.3225226</td>
+<td align="right">32.619228</td>
+<td align="right">0.4181179</td>
+<td align="right">42.287527</td>
+<td align="right">0.8320122</td>
+<td align="right">0.5189782</td>
+<td align="right">0.3534259</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="section level2">
@@ -106,131 +607,837 @@ Cáceres</h4>
 <div class="section level3">
 <h3 id="prades">PRADES<a class="anchor" aria-label="anchor" href="#prades"></a>
 </h3>
-<pre><code><span><span class="co">## Error in gzfile(file, "rb"): cannot open the connection</span></span></code></pre>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'input_object' not found</span></span></code></pre>
-<pre><code><span><span class="co">## Error in gzfile(file, "rb"): cannot open the connection</span></span></code></pre>
 <div class="section level4">
 <h4 id="soil-moisture-1">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-1"></a>
 </h4>
-<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1): arguments imply differing number of rows: 0, 1</span></span></code></pre>
-<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1): arguments imply differing number of rows: 0, 1</span></span></code></pre>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'p' not found</span></span></code></pre>
-<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1): arguments imply differing number of rows: 0, 1</span></span></code></pre>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'p' not found</span></span></code></pre>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="5%">
+<col width="13%">
+<col width="13%">
+<col width="13%">
+<col width="12%">
+<col width="13%">
+<col width="13%">
+<col width="13%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="right">363</td>
+<td align="right">-0.016174</td>
+<td align="right">-2.534344</td>
+<td align="right">0.1727621</td>
+<td align="right">27.07048</td>
+<td align="right">0.7395554</td>
+<td align="right">0.4716469</td>
+<td align="right">0.2668374</td>
+</tr></tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-31-1.png" width="768"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-32-1.png" width="768"></p>
 </div>
 <div class="section level4">
 <h4 id="plant-transpiration-1">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-1"></a>
 </h4>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'input_object' not found</span></span></code></pre>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="8%">
+<col width="4%">
+<col width="13%">
+<col width="12%">
+<col width="12%">
+<col width="11%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+</colgroup>
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T1_153</td>
+<td align="right">362</td>
+<td align="right">0.0497007</td>
+<td align="right">23.94605</td>
+<td align="right">0.1263509</td>
+<td align="right">60.87658</td>
+<td align="right">0.7170830</td>
+<td align="right">0.4640003</td>
+<td align="right">0.3018631</td>
+</tr>
+<tr class="even">
+<td align="left">T2_168</td>
+<td align="right">253</td>
+<td align="right">-0.0723979</td>
+<td align="right">-37.76354</td>
+<td align="right">0.1280982</td>
+<td align="right">66.81739</td>
+<td align="right">0.7263049</td>
+<td align="right">0.2093176</td>
+<td align="right">0.2134702</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-34-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-34-2.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-34-3.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-34-4.png" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="leaf-water-potentials-1">Leaf water potentials<a class="anchor" aria-label="anchor" href="#leaf-water-potentials-1"></a>
 </h4>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'input_object' not found</span></span></code></pre>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="6%">
+<col width="18%">
+<col width="2%">
+<col width="10%">
+<col width="9%">
+<col width="9%">
+<col width="8%">
+<col width="10%">
+<col width="10%">
+<col width="10%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">cohort</th>
+<th align="left">WP</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T1_153</td>
+<td align="left">Midday potentials</td>
+<td align="right">4</td>
+<td align="right">-0.1977309</td>
+<td align="right">-10.64460</td>
+<td align="right">0.3636842</td>
+<td align="right">19.57850</td>
+<td align="right">-0.4154639</td>
+<td align="right">-1.6858419</td>
+<td align="right">-0.7962793</td>
+</tr>
+<tr class="even">
+<td align="left">T2_168</td>
+<td align="left">Midday potentials</td>
+<td align="right">1</td>
+<td align="right">-1.2463547</td>
+<td align="right">-59.75673</td>
+<td align="right">1.2463547</td>
+<td align="right">59.75673</td>
+<td align="right">NA</td>
+<td align="right">-Inf</td>
+<td align="right">-Inf</td>
+</tr>
+<tr class="odd">
+<td align="left">T1_153</td>
+<td align="left">Predawn potentials</td>
+<td align="right">4</td>
+<td align="right">0.1642666</td>
+<td align="right">10.89436</td>
+<td align="right">0.4251909</td>
+<td align="right">28.19919</td>
+<td align="right">-0.1142425</td>
+<td align="right">-0.3534272</td>
+<td align="right">-0.1017092</td>
+</tr>
+<tr class="even">
+<td align="left">T2_168</td>
+<td align="left">Predawn potentials</td>
+<td align="right">1</td>
+<td align="right">-0.9537104</td>
+<td align="right">-67.09520</td>
+<td align="right">0.9537104</td>
+<td align="right">67.09520</td>
+<td align="right">NA</td>
+<td align="right">-Inf</td>
+<td align="right">-Inf</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-36-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-36-2.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-36-3.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-36-4.png" width="700"></p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="frapue">FRAPUE<a class="anchor" aria-label="anchor" href="#frapue"></a>
 </h3>
-<pre><code><span><span class="co">## Error in gzfile(file, "rb"): cannot open the connection</span></span></code></pre>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'input_object' not found</span></span></code></pre>
-<pre><code><span><span class="co">## Error in gzfile(file, "rb"): cannot open the connection</span></span></code></pre>
 <div class="section level4">
 <h4 id="soil-moisture-2">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-2"></a>
 </h4>
-<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1): arguments imply differing number of rows: 0, 1</span></span></code></pre>
-<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1): arguments imply differing number of rows: 0, 1</span></span></code></pre>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'p' not found</span></span></code></pre>
-<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1): arguments imply differing number of rows: 0, 1</span></span></code></pre>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'p' not found</span></span></code></pre>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="6%">
+<col width="13%">
+<col width="12%">
+<col width="13%">
+<col width="12%">
+<col width="13%">
+<col width="13%">
+<col width="13%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="right">1012</td>
+<td align="right">0.0976523</td>
+<td align="right">13.42543</td>
+<td align="right">0.1436085</td>
+<td align="right">19.74358</td>
+<td align="right">0.6596554</td>
+<td align="right">0.0615871</td>
+<td align="right">0.1804707</td>
+</tr></tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-51-1.png" width="768"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-52-1.png" width="768"></p>
 </div>
 <div class="section level4">
 <h4 id="plant-transpiration-2">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-2"></a>
 </h4>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'input_object' not found</span></span></code></pre>
+<table class="table">
+<colgroup>
+<col width="8%">
+<col width="6%">
+<col width="13%">
+<col width="10%">
+<col width="12%">
+<col width="10%">
+<col width="12%">
+<col width="13%">
+<col width="13%">
+</colgroup>
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T1_168</td>
+<td align="right">1087</td>
+<td align="right">-0.0777585</td>
+<td align="right">-22.6596</td>
+<td align="right">0.2252976</td>
+<td align="right">65.65399</td>
+<td align="right">0.6795413</td>
+<td align="right">-0.7490764</td>
+<td align="right">-0.2428823</td>
+</tr>
+<tr class="even">
+<td align="left">S1_28</td>
+<td align="right">0</td>
+<td align="right">NaN</td>
+<td align="right">NaN</td>
+<td align="right">NaN</td>
+<td align="right">NaN</td>
+<td align="right">NA</td>
+<td align="right">NaN</td>
+<td align="right">NaN</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-54-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-54-2.png" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="leaf-water-potentials-2">Leaf water potentials<a class="anchor" aria-label="anchor" href="#leaf-water-potentials-2"></a>
 </h4>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'input_object' not found</span></span></code></pre>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="6%">
+<col width="18%">
+<col width="2%">
+<col width="10%">
+<col width="9%">
+<col width="9%">
+<col width="8%">
+<col width="9%">
+<col width="10%">
+<col width="10%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">cohort</th>
+<th align="left">WP</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T1_168</td>
+<td align="left">Midday potentials</td>
+<td align="right">16</td>
+<td align="right">-0.3411775</td>
+<td align="right">-12.14493</td>
+<td align="right">0.5460760</td>
+<td align="right">19.43871</td>
+<td align="right">0.8099563</td>
+<td align="right">-0.6259606</td>
+<td align="right">-0.0993666</td>
+</tr>
+<tr class="even">
+<td align="left">T1_168</td>
+<td align="left">Predawn potentials</td>
+<td align="right">16</td>
+<td align="right">-0.7877337</td>
+<td align="right">-69.56186</td>
+<td align="right">0.8388457</td>
+<td align="right">74.07537</td>
+<td align="right">0.8762916</td>
+<td align="right">-0.5740040</td>
+<td align="right">-0.3138908</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-56-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-56-2.png" width="700"></p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="fonbla">FONBLA<a class="anchor" aria-label="anchor" href="#fonbla"></a>
 </h3>
-<pre><code><span><span class="co">## Error in gzfile(file, "rb"): cannot open the connection</span></span></code></pre>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'input_object' not found</span></span></code></pre>
-<pre><code><span><span class="co">## Error in gzfile(file, "rb"): cannot open the connection</span></span></code></pre>
 <div class="section level4">
 <h4 id="soil-moisture-3">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-3"></a>
 </h4>
-<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1): arguments imply differing number of rows: 0, 1</span></span></code></pre>
-<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1): arguments imply differing number of rows: 0, 1</span></span></code></pre>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'p' not found</span></span></code></pre>
-<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1): arguments imply differing number of rows: 0, 1</span></span></code></pre>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'p' not found</span></span></code></pre>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="5%">
+<col width="13%">
+<col width="12%">
+<col width="13%">
+<col width="12%">
+<col width="13%">
+<col width="13%">
+<col width="13%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="right">364</td>
+<td align="right">0.0757425</td>
+<td align="right">10.79994</td>
+<td align="right">0.1254916</td>
+<td align="right">17.89355</td>
+<td align="right">0.8469075</td>
+<td align="right">0.6047714</td>
+<td align="right">0.3986768</td>
+</tr></tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-71-1.png" width="768"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-72-1.png" width="768"></p>
 </div>
 <div class="section level4">
 <h4 id="plant-transpiration-3">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-3"></a>
 </h4>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'input_object' not found</span></span></code></pre>
+<table class="table">
+<colgroup>
+<col width="8%">
+<col width="4%">
+<col width="12%">
+<col width="13%">
+<col width="11%">
+<col width="11%">
+<col width="11%">
+<col width="12%">
+<col width="12%">
+</colgroup>
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T2_148</td>
+<td align="right">300</td>
+<td align="right">-0.0019816</td>
+<td align="right">-0.9634655</td>
+<td align="right">0.0975156</td>
+<td align="right">47.41326</td>
+<td align="right">0.6817445</td>
+<td align="right">-0.1847833</td>
+<td align="right">0.0145543</td>
+</tr>
+<tr class="even">
+<td align="left">T3_168</td>
+<td align="right">309</td>
+<td align="right">0.3035528</td>
+<td align="right">104.8691380</td>
+<td align="right">0.3107775</td>
+<td align="right">107.36509</td>
+<td align="right">0.8999457</td>
+<td align="right">-3.7779782</td>
+<td align="right">-1.1172617</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-74-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-74-2.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-74-3.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-74-4.png" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="leaf-water-potentials-3">Leaf water potentials<a class="anchor" aria-label="anchor" href="#leaf-water-potentials-3"></a>
 </h4>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'input_object' not found</span></span></code></pre>
+<table class="table">
+<colgroup>
+<col width="6%">
+<col width="18%">
+<col width="2%">
+<col width="9%">
+<col width="9%">
+<col width="9%">
+<col width="9%">
+<col width="9%">
+<col width="11%">
+<col width="10%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">cohort</th>
+<th align="left">WP</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T2_148</td>
+<td align="left">Midday potentials</td>
+<td align="right">3</td>
+<td align="right">1.2926191</td>
+<td align="right">48.453029</td>
+<td align="right">1.2926191</td>
+<td align="right">48.453029</td>
+<td align="right">0.8610317</td>
+<td align="right">-32.2424803</td>
+<td align="right">-5.9110331</td>
+</tr>
+<tr class="even">
+<td align="left">T3_168</td>
+<td align="left">Midday potentials</td>
+<td align="right">3</td>
+<td align="right">0.1546383</td>
+<td align="right">5.666711</td>
+<td align="right">0.2047175</td>
+<td align="right">7.501861</td>
+<td align="right">0.9413139</td>
+<td align="right">0.6619691</td>
+<td align="right">0.3675776</td>
+</tr>
+<tr class="odd">
+<td align="left">T2_148</td>
+<td align="left">Predawn potentials</td>
+<td align="right">3</td>
+<td align="right">0.8450288</td>
+<td align="right">43.446211</td>
+<td align="right">0.8450288</td>
+<td align="right">43.446211</td>
+<td align="right">0.9978253</td>
+<td align="right">-2.8576810</td>
+<td align="right">-1.3766435</td>
+</tr>
+<tr class="even">
+<td align="left">T3_168</td>
+<td align="left">Predawn potentials</td>
+<td align="right">3</td>
+<td align="right">0.2602475</td>
+<td align="right">17.146617</td>
+<td align="right">0.2602475</td>
+<td align="right">17.146617</td>
+<td align="right">0.9990873</td>
+<td align="right">0.7476315</td>
+<td align="right">0.4119930</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-76-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-76-2.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-76-3.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-76-4.png" width="700"></p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="espaltarm">ESPALTARM<a class="anchor" aria-label="anchor" href="#espaltarm"></a>
 </h3>
-<pre><code><span><span class="co">## Error in gzfile(file, "rb"): cannot open the connection</span></span></code></pre>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'input_object' not found</span></span></code></pre>
-<pre><code><span><span class="co">## Error in gzfile(file, "rb"): cannot open the connection</span></span></code></pre>
 <div class="section level4">
 <h4 id="soil-moisture-4">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-4"></a>
 </h4>
-<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1): arguments imply differing number of rows: 0, 1</span></span></code></pre>
-<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1): arguments imply differing number of rows: 0, 1</span></span></code></pre>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'p' not found</span></span></code></pre>
-<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1): arguments imply differing number of rows: 0, 1</span></span></code></pre>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'p' not found</span></span></code></pre>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="6%">
+<col width="13%">
+<col width="12%">
+<col width="13%">
+<col width="12%">
+<col width="13%">
+<col width="13%">
+<col width="13%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="right">1013</td>
+<td align="right">0.2497114</td>
+<td align="right">47.36544</td>
+<td align="right">0.2992614</td>
+<td align="right">56.76413</td>
+<td align="right">0.7596915</td>
+<td align="right">0.1131705</td>
+<td align="right">0.0494851</td>
+</tr></tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-91-1.png" width="768"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-92-1.png" width="768"></p>
 </div>
 <div class="section level4">
 <h4 id="plant-transpiration-4">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-4"></a>
 </h4>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'input_object' not found</span></span></code></pre>
+<table class="table">
+<colgroup>
+<col width="8%">
+<col width="5%">
+<col width="12%">
+<col width="12%">
+<col width="11%">
+<col width="11%">
+<col width="12%">
+<col width="12%">
+<col width="13%">
+</colgroup>
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T1_149</td>
+<td align="right">924</td>
+<td align="right">-50603.10</td>
+<td align="right">-99.99923</td>
+<td align="right">50603.10</td>
+<td align="right">99.99923</td>
+<td align="right">0.5869532</td>
+<td align="right">-1.008517</td>
+<td align="right">-0.2119491</td>
+</tr>
+<tr class="even">
+<td align="left">T2_166</td>
+<td align="right">805</td>
+<td align="right">-35393.46</td>
+<td align="right">-99.99812</td>
+<td align="right">35393.46</td>
+<td align="right">99.99812</td>
+<td align="right">0.8208423</td>
+<td align="right">-2.142858</td>
+<td align="right">-0.7402761</td>
+</tr>
+<tr class="odd">
+<td align="left">T3_168</td>
+<td align="right">943</td>
+<td align="right">-55043.53</td>
+<td align="right">-99.99836</td>
+<td align="right">55043.53</td>
+<td align="right">99.99836</td>
+<td align="right">0.7399129</td>
+<td align="right">-1.486649</td>
+<td align="right">-0.4947086</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-94-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-94-2.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-94-3.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-94-4.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-94-5.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-94-6.png" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="leaf-water-potentials-4">Leaf water potentials<a class="anchor" aria-label="anchor" href="#leaf-water-potentials-4"></a>
 </h4>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'input_object' not found</span></span></code></pre>
+<table class="table">
+<colgroup>
+<col width="6%">
+<col width="18%">
+<col width="2%">
+<col width="10%">
+<col width="10%">
+<col width="9%">
+<col width="8%">
+<col width="9%">
+<col width="10%">
+<col width="10%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">cohort</th>
+<th align="left">WP</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T1_149</td>
+<td align="left">Midday potentials</td>
+<td align="right">6</td>
+<td align="right">0.3701292</td>
+<td align="right">21.000236</td>
+<td align="right">0.3701292</td>
+<td align="right">21.00024</td>
+<td align="right">0.9779558</td>
+<td align="right">-0.3769978</td>
+<td align="right">-0.2441316</td>
+</tr>
+<tr class="even">
+<td align="left">T2_166</td>
+<td align="left">Midday potentials</td>
+<td align="right">6</td>
+<td align="right">0.7237112</td>
+<td align="right">29.629938</td>
+<td align="right">0.7237112</td>
+<td align="right">29.62994</td>
+<td align="right">0.2306132</td>
+<td align="right">-4.5976796</td>
+<td align="right">-1.3728237</td>
+</tr>
+<tr class="odd">
+<td align="left">T3_168</td>
+<td align="left">Midday potentials</td>
+<td align="right">6</td>
+<td align="right">-0.3930286</td>
+<td align="right">-16.838069</td>
+<td align="right">0.5090997</td>
+<td align="right">21.81077</td>
+<td align="right">0.8408983</td>
+<td align="right">-0.0908776</td>
+<td align="right">-0.4557260</td>
+</tr>
+<tr class="even">
+<td align="left">T1_149</td>
+<td align="left">Predawn potentials</td>
+<td align="right">6</td>
+<td align="right">0.4914878</td>
+<td align="right">43.590933</td>
+<td align="right">0.4914878</td>
+<td align="right">43.59093</td>
+<td align="right">0.9874801</td>
+<td align="right">0.0966259</td>
+<td align="right">-0.0438678</td>
+</tr>
+<tr class="odd">
+<td align="left">T2_166</td>
+<td align="left">Predawn potentials</td>
+<td align="right">6</td>
+<td align="right">0.0243780</td>
+<td align="right">3.816522</td>
+<td align="right">0.2657603</td>
+<td align="right">41.60631</td>
+<td align="right">0.8144705</td>
+<td align="right">0.5689913</td>
+<td align="right">0.1629597</td>
+</tr>
+<tr class="even">
+<td align="left">T3_168</td>
+<td align="left">Predawn potentials</td>
+<td align="right">6</td>
+<td align="right">0.3225226</td>
+<td align="right">32.619228</td>
+<td align="right">0.4181179</td>
+<td align="right">42.28753</td>
+<td align="right">0.8320122</td>
+<td align="right">0.5189782</td>
+<td align="right">0.3534259</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-96-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-96-2.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-96-3.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-96-4.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-96-5.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-96-6.png" width="700"></p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="can-balasc">CAN BALASC<a class="anchor" aria-label="anchor" href="#can-balasc"></a>
 </h3>
-<pre><code><span><span class="co">## Error in gzfile(file, "rb"): cannot open the connection</span></span></code></pre>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'input_object' not found</span></span></code></pre>
-<pre><code><span><span class="co">## Error in gzfile(file, "rb"): cannot open the connection</span></span></code></pre>
 <div class="section level4">
 <h4 id="soil-moisture-5">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-5"></a>
 </h4>
-<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1): arguments imply differing number of rows: 0, 1</span></span></code></pre>
-<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1): arguments imply differing number of rows: 0, 1</span></span></code></pre>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'p' not found</span></span></code></pre>
-<pre><code><span><span class="co">## Error in data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1): arguments imply differing number of rows: 0, 1</span></span></code></pre>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'p' not found</span></span></code></pre>
+<table class="table">
+<colgroup>
+<col width="5%">
+<col width="13%">
+<col width="12%">
+<col width="13%">
+<col width="12%">
+<col width="13%">
+<col width="13%">
+<col width="15%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="right">676</td>
+<td align="right">0.1409552</td>
+<td align="right">20.06592</td>
+<td align="right">0.2878842</td>
+<td align="right">40.98225</td>
+<td align="right">0.4564628</td>
+<td align="right">-1.499109</td>
+<td align="right">-0.8602195</td>
+</tr></tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-111-1.png" width="768"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-112-1.png" width="768"></p>
 </div>
 <div class="section level4">
 <h4 id="plant-transpiration-5">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-5"></a>
 </h4>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'input_object' not found</span></span></code></pre>
+<table class="table">
+<colgroup>
+<col width="8%">
+<col width="4%">
+<col width="13%">
+<col width="11%">
+<col width="11%">
+<col width="11%">
+<col width="13%">
+<col width="11%">
+<col width="13%">
+</colgroup>
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">T1_19</td>
+<td align="right">644</td>
+<td align="right">-0.2738551</td>
+<td align="right">-92.13227</td>
+<td align="right">0.2738551</td>
+<td align="right">92.13227</td>
+<td align="right">0.4720402</td>
+<td align="right">-2.398135</td>
+<td align="right">-0.9427867</td>
+</tr>
+<tr class="even">
+<td align="left">T2_148</td>
+<td align="right">611</td>
+<td align="right">0.2018411</td>
+<td align="right">77.67295</td>
+<td align="right">0.3756301</td>
+<td align="right">144.55082</td>
+<td align="right">-0.2513688</td>
+<td align="right">-9.498208</td>
+<td align="right">-1.8064229</td>
+</tr>
+<tr class="odd">
+<td align="left">T3_171</td>
+<td align="right">644</td>
+<td align="right">-0.1970242</td>
+<td align="right">-68.05262</td>
+<td align="right">0.2243218</td>
+<td align="right">77.48127</td>
+<td align="right">0.5893409</td>
+<td align="right">-0.565041</td>
+<td align="right">-0.2256941</td>
+</tr>
+<tr class="even">
+<td align="left">T4_168</td>
+<td align="right">679</td>
+<td align="right">-0.2396049</td>
+<td align="right">-56.46147</td>
+<td align="right">0.3389610</td>
+<td align="right">79.87414</td>
+<td align="right">0.4795248</td>
+<td align="right">-2.254740</td>
+<td align="right">-0.8259434</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-114-1.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-114-2.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-114-3.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-114-4.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-114-5.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-114-6.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-114-7.png" width="700"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-114-8.png" width="700"></p>
 </div>
 <div class="section level4">
 <h4 id="leaf-water-potentials-5">Leaf water potentials<a class="anchor" aria-label="anchor" href="#leaf-water-potentials-5"></a>
 </h4>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'input_object' not found</span></span></code></pre>
 </div>
 </div>
 </div>
