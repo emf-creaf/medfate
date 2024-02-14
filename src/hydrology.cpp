@@ -259,6 +259,9 @@ double infiltrationAmount(double rainfallInput, double rainfallIntensity, List s
   if(model=="GreenAmpt1911") {
     NumericVector clay = soil["clay"];
     NumericVector sand = soil["sand"];
+    NumericVector bd = soil["bd"];
+    double bdsoil = 2.73; //Density of soil particles
+    double bdref = 1.2; //Reference bulk density for Ksat
     String usda = USDAType(clay[0], sand[0]);
     NumericVector cp = campbellParamsClappHornberger(usda);
     NumericVector theta_dry = theta(soil, soilFunctions);
@@ -267,6 +270,7 @@ double infiltrationAmount(double rainfallInput, double rainfallIntensity, List s
     double psi_w = cp["psi_sat_cm"]*((2.0*b + 3.0)/(2*b + 6.0));
     double theta_sat = cp["theta_sat"];
     double K_sat = cp["K_sat_cm_h"];
+    K_sat = K_sat*std::pow((bdsoil - bd[0])/(bdsoil - bdref),3.0);
     infiltration = infitrationGreenAmpt(t, psi_w, K_sat, theta_sat, theta_dry[0]);
   } else if(model=="Boughton1989") {
     NumericVector Water_FC = waterFC(soil, soilFunctions);
@@ -544,7 +548,10 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   NumericVector sourceSink_m3s =  sourceSink*mm_day_2_m3_s;
   NumericVector dZ_m = dVec*0.001; //mm to m
   NumericVector rfc = soil["rfc"];
-
+  NumericVector bd = soil["bd"];
+  double bdsoil = 2.73; //Density of soil particles
+  double bdref = 1.2; //Reference bulk density for Ksat
+  
   double maxSource =  max(abs(sourceSink));
   if(maxSource > 10) nsteps = 48;
   if(maxSource > 20) nsteps = 96;
@@ -584,7 +591,8 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   NumericVector Psi(nlayers), K(nlayers), C(nlayers);
   NumericVector Psi_m(nlayers), K_ms(nlayers), C_m(nlayers), K_ms05(nlayers), C_m05(nlayers);
   for(int l=0;l<nlayers;l++) {
-    Ksat[l] = Ksat_ori[l]*lambda[l];//Multiply K for the space available for water movement
+    Ksat[l] = Ksat_ori[l]*std::pow((bdsoil - bd[l])/(bdsoil - bdref),3.0);
+    Ksat[l] = Ksat[l]*lambda[l];//Multiply K for the space available for water movement
     Psi[l] = theta2psiVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], Theta[l]); 
     C[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
     K[l] = psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
