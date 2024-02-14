@@ -548,9 +548,7 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   NumericVector sourceSink_m3s =  sourceSink*mm_day_2_m3_s;
   NumericVector dZ_m = dVec*0.001; //mm to m
   NumericVector rfc = soil["rfc"];
-  NumericVector bd = soil["bd"];
-  double bdsoil = 2.73; //Density of soil particles
-  double bdref = 1.2; //Reference bulk density for Ksat
+
   
   double maxSource =  max(abs(sourceSink));
   if(maxSource > 10) nsteps = 48;
@@ -591,8 +589,7 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   NumericVector Psi(nlayers), K(nlayers), C(nlayers);
   NumericVector Psi_m(nlayers), K_ms(nlayers), C_m(nlayers), K_ms05(nlayers), C_m05(nlayers);
   for(int l=0;l<nlayers;l++) {
-    Ksat[l] = Ksat_ori[l]*std::pow((bdsoil - bd[l])/(bdsoil - bdref),3.0);
-    Ksat[l] = Ksat[l]*lambda[l];//Multiply K for the space available for water movement
+    Ksat[l] = Ksat_ori[l]*lambda[l];//Multiply K for the space available for water movement
     Psi[l] = theta2psiVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], Theta[l]); 
     C[l] = psi2cVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
     K[l] = psi2kVanGenuchten(Ksat[l], n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);

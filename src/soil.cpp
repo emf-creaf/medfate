@@ -118,7 +118,7 @@ CharacterVector layerNames(int nlayers) {
 //' 
 //' @name soil_texture
 // [[Rcpp::export("soil_saturatedConductivitySX")]]
-double saturatedConductivitySaxton(double clay, double sand, double om = NA_REAL, bool mmol = true) {
+double saturatedConductivitySaxton(double clay, double sand, double bd, double om = NA_REAL, bool mmol = true) {
   double Ksat = NA_REAL;
   //If organic matter is missing use Saxton et al (1986)
   //Otherwise use Saxton & Rawls (2006)
@@ -144,6 +144,10 @@ double saturatedConductivitySaxton(double clay, double sand, double om = NA_REAL
     //mm/h to cm/day
     Ksat = Ksat*0.1*24.0;
   }
+  //Correct for bulk density
+  double bdsoil = 2.73; //Density of soil particles
+  double bdref = 1.2; //Reference bulk density for Ksat
+  Ksat = Ksat*std::pow((bdsoil - bd)/(bdsoil - bdref),3.0);
   //cm/day to mmolH20·m-1·s-1·MPa-1
   if(mmol) Ksat = Ksat*cmdTOmmolm2sMPa;
   return(Ksat);
@@ -151,7 +155,7 @@ double saturatedConductivitySaxton(double clay, double sand, double om = NA_REAL
 
 //' @rdname soil_texture
 // [[Rcpp::export("soil_unsaturatedConductivitySX")]]
-double unsaturatedConductivitySaxton(double theta, double clay, double sand, double om = NA_REAL, bool mmol = true) {
+double unsaturatedConductivitySaxton(double theta, double clay, double sand, double bd, double om = NA_REAL, bool mmol = true) {
   double Kunsat = NA_REAL;
   //If organic matter is missing use Saxton et al (1986)
   //Otherwise use Saxton & Rawls (2006)
@@ -177,6 +181,10 @@ double unsaturatedConductivitySaxton(double theta, double clay, double sand, dou
     //mm/h to cm/day
     Kunsat = Kunsat*0.1*24.0;
   }
+  //Correct for bulk density
+  double bdsoil = 2.73; //Density of soil particles
+  double bdref = 1.2; //Reference bulk density for Ksat
+  Kunsat = Kunsat*std::pow((bdsoil - bd)/(bdsoil - bdref),3.0);
   //cm/day to mmolH20·m-1·s-1·MPa-1
   if(mmol) Kunsat = Kunsat*cmdTOmmolm2sMPa;
   return(Kunsat);
@@ -582,9 +590,10 @@ NumericVector conductivity(List soil, String model="SX") {
     NumericVector Theta = theta(soil, model);
     NumericVector clay =soil["clay"];
     NumericVector sand = soil["sand"];
+    NumericVector bd = soil["bd"];
     NumericVector om = soil["om"];
     for(int l=0;l<nlayers;l++) {
-      K[l] = unsaturatedConductivitySaxton(Theta[l], clay[l], sand[l], om[l]);
+      K[l] = unsaturatedConductivitySaxton(Theta[l], clay[l], sand[l], bd[l], om[l]);
     }
   } else {
     NumericVector psiSoil = psi(soil, model);
@@ -835,7 +844,7 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
       vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], FALSE);
       // Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
       macro[l] = std::max(0.0,0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0));
-      Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], om[l]);
+      Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], bd[l], om[l]);
     } else {
       stop("Wrong value for 'VG_PTF'");
     }
@@ -908,7 +917,7 @@ void modifySoilLayerParam(List soil, String paramName, int layer, double newValu
     VG_theta_sat[l] = vgl[3];
     // Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
     macro[l] = std::max(0.0,0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0));
-    Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], om[l]);
+    Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], bd[l], om[l]);
     SoilDepth +=dVec[l];
   }
   //Update SoilDepth

@@ -464,17 +464,17 @@ namespace medfate {
         return Rcpp::as<double >(rcpp_result_gen);
     }
 
-    inline double soil_saturatedConductivitySX(double clay, double sand, double om = NA_REAL, bool mmol = true) {
-        typedef SEXP(*Ptr_soil_saturatedConductivitySX)(SEXP,SEXP,SEXP,SEXP);
+    inline double soil_saturatedConductivitySX(double clay, double sand, double bd, double om = NA_REAL, bool mmol = true) {
+        typedef SEXP(*Ptr_soil_saturatedConductivitySX)(SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_soil_saturatedConductivitySX p_soil_saturatedConductivitySX = NULL;
         if (p_soil_saturatedConductivitySX == NULL) {
-            validateSignature("double(*soil_saturatedConductivitySX)(double,double,double,bool)");
+            validateSignature("double(*soil_saturatedConductivitySX)(double,double,double,double,bool)");
             p_soil_saturatedConductivitySX = (Ptr_soil_saturatedConductivitySX)R_GetCCallable("medfate", "_medfate_soil_saturatedConductivitySX");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_soil_saturatedConductivitySX(Shield<SEXP>(Rcpp::wrap(clay)), Shield<SEXP>(Rcpp::wrap(sand)), Shield<SEXP>(Rcpp::wrap(om)), Shield<SEXP>(Rcpp::wrap(mmol)));
+            rcpp_result_gen = p_soil_saturatedConductivitySX(Shield<SEXP>(Rcpp::wrap(clay)), Shield<SEXP>(Rcpp::wrap(sand)), Shield<SEXP>(Rcpp::wrap(bd)), Shield<SEXP>(Rcpp::wrap(om)), Shield<SEXP>(Rcpp::wrap(mmol)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -485,17 +485,17 @@ namespace medfate {
         return Rcpp::as<double >(rcpp_result_gen);
     }
 
-    inline double soil_unsaturatedConductivitySX(double theta, double clay, double sand, double om = NA_REAL, bool mmol = true) {
-        typedef SEXP(*Ptr_soil_unsaturatedConductivitySX)(SEXP,SEXP,SEXP,SEXP,SEXP);
+    inline double soil_unsaturatedConductivitySX(double theta, double clay, double sand, double bd, double om = NA_REAL, bool mmol = true) {
+        typedef SEXP(*Ptr_soil_unsaturatedConductivitySX)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_soil_unsaturatedConductivitySX p_soil_unsaturatedConductivitySX = NULL;
         if (p_soil_unsaturatedConductivitySX == NULL) {
-            validateSignature("double(*soil_unsaturatedConductivitySX)(double,double,double,double,bool)");
+            validateSignature("double(*soil_unsaturatedConductivitySX)(double,double,double,double,double,bool)");
             p_soil_unsaturatedConductivitySX = (Ptr_soil_unsaturatedConductivitySX)R_GetCCallable("medfate", "_medfate_soil_unsaturatedConductivitySX");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_soil_unsaturatedConductivitySX(Shield<SEXP>(Rcpp::wrap(theta)), Shield<SEXP>(Rcpp::wrap(clay)), Shield<SEXP>(Rcpp::wrap(sand)), Shield<SEXP>(Rcpp::wrap(om)), Shield<SEXP>(Rcpp::wrap(mmol)));
+            rcpp_result_gen = p_soil_unsaturatedConductivitySX(Shield<SEXP>(Rcpp::wrap(theta)), Shield<SEXP>(Rcpp::wrap(clay)), Shield<SEXP>(Rcpp::wrap(sand)), Shield<SEXP>(Rcpp::wrap(bd)), Shield<SEXP>(Rcpp::wrap(om)), Shield<SEXP>(Rcpp::wrap(mmol)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

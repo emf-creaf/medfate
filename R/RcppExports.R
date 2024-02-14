@@ -2790,13 +2790,13 @@ root_horizontalProportions <- function(poolProportions, VolInd, N, V, d, rfc) {
 #' soil_retentionCurvePlot(s, model="both")
 #' 
 #' @name soil_texture
-soil_saturatedConductivitySX <- function(clay, sand, om = NA_real_, mmol = TRUE) {
-    .Call(`_medfate_saturatedConductivitySaxton`, clay, sand, om, mmol)
+soil_saturatedConductivitySX <- function(clay, sand, bd, om = NA_real_, mmol = TRUE) {
+    .Call(`_medfate_saturatedConductivitySaxton`, clay, sand, bd, om, mmol)
 }
 
 #' @rdname soil_texture
-soil_unsaturatedConductivitySX <- function(theta, clay, sand, om = NA_real_, mmol = TRUE) {
-    .Call(`_medfate_unsaturatedConductivitySaxton`, theta, clay, sand, om, mmol)
+soil_unsaturatedConductivitySX <- function(theta, clay, sand, bd, om = NA_real_, mmol = TRUE) {
+    .Call(`_medfate_unsaturatedConductivitySaxton`, theta, clay, sand, bd, om, mmol)
 }
 
 #' @rdname soil_texture

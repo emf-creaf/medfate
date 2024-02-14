@@ -32,9 +32,16 @@
 \alias{soil_retentionCurvePlot}
 \title{Soil texture and hydraulics}
 \usage{
-soil_saturatedConductivitySX(clay, sand, om = NA_real_, mmol = TRUE)
+soil_saturatedConductivitySX(clay, sand, bd, om = NA_real_, mmol = TRUE)
 
-soil_unsaturatedConductivitySX(theta, clay, sand, om = NA_real_, mmol = TRUE)
+soil_unsaturatedConductivitySX(
+  theta,
+  clay,
+  sand,
+  bd,
+  om = NA_real_,
+  mmol = TRUE
+)
 
 soil_thetaSATSX(clay, sand, om = NA_real_)
 
@@ -100,6 +107,8 @@ soil_retentionCurvePlot(
 
 \item{sand}{Percentage of sand (in percent weight).}
 
+\item{bd}{Bulk density (in g/cm3).}
+
 \item{om}{Percentage of organic matter (optional, in percent weight).}
 
 \item{mmol}{Boolean flag to indicate that saturated conductivity units should be returned in mmol/m/s/MPa. If \code{mmol = FALSE} then units are cm/day.}
@@ -125,8 +134,6 @@ soil_retentionCurvePlot(
 \item{rockDensity}{Rock density (g/cm3).}
 
 \item{soilType}{A string indicating the soil type.}
-
-\item{bd}{Bulk density (in g/cm3).}
 
 \item{topsoil}{A boolean flag to indicate topsoil layer.}
 
