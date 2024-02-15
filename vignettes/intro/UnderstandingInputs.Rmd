@@ -61,6 +61,23 @@ exampleforestMED2
 
 This alternative `forest` form is suitable for water balance simulations, but does not allow simulating forest dynamics.
 
+### Single-cohort forests
+
+
+Although `medfate` has been designed to perform simulations on multi-cohort forests, it can also handle simulations where vegetation is described using a single cohort. Functions `tree2forest()` and `shrub2forest()` allow defining single-cohort forests from attributes. For example a holm oak (*Quercus ilex*) forest of 4-m height and having a leaf area index of $2\, m^2\cdot m^{-2}$ can be defined using:
+
+```{r}
+oak_forest <-tree2forest("Quercus ilex", Height= 400, LAI = 2)
+```
+
+The function will return a `forest` object where most attributes are empty:
+```{r}
+oak_forest
+```
+
+Since density and diameter have not been provided, simulations in this case will be restricted to water balance. Moreover, note that when defining single-cohort forests all possible interactions with functionally distinct plants are neglected.
+
+
 ### Aboveground and belowground data
 
 We can use some functions to inspect how above-ground and below-ground information is represented in `medfate`. 
