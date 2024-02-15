@@ -17,11 +17,7 @@ int findSpParamsRowByName(String spname, DataFrame SpParams) {
   stop(s);
   return(NA_INTEGER);
 }
-int findSpParamsRowByNameNoStop(String spname, DataFrame SpParams) {
-  CharacterVector spNameSP = SpParams["Name"];
-  for(int i=0;i<spNameSP.length();i++) if(spNameSP[i]==spname) return(i);
-  return(NA_INTEGER);
-}
+
 int findSpParamsRowBySpIndex(int sp, DataFrame SpParams) {
   IntegerVector spIndexSP = SpParams["SpIndex"];
   for(int i=0;i<spIndexSP.length();i++) if(spIndexSP[i]==sp) return(i);
@@ -70,16 +66,20 @@ NumericVector speciesNumericParameterFromIndex(IntegerVector SP, DataFrame SpPar
   return(par);
 }
 
-NumericVector speciesNumericParameterFromIndex(IntegerVector SP, DataFrame SpParams, String parName, bool fillWithGenus){
+NumericVector speciesNumericParameterFromIndexWithGenus(IntegerVector SP, DataFrame SpParams, String parName, bool fillWithGenus){
   NumericVector par = speciesNumericParameterFromIndex(SP, SpParams, parName);
   if(fillWithGenus) {
     NumericVector parSP = Rcpp::as<Rcpp::NumericVector>(SpParams[parName]);
     CharacterVector genus = SpParams["Genus"];
+    CharacterVector name = SpParams["Name"];
     for(int i=0;i<SP.size();i++) {
       if(NumericVector::is_na(par[i])) {
-        int genusRow = findSpParamsRowByNameNoStop(genus[i], SpParams);
-        if(!IntegerVector::is_na(genusRow)) {
-          par[i] = parSP[genusRow];
+        if(!CharacterVector::is_na(genus[SP[i]])) {
+          int genusRow = -1;
+          for(int j=0;j<name.length();j++) if(name[j]==genus[SP[i]]) {
+            genusRow= j;
+          }
+          if(genusRow>-1) par[i] = parSP[genusRow];
         }
       }
     }
@@ -195,7 +195,7 @@ CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parN
 
 /** Parameter retrieval with imputation */
 NumericVector LeafAngleWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector LeafAngle = speciesNumericParameterFromIndex(SP, SpParams, "LeafAngle", fillWithGenus);
+  NumericVector LeafAngle = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "LeafAngle", fillWithGenus);
   for(int j=0;j<LeafAngle.size();j++) {
     if(NumericVector::is_na(LeafAngle[j])) LeafAngle[j] = 53.7; //Corresponding to spherical distribution
   }
@@ -203,7 +203,7 @@ NumericVector LeafAngleWithImputation(IntegerVector SP, DataFrame SpParams, bool
 }
 /** Parameter retrieval with imputation */
 NumericVector LeafAngleSDWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector LeafAngleSD = speciesNumericParameterFromIndex(SP, SpParams, "LeafAngleSD", fillWithGenus);
+  NumericVector LeafAngleSD = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "LeafAngleSD", fillWithGenus);
   for(int j=0;j<LeafAngleSD.size();j++) {
     if(NumericVector::is_na(LeafAngleSD[j])) LeafAngleSD[j] = 21.55; //Corresponding to spherical distribution
   }
@@ -211,7 +211,7 @@ NumericVector LeafAngleSDWithImputation(IntegerVector SP, DataFrame SpParams, bo
 }
 /** Parameter retrieval with imputation */
 NumericVector ClumpingIndexWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector ClumpingIndex = speciesNumericParameterFromIndex(SP, SpParams, "ClumpingIndex", fillWithGenus);
+  NumericVector ClumpingIndex = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "ClumpingIndex", fillWithGenus);
   for(int j=0;j<ClumpingIndex.size();j++) {
     if(NumericVector::is_na(ClumpingIndex[j])) ClumpingIndex[j] = 0.75;
   }
@@ -219,7 +219,7 @@ NumericVector ClumpingIndexWithImputation(IntegerVector SP, DataFrame SpParams, 
 }
 NumericVector kPARWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
-  NumericVector kPAR = speciesNumericParameterFromIndex(SP, SpParams, "kPAR", fillWithGenus);
+  NumericVector kPAR = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "kPAR", fillWithGenus);
   for(int j=0;j<kPAR.size();j++) {
     if(leafShape[j] == "Broad") {
       if(NumericVector::is_na(kPAR[j])) kPAR[j] = 0.55;
@@ -233,7 +233,7 @@ NumericVector kPARWithImputation(IntegerVector SP, DataFrame SpParams, bool fill
 }
 NumericVector gammaSWRWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
-  NumericVector gammaSWR = speciesNumericParameterFromIndex(SP, SpParams, "gammaSWR", fillWithGenus);
+  NumericVector gammaSWR = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "gammaSWR", fillWithGenus);
   for(int j=0;j<gammaSWR.size();j++) {
     if(leafShape[j] == "Broad") {
       if(NumericVector::is_na(gammaSWR[j])) gammaSWR[j] = 0.18;
@@ -246,7 +246,7 @@ NumericVector gammaSWRWithImputation(IntegerVector SP, DataFrame SpParams, bool 
   return(gammaSWR);
 }
 NumericVector alphaSWRWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector alphaSWR = speciesNumericParameterFromIndex(SP, SpParams, "alphaSWR", fillWithGenus);
+  NumericVector alphaSWR = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "alphaSWR", fillWithGenus);
   for(int j=0;j<alphaSWR.size();j++) {
     if(NumericVector::is_na(alphaSWR[j])) alphaSWR[j] = 0.7;
   }
@@ -254,7 +254,7 @@ NumericVector alphaSWRWithImputation(IntegerVector SP, DataFrame SpParams, bool 
 }
 NumericVector gWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
-  NumericVector g = speciesNumericParameterFromIndex(SP, SpParams, "g", fillWithGenus);
+  NumericVector g = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "g", fillWithGenus);
   for(int j=0;j<g.size();j++) {
     if(leafShape[j] == "Broad") {
       if(NumericVector::is_na(g[j])) g[j] = 0.5;
@@ -269,7 +269,7 @@ NumericVector gWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWit
 NumericVector fineFoliarRatioWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
   CharacterVector leafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
-  NumericVector ffr = speciesNumericParameterFromIndex(SP, SpParams, "r635", fillWithGenus);
+  NumericVector ffr = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "r635", fillWithGenus);
   for(int i=0;i<ffr.size();i++) {
     if(NumericVector::is_na(ffr[i])) {
       if(leafShape[i]=="Scale") {
@@ -296,7 +296,7 @@ NumericVector fineFoliarRatioWithImputation(IntegerVector SP, DataFrame SpParams
 NumericVector specificLeafAreaWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus){
   CharacterVector LeafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
   CharacterVector LeafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
-  NumericVector SLA = speciesNumericParameterFromIndex(SP, SpParams, "SLA", fillWithGenus);
+  NumericVector SLA = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "SLA", fillWithGenus);
   for(int c=0;c<SLA.size();c++){
     if(NumericVector::is_na(SLA[c])) {
       if(!CharacterVector::is_na(LeafShape[c]) && !CharacterVector::is_na(LeafSize[c])) {
@@ -331,7 +331,7 @@ NumericVector specificLeafAreaWithImputation(IntegerVector SP, DataFrame SpParam
 NumericVector ligninPercentWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
   CharacterVector leafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
-  NumericVector cohLigninPercent = speciesNumericParameterFromIndex(SP, SpParams, "LigninPercent", fillWithGenus);
+  NumericVector cohLigninPercent = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "LigninPercent", fillWithGenus);
   for(int i=0;i<cohLigninPercent.size();i++) {
     if(NumericVector::is_na(cohLigninPercent[i])) {
       if(leafShape[i]=="Scale") {
@@ -362,7 +362,7 @@ NumericVector ligninPercentWithImputation(IntegerVector SP, DataFrame SpParams, 
 NumericVector surfaceToAreaRatioWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
   CharacterVector leafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
-  NumericVector cohSAV = speciesNumericParameterFromIndex(SP, SpParams, "SAV", fillWithGenus);
+  NumericVector cohSAV = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "SAV", fillWithGenus);
   for(int i=0;i<cohSAV.size();i++) {
     if(NumericVector::is_na(cohSAV[i])) {
       if(leafShape[i]=="Scale") {
@@ -393,7 +393,7 @@ NumericVector surfaceToAreaRatioWithImputation(IntegerVector SP, DataFrame SpPar
 NumericVector heatContentWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
   CharacterVector leafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
-  NumericVector cohHeatContent = speciesNumericParameterFromIndex(SP, SpParams, "HeatContent", fillWithGenus);
+  NumericVector cohHeatContent = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "HeatContent", fillWithGenus);
   for(int i=0;i<cohHeatContent.size();i++) {
     if(NumericVector::is_na(cohHeatContent[i])) {
       if(leafShape[i]=="Scale") {
@@ -422,7 +422,7 @@ NumericVector heatContentWithImputation(IntegerVector SP, DataFrame SpParams, bo
   return(cohHeatContent);
 }
 NumericVector proportionDeadWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector pDead = speciesNumericParameterFromIndex(SP, SpParams, "pDead", fillWithGenus);
+  NumericVector pDead = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "pDead", fillWithGenus);
   for(int c=0;c<pDead.size();c++) {
     if(NumericVector::is_na(pDead[c])) {
       pDead[c] = 0.05;
@@ -433,7 +433,7 @@ NumericVector proportionDeadWithImputation(IntegerVector SP, DataFrame SpParams,
 NumericVector leafWidthWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
   CharacterVector leafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
-  NumericVector leafwidth = speciesNumericParameterFromIndex(SP, SpParams, "LeafWidth", fillWithGenus);
+  NumericVector leafwidth = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "LeafWidth", fillWithGenus);
   for(int c=0;c<leafwidth.size();c++) {
     if(NumericVector::is_na(leafwidth[c])) {
       if(leafShape[c]=="Linear") {
@@ -456,7 +456,7 @@ NumericVector leafWidthWithImputation(IntegerVector SP, DataFrame SpParams, bool
   return(leafwidth);
 }
 NumericVector Ar2AlWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector Ar2Al = speciesNumericParameterFromIndex(SP, SpParams, "Ar2Al", fillWithGenus);
+  NumericVector Ar2Al = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Ar2Al", fillWithGenus);
   for(int c=0;c<Ar2Al.size();c++) {
     if(NumericVector::is_na(Ar2Al[c])) {
       Ar2Al[c] = 1.0;
@@ -467,7 +467,7 @@ NumericVector Ar2AlWithImputation(IntegerVector SP, DataFrame SpParams, bool fil
 NumericVector Al2AsWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
   CharacterVector leafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
-  NumericVector Al2As = speciesNumericParameterFromIndex(SP, SpParams, "Al2As", fillWithGenus);
+  NumericVector Al2As = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Al2As", fillWithGenus);
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
@@ -503,7 +503,7 @@ NumericVector Al2AsWithImputation(IntegerVector SP, DataFrame SpParams, bool fil
   return(Al2As);
 }
 NumericVector woodDensityWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector woodDensity = speciesNumericParameterFromIndex(SP, SpParams, "WoodDensity", fillWithGenus);
+  NumericVector woodDensity = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "WoodDensity", fillWithGenus);
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
@@ -525,7 +525,7 @@ NumericVector woodDensityWithImputation(IntegerVector SP, DataFrame SpParams, bo
   return(woodDensity);
 }
 NumericVector leafDensityWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector leafDensity = speciesNumericParameterFromIndex(SP, SpParams, "LeafDensity", fillWithGenus);
+  NumericVector leafDensity = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "LeafDensity", fillWithGenus);
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
@@ -547,7 +547,7 @@ NumericVector leafDensityWithImputation(IntegerVector SP, DataFrame SpParams, bo
   return(leafDensity);
 }
 NumericVector fineRootDensityWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector fineRootDensity = speciesNumericParameterFromIndex(SP, SpParams, "FineRootDensity", fillWithGenus);
+  NumericVector fineRootDensity = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "FineRootDensity", fillWithGenus);
   for(int c=0;c<fineRootDensity.size();c++) {
     if(NumericVector::is_na(fineRootDensity[c])) {
       fineRootDensity[c] = 0.165;
@@ -556,7 +556,7 @@ NumericVector fineRootDensityWithImputation(IntegerVector SP, DataFrame SpParams
   return(fineRootDensity);
 }
 NumericVector specificRootLengthWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector specificRootLength = speciesNumericParameterFromIndex(SP, SpParams, "SRL", fillWithGenus);
+  NumericVector specificRootLength = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "SRL", fillWithGenus);
   for(int c=0;c<specificRootLength.size();c++) {
     if(NumericVector::is_na(specificRootLength[c])) {
       specificRootLength[c] = 3870.0;
@@ -565,7 +565,7 @@ NumericVector specificRootLengthWithImputation(IntegerVector SP, DataFrame SpPar
   return(specificRootLength);
 }
 NumericVector rootLengthDensityWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector rootLengthDensity = speciesNumericParameterFromIndex(SP, SpParams, "RLD", fillWithGenus);
+  NumericVector rootLengthDensity = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "RLD", fillWithGenus);
   for(int c=0;c<rootLengthDensity.size();c++) {
     if(NumericVector::is_na(rootLengthDensity[c])) {
       rootLengthDensity[c] = 10.0;
@@ -575,7 +575,7 @@ NumericVector rootLengthDensityWithImputation(IntegerVector SP, DataFrame SpPara
 }
 NumericVector conduit2sapwoodWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector Group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
-  NumericVector conduit2sapwood = speciesNumericParameterFromIndex(SP, SpParams, "conduit2sapwood", fillWithGenus);
+  NumericVector conduit2sapwood = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "conduit2sapwood", fillWithGenus);
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
@@ -598,7 +598,7 @@ NumericVector conduit2sapwoodWithImputation(IntegerVector SP, DataFrame SpParams
   return(conduit2sapwood);
 }
 NumericVector maxFMCWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector maxFMC = speciesNumericParameterFromIndex(SP, SpParams, "maxFMC", fillWithGenus);
+  NumericVector maxFMC = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "maxFMC", fillWithGenus);
   for(int c=0;c<maxFMC.size();c++) {
     if(NumericVector::is_na(maxFMC[c])) {
       maxFMC[c] = 120.0; //To be improved
@@ -607,7 +607,7 @@ NumericVector maxFMCWithImputation(IntegerVector SP, DataFrame SpParams, bool fi
   return(maxFMC);
 }
 NumericVector minFMCWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector minFMC = speciesNumericParameterFromIndex(SP, SpParams, "minFMC", fillWithGenus);
+  NumericVector minFMC = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "minFMC", fillWithGenus);
   for(int c=0;c<minFMC.size();c++) {
     if(NumericVector::is_na(minFMC[c])) {
       minFMC[c] = 80.0; //To be improved
@@ -617,7 +617,7 @@ NumericVector minFMCWithImputation(IntegerVector SP, DataFrame SpParams, bool fi
 }
 NumericVector stemPI0WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector WoodDensity = woodDensityWithImputation(SP, SpParams, fillWithGenus);
-  NumericVector StemPI0 = speciesNumericParameterFromIndex(SP, SpParams, "StemPI0", fillWithGenus);
+  NumericVector StemPI0 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "StemPI0", fillWithGenus);
   for(int c=0;c<StemPI0.size();c++) {
     //From: Christoffersen, B.O., Gloor, M., Fauset, S., Fyllas, N.M., Galbraith, D.R., Baker, T.R., Rowland, L., Fisher, R.A., Binks, O.J., Sevanto, S.A., Xu, C., Jansen, S., Choat, B., Mencuccini, M., McDowell, N.G., & Meir, P. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0: 1–60.
     if(NumericVector::is_na(StemPI0[c])) {
@@ -628,7 +628,7 @@ NumericVector stemPI0WithImputation(IntegerVector SP, DataFrame SpParams, bool f
 }
 NumericVector stemEPSWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector WoodDensity = woodDensityWithImputation(SP, SpParams, fillWithGenus);
-  NumericVector StemEPS = speciesNumericParameterFromIndex(SP, SpParams, "StemEPS", fillWithGenus);
+  NumericVector StemEPS = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "StemEPS", fillWithGenus);
   for(int c=0;c<StemEPS.size();c++) {
     //From: Christoffersen, B.O., Gloor, M., Fauset, S., Fyllas, N.M., Galbraith, D.R., Baker, T.R., Rowland, L., Fisher, R.A., Binks, O.J., Sevanto, S.A., Xu, C., Jansen, S., Choat, B., Mencuccini, M., McDowell, N.G., & Meir, P. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0: 1–60.
     if(NumericVector::is_na(StemEPS[c])) {
@@ -639,7 +639,7 @@ NumericVector stemEPSWithImputation(IntegerVector SP, DataFrame SpParams, bool f
 }
 NumericVector stemAFWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector conduit2sapwood = conduit2sapwoodWithImputation(SP, SpParams, fillWithGenus);
-  NumericVector stemAF = speciesNumericParameterFromIndex(SP, SpParams, "StemAF", fillWithGenus);
+  NumericVector stemAF = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "StemAF", fillWithGenus);
   for(int c=0;c<stemAF.size();c++) {
     if(NumericVector::is_na(stemAF[c])) {
       stemAF[c] = conduit2sapwood[c]; 
@@ -648,7 +648,7 @@ NumericVector stemAFWithImputation(IntegerVector SP, DataFrame SpParams, bool fi
   return(stemAF);
 }
 NumericVector leafPI0WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector leafPI0 = speciesNumericParameterFromIndex(SP, SpParams, "LeafPI0", fillWithGenus);
+  NumericVector leafPI0 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "LeafPI0", fillWithGenus);
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
@@ -671,7 +671,7 @@ NumericVector leafPI0WithImputation(IntegerVector SP, DataFrame SpParams, bool f
   return(leafPI0);
 }
 NumericVector leafEPSWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector leafEPS = speciesNumericParameterFromIndex(SP, SpParams, "LeafEPS", fillWithGenus);
+  NumericVector leafEPS = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "LeafEPS", fillWithGenus);
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
@@ -694,7 +694,7 @@ NumericVector leafEPSWithImputation(IntegerVector SP, DataFrame SpParams, bool f
   return(leafEPS);
 }
 NumericVector leafAFWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector leafAF = speciesNumericParameterFromIndex(SP, SpParams, "LeafAF", fillWithGenus);
+  NumericVector leafAF = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "LeafAF", fillWithGenus);
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
@@ -718,7 +718,7 @@ NumericVector leafAFWithImputation(IntegerVector SP, DataFrame SpParams, bool fi
 }
 
 NumericVector TmaxLAIWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector Tmax_LAI = speciesNumericParameterFromIndex(SP, SpParams, "Tmax_LAI", fillWithGenus);
+  NumericVector Tmax_LAI = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Tmax_LAI", fillWithGenus);
   for(int c=0;c<Tmax_LAI.size();c++) {
     if(NumericVector::is_na(Tmax_LAI[c])) {
       Tmax_LAI[c] = 0.134;//Granier coefficient for LAI
@@ -727,7 +727,7 @@ NumericVector TmaxLAIWithImputation(IntegerVector SP, DataFrame SpParams, bool f
   return(Tmax_LAI);
 }
 NumericVector TmaxLAIsqWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector Tmax_LAIsq = speciesNumericParameterFromIndex(SP, SpParams, "Tmax_LAIsq", fillWithGenus);
+  NumericVector Tmax_LAIsq = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Tmax_LAIsq", fillWithGenus);
   for(int c=0;c<Tmax_LAIsq.size();c++) {
     if(NumericVector::is_na(Tmax_LAIsq[c])) {
       Tmax_LAIsq[c] = -0.006; //Granier coefficient for LAI^2
@@ -738,7 +738,7 @@ NumericVector TmaxLAIsqWithImputation(IntegerVector SP, DataFrame SpParams, bool
 NumericVector WUEWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector leafShape = speciesCharacterParameterFromIndex(SP, SpParams, "LeafShape");
   CharacterVector leafSize = speciesCharacterParameterFromIndex(SP, SpParams, "LeafSize");
-  NumericVector WUE = speciesNumericParameterFromIndex(SP, SpParams, "WUE", fillWithGenus);
+  NumericVector WUE = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "WUE", fillWithGenus);
   for(int c=0;c<WUE.size();c++) {
     if(NumericVector::is_na(WUE[c])) {
       WUE[c] = 7.9; 
@@ -779,7 +779,7 @@ NumericVector WUEWithImputation(IntegerVector SP, DataFrame SpParams, bool fillW
   return(WUE);
 }
 NumericVector WUEPARWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector WUE_par = speciesNumericParameterFromIndex(SP, SpParams, "WUE_par", fillWithGenus);
+  NumericVector WUE_par = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "WUE_par", fillWithGenus);
   for(int c=0;c<WUE_par.size();c++) {
     if(NumericVector::is_na(WUE_par[c])) {
       WUE_par[c] = 0.3643; //default value
@@ -788,7 +788,7 @@ NumericVector WUEPARWithImputation(IntegerVector SP, DataFrame SpParams, bool fi
   return(WUE_par);
 }
 NumericVector WUECO2WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector WUE_co2 = speciesNumericParameterFromIndex(SP, SpParams, "WUE_co2", fillWithGenus);
+  NumericVector WUE_co2 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "WUE_co2", fillWithGenus);
   for(int c=0;c<WUE_co2.size();c++) {
     if(NumericVector::is_na(WUE_co2[c])) {
       WUE_co2[c] = 0.002757;
@@ -797,7 +797,7 @@ NumericVector WUECO2WithImputation(IntegerVector SP, DataFrame SpParams, bool fi
   return(WUE_co2);
 }
 NumericVector WUEVPDWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector WUE_vpd = speciesNumericParameterFromIndex(SP, SpParams, "WUE_vpd", fillWithGenus);
+  NumericVector WUE_vpd = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "WUE_vpd", fillWithGenus);
   for(int c=0;c<WUE_vpd.size();c++) {
     if(NumericVector::is_na(WUE_vpd[c])) {
       WUE_vpd[c] = -0.4636;
@@ -846,7 +846,7 @@ NumericVector WUEVPDWithImputation(IntegerVector SP, DataFrame SpParams, bool fi
 // }
 
 NumericVector expExtractWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector Exp_Extract = speciesNumericParameterFromIndex(SP, SpParams, "Exp_Extract", fillWithGenus);
+  NumericVector Exp_Extract = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Exp_Extract", fillWithGenus);
   for(int c=0;c<Exp_Extract.size();c++) {
     if(NumericVector::is_na(Exp_Extract[c])) {
       Exp_Extract[c] = 1.3;
@@ -859,7 +859,7 @@ NumericVector psiExtractWithImputation(IntegerVector SP, DataFrame SpParams, boo
   NumericVector leafPI0 = leafPI0WithImputation(SP, SpParams, fillWithGenus);
   NumericVector leafEPS = leafEPSWithImputation(SP, SpParams, fillWithGenus);
   NumericVector Exp_Extract = expExtractWithImputation(SP, SpParams, fillWithGenus);
-  NumericVector Psi_Extract = speciesNumericParameterFromIndex(SP, SpParams, "Psi_Extract", fillWithGenus);
+  NumericVector Psi_Extract = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Psi_Extract", fillWithGenus);
   for(int c=0;c<Psi_Extract.size();c++) {
     if(NumericVector::is_na(Psi_Extract[c])) {
       double corr = pow(log(0.5)/log(0.10), 1.0/Exp_Extract[c]); //Assumes TLP corresponds to 10% stomatal conductance (Martin-StPaul 2017 Ecol. Lett)
@@ -869,7 +869,7 @@ NumericVector psiExtractWithImputation(IntegerVector SP, DataFrame SpParams, boo
   return(Psi_Extract);
 }
 NumericVector GswmaxWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector Gswmax = speciesNumericParameterFromIndex(SP, SpParams, "Gswmax", fillWithGenus);
+  NumericVector Gswmax = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Gswmax", fillWithGenus);
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
@@ -890,7 +890,7 @@ NumericVector GswmaxWithImputation(IntegerVector SP, DataFrame SpParams, bool fi
   return(Gswmax);
 }
 NumericVector GswminWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector Gswmin = speciesNumericParameterFromIndex(SP, SpParams, "Gswmin", fillWithGenus);
+  NumericVector Gswmin = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Gswmin", fillWithGenus);
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
@@ -910,14 +910,14 @@ NumericVector GswminWithImputation(IntegerVector SP, DataFrame SpParams, bool fi
   return(Gswmin);
 }
 NumericVector GsToptimWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector Gs_Toptim = speciesNumericParameterFromIndex(SP, SpParams, "Gs_Toptim", fillWithGenus);
+  NumericVector Gs_Toptim = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Gs_Toptim", fillWithGenus);
   for(int c=0;c<Gs_Toptim.size();c++) {
     if(NumericVector::is_na(Gs_Toptim[c])) Gs_Toptim[c] = 25.0;
   }
   return(Gs_Toptim);
 }
 NumericVector GsTsensWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector Gs_Tsens = speciesNumericParameterFromIndex(SP, SpParams, "Gs_Tsens", fillWithGenus);
+  NumericVector Gs_Tsens = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Gs_Tsens", fillWithGenus);
   for(int c=0;c<Gs_Tsens.size();c++) {
     if(NumericVector::is_na(Gs_Tsens[c])) Gs_Tsens[c] = 17.0;
   }
@@ -925,7 +925,7 @@ NumericVector GsTsensWithImputation(IntegerVector SP, DataFrame SpParams, bool f
 }
 
 NumericVector KmaxStemXylemWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector Kmax_stemxylem = speciesNumericParameterFromIndex(SP, SpParams, "Kmax_stemxylem", fillWithGenus);
+  NumericVector Kmax_stemxylem = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Kmax_stemxylem", fillWithGenus);
   CharacterVector Group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
   CharacterVector GrowthForm = speciesCharacterParameterFromIndex(SP, SpParams, "GrowthForm");
   CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
@@ -966,7 +966,7 @@ NumericVector KmaxStemXylemWithImputation(IntegerVector SP, DataFrame SpParams, 
 }
 NumericVector KmaxRootXylemWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector Kmax_stemxylem = KmaxStemXylemWithImputation(SP, SpParams, fillWithGenus);
-  NumericVector Kmax_rootxylem = speciesNumericParameterFromIndex(SP, SpParams, "Kmax_rootxylem", fillWithGenus);
+  NumericVector Kmax_rootxylem = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Kmax_rootxylem", fillWithGenus);
   for(int c=0;c<Kmax_rootxylem.size();c++) {
     //Oliveras I, Martínez-Vilalta J, Jimenez-Ortiz T, et al (2003) Hydraulic architecture of Pinus halepensis, P . pinea and Tetraclinis articulata in a dune ecosystem of Eastern Spain. Plant Ecol 131–141
     if(NumericVector::is_na(Kmax_rootxylem[c])) Kmax_rootxylem[c] = 4.0*Kmax_stemxylem[c];
@@ -974,7 +974,7 @@ NumericVector KmaxRootXylemWithImputation(IntegerVector SP, DataFrame SpParams, 
   return(Kmax_rootxylem);
 }
 NumericVector VCleafkmaxWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector VCleaf_kmax = speciesNumericParameterFromIndex(SP, SpParams, "VCleaf_kmax", fillWithGenus);
+  NumericVector VCleaf_kmax = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCleaf_kmax", fillWithGenus);
   NumericVector Gswmax = GswmaxWithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCleaf_kmax.size();c++) {
     //Franks, P. J. (2006). Higher rates of leaf gas exchange are associated with higher leaf hydrodynamic pressure gradients. Plant, Cell and Environment, 29(4), 584–592. https://doi.org/10.1111/j.1365-3040.2005.01434.x
@@ -986,7 +986,7 @@ NumericVector VCleafkmaxWithImputation(IntegerVector SP, DataFrame SpParams, boo
   return(VCleaf_kmax);
 }
 NumericVector NleafWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus){
-  NumericVector Nleaf = speciesNumericParameterFromIndex(SP, SpParams, "Nleaf", fillWithGenus);
+  NumericVector Nleaf = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Nleaf", fillWithGenus);
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
@@ -1006,7 +1006,7 @@ NumericVector NleafWithImputation(IntegerVector SP, DataFrame SpParams, bool fil
   return(Nleaf);
 }
 NumericVector NsapwoodWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus){
-  NumericVector Nsapwood = speciesNumericParameterFromIndex(SP, SpParams, "Nsapwood", fillWithGenus);
+  NumericVector Nsapwood = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Nsapwood", fillWithGenus);
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
@@ -1026,7 +1026,7 @@ NumericVector NsapwoodWithImputation(IntegerVector SP, DataFrame SpParams, bool 
   return(Nsapwood);
 }
 NumericVector NfinerootWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus){
-  NumericVector Nfineroot = speciesNumericParameterFromIndex(SP, SpParams, "Nfineroot", fillWithGenus);
+  NumericVector Nfineroot = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Nfineroot", fillWithGenus);
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
@@ -1049,7 +1049,7 @@ NumericVector NfinerootWithImputation(IntegerVector SP, DataFrame SpParams, bool
 NumericVector Vmax298WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector SLA = specificLeafAreaWithImputation(SP, SpParams, fillWithGenus);
   NumericVector Nleaf = NleafWithImputation(SP, SpParams, fillWithGenus);
-  NumericVector Vmax298 = speciesNumericParameterFromIndex(SP, SpParams, "Vmax298", fillWithGenus);
+  NumericVector Vmax298 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Vmax298", fillWithGenus);
   for(int c=0;c<Vmax298.size();c++) {
     if(NumericVector::is_na(Vmax298[c]))  {
       if(!NumericVector::is_na(SLA[c]) && !NumericVector::is_na(Nleaf[c]))  {
@@ -1066,7 +1066,7 @@ NumericVector Vmax298WithImputation(IntegerVector SP, DataFrame SpParams, bool f
 }
 NumericVector Jmax298WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   NumericVector Vmax298 = Vmax298WithImputation(SP, SpParams, fillWithGenus);
-  NumericVector Jmax298 = speciesNumericParameterFromIndex(SP, SpParams, "Jmax298", fillWithGenus);
+  NumericVector Jmax298 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Jmax298", fillWithGenus);
   for(int c=0;c<Jmax298.size();c++) {
     //Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173
     if(NumericVector::is_na(Jmax298[c])) Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c])); 
@@ -1074,7 +1074,7 @@ NumericVector Jmax298WithImputation(IntegerVector SP, DataFrame SpParams, bool f
   return(Jmax298);
 }
 NumericVector VCstemP50WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector VCstem_P50 = speciesNumericParameterFromIndex(SP, SpParams, "VCstem_P50", fillWithGenus);
+  NumericVector VCstem_P50 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCstem_P50", fillWithGenus);
   CharacterVector Group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
   CharacterVector GrowthForm = speciesCharacterParameterFromIndex(SP, SpParams, "GrowthForm");
   CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
@@ -1114,7 +1114,7 @@ NumericVector VCstemP50WithImputation(IntegerVector SP, DataFrame SpParams, bool
   return(VCstem_P50);
 } 
 NumericVector VCstemP88WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector VCstem_P88 = speciesNumericParameterFromIndex(SP, SpParams, "VCstem_P88", fillWithGenus);
+  NumericVector VCstem_P88 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCstem_P88", fillWithGenus);
   NumericVector VCstem_P50 = VCstemP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCstem_P88.size();c++) {
     if(NumericVector::is_na(VCstem_P88[c])) {
@@ -1124,7 +1124,7 @@ NumericVector VCstemP88WithImputation(IntegerVector SP, DataFrame SpParams, bool
   return(VCstem_P88);
 }
 NumericVector VCstemP12WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector VCstem_P12 = speciesNumericParameterFromIndex(SP, SpParams, "VCstem_P12", fillWithGenus);
+  NumericVector VCstem_P12 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCstem_P12", fillWithGenus);
   NumericVector VCstem_P50 = VCstemP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCstem_P12.size();c++) {
     if(NumericVector::is_na(VCstem_P12[c])) {
@@ -1135,7 +1135,7 @@ NumericVector VCstemP12WithImputation(IntegerVector SP, DataFrame SpParams, bool
 }
 
 NumericVector VCleafP50WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector VCleaf_P50 = speciesNumericParameterFromIndex(SP, SpParams, "VCleaf_P50", fillWithGenus);
+  NumericVector VCleaf_P50 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCleaf_P50", fillWithGenus);
   NumericVector leafPI0 = leafPI0WithImputation(SP, SpParams, fillWithGenus);
   NumericVector leafEPS = leafEPSWithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCleaf_P50.size();c++) {
@@ -1148,7 +1148,7 @@ NumericVector VCleafP50WithImputation(IntegerVector SP, DataFrame SpParams, bool
   return(VCleaf_P50);
 }
 NumericVector VCleafP88WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector VCleaf_P88 = speciesNumericParameterFromIndex(SP, SpParams, "VCleaf_P88", fillWithGenus);
+  NumericVector VCleaf_P88 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCleaf_P88", fillWithGenus);
   NumericVector VCleaf_P50 = VCleafP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCleaf_P88.size();c++) {
     if(NumericVector::is_na(VCleaf_P88[c])) {
@@ -1158,7 +1158,7 @@ NumericVector VCleafP88WithImputation(IntegerVector SP, DataFrame SpParams, bool
   return(VCleaf_P88);
 }
 NumericVector VCleafP12WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector VCleaf_P12 = speciesNumericParameterFromIndex(SP, SpParams, "VCleaf_P12", fillWithGenus);
+  NumericVector VCleaf_P12 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCleaf_P12", fillWithGenus);
   NumericVector VCleaf_P50 = VCleafP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCleaf_P12.size();c++) {
     if(NumericVector::is_na(VCleaf_P12[c])) {
@@ -1169,7 +1169,7 @@ NumericVector VCleafP12WithImputation(IntegerVector SP, DataFrame SpParams, bool
 }
 
 NumericVector VCrootP50WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector VCroot_P50 = speciesNumericParameterFromIndex(SP, SpParams, "VCroot_P50", fillWithGenus);
+  NumericVector VCroot_P50 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCroot_P50", fillWithGenus);
   NumericVector VCstem_P50 = VCstemP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCroot_P50.size();c++) {
     if(NumericVector::is_na(VCroot_P50[c])) {
@@ -1179,7 +1179,7 @@ NumericVector VCrootP50WithImputation(IntegerVector SP, DataFrame SpParams, bool
   return(VCroot_P50);
 }
 NumericVector VCrootP88WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector VCroot_P88 = speciesNumericParameterFromIndex(SP, SpParams, "VCroot_P88", fillWithGenus);
+  NumericVector VCroot_P88 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCroot_P88", fillWithGenus);
   NumericVector VCroot_P50 = VCrootP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCroot_P88.size();c++) {
     if(NumericVector::is_na(VCroot_P88[c])) {
@@ -1189,7 +1189,7 @@ NumericVector VCrootP88WithImputation(IntegerVector SP, DataFrame SpParams, bool
   return(VCroot_P88);
 }
 NumericVector VCrootP12WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector VCroot_P12 = speciesNumericParameterFromIndex(SP, SpParams, "VCroot_P12", fillWithGenus);
+  NumericVector VCroot_P12 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "VCroot_P12", fillWithGenus);
   NumericVector VCroot_P50 = VCstemP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<VCroot_P12.size();c++) {
     if(NumericVector::is_na(VCroot_P12[c])) {
@@ -1199,7 +1199,7 @@ NumericVector VCrootP12WithImputation(IntegerVector SP, DataFrame SpParams, bool
   return(VCroot_P12);
 }
 NumericVector GsP50WithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector Gs_P50 = speciesNumericParameterFromIndex(SP, SpParams, "Gs_P50", fillWithGenus);
+  NumericVector Gs_P50 = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Gs_P50", fillWithGenus);
   NumericVector VCleaf_P50 = VCleafP50WithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<Gs_P50.size();c++) {
     if(NumericVector::is_na(Gs_P50[c])) Gs_P50[c] = VCleaf_P50[c];
@@ -1207,14 +1207,14 @@ NumericVector GsP50WithImputation(IntegerVector SP, DataFrame SpParams, bool fil
   return(Gs_P50);
 }
 NumericVector GsslopeWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector Gs_slope = speciesNumericParameterFromIndex(SP, SpParams, "Gs_slope", fillWithGenus);
+  NumericVector Gs_slope = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Gs_slope", fillWithGenus);
   for(int c=0;c<Gs_slope.size();c++) {
     if(NumericVector::is_na(Gs_slope[c])) Gs_slope[c] = 30.0;
   }
   return(Gs_slope);
 }
 NumericVector LeafRespirationRateWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector RERleaf = speciesNumericParameterFromIndex(SP, SpParams, "RERleaf", fillWithGenus);
+  NumericVector RERleaf = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "RERleaf", fillWithGenus);
   NumericVector Nleaf = NleafWithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<RERleaf.size();c++) {
     if(NumericVector::is_na(RERleaf[c])) {
@@ -1227,7 +1227,7 @@ NumericVector LeafRespirationRateWithImputation(IntegerVector SP, DataFrame SpPa
   return(RERleaf);
 }
 NumericVector SapwoodRespirationRateWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector RERsapwood = speciesNumericParameterFromIndex(SP, SpParams, "RERsapwood", fillWithGenus);
+  NumericVector RERsapwood = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "RERsapwood", fillWithGenus);
   NumericVector Nsapwood = NsapwoodWithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<RERsapwood.size();c++) {
     if(NumericVector::is_na(RERsapwood[c])) {
@@ -1242,7 +1242,7 @@ NumericVector SapwoodRespirationRateWithImputation(IntegerVector SP, DataFrame S
   return(RERsapwood);
 }
 NumericVector SapwoodSenescenceRateWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector SRsapwood = speciesNumericParameterFromIndex(SP, SpParams, "SRsapwood", fillWithGenus);
+  NumericVector SRsapwood = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "SRsapwood", fillWithGenus);
   for(int c=0;c<SRsapwood.size();c++) {
     if(NumericVector::is_na(SRsapwood[c])) {
       SRsapwood[c] = 0.000135;
@@ -1252,7 +1252,7 @@ NumericVector SapwoodSenescenceRateWithImputation(IntegerVector SP, DataFrame Sp
 }
 
 NumericVector FinerootRespirationRateWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector RERfineroot = speciesNumericParameterFromIndex(SP, SpParams, "RERfineroot", fillWithGenus);
+  NumericVector RERfineroot = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "RERfineroot", fillWithGenus);
   NumericVector Nfineroot = NsapwoodWithImputation(SP, SpParams, fillWithGenus);
   for(int c=0;c<RERfineroot.size();c++) {
     if(NumericVector::is_na(RERfineroot[c])) {
@@ -1266,7 +1266,7 @@ NumericVector FinerootRespirationRateWithImputation(IntegerVector SP, DataFrame 
 }
 
 NumericVector WoodCWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector WoodC = speciesNumericParameterFromIndex(SP, SpParams, "WoodC", fillWithGenus);
+  NumericVector WoodC = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "WoodC", fillWithGenus);
   //Access internal data frame "trait_family_means"
   Environment pkg = Environment::namespace_env("medfate");
   DataFrame TFM = Rcpp::as<Rcpp::DataFrame>(pkg["trait_family_means"]);
@@ -1289,7 +1289,7 @@ NumericVector WoodCWithImputation(IntegerVector SP, DataFrame SpParams, bool fil
 }
 NumericVector leafDurationWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
-  NumericVector leafDuration = speciesNumericParameterFromIndex(SP, SpParams, "LeafDuration", fillWithGenus);
+  NumericVector leafDuration = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "LeafDuration", fillWithGenus);
   for(int c=0;c<leafDuration.size();c++) {
     if(NumericVector::is_na(leafDuration[c])) {
       if((phenoType[c]=="winter-deciduous") || (phenoType[c]=="winter-semideciduous")) leafDuration[c] = 1.0; 
@@ -1301,7 +1301,7 @@ NumericVector leafDurationWithImputation(IntegerVector SP, DataFrame SpParams, b
 }
 NumericVector t0gddWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
-  NumericVector t0gdd = speciesNumericParameterFromIndex(SP, SpParams, "t0gdd", fillWithGenus);
+  NumericVector t0gdd = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "t0gdd", fillWithGenus);
   for(int c=0;c<t0gdd.size();c++) {
     if(NumericVector::is_na(t0gdd[c])) {
       t0gdd[c] = 50.0; //Default
@@ -1311,7 +1311,7 @@ NumericVector t0gddWithImputation(IntegerVector SP, DataFrame SpParams, bool fil
 }
 NumericVector SgddWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
-  NumericVector Sgdd = speciesNumericParameterFromIndex(SP, SpParams, "Sgdd", fillWithGenus);
+  NumericVector Sgdd = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Sgdd", fillWithGenus);
   for(int c=0;c<Sgdd.size();c++) {
     if(NumericVector::is_na(Sgdd[c])) {
       Sgdd[c] = 200.0; //Default
@@ -1321,7 +1321,7 @@ NumericVector SgddWithImputation(IntegerVector SP, DataFrame SpParams, bool fill
 }
 NumericVector TbgddWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
-  NumericVector Tbgdd = speciesNumericParameterFromIndex(SP, SpParams, "Tbgdd", fillWithGenus);
+  NumericVector Tbgdd = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Tbgdd", fillWithGenus);
   for(int c=0;c<Tbgdd.size();c++) {
     if(NumericVector::is_na(Tbgdd[c])) {
       Tbgdd[c] = 0.0; //Default
@@ -1331,7 +1331,7 @@ NumericVector TbgddWithImputation(IntegerVector SP, DataFrame SpParams, bool fil
 }
 NumericVector SsenWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
-  NumericVector Ssen = speciesNumericParameterFromIndex(SP, SpParams, "Ssen", fillWithGenus);
+  NumericVector Ssen = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Ssen", fillWithGenus);
   for(int c=0;c<Ssen.size();c++) {
     if(NumericVector::is_na(Ssen[c])) {//Delpierre et al 2009
       Ssen[c] = 8268.0; //Default (broadleaved deciduous)
@@ -1341,7 +1341,7 @@ NumericVector SsenWithImputation(IntegerVector SP, DataFrame SpParams, bool fill
 }
 NumericVector PhsenWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
-  NumericVector Phsen = speciesNumericParameterFromIndex(SP, SpParams, "Phsen", fillWithGenus);
+  NumericVector Phsen = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Phsen", fillWithGenus);
   for(int c=0;c<Phsen.size();c++) {
     if(NumericVector::is_na(Phsen[c])) {//Delpierre et al 2009
       Phsen[c] = 12.5; //Default (broadleaved deciduous)
@@ -1351,7 +1351,7 @@ NumericVector PhsenWithImputation(IntegerVector SP, DataFrame SpParams, bool fil
 }
 NumericVector TbsenWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
-  NumericVector Tbsen = speciesNumericParameterFromIndex(SP, SpParams, "Tbsen", fillWithGenus);
+  NumericVector Tbsen = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Tbsen", fillWithGenus);
   for(int c=0;c<Tbsen.size();c++) {
     if(NumericVector::is_na(Tbsen[c])) {//Delpierre et al 2009
       Tbsen[c] = 28.5; //Default (broadleaved deciduous)
@@ -1361,7 +1361,7 @@ NumericVector TbsenWithImputation(IntegerVector SP, DataFrame SpParams, bool fil
 }
 NumericVector xsenWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
-  NumericVector xsen = speciesNumericParameterFromIndex(SP, SpParams, "xsen", fillWithGenus);
+  NumericVector xsen = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "xsen", fillWithGenus);
   for(int c=0;c<xsen.size();c++) {
     if(NumericVector::is_na(xsen[c])) {//Delpierre et al 2009
       xsen[c] = 2.0; //Default
@@ -1371,7 +1371,7 @@ NumericVector xsenWithImputation(IntegerVector SP, DataFrame SpParams, bool fill
 }
 NumericVector ysenWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
   CharacterVector phenoType = speciesCharacterParameterFromIndex(SP, SpParams, "PhenologyType");
-  NumericVector ysen = speciesNumericParameterFromIndex(SP, SpParams, "ysen", fillWithGenus);
+  NumericVector ysen = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "ysen", fillWithGenus);
   for(int c=0;c<ysen.size();c++) {
     if(NumericVector::is_na(ysen[c])) {//Delpierre et al 2009
       ysen[c] = 2.0; //Default
@@ -1380,7 +1380,7 @@ NumericVector ysenWithImputation(IntegerVector SP, DataFrame SpParams, bool fill
   return(ysen);
 }
 NumericVector seedMassWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector seedMass = speciesNumericParameterFromIndex(SP, SpParams, "SeedMass", fillWithGenus);
+  NumericVector seedMass = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "SeedMass", fillWithGenus);
   for(int c=0;c<seedMass.size();c++) {
     if(NumericVector::is_na(seedMass[c])) {
       seedMass[c] = 50.0; //Default 50 mg
@@ -1389,7 +1389,7 @@ NumericVector seedMassWithImputation(IntegerVector SP, DataFrame SpParams, bool 
   return(seedMass);
 }
 NumericVector seedLongevityWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector seedLongevity = speciesNumericParameterFromIndex(SP, SpParams, "SeedLongevity", fillWithGenus);
+  NumericVector seedLongevity = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "SeedLongevity", fillWithGenus);
   for(int c=0;c<seedLongevity.size();c++) {
     if(NumericVector::is_na(seedLongevity[c])) {
       seedLongevity[c] = 2.0; //Default 2 years
@@ -1398,7 +1398,7 @@ NumericVector seedLongevityWithImputation(IntegerVector SP, DataFrame SpParams, 
   return(seedLongevity);
 }
 NumericVector dispersalDistanceWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector dispersalDistance = speciesNumericParameterFromIndex(SP, SpParams, "DispersalDistance", fillWithGenus);
+  NumericVector dispersalDistance = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "DispersalDistance", fillWithGenus);
   for(int c=0;c<dispersalDistance.size();c++) {
     if(NumericVector::is_na(dispersalDistance[c])) {
       dispersalDistance[c] = 50.0; //Default 50 m
@@ -1408,7 +1408,7 @@ NumericVector dispersalDistanceWithImputation(IntegerVector SP, DataFrame SpPara
   return(dispersalDistance);
 }
 NumericVector dispersalShapeWithImputation(IntegerVector SP, DataFrame SpParams, bool fillWithGenus) {
-  NumericVector dispersalShape = speciesNumericParameterFromIndex(SP, SpParams, "DispersalShape", fillWithGenus);
+  NumericVector dispersalShape = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "DispersalShape", fillWithGenus);
   for(int c=0;c<dispersalShape.size();c++) {
     if(NumericVector::is_na(dispersalShape[c])) {
       dispersalShape[c] = 2.0; //Default 2 (bell shaped)
@@ -1420,10 +1420,10 @@ NumericVector dispersalShapeWithImputation(IntegerVector SP, DataFrame SpParams,
 
 /** Allometric coefficient retrieval with imputation */
 NumericVector shrubAllometricCoefficientWithImputation(IntegerVector SP, DataFrame SpParams, String parName, bool fillWithGenus) {
-  NumericVector coef = speciesNumericParameterFromIndex(SP,SpParams, parName, fillWithGenus);
+  NumericVector coef = speciesNumericParameterFromIndexWithGenus(SP,SpParams, parName, fillWithGenus);
   CharacterVector GrowthForm = speciesCharacterParameterFromIndex(SP, SpParams, "GrowthForm");
   CharacterVector lifeForm = speciesCharacterParameterFromIndex(SP, SpParams, "LifeForm");
-  NumericVector Hmax = speciesNumericParameterFromIndex(SP, SpParams, "Hmax", fillWithGenus);
+  NumericVector Hmax = speciesNumericParameterFromIndexWithGenus(SP, SpParams, "Hmax", fillWithGenus);
   for(int i=0;i<coef.size();i++) { // From De Caceres et al. 2019
     if(NumericVector::is_na(coef[i]) && (GrowthForm[i] != "Tree")) {
       if(parName=="a_ash") {
@@ -1478,7 +1478,7 @@ NumericVector shrubAllometricCoefficientWithImputation(IntegerVector SP, DataFra
 
 /** Allometric coefficient retrieval with imputation */
 NumericVector treeAllometricCoefficientWithImputation(IntegerVector SP, DataFrame SpParams, String parName, bool fillWithGenus) {
-  NumericVector coef = speciesNumericParameterFromIndex(SP,SpParams, parName, fillWithGenus);
+  NumericVector coef = speciesNumericParameterFromIndexWithGenus(SP,SpParams, parName, fillWithGenus);
   CharacterVector GrowthForm = speciesCharacterParameterFromIndex(SP, SpParams, "GrowthForm");
   CharacterVector group = speciesCharacterParameterFromIndex(SP, SpParams, "Group");
   for(int i=0;i<coef.size();i++) { // From De Caceres et al. 2019
