@@ -98,7 +98,7 @@
 <span></span>
 <span><span class="fu">plant_characterParameter</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, <span class="va">parName</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">plant_parameter</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, <span class="va">parName</span>, fillMissing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">plant_parameter</span><span class="op">(</span><span class="va">x</span>, <span class="va">SpParams</span>, <span class="va">parName</span>, fillMissing <span class="op">=</span> <span class="cn">TRUE</span>, fillWithGenus <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -145,6 +145,10 @@
 
 <dt>fillMissing</dt>
 <dd><p>A boolean flag to try imputation on missing values.</p></dd>
+
+
+<dt>fillWithGenus</dt>
+<dd><p>A boolean flag to try imputation of missing values using genus values.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -208,7 +212,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75  herbs: 10 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> LAI (m2/m2) total: 1.7585845  adult trees: 1.5543216  saplings: 0  shrubs: 0.030626  herbs: 0.1736369 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fuel loading (kg/m2) total: 0.5588728  adult trees: 0.5255004  saplings: 0  shrubs: 0.0140795  herbs: 0.019293 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PAR ground (%): 40.0075402  SWR ground (%): 50.7329667 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PAR ground (%): NA  SWR ground (%): NA </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Cohort IDs in the models</span></span></span>
 <span class="r-in"><span><span class="fu">plant_ID</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>

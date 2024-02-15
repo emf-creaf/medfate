@@ -70,7 +70,13 @@
 <span></span>
 <span><span class="fu">species_characterParameter</span><span class="op">(</span><span class="va">species</span>, <span class="va">SpParams</span>, <span class="va">parName</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">species_parameter</span><span class="op">(</span><span class="va">species</span>, <span class="va">SpParams</span>, <span class="va">parName</span>, fillMissing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">species_parameter</span><span class="op">(</span></span>
+<span>  <span class="va">species</span>,</span>
+<span>  <span class="va">SpParams</span>,</span>
+<span>  <span class="va">parName</span>,</span>
+<span>  fillMissing <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  fillWithGenus <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -105,6 +111,10 @@
 
 <dt>fillMissing</dt>
 <dd><p>A boolean flag to try imputation on missing values.</p></dd>
+
+
+<dt>fillWithGenus</dt>
+<dd><p>A boolean flag to try imputation of missing values using genus values.</p></dd>
 
 </dl></div>
     <div id="value">

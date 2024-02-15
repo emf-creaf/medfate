@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2024-02-14</h4>
+            <h4 data-toc-skip class="date">2024-02-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/intro/PreparingInputs.Rmd" class="external-link"><code>vignettes/intro/PreparingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>PreparingInputs.Rmd</code></div>
@@ -217,7 +217,7 @@ function defined in <strong>medfate</strong> for this object class:</p>
 <span><span class="co">#&gt; Cover (%) adult trees: 42.1205627  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; LAI (m2/m2) total: 0.544959  adult trees: 0.544959  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; Fuel loading (kg/m2) total: 0.1421746  adult trees: 0.1421746  saplings: 0  shrubs: 0  herbs: 0 </span></span>
-<span><span class="co">#&gt; PAR ground (%): 74.1020142  SWR ground (%): 80.0899066</span></span></code></pre></div>
+<span><span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></span></code></pre></div>
 <p>The values of stand density and stand basal area are too low for such
 a dense forest, which indicates that something needs to be corrected. At
 this point, it is important to remember that <code>forest</code> objects
@@ -242,7 +242,7 @@ parameter <code>plot_size_x</code>:</p>
 <span><span class="co">#&gt; Cover (%) adult trees: 100  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; LAI (m2/m2) total: 5.6770407  adult trees: 5.6770407  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; Fuel loading (kg/m2) total: 1.493419  adult trees: 1.493419  saplings: 0  shrubs: 0  herbs: 0 </span></span>
-<span><span class="co">#&gt; PAR ground (%): 4.4052535  SWR ground (%): 9.8976935</span></span></code></pre></div>
+<span><span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></span></code></pre></div>
 <p>which results in a much higher basal area and density, as should be
 expected for a dense oak forest resulting from an abandoned old
 coppice.</p>
@@ -273,7 +273,7 @@ defined, we can include them in our mapping:</p>
 <span><span class="co">#&gt; Cover (%) adult trees: 100  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; LAI (m2/m2) total: 5.6770407  adult trees: 5.6770407  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; Fuel loading (kg/m2) total: 1.493419  adult trees: 1.493419  saplings: 0  shrubs: 0  herbs: 0 </span></span>
-<span><span class="co">#&gt; PAR ground (%): 4.4052535  SWR ground (%): 9.8976935</span></span></code></pre></div>
+<span><span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></span></code></pre></div>
 <p>The fraction of PAR/SWR reaching the ground is low, as would be
 expected for a dense forest.</p>
 </div>
@@ -308,7 +308,7 @@ accepted name (<em>Quercus pubescens</em>), which we can do:</p>
 <span><span class="co">#&gt; Cover (%) adult trees: 100  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; LAI (m2/m2) total: 5.5833511  adult trees: 5.5833511  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; Fuel loading (kg/m2) total: 1.4629714  adult trees: 1.4629714  saplings: 0  shrubs: 0  herbs: 0 </span></span>
-<span><span class="co">#&gt; PAR ground (%): 4.6382035  SWR ground (%): 10.2827898</span></span></code></pre></div>
+<span><span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></span></code></pre></div>
 <p>Like the control plot, these statistics indicate a dense oak forest.
 We can repeat the same operations with the forest plot after the
 thinning intervention:</p>
@@ -323,7 +323,7 @@ thinning intervention:</p>
 <span><span class="co">#&gt; Cover (%) adult trees: 100  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; LAI (m2/m2) total: 4.5328748  adult trees: 4.5328748  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; Fuel loading (kg/m2) total: 1.1915321  adult trees: 1.1915321  saplings: 0  shrubs: 0  herbs: 0 </span></span>
-<span><span class="co">#&gt; PAR ground (%): 8.2654902  SWR ground (%): 15.7752682</span></span></code></pre></div>
+<span><span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></span></code></pre></div>
 <p>Note the decrease in tree density and basal area, and the increase in
 light reaching the ground, despite the estimated leaf area index is
 still high.</p>
@@ -368,7 +368,7 @@ tree cohorts using again:</p>
 <span><span class="co">#&gt; Cover (%) adult trees: 100  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; LAI (m2/m2) total: 4.0969956  adult trees: 4.0969956  saplings: 0  shrubs: 0  herbs: 0 </span></span>
 <span><span class="co">#&gt; Fuel loading (kg/m2) total: 1.0724731  adult trees: 1.0724731  saplings: 0  shrubs: 0  herbs: 0 </span></span>
-<span><span class="co">#&gt; PAR ground (%): 10.5046983  SWR ground (%): 18.8407832</span></span></code></pre></div>
+<span><span class="co">#&gt; PAR ground (%): NA  SWR ground (%): NA</span></span></code></pre></div>
 <p>Function <code><a href="../../reference/forest_mergeTrees.html">forest_mergeTrees()</a></code> will preserve the stand
 density and basal area that the stand description had before merging
 cohorts. Other properties like leaf area index may be slightly
