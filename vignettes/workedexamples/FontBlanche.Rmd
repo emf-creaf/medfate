@@ -175,14 +175,7 @@ fb_x = forest2spwbInput(fb_forest, fb_soil, SpParamsFB, fb_control)
 
 Different species parameter variables will be drawn from `SpParamsMED` depending on the value of `transpirationMode`. For the simple water balance model, relatively few parameters are needed. All the input information for forest data and species parameter values can be inspected by printing the input object. 
 
-It is important to remember that, unlike normal objects in R, any water balance simulation will modify the `spwbInput` object. Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next.
-
-Finally, note that one can play with plant-specific parameters for soil water balance (instead of using species-level values) by using function `modifyCohortParams()`:
-
-```{r}
-fb_x <- modifyCohortParams(fb_x, fb$customParams, verbose = FALSE)
-```
-We recommend using `modifyCohortParams()` instead of manually modifying values in the `spwbInput` object because some parameters are related, so that modifying a given parameter value should affect others. These dependencies are taken into account automatically in `modifyCohortParams()`.
+Finally, note that one can play with plant-specific parameters for soil water balance (instead of using species-level values) by using function `modifyCohortParams()`.
 
 
 ## Running the model

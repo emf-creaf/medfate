@@ -122,7 +122,6 @@ modifySpParams<-function(SpParams, customParams, subsetSpecies = TRUE) {
   if(subsetSpecies) {
     if("SpIndex" %in% names(customParams)) SpParams = SpParams[SpParams$SpIndex %in% customParams[['SpIndex']],]
     if("Species" %in% names(customParams)) SpParams = SpParams[SpParams$Name %in% customParams[['Species']],]
-    if("SpIndex" %in% names(SpParams)) SpParams[["SpIndex"]] <- 0:(nrow(SpParams)-1)
   }
   # return the new SpParams
   return(SpParams)
