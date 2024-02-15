@@ -74,9 +74,10 @@ NumericVector speciesNumericParameterFromIndexWithGenus(IntegerVector SP, DataFr
     CharacterVector name = SpParams["Name"];
     for(int i=0;i<SP.size();i++) {
       if(NumericVector::is_na(par[i])) {
-        if(!CharacterVector::is_na(genus[SP[i]])) {
+        int spRow = findSpParamsRowBySpIndex(SP[i], SpParams);
+        if(!CharacterVector::is_na(genus[spRow])) {
           int genusRow = -1;
-          for(int j=0;j<name.length();j++) if(name[j]==genus[SP[i]]) {
+          for(int j=0;j<name.length();j++) if(name[j]==genus[spRow]) {
             genusRow= j;
           }
           if(genusRow>-1) par[i] = parSP[genusRow];
