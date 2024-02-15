@@ -178,7 +178,7 @@ Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-31
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Load example plot plant data</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforest</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Default species parameterization</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
@@ -190,7 +190,7 @@ Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-31
 <span class="r-in"><span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Initialize vegetation input</span></span></span>
-<span class="r-in"><span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x1</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Call simulation function</span></span></span>
 <span class="r-in"><span><span class="va">G1</span> <span class="op">&lt;-</span> <span class="fu">growth</span><span class="op">(</span><span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
@@ -230,7 +230,7 @@ Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-31
 <span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Initialize vegetation input</span></span></span>
-<span class="r-in"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforest</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Call simulation function</span></span></span>
 <span class="r-in"><span><span class="va">G2</span> <span class="op">&lt;-</span><span class="fu">growth</span><span class="op">(</span><span class="va">x2</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
@@ -272,7 +272,7 @@ Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-31
 <span class="r-in"><span><span class="va">control</span><span class="op">$</span><span class="va">equalLeafStemVC</span> <span class="op">=</span> <span class="cn">TRUE</span> </span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Initialize vegetation input</span></span></span>
-<span class="r-in"><span><span class="va">x3</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x3</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2growthInput</a></span><span class="op">(</span><span class="va">exampleforest</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Call simulation function</span></span></span>
 <span class="r-in"><span><span class="va">G3</span> <span class="op">&lt;-</span><span class="fu">growth</span><span class="op">(</span><span class="va">x3</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
@@ -298,7 +298,7 @@ Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-31
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in soil water content (mm): 28.2139</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Soil water balance result (mm): 28.0884</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Change in snowpack water content (mm): 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Snowpack water balance result (mm): 7.10543e-15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Water balance components:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Precipitation (mm) 513</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Rain (mm) 462 Snow (mm) 51</span>

@@ -107,8 +107,8 @@ by loading the package and the example forest data:</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/" class="external-link">medfate</a></span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Package 'medfate' [ver. 4.0.0]</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
-<span><span class="va">exampleforestMED</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforest</span><span class="op">)</span></span>
+<span><span class="va">exampleforest</span></span></code></pre></div>
 <pre><code><span><span class="co">## $treeData</span></span>
 <span><span class="co">##            Species   N   DBH Height Z50  Z95</span></span>
 <span><span class="co">## 1 Pinus halepensis 168 37.55    800 100  600</span></span>
@@ -123,6 +123,10 @@ by loading the package and the example forest data:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## $herbHeight</span></span>
 <span><span class="co">## [1] 20</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $seedBank</span></span>
+<span><span class="co">## [1] Species Percent</span></span>
+<span><span class="co">## &lt;0 rows&gt; (or 0-length row.names)</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## attr(,"class")</span></span>
 <span><span class="co">## [1] "forest" "list"</span></span></code></pre>
@@ -148,7 +152,7 @@ texture, bulk density and rock content) and the species input parameters
 for simulation function <code><a href="../../reference/spwb.html">spwb()</a></code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="../../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="../../reference/modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, control <span class="op">=</span> <span class="fu"><a href="../../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="../../reference/modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforest</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, control <span class="op">=</span> <span class="fu"><a href="../../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Although it is not necessary, we make an initial call to the model
 (<code><a href="../../reference/spwb.html">spwb()</a></code>) with the default parameter settings:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">

@@ -93,6 +93,10 @@
 </ul></li>
 <li><p><code>herbCover</code>: Percent cover of the herb layer (optional).</p></li>
 <li><p><code>herbHeight</code>: Mean height (in cm) of the herb layer (optional).</p></li>
+<li><p><code>seedBank</code>: A data frame containing seed bank information with the following columns:
+      </p><ul><li><p><code>Species</code>: String with species (taxon) name or a non-negative integer for tree species identity (i.e., 0,1,2,...) matching SpParams.</p></li>
+<li><p><code>Percent</code>: Amount of seeds in relation to full seed bank (in %).</p></li>
+</ul></li>
 </ul></dd>
 
 
@@ -137,7 +141,8 @@ one or the other, and not all of them at the same time.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="exampleforest.html">exampleforestMED</a></code>, <code><a href="forest_mergeTrees.html">forest_mergeTrees</a></code>,  <code><a href="plot.forest.html">plot.forest</a></code></p></div>
+    <div class="dont-index"><p><code><a href="exampleforest.html">exampleforest</a></code>, <code><a href="forest_mergeTrees.html">forest_mergeTrees</a></code>,  
+<code><a href="plot.forest.html">plot.forest</a></code>, <code><a href="tree2forest.html">tree2forest</a></code></p></div>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -146,11 +151,11 @@ one or the other, and not all of them at the same time.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforest</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Example forest</span></span></span>
-<span class="r-in"><span><span class="va">exampleforestMED</span></span></span>
+<span class="r-in"><span><span class="co"># Prints forest as a list of data items</span></span></span>
+<span class="r-in"><span><span class="va">exampleforest</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $treeData</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            Species   N   DBH Height Z50  Z95</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Pinus halepensis 168 37.55    800 100  600</span>
@@ -166,11 +171,15 @@ one or the other, and not all of them at the same time.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $herbHeight</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $seedBank</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] Species Percent</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;0 rows&gt; (or 0-length row.names)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "forest" "list"  </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Summary of example forest</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Tree BA (m2/ha): 25.0333016  adult trees: 25.0333016  saplings: 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Density (ind/ha) adult trees: 552  saplings: 0  shrubs (estimated): 749.4923076 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75  herbs: 10 </span>

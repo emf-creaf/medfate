@@ -199,13 +199,13 @@ Each of them contains live moisture content values for each day (in rows) and pl
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Load example plot plant data</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforest</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Default species parameterization</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Show stratification of fuels</span></span></span>
-<span class="r-in"><span><span class="fu">fuel_stratification</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">fuel_stratification</span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $surfaceLayerBaseHeight</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -238,7 +238,7 @@ Each of them contains live moisture content values for each day (in rows) and pl
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="co">#Calculate fuel properties according to FCCS</span></span></span>
-<span class="r-in"><span><span class="va">fccs</span> <span class="op">=</span> <span class="fu">fuel_FCCS</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fccs</span> <span class="op">=</span> <span class="fu">fuel_FCCS</span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fccs</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 w  cover hbc htc habc hatc       delta        rhob     rhop</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> canopy 0.52550038 100.00 2.7 7.1  2.6  7.9 4.791658510  0.10966983 592.0044</span>

@@ -191,22 +191,22 @@
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Load example plot</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforest</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#A plant-level way to obtain stand basal area</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">plant_basalArea</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">plant_basalArea</span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 25.0333</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#The analogous plant-level function for LAI</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">plant_LAI</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">plant_LAI</span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.584948</span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="co">#The analogous plant-level function for fuel loading</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">plant_fuelLoading</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fu">plant_fuelLoading</span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.5395798</span>
 <span class="r-in"><span>      </span></span>
 <span class="r-in"><span><span class="co">#Summary function for 'forest' objects can be also used</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Tree BA (m2/ha): 25.0333016  adult trees: 25.0333016  saplings: 0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Density (ind/ha) adult trees: 552  saplings: 0  shrubs (estimated): 749.4923076 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cover (%) adult trees: 100  saplings: 0  shrubs: 3.75  herbs: 10 </span>
@@ -215,7 +215,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> PAR ground (%): NA  SWR ground (%): NA </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Cohort IDs in the models</span></span></span>
-<span class="r-in"><span><span class="fu">plant_ID</span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">plant_ID</span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "T1_148" "T2_168" "S1_165"</span>
 <span class="r-in"><span>      </span></span>
 </code></pre></div>

@@ -200,7 +200,7 @@ or a LAI-weighted mean (as for plant stress or plant water potential).</p></dd>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Load example plot plant data</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforest</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Default species parameterization</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
@@ -212,7 +212,7 @@ or a LAI-weighted mean (as for plant stress or plant water potential).</p></dd>
 <span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Simulate one day only</span></span></span>
-<span class="r-in"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforest</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fl">100</span></span></span>
 <span class="r-in"><span><span class="va">date</span> <span class="op">&lt;-</span> <span class="va">examplemeteo</span><span class="op">$</span><span class="va">dates</span><span class="op">[</span><span class="va">d</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="va">meteovec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">[</span><span class="va">d</span>,<span class="op">]</span><span class="op">)</span></span></span>

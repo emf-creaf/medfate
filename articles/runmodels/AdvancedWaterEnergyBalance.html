@@ -109,19 +109,19 @@ with soil layers in rows and physical attributes in columns. Soil
 physical attributes can be initialized to default values, for a given
 number of layers, using function <code><a href="../../reference/defaultSoilParams.html">defaultSoilParams()</a></code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">spar</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">spar</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span></code></pre></div>
 <p>The soil input for water balance simulation is actually a list of
 class <code>soil</code> that is created using a function with the same
 name:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">spar</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">spar</span><span class="op">)</span></span></code></pre></div>
 <p>As explained in the package overview, models included in
 <code>medfate</code> were primarily designed to be ran on <strong>forest
 inventory plots</strong>. Here we use the example object provided with
 the package:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
-<span><span class="va">exampleforestMED</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforest</span><span class="op">)</span></span>
+<span><span class="va">exampleforest</span></span></code></pre></div>
 <pre><code><span><span class="co">## $treeData</span></span>
 <span><span class="co">##            Species   N   DBH Height Z50  Z95</span></span>
 <span><span class="co">## 1 Pinus halepensis 168 37.55    800 100  600</span></span>
@@ -136,6 +136,10 @@ the package:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## $herbHeight</span></span>
 <span><span class="co">## [1] 20</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $seedBank</span></span>
+<span><span class="co">## [1] Species Percent</span></span>
+<span><span class="co">## &lt;0 rows&gt; (or 0-length row.names)</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## attr(,"class")</span></span>
 <span><span class="co">## [1] "forest" "list"</span></span></code></pre>
@@ -173,7 +177,7 @@ controlled using a set of global parameters. The default
 parameterization is obtained using function
 <code><a href="../../reference/defaultControl.html">defaultControl()</a></code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sperry"</span><span class="op">)</span></span></code></pre></div>
 <p>To use the advanced water balance model we must change the values of
 <code>transpirationMode</code> to switch from <code>"Granier"</code> to
 either <code>"Sperry"</code> or <code>"Cochard"</code>.</p>
@@ -187,7 +191,7 @@ belowground parameters and the specification of additional parameter
 values for each plant cohort. This is done by calling function
 <code><a href="../../reference/modelInput.html">forest2spwbInput()</a></code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../../reference/modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></code></pre></div>
 <p>The <code>spwbInput</code> object for advanced water and energy
 balance is similar to that of simple water balance simulations, but
 contains more elements. Information about the cohort species is found in
@@ -324,8 +328,8 @@ seen in <code>paramsTranspiration</code>:</p>
 <span><span class="co">## T1_148  0.7465846 0.1866462 0.5573346 0.2560193</span></span>
 <span><span class="co">## T2_168  0.8249857 0.2062464 0.5089563 0.2847972</span></span>
 <span><span class="co">## S1_165  1.5867376 0.1656462 0.3449978 0.4893561</span></span></code></pre>
-<p>Finally, parameters related to pressure-volume curves and water
-storage capacity of leaf and stem organs are in
+<p>Parameters related to pressure-volume curves and water storage
+capacity of leaf and stem organs are in
 <code>paramsWaterStorage</code>:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">paramsWaterStorage</span></span></code></pre></div>
@@ -428,7 +432,7 @@ supply and photosynthesis curves for sunlit and shade leaves, along with
 an indication of the values corresponding to the chosen stomatal
 aperture:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">d</span> <span class="op">=</span> <span class="fl">100</span></span>
+<code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
 <span><span class="fu"><a href="../../reference/transp_stomatalregulation.html">transp_stomatalRegulationPlot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, day <span class="op">=</span> <span class="va">d</span>, timestep<span class="op">=</span><span class="fl">12</span>,</span>
 <span>                              latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, type<span class="op">=</span><span class="st">"E"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Package 'meteoland' [ver. 2.2.1]</span></span></code></pre>
@@ -740,7 +744,7 @@ affected by the end state of the previous simulation:</p>
 <span><span class="co">## 28 2700 2750 2800   NA   NA    NA</span></span></code></pre>
 <p>Now we are ready to call function <code><a href="../../reference/spwb.html">spwb()</a></code>:</p>
 <div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">S</span> <span class="op">=</span> <span class="fu"><a href="../../reference/spwb.html">spwb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">S</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/spwb.html">spwb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Initial plant water content (mm): 6.78513</span></span>
 <span><span class="co">## Initial soil water content (mm): 290.875</span></span>
 <span><span class="co">## Initial snowpack content (mm): 0</span></span>

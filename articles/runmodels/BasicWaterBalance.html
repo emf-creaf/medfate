@@ -109,19 +109,19 @@ with soil layers in rows and physical attributes in columns. Soil
 physical attributes can be initialized to default values, for a given
 number of layers, using function <code><a href="../../reference/defaultSoilParams.html">defaultSoilParams()</a></code>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">spar</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">spar</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span></span></code></pre></div>
 <p>The soil input for water balance simulation is actually a list of
 class <code>soil</code> that is created using a function with the same
 name:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">examplesoil</span> <span class="op">=</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">spar</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">examplesoil</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/soil.html">soil</a></span><span class="op">(</span><span class="va">spar</span><span class="op">)</span></span></code></pre></div>
 <p>As explained in the package overview, models included in
 <code>medfate</code> were primarily designed to be ran on <strong>forest
 inventory plots</strong>. Here we use the example object provided with
 the package:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span>
-<span><span class="va">exampleforestMED</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforest</span><span class="op">)</span></span>
+<span><span class="va">exampleforest</span></span></code></pre></div>
 <pre><code><span><span class="co">## $treeData</span></span>
 <span><span class="co">##            Species   N   DBH Height Z50  Z95</span></span>
 <span><span class="co">## 1 Pinus halepensis 168 37.55    800 100  600</span></span>
@@ -136,6 +136,10 @@ the package:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## $herbHeight</span></span>
 <span><span class="co">## [1] 20</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## $seedBank</span></span>
+<span><span class="co">## [1] Species Percent</span></span>
+<span><span class="co">## &lt;0 rows&gt; (or 0-length row.names)</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## attr(,"class")</span></span>
 <span><span class="co">## [1] "forest" "list"</span></span></code></pre>
@@ -173,7 +177,7 @@ controlled using a set of global parameters. The default
 parameterization is obtained using function
 <code><a href="../../reference/defaultControl.html">defaultControl()</a></code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="../../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Granier"</span><span class="op">)</span></span></code></pre></div>
 <p>Some parameters deserve explanation here:</p>
 <ol style="list-style-type: decimal">
 <li>Console output can be turned off by setting
@@ -197,7 +201,7 @@ values for each plant cohort. This is done by calling function
 the object can be generated more directly using function
 <code><a href="../../reference/modelInput.html">forest2spwbInput()</a></code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">=</span> <span class="fu"><a href="../../reference/modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></code></pre></div>
 <p>Different parameter variables will be drawn depending on the value of
 <code>transpirationMode</code>. For the basic water balance model
 (<code>transpirationMode = "Granier"</code>), relatively few parameters
@@ -212,8 +216,6 @@ this object, whose names are.</p>
 <span><span class="co">## [10] "paramsPhenology"     "paramsAnatomy"       "paramsInterception" </span></span>
 <span><span class="co">## [13] "paramsTranspiration" "paramsWaterStorage"  "internalPhenology"  </span></span>
 <span><span class="co">## [16] "internalWater"       "internalFCCS"</span></span></code></pre>
-<p>Note that (since <strong>ver 2.0</strong>) the water balance input
-object contains an element <code>soil</code> with the soil input.</p>
 <p>Finally, note that users can set cohort-specific parameters for soil
 water balance (instead of using species-level values) by modifying
 manually the parameter values in this object. Since some parameters may
@@ -349,7 +351,7 @@ simulation:</p>
 <pre><code><span><span class="co">## [1] 1 1 1 1</span></span></code></pre>
 <p>Now we are ready to call function <code><a href="../../reference/spwb.html">spwb()</a></code>:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">S</span> <span class="op">=</span> <span class="fu"><a href="../../reference/spwb.html">spwb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">S</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/spwb.html">spwb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Initial plant water content (mm): 7.05859</span></span>
 <span><span class="co">## Initial soil water content (mm): 290.875</span></span>
 <span><span class="co">## Initial snowpack content (mm): 0</span></span>

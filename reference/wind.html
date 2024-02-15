@@ -157,10 +157,10 @@
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Load example plot plant data</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleforest</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Canopy height (in m)</span></span></span>
-<span class="r-in"><span><span class="va">h</span><span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">$</span><span class="va">treeData</span><span class="op">$</span><span class="va">Height</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span> </span></span>
+<span class="r-in"><span><span class="va">h</span><span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">exampleforest</span><span class="op">$</span><span class="va">treeData</span><span class="op">$</span><span class="va">Height</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span> </span></span>
 <span class="r-in"><span><span class="va">d0</span> <span class="op">=</span> <span class="fl">0.67</span><span class="op">*</span><span class="va">h</span></span></span>
 <span class="r-in"><span><span class="va">z0</span> <span class="op">=</span> <span class="fl">0.08</span><span class="op">*</span><span class="va">h</span></span></span>
 <span class="r-in"><span></span></span>
@@ -169,7 +169,7 @@
 <span class="r-in"><span><span class="va">zm</span> <span class="op">=</span> <span class="va">z</span><span class="op">/</span><span class="fl">100</span> <span class="co"># (in m)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Leaf area density</span></span></span>
-<span class="r-in"><span><span class="va">lad</span> <span class="op">=</span> <span class="fu"><a href="vprofile_leafAreaDensity.html">vprofile_leafAreaDensity</a></span><span class="op">(</span><span class="va">exampleforestMED</span>, <span class="va">SpParamsMED</span>, draw <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span><span class="va">lad</span> <span class="op">=</span> <span class="fu"><a href="vprofile_leafAreaDensity.html">vprofile_leafAreaDensity</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">SpParamsMED</span>, draw <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>                               z <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="va">z</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="co"># Effective drag</span></span></span>
