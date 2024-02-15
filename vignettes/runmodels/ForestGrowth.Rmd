@@ -37,8 +37,8 @@ examplesoil = soil(spar)
 
 As explained in the package overview, models included in `medfate` were primarily designed to be ran on **forest inventory plots**. Here we use the example forest object provided with the package:
 ```{r}
-data(exampleforestMED)
-exampleforestMED
+data(exampleforest)
+exampleforest
 ```
 
 Importantly, a data frame with daily weather for the period to be simulated is required. Here we use the default data frame included with the package: 
@@ -71,7 +71,7 @@ Here we will run growth simulations using the basic water balance model (i.e. `t
 A last object, called `growthInput`, needs to be created before calling the simulation function. This is analogous to `spwbInput` and consists in the compilation of soil and cohort-level parameters needed for simulations. The object can be obtained by calling function `growthInput()`, but if one has a `forest` object, it can be generated more directly using function `forest2growthInput()`:
 
 ```{r}
-x = forest2growthInput(exampleforestMED, examplesoil, SpParamsMED, control)
+x = forest2growthInput(exampleforest, examplesoil, SpParamsMED, control)
 ```
 
 All the input information for forest data and species parameter values can be inspected by printing different elements of the input object, whose names are: 

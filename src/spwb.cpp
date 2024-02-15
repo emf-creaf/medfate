@@ -771,7 +771,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
 //' data(examplemeteo)
 //' 
 //' #Load example plot plant data
-//' data(exampleforestMED)
+//' data(exampleforest)
 //' 
 //' #Default species parameterization
 //' data(SpParamsMED)
@@ -786,13 +786,13 @@ List spwbDay_advanced(List x, NumericVector meteovec,
 //' 
 //' #Simulate water balance one day only (Granier mode)
 //' examplesoil <- soil(defaultSoilParams(4))
-//' x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' x1 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 //' sd1 <- spwb_day(x1, date, meteovec,  
 //'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0) 
 //' 
 //' #Simulate water balance for one day only (Sperry mode)
 //' control <- defaultControl("Sperry")
-//' x2 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
+//' x2 <- forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 //' sd2 <-spwb_day(x2, date, meteovec,
 //'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 //' 
@@ -801,14 +801,14 @@ List spwbDay_advanced(List x, NumericVector meteovec,
 //' 
 //' #Simulate water balance for one day only (Cochard mode)
 //' control <- defaultControl("Cochard")
-//' x3 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
+//' x3 <- forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 //' sd3 <-spwb_day(x3, date, meteovec,
 //'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 //' 
 //' 
 //' #Simulate water and carbon balance for one day only (Granier mode)
 //' control <- defaultControl("Granier")
-//' x4  <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' x4  <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
 //' sd4 <- growth_day(x4, date, meteovec,
 //'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 //' 
@@ -1991,7 +1991,7 @@ void printWaterBalanceResult(List outputList, List x,
 //' data(examplemeteo)
 //' 
 //' #Load example plot plant data
-//' data(exampleforestMED)
+//' data(exampleforest)
 //' 
 //' #Default species parameterization
 //' data(SpParamsMED)
@@ -2003,7 +2003,7 @@ void printWaterBalanceResult(List outputList, List x,
 //' control <- defaultControl("Granier")
 //' 
 //' #Initialize input
-//' x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' x1 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 //' 
 //' #Call simulation function
 //' S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -2013,7 +2013,7 @@ void printWaterBalanceResult(List outputList, List x,
 //' control <- defaultControl("Sperry")
 //' 
 //' #Initialize input
-//' x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' x2 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 //' 
 //' #Call simulation function
 //' S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -2025,7 +2025,7 @@ void printWaterBalanceResult(List outputList, List x,
 //' control$equalLeafStemVC = TRUE 
 //' 
 //' #Initialize input
-//' x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' x3 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 //' 
 //' #Call simulation function
 //' S3 <- spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)

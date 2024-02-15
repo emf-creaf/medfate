@@ -39,9 +39,9 @@ A ggplot or a shiny application, depending on the function.
 Convenient wrappers for vertical forest profiles (see \code{\link{vprofile_leafAreaDensity}}).
 }
 \examples{
-data(exampleforestMED)
+data(exampleforest)
 data(SpParamsMED)
-plot(exampleforestMED, SpParamsMED)
+plot(exampleforest, SpParamsMED)
 
 }
 \seealso{

@@ -56,7 +56,7 @@ When using \code{subdaily = TRUE}, parameter \code{output} is not taken into acc
 data(examplemeteo)
 
 #Load example plot plant data
-data(exampleforestMED)
+data(exampleforest)
 
 #Default species parameterization
 data(SpParamsMED)
@@ -68,7 +68,7 @@ examplesoil = soil(defaultSoilParams(2))
 control = defaultControl("Granier")
 
 #Initialize input
-x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function (ten days)
 S1<-spwb(x, examplemeteo[1:10, ], latitude = 41.82592, elevation = 100)

@@ -1584,43 +1584,43 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //' 
 //' @examples
 //' #Load example plot plant data
-//' data(exampleforestMED)
+//' data(exampleforest)
 //' 
 //' #Default species parameterization
 //' data(SpParamsMED)
 //' 
 //' # Aboveground parameters
-//' forest2aboveground(exampleforestMED, SpParamsMED)
+//' forest2aboveground(exampleforest, SpParamsMED)
 //' 
 //' # Example of aboveground parameters taken from a forest
 //' # described using LAI and crown ratio
-//' data(exampleforestMED2)
-//' forest2aboveground(exampleforestMED2, SpParamsMED)
+//' data(exampleforest2)
+//' forest2aboveground(exampleforest2, SpParamsMED)
 //' 
 //' # Initialize soil with default soil params
 //' examplesoil <- soil(defaultSoilParams())
 //' 
 //' # Bewowground parameters (distribution of fine roots)
-//' forest2belowground(exampleforestMED, examplesoil, SpParamsMED)
+//' forest2belowground(exampleforest, examplesoil, SpParamsMED)
 //' 
 //' # Initialize control parameters using 'Granier' transpiration mode
 //' control <- defaultControl("Granier")
 //' 
 //' # Prepare spwb input
-//' forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
+//' forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 //'                 
 //' # Prepare input for 'Sperry' transpiration mode
 //' control <- defaultControl("Sperry")
-//' forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
+//' forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 //' 
 //' # Prepare input for 'Cochard' transpiration mode
 //' control <- defaultControl("Cochard")
-//' forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
+//' forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 //' 
 //' # Example of initialization from a forest 
 //' # described using LAI and crown ratio
 //' control <- defaultControl("Granier")
-//' forest2spwbInput(exampleforestMED2, examplesoil, SpParamsMED, control)
+//' forest2spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 //' 
 //' @name modelInput
 //' @aliases spwbInput growthInput

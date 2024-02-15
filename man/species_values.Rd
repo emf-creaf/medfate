@@ -75,10 +75,10 @@ Functions to calculate attributes of a \code{\link{forest}} object by species or
 data(SpParamsMED)
 
 # Load example plot
-data(exampleforestMED)
+data(exampleforest)
 
 # Species basal area in the forest plot
-species_basalArea(exampleforestMED, SpParamsMED)
+species_basalArea(exampleforest, SpParamsMED)
   
 # Value of parameter "Psi_Extract" for two species
 species_parameter(c("Pinus halepensis", "Quercus ilex"), SpParamsMED, "Psi_Extract")

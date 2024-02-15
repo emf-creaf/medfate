@@ -147,12 +147,12 @@ Functions to calculate properties of fine/coarse roots within the soil, given ro
 }
 \examples{
 #Load example plot plant data
-data(exampleforestMED)
+data(exampleforest)
 
 #Default species parameterization
 data(SpParamsMED)
 
-ntree = nrow(exampleforestMED$treeData)
+ntree = nrow(exampleforest$treeData)
 
 #Initialize soil with default soil params
 S = soil(defaultSoilParams())

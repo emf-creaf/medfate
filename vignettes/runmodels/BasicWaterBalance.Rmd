@@ -25,18 +25,18 @@ Model inputs are explained in greater detail in vignettes [*Understanding model 
 Soil information needs to be entered as a `data frame` with soil layers in rows and physical attributes in columns. Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
 
 ```{r}
-spar = defaultSoilParams(4)
+spar <- defaultSoilParams(4)
 ```
 
 The soil input for water balance simulation is actually a list of class `soil` that is created using a function with the same name:
 ```{r}
-examplesoil = soil(spar)
+examplesoil <- soil(spar)
 ```
 
 As explained in the package overview, models included in `medfate` were primarily designed to be ran on **forest inventory plots**. Here we use the example object provided with the package:
 ```{r}
-data(exampleforestMED)
-exampleforestMED
+data(exampleforest)
+exampleforest
 ```
 
 Importantly, a data frame with daily weather for the period to be simulated is required. Here we use the default data frame included with the package: 
@@ -56,7 +56,7 @@ data("SpParamsMED")
 Apart from data inputs, the behaviour of simulation models can be controlled using a set of global parameters. The default parameterization is obtained using function `defaultControl()`:
 
 ```{r}
-control = defaultControl("Granier")
+control <- defaultControl("Granier")
 ```
 Some parameters deserve explanation here: 
 
@@ -70,15 +70,13 @@ Some parameters deserve explanation here:
 A last object is needed before calling simulation functions, called `spwbInput`. It consists in the compilation of aboveground and belowground parameters and the specification of additional parameter values for each plant cohort. This is done by calling function `spwbInput()`, but if one has a `forest` object, the object can be generated more directly using function `forest2spwbInput()`:
 
 ```{r}
-x = forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
+x <- forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 ```
 
 Different parameter variables will be drawn depending on the value of `transpirationMode`. For the basic water balance model (`transpirationMode = "Granier"`), relatively few parameters are needed. All the input information for forest data and species parameter values can be inspected by accessing the different elements of this object, whose names are.
 ```{r}
 names(x)
 ```
-Note that (since **ver 2.0**) the water balance input object contains an element `soil` with the soil input. 
-
 
 Finally, note that users can set cohort-specific parameters for soil water balance (instead of using species-level values) by modifying manually the parameter values in this object. Since some parameters may be coordinated by design, however, it is better to use specific package functions for this purpose.
 
@@ -122,7 +120,7 @@ x$soil$W
 ```
 Now we are ready to call function `spwb()`:
 ```{r}
-S = spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
+S <- spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 Function `spwb()` returns an object of class with the same name, actually a list:
 ```{r}

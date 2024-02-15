@@ -161,10 +161,10 @@ IntegerVector which(LogicalVector l) {
 //' data(SpParamsMED)
 //' 
 //' #Load example plot plant data
-//' data(exampleforestMED)
+//' data(exampleforest)
 //' 
 //' #Canopy height (in m)
-//' h= max(exampleforestMED$treeData$Height/100) 
+//' h= max(exampleforest$treeData$Height/100) 
 //' d0 = 0.67*h
 //' z0 = 0.08*h
 //' 
@@ -173,7 +173,7 @@ IntegerVector which(LogicalVector l) {
 //' zm = z/100 # (in m)
 //' 
 //' # Leaf area density
-//' lad = vprofile_leafAreaDensity(exampleforestMED, SpParamsMED, draw = FALSE,
+//' lad = vprofile_leafAreaDensity(exampleforest, SpParamsMED, draw = FALSE,
 //'                                z = c(0,z))
 //'   
 //' # Effective drag

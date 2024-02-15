@@ -150,12 +150,12 @@ NumericVector conicRS_one(double Zcone, NumericVector d){
 //'
 //' @examples
 //' #Load example plot plant data
-//' data(exampleforestMED)
+//' data(exampleforest)
 //' 
 //' #Default species parameterization
 //' data(SpParamsMED)
 //' 
-//' ntree = nrow(exampleforestMED$treeData)
+//' ntree = nrow(exampleforest$treeData)
 //' 
 //' #Initialize soil with default soil params
 //' S = soil(defaultSoilParams())

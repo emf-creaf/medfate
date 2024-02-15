@@ -20,22 +20,25 @@ library(medfate)
 Any process-based model of forest functioning and dynamics needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since `medfate` allows simulating cohorts belonging to different species,  **species-specific parameters** are also needed. Finally, **simulation control parameters** may need to be changed, depending on the goals of the simulation. This article explains data structures required as input to run simulations using the package so that the user can understand them. A companion article [*Preparing model inputs*](https://emf-creaf.github.io/medfate/articles/intro/PreparingInputs.html) provides a practical example to illustrate how to create model inputs and some common problems encountered.
 
 
-## Species-specific parameters
+## Species parameter tables
 
-Simulation models in `medfate` require a data frame with species parameter values. The package includes a default data set of parameter values for a set of Mediterranean species. The set of species are reported in the Spanish National Forest Inventory. Hence they represent woody taxa found in Spain, but may not be sufficient for other areas. The values of the parameter table were obtained from global trait data bases, bibliographic searches, fit to empirical data or expert-based guesses:
+Simulation models in `medfate` require a data frame with species (taxon) parameter values. The package includes default data sets to be readily used. The values of the parameter table were obtained from global trait data bases, bibliographic searches, fit to empirical data or expert-based guesses:
 
 ```{r}
-data("SpParamsMED")
+data("SpParamsMED") # For the Spanish forest inventory (including taxon groups)
+data("SpParamsES") # For the Spanish forest inventory (full taxon list)
+data("SpParamsFR") # For the French forest inventory 
+data("SpParamsUS") # For the US forest inventory (FIA) 
 ```
 
- A large number of parameters (columns) can be found in `SpParamsMED`. Not all parameters are needed for all models. You can find parameter definitions in table `SpParamsDefinition`, which we reproduce below:
+ A large number of parameters (columns) can be found in species parameter tables. Not all parameters are needed for all models. You can find parameter definitions in table `SpParamsDefinition`, which we reproduce below:
 
 ```{r, echo = FALSE}
 data("SpParamsDefinition")
 knitr::kable(SpParamsDefinition[,-2])
 ```
 
-In order to understand the role of parameters in the model, you should read the details of model design and formulation included in the [**medfatebook**](https://emf-creaf.github.io/medfatebook/index.html). An example of how to define and populate a species parameter table for a given region is given in article [*Species parameterization for Spain*](https://emf-creaf.github.io/medfate/articles/parametrization/SpeciesParameterizationSpain.html). 
+In order to understand the role of parameters in the model, you should read the details of model design and formulation included in the [**medfatebook**](https://emf-creaf.github.io/medfatebook/index.html). Details regarding how the species parameter tables are build can be found in article [*Species parameterization*](https://emf-creaf.github.io/medfate/articles/parametrization/SpeciesParameterization.html). 
 
 ## Vegetation
 
@@ -46,8 +49,8 @@ Models included in `medfate` were primarily designed to be ran on **forest inven
 Each forest plot is represented in an object of class `forest`, a list that contains several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` (for shrubs):
 
 ```{r}
-data(exampleforestMED)
-exampleforestMED
+data(exampleforest)
+exampleforest
 ```
 
 Trees are expected to be primarily described in terms of species, diameter (DBH; cm) and height (cm), whereas shrubs are described in terms of species, percent cover (%) and mean height (cm). Root distribution has to be specified for both growth forms, in terms of the depths (mm) corresponding to 50% and 95% of cumulative fine root distribution. Functions are provided in package [medfateutils](https://emf-creaf.github.io/medfateutils/) to map variables in user data frames into tables `treeData` and `shrubData`. Information about the herb layer may be either absent or included in an aggregated way (i.e. without distinguishing cohorts).
@@ -55,8 +58,8 @@ Trees are expected to be primarily described in terms of species, diameter (DBH;
 While the former example illustrates the standard structure of a `forest` object, users may use an alternative description, based on leaf area index and crown ratio of woody cohorts and the herb layer:
 
 ```{r}
-data(exampleforestMED2)
-exampleforestMED2
+data(exampleforest2)
+exampleforest2
 ```
 
 This alternative `forest` form is suitable for water balance simulations, but does not allow simulating forest dynamics.
@@ -82,16 +85,16 @@ Since density and diameter have not been provided, simulations in this case will
 
 We can use some functions to inspect how above-ground and below-ground information is represented in `medfate`. 
 
-For example, we can use function `forest2aboveground()` on the object `exampleforestMED` to show how medfate completes above-ground information:
+For example, we can use function `forest2aboveground()` on the object `exampleforest` to show how medfate completes above-ground information:
 ```{r}
-above = forest2aboveground(exampleforestMED, SpParamsMED)
+above = forest2aboveground(exampleforest, SpParamsMED)
 above
 ```
 Note that the call to `forest2aboveground()` included the species parameter table, because species-specific allometric coefficients are needed to calculate leaf area from tree size or shrub percent cover and height. Moreover, note that the plant cohorts were given unique codes that tell us whether they correspond to trees ('T') or shrubs ('S'). 
 
 Columns `N`, `DBH` and `Cover` describe forest structure and are required for simulating growth, but not for soil water balance, which only requires columns `SP`, `H` (in cm), `CR` (i.e. the crown ratio), `LAI_live`, `LAI_expanded` and `LAI_dead`. Therefore, one could use alternative forest description as starting point, i.e.:
 ```{r}
-above2 = forest2aboveground(exampleforestMED2, SpParamsMED)
+above2 = forest2aboveground(exampleforest2, SpParamsMED)
 above2
 ```
 
@@ -100,23 +103,23 @@ Of course, the resulting data frame has missing values, whereas the other values
 Aboveground leaf area distribution (with or without distinguishing among cohorts) can be examined by calling function `vprofile_leafAreaDensity()`:
 
 ```{r, fig = TRUE, fig.width= 4, fig.height=3, fig.align= 'center', echo=TRUE}
-vprofile_leafAreaDensity(exampleforestMED, SpParamsMED, byCohorts = F)
+vprofile_leafAreaDensity(exampleforest, SpParamsMED, byCohorts = F)
 ```
 ```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE}
-vprofile_leafAreaDensity(exampleforestMED, SpParamsMED, byCohorts = T)
+vprofile_leafAreaDensity(exampleforest, SpParamsMED, byCohorts = T)
 ```
 
 ### Belowground data
 
 Regarding **belowground** information, we need vectors with depths corresponding to 50% and 95% of fine roots, which we simply concatenate from our forest data:
 ```{r}
-Z50 = c(exampleforestMED$treeData$Z50, exampleforestMED$shrubData$Z50)
-Z95 = c(exampleforestMED$treeData$Z95, exampleforestMED$shrubData$Z95)
+Z50 = c(exampleforest$treeData$Z50, exampleforest$shrubData$Z50)
+Z95 = c(exampleforest$treeData$Z95, exampleforest$shrubData$Z95)
 ```
 These parameters specify a continuous distribution of fine roots. Users can visually inspect the distribution of fine roots of `forest` objects by calling function `vprofile_rootDistribution()`:
 
 ```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE}
-vprofile_rootDistribution(exampleforestMED, SpParamsMED)
+vprofile_rootDistribution(exampleforest, SpParamsMED)
 ```
 
 

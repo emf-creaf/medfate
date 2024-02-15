@@ -616,7 +616,7 @@ List transpirationBasic(List x, NumericVector meteovec,
 //' data(examplemeteo)
 //' 
 //' #Load example plot plant data
-//' data(exampleforestMED)
+//' data(exampleforest)
 //' 
 //' #Default species parameterization
 //' data(SpParamsMED)
@@ -628,7 +628,7 @@ List transpirationBasic(List x, NumericVector meteovec,
 //' control <- defaultControl("Granier")
 //' 
 //' #Initialize input
-//' x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' x1 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 //' 
 //' # Transpiration according to Granier's model, plant water potential 
 //' # and plant stress for a given day
@@ -640,7 +640,7 @@ List transpirationBasic(List x, NumericVector meteovec,
 //' control <- defaultControl("Sperry")
 //' 
 //' #Initialize input
-//' x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' x2 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 //' 
 //' # Transpiration according to Sperry's model
 //' t2 <- transp_transpirationSperry(x2, examplemeteo, 1, 
@@ -651,7 +651,7 @@ List transpirationBasic(List x, NumericVector meteovec,
 //' control <- defaultControl("Cochard")
 //' 
 //' #Initialize input
-//' x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' x3 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 //' 
 //' # Transpiration according to Cochard's model
 //' t3 <- transp_transpirationCochard(x3, examplemeteo, 1, 

@@ -105,7 +105,7 @@ row.names(meteo2002) <- seq(as.Date("2002-01-01"),
 meteo_01_02 <- rbind(meteo2001, meteo2002)
 
 #Load example plot plant data
-data(exampleforestMED)
+data(exampleforest)
 
 #Default species parameterization
 data(SpParamsMED)
@@ -117,7 +117,7 @@ control <- defaultControl("Granier")
 examplesoil <- soil(defaultSoilParams(4))
 
 #Call simulation function
-fd<-fordyn(exampleforestMED, examplesoil, 
+fd<-fordyn(exampleforest, examplesoil, 
            SpParamsMED, meteo_01_02, control,
            latitude = 41.82592, elevation = 100)
 

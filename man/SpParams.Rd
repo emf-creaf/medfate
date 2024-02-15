@@ -19,10 +19,18 @@
 A data sets of species parameter definition and values, the latter resulting from existing databases, fit to empirical data or expert-based guesses.
 }
 \details{
-Plant trait parameter sources are listed in the bibliography section. Details of the procedures used to obtain the species parameter tables can be found in an article at https://emf-creaf.github.io/medfate/.
+\code{SpParamsMED} was the official species parameter for package versions up to v.4.0.0, but will not be maintained in the future.
+
+\code{SpParamsES}, \code{SpParamsFR} and \code{SpParamsUS} are species parameter data frames designed to be used with National Forest Inventories
+of Spain, France and USA, respectively. 
+
+Details of the procedures used to obtain the species parameter tables can be found in an article at https://emf-creaf.github.io/medfate/.
 }
 \examples{
 data(SpParamsDefinition)
 data(SpParamsMED)
+data(SpParamsES)
+data(SpParamsFR)
+data(SpParamsUS)
 }
 \keyword{data}

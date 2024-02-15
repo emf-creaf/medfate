@@ -26,8 +26,8 @@ The aim of the exercises presented here are:
 As an example data set we will use here the same data sets provided to illustrate simulation functions in **medfate**. We begin by loading the package and the example forest data:
 ```{r}
 library(medfate)
-data(exampleforestMED)
-exampleforestMED
+data(exampleforest)
+exampleforest
 ```
 We also load the species parameter table and the example weather dataset:
 ```{r}
@@ -49,7 +49,7 @@ We first initialize a soil with four layers (default values of texture, bulk den
 
 ```{r}
 examplesoil = soil(defaultSoilParams(4))
-x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control = defaultControl())
+x1 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control = defaultControl())
 ```
 
 Although it is not necessary, we make an initial call to the model (`spwb()`) with the default parameter settings:

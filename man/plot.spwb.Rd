@@ -213,7 +213,7 @@ Finally, the following plots are only available for \code{\link{fordyn}} simulat
 data(examplemeteo)
 
 #Load example plot plant data
-data(exampleforestMED)
+data(exampleforest)
 
 #Default species parameterization
 data(SpParamsMED)
@@ -225,7 +225,7 @@ examplesoil <- soil(defaultSoilParams(2))
 control <- defaultControl("Granier")
 
 #Initialize input
-x <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
 S1 <- spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)

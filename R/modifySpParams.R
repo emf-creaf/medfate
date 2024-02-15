@@ -35,7 +35,7 @@
 #' data(examplemeteo)
 #' 
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #Default species parameterization
 #' data(SpParamsMED)
@@ -47,7 +47,7 @@
 #' control = defaultControl("Granier")
 #' 
 #' #Initialize input
-#' x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x1 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' # Cohort name for Pinus halepensis
 #' PH_coh = paste0("T1_", SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"])
@@ -74,7 +74,7 @@
 #' x1s$soil
 #' 
 #' # When modifying growth input objects dependencies increase
-#' x1 = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x1 = forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
 #' customParams <- c(2000,2)
 #' names(customParams) <- paste0(PH_coh,c("/Al2As", "/LAI_live"))
 #' x1m <- modifyInputParams(x1, customParams)

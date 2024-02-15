@@ -33,13 +33,13 @@
 #' 
 #' @examples 
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #Default species parameterization
 #' data(SpParamsMED)
 #' 
 #' #Draw rainfall interception for two values of the E/R ratio
-#' hydrology_interceptionPlot(exampleforestMED, SpParamsMED, ER = c(0.05, 0.2))
+#' hydrology_interceptionPlot(exampleforest, SpParamsMED, ER = c(0.05, 0.2))
 #' 
 #' @name hydrology_interception
 hydrology_rainInterception<-function(Rainfall, Cm, p, ER=0.05, model="Gash1995"){

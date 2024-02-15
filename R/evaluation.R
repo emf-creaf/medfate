@@ -66,7 +66,7 @@
 #' data(examplemeteo)
 #' 
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #Default species parameterization
 #' data(SpParamsMED)
@@ -78,7 +78,7 @@
 #' control = defaultControl("Granier")
 #' 
 #' #Initialize input
-#' x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x1 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
 #' S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)

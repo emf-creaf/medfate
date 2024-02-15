@@ -74,7 +74,7 @@
 #' data(examplemeteo)
 #' 
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #Default species parameterization
 #' data(SpParamsMED)
@@ -86,7 +86,7 @@
 #' control <- defaultControl("Sperry")
 #' 
 #' #Simulate one day only
-#' x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x2 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' d <- 100
 #' date <- examplemeteo$dates[d]
 #' meteovec <- unlist(examplemeteo[d,])

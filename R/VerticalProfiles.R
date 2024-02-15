@@ -37,15 +37,15 @@
 #' data(SpParamsMED)
 #' 
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
-#' vprofile_leafAreaDensity(exampleforestMED, SpParamsMED)
-#' vprofile_fuelBulkDensity(exampleforestMED, SpParamsMED)
+#' vprofile_leafAreaDensity(exampleforest, SpParamsMED)
+#' vprofile_fuelBulkDensity(exampleforest, SpParamsMED)
 #' 
-#' vprofile_PARExtinction(exampleforestMED, SpParamsMED)
-#' vprofile_SWRExtinction(exampleforestMED, SpParamsMED)
+#' vprofile_PARExtinction(exampleforest, SpParamsMED)
+#' vprofile_SWRExtinction(exampleforest, SpParamsMED)
 #' 
-#' vprofile_windExtinction(exampleforestMED, SpParamsMED)
+#' vprofile_windExtinction(exampleforest, SpParamsMED)
 #' 
 #' @name vprofile_leafAreaDensity
 vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, 

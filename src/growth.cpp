@@ -2178,7 +2178,7 @@ void fillGrowthDailyOutput(List l, List soil, List sDay, int iday) {
 //' data(examplemeteo)
 //' 
 //' #Load example plot plant data
-//' data(exampleforestMED)
+//' data(exampleforest)
 //' 
 //' #Default species parameterization
 //' data(SpParamsMED)
@@ -2190,7 +2190,7 @@ void fillGrowthDailyOutput(List l, List soil, List sDay, int iday) {
 //' examplesoil <- soil(defaultSoilParams(4))
 //' 
 //' #Initialize vegetation input
-//' x1 <- forest2growthInput(exampleforestMED, examplesoil, SpParamsMED, control)
+//' x1 <- forest2growthInput(exampleforest, examplesoil, SpParamsMED, control)
 //' 
 //' #Call simulation function
 //' G1 <- growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -2200,7 +2200,7 @@ void fillGrowthDailyOutput(List l, List soil, List sDay, int iday) {
 //' control <- defaultControl("Sperry")
 //' 
 //' #Initialize vegetation input
-//' x2 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' x2 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
 //' 
 //' #Call simulation function
 //' G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -2212,7 +2212,7 @@ void fillGrowthDailyOutput(List l, List soil, List sDay, int iday) {
 //' control$equalLeafStemVC = TRUE 
 //' 
 //' #Initialize vegetation input
-//' x3 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' x3 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
 //' 
 //' #Call simulation function
 //' G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)

@@ -312,13 +312,13 @@ carbon_carbonCompartments <- function(x, biomassUnits = "g_m2") {
 #' 
 #' @examples
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #Default species parameterization
 #' data(SpParamsMED)
 #' 
 #' #Calculate fuel properties according to FCCS
-#' fccs = fuel_FCCS(exampleforestMED, SpParamsMED)
+#' fccs = fuel_FCCS(exampleforest, SpParamsMED)
 #'   
 #' #Calculate fire behavior according to FCCS
 #' fire_FCCS(fccs)
@@ -327,7 +327,7 @@ carbon_carbonCompartments <- function(x, biomassUnits = "g_m2") {
 #' data(SFM_metric)
 #'       
 #' #Fuel stratification (returns heights in cm)
-#' fs = fuel_stratification(exampleforestMED, SpParamsMED)
+#' fs = fuel_stratification(exampleforest, SpParamsMED)
 #' 
 #' #Correct windspeed (transform heights to m)
 #' u = 11 #m/s
@@ -499,22 +499,22 @@ fire_necrosisHeight <- function(Ib_surf, t_res, thermal_factor, T_air = 25.0, rh
 #' data(SpParamsMED)
 #' 
 #' #Load example plot
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #A plant-level way to obtain stand basal area
-#' sum(plant_basalArea(exampleforestMED, SpParamsMED), na.rm=TRUE)
+#' sum(plant_basalArea(exampleforest, SpParamsMED), na.rm=TRUE)
 #' 
 #' #The analogous plant-level function for LAI
-#' sum(plant_LAI(exampleforestMED, SpParamsMED))
+#' sum(plant_LAI(exampleforest, SpParamsMED))
 #'   
 #' #The analogous plant-level function for fuel loading
-#' sum(plant_fuelLoading(exampleforestMED, SpParamsMED))
+#' sum(plant_fuelLoading(exampleforest, SpParamsMED))
 #'       
 #' #Summary function for 'forest' objects can be also used
-#' summary(exampleforestMED, SpParamsMED)
+#' summary(exampleforest, SpParamsMED)
 #' 
 #' #Cohort IDs in the models
-#' plant_ID(exampleforestMED, SpParamsMED)
+#' plant_ID(exampleforest, SpParamsMED)
 #'       
 #' @name plant_values
 plant_ID <- function(x, SpParams, treeOffset = 0L, shrubOffset = 0L) {
@@ -677,10 +677,10 @@ herb_LAI <- function(x, SpParams) {
 #' data(SpParamsMED)
 #' 
 #' # Load example plot
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' # Species basal area in the forest plot
-#' species_basalArea(exampleforestMED, SpParamsMED)
+#' species_basalArea(exampleforest, SpParamsMED)
 #'   
 #' # Value of parameter "Psi_Extract" for two species
 #' species_parameter(c("Pinus halepensis", "Quercus ilex"), SpParamsMED, "Psi_Extract")
@@ -872,16 +872,16 @@ forest2belowground <- function(x, soil, SpParams) {
 #' 
 #' @examples
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #Default species parameterization
 #' data(SpParamsMED)
 #' 
 #' #Show stratification of fuels
-#' fuel_stratification(exampleforestMED, SpParamsMED)
+#' fuel_stratification(exampleforest, SpParamsMED)
 #'   
 #' #Calculate fuel properties according to FCCS
-#' fccs = fuel_FCCS(exampleforestMED, SpParamsMED)
+#' fccs = fuel_FCCS(exampleforest, SpParamsMED)
 #' fccs
 #' 
 #' fuel_windAdjustmentFactor(fccs$htc[2], fccs$hbc[1], fccs$htc[1], fccs$cover[1])
@@ -1032,7 +1032,7 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, ru
 #' data(examplemeteo)
 #' 
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #Default species parameterization
 #' data(SpParamsMED)
@@ -1044,7 +1044,7 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, ru
 #' examplesoil <- soil(defaultSoilParams(4))
 #' 
 #' #Initialize vegetation input
-#' x1 <- forest2growthInput(exampleforestMED, examplesoil, SpParamsMED, control)
+#' x1 <- forest2growthInput(exampleforest, examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
 #' G1 <- growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -1054,7 +1054,7 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, ru
 #' control <- defaultControl("Sperry")
 #' 
 #' #Initialize vegetation input
-#' x2 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x2 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
 #' G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -1066,7 +1066,7 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, ru
 #' control$equalLeafStemVC = TRUE 
 #' 
 #' #Initialize vegetation input
-#' x3 <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x3 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
 #' G3 <-growth(x3, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -1131,7 +1131,7 @@ growth <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, a
 #'      xlab="Canopy pressure (-MPa)", lwd=1.5,ylim=c(0,kstemmax))
 #' 
 #' #Load example dataset
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #Default species parameterization
 #' data(SpParamsMED)
@@ -1146,7 +1146,7 @@ growth <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, a
 #' control = defaultControl("Sperry")
 #' 
 #' #Initialize input
-#' x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' #Leaf vulnerability curves
 #' hydraulics_vulnerabilityCurvePlot(x, type="leaf")
@@ -1812,7 +1812,7 @@ hydraulics_initSperryNetworks <- function(x) {
 #' data(examplemeteo)
 #' 
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #Default species parameterization
 #' data(SpParamsMED)
@@ -1824,7 +1824,7 @@ hydraulics_initSperryNetworks <- function(x) {
 #' control = defaultControl(transpirationMode="Sperry")
 #' 
 #' #Initialize input
-#' x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x2 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' # Stomatal VPD curve and chosen value for the 12th time step at day 100
 #' transp_stomatalRegulationPlot(x2, examplemeteo, day=100, timestep = 12,
@@ -2243,43 +2243,43 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #' 
 #' @examples
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #Default species parameterization
 #' data(SpParamsMED)
 #' 
 #' # Aboveground parameters
-#' forest2aboveground(exampleforestMED, SpParamsMED)
+#' forest2aboveground(exampleforest, SpParamsMED)
 #' 
 #' # Example of aboveground parameters taken from a forest
 #' # described using LAI and crown ratio
-#' data(exampleforestMED2)
-#' forest2aboveground(exampleforestMED2, SpParamsMED)
+#' data(exampleforest2)
+#' forest2aboveground(exampleforest2, SpParamsMED)
 #' 
 #' # Initialize soil with default soil params
 #' examplesoil <- soil(defaultSoilParams())
 #' 
 #' # Bewowground parameters (distribution of fine roots)
-#' forest2belowground(exampleforestMED, examplesoil, SpParamsMED)
+#' forest2belowground(exampleforest, examplesoil, SpParamsMED)
 #' 
 #' # Initialize control parameters using 'Granier' transpiration mode
 #' control <- defaultControl("Granier")
 #' 
 #' # Prepare spwb input
-#' forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
+#' forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #'                 
 #' # Prepare input for 'Sperry' transpiration mode
 #' control <- defaultControl("Sperry")
-#' forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
+#' forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #' 
 #' # Prepare input for 'Cochard' transpiration mode
 #' control <- defaultControl("Cochard")
-#' forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
+#' forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #' 
 #' # Example of initialization from a forest 
 #' # described using LAI and crown ratio
 #' control <- defaultControl("Granier")
-#' forest2spwbInput(exampleforestMED2, examplesoil, SpParamsMED, control)
+#' forest2spwbInput(exampleforest2, examplesoil, SpParamsMED, control)
 #' 
 #' @name modelInput
 #' @aliases spwbInput growthInput
@@ -2618,12 +2618,12 @@ photo_multilayerPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair,
 #'
 #' @examples
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #Default species parameterization
 #' data(SpParamsMED)
 #' 
-#' ntree = nrow(exampleforestMED$treeData)
+#' ntree = nrow(exampleforest$treeData)
 #' 
 #' #Initialize soil with default soil params
 #' S = soil(defaultSoilParams())
@@ -3137,7 +3137,7 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
 #' data(examplemeteo)
 #' 
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #Default species parameterization
 #' data(SpParamsMED)
@@ -3152,13 +3152,13 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
 #' 
 #' #Simulate water balance one day only (Granier mode)
 #' examplesoil <- soil(defaultSoilParams(4))
-#' x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x1 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' sd1 <- spwb_day(x1, date, meteovec,  
 #'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0) 
 #' 
 #' #Simulate water balance for one day only (Sperry mode)
 #' control <- defaultControl("Sperry")
-#' x2 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
+#' x2 <- forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #' sd2 <-spwb_day(x2, date, meteovec,
 #'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 #' 
@@ -3167,14 +3167,14 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
 #' 
 #' #Simulate water balance for one day only (Cochard mode)
 #' control <- defaultControl("Cochard")
-#' x3 <- forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
+#' x3 <- forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #' sd3 <-spwb_day(x3, date, meteovec,
 #'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 #' 
 #' 
 #' #Simulate water and carbon balance for one day only (Granier mode)
 #' control <- defaultControl("Granier")
-#' x4  <- forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x4  <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
 #' sd4 <- growth_day(x4, date, meteovec,
 #'                 latitude = 41.82592, elevation = 100, slope=0, aspect=0)
 #' 
@@ -3364,7 +3364,7 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #' data(examplemeteo)
 #' 
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #Default species parameterization
 #' data(SpParamsMED)
@@ -3376,7 +3376,7 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #' control <- defaultControl("Granier")
 #' 
 #' #Initialize input
-#' x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x1 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
 #' S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -3386,7 +3386,7 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #' control <- defaultControl("Sperry")
 #' 
 #' #Initialize input
-#' x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x2 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
 #' S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -3398,7 +3398,7 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #' control$equalLeafStemVC = TRUE 
 #' 
 #' #Initialize input
-#' x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x3 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' #Call simulation function
 #' S3 <- spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -3672,7 +3672,7 @@ transp_transpirationCochard <- function(x, meteo, day, latitude, elevation, slop
 #' data(examplemeteo)
 #' 
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #Default species parameterization
 #' data(SpParamsMED)
@@ -3684,7 +3684,7 @@ transp_transpirationCochard <- function(x, meteo, day, latitude, elevation, slop
 #' control <- defaultControl("Granier")
 #' 
 #' #Initialize input
-#' x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x1 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' # Transpiration according to Granier's model, plant water potential 
 #' # and plant stress for a given day
@@ -3696,7 +3696,7 @@ transp_transpirationCochard <- function(x, meteo, day, latitude, elevation, slop
 #' control <- defaultControl("Sperry")
 #' 
 #' #Initialize input
-#' x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x2 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' # Transpiration according to Sperry's model
 #' t2 <- transp_transpirationSperry(x2, examplemeteo, 1, 
@@ -3707,7 +3707,7 @@ transp_transpirationCochard <- function(x, meteo, day, latitude, elevation, slop
 #' control <- defaultControl("Cochard")
 #' 
 #' #Initialize input
-#' x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x3 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' # Transpiration according to Cochard's model
 #' t3 <- transp_transpirationCochard(x3, examplemeteo, 1, 
@@ -3773,10 +3773,10 @@ transp_transpirationGranier <- function(x, meteo, day, latitude, elevation, slop
 #' data(SpParamsMED)
 #' 
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #Canopy height (in m)
-#' h= max(exampleforestMED$treeData$Height/100) 
+#' h= max(exampleforest$treeData$Height/100) 
 #' d0 = 0.67*h
 #' z0 = 0.08*h
 #' 
@@ -3785,7 +3785,7 @@ transp_transpirationGranier <- function(x, meteo, day, latitude, elevation, slop
 #' zm = z/100 # (in m)
 #' 
 #' # Leaf area density
-#' lad = vprofile_leafAreaDensity(exampleforestMED, SpParamsMED, draw = FALSE,
+#' lad = vprofile_leafAreaDensity(exampleforest, SpParamsMED, draw = FALSE,
 #'                                z = c(0,z))
 #'   
 #' # Effective drag

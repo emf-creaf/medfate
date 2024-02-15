@@ -30,18 +30,18 @@ Model inputs are explained in greater detail in vignettes [*Understanding model 
 Soil information needs to be entered as a `data frame` with soil layers in rows and physical attributes in columns. Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
 
 ```{r}
-spar = defaultSoilParams(4)
+spar <- defaultSoilParams(4)
 ```
 
 The soil input for water balance simulation is actually a list of class `soil` that is created using a function with the same name:
 ```{r}
-examplesoil = soil(spar)
+examplesoil <- soil(spar)
 ```
 
 As explained in the package overview, models included in `medfate` were primarily designed to be ran on **forest inventory plots**. Here we use the example object provided with the package:
 ```{r}
-data(exampleforestMED)
-exampleforestMED
+data(exampleforest)
+exampleforest
 ```
 
 Importantly, a data frame with daily weather for the period to be simulated is required. Here we use the default data frame included with the package: 
@@ -61,7 +61,7 @@ data("SpParamsMED")
 Apart from data inputs, the behaviour of simulation models can be controlled using a set of global parameters. The default parameterization is obtained using function `defaultControl()`:
 
 ```{r}
-control = defaultControl("Granier")
+control <- defaultControl("Granier")
 ```
 Here we will run simulations of forest dynamics using the basic water balance model (i.e. `transpirationMode = "Granier"`). The complexity of the soil water balance calculations can be changed by using `"Sperry"` as input to `defaultControl()`. However, when running `fordyn()` sub-daily output will never be stored (i.e. setting `subdailyResults = TRUE` is useless).
 
@@ -69,7 +69,7 @@ Here we will run simulations of forest dynamics using the basic water balance mo
 
 In this vignette we will fake a ten-year weather input by repeating the example weather data frame ten times.
 ```{r}
-meteo = rbind(examplemeteo, examplemeteo, examplemeteo, examplemeteo,
+meteo <- rbind(examplemeteo, examplemeteo, examplemeteo, examplemeteo,
                     examplemeteo, examplemeteo, examplemeteo, examplemeteo,
                     examplemeteo, examplemeteo)
 meteo$dates = seq(as.Date("2001-01-01"), 
@@ -79,7 +79,7 @@ meteo$dates = seq(as.Date("2001-01-01"),
 
 Now we run the forest dynamics model using all inputs (note that no intermediate input object is needed, as in `spwb()` or  `growth()`):
 ```{r}
-fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, meteo, control, 
+fd<-fordyn(exampleforest, examplesoil, SpParamsMED, meteo, control, 
            latitude = 41.82592, elevation = 100)
 ```
 It is worth noting that, while `fordyn()` calls function `growth()` internally for each simulated year, the `verbose` option of the control parameters only affects function `fordyn()` (i.e. all console output from `growth()` is hidden). Recruitment and summaries are done only once a year at the level of function `fordyn()`.
@@ -146,7 +146,7 @@ args <- defaultManagementArguments()
 # Here one can modify defaults before calling fordyn()
 #
 # Simulation
-fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, meteo, control, 
+fd<-fordyn(exampleforest, examplesoil, SpParamsMED, meteo, control, 
            latitude = 41.82592, elevation = 100,
            management_function = defaultManagementFunction,
            management_args = args)

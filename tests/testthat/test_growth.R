@@ -1,6 +1,6 @@
 library(medfate)
 
-data(exampleforestMED)
+data(exampleforest)
 data(SpParamsMED)
 data(examplemeteo)
 examplemeteo2 <- examplemeteo
@@ -18,13 +18,13 @@ control_cochard$verbose <- FALSE
 examplesoil <- soil(defaultSoilParams(4))
 
 test_that("growth can be run in example and empty forests",{
-  expect_s3_class(growth(forest2growthInput(exampleforestMED, examplesoil, SpParamsMED, control_granier), 
+  expect_s3_class(growth(forest2growthInput(exampleforest, examplesoil, SpParamsMED, control_granier), 
                        examplemeteo[1:10,],
                        latitude = 41.82592, elevation = 100), "growth")
-  expect_s3_class(growth(forest2growthInput(exampleforestMED, examplesoil, SpParamsMED, control_sperry), 
+  expect_s3_class(growth(forest2growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry), 
                        examplemeteo[1:10,],
                        latitude = 41.82592, elevation = 100), "growth")
-  expect_s3_class(growth(forest2growthInput(exampleforestMED, examplesoil, SpParamsMED, control_cochard), 
+  expect_s3_class(growth(forest2growthInput(exampleforest, examplesoil, SpParamsMED, control_cochard), 
                        examplemeteo[1:10,],
                        latitude = 41.82592, elevation = 100), "growth")
   expect_s3_class(growth(forest2growthInput(emptyforest(), examplesoil, SpParamsMED, control_granier), 
@@ -39,19 +39,19 @@ test_that("growth can be run in example and empty forests",{
 })
 
 test_that("growth can be run using dates as columns",{
-  expect_s3_class(growth(forest2growthInput(exampleforestMED, examplesoil, SpParamsMED, control_granier), 
+  expect_s3_class(growth(forest2growthInput(exampleforest, examplesoil, SpParamsMED, control_granier), 
                        examplemeteo2[1:10,],
                        latitude = 41.82592, elevation = 100), "growth")
-  expect_s3_class(growth(forest2growthInput(exampleforestMED, examplesoil, SpParamsMED, control_sperry), 
+  expect_s3_class(growth(forest2growthInput(exampleforest, examplesoil, SpParamsMED, control_sperry), 
                        examplemeteo2[1:10,],
                        latitude = 41.82592, elevation = 100), "growth")
-  expect_s3_class(growth(forest2growthInput(exampleforestMED, examplesoil, SpParamsMED, control_cochard), 
+  expect_s3_class(growth(forest2growthInput(exampleforest, examplesoil, SpParamsMED, control_cochard), 
                        examplemeteo2[1:10,],
                        latitude = 41.82592, elevation = 100), "growth")
 })
 
 test_that("growth can be run using species codes",{
-  f <- exampleforestMED
+  f <- exampleforest
   f$treeData$Species <- c(148, 168)
   f$shrubData$Species <- 165
   expect_s3_class(growth(forest2growthInput(f, examplesoil, SpParamsMED, control_granier), 

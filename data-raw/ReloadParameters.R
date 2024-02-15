@@ -123,26 +123,26 @@ usethis::use_data(SpParamsUS, overwrite = T)
 trait_family_means = read.csv2("data-raw/trait_family_means.csv", dec=".")
 usethis::use_data(trait_family_means, internal=TRUE, overwrite=TRUE)
 
-## Modify exampleforestMED (after rebuilding)
-data(exampleforestMED)
+## Modify exampleforest (after rebuilding)
+data(exampleforest)
 data("SpParamsMED")
-exampleforestMED$treeData$Species[1] = "Pinus halepensis"
-exampleforestMED$treeData$Species[2] = "Quercus ilex"
-exampleforestMED$shrubData$Species[1] = "Quercus coccifera"
-usethis::use_data(exampleforestMED, overwrite = T)
+exampleforest$treeData$Species[1] = "Pinus halepensis"
+exampleforest$treeData$Species[2] = "Quercus ilex"
+exampleforest$shrubData$Species[1] = "Quercus coccifera"
+usethis::use_data(exampleforest, overwrite = T)
 ##Rebuild!
 
 ## Builds a fake observed data set from simulation results
 library(medfate)
 data(examplemeteo)
-data(exampleforestMED)
+data(exampleforest)
 PH_cohName = paste0("T1_",SpParamsMED$SpIndex[SpParamsMED$Name=="Pinus halepensis"])
 QI_cohName = paste0("T2_",SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus ilex"])
 QC_cohName = paste0("S1_",SpParamsMED$SpIndex[SpParamsMED$Name=="Quercus coccifera"])
 data(SpParamsMED)
 examplesoil = soil(defaultSoilParams(4))
 control = defaultControl("Granier")
-x1 = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x1 = forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
 DBH_ini_PH = x1$above[PH_cohName, "DBH"]
 DBH_ini_QI = x1$above[QI_cohName, "DBH"]
 S1<-growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)

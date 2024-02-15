@@ -22,13 +22,13 @@ library(medfate)
 examplesoil <- soil(defaultSoilParams(n = 4))
 
 # Load example plot plant data
-data(exampleforestMED)
+data(exampleforest)
 
 # Prepare input for 'Cochard' transpiration mode
 control <- defaultControl("Cochard")
 
 # Create input for spwb
-x <- forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
+x <- forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 
 ```
 

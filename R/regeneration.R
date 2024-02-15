@@ -38,7 +38,7 @@
 #' 
 #' @examples 
 #' #Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' #Default species parameterization
 #' data(SpParamsMED)
@@ -48,12 +48,12 @@
 #' control$recruitmentMode = "deterministic" 
 #' 
 #' #Recruitment limits
-#' plant_parameter(exampleforestMED, SpParamsMED, "MinTempRecr")
-#' plant_parameter(exampleforestMED, SpParamsMED, "MinMoistureRecr")
+#' plant_parameter(exampleforest, SpParamsMED, "MinTempRecr")
+#' plant_parameter(exampleforest, SpParamsMED, "MinMoistureRecr")
 #' 
 #' #Compare seed recruitment outcomes
-#' regeneration_recruitment(exampleforestMED, SpParamsMED, control, 0, 0.25)
-#' regeneration_recruitment(exampleforestMED, SpParamsMED, control, 3, 0.25)
+#' regeneration_recruitment(exampleforest, SpParamsMED, control, 0, 0.25)
+#' regeneration_recruitment(exampleforest, SpParamsMED, control, 3, 0.25)
 #' 
 #' @name regeneration
 regeneration_seedproduction<-function(forest, SpParams, control) {

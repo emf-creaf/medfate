@@ -112,16 +112,16 @@ Function \code{fuel_windAdjustmentFactor} determines the adjustment factor of wi
 }
 \examples{
 #Load example plot plant data
-data(exampleforestMED)
+data(exampleforest)
 
 #Default species parameterization
 data(SpParamsMED)
 
 #Show stratification of fuels
-fuel_stratification(exampleforestMED, SpParamsMED)
+fuel_stratification(exampleforest, SpParamsMED)
   
 #Calculate fuel properties according to FCCS
-fccs = fuel_FCCS(exampleforestMED, SpParamsMED)
+fccs = fuel_FCCS(exampleforest, SpParamsMED)
 fccs
 
 fuel_windAdjustmentFactor(fccs$htc[2], fccs$hbc[1], fccs$htc[1], fccs$cover[1])

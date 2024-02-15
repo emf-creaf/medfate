@@ -22,9 +22,9 @@
 #' @seealso \code{\link{vprofile_leafAreaDensity}}
 #' 
 #' @examples 
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' data(SpParamsMED)
-#' plot(exampleforestMED, SpParamsMED)
+#' plot(exampleforest, SpParamsMED)
 #' 
 #' @name plot.forest
 plot.forest<-function(x, SpParams, type = "LeafAreaDensity", byCohorts = FALSE, bySpecies = FALSE, includeHerbs = FALSE, ...) {

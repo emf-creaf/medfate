@@ -126,22 +126,22 @@ Functions to calculate attributes of woody plants in a \code{\link{forest}} obje
 data(SpParamsMED)
 
 #Load example plot
-data(exampleforestMED)
+data(exampleforest)
 
 #A plant-level way to obtain stand basal area
-sum(plant_basalArea(exampleforestMED, SpParamsMED), na.rm=TRUE)
+sum(plant_basalArea(exampleforest, SpParamsMED), na.rm=TRUE)
 
 #The analogous plant-level function for LAI
-sum(plant_LAI(exampleforestMED, SpParamsMED))
+sum(plant_LAI(exampleforest, SpParamsMED))
   
 #The analogous plant-level function for fuel loading
-sum(plant_fuelLoading(exampleforestMED, SpParamsMED))
+sum(plant_fuelLoading(exampleforest, SpParamsMED))
       
 #Summary function for 'forest' objects can be also used
-summary(exampleforestMED, SpParamsMED)
+summary(exampleforest, SpParamsMED)
 
 #Cohort IDs in the models
-plant_ID(exampleforestMED, SpParamsMED)
+plant_ID(exampleforest, SpParamsMED)
       
 }
 \seealso{

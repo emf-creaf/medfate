@@ -39,7 +39,7 @@
 #' data(examplemeteo)
 #' 
 #' # Load example plot plant data
-#' data(exampleforestMED)
+#' data(exampleforest)
 #' 
 #' # Load default species parameters
 #' data(SpParamsMED)
@@ -51,7 +51,7 @@
 #' control <- defaultControl(transpirationMode="Sperry")
 #' 
 #' # Initialize input
-#' x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#' x2 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
 #' # Estimate maximum transpiration ratio models for each cohort
 #' # Weather is subset to speed-up results

@@ -80,10 +80,10 @@
 #' data(SpParamsMED)
 #'   
 #' #Load example plot
-#' data(exampleforestMED)
+#' data(exampleforest)
 #'     
 #' #A short way to obtain total basal area
-#' stand_basalArea(exampleforestMED)
+#' stand_basalArea(exampleforest)
 #'     
 #' @name stand_values
 stand_dominantTreeDiameter<-function(x, minDBH = 7.5) {

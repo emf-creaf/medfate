@@ -68,7 +68,7 @@ and a plot with the cohort photosynthesis functions against water potential, bot
 data(examplemeteo)
 
 #Load example plot plant data
-data(exampleforestMED)
+data(exampleforest)
 
 #Default species parameterization
 data(SpParamsMED)
@@ -80,7 +80,7 @@ examplesoil = soil(defaultSoilParams(4))
 control = defaultControl(transpirationMode="Sperry")
 
 #Initialize input
-x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x2 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 # Stomatal VPD curve and chosen value for the 12th time step at day 100
 transp_stomatalRegulationPlot(x2, examplemeteo, day=100, timestep = 12,

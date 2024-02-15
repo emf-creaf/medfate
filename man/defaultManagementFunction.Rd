@@ -77,13 +77,13 @@ Understory clearings are assumed to occur anytime there is an intervention on tr
 }
 \examples{
 # Load example forest object
-data(exampleforestMED)
+data(exampleforest)
   
 # Define arguments
 args = defaultManagementArguments()
   
 # Call management function
-f = defaultManagementFunction(exampleforestMED, args)
+f = defaultManagementFunction(exampleforest, args)
   
 #list names
 names(f)

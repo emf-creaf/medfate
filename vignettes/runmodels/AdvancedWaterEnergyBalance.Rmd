@@ -26,18 +26,18 @@ Model inputs are explained in greater detail in vignettes [*Understanding model 
 Soil information needs to be entered as a `data frame` with soil layers in rows and physical attributes in columns. Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
 
 ```{r}
-spar = defaultSoilParams(4)
+spar <- defaultSoilParams(4)
 ```
 
 The soil input for water balance simulation is actually a list of class `soil` that is created using a function with the same name:
 ```{r}
-examplesoil = soil(spar)
+examplesoil <- soil(spar)
 ```
 
 As explained in the package overview, models included in `medfate` were primarily designed to be ran on **forest inventory plots**. Here we use the example object provided with the package:
 ```{r}
-data(exampleforestMED)
-exampleforestMED
+data(exampleforest)
+exampleforest
 ```
 
 Importantly, a data frame with daily weather for the period to be simulated is required. Here we use the default data frame included with the package: 
@@ -58,7 +58,7 @@ data("SpParamsMED")
 Apart from data inputs, the behaviour of simulation models is controlled using a set of global parameters. The default parameterization is obtained using function `defaultControl()`:
 
 ```{r}
-control = defaultControl("Sperry")
+control <- defaultControl("Sperry")
 ```
 
 To use the advanced water balance model we must change the values of `transpirationMode` to switch from `"Granier"` to either `"Sperry"` or `"Cochard"`. 
@@ -67,7 +67,7 @@ To use the advanced water balance model we must change the values of `transpirat
 A last object is needed before calling simulation functions, called `spwbInput`. It consists in the compilation of aboveground, belowground parameters and the specification of additional parameter values for each plant cohort. This is done by calling function `forest2spwbInput()`:
 
 ```{r}
-x = forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
+x <- forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 ```
 
 The `spwbInput` object for advanced water and energy balance is similar to that of simple water balance simulations, but contains more elements. Information about the cohort species is found in element `cohorts`, i.e. the cohort code, the species index and species name:
@@ -103,7 +103,7 @@ Parameters related to plant transpiration and photosynthesis can be seen in `par
 ```{r}
 x$paramsTranspiration
 ```
-Finally, parameters related to pressure-volume curves and water storage capacity of leaf and stem organs are in `paramsWaterStorage`:
+Parameters related to pressure-volume curves and water storage capacity of leaf and stem organs are in `paramsWaterStorage`:
 ```{r}
 x$paramsWaterStorage
 ```
@@ -145,7 +145,7 @@ Calls to `hydraulics_supplyFunctionPlot()` always need both a `spwbInput` object
 The soil water balance model determines stomatal conductance and transpiration separately for sunlit and shade leaves. Stomatal conductance is determined after building a photosynthesis function corresponding to the supply function and finding the value of stomatal conductance that maximizes carbon revenue while avoiding hydraulic damage (a profit-maximization approach). Given a meteorological and soil inputs and a chosen day and timestep, function `transp_stomatalRegulationPlot()` allows displaying the supply and photosynthesis curves for sunlit and shade leaves, along with an indication of the values corresponding to the chosen stomatal aperture:
 
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 3.5}
-d = 100
+d <- 100
 transp_stomatalRegulationPlot(x, examplemeteo, day = d, timestep=12,
                               latitude = 41.82592, elevation = 100, type="E")
 transp_stomatalRegulationPlot(x, examplemeteo, day = d, timestep=12,
@@ -296,7 +296,7 @@ x$canopy
 ```
 Now we are ready to call function `spwb()`:
 ```{r}
-S = spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
+S <- spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 Function `spwb()` returns an object of class *spwb*. If we inspect its elements, we realize that the output is arranged differently than in `spwb_day()`:
 ```{r}

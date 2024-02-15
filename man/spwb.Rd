@@ -194,7 +194,7 @@ Simulations using the 'Sperry' or 'Cochard' transpiration mode are computational
 data(examplemeteo)
 
 #Load example plot plant data
-data(exampleforestMED)
+data(exampleforest)
 
 #Default species parameterization
 data(SpParamsMED)
@@ -206,7 +206,7 @@ examplesoil <- soil(defaultSoilParams(4))
 control <- defaultControl("Granier")
 
 #Initialize input
-x1 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x1 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
 S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -216,7 +216,7 @@ S1 <- spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 control <- defaultControl("Sperry")
 
 #Initialize input
-x2 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x2 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
 S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -228,7 +228,7 @@ control <- defaultControl("Cochard")
 control$equalLeafStemVC = TRUE 
 
 #Initialize input
-x3 <- forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x3 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
 S3 <- spwb(x3, examplemeteo, latitude = 41.82592, elevation = 100)

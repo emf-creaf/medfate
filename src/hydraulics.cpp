@@ -67,7 +67,7 @@ double const cmhead2MPa = 0.00009804139; //Constant to transform cm head to MPa
 //'      xlab="Canopy pressure (-MPa)", lwd=1.5,ylim=c(0,kstemmax))
 //' 
 //' #Load example dataset
-//' data(exampleforestMED)
+//' data(exampleforest)
 //' 
 //' #Default species parameterization
 //' data(SpParamsMED)
@@ -82,7 +82,7 @@ double const cmhead2MPa = 0.00009804139; //Constant to transform cm head to MPa
 //' control = defaultControl("Sperry")
 //' 
 //' #Initialize input
-//' x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+//' x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 //' 
 //' #Leaf vulnerability curves
 //' hydraulics_vulnerabilityCurvePlot(x, type="leaf")

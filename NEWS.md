@@ -40,7 +40,7 @@
 - Fire severity implemented
 - Crown bud percent decreases with PLC and fire, increases with SA growth and regulates primary growth rate
 - Forest objects can now have additional variables defined (LAI, foliar biomass, fuel loading), to override estimations from allometric models
-- New example forest object 'exampleforestMED2'
+- New example forest object 'exampleforest2'
 
 # Version 3.1.0
 - Herbaceous information in summary.forest

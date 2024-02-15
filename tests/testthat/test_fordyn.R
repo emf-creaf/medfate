@@ -1,6 +1,6 @@
 library(medfate)
 
-data(exampleforestMED)
+data(exampleforest)
 data(SpParamsMED)
 
 
@@ -18,7 +18,7 @@ meteo_01_02_B$dates <- as.Date(meteo_01_02_B$dates)
 row.names(meteo_01_02_B) <- NULL
 
 #Load example plot plant data
-data(exampleforestMED)
+data(exampleforest)
 
 #Default species parameterization
 data(SpParamsMED)
@@ -31,7 +31,7 @@ control$verbose <- FALSE
 examplesoil <- soil(defaultSoilParams(4))
 
 test_that("fordyn can be run in example and empty forests",{
-  expect_s3_class(fordyn(exampleforestMED, examplesoil, 
+  expect_s3_class(fordyn(exampleforest, examplesoil, 
                          SpParamsMED, meteo_01_02, control,
                          latitude = 41.82592, elevation = 100), "fordyn")
   expect_s3_class(fordyn(emptyforest(), examplesoil, 
@@ -40,7 +40,7 @@ test_that("fordyn can be run in example and empty forests",{
 })
 
 test_that("fordyn can be run using species codes",{
-  f <- exampleforestMED
+  f <- exampleforest
   f$treeData$Species <- c(148, 168)
   f$shrubData$Species <- 165
   expect_s3_class(fordyn(f, examplesoil, 
@@ -49,7 +49,7 @@ test_that("fordyn can be run using species codes",{
 })
 
 test_that("fordyn can be run in example and empty forests using management",{
-  expect_s3_class(fordyn(exampleforestMED, examplesoil, 
+  expect_s3_class(fordyn(exampleforest, examplesoil, 
                          SpParamsMED, meteo_01_02, control,
                          latitude = 41.82592, elevation = 100,
                          management_function = defaultManagementFunction,
@@ -62,7 +62,7 @@ test_that("fordyn can be run in example and empty forests using management",{
 })
 
 test_that("fordyn can be run using dates as columns",{
-  expect_s3_class(fordyn(exampleforestMED, examplesoil, 
+  expect_s3_class(fordyn(exampleforest, examplesoil, 
                          SpParamsMED, meteo_01_02_B, control,
                          latitude = 41.82592, elevation = 100), "fordyn")
 })
