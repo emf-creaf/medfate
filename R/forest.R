@@ -149,8 +149,13 @@ summary.forest<-function(object, SpParams, ...) {
   s["Herb_fuel"] <- herb_fuelLoading(object, SpParams)
   s["Total_fuel"] <- s[["Tree_fuel"]] + s[["Shrub_fuel"]] + s[["Herb_fuel"]]
   
-  s["PARground"] <- light_PARground(object, SpParams)
-  s["SWRground"] <- light_SWRground(object, SpParams)
+  s["PARground"] <- NA
+  s["SWRground"] <- NA
+  
+  if(all(!is.na(object$treeData$Height)) && all(!is.na(object$shrubData$Height))) {
+    light_PARground(object, SpParams)
+    light_SWRground(object, SpParams)
+  }
   class(s)<-c("summary.forest","list")
   return(s)
 }
