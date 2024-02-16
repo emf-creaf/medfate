@@ -135,7 +135,7 @@ G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 control <- defaultControl("Cochard")
 
 #Makes leaf xylem vulnerability equal to stem xylem vulnerability
-control$equalLeafStemVC = TRUE 
+control$segmentedXylemVulnerability = TRUE 
 
 #Initialize vegetation input
 x3 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)

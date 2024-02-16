@@ -42,19 +42,19 @@ if(params$reload_fontblanche) {
 ```
 
 ```{r}
-fb = readRDS("fb_data.rds")
+fb <- readRDS("fb_data.rds")
 names(fb)
 ```
 
 ### Soil
-We require information on the physical attributes of soil in FontBlanche, namely *soil depth*, *texture*, *bulk density* and *rock fragment content*. Soil information needs to be entered as a `data frame` with soil layers in rows and physical attributes in columns. The model accepts one to five soil layers with arbitrary widths. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via soilgrids.org (see function `soilgridsParams()`). In our case soil physical attributes are already defined in the data bundled for FontBlanche:
+We require information on the physical attributes of soil in Font-Blanche, namely *soil depth*, *texture*, *bulk density* and *rock fragment content*. Soil information needs to be entered as a `data frame` with soil layers in rows and physical attributes in columns. The model accepts one to five soil layers with arbitrary widths. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via soilgrids.org (see function `soilgridsParams()`). In our case soil physical attributes are already defined in the data bundled for FontBlanche:
 ```{r}
 spar <- fb$soilData
 print(spar)
 ```
 The soil input for function `spwb()` is actually an object of class `soil` that is created using a function with the same name:
 ```{r}
-fb_soil = soil(spar)
+fb_soil <- soil(spar)
 ```
 
 The `print()` function for objects `soil` provides a lot of information on soil physical properties and water capacity:
@@ -81,7 +81,7 @@ fb$customParams
 ```
 We can use function `modifySpParams()` to replace the values of parameters for the desired traits, leaving the rest unaltered:
 ```{r}
-SpParamsFB = modifySpParams(SpParamsMED, fb$customParams)
+SpParamsFB <- modifySpParams(SpParamsMED, fb$customParams)
 SpParamsFB
 ```
 Note that the function returns a subset of rows for the species mentioned in `customParams`. Not all parameters are needed for the soil water balance model. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (http://emf-creaf.github.io/medfate). 
@@ -91,7 +91,7 @@ Note that the function returns a subset of rows for the species mentioned in `cu
 
 Models included in `medfate` were primarily designed to be ran on **forest inventory plots**. In this kind of data, the  vegetation of a sampled area is described in terms of woody plants (trees and shrubs) along with their size and species identity. Forest plots in `medfate` are assumed to be in a format that follows closely the Spanish forest inventory. Each forest plot is represented in an object of class `forest`, a list that contains several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` for shrubs:
 ```{r}
-fb_forest = emptyforest()
+fb_forest <- emptyforest()
 fb_forest
 ```
 Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height. 
@@ -104,13 +104,13 @@ Trees have been grouped by species, so DBH and height values are means (in cm), 
 In order to use this data, we need to replace the part corresponding to trees into the forest object that we created before:
 
 ```{r}
-fb_forest$treeData = fb$treeData
+fb_forest$treeData <- fb$treeData
 fb_forest
 ```
 
 Because the forest plot format is rather specific, `medfate` also allows starting in an alternative way using two data frames, one with **aboveground** information (i.e. the leave area and size of plants) and the other with **belowground** information (i.e. root distribution). The aboveground data frame does not distinguish between trees and shrubs. It includes, for each plant cohort to be considered in rows, its *species identity*, *height*, *leaf area index* (LAI) and *crown ratio*. While users can build their input data themselves, we use function `forest2aboveground()` on the object `fb_forest` to show how should the data look like:
 ```{r}
-fb_above = forest2aboveground(fb_forest, SpParamsFB)
+fb_above <- forest2aboveground(fb_forest, SpParamsFB)
 fb_above
 ```
 Note that the call to `forest2aboveground()` included species parameters, because species-specific parameter values are needed to calculate leaf area from tree diameters or shrub cover using allometric relationships. Columns `N`, `DBH` and `Cover` are required for simulating growth, but not for soil water balance, which only requires columns `SP`, `H` (in cm), `CR` (i.e. the crown ratio), `LAI_live`, `LAI_expanded` and `LAI_dead`. Here plant cohorts are given unique codes that tell us whether they correspond to trees or shrubs. In practice, the user only needs to worry to calculate the values for `LAI_live`. `LAI_live` and `LAI_expanded` can contain the same LAI values, and `LAI_dead` is normally zero. 
@@ -123,7 +123,7 @@ vprofile_leafAreaDensity(fb_forest, SpParamsFB, byCohorts = T, bySpecies = T)
 
 Regarding **belowground** information, the usuer should supply a matrix describing for each plant cohort, the proportion of fine roots in each soil layer. As before, we use function `forest2belowground()` on the object `fb_forest` to show how should the data look like:
 ```{r}
-fb_below = forest2belowground(fb_forest, fb_soil, SpParamsFB)
+fb_below <- forest2belowground(fb_forest, fb_soil, SpParamsFB)
 fb_below
 ```
 In our case, these proportions were implicitly specified in parameters `Z50` and `Z95`. In fact, these values describe a continuous distribution of fine roots along depth, which can be displayed using function `vprofile_rootDistribution()`:
@@ -139,7 +139,7 @@ Note that in Font-Blanche we set that the root system of Aleppo pines (*Pinus ha
 
 Water balance simulations of function `spwb()` require **daily weather** inputs. The weather variables that are required depend on the complexity of the soil water balance model we are using. In the simplest case, only **mean temperature**, **precipitation** and **potential evapo-transpiration (PET)** is required, but the more complex simulation model also requires radiation, wind speed, min/max temparature and relative humitidy. Here we already have a data frame with the daily meteorology measured at Font-Blanche for year 2014: 
 ```{r}
-fb_meteo = fb$meteoData
+fb_meteo <- fb$meteoData
 head(fb_meteo)
 ```
 Simulation models in `medfate` have been designed to work along with data generated from package `meteoland` (De Cáceres et al. 2018), which specifies conventions for variable names and units. The user is strongly recommended to resort to this package to obtain suitable weather input for soil water balance simulations (see http://emf-creaf.github.io/meteoland).
@@ -150,13 +150,12 @@ Simulation models in `medfate` have been designed to work along with data genera
 Apart from data inputs, the behavior of simulation models can be controlled using a set of **global parameters**. The default global parameter values are obtained using function `defaultControl()`:
 
 ```{r}
-fb_control = defaultControl()
-fb_control$transpirationMode = "Sperry"
-fb_control$soilFunctions = "VG"
-fb_control$subdailyResults = TRUE
-fb_control$cavitationRefillStem = "rate"
-fb_control$cavitationRefillLeaves = "total"
-fb_control$fracRootResistance = 0.4
+fb_control <- defaultControl()
+fb_control$transpirationMode <- "Sperry"
+fb_control$subdailyResults <- TRUE
+fb_control$cavitationRefillStem <- "rate"
+fb_control$cavitationRefillLeaves <- "total"
+fb_control$fracRootResistance <- 0.4
 ```
 Where the following changes are set to control parameters: 
 
@@ -170,7 +169,7 @@ Where the following changes are set to control parameters:
 A last step is needed before calling simulation functions. It consists in the compilation of all aboveground and belowground parameters and the specification of additional parameter values for each plant cohort, such as their light extinction coefficient or their response to drought. If one has a `forest` object, the `spwbInput` object can be generated in directly from it, avoiding the need to explicitly build `fb_above` and `fb_below` data frames:
 
 ```{r}
-fb_x = forest2spwbInput(fb_forest, fb_soil, SpParamsFB, fb_control)
+fb_x <- forest2spwbInput(fb_forest, fb_soil, SpParamsFB, fb_control)
 ```
 
 Different species parameter variables will be drawn from `SpParamsMED` depending on the value of `transpirationMode`. For the simple water balance model, relatively few parameters are needed. All the input information for forest data and species parameter values can be inspected by printing the input object. 
@@ -187,7 +186,7 @@ Function `spwb()` requires two main objects as input:
 
 Now we are ready to call function `spwb()`:
 ```{r}
-fb_SWB = spwb(fb_x, fb_meteo, elevation = 420, latitude = 43.24083)
+fb_SWB <- spwb(fb_x, fb_meteo, elevation = 420, latitude = 43.24083)
 ```
 
 Console output provides the water balance totals for the period considered, which may span several years. The output of function `spwb()` is an object of class with the same name, actually a list:
@@ -215,8 +214,9 @@ Before examining the results of the model, it is important to compare its predic
 
 We first load the measured data into the workspace and filter for the dates used in the simulation:
 ```{r}
-fb_observed = fb$measuredData
-fb_observed = fb_observed[fb_observed$Date %in% row.names(fb_meteo),]
+fb_observed <- fb$measuredData
+fb_observed <- fb_observed[fb_observed$dates %in% fb_meteo$dates,]
+row.names(fb_observed) <- fb_observed$dates
 head(fb_observed)
 ```
 
@@ -233,6 +233,7 @@ It is easy to see that in rainy days the predicted evapotranspiration is much hi
 evaluation_plot(fb_SWB, fb_observed, type = "SE+TR", plotType="dynamics")+
   theme(legend.position = c(0.8,0.85))
 ```
+
 The relationship can be shown in a scatter plot:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4, warning=FALSE, message=FALSE}
 evaluation_plot(fb_SWB, fb_observed, type = "SE+TR", plotType="scatter")

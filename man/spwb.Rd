@@ -224,8 +224,8 @@ S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 #Switch to 'Cochard' transpiration mode
 control <- defaultControl("Cochard")
 
-# Makes leaf xylem vulnerability equal to stem xylem vulnerability
-control$equalLeafStemVC = TRUE 
+# Makes leaf/root xylem vulnerability equal to stem xylem vulnerability
+control$segmentedXylemVulnerability = FALSE 
 
 #Initialize input
 x3 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)

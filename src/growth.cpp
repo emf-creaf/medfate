@@ -2209,7 +2209,7 @@ void fillGrowthDailyOutput(List l, List soil, List sDay, int iday) {
 //' control <- defaultControl("Cochard")
 //' 
 //' #Makes leaf xylem vulnerability equal to stem xylem vulnerability
-//' control$equalLeafStemVC = TRUE 
+//' control$segmentedXylemVulnerability = TRUE 
 //' 
 //' #Initialize vegetation input
 //' x3 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)

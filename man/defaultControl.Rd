@@ -54,7 +54,7 @@ A list, with the following options (default values in brackets):
       }
       \item{\code{verticalLayerSize [= 100]}: Size of vertical layers (in cm) for the calculation of light extinction (and photosynthesis).}
       \item{\code{windMeasurementHeight [= 200]}: Height (in cm) over the canopy corresponding to wind measurements.}
-      \item{\code{equalLeafStemVC [= FALSE]}: Leaf vulnerability curves equal to those of the stem.}
+      \item{\code{segmentedXylemVulnerability [= TRUE]}: If \code{FALSE} leaf and root vulnerability curves will be equal to those of stem.}
       \item{\code{cavitationRefillLeaves, cavitationRefillStem [= "annual"]}: A string indicating how refilling of embolized leaf/stem xylem is done:
           \itemize{
             \item{"none" - no refilling.}
