@@ -35,7 +35,8 @@
 #' }
 #' Additional columns may exist with the standard error of measured quantities. These should be named as the referred quantity, followed by \code{"_err"} (e.g. \code{"PD_T1_68_err"}), and are used to draw confidence intervals around observations.
 #'  
-#' Row names in \code{measuredData} indicate the date of measurement (in the case of days). If measurements refer to months or years, row names should also be in a "year-month-day" format, although with "01" for days and/or months (e.g. "2001-02-01" for february 2001, or "2001-01-01" for year 2001).
+#' Row names in \code{measuredData} indicate the date of measurement (in the case of days). Alternatively, a column called \code{"dates"} can contain the measurement dates.
+#' If measurements refer to months or years, row names should also be in a "year-month-day" format, although with "01" for days and/or months (e.g. "2001-02-01" for february 2001, or "2001-01-01" for year 2001).
 #'
 #' @return 
 #' \itemize{
@@ -102,6 +103,10 @@
 evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL, 
                            temporalResolution = "day") {
   
+  # allow dates in column 'dates'
+  if("dates" %in% names(measuredData)) {
+    row.names(measuredData) <- as.character(measuredData$dates)
+  }
   # Check arguments
   temporalResolution = match.arg(temporalResolution, c("day", "week", "month", "year"))
   if("spwbInput" %in% names(out)) {

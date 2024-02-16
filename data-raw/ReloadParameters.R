@@ -132,7 +132,7 @@ exampleforest$shrubData$Species[1] = "Quercus coccifera"
 usethis::use_data(exampleforest, overwrite = T)
 ##Rebuild!
 
-## Builds a fake observed data set from simulation results
+# Builds a fake observed data set from simulation results -------------------------------
 library(medfate)
 data(examplemeteo)
 data(exampleforest)
@@ -149,7 +149,9 @@ S1<-growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 fmc<-S1$Plants$LFMC
 DI_PH = S1$PlantStructure$DBH[,PH_cohName] - c(DBH_ini_PH, S1$PlantStructure$DBH[-nrow(examplemeteo),PH_cohName])
 DI_QI = S1$PlantStructure$DBH[,QI_cohName] - c(DBH_ini_QI, S1$PlantStructure$DBH[-nrow(examplemeteo),QI_cohName])
-exampleobs = data.frame(SWC = S1$Soil$W.1*(soil_thetaFC(examplesoil)[1]), 
+dates <- row.names(S1$Soil)
+exampleobs = data.frame(dates = as.Date(dates),
+                        SWC = S1$Soil$W.1*(soil_thetaFC(examplesoil)[1]), 
              ETR  = S1$WaterBalance$Evapotranspiration, 
              E_PH = S1$Plants$Transpiration[,PH_cohName]/x1$above[PH_cohName,"LAI_expanded"],
              E_QI = S1$Plants$Transpiration[,QI_cohName]/x1$above[QI_cohName,"LAI_expanded"],
@@ -174,7 +176,7 @@ names(exampleobs)[3:10] = c(paste0("E_",PH_cohName), paste0("E_",QI_cohName),
                            paste0("FMC_",PH_cohName),paste0("FMC_",QI_cohName),
                            paste0("BAI_",PH_cohName),paste0("BAI_",QI_cohName),
                            paste0("DI_",PH_cohName),paste0("DI_",QI_cohName))
-
+row.names(exampleobs) <- NULL
 usethis::use_data(exampleobs, overwrite = T)
 
 #Rebuild!!!

@@ -7,6 +7,7 @@
 \format{
 A data frame containing daily 'observed' values for year 2001:
 \describe{
+  \item{\code{dates}}{Measurement dates.}
   \item{\code{SWC}}{Soil moisture content (in m3/m3).}
   \item{\code{ETR}}{Total evapotranspiration (mm).}
   \item{\code{E_T1_148}}{Transpiration of Pinus halepensis cohort 'T1_148' (L/m2 of leaf area).}
