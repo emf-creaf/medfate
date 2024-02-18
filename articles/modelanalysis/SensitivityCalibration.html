@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-02-16</h4>
+            <h4 data-toc-skip class="date">2024-02-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/modelanalysis/SensitivityCalibration.Rmd" class="external-link"><code>vignettes/modelanalysis/SensitivityCalibration.Rmd</code></a></small>
       <div class="hidden name"><code>SensitivityCalibration.Rmd</code></div>
@@ -358,20 +358,20 @@ as reference:</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##                  SWC       ETR  E_T1_148   E_T2_168 FMC_T1_148 FMC_T2_168</span></span>
-<span><span class="co">## 2001-01-01 0.3045751 2.3411471 0.1339854 0.07607795   125.9175   93.06831</span></span>
-<span><span class="co">## 2001-01-02 0.3102597 2.1269664 0.2337255 0.13067831   125.8440   93.09309</span></span>
-<span><span class="co">## 2001-01-03 0.2910761 0.4372701 0.2044522 0.13490555   125.8258   93.08122</span></span>
-<span><span class="co">## 2001-01-04 0.3044012 2.4051967 0.1821502 0.10833830   125.9498   93.05980</span></span>
-<span><span class="co">## 2001-01-05 0.2943755 2.1179359 0.1741763 0.17682843   125.8625   93.04084</span></span>
-<span><span class="co">## 2001-01-06 0.2983762 2.7841214 0.2050965 0.16383047   125.8570   93.07484</span></span>
-<span><span class="co">##              BAI_T1_148 BAI_T2_168    DI_T1_148 DI_T2_168</span></span>
-<span><span class="co">## 2001-01-01 2.523957e-05          0 1.145092e-07         0</span></span>
-<span><span class="co">## 2001-01-02 9.827612e-10          0 4.195872e-11         0</span></span>
-<span><span class="co">## 2001-01-03 2.558302e-13          0 0.000000e+00         0</span></span>
-<span><span class="co">## 2001-01-04 2.583888e-11          0 1.439640e-12         0</span></span>
-<span><span class="co">## 2001-01-05 2.939784e-03          0 8.218013e-05         0</span></span>
-<span><span class="co">## 2001-01-06 3.163390e-03          0 4.238446e-05         0</span></span></code></pre>
+<pre><code><span><span class="co">##        dates       SWC       ETR   E_T1_148   E_T2_168 FMC_T1_148 FMC_T2_168</span></span>
+<span><span class="co">## 1 2001-01-01 0.3069977 1.9590280 0.07897391 0.05401519   125.8873   93.07011</span></span>
+<span><span class="co">## 2 2001-01-02 0.3224390 1.8063483 0.25711073 0.14870784   125.9162   93.07620</span></span>
+<span><span class="co">## 3 2001-01-03 0.3083034 0.2818827 0.20327929 0.08146374   125.9254   93.07423</span></span>
+<span><span class="co">## 4 2001-01-04 0.3235625 1.5629178 0.09251115 0.06161691   125.8833   93.08324</span></span>
+<span><span class="co">## 5 2001-01-05 0.3146014 1.2766893 0.15464108 0.13231872   125.9490   93.09398</span></span>
+<span><span class="co">## 6 2001-01-06 0.3409924 1.7082599 0.14587030 0.07959577   125.9485   93.08401</span></span>
+<span><span class="co">##     BAI_T1_148 BAI_T2_168    DI_T1_148 DI_T2_168</span></span>
+<span><span class="co">## 1 2.318246e-05          0 2.614144e-07         0</span></span>
+<span><span class="co">## 2 2.266946e-09          0 3.828287e-11         0</span></span>
+<span><span class="co">## 3 1.815648e-13          0 0.000000e+00         0</span></span>
+<span><span class="co">## 4 2.421352e-11          0 1.005387e-12         0</span></span>
+<span><span class="co">## 5 2.924564e-03          0 9.304292e-05         0</span></span>
+<span><span class="co">## 6 2.833330e-03          0 5.142938e-05         0</span></span></code></pre>
 <p>where soil water content dynamics is in column <code>SWC</code>. The
 model fit to observed data can be measured using the Nash-Sutcliffe
 coefficient, which we calculate for the initial run using function
@@ -379,7 +379,7 @@ coefficient, which we calculate for the initial run using function
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_metric</a></span><span class="op">(</span><span class="va">S1</span>, measuredData <span class="op">=</span> <span class="va">exampleobs</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, </span>
 <span>                  metric <span class="op">=</span> <span class="st">"NSE"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] -2.501692</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 0.9364947</span></span></code></pre>
 <p>A call to <code><a href="../../reference/evaluation.html">evaluation_metric()</a></code> provides the coefficient
 given a model simulation result, but is not a model output function as
 we defined above. Analogously to the measures of total transpiration and
@@ -398,10 +398,10 @@ simulation results, so that we only need to provide values for the input
 factors:</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] -5.133859</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 0.7608044</span></span></code></pre>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] -9.523272</span></span></code></pre>
+<pre><code><span><span class="co">## [1] -6.398158</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="global-sensitivity-analyses">Global sensitivity analyses<a class="anchor" aria-label="anchor" href="#global-sensitivity-analyses"></a>

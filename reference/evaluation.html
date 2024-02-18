@@ -159,7 +159,8 @@
 <li><p><code>"DBH"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"DBH_"</code> and continuing with a cohort name (e.g. <code>"DBH_T1_68"</code>) with DBH values in cm.</p></li>
 <li><p><code>"Height"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"Height_"</code> and continuing with a cohort name (e.g. <code>"Height_T1_68"</code>) with Height values in cm.</p></li>
 </ul><p>Additional columns may exist with the standard error of measured quantities. These should be named as the referred quantity, followed by <code>"_err"</code> (e.g. <code>"PD_T1_68_err"</code>), and are used to draw confidence intervals around observations.</p> 
-<p>Row names in <code>measuredData</code> indicate the date of measurement (in the case of days). If measurements refer to months or years, row names should also be in a "year-month-day" format, although with "01" for days and/or months (e.g. "2001-02-01" for february 2001, or "2001-01-01" for year 2001).</p>
+<p>Row names in <code>measuredData</code> indicate the date of measurement (in the case of days). Alternatively, a column called <code>"dates"</code> can contain the measurement dates.
+If measurements refer to months or years, row names should also be in a "year-month-day" format, although with "01" for days and/or months (e.g. "2001-02-01" for february 2001, or "2001-01-01" for year 2001).</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -225,14 +226,14 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Evaluation statistics for soil water content</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_stats</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            n         Bias     Bias.rel          MAE      MAE.rel            r </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 365.00000000   0.03944408  14.25792968   0.03960729  14.31692719   0.82636503 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          NSE      NSE.abs </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  -2.50169230  -1.18830203 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             n          Bias      Bias.rel           MAE       MAE.rel </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 365.000000000  -0.002178275  -0.684413198   0.007515571   2.361389876 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             r           NSE       NSE.abs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.969546409   0.936494713   0.748304328 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#NSE only</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span>, metric<span class="op">=</span><span class="st">"NSE"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -2.501692</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.9364947</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Comparison of temporal dynamics</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_plot</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
@@ -240,7 +241,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Loglikelihood value</span></span></span>
 <span class="r-in"><span><span class="fu">evaluation_metric</span><span class="op">(</span><span class="va">S1</span>, <span class="va">exampleobs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 389.0348</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 855.6326</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
