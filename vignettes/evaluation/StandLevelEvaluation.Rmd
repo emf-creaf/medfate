@@ -7,85 +7,114 @@ output:
     df_print: paged
     toc: TRUE
 ---
-```{r eval = FALSE, include = FALSE}
-## If necessary, rebuild model evaluation
-source("/home/miquel/OneDrive/mcaceres_work/model_development/medfate_development/StandLevelEvaluation/main_script.R")
-```
+
 
 
 ```{r setup, include=FALSE}
 params = list(wd='/home/miquel/OneDrive/mcaceres_work/model_development/medfate_development/StandLevelEvaluation/',
               model='spwb',
-              conf='sperry',
+              codes=c("PRADES", "FRAPUE", "FONBLA"),
+              confs=c('granier','sperry', 'cochard'),
               save_plots = FALSE)
 
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(error = TRUE)
 knitr::opts_chunk$set(message = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
-knitr::opts_knit$set(root.dir = params$wd)
 
 library(medfate)
 library(ggplot2)
 
 ```
 
-# Evaluation summaries
+```{r message=FALSE, warning=FALSE}
+this_path <- getwd()
+knitr::opts_knit$set(root.dir = params$wd)
+n_sites <- length(params$codes)
+n_confs <- length(params$confs)
+n_rows <- n_sites*n_confs
+df <- data.frame(Site = rep(NA, n_rows), 
+                 Mode = rep(NA, n_rows),
+                 Path = rep(NA, n_rows))
+df$SiteData = vector("list", n_rows)
+df$InputObject = vector("list", n_rows)
+df$Result = vector("list",n_rows)
+cnt <- 0
+df <- tibble::as_tibble(df)
+for(i in 1:n_sites) {
+  site <- params$codes[i]
+  for(j in 1:n_confs) {
+    conf <- params$confs[j]
+    cnt <- cnt+1
+    df$Site[cnt] <- site
+    df$Mode[cnt] <- conf
+    df$Path[cnt] <- file.path(params$wd, 'Output', packageVersion('medfate')[[1]], params$model, conf, site)
+    file_name_input <- file.path(df$Path[cnt],
+                       paste0('simulation_input.rds'))
+    file_name_output <- file.path(df$Path[cnt],
+                       paste0('simulation_result.rds'))
+    df$InputObject[[cnt]] <- readRDS(file_name_input)
+    df$Result[[cnt]] <-   readRDS(file_name_output)
+    df$SiteData[[cnt]] <- medfatereports::load_list(site)
+  }
+}
+knitr::opts_knit$set(root.dir = this_path)
+```
 
-```{r}
-codes = c("PRADES", "FRAPUE", "FONBLA", "ESPALTARM","CANBALASC")
+```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
+ for(i in 1:length(params$codes)) {
+   site_name <- params$codes[i] 
+   res <- knitr::knit_child(file.path(this_path,'_SLEvaluation_child.Rmd'), quiet = TRUE)
+   cat(res, sep = '\n')
+ }
 ```
 
 
-```{r child = system.file("Rmd_templates","evaluation_child_summaries.Rmd",package = "medfatereports")}
-```
 
-# Evaluation results by site
+<!-- ## PRADES -->
+<!-- ```{r} -->
+<!-- params$code = 'PRADES' -->
+<!-- site_data <- medfatereports::load_list(params$code) -->
+<!-- ``` -->
 
-## PRADES
-```{r}
-params$code = 'PRADES'
-site_data <- medfatereports::load_list(params$code)
-```
+<!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} -->
+<!-- ``` -->
 
-```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")}
-```
+<!-- ## FRAPUE -->
+<!-- ```{r} -->
+<!-- params$code = 'FRAPUE' -->
+<!-- site_data <- medfatereports::load_list(params$code) -->
+<!-- ``` -->
 
-## FRAPUE
-```{r}
-params$code = 'FRAPUE'
-site_data <- medfatereports::load_list(params$code)
-```
+<!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} -->
+<!-- ``` -->
 
-```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")}
-```
+<!-- ## FONBLA -->
+<!-- ```{r} -->
+<!-- params$code = 'FONBLA' -->
+<!-- site_data <- medfatereports::load_list(params$code) -->
+<!-- ``` -->
 
-## FONBLA
-```{r}
-params$code = 'FONBLA'
-site_data <- medfatereports::load_list(params$code)
-```
+<!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} -->
+<!-- ``` -->
 
-```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")}
-```
+<!-- ## ESPALTARM -->
+<!-- ```{r} -->
+<!-- params$code = 'ESPALTARM' -->
+<!-- site_data <- medfatereports::load_list(params$code) -->
+<!-- ``` -->
 
-## ESPALTARM
-```{r}
-params$code = 'ESPALTARM'
-site_data <- medfatereports::load_list(params$code)
-```
+<!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} -->
+<!-- ``` -->
 
-```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")}
-```
+<!-- ## CAN BALASC -->
+<!-- ```{r} -->
+<!-- params$code = 'CANBALASC' -->
+<!-- site_data <- medfatereports::load_list(params$code) -->
+<!-- ``` -->
 
-## CAN BALASC
-```{r}
-params$code = 'CANBALASC'
-site_data <- medfatereports::load_list(params$code)
-```
-
-```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")}
-```
+<!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} -->
+<!-- ``` -->
 
 
 

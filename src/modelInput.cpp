@@ -306,7 +306,7 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, List soi
     kleaf_symp[c] = 1.0/(fractionLeafSymplasm*(1.0/VCleaf_kmax[c]));
     VCleafapo_kmax[c] = 1.0/((1.0- fractionLeafSymplasm)*(1.0/VCleaf_kmax[c]));
     
-    if(segmentedXylemVulnerability) {
+    if(!segmentedXylemVulnerability) {
       VCleaf_P12[c] = VCstem_P12[c];
       VCleaf_P50[c] = VCstem_P50[c];
       VCleaf_P88[c] = VCstem_P88[c];
@@ -433,7 +433,7 @@ DataFrame paramsTranspirationCochard(DataFrame above, NumericVector Z95, List so
     if(NumericVector::is_na(VCstem_slope[c])) VCstem_slope[c] = (88.0 - 12.0)/(std::abs(VCstem_P88[c]) - std::abs(VCstem_P12[c]));
     if(NumericVector::is_na(VCroot_slope[c])) VCroot_slope[c] = (88.0 - 12.0)/(std::abs(VCroot_P88[c]) - std::abs(VCroot_P12[c]));
 
-    if(segmentedXylemVulnerability) {
+    if(!segmentedXylemVulnerability) {
       VCleaf_P12[c] = VCstem_P12[c];
       VCleaf_P50[c] = VCstem_P50[c];
       VCleaf_P88[c] = VCstem_P88[c];
