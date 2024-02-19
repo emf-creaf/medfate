@@ -78,7 +78,7 @@
 #' meteo2001 <- examplemeteo
 #' meteo2002 <- examplemeteo
 #' meteo2002$Precipitation <- meteo2002$Precipitation/2
-#' row.names(meteo2002) <- seq(as.Date("2002-01-01"), 
+#' meteo2002$dates <- seq(as.Date("2002-01-01"), 
 #'                            as.Date("2002-12-31"), by="day")
 #' meteo_01_02 <- rbind(meteo2001, meteo2002)
 #' 

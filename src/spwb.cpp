@@ -22,8 +22,17 @@ using namespace Rcpp;
 
 CharacterVector getWeatherDates(DataFrame meteo){
   CharacterVector dateStrings;
-  if(meteo.containsElementNamed("dates")){
-    RObject vector = Rcpp::as<Rcpp::RObject>(meteo["dates"]);
+  String dateColumnName = NA_STRING;
+  bool is_date_column = false;
+  if(meteo.containsElementNamed("dates")) {
+    dateColumnName = "dates";
+    is_date_column = true;
+  } else if(meteo.containsElementNamed("Dates")) {
+    dateColumnName = "Dates";
+    is_date_column = true;
+  }
+  if(is_date_column){
+    RObject vector = Rcpp::as<Rcpp::RObject>(meteo[dateColumnName]);
     if(is<DateVector>(vector)) {
       DateVector dateVector = Rcpp::as<Rcpp::DateVector>(vector);
       CharacterVector dS(dateVector.size(), NA_STRING);
@@ -1830,7 +1839,7 @@ void printWaterBalanceResult(List outputList, List x,
 //' @param x An object of class \code{\link{spwbInput}}.
 //' @param meteo A data frame with daily meteorological data series. 
 //' Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}). Alternatively,
-//' a column \code{dates} can contain \code{\link{Date}} or \code{\link{POSIXct}} classes.
+//' a column called \code{"dates"} or \code{"Dates"} can contain \code{\link{Date}} or \code{\link{POSIXct}} classes.
 //' The following columns are required and cannot have missing values:
 //'   \itemize{
 //'     \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}

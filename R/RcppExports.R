@@ -3203,7 +3203,7 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #' @param x An object of class \code{\link{spwbInput}}.
 #' @param meteo A data frame with daily meteorological data series. 
 #' Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}). Alternatively,
-#' a column \code{dates} can contain \code{\link{Date}} or \code{\link{POSIXct}} classes.
+#' a column called \code{"dates"} or \code{"Dates"} can contain \code{\link{Date}} or \code{\link{POSIXct}} classes.
 #' The following columns are required and cannot have missing values:
 #'   \itemize{
 #'     \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
