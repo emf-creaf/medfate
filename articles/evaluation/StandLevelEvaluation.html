@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2024-02-18</h4>
+            <h4 data-toc-skip class="date">2024-02-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/evaluation/StandLevelEvaluation.Rmd" class="external-link"><code>vignettes/evaluation/StandLevelEvaluation.Rmd</code></a></small>
       <div class="hidden name"><code>StandLevelEvaluation.Rmd</code></div>
@@ -83,10 +83,551 @@ Cáceres</h4>
     
     
 <div class="section level2">
-<h2 id="prades">PRADES<a class="anchor" aria-label="anchor" href="#prades"></a>
+<h2 id="frapue">FRAPUE<a class="anchor" aria-label="anchor" href="#frapue"></a>
 </h2>
 <div class="section level3">
 <h3 id="soil-moisture">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture"></a>
+</h3>
+<table class="table">
+<colgroup>
+<col width="7%">
+<col width="8%">
+<col width="5%">
+<col width="11%">
+<col width="10%">
+<col width="10%">
+<col width="9%">
+<col width="10%">
+<col width="11%">
+<col width="11%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Site</th>
+<th align="left">Mode</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">FRAPUE</td>
+<td align="left">granier</td>
+<td align="right">1021</td>
+<td align="right">0.1759574</td>
+<td align="right">24.163733</td>
+<td align="right">0.2005363</td>
+<td align="right">27.53907</td>
+<td align="right">0.5843796</td>
+<td align="right">-0.4112639</td>
+<td align="right">-0.1436430</td>
+</tr>
+<tr class="even">
+<td align="left">FRAPUE</td>
+<td align="left">sperry</td>
+<td align="right">1021</td>
+<td align="right">-0.0701551</td>
+<td align="right">-9.634195</td>
+<td align="right">0.1155844</td>
+<td align="right">15.87288</td>
+<td align="right">0.8595270</td>
+<td align="right">0.5396424</td>
+<td align="right">0.3408309</td>
+</tr>
+<tr class="odd">
+<td align="left">FRAPUE</td>
+<td align="left">cochard</td>
+<td align="right">1021</td>
+<td align="right">0.0594225</td>
+<td align="right">8.160329</td>
+<td align="right">0.1121750</td>
+<td align="right">15.40468</td>
+<td align="right">0.7964613</td>
+<td align="right">0.4634429</td>
+<td align="right">0.3602744</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-8-1.png" width="864" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="plant-transpiration">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration"></a>
+</h3>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="7%">
+<col width="8%">
+<col width="7%">
+<col width="5%">
+<col width="11%">
+<col width="11%">
+<col width="10%">
+<col width="9%">
+<col width="10%">
+<col width="11%">
+<col width="11%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Site</th>
+<th align="left">Mode</th>
+<th align="left">Cohort</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">FRAPUE</td>
+<td align="left">granier</td>
+<td align="left">T1_168</td>
+<td align="right">1096</td>
+<td align="right">-0.0875796</td>
+<td align="right">-25.531130</td>
+<td align="right">0.1497480</td>
+<td align="right">43.65444</td>
+<td align="right">0.6485927</td>
+<td align="right">0.2361046</td>
+<td align="right">0.1727263</td>
+</tr>
+<tr class="even">
+<td align="left">FRAPUE</td>
+<td align="left">sperry</td>
+<td align="left">T1_168</td>
+<td align="right">1096</td>
+<td align="right">0.0707325</td>
+<td align="right">20.619877</td>
+<td align="right">0.2250904</td>
+<td align="right">65.61818</td>
+<td align="right">0.6074291</td>
+<td align="right">-0.9363408</td>
+<td align="right">-0.2434978</td>
+</tr>
+<tr class="odd">
+<td align="left">FRAPUE</td>
+<td align="left">cochard</td>
+<td align="left">T1_168</td>
+<td align="right">1096</td>
+<td align="right">0.0040503</td>
+<td align="right">1.180753</td>
+<td align="right">0.1441349</td>
+<td align="right">42.01811</td>
+<td align="right">0.8240701</td>
+<td align="right">0.2210125</td>
+<td align="right">0.2037356</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-10-1.png" width="864" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="water-potentials">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials"></a>
+</h3>
+<table class="table">
+<colgroup>
+<col width="6%">
+<col width="7%">
+<col width="6%">
+<col width="7%">
+<col width="2%">
+<col width="10%">
+<col width="11%">
+<col width="9%">
+<col width="9%">
+<col width="9%">
+<col width="10%">
+<col width="10%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Site</th>
+<th align="left">Mode</th>
+<th align="left">Cohort</th>
+<th align="left">WP</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">FRAPUE</td>
+<td align="left">sperry</td>
+<td align="left">T1_168</td>
+<td align="left">Predawn</td>
+<td align="right">28</td>
+<td align="right">-1.8940040</td>
+<td align="right">-129.4847875</td>
+<td align="right">1.8940040</td>
+<td align="right">129.48479</td>
+<td align="right">0.8497064</td>
+<td align="right">-2.5444295</td>
+<td align="right">-0.9918387</td>
+</tr>
+<tr class="even">
+<td align="left">FRAPUE</td>
+<td align="left">sperry</td>
+<td align="left">T1_168</td>
+<td align="left">Midday</td>
+<td align="right">28</td>
+<td align="right">-1.4801197</td>
+<td align="right">-47.4363392</td>
+<td align="right">1.4901674</td>
+<td align="right">47.75836</td>
+<td align="right">0.7403975</td>
+<td align="right">-4.2629157</td>
+<td align="right">-1.4960554</td>
+</tr>
+<tr class="odd">
+<td align="left">FRAPUE</td>
+<td align="left">cochard</td>
+<td align="left">T1_168</td>
+<td align="left">Predawn</td>
+<td align="right">28</td>
+<td align="right">0.0062396</td>
+<td align="right">0.4265758</td>
+<td align="right">0.5057686</td>
+<td align="right">34.57719</td>
+<td align="right">0.8887329</td>
+<td align="right">0.6514891</td>
+<td align="right">0.4681059</td>
+</tr>
+<tr class="even">
+<td align="left">FRAPUE</td>
+<td align="left">cochard</td>
+<td align="left">T1_168</td>
+<td align="left">Midday</td>
+<td align="right">28</td>
+<td align="right">1.1108589</td>
+<td align="right">35.6019038</td>
+<td align="right">1.2383717</td>
+<td align="right">39.68856</td>
+<td align="right">0.8498476</td>
+<td align="right">-2.1182867</td>
+<td align="right">-1.0742934</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section level2">
+<h2 id="frahes">FRAHES<a class="anchor" aria-label="anchor" href="#frahes"></a>
+</h2>
+<div class="section level3">
+<h3 id="soil-moisture-1">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-1"></a>
+</h3>
+<table class="table">
+<colgroup>
+<col width="7%">
+<col width="8%">
+<col width="3%">
+<col width="12%">
+<col width="11%">
+<col width="11%">
+<col width="10%">
+<col width="11%">
+<col width="12%">
+<col width="12%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Site</th>
+<th align="left">Mode</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">FRAHES</td>
+<td align="left">granier</td>
+<td align="right">43</td>
+<td align="right">-0.1151671</td>
+<td align="right">-13.87619</td>
+<td align="right">0.1346082</td>
+<td align="right">16.21860</td>
+<td align="right">0.6863663</td>
+<td align="right">-0.0942848</td>
+<td align="right">0.0624709</td>
+</tr>
+<tr class="even">
+<td align="left">FRAHES</td>
+<td align="left">sperry</td>
+<td align="right">43</td>
+<td align="right">-0.2018497</td>
+<td align="right">-24.32036</td>
+<td align="right">0.2018497</td>
+<td align="right">24.32036</td>
+<td align="right">0.9523426</td>
+<td align="right">-0.6492286</td>
+<td align="right">-0.4058577</td>
+</tr>
+<tr class="odd">
+<td align="left">FRAHES</td>
+<td align="left">cochard</td>
+<td align="right">43</td>
+<td align="right">-0.2037937</td>
+<td align="right">-24.55459</td>
+<td align="right">0.2037937</td>
+<td align="right">24.55459</td>
+<td align="right">0.8741202</td>
+<td align="right">-0.8095902</td>
+<td align="right">-0.4193975</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-21-1.png" width="864" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="plant-transpiration-1">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-1"></a>
+</h3>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="7%">
+<col width="8%">
+<col width="7%">
+<col width="5%">
+<col width="11%">
+<col width="10%">
+<col width="10%">
+<col width="9%">
+<col width="10%">
+<col width="10%">
+<col width="10%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Site</th>
+<th align="left">Mode</th>
+<th align="left">Cohort</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">FRAHES</td>
+<td align="left">granier</td>
+<td align="left">T1_97</td>
+<td align="right">1826</td>
+<td align="right">-0.1763858</td>
+<td align="right">-51.34963</td>
+<td align="right">0.2234918</td>
+<td align="right">65.06318</td>
+<td align="right">0.8179913</td>
+<td align="right">0.3454962</td>
+<td align="right">0.4689967</td>
+</tr>
+<tr class="even">
+<td align="left">FRAHES</td>
+<td align="left">sperry</td>
+<td align="left">T1_97</td>
+<td align="right">1826</td>
+<td align="right">-0.2213958</td>
+<td align="right">-64.45300</td>
+<td align="right">0.2650631</td>
+<td align="right">77.16548</td>
+<td align="right">0.6758291</td>
+<td align="right">0.2362351</td>
+<td align="right">0.3702256</td>
+</tr>
+<tr class="odd">
+<td align="left">FRAHES</td>
+<td align="left">cochard</td>
+<td align="left">T1_97</td>
+<td align="right">1826</td>
+<td align="right">-0.2173513</td>
+<td align="right">-63.27557</td>
+<td align="right">0.2564956</td>
+<td align="right">74.67130</td>
+<td align="right">0.7048361</td>
+<td align="right">0.2595873</td>
+<td align="right">0.3905815</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-23-1.png" width="864" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="water-potentials-1">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-1"></a>
+</h3>
+</div>
+</div>
+<div class="section level2">
+<h2 id="isryat">ISRYAT<a class="anchor" aria-label="anchor" href="#isryat"></a>
+</h2>
+<div class="section level3">
+<h3 id="soil-moisture-2">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-2"></a>
+</h3>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="7%">
+<col width="8%">
+<col width="4%">
+<col width="12%">
+<col width="11%">
+<col width="11%">
+<col width="10%">
+<col width="11%">
+<col width="11%">
+<col width="11%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Site</th>
+<th align="left">Mode</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">ISRYAT</td>
+<td align="left">granier</td>
+<td align="right">335</td>
+<td align="right">0.0938789</td>
+<td align="right">16.630009</td>
+<td align="right">0.1373036</td>
+<td align="right">24.32239</td>
+<td align="right">0.8708698</td>
+<td align="right">0.6298254</td>
+<td align="right">0.4223073</td>
+</tr>
+<tr class="even">
+<td align="left">ISRYAT</td>
+<td align="left">sperry</td>
+<td align="right">335</td>
+<td align="right">-0.0069455</td>
+<td align="right">-1.230354</td>
+<td align="right">0.1440887</td>
+<td align="right">25.52433</td>
+<td align="right">0.7977867</td>
+<td align="right">0.6128795</td>
+<td align="right">0.3937594</td>
+</tr>
+<tr class="odd">
+<td align="left">ISRYAT</td>
+<td align="left">cochard</td>
+<td align="right">335</td>
+<td align="right">0.0690529</td>
+<td align="right">12.232256</td>
+<td align="right">0.1677358</td>
+<td align="right">29.71324</td>
+<td align="right">0.6240935</td>
+<td align="right">0.2765346</td>
+<td align="right">0.2942666</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-34-1.png" width="864" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="plant-transpiration-2">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-2"></a>
+</h3>
+<table class="table">
+<colgroup>
+<col width="7%">
+<col width="8%">
+<col width="7%">
+<col width="4%">
+<col width="11%">
+<col width="10%">
+<col width="10%">
+<col width="9%">
+<col width="10%">
+<col width="11%">
+<col width="11%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Site</th>
+<th align="left">Mode</th>
+<th align="left">Cohort</th>
+<th align="right">n</th>
+<th align="right">Bias</th>
+<th align="right">Bias.rel</th>
+<th align="right">MAE</th>
+<th align="right">MAE.rel</th>
+<th align="right">r</th>
+<th align="right">NSE</th>
+<th align="right">NSE.abs</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">ISRYAT</td>
+<td align="left">granier</td>
+<td align="left">T1_148</td>
+<td align="right">344</td>
+<td align="right">-0.5236719</td>
+<td align="right">-68.30827</td>
+<td align="right">0.5262492</td>
+<td align="right">68.64446</td>
+<td align="right">0.8139307</td>
+<td align="right">-0.3869864</td>
+<td align="right">-0.1362563</td>
+</tr>
+<tr class="even">
+<td align="left">ISRYAT</td>
+<td align="left">sperry</td>
+<td align="left">T1_148</td>
+<td align="right">344</td>
+<td align="right">-0.4849972</td>
+<td align="right">-63.26351</td>
+<td align="right">0.5060817</td>
+<td align="right">66.01379</td>
+<td align="right">0.7011926</td>
+<td align="right">-0.2920098</td>
+<td align="right">-0.0927114</td>
+</tr>
+<tr class="odd">
+<td align="left">ISRYAT</td>
+<td align="left">cochard</td>
+<td align="left">T1_148</td>
+<td align="right">344</td>
+<td align="right">-0.5384362</td>
+<td align="right">-70.23415</td>
+<td align="right">0.5418092</td>
+<td align="right">70.67411</td>
+<td align="right">0.8091562</td>
+<td align="right">-0.3329100</td>
+<td align="right">-0.1698527</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-36-1.png" width="864" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="water-potentials-2">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-2"></a>
+</h3>
+</div>
+</div>
+<div class="section level2">
+<h2 id="prades">PRADES<a class="anchor" aria-label="anchor" href="#prades"></a>
+</h2>
+<div class="section level3">
+<h3 id="soil-moisture-3">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-3"></a>
 </h3>
 <table style="width:100%;" class="table">
 <colgroup>
@@ -152,10 +693,10 @@ Cáceres</h4>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-8-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-47-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="plant-transpiration">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration"></a>
+<h3 id="plant-transpiration-3">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-3"></a>
 </h3>
 <table class="table">
 <colgroup>
@@ -265,10 +806,10 @@ Cáceres</h4>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-10-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-10-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-49-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-49-2.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="water-potentials">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials"></a>
+<h3 id="water-potentials-3">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-3"></a>
 </h3>
 <table class="table">
 <colgroup>
@@ -301,7 +842,7 @@ Cáceres</h4>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">PRADES</td>
+<td align="left">FRAPUE</td>
 <td align="left">sperry</td>
 <td align="left">T1_153</td>
 <td align="left">Predawn</td>
@@ -315,7 +856,7 @@ Cáceres</h4>
 <td align="right">-Inf</td>
 </tr>
 <tr class="even">
-<td align="left">PRADES</td>
+<td align="left">FRAPUE</td>
 <td align="left">sperry</td>
 <td align="left">T1_153</td>
 <td align="left">Midday</td>
@@ -329,7 +870,7 @@ Cáceres</h4>
 <td align="right">-Inf</td>
 </tr>
 <tr class="odd">
-<td align="left">PRADES</td>
+<td align="left">FRAPUE</td>
 <td align="left">sperry</td>
 <td align="left">T2_168</td>
 <td align="left">Predawn</td>
@@ -343,7 +884,7 @@ Cáceres</h4>
 <td align="right">-1.1753443</td>
 </tr>
 <tr class="even">
-<td align="left">PRADES</td>
+<td align="left">FRAPUE</td>
 <td align="left">sperry</td>
 <td align="left">T2_168</td>
 <td align="left">Midday</td>
@@ -357,7 +898,7 @@ Cáceres</h4>
 <td align="right">-1.0644385</td>
 </tr>
 <tr class="odd">
-<td align="left">PRADES</td>
+<td align="left">FRAPUE</td>
 <td align="left">cochard</td>
 <td align="left">T1_153</td>
 <td align="left">Predawn</td>
@@ -371,7 +912,7 @@ Cáceres</h4>
 <td align="right">-Inf</td>
 </tr>
 <tr class="even">
-<td align="left">PRADES</td>
+<td align="left">FRAPUE</td>
 <td align="left">cochard</td>
 <td align="left">T1_153</td>
 <td align="left">Midday</td>
@@ -385,7 +926,7 @@ Cáceres</h4>
 <td align="right">-Inf</td>
 </tr>
 <tr class="odd">
-<td align="left">PRADES</td>
+<td align="left">FRAPUE</td>
 <td align="left">cochard</td>
 <td align="left">T2_168</td>
 <td align="left">Predawn</td>
@@ -399,7 +940,7 @@ Cáceres</h4>
 <td align="right">0.1698090</td>
 </tr>
 <tr class="even">
-<td align="left">PRADES</td>
+<td align="left">FRAPUE</td>
 <td align="left">cochard</td>
 <td align="left">T2_168</td>
 <td align="left">Midday</td>
@@ -417,249 +958,10 @@ Cáceres</h4>
 </div>
 </div>
 <div class="section level2">
-<h2 id="frapue">FRAPUE<a class="anchor" aria-label="anchor" href="#frapue"></a>
-</h2>
-<div class="section level3">
-<h3 id="soil-moisture-1">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-1"></a>
-</h3>
-<table class="table">
-<colgroup>
-<col width="7%">
-<col width="8%">
-<col width="5%">
-<col width="11%">
-<col width="10%">
-<col width="10%">
-<col width="9%">
-<col width="10%">
-<col width="11%">
-<col width="11%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Site</th>
-<th align="left">Mode</th>
-<th align="right">n</th>
-<th align="right">Bias</th>
-<th align="right">Bias.rel</th>
-<th align="right">MAE</th>
-<th align="right">MAE.rel</th>
-<th align="right">r</th>
-<th align="right">NSE</th>
-<th align="right">NSE.abs</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">granier</td>
-<td align="right">1021</td>
-<td align="right">0.1759574</td>
-<td align="right">24.163733</td>
-<td align="right">0.2005363</td>
-<td align="right">27.53907</td>
-<td align="right">0.5843796</td>
-<td align="right">-0.4112639</td>
-<td align="right">-0.1436430</td>
-</tr>
-<tr class="even">
-<td align="left">FRAPUE</td>
-<td align="left">sperry</td>
-<td align="right">1021</td>
-<td align="right">-0.0701551</td>
-<td align="right">-9.634195</td>
-<td align="right">0.1155844</td>
-<td align="right">15.87288</td>
-<td align="right">0.8595270</td>
-<td align="right">0.5396424</td>
-<td align="right">0.3408309</td>
-</tr>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">cochard</td>
-<td align="right">1021</td>
-<td align="right">0.0594225</td>
-<td align="right">8.160329</td>
-<td align="right">0.1121750</td>
-<td align="right">15.40468</td>
-<td align="right">0.7964613</td>
-<td align="right">0.4634429</td>
-<td align="right">0.3602744</td>
-</tr>
-</tbody>
-</table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-21-1.png" width="864" style="display: block; margin: auto;"></p>
-</div>
-<div class="section level3">
-<h3 id="plant-transpiration-1">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-1"></a>
-</h3>
-<table style="width:100%;" class="table">
-<colgroup>
-<col width="7%">
-<col width="8%">
-<col width="7%">
-<col width="5%">
-<col width="11%">
-<col width="11%">
-<col width="10%">
-<col width="9%">
-<col width="10%">
-<col width="11%">
-<col width="11%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Site</th>
-<th align="left">Mode</th>
-<th align="left">Cohort</th>
-<th align="right">n</th>
-<th align="right">Bias</th>
-<th align="right">Bias.rel</th>
-<th align="right">MAE</th>
-<th align="right">MAE.rel</th>
-<th align="right">r</th>
-<th align="right">NSE</th>
-<th align="right">NSE.abs</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">granier</td>
-<td align="left">T1_168</td>
-<td align="right">1096</td>
-<td align="right">-0.0875796</td>
-<td align="right">-25.531130</td>
-<td align="right">0.1497480</td>
-<td align="right">43.65444</td>
-<td align="right">0.6485927</td>
-<td align="right">0.2361046</td>
-<td align="right">0.1727263</td>
-</tr>
-<tr class="even">
-<td align="left">FRAPUE</td>
-<td align="left">sperry</td>
-<td align="left">T1_168</td>
-<td align="right">1096</td>
-<td align="right">0.0707325</td>
-<td align="right">20.619877</td>
-<td align="right">0.2250904</td>
-<td align="right">65.61818</td>
-<td align="right">0.6074291</td>
-<td align="right">-0.9363408</td>
-<td align="right">-0.2434978</td>
-</tr>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">cochard</td>
-<td align="left">T1_168</td>
-<td align="right">1096</td>
-<td align="right">0.0040503</td>
-<td align="right">1.180753</td>
-<td align="right">0.1441349</td>
-<td align="right">42.01811</td>
-<td align="right">0.8240701</td>
-<td align="right">0.2210125</td>
-<td align="right">0.2037356</td>
-</tr>
-</tbody>
-</table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-23-1.png" width="864" style="display: block; margin: auto;"></p>
-</div>
-<div class="section level3">
-<h3 id="water-potentials-1">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-1"></a>
-</h3>
-<table class="table">
-<colgroup>
-<col width="6%">
-<col width="7%">
-<col width="6%">
-<col width="7%">
-<col width="2%">
-<col width="10%">
-<col width="11%">
-<col width="9%">
-<col width="9%">
-<col width="9%">
-<col width="10%">
-<col width="10%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Site</th>
-<th align="left">Mode</th>
-<th align="left">Cohort</th>
-<th align="left">WP</th>
-<th align="right">n</th>
-<th align="right">Bias</th>
-<th align="right">Bias.rel</th>
-<th align="right">MAE</th>
-<th align="right">MAE.rel</th>
-<th align="right">r</th>
-<th align="right">NSE</th>
-<th align="right">NSE.abs</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">PRADES</td>
-<td align="left">sperry</td>
-<td align="left">T1_168</td>
-<td align="left">Predawn</td>
-<td align="right">28</td>
-<td align="right">-1.8940040</td>
-<td align="right">-129.4847875</td>
-<td align="right">1.8940040</td>
-<td align="right">129.48479</td>
-<td align="right">0.8497064</td>
-<td align="right">-2.5444295</td>
-<td align="right">-0.9918387</td>
-</tr>
-<tr class="even">
-<td align="left">PRADES</td>
-<td align="left">sperry</td>
-<td align="left">T1_168</td>
-<td align="left">Midday</td>
-<td align="right">28</td>
-<td align="right">-1.4801197</td>
-<td align="right">-47.4363392</td>
-<td align="right">1.4901674</td>
-<td align="right">47.75836</td>
-<td align="right">0.7403975</td>
-<td align="right">-4.2629157</td>
-<td align="right">-1.4960554</td>
-</tr>
-<tr class="odd">
-<td align="left">PRADES</td>
-<td align="left">cochard</td>
-<td align="left">T1_168</td>
-<td align="left">Predawn</td>
-<td align="right">28</td>
-<td align="right">0.0062396</td>
-<td align="right">0.4265758</td>
-<td align="right">0.5057686</td>
-<td align="right">34.57719</td>
-<td align="right">0.8887329</td>
-<td align="right">0.6514891</td>
-<td align="right">0.4681059</td>
-</tr>
-<tr class="even">
-<td align="left">PRADES</td>
-<td align="left">cochard</td>
-<td align="left">T1_168</td>
-<td align="left">Midday</td>
-<td align="right">28</td>
-<td align="right">1.1108589</td>
-<td align="right">35.6019038</td>
-<td align="right">1.2383717</td>
-<td align="right">39.68856</td>
-<td align="right">0.8498476</td>
-<td align="right">-2.1182867</td>
-<td align="right">-1.0742934</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="section level2">
 <h2 id="fonbla">FONBLA<a class="anchor" aria-label="anchor" href="#fonbla"></a>
 </h2>
 <div class="section level3">
-<h3 id="soil-moisture-2">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-2"></a>
+<h3 id="soil-moisture-4">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-4"></a>
 </h3>
 <table style="width:100%;" class="table">
 <colgroup>
@@ -725,10 +1027,10 @@ Cáceres</h4>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-34-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-60-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="plant-transpiration-2">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-2"></a>
+<h3 id="plant-transpiration-4">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-4"></a>
 </h3>
 <table style="width:100%;" class="table">
 <colgroup>
@@ -838,10 +1140,10 @@ Cáceres</h4>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-36-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-36-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-62-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-62-2.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="water-potentials-2">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-2"></a>
+<h3 id="water-potentials-4">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-4"></a>
 </h3>
 <table class="table">
 <colgroup>
@@ -874,7 +1176,7 @@ Cáceres</h4>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">PRADES</td>
+<td align="left">FRAPUE</td>
 <td align="left">sperry</td>
 <td align="left">T2_148</td>
 <td align="left">Predawn</td>
@@ -888,7 +1190,7 @@ Cáceres</h4>
 <td align="right">-1.4220641</td>
 </tr>
 <tr class="even">
-<td align="left">PRADES</td>
+<td align="left">FRAPUE</td>
 <td align="left">sperry</td>
 <td align="left">T2_148</td>
 <td align="left">Midday</td>
@@ -902,7 +1204,7 @@ Cáceres</h4>
 <td align="right">-4.1561923</td>
 </tr>
 <tr class="odd">
-<td align="left">PRADES</td>
+<td align="left">FRAPUE</td>
 <td align="left">sperry</td>
 <td align="left">T3_168</td>
 <td align="left">Predawn</td>
@@ -916,7 +1218,7 @@ Cáceres</h4>
 <td align="right">0.0428507</td>
 </tr>
 <tr class="even">
-<td align="left">PRADES</td>
+<td align="left">FRAPUE</td>
 <td align="left">sperry</td>
 <td align="left">T3_168</td>
 <td align="left">Midday</td>
@@ -930,7 +1232,7 @@ Cáceres</h4>
 <td align="right">-0.9124306</td>
 </tr>
 <tr class="odd">
-<td align="left">PRADES</td>
+<td align="left">FRAPUE</td>
 <td align="left">cochard</td>
 <td align="left">T2_148</td>
 <td align="left">Predawn</td>
@@ -944,7 +1246,7 @@ Cáceres</h4>
 <td align="right">-Inf</td>
 </tr>
 <tr class="even">
-<td align="left">PRADES</td>
+<td align="left">FRAPUE</td>
 <td align="left">cochard</td>
 <td align="left">T2_148</td>
 <td align="left">Midday</td>
@@ -958,7 +1260,7 @@ Cáceres</h4>
 <td align="right">-Inf</td>
 </tr>
 <tr class="odd">
-<td align="left">PRADES</td>
+<td align="left">FRAPUE</td>
 <td align="left">cochard</td>
 <td align="left">T3_168</td>
 <td align="left">Predawn</td>
@@ -972,7 +1274,7 @@ Cáceres</h4>
 <td align="right">-0.0004119</td>
 </tr>
 <tr class="even">
-<td align="left">PRADES</td>
+<td align="left">FRAPUE</td>
 <td align="left">cochard</td>
 <td align="left">T3_168</td>
 <td align="left">Midday</td>
