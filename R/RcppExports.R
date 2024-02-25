@@ -1063,7 +1063,7 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, ru
 #' control <- defaultControl("Cochard")
 #' 
 #' #Makes leaf xylem vulnerability equal to stem xylem vulnerability
-#' control$segmentedXylemVulnerability = TRUE 
+#' control$segmentedXylemVulnerability = FALSE 
 #' 
 #' #Initialize vegetation input
 #' x3 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)

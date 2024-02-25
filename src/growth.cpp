@@ -543,14 +543,12 @@ List growthDayInner(List x, NumericVector meteovec,
 
   //Data from spwb
   NumericVector Tcan;
-  NumericMatrix StemSympPsiInst, LeafSympPsiInst, StemSympRWCInst, LeafSympRWCInst;
+  NumericMatrix StemSympPsiInst, LeafSympPsiInst;
   List eb;
   double tcan_day = NA_REAL;
   if((transpirationMode=="Sperry") || (transpirationMode=="Cochard")) {
     StemSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympPsi"]);
     LeafSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympPsi"]);
-    StemSympRWCInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympRWC"]);
-    LeafSympRWCInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympRWC"]);
 
     eb = spwbOut["EnergyBalance"];  
     DataFrame tempDF =  Rcpp::as<Rcpp::DataFrame>(eb["Temperature"]);
@@ -974,11 +972,8 @@ List growthDayInner(List x, NumericVector meteovec,
             if(LAexpanded>0.0) {
               sugarLeaf[j] += leafSugarMassDeltaStep/ctl;
               double ft = phloemFlow(LeafSympPsiInst(j,s), StemSympPsiInst(j,s), sugarLeaf[j], sugarSapwood[j], Tcan[s], k_phloem, nonSugarConcentration)*LAlive; //flow as mol glucose per s
-              // double ft = phloemFlow(LeafSympPsiInst(j,s), StemSympPsiInst(j,s), sugarLeaf[j]/LeafSympRWCInst(j,s), sugarSapwood[j]/StemSympRWCInst(j,s), Tcan[s], k_phloem, nonSugarConcentration)*LAlive; //flow as mol glucose per s
               // sugar-starch dynamics
-              // double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j]/LeafSympRWCInst(j,s), starchLeaf[j]/LeafSympRWCInst(j,s), equilibriumLeafSugarConc);
               double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j], starchLeaf[j], equilibriumLeafSugarConc);
-              // double starchLeafIncrease = conversionLeaf*LeafSympRWCInst(j,s);
               double starchLeafIncrease = conversionLeaf;
               starchLeaf[j]  += starchLeafIncrease;
               // Rcout<<" coh:"<<j<< " s:"<<s<< " Ssugar: "<< sugarSapwood[j] << " Sstarch: "<< starchSapwood[j]<<" starch formation: "<<conversionSapwood<< "\n";
@@ -1189,7 +1184,9 @@ List growthDayInner(List x, NumericVector meteovec,
       if((!shrubDynamics) && isShrub) dynamicCohort = false;
       double stemSympRWC = NA_REAL;
       if(transpirationMode=="Granier") stemSympRWC = symplasticRelativeWaterContent(PlantPsi[j], StemPI0[j], StemEPS[j]);
-      else stemSympRWC = sum(StemSympRWCInst(j,_))/((double) numSteps);
+      else stemSympRWC = symplasticRelativeWaterContent(psiSympStem[j], StemPI0[j], StemEPS[j]);
+      if(NumericVector::is_na(stemSympRWC)) stop("Missing value for stem symp RWC");
+
       //Sapwood sugar relative to equilibrium, indicator of starvation
       double relativeSugarSapwood = (sugarSapwood[j]/equilibriumSapwoodSugarConc);
       if(dynamicCohort) {
@@ -1275,6 +1272,7 @@ List growthDayInner(List x, NumericVector meteovec,
             // Rcout<< j << " "<< stemSympRWC<< " "<< dessicationRate[j]<<"\n";
             if(mortalityMode =="density/deterministic") {
               Ndead_day = N[j]*mortalityRate[j];
+              // Rcout<< "mortalityRate " << mortalityRate[j]<< " Ndead "<<Ndead_day<<"\n";
             } else if(mortalityMode =="whole-cohort/stochastic") {
               if(R::runif(0.0,1.0) < mortalityRate[j]) {
                 Ndead_day = N[j];
@@ -1289,6 +1287,7 @@ List growthDayInner(List x, NumericVector meteovec,
           cause = "burnt";
         }
         // Update density and increase the number of dead plants
+        if(NumericVector::is_na(Ndead_day)) stop("Missing value for Ndead_day");
         Ndead_day = std::min(Ndead_day, N[j]);
         double Cdead_day = Cover[j]*(Ndead_day/N[j]);
         if(cause == "starvation") {
@@ -1413,7 +1412,7 @@ List growthDayInner(List x, NumericVector meteovec,
     PlantSugarSapwood[j] = sugarSapwood[j];
     PlantStarchSapwood[j] = starchSapwood[j];
   }
-  
+
   //CLOSE BIOMASS BALANCE
   closePlantBiomassBalance(plantBiomassBalance, x,
                       LabileCarbonBalance, LeafBiomassBalance, FineRootBiomassBalance);
@@ -2211,7 +2210,7 @@ void fillGrowthDailyOutput(List l, List soil, List sDay, int iday) {
 //' control <- defaultControl("Cochard")
 //' 
 //' #Makes leaf xylem vulnerability equal to stem xylem vulnerability
-//' control$segmentedXylemVulnerability = TRUE 
+//' control$segmentedXylemVulnerability = FALSE 
 //' 
 //' #Initialize vegetation input
 //' x3 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
