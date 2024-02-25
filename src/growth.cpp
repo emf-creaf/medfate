@@ -486,6 +486,7 @@ List growthDayInner(List x, NumericVector meteovec,
   NumericVector LeafPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
   if(transpirationMode=="Granier") {
     PlantPsi  = Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]);
+    psiApoLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]);
   } else {
     psiApoLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
     if(transpirationMode == "Sperry") {
@@ -611,6 +612,10 @@ List growthDayInner(List x, NumericVector meteovec,
   NumericVector Psi_Extract, Kmax_stemxylem, Plant_kmax, VCleaf_kmax, VCleaf_c, VCleaf_d;
   NumericVector VCstem_kmax, VCstem_c, VCstem_d, VCroot_kmaxVEC, VCroot_c, VCroot_d, VGrhizo_kmaxVEC;
   NumericVector WUE_par(numCohorts, 0.3643);
+  VCleaf_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_c"]);
+  VCleaf_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_d"]);
+  VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
+  VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
   if(transpirationMode=="Granier") {
     Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
     if(paramsTransp.containsElementNamed("WUE_par")) {
@@ -623,11 +628,7 @@ List growthDayInner(List x, NumericVector meteovec,
     Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
     Plant_kmax= paramsTransp["Plant_kmax"];
     VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_kmax"]);
-    VCleaf_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_c"]);
-    VCleaf_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_d"]);
     VCstem_kmax = paramsTransp["VCstem_kmax"];
-    VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
-    VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
     VCroot_kmaxVEC= paramsTransp["VCroot_kmax"];
     VCroot_c = paramsTransp["VCroot_c"];
     VCroot_d = paramsTransp["VCroot_d"];
@@ -1040,9 +1041,10 @@ List growthDayInner(List x, NumericVector meteovec,
       //Leaf senescence and bud senescence due to drought (only when PLC increases)
       double PLCinc = (StemPLC[j]-StemPLCprev[j]);
       if(PLCinc>0.0) {
-        double LAplc = std::min(LAexpanded, (1.0-StemPLC[j])*leafAreaTarget[j]);
-        if(LAplc<LAexpanded) {
-          propLeafSenescence = std::max((LAexpanded-LAplc)/LAexpanded, propLeafSenescence);
+        double LeafPDEF = proportionDefoliationWeibull(psiApoLeaf[j], VCleaf_c[j], VCleaf_d[j]);
+        double LApdef = std::min(LAexpanded, (1.0 - LeafPDEF)*leafAreaTarget[j]);
+        if(LApdef<LAexpanded) {
+          propLeafSenescence = std::max((LAexpanded-LApdef)/LAexpanded, propLeafSenescence);
         }
         double budplc = 100.0*(1.0-StemPLC[j]);
         if(budplc < crownBudPercent[j]) {
