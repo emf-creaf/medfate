@@ -1017,7 +1017,8 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
   if(transpirationMode=="Granier") {
     df = DataFrame::create(Named("PlantPsi") = NumericVector(numCohorts, -0.033),
                            Named("StemPLC") = NumericVector(numCohorts, 0.0),
-                           Named("LeafPLC") = NumericVector(numCohorts, 0.0));
+                           Named("LeafPLC") = NumericVector(numCohorts, 0.0),
+                           Named("LeafPDEF") = NumericVector(numCohorts, 0.0));
   } else if(transpirationMode =="Sperry") {
     df = DataFrame::create(Named("Einst") = NumericVector(numCohorts, 0.0),
                            Named("RootCrownPsi") = NumericVector(numCohorts, -0.033),
@@ -1026,7 +1027,8 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
                            Named("LeafSympPsi") = NumericVector(numCohorts, -0.033),
                            Named("StemSympPsi") = NumericVector(numCohorts, -0.033),
                            Named("LeafPLC") = NumericVector(numCohorts, 0.0),
-                           Named("StemPLC") = NumericVector(numCohorts, 0.0));
+                           Named("StemPLC") = NumericVector(numCohorts, 0.0),
+                           Named("LeafPDEF") = NumericVector(numCohorts, 0.0));
   } else if(transpirationMode =="Cochard") {
     df = DataFrame::create(Named("Einst") = NumericVector(numCohorts, 0.0),
                            Named("Elim") = NumericVector(numCohorts, 0.0),
@@ -1037,8 +1039,9 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
                            Named("StemPsi") = NumericVector(numCohorts, -0.033),
                            Named("LeafSympPsi") = NumericVector(numCohorts, -0.033),
                            Named("StemSympPsi") = NumericVector(numCohorts, -0.033),
+                           Named("StemPLC") = NumericVector(numCohorts, 0.0),
                            Named("LeafPLC") = NumericVector(numCohorts, 0.0),
-                           Named("StemPLC") = NumericVector(numCohorts, 0.0));
+                           Named("LeafPDEF") = NumericVector(numCohorts, 0.0));
   }
   df.attr("row.names") = above.attr("row.names");
   return(df);
@@ -1190,7 +1193,8 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   NumericVector CR = above["CR"];
   NumericVector Loading = above["Loading"];
   
-  control["cavitationRefillStem"] = "growth";
+  control["cavitationRecoveryStem"] = "growth";
+  control["cavitationRecoveryLeaves"] = "growth";
 
   String transpirationMode = control["transpirationMode"];
   if((transpirationMode!="Granier") && (transpirationMode!="Sperry") && (transpirationMode!="Cochard")) stop("Wrong Transpiration mode ('transpirationMode' should be 'Granier', 'Sperry' or 'Cochard')");

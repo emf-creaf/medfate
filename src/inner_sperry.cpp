@@ -348,8 +348,8 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   // Extract control variables
   List control = x["control"];
   String soilFunctions = control["soilFunctions"];
-  String cavitationRefillStem = control["cavitationRefillStem"];
-  String cavitationRefillLeaves = control["cavitationRefillLeaves"];
+  String cavitationRecoveryStem = control["cavitationRecoveryStem"];
+  String cavitationRecoveryLeaves = control["cavitationRecoveryLeaves"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   bool sunlitShade = control["sunlitShade"];
@@ -690,12 +690,12 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         LeafSympPsiVEC[c] = LeafPsiVEC[c]; //Leaf symplastic compartment coupled with apoplastic compartment
         
         // Update the leaf and stem PLC
-        if(cavitationRefillStem!="total") {
+        if(cavitationRecoveryStem!="total") {
           StemPLCVEC[c] = std::max(StemPLCVEC[c], 1.0 - xylemConductance(StemPsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
         } else { //Immediate refilling
           StemPLCVEC[c] = 1.0 - xylemConductance(StemPsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
         }
-        if(cavitationRefillLeaves!="total") {
+        if(cavitationRecoveryLeaves!="total") {
           LeafPLCVEC[c] = std::max(LeafPLCVEC[c], 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c])); 
         } else { //Immediate refilling
           LeafPLCVEC[c] = 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c]); 

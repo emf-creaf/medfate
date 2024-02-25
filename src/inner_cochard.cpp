@@ -489,7 +489,7 @@ void calculateRhizoPsi(int c,
 //' @param network A hydraulic network element of the list returned by \code{initCochardNetworks}
 //' @param dt Smallest time step (seconds)
 //' @param opt Option flag vector
-//' @param cavitationRefillStem,cavitationRefillLeaves A string indicating how refilling of embolized conduits is done:
+//' @param cavitationRecoveryStem,cavitationRecoveryLeaves A string indicating how refilling of embolized conduits is done:
 //'           \itemize{
 //'             \item{"none" - no refilling.}
 //'             \item{"annual" - every first day of the year.}
@@ -498,7 +498,7 @@ void calculateRhizoPsi(int c,
 //'           }
 // [[Rcpp::export("semi_implicit_integration")]]
 void semi_implicit_integration(List network, double dt, NumericVector opt, 
-                               String cavitationRefillStem = "annual", String cavitationRefillLeaves = "total") {
+                               String cavitationRecoveryStem = "annual", String cavitationRecoveryLeaves = "total") {
   
   List params = as<Rcpp::List>(network["params"]);
   NumericVector PsiSoil = network["PsiSoil"];
@@ -645,7 +645,7 @@ void semi_implicit_integration(List network, double dt, NumericVector opt,
   //# Cavitation
   psirefL = network["Psi_LApo"];  //# the reference is at current time step for other modes  (implicit, explicit)
   psirefS = network["Psi_SApo"];  //# The reference is at current time step for other modes (implicit, explicit)
-  if(cavitationRefillStem!="total") {
+  if(cavitationRecoveryStem!="total") {
     if (psirefS < Psi_SApo_cav) {
       network["Psi_SApo_cav"] = psirefS;
       network["PLC_Stem"] = PLC(psirefS, VCstem_slope, VCstem_P50);
@@ -654,7 +654,7 @@ void semi_implicit_integration(List network, double dt, NumericVector opt,
     network["Psi_SApo_cav"] = psirefS;
     network["PLC_Stem"] = PLC(psirefS, VCstem_slope, VCstem_P50);
   }
-  if(cavitationRefillLeaves!="total") {
+  if(cavitationRecoveryLeaves!="total") {
     if(psirefL < Psi_LApo_cav) {
       network["Psi_LApo_cav"] = psirefL;
       network["PLC_Leaf"] = PLC(psirefL, VCleaf_slope, VCleaf_P50);
@@ -684,8 +684,8 @@ void innerCochard(List x, List input, List output, int n, double tstep,
   // Extract control variables
   List control = x["control"];
   String soilFunctions = control["soilFunctions"];
-  String cavitationRefillStem = control["cavitationRefillStem"];
-  String cavitationRefillLeaves = control["cavitationRefillLeaves"];
+  String cavitationRecoveryStem = control["cavitationRecoveryStem"];
+  String cavitationRecoveryLeaves = control["cavitationRecoveryLeaves"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   bool plantCapacitance = control["plantCapacitance"];
@@ -1011,7 +1011,7 @@ void innerCochard(List x, List input, List output, int n, double tstep,
           network_n["Einst_SH"] = Elim_SH + Emin_L_SH; //For shade photosynthesis/transpiration
           
           //Effects on water potentials and flows
-          semi_implicit_integration(network_n, dt, opt, cavitationRefillStem, cavitationRefillLeaves);
+          semi_implicit_integration(network_n, dt, opt, cavitationRecoveryStem, cavitationRecoveryLeaves);
           update_conductances(network_n);
           update_capacitances(network_n);
           

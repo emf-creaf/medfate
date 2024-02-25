@@ -211,6 +211,9 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
   LogicalVector leafUnfolding = internalPhenology["leafUnfolding"];
   LogicalVector leafSenescence = internalPhenology["leafSenescence"];
   LogicalVector leafDormancy = internalPhenology["leafDormancy"];
+
+  DataFrame internalWater =  Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+  NumericVector LeafPDEF = internalWater["LeafPDEF"];
   
   for(int j=0;j<numCohorts;j++) {
     bool leafFall = true;
@@ -226,7 +229,7 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
           leafSenescence[j] = false;
         } 
         else if(leafUnfolding[j]) {
-          LAI_expanded[j] = LAI_live[j]*phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
+          LAI_expanded[j] = (1.0 - (LeafPDEF[j]/100.0))*LAI_live[j]*phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
         }
       } 
     }

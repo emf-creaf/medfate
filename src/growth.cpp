@@ -393,8 +393,8 @@ List growthDayInner(List x, NumericVector meteovec,
   bool shrubDynamics = control["shrubDynamics"];
   String allocationStrategy = control["allocationStrategy"];
   if(transpirationMode=="Granier") allocationStrategy = "Al2As";
-  String cavitationRefillStem = control["cavitationRefillStem"];
-  String cavitationRefillLeaves = control["cavitationRefillLeaves"];
+  String cavitationRecoveryStem = control["cavitationRecoveryStem"];
+  String cavitationRecoveryLeaves = control["cavitationRecoveryLeaves"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   bool taper = control["taper"];
@@ -1166,10 +1166,10 @@ List growthDayInner(List x, NumericVector meteovec,
         }
       }
       //Decrease PLC due to new SA growth
-      if(cavitationRefillStem=="growth") {
+      if(cavitationRecoveryStem=="growth") {
         StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth[j]/SA[j])); 
       }
-      if(cavitationRefillLeaves=="growth") {
+      if(cavitationRecoveryLeaves=="growth") {
         LeafPLC[j] = std::max(0.0, LeafPLC[j] - (deltaLAgrowth[j]/LAexpanded)); 
       }
       //Increase crown buds to new SA growth
