@@ -198,7 +198,7 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_dead = above["LAI_dead"];
-  NumericVector LAI_expanded = above["LAI_expanded"];
+  NumericVector LAI = above["LAI_expanded"];
   int numCohorts = LAI_live.size();
 
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
@@ -212,9 +212,6 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
   LogicalVector leafSenescence = internalPhenology["leafSenescence"];
   LogicalVector leafDormancy = internalPhenology["leafDormancy"];
 
-  DataFrame internalWater =  Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
-  NumericVector LeafPDEF = internalWater["LeafPDEF"];
-  
   for(int j=0;j<numCohorts;j++) {
     bool leafFall = true;
     if(phenoType[j] == "winter-semideciduous") leafFall = leafUnfolding[j];
@@ -222,14 +219,14 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
     //Leaf unfolding and senescence only dealt with if called from spwb
     if(!fromGrowthModel) {
       if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") {
-        if((leafSenescence[j]) && (LAI_expanded[j]>0.0)) {
-          double LAI_exp_prev= LAI_expanded[j]; //Store previous value
-          LAI_expanded[j] = 0.0; //Update expanded leaf area (will decrease if LAI_live decreases)
+        if((leafSenescence[j]) && (LAI[j]>0.0)) {
+          double LAI_exp_prev= LAI[j]; //Store previous value
+          LAI[j] = 0.0; //Update expanded leaf area (will decrease if LAI_live decreases)
           LAI_dead[j] += LAI_exp_prev;//Check increase dead leaf area if expanded leaf area has decreased
           leafSenescence[j] = false;
         } 
         else if(leafUnfolding[j]) {
-          LAI_expanded[j] = (1.0 - (LeafPDEF[j]/100.0))*LAI_live[j]*phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
+          LAI[j] = LAI_live[j]*phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
         }
       } 
     }

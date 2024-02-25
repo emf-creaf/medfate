@@ -2012,6 +2012,36 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// proportionDefoliationSigmoid
+double proportionDefoliationSigmoid(double psiLeaf, double P50, double slope, double PLC_crit, double P50_cv);
+RcppExport SEXP _medfate_proportionDefoliationSigmoid(SEXP psiLeafSEXP, SEXP P50SEXP, SEXP slopeSEXP, SEXP PLC_critSEXP, SEXP P50_cvSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type psiLeaf(psiLeafSEXP);
+    Rcpp::traits::input_parameter< double >::type P50(P50SEXP);
+    Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
+    Rcpp::traits::input_parameter< double >::type PLC_crit(PLC_critSEXP);
+    Rcpp::traits::input_parameter< double >::type P50_cv(P50_cvSEXP);
+    rcpp_result_gen = Rcpp::wrap(proportionDefoliationSigmoid(psiLeaf, P50, slope, PLC_crit, P50_cv));
+    return rcpp_result_gen;
+END_RCPP
+}
+// proportionDefoliationWeibull
+double proportionDefoliationWeibull(double psiLeaf, double c, double d, double PLC_crit, double P50_cv);
+RcppExport SEXP _medfate_proportionDefoliationWeibull(SEXP psiLeafSEXP, SEXP cSEXP, SEXP dSEXP, SEXP PLC_critSEXP, SEXP P50_cvSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type psiLeaf(psiLeafSEXP);
+    Rcpp::traits::input_parameter< double >::type c(cSEXP);
+    Rcpp::traits::input_parameter< double >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type PLC_crit(PLC_critSEXP);
+    Rcpp::traits::input_parameter< double >::type P50_cv(P50_cvSEXP);
+    rcpp_result_gen = Rcpp::wrap(proportionDefoliationWeibull(psiLeaf, c, d, PLC_crit, P50_cv));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rainfallIntensity
 double rainfallIntensity(int month, double prec, NumericVector rainfallIntensityPerMonth);
 static SEXP _medfate_rainfallIntensity_try(SEXP monthSEXP, SEXP precSEXP, SEXP rainfallIntensityPerMonthSEXP) {
@@ -5647,6 +5677,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_referenceConductivityHeightFactor", (DL_FUNC) &_medfate_referenceConductivityHeightFactor, 2},
     {"_medfate_maximumStemHydraulicConductance", (DL_FUNC) &_medfate_maximumStemHydraulicConductance, 5},
     {"_medfate_rootxylemConductanceProportions", (DL_FUNC) &_medfate_rootxylemConductanceProportions, 2},
+    {"_medfate_proportionDefoliationSigmoid", (DL_FUNC) &_medfate_proportionDefoliationSigmoid, 5},
+    {"_medfate_proportionDefoliationWeibull", (DL_FUNC) &_medfate_proportionDefoliationWeibull, 5},
     {"_medfate_rainfallIntensity", (DL_FUNC) &_medfate_rainfallIntensity, 3},
     {"_medfate_interceptionGashDay", (DL_FUNC) &_medfate_interceptionGashDay, 4},
     {"_medfate_interceptionLiuDay", (DL_FUNC) &_medfate_interceptionLiuDay, 4},

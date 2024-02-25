@@ -27,7 +27,7 @@ double plantVol(double plantPsi, NumericVector pars) {
   double stemrwc = tissueRelativeWaterContent(plantPsi, pars["stempi0"], pars["stemeps"], 
                                               plantPsi, pars["stem_c"], pars["stem_d"], 
                                               pars["stemaf"]);
-  return(((pars["Vleaf"] * leafrwc)*pars["LAIphe"]) + ((pars["Vsapwood"] * stemrwc)*pars["LAIlive"]));
+  return(((pars["Vleaf"] * leafrwc)*pars["LAI"]) + ((pars["Vsapwood"] * stemrwc)*pars["LAIlive"]));
 }
 
 
@@ -58,7 +58,7 @@ List transpirationBasic(List x, NumericVector meteovec,
   List control = x["control"];
   String cavitationRecoveryStem = control["cavitationRecoveryStem"];
   String cavitationRecoveryLeaves = control["cavitationRecoveryLeaves"];
-  double refillMaximumRate = control["refillMaximumRate"];
+  double cavitationRecoveryMaximumRate = control["cavitationRecoveryMaximumRate"];
   String soilFunctions = control["soilFunctions"];
   double verticalLayerSize = control["verticalLayerSize"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
@@ -163,16 +163,13 @@ List transpirationBasic(List x, NumericVector meteovec,
   //Communication vectors
   //Comunication with outside
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
-  NumericVector PlantPsi = clone(Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]));
-  NumericVector StemPLC = clone(Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]));
-  NumericVector LeafPLC = clone(Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]));
-  
+  NumericVector PlantPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]);
+  NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
+  NumericVector LeafPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
+
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
-  NumericVector Phe(numCohorts,0.0);
   double s = 0.0, LAIcell = 0.0, canopyHeight = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0,LAIcelldead = 0.0;
   for(int c=0;c<numCohorts;c++) {
-    if(LAIlive[c]>0) Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
-    else Phe[c]=0.0;
     s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
     LAIcell += LAIphe[c]+LAIdead[c];
     LAIcelldead += LAIdead[c];
@@ -245,7 +242,7 @@ List transpirationBasic(List x, NumericVector meteovec,
                                                   _["leafpi0"] = LeafPI0[c], _["leafeps"] = LeafEPS[c],
                                                   _["leafaf"] = LeafAF[c],_["stempi0"] = StemPI0[c],_["stemeps"] = StemEPS[c],
                                                   _["stemaf"] = StemAF[c],_["Vsapwood"] = Vsapwood[c],_["Vleaf"] = Vleaf[c],
-                                                  _["LAIphe"] = LAIphe[c],_["LAIlive"] = LAIlive[c]);
+                                                  _["LAI"] = LAIphe[c],_["LAIlive"] = LAIlive[c]);
     
     double rootCrownPsi = NA_REAL;
     
@@ -366,10 +363,10 @@ List transpirationBasic(List x, NumericVector meteovec,
     LFMC[c] = maxFMC[c]*((1.0/r635[c])*RWClm[c]+(1.0 - (1.0/r635[c]))*RWCsm[c]);
     
     //Daily drought stress from plant WP
-    DDS[c] = Phe[c]*(1.0 - Psi2K(PlantPsi[c],Psi_Extract[c],Exp_Extract[c])); 
+    DDS[c] = 1.0 - Psi2K(PlantPsi[c],Psi_Extract[c],Exp_Extract[c]); 
     
     double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
-    double r = refillMaximumRate*std::max(0.0, (PlantPsi[c] + 1.5)/1.5);
+    double r = cavitationRecoveryMaximumRate*std::max(0.0, (PlantPsi[c] + 1.5)/1.5);
     if(cavitationRecoveryStem=="rate") {
       StemPLC[c] = std::max(0.0, StemPLC[c] - (r/SAmax));
     }
@@ -377,11 +374,6 @@ List transpirationBasic(List x, NumericVector meteovec,
       LeafPLC[c] = std::max(0.0, LeafPLC[c] - (r/SAmax));
     }
   }
-  
-  //Updates plant water internal status
-  internalWater["StemPLC"] = StemPLC;
-  internalWater["LeafPLC"] = LeafPLC;
-  internalWater["PlantPsi"] = PlantPsi;
   
   //Atempt to implement hydraulic redistribution
   if(hydraulicRedistributionFraction > 0.0) {

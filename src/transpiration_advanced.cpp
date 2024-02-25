@@ -66,7 +66,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   double defaultWindSpeed = control["defaultWindSpeed"];
   String cavitationRecoveryStem = control["cavitationRecoveryStem"];
   String cavitationRecoveryLeaves = control["cavitationRecoveryLeaves"];
-  double refillMaximumRate = control["refillMaximumRate"];
+  double cavitationRecoveryMaximumRate = control["cavitationRecoveryMaximumRate"];
   bool sapFluidityVariation = control["sapFluidityVariation"];
 
   //Meteo input
@@ -90,7 +90,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
-  NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
+  NumericVector LAI = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
   NumericVector LAIdead = Rcpp::as<Rcpp::NumericVector>(above["LAI_dead"]);
   NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
@@ -362,31 +362,28 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   ////////////////////////////////////////
   // STEP 1. Estimate stand-level leaf area values and leaf distribution across layers from leaf-level live/expanded area
   ////////////////////////////////////////
-  NumericVector Phe(numCohorts);
   double LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0;
   double canopyHeight = 100.0; //Minimum canopy height of 1 m
   for(int c=0;c<numCohorts;c++) {
-    Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
-    if(LAIlive[c]==0.0) Phe[c] = 0.0;
-    LAIcell += (LAIphe[c]+LAIdead[c]);
+    LAIcell += (LAI[c]+LAIdead[c]);
     LAIcelldead += LAIdead[c];
     LAIcelllive += LAIlive[c];
-    LAIcellexpanded +=LAIphe[c];
-    if((canopyHeight<H[c]) && ((LAIphe[c]+LAIdead[c])>0.0)) canopyHeight = H[c];
+    LAIcellexpanded +=LAI[c];
+    if((canopyHeight<H[c]) && ((LAI[c]+LAIdead[c])>0.0)) canopyHeight = H[c];
   }
   //Create z vector with all layer height limits
   NumericVector z(ncanlayers+1,0.0);
   for(int i=1;i<=ncanlayers;i++) z[i] = z[i-1] + verticalLayerSize;
   
-  NumericVector PARcohort = parcohortC(H, LAIphe,  LAIdead, kPAR, CR);
+  NumericVector PARcohort = parcohortC(H, LAI,  LAIdead, kPAR, CR);
   
   //LAI distribution per layer and cohort
-  NumericMatrix LAIme = LAIdistributionVectors(z, LAIphe, H, CR); //Expanded leaves
+  NumericMatrix LAIme = LAIdistributionVectors(z, LAI, H, CR); //Expanded leaves
   NumericMatrix LAImd = LAIdistributionVectors(z, LAIdead, H, CR); //Dead (standing) leaves
   NumericMatrix LAImx = LAIdistributionVectors(z, LAIlive, H, CR); //Maximum leaf expansion
   //LAI profile per layer
   NumericVector LAIpx = LAIprofileVectors(z, LAIlive, H, CR);
-  NumericVector LAIpe = LAIprofileVectors(z, LAIphe, H, CR);
+  NumericVector LAIpe = LAIprofileVectors(z, LAI, H, CR);
   NumericVector LAIpd = LAIprofileVectors(z, LAIdead, H, CR);
   NumericVector lad = 100.0*(LAIpe + LAIpd)/verticalLayerSize;
   ////////////////////////////////////////
@@ -528,7 +525,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         hydraulicNetwork[c] = HN;
         supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
       } else if(transpirationMode == "Cochard") {
-        hydraulicNetwork[c] = initCochardNetwork(c, LAIphe,
+        hydraulicNetwork[c] = initCochardNetwork(c, LAI,
                                                 internalWater, 
                                                 paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                                 VCroot_kmax(c,_), VGrhizo_kmax(c,_),
@@ -597,7 +594,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         hydraulicNetwork[c] = HN;
         supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
       } else if(transpirationMode == "Cochard") {
-        hydraulicNetwork[c] = initCochardNetwork(c, LAIphe,
+        hydraulicNetwork[c] = initCochardNetwork(c, LAI,
                                                 internalWater, 
                                                 paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                                 VCroot_kmaxc, VGrhizo_kmaxc,
@@ -722,7 +719,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     _["StemSympRWC"] = StemSympRWCInst,
     _["LeafSympRWC"] = LeafSympRWCInst,
     _["PWB"] = PWBinst);
-  DataFrame Plants = DataFrame::create(_["LAI"] = clone(LAIphe),
+  DataFrame Plants = DataFrame::create(_["LAI"] = clone(LAI),
                                        _["LAIlive"] = clone(LAIlive),
                                        _["FPAR"] = PARcohort,
                                        _["Extraction"] = SoilExtractCoh,
@@ -875,7 +872,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
       Einst(c,n) = 0.0;
       Aginst(c,n) = 0.0;
       Aninst(c,n) = 0.0;
-      if(LAIphe[c]>0.0) {
+      if(LAI[c]>0.0) {
         PAR_SL(c,n) = absPAR_SL_COH[c];
         PAR_SH(c,n) = absPAR_SH_COH[c];
         SWR_SL(c,n) = absSWR_SL_COH[c];
@@ -1037,7 +1034,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
         absSWRlayer[i] = sum(absSWR_SL_ML(i,_)) + sum(absSWR_SH_ML(i,_));
         //Radiation balance
         Rnlayer[i] = absSWRlayer[i] + LWRnet_layer[i];
-        NumericVector pLayer = LAIme(i,_)/LAIphe; //Proportion of each cohort LAI in layer i
+        NumericVector pLayer = LAIme(i,_)/LAI; //Proportion of each cohort LAI in layer i
         //Instantaneous layer transpiration
         //from mmolH2O/m2/s to kgH2O/m2/s
         double ElayerInst = 0.001*0.01802*sum(LAIme(i,_)*(E_SL(_,n)*fsunlit[i] + E_SH(_,n)*(1.0-fsunlit[i])));
@@ -1159,10 +1156,10 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     RWClm[c] = sum(LeafRWCInst(c,_))/((double)LeafRWCInst.ncol());
     LFMC[c] = maxFMC[c]*((1.0/r635[c])*RWClm[c]+(1.0 - (1.0/r635[c]))*RWCsm[c]);
     dEdPm[c] = sum(dEdPInst(c,_))/((double)dEdPInst.ncol());  
-    DDS[c] = Phe[c]*(1.0 - (dEdPm[c]/(sapFluidityDay*Plant_kmax[c])));
+    DDS[c] = (1.0 - (dEdPm[c]/(sapFluidityDay*Plant_kmax[c])));
     
     double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
-    double r = refillMaximumRate*std::max(0.0, (StemSympPsiVEC[c] + 1.5)/1.5);
+    double r = cavitationRecoveryMaximumRate*std::max(0.0, (StemSympPsiVEC[c] + 1.5)/1.5);
     if(cavitationRecoveryStem=="rate") {
       StemPLCVEC[c] = std::max(0.0, StemPLCVEC[c] - (r/SAmax));
     }

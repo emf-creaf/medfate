@@ -55,15 +55,15 @@ A list, with the following options (default values in brackets):
       \item{\code{verticalLayerSize [= 100]}: Size of vertical layers (in cm) for the calculation of light extinction (and photosynthesis).}
       \item{\code{windMeasurementHeight [= 200]}: Height (in cm) over the canopy corresponding to wind measurements.}
       \item{\code{segmentedXylemVulnerability [= TRUE]}: If \code{FALSE} leaf and root vulnerability curves will be equal to those of stem.}
-      \item{\code{cavitationRecoveryLeaves, cavitationRecoveryStem [= "annual"]}: A string indicating how refilling of embolized leaf/stem xylem is done:
+      \item{\code{cavitationRecoveryLeaves, cavitationRecoveryStem [= "rate"]}: A string indicating how refilling of embolized leaf/stem xylem is done:
           \itemize{
-            \item{"none" - no refilling.}
+            \item{"none" - no recovery.}
             \item{"annual" - every first day of the year.}
-            \item{"rate" - following a rate of new sapwood formation.}
-            \item{"total" - instantaneous complete refilling.}
+            \item{"rate" - following a rate of new leaf or sapwood formation.}
+            \item{"total" - instantaneous complete recovery.}
           }
       }
-      \item{\code{refillMaximumRate [= 0.05]}: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).}
+      \item{\code{cavitationRecoveryMaximumRate [= 0.05]}: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).}
     }
   \bold{Water balance} (functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{spwb_day}} when \code{traspirationMode = "Granier"} only):
     \itemize{
@@ -149,7 +149,7 @@ A list, with the following options (default values in brackets):
      \item{\code{removeEmptyCohorts [= TRUE]}: Boolean flag to indicate the removal of cohorts whose density is too low.}
      \item{\code{minimumTreeCohortDensity [= 1]}: Threshold of tree density resulting in cohort removal.}
      \item{\code{minimumShrubCohortCover [= 0.01]}: Threshold of shrub cover resulting in cohort removal.}
-     \item{\code{dynamicallyMergeCohorts [= FALSE]}: Boolean flag to indicate that cohorts should be merged when possible. This option speeds up calculations but results in a loss of cohort identity and reinitialization of many state variables.}
+     \item{\code{dynamicallyMergeCohorts [= TRUE]}: Boolean flag to indicate that cohorts should be merged when possible. This option speeds up calculations but results in a loss of cohort identity and reinitialization of many state variables.}
      \item{\code{seedRain [= NULL]}: Vector of species names whose seed rain is to be added to seed bank, regardless of local seed production.}
      \item{\code{seedProductionTreeHeight [= 300]}: Default minimum tree height for producing seeds (when species parameter \code{SeedProductionHeight} is missing).}
      \item{\code{seedProductionShrubHeight [= 30]}: Default minimum shrub height for producing seeds (when species parameter \code{SeedProductionHeight} is missing).}

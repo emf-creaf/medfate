@@ -1477,6 +1477,43 @@ hydraulics_rootxylemConductanceProportions <- function(L, V) {
     .Call(`_medfate_rootxylemConductanceProportions`, L, V)
 }
 
+#' Hydraulic-related defoliation
+#' 
+#' Functions to calculate the proportion of crown defoliation due to hydraulic disconnection.
+#'
+#' @param psiLeaf Leaf water potential (in MPa).
+#' @param c,d Parameters of the Weibull function.
+#' @param P50,slope Parameters of the Sigmoid function.
+#' @param PLC_crit Critical leaf PLC corresponding to defoliation
+#' @param P50_cv Coefficient of variation (in percent) of leaf P50, to describe the
+#' variability in hydraulic vulnerability across crown leaves.
+#' 
+#' @details The functions assume that crowns are made of a population of leaves whose
+#' hydraulic vulnerability (i.e. the water potential corresponding to 50% loss of conductance) 
+#' follows a Gaussian distribution centered on the input P50 and with a known coefficient of variation (\code{P50_cv}).
+#' The slope parameter (or the c exponent in the case of a Weibull function) is considered constant.
+#' Leaves are hydraulically disconnected, and shedded, when their embolism rate exceeds a critical value (\code{PLC_crit}).
+#' 
+#' @return The proportion of crown defoliation.
+#' 
+#' @author 
+#' Hervé Cochard, INRAE
+#' 
+#' Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
+#' 
+#' @seealso
+#' \code{\link{hydraulics_conductancefunctions}}
+#' 
+#' @name hydraulics_defoliation
+hydraulics_proportionDefoliationSigmoid <- function(psiLeaf, P50, slope, PLC_crit = 0.88, P50_cv = 10.0) {
+    .Call(`_medfate_proportionDefoliationSigmoid`, psiLeaf, P50, slope, PLC_crit, P50_cv)
+}
+
+#' @name hydraulics_defoliation
+hydraulics_proportionDefoliationWeibull <- function(psiLeaf, c, d, PLC_crit = 0.88, P50_cv = 10.0) {
+    .Call(`_medfate_proportionDefoliationWeibull`, psiLeaf, c, d, PLC_crit, P50_cv)
+}
+
 #' @param month Month of the year (from 1 to 12).
 #' @param prec Precipitation for a given day (mm).
 #' @param rainfallIntensityPerMonth A vector with twelve positions with average intensity of rainfall (in mm/h) for each month.

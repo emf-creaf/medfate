@@ -366,7 +366,7 @@
 # Version 0.8.5
 - New control parameter 'fracLeafResistance'
 - Different control options for parameter 'cavitationRefill'
-- New control parameter 'refillMaximumRate'
+- New control parameter 'cavitationRecoveryMaximumRate'
 - Control parameter 'hydraulicCostFunction' replaced by 'costModifier' and 'gainModifier'
 - New control parameter 'cuticularTranspiration'
 - Numerical controls to avoid NaN in functions 'soil_theta2psiSX' and 'soil_psi2thetaSX'

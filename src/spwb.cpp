@@ -2222,7 +2222,9 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
         if(DOY[i]==1) {
           DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
           NumericVector LeafPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
-          for(int j=0;j<LeafPLC.length();j++) LeafPLC[j] = 0.0;
+          for(int j=0;j<LeafPLC.length();j++) {
+            LeafPLC[j] = 0.0;
+          }
         }
       }
       
@@ -2629,7 +2631,9 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       if(DOY[i]==1) {
         DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
         NumericVector LeafPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPLC"]);
-        for(int j=0;j<LeafPLC.length();j++) LeafPLC[j] = 0.0;
+        for(int j=0;j<LeafPLC.length();j++) {
+          LeafPLC[j] = 0.0;
+        }
       }
     }
       
