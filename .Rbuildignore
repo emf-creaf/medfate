@@ -18,5 +18,6 @@
 ^vignettes/workedexamples/*$
 ^vignettes/parametrization/*$
 ^cran-comments\.md$
+^figures/*$
 ^CRAN-SUBMISSION$
 ^LICENSE\.md$

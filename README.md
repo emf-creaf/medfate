@@ -68,10 +68,13 @@ which evolve together with **medfate**:
 ## Authorship
 
 The set of R packages are developed and maintained by the [*Ecosystem
-Modelling Facility*](https://emf.creaf.cat) unit at CREAF (in Spain), in
-close collaboration with researchers from
+Modelling Facility*](https://emf.creaf.cat) unit at
+[*CREAF*](https://www.creaf.cat/) (in Spain), in close collaboration
+with researchers from
 [*URFM-INRAE*](https://www6.paca.inrae.fr/ecologie_des_forets_mediterraneennes/)
-(in France).
+(in France) and [*CTFC*](https://www.ctfc.cat/) (in Spain).
+
+<img src="figures/logos.png" width="80%" style="display: block; margin: auto;" />
 
 ## References
 
