@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-02-19</h4>
+            <h4 data-toc-skip class="date">2024-02-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/BasicWaterBalance.Rmd" class="external-link"><code>vignettes/runmodels/BasicWaterBalance.Rmd</code></a></small>
       <div class="hidden name"><code>BasicWaterBalance.Rmd</code></div>
@@ -322,10 +322,10 @@ leaves), canopy water retention capacity and the proportion of light
 <span><span class="co">## T1_148    0.40874422           2.7741548   -0.033 0.005808769 0.9998350</span></span>
 <span><span class="co">## T2_168    0.23318589           2.1058696   -0.033 0.010612890 0.9997489</span></span>
 <span><span class="co">## S1_165    0.02675376           0.1635903   -0.033 0.003088161 0.9983684</span></span>
-<span><span class="co">##          LeafRWC      LFMC      StemPLC      LeafPLC WaterBalance</span></span>
-<span><span class="co">## T1_148 0.9979679 125.89003 1.320577e-11 3.713826e-03            0</span></span>
-<span><span class="co">## T2_168 0.9986794  93.07448 1.691266e-06 3.473351e-05            0</span></span>
-<span><span class="co">## S1_165 0.9987207  96.39176 4.394058e-08 3.473351e-05            0</span></span>
+<span><span class="co">##          LeafRWC      LFMC StemPLC     LeafPLC WaterBalance</span></span>
+<span><span class="co">## T1_148 0.9979679 125.89003       0 0.003069557            0</span></span>
+<span><span class="co">## T2_168 0.9986794  93.07448       0 0.000000000            0</span></span>
+<span><span class="co">## S1_165 0.9987207  96.39176       0 0.000000000            0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## attr(,"class")</span></span>
 <span><span class="co">## [1] "spwb_day" "list"</span></span></code></pre>
@@ -576,19 +576,19 @@ variables:</p>
 <span><span class="co">## 5 2001-01-05 T1_148 Pinus halepensis 0.8487477 0.8487477 92.18285</span></span>
 <span><span class="co">## 6 2001-01-06 T1_148 Pinus halepensis 0.8487477 0.8487477 92.18285</span></span>
 <span><span class="co">##   AbsorbedSWRFraction Transpiration GrossPhotosynthesis    PlantPsi     LeafPLC</span></span>
-<span><span class="co">## 1            35.07634    0.09247256           0.8934407 -0.03300000 0.003713826</span></span>
-<span><span class="co">## 2            35.07634    0.17167226           1.5611765 -0.02951758 0.003157972</span></span>
-<span><span class="co">## 3            35.07634    0.13648547           1.3089514 -0.02890922 0.003063776</span></span>
-<span><span class="co">## 4            35.07634    0.05965898           0.5972837 -0.02957884 0.003167505</span></span>
-<span><span class="co">## 5            35.07634    0.17590438           1.6200910 -0.02487192 0.002461788</span></span>
-<span><span class="co">## 6            35.07634    0.12675398           1.3121531 -0.02473400 0.002441958</span></span>
-<span><span class="co">##        StemPLC PlantWaterBalance   LeafRWC   StemRWC     LFMC PlantStress</span></span>
-<span><span class="co">## 1 1.320577e-11      0.000000e+00 0.9979679 0.9998350 125.8900 0.005808769</span></span>
-<span><span class="co">## 2 1.320577e-11      1.908389e-04 0.9981823 0.9998524 125.9049 0.004932295</span></span>
-<span><span class="co">## 3 1.320577e-11      3.334063e-05 0.9982197 0.9998554 125.9075 0.004783882</span></span>
-<span><span class="co">## 4 1.320577e-11     -3.669746e-05 0.9981785 0.9998521 125.9046 0.004947317</span></span>
-<span><span class="co">## 5 1.320577e-11      2.579668e-04 0.9984682 0.9998756 125.9247 0.003836334</span></span>
-<span><span class="co">## 6 1.320577e-11      7.558992e-06 0.9984767 0.9998763 125.9252 0.003805150</span></span></code></pre>
+<span><span class="co">## 1            35.07634    0.09247256           0.8934407 -0.03300000 0.003069557</span></span>
+<span><span class="co">## 2            35.07634    0.17167226           1.5611765 -0.02951758 0.002512174</span></span>
+<span><span class="co">## 3            35.07634    0.13648547           1.3089514 -0.02890922 0.002417711</span></span>
+<span><span class="co">## 4            35.07634    0.05965898           0.5972837 -0.02957884 0.002521734</span></span>
+<span><span class="co">## 5            35.07634    0.17590438           1.6200910 -0.02487192 0.001873895</span></span>
+<span><span class="co">## 6            35.07634    0.12675398           1.3121531 -0.02473400 0.001794059</span></span>
+<span><span class="co">##   StemPLC PlantWaterBalance   LeafRWC   StemRWC     LFMC PlantStress</span></span>
+<span><span class="co">## 1       0      0.000000e+00 0.9979679 0.9998350 125.8900 0.005808769</span></span>
+<span><span class="co">## 2       0      1.908389e-04 0.9981823 0.9998524 125.9049 0.004932295</span></span>
+<span><span class="co">## 3       0      3.334063e-05 0.9982197 0.9998554 125.9075 0.004783882</span></span>
+<span><span class="co">## 4       0     -3.669746e-05 0.9981785 0.9998521 125.9046 0.004947317</span></span>
+<span><span class="co">## 5       0      2.579668e-04 0.9984682 0.9998756 125.9247 0.003836334</span></span>
+<span><span class="co">## 6       0      7.558992e-06 0.9984767 0.9998763 125.9252 0.003805150</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="temporal-summaries">Temporal summaries<a class="anchor" aria-label="anchor" href="#temporal-summaries"></a>

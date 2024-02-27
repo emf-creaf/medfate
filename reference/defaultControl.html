@@ -105,13 +105,13 @@
 <li><p><code>verticalLayerSize [= 100]</code>: Size of vertical layers (in cm) for the calculation of light extinction (and photosynthesis).</p></li>
 <li><p><code>windMeasurementHeight [= 200]</code>: Height (in cm) over the canopy corresponding to wind measurements.</p></li>
 <li><p><code>segmentedXylemVulnerability [= TRUE]</code>: If <code>FALSE</code> leaf and root vulnerability curves will be equal to those of stem.</p></li>
-<li><p><code>cavitationRefillLeaves, cavitationRefillStem [= "annual"]</code>: A string indicating how refilling of embolized leaf/stem xylem is done:
-          </p><ul><li><p>"none" - no refilling.</p></li>
+<li><p><code>cavitationRecoveryLeaves, cavitationRecoveryStem [= "rate"]</code>: A string indicating how refilling of embolized leaf/stem xylem is done:
+          </p><ul><li><p>"none" - no recovery.</p></li>
 <li><p>"annual" - every first day of the year.</p></li>
-<li><p>"rate" - following a rate of new sapwood formation.</p></li>
-<li><p>"total" - instantaneous complete refilling.</p></li>
+<li><p>"rate" - following a rate of new leaf or sapwood formation.</p></li>
+<li><p>"total" - instantaneous complete recovery.</p></li>
 </ul></li>
-<li><p><code>refillMaximumRate [= 0.05]</code>: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).</p></li>
+<li><p><code>cavitationRecoveryMaximumRate [= 0.05]</code>: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).</p></li>
 </ul><p><b>Water balance</b> (functions <code><a href="spwb.html">spwb</a></code>, <code><a href="spwb.html">pwb</a></code> or <code><a href="spwb_day.html">spwb_day</a></code> when <code>traspirationMode = "Granier"</code> only):</p><ul><li><p><code>hydraulicRedistributionFraction [= 0.1]</code>: Fraction of plant transpiration corresponding to hydraulic redistribution.</p></li>
 </ul><p><b>Water balance</b> (functions <code><a href="spwb.html">spwb</a></code>, <code><a href="spwb.html">pwb</a></code> or <code><a href="spwb_day.html">spwb_day</a></code> when <code>traspirationMode = "Sperry"</code> or <code>traspirationMode = "Cochard"</code>):</p><ul><li><p><code>ndailysteps [= 24]</code>: Number of steps into which each day is divided for determination of stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).</p></li>
 <li><p><code>nsubsteps [= 3600]</code>: Number of substeps into which each step is divided for multi-layer canopy energy balance solving.</p></li>
@@ -174,7 +174,7 @@
 <li><p><code>removeEmptyCohorts [= TRUE]</code>: Boolean flag to indicate the removal of cohorts whose density is too low.</p></li>
 <li><p><code>minimumTreeCohortDensity [= 1]</code>: Threshold of tree density resulting in cohort removal.</p></li>
 <li><p><code>minimumShrubCohortCover [= 0.01]</code>: Threshold of shrub cover resulting in cohort removal.</p></li>
-<li><p><code>dynamicallyMergeCohorts [= FALSE]</code>: Boolean flag to indicate that cohorts should be merged when possible. This option speeds up calculations but results in a loss of cohort identity and reinitialization of many state variables.</p></li>
+<li><p><code>dynamicallyMergeCohorts [= TRUE]</code>: Boolean flag to indicate that cohorts should be merged when possible. This option speeds up calculations but results in a loss of cohort identity and reinitialization of many state variables.</p></li>
 <li><p><code>seedRain [= NULL]</code>: Vector of species names whose seed rain is to be added to seed bank, regardless of local seed production.</p></li>
 <li><p><code>seedProductionTreeHeight [= 300]</code>: Default minimum tree height for producing seeds (when species parameter <code>SeedProductionHeight</code> is missing).</p></li>
 <li><p><code>seedProductionShrubHeight [= 30]</code>: Default minimum shrub height for producing seeds (when species parameter <code>SeedProductionHeight</code> is missing).</p></li>

@@ -10,6 +10,7 @@ articles:
   SensitivityCalibration: modelanalysis/SensitivityCalibration.html
   GrowthCalibration: parametrization/GrowthCalibration.html
   Metamodelling: parametrization/Metamodelling.html
+  SpeciesParameterization: parametrization/SpeciesParameterization.html
   AdvancedWaterEnergyBalance: runmodels/AdvancedWaterEnergyBalance.html
   BasicWaterBalance: runmodels/BasicWaterBalance.html
   ForestDynamics: runmodels/ForestDynamics.html
@@ -17,5 +18,5 @@ articles:
   Sureau: runmodels/Sureau.html
   FontBlanche: workedexamples/FontBlanche.html
   PlantWaterPools: workedexamples/PlantWaterPools.html
-last_built: 2024-02-19T11:41Z
+last_built: 2024-02-27T17:38Z
 

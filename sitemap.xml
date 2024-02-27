@@ -37,6 +37,9 @@
     <loc>/articles/parametrization/Metamodelling.html</loc>
   </url>
   <url>
+    <loc>/articles/parametrization/SpeciesParameterization.html</loc>
+  </url>
+  <url>
     <loc>/articles/runmodels/AdvancedWaterEnergyBalance.html</loc>
   </url>
   <url>
@@ -140,6 +143,9 @@
   </url>
   <url>
     <loc>/reference/hydraulics_conductancefunctions.html</loc>
+  </url>
+  <url>
+    <loc>/reference/hydraulics_defoliation.html</loc>
   </url>
   <url>
     <loc>/reference/hydraulics_scalingconductance.html</loc>
