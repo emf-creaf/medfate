@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-02-27</h4>
+            <h4 data-toc-skip class="date">2024-02-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/AdvancedWaterEnergyBalance.Rmd" class="external-link"><code>vignettes/runmodels/AdvancedWaterEnergyBalance.Rmd</code></a></small>
       <div class="hidden name"><code>AdvancedWaterEnergyBalance.Rmd</code></div>
@@ -563,18 +563,18 @@ Several output variables can be inspected in this element.</p>
 <span><span class="co">## T1_148 0.84874773 0.84874773 92.18285 0.17145075    0.17145075</span></span>
 <span><span class="co">## T2_168 0.70557382 0.70557382 72.36365 0.25707171    0.25707171</span></span>
 <span><span class="co">## S1_165 0.03062604 0.03062604 44.32407 0.01248587    0.01248587</span></span>
-<span><span class="co">##        GrossPhotosynthesis NetPhotosynthesis    RootPsi    StemPsi    LeafPLC</span></span>
-<span><span class="co">## T1_148          1.91266768        1.79911299 -0.2180120 -0.6186918 0.18999318</span></span>
-<span><span class="co">## T2_168          1.75124703        1.64531791 -0.3785782 -0.9685505 0.06516776</span></span>
-<span><span class="co">## S1_165          0.06688913        0.06294377 -0.3759137 -0.6029081 0.02030159</span></span>
+<span><span class="co">##        GrossPhotosynthesis NetPhotosynthesis    RootPsi    StemPsi LeafPLC</span></span>
+<span><span class="co">## T1_148          1.91266768        1.79911299 -0.2180120 -0.6186918       0</span></span>
+<span><span class="co">## T2_168          1.75124703        1.64531791 -0.3785782 -0.9685505       0</span></span>
+<span><span class="co">## S1_165          0.06688913        0.06294377 -0.3759137 -0.6029081       0</span></span>
 <span><span class="co">##             StemPLC LeafPsiMin  LeafPsiMax      dEdP        DDS   StemRWC</span></span>
 <span><span class="co">## T1_148 1.553358e-05 -0.8045533 -0.03995231 0.4790119 0.05005867 0.9987769</span></span>
 <span><span class="co">## T2_168 9.496613e-03 -1.2294457 -0.04019149 0.5400064 0.03087011 0.9912581</span></span>
 <span><span class="co">## S1_165 1.971280e-04 -0.7151737 -0.04188680 1.0414421 0.02823879 0.9879970</span></span>
 <span><span class="co">##          LeafRWC      LFMC  WaterBalance</span></span>
-<span><span class="co">## T1_148 0.9145491 120.47218 -2.710505e-18</span></span>
-<span><span class="co">## T2_168 0.9704162  91.26361  7.752046e-18</span></span>
-<span><span class="co">## S1_165 0.9841577  95.21383  1.162129e-18</span></span></code></pre>
+<span><span class="co">## T1_148 0.9815217 124.76934 -2.710505e-18</span></span>
+<span><span class="co">## T2_168 0.9814947  91.83508  7.752046e-18</span></span>
+<span><span class="co">## S1_165 0.9890301  95.41927  1.162129e-18</span></span></code></pre>
 <p>While <code>Plants</code> contains one value per cohort and variable
 that summarizes the whole simulated day, information by disaggregated by
 time step can be accessed in <code>PlantsInst</code>. Moreover, we can
@@ -745,17 +745,17 @@ affected by the end state of the previous simulation:</p>
 <p>Now we are ready to call function <code><a href="../../reference/spwb.html">spwb()</a></code>:</p>
 <div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">S</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/spwb.html">spwb</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Initial plant water content (mm): 6.73289</span></span>
+<pre><code><span><span class="co">## Initial plant water content (mm): 6.78662</span></span>
 <span><span class="co">## Initial soil water content (mm): 290.875</span></span>
 <span><span class="co">## Initial snowpack content (mm): 0</span></span>
 <span><span class="co">## Performing daily simulations</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  [Year 2001]:....................................</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant water content (mm): 6.72</span></span>
+<span><span class="co">## Final plant water content (mm): 6.78047</span></span>
 <span><span class="co">## Final soil water content (mm): 321.603</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): -0.0128886</span></span>
+<span><span class="co">## Change in plant water content (mm): -0.00614779</span></span>
 <span><span class="co">## Plant water balance result (mm): 2.03123e-16</span></span>
 <span><span class="co">## Change in soil water content (mm): 30.7277</span></span>
 <span><span class="co">## Soil water balance result (mm): 30.6254</span></span>

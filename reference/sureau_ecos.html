@@ -64,8 +64,8 @@ Function <code>semi_implicit_integration</code> updates water potentials and cav
 <span>  <span class="va">network</span>,</span>
 <span>  <span class="va">dt</span>,</span>
 <span>  <span class="va">opt</span>,</span>
-<span>  cavitationRecoveryStem <span class="op">=</span> <span class="st">"annual"</span>,</span>
-<span>  cavitationRecoveryLeaves <span class="op">=</span> <span class="st">"total"</span></span>
+<span>  stemCavitationRecovery <span class="op">=</span> <span class="st">"annual"</span>,</span>
+<span>  leafCavitationRecovery <span class="op">=</span> <span class="st">"total"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -87,7 +87,7 @@ Function <code>semi_implicit_integration</code> updates water potentials and cav
 <dd><p>Option flag vector</p></dd>
 
 
-<dt>cavitationRecoveryStem, cavitationRecoveryLeaves</dt>
+<dt>stemCavitationRecovery, leafCavitationRecovery</dt>
 <dd><p>A string indicating how refilling of embolized conduits is done:</p><ul><li><p>"none" - no refilling.</p></li>
 <li><p>"annual" - every first day of the year.</p></li>
 <li><p>"rate" - following a rate of new sapwood formation.</p></li>

@@ -105,7 +105,8 @@
 <li><p><code>verticalLayerSize [= 100]</code>: Size of vertical layers (in cm) for the calculation of light extinction (and photosynthesis).</p></li>
 <li><p><code>windMeasurementHeight [= 200]</code>: Height (in cm) over the canopy corresponding to wind measurements.</p></li>
 <li><p><code>segmentedXylemVulnerability [= TRUE]</code>: If <code>FALSE</code> leaf and root vulnerability curves will be equal to those of stem.</p></li>
-<li><p><code>cavitationRecoveryLeaves, cavitationRecoveryStem [= "rate"]</code>: A string indicating how refilling of embolized leaf/stem xylem is done:
+<li><p><code>leafCavitationEffects, stemCavitationEffects [= FALSE/TRUE]</code>: A flag indicating whether cavitation effects on conductance of leaves and stem are applied. Only relevant for <code>transpirationMode = "Sperry"</code>.</p></li>
+<li><p><code>leafCavitationRecovery, stemCavitationRecovery [= "rate"]</code>: A string indicating how recovery of previous cavitation leaf/stem xylem is done (only relevant for functions <code><a href="spwb.html">spwb</a></code> and <code><a href="spwb_day.html">spwb_day</a></code>):
           </p><ul><li><p>"none" - no recovery.</p></li>
 <li><p>"annual" - every first day of the year.</p></li>
 <li><p>"rate" - following a rate of new leaf or sapwood formation.</p></li>
@@ -141,11 +142,11 @@
 <li><p><code>k_SSym [= 0.26]</code>: Conductance from stem apoplasm to stem symplasm (mmol·s-1·m-2·MPa-1).</p></li>
 <li><p><code>fractionLeafSymplasm [= 0.5]</code>: Fraction of the leaf resistance from leaf apoplasm to leaf symplasm ([0-1]).</p></li>
 <li><p><code>gs_NightFrac [= 0.05]</code>: Stomatal conductance at night as fraction of maximum stomatal conductance ([0-1]).</p></li>
+<li><p><code>stomatalSubmodel [= "Baldocchi"]</code>: Stomatal regulation sub-model, either "Jarvis" or "Baldocchi".</p></li>
 <li><p><code>JarvisPAR [= 0.003]</code>: Parameter regulating the response of stomatal conductance to light (PAR) in the Jarvis model.</p></li>
 <li><p><code>gCrown0 [= 0.150]</code>: Reference crown conductance (mol·s-1·m-2).</p></li>
 <li><p><code>fTRBToLeaf [= 0.8]</code>: Fraction of surface of bark exposed to air per leaf area.</p></li>
-</ul><p><b>Forest growth</b> (functions <code><a href="growth.html">growth</a></code> or <code><a href="spwb_day.html">growth_day</a></code>):</p><ul><li><p><code>stomatalSubmodel [= "Baldocchi"]</code>: Stomatal regulation sub-model, either "Jarvis" or "Baldocchi".</p></li>
-<li><p><code>subdailyCarbonBalance [= FALSE]</code>: Boolean flag to indicate that labile carbon balance should be conducted at sub-daily steps (applies only to transpirationMode = "Sperry").</p></li>
+</ul><p><b>Forest growth</b> (functions <code><a href="growth.html">growth</a></code> or <code><a href="spwb_day.html">growth_day</a></code>):</p><ul><li><p><code>subdailyCarbonBalance [= FALSE]</code>: Boolean flag to indicate that labile carbon balance should be conducted at sub-daily steps (applies only to transpirationMode = "Sperry").</p></li>
 <li><p><code>allowDessication [= TRUE]</code>: Boolean flag to indicate that mortality by dessication is allowed.</p></li>
 <li><p><code>allowStarvation [= TRUE]</code>: Boolean flag to indicate that mortality by starvation is allowed.</p></li>
 <li><p><code>sinkLimitation [= TRUE]</code>: Boolean flag to indicate that temperature and turgor limitations to growth are applied.</p></li>

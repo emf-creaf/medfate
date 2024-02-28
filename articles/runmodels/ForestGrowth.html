@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Caceres</h4>
             
-            <h4 data-toc-skip class="date">2024-02-27</h4>
+            <h4 data-toc-skip class="date">2024-02-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/runmodels/ForestGrowth.Rmd" class="external-link"><code>vignettes/runmodels/ForestGrowth.Rmd</code></a></small>
       <div class="hidden name"><code>ForestGrowth.Rmd</code></div>
@@ -326,21 +326,21 @@ model sink limitations on wood formation.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Year 2001:....................................</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant biomass (g/m2): 6276.02</span></span>
-<span><span class="co">## Change in plant biomass (g/m2): 165.161</span></span>
-<span><span class="co">## Plant biomass balance result (g/m2): 165.161</span></span>
+<span><span class="co">## Final plant biomass (g/m2): 6276.2</span></span>
+<span><span class="co">## Change in plant biomass (g/m2): 165.334</span></span>
+<span><span class="co">## Plant biomass balance result (g/m2): 165.334</span></span>
 <span><span class="co">## Plant biomass balance components:</span></span>
 <span><span class="co">##   Structural balance (g/m2) 81 Labile balance (g/m2) 94</span></span>
 <span><span class="co">##   Plant individual balance (g/m2) 175 Mortality loss (g/m2) 10</span></span>
 <span><span class="co">## Final plant water content (mm): 7.07946</span></span>
-<span><span class="co">## Final soil water content (mm): 323.613</span></span>
+<span><span class="co">## Final soil water content (mm): 323.62</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): 0.0208681</span></span>
-<span><span class="co">## Plant water balance result (mm): -0.000991005</span></span>
-<span><span class="co">## Change in soil water content (mm): 32.7379</span></span>
-<span><span class="co">## Soil water balance result (mm): 32.6818</span></span>
+<span><span class="co">## Change in plant water content (mm): 0.0208698</span></span>
+<span><span class="co">## Plant water balance result (mm): -0.000989162</span></span>
+<span><span class="co">## Change in soil water content (mm): 32.7451</span></span>
+<span><span class="co">## Soil water balance result (mm): 32.6891</span></span>
 <span><span class="co">## Change in snowpack water content (mm): 0</span></span>
-<span><span class="co">## Snowpack water balance result (mm): 7.10543e-15</span></span>
+<span><span class="co">## Snowpack water balance result (mm): 1.42109e-14</span></span>
 <span><span class="co">## Water balance components:</span></span>
 <span><span class="co">##   Precipitation (mm) 513</span></span>
 <span><span class="co">##   Rain (mm) 462 Snow (mm) 51</span></span>
@@ -506,9 +506,9 @@ relationship:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../../reference/evaluation.html">evaluation_stats</a></span><span class="op">(</span><span class="va">G1</span>, <span class="va">exampleobs</span>, <span class="st">"BAI"</span>, cohort <span class="op">=</span> <span class="st">"T1_148"</span>, </span>
 <span>                 temporalResolution <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          n       Bias   Bias.rel        MAE    MAE.rel          r        NSE </span></span>
-<span><span class="co">## 12.0000000 -0.1300035 -9.9106048  0.1323679 10.0908517  0.9976550  0.9752267 </span></span>
+<span><span class="co">## 12.0000000 -0.1300020 -9.9104897  0.1323664 10.0907365  0.9976550  0.9752269 </span></span>
 <span><span class="co">##    NSE.abs </span></span>
-<span><span class="co">##  0.8648343</span></span></code></pre>
+<span><span class="co">##  0.8648358</span></span></code></pre>
 <p>The observed data set is fake and the evaluation is unrealistically
 good. For illustrative purposes, we also compare diameter increment
 values, here drawing the observed and predicted time series

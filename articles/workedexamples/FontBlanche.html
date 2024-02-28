@@ -74,7 +74,7 @@ Font-Blanche</h1>
                         <h4 data-toc-skip class="author">Miquel De
 Caceres (CREAF), Nicolas Martin-StPaul (INRA)</h4>
             
-            <h4 data-toc-skip class="date">2024-02-27</h4>
+            <h4 data-toc-skip class="date">2024-02-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/workedexamples/FontBlanche.Rmd" class="external-link"><code>vignettes/workedexamples/FontBlanche.Rmd</code></a></small>
       <div class="hidden name"><code>FontBlanche.Rmd</code></div>
@@ -555,8 +555,8 @@ default global parameter values are obtained using function
 <code class="sourceCode R"><span><span class="va">fb_control</span> <span class="op">&lt;-</span> <span class="fu"><a href="../../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">fb_control</span><span class="op">$</span><span class="va">transpirationMode</span> <span class="op">&lt;-</span> <span class="st">"Sperry"</span></span>
 <span><span class="va">fb_control</span><span class="op">$</span><span class="va">subdailyResults</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span>
-<span><span class="va">fb_control</span><span class="op">$</span><span class="va">cavitationRecoveryStem</span> <span class="op">&lt;-</span> <span class="st">"rate"</span></span>
-<span><span class="va">fb_control</span><span class="op">$</span><span class="va">cavitationRecoveryLeaves</span> <span class="op">&lt;-</span> <span class="st">"total"</span></span>
+<span><span class="va">fb_control</span><span class="op">$</span><span class="va">stemCavitationRecovery</span> <span class="op">&lt;-</span> <span class="st">"rate"</span></span>
+<span><span class="va">fb_control</span><span class="op">$</span><span class="va">leafCavitationRecovery</span> <span class="op">&lt;-</span> <span class="st">"total"</span></span>
 <span><span class="va">fb_control</span><span class="op">$</span><span class="va">fracRootResistance</span> <span class="op">&lt;-</span> <span class="fl">0.4</span></span></code></pre></div>
 <p>Where the following changes are set to control parameters:</p>
 <ol style="list-style-type: decimal">
@@ -615,10 +615,10 @@ function <code><a href="../../reference/modifyParams.html">modifyCohortParams()<
 <span><span class="co">## </span></span>
 <span><span class="co">##  [Year 2014]:....................................</span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">## Final plant water content (mm): 31.8671</span></span>
+<span><span class="co">## Final plant water content (mm): 31.8683</span></span>
 <span><span class="co">## Final soil water content (mm): 213.91</span></span>
 <span><span class="co">## Final snowpack content (mm): 0</span></span>
-<span><span class="co">## Change in plant water content (mm): -0.0193249</span></span>
+<span><span class="co">## Change in plant water content (mm): -0.0181091</span></span>
 <span><span class="co">## Plant water balance result (mm): 2.46893e-16</span></span>
 <span><span class="co">## Change in soil water content (mm): 0.0245851</span></span>
 <span><span class="co">## Soil water balance result (mm): 125.445</span></span>

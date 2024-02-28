@@ -73,7 +73,7 @@
                         <h4 data-toc-skip class="author">Miquel De
 Cáceres</h4>
             
-            <h4 data-toc-skip class="date">2024-02-27</h4>
+            <h4 data-toc-skip class="date">2024-02-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/evaluation/StandLevelEvaluation.Rmd" class="external-link"><code>vignettes/evaluation/StandLevelEvaluation.Rmd</code></a></small>
       <div class="hidden name"><code>StandLevelEvaluation.Rmd</code></div>
@@ -83,1213 +83,585 @@ Cáceres</h4>
     
     
 <div class="section level2">
-<h2 id="frapue">FRAPUE<a class="anchor" aria-label="anchor" href="#frapue"></a>
+<h2 id="frapue-plot">FRAPUE plot<a class="anchor" aria-label="anchor" href="#frapue-plot"></a>
 </h2>
 <div class="section level3">
-<h3 id="soil-moisture">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture"></a>
+<h3 id="experimental-plot-information">Experimental plot information<a class="anchor" aria-label="anchor" href="#experimental-plot-information"></a>
 </h3>
-<table class="table">
-<colgroup>
-<col width="7%">
-<col width="8%">
-<col width="5%">
-<col width="11%">
-<col width="10%">
-<col width="10%">
-<col width="9%">
-<col width="10%">
-<col width="11%">
-<col width="11%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Site</th>
-<th align="left">Mode</th>
-<th align="right">n</th>
-<th align="right">Bias</th>
-<th align="right">Bias.rel</th>
-<th align="right">MAE</th>
-<th align="right">MAE.rel</th>
-<th align="right">r</th>
-<th align="right">NSE</th>
-<th align="right">NSE.abs</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">granier</td>
-<td align="right">1021</td>
-<td align="right">0.1759574</td>
-<td align="right">24.163733</td>
-<td align="right">0.2005363</td>
-<td align="right">27.53907</td>
-<td align="right">0.5843796</td>
-<td align="right">-0.4112639</td>
-<td align="right">-0.1436430</td>
-</tr>
-<tr class="even">
-<td align="left">FRAPUE</td>
-<td align="left">sperry</td>
-<td align="right">1021</td>
-<td align="right">-0.0701551</td>
-<td align="right">-9.634195</td>
-<td align="right">0.1155844</td>
-<td align="right">15.87288</td>
-<td align="right">0.8595270</td>
-<td align="right">0.5396424</td>
-<td align="right">0.3408309</td>
-</tr>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">cochard</td>
-<td align="right">1021</td>
-<td align="right">0.0594225</td>
-<td align="right">8.160329</td>
-<td align="right">0.1121750</td>
-<td align="right">15.40468</td>
-<td align="right">0.7964613</td>
-<td align="right">0.4634429</td>
-<td align="right">0.3602744</td>
-</tr>
-</tbody>
-</table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-8-1.png" width="864" style="display: block; margin: auto;"></p>
+<pre><code><span><span class="co">##            Attribute                                       Value</span></span>
+<span><span class="co">## 1          Plot name                                   Puéchabon</span></span>
+<span><span class="co">## 2       Latitude (º)                                       43.74</span></span>
+<span><span class="co">## 3      Longitude (º)                                         3.6</span></span>
+<span><span class="co">## 4      Elevation (m)                                         270</span></span>
+<span><span class="co">## 5          Slope (º)                                           0</span></span>
+<span><span class="co">## 6         Aspect (º)                                           0</span></span>
+<span><span class="co">## 7    Parent material                                   Limestone</span></span>
+<span><span class="co">## 8       Soil texture                             Silty clay loam</span></span>
+<span><span class="co">## 9           MAT (ºC)                                        13.2</span></span>
+<span><span class="co">## 10          MAP (mm)                                         916</span></span>
+<span><span class="co">## 11 Stand description Dense evergreen forest dominated by Q. ilex</span></span>
+<span><span class="co">## 12         Stand LAI                                           2</span></span>
+<span><span class="co">## 13 Species simulated            Quercus ilex, Buxus sempervirens</span></span></code></pre>
 </div>
 <div class="section level3">
-<h3 id="plant-transpiration">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration"></a>
+<h3 id="model-inputs">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs"></a>
 </h3>
-<table style="width:100%;" class="table">
-<colgroup>
-<col width="7%">
-<col width="8%">
-<col width="7%">
-<col width="5%">
-<col width="11%">
-<col width="11%">
-<col width="10%">
-<col width="9%">
-<col width="10%">
-<col width="11%">
-<col width="11%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Site</th>
-<th align="left">Mode</th>
-<th align="left">Cohort</th>
-<th align="right">n</th>
-<th align="right">Bias</th>
-<th align="right">Bias.rel</th>
-<th align="right">MAE</th>
-<th align="right">MAE.rel</th>
-<th align="right">r</th>
-<th align="right">NSE</th>
-<th align="right">NSE.abs</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">granier</td>
-<td align="left">T1_168</td>
-<td align="right">1096</td>
-<td align="right">-0.0875796</td>
-<td align="right">-25.531130</td>
-<td align="right">0.1497480</td>
-<td align="right">43.65444</td>
-<td align="right">0.6485927</td>
-<td align="right">0.2361046</td>
-<td align="right">0.1727263</td>
-</tr>
-<tr class="even">
-<td align="left">FRAPUE</td>
-<td align="left">sperry</td>
-<td align="left">T1_168</td>
-<td align="right">1096</td>
-<td align="right">0.0707325</td>
-<td align="right">20.619877</td>
-<td align="right">0.2250904</td>
-<td align="right">65.61818</td>
-<td align="right">0.6074291</td>
-<td align="right">-0.9363408</td>
-<td align="right">-0.2434978</td>
-</tr>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">cochard</td>
-<td align="left">T1_168</td>
-<td align="right">1096</td>
-<td align="right">0.0040503</td>
-<td align="right">1.180753</td>
-<td align="right">0.1441349</td>
-<td align="right">42.01811</td>
-<td align="right">0.8240701</td>
-<td align="right">0.2210125</td>
-<td align="right">0.2037356</td>
-</tr>
-</tbody>
-</table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-10-1.png" width="864" style="display: block; margin: auto;"></p>
+<div class="section level4">
+<h4 id="vegetation">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation"></a>
+</h4>
+<pre><code><span><span class="co">##        Species    DBH   Height    N Z50  Z95 LAI</span></span>
+<span><span class="co">## 1 Quercus ilex 9.1156 530.2222 1750 529 2287   2</span></span></code></pre>
+<pre><code><span><span class="co">##              Species Cover Height Z50  Z95 LAI</span></span>
+<span><span class="co">## 1 Buxus sempervirens    13    200 390 1470 0.2</span></span></code></pre>
+</div>
+<div class="section level4">
+<h4 id="soil">Soil<a class="anchor" aria-label="anchor" href="#soil"></a>
+</h4>
+<pre><code><span><span class="co">##   widths clay sand om   bd rfc</span></span>
+<span><span class="co">## 1    300   39   26  6 1.45  75</span></span>
+<span><span class="co">## 2    200   39   26  3 1.45  75</span></span>
+<span><span class="co">## 3   1500   39   26  1 1.45  80</span></span>
+<span><span class="co">## 4   2500   39   26  1 1.45  90</span></span></code></pre>
+</div>
+<div class="section level4">
+<h4 id="custom-traits">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits"></a>
+</h4>
+<pre><code><span><span class="co">##              Species  SLA VCleaf_P12 VCleaf_P50 VCleaf_P88 VCleaf_slope</span></span>
+<span><span class="co">## 1       Quercus ilex 4.55  -4.004731      -5.25  -6.495269           40</span></span>
+<span><span class="co">## 2 Buxus sempervirens 5.19  -5.004731      -6.25  -7.495269           40</span></span>
+<span><span class="co">##   VCstem_P12 VCstem_P50 VCstem_P88 VCstem_slope VCroot_P12 VCroot_P50</span></span>
+<span><span class="co">## 1  -4.739642       -6.4  -8.060358           30  -2.004731      -3.25</span></span>
+<span><span class="co">## 2         NA         NA         NA           NA         NA         NA</span></span>
+<span><span class="co">##   VCroot_P88 VCroot_slope VCleaf_kmax Kmax_stemxylem LeafEPS LeafPI0 LeafAF</span></span>
+<span><span class="co">## 1  -4.495269           40        2.63           0.20      15    -2.5    0.4</span></span>
+<span><span class="co">## 2         NA           NA        2.00           0.15      NA      NA     NA</span></span>
+<span><span class="co">##   StemEPS StemPI0 StemAF Gswmin Gswmax    Gs_P50 Gs_slope    Al2As</span></span>
+<span><span class="co">## 1      15    -2.5    0.4  0.002   0.20 -2.114188 44.70588 1540.671</span></span>
+<span><span class="co">## 2      NA      NA     NA  0.002   0.18        NA       NA       NA</span></span></code></pre>
+</div>
 </div>
 <div class="section level3">
-<h3 id="water-potentials">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials"></a>
+<h3 id="evaluation-results">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results"></a>
 </h3>
-<table class="table">
-<colgroup>
-<col width="6%">
-<col width="7%">
-<col width="6%">
-<col width="7%">
-<col width="2%">
-<col width="10%">
-<col width="11%">
-<col width="9%">
-<col width="9%">
-<col width="9%">
-<col width="10%">
-<col width="10%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Site</th>
-<th align="left">Mode</th>
-<th align="left">Cohort</th>
-<th align="left">WP</th>
-<th align="right">n</th>
-<th align="right">Bias</th>
-<th align="right">Bias.rel</th>
-<th align="right">MAE</th>
-<th align="right">MAE.rel</th>
-<th align="right">r</th>
-<th align="right">NSE</th>
-<th align="right">NSE.abs</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">sperry</td>
-<td align="left">T1_168</td>
-<td align="left">Predawn</td>
-<td align="right">28</td>
-<td align="right">-1.8940040</td>
-<td align="right">-129.4847875</td>
-<td align="right">1.8940040</td>
-<td align="right">129.48479</td>
-<td align="right">0.8497064</td>
-<td align="right">-2.5444295</td>
-<td align="right">-0.9918387</td>
-</tr>
-<tr class="even">
-<td align="left">FRAPUE</td>
-<td align="left">sperry</td>
-<td align="left">T1_168</td>
-<td align="left">Midday</td>
-<td align="right">28</td>
-<td align="right">-1.4801197</td>
-<td align="right">-47.4363392</td>
-<td align="right">1.4901674</td>
-<td align="right">47.75836</td>
-<td align="right">0.7403975</td>
-<td align="right">-4.2629157</td>
-<td align="right">-1.4960554</td>
-</tr>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">cochard</td>
-<td align="left">T1_168</td>
-<td align="left">Predawn</td>
-<td align="right">28</td>
-<td align="right">0.0062396</td>
-<td align="right">0.4265758</td>
-<td align="right">0.5057686</td>
-<td align="right">34.57719</td>
-<td align="right">0.8887329</td>
-<td align="right">0.6514891</td>
-<td align="right">0.4681059</td>
-</tr>
-<tr class="even">
-<td align="left">FRAPUE</td>
-<td align="left">cochard</td>
-<td align="left">T1_168</td>
-<td align="left">Midday</td>
-<td align="right">28</td>
-<td align="right">1.1108589</td>
-<td align="right">35.6019038</td>
-<td align="right">1.2383717</td>
-<td align="right">39.68856</td>
-<td align="right">0.8498476</td>
-<td align="right">-2.1182867</td>
-<td align="right">-1.0742934</td>
-</tr>
-</tbody>
-</table>
+<div class="section level4">
+<h4 id="soil-moisture">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture"></a>
+</h4>
+<pre><code><span><span class="co">##     Site    Mode    n        Bias  Bias.rel       MAE  MAE.rel         r</span></span>
+<span><span class="co">## 1 FRAPUE granier 1021  0.17595743 24.163733 0.2005363 27.53907 0.5843796</span></span>
+<span><span class="co">## 2 FRAPUE  sperry 1021 -0.07015506 -9.634195 0.1155844 15.87288 0.8595270</span></span>
+<span><span class="co">## 3 FRAPUE cochard 1021  0.05942236  8.160304 0.1121749 15.40466 0.7964611</span></span>
+<span><span class="co">##          NSE    NSE.abs</span></span>
+<span><span class="co">## 1 -0.4112639 -0.1436430</span></span>
+<span><span class="co">## 2  0.5396424  0.3408309</span></span>
+<span><span class="co">## 3  0.4634434  0.3602751</span></span></code></pre>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-13-1.png" width="864" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="plant-transpiration">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration"></a>
+</h4>
+<pre><code><span><span class="co">##     Site    Mode Cohort    n         Bias   Bias.rel       MAE  MAE.rel</span></span>
+<span><span class="co">## 1 FRAPUE granier T1_168 1096 -0.087579555 -25.531130 0.1497480 43.65444</span></span>
+<span><span class="co">## 2 FRAPUE  sperry T1_168 1096  0.070732462  20.619877 0.2250904 65.61819</span></span>
+<span><span class="co">## 3 FRAPUE cochard T1_168 1096  0.004049952   1.180639 0.1441344 42.01797</span></span>
+<span><span class="co">##           r        NSE    NSE.abs</span></span>
+<span><span class="co">## 1 0.6485927  0.2361046  0.1727263</span></span>
+<span><span class="co">## 2 0.6074291 -0.9363408 -0.2434978</span></span>
+<span><span class="co">## 3 0.8240708  0.2210128  0.2037383</span></span></code></pre>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-15-1.png" width="864" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="water-potentials">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials"></a>
+</h4>
+<pre><code><span><span class="co">##     Site    Mode Cohort      WP  n         Bias     Bias.rel       MAE</span></span>
+<span><span class="co">## 1 FRAPUE  sperry T1_168 Predawn 28 -1.894004046 -129.4847875 1.8940040</span></span>
+<span><span class="co">## 2 FRAPUE  sperry T1_168  Midday 28 -1.480119669  -47.4363392 1.4901674</span></span>
+<span><span class="co">## 3 FRAPUE cochard T1_168 Predawn 28  0.006253152    0.4275007 0.5057551</span></span>
+<span><span class="co">## 4 FRAPUE cochard T1_168  Midday 28  1.110867659   35.6021856 1.2383656</span></span>
+<span><span class="co">##     MAE.rel         r        NSE    NSE.abs</span></span>
+<span><span class="co">## 1 129.48479 0.8497064 -2.5444295 -0.9918387</span></span>
+<span><span class="co">## 2  47.75836 0.7403975 -4.2629157 -1.4960554</span></span>
+<span><span class="co">## 3  34.57627 0.8887362  0.6515199  0.4681202</span></span>
+<span><span class="co">## 4  39.68837 0.8498483 -2.1182754 -1.0742832</span></span></code></pre>
+</div>
 </div>
 </div>
 <div class="section level2">
-<h2 id="frahes">FRAHES<a class="anchor" aria-label="anchor" href="#frahes"></a>
+<h2 id="frahes-plot">FRAHES plot<a class="anchor" aria-label="anchor" href="#frahes-plot"></a>
 </h2>
 <div class="section level3">
-<h3 id="soil-moisture-1">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-1"></a>
+<h3 id="experimental-plot-information-1">Experimental plot information<a class="anchor" aria-label="anchor" href="#experimental-plot-information-1"></a>
 </h3>
-<table class="table">
-<colgroup>
-<col width="7%">
-<col width="8%">
-<col width="3%">
-<col width="12%">
-<col width="11%">
-<col width="11%">
-<col width="10%">
-<col width="11%">
-<col width="12%">
-<col width="12%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Site</th>
-<th align="left">Mode</th>
-<th align="right">n</th>
-<th align="right">Bias</th>
-<th align="right">Bias.rel</th>
-<th align="right">MAE</th>
-<th align="right">MAE.rel</th>
-<th align="right">r</th>
-<th align="right">NSE</th>
-<th align="right">NSE.abs</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">FRAHES</td>
-<td align="left">granier</td>
-<td align="right">43</td>
-<td align="right">-0.1151671</td>
-<td align="right">-13.87619</td>
-<td align="right">0.1346082</td>
-<td align="right">16.21860</td>
-<td align="right">0.6863663</td>
-<td align="right">-0.0942848</td>
-<td align="right">0.0624709</td>
-</tr>
-<tr class="even">
-<td align="left">FRAHES</td>
-<td align="left">sperry</td>
-<td align="right">43</td>
-<td align="right">-0.2018497</td>
-<td align="right">-24.32036</td>
-<td align="right">0.2018497</td>
-<td align="right">24.32036</td>
-<td align="right">0.9523426</td>
-<td align="right">-0.6492286</td>
-<td align="right">-0.4058577</td>
-</tr>
-<tr class="odd">
-<td align="left">FRAHES</td>
-<td align="left">cochard</td>
-<td align="right">43</td>
-<td align="right">-0.2037937</td>
-<td align="right">-24.55459</td>
-<td align="right">0.2037937</td>
-<td align="right">24.55459</td>
-<td align="right">0.8741202</td>
-<td align="right">-0.8095902</td>
-<td align="right">-0.4193975</td>
-</tr>
-</tbody>
-</table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-21-1.png" width="864" style="display: block; margin: auto;"></p>
+<pre><code><span><span class="co">##            Attribute           Value</span></span>
+<span><span class="co">## 1          Plot name           Hesse</span></span>
+<span><span class="co">## 2       Latitude (º)         48.6742</span></span>
+<span><span class="co">## 3      Longitude (º)            &lt;NA&gt;</span></span>
+<span><span class="co">## 4      Elevation (m)             300</span></span>
+<span><span class="co">## 5          Slope (º)               0</span></span>
+<span><span class="co">## 6         Aspect (º)               0</span></span>
+<span><span class="co">## 7    Parent material                </span></span>
+<span><span class="co">## 8       Soil texture                </span></span>
+<span><span class="co">## 9           MAT (ºC)            &lt;NA&gt;</span></span>
+<span><span class="co">## 10          MAP (mm)            &lt;NA&gt;</span></span>
+<span><span class="co">## 11 Stand description                </span></span>
+<span><span class="co">## 12         Stand LAI               5</span></span>
+<span><span class="co">## 13 Species simulated Fagus sylvatica</span></span></code></pre>
 </div>
 <div class="section level3">
-<h3 id="plant-transpiration-1">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-1"></a>
+<h3 id="model-inputs-1">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-1"></a>
 </h3>
-<table style="width:100%;" class="table">
-<colgroup>
-<col width="7%">
-<col width="8%">
-<col width="7%">
-<col width="5%">
-<col width="11%">
-<col width="10%">
-<col width="10%">
-<col width="9%">
-<col width="10%">
-<col width="10%">
-<col width="10%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Site</th>
-<th align="left">Mode</th>
-<th align="left">Cohort</th>
-<th align="right">n</th>
-<th align="right">Bias</th>
-<th align="right">Bias.rel</th>
-<th align="right">MAE</th>
-<th align="right">MAE.rel</th>
-<th align="right">r</th>
-<th align="right">NSE</th>
-<th align="right">NSE.abs</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">FRAHES</td>
-<td align="left">granier</td>
-<td align="left">T1_97</td>
-<td align="right">1826</td>
-<td align="right">-0.1763858</td>
-<td align="right">-51.34963</td>
-<td align="right">0.2234918</td>
-<td align="right">65.06318</td>
-<td align="right">0.8179913</td>
-<td align="right">0.3454962</td>
-<td align="right">0.4689967</td>
-</tr>
-<tr class="even">
-<td align="left">FRAHES</td>
-<td align="left">sperry</td>
-<td align="left">T1_97</td>
-<td align="right">1826</td>
-<td align="right">-0.2213958</td>
-<td align="right">-64.45300</td>
-<td align="right">0.2650631</td>
-<td align="right">77.16548</td>
-<td align="right">0.6758291</td>
-<td align="right">0.2362351</td>
-<td align="right">0.3702256</td>
-</tr>
-<tr class="odd">
-<td align="left">FRAHES</td>
-<td align="left">cochard</td>
-<td align="left">T1_97</td>
-<td align="right">1826</td>
-<td align="right">-0.2173513</td>
-<td align="right">-63.27557</td>
-<td align="right">0.2564956</td>
-<td align="right">74.67130</td>
-<td align="right">0.7048361</td>
-<td align="right">0.2595873</td>
-<td align="right">0.3905815</td>
-</tr>
-</tbody>
-</table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-23-1.png" width="864" style="display: block; margin: auto;"></p>
+<div class="section level4">
+<h4 id="vegetation-1">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-1"></a>
+</h4>
+<pre><code><span><span class="co">##           Species   DBH Height    N Z50  Z95 LAI</span></span>
+<span><span class="co">## 1 Fagus sylvatica 12.91   1300 3203 300 1200   5</span></span></code></pre>
+<pre><code><span><span class="co">## data frame with 0 columns and 0 rows</span></span></code></pre>
+</div>
+<div class="section level4">
+<h4 id="soil-1">Soil<a class="anchor" aria-label="anchor" href="#soil-1"></a>
+</h4>
+<pre><code><span><span class="co">##   widths sand clay om rfc   bd</span></span>
+<span><span class="co">## 1    200    8   25  6   9 1.16</span></span>
+<span><span class="co">## 2    300    8   35  3  13 1.37</span></span>
+<span><span class="co">## 3    500    8   45  1  15 1.58</span></span></code></pre>
+</div>
+<div class="section level4">
+<h4 id="custom-traits-1">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-1"></a>
+</h4>
+<pre><code><span><span class="co">##           Species VCleaf_P12 VCleaf_P50 VCleaf_P88 VCleaf_slope VCstem_P12</span></span>
+<span><span class="co">## 1 Fagus sylvatica         NA         NA         NA           NA         NA</span></span>
+<span><span class="co">##   VCstem_P50 VCstem_P88 VCstem_slope VCroot_P12 VCroot_P50 VCroot_P88</span></span>
+<span><span class="co">## 1         NA         NA           NA         NA         NA         NA</span></span>
+<span><span class="co">##   VCroot_slope VCleaf_kmax LeafEPS LeafPI0 LeafAF StemEPS StemPI0 StemAF Gswmin</span></span>
+<span><span class="co">## 1           NA          NA      NA      NA     NA      NA      NA     NA     NA</span></span>
+<span><span class="co">##   Gswmax Gs_P50 Gs_slope Al2As</span></span>
+<span><span class="co">## 1     NA     NA       NA    NA</span></span></code></pre>
+</div>
 </div>
 <div class="section level3">
-<h3 id="water-potentials-1">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-1"></a>
+<h3 id="evaluation-results-1">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-1"></a>
 </h3>
-</div>
-</div>
-<div class="section level2">
-<h2 id="isryat">ISRYAT<a class="anchor" aria-label="anchor" href="#isryat"></a>
-</h2>
-<div class="section level3">
-<h3 id="soil-moisture-2">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-2"></a>
-</h3>
-<table style="width:100%;" class="table">
-<colgroup>
-<col width="7%">
-<col width="8%">
-<col width="4%">
-<col width="12%">
-<col width="11%">
-<col width="11%">
-<col width="10%">
-<col width="11%">
-<col width="11%">
-<col width="11%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Site</th>
-<th align="left">Mode</th>
-<th align="right">n</th>
-<th align="right">Bias</th>
-<th align="right">Bias.rel</th>
-<th align="right">MAE</th>
-<th align="right">MAE.rel</th>
-<th align="right">r</th>
-<th align="right">NSE</th>
-<th align="right">NSE.abs</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">ISRYAT</td>
-<td align="left">granier</td>
-<td align="right">335</td>
-<td align="right">0.0938789</td>
-<td align="right">16.630009</td>
-<td align="right">0.1373036</td>
-<td align="right">24.32239</td>
-<td align="right">0.8708698</td>
-<td align="right">0.6298254</td>
-<td align="right">0.4223073</td>
-</tr>
-<tr class="even">
-<td align="left">ISRYAT</td>
-<td align="left">sperry</td>
-<td align="right">335</td>
-<td align="right">-0.0069455</td>
-<td align="right">-1.230354</td>
-<td align="right">0.1440887</td>
-<td align="right">25.52433</td>
-<td align="right">0.7977867</td>
-<td align="right">0.6128795</td>
-<td align="right">0.3937594</td>
-</tr>
-<tr class="odd">
-<td align="left">ISRYAT</td>
-<td align="left">cochard</td>
-<td align="right">335</td>
-<td align="right">0.0690529</td>
-<td align="right">12.232256</td>
-<td align="right">0.1677358</td>
-<td align="right">29.71324</td>
-<td align="right">0.6240935</td>
-<td align="right">0.2765346</td>
-<td align="right">0.2942666</td>
-</tr>
-</tbody>
-</table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-34-1.png" width="864" style="display: block; margin: auto;"></p>
-</div>
-<div class="section level3">
-<h3 id="plant-transpiration-2">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-2"></a>
-</h3>
-<table class="table">
-<colgroup>
-<col width="7%">
-<col width="8%">
-<col width="7%">
-<col width="4%">
-<col width="11%">
-<col width="10%">
-<col width="10%">
-<col width="9%">
-<col width="10%">
-<col width="11%">
-<col width="11%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Site</th>
-<th align="left">Mode</th>
-<th align="left">Cohort</th>
-<th align="right">n</th>
-<th align="right">Bias</th>
-<th align="right">Bias.rel</th>
-<th align="right">MAE</th>
-<th align="right">MAE.rel</th>
-<th align="right">r</th>
-<th align="right">NSE</th>
-<th align="right">NSE.abs</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">ISRYAT</td>
-<td align="left">granier</td>
-<td align="left">T1_148</td>
-<td align="right">344</td>
-<td align="right">-0.5236719</td>
-<td align="right">-68.30827</td>
-<td align="right">0.5262492</td>
-<td align="right">68.64446</td>
-<td align="right">0.8139307</td>
-<td align="right">-0.3869864</td>
-<td align="right">-0.1362563</td>
-</tr>
-<tr class="even">
-<td align="left">ISRYAT</td>
-<td align="left">sperry</td>
-<td align="left">T1_148</td>
-<td align="right">344</td>
-<td align="right">-0.4849972</td>
-<td align="right">-63.26351</td>
-<td align="right">0.5060817</td>
-<td align="right">66.01379</td>
-<td align="right">0.7011926</td>
-<td align="right">-0.2920098</td>
-<td align="right">-0.0927114</td>
-</tr>
-<tr class="odd">
-<td align="left">ISRYAT</td>
-<td align="left">cochard</td>
-<td align="left">T1_148</td>
-<td align="right">344</td>
-<td align="right">-0.5384362</td>
-<td align="right">-70.23415</td>
-<td align="right">0.5418092</td>
-<td align="right">70.67411</td>
-<td align="right">0.8091562</td>
-<td align="right">-0.3329100</td>
-<td align="right">-0.1698527</td>
-</tr>
-</tbody>
-</table>
+<div class="section level4">
+<h4 id="soil-moisture-1">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-1"></a>
+</h4>
+<pre><code><span><span class="co">##     Site    Mode  n       Bias  Bias.rel       MAE  MAE.rel         r</span></span>
+<span><span class="co">## 1 FRAHES granier 43 -0.1151671 -13.87619 0.1346082 16.21860 0.6863663</span></span>
+<span><span class="co">## 2 FRAHES  sperry 43 -0.2018497 -24.32036 0.2018497 24.32036 0.9523426</span></span>
+<span><span class="co">## 3 FRAHES cochard 43 -0.2037937 -24.55459 0.2037937 24.55459 0.8741202</span></span>
+<span><span class="co">##           NSE     NSE.abs</span></span>
+<span><span class="co">## 1 -0.09428481  0.06247087</span></span>
+<span><span class="co">## 2 -0.64922865 -0.40585771</span></span>
+<span><span class="co">## 3 -0.80959009 -0.41939746</span></span></code></pre>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-36-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
-<div class="section level3">
-<h3 id="water-potentials-2">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-2"></a>
-</h3>
+<div class="section level4">
+<h4 id="plant-transpiration-1">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-1"></a>
+</h4>
+<pre><code><span><span class="co">##     Site    Mode Cohort    n       Bias  Bias.rel       MAE  MAE.rel         r</span></span>
+<span><span class="co">## 1 FRAHES granier  T1_97 1826 -0.1763858 -51.34963 0.2234918 65.06318 0.8179913</span></span>
+<span><span class="co">## 2 FRAHES  sperry  T1_97 1826 -0.1418208 -41.28704 0.2163215 62.97577 0.7670387</span></span>
+<span><span class="co">## 3 FRAHES cochard  T1_97 1826 -0.2173513 -63.27557 0.2564956 74.67130 0.7048361</span></span>
+<span><span class="co">##         NSE   NSE.abs</span></span>
+<span><span class="co">## 1 0.3454962 0.4689967</span></span>
+<span><span class="co">## 2 0.4378129 0.4860328</span></span>
+<span><span class="co">## 3 0.2595873 0.3905815</span></span></code></pre>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-38-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
+<div class="section level4">
+<h4 id="water-potentials-1">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-1"></a>
+</h4>
+<pre><code><span><span class="co">##     Site    Mode Cohort    n       Bias  Bias.rel       MAE  MAE.rel         r</span></span>
+<span><span class="co">## 1 FRAHES granier  T1_97 1826 -0.1763858 -51.34963 0.2234918 65.06318 0.8179913</span></span>
+<span><span class="co">## 2 FRAHES  sperry  T1_97 1826 -0.1418208 -41.28704 0.2163215 62.97577 0.7670387</span></span>
+<span><span class="co">## 3 FRAHES cochard  T1_97 1826 -0.2173513 -63.27557 0.2564956 74.67130 0.7048361</span></span>
+<span><span class="co">##         NSE   NSE.abs</span></span>
+<span><span class="co">## 1 0.3454962 0.4689967</span></span>
+<span><span class="co">## 2 0.4378129 0.4860328</span></span>
+<span><span class="co">## 3 0.2595873 0.3905815</span></span></code></pre>
 </div>
-<div class="section level2">
-<h2 id="prades">PRADES<a class="anchor" aria-label="anchor" href="#prades"></a>
-</h2>
-<div class="section level3">
-<h3 id="soil-moisture-3">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-3"></a>
-</h3>
-<table style="width:100%;" class="table">
-<colgroup>
-<col width="7%">
-<col width="8%">
-<col width="4%">
-<col width="12%">
-<col width="11%">
-<col width="11%">
-<col width="10%">
-<col width="11%">
-<col width="11%">
-<col width="11%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Site</th>
-<th align="left">Mode</th>
-<th align="right">n</th>
-<th align="right">Bias</th>
-<th align="right">Bias.rel</th>
-<th align="right">MAE</th>
-<th align="right">MAE.rel</th>
-<th align="right">r</th>
-<th align="right">NSE</th>
-<th align="right">NSE.abs</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">PRADES</td>
-<td align="left">granier</td>
-<td align="right">363</td>
-<td align="right">0.1854026</td>
-<td align="right">29.051146</td>
-<td align="right">0.2235958</td>
-<td align="right">35.03572</td>
-<td align="right">0.8263329</td>
-<td align="right">0.2512393</td>
-<td align="right">0.0511112</td>
-</tr>
-<tr class="even">
-<td align="left">PRADES</td>
-<td align="left">sperry</td>
-<td align="right">363</td>
-<td align="right">-0.0332228</td>
-<td align="right">-5.205754</td>
-<td align="right">0.1487844</td>
-<td align="right">23.31336</td>
-<td align="right">0.7999589</td>
-<td align="right">0.5601136</td>
-<td align="right">0.3685932</td>
-</tr>
-<tr class="odd">
-<td align="left">PRADES</td>
-<td align="left">cochard</td>
-<td align="right">363</td>
-<td align="right">0.1063234</td>
-<td align="right">16.660049</td>
-<td align="right">0.1368835</td>
-<td align="right">21.44858</td>
-<td align="right">0.9124063</td>
-<td align="right">0.6683208</td>
-<td align="right">0.4190980</td>
-</tr>
-</tbody>
-</table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-47-1.png" width="864" style="display: block; margin: auto;"></p>
-</div>
-<div class="section level3">
-<h3 id="plant-transpiration-3">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-3"></a>
-</h3>
-<table class="table">
-<colgroup>
-<col width="7%">
-<col width="8%">
-<col width="7%">
-<col width="4%">
-<col width="11%">
-<col width="10%">
-<col width="10%">
-<col width="10%">
-<col width="10%">
-<col width="11%">
-<col width="11%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Site</th>
-<th align="left">Mode</th>
-<th align="left">Cohort</th>
-<th align="right">n</th>
-<th align="right">Bias</th>
-<th align="right">Bias.rel</th>
-<th align="right">MAE</th>
-<th align="right">MAE.rel</th>
-<th align="right">r</th>
-<th align="right">NSE</th>
-<th align="right">NSE.abs</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">PRADES</td>
-<td align="left">granier</td>
-<td align="left">T1_153</td>
-<td align="right">362</td>
-<td align="right">0.1958834</td>
-<td align="right">94.37769</td>
-<td align="right">0.2189727</td>
-<td align="right">105.50226</td>
-<td align="right">0.5941152</td>
-<td align="right">-1.4280751</td>
-<td align="right">-0.2099073</td>
-</tr>
-<tr class="even">
-<td align="left">PRADES</td>
-<td align="left">granier</td>
-<td align="left">T2_168</td>
-<td align="right">253</td>
-<td align="right">-0.0312491</td>
-<td align="right">-16.29986</td>
-<td align="right">0.0890232</td>
-<td align="right">46.43546</td>
-<td align="right">0.7967687</td>
-<td align="right">0.5880649</td>
-<td align="right">0.4533928</td>
-</tr>
-<tr class="odd">
-<td align="left">PRADES</td>
-<td align="left">sperry</td>
-<td align="left">T1_153</td>
-<td align="right">362</td>
-<td align="right">-0.1124989</td>
-<td align="right">-54.20258</td>
-<td align="right">0.1302893</td>
-<td align="right">62.77413</td>
-<td align="right">0.7066369</td>
-<td align="right">0.2359929</td>
-<td align="right">0.2801019</td>
-</tr>
-<tr class="even">
-<td align="left">PRADES</td>
-<td align="left">sperry</td>
-<td align="left">T2_168</td>
-<td align="right">253</td>
-<td align="right">0.0450971</td>
-<td align="right">23.52312</td>
-<td align="right">0.1669304</td>
-<td align="right">87.07266</td>
-<td align="right">0.7018740</td>
-<td align="right">-0.6430119</td>
-<td align="right">-0.0249612</td>
-</tr>
-<tr class="odd">
-<td align="left">PRADES</td>
-<td align="left">cochard</td>
-<td align="left">T1_153</td>
-<td align="right">362</td>
-<td align="right">0.0250714</td>
-<td align="right">12.07955</td>
-<td align="right">0.1415184</td>
-<td align="right">68.18433</td>
-<td align="right">0.8039801</td>
-<td align="right">-0.3231549</td>
-<td align="right">0.2180572</td>
-</tr>
-<tr class="even">
-<td align="left">PRADES</td>
-<td align="left">cochard</td>
-<td align="left">T2_168</td>
-<td align="right">253</td>
-<td align="right">0.0542673</td>
-<td align="right">28.30639</td>
-<td align="right">0.0927645</td>
-<td align="right">48.38694</td>
-<td align="right">0.8611090</td>
-<td align="right">0.5097086</td>
-<td align="right">0.4304212</td>
-</tr>
-</tbody>
-</table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-49-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-49-2.png" width="864" style="display: block; margin: auto;"></p>
-</div>
-<div class="section level3">
-<h3 id="water-potentials-3">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-3"></a>
-</h3>
-<table class="table">
-<colgroup>
-<col width="6%">
-<col width="7%">
-<col width="6%">
-<col width="7%">
-<col width="2%">
-<col width="10%">
-<col width="10%">
-<col width="9%">
-<col width="9%">
-<col width="9%">
-<col width="10%">
-<col width="10%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Site</th>
-<th align="left">Mode</th>
-<th align="left">Cohort</th>
-<th align="left">WP</th>
-<th align="right">n</th>
-<th align="right">Bias</th>
-<th align="right">Bias.rel</th>
-<th align="right">MAE</th>
-<th align="right">MAE.rel</th>
-<th align="right">r</th>
-<th align="right">NSE</th>
-<th align="right">NSE.abs</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">sperry</td>
-<td align="left">T1_153</td>
-<td align="left">Predawn</td>
-<td align="right">1</td>
-<td align="right">-1.2864859</td>
-<td align="right">-145.98421</td>
-<td align="right">1.2864859</td>
-<td align="right">145.98421</td>
-<td align="right">NA</td>
-<td align="right">-Inf</td>
-<td align="right">-Inf</td>
-</tr>
-<tr class="even">
-<td align="left">FRAPUE</td>
-<td align="left">sperry</td>
-<td align="left">T1_153</td>
-<td align="left">Midday</td>
-<td align="right">1</td>
-<td align="right">-0.7990959</td>
-<td align="right">-47.28378</td>
-<td align="right">0.7990959</td>
-<td align="right">47.28378</td>
-<td align="right">NA</td>
-<td align="right">-Inf</td>
-<td align="right">-Inf</td>
-</tr>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">sperry</td>
-<td align="left">T2_168</td>
-<td align="left">Predawn</td>
-<td align="right">4</td>
-<td align="right">-2.3900625</td>
-<td align="right">-81.44924</td>
-<td align="right">2.3900625</td>
-<td align="right">81.44924</td>
-<td align="right">0.7033769</td>
-<td align="right">-3.5116805</td>
-<td align="right">-1.1753443</td>
-</tr>
-<tr class="even">
-<td align="left">FRAPUE</td>
-<td align="left">sperry</td>
-<td align="left">T2_168</td>
-<td align="left">Midday</td>
-<td align="right">4</td>
-<td align="right">-2.0987690</td>
-<td align="right">-59.04971</td>
-<td align="right">2.0987690</td>
-<td align="right">59.04971</td>
-<td align="right">0.6297046</td>
-<td align="right">-2.6532171</td>
-<td align="right">-1.0644385</td>
-</tr>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">cochard</td>
-<td align="left">T1_153</td>
-<td align="left">Predawn</td>
-<td align="right">1</td>
-<td align="right">0.6659771</td>
-<td align="right">75.57186</td>
-<td align="right">0.6659771</td>
-<td align="right">75.57186</td>
-<td align="right">NA</td>
-<td align="right">-Inf</td>
-<td align="right">-Inf</td>
-</tr>
-<tr class="even">
-<td align="left">FRAPUE</td>
-<td align="left">cochard</td>
-<td align="left">T1_153</td>
-<td align="left">Midday</td>
-<td align="right">1</td>
-<td align="right">0.9098978</td>
-<td align="right">53.84010</td>
-<td align="right">0.9098978</td>
-<td align="right">53.84010</td>
-<td align="right">NA</td>
-<td align="right">-Inf</td>
-<td align="right">-Inf</td>
-</tr>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">cochard</td>
-<td align="left">T2_168</td>
-<td align="left">Predawn</td>
-<td align="right">4</td>
-<td align="right">0.4976926</td>
-<td align="right">16.96051</td>
-<td align="right">0.9121353</td>
-<td align="right">31.08401</td>
-<td align="right">0.9814155</td>
-<td align="right">0.4784753</td>
-<td align="right">0.1698090</td>
-</tr>
-<tr class="even">
-<td align="left">FRAPUE</td>
-<td align="left">cochard</td>
-<td align="left">T2_168</td>
-<td align="left">Midday</td>
-<td align="right">4</td>
-<td align="right">0.8923887</td>
-<td align="right">25.10772</td>
-<td align="right">1.0315616</td>
-<td align="right">29.02340</td>
-<td align="right">0.9968147</td>
-<td align="right">0.2212831</td>
-<td align="right">-0.0146879</td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
 <div class="section level2">
-<h2 id="fonbla">FONBLA<a class="anchor" aria-label="anchor" href="#fonbla"></a>
+<h2 id="isryat-plot">ISRYAT plot<a class="anchor" aria-label="anchor" href="#isryat-plot"></a>
 </h2>
 <div class="section level3">
-<h3 id="soil-moisture-4">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-4"></a>
+<h3 id="experimental-plot-information-2">Experimental plot information<a class="anchor" aria-label="anchor" href="#experimental-plot-information-2"></a>
 </h3>
-<table style="width:100%;" class="table">
-<colgroup>
-<col width="8%">
-<col width="9%">
-<col width="4%">
-<col width="11%">
-<col width="10%">
-<col width="11%">
-<col width="10%">
-<col width="11%">
-<col width="11%">
-<col width="11%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Site</th>
-<th align="left">Mode</th>
-<th align="right">n</th>
-<th align="right">Bias</th>
-<th align="right">Bias.rel</th>
-<th align="right">MAE</th>
-<th align="right">MAE.rel</th>
-<th align="right">r</th>
-<th align="right">NSE</th>
-<th align="right">NSE.abs</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">FONBLA</td>
-<td align="left">granier</td>
-<td align="right">364</td>
-<td align="right">0.1505631</td>
-<td align="right">21.46844</td>
-<td align="right">0.1823434</td>
-<td align="right">25.99992</td>
-<td align="right">0.7081003</td>
-<td align="right">0.0870244</td>
-<td align="right">0.1262574</td>
-</tr>
-<tr class="even">
-<td align="left">FONBLA</td>
-<td align="left">sperry</td>
-<td align="right">364</td>
-<td align="right">0.0746035</td>
-<td align="right">10.63754</td>
-<td align="right">0.1370191</td>
-<td align="right">19.53723</td>
-<td align="right">0.7980342</td>
-<td align="right">0.5175409</td>
-<td align="right">0.3434400</td>
-</tr>
-<tr class="odd">
-<td align="left">FONBLA</td>
-<td align="left">cochard</td>
-<td align="right">364</td>
-<td align="right">0.0851096</td>
-<td align="right">12.13558</td>
-<td align="right">0.1355635</td>
-<td align="right">19.32969</td>
-<td align="right">0.8141788</td>
-<td align="right">0.5244655</td>
-<td align="right">0.3504145</td>
-</tr>
-</tbody>
-</table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-60-1.png" width="864" style="display: block; margin: auto;"></p>
+<pre><code><span><span class="co">##            Attribute            Value</span></span>
+<span><span class="co">## 1          Plot name            Yatir</span></span>
+<span><span class="co">## 2       Latitude (º)           31.345</span></span>
+<span><span class="co">## 3      Longitude (º)             &lt;NA&gt;</span></span>
+<span><span class="co">## 4      Elevation (m)              650</span></span>
+<span><span class="co">## 5          Slope (º)                0</span></span>
+<span><span class="co">## 6         Aspect (º)                0</span></span>
+<span><span class="co">## 7    Parent material                 </span></span>
+<span><span class="co">## 8       Soil texture                 </span></span>
+<span><span class="co">## 9           MAT (ºC)             &lt;NA&gt;</span></span>
+<span><span class="co">## 10          MAP (mm)             &lt;NA&gt;</span></span>
+<span><span class="co">## 11 Stand description                 </span></span>
+<span><span class="co">## 12         Stand LAI              1.5</span></span>
+<span><span class="co">## 13 Species simulated Pinus halepensis</span></span></code></pre>
 </div>
 <div class="section level3">
-<h3 id="plant-transpiration-4">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-4"></a>
+<h3 id="model-inputs-2">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-2"></a>
 </h3>
-<table style="width:100%;" class="table">
-<colgroup>
-<col width="7%">
-<col width="8%">
-<col width="7%">
-<col width="4%">
-<col width="11%">
-<col width="10%">
-<col width="10%">
-<col width="10%">
-<col width="10%">
-<col width="12%">
-<col width="11%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Site</th>
-<th align="left">Mode</th>
-<th align="left">Cohort</th>
-<th align="right">n</th>
-<th align="right">Bias</th>
-<th align="right">Bias.rel</th>
-<th align="right">MAE</th>
-<th align="right">MAE.rel</th>
-<th align="right">r</th>
-<th align="right">NSE</th>
-<th align="right">NSE.abs</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">FONBLA</td>
-<td align="left">granier</td>
-<td align="left">T2_148</td>
-<td align="right">300</td>
-<td align="right">0.1954687</td>
-<td align="right">95.03920</td>
-<td align="right">0.2163145</td>
-<td align="right">105.17466</td>
-<td align="right">0.3725291</td>
-<td align="right">-6.5937035</td>
-<td align="right">-1.1859690</td>
-</tr>
-<tr class="even">
-<td align="left">FONBLA</td>
-<td align="left">granier</td>
-<td align="left">T3_168</td>
-<td align="right">309</td>
-<td align="right">-0.0815908</td>
-<td align="right">-28.18737</td>
-<td align="right">0.1031204</td>
-<td align="right">35.62527</td>
-<td align="right">0.8166784</td>
-<td align="right">0.4309776</td>
-<td align="right">0.2974624</td>
-</tr>
-<tr class="odd">
-<td align="left">FONBLA</td>
-<td align="left">sperry</td>
-<td align="left">T2_148</td>
-<td align="right">300</td>
-<td align="right">0.0557513</td>
-<td align="right">27.10695</td>
-<td align="right">0.1072170</td>
-<td align="right">52.13018</td>
-<td align="right">0.6029784</td>
-<td align="right">-0.9195415</td>
-<td align="right">-0.0834830</td>
-</tr>
-<tr class="even">
-<td align="left">FONBLA</td>
-<td align="left">sperry</td>
-<td align="left">T3_168</td>
-<td align="right">309</td>
-<td align="right">0.0934671</td>
-<td align="right">32.29032</td>
-<td align="right">0.1093264</td>
-<td align="right">37.76927</td>
-<td align="right">0.8915845</td>
-<td align="right">0.2830195</td>
-<td align="right">0.2551822</td>
-</tr>
-<tr class="odd">
-<td align="left">FONBLA</td>
-<td align="left">cochard</td>
-<td align="left">T2_148</td>
-<td align="right">300</td>
-<td align="right">0.0793288</td>
-<td align="right">38.57062</td>
-<td align="right">0.2531704</td>
-<td align="right">123.09444</td>
-<td align="right">0.3292795</td>
-<td align="right">-10.2856625</td>
-<td align="right">-1.5584169</td>
-</tr>
-<tr class="even">
-<td align="left">FONBLA</td>
-<td align="left">cochard</td>
-<td align="left">T3_168</td>
-<td align="right">309</td>
-<td align="right">0.0463675</td>
-<td align="right">16.01869</td>
-<td align="right">0.1090965</td>
-<td align="right">37.68983</td>
-<td align="right">0.8062543</td>
-<td align="right">0.2343640</td>
-<td align="right">0.2567487</td>
-</tr>
-</tbody>
-</table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-62-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-62-2.png" width="864" style="display: block; margin: auto;"></p>
+<div class="section level4">
+<h4 id="vegetation-2">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-2"></a>
+</h4>
+<pre><code><span><span class="co">##            Species  DBH Height   N Z50  Z95 LAI</span></span>
+<span><span class="co">## 1 Pinus halepensis 19.8   1020 300 400 2500 1.5</span></span></code></pre>
+<pre><code><span><span class="co">## data frame with 0 columns and 0 rows</span></span></code></pre>
+</div>
+<div class="section level4">
+<h4 id="soil-2">Soil<a class="anchor" aria-label="anchor" href="#soil-2"></a>
+</h4>
+<pre><code><span><span class="co">##   widths sand clay om   bd rfc</span></span>
+<span><span class="co">## 1    200   31   28  6 1.45  75</span></span>
+<span><span class="co">## 2    300   31   28  3 1.45  75</span></span>
+<span><span class="co">## 3   3000   31   28  1 1.45  92</span></span></code></pre>
+</div>
+<div class="section level4">
+<h4 id="custom-traits-2">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-2"></a>
+</h4>
+<pre><code><span><span class="co">##            Species VCleaf_P12 VCleaf_P50 VCleaf_P88 VCleaf_slope VCstem_P12</span></span>
+<span><span class="co">## 1 Pinus halepensis  -3.707158      -4.79  -5.872842           46  -3.707158</span></span>
+<span><span class="co">##   VCstem_P50 VCstem_P88 VCstem_slope VCroot_P12 VCroot_P50 VCroot_P88</span></span>
+<span><span class="co">## 1      -4.79  -5.872842           46         -1  -1.741565  -2.301482</span></span>
+<span><span class="co">##   VCroot_slope VCleaf_kmax LeafEPS LeafPI0 LeafAF StemEPS StemPI0 StemAF Gswmin</span></span>
+<span><span class="co">## 1           NA           4    5.31    -1.5    0.6       5   -1.65    0.4  0.001</span></span>
+<span><span class="co">##   Gswmax    Gs_P50 Gs_slope Al2As</span></span>
+<span><span class="co">## 1 0.2175 -1.871216  97.4359    NA</span></span></code></pre>
+</div>
 </div>
 <div class="section level3">
-<h3 id="water-potentials-4">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-4"></a>
+<h3 id="evaluation-results-2">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-2"></a>
 </h3>
-<table class="table">
-<colgroup>
-<col width="6%">
-<col width="7%">
-<col width="6%">
-<col width="7%">
-<col width="2%">
-<col width="9%">
-<col width="8%">
-<col width="9%">
-<col width="8%">
-<col width="9%">
-<col width="11%">
-<col width="10%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">Site</th>
-<th align="left">Mode</th>
-<th align="left">Cohort</th>
-<th align="left">WP</th>
-<th align="right">n</th>
-<th align="right">Bias</th>
-<th align="right">Bias.rel</th>
-<th align="right">MAE</th>
-<th align="right">MAE.rel</th>
-<th align="right">r</th>
-<th align="right">NSE</th>
-<th align="right">NSE.abs</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">sperry</td>
-<td align="left">T2_148</td>
-<td align="left">Predawn</td>
-<td align="right">3</td>
-<td align="right">0.8611783</td>
-<td align="right">44.27652</td>
-<td align="right">0.8611783</td>
-<td align="right">44.27652</td>
-<td align="right">0.9965277</td>
-<td align="right">-3.0409566</td>
-<td align="right">-1.4220641</td>
-</tr>
-<tr class="even">
-<td align="left">FRAPUE</td>
-<td align="left">sperry</td>
-<td align="left">T2_148</td>
-<td align="left">Midday</td>
-<td align="right">3</td>
-<td align="right">0.9643989</td>
-<td align="right">36.14990</td>
-<td align="right">0.9643989</td>
-<td align="right">36.14990</td>
-<td align="right">0.9888488</td>
-<td align="right">-17.7492845</td>
-<td align="right">-4.1561923</td>
-</tr>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">sperry</td>
-<td align="left">T3_168</td>
-<td align="left">Predawn</td>
-<td align="right">3</td>
-<td align="right">0.4236272</td>
-<td align="right">27.91102</td>
-<td align="right">0.4236272</td>
-<td align="right">27.91102</td>
-<td align="right">0.9995259</td>
-<td align="right">0.3391260</td>
-<td align="right">0.0428507</td>
-</tr>
-<tr class="even">
-<td align="left">FRAPUE</td>
-<td align="left">sperry</td>
-<td align="left">T3_168</td>
-<td align="left">Midday</td>
-<td align="right">3</td>
-<td align="right">0.6190609</td>
-<td align="right">22.68546</td>
-<td align="right">0.6190609</td>
-<td align="right">22.68546</td>
-<td align="right">0.9718487</td>
-<td align="right">-1.6514397</td>
-<td align="right">-0.9124306</td>
-</tr>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">cochard</td>
-<td align="left">T2_148</td>
-<td align="left">Predawn</td>
-<td align="right">1</td>
-<td align="right">0.9013778</td>
-<td align="right">63.85203</td>
-<td align="right">0.9013778</td>
-<td align="right">63.85203</td>
-<td align="right">NA</td>
-<td align="right">-Inf</td>
-<td align="right">-Inf</td>
-</tr>
-<tr class="even">
-<td align="left">FRAPUE</td>
-<td align="left">cochard</td>
-<td align="left">T2_148</td>
-<td align="left">Midday</td>
-<td align="right">1</td>
-<td align="right">1.1903404</td>
-<td align="right">49.70106</td>
-<td align="right">1.1903404</td>
-<td align="right">49.70106</td>
-<td align="right">NA</td>
-<td align="right">-Inf</td>
-<td align="right">-Inf</td>
-</tr>
-<tr class="odd">
-<td align="left">FRAPUE</td>
-<td align="left">cochard</td>
-<td align="left">T3_168</td>
-<td align="left">Predawn</td>
-<td align="right">3</td>
-<td align="right">0.4427749</td>
-<td align="right">29.17258</td>
-<td align="right">0.4427749</td>
-<td align="right">29.17258</td>
-<td align="right">0.9961493</td>
-<td align="right">0.2638482</td>
-<td align="right">-0.0004119</td>
-</tr>
-<tr class="even">
-<td align="left">FRAPUE</td>
-<td align="left">cochard</td>
-<td align="left">T3_168</td>
-<td align="left">Midday</td>
-<td align="right">3</td>
-<td align="right">1.1804912</td>
-<td align="right">43.25904</td>
-<td align="right">1.1804912</td>
-<td align="right">43.25904</td>
-<td align="right">0.9878493</td>
-<td align="right">-8.5425367</td>
-<td align="right">-2.6468263</td>
-</tr>
-</tbody>
-</table>
-<!-- ## PRADES --><!-- ```{r} --><!-- params$code = 'PRADES' --><!-- site_data <- medfatereports::load_list(params$code) --><!-- ``` --><!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} --><!-- ``` --><!-- ## FRAPUE --><!-- ```{r} --><!-- params$code = 'FRAPUE' --><!-- site_data <- medfatereports::load_list(params$code) --><!-- ``` --><!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} --><!-- ``` --><!-- ## FONBLA --><!-- ```{r} --><!-- params$code = 'FONBLA' --><!-- site_data <- medfatereports::load_list(params$code) --><!-- ``` --><!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} --><!-- ``` --><!-- ## ESPALTARM --><!-- ```{r} --><!-- params$code = 'ESPALTARM' --><!-- site_data <- medfatereports::load_list(params$code) --><!-- ``` --><!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} --><!-- ``` --><!-- ## CAN BALASC --><!-- ```{r} --><!-- params$code = 'CANBALASC' --><!-- site_data <- medfatereports::load_list(params$code) --><!-- ``` --><!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} --><!-- ``` -->
+<div class="section level4">
+<h4 id="soil-moisture-2">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-2"></a>
+</h4>
+<pre><code><span><span class="co">##     Site    Mode   n         Bias  Bias.rel       MAE  MAE.rel         r</span></span>
+<span><span class="co">## 1 ISRYAT granier 335  0.093878928 16.630009 0.1373036 24.32239 0.8708698</span></span>
+<span><span class="co">## 2 ISRYAT  sperry 335 -0.006945536 -1.230354 0.1440887 25.52433 0.7977867</span></span>
+<span><span class="co">## 3 ISRYAT cochard 335  0.069052940 12.232256 0.1677358 29.71324 0.6240935</span></span>
+<span><span class="co">##         NSE   NSE.abs</span></span>
+<span><span class="co">## 1 0.6298254 0.4223073</span></span>
+<span><span class="co">## 2 0.6128795 0.3937594</span></span>
+<span><span class="co">## 3 0.2765346 0.2942666</span></span></code></pre>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-59-1.png" width="864" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="plant-transpiration-2">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-2"></a>
+</h4>
+<pre><code><span><span class="co">##     Site    Mode Cohort   n       Bias  Bias.rel       MAE  MAE.rel         r</span></span>
+<span><span class="co">## 1 ISRYAT granier T1_148 344 -0.5236719 -68.30827 0.5262492 68.64446 0.8139307</span></span>
+<span><span class="co">## 2 ISRYAT  sperry T1_148 344 -0.4849972 -63.26351 0.5060817 66.01379 0.7011926</span></span>
+<span><span class="co">## 3 ISRYAT cochard T1_148 344 -0.5384362 -70.23415 0.5418092 70.67411 0.8091562</span></span>
+<span><span class="co">##          NSE     NSE.abs</span></span>
+<span><span class="co">## 1 -0.3869864 -0.13625632</span></span>
+<span><span class="co">## 2 -0.2920098 -0.09271144</span></span>
+<span><span class="co">## 3 -0.3329100 -0.16985268</span></span></code></pre>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-61-1.png" width="864" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="water-potentials-2">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-2"></a>
+</h4>
+<pre><code><span><span class="co">##     Site    Mode Cohort   n       Bias  Bias.rel       MAE  MAE.rel         r</span></span>
+<span><span class="co">## 1 ISRYAT granier T1_148 344 -0.5236719 -68.30827 0.5262492 68.64446 0.8139307</span></span>
+<span><span class="co">## 2 ISRYAT  sperry T1_148 344 -0.4849972 -63.26351 0.5060817 66.01379 0.7011926</span></span>
+<span><span class="co">## 3 ISRYAT cochard T1_148 344 -0.5384362 -70.23415 0.5418092 70.67411 0.8091562</span></span>
+<span><span class="co">##          NSE     NSE.abs</span></span>
+<span><span class="co">## 1 -0.3869864 -0.13625632</span></span>
+<span><span class="co">## 2 -0.2920098 -0.09271144</span></span>
+<span><span class="co">## 3 -0.3329100 -0.16985268</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="prades-plot">PRADES plot<a class="anchor" aria-label="anchor" href="#prades-plot"></a>
+</h2>
+<div class="section level3">
+<h3 id="experimental-plot-information-3">Experimental plot information<a class="anchor" aria-label="anchor" href="#experimental-plot-information-3"></a>
+</h3>
+<pre><code><span><span class="co">##            Attribute</span></span>
+<span><span class="co">## 1          Plot name</span></span>
+<span><span class="co">## 2       Latitude (º)</span></span>
+<span><span class="co">## 3      Longitude (º)</span></span>
+<span><span class="co">## 4      Elevation (m)</span></span>
+<span><span class="co">## 5          Slope (º)</span></span>
+<span><span class="co">## 6         Aspect (º)</span></span>
+<span><span class="co">## 7    Parent material</span></span>
+<span><span class="co">## 8       Soil texture</span></span>
+<span><span class="co">## 9           MAT (ºC)</span></span>
+<span><span class="co">## 10          MAP (mm)</span></span>
+<span><span class="co">## 11 Stand description</span></span>
+<span><span class="co">## 12         Stand LAI</span></span>
+<span><span class="co">## 13 Species simulated</span></span>
+<span><span class="co">##                                                             Value</span></span>
+<span><span class="co">## 1                                         Prades (Titllar valley)</span></span>
+<span><span class="co">## 2                                                           41.33</span></span>
+<span><span class="co">## 3                                                            1.02</span></span>
+<span><span class="co">## 4                                                            1018</span></span>
+<span><span class="co">## 5                                                              35</span></span>
+<span><span class="co">## 6                                                            8.53</span></span>
+<span><span class="co">## 7                                                Fractured schist</span></span>
+<span><span class="co">## 8                                                       Clay loam</span></span>
+<span><span class="co">## 9                                                            11.3</span></span>
+<span><span class="co">## 10                                                            664</span></span>
+<span><span class="co">## 11 Mixed forest with P. sylvestris (overstory) Q. ilex (midstory)</span></span>
+<span><span class="co">## 12                                                           3.27</span></span>
+<span><span class="co">## 13                                 Quercus ilex, Pinus sylvestris</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="model-inputs-3">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-3"></a>
+</h3>
+<div class="section level4">
+<h4 id="vegetation-3">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-3"></a>
+</h4>
+<pre><code><span><span class="co">##            Species  DBH Height    N Z50  Z95  LAI</span></span>
+<span><span class="co">## 1 Pinus sylvestris 27.7   1424  257 300 1200 0.58</span></span>
+<span><span class="co">## 2     Quercus ilex  8.4    500 2913 529 2287 2.69</span></span></code></pre>
+<pre><code><span><span class="co">## data frame with 0 columns and 0 rows</span></span></code></pre>
+</div>
+<div class="section level4">
+<h4 id="soil-3">Soil<a class="anchor" aria-label="anchor" href="#soil-3"></a>
+</h4>
+<pre><code><span><span class="co">##   widths clay sand om  bd rfc</span></span>
+<span><span class="co">## 1    300   21   47  4 1.5  45</span></span>
+<span><span class="co">## 2    700   19   48  4 1.5  70</span></span>
+<span><span class="co">## 3   1000   19   48  4 1.5  85</span></span>
+<span><span class="co">## 4   2500   19   48  4 1.5  90</span></span></code></pre>
+</div>
+<div class="section level4">
+<h4 id="custom-traits-3">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-3"></a>
+</h4>
+<pre><code><span><span class="co">##            Species VCleaf_P12 VCleaf_P50 VCleaf_P88 VCleaf_slope VCstem_P12</span></span>
+<span><span class="co">## 1 Pinus sylvestris         NA         NA         NA           NA -0.9930548</span></span>
+<span><span class="co">## 2     Quercus ilex  -4.004731      -5.25  -6.495269           40 -4.7396415</span></span>
+<span><span class="co">##   VCstem_P50 VCstem_P88 VCstem_slope VCroot_P12 VCroot_P50 VCroot_P88</span></span>
+<span><span class="co">## 1       -3.2  -5.406945        22.57 -0.2474341      -1.65  -3.052566</span></span>
+<span><span class="co">## 2       -6.4  -8.060358        30.00 -2.0047311      -3.25  -4.495269</span></span>
+<span><span class="co">##   VCroot_slope VCleaf_kmax LeafEPS LeafPI0 LeafAF StemEPS StemPI0 StemAF Gswmin</span></span>
+<span><span class="co">## 1     35.51402        4.00    5.31    -1.5    0.6       5   -1.65    0.4  0.001</span></span>
+<span><span class="co">## 2     40.00000        2.63   15.00    -2.5    0.4      15   -2.50    0.4  0.002</span></span>
+<span><span class="co">##   Gswmax    Gs_P50 Gs_slope     Al2As</span></span>
+<span><span class="co">## 1   0.18 -1.871216 97.43590  790.9582</span></span>
+<span><span class="co">## 2   0.20 -2.114188 44.70588 1310.7563</span></span></code></pre>
+</div>
+</div>
+<div class="section level3">
+<h3 id="evaluation-results-3">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-3"></a>
+</h3>
+<div class="section level4">
+<h4 id="soil-moisture-3">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-3"></a>
+</h4>
+<pre><code><span><span class="co">##     Site    Mode   n        Bias  Bias.rel       MAE  MAE.rel         r</span></span>
+<span><span class="co">## 1 PRADES granier 363  0.18540260 29.051146 0.2235958 35.03572 0.8263329</span></span>
+<span><span class="co">## 2 PRADES  sperry 363 -0.03590764 -5.626447 0.1468471 23.00979 0.8017732</span></span>
+<span><span class="co">## 3 PRADES cochard 363  0.10632339 16.660049 0.1368835 21.44858 0.9124063</span></span>
+<span><span class="co">##         NSE    NSE.abs</span></span>
+<span><span class="co">## 1 0.2512393 0.05111116</span></span>
+<span><span class="co">## 2 0.5669605 0.37681490</span></span>
+<span><span class="co">## 3 0.6683208 0.41909799</span></span></code></pre>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-82-1.png" width="864" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="plant-transpiration-3">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-3"></a>
+</h4>
+<pre><code><span><span class="co">##     Site    Mode Cohort   n        Bias  Bias.rel        MAE   MAE.rel</span></span>
+<span><span class="co">## 1 PRADES granier T1_153 362  0.19588336  94.37769 0.21897269 105.50226</span></span>
+<span><span class="co">## 2 PRADES granier T2_168 253 -0.03124910 -16.29986 0.08902322  46.43546</span></span>
+<span><span class="co">## 3 PRADES  sperry T1_153 362 -0.10351724 -49.87518 0.12190499  58.73450</span></span>
+<span><span class="co">## 4 PRADES  sperry T2_168 253  0.04449326  23.20816 0.16708499  87.15331</span></span>
+<span><span class="co">## 5 PRADES cochard T1_153 362  0.02507142  12.07955 0.14151837  68.18433</span></span>
+<span><span class="co">## 6 PRADES cochard T2_168 253  0.05426729  28.30639 0.09276449  48.38694</span></span>
+<span><span class="co">##           r        NSE     NSE.abs</span></span>
+<span><span class="co">## 1 0.5941152 -1.4280751 -0.20990734</span></span>
+<span><span class="co">## 2 0.7967687  0.5880649  0.45339279</span></span>
+<span><span class="co">## 3 0.6987122  0.2615924  0.32642861</span></span>
+<span><span class="co">## 4 0.7015845 -0.6449079 -0.02591055</span></span>
+<span><span class="co">## 5 0.8039801 -0.3231549  0.21805724</span></span>
+<span><span class="co">## 6 0.8611090  0.5097086  0.43042122</span></span></code></pre>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-84-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-84-2.png" width="864" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="water-potentials-3">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-3"></a>
+</h4>
+<pre><code><span><span class="co">##     Site    Mode Cohort      WP n       Bias   Bias.rel       MAE   MAE.rel</span></span>
+<span><span class="co">## 1 FRAPUE  sperry T1_153 Predawn 4 -4.0360938 -267.67876 4.0360938 267.67876</span></span>
+<span><span class="co">## 2 FRAPUE  sperry T1_153  Midday 4 -3.7666769 -202.77449 3.7666769 202.77449</span></span>
+<span><span class="co">## 3 FRAPUE  sperry T2_168 Predawn 4 -2.4051378  -81.96298 2.4051378  81.96298</span></span>
+<span><span class="co">## 4 FRAPUE  sperry T2_168  Midday 4 -2.1141633  -59.48283 2.1141633  59.48283</span></span>
+<span><span class="co">## 5 FRAPUE cochard T1_153 Predawn 1  0.6659771   75.57186 0.6659771  75.57186</span></span>
+<span><span class="co">## 6 FRAPUE cochard T1_153  Midday 1  0.9098978   53.84010 0.9098978  53.84010</span></span>
+<span><span class="co">## 7 FRAPUE cochard T2_168 Predawn 4  0.4976926   16.96051 0.9121353  31.08401</span></span>
+<span><span class="co">## 8 FRAPUE cochard T2_168  Midday 4  0.8923887   25.10772 1.0315616  29.02340</span></span>
+<span><span class="co">##           r          NSE      NSE.abs</span></span>
+<span><span class="co">## 1 0.8835780  -92.2040145  -9.45789487</span></span>
+<span><span class="co">## 2 0.5290317 -275.8755813 -17.60406346</span></span>
+<span><span class="co">## 3 0.7082556   -3.5397283  -1.18906533</span></span>
+<span><span class="co">## 4 0.6376933   -2.6721339  -1.07958102</span></span>
+<span><span class="co">## 5        NA         -Inf         -Inf</span></span>
+<span><span class="co">## 6        NA         -Inf         -Inf</span></span>
+<span><span class="co">## 7 0.9814155    0.4784753   0.16980899</span></span>
+<span><span class="co">## 8 0.9968147    0.2212831  -0.01468793</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="fonbla-plot">FONBLA plot<a class="anchor" aria-label="anchor" href="#fonbla-plot"></a>
+</h2>
+<div class="section level3">
+<h3 id="experimental-plot-information-4">Experimental plot information<a class="anchor" aria-label="anchor" href="#experimental-plot-information-4"></a>
+</h3>
+<pre><code><span><span class="co">##            Attribute                                               Value</span></span>
+<span><span class="co">## 1          Plot name                                        Font-Blanche</span></span>
+<span><span class="co">## 2       Latitude (º)                                               43.24</span></span>
+<span><span class="co">## 3      Longitude (º)                                                5.68</span></span>
+<span><span class="co">## 4      Elevation (m)                                                 420</span></span>
+<span><span class="co">## 5          Slope (º)                                                   0</span></span>
+<span><span class="co">## 6         Aspect (º)                                                   0</span></span>
+<span><span class="co">## 7    Parent material                                           Limestone</span></span>
+<span><span class="co">## 8       Soil texture                                           Clay loam</span></span>
+<span><span class="co">## 9           MAT (ºC)                                                13.5</span></span>
+<span><span class="co">## 10          MAP (mm)                                                 722</span></span>
+<span><span class="co">## 11 Stand description         Mixed forest with P. halepensis and Q. ilex</span></span>
+<span><span class="co">## 12         Stand LAI                                                   2</span></span>
+<span><span class="co">## 13 Species simulated Quercus ilex, Pinus halepensis, Phillyrea latifolia</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="model-inputs-4">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-4"></a>
+</h3>
+<div class="section level4">
+<h4 id="vegetation-4">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-4"></a>
+</h4>
+<pre><code><span><span class="co">##               Species       DBH    Height    N Z50  Z95       LAI</span></span>
+<span><span class="co">## 1 Phillyrea latifolia  2.587859  323.0000 1248 390 1470 0.2581029</span></span>
+<span><span class="co">## 2    Pinus halepensis 26.759914 1195.7667  256 300 1200 1.0035486</span></span>
+<span><span class="co">## 3        Quercus ilex  6.220031  495.5532 3104 500 2287 1.4383485</span></span></code></pre>
+<pre><code><span><span class="co">## [1] Species Cover   Height  Z50     Z95    </span></span>
+<span><span class="co">## &lt;0 rows&gt; (or 0-length row.names)</span></span></code></pre>
+</div>
+<div class="section level4">
+<h4 id="soil-4">Soil<a class="anchor" aria-label="anchor" href="#soil-4"></a>
+</h4>
+<pre><code><span><span class="co">##   widths clay sand om   bd rfc</span></span>
+<span><span class="co">## 1    300   39   26  6 1.45  50</span></span>
+<span><span class="co">## 2    700   39   26  3 1.45  65</span></span>
+<span><span class="co">## 3   1000   39   26  1 1.45  90</span></span>
+<span><span class="co">## 4   2500   39   26  1 1.45  95</span></span></code></pre>
+</div>
+<div class="section level4">
+<h4 id="custom-traits-4">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-4"></a>
+</h4>
+<pre><code><span><span class="co">##               Species VCleaf_P12 VCleaf_P50 VCleaf_P88 VCleaf_slope VCstem_P12</span></span>
+<span><span class="co">## 1 Phillyrea latifolia         NA         NA         NA           NA  -1.971750</span></span>
+<span><span class="co">## 2    Pinus halepensis         NA         NA         NA           NA  -3.707158</span></span>
+<span><span class="co">## 3        Quercus ilex         NA         NA         NA           NA  -4.739642</span></span>
+<span><span class="co">##   VCstem_P50 VCstem_P88 VCstem_slope VCroot_P12 VCroot_P50 VCroot_P88</span></span>
+<span><span class="co">## 1      -6.50 -11.028250           11         NA         NA         NA</span></span>
+<span><span class="co">## 2      -4.79  -5.872842           46         -1  -1.741565  -2.301482</span></span>
+<span><span class="co">## 3      -6.40  -8.060358           30         NA         NA         NA</span></span>
+<span><span class="co">##   VCroot_slope VCleaf_kmax LeafEPS LeafPI0 LeafAF StemEPS StemPI0 StemAF Gswmin</span></span>
+<span><span class="co">## 1           NA        3.00   12.38   -2.13    0.5   12.38   -2.13    0.4  0.002</span></span>
+<span><span class="co">## 2           NA        4.00    5.31   -1.50    0.6    5.00   -1.65    0.4  0.001</span></span>
+<span><span class="co">## 3           NA        2.63   15.00   -2.50    0.4   15.00   -2.50    0.4  0.002</span></span>
+<span><span class="co">##   Gswmax    Gs_P50 Gs_slope    Al2As</span></span>
+<span><span class="co">## 1 0.2200 -2.207094 89.41176       NA</span></span>
+<span><span class="co">## 2 0.2175 -1.871216 97.43590  631.000</span></span>
+<span><span class="co">## 3 0.2200 -2.114188 44.70588 1540.671</span></span></code></pre>
+</div>
+</div>
+<div class="section level3">
+<h3 id="evaluation-results-4">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-4"></a>
+</h3>
+<div class="section level4">
+<h4 id="soil-moisture-4">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-4"></a>
+</h4>
+<pre><code><span><span class="co">##     Site    Mode   n       Bias Bias.rel       MAE  MAE.rel         r</span></span>
+<span><span class="co">## 1 FONBLA granier 364 0.15056308 21.46844 0.1823434 25.99992 0.7081003</span></span>
+<span><span class="co">## 2 FONBLA  sperry 364 0.07460350 10.63754 0.1370191 19.53723 0.7980342</span></span>
+<span><span class="co">## 3 FONBLA cochard 364 0.08510763 12.13530 0.1355643 19.32979 0.8141743</span></span>
+<span><span class="co">##          NSE   NSE.abs</span></span>
+<span><span class="co">## 1 0.08702442 0.1262574</span></span>
+<span><span class="co">## 2 0.51754089 0.3434400</span></span>
+<span><span class="co">## 3 0.52446422 0.3504110</span></span></code></pre>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-105-1.png" width="864" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="plant-transpiration-4">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-4"></a>
+</h4>
+<pre><code><span><span class="co">##     Site    Mode Cohort   n        Bias  Bias.rel       MAE   MAE.rel         r</span></span>
+<span><span class="co">## 1 FONBLA granier T2_148 300  0.19546868  95.03920 0.2163145 105.17466 0.3725291</span></span>
+<span><span class="co">## 2 FONBLA granier T3_168 309 -0.08159076 -28.18737 0.1031204  35.62527 0.8166784</span></span>
+<span><span class="co">## 3 FONBLA  sperry T2_148 300  0.05575132  27.10695 0.1072170  52.13018 0.6029784</span></span>
+<span><span class="co">## 4 FONBLA  sperry T3_168 309  0.09346711  32.29032 0.1093264  37.76927 0.8915845</span></span>
+<span><span class="co">## 5 FONBLA cochard T2_148 300  0.07932883  38.57062 0.2531704 123.09444 0.3292795</span></span>
+<span><span class="co">## 6 FONBLA cochard T3_168 309  0.04636772  16.01877 0.1090967  37.68990 0.8062538</span></span>
+<span><span class="co">##           NSE     NSE.abs</span></span>
+<span><span class="co">## 1  -6.5937035 -1.18596897</span></span>
+<span><span class="co">## 2   0.4309776  0.29746239</span></span>
+<span><span class="co">## 3  -0.9195415 -0.08348303</span></span>
+<span><span class="co">## 4   0.2830195  0.25518224</span></span>
+<span><span class="co">## 5 -10.2856625 -1.55841686</span></span>
+<span><span class="co">## 6   0.2343610  0.25674731</span></span></code></pre>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-107-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-107-2.png" width="864" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level4">
+<h4 id="water-potentials-4">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-4"></a>
+</h4>
+<pre><code><span><span class="co">##     Site    Mode Cohort      WP n      Bias Bias.rel       MAE  MAE.rel</span></span>
+<span><span class="co">## 1 FRAPUE  sperry T2_148 Predawn 3 0.8611783 44.27652 0.8611783 44.27652</span></span>
+<span><span class="co">## 2 FRAPUE  sperry T2_148  Midday 3 0.9643989 36.14990 0.9643989 36.14990</span></span>
+<span><span class="co">## 3 FRAPUE  sperry T3_168 Predawn 3 0.4236272 27.91102 0.4236272 27.91102</span></span>
+<span><span class="co">## 4 FRAPUE  sperry T3_168  Midday 3 0.6190609 22.68546 0.6190609 22.68546</span></span>
+<span><span class="co">## 5 FRAPUE cochard T2_148 Predawn 1 0.9013778 63.85203 0.9013778 63.85203</span></span>
+<span><span class="co">## 6 FRAPUE cochard T2_148  Midday 1 1.1903404 49.70106 1.1903404 49.70106</span></span>
+<span><span class="co">## 7 FRAPUE cochard T3_168 Predawn 3 0.4427749 29.17258 0.4427749 29.17258</span></span>
+<span><span class="co">## 8 FRAPUE cochard T3_168  Midday 3 1.1804912 43.25904 1.1804912 43.25904</span></span>
+<span><span class="co">##           r         NSE       NSE.abs</span></span>
+<span><span class="co">## 1 0.9965277  -3.0409566 -1.4220640972</span></span>
+<span><span class="co">## 2 0.9888488 -17.7492845 -4.1561922942</span></span>
+<span><span class="co">## 3 0.9995259   0.3391260  0.0428506767</span></span>
+<span><span class="co">## 4 0.9718487  -1.6514397 -0.9124306034</span></span>
+<span><span class="co">## 5        NA        -Inf          -Inf</span></span>
+<span><span class="co">## 6        NA        -Inf          -Inf</span></span>
+<span><span class="co">## 7 0.9961493   0.2638482 -0.0004119017</span></span>
+<span><span class="co">## 8 0.9878493  -8.5425367 -2.6468263253</span></span></code></pre>
+<!-- ## PRADES -->
+<!-- ```{r} -->
+<!-- params$code = 'PRADES' -->
+<!-- site_data <- medfatereports::load_list(params$code) -->
+<!-- ``` -->
+<!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} -->
+<!-- ``` -->
+<!-- ## FRAPUE -->
+<!-- ```{r} -->
+<!-- params$code = 'FRAPUE' -->
+<!-- site_data <- medfatereports::load_list(params$code) -->
+<!-- ``` -->
+<!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} -->
+<!-- ``` -->
+<!-- ## FONBLA -->
+<!-- ```{r} -->
+<!-- params$code = 'FONBLA' -->
+<!-- site_data <- medfatereports::load_list(params$code) -->
+<!-- ``` -->
+<!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} -->
+<!-- ``` -->
+<!-- ## ESPALTARM -->
+<!-- ```{r} -->
+<!-- params$code = 'ESPALTARM' -->
+<!-- site_data <- medfatereports::load_list(params$code) -->
+<!-- ``` -->
+<!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} -->
+<!-- ``` -->
+<!-- ## CAN BALASC -->
+<!-- ```{r} -->
+<!-- params$code = 'CANBALASC' -->
+<!-- site_data <- medfatereports::load_list(params$code) -->
+<!-- ``` -->
+<!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} -->
+<!-- ``` -->
+</div>
 </div>
 </div>
   </div>
