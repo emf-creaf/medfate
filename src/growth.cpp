@@ -111,11 +111,7 @@ double qResp(double Tmean) {
 //   double k =10.0;
 //   return(std::max(0.0,(1.0 - exp(k*(threshold-conc)))/(1.0 - exp(k*(-conc)))));
 // }
-// // [[Rcpp::export(".growth_defoliationFraction")]]
-// double defoliationFraction(double conc, double threshold) {
-//   double k =-10.0;
-//   return(std::max(0.0,(exp(k*conc)-exp(k*threshold))/(1.0-exp(k*threshold))));
-// }
+
 
 DataFrame initPlantBiomassBalance(DataFrame ccIni, DataFrame above) {
 
@@ -393,8 +389,6 @@ List growthDayInner(List x, NumericVector meteovec,
   bool shrubDynamics = control["shrubDynamics"];
   String allocationStrategy = control["allocationStrategy"];
   if(transpirationMode=="Granier") allocationStrategy = "Al2As";
-  String cavitationRecoveryStem = control["cavitationRecoveryStem"];
-  String cavitationRecoveryLeaves = control["cavitationRecoveryLeaves"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   bool taper = control["taper"];
@@ -1163,12 +1157,9 @@ List growthDayInner(List x, NumericVector meteovec,
         }
       }
       //Decrease PLC due to new SA growth
-      if(cavitationRecoveryStem=="growth") {
-        StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth[j]/SA[j])); 
-      }
-      if(cavitationRecoveryLeaves=="growth") {
-        LeafPLC[j] = std::max(0.0, LeafPLC[j] - (deltaLAgrowth[j]/LAexpanded)); 
-      }
+      StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth[j]/SA[j])); 
+      LeafPLC[j] = std::max(0.0, LeafPLC[j] - (deltaLAgrowth[j]/LAexpanded)); 
+      
       //Increase crown buds to new SA growth
       crownBudPercent[j] = std::min(100.0, crownBudPercent[j] + 100.0*(deltaSAgrowth[j]/SA[j]));
       

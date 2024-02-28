@@ -2622,16 +2622,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // semi_implicit_integration
-void semi_implicit_integration(List network, double dt, NumericVector opt, String cavitationRecoveryStem, String cavitationRecoveryLeaves);
-RcppExport SEXP _medfate_semi_implicit_integration(SEXP networkSEXP, SEXP dtSEXP, SEXP optSEXP, SEXP cavitationRecoveryStemSEXP, SEXP cavitationRecoveryLeavesSEXP) {
+void semi_implicit_integration(List network, double dt, NumericVector opt, String stemCavitationRecovery, String leafCavitationRecovery);
+RcppExport SEXP _medfate_semi_implicit_integration(SEXP networkSEXP, SEXP dtSEXP, SEXP optSEXP, SEXP stemCavitationRecoverySEXP, SEXP leafCavitationRecoverySEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type network(networkSEXP);
     Rcpp::traits::input_parameter< double >::type dt(dtSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type opt(optSEXP);
-    Rcpp::traits::input_parameter< String >::type cavitationRecoveryStem(cavitationRecoveryStemSEXP);
-    Rcpp::traits::input_parameter< String >::type cavitationRecoveryLeaves(cavitationRecoveryLeavesSEXP);
-    semi_implicit_integration(network, dt, opt, cavitationRecoveryStem, cavitationRecoveryLeaves);
+    Rcpp::traits::input_parameter< String >::type stemCavitationRecovery(stemCavitationRecoverySEXP);
+    Rcpp::traits::input_parameter< String >::type leafCavitationRecovery(leafCavitationRecoverySEXP);
+    semi_implicit_integration(network, dt, opt, stemCavitationRecovery, leafCavitationRecovery);
     return R_NilValue;
 END_RCPP
 }

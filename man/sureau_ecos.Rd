@@ -12,8 +12,8 @@ semi_implicit_integration(
   network,
   dt,
   opt,
-  cavitationRecoveryStem = "annual",
-  cavitationRecoveryLeaves = "total"
+  stemCavitationRecovery = "annual",
+  leafCavitationRecovery = "total"
 )
 }
 \arguments{
@@ -25,7 +25,7 @@ semi_implicit_integration(
 
 \item{opt}{Option flag vector}
 
-\item{cavitationRecoveryStem, cavitationRecoveryLeaves}{A string indicating how refilling of embolized conduits is done:
+\item{stemCavitationRecovery, leafCavitationRecovery}{A string indicating how refilling of embolized conduits is done:
 \itemize{
   \item{"none" - no refilling.}
   \item{"annual" - every first day of the year.}

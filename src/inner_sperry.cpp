@@ -32,6 +32,8 @@ List initSperryNetwork(int c,
   double leaf_plc = LeafPLCVEC[c];
   if(!control["leafCavitationEffects"]) leaf_plc = 0.0;
   List HN = List::create(_["numericParams"] = control["numericParams"], 
+                         _["stemCavitationEffects"] = control["stemCavitationEffects"],
+                         _["leafCavitationEffects"] = control["leafCavitationEffects"],
                          _["psisoil"] = psiSoil,
                          _["krhizomax"] = VGrhizo_kmax,_["nsoil"] = VG_n,_["alphasoil"] = VG_alpha,
                          _["krootmax"] = sapFluidityDay*VCroot_kmax, _["rootc"] = VCroot_c[c], _["rootd"] = VCroot_d[c],
@@ -348,8 +350,10 @@ void innerSperry(List x, List input, List output, int n, double tstep,
   // Extract control variables
   List control = x["control"];
   String soilFunctions = control["soilFunctions"];
-  String cavitationRecoveryStem = control["cavitationRecoveryStem"];
-  String cavitationRecoveryLeaves = control["cavitationRecoveryLeaves"];
+  bool leafCavitationEffects = control["leafCavitationEffects"];
+  bool stemCavitationEffects = control["stemCavitationEffects"];
+  String stemCavitationRecovery = control["stemCavitationRecovery"];
+  String leafCavitationRecovery = control["leafCavitationRecovery"];
   String rhizosphereOverlap = control["rhizosphereOverlap"];
   bool plantWaterPools = (rhizosphereOverlap!="total");
   bool sunlitShade = control["sunlitShade"];
@@ -690,15 +694,19 @@ void innerSperry(List x, List input, List output, int n, double tstep,
         LeafSympPsiVEC[c] = LeafPsiVEC[c]; //Leaf symplastic compartment coupled with apoplastic compartment
         
         // Update the leaf and stem PLC
-        if(cavitationRecoveryStem!="total") {
-          StemPLCVEC[c] = std::max(StemPLCVEC[c], 1.0 - xylemConductance(StemPsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
-        } else { //Immediate refilling
-          StemPLCVEC[c] = 1.0 - xylemConductance(StemPsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
+        if(stemCavitationEffects) {
+          if(stemCavitationRecovery!="total") {
+            StemPLCVEC[c] = std::max(StemPLCVEC[c], 1.0 - xylemConductance(StemPsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
+          } else { //Immediate refilling
+            StemPLCVEC[c] = 1.0 - xylemConductance(StemPsiVEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
+          }
         }
-        if(cavitationRecoveryLeaves!="total") {
-          LeafPLCVEC[c] = std::max(LeafPLCVEC[c], 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c])); 
-        } else { //Immediate refilling
-          LeafPLCVEC[c] = 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c]); 
+        if(leafCavitationEffects) {
+          if(leafCavitationRecovery!="total") {
+            LeafPLCVEC[c] = std::max(LeafPLCVEC[c], 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c])); 
+          } else { //Immediate refilling
+            LeafPLCVEC[c] = 1.0 - xylemConductance(LeafPsiVEC[c], 1.0, VCleaf_c[c], VCleaf_d[c]); 
+          }
         }
         
         //Scale soil water extracted from leaf to cohort level

@@ -1191,9 +1191,6 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   NumericVector CR = above["CR"];
   NumericVector Loading = above["Loading"];
   
-  control["cavitationRecoveryStem"] = "growth";
-  control["cavitationRecoveryLeaves"] = "growth";
-
   String transpirationMode = control["transpirationMode"];
   if((transpirationMode!="Granier") && (transpirationMode!="Sperry") && (transpirationMode!="Cochard")) stop("Wrong Transpiration mode ('transpirationMode' should be 'Granier', 'Sperry' or 'Cochard')");
   

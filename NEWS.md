@@ -3,6 +3,7 @@
 -------------------------------
 
 # Version 4.0.0
+- Options leafCavitationEffects and stemCavitationEffects for Sperry
 - New taxonomic treatment (Name/AcceptedName)
 - Revision of Cochard sub-model
 - Replacement of vulnerability curve parameters by P12, P50 and P88

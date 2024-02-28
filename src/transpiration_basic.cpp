@@ -56,8 +56,8 @@ List transpirationBasic(List x, NumericVector meteovec,
   
   //Control parameters
   List control = x["control"];
-  String cavitationRecoveryStem = control["cavitationRecoveryStem"];
-  String cavitationRecoveryLeaves = control["cavitationRecoveryLeaves"];
+  String stemCavitationRecovery = control["stemCavitationRecovery"];
+  String leafCavitationRecovery = control["leafCavitationRecovery"];
   double cavitationRecoveryMaximumRate = control["cavitationRecoveryMaximumRate"];
   String soilFunctions = control["soilFunctions"];
   double verticalLayerSize = control["verticalLayerSize"];
@@ -261,7 +261,7 @@ List transpirationBasic(List x, NumericVector meteovec,
       for(int l=0;l<nlayers;l++) {
         Klc[l] = Psi2K(psiSoil[l], Psi_Extract[c], Exp_Extract[c]);
         //Limit Mean Kl due to previous cavitation
-        if(cavitationRecoveryStem!="total") {
+        if(stemCavitationRecovery!="total") {
           Klc[l] = std::min(Klc[l], 1.0-StemPLC[c]); 
         }
         Kunlc[l] = pow(Kunsat[l],0.5)*V(c,l);
@@ -293,7 +293,7 @@ List transpirationBasic(List x, NumericVector meteovec,
           RHOPcohV(j,l) = RHOPcohDyn(j,l)*V(c,l);
           Klc(j,l) = Psi2K(psiSoilM(c,l), Psi_Extract[c], Exp_Extract[c]);
           //Limit Mean Kl due to previous cavitation
-          if(cavitationRecoveryStem!="total") Klc(j,l) = std::min(Klc(j,l), 1.0-StemPLC[c]); 
+          if(stemCavitationRecovery!="total") Klc(j,l) = std::min(Klc(j,l), 1.0-StemPLC[c]); 
           Kunlc(j,l) = pow(KunsatM(j,l),0.5)*RHOPcohV(j,l);
         }
       }
@@ -342,12 +342,12 @@ List transpirationBasic(List x, NumericVector meteovec,
   
   //Plant water status (StemPLC, RWC, DDS)
   for(int c=0;c<numCohorts;c++) {
-    if(cavitationRecoveryStem!="total") {
+    if(stemCavitationRecovery!="total") {
       StemPLC[c] = std::max(1.0 - xylemConductance(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]), StemPLC[c]); //Track current embolism if no refill
     } else {
       StemPLC[c] = 1.0 - xylemConductance(PlantPsi[c], 1.0, VCstem_c[c], VCstem_d[c]);
     }
-    if(cavitationRecoveryLeaves!="total") {
+    if(leafCavitationRecovery!="total") {
       LeafPLC[c] = std::max(1.0 - xylemConductance(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]), LeafPLC[c]); //Track current embolism if no refill
     } else {
       LeafPLC[c] = 1.0 - xylemConductance(PlantPsi[c], 1.0, VCleaf_c[c], VCleaf_d[c]);
@@ -367,10 +367,10 @@ List transpirationBasic(List x, NumericVector meteovec,
     
     double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
     double r = cavitationRecoveryMaximumRate*std::max(0.0, (PlantPsi[c] + 1.5)/1.5);
-    if(cavitationRecoveryStem=="rate") {
+    if(stemCavitationRecovery=="rate") {
       StemPLC[c] = std::max(0.0, StemPLC[c] - (r/SAmax));
     }
-    if(cavitationRecoveryLeaves=="rate") {
+    if(leafCavitationRecovery=="rate") {
       LeafPLC[c] = std::max(0.0, LeafPLC[c] - (r/SAmax));
     }
   }

@@ -54,7 +54,8 @@
 #'       \item{\code{verticalLayerSize [= 100]}: Size of vertical layers (in cm) for the calculation of light extinction (and photosynthesis).}
 #'       \item{\code{windMeasurementHeight [= 200]}: Height (in cm) over the canopy corresponding to wind measurements.}
 #'       \item{\code{segmentedXylemVulnerability [= TRUE]}: If \code{FALSE} leaf and root vulnerability curves will be equal to those of stem.}
-#'       \item{\code{cavitationRecoveryLeaves, cavitationRecoveryStem [= "rate"]}: A string indicating how refilling of embolized leaf/stem xylem is done:
+#'       \item{\code{leafCavitationEffects, stemCavitationEffects [= FALSE/TRUE]}: A flag indicating whether cavitation effects on conductance of leaves and stem are applied. Only relevant for \code{transpirationMode = "Sperry"}.}
+#'       \item{\code{leafCavitationRecovery, stemCavitationRecovery [= "rate"]}: A string indicating how recovery of previous cavitation leaf/stem xylem is done (only relevant for functions \code{\link{spwb}} and \code{\link{spwb_day}}):
 #'           \itemize{
 #'             \item{"none" - no recovery.}
 #'             \item{"annual" - every first day of the year.}
@@ -206,8 +207,8 @@ defaultControl<-function(transpirationMode = "Granier") {
     verticalLayerSize = 100,
     windMeasurementHeight = 200,
     segmentedXylemVulnerability = TRUE,
-    cavitationRecoveryStem = "rate",
-    cavitationRecoveryLeaves = "rate",
+    stemCavitationRecovery = "rate",
+    leafCavitationRecovery = "rate",
     
     #spwb with granier
     hydraulicRedistributionFraction = 0.1,
@@ -231,6 +232,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     #spwb with sperry
     numericParams=list(maxNsteps = 400, ntrial = 200, psiTol = 0.0001, ETol = 0.0000001),
     leafCavitationEffects = FALSE,
+    stemCavitationEffects = TRUE,
     
     #spwb with cochard
     stomatalSubmodel = "Baldocchi",

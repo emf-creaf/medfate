@@ -64,8 +64,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
   double thermalCapacityLAI = control["thermalCapacityLAI"];
   bool multiLayerBalance = control["multiLayerBalance"];
   double defaultWindSpeed = control["defaultWindSpeed"];
-  String cavitationRecoveryStem = control["cavitationRecoveryStem"];
-  String cavitationRecoveryLeaves = control["cavitationRecoveryLeaves"];
+  String stemCavitationRecovery = control["stemCavitationRecovery"];
+  String leafCavitationRecovery = control["leafCavitationRecovery"];
   double cavitationRecoveryMaximumRate = control["cavitationRecoveryMaximumRate"];
   bool sapFluidityVariation = control["sapFluidityVariation"];
 
@@ -1160,10 +1160,10 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     
     double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
     double r = cavitationRecoveryMaximumRate*std::max(0.0, (StemSympPsiVEC[c] + 1.5)/1.5);
-    if(cavitationRecoveryStem=="rate") {
+    if(stemCavitationRecovery=="rate") {
       StemPLCVEC[c] = std::max(0.0, StemPLCVEC[c] - (r/SAmax));
     }
-    if(cavitationRecoveryLeaves=="rate") {
+    if(leafCavitationRecovery=="rate") {
       LeafPLCVEC[c] = std::max(0.0, LeafPLCVEC[c] - (r/SAmax));
     }
   }

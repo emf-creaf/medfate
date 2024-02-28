@@ -153,8 +153,8 @@ Apart from data inputs, the behavior of simulation models can be controlled usin
 fb_control <- defaultControl()
 fb_control$transpirationMode <- "Sperry"
 fb_control$subdailyResults <- TRUE
-fb_control$cavitationRecoveryStem <- "rate"
-fb_control$cavitationRecoveryLeaves <- "total"
+fb_control$stemCavitationRecovery <- "rate"
+fb_control$leafCavitationRecovery <- "total"
 fb_control$fracRootResistance <- 0.4
 ```
 Where the following changes are set to control parameters: 

@@ -46,7 +46,9 @@ hydraulics_supplyFunctionPlot<-function(x, draw = TRUE, type="E", speciesNames =
     VGrhizo_kmaxc = VGrhizo_kmaxc[VGrhizo_kmaxc>0]
     VCroot_kmaxc = VCroot_kmaxc[VCroot_kmaxc>0]
     hn = list("numericParams" = x$control$numericParams,
-               "psisoil" = psiSoil,
+              "stemCavitationEffects" = x$control$stemCavitationEffects,
+              "leafCavitationEffects" = x$control$leafCavitationEffects,
+              "psisoil" = psiSoil,
                "krhizomax" = VGrhizo_kmaxc, "nsoil" = VG_nc, "alphasoil" = VG_alphac,
                "krootmax" = VCroot_kmaxc, "rootc" = VCroot_c[i], "rootd" = VCroot_d[i],
                "kstemmax" = VCstem_kmax[i], "stemc" = VCstem_c[i], "stemd" = VCstem_d[i], 
