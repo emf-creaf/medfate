@@ -84,10 +84,29 @@ Cáceres</h4>
     
     
 <div class="section level2">
-<h2 id="frapue-plot">FRAPUE plot<a class="anchor" aria-label="anchor" href="#frapue-plot"></a>
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p>This document presents model evaluation results at stand-level, using
+data from a set of experimental forest plots. Forest water balance
+simulations have been conducted using the three transpiration modes
+(i.e. <code>Granier</code>, <code>Sperry</code> or
+<code>Cochard</code>). For each site, general information is first
+presented, followed by a description of model inputs. Then, evaluation
+results are presented for four different variables:</p>
+<ol style="list-style-type: lower-alpha">
+<li>Stand-level evapo-transpiration.</li>
+<li>Soil moisture content of the topmost layer.</li>
+<li>Species-level transpiration, scaled from sap-flow data.</li>
+<li>Predawn and midday leaf water potentials.</li>
+</ol>
+<p>The main source of observed data is SAPFLUXNET database (<a href="https://essd.copernicus.org/articles/13/2607/2021/" class="external-link">Poyatos et
+al. 2021</a>).</p>
+</div>
+<div class="section level2">
+<h2 id="puéchabon">Puéchabon<a class="anchor" aria-label="anchor" href="#pu%C3%A9chabon"></a>
 </h2>
 <div class="section level3">
-<h3 id="experimental-plot-information">Experimental plot information<a class="anchor" aria-label="anchor" href="#experimental-plot-information"></a>
+<h3 id="plot-information">Plot information<a class="anchor" aria-label="anchor" href="#plot-information"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -105,6 +124,30 @@ Plot name
 </td>
 <td style="text-align:left;">
 Puéchabon
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Country
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SAPFLUXNET code
+</td>
+<td style="text-align:left;">
+FRA_PUE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Contributor (affiliation)
+</td>
+<td style="text-align:left;">
+Jean-Marc Limousin (CEFE-CNRS)
 </td>
 </tr>
 <tr>
@@ -176,7 +219,7 @@ MAT (ºC)
 MAP (mm)
 </td>
 <td style="text-align:left;">
-916
+720
 </td>
 </tr>
 <tr>
@@ -201,6 +244,14 @@ Species simulated
 </td>
 <td style="text-align:left;">
 Quercus ilex, Buxus sempervirens
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Description DOI
+</td>
+<td style="text-align:left;">
+10.1111/j.1365-2486.2009.01852.x
 </td>
 </tr>
 </tbody>
@@ -959,7 +1010,7 @@ T1_168
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-15-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
-<h4 id="water-potentials">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials"></a>
+<h4 id="leaf-water-potential">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -1159,10 +1210,10 @@ Midday
 </div>
 </div>
 <div class="section level2">
-<h2 id="frahes-plot">FRAHES plot<a class="anchor" aria-label="anchor" href="#frahes-plot"></a>
+<h2 id="hesse">Hesse<a class="anchor" aria-label="anchor" href="#hesse"></a>
 </h2>
 <div class="section level3">
-<h3 id="experimental-plot-information-1">Experimental plot information<a class="anchor" aria-label="anchor" href="#experimental-plot-information-1"></a>
+<h3 id="plot-information-1">Plot information<a class="anchor" aria-label="anchor" href="#plot-information-1"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -1184,6 +1235,30 @@ Hesse
 </tr>
 <tr>
 <td style="text-align:left;">
+Country
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SAPFLUXNET code
+</td>
+<td style="text-align:left;">
+FRA_HES_HE2_NON
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Contributor (affiliation)
+</td>
+<td style="text-align:left;">
+André Granier (INRAE)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 Latitude (º)
 </td>
 <td style="text-align:left;">
@@ -1195,7 +1270,7 @@ Latitude (º)
 Longitude (º)
 </td>
 <td style="text-align:left;">
-NA
+7.0647
 </td>
 </tr>
 <tr>
@@ -1234,6 +1309,7 @@ Parent material
 Soil texture
 </td>
 <td style="text-align:left;">
+Silt loam
 </td>
 </tr>
 <tr>
@@ -1241,7 +1317,7 @@ Soil texture
 MAT (ºC)
 </td>
 <td style="text-align:left;">
-NA
+9.3
 </td>
 </tr>
 <tr>
@@ -1249,7 +1325,7 @@ NA
 MAP (mm)
 </td>
 <td style="text-align:left;">
-NA
+729
 </td>
 </tr>
 <tr>
@@ -1257,6 +1333,7 @@ NA
 Stand description
 </td>
 <td style="text-align:left;">
+Naturally regenerated, managed beech forest
 </td>
 </tr>
 <tr>
@@ -1273,6 +1350,14 @@ Species simulated
 </td>
 <td style="text-align:left;">
 Fagus sylvatica
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Description DOI
+</td>
+<td style="text-align:left;">
+10.1051/forest:2008052
 </td>
 </tr>
 </tbody>
@@ -1401,7 +1486,7 @@ bd
 </tr>
 <tr>
 <td style="text-align:right;">
-500
+700
 </td>
 <td style="text-align:right;">
 8
@@ -1414,6 +1499,26 @@ bd
 </td>
 <td style="text-align:right;">
 15
+</td>
+<td style="text-align:right;">
+1.58
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+45
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+95
 </td>
 <td style="text-align:right;">
 1.58
@@ -1634,25 +1739,25 @@ granier
 43
 </td>
 <td style="text-align:right;">
--0.1151671
+-0.0524701
 </td>
 <td style="text-align:right;">
--13.87619
+-6.321985
 </td>
 <td style="text-align:right;">
-0.1346082
+0.1114305
 </td>
 <td style="text-align:right;">
-16.21860
+13.42598
 </td>
 <td style="text-align:right;">
-0.6863663
+0.7673302
 </td>
 <td style="text-align:right;">
--0.0942848
+0.3994160
 </td>
 <td style="text-align:right;">
-0.0624709
+0.2239005
 </td>
 </tr>
 <tr>
@@ -1666,25 +1771,25 @@ sperry
 43
 </td>
 <td style="text-align:right;">
--0.2018497
+-0.1545608
 </td>
 <td style="text-align:right;">
--24.32036
+-18.622644
 </td>
 <td style="text-align:right;">
-0.2018497
+0.1545608
 </td>
 <td style="text-align:right;">
-24.32036
+18.62264
 </td>
 <td style="text-align:right;">
-0.9523426
+0.9062956
 </td>
 <td style="text-align:right;">
--0.6492286
+-0.0817511
 </td>
 <td style="text-align:right;">
--0.4058577
+-0.0764967
 </td>
 </tr>
 <tr>
@@ -1698,25 +1803,25 @@ cochard
 43
 </td>
 <td style="text-align:right;">
--0.2037937
+-0.1749961
 </td>
 <td style="text-align:right;">
--24.55459
+-21.084843
 </td>
 <td style="text-align:right;">
-0.2037937
+0.1749961
 </td>
 <td style="text-align:right;">
-24.55459
+21.08484
 </td>
 <td style="text-align:right;">
-0.8741202
+0.8658463
 </td>
 <td style="text-align:right;">
--0.8095901
+-0.4167418
 </td>
 <td style="text-align:right;">
--0.4193975
+-0.2188261
 </td>
 </tr>
 </tbody>
@@ -1777,25 +1882,25 @@ T1_97
 1826
 </td>
 <td style="text-align:right;">
--0.1763858
+-0.1684858
 </td>
 <td style="text-align:right;">
--51.34963
+-49.04980
 </td>
 <td style="text-align:right;">
-0.2234918
+0.2176953
 </td>
 <td style="text-align:right;">
-65.06318
+63.37572
 </td>
 <td style="text-align:right;">
-0.8179913
+0.8189707
 </td>
 <td style="text-align:right;">
-0.3454962
+0.3680737
 </td>
 <td style="text-align:right;">
-0.4689967
+0.4827686
 </td>
 </tr>
 <tr>
@@ -1812,25 +1917,25 @@ T1_97
 1826
 </td>
 <td style="text-align:right;">
--0.1418208
+-0.1161178
 </td>
 <td style="text-align:right;">
--41.28704
+-33.80435
 </td>
 <td style="text-align:right;">
-0.2163215
+0.1991073
 </td>
 <td style="text-align:right;">
-62.97577
+57.96435
 </td>
 <td style="text-align:right;">
-0.7670387
+0.8022358
 </td>
 <td style="text-align:right;">
-0.4378129
+0.5148171
 </td>
 <td style="text-align:right;">
-0.4860328
+0.5269328
 </td>
 </tr>
 <tr>
@@ -1847,25 +1952,25 @@ T1_97
 1826
 </td>
 <td style="text-align:right;">
--0.2173513
+-0.1949335
 </td>
 <td style="text-align:right;">
--63.27557
+-56.74925
 </td>
 <td style="text-align:right;">
-0.2564956
+0.2486651
 </td>
 <td style="text-align:right;">
-74.67130
+72.39168
 </td>
 <td style="text-align:right;">
-0.7048361
+0.7056291
 </td>
 <td style="text-align:right;">
-0.2595873
+0.3302327
 </td>
 <td style="text-align:right;">
-0.3905815
+0.4091863
 </td>
 </tr>
 </tbody>
@@ -1873,7 +1978,7 @@ T1_97
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-38-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
-<h4 id="water-potentials-1">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-1"></a>
+<h4 id="leaf-water-potential-1">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-1"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -1926,25 +2031,25 @@ T1_97
 1826
 </td>
 <td style="text-align:right;">
--0.1763858
+-0.1684858
 </td>
 <td style="text-align:right;">
--51.34963
+-49.04980
 </td>
 <td style="text-align:right;">
-0.2234918
+0.2176953
 </td>
 <td style="text-align:right;">
-65.06318
+63.37572
 </td>
 <td style="text-align:right;">
-0.8179913
+0.8189707
 </td>
 <td style="text-align:right;">
-0.3454962
+0.3680737
 </td>
 <td style="text-align:right;">
-0.4689967
+0.4827686
 </td>
 </tr>
 <tr>
@@ -1961,25 +2066,25 @@ T1_97
 1826
 </td>
 <td style="text-align:right;">
--0.1418208
+-0.1161178
 </td>
 <td style="text-align:right;">
--41.28704
+-33.80435
 </td>
 <td style="text-align:right;">
-0.2163215
+0.1991073
 </td>
 <td style="text-align:right;">
-62.97577
+57.96435
 </td>
 <td style="text-align:right;">
-0.7670387
+0.8022358
 </td>
 <td style="text-align:right;">
-0.4378129
+0.5148171
 </td>
 <td style="text-align:right;">
-0.4860328
+0.5269328
 </td>
 </tr>
 <tr>
@@ -1996,25 +2101,25 @@ T1_97
 1826
 </td>
 <td style="text-align:right;">
--0.2173513
+-0.1949335
 </td>
 <td style="text-align:right;">
--63.27557
+-56.74925
 </td>
 <td style="text-align:right;">
-0.2564956
+0.2486651
 </td>
 <td style="text-align:right;">
-74.67130
+72.39168
 </td>
 <td style="text-align:right;">
-0.7048361
+0.7056291
 </td>
 <td style="text-align:right;">
-0.2595873
+0.3302327
 </td>
 <td style="text-align:right;">
-0.3905815
+0.4091863
 </td>
 </tr>
 </tbody>
@@ -2023,10 +2128,10 @@ T1_97
 </div>
 </div>
 <div class="section level2">
-<h2 id="isryat-plot">ISRYAT plot<a class="anchor" aria-label="anchor" href="#isryat-plot"></a>
+<h2 id="yatir">Yatir<a class="anchor" aria-label="anchor" href="#yatir"></a>
 </h2>
 <div class="section level3">
-<h3 id="experimental-plot-information-2">Experimental plot information<a class="anchor" aria-label="anchor" href="#experimental-plot-information-2"></a>
+<h3 id="plot-information-2">Plot information<a class="anchor" aria-label="anchor" href="#plot-information-2"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -2048,6 +2153,22 @@ Yatir
 </tr>
 <tr>
 <td style="text-align:left;">
+SAPFLUXNET code
+</td>
+<td style="text-align:left;">
+ISR_YAT_YAT
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Contributor (affiliation)
+</td>
+<td style="text-align:left;">
+Fyodor Tatarinov (WIS)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 Latitude (º)
 </td>
 <td style="text-align:left;">
@@ -2059,7 +2180,7 @@ Latitude (º)
 Longitude (º)
 </td>
 <td style="text-align:left;">
-NA
+35.051
 </td>
 </tr>
 <tr>
@@ -2098,6 +2219,7 @@ Parent material
 Soil texture
 </td>
 <td style="text-align:left;">
+Clay loam
 </td>
 </tr>
 <tr>
@@ -2105,7 +2227,7 @@ Soil texture
 MAT (ºC)
 </td>
 <td style="text-align:left;">
-NA
+17.8
 </td>
 </tr>
 <tr>
@@ -2113,7 +2235,7 @@ NA
 MAP (mm)
 </td>
 <td style="text-align:left;">
-NA
+295
 </td>
 </tr>
 <tr>
@@ -2121,6 +2243,7 @@ NA
 Stand description
 </td>
 <td style="text-align:left;">
+Pinus halepensis managed plantation
 </td>
 </tr>
 <tr>
@@ -2137,6 +2260,14 @@ Species simulated
 </td>
 <td style="text-align:left;">
 Pinus halepensis
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Description DOI
+</td>
+<td style="text-align:left;">
+10.1111/nph.13597
 </td>
 </tr>
 </tbody>
@@ -2192,7 +2323,7 @@ Pinus halepensis
 2500
 </td>
 <td style="text-align:right;">
-1.5
+1.7
 </td>
 </tr></tbody>
 </table>
@@ -2498,25 +2629,25 @@ granier
 335
 </td>
 <td style="text-align:right;">
-0.0938789
+0.0773319
 </td>
 <td style="text-align:right;">
-16.630009
+13.698818
 </td>
 <td style="text-align:right;">
-0.1373036
+0.1181211
 </td>
 <td style="text-align:right;">
-24.32239
+20.92435
 </td>
 <td style="text-align:right;">
-0.8708698
+0.8923724
 </td>
 <td style="text-align:right;">
-0.6298254
+0.7056456
 </td>
 <td style="text-align:right;">
-0.4223073
+0.5030158
 </td>
 </tr>
 <tr>
@@ -2530,25 +2661,25 @@ sperry
 335
 </td>
 <td style="text-align:right;">
--0.0069455
+-0.0142651
 </td>
 <td style="text-align:right;">
--1.230354
+-2.526968
 </td>
 <td style="text-align:right;">
-0.1440887
+0.1420503
 </td>
 <td style="text-align:right;">
-25.52433
+25.16324
 </td>
 <td style="text-align:right;">
-0.7977867
+0.8034011
 </td>
 <td style="text-align:right;">
-0.6128795
+0.6189593
 </td>
 <td style="text-align:right;">
-0.3937594
+0.4023358
 </td>
 </tr>
 <tr>
@@ -2562,25 +2693,25 @@ cochard
 335
 </td>
 <td style="text-align:right;">
-0.0690529
+0.0550683
 </td>
 <td style="text-align:right;">
-12.232256
+9.754981
 </td>
 <td style="text-align:right;">
-0.1677358
+0.1719138
 </td>
 <td style="text-align:right;">
-29.71324
+30.45335
 </td>
 <td style="text-align:right;">
-0.6240935
+0.6105673
 </td>
 <td style="text-align:right;">
-0.2765346
+0.2829434
 </td>
 <td style="text-align:right;">
-0.2942666
+0.2766880
 </td>
 </tr>
 </tbody>
@@ -2641,25 +2772,25 @@ T1_148
 344
 </td>
 <td style="text-align:right;">
--0.5236719
+-0.5539731
 </td>
 <td style="text-align:right;">
--68.30827
+-72.26080
 </td>
 <td style="text-align:right;">
-0.5262492
+0.5564246
 </td>
 <td style="text-align:right;">
-68.64446
+72.58056
 </td>
 <td style="text-align:right;">
-0.8139307
+0.8524855
 </td>
 <td style="text-align:right;">
--0.3869864
+-0.4948927
 </td>
 <td style="text-align:right;">
--0.1362563
+-0.2014097
 </td>
 </tr>
 <tr>
@@ -2676,25 +2807,25 @@ T1_148
 344
 </td>
 <td style="text-align:right;">
--0.4849972
+-0.5162499
 </td>
 <td style="text-align:right;">
--63.26351
+-67.34014
 </td>
 <td style="text-align:right;">
-0.5060817
+0.5339807
 </td>
 <td style="text-align:right;">
-66.01379
+69.65297
 </td>
 <td style="text-align:right;">
-0.7011926
+0.6554365
 </td>
 <td style="text-align:right;">
--0.2920098
+-0.4553704
 </td>
 <td style="text-align:right;">
--0.0927114
+-0.1529498
 </td>
 </tr>
 <tr>
@@ -2711,25 +2842,25 @@ T1_148
 344
 </td>
 <td style="text-align:right;">
--0.5384362
+-0.5613821
 </td>
 <td style="text-align:right;">
--70.23415
+-73.22722
 </td>
 <td style="text-align:right;">
-0.5418092
+0.5645361
 </td>
 <td style="text-align:right;">
-70.67411
+73.63864
 </td>
 <td style="text-align:right;">
-0.8091562
+0.8159793
 </td>
 <td style="text-align:right;">
--0.3329100
+-0.4337231
 </td>
 <td style="text-align:right;">
--0.1698527
+-0.2189239
 </td>
 </tr>
 </tbody>
@@ -2737,7 +2868,7 @@ T1_148
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-61-1.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
-<h4 id="water-potentials-2">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-2"></a>
+<h4 id="leaf-water-potential-2">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-2"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -2790,25 +2921,25 @@ T1_148
 344
 </td>
 <td style="text-align:right;">
--0.5236719
+-0.5539731
 </td>
 <td style="text-align:right;">
--68.30827
+-72.26080
 </td>
 <td style="text-align:right;">
-0.5262492
+0.5564246
 </td>
 <td style="text-align:right;">
-68.64446
+72.58056
 </td>
 <td style="text-align:right;">
-0.8139307
+0.8524855
 </td>
 <td style="text-align:right;">
--0.3869864
+-0.4948927
 </td>
 <td style="text-align:right;">
--0.1362563
+-0.2014097
 </td>
 </tr>
 <tr>
@@ -2825,25 +2956,25 @@ T1_148
 344
 </td>
 <td style="text-align:right;">
--0.4849972
+-0.5162499
 </td>
 <td style="text-align:right;">
--63.26351
+-67.34014
 </td>
 <td style="text-align:right;">
-0.5060817
+0.5339807
 </td>
 <td style="text-align:right;">
-66.01379
+69.65297
 </td>
 <td style="text-align:right;">
-0.7011926
+0.6554365
 </td>
 <td style="text-align:right;">
--0.2920098
+-0.4553704
 </td>
 <td style="text-align:right;">
--0.0927114
+-0.1529498
 </td>
 </tr>
 <tr>
@@ -2860,25 +2991,25 @@ T1_148
 344
 </td>
 <td style="text-align:right;">
--0.5384362
+-0.5613821
 </td>
 <td style="text-align:right;">
--70.23415
+-73.22722
 </td>
 <td style="text-align:right;">
-0.5418092
+0.5645361
 </td>
 <td style="text-align:right;">
-70.67411
+73.63864
 </td>
 <td style="text-align:right;">
-0.8091562
+0.8159793
 </td>
 <td style="text-align:right;">
--0.3329100
+-0.4337231
 </td>
 <td style="text-align:right;">
--0.1698527
+-0.2189239
 </td>
 </tr>
 </tbody>
@@ -2887,10 +3018,10 @@ T1_148
 </div>
 </div>
 <div class="section level2">
-<h2 id="prades-plot">PRADES plot<a class="anchor" aria-label="anchor" href="#prades-plot"></a>
+<h2 id="prades">Prades<a class="anchor" aria-label="anchor" href="#prades"></a>
 </h2>
 <div class="section level3">
-<h3 id="experimental-plot-information-3">Experimental plot information<a class="anchor" aria-label="anchor" href="#experimental-plot-information-3"></a>
+<h3 id="plot-information-3">Plot information<a class="anchor" aria-label="anchor" href="#plot-information-3"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -2907,7 +3038,31 @@ Value
 Plot name
 </td>
 <td style="text-align:left;">
-Prades (Titllar valley)
+Prades (Tillar valley)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Country
+</td>
+<td style="text-align:left;">
+Spain
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SAPFLUXNET code
+</td>
+<td style="text-align:left;">
+ESP_TIL_MIX
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Contributor (affiliation)
+</td>
+<td style="text-align:left;">
+Rafael Poyatos (CREAF)
 </td>
 </tr>
 <tr>
@@ -3004,6 +3159,14 @@ Species simulated
 </td>
 <td style="text-align:left;">
 Quercus ilex, Pinus sylvestris
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Description DOI
+</td>
+<td style="text-align:left;">
+10.1111/nph.12278
 </td>
 </tr>
 </tbody>
@@ -3833,7 +3996,7 @@ T2_168
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-84-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-84-2.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
-<h4 id="water-potentials-3">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-3"></a>
+<h4 id="leaf-water-potential-3">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-3"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -4185,10 +4348,10 @@ Midday
 </div>
 </div>
 <div class="section level2">
-<h2 id="fonbla-plot">FONBLA plot<a class="anchor" aria-label="anchor" href="#fonbla-plot"></a>
+<h2 id="font-blanche">Font-Blanche<a class="anchor" aria-label="anchor" href="#font-blanche"></a>
 </h2>
 <div class="section level3">
-<h3 id="experimental-plot-information-4">Experimental plot information<a class="anchor" aria-label="anchor" href="#experimental-plot-information-4"></a>
+<h3 id="plot-information-4">Plot information<a class="anchor" aria-label="anchor" href="#plot-information-4"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -4206,6 +4369,29 @@ Plot name
 </td>
 <td style="text-align:left;">
 Font-Blanche
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Country
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SAPFLUXNET code
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Contributor (affiliation)
+</td>
+<td style="text-align:left;">
+Nicolas Martin-StPaul (INRAE
 </td>
 </tr>
 <tr>
@@ -4253,7 +4439,7 @@ Aspect (º)
 Parent material
 </td>
 <td style="text-align:left;">
-Limestone
+Cretaceous limestone
 </td>
 </tr>
 <tr>
@@ -4302,6 +4488,14 @@ Species simulated
 </td>
 <td style="text-align:left;">
 Quercus ilex, Pinus halepensis, Phillyrea latifolia
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Description DOI
+</td>
+<td style="text-align:left;">
+10.1016/j.agrformet.2021.108472
 </td>
 </tr>
 </tbody>
@@ -5250,7 +5444,7 @@ T3_168
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-107-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-107-2.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
-<h4 id="water-potentials-4">Water potentials<a class="anchor" aria-label="anchor" href="#water-potentials-4"></a>
+<h4 id="leaf-water-potential-4">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-4"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5598,7 +5792,6 @@ Midday
 </tr>
 </tbody>
 </table>
-<!-- ## PRADES --><!-- ```{r} --><!-- params$code = 'PRADES' --><!-- site_data <- medfatereports::load_list(params$code) --><!-- ``` --><!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} --><!-- ``` --><!-- ## FRAPUE --><!-- ```{r} --><!-- params$code = 'FRAPUE' --><!-- site_data <- medfatereports::load_list(params$code) --><!-- ``` --><!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} --><!-- ``` --><!-- ## FONBLA --><!-- ```{r} --><!-- params$code = 'FONBLA' --><!-- site_data <- medfatereports::load_list(params$code) --><!-- ``` --><!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} --><!-- ``` --><!-- ## ESPALTARM --><!-- ```{r} --><!-- params$code = 'ESPALTARM' --><!-- site_data <- medfatereports::load_list(params$code) --><!-- ``` --><!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} --><!-- ``` --><!-- ## CAN BALASC --><!-- ```{r} --><!-- params$code = 'CANBALASC' --><!-- site_data <- medfatereports::load_list(params$code) --><!-- ``` --><!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} --><!-- ``` -->
 </div>
 </div>
 </div>
