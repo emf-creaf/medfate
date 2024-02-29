@@ -75,7 +75,7 @@
 Cáceres (CREAF), Víctor Granda (CREAF), Nicolas Martin-StPaul
 (INRAE)</h4>
             
-            <h4 data-toc-skip class="date">2024-02-28</h4>
+            <h4 data-toc-skip class="date">2024-02-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/evaluation/StandLevelEvaluation.Rmd" class="external-link"><code>vignettes/evaluation/StandLevelEvaluation.Rmd</code></a></small>
       <div class="hidden name"><code>StandLevelEvaluation.Rmd</code></div>
@@ -727,6 +727,8 @@ NA
 <div class="section level3">
 <h3 id="evaluation-results">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results"></a>
 </h3>
+<!-- Stand-level evapotranspiration -->
+<!-- Soil moisture -->
 <div class="section level4">
 <h4 id="soil-moisture">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture"></a>
 </h4>
@@ -839,33 +841,35 @@ cochard
 1021
 </td>
 <td style="text-align:right;">
-0.0594224
+0.0587799
 </td>
 <td style="text-align:right;">
-8.160304
+8.072083
 </td>
 <td style="text-align:right;">
-0.1121749
+0.1128134
 </td>
 <td style="text-align:right;">
-15.40466
+15.49234
 </td>
 <td style="text-align:right;">
-0.7964611
+0.7966366
 </td>
 <td style="text-align:right;">
-0.4634434
+0.4612456
 </td>
 <td style="text-align:right;">
-0.3602751
+0.3566339
 </td>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-13-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-25-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-26-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Plant transpiration -->
 </div>
 <div class="section level4">
-<h4 id="plant-transpiration">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration"></a>
+<h4 id="transpiration-per-leaf-area">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -988,30 +992,31 @@ T1_168
 1096
 </td>
 <td style="text-align:right;">
-0.0040500
+0.0040822
 </td>
 <td style="text-align:right;">
-1.180639
+1.190029
 </td>
 <td style="text-align:right;">
-0.1441344
+0.1445749
 </td>
 <td style="text-align:right;">
-42.01797
+42.14638
 </td>
 <td style="text-align:right;">
-0.8240708
+0.8235361
 </td>
 <td style="text-align:right;">
-0.2210128
+0.2170676
 </td>
 <td style="text-align:right;">
-0.2037383
+0.2013047
 </td>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-15-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-32-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-32-2.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Leaf water potential -->
 </div>
 <div class="section level4">
 <h4 id="leaf-water-potential">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential"></a>
@@ -1076,7 +1081,7 @@ Predawn
 -1.8940040
 </td>
 <td style="text-align:right;">
--129.4847875
+-129.484788
 </td>
 <td style="text-align:right;">
 1.8940040
@@ -1114,7 +1119,7 @@ Midday
 -1.4801197
 </td>
 <td style="text-align:right;">
--47.4363392
+-47.436339
 </td>
 <td style="text-align:right;">
 1.4901674
@@ -1149,25 +1154,25 @@ Predawn
 28
 </td>
 <td style="text-align:right;">
-0.0062532
+0.0194158
 </td>
 <td style="text-align:right;">
-0.4275007
+1.327371
 </td>
 <td style="text-align:right;">
-0.5057551
+0.5035962
 </td>
 <td style="text-align:right;">
-34.57627
+34.42867
 </td>
 <td style="text-align:right;">
-0.8887362
+0.8787090
 </td>
 <td style="text-align:right;">
-0.6515199
+0.6467641
 </td>
 <td style="text-align:right;">
-0.4681202
+0.4703906
 </td>
 </tr>
 <tr>
@@ -1187,25 +1192,25 @@ Midday
 28
 </td>
 <td style="text-align:right;">
-1.1108677
+1.1281622
 </td>
 <td style="text-align:right;">
-35.6021856
+36.156458
 </td>
 <td style="text-align:right;">
-1.2383656
+1.2662365
 </td>
 <td style="text-align:right;">
-39.68837
+40.58160
 </td>
 <td style="text-align:right;">
-0.8498483
+0.8322911
 </td>
 <td style="text-align:right;">
--2.1182754
+-2.1808111
 </td>
 <td style="text-align:right;">
--1.0742832
+-1.1209675
 </td>
 </tr>
 </tbody>
@@ -1695,6 +1700,8 @@ NA
 <div class="section level3">
 <h3 id="evaluation-results-1">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-1"></a>
 </h3>
+<!-- Stand-level evapotranspiration -->
+<!-- Soil moisture -->
 <div class="section level4">
 <h4 id="soil-moisture-1">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-1"></a>
 </h4>
@@ -1807,33 +1814,35 @@ cochard
 43
 </td>
 <td style="text-align:right;">
--0.1749961
+-0.1749246
 </td>
 <td style="text-align:right;">
--21.084843
+-21.076229
 </td>
 <td style="text-align:right;">
-0.1749961
+0.1749246
 </td>
 <td style="text-align:right;">
-21.08484
+21.07623
 </td>
 <td style="text-align:right;">
-0.8658463
+0.8672738
 </td>
 <td style="text-align:right;">
--0.4167418
+-0.4138126
 </td>
 <td style="text-align:right;">
--0.2188261
+-0.2183281
 </td>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-36-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-58-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-59-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Plant transpiration -->
 </div>
 <div class="section level4">
-<h4 id="plant-transpiration-1">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-1"></a>
+<h4 id="transpiration-per-leaf-area-1">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-1"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -1956,178 +1965,31 @@ T1_97
 1826
 </td>
 <td style="text-align:right;">
--0.1949335
+-0.1945806
 </td>
 <td style="text-align:right;">
--56.74925
+-56.64652
 </td>
 <td style="text-align:right;">
-0.2486651
+0.2483725
 </td>
 <td style="text-align:right;">
-72.39168
+72.30648
 </td>
 <td style="text-align:right;">
-0.7056291
+0.7057389
 </td>
 <td style="text-align:right;">
-0.3302327
+0.3313529
 </td>
 <td style="text-align:right;">
-0.4091863
+0.4098816
 </td>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-38-1.png" width="864" style="display: block; margin: auto;"></p>
-</div>
-<div class="section level4">
-<h4 id="leaf-water-potential-1">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-1"></a>
-</h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:left;">
-Cohort
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:left;">
-T1_97
-</td>
-<td style="text-align:right;">
-1826
-</td>
-<td style="text-align:right;">
--0.1684858
-</td>
-<td style="text-align:right;">
--49.04980
-</td>
-<td style="text-align:right;">
-0.2176953
-</td>
-<td style="text-align:right;">
-63.37572
-</td>
-<td style="text-align:right;">
-0.8189707
-</td>
-<td style="text-align:right;">
-0.3680737
-</td>
-<td style="text-align:right;">
-0.4827686
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:left;">
-T1_97
-</td>
-<td style="text-align:right;">
-1826
-</td>
-<td style="text-align:right;">
--0.1161178
-</td>
-<td style="text-align:right;">
--33.80435
-</td>
-<td style="text-align:right;">
-0.1991073
-</td>
-<td style="text-align:right;">
-57.96435
-</td>
-<td style="text-align:right;">
-0.8022358
-</td>
-<td style="text-align:right;">
-0.5148171
-</td>
-<td style="text-align:right;">
-0.5269328
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FRAHES
-</td>
-<td style="text-align:left;">
-cochard
-</td>
-<td style="text-align:left;">
-T1_97
-</td>
-<td style="text-align:right;">
-1826
-</td>
-<td style="text-align:right;">
--0.1949335
-</td>
-<td style="text-align:right;">
--56.74925
-</td>
-<td style="text-align:right;">
-0.2486651
-</td>
-<td style="text-align:right;">
-72.39168
-</td>
-<td style="text-align:right;">
-0.7056291
-</td>
-<td style="text-align:right;">
-0.3302327
-</td>
-<td style="text-align:right;">
-0.4091863
-</td>
-</tr>
-</tbody>
-</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-65-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-65-2.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Leaf water potential -->
 </div>
 </div>
 </div>
@@ -2593,6 +2455,8 @@ NA
 <div class="section level3">
 <h3 id="evaluation-results-2">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-2"></a>
 </h3>
+<!-- Stand-level evapotranspiration -->
+<!-- Soil moisture -->
 <div class="section level4">
 <h4 id="soil-moisture-2">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-2"></a>
 </h4>
@@ -2705,33 +2569,35 @@ cochard
 335
 </td>
 <td style="text-align:right;">
-0.0550683
+0.0522270
 </td>
 <td style="text-align:right;">
-9.754981
+9.251653
 </td>
 <td style="text-align:right;">
-0.1719138
+0.1676638
 </td>
 <td style="text-align:right;">
-30.45335
+29.70050
 </td>
 <td style="text-align:right;">
-0.6105673
+0.6276111
 </td>
 <td style="text-align:right;">
-0.2829434
+0.3068827
 </td>
 <td style="text-align:right;">
-0.2766880
+0.2945692
 </td>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-59-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-88-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-89-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Plant transpiration -->
 </div>
 <div class="section level4">
-<h4 id="plant-transpiration-2">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-2"></a>
+<h4 id="transpiration-per-leaf-area-2">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-2"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -2854,178 +2720,31 @@ T1_148
 344
 </td>
 <td style="text-align:right;">
--0.5613821
+-0.5574821
 </td>
 <td style="text-align:right;">
--73.22722
+-72.71850
 </td>
 <td style="text-align:right;">
-0.5645361
+0.5606363
 </td>
 <td style="text-align:right;">
-73.63864
+73.12995
 </td>
 <td style="text-align:right;">
-0.8159793
+0.8119644
 </td>
 <td style="text-align:right;">
--0.4337231
+-0.4178969
 </td>
 <td style="text-align:right;">
--0.2189239
+-0.2105035
 </td>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-61-1.png" width="864" style="display: block; margin: auto;"></p>
-</div>
-<div class="section level4">
-<h4 id="leaf-water-potential-2">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-2"></a>
-</h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:left;">
-Cohort
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-ISRYAT
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:left;">
-T1_148
-</td>
-<td style="text-align:right;">
-344
-</td>
-<td style="text-align:right;">
--0.5539731
-</td>
-<td style="text-align:right;">
--72.26080
-</td>
-<td style="text-align:right;">
-0.5564246
-</td>
-<td style="text-align:right;">
-72.58056
-</td>
-<td style="text-align:right;">
-0.8524855
-</td>
-<td style="text-align:right;">
--0.4948927
-</td>
-<td style="text-align:right;">
--0.2014097
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ISRYAT
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:left;">
-T1_148
-</td>
-<td style="text-align:right;">
-344
-</td>
-<td style="text-align:right;">
--0.5162499
-</td>
-<td style="text-align:right;">
--67.34014
-</td>
-<td style="text-align:right;">
-0.5339807
-</td>
-<td style="text-align:right;">
-69.65297
-</td>
-<td style="text-align:right;">
-0.6554365
-</td>
-<td style="text-align:right;">
--0.4553704
-</td>
-<td style="text-align:right;">
--0.1529498
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ISRYAT
-</td>
-<td style="text-align:left;">
-cochard
-</td>
-<td style="text-align:left;">
-T1_148
-</td>
-<td style="text-align:right;">
-344
-</td>
-<td style="text-align:right;">
--0.5613821
-</td>
-<td style="text-align:right;">
--73.22722
-</td>
-<td style="text-align:right;">
-0.5645361
-</td>
-<td style="text-align:right;">
-73.63864
-</td>
-<td style="text-align:right;">
-0.8159793
-</td>
-<td style="text-align:right;">
--0.4337231
-</td>
-<td style="text-align:right;">
--0.2189239
-</td>
-</tr>
-</tbody>
-</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-95-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-95-2.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Leaf water potential -->
 </div>
 </div>
 </div>
@@ -3616,6 +3335,8 @@ Quercus ilex
 <div class="section level3">
 <h3 id="evaluation-results-3">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-3"></a>
 </h3>
+<!-- Stand-level evapotranspiration -->
+<!-- Soil moisture -->
 <div class="section level4">
 <h4 id="soil-moisture-3">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-3"></a>
 </h4>
@@ -3728,33 +3449,35 @@ cochard
 363
 </td>
 <td style="text-align:right;">
-0.1063234
+0.1008838
 </td>
 <td style="text-align:right;">
-16.660049
+15.807707
 </td>
 <td style="text-align:right;">
-0.1368835
+0.1327021
 </td>
 <td style="text-align:right;">
-21.44858
+20.79339
 </td>
 <td style="text-align:right;">
-0.9124063
+0.9102104
 </td>
 <td style="text-align:right;">
-0.6683208
+0.6699783
 </td>
 <td style="text-align:right;">
-0.4190980
+0.4368427
 </td>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-82-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-118-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-119-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Plant transpiration -->
 </div>
 <div class="section level4">
-<h4 id="plant-transpiration-3">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-3"></a>
+<h4 id="transpiration-per-leaf-area-3">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-3"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -3947,25 +3670,25 @@ T1_153
 362
 </td>
 <td style="text-align:right;">
-0.0250714
+0.1028850
 </td>
 <td style="text-align:right;">
-12.07955
+49.57057
 </td>
 <td style="text-align:right;">
-0.1415184
+0.1680049
 </td>
 <td style="text-align:right;">
-68.18433
+80.94571
 </td>
 <td style="text-align:right;">
-0.8039801
+0.7242902
 </td>
 <td style="text-align:right;">
--0.3231549
+-0.7903795
 </td>
 <td style="text-align:right;">
-0.2180572
+0.0717089
 </td>
 </tr>
 <tr>
@@ -3982,33 +3705,34 @@ T2_168
 253
 </td>
 <td style="text-align:right;">
-0.0542673
+0.0417020
 </td>
 <td style="text-align:right;">
-28.30639
+21.75223
 </td>
 <td style="text-align:right;">
-0.0927645
+0.0804781
 </td>
 <td style="text-align:right;">
-48.38694
+41.97825
 </td>
 <td style="text-align:right;">
-0.8611090
+0.8874466
 </td>
 <td style="text-align:right;">
-0.5097086
+0.6360741
 </td>
 <td style="text-align:right;">
-0.4304212
+0.5058601
 </td>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-84-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-84-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-125-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-125-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-125-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-125-4.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Leaf water potential -->
 </div>
 <div class="section level4">
-<h4 id="leaf-water-potential-3">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-3"></a>
+<h4 id="leaf-water-potential-1">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-1"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -4216,28 +3940,28 @@ T1_153
 Predawn
 </td>
 <td style="text-align:right;">
-1
+4
 </td>
 <td style="text-align:right;">
-0.6659771
+-1.0880001
 </td>
 <td style="text-align:right;">
-75.57186
+-72.15752
 </td>
 <td style="text-align:right;">
-0.6659771
+1.4185751
 </td>
 <td style="text-align:right;">
-75.57186
+94.08166
 </td>
 <td style="text-align:right;">
-NA
+0.9279454
 </td>
 <td style="text-align:right;">
--Inf
+-20.4497674
 </td>
 <td style="text-align:right;">
--Inf
+-2.6756601
 </td>
 </tr>
 <tr>
@@ -4254,28 +3978,28 @@ T1_153
 Midday
 </td>
 <td style="text-align:right;">
-1
+4
 </td>
 <td style="text-align:right;">
-0.9098978
+-1.0640751
 </td>
 <td style="text-align:right;">
-53.84010
+-57.28319
 </td>
 <td style="text-align:right;">
-0.9098978
+1.5023619
 </td>
 <td style="text-align:right;">
-53.84010
+80.87783
 </td>
 <td style="text-align:right;">
-NA
+0.9378991
 </td>
 <td style="text-align:right;">
--Inf
+-67.9465330
 </td>
 <td style="text-align:right;">
--Inf
+-6.4203433
 </td>
 </tr>
 <tr>
@@ -4295,25 +4019,25 @@ Predawn
 4
 </td>
 <td style="text-align:right;">
-0.4976926
+0.4377342
 </td>
 <td style="text-align:right;">
-16.96051
+14.91723
 </td>
 <td style="text-align:right;">
-0.9121353
+0.7238620
 </td>
 <td style="text-align:right;">
-31.08401
+24.66798
 </td>
 <td style="text-align:right;">
-0.9814155
+0.9883464
 </td>
 <td style="text-align:right;">
-0.4784753
+0.6375091
 </td>
 <td style="text-align:right;">
-0.1698090
+0.3411683
 </td>
 </tr>
 <tr>
@@ -4333,25 +4057,25 @@ Midday
 4
 </td>
 <td style="text-align:right;">
-0.8923887
+0.5624160
 </td>
 <td style="text-align:right;">
-25.10772
+15.82380
 </td>
 <td style="text-align:right;">
-1.0315616
+0.9039226
 </td>
 <td style="text-align:right;">
-29.02340
+25.43222
 </td>
 <td style="text-align:right;">
-0.9968147
+0.9989538
 </td>
 <td style="text-align:right;">
-0.2212831
+0.3958278
 </td>
 <td style="text-align:right;">
--0.0146879
+0.1108633
 </td>
 </tr>
 </tbody>
@@ -5064,6 +4788,146 @@ NA
 <div class="section level3">
 <h3 id="evaluation-results-4">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-4"></a>
 </h3>
+<!-- Stand-level evapotranspiration -->
+<div class="section level4">
+<h4 id="stand-level-evapotranspiration">Stand-level evapotranspiration<a class="anchor" aria-label="anchor" href="#stand-level-evapotranspiration"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Site
+</th>
+<th style="text-align:left;">
+Mode
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Bias.rel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAE.rel
+</th>
+<th style="text-align:right;">
+r
+</th>
+<th style="text-align:right;">
+NSE
+</th>
+<th style="text-align:right;">
+NSE.abs
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+FONBLA
+</td>
+<td style="text-align:left;">
+granier
+</td>
+<td style="text-align:right;">
+365
+</td>
+<td style="text-align:right;">
+-0.1138264
+</td>
+<td style="text-align:right;">
+-8.54310
+</td>
+<td style="text-align:right;">
+0.8019525
+</td>
+<td style="text-align:right;">
+60.18956
+</td>
+<td style="text-align:right;">
+0.0972308
+</td>
+<td style="text-align:right;">
+-1.363029
+</td>
+<td style="text-align:right;">
+-0.6106134
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FONBLA
+</td>
+<td style="text-align:left;">
+sperry
+</td>
+<td style="text-align:right;">
+365
+</td>
+<td style="text-align:right;">
+-0.0717728
+</td>
+<td style="text-align:right;">
+-5.38682
+</td>
+<td style="text-align:right;">
+0.7184960
+</td>
+<td style="text-align:right;">
+53.92583
+</td>
+<td style="text-align:right;">
+0.2313266
+</td>
+<td style="text-align:right;">
+-1.091321
+</td>
+<td style="text-align:right;">
+-0.4430023
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FONBLA
+</td>
+<td style="text-align:left;">
+cochard
+</td>
+<td style="text-align:right;">
+365
+</td>
+<td style="text-align:right;">
+-0.0873662
+</td>
+<td style="text-align:right;">
+-6.55716
+</td>
+<td style="text-align:right;">
+0.8045796
+</td>
+<td style="text-align:right;">
+60.38673
+</td>
+<td style="text-align:right;">
+0.2088727
+</td>
+<td style="text-align:right;">
+-1.390947
+</td>
+<td style="text-align:right;">
+-0.6158896
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-150-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-151-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Soil moisture -->
+</div>
 <div class="section level4">
 <h4 id="soil-moisture-4">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-4"></a>
 </h4>
@@ -5115,7 +4979,7 @@ granier
 0.1505631
 </td>
 <td style="text-align:right;">
-21.46844
+21.468437
 </td>
 <td style="text-align:right;">
 0.1823434
@@ -5147,7 +5011,7 @@ sperry
 0.0746035
 </td>
 <td style="text-align:right;">
-10.63754
+10.637539
 </td>
 <td style="text-align:right;">
 0.1370191
@@ -5176,33 +5040,35 @@ cochard
 364
 </td>
 <td style="text-align:right;">
-0.0851076
+0.0629164
 </td>
 <td style="text-align:right;">
-12.13530
+8.971108
 </td>
 <td style="text-align:right;">
-0.1355643
+0.1429222
 </td>
 <td style="text-align:right;">
-19.32979
+20.37894
 </td>
 <td style="text-align:right;">
-0.8141743
+0.7708848
 </td>
 <td style="text-align:right;">
-0.5244642
+0.4743982
 </td>
 <td style="text-align:right;">
-0.3504110
+0.3151538
 </td>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-105-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-157-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-158-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Plant transpiration -->
 </div>
 <div class="section level4">
-<h4 id="plant-transpiration-4">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-4"></a>
+<h4 id="transpiration-per-leaf-area-4">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-4"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5258,7 +5124,7 @@ T2_148
 0.1954687
 </td>
 <td style="text-align:right;">
-95.03920
+95.039196
 </td>
 <td style="text-align:right;">
 0.2163145
@@ -5293,7 +5159,7 @@ T3_168
 -0.0815908
 </td>
 <td style="text-align:right;">
--28.18737
+-28.187366
 </td>
 <td style="text-align:right;">
 0.1031204
@@ -5328,7 +5194,7 @@ T2_148
 0.0557513
 </td>
 <td style="text-align:right;">
-27.10695
+27.106955
 </td>
 <td style="text-align:right;">
 0.1072170
@@ -5363,7 +5229,7 @@ T3_168
 0.0934671
 </td>
 <td style="text-align:right;">
-32.29032
+32.290318
 </td>
 <td style="text-align:right;">
 0.1093264
@@ -5395,25 +5261,25 @@ T2_148
 300
 </td>
 <td style="text-align:right;">
-0.0793288
+0.1789532
 </td>
 <td style="text-align:right;">
-38.57062
+87.009189
 </td>
 <td style="text-align:right;">
-0.2531704
+0.2236487
 </td>
 <td style="text-align:right;">
-123.09444
+108.74067
 </td>
 <td style="text-align:right;">
-0.3292795
+0.3641960
 </td>
 <td style="text-align:right;">
--10.2856625
+-10.1863878
 </td>
 <td style="text-align:right;">
--1.5584169
+-1.2600855
 </td>
 </tr>
 <tr>
@@ -5430,33 +5296,34 @@ T3_168
 309
 </td>
 <td style="text-align:right;">
-0.0463677
+0.0141023
 </td>
 <td style="text-align:right;">
-16.01877
+4.871964
 </td>
 <td style="text-align:right;">
-0.1090967
+0.0866902
 </td>
 <td style="text-align:right;">
-37.68990
+29.94908
 </td>
 <td style="text-align:right;">
-0.8062538
+0.8568822
 </td>
 <td style="text-align:right;">
-0.2343610
+0.5200756
 </td>
 <td style="text-align:right;">
-0.2567473
+0.4093980
 </td>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-107-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-107-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-164-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-164-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-164-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-164-4.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Leaf water potential -->
 </div>
 <div class="section level4">
-<h4 id="leaf-water-potential-4">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-4"></a>
+<h4 id="leaf-water-potential-2">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-2"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5518,7 +5385,7 @@ Predawn
 0.8611783
 </td>
 <td style="text-align:right;">
-44.27652
+44.276522
 </td>
 <td style="text-align:right;">
 0.8611783
@@ -5556,7 +5423,7 @@ Midday
 0.9643989
 </td>
 <td style="text-align:right;">
-36.14990
+36.149897
 </td>
 <td style="text-align:right;">
 0.9643989
@@ -5594,7 +5461,7 @@ Predawn
 0.4236272
 </td>
 <td style="text-align:right;">
-27.91102
+27.911016
 </td>
 <td style="text-align:right;">
 0.4236272
@@ -5632,7 +5499,7 @@ Midday
 0.6190609
 </td>
 <td style="text-align:right;">
-22.68546
+22.685455
 </td>
 <td style="text-align:right;">
 0.6190609
@@ -5664,28 +5531,28 @@ T2_148
 Predawn
 </td>
 <td style="text-align:right;">
-1
+3
 </td>
 <td style="text-align:right;">
-0.9013778
+0.4757209
 </td>
 <td style="text-align:right;">
-63.85203
+24.458657
 </td>
 <td style="text-align:right;">
-0.9013778
+0.4757209
 </td>
 <td style="text-align:right;">
-63.85203
+24.45866
 </td>
 <td style="text-align:right;">
-NA
+0.9965874
 </td>
 <td style="text-align:right;">
--Inf
+-0.8570954
 </td>
 <td style="text-align:right;">
--Inf
+-0.3379650
 </td>
 </tr>
 <tr>
@@ -5702,28 +5569,28 @@ T2_148
 Midday
 </td>
 <td style="text-align:right;">
-1
+3
 </td>
 <td style="text-align:right;">
-1.1903404
+0.7969883
 </td>
 <td style="text-align:right;">
-49.70106
+29.874614
 </td>
 <td style="text-align:right;">
-1.1903404
+0.7969883
 </td>
 <td style="text-align:right;">
-49.70106
+29.87461
 </td>
 <td style="text-align:right;">
-NA
+0.9999823
 </td>
 <td style="text-align:right;">
--Inf
+-13.3343546
 </td>
 <td style="text-align:right;">
--Inf
+-3.2611256
 </td>
 </tr>
 <tr>
@@ -5743,25 +5610,25 @@ Predawn
 3
 </td>
 <td style="text-align:right;">
-0.4427749
+0.1114694
 </td>
 <td style="text-align:right;">
-29.17258
+7.344247
 </td>
 <td style="text-align:right;">
-0.4427749
+0.2558122
 </td>
 <td style="text-align:right;">
-29.17258
+16.85439
 </td>
 <td style="text-align:right;">
-0.9961493
+0.9997929
 </td>
 <td style="text-align:right;">
-0.2638482
+0.7236304
 </td>
 <td style="text-align:right;">
--0.0004119
+0.4220143
 </td>
 </tr>
 <tr>
@@ -5781,25 +5648,25 @@ Midday
 3
 </td>
 <td style="text-align:right;">
-1.1804912
+0.9490301
 </td>
 <td style="text-align:right;">
-43.25904
+34.777161
 </td>
 <td style="text-align:right;">
-1.1804912
+0.9490301
 </td>
 <td style="text-align:right;">
-43.25904
+34.77716
 </td>
 <td style="text-align:right;">
-0.9878493
+0.9971048
 </td>
 <td style="text-align:right;">
--8.5425367
+-5.6424441
 </td>
 <td style="text-align:right;">
--2.6468263
+-1.9317863
 </td>
 </tr>
 </tbody>
@@ -6236,61 +6103,61 @@ VCleaf_P88
 <th style="text-align:left;">
 VCleaf_slope
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCstem_P12
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCstem_P50
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCstem_P88
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCstem_slope
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCroot_P12
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCroot_P50
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCroot_P88
 </th>
 <th style="text-align:left;">
 VCroot_slope
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCleaf_kmax
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 LeafEPS
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 LeafPI0
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 LeafAF
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 StemEPS
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 StemPI0
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 StemAF
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 Gswmin
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 Gswmax
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 Gs_P50
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 Gs_slope
 </th>
 <th style="text-align:right;">
@@ -6314,61 +6181,61 @@ NA
 <td style="text-align:left;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
 NA
 </td>
 <td style="text-align:left;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
 <td style="text-align:right;">
@@ -6391,62 +6258,62 @@ NA
 <td style="text-align:left;">
 NA
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-3.707158
+</td>
+<td style="text-align:right;">
+-4.79
+</td>
+<td style="text-align:right;">
+-5.872842
+</td>
+<td style="text-align:right;">
+46
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+-1.741565
+</td>
+<td style="text-align:right;">
+-2.301482
 </td>
 <td style="text-align:left;">
 NA
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+4.00
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+5.31
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-1.5
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.6
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+5
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-1.65
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.4
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.001
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.2175
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-1.871216
 </td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+97.43590
 </td>
 <td style="text-align:right;">
 631.1784
@@ -6468,61 +6335,61 @@ NA
 <td style="text-align:left;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
 NA
 </td>
 <td style="text-align:left;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
 <td style="text-align:right;">
@@ -6545,62 +6412,62 @@ NA
 <td style="text-align:left;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
+-4.739642
+</td>
+<td style="text-align:right;">
+-6.40
+</td>
+<td style="text-align:right;">
+-8.060358
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
 NA
 </td>
 <td style="text-align:left;">
 NA
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+2.63
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+15.00
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-2.5
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.4
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+15
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-2.50
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.4
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.002
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.2200
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-2.114188
 </td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+44.70588
 </td>
 <td style="text-align:right;">
 1009.0124
@@ -6613,6 +6480,8 @@ NA
 <div class="section level3">
 <h3 id="evaluation-results-5">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-5"></a>
 </h3>
+<!-- Stand-level evapotranspiration -->
+<!-- Soil moisture -->
 <div class="section level4">
 <h4 id="soil-moisture-5">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-5"></a>
 </h4>
@@ -6693,25 +6562,25 @@ sperry
 676
 </td>
 <td style="text-align:right;">
-0.0480731
+0.0657958
 </td>
 <td style="text-align:right;">
-6.843525
+9.366478
 </td>
 <td style="text-align:right;">
-0.1927507
+0.1975054
 </td>
 <td style="text-align:right;">
-27.43936
+28.11623
 </td>
 <td style="text-align:right;">
-0.6856960
+0.6729583
 </td>
 <td style="text-align:right;">
--0.3142732
+-0.3821856
 </td>
 <td style="text-align:right;">
--0.2454962
+-0.2762198
 </td>
 </tr>
 <tr>
@@ -6725,33 +6594,35 @@ cochard
 676
 </td>
 <td style="text-align:right;">
-0.1829638
+0.1689417
 </td>
 <td style="text-align:right;">
-26.046135
+24.049995
 </td>
 <td style="text-align:right;">
-0.2531387
+0.2440514
 </td>
 <td style="text-align:right;">
-36.03600
+34.74236
 </td>
 <td style="text-align:right;">
-0.6125223
+0.6122855
 </td>
 <td style="text-align:right;">
--1.2359922
+-1.0711569
 </td>
 <td style="text-align:right;">
--0.6357051
+-0.5769857
 </td>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-128-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-190-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-191-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Plant transpiration -->
 </div>
 <div class="section level4">
-<h4 id="plant-transpiration-5">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-5"></a>
+<h4 id="transpiration-per-leaf-area-5">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-5"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -6944,25 +6815,25 @@ T1_19
 682
 </td>
 <td style="text-align:right;">
--0.8266254
+-0.8170589
 </td>
 <td style="text-align:right;">
--84.88534
+-83.90296
 </td>
 <td style="text-align:right;">
-0.8332676
+0.8235674
 </td>
 <td style="text-align:right;">
-85.56742
+84.57131
 </td>
 <td style="text-align:right;">
-0.8391395
+0.8317622
 </td>
 <td style="text-align:right;">
--0.9921871
+-0.9574424
 </td>
 <td style="text-align:right;">
--0.4138112
+-0.3973527
 </td>
 </tr>
 <tr>
@@ -6979,25 +6850,25 @@ T2_148
 682
 </td>
 <td style="text-align:right;">
--0.3503121
+-0.2955775
 </td>
 <td style="text-align:right;">
--62.74182
+-52.93871
 </td>
 <td style="text-align:right;">
-0.3820570
+0.3717875
 </td>
 <td style="text-align:right;">
-68.42741
+66.58812
 </td>
 <td style="text-align:right;">
-0.6937116
+0.5912013
 </td>
 <td style="text-align:right;">
--0.0481314
+0.0031394
 </td>
 <td style="text-align:right;">
-0.0099336
+0.0365461
 </td>
 </tr>
 <tr>
@@ -7014,25 +6885,25 @@ T3_171
 682
 </td>
 <td style="text-align:right;">
--0.9726501
+-0.9467914
 </td>
 <td style="text-align:right;">
--77.87113
+-75.80086
 </td>
 <td style="text-align:right;">
-0.9781483
+0.9527393
 </td>
 <td style="text-align:right;">
-78.31132
+76.27706
 </td>
 <td style="text-align:right;">
-0.8334242
+0.8224577
 </td>
 <td style="text-align:right;">
--0.2161052
+-0.1778876
 </td>
 <td style="text-align:right;">
--0.0061651
+0.0199718
 </td>
 </tr>
 <tr>
@@ -7049,25 +6920,25 @@ T4_168
 682
 </td>
 <td style="text-align:right;">
--1.3889345
+-1.4102538
 </td>
 <td style="text-align:right;">
--76.49795
+-77.67215
 </td>
 <td style="text-align:right;">
-1.4033736
+1.4267953
 </td>
 <td style="text-align:right;">
-77.29321
+78.58320
 </td>
 <td style="text-align:right;">
-0.6598907
+0.6387358
 </td>
 <td style="text-align:right;">
--1.0875082
+-1.1651155
 </td>
 <td style="text-align:right;">
--0.4737132
+-0.4983088
 </td>
 </tr>
 <tr>
@@ -7084,25 +6955,25 @@ T1_19
 682
 </td>
 <td style="text-align:right;">
--0.7243820
+-0.7033224
 </td>
 <td style="text-align:right;">
--74.38606
+-72.22348
 </td>
 <td style="text-align:right;">
-0.7407956
+0.7232922
 </td>
 <td style="text-align:right;">
-76.07156
+74.27416
 </td>
 <td style="text-align:right;">
-0.5336857
+0.5093252
 </td>
 <td style="text-align:right;">
--0.7475773
+-0.7137011
 </td>
 <td style="text-align:right;">
--0.2569132
+-0.2272151
 </td>
 </tr>
 <tr>
@@ -7119,25 +6990,25 @@ T2_148
 682
 </td>
 <td style="text-align:right;">
--0.3283780
+-0.0880704
 </td>
 <td style="text-align:right;">
--58.81335
+-15.77364
 </td>
 <td style="text-align:right;">
-0.4784202
+0.4963668
 </td>
 <td style="text-align:right;">
-85.68631
+88.90060
 </td>
 <td style="text-align:right;">
-0.4430823
+0.1445312
 </td>
 <td style="text-align:right;">
--0.3460187
+-0.5476439
 </td>
 <td style="text-align:right;">
--0.2397828
+-0.2862900
 </td>
 </tr>
 <tr>
@@ -7154,25 +7025,25 @@ T3_171
 682
 </td>
 <td style="text-align:right;">
--0.8834743
+-0.8889755
 </td>
 <td style="text-align:right;">
--70.73164
+-71.17208
 </td>
 <td style="text-align:right;">
-0.9226107
+0.9220352
 </td>
 <td style="text-align:right;">
-73.86494
+73.81886
 </td>
 <td style="text-align:right;">
-0.5281210
+0.5517922
 </td>
 <td style="text-align:right;">
--0.2696177
+-0.2639718
 </td>
 <td style="text-align:right;">
-0.0509633
+0.0515553
 </td>
 </tr>
 <tr>
@@ -7189,493 +7060,31 @@ T4_168
 682
 </td>
 <td style="text-align:right;">
--1.4325670
+-1.4928510
 </td>
 <td style="text-align:right;">
--78.90108
+-82.22133
 </td>
 <td style="text-align:right;">
-1.4538806
+1.5035364
 </td>
 <td style="text-align:right;">
-80.07497
+82.80985
 </td>
 <td style="text-align:right;">
-0.2791524
+0.3503160
 </td>
 <td style="text-align:right;">
--1.4128779
+-1.5088990
 </td>
 <td style="text-align:right;">
--0.5267517
+-0.5788963
 </td>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-130-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-130-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-130-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-130-4.png" width="864" style="display: block; margin: auto;"></p>
-</div>
-<div class="section level4">
-<h4 id="leaf-water-potential-5">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-5"></a>
-</h4>
-<table class="table table" style="margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:left;">
-Site
-</th>
-<th style="text-align:left;">
-Mode
-</th>
-<th style="text-align:left;">
-Cohort
-</th>
-<th style="text-align:right;">
-n
-</th>
-<th style="text-align:right;">
-Bias
-</th>
-<th style="text-align:right;">
-Bias.rel
-</th>
-<th style="text-align:right;">
-MAE
-</th>
-<th style="text-align:right;">
-MAE.rel
-</th>
-<th style="text-align:right;">
-r
-</th>
-<th style="text-align:right;">
-NSE
-</th>
-<th style="text-align:right;">
-NSE.abs
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-CANBALASC
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:left;">
-T1_19
-</td>
-<td style="text-align:right;">
-682
-</td>
-<td style="text-align:right;">
--0.5709014
-</td>
-<td style="text-align:right;">
--58.62530
-</td>
-<td style="text-align:right;">
-0.6323323
-</td>
-<td style="text-align:right;">
-64.93357
-</td>
-<td style="text-align:right;">
-0.5225113
-</td>
-<td style="text-align:right;">
--0.3795052
-</td>
-<td style="text-align:right;">
--0.0728827
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CANBALASC
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:left;">
-T2_148
-</td>
-<td style="text-align:right;">
-682
-</td>
-<td style="text-align:right;">
--0.0169660
-</td>
-<td style="text-align:right;">
--3.03865
-</td>
-<td style="text-align:right;">
-0.4578817
-</td>
-<td style="text-align:right;">
-82.00781
-</td>
-<td style="text-align:right;">
-0.1501800
-</td>
-<td style="text-align:right;">
--0.2383354
-</td>
-<td style="text-align:right;">
--0.1865592
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CANBALASC
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:left;">
-T3_171
-</td>
-<td style="text-align:right;">
-682
-</td>
-<td style="text-align:right;">
--0.9893466
-</td>
-<td style="text-align:right;">
--79.20786
-</td>
-<td style="text-align:right;">
-1.0047622
-</td>
-<td style="text-align:right;">
-80.44205
-</td>
-<td style="text-align:right;">
-0.5910252
-</td>
-<td style="text-align:right;">
--0.4460137
-</td>
-<td style="text-align:right;">
--0.0335413
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CANBALASC
-</td>
-<td style="text-align:left;">
-granier
-</td>
-<td style="text-align:left;">
-T4_168
-</td>
-<td style="text-align:right;">
-682
-</td>
-<td style="text-align:right;">
--1.6383147
-</td>
-<td style="text-align:right;">
--90.23300
-</td>
-<td style="text-align:right;">
-1.6456290
-</td>
-<td style="text-align:right;">
-90.63584
-</td>
-<td style="text-align:right;">
-0.3684603
-</td>
-<td style="text-align:right;">
--1.8902407
-</td>
-<td style="text-align:right;">
--0.7281108
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CANBALASC
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:left;">
-T1_19
-</td>
-<td style="text-align:right;">
-682
-</td>
-<td style="text-align:right;">
--0.8266254
-</td>
-<td style="text-align:right;">
--84.88534
-</td>
-<td style="text-align:right;">
-0.8332676
-</td>
-<td style="text-align:right;">
-85.56742
-</td>
-<td style="text-align:right;">
-0.8391395
-</td>
-<td style="text-align:right;">
--0.9921871
-</td>
-<td style="text-align:right;">
--0.4138112
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CANBALASC
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:left;">
-T2_148
-</td>
-<td style="text-align:right;">
-682
-</td>
-<td style="text-align:right;">
--0.3503121
-</td>
-<td style="text-align:right;">
--62.74182
-</td>
-<td style="text-align:right;">
-0.3820570
-</td>
-<td style="text-align:right;">
-68.42741
-</td>
-<td style="text-align:right;">
-0.6937116
-</td>
-<td style="text-align:right;">
--0.0481314
-</td>
-<td style="text-align:right;">
-0.0099336
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CANBALASC
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:left;">
-T3_171
-</td>
-<td style="text-align:right;">
-682
-</td>
-<td style="text-align:right;">
--0.9726501
-</td>
-<td style="text-align:right;">
--77.87113
-</td>
-<td style="text-align:right;">
-0.9781483
-</td>
-<td style="text-align:right;">
-78.31132
-</td>
-<td style="text-align:right;">
-0.8334242
-</td>
-<td style="text-align:right;">
--0.2161052
-</td>
-<td style="text-align:right;">
--0.0061651
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CANBALASC
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:left;">
-T4_168
-</td>
-<td style="text-align:right;">
-682
-</td>
-<td style="text-align:right;">
--1.3889345
-</td>
-<td style="text-align:right;">
--76.49795
-</td>
-<td style="text-align:right;">
-1.4033736
-</td>
-<td style="text-align:right;">
-77.29321
-</td>
-<td style="text-align:right;">
-0.6598907
-</td>
-<td style="text-align:right;">
--1.0875082
-</td>
-<td style="text-align:right;">
--0.4737132
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CANBALASC
-</td>
-<td style="text-align:left;">
-cochard
-</td>
-<td style="text-align:left;">
-T1_19
-</td>
-<td style="text-align:right;">
-682
-</td>
-<td style="text-align:right;">
--0.7243820
-</td>
-<td style="text-align:right;">
--74.38606
-</td>
-<td style="text-align:right;">
-0.7407956
-</td>
-<td style="text-align:right;">
-76.07156
-</td>
-<td style="text-align:right;">
-0.5336857
-</td>
-<td style="text-align:right;">
--0.7475773
-</td>
-<td style="text-align:right;">
--0.2569132
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CANBALASC
-</td>
-<td style="text-align:left;">
-cochard
-</td>
-<td style="text-align:left;">
-T2_148
-</td>
-<td style="text-align:right;">
-682
-</td>
-<td style="text-align:right;">
--0.3283780
-</td>
-<td style="text-align:right;">
--58.81335
-</td>
-<td style="text-align:right;">
-0.4784202
-</td>
-<td style="text-align:right;">
-85.68631
-</td>
-<td style="text-align:right;">
-0.4430823
-</td>
-<td style="text-align:right;">
--0.3460187
-</td>
-<td style="text-align:right;">
--0.2397828
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CANBALASC
-</td>
-<td style="text-align:left;">
-cochard
-</td>
-<td style="text-align:left;">
-T3_171
-</td>
-<td style="text-align:right;">
-682
-</td>
-<td style="text-align:right;">
--0.8834743
-</td>
-<td style="text-align:right;">
--70.73164
-</td>
-<td style="text-align:right;">
-0.9226107
-</td>
-<td style="text-align:right;">
-73.86494
-</td>
-<td style="text-align:right;">
-0.5281210
-</td>
-<td style="text-align:right;">
--0.2696177
-</td>
-<td style="text-align:right;">
-0.0509633
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CANBALASC
-</td>
-<td style="text-align:left;">
-cochard
-</td>
-<td style="text-align:left;">
-T4_168
-</td>
-<td style="text-align:right;">
-682
-</td>
-<td style="text-align:right;">
--1.4325670
-</td>
-<td style="text-align:right;">
--78.90108
-</td>
-<td style="text-align:right;">
-1.4538806
-</td>
-<td style="text-align:right;">
-80.07497
-</td>
-<td style="text-align:right;">
-0.2791524
-</td>
-<td style="text-align:right;">
--1.4128779
-</td>
-<td style="text-align:right;">
--0.5267517
-</td>
-</tr>
-</tbody>
-</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-197-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-197-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-197-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-197-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-197-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-197-6.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-197-7.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-197-8.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Leaf water potential -->
 </div>
 </div>
 </div>
@@ -8073,73 +7482,73 @@ rfc
 <th style="text-align:left;">
 Species
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCleaf_P12
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCleaf_P50
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCleaf_P88
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCleaf_slope
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCstem_P12
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCstem_P50
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCstem_P88
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCstem_slope
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCroot_P12
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCroot_P50
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCroot_P88
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCroot_slope
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 VCleaf_kmax
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 LeafEPS
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 LeafPI0
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 LeafAF
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 StemEPS
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 StemPI0
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 StemAF
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 Gswmin
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 Gswmax
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 Gs_P50
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 Gs_slope
 </th>
 <th style="text-align:right;">
@@ -8151,74 +7560,74 @@ Al2As
 <td style="text-align:left;">
 Pinus nigra
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
+-0.9930548
+</td>
+<td style="text-align:right;">
+-3.2
+</td>
+<td style="text-align:right;">
+-5.406945
+</td>
+<td style="text-align:right;">
+22.57
+</td>
+<td style="text-align:right;">
+-0.2474341
+</td>
+<td style="text-align:right;">
+-1.65
+</td>
+<td style="text-align:right;">
+-3.052566
+</td>
+<td style="text-align:right;">
+35.51402
+</td>
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+5.31
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-1.5
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.6
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+5
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-1.65
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.4
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.001
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.18
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-1.871216
 </td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+97.43590
 </td>
 <td style="text-align:right;">
 1272
@@ -8228,74 +7637,74 @@ NA
 <td style="text-align:left;">
 Quercus faginea
 </td>
-<td style="text-align:left;">
+<td style="text-align:right;">
+-4.004731
+</td>
+<td style="text-align:right;">
+-5.25
+</td>
+<td style="text-align:right;">
+-6.495269
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+-4.7396415
+</td>
+<td style="text-align:right;">
+-6.4
+</td>
+<td style="text-align:right;">
+-8.060358
+</td>
+<td style="text-align:right;">
+30.00
+</td>
+<td style="text-align:right;">
+-2.0047311
+</td>
+<td style="text-align:right;">
+-3.25
+</td>
+<td style="text-align:right;">
+-4.495269
+</td>
+<td style="text-align:right;">
+40.00000
+</td>
+<td style="text-align:right;">
 NA
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+15.00
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-2.5
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.4
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+15
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-2.50
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.4
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.002
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.22
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-2.114188
 </td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
-</td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+44.70588
 </td>
 <td style="text-align:right;">
 1488
@@ -8305,74 +7714,74 @@ NA
 <td style="text-align:left;">
 Quercus ilex
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-4.004731
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-5.25
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-6.495269
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+40
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-4.7396415
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-6.4
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-8.060358
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+30.00
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-2.0047311
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-3.25
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-4.495269
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+40.00000
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+2.63
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+15.00
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-2.5
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.4
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+15
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-2.50
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.4
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.002
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+0.22
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+-2.114188
 </td>
-<td style="text-align:left;">
-NA
+<td style="text-align:right;">
+44.70588
 </td>
 <td style="text-align:right;">
 1541
@@ -8385,6 +7794,8 @@ NA
 <div class="section level3">
 <h3 id="evaluation-results-6">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-6"></a>
 </h3>
+<!-- Stand-level evapotranspiration -->
+<!-- Soil moisture -->
 <div class="section level4">
 <h4 id="soil-moisture-6">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-6"></a>
 </h4>
@@ -8433,25 +7844,25 @@ granier
 715
 </td>
 <td style="text-align:right;">
-0.3206911
+0.3120769
 </td>
 <td style="text-align:right;">
-57.95285
+56.39615
 </td>
 <td style="text-align:right;">
-0.3790282
+0.3743449
 </td>
 <td style="text-align:right;">
-68.49507
+67.64874
 </td>
 <td style="text-align:right;">
-0.3117529
+0.3009302
 </td>
 <td style="text-align:right;">
--0.6723680
+-0.6416403
 </td>
 <td style="text-align:right;">
--0.2220663
+-0.2069664
 </td>
 </tr>
 <tr>
@@ -8465,25 +7876,25 @@ sperry
 715
 </td>
 <td style="text-align:right;">
-0.2030120
+0.1512699
 </td>
 <td style="text-align:right;">
-36.68678
+27.33634
 </td>
 <td style="text-align:right;">
-0.2685852
+0.2191502
 </td>
 <td style="text-align:right;">
-48.53667
+39.60315
 </td>
 <td style="text-align:right;">
-0.7338856
+0.8181905
 </td>
 <td style="text-align:right;">
-0.2219866
+0.4946756
 </td>
 <td style="text-align:right;">
-0.1340249
+0.2934137
 </td>
 </tr>
 <tr>
@@ -8497,33 +7908,35 @@ cochard
 715
 </td>
 <td style="text-align:right;">
-0.2210972
+0.2306747
 </td>
 <td style="text-align:right;">
-39.95500
+41.68577
 </td>
 <td style="text-align:right;">
-0.2918029
+0.2970097
 </td>
 <td style="text-align:right;">
-52.73238
+53.67331
 </td>
 <td style="text-align:right;">
-0.6108449
+0.6311909
 </td>
 <td style="text-align:right;">
-0.0092865
+0.0021392
 </td>
 <td style="text-align:right;">
-0.0591663
+0.0423785
 </td>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-151-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-220-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-221-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Plant transpiration -->
 </div>
 <div class="section level4">
-<h4 id="plant-transpiration-6">Plant transpiration<a class="anchor" aria-label="anchor" href="#plant-transpiration-6"></a>
+<h4 id="transpiration-per-leaf-area-6">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-6"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -8576,25 +7989,25 @@ T1_149
 227
 </td>
 <td style="text-align:right;">
--0.0807283
+-0.0812579
 </td>
 <td style="text-align:right;">
--16.57720
+-16.685939
 </td>
 <td style="text-align:right;">
-0.2537602
+0.2541882
 </td>
 <td style="text-align:right;">
-52.10852
+52.19641
 </td>
 <td style="text-align:right;">
-0.4859261
+0.4839407
 </td>
 <td style="text-align:right;">
-0.1613396
+0.1582606
 </td>
 <td style="text-align:right;">
-0.0573642
+0.0557742
 </td>
 </tr>
 <tr>
@@ -8611,25 +8024,25 @@ T2_166
 174
 </td>
 <td style="text-align:right;">
--0.4303339
+-0.4305293
 </td>
 <td style="text-align:right;">
--58.57468
+-58.601284
 </td>
 <td style="text-align:right;">
-0.4306690
+0.4308511
 </td>
 <td style="text-align:right;">
-58.62030
+58.64508
 </td>
 <td style="text-align:right;">
-0.9528684
+0.9529299
 </td>
 <td style="text-align:right;">
--0.5554629
+-0.5567462
 </td>
 <td style="text-align:right;">
--0.3057881
+-0.3063401
 </td>
 </tr>
 <tr>
@@ -8646,25 +8059,25 @@ T3_168
 267
 </td>
 <td style="text-align:right;">
--0.3277986
+-0.3279353
 </td>
 <td style="text-align:right;">
--58.72476
+-58.749257
 </td>
 <td style="text-align:right;">
-0.3290908
+0.3292255
 </td>
 <td style="text-align:right;">
-58.95625
+58.98038
 </td>
 <td style="text-align:right;">
-0.9075216
+0.9076250
 </td>
 <td style="text-align:right;">
--0.5024808
+-0.5035348
 </td>
 <td style="text-align:right;">
--0.2363106
+-0.2368166
 </td>
 </tr>
 <tr>
@@ -8681,25 +8094,25 @@ T1_149
 227
 </td>
 <td style="text-align:right;">
-0.1141874
+-0.1449901
 </td>
 <td style="text-align:right;">
-23.44787
+-29.773059
 </td>
 <td style="text-align:right;">
-0.2481259
+0.1640154
 </td>
 <td style="text-align:right;">
-50.95153
+33.67982
 </td>
 <td style="text-align:right;">
-0.5287055
+0.8958875
 </td>
 <td style="text-align:right;">
--0.0468676
+0.5475089
 </td>
 <td style="text-align:right;">
-0.0782938
+0.3907368
 </td>
 </tr>
 <tr>
@@ -8716,25 +8129,25 @@ T2_166
 174
 </td>
 <td style="text-align:right;">
-0.2662752
+0.7775456
 </td>
 <td style="text-align:right;">
-36.24392
+105.835235
 </td>
 <td style="text-align:right;">
-0.3307155
+0.8591497
 </td>
 <td style="text-align:right;">
-45.01518
+116.94274
 </td>
 <td style="text-align:right;">
-0.9278447
+0.8037346
 </td>
 <td style="text-align:right;">
--0.1581411
+-8.8779660
 </td>
 <td style="text-align:right;">
--0.0027292
+-1.6049411
 </td>
 </tr>
 <tr>
@@ -8751,25 +8164,25 @@ T3_168
 267
 </td>
 <td style="text-align:right;">
-0.2421524
+0.5688979
 </td>
 <td style="text-align:right;">
-43.38135
+101.917447
 </td>
 <td style="text-align:right;">
-0.2963046
+0.6301934
 </td>
 <td style="text-align:right;">
-53.08265
+112.89847
 </td>
 <td style="text-align:right;">
-0.9115945
+0.7766238
 </td>
 <td style="text-align:right;">
--0.3080976
+-6.6869343
 </td>
 <td style="text-align:right;">
--0.1131414
+-1.3674770
 </td>
 </tr>
 <tr>
@@ -8789,7 +8202,7 @@ T1_149
 -0.4869841
 </td>
 <td style="text-align:right;">
--100.00000
+-100.000000
 </td>
 <td style="text-align:right;">
 0.4869841
@@ -8821,25 +8234,25 @@ T2_166
 174
 </td>
 <td style="text-align:right;">
--0.7346756
+0.0144748
 </td>
 <td style="text-align:right;">
--100.00000
+1.970225
 </td>
 <td style="text-align:right;">
-0.7346756
+0.1822589
 </td>
 <td style="text-align:right;">
-100.00000
+24.80808
 </td>
 <td style="text-align:right;">
-NA
+0.9183907
 </td>
 <td style="text-align:right;">
--3.5805115
+0.6249979
 </td>
 <td style="text-align:right;">
--1.2275356
+0.4473913
 </td>
 </tr>
 <tr>
@@ -8856,33 +8269,34 @@ T3_168
 267
 </td>
 <td style="text-align:right;">
-0.1353823
+0.0428451
 </td>
 <td style="text-align:right;">
-24.25359
+7.675648
 </td>
 <td style="text-align:right;">
-0.2601580
+0.1884476
 </td>
 <td style="text-align:right;">
-46.60701
+33.76017
 </td>
 <td style="text-align:right;">
-0.9087197
+0.9090764
 </td>
 <td style="text-align:right;">
--0.1336266
+0.4264045
 </td>
 <td style="text-align:right;">
-0.0226525
+0.2920503
 </td>
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-153-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-153-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-153-3.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-227-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-227-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-227-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-227-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-227-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-227-6.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Leaf water potential -->
 </div>
 <div class="section level4">
-<h4 id="leaf-water-potential-6">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-6"></a>
+<h4 id="leaf-water-potential-3">Leaf water potential<a class="anchor" aria-label="anchor" href="#leaf-water-potential-3"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -8941,25 +8355,25 @@ Predawn
 4
 </td>
 <td style="text-align:right;">
-0.4502280
+-0.5085368
 </td>
 <td style="text-align:right;">
-40.198929
+-45.405070
 </td>
 <td style="text-align:right;">
-0.4502280
+0.9015300
 </td>
 <td style="text-align:right;">
-40.19893
+80.49375
 </td>
 <td style="text-align:right;">
-0.9820899
+0.9732661
 </td>
 <td style="text-align:right;">
-0.1007199
+-3.2202779
 </td>
 <td style="text-align:right;">
--0.0409896
+-1.0844624
 </td>
 </tr>
 <tr>
@@ -8979,25 +8393,25 @@ Midday
 4
 </td>
 <td style="text-align:right;">
-0.2807148
+-0.8274988
 </td>
 <td style="text-align:right;">
-15.893264
+-46.850603
 </td>
 <td style="text-align:right;">
-0.2864589
+1.0020221
 </td>
 <td style="text-align:right;">
-16.21848
+56.73161
 </td>
 <td style="text-align:right;">
-0.9641813
+0.9918983
 </td>
 <td style="text-align:right;">
-0.0812875
+-15.8857860
 </td>
 <td style="text-align:right;">
-0.0833316
+-2.2064706
 </td>
 </tr>
 <tr>
@@ -9017,25 +8431,25 @@ Predawn
 4
 </td>
 <td style="text-align:right;">
-0.1000116
+-0.7502477
 </td>
 <td style="text-align:right;">
-13.526511
+-101.470530
 </td>
 <td style="text-align:right;">
-0.1774926
+0.9169839
 </td>
 <td style="text-align:right;">
-24.00576
+124.02149
 </td>
 <td style="text-align:right;">
-0.9520656
+0.8203289
 </td>
 <td style="text-align:right;">
-0.7967036
+-4.3494700
 </td>
 <td style="text-align:right;">
-0.5826772
+-1.1560239
 </td>
 </tr>
 <tr>
@@ -9055,25 +8469,25 @@ Midday
 4
 </td>
 <td style="text-align:right;">
-0.6458555
+-0.8779146
 </td>
 <td style="text-align:right;">
-25.333877
+-34.436465
 </td>
 <td style="text-align:right;">
-0.6458555
+0.8779146
 </td>
 <td style="text-align:right;">
-25.33388
+34.43646
 </td>
 <td style="text-align:right;">
-0.6574012
+0.9387197
 </td>
 <td style="text-align:right;">
--5.6602991
+-9.1352361
 </td>
 <td style="text-align:right;">
--1.7556503
+-2.7457691
 </td>
 </tr>
 <tr>
@@ -9093,25 +8507,25 @@ Predawn
 4
 </td>
 <td style="text-align:right;">
-0.4861252
+-0.3844217
 </td>
 <td style="text-align:right;">
-42.619195
+-33.702724
 </td>
 <td style="text-align:right;">
-0.4861252
+0.6686617
 </td>
 <td style="text-align:right;">
-42.61920
+58.62240
 </td>
 <td style="text-align:right;">
-0.9705442
+0.8070981
 </td>
 <td style="text-align:right;">
-0.5863630
+0.1664156
 </td>
 <td style="text-align:right;">
-0.4060326
+0.1830021
 </td>
 </tr>
 <tr>
@@ -9131,25 +8545,25 @@ Midday
 4
 </td>
 <td style="text-align:right;">
-0.2882249
+-1.3656649
 </td>
 <td style="text-align:right;">
-12.229113
+-57.943881
 </td>
 <td style="text-align:right;">
-0.3816082
+1.3656649
 </td>
 <td style="text-align:right;">
-16.19128
+57.94388
 </td>
 <td style="text-align:right;">
-0.9664102
+0.9830133
 </td>
 <td style="text-align:right;">
-0.5773310
+-3.7795083
 </td>
 <td style="text-align:right;">
-0.2466711
+-1.6959454
 </td>
 </tr>
 <tr>
@@ -9166,28 +8580,28 @@ T1_149
 Predawn
 </td>
 <td style="text-align:right;">
-1
+2
 </td>
 <td style="text-align:right;">
-0.4662039
+0.1025328
 </td>
 <td style="text-align:right;">
-56.169143
+7.470512
 </td>
 <td style="text-align:right;">
-0.4662039
+0.4013166
 </td>
 <td style="text-align:right;">
-56.16914
+29.23983
 </td>
 <td style="text-align:right;">
-NA
+1.0000000
 </td>
 <td style="text-align:right;">
--Inf
+0.4170426
 </td>
 <td style="text-align:right;">
--Inf
+0.2602458
 </td>
 </tr>
 <tr>
@@ -9204,28 +8618,28 @@ T1_149
 Midday
 </td>
 <td style="text-align:right;">
-1
+2
 </td>
 <td style="text-align:right;">
-0.4602853
+0.0495478
 </td>
 <td style="text-align:right;">
-32.644349
+2.678261
 </td>
 <td style="text-align:right;">
-0.4602853
+0.3753674
 </td>
 <td style="text-align:right;">
-32.64435
+20.29013
 </td>
 <td style="text-align:right;">
-NA
+1.0000000
 </td>
 <td style="text-align:right;">
--Inf
+0.2595263
 </td>
 <td style="text-align:right;">
--Inf
+0.1468922
 </td>
 </tr>
 <tr>
@@ -9242,28 +8656,28 @@ T2_166
 Predawn
 </td>
 <td style="text-align:right;">
-1
+4
 </td>
 <td style="text-align:right;">
-0.2760912
+0.0784741
 </td>
 <td style="text-align:right;">
-44.711133
+10.613576
 </td>
 <td style="text-align:right;">
-0.2760912
+0.3352971
 </td>
 <td style="text-align:right;">
-44.71113
+45.34872
 </td>
 <td style="text-align:right;">
-NA
+0.9667859
 </td>
 <td style="text-align:right;">
--Inf
+0.4754038
 </td>
 <td style="text-align:right;">
--Inf
+0.2116453
 </td>
 </tr>
 <tr>
@@ -9280,28 +8694,28 @@ T2_166
 Midday
 </td>
 <td style="text-align:right;">
-1
+4
 </td>
 <td style="text-align:right;">
-1.4012215
+1.3939918
 </td>
 <td style="text-align:right;">
-55.384251
+54.679747
 </td>
 <td style="text-align:right;">
-1.4012215
+1.3939918
 </td>
 <td style="text-align:right;">
-55.38425
+54.67975
 </td>
 <td style="text-align:right;">
-NA
+0.5622078
 </td>
 <td style="text-align:right;">
--Inf
+-29.4500443
 </td>
 <td style="text-align:right;">
--Inf
+-4.9476983
 </td>
 </tr>
 <tr>
@@ -9321,25 +8735,25 @@ Predawn
 4
 </td>
 <td style="text-align:right;">
-0.0855552
+0.4622506
 </td>
 <td style="text-align:right;">
-7.500725
+40.526076
 </td>
 <td style="text-align:right;">
-0.3776394
+0.4622506
 </td>
 <td style="text-align:right;">
-33.10811
+40.52608
 </td>
 <td style="text-align:right;">
-0.9925750
+0.9963892
 </td>
 <td style="text-align:right;">
-0.8101183
+0.7452886
 </td>
 <td style="text-align:right;">
-0.5385849
+0.4352036
 </td>
 </tr>
 <tr>
@@ -9359,25 +8773,25 @@ Midday
 4
 </td>
 <td style="text-align:right;">
-0.3679819
+0.9424340
 </td>
 <td style="text-align:right;">
-15.613129
+39.986594
 </td>
 <td style="text-align:right;">
-0.9056199
+0.9424340
 </td>
 <td style="text-align:right;">
-38.42460
+39.98659
 </td>
 <td style="text-align:right;">
-0.8820273
+0.8991339
 </td>
 <td style="text-align:right;">
--1.2268164
+-1.3534544
 </td>
 <td style="text-align:right;">
--0.7877752
+-0.8604497
 </td>
 </tr>
 </tbody>
