@@ -1,6 +1,6 @@
 ---
-title: "Stand-level evaluation"
-author: "Miquel De Cáceres"
+title: "Stand-level model evaluation"
+author: "Miquel De Cáceres (CREAF), Víctor Granda (CREAF), Nicolas Martin-StPaul (INRAE)"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_document:
@@ -13,7 +13,8 @@ output:
 ```{r setup, include=FALSE}
 params = list(wd='/home/miquel/OneDrive/mcaceres_work/model_development/medfate_development/StandLevelEvaluation/',
               model='spwb',
-              codes=c("FRAPUE", "FRAHES", "ISRYAT", "PRADES",  "FONBLA" ),
+              names=c("Puéchabon", "Hesse", "Yatir", "Prades", "Font-Blanche", "Can Balasc", "Armallones"),
+              codes=c("FRAPUE", "FRAHES", "ISRYAT", "PRADES",  "FONBLA", "CANBALASC", "ESPALTARM"),
               confs=c('granier','sperry', 'cochard'),
               save_plots = FALSE)
 
@@ -21,7 +22,8 @@ knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(error = TRUE)
 knitr::opts_chunk$set(message = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
-
+library(knitr)
+library(kableExtra)
 library(medfate)
 library(ggplot2)
 
@@ -61,60 +63,26 @@ for(i in 1:n_sites) {
 knitr::opts_knit$set(root.dir = this_path)
 ```
 
+# Introduction
+
+This document presents **medfate** (**ver. `r packageVersion('medfate')[[1]]`**) model evaluation results at stand-level, using data from a set of **`r length(params$codes)` experimental forest plots**. Forest water balance simulations (i.e. function `spwb()`) have been conducted using the three transpiration modes (i.e. `Granier`, `Sperry` or `Cochard`). For each forest plot, general information about the site, topography, soil and climate is first presented, followed by a description of model inputs. Then, evaluation results are presented for four different variables:
+
+ a. Stand-level evapo-transpiration.
+ b. Soil moisture content of the topmost layer.
+ c. Species-level transpiration, scaled from sap-flow data.
+ d. Predawn and midday leaf water potentials. 
+
+The main source of observed data is SAPFLUXNET database ([Poyatos et al. 2021](https://essd.copernicus.org/articles/13/2607/2021/)).
+ 
+
 ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
  for(i in 1:length(params$codes)) {
-   site_name <- params$codes[i] 
-   res <- knitr::knit_child(file.path(this_path,'_SLEvaluation_child.Rmd'), quiet = TRUE)
+   site_code <- params$codes[i]
+   site_name <- params$names[i]
+   res <- knitr::knit_child(file.path(this_path,'_Stand_Evaluation_child.Rmd'), quiet = TRUE)
    cat(res, sep = '\n')
  }
 ```
-
-
-
-<!-- ## PRADES -->
-<!-- ```{r} -->
-<!-- params$code = 'PRADES' -->
-<!-- site_data <- medfatereports::load_list(params$code) -->
-<!-- ``` -->
-
-<!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} -->
-<!-- ``` -->
-
-<!-- ## FRAPUE -->
-<!-- ```{r} -->
-<!-- params$code = 'FRAPUE' -->
-<!-- site_data <- medfatereports::load_list(params$code) -->
-<!-- ``` -->
-
-<!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} -->
-<!-- ``` -->
-
-<!-- ## FONBLA -->
-<!-- ```{r} -->
-<!-- params$code = 'FONBLA' -->
-<!-- site_data <- medfatereports::load_list(params$code) -->
-<!-- ``` -->
-
-<!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} -->
-<!-- ``` -->
-
-<!-- ## ESPALTARM -->
-<!-- ```{r} -->
-<!-- params$code = 'ESPALTARM' -->
-<!-- site_data <- medfatereports::load_list(params$code) -->
-<!-- ``` -->
-
-<!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} -->
-<!-- ``` -->
-
-<!-- ## CAN BALASC -->
-<!-- ```{r} -->
-<!-- params$code = 'CANBALASC' -->
-<!-- site_data <- medfatereports::load_list(params$code) -->
-<!-- ``` -->
-
-<!-- ```{r child = system.file("Rmd_templates","evaluation_child_template.Rmd",package = "medfatereports")} -->
-<!-- ``` -->
 
 
 

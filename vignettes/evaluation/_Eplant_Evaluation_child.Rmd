@@ -1,0 +1,76 @@
+### Transpiration per leaf area
+
+```{r}
+df_eval<-NULL
+cohNamesOut <- character()
+sitesOut <- character()
+modesOut <- character()
+for(i in 1:nrow(df_site)) {
+  cohNames <- row.names(df_site$InputObject[[i]]$cohorts)
+  for(j in 1:length(cohNames)) {
+    measured_var <- paste0("E_", cohNames[j])
+    if(measured_var %in% names(df_site$SiteData[[i]]$measuredData)) {
+      v<-medfate::evaluation_stats(df_site$Result[[i]], df_site$SiteData[[i]]$measuredData,
+                                   type= "E", cohort = cohNames[j])
+      if(v[["n"]]>0) {
+        if(is.null(df_eval)) {
+          df_eval <- v
+        } else {
+          df_eval <- cbind(df_eval, v)
+        }
+        cohNamesOut <-c(cohNamesOut, cohNames[j])
+        sitesOut<- c(sitesOut, df_site$Site[i])
+        modesOut<- c(modesOut, df_site$Mode[i])
+      }
+    }
+  }
+}
+if(!is.null(df_eval)) {
+  df_all <- data.frame(Site = sitesOut, Mode = modesOut, Cohort = cohNamesOut, t(df_eval))
+}
+row.names(df_all)<- NULL
+df_all|> 
+  kbl() |>
+  kable_styling()
+```
+
+
+```{r, fig.height=3, fig.width=9, fig.align="center"}
+cohNames <- row.names(df_site$InputObject[[1]]$cohorts)
+spNames <- df_site$InputObject[[1]]$cohorts$Name
+for(i in 1:length(cohNames)) {
+  measured_var <- paste0("E_", cohNames[i])
+  to_plot <- measured_var %in% names(df_site$SiteData[[1]]$measuredData)
+  if(to_plot) {
+    to_plot <- to_plot && any(!is.na(df_site$SiteData[[1]]$measuredData[[measured_var]]))
+  }
+  if(to_plot) {
+    eval_table_granier <- medfate::evaluation_table(df_site$Result[[1]], df_site$SiteData[[1]]$measuredData, 
+                                                    type= "E", cohort = cohNames[i])
+    eval_table_sperry <- medfate::evaluation_table(df_site$Result[[2]], df_site$SiteData[[2]]$measuredData, 
+                                                   type= "E",cohort = cohNames[i])
+    eval_table_cochard <- medfate::evaluation_table(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData, 
+                                                    type= "E", cohort = cohNames[i])
+    eval_all <- eval_table_granier[,c(1,2)]
+    eval_all$Granier <- eval_table_granier$Modelled
+    eval_all$Sperry <- eval_table_sperry$Modelled
+    eval_all$Cochard <- eval_table_cochard$Modelled
+    eval_all_long <- eval_all |>
+      tidyr::pivot_longer(cols = 2:5, names_to = "Mode", values_to="E") |>
+      dplyr::mutate(Mode = factor(Mode, levels = c("Observed", "Granier", "Sperry", "Cochard")))
+    pa<-medfate::evaluation_plot(df_site$Result[[1]], df_site$SiteData[[1]]$measuredData, type= "E", plotType = "scatter", cohort = cohNames[i])+labs(subtitle="Granier")+xlab("Modelled E (l/m2)")+ylab("Observed E (l/m2)")
+    pb<-medfate::evaluation_plot(df_site$Result[[2]], df_site$SiteData[[2]]$measuredData, type= "E", plotType = "scatter", cohort = cohNames[i])+labs(subtitle="Sperry", title="")+xlab("Modelled E (l/m2)")+ylab("Observed E (l/m2)")
+    pc<-medfate::evaluation_plot(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData, type= "E", plotType = "scatter", cohort = cohNames[i])+labs(subtitle="Cochard", title="")+xlab("Modelled E (l/m2)")+ylab("Observed E (l/m2)")
+    p1 <- cowplot::plot_grid(pa,pb,pc, ncol = 3)
+    print(p1)
+    p2<-ggplot(eval_all_long, mapping = aes(x=Dates, y=E))+
+      geom_line(mapping=aes(col = Mode, alpha = Mode))+
+      geom_point(aes(x= Dates, y=E), size = 0.5, data = eval_all_long[eval_all_long$Mode=="Observed",])+
+      scale_alpha_manual("", values=c(0.8,0.5,0.5,0.5))+
+      scale_color_manual("",values = c("black", "red", "green", "blue"))+
+      xlab("")+ylab("Transpiration per leaf area (l/m2)") + labs(title="")+
+      theme_bw()
+    print(p2)
+  }
+}
+```

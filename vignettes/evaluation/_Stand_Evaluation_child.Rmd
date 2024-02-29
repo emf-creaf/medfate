@@ -1,0 +1,87 @@
+# `r site_name`
+
+```{r, echo = FALSE}
+df_site <- df[df$Site==site_code,]
+```
+
+## Plot information
+
+```{r}
+as.data.frame(df_site$SiteData[[1]]$siteData)|> 
+  kbl() |>
+  kable_styling()
+```
+
+## Model inputs
+### Vegetation 
+
+```{r}
+as.data.frame(df_site$SiteData[[1]]$treeData)|> 
+  kbl() |>
+  kable_styling()
+```
+
+```{r}
+as.data.frame(df_site$SiteData[[1]]$shrubData)|> 
+  kbl() |>
+  kable_styling()
+```
+
+### Soil
+
+```{r}
+as.data.frame(df_site$SiteData[[1]]$soilData)|> 
+  kbl() |>
+  kable_styling()
+```
+
+### Custom traits
+
+```{r, max.print=5}
+as.data.frame(df_site$SiteData[[1]]$customParams)|> 
+  kbl() |>
+  kable_styling()
+```
+
+## Evaluation results
+
+<!-- Stand-level evapotranspiration -->
+```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
+eval_ETR <- "ETR" %in% names(df_site$SiteData[[1]]$measuredData)
+ if(eval_ETR) {
+   res <- knitr::knit_child(file.path(this_path,'_ETR_Evaluation_child.Rmd'), quiet = TRUE)
+   cat(res, sep = '\n')
+ }
+```
+
+<!-- Soil moisture -->
+```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
+eval_REW <- "SWC" %in% names(df_site$SiteData[[1]]$measuredData)
+ if(eval_REW) {
+   res <- knitr::knit_child(file.path(this_path,'_REW_Evaluation_child.Rmd'), quiet = TRUE)
+   cat(res, sep = '\n')
+ }
+```
+
+<!-- Plant transpiration -->
+```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
+eval_Eplant <- TRUE
+ if(eval_Eplant) {
+   res <- knitr::knit_child(file.path(this_path,'_Eplant_Evaluation_child.Rmd'), quiet = TRUE)
+   cat(res, sep = '\n')
+ }
+```
+
+<!-- Leaf water potential -->
+```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
+eval_WP <- FALSE
+cohNames <- row.names(df_site$InputObject[[1]]$cohorts)
+for(j in 1:length(cohNames)) {
+  if(paste0("MD_", cohNames[j]) %in% names(df_site$SiteData[[1]]$measuredData)) eval_WP <- TRUE
+  if(paste0("PD_", cohNames[j]) %in% names(df_site$SiteData[[1]]$measuredData)) eval_WP <- TRUE
+}
+if(eval_WP) {
+  res <- knitr::knit_child(file.path(this_path,'_LeafWP_Evaluation_child.Rmd'), quiet = TRUE)
+  cat(res, sep = '\n')
+}
+```

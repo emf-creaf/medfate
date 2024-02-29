@@ -1,0 +1,41 @@
+
+### Leaf water potential
+
+```{r}
+df_eval<-NULL
+cohNamesOut <- character()
+sitesOut <- character()
+modesOut <- character()
+wpOut <- character()
+for(i in 1:nrow(df_site)) {
+  if(df_site$Mode[[i]] !="granier") {
+      cohNames <- row.names(df_site$InputObject[[i]]$cohorts)
+      for(j in 1:length(cohNames)) {
+        measured_var <- paste0("MD_", cohNames[j])
+        if(measured_var %in% names(df_site$SiteData[[i]]$measuredData)) {
+          v<-medfate::evaluation_stats(df_site$Result[[i]], df_site$SiteData[[i]]$measuredData,
+                                       type= "WP", cohort = cohNames[j])
+          if(v[["n"]][1]>0) {
+            if(is.null(df_eval)) {
+              df_eval <- v
+            } else {
+              df_eval <- rbind(df_eval, v)
+            }
+            wpOut <- c(wpOut, c("Predawn", "Midday"))
+            cohNamesOut <-c(cohNamesOut, rep(cohNames[j],2))
+            sitesOut<- c(sitesOut, rep(df$Site[i],2))
+            modesOut<- c(modesOut, rep(df$Mode[i],2))
+          }
+        }
+      }
+  }
+}
+if(!is.null(df_eval)) {
+  df_all <- data.frame(Site = sitesOut, Mode = modesOut, Cohort = cohNamesOut, WP = wpOut, df_eval)
+}
+row.names(df_all)<- NULL
+df_all|>
+  kbl() |>
+  kable_styling()
+```
+
