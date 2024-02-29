@@ -39,3 +39,40 @@ df_all|>
   kable_styling()
 ```
 
+
+```{r, fig.height=3, fig.width=9, fig.align="center"}
+cohNames <- row.names(df_site$InputObject[[1]]$cohorts)
+spNames <- df_site$InputObject[[1]]$cohorts$Name
+for(j in 1:length(cohNames)) {
+  measured_var <- paste0("PD_", cohNames[j])
+  to_plot <- measured_var %in% names(df_site$SiteData[[2]]$measuredData)
+  if(to_plot) {
+    to_plot <- to_plot && any(!is.na(df_site$SiteData[[2]]$measuredData[[measured_var]]))
+  }
+  if(to_plot) {
+    pb<-medfate::evaluation_plot(df_site$Result[[2]], df_site$SiteData[[2]]$measuredData, type= "WP", 
+                                 plotType = "scatter", cohort = cohNames[j])+labs(subtitle="Sperry")
+    pc<-medfate::evaluation_plot(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData, type= "WP", 
+                                 plotType = "scatter", cohort = cohNames[j])+labs(subtitle="Cochard", title="")
+    l <- cowplot::get_legend(pb)
+    p1 <- cowplot::plot_grid(pb + theme(legend.position = "none"),
+                             pc + theme(legend.position = "none"), 
+                             l, 
+                             ncol = 3)
+    print(p1)
+    eval_table_sperry <- medfate::evaluation_table(df_site$Result[[2]], df_site$SiteData[[2]]$measuredData,
+                                                   type= "WP",cohort = cohNames[j])
+    eval_table_cochard <- medfate::evaluation_table(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData,
+                                                    type= "WP", cohort = cohNames[j])
+    obs_table <- eval_table_sperry[!is.na(eval_table_sperry$PD_obs),]
+    p2 <- ggplot()+
+      geom_ribbon(aes(x = Dates, ymin = PD_mod, ymax = MD_mod), data = eval_table_sperry, alpha = 0.5, fill = "green")+
+      geom_ribbon(aes(x = Dates, ymin = PD_mod, ymax = MD_mod), data = eval_table_cochard, alpha = 0.5, fill = "blue")+
+      geom_point(aes(x = Dates, y = PD_obs), data = obs_table)+
+      geom_point(aes(x = Dates, y = MD_obs), data = obs_table)+
+      geom_segment(aes(x = Dates, xend = Dates, y = MD_obs, yend= PD_obs), data = obs_table)+
+      theme_bw()+ ylab("Leaf water potential (MPa)")+ xlab("")
+    print(p2)
+  }
+}
+```

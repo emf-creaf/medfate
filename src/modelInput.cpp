@@ -467,7 +467,7 @@ DataFrame paramsTranspirationCochard(DataFrame above, NumericVector Z95, List so
     NumericVector LP = leafphotosynthesis(2000.0,  386.0, Gswmax[c]/1.6, 25.0, Vmax298[c], Jmax298[c]); 
     double An_max = LP[1] - 0.015*VmaxTemp(Vmax298[c], 25.0);
     Gsw_AC_slope[c] = (Gswmax[c] - Gswmin[c])*386.0/An_max;
-    
+    Gsw_AC_slope[c] = std::min(10.0, std::max(3.0, Gsw_AC_slope[c]));
   }
   
   DataFrame paramsTranspirationdf = DataFrame::create();
