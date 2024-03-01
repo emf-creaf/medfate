@@ -66,6 +66,47 @@ namespace medfate {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
+    inline List _defineASPWBDailyOutput(double latitude, double elevation, double slope, double aspect, CharacterVector dateStrings, List x) {
+        typedef SEXP(*Ptr__defineASPWBDailyOutput)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
+        static Ptr__defineASPWBDailyOutput p__defineASPWBDailyOutput = NULL;
+        if (p__defineASPWBDailyOutput == NULL) {
+            validateSignature("List(*_defineASPWBDailyOutput)(double,double,double,double,CharacterVector,List)");
+            p__defineASPWBDailyOutput = (Ptr__defineASPWBDailyOutput)R_GetCCallable("medfate", "_medfate__defineASPWBDailyOutput");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p__defineASPWBDailyOutput(Shield<SEXP>(Rcpp::wrap(latitude)), Shield<SEXP>(Rcpp::wrap(elevation)), Shield<SEXP>(Rcpp::wrap(slope)), Shield<SEXP>(Rcpp::wrap(aspect)), Shield<SEXP>(Rcpp::wrap(dateStrings)), Shield<SEXP>(Rcpp::wrap(x)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<List >(rcpp_result_gen);
+    }
+
+    inline void _fillASPWBDailyOutput(List l, List soil, List sDay, int iday) {
+        typedef SEXP(*Ptr__fillASPWBDailyOutput)(SEXP,SEXP,SEXP,SEXP);
+        static Ptr__fillASPWBDailyOutput p__fillASPWBDailyOutput = NULL;
+        if (p__fillASPWBDailyOutput == NULL) {
+            validateSignature("void(*_fillASPWBDailyOutput)(List,List,List,int)");
+            p__fillASPWBDailyOutput = (Ptr__fillASPWBDailyOutput)R_GetCCallable("medfate", "_medfate__fillASPWBDailyOutput");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p__fillASPWBDailyOutput(Shield<SEXP>(Rcpp::wrap(l)), Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(sDay)), Shield<SEXP>(Rcpp::wrap(iday)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+    }
+
     inline List aspwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
         typedef SEXP(*Ptr_aspwb)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_aspwb p_aspwb = NULL;

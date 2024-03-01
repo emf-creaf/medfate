@@ -11,6 +11,14 @@ aspwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, run
     .Call(`_medfate_aspwb_day`, x, date, meteovec, latitude, elevation, slope, aspect, runon, modifyInput)
 }
 
+.defineASPWBDailyOutput <- function(latitude, elevation, slope, aspect, dateStrings, x) {
+    .Call(`_medfate_defineASPWBDailyOutput`, latitude, elevation, slope, aspect, dateStrings, x)
+}
+
+.fillASPWBDailyOutput <- function(l, soil, sDay, iday) {
+    invisible(.Call(`_medfate_fillASPWBDailyOutput`, l, soil, sDay, iday))
+}
+
 #' Simulation in agricultural areas
 #'
 #' Function \code{aspwb_day} performs water balance for a single day in an agriculture location.
@@ -44,7 +52,7 @@ aspwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, run
 #' 
 #' @name aspwb
 aspwb <- function(x, meteo, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
-    .Call(`_medfate_apwb`, x, meteo, latitude, elevation, slope, aspect)
+    .Call(`_medfate_aspwb`, x, meteo, latitude, elevation, slope, aspect)
 }
 
 #' Physical and biophysical utility functions

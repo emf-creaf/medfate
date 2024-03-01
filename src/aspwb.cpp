@@ -203,10 +203,12 @@ List aspwb_day(List x, CharacterVector date, NumericVector meteovec,
 }
 
 
-DataFrame defineAgricultureWaterBalanceDailyOutput(CharacterVector dateStrings, NumericVector PET) {
+
+
+DataFrame defineAgricultureWaterBalanceDailyOutput(CharacterVector dateStrings) {
   int numDays = dateStrings.length();
   
-  NumericVector Precipitation(numDays), Evapotranspiration(numDays);
+  NumericVector PET(numDays), Precipitation(numDays), Evapotranspiration(numDays);
   NumericVector Runoff(numDays),Rain(numDays),Snow(numDays);
   NumericVector Snowmelt(numDays),NetRain(numDays);
   NumericVector Infiltration(numDays),DeepDrainage(numDays);
@@ -249,8 +251,36 @@ DataFrame defineAgricultureSoilWaterBalanceDailyOutput(CharacterVector dateStrin
   return(SWB);  
 }
 
+// [[Rcpp::export(".defineASPWBDailyOutput")]]
+List defineASPWBDailyOutput(double latitude, double elevation, double slope, double aspect, 
+                           CharacterVector dateStrings, List x) {
+  
+  NumericVector topo = NumericVector::create(elevation, slope, aspect);
+  topo.attr("names") = CharacterVector::create("elevation", "slope", "aspect");
+  
+  List aspwbInput = clone(x);
+  List control = x["control"];
+  List soil = x["soil"];
+
+  //Water balance output variables
+  DataFrame DWB = defineAgricultureWaterBalanceDailyOutput(dateStrings);
+  DataFrame SWB = defineAgricultureSoilWaterBalanceDailyOutput(dateStrings, soil);
+  
+  List l;
+  l = List::create(Named("latitude") = latitude,
+                   Named("topography") = topo,
+                   Named("weather") = NA_REAL,
+                   Named("aspwbInput") = aspwbInput,
+                   Named("aspwbOutput") = x,
+                   Named("WaterBalance")=DWB);
+  if(control["soilResults"]) l.push_back(SWB, "Soil");
+  l.attr("class") = CharacterVector::create("aspwb","list");
+  return(l);
+}
+
 void fillAgricultureWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday) {
   List db = sDay["WaterBalance"];
+  NumericVector PET = DWB["PET"];
   NumericVector Precipitation = DWB["Precipitation"];
   NumericVector DeepDrainage = DWB["DeepDrainage"];
   NumericVector Infiltration = DWB["Infiltration"];
@@ -266,6 +296,7 @@ void fillAgricultureWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday) 
   Runoff[iday] = db["Runoff"];
   Rain[iday] = db["Rain"];
   Snow[iday] = db["Snow"];
+  PET[iday] = db["PET"];
   Precipitation[iday] = Rain[iday]+Snow[iday];
   Snowmelt[iday] = db["Snowmelt"];
   Transpiration[iday] = db["Transpiration"];
@@ -302,6 +333,26 @@ void fillAgricultureSoilWaterBalanceDailyOutput(DataFrame SWB, List soil, List s
   }
   SWE[iday] = soil["SWE"];
   WaterTable[iday] = waterTableDepth(soil, soilFunctions);
+}
+
+// [[Rcpp::export(".fillASPWBDailyOutput")]]
+void fillASPWBDailyOutput(List l, List soil, List sDay, int iday) {
+  
+  List x = l["aspwbInput"];
+  List control = x["control"];
+  String transpirationMode = control["transpirationMode"];
+  
+  DataFrame DWB = Rcpp::as<Rcpp::DataFrame>(l["WaterBalance"]);
+  int numDays = DWB.nrow();
+  fillAgricultureWaterBalanceDailyOutput(DWB, sDay, iday);
+  
+  if(control["soilResults"]) {
+    String soilFunctions = control["soilFunctions"];
+    DataFrame SWB = Rcpp::as<Rcpp::DataFrame>(l["Soil"]);
+    fillAgricultureSoilWaterBalanceDailyOutput(SWB, soil, sDay, 
+                                               iday, numDays,
+                                               soilFunctions);
+  }
 }
 
 void printAgricultureWaterBalanceResult(DataFrame DWB,
@@ -384,16 +435,15 @@ void printAgricultureWaterBalanceResult(DataFrame DWB,
 //' 
 //' @name aspwb
 // [[Rcpp::export("aspwb")]]
-List apwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
+List aspwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
   List control = x["control"];
   String soilFunctions = control["soilFunctions"];
   bool verbose = control["verbose"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
   NumericVector defaultRainfallIntensityPerMonth = control["defaultRainfallIntensityPerMonth"];
   
-  //Store input
-  List aspwbInput = x; // Store initial object
-  x = clone(x); //Ensure a copy will be modified
+  //Clone input
+  x = clone(x);
   
   List soil = x["soil"];
   
@@ -474,9 +524,11 @@ List apwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   List subdailyRes(numDays);
   
 
-  //Water balance output variables
-  DataFrame DWB = defineAgricultureWaterBalanceDailyOutput(dateStrings, PET);
-  DataFrame SWB = defineAgricultureSoilWaterBalanceDailyOutput(dateStrings, soil);
+  
+  //Define output list
+  List outputList = defineASPWBDailyOutput(latitude, elevation, slope, aspect,
+                                          dateStrings, x);
+  outputList["weather"] = clone(meteo);
   
   NumericVector initialContent = water(soil, soilFunctions);
   double initialSnowContent = soil["SWE"];
@@ -510,6 +562,7 @@ List apwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       int month = std::atoi(c.substr(5,2).c_str());
       Rint = rainfallIntensity(month, Precipitation[i], defaultRainfallIntensityPerMonth);
     }
+    
     
     if(unlimitedSoilWater) {
       NumericVector W = soil["W"];
@@ -552,10 +605,8 @@ List apwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       error_occurence = true;
     }
     
-    //Update plant daily water output
-    fillAgricultureWaterBalanceDailyOutput(DWB, s,i);
-    fillAgricultureSoilWaterBalanceDailyOutput(SWB, soil, s,
-                                    i, numDays, soilFunctions);
+    //Fill output list      
+    fillASPWBDailyOutput(outputList, soil, s,i);
 
     if(control["subdailyResults"]) {
       subdailyRes[i] = clone(s);
@@ -564,6 +615,7 @@ List apwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   if(verbose) Rcout << "\n\n";
   
   if(verbose) {
+    List DWB = outputList["WaterBalance"];
     printAgricultureWaterBalanceResult(DWB, soil, soilFunctions,
                                        initialContent, initialSnowContent);
     if(error_occurence) {
@@ -571,22 +623,5 @@ List apwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
     }
   }
   
-  
-  subdailyRes.attr("names") = dateStrings;
-  
-  NumericVector topo = NumericVector::create(elevation, slope, aspect);
-  topo.attr("names") = CharacterVector::create("elevation", "slope", "aspect");
-  
-
-  List l;
-  l = List::create(Named("latitude") = latitude,
-                   Named("topography") = topo,
-                   Named("weather") = clone(meteo),
-                   Named("aspwbInput") = aspwbInput,
-                   Named("aspwbOutput") = clone(x),
-                   Named("WaterBalance")=DWB);
-  if(control["soilResults"]) l.push_back(SWB, "Soil");
-  if(control["subdailyResults"]) l.push_back(subdailyRes,"subdaily");
-  l.attr("class") = CharacterVector::create("aspwb","list");
-  return(l);
+  return(outputList);
 }
