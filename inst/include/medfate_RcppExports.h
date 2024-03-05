@@ -484,11 +484,11 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline double hydrology_soilFlows(List soil, NumericVector sourceSink, int nsteps = 24, bool modifySoil = true) {
+    inline NumericVector hydrology_soilFlows(List soil, NumericVector sourceSink, int nsteps = 24, bool modifySoil = true) {
         typedef SEXP(*Ptr_hydrology_soilFlows)(SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_soilFlows p_hydrology_soilFlows = NULL;
         if (p_hydrology_soilFlows == NULL) {
-            validateSignature("double(*hydrology_soilFlows)(List,NumericVector,int,bool)");
+            validateSignature("NumericVector(*hydrology_soilFlows)(List,NumericVector,int,bool)");
             p_hydrology_soilFlows = (Ptr_hydrology_soilFlows)R_GetCCallable("medfate", "_medfate_hydrology_soilFlows");
         }
         RObject rcpp_result_gen;
@@ -502,7 +502,7 @@ namespace medfate {
             throw Rcpp::LongjumpException(rcpp_result_gen);
         if (rcpp_result_gen.inherits("try-error"))
             throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<double >(rcpp_result_gen);
+        return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
     inline double soil_saturatedConductivitySX(double clay, double sand, double bd, double om = NA_REAL, bool mmol = true) {

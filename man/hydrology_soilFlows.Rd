@@ -17,7 +17,11 @@ as mm/day.}
 \item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
 }
 \value{
-Returns the water draining from the bottom layer.
+Returns a named vector with two elements:
+  \itemize{
+    \item{\code{deep_drainage}: the water draining from the bottom layer.}
+    \item{\code{saturation_excess}: surface runoff generated via saturation excess.}
+  }
 }
 \description{
 Function \code{hydrology_soilFlows} estimates water movement within the soil according to Richards equation.

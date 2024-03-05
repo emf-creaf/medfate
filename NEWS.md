@@ -21,6 +21,7 @@
 - New species parameter tables: SpParamsES, SpParamsFR, SpParamsUS
 - New functions "tree2forest"/"shrub2forest" to create forest objects with single cohorts
 - Van Genuchten parameters and Ksat can be specified directly when initializing soil
+- Saturation excess in soil flows
 
 # Version 3.2.0
 - Correction of a bug arisen in old Rcpp versions

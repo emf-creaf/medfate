@@ -2575,7 +2575,7 @@ RcppExport SEXP _medfate_soilWaterInputs(SEXP soilSEXP, SEXP soilFunctionsSEXP, 
     return rcpp_result_gen;
 }
 // soilFlows
-double soilFlows(List soil, NumericVector sourceSink, int nsteps, bool modifySoil);
+NumericVector soilFlows(List soil, NumericVector sourceSink, int nsteps, bool modifySoil);
 static SEXP _medfate_soilFlows_try(SEXP soilSEXP, SEXP sourceSinkSEXP, SEXP nstepsSEXP, SEXP modifySoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -5518,7 +5518,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("double(*hydrology_infiltrationAmount)(double,double,List,String,String)");
         signatures.insert("double(*hydrology_snowMelt)(double,double,double,double)");
         signatures.insert("NumericVector(*hydrology_soilWaterInputs)(List,String,String,double,double,double,double,double,double,double,double,double,double,bool,bool)");
-        signatures.insert("double(*hydrology_soilFlows)(List,NumericVector,int,bool)");
+        signatures.insert("NumericVector(*hydrology_soilFlows)(List,NumericVector,int,bool)");
         signatures.insert("double(*soil_saturatedConductivitySX)(double,double,double,double,bool)");
         signatures.insert("double(*soil_unsaturatedConductivitySX)(double,double,double,double,double,bool)");
         signatures.insert("double(*soil_thetaSATSX)(double,double,double)");

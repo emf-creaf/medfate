@@ -536,11 +536,16 @@ NumericVector tridiagonalSolving(NumericVector a, NumericVector b, NumericVector
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
 //' @return
-//'   Returns the water draining from the bottom layer.
+//'   Returns a named vector with two elements:
+//'   \itemize{
+//'     \item{\code{deep_drainage}: the water draining from the bottom layer.}
+//'     \item{\code{saturation_excess}: surface runoff generated via saturation excess.}
+//'   }
+//'   
 //'   
 //' @name hydrology_soilFlows
 // [[Rcpp::export("hydrology_soilFlows")]]
-double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
+NumericVector soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
                  bool modifySoil = true) {
   
   NumericVector dVec = soil["dVec"];
@@ -549,7 +554,8 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   NumericVector dZ_m = dVec*0.001; //mm to m
   NumericVector rfc = soil["rfc"];
 
-  
+  if(!modifySoil) soil = clone(soil);
+    
   double maxSource =  max(abs(sourceSink));
   if(maxSource > 10) nsteps = 48;
   if(maxSource > 20) nsteps = 96;
@@ -582,6 +588,7 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
   NumericVector alpha = soil["VG_alpha"];
   NumericVector theta_res = soil["VG_theta_res"];
   NumericVector theta_sat = soil["VG_theta_sat"];
+
   
   //Estimate Theta, Psi, C, K
   NumericVector Theta = theta(soil, "VG");
@@ -598,7 +605,8 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
     C_m[l] = C[l]*mTOMPa; //From MPa-1 to m-1
   }
   
-
+  //Initial soil volume
+  double Vini_mm = sum(water(soil, "VG"));
   double drainage = 0.0;
   double K_up, K_down;
   NumericVector a(nlayers), b(nlayers), c(nlayers), d(nlayers);
@@ -680,13 +688,18 @@ double soilFlows(List soil, NumericVector sourceSink, int nsteps = 24,
     }
   }
   double drainage_mm = drainage*1000.0; //m3/m2 to mm/m2
-  if(modifySoil) {
-    NumericVector W = soil["W"];
-    for(int l=0;l<nlayers;l++) {
-      double theta_fc = psi2thetaVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], -0.033);
-      Theta[l] = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
-      W[l] = Theta[l]/theta_fc;
-    }
+  NumericVector W = soil["W"];
+  for(int l=0;l<nlayers;l++) {
+    double theta_fc = psi2thetaVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], -0.033);
+    Theta[l] = psi2thetaVanGenuchten(n[l], alpha[l], theta_res[l], theta_sat[l], Psi[l]);
+    W[l] = Theta[l]/theta_fc;
   }
-  return(drainage_mm);
+  
+  double Vfin_mm = sum(water(soil, "VG"));
+  double balance_mm = sum(sourceSink) - drainage_mm + Vini_mm - Vfin_mm;
+  //If positive balance (more inputs than outputs) create saturation excess
+  double saturation_excess_mm = std::max(0.0, balance_mm); 
+  //If negative (more outputs than inputs) reduce drainage
+  drainage_mm += std::min(0.0, balance_mm); 
+  return(NumericVector::create(_["deep_drainage"] = drainage_mm, _["saturation_excess"] = saturation_excess_mm));
 }

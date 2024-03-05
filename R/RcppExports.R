@@ -1743,7 +1743,12 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, interceptionMode, pre
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 
 #' @return
-#'   Returns the water draining from the bottom layer.
+#'   Returns a named vector with two elements:
+#'   \itemize{
+#'     \item{\code{deep_drainage}: the water draining from the bottom layer.}
+#'     \item{\code{saturation_excess}: surface runoff generated via saturation excess.}
+#'   }
+#'   
 #'   
 #' @name hydrology_soilFlows
 hydrology_soilFlows <- function(soil, sourceSink, nsteps = 24L, modifySoil = TRUE) {

@@ -128,8 +128,10 @@ List aspwb_day_internal(List x, NumericVector meteovec,
     sourceSinkVec[l] += IVec[l] - ExtractionVec[l];
     if(l ==0) sourceSinkVec[l] += Snowmelt - Esoil;
   }
-  double DeepDrainage = soilFlows(soil, sourceSinkVec, 24, true);
-    
+  NumericVector sf = soilFlows(soil, sourceSinkVec, 24, true);
+  double DeepDrainage = sf["deep_drainage"];
+  Runoff += sf["saturation_excess"];
+  
   //Recalculate current soil water potential for output
   psiVec = psi(soil, soilFunctions); 
   
