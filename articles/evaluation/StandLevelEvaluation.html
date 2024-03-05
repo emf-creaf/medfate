@@ -89,7 +89,12 @@ Martin-StPaul (INRAE)</h4>
 </h2>
 <p>This document presents <strong>medfate</strong> (<strong>ver.
 4.0.0</strong>) model evaluation results at stand-level, using data from
-a set of <strong>11 experimental forest plots</strong>.</p>
+a set of <strong>11 experimental forest plots</strong>. The main source
+of observed data is SAPFLUXNET database (<a href="https://essd.copernicus.org/articles/13/2607/2021/" class="external-link">Poyatos et
+al. 2021</a>).</p>
+<div class="section level3">
+<h3 id="list-of-sites">List of sites<a class="anchor" aria-label="anchor" href="#list-of-sites"></a>
+</h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
 <th style="text-align:left;">
@@ -226,21 +231,29 @@ Mixed gimnosperm forest dominated by Abies pinsapo
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section level3">
+<h3 id="simulation-and-evaluation-procedure">Simulation and evaluation procedure<a class="anchor" aria-label="anchor" href="#simulation-and-evaluation-procedure"></a>
+</h3>
 <p>Forest water balance simulations (i.e. function <code><a href="../../reference/spwb.html">spwb()</a></code>)
 have been conducted using the three transpiration modes
 (i.e. <code>Granier</code>, <code>Sperry</code> or
-<code>Cochard</code>). For each forest plot, general information about
-the site, topography, soil and climate is first presented, followed by a
-description of model inputs. Then, evaluation results are presented for
-four different variables:</p>
+<code>Cochard</code>). Only soil characteristics have been tuned, but
+calibration exercises have not been conducted. When available, however,
+leaf area to sapwood area ratios have been used. Thus, the evaluation is
+meant to be more or less representative of simulations with default
+species-level trait data.</p>
+<p>For each forest plot, general information about the site, topography,
+soil and climate is first presented, followed by a description of model
+inputs. Then, evaluation results are presented for four different
+variables:</p>
 <ol style="list-style-type: lower-alpha">
 <li>Stand-level evapo-transpiration.</li>
 <li>Soil moisture content of the topmost layer.</li>
 <li>Species-level transpiration, scaled from sap-flow data.</li>
 <li>Predawn and midday leaf water potentials.</li>
 </ol>
-<p>The main source of observed data is SAPFLUXNET database (<a href="https://essd.copernicus.org/articles/13/2607/2021/" class="external-link">Poyatos et
-al. 2021</a>).</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="puéchabon">Puéchabon<a class="anchor" aria-label="anchor" href="#pu%C3%A9chabon"></a>
@@ -517,6 +530,12 @@ bd
 <th style="text-align:right;">
 rfc
 </th>
+<th style="text-align:right;">
+VG_theta_sat
+</th>
+<th style="text-align:right;">
+VG_theta_res
+</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -538,6 +557,12 @@ rfc
 <td style="text-align:right;">
 75
 </td>
+<td style="text-align:right;">
+0.33
+</td>
+<td style="text-align:right;">
+0.008
+</td>
 </tr>
 <tr>
 <td style="text-align:right;">
@@ -557,6 +582,12 @@ rfc
 </td>
 <td style="text-align:right;">
 75
+</td>
+<td style="text-align:right;">
+0.33
+</td>
+<td style="text-align:right;">
+0.008
 </td>
 </tr>
 <tr>
@@ -578,6 +609,12 @@ rfc
 <td style="text-align:right;">
 80
 </td>
+<td style="text-align:right;">
+0.33
+</td>
+<td style="text-align:right;">
+0.008
+</td>
 </tr>
 <tr>
 <td style="text-align:right;">
@@ -597,6 +634,12 @@ rfc
 </td>
 <td style="text-align:right;">
 90
+</td>
+<td style="text-align:right;">
+0.33
+</td>
+<td style="text-align:right;">
+0.008
 </td>
 </tr>
 </tbody>
@@ -877,55 +920,15 @@ Remark
 Soil
 </td>
 <td style="text-align:left;">
-soil data from biblio
+Adjusted theta_res and theta_sat
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Fine Roots Proportion
+Vegetation
 </td>
 <td style="text-align:left;">
-Optimization mode 2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FC
-</td>
-<td style="text-align:left;">
-Not modified
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-W
-</td>
-<td style="text-align:left;">
-Initial value adjusted to measured value for first layer
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-LAI
-</td>
-<td style="text-align:left;">
-Supplied by authors
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-xylem_kmax
-</td>
-<td style="text-align:left;">
-Modified arbitrarily to 0.4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Gwmax
-</td>
-<td style="text-align:left;">
-Modified to 0.3
+Using B. sempervirens as understory
 </td>
 </tr>
 </tbody>
@@ -936,9 +939,9 @@ Modified to 0.3
 <h3 id="evaluation-results">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
-<!-- Soil moisture -->
+<!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture"></a>
+<h4 id="soil-moisture-content">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -985,25 +988,25 @@ granier
 1021
 </td>
 <td style="text-align:right;">
-0.1759574
+0.0726661
 </td>
 <td style="text-align:right;">
-24.163733
+45.618435
 </td>
 <td style="text-align:right;">
-0.2005363
+0.0734996
 </td>
 <td style="text-align:right;">
-27.53907
+46.14169
 </td>
 <td style="text-align:right;">
-0.5843796
+0.5974180
 </td>
 <td style="text-align:right;">
--0.4112639
+-2.5260970
 </td>
 <td style="text-align:right;">
--0.1436430
+-0.9161727
 </td>
 </tr>
 <tr>
@@ -1017,25 +1020,25 @@ sperry
 1021
 </td>
 <td style="text-align:right;">
--0.0701551
+0.0093261
 </td>
 <td style="text-align:right;">
--9.634195
+5.854724
 </td>
 <td style="text-align:right;">
-0.1155844
+0.0276281
 </td>
 <td style="text-align:right;">
-15.87288
+17.34442
 </td>
 <td style="text-align:right;">
-0.8595270
+0.8688581
 </td>
 <td style="text-align:right;">
-0.5396424
+0.2788367
 </td>
 <td style="text-align:right;">
-0.3408309
+0.2797208
 </td>
 </tr>
 <tr>
@@ -1049,25 +1052,25 @@ cochard
 1021
 </td>
 <td style="text-align:right;">
-0.0587799
+0.0419789
 </td>
 <td style="text-align:right;">
-8.072083
+26.353552
 </td>
 <td style="text-align:right;">
-0.1128134
+0.0468970
 </td>
 <td style="text-align:right;">
-15.49234
+29.44107
 </td>
 <td style="text-align:right;">
-0.7966366
+0.7831043
 </td>
 <td style="text-align:right;">
-0.4612456
+-0.8082740
 </td>
 <td style="text-align:right;">
-0.3566339
+-0.2226292
 </td>
 </tr>
 </tbody>
@@ -1130,25 +1133,25 @@ T1_168
 1096
 </td>
 <td style="text-align:right;">
--0.0875796
+-0.0953037
 </td>
 <td style="text-align:right;">
--25.531130
+-27.782865
 </td>
 <td style="text-align:right;">
-0.1497480
+0.1456218
 </td>
 <td style="text-align:right;">
-43.65444
+42.45157
 </td>
 <td style="text-align:right;">
-0.6485927
+0.6871148
 </td>
 <td style="text-align:right;">
-0.2361046
+0.2744205
 </td>
 <td style="text-align:right;">
-0.1727263
+0.1955213
 </td>
 </tr>
 <tr>
@@ -1165,25 +1168,25 @@ T1_168
 1096
 </td>
 <td style="text-align:right;">
-0.0707325
+0.0452871
 </td>
 <td style="text-align:right;">
-20.619877
+13.202051
 </td>
 <td style="text-align:right;">
-0.2250904
+0.2261158
 </td>
 <td style="text-align:right;">
-65.61818
+65.91711
 </td>
 <td style="text-align:right;">
-0.6074291
+0.5472149
 </td>
 <td style="text-align:right;">
--0.9363408
+-0.8476519
 </td>
 <td style="text-align:right;">
--0.2434978
+-0.2491625
 </td>
 </tr>
 <tr>
@@ -1200,25 +1203,25 @@ T1_168
 1096
 </td>
 <td style="text-align:right;">
-0.0040822
+-0.0247467
 </td>
 <td style="text-align:right;">
-1.190029
+-7.214149
 </td>
 <td style="text-align:right;">
-0.1445749
+0.1238995
 </td>
 <td style="text-align:right;">
-42.14638
+36.11910
 </td>
 <td style="text-align:right;">
-0.8235361
+0.8588981
 </td>
 <td style="text-align:right;">
-0.2170676
+0.4330576
 </td>
 <td style="text-align:right;">
-0.2013047
+0.3155248
 </td>
 </tr>
 </tbody>
@@ -1286,25 +1289,25 @@ Predawn
 28
 </td>
 <td style="text-align:right;">
--1.8940040
+-2.2303101
 </td>
 <td style="text-align:right;">
--129.484788
+-152.47657
 </td>
 <td style="text-align:right;">
-1.8940040
+2.2322259
 </td>
 <td style="text-align:right;">
-129.48479
+152.60754
 </td>
 <td style="text-align:right;">
-0.8497064
+0.8256297
 </td>
 <td style="text-align:right;">
--2.5444295
+-3.8122413
 </td>
 <td style="text-align:right;">
--0.9918387
+-1.3475314
 </td>
 </tr>
 <tr>
@@ -1324,25 +1327,25 @@ Midday
 28
 </td>
 <td style="text-align:right;">
--1.4801197
+-1.7131125
 </td>
 <td style="text-align:right;">
--47.436339
+-54.90352
 </td>
 <td style="text-align:right;">
-1.4901674
+1.7241487
 </td>
 <td style="text-align:right;">
-47.75836
+55.25722
 </td>
 <td style="text-align:right;">
-0.7403975
+0.6762325
 </td>
 <td style="text-align:right;">
--4.2629157
+-5.9089011
 </td>
 <td style="text-align:right;">
--1.4960554
+-1.8879780
 </td>
 </tr>
 <tr>
@@ -1362,25 +1365,25 @@ Predawn
 28
 </td>
 <td style="text-align:right;">
-0.0194158
+-0.3872364
 </td>
 <td style="text-align:right;">
-1.327371
+-26.47367
 </td>
 <td style="text-align:right;">
-0.5035962
+0.6020391
 </td>
 <td style="text-align:right;">
-34.42867
+41.15879
 </td>
 <td style="text-align:right;">
-0.8787090
+0.9130734
 </td>
 <td style="text-align:right;">
-0.6467641
+0.4609261
 </td>
 <td style="text-align:right;">
-0.4703906
+0.3668626
 </td>
 </tr>
 <tr>
@@ -1400,25 +1403,25 @@ Midday
 28
 </td>
 <td style="text-align:right;">
-1.1281622
+0.6686880
 </td>
 <td style="text-align:right;">
-36.156458
+21.43078
 </td>
 <td style="text-align:right;">
-1.2662365
+0.9812258
 </td>
 <td style="text-align:right;">
-40.58160
+31.44729
 </td>
 <td style="text-align:right;">
-0.8322911
+0.8710983
 </td>
 <td style="text-align:right;">
--2.1808111
+-1.3686923
 </td>
 <td style="text-align:right;">
--1.1209675
+-0.6435697
 </td>
 </tr>
 </tbody>
@@ -1660,6 +1663,9 @@ rfc
 <th style="text-align:right;">
 bd
 </th>
+<th style="text-align:right;">
+VG_theta_sat
+</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -1681,6 +1687,9 @@ bd
 <td style="text-align:right;">
 1.16
 </td>
+<td style="text-align:right;">
+0.5528318
+</td>
 </tr>
 <tr>
 <td style="text-align:right;">
@@ -1700,6 +1709,9 @@ bd
 </td>
 <td style="text-align:right;">
 1.37
+</td>
+<td style="text-align:right;">
+0.5044341
 </td>
 </tr>
 <tr>
@@ -1721,6 +1733,9 @@ bd
 <td style="text-align:right;">
 1.58
 </td>
+<td style="text-align:right;">
+0.4560364
+</td>
 </tr>
 <tr>
 <td style="text-align:right;">
@@ -1740,6 +1755,9 @@ bd
 </td>
 <td style="text-align:right;">
 1.58
+</td>
+<td style="text-align:right;">
+0.4560364
 </td>
 </tr>
 </tbody>
@@ -1779,39 +1797,15 @@ Remark
 Soil
 </td>
 <td style="text-align:left;">
-Mix supplied by authors and soilGrids
+VG_theta_sat modified
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Fine Roots Proportion
+Vegetation
 </td>
 <td style="text-align:left;">
-Optimization mode 1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FC
-</td>
-<td style="text-align:left;">
-Adjusted to info from measured data
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-W
-</td>
-<td style="text-align:left;">
-Initial value adjusted to measured value for first layer
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-LAI
-</td>
-<td style="text-align:left;">
-Supplied by authors
+No understory
 </td>
 </tr>
 </tbody>
@@ -1822,9 +1816,9 @@ Supplied by authors
 <h3 id="evaluation-results-1">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-1"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
-<!-- Soil moisture -->
+<!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-1">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-1"></a>
+<h4 id="soil-moisture-content-1">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-1"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -1871,25 +1865,25 @@ granier
 43
 </td>
 <td style="text-align:right;">
--0.0529559
+0.0296932
 </td>
 <td style="text-align:right;">
--6.380521
+9.016966
 </td>
 <td style="text-align:right;">
-0.1120646
+0.0454467
 </td>
 <td style="text-align:right;">
-13.50238
+13.800860
 </td>
 <td style="text-align:right;">
-0.7586564
+0.6843278
 </td>
 <td style="text-align:right;">
-0.3894714
+0.2375186
 </td>
 <td style="text-align:right;">
-0.2194840
+0.2022304
 </td>
 </tr>
 <tr>
@@ -1903,25 +1897,25 @@ sperry
 43
 </td>
 <td style="text-align:right;">
--0.1545608
+-0.0155907
 </td>
 <td style="text-align:right;">
--18.622644
+-4.734442
 </td>
 <td style="text-align:right;">
-0.1545608
+0.0238483
 </td>
 <td style="text-align:right;">
-18.62264
+7.242033
 </td>
 <td style="text-align:right;">
-0.9062956
+0.8722041
 </td>
 <td style="text-align:right;">
--0.0817511
+0.6922451
 </td>
 <td style="text-align:right;">
--0.0764967
+0.5813685
 </td>
 </tr>
 <tr>
@@ -1935,25 +1929,25 @@ cochard
 43
 </td>
 <td style="text-align:right;">
--0.1749246
+-0.0250445
 </td>
 <td style="text-align:right;">
--21.076229
+-7.605292
 </td>
 <td style="text-align:right;">
-0.1749246
+0.0310378
 </td>
 <td style="text-align:right;">
-21.07623
+9.425278
 </td>
 <td style="text-align:right;">
-0.8672738
+0.8201000
 </td>
 <td style="text-align:right;">
--0.4138126
+0.4715305
 </td>
 <td style="text-align:right;">
--0.2183281
+0.4551643
 </td>
 </tr>
 </tbody>
@@ -2016,25 +2010,25 @@ T1_97
 1826
 </td>
 <td style="text-align:right;">
--0.1684955
+-0.1657631
 </td>
 <td style="text-align:right;">
--49.05262
+-48.25715
 </td>
 <td style="text-align:right;">
-0.2176886
+0.2159581
 </td>
 <td style="text-align:right;">
-63.37376
+62.86997
 </td>
 <td style="text-align:right;">
-0.8190856
+0.8177281
 </td>
 <td style="text-align:right;">
-0.3681552
+0.3741446
 </td>
 <td style="text-align:right;">
-0.4827846
+0.4868962
 </td>
 </tr>
 <tr>
@@ -2051,25 +2045,25 @@ T1_97
 1826
 </td>
 <td style="text-align:right;">
--0.1161178
+-0.1038822
 </td>
 <td style="text-align:right;">
--33.80435
+-30.24231
 </td>
 <td style="text-align:right;">
-0.1991073
+0.1920743
 </td>
 <td style="text-align:right;">
-57.96435
+55.91689
 </td>
 <td style="text-align:right;">
-0.8022358
+0.8114927
 </td>
 <td style="text-align:right;">
-0.5148171
+0.5462944
 </td>
 <td style="text-align:right;">
-0.5269328
+0.5436427
 </td>
 </tr>
 <tr>
@@ -2086,25 +2080,25 @@ T1_97
 1826
 </td>
 <td style="text-align:right;">
--0.1945806
+-0.1867803
 </td>
 <td style="text-align:right;">
--56.64652
+-54.37570
 </td>
 <td style="text-align:right;">
-0.2483725
+0.2432659
 </td>
 <td style="text-align:right;">
-72.30648
+70.81985
 </td>
 <td style="text-align:right;">
-0.7057389
+0.7038322
 </td>
 <td style="text-align:right;">
-0.3313529
+0.3457786
 </td>
 <td style="text-align:right;">
-0.4098816
+0.4220145
 </td>
 </tr>
 </tbody>
@@ -2347,6 +2341,12 @@ bd
 <th style="text-align:right;">
 rfc
 </th>
+<th style="text-align:right;">
+VG_theta_sat
+</th>
+<th style="text-align:right;">
+VG_theta_res
+</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -2368,6 +2368,12 @@ rfc
 <td style="text-align:right;">
 75
 </td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.003
+</td>
 </tr>
 <tr>
 <td style="text-align:right;">
@@ -2388,6 +2394,12 @@ rfc
 <td style="text-align:right;">
 75
 </td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.003
+</td>
 </tr>
 <tr>
 <td style="text-align:right;">
@@ -2406,7 +2418,13 @@ rfc
 1.45
 </td>
 <td style="text-align:right;">
-92
+85
+</td>
+<td style="text-align:right;">
+0.45
+</td>
+<td style="text-align:right;">
+0.003
 </td>
 </tr>
 </tbody>
@@ -2578,39 +2596,15 @@ Remark
 Soil
 </td>
 <td style="text-align:left;">
-soil optmization + soilGrids for the second layer
+50-cm soil with rocky layers. Modification of theta_res
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Fine Roots Proportion
+Vegetation
 </td>
 <td style="text-align:left;">
-Optimization mode 1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FC
-</td>
-<td style="text-align:left;">
-Not modified
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-W
-</td>
-<td style="text-align:left;">
-Initial value adjusted to measured value for first layer
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-LAI
-</td>
-<td style="text-align:left;">
-Custom, increased from the authors LAI
+No understory considered
 </td>
 </tr>
 </tbody>
@@ -2621,9 +2615,9 @@ Custom, increased from the authors LAI
 <h3 id="evaluation-results-2">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-2"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
-<!-- Soil moisture -->
+<!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-2">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-2"></a>
+<h4 id="soil-moisture-content-2">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-2"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -2670,25 +2664,25 @@ granier
 335
 </td>
 <td style="text-align:right;">
-0.0773319
+0.0970199
 </td>
 <td style="text-align:right;">
-13.698818
+76.40476
 </td>
 <td style="text-align:right;">
-0.1181211
+0.0970199
 </td>
 <td style="text-align:right;">
-20.92435
+76.40476
 </td>
 <td style="text-align:right;">
-0.8923724
+0.8969705
 </td>
 <td style="text-align:right;">
-0.7056456
+-1.7391098
 </td>
 <td style="text-align:right;">
-0.5030158
+-0.8147259
 </td>
 </tr>
 <tr>
@@ -2702,25 +2696,25 @@ sperry
 335
 </td>
 <td style="text-align:right;">
--0.0142651
+0.0527994
 </td>
 <td style="text-align:right;">
--2.526968
+41.58034
 </td>
 <td style="text-align:right;">
-0.1420503
+0.0536566
 </td>
 <td style="text-align:right;">
-25.16324
+42.25548
 </td>
 <td style="text-align:right;">
-0.8034011
+0.8186855
 </td>
 <td style="text-align:right;">
-0.6189593
+-0.1356848
 </td>
 <td style="text-align:right;">
-0.4023358
+-0.0036299
 </td>
 </tr>
 <tr>
@@ -2734,25 +2728,25 @@ cochard
 335
 </td>
 <td style="text-align:right;">
-0.0522270
+0.0619434
 </td>
 <td style="text-align:right;">
-9.251653
+48.78140
 </td>
 <td style="text-align:right;">
-0.1676638
+0.0619434
 </td>
 <td style="text-align:right;">
-29.70050
+48.78140
 </td>
 <td style="text-align:right;">
-0.6276111
+0.8702197
 </td>
 <td style="text-align:right;">
-0.3068827
+-0.4061093
 </td>
 <td style="text-align:right;">
-0.2945692
+-0.1586303
 </td>
 </tr>
 </tbody>
@@ -2815,25 +2809,25 @@ T1_148
 344
 </td>
 <td style="text-align:right;">
--0.5539731
+-0.4629843
 </td>
 <td style="text-align:right;">
--72.26080
+-60.39212
 </td>
 <td style="text-align:right;">
-0.5564246
+0.4675299
 </td>
 <td style="text-align:right;">
-72.58056
+60.98506
 </td>
 <td style="text-align:right;">
-0.8524855
+0.7172832
 </td>
 <td style="text-align:right;">
--0.4948927
+-0.2581467
 </td>
 <td style="text-align:right;">
--0.2014097
+-0.0094719
 </td>
 </tr>
 <tr>
@@ -2850,25 +2844,25 @@ T1_148
 344
 </td>
 <td style="text-align:right;">
--0.5162499
+-0.4309186
 </td>
 <td style="text-align:right;">
--67.34014
+-56.20945
 </td>
 <td style="text-align:right;">
-0.5339807
+0.4502450
 </td>
 <td style="text-align:right;">
-69.65297
+58.73040
 </td>
 <td style="text-align:right;">
-0.6554365
+0.8210513
 </td>
 <td style="text-align:right;">
--0.4553704
+0.0272849
 </td>
 <td style="text-align:right;">
--0.1529498
+0.0278490
 </td>
 </tr>
 <tr>
@@ -2885,25 +2879,25 @@ T1_148
 344
 </td>
 <td style="text-align:right;">
--0.5574821
+-0.4226298
 </td>
 <td style="text-align:right;">
--72.71850
+-55.12824
 </td>
 <td style="text-align:right;">
-0.5606363
+0.4433569
 </td>
 <td style="text-align:right;">
-73.12995
+57.83190
 </td>
 <td style="text-align:right;">
-0.8119644
+0.7279001
 </td>
 <td style="text-align:right;">
--0.4178969
+-0.0595894
 </td>
 <td style="text-align:right;">
--0.2105035
+0.0427216
 </td>
 </tr>
 </tbody>
@@ -3165,6 +3159,12 @@ bd
 <th style="text-align:right;">
 rfc
 </th>
+<th style="text-align:right;">
+VG_theta_sat
+</th>
+<th style="text-align:right;">
+VG_theta_res
+</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -3186,6 +3186,12 @@ rfc
 <td style="text-align:right;">
 10.00
 </td>
+<td style="text-align:right;">
+0.35
+</td>
+<td style="text-align:right;">
+0.03
+</td>
 </tr>
 <tr>
 <td style="text-align:right;">
@@ -3205,6 +3211,12 @@ rfc
 </td>
 <td style="text-align:right;">
 21.00
+</td>
+<td style="text-align:right;">
+0.35
+</td>
+<td style="text-align:right;">
+0.03
 </td>
 </tr>
 <tr>
@@ -3226,6 +3238,12 @@ rfc
 <td style="text-align:right;">
 24.85
 </td>
+<td style="text-align:right;">
+0.35
+</td>
+<td style="text-align:right;">
+0.03
+</td>
 </tr>
 <tr>
 <td style="text-align:right;">
@@ -3246,6 +3264,12 @@ rfc
 <td style="text-align:right;">
 60.00
 </td>
+<td style="text-align:right;">
+0.35
+</td>
+<td style="text-align:right;">
+0.03
+</td>
 </tr>
 <tr>
 <td style="text-align:right;">
@@ -3265,6 +3289,12 @@ rfc
 </td>
 <td style="text-align:right;">
 85.00
+</td>
+<td style="text-align:right;">
+0.35
+</td>
+<td style="text-align:right;">
+0.03
 </td>
 </tr>
 </tbody>
@@ -3334,47 +3364,23 @@ Remark
 Soil
 </td>
 <td style="text-align:left;">
-Mix supplied by authors and soilGrids
+Taken from SoilGrids, with modification of theta_sat and theta_res
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Fine Roots Proportion
+Vegetation
 </td>
 <td style="text-align:left;">
-Calibration by E tot
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FC
-</td>
-<td style="text-align:left;">
-Not modified
+Understory not considered
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-W
+Weather
 </td>
 <td style="text-align:left;">
-Initial value adjusted to measured value for first layer
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-LAI
-</td>
-<td style="text-align:left;">
-Calculated by model
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-kmax
-</td>
-<td style="text-align:left;">
-Q. pyrenaica modifed to mimic Q. pubescens
+Available weather complemented with interpolation
 </td>
 </tr>
 </tbody>
@@ -3385,9 +3391,9 @@ Q. pyrenaica modifed to mimic Q. pubescens
 <h3 id="evaluation-results-3">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-3"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
-<!-- Soil moisture -->
+<!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-3">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-3"></a>
+<h4 id="soil-moisture-content-3">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-3"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -3434,25 +3440,25 @@ granier
 28
 </td>
 <td style="text-align:right;">
-0.2336243
+0.0352071
 </td>
 <td style="text-align:right;">
-34.23493
+20.277821
 </td>
 <td style="text-align:right;">
-0.2989031
+0.0620229
 </td>
 <td style="text-align:right;">
-43.80078
+35.72261
 </td>
 <td style="text-align:right;">
-0.3619762
+0.4421587
 </td>
 <td style="text-align:right;">
--0.6182280
+-0.0640697
 </td>
 <td style="text-align:right;">
--0.1548306
+0.0581546
 </td>
 </tr>
 <tr>
@@ -3466,25 +3472,25 @@ sperry
 28
 </td>
 <td style="text-align:right;">
-0.0956163
+-0.0026167
 </td>
 <td style="text-align:right;">
-14.01145
+-1.507091
 </td>
 <td style="text-align:right;">
-0.1290734
+0.0234166
 </td>
 <td style="text-align:right;">
-18.91421
+13.48696
 </td>
 <td style="text-align:right;">
-0.9193313
+0.8832057
 </td>
 <td style="text-align:right;">
-0.7201920
+0.7745776
 </td>
 <td style="text-align:right;">
-0.5013170
+0.6444092
 </td>
 </tr>
 <tr>
@@ -3498,25 +3504,25 @@ cochard
 28
 </td>
 <td style="text-align:right;">
-0.0789953
+-0.0061655
 </td>
 <td style="text-align:right;">
-11.57584
+-3.551050
 </td>
 <td style="text-align:right;">
-0.1208302
+0.0223412
 </td>
 <td style="text-align:right;">
-17.70626
+12.86761
 </td>
 <td style="text-align:right;">
-0.9125876
+0.8823483
 </td>
 <td style="text-align:right;">
-0.7490803
+0.7706462
 </td>
 <td style="text-align:right;">
-0.5331651
+0.6607386
 </td>
 </tr>
 </tbody>
@@ -3579,25 +3585,25 @@ T1_172
 103
 </td>
 <td style="text-align:right;">
-0.0874656
+0.0870338
 </td>
 <td style="text-align:right;">
-24.17482
+24.05547
 </td>
 <td style="text-align:right;">
-0.0979220
+0.0975860
 </td>
 <td style="text-align:right;">
-27.06488
+26.97201
 </td>
 <td style="text-align:right;">
-0.6292471
+0.6295044
 </td>
 <td style="text-align:right;">
--1.005771
+-0.9933409
 </td>
 <td style="text-align:right;">
--0.6531969
+-0.6475239
 </td>
 </tr>
 <tr>
@@ -3614,25 +3620,25 @@ T1_172
 103
 </td>
 <td style="text-align:right;">
-0.3371234
+0.2919364
 </td>
 <td style="text-align:right;">
-93.17829
+80.68896
 </td>
 <td style="text-align:right;">
-0.3380940
+0.2975991
 </td>
 <td style="text-align:right;">
-93.44656
+82.25409
 </td>
 <td style="text-align:right;">
-0.4218308
+0.4096024
 </td>
 <td style="text-align:right;">
--19.202046
+-15.5449529
 </td>
 <td style="text-align:right;">
--4.7079713
+-4.0243046
 </td>
 </tr>
 <tr>
@@ -3649,25 +3655,25 @@ T1_172
 103
 </td>
 <td style="text-align:right;">
-0.3529446
+0.3511714
 </td>
 <td style="text-align:right;">
-97.55115
+97.06104
 </td>
 <td style="text-align:right;">
-0.3557245
+0.3539799
 </td>
 <td style="text-align:right;">
-98.31949
+97.83728
 </td>
 <td style="text-align:right;">
-0.4337828
+0.4364209
 </td>
 <td style="text-align:right;">
--23.258272
+-23.0434305
 </td>
 <td style="text-align:right;">
--5.0056236
+-4.9761686
 </td>
 </tr>
 </tbody>
@@ -3735,25 +3741,25 @@ Predawn
 15
 </td>
 <td style="text-align:right;">
-0.1137464
+0.0223342
 </td>
 <td style="text-align:right;">
-28.40793
+5.577914
 </td>
 <td style="text-align:right;">
-0.1562910
+0.1789059
 </td>
 <td style="text-align:right;">
-39.03338
+44.68139
 </td>
 <td style="text-align:right;">
-0.7303949
+0.6520474
 </td>
 <td style="text-align:right;">
-0.0732319
+-0.2748762
 </td>
 <td style="text-align:right;">
-0.0322846
+-0.1077410
 </td>
 </tr>
 <tr>
@@ -3773,25 +3779,25 @@ Midday
 15
 </td>
 <td style="text-align:right;">
-0.2785815
+0.2079168
 </td>
 <td style="text-align:right;">
-17.61672
+13.148086
 </td>
 <td style="text-align:right;">
-0.4178097
+0.3568863
 </td>
 <td style="text-align:right;">
-26.42113
+22.56851
 </td>
 <td style="text-align:right;">
-0.7101161
+0.7256276
 </td>
 <td style="text-align:right;">
-0.1194631
+0.3023424
 </td>
 <td style="text-align:right;">
-0.0267469
+0.1686628
 </td>
 </tr>
 <tr>
@@ -3811,25 +3817,25 @@ Predawn
 15
 </td>
 <td style="text-align:right;">
--0.0680067
+-0.2379211
 </td>
 <td style="text-align:right;">
--16.98453
+-59.420334
 </td>
 <td style="text-align:right;">
-0.1777333
+0.3338329
 </td>
 <td style="text-align:right;">
-44.38854
+83.37411
 </td>
 <td style="text-align:right;">
-0.7676977
+0.7656817
 </td>
 <td style="text-align:right;">
--0.4679971
+-6.1469404
 </td>
 <td style="text-align:right;">
--0.1004805
+-1.0670107
 </td>
 </tr>
 <tr>
@@ -3849,25 +3855,25 @@ Midday
 15
 </td>
 <td style="text-align:right;">
-0.6928570
+0.4906109
 </td>
 <td style="text-align:right;">
-43.81437
+31.024883
 </td>
 <td style="text-align:right;">
-0.6928570
+0.5187510
 </td>
 <td style="text-align:right;">
-43.81437
+32.80438
 </td>
 <td style="text-align:right;">
-0.8662245
+0.8453100
 </td>
 <td style="text-align:right;">
--0.9059636
+-0.1620120
 </td>
 <td style="text-align:right;">
--0.6139531
+-0.2083876
 </td>
 </tr>
 </tbody>
@@ -4322,9 +4328,9 @@ Huber values
 <h3 id="evaluation-results-4">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-4"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
-<!-- Soil moisture -->
+<!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-4">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-4"></a>
+<h4 id="soil-moisture-content-4">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-4"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -4371,25 +4377,25 @@ granier
 445
 </td>
 <td style="text-align:right;">
-0.1302229
+0.0531652
 </td>
 <td style="text-align:right;">
-15.914439
+17.891060
 </td>
 <td style="text-align:right;">
-0.1357043
+0.0541854
 </td>
 <td style="text-align:right;">
-16.58432
+18.23439
 </td>
 <td style="text-align:right;">
 0.8128646
 </td>
 <td style="text-align:right;">
--0.5166176
+-0.7835359
 </td>
 <td style="text-align:right;">
--0.3659991
+-0.5019107
 </td>
 </tr>
 <tr>
@@ -4403,25 +4409,25 @@ sperry
 445
 </td>
 <td style="text-align:right;">
--0.0753938
+-0.0227794
 </td>
 <td style="text-align:right;">
--9.213818
+-7.665694
 </td>
 <td style="text-align:right;">
-0.1279545
+0.0447789
 </td>
 <td style="text-align:right;">
-15.63721
+15.06893
 </td>
 <td style="text-align:right;">
 0.7023648
 </td>
 <td style="text-align:right;">
--0.2607770
+-0.1839546
 </td>
 <td style="text-align:right;">
--0.2879892
+-0.2411811
 </td>
 </tr>
 <tr>
@@ -4435,25 +4441,25 @@ cochard
 445
 </td>
 <td style="text-align:right;">
--0.0800691
+-0.0245062
 </td>
 <td style="text-align:right;">
--9.785173
+-8.246793
 </td>
 <td style="text-align:right;">
-0.1335150
+0.0469427
 </td>
 <td style="text-align:right;">
-16.31676
+15.79708
 </td>
 <td style="text-align:right;">
 0.7230428
 </td>
 <td style="text-align:right;">
--0.3635240
+-0.2852774
 </td>
 <td style="text-align:right;">
--0.3439613
+-0.3011567
 </td>
 </tr>
 </tbody>
@@ -5004,7 +5010,8 @@ Remark
 Soil
 </td>
 <td style="text-align:left;">
-Soil depth is 65 cm (30 + 35)
+Soil depth is 65 cm (30 + 35) but an additional layer of 35 cm is
+considered with 50% rocks
 </td>
 </tr>
 <tr>
@@ -5040,9 +5047,9 @@ Huber values
 <h3 id="evaluation-results-5">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-5"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
-<!-- Soil moisture -->
+<!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-5">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-5"></a>
+<h4 id="soil-moisture-content-5">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-5"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5089,25 +5096,25 @@ granier
 743
 </td>
 <td style="text-align:right;">
-0.2720982
+0.0250593
 </td>
 <td style="text-align:right;">
-36.59899
+11.673224
 </td>
 <td style="text-align:right;">
-0.2739855
+0.0362518
 </td>
 <td style="text-align:right;">
-36.85285
+16.88695
 </td>
 <td style="text-align:right;">
 0.7394493
 </td>
 <td style="text-align:right;">
--1.5722658
+0.3097700
 </td>
 <td style="text-align:right;">
--0.6699795
+0.2347714
 </td>
 </tr>
 <tr>
@@ -5121,25 +5128,25 @@ sperry
 743
 </td>
 <td style="text-align:right;">
-0.1338004
+-0.0075873
 </td>
 <td style="text-align:right;">
-17.99704
+-3.534359
 </td>
 <td style="text-align:right;">
-0.1782601
+0.0310952
 </td>
 <td style="text-align:right;">
-23.97715
+14.48488
 </td>
 <td style="text-align:right;">
 0.7220238
 </td>
 <td style="text-align:right;">
--0.1830526
+0.4502590
 </td>
 <td style="text-align:right;">
--0.0865198
+0.3436205
 </td>
 </tr>
 <tr>
@@ -5153,25 +5160,25 @@ cochard
 743
 </td>
 <td style="text-align:right;">
-0.1799863
+0.0033153
 </td>
 <td style="text-align:right;">
-24.20934
+1.544361
 </td>
 <td style="text-align:right;">
-0.2112892
+0.0331857
 </td>
 <td style="text-align:right;">
-28.41979
+15.45870
 </td>
 <td style="text-align:right;">
 0.6980475
 </td>
 <td style="text-align:right;">
--0.6185787
+0.4358596
 </td>
 <td style="text-align:right;">
--0.2878371
+0.2994921
 </td>
 </tr>
 </tbody>
@@ -5933,39 +5940,15 @@ Remark
 Soil
 </td>
 <td style="text-align:left;">
-Provided by authors with modified rfc
+Additional rocky layer considered
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Fine Roots Proportion
+Vegetation
 </td>
 <td style="text-align:left;">
-Optimization mode 2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FC
-</td>
-<td style="text-align:left;">
-Not modified
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-W
-</td>
-<td style="text-align:left;">
-Initial value adjusted to measured value for first layer
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-LAI
-</td>
-<td style="text-align:left;">
-Calculated by model
+Understory not considered
 </td>
 </tr>
 </tbody>
@@ -5976,9 +5959,9 @@ Calculated by model
 <h3 id="evaluation-results-6">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-6"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
-<!-- Soil moisture -->
+<!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-6">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-6"></a>
+<h4 id="soil-moisture-content-6">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-6"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -6025,25 +6008,25 @@ granier
 363
 </td>
 <td style="text-align:right;">
-0.1854026
+0.0480754
 </td>
 <td style="text-align:right;">
-29.051146
+26.470835
 </td>
 <td style="text-align:right;">
-0.2235958
+0.0603454
 </td>
 <td style="text-align:right;">
-35.03572
+33.22682
 </td>
 <td style="text-align:right;">
 0.8263329
 </td>
 <td style="text-align:right;">
-0.2512393
+0.3257429
 </td>
 <td style="text-align:right;">
-0.0511112
+0.1001024
 </td>
 </tr>
 <tr>
@@ -6057,25 +6040,25 @@ sperry
 363
 </td>
 <td style="text-align:right;">
--0.0359076
+-0.0136456
 </td>
 <td style="text-align:right;">
--5.626447
+-7.513398
 </td>
 <td style="text-align:right;">
-0.1468471
+0.0413005
 </td>
 <td style="text-align:right;">
-23.00979
+22.74048
 </td>
 <td style="text-align:right;">
 0.8017732
 </td>
 <td style="text-align:right;">
-0.5669605
+0.5641939
 </td>
 <td style="text-align:right;">
-0.3768149
+0.3841088
 </td>
 </tr>
 <tr>
@@ -6089,25 +6072,25 @@ cochard
 363
 </td>
 <td style="text-align:right;">
-0.1008838
+0.0245041
 </td>
 <td style="text-align:right;">
-15.807707
+13.492192
 </td>
 <td style="text-align:right;">
-0.1327021
+0.0349023
 </td>
 <td style="text-align:right;">
-20.79339
+19.21756
 </td>
 <td style="text-align:right;">
 0.9102104
 </td>
 <td style="text-align:right;">
-0.6699783
+0.7116580
 </td>
 <td style="text-align:right;">
-0.4368427
+0.4795216
 </td>
 </tr>
 </tbody>
@@ -6636,7 +6619,7 @@ Midday
 0.9378991
 </td>
 <td style="text-align:right;">
--67.9465330
+-67.9465329
 </td>
 <td style="text-align:right;">
 -6.4203433
@@ -7485,7 +7468,7 @@ granier
 -0.1138264
 </td>
 <td style="text-align:right;">
--8.54310
+-8.543100
 </td>
 <td style="text-align:right;">
 0.8019525
@@ -7517,7 +7500,7 @@ sperry
 -0.0717728
 </td>
 <td style="text-align:right;">
--5.38682
+-5.386820
 </td>
 <td style="text-align:right;">
 0.7184960
@@ -7549,7 +7532,7 @@ cochard
 -0.0873662
 </td>
 <td style="text-align:right;">
--6.55716
+-6.557162
 </td>
 <td style="text-align:right;">
 0.8045796
@@ -7564,17 +7547,17 @@ cochard
 -1.390947
 </td>
 <td style="text-align:right;">
--0.6158896
+-0.6158897
 </td>
 </tr>
 </tbody>
 </table>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-264-1.png" width="768" style="display: block; margin: auto;"></p>
 <p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-265-1.png" width="864" style="display: block; margin: auto;"></p>
-<!-- Soil moisture -->
+<!-- Soil moisture content -->
 </div>
 <div class="section level4">
-<h4 id="soil-moisture-7">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-7"></a>
+<h4 id="soil-moisture-content-7">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-7"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -7621,25 +7604,25 @@ granier
 364
 </td>
 <td style="text-align:right;">
-0.1505631
+-0.1148626
 </td>
 <td style="text-align:right;">
-21.468437
+-26.77827
 </td>
 <td style="text-align:right;">
-0.1823434
+0.1282415
 </td>
 <td style="text-align:right;">
-25.99992
+29.89734
 </td>
 <td style="text-align:right;">
 0.7081003
 </td>
 <td style="text-align:right;">
-0.0870244
+-0.1929796
 </td>
 <td style="text-align:right;">
-0.1262574
+-0.0047176
 </td>
 </tr>
 <tr>
@@ -7653,25 +7636,25 @@ sperry
 364
 </td>
 <td style="text-align:right;">
-0.0746035
+-0.1428677
 </td>
 <td style="text-align:right;">
-10.637539
+-33.30719
 </td>
 <td style="text-align:right;">
-0.1370191
+0.1433385
 </td>
 <td style="text-align:right;">
-19.53723
+33.41695
 </td>
 <td style="text-align:right;">
 0.7980342
 </td>
 <td style="text-align:right;">
-0.5175409
+-0.4037966
 </td>
 <td style="text-align:right;">
-0.3434400
+-0.1229963
 </td>
 </tr>
 <tr>
@@ -7685,25 +7668,25 @@ cochard
 364
 </td>
 <td style="text-align:right;">
-0.0629164
+-0.1471765
 </td>
 <td style="text-align:right;">
-8.971108
+-34.31172
 </td>
 <td style="text-align:right;">
-0.1429222
+0.1476348
 </td>
 <td style="text-align:right;">
-20.37894
+34.41856
 </td>
 <td style="text-align:right;">
-0.7708848
+0.7708849
 </td>
 <td style="text-align:right;">
-0.4743982
+-0.4819607
 </td>
 <td style="text-align:right;">
-0.3151538
+-0.1566559
 </td>
 </tr>
 </tbody>
@@ -7909,7 +7892,7 @@ T2_148
 0.1789532
 </td>
 <td style="text-align:right;">
-87.009189
+87.009188
 </td>
 <td style="text-align:right;">
 0.2236487
@@ -7921,7 +7904,7 @@ T2_148
 0.3641960
 </td>
 <td style="text-align:right;">
--10.1863878
+-10.1863876
 </td>
 <td style="text-align:right;">
 -1.2600855
@@ -8179,25 +8162,25 @@ Predawn
 3
 </td>
 <td style="text-align:right;">
-0.4757209
+0.4757208
 </td>
 <td style="text-align:right;">
-24.458657
+24.458654
 </td>
 <td style="text-align:right;">
-0.4757209
+0.4757208
 </td>
 <td style="text-align:right;">
-24.45866
+24.45865
 </td>
 <td style="text-align:right;">
 0.9965874
 </td>
 <td style="text-align:right;">
--0.8570954
+-0.8570950
 </td>
 <td style="text-align:right;">
--0.3379650
+-0.3379648
 </td>
 </tr>
 <tr>
@@ -8220,7 +8203,7 @@ Midday
 0.7969883
 </td>
 <td style="text-align:right;">
-29.874614
+29.874612
 </td>
 <td style="text-align:right;">
 0.7969883
@@ -8232,10 +8215,10 @@ Midday
 0.9999823
 </td>
 <td style="text-align:right;">
--13.3343546
+-13.3343533
 </td>
 <td style="text-align:right;">
--3.2611256
+-3.2611254
 </td>
 </tr>
 <tr>
@@ -8255,10 +8238,10 @@ Predawn
 3
 </td>
 <td style="text-align:right;">
-0.1114694
+0.1114693
 </td>
 <td style="text-align:right;">
-7.344247
+7.344244
 </td>
 <td style="text-align:right;">
 0.2558122
@@ -8273,7 +8256,7 @@ Predawn
 0.7236304
 </td>
 <td style="text-align:right;">
-0.4220143
+0.4220144
 </td>
 </tr>
 <tr>
@@ -8293,13 +8276,13 @@ Midday
 3
 </td>
 <td style="text-align:right;">
-0.9490301
+0.9490300
 </td>
 <td style="text-align:right;">
-34.777161
+34.777160
 </td>
 <td style="text-align:right;">
-0.9490301
+0.9490300
 </td>
 <td style="text-align:right;">
 34.77716
@@ -8308,10 +8291,10 @@ Midday
 0.9971048
 </td>
 <td style="text-align:right;">
--5.6424441
+-5.6424435
 </td>
 <td style="text-align:right;">
--1.9317863
+-1.9317862
 </td>
 </tr>
 </tbody>
@@ -8605,10 +8588,10 @@ Quercus ilex
 <th style="text-align:left;">
 Species
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 Cover
 </th>
-<th style="text-align:left;">
+<th style="text-align:right;">
 Height
 </th>
 <th style="text-align:left;">
@@ -8618,7 +8601,93 @@ Z50
 Z95
 </th>
 </tr></thead>
-<tbody><tr></tr></tbody>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Arbutus unedo
+</td>
+<td style="text-align:right;">
+4.83
+</td>
+<td style="text-align:right;">
+174.00
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Phillyrea angustifolia
+</td>
+<td style="text-align:right;">
+7.25
+</td>
+<td style="text-align:right;">
+153.33
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pistacia lentiscus
+</td>
+<td style="text-align:right;">
+13.50
+</td>
+<td style="text-align:right;">
+118.33
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Quercus ilex
+</td>
+<td style="text-align:right;">
+9.67
+</td>
+<td style="text-align:right;">
+78.00
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Viburnum spp.
+</td>
+<td style="text-align:right;">
+9.67
+</td>
+<td style="text-align:right;">
+138.33
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+</tbody>
 </table>
 </div>
 <div class="section level4">
@@ -9044,6 +9113,192 @@ NA
 1009.0124
 </td>
 </tr>
+<tr>
+<td style="text-align:left;">
+Phillyrea angustifolia
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pistacia lentiscus
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Viburnum spp.
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -9065,39 +9320,15 @@ Remark
 Soil
 </td>
 <td style="text-align:left;">
-Soilgrids with rfc manually setted to increase it
+Soil description from local samples
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Fine Roots Proportion
+Vegetation
 </td>
 <td style="text-align:left;">
-Optimization mode 1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FC
-</td>
-<td style="text-align:left;">
-Not modified
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-W
-</td>
-<td style="text-align:left;">
-Initial value adjusted to measured value for first layer
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-LAI
-</td>
-<td style="text-align:left;">
-Supplied by authors for tree cohorts
+Understory composed of multiple species
 </td>
 </tr>
 </tbody>
@@ -9108,9 +9339,9 @@ Supplied by authors for tree cohorts
 <h3 id="evaluation-results-8">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-8"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
-<!-- Soil moisture -->
+<!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-8">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-8"></a>
+<h4 id="soil-moisture-content-8">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-8"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -9157,25 +9388,25 @@ granier
 676
 </td>
 <td style="text-align:right;">
-0.2838859
+0.0912531
 </td>
 <td style="text-align:right;">
-40.413062
+58.07784
 </td>
 <td style="text-align:right;">
-0.3240393
+0.0965910
 </td>
 <td style="text-align:right;">
-46.12918
+61.47507
 </td>
 <td style="text-align:right;">
-0.3816271
+0.4649644
 </td>
 <td style="text-align:right;">
--2.2994890
+-4.6681745
 </td>
 <td style="text-align:right;">
--1.0938432
+-1.7904064
 </td>
 </tr>
 <tr>
@@ -9189,25 +9420,25 @@ sperry
 676
 </td>
 <td style="text-align:right;">
-0.0657958
+0.0247413
 </td>
 <td style="text-align:right;">
-9.366478
+15.74656
 </td>
 <td style="text-align:right;">
-0.1975054
+0.0493077
 </td>
 <td style="text-align:right;">
-28.11623
+31.38179
 </td>
 <td style="text-align:right;">
-0.6729583
+0.6822632
 </td>
 <td style="text-align:right;">
--0.3821856
+-0.9521284
 </td>
 <td style="text-align:right;">
--0.2762198
+-0.4244463
 </td>
 </tr>
 <tr>
@@ -9221,25 +9452,25 @@ cochard
 676
 </td>
 <td style="text-align:right;">
-0.1689417
+0.0571805
 </td>
 <td style="text-align:right;">
-24.049995
+36.39238
 </td>
 <td style="text-align:right;">
-0.2440514
+0.0706945
 </td>
 <td style="text-align:right;">
-34.74236
+44.99332
 </td>
 <td style="text-align:right;">
-0.6122855
+0.6373757
 </td>
 <td style="text-align:right;">
--1.0711569
+-2.6035067
 </td>
 <td style="text-align:right;">
--0.5769857
+-1.0422858
 </td>
 </tr>
 </tbody>
@@ -9302,25 +9533,25 @@ T1_19
 682
 </td>
 <td style="text-align:right;">
--0.5709014
+-0.5795800
 </td>
 <td style="text-align:right;">
--58.62530
+-59.516487
 </td>
 <td style="text-align:right;">
-0.6323323
+0.6360706
 </td>
 <td style="text-align:right;">
-64.93357
+65.31745
 </td>
 <td style="text-align:right;">
-0.5225113
+0.5275426
 </td>
 <td style="text-align:right;">
--0.3795052
+-0.3974089
 </td>
 <td style="text-align:right;">
--0.0728827
+-0.0792256
 </td>
 </tr>
 <tr>
@@ -9337,25 +9568,25 @@ T2_148
 682
 </td>
 <td style="text-align:right;">
--0.0169660
+-0.0290091
 </td>
 <td style="text-align:right;">
--3.03865
+-5.195613
 </td>
 <td style="text-align:right;">
-0.4578817
+0.4543269
 </td>
 <td style="text-align:right;">
-82.00781
+81.37113
 </td>
 <td style="text-align:right;">
-0.1501800
+0.1550961
 </td>
 <td style="text-align:right;">
--0.2383354
+-0.2216989
 </td>
 <td style="text-align:right;">
--0.1865592
+-0.1773472
 </td>
 </tr>
 <tr>
@@ -9372,25 +9603,25 @@ T3_171
 682
 </td>
 <td style="text-align:right;">
--0.9893466
+-0.9954789
 </td>
 <td style="text-align:right;">
--79.20786
+-79.698818
 </td>
 <td style="text-align:right;">
-1.0047622
+1.0101268
 </td>
 <td style="text-align:right;">
-80.44205
+80.87154
 </td>
 <td style="text-align:right;">
-0.5910252
+0.5985250
 </td>
 <td style="text-align:right;">
--0.4460137
+-0.4542457
 </td>
 <td style="text-align:right;">
--0.0335413
+-0.0390594
 </td>
 </tr>
 <tr>
@@ -9407,25 +9638,25 @@ T4_168
 682
 </td>
 <td style="text-align:right;">
--1.6383147
+-1.6421164
 </td>
 <td style="text-align:right;">
--90.23300
+-90.442380
 </td>
 <td style="text-align:right;">
-1.6456290
+1.6491530
 </td>
 <td style="text-align:right;">
-90.63584
+90.82993
 </td>
 <td style="text-align:right;">
-0.3684603
+0.3737119
 </td>
 <td style="text-align:right;">
--1.8902407
+-1.8992616
 </td>
 <td style="text-align:right;">
--0.7281108
+-0.7318115
 </td>
 </tr>
 <tr>
@@ -9442,25 +9673,25 @@ T1_19
 682
 </td>
 <td style="text-align:right;">
--0.8170589
+-0.8389656
 </td>
 <td style="text-align:right;">
--83.90296
+-86.152539
 </td>
 <td style="text-align:right;">
-0.8235674
+0.8451867
 </td>
 <td style="text-align:right;">
-84.57131
+86.79138
 </td>
 <td style="text-align:right;">
-0.8317622
+0.8522610
 </td>
 <td style="text-align:right;">
--0.9574424
+-1.0335680
 </td>
 <td style="text-align:right;">
--0.3973527
+-0.4340344
 </td>
 </tr>
 <tr>
@@ -9477,25 +9708,25 @@ T2_148
 682
 </td>
 <td style="text-align:right;">
--0.2955775
+-0.3427736
 </td>
 <td style="text-align:right;">
--52.93871
+-61.391649
 </td>
 <td style="text-align:right;">
-0.3717875
+0.3813134
 </td>
 <td style="text-align:right;">
-66.58812
+68.29423
 </td>
 <td style="text-align:right;">
-0.5912013
+0.6745727
 </td>
 <td style="text-align:right;">
-0.0031394
+-0.0469947
 </td>
 <td style="text-align:right;">
-0.0365461
+0.0118606
 </td>
 </tr>
 <tr>
@@ -9512,25 +9743,25 @@ T3_171
 682
 </td>
 <td style="text-align:right;">
--0.9467914
+-1.0054023
 </td>
 <td style="text-align:right;">
--75.80086
+-80.493294
 </td>
 <td style="text-align:right;">
-0.9527393
+1.0109199
 </td>
 <td style="text-align:right;">
-76.27706
+80.93504
 </td>
 <td style="text-align:right;">
-0.8224577
+0.8633642
 </td>
 <td style="text-align:right;">
--0.1778876
+-0.2616408
 </td>
 <td style="text-align:right;">
-0.0199718
+-0.0398753
 </td>
 </tr>
 <tr>
@@ -9547,25 +9778,25 @@ T4_168
 682
 </td>
 <td style="text-align:right;">
--1.4102538
+-1.4547346
 </td>
 <td style="text-align:right;">
--77.67215
+-80.122006
 </td>
 <td style="text-align:right;">
-1.4267953
+1.4708504
 </td>
 <td style="text-align:right;">
-78.58320
+81.00961
 </td>
 <td style="text-align:right;">
-0.6387358
+0.7053330
 </td>
 <td style="text-align:right;">
--1.1651155
+-1.2294658
 </td>
 <td style="text-align:right;">
--0.4983088
+-0.5445721
 </td>
 </tr>
 <tr>
@@ -9582,25 +9813,25 @@ T1_19
 682
 </td>
 <td style="text-align:right;">
--0.7033224
+-0.7258542
 </td>
 <td style="text-align:right;">
--72.22348
+-74.537244
 </td>
 <td style="text-align:right;">
-0.7232922
+0.7337597
 </td>
 <td style="text-align:right;">
-74.27416
+75.34905
 </td>
 <td style="text-align:right;">
-0.5093252
+0.5760390
 </td>
 <td style="text-align:right;">
--0.7137011
+-0.7449969
 </td>
 <td style="text-align:right;">
--0.2272151
+-0.2449754
 </td>
 </tr>
 <tr>
@@ -9617,25 +9848,25 @@ T2_148
 682
 </td>
 <td style="text-align:right;">
--0.0880704
+-0.1568916
 </td>
 <td style="text-align:right;">
--15.77364
+-28.099703
 </td>
 <td style="text-align:right;">
-0.4963668
+0.4550342
 </td>
 <td style="text-align:right;">
-88.90060
+81.49782
 </td>
 <td style="text-align:right;">
-0.1445312
+0.2316466
 </td>
 <td style="text-align:right;">
--0.5476439
+-0.3568857
 </td>
 <td style="text-align:right;">
--0.2862900
+-0.1791802
 </td>
 </tr>
 <tr>
@@ -9652,25 +9883,25 @@ T3_171
 682
 </td>
 <td style="text-align:right;">
--0.8889755
+-0.9468618
 </td>
 <td style="text-align:right;">
--71.17208
+-75.806499
 </td>
 <td style="text-align:right;">
-0.9220352
+0.9528674
 </td>
 <td style="text-align:right;">
-73.81886
+76.28731
 </td>
 <td style="text-align:right;">
-0.5517922
+0.6287622
 </td>
 <td style="text-align:right;">
--0.2639718
+-0.2930661
 </td>
 <td style="text-align:right;">
-0.0515553
+0.0198400
 </td>
 </tr>
 <tr>
@@ -9687,25 +9918,25 @@ T4_168
 682
 </td>
 <td style="text-align:right;">
--1.4928510
+-1.5200087
 </td>
 <td style="text-align:right;">
--82.22133
+-83.717089
 </td>
 <td style="text-align:right;">
-1.5035364
+1.5281084
 </td>
 <td style="text-align:right;">
-82.80985
+84.16319
 </td>
 <td style="text-align:right;">
-0.3503160
+0.4345083
 </td>
 <td style="text-align:right;">
--1.5088990
+-1.5344966
 </td>
 <td style="text-align:right;">
--0.5788963
+-0.6046999
 </td>
 </tr>
 </tbody>
@@ -10435,47 +10666,15 @@ Remark
 Soil
 </td>
 <td style="text-align:left;">
-Soilgrids complete
+Taken from Soilgrids
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Fine Roots Proportion
+Vegetation
 </td>
 <td style="text-align:left;">
-Optimization mode 2
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FC
-</td>
-<td style="text-align:left;">
-Not modified
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-W
-</td>
-<td style="text-align:left;">
-Initial value adjusted to measured value for first layer
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-LAI
-</td>
-<td style="text-align:left;">
-Calculated by model
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-kmax
-</td>
-<td style="text-align:left;">
-Q. faginea modifed to mimic Q. pubescens
+Understory not considered
 </td>
 </tr>
 </tbody>
@@ -10486,9 +10685,9 @@ Q. faginea modifed to mimic Q. pubescens
 <h3 id="evaluation-results-9">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-9"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
-<!-- Soil moisture -->
+<!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-9">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-9"></a>
+<h4 id="soil-moisture-content-9">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-9"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -10535,25 +10734,25 @@ granier
 715
 </td>
 <td style="text-align:right;">
-0.3120769
+0.2078352
 </td>
 <td style="text-align:right;">
-56.39615
+375.5839
 </td>
 <td style="text-align:right;">
-0.3743449
+0.2078352
 </td>
 <td style="text-align:right;">
-67.64874
+375.5839
 </td>
 <td style="text-align:right;">
 0.3009302
 </td>
 <td style="text-align:right;">
--0.6416403
+-32.79221
 </td>
 <td style="text-align:right;">
--0.2069664
+-5.701044
 </td>
 </tr>
 <tr>
@@ -10567,25 +10766,25 @@ sperry
 715
 </td>
 <td style="text-align:right;">
-0.1512699
+0.1595144
 </td>
 <td style="text-align:right;">
-27.33634
+288.2623
 </td>
 <td style="text-align:right;">
-0.2191502
+0.1595144
 </td>
 <td style="text-align:right;">
-39.60315
+288.2623
 </td>
 <td style="text-align:right;">
-0.8181905
+0.8176517
 </td>
 <td style="text-align:right;">
-0.4946756
+-20.34213
 </td>
 <td style="text-align:right;">
-0.2934137
+-4.143080
 </td>
 </tr>
 <tr>
@@ -10599,25 +10798,25 @@ cochard
 715
 </td>
 <td style="text-align:right;">
-0.2306747
+0.1776166
 </td>
 <td style="text-align:right;">
-41.68577
+320.9752
 </td>
 <td style="text-align:right;">
-0.2970097
+0.1776166
 </td>
 <td style="text-align:right;">
-53.67331
+320.9752
 </td>
 <td style="text-align:right;">
-0.6311909
+0.6316501
 </td>
 <td style="text-align:right;">
-0.0021392
+-24.43701
 </td>
 <td style="text-align:right;">
-0.0423785
+-4.726733
 </td>
 </tr>
 </tbody>
@@ -10785,25 +10984,25 @@ T1_149
 227
 </td>
 <td style="text-align:right;">
--0.1449901
+-0.1439805
 </td>
 <td style="text-align:right;">
--29.773059
+-29.565742
 </td>
 <td style="text-align:right;">
-0.1640154
+0.1632577
 </td>
 <td style="text-align:right;">
-33.67982
+33.52424
 </td>
 <td style="text-align:right;">
-0.8958875
+0.8951061
 </td>
 <td style="text-align:right;">
-0.5475089
+0.5501464
 </td>
 <td style="text-align:right;">
-0.3907368
+0.3935512
 </td>
 </tr>
 <tr>
@@ -10820,25 +11019,25 @@ T2_166
 174
 </td>
 <td style="text-align:right;">
-0.7775456
+0.7804290
 </td>
 <td style="text-align:right;">
-105.835235
+106.227711
 </td>
 <td style="text-align:right;">
-0.8591497
+0.8613543
 </td>
 <td style="text-align:right;">
-116.94274
+117.24282
 </td>
 <td style="text-align:right;">
-0.8037346
+0.8045914
 </td>
 <td style="text-align:right;">
--8.8779660
+-8.9213818
 </td>
 <td style="text-align:right;">
--1.6049411
+-1.6116255
 </td>
 </tr>
 <tr>
@@ -10855,25 +11054,25 @@ T3_168
 267
 </td>
 <td style="text-align:right;">
-0.5688979
+0.5710080
 </td>
 <td style="text-align:right;">
-101.917447
+102.295459
 </td>
 <td style="text-align:right;">
-0.6301934
+0.6316821
 </td>
 <td style="text-align:right;">
-112.89847
+113.16516
 </td>
 <td style="text-align:right;">
-0.7766238
+0.7779528
 </td>
 <td style="text-align:right;">
--6.6869343
+-6.7236228
 </td>
 <td style="text-align:right;">
--1.3674770
+-1.3730695
 </td>
 </tr>
 <tr>
@@ -10925,25 +11124,25 @@ T2_166
 174
 </td>
 <td style="text-align:right;">
-0.0144748
+0.0147146
 </td>
 <td style="text-align:right;">
-1.970225
+2.002870
 </td>
 <td style="text-align:right;">
-0.1822589
+0.1824616
 </td>
 <td style="text-align:right;">
-24.80808
+24.83567
 </td>
 <td style="text-align:right;">
-0.9183907
+0.9183024
 </td>
 <td style="text-align:right;">
-0.6249979
+0.6239663
 </td>
 <td style="text-align:right;">
-0.4473913
+0.4467766
 </td>
 </tr>
 <tr>
@@ -10960,25 +11159,25 @@ T3_168
 267
 </td>
 <td style="text-align:right;">
-0.0428451
+0.0430105
 </td>
 <td style="text-align:right;">
-7.675648
+7.705285
 </td>
 <td style="text-align:right;">
-0.1884476
+0.1885242
 </td>
 <td style="text-align:right;">
-33.76017
+33.77391
 </td>
 <td style="text-align:right;">
-0.9090764
+0.9091331
 </td>
 <td style="text-align:right;">
-0.4264045
+0.4261578
 </td>
 <td style="text-align:right;">
-0.2920503
+0.2917623
 </td>
 </tr>
 </tbody>
@@ -11046,25 +11245,25 @@ Predawn
 4
 </td>
 <td style="text-align:right;">
--0.5085368
+-0.5073002
 </td>
 <td style="text-align:right;">
--45.405070
+-45.294660
 </td>
 <td style="text-align:right;">
-0.9015300
+0.9016315
 </td>
 <td style="text-align:right;">
-80.49375
+80.50282
 </td>
 <td style="text-align:right;">
-0.9732661
+0.9734379
 </td>
 <td style="text-align:right;">
--3.2202779
+-3.2176272
 </td>
 <td style="text-align:right;">
--1.0844624
+-1.0846972
 </td>
 </tr>
 <tr>
@@ -11084,25 +11283,25 @@ Midday
 4
 </td>
 <td style="text-align:right;">
--0.8274988
+-0.8260921
 </td>
 <td style="text-align:right;">
--46.850603
+-46.770959
 </td>
 <td style="text-align:right;">
-1.0020221
+1.0020064
 </td>
 <td style="text-align:right;">
-56.73161
+56.73072
 </td>
 <td style="text-align:right;">
-0.9918983
+0.9917891
 </td>
 <td style="text-align:right;">
--15.8857860
+-15.8771161
 </td>
 <td style="text-align:right;">
--2.2064706
+-2.2064204
 </td>
 </tr>
 <tr>
@@ -11122,25 +11321,25 @@ Predawn
 4
 </td>
 <td style="text-align:right;">
--0.7502477
+-0.7493262
 </td>
 <td style="text-align:right;">
--101.470530
+-101.345895
 </td>
 <td style="text-align:right;">
-0.9169839
+0.9169681
 </td>
 <td style="text-align:right;">
-124.02149
+124.01936
 </td>
 <td style="text-align:right;">
-0.8203289
+0.8206907
 </td>
 <td style="text-align:right;">
--4.3494700
+-4.3438705
 </td>
 <td style="text-align:right;">
--1.1560239
+-1.1559867
 </td>
 </tr>
 <tr>
@@ -11160,25 +11359,25 @@ Midday
 4
 </td>
 <td style="text-align:right;">
--0.8779146
+-0.8768185
 </td>
 <td style="text-align:right;">
--34.436465
+-34.393469
 </td>
 <td style="text-align:right;">
-0.8779146
+0.8768185
 </td>
 <td style="text-align:right;">
-34.43646
+34.39347
 </td>
 <td style="text-align:right;">
-0.9387197
+0.9383902
 </td>
 <td style="text-align:right;">
--9.1352361
+-9.1137821
 </td>
 <td style="text-align:right;">
--2.7457691
+-2.7410922
 </td>
 </tr>
 <tr>
@@ -11198,25 +11397,25 @@ Predawn
 4
 </td>
 <td style="text-align:right;">
--0.3844217
+-0.3834877
 </td>
 <td style="text-align:right;">
--33.702724
+-33.620837
 </td>
 <td style="text-align:right;">
-0.6686617
+0.6686935
 </td>
 <td style="text-align:right;">
-58.62240
+58.62518
 </td>
 <td style="text-align:right;">
-0.8070981
+0.8073814
 </td>
 <td style="text-align:right;">
-0.1664156
+0.1676695
 </td>
 <td style="text-align:right;">
-0.1830021
+0.1829633
 </td>
 </tr>
 <tr>
@@ -11236,25 +11435,25 @@ Midday
 4
 </td>
 <td style="text-align:right;">
--1.3656649
+-1.3646609
 </td>
 <td style="text-align:right;">
--57.943881
+-57.901283
 </td>
 <td style="text-align:right;">
-1.3656649
+1.3646609
 </td>
 <td style="text-align:right;">
-57.94388
+57.90128
 </td>
 <td style="text-align:right;">
-0.9830133
+0.9834141
 </td>
 <td style="text-align:right;">
--3.7795083
+-3.7716500
 </td>
 <td style="text-align:right;">
--1.6959454
+-1.6939635
 </td>
 </tr>
 <tr>
@@ -11274,25 +11473,25 @@ Predawn
 2
 </td>
 <td style="text-align:right;">
-0.1025328
+0.1024017
 </td>
 <td style="text-align:right;">
-7.470512
+7.460959
 </td>
 <td style="text-align:right;">
-0.4013166
+0.4013674
 </td>
 <td style="text-align:right;">
-29.23983
+29.24353
 </td>
 <td style="text-align:right;">
 1.0000000
 </td>
 <td style="text-align:right;">
-0.4170426
+0.4169954
 </td>
 <td style="text-align:right;">
-0.2602458
+0.2601523
 </td>
 </tr>
 <tr>
@@ -11312,25 +11511,25 @@ Midday
 2
 </td>
 <td style="text-align:right;">
-0.0495478
+0.0494329
 </td>
 <td style="text-align:right;">
-2.678261
+2.672048
 </td>
 <td style="text-align:right;">
-0.3753674
+0.3753976
 </td>
 <td style="text-align:right;">
-20.29013
+20.29176
 </td>
 <td style="text-align:right;">
 1.0000000
 </td>
 <td style="text-align:right;">
-0.2595263
+0.2594682
 </td>
 <td style="text-align:right;">
-0.1468922
+0.1468237
 </td>
 </tr>
 <tr>
@@ -11350,25 +11549,25 @@ Predawn
 4
 </td>
 <td style="text-align:right;">
-0.0784741
+0.0736130
 </td>
 <td style="text-align:right;">
-10.613576
+9.956114
 </td>
 <td style="text-align:right;">
-0.3352971
+0.3305276
 </td>
 <td style="text-align:right;">
-45.34872
+44.70365
 </td>
 <td style="text-align:right;">
-0.9667859
+0.9661399
 </td>
 <td style="text-align:right;">
-0.4754038
+0.4834524
 </td>
 <td style="text-align:right;">
-0.2116453
+0.2228595
 </td>
 </tr>
 <tr>
@@ -11388,25 +11587,25 @@ Midday
 4
 </td>
 <td style="text-align:right;">
-1.3939918
+1.3888309
 </td>
 <td style="text-align:right;">
-54.679747
+54.477311
 </td>
 <td style="text-align:right;">
-1.3939918
+1.3888309
 </td>
 <td style="text-align:right;">
-54.67975
+54.47731
 </td>
 <td style="text-align:right;">
-0.5622078
+0.5615455
 </td>
 <td style="text-align:right;">
--29.4500443
+-29.2188738
 </td>
 <td style="text-align:right;">
--4.9476983
+-4.9256787
 </td>
 </tr>
 <tr>
@@ -11426,25 +11625,25 @@ Predawn
 4
 </td>
 <td style="text-align:right;">
-0.4622506
+0.4571409
 </td>
 <td style="text-align:right;">
-40.526076
+40.078109
 </td>
 <td style="text-align:right;">
-0.4622506
+0.4571409
 </td>
 <td style="text-align:right;">
-40.52608
+40.07811
 </td>
 <td style="text-align:right;">
-0.9963892
+0.9963228
 </td>
 <td style="text-align:right;">
-0.7452886
+0.7496870
 </td>
 <td style="text-align:right;">
-0.4352036
+0.4414467
 </td>
 </tr>
 <tr>
@@ -11464,25 +11663,25 @@ Midday
 4
 </td>
 <td style="text-align:right;">
-0.9424340
+0.9370099
 </td>
 <td style="text-align:right;">
-39.986594
+39.756452
 </td>
 <td style="text-align:right;">
-0.9424340
+0.9370099
 </td>
 <td style="text-align:right;">
-39.98659
+39.75645
 </td>
 <td style="text-align:right;">
-0.8991339
+0.8985531
 </td>
 <td style="text-align:right;">
--1.3534544
+-1.3279051
 </td>
 <td style="text-align:right;">
--0.8604497
+-0.8497419
 </td>
 </tr>
 </tbody>
@@ -11759,6 +11958,12 @@ bd
 <th style="text-align:right;">
 rfc
 </th>
+<th style="text-align:right;">
+VG_theta_sat
+</th>
+<th style="text-align:right;">
+VG_theta_res
+</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -11780,6 +11985,12 @@ rfc
 <td style="text-align:right;">
 19.46667
 </td>
+<td style="text-align:right;">
+0.55
+</td>
+<td style="text-align:right;">
+0.1
+</td>
 </tr>
 <tr>
 <td style="text-align:right;">
@@ -11798,7 +12009,13 @@ rfc
 1.420000
 </td>
 <td style="text-align:right;">
-22.05000
+40.00000
+</td>
+<td style="text-align:right;">
+0.55
+</td>
+<td style="text-align:right;">
+0.1
 </td>
 </tr>
 <tr>
@@ -11818,7 +12035,13 @@ rfc
 1.480000
 </td>
 <td style="text-align:right;">
-60.00000
+80.00000
+</td>
+<td style="text-align:right;">
+0.55
+</td>
+<td style="text-align:right;">
+0.1
 </td>
 </tr>
 <tr>
@@ -11838,7 +12061,13 @@ rfc
 1.480000
 </td>
 <td style="text-align:right;">
-85.00000
+90.00000
+</td>
+<td style="text-align:right;">
+0.55
+</td>
+<td style="text-align:right;">
+0.1
 </td>
 </tr>
 </tbody>
@@ -11894,47 +12123,23 @@ Remark
 Soil
 </td>
 <td style="text-align:left;">
-Mix supplied by authors and soilGrids
+Taken from SoilGrids with theta_sat and theta_res modified
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Fine Roots Proportion
+Vegetation
 </td>
 <td style="text-align:left;">
-Calibration by E tot
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FC
-</td>
-<td style="text-align:left;">
-Not modified
+Understory not considered
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-W
+Weather
 </td>
 <td style="text-align:left;">
-Initial value adjusted to measured value for first layer
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-LAI
-</td>
-<td style="text-align:left;">
-Calculated by model
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-kmax
-</td>
-<td style="text-align:left;">
-Q. pyrenaica modifed to mimic Q. pubescens
+Complemented with interpolated weather
 </td>
 </tr>
 </tbody>
@@ -11945,9 +12150,9 @@ Q. pyrenaica modifed to mimic Q. pubescens
 <h3 id="evaluation-results-10">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-10"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
-<!-- Soil moisture -->
+<!-- Soil moisture content -->
 <div class="section level4">
-<h4 id="soil-moisture-10">Soil moisture<a class="anchor" aria-label="anchor" href="#soil-moisture-10"></a>
+<h4 id="soil-moisture-content-10">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-10"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -11994,25 +12199,25 @@ granier
 731
 </td>
 <td style="text-align:right;">
-0.1250586
+0.0038660
 </td>
 <td style="text-align:right;">
-17.418879
+1.458765
 </td>
 <td style="text-align:right;">
-0.1719340
+0.0596806
 </td>
 <td style="text-align:right;">
-23.94795
+22.51915
 </td>
 <td style="text-align:right;">
-0.7363404
+0.5084233
 </td>
 <td style="text-align:right;">
-0.1901710
+0.1466471
 </td>
 <td style="text-align:right;">
-0.1125183
+0.1654679
 </td>
 </tr>
 <tr>
@@ -12026,25 +12231,25 @@ sperry
 731
 </td>
 <td style="text-align:right;">
--0.0321896
+-0.0198181
 </td>
 <td style="text-align:right;">
--4.483554
+-7.477932
 </td>
 <td style="text-align:right;">
-0.1036066
+0.0380555
 </td>
 <td style="text-align:right;">
-14.43093
+14.35938
 </td>
 <td style="text-align:right;">
-0.8412842
+0.7756705
 </td>
 <td style="text-align:right;">
-0.4991552
+0.5010054
 </td>
 <td style="text-align:right;">
-0.4652075
+0.4678592
 </td>
 </tr>
 <tr>
@@ -12058,25 +12263,25 @@ cochard
 731
 </td>
 <td style="text-align:right;">
--0.0543579
+-0.0263445
 </td>
 <td style="text-align:right;">
--7.571279
+-9.940515
 </td>
 <td style="text-align:right;">
-0.1253010
+0.0404005
 </td>
 <td style="text-align:right;">
-17.45264
+15.24424
 </td>
 <td style="text-align:right;">
-0.8631274
+0.7965998
 </td>
 <td style="text-align:right;">
-0.4239501
+0.4690010
 </td>
 <td style="text-align:right;">
-0.3532265
+0.4350673
 </td>
 </tr>
 </tbody>
@@ -12139,25 +12344,25 @@ T1_1
 730
 </td>
 <td style="text-align:right;">
-0.2447378
+0.2283542
 </td>
 <td style="text-align:right;">
-168.4910
+157.2116
 </td>
 <td style="text-align:right;">
-0.2530763
+0.2369165
 </td>
 <td style="text-align:right;">
-174.2317
+163.1063
 </td>
 <td style="text-align:right;">
-0.7508962
+0.7276320
 </td>
 <td style="text-align:right;">
--12.05478
+-10.57561
 </td>
 <td style="text-align:right;">
--2.697264
+-2.461180
 </td>
 </tr>
 <tr>
@@ -12174,25 +12379,25 @@ T2_200
 712
 </td>
 <td style="text-align:right;">
-0.5806077
+0.5654573
 </td>
 <td style="text-align:right;">
-776.5568
+756.2932
 </td>
 <td style="text-align:right;">
-0.5807681
+0.5656253
 </td>
 <td style="text-align:right;">
-776.7713
+756.5179
 </td>
 <td style="text-align:right;">
-0.7399001
+0.7441288
 </td>
 <td style="text-align:right;">
--136.80177
+-129.43095
 </td>
 <td style="text-align:right;">
--11.377898
+-11.055160
 </td>
 </tr>
 <tr>
@@ -12209,25 +12414,25 @@ T1_1
 730
 </td>
 <td style="text-align:right;">
-0.6038704
+0.5873390
 </td>
 <td style="text-align:right;">
-415.7376
+404.3565
 </td>
 <td style="text-align:right;">
-0.6046794
+0.5881473
 </td>
 <td style="text-align:right;">
-416.2946
+404.9130
 </td>
 <td style="text-align:right;">
-0.7672848
+0.7655487
 </td>
 <td style="text-align:right;">
--76.72062
+-72.89906
 </td>
 <td style="text-align:right;">
--7.833934
+-7.592411
 </td>
 </tr>
 <tr>
@@ -12244,25 +12449,25 @@ T2_200
 712
 </td>
 <td style="text-align:right;">
-0.4056400
+0.3958695
 </td>
 <td style="text-align:right;">
-542.5393
+529.4713
 </td>
 <td style="text-align:right;">
-0.4059585
+0.3961897
 </td>
 <td style="text-align:right;">
-542.9653
+529.8995
 </td>
 <td style="text-align:right;">
-0.6938095
+0.6984778
 </td>
 <td style="text-align:right;">
--63.50973
+-60.45955
 </td>
 <td style="text-align:right;">
--7.652185
+-7.443981
 </td>
 </tr>
 <tr>
@@ -12279,25 +12484,25 @@ T1_1
 730
 </td>
 <td style="text-align:right;">
-0.6683580
+0.6558778
 </td>
 <td style="text-align:right;">
-460.1345
+451.5424
 </td>
 <td style="text-align:right;">
-0.6717860
+0.6593191
 </td>
 <td style="text-align:right;">
-462.4945
+453.9116
 </td>
 <td style="text-align:right;">
-0.7494491
+0.7494845
 </td>
 <td style="text-align:right;">
--113.72938
+-110.23171
 </td>
 <td style="text-align:right;">
--8.814313
+-8.632180
 </td>
 </tr>
 <tr>
@@ -12314,25 +12519,25 @@ T2_200
 712
 </td>
 <td style="text-align:right;">
-0.4876020
+0.4775966
 </td>
 <td style="text-align:right;">
-652.1625
+638.7804
 </td>
 <td style="text-align:right;">
-0.4885107
+0.4784939
 </td>
 <td style="text-align:right;">
-653.3779
+639.9805
 </td>
 <td style="text-align:right;">
-0.6610708
+0.6687477
 </td>
 <td style="text-align:right;">
--113.75426
+-109.65694
 </td>
 <td style="text-align:right;">
--9.411617
+-9.198130
 </td>
 </tr>
 </tbody>
