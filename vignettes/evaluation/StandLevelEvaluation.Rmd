@@ -1,6 +1,6 @@
 ---
-title: "Stand-level model evaluation"
-author: "Miquel De Cáceres (CREAF), Víctor Granda (CREAF), Nicolas Martin-StPaul (INRAE)"
+title: "Model evaluation in experimental plots"
+author: "Miquel De Cáceres (CREAF), Víctor Granda (CREAF),  Rafael Poyatos (CREAF), Nicolas Martin-StPaul (INRAE)"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_document:
@@ -15,8 +15,8 @@ params = list(wd='/home/miquel/OneDrive/mcaceres_work/model_development/medfate_
               model='spwb',
               # names = "Puéchabon",
               # codes = "FRAPUE",
-              names=c("Puéchabon", "Hesse", "Yatir", "Rinconada", "Prades", "Font-Blanche", "Can Balasc", "Armallones"),
-              codes=c("FRAPUE", "FRAHES", "ISRYAT", "ESPRIN", "PRADES",  "FONBLA", "CANBALASC", "ESPALTARM"),
+              names=c("Puéchabon", "Hesse", "Yatir", "Rinconada", "Vallcebre (Barrol)", "Vallcebre (Sort)","Prades", "Font-Blanche", "Can Balasc", "Armallones", "Ronda"),
+              codes=c("FRAPUE", "FRAHES", "ISRYAT", "ESPRIN", "QVALLCEBRE", "PVALLCEBRE", "PRADES",  "FONBLA", "CANBALASC", "ESPALTARM", "RONDA"),
               confs=c('granier','sperry', 'cochard'),
               save_plots = FALSE)
 
@@ -45,6 +45,8 @@ df$InputObject = vector("list", n_rows)
 df$Result = vector("list",n_rows)
 cnt <- 0
 df <- tibble::as_tibble(df)
+df_general_sites <- data.frame(Plot = rep(NA, n_sites),
+                               Country = rep(NA, n_sites))
 for(i in 1:n_sites) {
   site <- params$codes[i]
   for(j in 1:n_confs) {
@@ -59,7 +61,11 @@ for(i in 1:n_sites) {
                        paste0('simulation_result.rds'))
     df$InputObject[[cnt]] <- readRDS(file_name_input)
     df$Result[[cnt]] <-   readRDS(file_name_output)
-    df$SiteData[[cnt]] <- medfatereports::load_list(site)
+    site_list  <- medfatereports::load_list(site)
+    df$SiteData[[cnt]] <- site_list
+    df_general_sites$Plot[i] <- site_list$siteData$Value[1]
+    df_general_sites$Country[i] <- site_list$siteData$Value[2]
+    df_general_sites$Stand[i] <- site_list$siteData$Value[14]
   }
 }
 knitr::opts_knit$set(root.dir = this_path)
@@ -67,7 +73,16 @@ knitr::opts_knit$set(root.dir = this_path)
 
 # Introduction
 
-This document presents **medfate** (**ver. `r packageVersion('medfate')[[1]]`**) model evaluation results at stand-level, using data from a set of **`r length(params$codes)` experimental forest plots**. Forest water balance simulations (i.e. function `spwb()`) have been conducted using the three transpiration modes (i.e. `Granier`, `Sperry` or `Cochard`). For each forest plot, general information about the site, topography, soil and climate is first presented, followed by a description of model inputs. Then, evaluation results are presented for four different variables:
+This document presents **medfate** (**ver. `r packageVersion('medfate')[[1]]`**) model evaluation results at stand-level, using data from a set of **`r length(params$codes)` experimental forest plots**. 
+
+```{r}
+df_general_sites |> 
+  kbl() |>
+  kable_styling()
+```
+
+
+Forest water balance simulations (i.e. function `spwb()`) have been conducted using the three transpiration modes (i.e. `Granier`, `Sperry` or `Cochard`). For each forest plot, general information about the site, topography, soil and climate is first presented, followed by a description of model inputs. Then, evaluation results are presented for four different variables:
 
  a. Stand-level evapo-transpiration.
  b. Soil moisture content of the topmost layer.

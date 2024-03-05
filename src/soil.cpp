@@ -770,12 +770,6 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 //' @param W A numerical vector with the initial relative water content of each soil layer.
 //' @param SWE Initial snow water equivalent of the snow pack on the soil surface (mm).
 //' 
-//' @details 
-//' Function \code{print} prompts a description of soil characteristics and state variables (water content and temperature) 
-//' according to a water retention curve (either Saxton's or Van Genuchten's). 
-//' Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa. 
-//' Parameter \code{Temp} is initialized as missing for all soil layers. 
-//' 
 //' @return
 //' Function \code{soil} returns a list of class \code{soil} with the following elements:
 //' \itemize{
@@ -795,6 +789,15 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 //' 
 //' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 //' 
+//' @details 
+//' Function \code{print} prompts a description of soil characteristics and state variables (water content and temperature) 
+//' according to a water retention curve (either Saxton's or Van Genuchten's). 
+//' Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa. 
+//' Parameter \code{Temp} is initialized as missing for all soil layers. 
+//' 
+//' If available, the user can specify columns \code{VG_alpha}, \code{VG_n}, \code{VG_theta_res}, \code{VG_theta_sat} and \code{K_sat},
+//' to override Van Genuchten parameters an saturated conductivity estimated from pedotransfer functions when calling function \code{soil}. 
+//' 
 //' @references
 //' Carsel, R.F., and Parrish, R.S. 1988. Developing joint probability distributions of soil water retention characteristics. Water Resources Research 24: 755–769.
 //' 
@@ -805,8 +808,11 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 //' @seealso   \code{\link{soil_psi2thetaSX}}, \code{\link{soil_psi2thetaVG}}, \code{\link{spwb}}, \code{\link{defaultSoilParams}}
 //' 
 //' @examples
+//' # Default parameters
+//' df_soil <- defaultSoilParams()
+//' 
 //' # Initializes soil
-//' s = soil(defaultSoilParams())
+//' s = soil(df_soil)
 //' 
 //' # Prints soil characteristics according to Saxton's water retention curve
 //' print(s, model="SX")
@@ -814,6 +820,13 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
 //' # Prints soil characteristics according to Van Genuchten's water retention curve
 //' print(s, model="VG")
 //' 
+//' # Add columns 'VG_theta_sat' and 'VG_theta_res' with custom values
+//' df_soil$VG_theta_sat <- 0.400 
+//' df_soil$VG_theta_res <- 0.040 
+//' 
+//' # Reinitialize soil (should override estimations)
+//' s2 = soil(df_soil)
+//' print(s2, model="VG")
 //' @name soil
 // [[Rcpp::export("soil")]]
 List soil(DataFrame SoilParams, String VG_PTF = "Toth", 
@@ -847,33 +860,54 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
   NumericVector macro(nlayers, NA_REAL);
   NumericVector temperature(nlayers, NA_REAL);
   CharacterVector usda_Type(nlayers);
-  NumericVector VG_alpha(nlayers);
-  NumericVector VG_n(nlayers);
-  NumericVector VG_theta_res(nlayers);
-  NumericVector VG_theta_sat(nlayers);
-  NumericVector Ksat(nlayers);
+  NumericVector VG_alpha(nlayers, NA_REAL);
+  NumericVector VG_n(nlayers, NA_REAL);
+  NumericVector VG_theta_res(nlayers, NA_REAL);
+  NumericVector VG_theta_sat(nlayers, NA_REAL);
+  NumericVector Ksat(nlayers, NA_REAL);
+  
+  //Get parameters from input if specified
+  if(SoilParams.containsElementNamed("VG_alpha")) {
+    VG_alpha = clone(as<NumericVector>(SoilParams["VG_alpha"]));
+  }
+  if(SoilParams.containsElementNamed("VG_n")) {
+    VG_n = clone(as<NumericVector>(SoilParams["VG_n"]));
+  }
+  if(SoilParams.containsElementNamed("VG_theta_res")) {
+    VG_theta_res = clone(as<NumericVector>(SoilParams["VG_theta_res"]));
+  }
+  if(SoilParams.containsElementNamed("VG_theta_sat")) {
+    VG_theta_sat = clone(as<NumericVector>(SoilParams["VG_theta_sat"]));
+  }
+  if(SoilParams.containsElementNamed("Ksat")) {
+    Ksat = clone(as<NumericVector>(SoilParams["Ksat"]));
+  }
   for(int l=0;l<nlayers;l++) {
     usda_Type[l] = USDAType(clay[l],sand[l]);
     NumericVector vgl;
     if(VG_PTF=="Carsel") {
-      vgl = vanGenuchtenParamsCarsel(usda_Type[l]); 
-      Ksat[l] = vgl[4]; //Use Carsel estimate for Ksat
+      if(NumericVector::is_na(Ksat[l])) {
+        vgl = vanGenuchtenParamsCarsel(usda_Type[l]); 
+        Ksat[l] = vgl[4]; //Use Carsel estimate for Ksat
+      }
     } else if(VG_PTF=="Toth") {
-      if(!SoilParams.containsElementNamed("bd")) stop("bd missing in SoilParams");
-      NumericVector bd = as<NumericVector>(SoilParams["bd"]);
-      // if(l==0) vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], TRUE);
-      //Use non-top soil equation for all layers
-      vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], FALSE);
-      // Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
-      macro[l] = std::max(0.0,0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0));
-      Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], bd[l], om[l]);
+      if(NumericVector::is_na(Ksat[l])) {
+        if(!SoilParams.containsElementNamed("bd")) stop("bd missing in SoilParams");
+        NumericVector bd = as<NumericVector>(SoilParams["bd"]);
+        // if(l==0) vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], TRUE);
+        //Use non-top soil equation for all layers
+        vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], FALSE);
+        // Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
+        macro[l] = std::max(0.0,0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0));
+        Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], bd[l], om[l]); 
+      }
     } else {
       stop("Wrong value for 'VG_PTF'");
     }
-    VG_alpha[l] = vgl[0];
-    VG_n[l] = vgl[1];
-    VG_theta_res[l] = vgl[2];
-    VG_theta_sat[l] = vgl[3];
+    if(NumericVector::is_na(VG_alpha[l])) VG_alpha[l] = vgl[0];
+    if(NumericVector::is_na(VG_n[l])) VG_n[l] = vgl[1];
+    if(NumericVector::is_na(VG_theta_res[l])) VG_theta_res[l] = vgl[2];
+    if(NumericVector::is_na(VG_theta_sat[l])) VG_theta_sat[l] = vgl[3];
     SoilDepth +=dVec[l];
   }
   double Gsoil = 0.5; //TO DO, implement pedotransfer functions for Gsoil

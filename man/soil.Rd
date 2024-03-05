@@ -48,11 +48,17 @@ Initializes soil parameters and state variables for its use in simulations.
 Function \code{print} prompts a description of soil characteristics and state variables (water content and temperature) 
 according to a water retention curve (either Saxton's or Van Genuchten's). 
 Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa. 
-Parameter \code{Temp} is initialized as missing for all soil layers.
+Parameter \code{Temp} is initialized as missing for all soil layers. 
+
+If available, the user can specify columns \code{VG_alpha}, \code{VG_n}, \code{VG_theta_res}, \code{VG_theta_sat} and \code{K_sat},
+to override Van Genuchten parameters an saturated conductivity estimated from pedotransfer functions when calling function \code{soil}.
 }
 \examples{
+# Default parameters
+df_soil <- defaultSoilParams()
+
 # Initializes soil
-s = soil(defaultSoilParams())
+s = soil(df_soil)
 
 # Prints soil characteristics according to Saxton's water retention curve
 print(s, model="SX")
@@ -60,6 +66,13 @@ print(s, model="SX")
 # Prints soil characteristics according to Van Genuchten's water retention curve
 print(s, model="VG")
 
+# Add columns 'VG_theta_sat' and 'VG_theta_res' with custom values
+df_soil$VG_theta_sat <- 0.400 
+df_soil$VG_theta_res <- 0.040 
+
+# Reinitialize soil (should override estimations)
+s2 = soil(df_soil)
+print(s2, model="VG")
 }
 \references{
 Carsel, R.F., and Parrish, R.S. 1988. Developing joint probability distributions of soil water retention characteristics. Water Resources Research 24: 755–769.

@@ -38,7 +38,17 @@ as.data.frame(df_site$SiteData[[1]]$soilData)|>
 ### Custom traits
 
 ```{r, max.print=5}
-as.data.frame(df_site$SiteData[[1]]$customParams)|> 
+custom_df <- df_site$SiteData[[1]]$customParams
+custom_df <- custom_df[,colSums(is.na(custom_df))< nrow(custom_df), drop = FALSE]
+custom_df |> 
+  kbl() |>
+  kable_styling()
+```
+
+### Remarks
+
+```{r, max.print=5}
+as.data.frame(df_site$SiteData[[1]]$remarks)|> 
   kbl() |>
   kable_styling()
 ```
