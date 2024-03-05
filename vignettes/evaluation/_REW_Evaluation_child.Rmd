@@ -1,4 +1,4 @@
-### Soil moisture
+### Soil moisture (relative)
 ```{r}
 df_eval <-NULL
 for(i in 1:nrow(df_site)) {

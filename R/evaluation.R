@@ -394,8 +394,12 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
   scatterplot<-function(df, xlab="", ylab="", title=NULL, err = FALSE) {
     g<-ggplot(df, aes(x=.data$Modelled))
     if(err) {
-      g<-g+
-        geom_pointrange(aes(y = .data$Observed, ymin = .data$obs_lower, ymax = .data$obs_upper),cex=0.5)
+      data_err <- df[!is.na(df$obs_lower) & !is.na(df$obs_upper), , drop = FALSE]
+      if(nrow(data_err)>0) {
+        g<-g+
+          geom_pointrange(aes(y = .data$Observed, ymin = .data$obs_lower, ymax = .data$obs_upper),cex=0.5,
+                          data = data_err)
+      }
     }
     g<-g + 
       geom_point(aes(y = .data$Observed), cex=0.5)+

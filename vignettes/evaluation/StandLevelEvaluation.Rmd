@@ -13,8 +13,8 @@ output:
 ```{r setup, include=FALSE}
 params = list(wd='/home/miquel/OneDrive/mcaceres_work/model_development/medfate_development/StandLevelEvaluation/',
               model='spwb',
-              # names = "Puéchabon",
-              # codes = "FRAPUE",
+              # names = "Ronda",
+              # codes = "RONDA",
               names=c("Puéchabon", "Hesse", "Yatir", "Rinconada", "Vallcebre (Barrol)", "Vallcebre (Sort)","Prades", "Font-Blanche", "Can Balasc", "Armallones", "Ronda"),
               codes=c("FRAPUE", "FRAHES", "ISRYAT", "ESPRIN", "QVALLCEBRE", "PVALLCEBRE", "PRADES",  "FONBLA", "CANBALASC", "ESPALTARM", "RONDA"),
               confs=c('granier','sperry', 'cochard'),
@@ -73,7 +73,10 @@ knitr::opts_knit$set(root.dir = this_path)
 
 # Introduction
 
-This document presents **medfate** (**ver. `r packageVersion('medfate')[[1]]`**) model evaluation results at stand-level, using data from a set of **`r length(params$codes)` experimental forest plots**. 
+This document presents **medfate** (**ver. `r packageVersion('medfate')[[1]]`**) model evaluation results at stand-level, using data from a set of **`r length(params$codes)` experimental forest plots**. The main source of observed data is SAPFLUXNET database ([Poyatos et al. 2021](https://essd.copernicus.org/articles/13/2607/2021/)).
+
+
+## List of sites
 
 ```{r}
 df_general_sites |> 
@@ -81,15 +84,16 @@ df_general_sites |>
   kable_styling()
 ```
 
+## Simulation and evaluation procedure
 
-Forest water balance simulations (i.e. function `spwb()`) have been conducted using the three transpiration modes (i.e. `Granier`, `Sperry` or `Cochard`). For each forest plot, general information about the site, topography, soil and climate is first presented, followed by a description of model inputs. Then, evaluation results are presented for four different variables:
+Forest water balance simulations (i.e. function `spwb()`) have been conducted using the three transpiration modes (i.e. `Granier`, `Sperry` or `Cochard`). Only soil characteristics have been tuned, but calibration exercises have not been conducted. When available, however, leaf area to sapwood area ratios have been used. Thus, the evaluation is meant to be more or less representative of simulations with default species-level trait data.
+
+For each forest plot, general information about the site, topography, soil and climate is first presented, followed by a description of model inputs. Then, evaluation results are presented for four different variables:
 
  a. Stand-level evapo-transpiration.
  b. Soil moisture content of the topmost layer.
  c. Species-level transpiration, scaled from sap-flow data.
  d. Predawn and midday leaf water potentials. 
-
-The main source of observed data is SAPFLUXNET database ([Poyatos et al. 2021](https://essd.copernicus.org/articles/13/2607/2021/)).
  
 
 ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
