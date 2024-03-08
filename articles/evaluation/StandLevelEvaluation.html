@@ -75,7 +75,7 @@
 Cáceres (CREAF), Víctor Granda (CREAF), Rafael Poyatos (CREAF), Nicolas
 Martin-StPaul (INRAE)</h4>
             
-            <h4 data-toc-skip class="date">2024-03-05</h4>
+            <h4 data-toc-skip class="date">2024-03-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/evaluation/StandLevelEvaluation.Rmd" class="external-link"><code>vignettes/evaluation/StandLevelEvaluation.Rmd</code></a></small>
       <div class="hidden name"><code>StandLevelEvaluation.Rmd</code></div>
@@ -89,7 +89,7 @@ Martin-StPaul (INRAE)</h4>
 </h2>
 <p>This document presents <strong>medfate</strong> (<strong>ver.
 4.0.0</strong>) model evaluation results at stand-level, using data from
-a set of <strong>11 experimental forest plots</strong>. The main source
+a set of <strong>12 experimental forest plots</strong>. The main source
 of observed data is SAPFLUXNET database (<a href="https://essd.copernicus.org/articles/13/2607/2021/" class="external-link">Poyatos et
 al. 2021</a>).</p>
 <div class="section level3">
@@ -172,6 +172,17 @@ Spain
 </td>
 <td style="text-align:left;">
 Pinus sylvestris forest in a terraced area
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fontainebleau-Barbeau
+</td>
+<td style="text-align:left;">
+France
+</td>
+<td style="text-align:left;">
+Mixed deciduous forest
 </td>
 </tr>
 <tr>
@@ -5340,10 +5351,717 @@ T1_153
 </div>
 </div>
 <div class="section level2">
-<h2 id="prades">Prades<a class="anchor" aria-label="anchor" href="#prades"></a>
+<h2 id="fontaine-bleau">Fontaine-Bleau<a class="anchor" aria-label="anchor" href="#fontaine-bleau"></a>
 </h2>
 <div class="section level3">
 <h3 id="plot-information-6">Plot information<a class="anchor" aria-label="anchor" href="#plot-information-6"></a>
+</h3>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Attribute
+</th>
+<th style="text-align:left;">
+Value
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Plot name
+</td>
+<td style="text-align:left;">
+Fontainebleau-Barbeau
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Country
+</td>
+<td style="text-align:left;">
+France
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SAPFLUXNET code
+</td>
+<td style="text-align:left;">
+FRA_FON
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Contributor (affiliation)
+</td>
+<td style="text-align:left;">
+Nicolas Delpierre (Univ. Paris-Sud)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Latitude (º)
+</td>
+<td style="text-align:left;">
+48.47634
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Longitude (º)
+</td>
+<td style="text-align:left;">
+2.78014
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Elevation (m)
+</td>
+<td style="text-align:left;">
+105
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Slope (º)
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Aspect (º)
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Parent material
+</td>
+<td style="text-align:left;">
+Millstone
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Soil texture
+</td>
+<td style="text-align:left;">
+Loam
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MAT (ºC)
+</td>
+<td style="text-align:left;">
+11.2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MAP (mm)
+</td>
+<td style="text-align:left;">
+696.906387615385
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Stand description
+</td>
+<td style="text-align:left;">
+Mixed deciduous forest
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Stand LAI
+</td>
+<td style="text-align:left;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Species simulated
+</td>
+<td style="text-align:left;">
+Quercus petraea, Carpinus betulus
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Description DOI
+</td>
+<td style="text-align:left;">
+10.1111/nph.13771
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level3">
+<h3 id="model-inputs-6">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-6"></a>
+</h3>
+<div class="section level4">
+<h4 id="vegetation-6">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-6"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Species
+</th>
+<th style="text-align:right;">
+DBH
+</th>
+<th style="text-align:right;">
+Height
+</th>
+<th style="text-align:right;">
+N
+</th>
+<th style="text-align:left;">
+Z50
+</th>
+<th style="text-align:left;">
+Z95
+</th>
+<th style="text-align:right;">
+LAI
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Quercus petraea
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+2800
+</td>
+<td style="text-align:right;">
+220.8
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+4.74
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Carpinus betulus
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+500
+</td>
+<td style="text-align:right;">
+883.2
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+1.26
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Species
+</th>
+<th style="text-align:left;">
+Cover
+</th>
+<th style="text-align:left;">
+Height
+</th>
+<th style="text-align:left;">
+Z50
+</th>
+<th style="text-align:left;">
+Z95
+</th>
+</tr></thead>
+<tbody><tr></tr></tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="soil-6">Soil<a class="anchor" aria-label="anchor" href="#soil-6"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:right;">
+widths
+</th>
+<th style="text-align:right;">
+clay
+</th>
+<th style="text-align:right;">
+sand
+</th>
+<th style="text-align:right;">
+om
+</th>
+<th style="text-align:right;">
+bd
+</th>
+<th style="text-align:right;">
+rfc
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+300
+</td>
+<td style="text-align:right;">
+24.13333
+</td>
+<td style="text-align:right;">
+26.56667
+</td>
+<td style="text-align:right;">
+3.6733330
+</td>
+<td style="text-align:right;">
+1.286667
+</td>
+<td style="text-align:right;">
+14.43333
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+600
+</td>
+<td style="text-align:right;">
+30.48571
+</td>
+<td style="text-align:right;">
+25.22857
+</td>
+<td style="text-align:right;">
+0.6228571
+</td>
+<td style="text-align:right;">
+1.504286
+</td>
+<td style="text-align:right;">
+15.54286
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1100
+</td>
+<td style="text-align:right;">
+30.20000
+</td>
+<td style="text-align:right;">
+25.64000
+</td>
+<td style="text-align:right;">
+0.4720000
+</td>
+<td style="text-align:right;">
+1.518000
+</td>
+<td style="text-align:right;">
+80.00000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2500
+</td>
+<td style="text-align:right;">
+29.90000
+</td>
+<td style="text-align:right;">
+25.80000
+</td>
+<td style="text-align:right;">
+0.4500000
+</td>
+<td style="text-align:right;">
+1.520000
+</td>
+<td style="text-align:right;">
+90.00000
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="custom-traits-6">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-6"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Species
+</th>
+<th style="text-align:right;">
+Al2As
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Quercus petraea
+</td>
+<td style="text-align:right;">
+1075.267
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Carpinus betulus
+</td>
+<td style="text-align:right;">
+1075.267
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="remarks-6">Remarks<a class="anchor" aria-label="anchor" href="#remarks-6"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Title
+</th>
+<th style="text-align:left;">
+Remark
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Soil
+</td>
+<td style="text-align:left;">
+Taken from SoilGrids with theta_sat and theta_res modified
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Vegetation
+</td>
+<td style="text-align:left;">
+Plantation
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Weather
+</td>
+<td style="text-align:left;">
+Windspeed is missing
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sapflow
+</td>
+<td style="text-align:left;">
+Sapwood area estimated from dbh for trees within missing data
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section level3">
+<h3 id="evaluation-results-6">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-6"></a>
+</h3>
+<!-- Stand-level evapotranspiration -->
+<!-- Soil moisture content -->
+<!-- Plant transpiration -->
+<div class="section level4">
+<h4 id="transpiration-per-leaf-area-6">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-6"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Site
+</th>
+<th style="text-align:left;">
+Mode
+</th>
+<th style="text-align:left;">
+Cohort
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Bias.rel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAE.rel
+</th>
+<th style="text-align:right;">
+r
+</th>
+<th style="text-align:right;">
+NSE
+</th>
+<th style="text-align:right;">
+NSE.abs
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+FONTAINEBLEAU
+</td>
+<td style="text-align:left;">
+granier
+</td>
+<td style="text-align:left;">
+T1_2856
+</td>
+<td style="text-align:right;">
+263
+</td>
+<td style="text-align:right;">
+-0.3066525
+</td>
+<td style="text-align:right;">
+-62.49245
+</td>
+<td style="text-align:right;">
+0.3074239
+</td>
+<td style="text-align:right;">
+62.64966
+</td>
+<td style="text-align:right;">
+0.9217518
+</td>
+<td style="text-align:right;">
+-0.1799619
+</td>
+<td style="text-align:right;">
+0.0060974
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FONTAINEBLEAU
+</td>
+<td style="text-align:left;">
+granier
+</td>
+<td style="text-align:left;">
+T2_730
+</td>
+<td style="text-align:right;">
+255
+</td>
+<td style="text-align:right;">
+-0.0385564
+</td>
+<td style="text-align:right;">
+-24.68895
+</td>
+<td style="text-align:right;">
+0.0509725
+</td>
+<td style="text-align:right;">
+32.63943
+</td>
+<td style="text-align:right;">
+0.8525437
+</td>
+<td style="text-align:right;">
+0.5832790
+</td>
+<td style="text-align:right;">
+0.4515562
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FONTAINEBLEAU
+</td>
+<td style="text-align:left;">
+sperry
+</td>
+<td style="text-align:left;">
+T1_2856
+</td>
+<td style="text-align:right;">
+263
+</td>
+<td style="text-align:right;">
+-0.2030877
+</td>
+<td style="text-align:right;">
+-41.38706
+</td>
+<td style="text-align:right;">
+0.2172966
+</td>
+<td style="text-align:right;">
+44.28268
+</td>
+<td style="text-align:right;">
+0.8557253
+</td>
+<td style="text-align:right;">
+0.3892490
+</td>
+<td style="text-align:right;">
+0.2974795
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FONTAINEBLEAU
+</td>
+<td style="text-align:left;">
+sperry
+</td>
+<td style="text-align:left;">
+T2_730
+</td>
+<td style="text-align:right;">
+255
+</td>
+<td style="text-align:right;">
+-0.0389594
+</td>
+<td style="text-align:right;">
+-24.94702
+</td>
+<td style="text-align:right;">
+0.0726012
+</td>
+<td style="text-align:right;">
+46.48902
+</td>
+<td style="text-align:right;">
+0.7205880
+</td>
+<td style="text-align:right;">
+0.2880712
+</td>
+<td style="text-align:right;">
+0.2188401
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FONTAINEBLEAU
+</td>
+<td style="text-align:left;">
+cochard
+</td>
+<td style="text-align:left;">
+T1_2856
+</td>
+<td style="text-align:right;">
+263
+</td>
+<td style="text-align:right;">
+-0.3060111
+</td>
+<td style="text-align:right;">
+-62.36174
+</td>
+<td style="text-align:right;">
+0.3117089
+</td>
+<td style="text-align:right;">
+63.52288
+</td>
+<td style="text-align:right;">
+0.7636289
+</td>
+<td style="text-align:right;">
+-0.2163769
+</td>
+<td style="text-align:right;">
+-0.0077558
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FONTAINEBLEAU
+</td>
+<td style="text-align:left;">
+cochard
+</td>
+<td style="text-align:left;">
+T2_730
+</td>
+<td style="text-align:right;">
+255
+</td>
+<td style="text-align:right;">
+-0.0835362
+</td>
+<td style="text-align:right;">
+-53.49106
+</td>
+<td style="text-align:right;">
+0.0886374
+</td>
+<td style="text-align:right;">
+56.75757
+</td>
+<td style="text-align:right;">
+0.6821067
+</td>
+<td style="text-align:right;">
+-0.0884225
+</td>
+<td style="text-align:right;">
+0.0462966
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-230-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-230-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-230-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-230-4.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Leaf water potential -->
+</div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="prades">Prades<a class="anchor" aria-label="anchor" href="#prades"></a>
+</h2>
+<div class="section level3">
+<h3 id="plot-information-7">Plot information<a class="anchor" aria-label="anchor" href="#plot-information-7"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5495,10 +6213,10 @@ Description DOI
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-6">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-6"></a>
+<h3 id="model-inputs-7">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-7"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-6">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-6"></a>
+<h4 id="vegetation-7">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-7"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5576,7 +6294,7 @@ Quercus ilex
 <table class="table table" style="margin-left: auto; margin-right: auto;"><tbody><tr></tr></tbody></table>
 </div>
 <div class="section level4">
-<h4 id="soil-6">Soil<a class="anchor" aria-label="anchor" href="#soil-6"></a>
+<h4 id="soil-7">Soil<a class="anchor" aria-label="anchor" href="#soil-7"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5684,7 +6402,7 @@ rfc
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-6">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-6"></a>
+<h4 id="custom-traits-7">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-7"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5923,7 +6641,7 @@ Quercus ilex
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-6">Remarks<a class="anchor" aria-label="anchor" href="#remarks-6"></a>
+<h4 id="remarks-7">Remarks<a class="anchor" aria-label="anchor" href="#remarks-7"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -5956,7 +6674,7 @@ Understory not considered
 </div>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-6">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-6"></a>
+<h3 id="evaluation-results-7">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-7"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Soil moisture content -->
@@ -6095,12 +6813,12 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-229-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-230-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-255-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-256-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
-<h4 id="transpiration-per-leaf-area-6">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-6"></a>
+<h4 id="transpiration-per-leaf-area-7">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-7"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -6351,7 +7069,7 @@ T2_168
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-236-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-236-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-236-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-236-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-262-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-262-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-262-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-262-4.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 <div class="section level4">
@@ -6703,7 +7421,7 @@ Midday
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-241-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-241-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-241-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-241-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-267-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-267-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-267-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-267-4.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>
@@ -6711,7 +7429,7 @@ Midday
 <h2 id="font-blanche">Font-Blanche<a class="anchor" aria-label="anchor" href="#font-blanche"></a>
 </h2>
 <div class="section level3">
-<h3 id="plot-information-7">Plot information<a class="anchor" aria-label="anchor" href="#plot-information-7"></a>
+<h3 id="plot-information-8">Plot information<a class="anchor" aria-label="anchor" href="#plot-information-8"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -6862,10 +7580,10 @@ Description DOI
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-7">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-7"></a>
+<h3 id="model-inputs-8">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-8"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-7">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-7"></a>
+<h4 id="vegetation-8">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-8"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -6985,7 +7703,7 @@ Z95
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-7">Soil<a class="anchor" aria-label="anchor" href="#soil-7"></a>
+<h4 id="soil-8">Soil<a class="anchor" aria-label="anchor" href="#soil-8"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -7093,7 +7811,7 @@ rfc
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-7">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-7"></a>
+<h4 id="custom-traits-8">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-8"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -7349,7 +8067,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-7">Remarks<a class="anchor" aria-label="anchor" href="#remarks-7"></a>
+<h4 id="remarks-8">Remarks<a class="anchor" aria-label="anchor" href="#remarks-8"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -7414,7 +8132,7 @@ Modified to 0.3
 </div>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-7">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-7"></a>
+<h3 id="evaluation-results-8">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-8"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <div class="section level4">
@@ -7552,8 +8270,8 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-264-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-265-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-290-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-291-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Soil moisture content -->
 </div>
 <div class="section level4">
@@ -7691,12 +8409,12 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-271-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-272-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-297-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-298-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
-<h4 id="transpiration-per-leaf-area-7">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-7"></a>
+<h4 id="transpiration-per-leaf-area-8">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-8"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -7947,7 +8665,7 @@ T3_168
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-278-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-278-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-278-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-278-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-304-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-304-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-304-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-304-4.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 <div class="section level4">
@@ -8299,7 +9017,7 @@ Midday
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-283-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-283-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-283-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-283-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-309-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-309-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-309-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-309-4.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>
@@ -8307,7 +9025,7 @@ Midday
 <h2 id="can-balasc">Can Balasc<a class="anchor" aria-label="anchor" href="#can-balasc"></a>
 </h2>
 <div class="section level3">
-<h3 id="plot-information-8">Plot information<a class="anchor" aria-label="anchor" href="#plot-information-8"></a>
+<h3 id="plot-information-9">Plot information<a class="anchor" aria-label="anchor" href="#plot-information-9"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -8459,10 +9177,10 @@ Description DOI
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-8">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-8"></a>
+<h3 id="model-inputs-9">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-9"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-8">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-8"></a>
+<h4 id="vegetation-9">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-9"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -8691,7 +9409,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-8">Soil<a class="anchor" aria-label="anchor" href="#soil-8"></a>
+<h4 id="soil-9">Soil<a class="anchor" aria-label="anchor" href="#soil-9"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -8799,7 +9517,7 @@ rfc
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-8">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-8"></a>
+<h4 id="custom-traits-9">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-9"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -9303,7 +10021,7 @@ NA
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-8">Remarks<a class="anchor" aria-label="anchor" href="#remarks-8"></a>
+<h4 id="remarks-9">Remarks<a class="anchor" aria-label="anchor" href="#remarks-9"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -9336,7 +10054,7 @@ Understory composed of multiple species
 </div>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-8">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-8"></a>
+<h3 id="evaluation-results-9">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-9"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Soil moisture content -->
@@ -9475,12 +10193,12 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-307-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-308-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-333-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-334-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
-<h4 id="transpiration-per-leaf-area-8">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-8"></a>
+<h4 id="transpiration-per-leaf-area-9">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-9"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -9941,7 +10659,7 @@ T4_168
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-314-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-314-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-314-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-314-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-314-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-314-6.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-314-7.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-314-8.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-6.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-7.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-8.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -9950,7 +10668,7 @@ T4_168
 <h2 id="armallones">Armallones<a class="anchor" aria-label="anchor" href="#armallones"></a>
 </h2>
 <div class="section level3">
-<h3 id="plot-information-9">Plot information<a class="anchor" aria-label="anchor" href="#plot-information-9"></a>
+<h3 id="plot-information-10">Plot information<a class="anchor" aria-label="anchor" href="#plot-information-10"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -10102,10 +10820,10 @@ Description DOI
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-9">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-9"></a>
+<h3 id="model-inputs-10">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-10"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-9">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-9"></a>
+<h4 id="vegetation-10">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-10"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -10225,7 +10943,7 @@ Z95
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-9">Soil<a class="anchor" aria-label="anchor" href="#soil-9"></a>
+<h4 id="soil-10">Soil<a class="anchor" aria-label="anchor" href="#soil-10"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -10333,7 +11051,7 @@ rfc
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-9">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-9"></a>
+<h4 id="custom-traits-10">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-10"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -10649,7 +11367,7 @@ Quercus ilex
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-9">Remarks<a class="anchor" aria-label="anchor" href="#remarks-9"></a>
+<h4 id="remarks-10">Remarks<a class="anchor" aria-label="anchor" href="#remarks-10"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -10682,7 +11400,7 @@ Understory not considered
 </div>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-9">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-9"></a>
+<h3 id="evaluation-results-10">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-10"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Soil moisture content -->
@@ -10821,12 +11539,12 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-339-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-365-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-366-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
-<h4 id="transpiration-per-leaf-area-9">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-9"></a>
+<h4 id="transpiration-per-leaf-area-10">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-10"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -11182,7 +11900,7 @@ T3_168
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-346-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-346-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-346-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-346-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-346-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-346-6.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-6.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 <div class="section level4">
@@ -11686,7 +12404,7 @@ Midday
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-351-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-351-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-351-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-351-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-351-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-351-6.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-377-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-377-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-377-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-377-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-377-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-377-6.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>
@@ -11694,7 +12412,7 @@ Midday
 <h2 id="ronda">Ronda<a class="anchor" aria-label="anchor" href="#ronda"></a>
 </h2>
 <div class="section level3">
-<h3 id="plot-information-10">Plot information<a class="anchor" aria-label="anchor" href="#plot-information-10"></a>
+<h3 id="plot-information-11">Plot information<a class="anchor" aria-label="anchor" href="#plot-information-11"></a>
 </h3>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -11845,10 +12563,10 @@ Description DOI
 </table>
 </div>
 <div class="section level3">
-<h3 id="model-inputs-10">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-10"></a>
+<h3 id="model-inputs-11">Model inputs<a class="anchor" aria-label="anchor" href="#model-inputs-11"></a>
 </h3>
 <div class="section level4">
-<h4 id="vegetation-10">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-10"></a>
+<h4 id="vegetation-11">Vegetation<a class="anchor" aria-label="anchor" href="#vegetation-11"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -11936,7 +12654,7 @@ Z95
 </table>
 </div>
 <div class="section level4">
-<h4 id="soil-10">Soil<a class="anchor" aria-label="anchor" href="#soil-10"></a>
+<h4 id="soil-11">Soil<a class="anchor" aria-label="anchor" href="#soil-11"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -12074,7 +12792,7 @@ VG_theta_res
 </table>
 </div>
 <div class="section level4">
-<h4 id="custom-traits-10">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-10"></a>
+<h4 id="custom-traits-11">Custom traits<a class="anchor" aria-label="anchor" href="#custom-traits-11"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -12106,7 +12824,7 @@ Taxus baccata
 </table>
 </div>
 <div class="section level4">
-<h4 id="remarks-10">Remarks<a class="anchor" aria-label="anchor" href="#remarks-10"></a>
+<h4 id="remarks-11">Remarks<a class="anchor" aria-label="anchor" href="#remarks-11"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -12147,7 +12865,7 @@ Complemented with interpolated weather
 </div>
 </div>
 <div class="section level3">
-<h3 id="evaluation-results-10">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-10"></a>
+<h3 id="evaluation-results-11">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-11"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
 <!-- Soil moisture content -->
@@ -12286,12 +13004,12 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-375-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-376-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-401-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-402-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
-<h4 id="transpiration-per-leaf-area-10">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-10"></a>
+<h4 id="transpiration-per-leaf-area-11">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-11"></a>
 </h4>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
 <thead><tr>
@@ -12542,7 +13260,7 @@ T2_200
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-382-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-382-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-382-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-382-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-408-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-408-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-408-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-408-4.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
