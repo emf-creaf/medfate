@@ -1,0 +1,38 @@
+### Stand-level latent heat turbulent flux
+```{r}
+df_eval <- NULL
+for(j in 2:nrow(df_site)) {
+    v<-medfate::evaluation_stats(df_site$Result[[j]], df_site$SiteData[[j]]$measuredData, type= "LE")
+    if(is.null(df_eval)) df_eval <- v
+    else df_eval <- cbind(df_eval, v)
+}
+df_all <- cbind(df_site[-1,c("Site", "Mode")], as.data.frame(t(df_eval)))
+row.names(df_all)<- NULL
+df_all |> 
+  kbl() |>
+  kable_styling()
+```
+
+```{r, fig.height=3, fig.width=8, fig.align="center"}
+pb<-medfate::evaluation_plot(df_site$Result[[2]], df_site$SiteData[[2]]$measuredData, type= "LE", plotType = "scatter")+labs(subtitle="Sperry")
+pc<-medfate::evaluation_plot(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData, type= "LE", plotType = "scatter")+labs(subtitle="Cochard")
+cowplot::plot_grid(pb,pc, ncol = 2)
+```
+
+```{r, fig.height=3, fig.width=9, fig.align="center"}
+  eval_table_sperry <- medfate::evaluation_table(df_site$Result[[2]], df_site$SiteData[[2]]$measuredData, type= "LE")
+  eval_table_cochard <- medfate::evaluation_table(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData, type= "LE")
+  eval_all <- eval_table_sperry[,c(1,2)]
+  eval_all$Sperry <- eval_table_sperry$Modelled
+  eval_all$Cochard <- eval_table_cochard$Modelled
+  eval_all_long <- eval_all |>
+    tidyr::pivot_longer(cols = 2:4, names_to = "Mode", values_to="LE") |>
+    dplyr::mutate(Mode = factor(Mode, levels = c("Observed", "Sperry", "Cochard")))
+
+  ggplot(eval_all_long, mapping = aes(x=Dates, y=LE))+
+    geom_line(mapping=aes(col = Mode, alpha = Mode))+
+  geom_point(aes(x= Dates, y=LE), size = 0.5, data = eval_all_long[eval_all_long$Mode=="Observed",])+
+    scale_alpha_manual("", values=c(0.8,0.5,0.5,0.5))+
+    scale_color_manual("",values = c("black", "red", "green", "blue"))+
+    ylab("Latent heat turbulent flux (MJ/m2)")+xlab("")+ theme_bw()
+```

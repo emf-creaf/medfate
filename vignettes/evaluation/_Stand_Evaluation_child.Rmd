@@ -64,6 +64,15 @@ eval_ETR <- "ETR" %in% names(df_site$SiteData[[1]]$measuredData)
  }
 ```
 
+<!-- Stand-level latent heat turbulent flux -->
+```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
+eval_LE <- "LE" %in% names(df_site$SiteData[[1]]$measuredData)
+ if(eval_LE) {
+   res <- knitr::knit_child(file.path(this_path,'_LE_Evaluation_child.Rmd'), quiet = TRUE)
+   cat(res, sep = '\n')
+ }
+```
+
 <!-- Soil moisture content -->
 ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
 eval_SWC <- "SWC" %in% names(df_site$SiteData[[1]]$measuredData)

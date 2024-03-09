@@ -13,12 +13,12 @@ output:
 ```{r setup, include=FALSE}
 params = list(wd='/home/miquel/OneDrive/mcaceres_work/model_development/medfate_development/StandLevelEvaluation/',
               model='spwb',
-              # names = "Ronda",
-              # codes = "RONDA",
-              names=c("Puéchabon", "Hesse", "Yatir", "Rinconada", "Vallcebre (Barrol)", "Vallcebre (Sort)",
-                      "Fontaine-Bleau","Prades", "Font-Blanche", "Can Balasc", "Armallones", "Ronda"),
-              codes=c("FRAPUE", "FRAHES", "ISRYAT", "ESPRIN", "QVALLCEBRE", "PVALLCEBRE", 
-                      "FONTAINEBLEAU", "PRADES",  "FONBLA", "CANBALASC", "ESPALTARM", "RONDA"),
+              names = c("Puéchabon", "Fontaine-Bleau"),
+              codes = c("FRAPUE", "FONTAINEBLEAU"),
+              # names=c("Puéchabon", "Hesse", "Yatir", "Rinconada", "Vallcebre (Barrol)", "Vallcebre (Sort)",
+              #         "Fontaine-Bleau","Prades", "Font-Blanche", "Can Balasc", "Armallones", "Ronda"),
+              # codes=c("FRAPUE", "FRAHES", "ISRYAT", "ESPRIN", "QVALLCEBRE", "PVALLCEBRE",
+              #         "FONTAINEBLEAU", "PRADES",  "FONBLA", "CANBALASC", "ESPALTARM", "RONDA"),
               confs=c('granier','sperry', 'cochard'),
               save_plots = FALSE)
 
@@ -47,8 +47,12 @@ df$InputObject = vector("list", n_rows)
 df$Result = vector("list",n_rows)
 cnt <- 0
 df <- tibble::as_tibble(df)
-df_general_sites <- data.frame(Plot = rep(NA, n_sites),
-                               Country = rep(NA, n_sites))
+df_general_sites <- data.frame(Plot = rep("", n_sites),
+                               Country = rep("", n_sites),
+                               Stand = rep("", n_sites),
+                               SAPFLUXNET = rep("", n_sites),
+                               FLUXNET = rep("", n_sites))
+
 for(i in 1:n_sites) {
   site <- params$codes[i]
   for(j in 1:n_confs) {
@@ -66,8 +70,14 @@ for(i in 1:n_sites) {
     site_list  <- medfatereports::load_list(site)
     df$SiteData[[cnt]] <- site_list
     df_general_sites$Plot[i] <- site_list$siteData$Value[1]
-    df_general_sites$Country[i] <- site_list$siteData$Value[2]
-    df_general_sites$Stand[i] <- site_list$siteData$Value[14]
+    col_country <- which(site_list$siteData$Attribute=="Country")
+    df_general_sites$Country[i] <- site_list$siteData$Value[col_country]
+    col_sapfluxnet_code <- which(site_list$siteData$Attribute=="SAPFLUXNET code")
+    if(length(col_sapfluxnet_code)==1) df_general_sites$SAPFLUXNET[i] <- site_list$siteData$Value[col_sapfluxnet_code]
+    col_fluxnet_code <- which(site_list$siteData$Attribute=="FLUXNET code")
+    if(length(col_fluxnet_code)==1) df_general_sites$FLUXNET[i] <- site_list$siteData$Value[col_fluxnet_code]
+    col_stand <- which(site_list$siteData$Attribute=="Stand description")
+    if(length(col_stand)==1) df_general_sites$Stand[i] <- site_list$siteData$Value[col_stand]
   }
 }
 knitr::opts_knit$set(root.dir = this_path)
@@ -75,7 +85,7 @@ knitr::opts_knit$set(root.dir = this_path)
 
 # Introduction
 
-This document presents **medfate** (**ver. `r packageVersion('medfate')[[1]]`**) model evaluation results at stand-level, using data from a set of **`r length(params$codes)` experimental forest plots**. The main source of observed data is SAPFLUXNET database ([Poyatos et al. 2021](https://essd.copernicus.org/articles/13/2607/2021/)).
+This document presents **medfate** (**ver. `r packageVersion('medfate')[[1]]`**) model evaluation results at stand-level, using data from a set of **`r length(params$codes)` experimental forest plots**. The main source of observed data is SAPFLUXNET database ([Poyatos et al. 2021](https://essd.copernicus.org/articles/13/2607/2021/)) and FLUXNET 2015 dataset ([Pastorello et al. 2020](https://doi.org/10.1038/s41597-020-0534-3)).
 
 
 ## List of sites

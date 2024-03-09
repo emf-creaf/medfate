@@ -25,6 +25,7 @@
 #' \itemize{
 #'   \item{\code{"SWC" or "REW"}: A column named \code{"SWC"} should be present, containing soil moisture content in percent volume. When \code{type="REW"}, observed values are divided by the 90\% quantile, which is assumed to be the moisture content at field capacity.}
 #'   \item{\code{"ETR"} or \code{"SE+TR"}: A column named \code{"ETR"} should be present, containing stand's evapotranspiration in mm/day (or mm/week, mm/month, etc, depending on the temporal resolution). If \code{type="ETR"} observed values will be compared against modelled evapotranspiration (i.e. sum of transpiration, soil evaporation and interception loss), whereas if \code{type= "SE+TR"} observed values will be compared against the sum of transpiration and soil evaporation only.}
+#'   \item{\code{"LE"}: A column named \code{"LE"} should be present containing daily latent heat turbulent flux in MJ/m2.}
 #'   \item{\code{"E"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"E_"} and continuing with a cohort name (e.g. \code{"E_T1_68"}) with transpiration in L/m2/day on a leaf area basis (or L/m2/week, L/m2/month, etc, depending on the temporal resolution).}
 #'   \item{\code{"LFMC"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"FCM_"} and continuing with a cohort name (e.g. \code{"FMC_T1_68"}) with fuel moisture content as percent of dry weight.}
 #'   \item{\code{"WP"}: For each plant cohort whose transpiration is to be evaluated, two columns, one starting with \code{"PD_"} (for pre-dawn) and the other with \code{"MD_"} (for midday), and continuing with a cohort name (e.g. \code{"PD_T1_68"}). They should contain leaf water potential values in MPa. These are compared against sunlit water potentials.}
@@ -111,7 +112,7 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
   temporalResolution = match.arg(temporalResolution, c("day", "week", "month", "year"))
   if("spwbInput" %in% names(out)) {
     modelInput<-out[["spwbInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "WP", "LFMC"))
+    type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "LE", "WP", "LFMC"))
   } else {
     modelInput<- out[["growthInput"]]
     type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "WP", "LFMC", 
@@ -171,6 +172,13 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     
     if(!("ETR" %in% names(measuredData))) stop(paste0("Column 'ETR' not found in measured data frame."))
     df$Observed[d %in% rownames(measuredData)] = measuredData$ETR[rownames(measuredData) %in% d]
+  }
+  else if(type=="LE") {
+    LEmod = out$EnergyBalance$LEcan + out$EnergyBalance$LEsoil
+    d = rownames(out$EnergyBalance)
+    df = data.frame(Dates = as.Date(d), Observed = NA, Modelled = LEmod)
+    if(!("LE" %in% names(measuredData))) stop(paste0("Column 'LE' not found in measured data frame."))
+    df$Observed[d %in% rownames(measuredData)] = measuredData$LE[rownames(measuredData) %in% d]
   }
   else if(type=="SE+TR") {
     ET1 = out$WaterBalance$SoilEvaporation+out$WaterBalance$Transpiration
@@ -359,10 +367,10 @@ evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL,
   # Check arguments
   if("spwbInput" %in% names(out)) {
     modelInput<-out[["spwbInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "WP", "FMC"))
+    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "LE","WP", "FMC"))
   } else {
     modelInput<- out[["growthInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "WP", "FMC", 
+    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "LE", "WP", "FMC", 
                              "BAI", "DI","DBH", "Height"))
   }
   
@@ -375,6 +383,7 @@ evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL,
   else if(type=="FMC") eval_res = evalstats(df$Observed, df$Modelled)
   else if(type=="ETR") eval_res = evalstats(df$Observed, df$Modelled)
   else if(type=="SE+TR") eval_res = evalstats(df$Observed, df$Modelled)
+  else if(type=="LE") eval_res = evalstats(df$Observed, df$Modelled)
   else if(type=="WP") {
     eval_res = as.data.frame(rbind(evalstats(df$PD_obs, df$PD_mod),
                                    evalstats(df$MD_obs, df$MD_mod)))
@@ -436,10 +445,10 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
   plotType = match.arg(plotType, c("dynamics", "scatter"))
   if("spwbInput" %in% names(out)) {
     modelInput<-out[["spwbInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "WP", "FMC"))
+    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "LE", "WP", "FMC"))
   } else {
     modelInput<- out[["growthInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "WP", "FMC", 
+    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "LE", "WP", "FMC", 
                              "BAI","DI", "DBH", "Height"))
   }
   
@@ -604,6 +613,14 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     } else {
       g<-scatterplot(df, xlab  = "Modelled ETR (mm)",
                          ylab ="Measured ETR (mm)")
+    }
+  }
+  else if(type=="LE") {
+    if(plotType=="dynamics") {
+      g<-dynamicsplot(df, ylab = "Latent heat (MJ/m2)")
+    } else {
+      g<-scatterplot(df, xlab  = "Modelled latent heat (MJ/m2)",
+                     ylab ="Measured latent heat (MJ/m2)")
     }
   }
   else if(type=="SE+TR") {
