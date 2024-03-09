@@ -75,7 +75,7 @@
 Cáceres (CREAF), Víctor Granda (CREAF), Rafael Poyatos (CREAF), Nicolas
 Martin-StPaul (INRAE)</h4>
             
-            <h4 data-toc-skip class="date">2024-03-08</h4>
+            <h4 data-toc-skip class="date">2024-03-09</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/evaluation/StandLevelEvaluation.Rmd" class="external-link"><code>vignettes/evaluation/StandLevelEvaluation.Rmd</code></a></small>
       <div class="hidden name"><code>StandLevelEvaluation.Rmd</code></div>
@@ -91,7 +91,8 @@ Martin-StPaul (INRAE)</h4>
 4.0.0</strong>) model evaluation results at stand-level, using data from
 a set of <strong>12 experimental forest plots</strong>. The main source
 of observed data is SAPFLUXNET database (<a href="https://essd.copernicus.org/articles/13/2607/2021/" class="external-link">Poyatos et
-al. 2021</a>).</p>
+al. 2021</a>) and FLUXNET 2015 dataset (<a href="https://doi.org/10.1038/s41597-020-0534-3" class="external-link">Pastorello et
+al. 2020</a>).</p>
 <div class="section level3">
 <h3 id="list-of-sites">List of sites<a class="anchor" aria-label="anchor" href="#list-of-sites"></a>
 </h3>
@@ -106,6 +107,12 @@ Country
 <th style="text-align:left;">
 Stand
 </th>
+<th style="text-align:left;">
+SAPFLUXNET
+</th>
+<th style="text-align:left;">
+FLUXNET
+</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -118,6 +125,12 @@ France
 <td style="text-align:left;">
 Dense evergreen forest dominated by Q. ilex
 </td>
+<td style="text-align:left;">
+FRA_PUE
+</td>
+<td style="text-align:left;">
+FR-Pue
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -128,6 +141,11 @@ France
 </td>
 <td style="text-align:left;">
 Naturally regenerated, managed beech forest
+</td>
+<td style="text-align:left;">
+FRA_HES_HE2_NON
+</td>
+<td style="text-align:left;">
 </td>
 </tr>
 <tr>
@@ -140,6 +158,11 @@ Israel
 <td style="text-align:left;">
 Pinus halepensis managed plantation
 </td>
+<td style="text-align:left;">
+ISR_YAT_YAT
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -150,6 +173,11 @@ Spain
 </td>
 <td style="text-align:left;">
 Young, homogeneous, Quercus pyrenaica regrowth forest
+</td>
+<td style="text-align:left;">
+ESP_RIN
+</td>
+<td style="text-align:left;">
 </td>
 </tr>
 <tr>
@@ -162,6 +190,11 @@ Spain
 <td style="text-align:left;">
 Semi-deciduous sub-Mediterranean oak forest
 </td>
+<td style="text-align:left;">
+ESP_VAL_BAR
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -172,6 +205,11 @@ Spain
 </td>
 <td style="text-align:left;">
 Pinus sylvestris forest in a terraced area
+</td>
+<td style="text-align:left;">
+ESP_VAL_SOR
+</td>
+<td style="text-align:left;">
 </td>
 </tr>
 <tr>
@@ -184,6 +222,12 @@ France
 <td style="text-align:left;">
 Mixed deciduous forest
 </td>
+<td style="text-align:left;">
+FRA_FON
+</td>
+<td style="text-align:left;">
+FR-Fon
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -194,6 +238,11 @@ Spain
 </td>
 <td style="text-align:left;">
 Mixed forest with P. sylvestris (overstory) Q. ilex (midstory)
+</td>
+<td style="text-align:left;">
+ESP_TIL_MIX
+</td>
+<td style="text-align:left;">
 </td>
 </tr>
 <tr>
@@ -206,6 +255,10 @@ France
 <td style="text-align:left;">
 Mixed forest with P. halepensis and Q. ilex
 </td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -216,6 +269,11 @@ Spain
 </td>
 <td style="text-align:left;">
 Mixed forest dominated by Q. ilex
+</td>
+<td style="text-align:left;">
+ESP_CAN
+</td>
+<td style="text-align:left;">
 </td>
 </tr>
 <tr>
@@ -228,6 +286,11 @@ Spain
 <td style="text-align:left;">
 Sparse mixed forest dominated by three species
 </td>
+<td style="text-align:left;">
+ESP_ALT_ARM
+</td>
+<td style="text-align:left;">
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -238,6 +301,11 @@ Spain
 </td>
 <td style="text-align:left;">
 Mixed gimnosperm forest dominated by Abies pinsapo
+</td>
+<td style="text-align:left;">
+ESP_RON_PIL
+</td>
+<td style="text-align:left;">
 </td>
 </tr>
 </tbody>
@@ -304,6 +372,14 @@ SAPFLUXNET code
 </td>
 <td style="text-align:left;">
 FRA_PUE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FLUXNET code
+</td>
+<td style="text-align:left;">
+FR-Pue
 </td>
 </tr>
 <tr>
@@ -408,6 +484,14 @@ Species simulated
 </td>
 <td style="text-align:left;">
 Quercus ilex, Buxus sempervirens
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Evaluation period
+</td>
+<td style="text-align:left;">
+2004-2006
 </td>
 </tr>
 <tr>
@@ -950,7 +1034,114 @@ Using B. sempervirens as understory
 <h3 id="evaluation-results">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
+<!-- Stand-level latent heat turbulent flux -->
+<div class="section level4">
+<h4 id="stand-level-latent-heat-turbulent-flux">Stand-level latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#stand-level-latent-heat-turbulent-flux"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Site
+</th>
+<th style="text-align:left;">
+Mode
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Bias.rel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAE.rel
+</th>
+<th style="text-align:right;">
+r
+</th>
+<th style="text-align:right;">
+NSE
+</th>
+<th style="text-align:right;">
+NSE.abs
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+FRAPUE
+</td>
+<td style="text-align:left;">
+sperry
+</td>
+<td style="text-align:right;">
+1085
+</td>
+<td style="text-align:right;">
+-0.2159023
+</td>
+<td style="text-align:right;">
+-6.717271
+</td>
+<td style="text-align:right;">
+1.930467
+</td>
+<td style="text-align:right;">
+60.06174
+</td>
+<td style="text-align:right;">
+0.3941418
+</td>
+<td style="text-align:right;">
+-0.2035531
+</td>
+<td style="text-align:right;">
+-0.0173804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FRAPUE
+</td>
+<td style="text-align:left;">
+cochard
+</td>
+<td style="text-align:right;">
+1085
+</td>
+<td style="text-align:right;">
+-0.6066713
+</td>
+<td style="text-align:right;">
+-18.875093
+</td>
+<td style="text-align:right;">
+1.633104
+</td>
+<td style="text-align:right;">
+50.81004
+</td>
+<td style="text-align:right;">
+0.5431803
+</td>
+<td style="text-align:right;">
+0.1424041
+</td>
+<td style="text-align:right;">
+0.1393333
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-30-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-31-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Soil moisture content -->
+</div>
 <div class="section level4">
 <h4 id="soil-moisture-content">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content"></a>
 </h4>
@@ -1086,8 +1277,8 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-29-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-30-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-37-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-38-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -1237,7 +1428,7 @@ T1_168
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-36-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-36-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-44-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-44-2.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 <div class="section level4">
@@ -1437,7 +1628,7 @@ Midday
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-41-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-41-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-49-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-49-2.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>
@@ -1827,6 +2018,7 @@ No understory
 <h3 id="evaluation-results-1">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-1"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
+<!-- Stand-level latent heat turbulent flux -->
 <!-- Soil moisture content -->
 <div class="section level4">
 <h4 id="soil-moisture-content-1">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-1"></a>
@@ -1963,8 +2155,8 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-65-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-66-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-75-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-76-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -2114,7 +2306,7 @@ T1_97
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-72-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-72-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-82-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-82-2.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -2626,6 +2818,7 @@ No understory considered
 <h3 id="evaluation-results-2">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-2"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
+<!-- Stand-level latent heat turbulent flux -->
 <!-- Soil moisture content -->
 <div class="section level4">
 <h4 id="soil-moisture-content-2">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-2"></a>
@@ -2762,8 +2955,8 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-97-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-98-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-109-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-110-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -2913,7 +3106,7 @@ T1_148
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-104-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-104-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-116-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-116-2.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -3402,6 +3595,7 @@ Available weather complemented with interpolation
 <h3 id="evaluation-results-3">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-3"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
+<!-- Stand-level latent heat turbulent flux -->
 <!-- Soil moisture content -->
 <div class="section level4">
 <h4 id="soil-moisture-content-3">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-3"></a>
@@ -3538,8 +3732,8 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-129-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-130-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-143-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-144-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -3689,7 +3883,7 @@ T1_172
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-136-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-136-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-150-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-150-2.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 <div class="section level4">
@@ -3889,7 +4083,7 @@ Midday
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-141-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-141-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-155-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-155-2.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>
@@ -4339,6 +4533,7 @@ Huber values
 <h3 id="evaluation-results-4">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-4"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
+<!-- Stand-level latent heat turbulent flux -->
 <!-- Soil moisture content -->
 <div class="section level4">
 <h4 id="soil-moisture-content-4">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-4"></a>
@@ -4475,8 +4670,8 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-165-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-166-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-181-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-182-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -4626,7 +4821,7 @@ T1_171
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-172-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-172-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-188-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-188-2.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -5058,6 +5253,7 @@ Huber values
 <h3 id="evaluation-results-5">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-5"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
+<!-- Stand-level latent heat turbulent flux -->
 <!-- Soil moisture content -->
 <div class="section level4">
 <h4 id="soil-moisture-content-5">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-5"></a>
@@ -5194,8 +5390,8 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-197-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-198-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-215-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-216-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -5345,7 +5541,7 @@ T1_153
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-204-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-204-2.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-222-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-222-2.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -5388,6 +5584,14 @@ SAPFLUXNET code
 </td>
 <td style="text-align:left;">
 FRA_FON
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FLUXNET code
+</td>
+<td style="text-align:left;">
+FR-Fon
 </td>
 </tr>
 <tr>
@@ -5492,6 +5696,14 @@ Species simulated
 </td>
 <td style="text-align:left;">
 Quercus petraea, Carpinus betulus
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Evaluation period
+</td>
+<td style="text-align:left;">
+2006
 </td>
 </tr>
 <tr>
@@ -5798,8 +6010,115 @@ Sapwood area estimated from dbh for trees within missing data
 <h3 id="evaluation-results-6">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-6"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
+<!-- Stand-level latent heat turbulent flux -->
+<div class="section level4">
+<h4 id="stand-level-latent-heat-turbulent-flux-1">Stand-level latent heat turbulent flux<a class="anchor" aria-label="anchor" href="#stand-level-latent-heat-turbulent-flux-1"></a>
+</h4>
+<table class="table table" style="margin-left: auto; margin-right: auto;">
+<thead><tr>
+<th style="text-align:left;">
+Site
+</th>
+<th style="text-align:left;">
+Mode
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+Bias
+</th>
+<th style="text-align:right;">
+Bias.rel
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MAE.rel
+</th>
+<th style="text-align:right;">
+r
+</th>
+<th style="text-align:right;">
+NSE
+</th>
+<th style="text-align:right;">
+NSE.abs
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+FONTAINEBLEAU
+</td>
+<td style="text-align:left;">
+sperry
+</td>
+<td style="text-align:right;">
+360
+</td>
+<td style="text-align:right;">
+0.0791120
+</td>
+<td style="text-align:right;">
+2.044469
+</td>
+<td style="text-align:right;">
+1.770440
+</td>
+<td style="text-align:right;">
+45.75296
+</td>
+<td style="text-align:right;">
+0.8299693
+</td>
+<td style="text-align:right;">
+0.2798559
+</td>
+<td style="text-align:right;">
+0.2897313
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FONTAINEBLEAU
+</td>
+<td style="text-align:left;">
+cochard
+</td>
+<td style="text-align:right;">
+360
+</td>
+<td style="text-align:right;">
+-0.8781565
+</td>
+<td style="text-align:right;">
+-22.693940
+</td>
+<td style="text-align:right;">
+2.001918
+</td>
+<td style="text-align:right;">
+51.73498
+</td>
+<td style="text-align:right;">
+0.7448440
+</td>
+<td style="text-align:right;">
+0.2728259
+</td>
+<td style="text-align:right;">
+0.1968664
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-248-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-249-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Soil moisture content -->
 <!-- Plant transpiration -->
+</div>
 <div class="section level4">
 <h4 id="transpiration-per-leaf-area-6">Transpiration per leaf area<a class="anchor" aria-label="anchor" href="#transpiration-per-leaf-area-6"></a>
 </h4>
@@ -6052,7 +6371,7 @@ T2_730
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-230-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-230-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-230-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-230-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-256-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-256-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-256-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-256-4.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -6677,6 +6996,7 @@ Understory not considered
 <h3 id="evaluation-results-7">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-7"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
+<!-- Stand-level latent heat turbulent flux -->
 <!-- Soil moisture content -->
 <div class="section level4">
 <h4 id="soil-moisture-content-6">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-6"></a>
@@ -6813,8 +7133,8 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-255-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-256-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-283-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-284-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -7069,7 +7389,7 @@ T2_168
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-262-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-262-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-262-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-262-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-290-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-290-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-290-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-290-4.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 <div class="section level4">
@@ -7421,7 +7741,7 @@ Midday
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-267-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-267-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-267-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-267-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-295-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-295-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-295-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-295-4.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>
@@ -8270,8 +8590,9 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-290-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-291-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-319-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-320-1.png" width="864" style="display: block; margin: auto;"></p>
+<!-- Stand-level latent heat turbulent flux -->
 <!-- Soil moisture content -->
 </div>
 <div class="section level4">
@@ -8409,8 +8730,8 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-297-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-298-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-327-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-328-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -8665,7 +8986,7 @@ T3_168
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-304-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-304-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-304-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-304-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-334-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-334-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-334-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-334-4.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 <div class="section level4">
@@ -9017,7 +9338,7 @@ Midday
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-309-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-309-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-309-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-309-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-339-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-339-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-339-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-339-4.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>
@@ -10057,6 +10378,7 @@ Understory composed of multiple species
 <h3 id="evaluation-results-9">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-9"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
+<!-- Stand-level latent heat turbulent flux -->
 <!-- Soil moisture content -->
 <div class="section level4">
 <h4 id="soil-moisture-content-8">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-8"></a>
@@ -10193,8 +10515,8 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-333-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-334-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-365-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-366-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -10659,7 +10981,7 @@ T4_168
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-6.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-7.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-340-8.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-6.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-7.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-8.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
@@ -11403,6 +11725,7 @@ Understory not considered
 <h3 id="evaluation-results-10">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-10"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
+<!-- Stand-level latent heat turbulent flux -->
 <!-- Soil moisture content -->
 <div class="section level4">
 <h4 id="soil-moisture-content-9">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-9"></a>
@@ -11539,8 +11862,8 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-365-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-366-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-399-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-400-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -11900,7 +12223,7 @@ T3_168
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-372-6.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-406-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-406-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-406-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-406-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-406-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-406-6.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 <div class="section level4">
@@ -12404,7 +12727,7 @@ Midday
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-377-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-377-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-377-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-377-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-377-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-377-6.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-411-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-411-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-411-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-411-4.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-411-5.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-411-6.png" width="864" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>
@@ -12868,6 +13191,7 @@ Complemented with interpolated weather
 <h3 id="evaluation-results-11">Evaluation results<a class="anchor" aria-label="anchor" href="#evaluation-results-11"></a>
 </h3>
 <!-- Stand-level evapotranspiration -->
+<!-- Stand-level latent heat turbulent flux -->
 <!-- Soil moisture content -->
 <div class="section level4">
 <h4 id="soil-moisture-content-10">Soil moisture content<a class="anchor" aria-label="anchor" href="#soil-moisture-content-10"></a>
@@ -13004,8 +13328,8 @@ cochard
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-401-1.png" width="768" style="display: block; margin: auto;"></p>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-402-1.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-437-1.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-438-1.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Plant transpiration -->
 </div>
 <div class="section level4">
@@ -13260,7 +13584,7 @@ T2_200
 </tr>
 </tbody>
 </table>
-<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-408-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-408-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-408-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-408-4.png" width="864" style="display: block; margin: auto;"></p>
+<p><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-444-1.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-444-2.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-444-3.png" width="864" style="display: block; margin: auto;"><img src="StandLevelEvaluation_files/figure-html/unnamed-chunk-444-4.png" width="864" style="display: block; margin: auto;"></p>
 <!-- Leaf water potential -->
 </div>
 </div>
