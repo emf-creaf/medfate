@@ -13,12 +13,14 @@ output:
 ```{r setup, include=FALSE}
 params = list(wd='/home/miquel/OneDrive/mcaceres_work/model_development/medfate_development/StandLevelEvaluation/',
               model='spwb',
-              names = c("Puéchabon", "Fontaine-Bleau"),
-              codes = c("FRAPUE", "FONTAINEBLEAU"),
-              # names=c("Puéchabon", "Hesse", "Yatir", "Rinconada", "Vallcebre (Barrol)", "Vallcebre (Sort)",
-              #         "Fontaine-Bleau","Prades", "Font-Blanche", "Can Balasc", "Armallones", "Ronda"),
-              # codes=c("FRAPUE", "FRAHES", "ISRYAT", "ESPRIN", "QVALLCEBRE", "PVALLCEBRE",
-              #         "FONTAINEBLEAU", "PRADES",  "FONBLA", "CANBALASC", "ESPALTARM", "RONDA"),
+              # names = c("Puéchabon"),
+              # codes = c("FRAPUE"),
+              names=c("Puéchabon", "Hesse", "Yatir", "Rinconada", "Vallcebre (Barrol)", "Vallcebre (Sort)",
+                      "Fontainbleau-Barbeau", "Davos Seehornwald", "Prades", "Font-Blanche",
+                      "Can Balasc", "Armallones", "Ronda"),
+              codes=c("FRAPUE", "FRAHES", "ISRYAT", "ESPRIN", "QVALLCEBRE", "PVALLCEBRE",
+                      "FONTAINEBLEAU", "DAVOS", "PRADES",  "FONBLA",
+                      "CANBALASC", "ESPALTARM", "RONDA"),
               confs=c('granier','sperry', 'cochard'),
               save_plots = FALSE)
 
@@ -100,13 +102,19 @@ df_general_sites |>
 
 Forest water balance simulations (i.e. function `spwb()`) have been conducted using the three transpiration modes (i.e. `Granier`, `Sperry` or `Cochard`). Only soil characteristics have been tuned, but calibration exercises have not been conducted. When available, however, leaf area to sapwood area ratios have been used. Thus, the evaluation is meant to be more or less representative of simulations with default species-level trait data.
 
-For each forest plot, general information about the site, topography, soil and climate is first presented, followed by a description of model inputs. Then, evaluation results are presented for four different variables:
+For each forest plot, general information about the site, topography, soil and climate is first presented, followed by a description of model inputs (vegetation, soil, custom species parameters and parameterization remarks). 
 
- a. Stand-level evapo-transpiration.
- b. Soil moisture content of the topmost layer.
- c. Species-level transpiration, scaled from sap-flow data.
- d. Predawn and midday leaf water potentials. 
- 
+Evaluation results are presented for different variables:
+
+| Variable                            | Level  | Observation source | Units |
+|-------------------------------------|--------|--------------------|-------|
+| Total evapotranspiration            | Stand  | Eddy covariance    | mm    |
+| Latent heat turbulent flux          | Stand  | Eddy covariance    | MJ/m2 |
+| Gross primary productivity          | Stand  | Eddy covariance    | gC/m2 |
+| Soil moisture content (topsoil)     | Stand  | SAPFLUXNET         | % vol.|
+| Transpiration per leaf area         | Plant  | SAPFLUXNET         | l/m2  |
+| Predawn/midday leaf water potential | Plant  | SAPFLUXNET         | MPa   |
+
 
 ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
  for(i in 1:length(params$codes)) {

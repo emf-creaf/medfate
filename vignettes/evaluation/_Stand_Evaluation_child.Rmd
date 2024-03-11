@@ -73,6 +73,16 @@ eval_LE <- "LE" %in% names(df_site$SiteData[[1]]$measuredData)
  }
 ```
 
+
+<!-- Stand-level GPP -->
+```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
+eval_GPP <- "GPP" %in% names(df_site$SiteData[[1]]$measuredData)
+ if(eval_GPP) {
+   res <- knitr::knit_child(file.path(this_path,'_GPP_Evaluation_child.Rmd'), quiet = TRUE)
+   cat(res, sep = '\n')
+ }
+```
+
 <!-- Soil moisture content -->
 ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
 eval_SWC <- "SWC" %in% names(df_site$SiteData[[1]]$measuredData)
@@ -104,3 +114,4 @@ if(eval_WP) {
   cat(res, sep = '\n')
 }
 ```
+

@@ -29,6 +29,7 @@
 #'   \item{\code{"E"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"E_"} and continuing with a cohort name (e.g. \code{"E_T1_68"}) with transpiration in L/m2/day on a leaf area basis (or L/m2/week, L/m2/month, etc, depending on the temporal resolution).}
 #'   \item{\code{"LFMC"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"FCM_"} and continuing with a cohort name (e.g. \code{"FMC_T1_68"}) with fuel moisture content as percent of dry weight.}
 #'   \item{\code{"WP"}: For each plant cohort whose transpiration is to be evaluated, two columns, one starting with \code{"PD_"} (for pre-dawn) and the other with \code{"MD_"} (for midday), and continuing with a cohort name (e.g. \code{"PD_T1_68"}). They should contain leaf water potential values in MPa. These are compared against sunlit water potentials.}
+#'   \item{\code{"GPP"}: A column named \code{"GPP"} should be present containing daily gross primary productivity in gC/m2.}
 #'   \item{\code{"BAI"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"BAI_"} and continuing with a cohort name (e.g. \code{"BAI_T1_68"}) with basal area increment in cm2/day, cm2/week, cm2/month or cm2/year, depending on the temporal resolution.}
 #'   \item{\code{"DI"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"DI_"} and continuing with a cohort name (e.g. \code{"DI_T1_68"}) with basal area increment in cm/day, cm/week, cm/month or cm/year, depending on the temporal resolution.}
 #'   \item{\code{"DBH"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"DBH_"} and continuing with a cohort name (e.g. \code{"DBH_T1_68"}) with DBH values in cm.}
@@ -112,10 +113,10 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
   temporalResolution = match.arg(temporalResolution, c("day", "week", "month", "year"))
   if("spwbInput" %in% names(out)) {
     modelInput<-out[["spwbInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "LE", "WP", "LFMC"))
+    type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "LE", "WP", "LFMC", "GPP"))
   } else {
     modelInput<- out[["growthInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "WP", "LFMC", 
+    type = match.arg(type, c("SWC", "REW","E", "ETR", "SE+TR", "WP", "LFMC", "GPP", 
                              "BAI", "DI","DBH", "Height"))
   }
   if(type=="SWC") {
@@ -243,6 +244,14 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     if(!(obscolumn %in% names(measuredData))) stop(paste0("Column '", obscolumn, "' not found in measured data frame."))
     df$Observed[d %in% rownames(measuredData)] = measuredData[[obscolumn]][rownames(measuredData) %in% d] 
   }
+  else if(type=="GPP") {
+    GPP = rowSums(out$Plants$GrossPhotosynthesis)
+    d = rownames(out$Plants$GrossPhotosynthesis)
+    df = data.frame(Dates = as.Date(d), Observed = NA, Modelled = GPP)
+    
+    if(!("GPP" %in% names(measuredData))) stop(paste0("Column 'GPP' not found in measured data frame."))
+    df$Observed[d %in% rownames(measuredData)] = measuredData$GPP[rownames(measuredData) %in% d]
+  }
   else if(type=="BAI") {
     SAg = out$GrowthMortality$SAgrowth
     d = rownames(SAg)
@@ -367,32 +376,23 @@ evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL,
   # Check arguments
   if("spwbInput" %in% names(out)) {
     modelInput<-out[["spwbInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "LE","WP", "FMC"))
+    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "LE","WP", "LFMC", "GPP"))
   } else {
     modelInput<- out[["growthInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "LE", "WP", "FMC", 
+    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "LE", "WP", "LFMC", "GPP", 
                              "BAI", "DI","DBH", "Height"))
   }
   
   df = evaluation_table(out = out, measuredData = measuredData, 
                         type = type, cohort = cohort, 
                         temporalResolution = temporalResolution)
-  if(type=="SWC") eval_res = evalstats(df$Observed, df$Modelled)
-  else if(type=="REW") eval_res = evalstats(df$Observed, df$Modelled)
-  else if(type=="E") eval_res = evalstats(df$Observed, df$Modelled)
-  else if(type=="FMC") eval_res = evalstats(df$Observed, df$Modelled)
-  else if(type=="ETR") eval_res = evalstats(df$Observed, df$Modelled)
-  else if(type=="SE+TR") eval_res = evalstats(df$Observed, df$Modelled)
-  else if(type=="LE") eval_res = evalstats(df$Observed, df$Modelled)
-  else if(type=="WP") {
+  if(type=="WP") {
     eval_res = as.data.frame(rbind(evalstats(df$PD_obs, df$PD_mod),
                                    evalstats(df$MD_obs, df$MD_mod)))
     row.names(eval_res)<-c("Predawn potentials", "Midday potentials")
+  } else {
+    eval_res = evalstats(df$Observed, df$Modelled)
   }
-  else if(type=="BAI") eval_res = evalstats(df$Observed, df$Modelled)
-  else if(type=="DI") eval_res = evalstats(df$Observed, df$Modelled)
-  else if(type=="DBH") eval_res = evalstats(df$Observed, df$Modelled)
-  else if(type=="Height") eval_res = evalstats(df$Observed, df$Modelled)
   return(eval_res)
 }
 
@@ -445,10 +445,10 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
   plotType = match.arg(plotType, c("dynamics", "scatter"))
   if("spwbInput" %in% names(out)) {
     modelInput<-out[["spwbInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "LE", "WP", "FMC"))
+    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "LE", "WP", "LFMC", "GPP"))
   } else {
     modelInput<- out[["growthInput"]]
-    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "LE", "WP", "FMC", 
+    type = match.arg(type, c("SWC", "REW","E", "ETR","SE+TR", "LE", "WP", "LFMC", "GPP", 
                              "BAI","DI", "DBH", "Height"))
   }
   
@@ -629,6 +629,14 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     } else {
       g<-scatterplot(df, xlab  = "Modelled SE+TR (mm)",
                      ylab ="Measured ETR (mm)")
+    }
+  }
+  else if(type=="GPP") {
+    if(plotType=="dynamics") {
+      g<-dynamicsplot(df, ylab = "GPP (gC/m2)")
+    } else {
+      g<-scatterplot(df, xlab  = "Modelled GPP (gC/m2)",
+                     ylab ="Measured GPP (gC/m2)")
     }
   }
   else if(type=="WP"){
