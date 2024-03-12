@@ -76,12 +76,13 @@ for(i in 1:n_sites) {
     df_general_sites$Country[i] <- site_list$siteData$Value[col_country]
     col_sapfluxnet_code <- which(site_list$siteData$Attribute=="SAPFLUXNET code")
     if(length(col_sapfluxnet_code)==1) df_general_sites$SAPFLUXNET[i] <- site_list$siteData$Value[col_sapfluxnet_code]
-    col_fluxnet_code <- which(site_list$siteData$Attribute=="FLUXNET code")
+    col_fluxnet_code <- which(site_list$siteData$Attribute=="FLUXNET/ICOS code")
     if(length(col_fluxnet_code)==1) df_general_sites$FLUXNET[i] <- site_list$siteData$Value[col_fluxnet_code]
     col_stand <- which(site_list$siteData$Attribute=="Stand description")
     if(length(col_stand)==1) df_general_sites$Stand[i] <- site_list$siteData$Value[col_stand]
   }
 }
+names(df_general_sites)[5] <- "FLUXNET/ICOS"
 knitr::opts_knit$set(root.dir = this_path)
 ```
 
