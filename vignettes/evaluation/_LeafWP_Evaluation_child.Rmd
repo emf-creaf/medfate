@@ -64,7 +64,7 @@ for(j in 1:length(cohNames)) {
                                                    type= "WP",cohort = cohNames[j])
     eval_table_cochard <- medfate::evaluation_table(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData,
                                                     type= "WP", cohort = cohNames[j])
-    obs_table <- eval_table_sperry[!is.na(eval_table_sperry$PD_obs),]
+    obs_table <- eval_table_sperry[(!is.na(eval_table_sperry$PD_obs)) | (!is.na(eval_table_sperry$MD_obs)) ,]
     p2 <- ggplot()+
       geom_ribbon(aes(x = Dates, ymin = PD_mod, ymax = MD_mod), data = eval_table_sperry, alpha = 0.5, fill = "green")+
       geom_ribbon(aes(x = Dates, ymin = PD_mod, ymax = MD_mod), data = eval_table_cochard, alpha = 0.5, fill = "blue")+

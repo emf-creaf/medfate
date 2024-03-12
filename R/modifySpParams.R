@@ -91,9 +91,9 @@ modifySpParams<-function(SpParams, customParams, subsetSpecies = TRUE) {
   
   # get the names of the custom params and the SpParams
   target_par <- names(customParams)
-  if("SpIndex" %in% target_par) target_par = target_par[-which(target_par=="SpIndex")] # remove SpIndex from target_par
-  if("Species" %in% target_par) target_par = target_par[-which(target_par=="Species")] # remove Species from target_par
-  
+  fixed_cols <- c("Name", "SpIndex", "AcceptedName", "Species", "Genus", "Family", "Order","Group")
+  target_par <- target_par[!(target_par %in% fixed_cols)]
+
   sp_par <- names(SpParams)
   
   # iterate between the custom params existing in SpParams
@@ -101,18 +101,25 @@ modifySpParams<-function(SpParams, customParams, subsetSpecies = TRUE) {
     # check if the param exists in SpParams
     if (param %in% sp_par) {
       # iterate by species, in case same variable has different values by sp
-      if("SpIndex" %in% names(customParams)) {
-        for (sp in customParams[['SpIndex']]) {
-          val <- customParams[which(customParams[['SpIndex']] == sp), param][1]
+      if("Name" %in% names(customParams)) {
+        for (sp in customParams[['Name']]) {
+          val <- customParams[which(customParams[['Name']] == sp), param][1]
           if(!is.na(val)) {
-            SpParams[which(SpParams[['SpIndex']] == sp), param] <- val
+            SpParams[which(SpParams[['Name']] == sp), param] <- val
           }
         }
-      } else if ("Species" %in% names(customParams)) {
+      } else if("Species" %in% names(customParams)) {
         for (sp in customParams[['Species']]) {
           val <- customParams[which(customParams[['Species']] == sp), param][1]
           if(!is.na(val)) {
             SpParams[which(SpParams[['Name']] == sp), param] <- val
+          }
+        }
+      } else if ("SpIndex" %in% names(customParams)) {
+        for (sp in customParams[['SpIndex']]) {
+          val <- customParams[which(customParams[['SpIndex']] == sp), param][1]
+          if(!is.na(val)) {
+            SpParams[which(SpParams[['SpIndex']] == sp), param] <- val
           }
         }
       }

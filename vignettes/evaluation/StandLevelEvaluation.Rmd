@@ -13,14 +13,14 @@ output:
 ```{r setup, include=FALSE}
 params = list(wd='/home/miquel/OneDrive/mcaceres_work/model_development/medfate_development/StandLevelEvaluation/',
               model='spwb',
-              # names = c("Puéchabon"),
-              # codes = c("FRAPUE"),
-              names=c("Puéchabon", "Hesse", "Yatir", "Rinconada", "Vallcebre (Barrol)", "Vallcebre (Sort)",
-                      "Fontainbleau-Barbeau", "Davos Seehornwald", "Prades", "Font-Blanche",
-                      "Can Balasc", "Armallones", "Ronda"),
-              codes=c("FRAPUE", "FRAHES", "ISRYAT", "ESPRIN", "QVALLCEBRE", "PVALLCEBRE",
-                      "FONTAINEBLEAU", "DAVOS", "PRADES",  "FONBLA",
-                      "CANBALASC", "ESPALTARM", "RONDA"),
+              # names = c("Wombat"),
+              # codes = c("WOMBAT"),
+              names=c("Puéchabon", "Mitra","Hesse", "Yatir", "Rinconada", "Vallcebre (Barrol)", "Vallcebre (Sort)",
+                      "Fontainbleau-Barbeau", "Davos Seehornwald", "EucFACE", "Prades", "Wombat","Font-Blanche",
+                      "Can Balasc", "Armallones", "Ronda", "Morgan-Monroe"),
+              codes=c("FRAPUE", "MITRA","FRAHES", "ISRYAT", "ESPRIN", "QVALLCEBRE", "PVALLCEBRE",
+                      "FONTAINEBLEAU", "DAVOS", "EUCFACE","PRADES", "WOMBAT", "FONBLA",
+                      "CANBALASC", "ESPALTARM", "RONDA", "USAMORSF"),
               confs=c('granier','sperry', 'cochard'),
               save_plots = FALSE)
 
@@ -88,8 +88,9 @@ knitr::opts_knit$set(root.dir = this_path)
 
 # Introduction
 
-This document presents **medfate** (**ver. `r packageVersion('medfate')[[1]]`**) model evaluation results at stand-level, using data from a set of **`r length(params$codes)` experimental forest plots**. The main source of observed data is SAPFLUXNET database ([Poyatos et al. 2021](https://essd.copernicus.org/articles/13/2607/2021/)) and FLUXNET 2015 dataset ([Pastorello et al. 2020](https://doi.org/10.1038/s41597-020-0534-3)).
+This document presents **medfate** (**ver. `r packageVersion('medfate')[[1]]`**) model evaluation results at stand-level, using data from a set of **`r length(params$codes)` experimental forest plots**. The main source of observed data are SAPFLUXNET database ([Poyatos et al. 2021](https://essd.copernicus.org/articles/13/2607/2021/)) and FLUXNET 2015 dataset ([Pastorello et al. 2020](https://doi.org/10.1038/s41597-020-0534-3)).
 
+Forest water balance simulations (i.e. function `spwb()`) have been conducted using the three transpiration modes (i.e. `Granier`, `Sperry` or `Cochard`). Only soil characteristics have been tuned, but calibration exercises have not been conducted. When available, however, leaf area to sapwood area ratios have been used. Thus, the evaluation is meant to be more or less representative of simulations with default species-level trait data.
 
 ## List of sites
 
@@ -99,23 +100,26 @@ df_general_sites |>
   kable_styling()
 ```
 
-## Simulation and evaluation procedure
+## Evaluation variables
 
-Forest water balance simulations (i.e. function `spwb()`) have been conducted using the three transpiration modes (i.e. `Granier`, `Sperry` or `Cochard`). Only soil characteristics have been tuned, but calibration exercises have not been conducted. When available, however, leaf area to sapwood area ratios have been used. Thus, the evaluation is meant to be more or less representative of simulations with default species-level trait data.
-
-For each forest plot, general information about the site, topography, soil and climate is first presented, followed by a description of model inputs (vegetation, soil, custom species parameters and parameterization remarks). 
-
-Evaluation results are presented for different variables:
 
 | Variable                            | Level  | Observation source | Units |
 |-------------------------------------|--------|--------------------|-------|
-| Total evapotranspiration            | Stand  | Eddy covariance    | mm    |
-| Latent heat turbulent flux          | Stand  | Eddy covariance    | MJ/m2 |
-| Gross primary productivity          | Stand  | Eddy covariance    | gC/m2 |
-| Soil moisture content (topsoil)     | Stand  | SAPFLUXNET         | % vol.|
+| Total evapotranspiration            | Stand  | FLUXNET / ICOS    | mm    |
+| Latent heat turbulent flux          | Stand  | FLUXNET / ICOS    | MJ/m2 |
+| Gross primary productivity          | Stand  | FLUXNET / ICOS    | gC/m2 |
+| Soil moisture content (topsoil)     | Stand  | SAPFLUXNET / FLUXNET / ICOS         | % vol.|
 | Transpiration per leaf area         | Plant  | SAPFLUXNET         | l/m2  |
-| Predawn/midday leaf water potential | Plant  | SAPFLUXNET         | MPa   |
+| Predawn/midday leaf water potential | Plant  | SAPFLUXNET (addition)    | MPa   |
 
+
+## Structure of site reports
+
+The following contains as many sections as forest stands included in the evaluation. The following sub-sections are reported for each stand:
+
+ 1. **General information**: General information about the site, topography, soil and climate, as well as data sources used.
+ 2. **Model inputs**: Description of model inputs (vegetation, soil, custom species parameters and parameterization remarks). 
+ 3. **Evaluation results**: Evaluation results are presented for variables with available measurements.
 
 ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
  for(i in 1:length(params$codes)) {
@@ -125,6 +129,5 @@ Evaluation results are presented for different variables:
    cat(res, sep = '\n')
  }
 ```
-
 
 

@@ -4,7 +4,7 @@
 df_site <- df[df$Site==site_code,]
 ```
 
-## Plot information
+## General information
 
 ```{r}
 as.data.frame(df_site$SiteData[[1]]$siteData)|> 
