@@ -13,14 +13,14 @@ output:
 ```{r setup, include=FALSE}
 params = list(wd='/home/miquel/OneDrive/mcaceres_work/model_development/medfate_development/StandLevelEvaluation/',
               model='spwb',
-              # names = c("Wombat"),
-              # codes = c("WOMBAT"),
-              names=c("Puéchabon", "Mitra","Hesse", "Yatir", "Rinconada", "Vallcebre (Barrol)", "Vallcebre (Sort)",
-                      "Fontainbleau-Barbeau", "Davos Seehornwald", "EucFACE", "Prades", "Wombat","Font-Blanche",
-                      "Can Balasc", "Armallones", "Ronda", "Morgan-Monroe"),
-              codes=c("FRAPUE", "MITRA","FRAHES", "ISRYAT", "ESPRIN", "QVALLCEBRE", "PVALLCEBRE",
-                      "FONTAINEBLEAU", "DAVOS", "EUCFACE","PRADES", "WOMBAT", "FONBLA",
-                      "CANBALASC", "ESPALTARM", "RONDA", "USAMORSF"),
+              names = c("Hesse"),
+              codes = c("FRAHES"),
+              # names=c("Puéchabon", "Mitra","Hesse", "Yatir", "Rinconada", "Vallcebre (Barrol)", "Vallcebre (Sort)",
+              #         "Fontainbleau-Barbeau", "Davos Seehornwald", "EucFACE", "Prades", "Wombat","Font-Blanche",
+              #         "Can Balasc", "Armallones", "Ronda", "Morgan-Monroe"),
+              # codes=c("FRAPUE", "MITRA","FRAHES", "ISRYAT", "ESPRIN", "QVALLCEBRE", "PVALLCEBRE",
+              #         "FONTAINEBLEAU", "DAVOS", "EUCFACE","PRADES", "WOMBAT", "FONBLA",
+              #         "CANBALASC", "ESPALTARM", "RONDA", "USAMORSF"),
               confs=c('granier','sperry', 'cochard'),
               save_plots = FALSE)
 
@@ -31,6 +31,7 @@ knitr::opts_chunk$set(warning = FALSE)
 library(knitr)
 library(kableExtra)
 library(medfate)
+library(medfateutils)
 library(ggplot2)
 
 ```

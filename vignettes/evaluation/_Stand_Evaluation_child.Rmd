@@ -16,16 +16,27 @@ as.data.frame(df_site$SiteData[[1]]$siteData)|>
 ### Vegetation 
 
 ```{r}
-as.data.frame(df_site$SiteData[[1]]$treeData)|> 
+df_trees <- as.data.frame(df_site$SiteData[[1]]$treeData)
+df_shrubs <- as.data.frame(df_site$SiteData[[1]]$shrubData)
+miscData <- df_site$SiteData[[1]]$miscData
+if(nrow(df_trees)>0 && nrow(df_shrubs)>0) {
+  df <- df_trees |>
+    dplyr::full_join(df_shrubs)
+} else if(nrow(df_trees)>0) {
+  df <- df_trees
+} else {
+  df <- df_shrubs
+}
+if(miscData$herbCover>0) {
+  df_herbs <- data.frame(Species = "Herbaceous layer", Cover = miscData$herbCover, Height = miscData$herbHeight)
+  df <- df |>
+    dplyr::full_join(df_herbs)
+}
+df |> 
   kbl() |>
   kable_styling()
 ```
 
-```{r}
-as.data.frame(df_site$SiteData[[1]]$shrubData)|> 
-  kbl() |>
-  kable_styling()
-```
 
 ### Soil
 

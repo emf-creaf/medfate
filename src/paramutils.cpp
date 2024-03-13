@@ -1542,6 +1542,14 @@ NumericVector treeAllometricCoefficientWithImputation(IntegerVector SP, DataFram
       else if(parName=="b_bt") {
         coef[i] = 0.969;
       }
+      else if(parName=="fHDmin") {
+        if(group[i]=="Gymnosperm") coef[i] = 80.0;
+        else coef[i] = 40.0;
+      }
+      else if(parName=="fHDmax") {
+        if(group[i]=="Gymnosperm") coef[i] = 120.0;
+        else coef[i] = 140.0;
+      }
     }
   }
   return(coef);
@@ -1634,6 +1642,7 @@ NumericVector speciesNumericParameterWithImputation(IntegerVector SP, DataFrame 
     else if((parName == "a_cr") || (parName == "b_1cr") || (parName == "b_2cr") || (parName == "b_3cr")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName, fillWithGenus));
     else if((parName == "c_1cr") || (parName == "c_2cr")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName, fillWithGenus));
     else if((parName == "a_bt") || (parName == "b_bt")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName, fillWithGenus));
+    else if((parName == "fHDmin") || (parName == "fHDmax")) return(treeAllometricCoefficientWithImputation(SP, SpParams, parName, fillWithGenus));
     else if((parName == "a_ash") || (parName == "b_ash")) return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName, fillWithGenus));
     else if((parName == "a_bsh") || (parName == "b_bsh")) return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName, fillWithGenus));
     else if((parName == "a_btsh") || (parName == "b_btsh") || (parName == "cr") || (parName == "BTsh")) return(shrubAllometricCoefficientWithImputation(SP, SpParams, parName, fillWithGenus));
