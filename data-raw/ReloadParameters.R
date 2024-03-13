@@ -84,42 +84,6 @@ openxlsx::saveWorkbook(wb,"data-raw/SpParamsMED.xlsx", overwrite=TRUE)
 rm(SpParamsMED)
 
 
-# SpParamsES, SpParamsUS, SpParamsFR, SpParamsAU --------------------------------------
-MFWdir <- "~/OneDrive/mcaceres_work/model_development/medfate_development/"
-NFIparamDir <- "~/OneDrive/mcaceres_work/model_development/medfate_development/MedfateSpeciesParametrization/NFIs_parametrization/"
-SpParamsES <- readRDS(paste0(NFIparamDir, "Rdata/sp/SpParams_filled_strict_allom_sp.rds"))
-# Results of meta-modelling exercise
-metamodellingParamsSpecies = readRDS(paste0(MFWdir, "Metamodelling_TR_WUE/Rdata/metamodelling_params.rds"))
-SpParamsES = medfate::modifySpParams(SpParamsES, metamodellingParamsSpecies, subsetSpecies = FALSE)
-# Load growth calibration results
-RGRcambiummaxTrees = readRDS(paste0(MFWdir,"GrowthCalibration/Rdata/RGRcambiummax_trees.rds"))
-SpParamsES = medfate::modifySpParams(SpParamsES, RGRcambiummaxTrees, subsetSpecies = FALSE)
-# Load ingrowth calibration results
-## SHOULD BE RECALIBRATED: THEY REFER TO INGROWTH (~7.5 cm) 
-recruitmentParamsSpecies = readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/Rdata/final_recruitment_params.rds"))
-recruitmentParamsSpecies$RecrTreeHeight <- recruitmentParamsSpecies$RecrTreeHeight/10
-recruitmentParamsSpecies$IngrowthTreeDensity <- recruitmentParamsSpecies$RecrTreeDensity
-recruitmentParamsSpecies$RecrTreeDensity <- NULL
-SpParamsES = medfate::modifySpParams(SpParamsES, recruitmentParamsSpecies, subsetSpecies = FALSE)
-# Load Baseline mortality calibration results
-mortalityParamsSpecies = readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/Rdata/mort_rates.rds"))
-SpParamsES = medfate::modifySpParams(SpParamsES, mortalityParamsSpecies, subsetSpecies = FALSE)
-# Load SurvivalModel calibration results
-survivalParamsSpecies = readRDS(paste0(MFWdir,"MortalityRegenerationCalibration/Rdata/survival_models.rds"))
-SpParamsES = medfate::modifySpParams(SpParamsES, survivalParamsSpecies, subsetSpecies = FALSE)
-# Load SurvivalModel calibration results
-resproutingParamsSpecies = readxl::read_xlsx(paste0(MFWdir,"MortalityRegenerationCalibration/Data/ResproutingMED.xlsx"))
-names(resproutingParamsSpecies)[1] = "Species"
-SpParamsES = medfate::modifySpParams(SpParamsES, resproutingParamsSpecies, subsetSpecies = FALSE)
-usethis::use_data(SpParamsES, overwrite = T)
-
-SpParamsFR <- readRDS(paste0(NFIparamDir, "Rdata/fr/SpParams_filled_strict_allom_fr.rds"))
-usethis::use_data(SpParamsFR, overwrite = T)
-SpParamsUS <- readRDS(paste0(NFIparamDir, "Rdata/us/SpParams_filled_strict_allom_us.rds"))
-usethis::use_data(SpParamsUS, overwrite = T)
-SpParamsAU <- readRDS(paste0(NFIparamDir, "Rdata/au/SpParams_filled_strict_allom_au.rds"))
-usethis::use_data(SpParamsAU, overwrite = T)
-
 ## Trait family means
 trait_family_means = read.csv2("data-raw/trait_family_means.csv", dec=".")
 usethis::use_data(trait_family_means, internal=TRUE, overwrite=TRUE)
@@ -132,6 +96,7 @@ exampleforest$treeData$Species[2] = "Quercus ilex"
 exampleforest$shrubData$Species[1] = "Quercus coccifera"
 usethis::use_data(exampleforest, overwrite = T)
 ##Rebuild!
+
 
 # Builds a fake observed data set from simulation results -------------------------------
 library(medfate)

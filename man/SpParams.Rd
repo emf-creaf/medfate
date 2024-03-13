@@ -5,32 +5,24 @@
 \alias{SpParams}
 \alias{SpParamsDefinition}
 \alias{SpParamsMED}
-\alias{SpParamsES}
-\alias{SpParamsFR}
-\alias{SpParamsUS}
 \title{Data tables with species parameter definition and values for different countries}
 \format{
 \itemize{
   \item{Data frame \code{SpParamsDefinition} has parameters in rows and columns 'ParameterName', 'ParameterGroup', 'Definition', 'Type' and 'Units'.}
-  \item{Data frames \code{SpParamsMED} (for Catalonia), \code{SpParamsES} (for Spain), \code{SpParamsFR} (for France) and \code{SpParamsUS} (for US) have species or genus as rows and column names equal to parameter names in \code{SpParamsDefinition}.}
+  \item{Data frames \code{SpParamsMED} has species or genus as rows and column names equal to parameter names in \code{SpParamsDefinition}.}
 }
 }
 \description{
 A data sets of species parameter definition and values, the latter resulting from existing databases, fit to empirical data or expert-based guesses.
 }
 \details{
-\code{SpParamsMED} was the official species parameter for package versions up to v.4.0.0, but will not be maintained in the future.
-
-\code{SpParamsES}, \code{SpParamsFR} and \code{SpParamsUS} are species parameter data frames designed to be used with National Forest Inventories
-of Spain, France and USA, respectively. 
+\code{SpParamsMED} was the official species parameter for package versions up to v.4.0.0, but will not be maintained in the future. Additional 
+species parameter tables for different countries are distributed via package \code{medfateutils}, available from GitHub (https://emf-creaf.github.io/medfateutils/).
 
 Details of the procedures used to obtain the species parameter tables can be found in an article at https://emf-creaf.github.io/medfate/.
 }
 \examples{
 data(SpParamsDefinition)
 data(SpParamsMED)
-data(SpParamsES)
-data(SpParamsFR)
-data(SpParamsUS)
 }
 \keyword{data}
