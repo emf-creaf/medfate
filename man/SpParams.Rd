@@ -18,8 +18,6 @@ A data sets of species parameter definition and values, the latter resulting fro
 \details{
 \code{SpParamsMED} was the official species parameter for package versions up to v.4.0.0, but will not be maintained in the future. Additional 
 species parameter tables for different countries are distributed via package \code{medfateutils}, available from GitHub (https://emf-creaf.github.io/medfateutils/).
-
-Details of the procedures used to obtain the species parameter tables can be found in an article at https://emf-creaf.github.io/medfate/.
 }
 \examples{
 data(SpParamsDefinition)
