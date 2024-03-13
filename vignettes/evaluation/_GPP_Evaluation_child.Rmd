@@ -6,9 +6,9 @@ for(i in 1:nrow(df_site)) {
     if(is.null(df_eval)) df_eval <- v
     else df_eval <- cbind(df_eval, v)
 }
-df_all <- cbind(df_site[,c("Site", "Mode")], as.data.frame(t(df_eval)))
-row.names(df_all)<- NULL
-df_all |> 
+df_all_GPP <- cbind(df_site[,c("Site", "Mode")], as.data.frame(t(df_eval)))
+row.names(df_all_GPP)<- NULL
+df_all_GPP |> 
   kbl() |>
   kable_styling()
 ```

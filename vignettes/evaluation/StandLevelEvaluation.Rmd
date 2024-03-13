@@ -13,14 +13,14 @@ output:
 ```{r setup, include=FALSE}
 params = list(wd='/home/miquel/OneDrive/mcaceres_work/model_development/medfate_development/StandLevelEvaluation/',
               model='spwb',
-              names = c("Hesse"),
-              codes = c("FRAHES"),
-              # names=c("Puéchabon", "Mitra","Hesse", "Yatir", "Rinconada", "Vallcebre (Barrol)", "Vallcebre (Sort)",
-              #         "Fontainbleau-Barbeau", "Davos Seehornwald", "EucFACE", "Prades", "Wombat","Font-Blanche",
-              #         "Can Balasc", "Armallones", "Ronda", "Morgan-Monroe"),
-              # codes=c("FRAPUE", "MITRA","FRAHES", "ISRYAT", "ESPRIN", "QVALLCEBRE", "PVALLCEBRE",
-              #         "FONTAINEBLEAU", "DAVOS", "EUCFACE","PRADES", "WOMBAT", "FONBLA",
-              #         "CANBALASC", "ESPALTARM", "RONDA", "USAMORSF"),
+              # names = c("Font-Blanche"),
+              # codes = c("FONBLA"),
+              names=c("Puéchabon", "Mitra","Hesse", "Yatir", "Rinconada", "Vallcebre (Barrol)", "Vallcebre (Sort)",
+                      "Fontainbleau-Barbeau", "Davos Seehornwald", "EucFACE", "Prades", "Wombat","Font-Blanche",
+                      "Can Balasc", "Armallones", "Ronda", "Morgan-Monroe"),
+              codes=c("FRAPUE", "MITRA","FRAHES", "ISRYAT", "ESPRIN", "QVALLCEBRE", "PVALLCEBRE",
+                      "FONTAINEBLEAU", "DAVOS", "EUCFACE","PRADES", "WOMBAT", "FONBLA",
+                      "CANBALASC", "ESPALTARM", "RONDA", "USAMORSF"),
               confs=c('granier','sperry', 'cochard'),
               save_plots = FALSE)
 
@@ -42,14 +42,14 @@ knitr::opts_knit$set(root.dir = params$wd)
 n_sites <- length(params$codes)
 n_confs <- length(params$confs)
 n_rows <- n_sites*n_confs
-df <- data.frame(Site = rep(NA, n_rows), 
+df_all <- data.frame(Site = rep(NA, n_rows), 
                  Mode = rep(NA, n_rows),
                  Path = rep(NA, n_rows))
-df$SiteData = vector("list", n_rows)
-df$InputObject = vector("list", n_rows)
-df$Result = vector("list",n_rows)
+df_all$SiteData = vector("list", n_rows)
+df_all$InputObject = vector("list", n_rows)
+df_all$Result = vector("list",n_rows)
 cnt <- 0
-df <- tibble::as_tibble(df)
+df_all <- tibble::as_tibble(df_all)
 df_general_sites <- data.frame(Plot = rep("", n_sites),
                                Country = rep("", n_sites),
                                Stand = rep("", n_sites),
@@ -61,17 +61,17 @@ for(i in 1:n_sites) {
   for(j in 1:n_confs) {
     conf <- params$confs[j]
     cnt <- cnt+1
-    df$Site[cnt] <- site
-    df$Mode[cnt] <- conf
-    df$Path[cnt] <- file.path(params$wd, 'Output', packageVersion('medfate')[[1]], params$model, conf, site)
-    file_name_input <- file.path(df$Path[cnt],
+    df_all$Site[cnt] <- site
+    df_all$Mode[cnt] <- conf
+    df_all$Path[cnt] <- file.path(params$wd, 'Output', packageVersion('medfate')[[1]], params$model, conf, site)
+    file_name_input <- file.path(df_all$Path[cnt],
                        paste0('simulation_input.rds'))
-    file_name_output <- file.path(df$Path[cnt],
+    file_name_output <- file.path(df_all$Path[cnt],
                        paste0('simulation_result.rds'))
-    df$InputObject[[cnt]] <- readRDS(file_name_input)
-    df$Result[[cnt]] <-   readRDS(file_name_output)
+    df_all$InputObject[[cnt]] <- readRDS(file_name_input)
+    df_all$Result[[cnt]] <-   readRDS(file_name_output)
     site_list  <- medfatereports::load_list(site)
-    df$SiteData[[cnt]] <- site_list
+    df_all$SiteData[[cnt]] <- site_list
     df_general_sites$Plot[i] <- site_list$siteData$Value[1]
     col_country <- which(site_list$siteData$Attribute=="Country")
     df_general_sites$Country[i] <- site_list$siteData$Value[col_country]
@@ -123,9 +123,10 @@ The following contains as many sections as forest stands included in the evaluat
  3. **Evaluation results**: Evaluation results are presented for variables with available measurements.
 
 ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
- for(i in 1:length(params$codes)) {
-   site_code <- params$codes[i]
-   site_name <- params$names[i]
+ for(i_code in 1:length(params$codes)) {
+   site_code <- params$codes[i_code]
+   site_name <- params$names[i_code]
+   df_site <- df_all[df_all$Site==site_code,, drop = FALSE]
    res <- knitr::knit_child(file.path(this_path,'_Stand_Evaluation_child.Rmd'), quiet = TRUE)
    cat(res, sep = '\n')
  }

@@ -26,10 +26,10 @@ for(i in 1:nrow(df_site)) {
   }
 }
 if(!is.null(df_eval)) {
-  df_all <- data.frame(Site = sitesOut, Mode = modesOut, Cohort = cohNamesOut, t(df_eval))
+  df_all_E <- data.frame(Site = sitesOut, Mode = modesOut, Cohort = cohNamesOut, t(df_eval))
 }
-row.names(df_all)<- NULL
-df_all|> 
+row.names(df_all_E)<- NULL
+df_all_E|> 
   kbl() |>
   kable_styling()
 ```

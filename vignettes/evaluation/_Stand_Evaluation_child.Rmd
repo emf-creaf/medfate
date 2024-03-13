@@ -1,8 +1,5 @@
 # `r site_name`
 
-```{r, echo = FALSE}
-df_site <- df[df$Site==site_code,]
-```
 
 ## General information
 
