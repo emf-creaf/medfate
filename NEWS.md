@@ -18,7 +18,6 @@
 - Interception model Liu (2001) accepted as alternative to Gash (1995)
 - Optional "RainfallIntensity" (mm/h) as input in weather
 - New option "defaultRainfallIntensityPerMonth"
-- New species parameter tables: SpParamsES, SpParamsFR, SpParamsUS
 - New functions "tree2forest"/"shrub2forest" to create forest objects with single cohorts
 - Van Genuchten parameters and Ksat can be specified directly when initializing soil
 - Saturation excess in soil flows
