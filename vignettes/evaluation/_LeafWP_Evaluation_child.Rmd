@@ -31,12 +31,8 @@ for(k in 1:nrow(df_site)) {
   }
 }
 if(!is.null(df_eval)) {
-            # print(sitesOut)
-            # print(modesOut)
-            # print(cohNamesOut)
-            # print(wpOut)
-            # print(df_eval)
-  df_all_wp <- data.frame(Site = sitesOut, Mode = modesOut, Cohort = cohNamesOut, WP = wpOut, df_eval)
+  df_all_wp <- data.frame(Site = sitesOut, Cohort = cohNamesOut, WP = wpOut, Mode = modesOut,  df_eval) |>
+    dplyr::arrange(Cohort, WP)
 }
 row.names(df_all_wp)<- NULL
 df_all_wp|>

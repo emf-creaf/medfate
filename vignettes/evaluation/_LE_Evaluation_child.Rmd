@@ -1,4 +1,4 @@
-### Stand-level latent heat turbulent flux
+### Latent heat turbulent flux
 ```{r}
 df_eval <- NULL
 for(j in 2:nrow(df_site)) {

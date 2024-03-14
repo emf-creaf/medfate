@@ -47,10 +47,23 @@ evaluation_metric(
 
 \item{measuredData}{A data frame with observed/measured values. Dates should be in row names, whereas columns should be named according to the type of output to be evaluated (see details).}
 
-\item{type}{A string with the kind of model output to be evaluated. Accepted values are \code{"SWC"} (soil moisture content), \code{"REW"} relative extractable water, \code{"ETR"} (total evapotranspiration), 
-\code{"SE+TR"} (modelled soil evaporation + transpiration against observed total evapotranspiration), \code{"E"} (transpiration per leaf area), \code{"LFMC"} (Live fuel moisture content), \code{"WP"} (plant water potentials), 
-\code{"BAI"} (basal area increment), \code{"DI"} (diameter increment), 
-\code{"DBH"} (diameter at breast height) or \code{"Height"} (plant height).}
+\item{type}{A string with the kind of model output to be evaluated. Accepted values are:
+\itemize{
+  \item{\code{"SWC"}: Soil moisture content}
+  \item{\code{"REW"}: Relative extractable water}
+  \item{\code{"ETR"}: Total evapotranspiration}
+  \item{\code{"SE+TR"}: Modelled soil evaporation + plant transpiration against observed total evapotranspiration}
+  \item{\code{"E"}: Transpiration per leaf area}
+  \item{\code{"LE"}: Latent heat turbulent flux}
+  \item{\code{"H"}: Canopy sensible heat turbulent flux}
+  \item{\code{"GPP"}: Stand-level gross primary productivity}
+  \item{\code{"LFMC"}: Live fuel moisture content}
+  \item{\code{"WP"}: Plant water potentials}
+  \item{\code{"BAI"}: Basal area increment}
+  \item{\code{"DI"}: Diameter increment}
+  \item{\code{"DBH"}: Diameter at breast height}
+  \item{\code{"Height"}: Plant height}
+}}
 
 \item{cohort}{A string of the cohort to be compared (e.g. "T1_68"). If \code{NULL} results for the first cohort will be evaluated.}
 
@@ -95,10 +108,11 @@ Users should provide the appropriate columns in \code{measuredData}, depending o
   \item{\code{"SWC" or "REW"}: A column named \code{"SWC"} should be present, containing soil moisture content in percent volume. When \code{type="REW"}, observed values are divided by the 90\% quantile, which is assumed to be the moisture content at field capacity.}
   \item{\code{"ETR"} or \code{"SE+TR"}: A column named \code{"ETR"} should be present, containing stand's evapotranspiration in mm/day (or mm/week, mm/month, etc, depending on the temporal resolution). If \code{type="ETR"} observed values will be compared against modelled evapotranspiration (i.e. sum of transpiration, soil evaporation and interception loss), whereas if \code{type= "SE+TR"} observed values will be compared against the sum of transpiration and soil evaporation only.}
   \item{\code{"LE"}: A column named \code{"LE"} should be present containing daily latent heat turbulent flux in MJ/m2.}
+  \item{\code{"H"}: A column named \code{"H"} should be present containing daily sensible heat turbulent flux in MJ/m2.}
   \item{\code{"E"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"E_"} and continuing with a cohort name (e.g. \code{"E_T1_68"}) with transpiration in L/m2/day on a leaf area basis (or L/m2/week, L/m2/month, etc, depending on the temporal resolution).}
+  \item{\code{"GPP"}: A column named \code{"GPP"} should be present containing daily gross primary productivity in gC/m2.}
   \item{\code{"LFMC"}: For each plant cohort whose transpiration is to be evaluated, a column starting with \code{"FCM_"} and continuing with a cohort name (e.g. \code{"FMC_T1_68"}) with fuel moisture content as percent of dry weight.}
   \item{\code{"WP"}: For each plant cohort whose transpiration is to be evaluated, two columns, one starting with \code{"PD_"} (for pre-dawn) and the other with \code{"MD_"} (for midday), and continuing with a cohort name (e.g. \code{"PD_T1_68"}). They should contain leaf water potential values in MPa. These are compared against sunlit water potentials.}
-  \item{\code{"GPP"}: A column named \code{"GPP"} should be present containing daily gross primary productivity in gC/m2.}
   \item{\code{"BAI"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"BAI_"} and continuing with a cohort name (e.g. \code{"BAI_T1_68"}) with basal area increment in cm2/day, cm2/week, cm2/month or cm2/year, depending on the temporal resolution.}
   \item{\code{"DI"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"DI_"} and continuing with a cohort name (e.g. \code{"DI_T1_68"}) with basal area increment in cm/day, cm/week, cm/month or cm/year, depending on the temporal resolution.}
   \item{\code{"DBH"}: For each plant cohort whose growth is to be evaluated, a column starting with \code{"DBH_"} and continuing with a cohort name (e.g. \code{"DBH_T1_68"}) with DBH values in cm.}

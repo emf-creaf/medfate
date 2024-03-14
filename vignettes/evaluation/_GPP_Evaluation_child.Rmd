@@ -1,4 +1,4 @@
-### Stand-level GPP
+### Gross primary productivity
 ```{r}
 df_eval <- NULL
 for(i in 1:nrow(df_site)) {
