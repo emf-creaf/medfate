@@ -102,10 +102,21 @@
 
 
 <dt>type</dt>
-<dd><p>A string with the kind of model output to be evaluated. Accepted values are <code>"SWC"</code> (soil moisture content), <code>"REW"</code> relative extractable water, <code>"ETR"</code> (total evapotranspiration), 
-<code>"SE+TR"</code> (modelled soil evaporation + transpiration against observed total evapotranspiration), <code>"E"</code> (transpiration per leaf area), <code>"LFMC"</code> (Live fuel moisture content), <code>"WP"</code> (plant water potentials), 
-<code>"BAI"</code> (basal area increment), <code>"DI"</code> (diameter increment), 
-<code>"DBH"</code> (diameter at breast height) or <code>"Height"</code> (plant height).</p></dd>
+<dd><p>A string with the kind of model output to be evaluated. Accepted values are:</p><ul><li><p><code>"SWC"</code>: Soil moisture content</p></li>
+<li><p><code>"REW"</code>: Relative extractable water</p></li>
+<li><p><code>"ETR"</code>: Total evapotranspiration</p></li>
+<li><p><code>"SE+TR"</code>: Modelled soil evaporation + plant transpiration against observed total evapotranspiration</p></li>
+<li><p><code>"E"</code>: Transpiration per leaf area</p></li>
+<li><p><code>"LE"</code>: Latent heat turbulent flux</p></li>
+<li><p><code>"H"</code>: Canopy sensible heat turbulent flux</p></li>
+<li><p><code>"GPP"</code>: Stand-level gross primary productivity</p></li>
+<li><p><code>"LFMC"</code>: Live fuel moisture content</p></li>
+<li><p><code>"WP"</code>: Plant water potentials</p></li>
+<li><p><code>"BAI"</code>: Basal area increment</p></li>
+<li><p><code>"DI"</code>: Diameter increment</p></li>
+<li><p><code>"DBH"</code>: Diameter at breast height</p></li>
+<li><p><code>"Height"</code>: Plant height</p></li>
+</ul></dd>
 
 
 <dt>cohort</dt>
@@ -152,10 +163,11 @@
     <p>Users should provide the appropriate columns in <code>measuredData</code>, depending on the type of output to be evaluated:</p><ul><li><p><code>"SWC" or "REW"</code>: A column named <code>"SWC"</code> should be present, containing soil moisture content in percent volume. When <code>type="REW"</code>, observed values are divided by the 90% quantile, which is assumed to be the moisture content at field capacity.</p></li>
 <li><p><code>"ETR"</code> or <code>"SE+TR"</code>: A column named <code>"ETR"</code> should be present, containing stand's evapotranspiration in mm/day (or mm/week, mm/month, etc, depending on the temporal resolution). If <code>type="ETR"</code> observed values will be compared against modelled evapotranspiration (i.e. sum of transpiration, soil evaporation and interception loss), whereas if <code>type= "SE+TR"</code> observed values will be compared against the sum of transpiration and soil evaporation only.</p></li>
 <li><p><code>"LE"</code>: A column named <code>"LE"</code> should be present containing daily latent heat turbulent flux in MJ/m2.</p></li>
+<li><p><code>"H"</code>: A column named <code>"H"</code> should be present containing daily sensible heat turbulent flux in MJ/m2.</p></li>
 <li><p><code>"E"</code>: For each plant cohort whose transpiration is to be evaluated, a column starting with <code>"E_"</code> and continuing with a cohort name (e.g. <code>"E_T1_68"</code>) with transpiration in L/m2/day on a leaf area basis (or L/m2/week, L/m2/month, etc, depending on the temporal resolution).</p></li>
+<li><p><code>"GPP"</code>: A column named <code>"GPP"</code> should be present containing daily gross primary productivity in gC/m2.</p></li>
 <li><p><code>"LFMC"</code>: For each plant cohort whose transpiration is to be evaluated, a column starting with <code>"FCM_"</code> and continuing with a cohort name (e.g. <code>"FMC_T1_68"</code>) with fuel moisture content as percent of dry weight.</p></li>
 <li><p><code>"WP"</code>: For each plant cohort whose transpiration is to be evaluated, two columns, one starting with <code>"PD_"</code> (for pre-dawn) and the other with <code>"MD_"</code> (for midday), and continuing with a cohort name (e.g. <code>"PD_T1_68"</code>). They should contain leaf water potential values in MPa. These are compared against sunlit water potentials.</p></li>
-<li><p><code>"GPP"</code>: A column named <code>"GPP"</code> should be present containing daily gross primary productivity in gC/m2.</p></li>
 <li><p><code>"BAI"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"BAI_"</code> and continuing with a cohort name (e.g. <code>"BAI_T1_68"</code>) with basal area increment in cm2/day, cm2/week, cm2/month or cm2/year, depending on the temporal resolution.</p></li>
 <li><p><code>"DI"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"DI_"</code> and continuing with a cohort name (e.g. <code>"DI_T1_68"</code>) with basal area increment in cm/day, cm/week, cm/month or cm/year, depending on the temporal resolution.</p></li>
 <li><p><code>"DBH"</code>: For each plant cohort whose growth is to be evaluated, a column starting with <code>"DBH_"</code> and continuing with a cohort name (e.g. <code>"DBH_T1_68"</code>) with DBH values in cm.</p></li>
