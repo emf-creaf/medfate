@@ -959,7 +959,7 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, ru
 #' 
 #' @details
 #' Detailed model description is available in the medfate book. 
-#' Simulations using the 'Sperry' or 'Cochard' transpiration modes are computationally much more expensive 
+#' Simulations using the 'Sperry' or 'Sureau' transpiration modes are computationally much more expensive 
 #' than those using the 'Granier' transpiration mode. 
 #' 
 #' @return
@@ -971,14 +971,14 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, ru
 #'   \item{\code{"growthInput"}: A copy of the object \code{x} of class \code{\link{growthInput}} given as input.}
 #'   \item{\code{"growthOutput"}: An copy of the final state of the object \code{x} of class \code{\link{growthInput}}.}
 #'   \item{\code{"WaterBalance"}: A data frame where different water balance variables (see \code{\link{spwb}}).}
-#'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}; see \code{\link{spwb}}).}
+#'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
 #'   \item{\code{"CarbonBalance"}: A data frame where different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration and net primary production), all in g C · m-2.}
 #'   \item{\code{"BiomassBalance"}: A data frame with the daily values of stand biomass balance components (in g dry · m-2.}
-#'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}; see \code{\link{spwb}}).}
+#'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
 #'   \item{\code{"Soil"}: A data frame where different soil variables  (see \code{\link{spwb}}).}
 #'   \item{\code{"Stand"}: A data frame where different stand-level variables (see \code{\link{spwb}}).}
 #'   \item{\code{"Plants"}: A list of daily results for plant cohorts (see \code{\link{spwb}}).}
-#'   \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: A list with daily results for sunlit and shade leaves (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}; see \code{\link{spwb}}).}
+#'   \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: A list with daily results for sunlit and shade leaves (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
 #'   \item{\code{"LabileCarbonBalance"}: A list of daily labile carbon balance results for plant cohorts, with elements:}
 #'   \itemize{
 #'     \item{\code{"GrossPhotosynthesis"}: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).}
@@ -1067,8 +1067,8 @@ growth_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, ru
 #' #Call simulation function
 #' G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 #' 
-#' #Switch to 'Cochard' transpiration mode
-#' control <- defaultControl("Cochard")
+#' #Switch to 'Sureau' transpiration mode
+#' control <- defaultControl("Sureau")
 #' 
 #' #Makes leaf xylem vulnerability equal to stem xylem vulnerability
 #' control$segmentedXylemVulnerability = FALSE 
@@ -1779,50 +1779,6 @@ hydrology_soilFlows <- function(soil, sourceSink, nsteps = 24L, modifySoil = TRU
     .Call(`_medfate_gammds`, x, p)
 }
 
-#' Sureau-ECOS inner functions for testing only
-#' 
-#' Function \code{initCochardNetworks} initializes hydraulic networks for all plant cohorts in x
-#' Function \code{semi_implicit_integration} updates water potentials and cavitation across the hydraulic network
-#' 
-#' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}} created using \code{transpirationMode = "Cochard"}.
-#'  
-#' @return Function \code{initCochardNetworks} returns a vector of length equal to the number of cohorts. Each element is a list with Sureau-ECOS parameters.
-#' Function \code{semi_implicit_integration} does not return anything, but modifies input parameter \code{network}.
-#' 
-#' @author
-#' \itemize{
-#'   \item{Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF}
-#'   \item{Nicolas Martin-StPaul, URFM-INRAE}
-#' }
-#' 
-#' @references
-#' Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022) 
-#' SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level.
-#' Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).
-#' 
-#' 
-#' @seealso  \code{\link{spwb}}
-#' 
-#' @name sureau_ecos
-initCochardNetworks <- function(x) {
-    .Call(`_medfate_initCochardNetworks`, x)
-}
-
-#' @rdname sureau_ecos
-#' @param network A hydraulic network element of the list returned by \code{initCochardNetworks}
-#' @param dt Smallest time step (seconds)
-#' @param opt Option flag vector
-#' @param stemCavitationRecovery,leafCavitationRecovery A string indicating how refilling of embolized conduits is done:
-#'           \itemize{
-#'             \item{"none" - no refilling.}
-#'             \item{"annual" - every first day of the year.}
-#'             \item{"rate" - following a rate of new sapwood formation.}
-#'             \item{"total" - instantaneous complete refilling.}
-#'           }
-semi_implicit_integration <- function(network, dt, opt, stemCavitationRecovery = "annual", leafCavitationRecovery = "total") {
-    invisible(.Call(`_medfate_semi_implicit_integration`, network, dt, opt, stemCavitationRecovery, leafCavitationRecovery))
-}
-
 #' @rdname hydraulics_supplyfunctions
 hydraulics_initSperryNetworks <- function(x) {
     .Call(`_medfate_initSperryNetworks`, x)
@@ -1883,6 +1839,50 @@ hydraulics_initSperryNetworks <- function(x) {
 #' @name transp_stomatalregulation
 transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gswmin, Gswmax) {
     .Call(`_medfate_profitMaximization`, supplyFunction, photosynthesisFunction, Gswmin, Gswmax)
+}
+
+#' Sureau-ECOS inner functions for testing only
+#' 
+#' Function \code{initSureauNetworks} initializes hydraulic networks for all plant cohorts in x
+#' Function \code{semi_implicit_integration} updates water potentials and cavitation across the hydraulic network
+#' 
+#' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}} created using \code{transpirationMode = "Sureau"}.
+#'  
+#' @return Function \code{initSureauNetworks} returns a vector of length equal to the number of cohorts. Each element is a list with Sureau-ECOS parameters.
+#' Function \code{semi_implicit_integration} does not return anything, but modifies input parameter \code{network}.
+#' 
+#' @author
+#' \itemize{
+#'   \item{Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF}
+#'   \item{Nicolas Martin-StPaul, URFM-INRAE}
+#' }
+#' 
+#' @references
+#' Ruffault J, Pimont F, Cochard H, Dupuy JL, Martin-StPaul N (2022) 
+#' SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality at the ecosystem level.
+#' Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).
+#' 
+#' 
+#' @seealso  \code{\link{spwb}}
+#' 
+#' @name sureau_ecos
+initSureauNetworks <- function(x) {
+    .Call(`_medfate_initSureauNetworks`, x)
+}
+
+#' @rdname sureau_ecos
+#' @param network A hydraulic network element of the list returned by \code{initSureauNetworks}
+#' @param dt Smallest time step (seconds)
+#' @param opt Option flag vector
+#' @param stemCavitationRecovery,leafCavitationRecovery A string indicating how refilling of embolized conduits is done:
+#'           \itemize{
+#'             \item{"none" - no refilling.}
+#'             \item{"annual" - every first day of the year.}
+#'             \item{"rate" - following a rate of new sapwood formation.}
+#'             \item{"total" - instantaneous complete refilling.}
+#'           }
+semi_implicit_integration <- function(network, dt, opt, stemCavitationRecovery = "annual", leafCavitationRecovery = "total") {
+    invisible(.Call(`_medfate_semi_implicit_integration`, network, dt, opt, stemCavitationRecovery, leafCavitationRecovery))
 }
 
 #' Advanced radiation transfer functions
@@ -2089,7 +2089,7 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #' Function \code{forest2aboveground} extract height and species identity from plant cohorts of \code{x}, 
 #' and calculate leaf area index and crown ratio. Functions \code{forest2spwbInput} and \code{forest2growthInput} also calculate the distribution of fine roots 
 #' across soil, and finds parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. 
-#' If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Cochard"},
+#' If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Sureau"},
 #' the \code{forest2spwbInput} and \code{forest2growthInput} also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
 #' 
 #' @return 
@@ -2119,7 +2119,7 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #'         \item{\code{L}: A matrix with the length of coarse roots of each cohort (in rows) in each soil layer (in columns).}
 #'         \item{\code{Wpool}: A matrix with the soil moisture relative to field capacity around the rhizosphere of each cohort (in rows) in each soil layer (in columns).}
 #'       }
-#'       If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Cochard"} there are the following additional elements:
+#'       If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Sureau"} there are the following additional elements:
 #'       \itemize{
 #'         \item{\code{VGrhizo_kmax}: A matrix with maximum rhizosphere conductance values of each cohort (in rows) in each soil layer (in columns).}
 #'         \item{\code{VGroot_kmax}: A matrix with maximum root xylem conductance values of each cohort (in rows) in each soil layer (in columns).}
@@ -2158,7 +2158,7 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #'         \item{\code{kPAR}: PAR extinction coefficient.}
 #'         \item{\code{g}: Canopy water retention capacity per LAI unit (mm/LAI).}
 #'       }
-#'     If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Cochard"} additional columns are:
+#'     If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Sureau"} additional columns are:
 #'       \itemize{
 #'         \item{\code{gammaSWR}: Reflectance (albedo) coefficient for SWR .}
 #'         \item{\code{alphaSWR}: Absorbance coefficient for SWR .}
@@ -2192,7 +2192,7 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #'         \item{\code{VCroot_c}, \code{VCroot_d}: Parameters of the root xylem vulnerability curve.}
 #'         \item{\code{Plant_kmax}: Maximum whole-plant conductance.}
 #'       }
-#'       If \code{control$transpirationMode = "Cochard"} columns are:
+#'       If \code{control$transpirationMode = "Sureau"} columns are:
 #'       \itemize{
 #'         \item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
 #'         \item{\code{Gswmax}: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
@@ -2322,8 +2322,8 @@ light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
 #' control <- defaultControl("Sperry")
 #' forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #' 
-#' # Prepare input for 'Cochard' transpiration mode
-#' control <- defaultControl("Cochard")
+#' # Prepare input for 'Sureau' transpiration mode
+#' control <- defaultControl("Sureau")
 #' forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 #' 
 #' # Example of initialization from a forest 
@@ -3137,9 +3137,9 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
 #'   and implements an approach originally described in Granier et al. (1999).} 
 #'   \item{The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function \code{\link{transp_transpirationSperry}} and was described in De Caceres et al. (2021), and
 #'   implements a modelling approach originally described in Sperry et al. (2017).}  
-#'   \item{The sub-model corresponding to 'Cochard' transpiration mode is illustrated by function \code{\link{transp_transpirationCochard}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
+#'   \item{The sub-model corresponding to 'Sureau' transpiration mode is illustrated by function \code{\link{transp_transpirationSureau}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
 #' }
-#' Simulations using the 'Sperry' or 'Cochard' transpiration mode are computationally much more expensive than 'Granier'.
+#' Simulations using the 'Sperry' or 'Sureau' transpiration mode are computationally much more expensive than 'Granier'.
 #' 
 #' @return
 #' Function \code{spwb_day()} returns a list of class \code{spwb_day} with the 
@@ -3161,7 +3161,7 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
 #'   \item{\code{"Stand"}: A named vector with with stand values for the simulated day, equivalent to one row of 'Stand' object returned by \code{\link{spwb}}.}
 #'   \item{\code{"Plants"}: A data frame of results for each plant cohort (see \code{\link{transp_transpirationGranier}} or \code{\link{transp_transpirationSperry}}).}
 #' }
-#' The following items are only returned when \code{transpirationMode = "Sperry"} or  \code{transpirationMode = "Cochard"}:
+#' The following items are only returned when \code{transpirationMode = "Sperry"} or  \code{transpirationMode = "Sureau"}:
 #' \itemize{
 #'   \item{\code{"EnergyBalance"}: Energy balance of the stand (see \code{\link{transp_transpirationSperry}}).}
 #'   \item{\code{"RhizoPsi"}: Minimum water potential (in MPa) inside roots, after crossing rhizosphere, per cohort and soil layer.}
@@ -3228,8 +3228,8 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
 #' #Plot plant transpiration (see function 'plot.swb.day()')
 #' plot(sd2)
 #' 
-#' #Simulate water balance for one day only (Cochard mode)
-#' control <- defaultControl("Cochard")
+#' #Simulate water balance for one day only (Sureau mode)
+#' control <- defaultControl("Sureau")
 #' x3 <- forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 #' sd3 <-spwb_day(x3, date, meteovec,
 #'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
@@ -3296,9 +3296,9 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #'   and implements an approach originally described in Granier et al. (1999).} 
 #'   \item{The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function \code{\link{transp_transpirationSperry}} and was described in De Caceres et al. (2021), and
 #'   implements a modelling approach originally described in Sperry et al. (2017).}  
-#'   \item{The sub-model corresponding to 'Cochard' transpiration mode is illustrated by function \code{\link{transp_transpirationCochard}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
+#'   \item{The sub-model corresponding to 'Sureau' transpiration mode is illustrated by function \code{\link{transp_transpirationSureau}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
 #' }
-#' Simulations using the 'Sperry' or 'Cochard' transpiration mode are computationally much more expensive than 'Granier'.
+#' Simulations using the 'Sperry' or 'Sureau' transpiration mode are computationally much more expensive than 'Granier'.
 #' 
 #' @return
 #' Function \code{spwb} returns a list of class 'spwb' whereas function \code{pwb} returns a list of class 'pwb'. 
@@ -3326,8 +3326,8 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #'     \item{\code{"Transpiration"}: Woody plant transpiration (in mm).}
 #'     \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network.}
 #'   }
-#'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).}
-#'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).}
+#'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).}
+#'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).}
 #'   \item{\code{"Soil"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
 #'   \itemize{
 #'     \item{\code{"W.1"}, \code{...}, \code{"W.k"}: Relative soil moisture content (relative to field capacity) in each soil layer.}
@@ -3370,7 +3370,7 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #'     \item{\code{"LFMC"}: A data frame with the daily live fuel moisture content (in percent of dry weight).}
 #'     \item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance).}
 #'   }
-#' If \code{transpirationMode="Sperry"} or \code{transpirationMode="Cochard"}, element \code{"Plants"} is a list with the following subelements:
+#' If \code{transpirationMode="Sperry"} or \code{transpirationMode="Sureau"}, element \code{"Plants"} is a list with the following subelements:
 #'   \itemize{
 #'     \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
 #'     \item{\code{"AbsorbedSWR"}: A data frame with the daily SWR absorbed by each plant cohort.}
@@ -3454,8 +3454,8 @@ spwb_day <- function(x, date, meteovec, latitude, elevation, slope, aspect, runo
 #' #Call simulation function
 #' S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 #' 
-#' #Switch to 'Cochard' transpiration mode
-#' control <- defaultControl("Cochard")
+#' #Switch to 'Sureau' transpiration mode
+#' control <- defaultControl("Sureau")
 #' 
 #' # Makes leaf/root xylem vulnerability equal to stem xylem vulnerability
 #' control$segmentedXylemVulnerability = FALSE 
@@ -3591,8 +3591,8 @@ transp_transpirationSperry <- function(x, meteo, day, latitude, elevation, slope
 }
 
 #' @rdname transp_modes
-transp_transpirationCochard <- function(x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, herbTranspiration = 0.0, modifyInput = TRUE) {
-    .Call(`_medfate_transpirationCochard`, x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration, modifyInput)
+transp_transpirationSureau <- function(x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, herbTranspiration = 0.0, modifyInput = TRUE) {
+    .Call(`_medfate_transpirationSureau`, x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration, modifyInput)
 }
 
 #' Transpiration modes
@@ -3606,10 +3606,10 @@ transp_transpirationCochard <- function(x, meteo, day, latitude, elevation, slop
 #'   and implements an approach originally described in Granier et al. (1999).} 
 #'   \item{Sub-model in function \code{transp_transpirationSperry} was described in De \enc{Cáceres}{Caceres} et al. (2021), and
 #'   implements a modelling approach originally described in Sperry et al. (2017).} 
-#'   \item{Sub-model in function \code{transp_transpirationCochard} was described for SurEau-Ecos v2.0 model in Ruffault et al. (2022).} 
+#'   \item{Sub-model in function \code{transp_transpirationSureau} was described for SurEau-Ecos v2.0 model in Ruffault et al. (2022).} 
 #' }
 #' 
-#' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}, built using the 'Granier', 'Sperry' or 'Cochard' transpiration modes.
+#' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}, built using the 'Granier', 'Sperry' or 'Sureau' transpiration modes.
 #' @param meteo A data frame with daily meteorological data series (see \code{\link{spwb}}).
 #' @param day An integer to identify a day (row) within the \code{meteo} data frame.
 #' @param latitude Latitude (in degrees).
@@ -3631,7 +3631,7 @@ transp_transpirationCochard <- function(x, meteo, day, latitude, elevation, slop
 #'       \item{\code{"psi"}: Water potential (in MPa) of the plant cohort (average over soil layers).}
 #'       \item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
 #'     }
-#'   When using \code{transp_transpirationSperry} or \code{transp_transpirationCochard}, element \code{"Plants"} includes:
+#'   When using \code{transp_transpirationSperry} or \code{transp_transpirationSureau}, element \code{"Plants"} includes:
 #'     \itemize{
 #'       \item{\code{"LAI"}: Leaf area index of the plant cohort.}
 #'       \item{\code{"LAIlive"}: Leaf area index of the plant cohort, assuming all leaves are unfolded.}
@@ -3658,7 +3658,7 @@ transp_transpirationCochard <- function(x, meteo, day, latitude, elevation, slop
 #'   }
 #'   \item{\code{"Extraction"}: A data frame with mm of water extracted from each soil layer (in columns) by each cohort (in rows).}
 #' 
-#'   The remaining items are only given by \code{transp_transpirationSperry} or \code{transp_transpirationCochard}:
+#'   The remaining items are only given by \code{transp_transpirationSperry} or \code{transp_transpirationSureau}:
 #'   \item{\code{"EnergyBalance"}: A list with the following elements:
 #'     \itemize{
 #'       \item{\code{"Temperature"}: A data frame with the temperature of the atmosphere ('Tatm'), canopy ('Tcan') and soil ('Tsoil.1', 'Tsoil.2', ...) for each time step.}
@@ -3766,14 +3766,14 @@ transp_transpirationCochard <- function(x, meteo, day, latitude, elevation, slop
 #'                                 latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
 #'                                 modifyInput = FALSE)
 #'                                 
-#' #Switch to 'Cochard' transpiration mode
-#' control <- defaultControl("Cochard")
+#' #Switch to 'Sureau' transpiration mode
+#' control <- defaultControl("Sureau")
 #' 
 #' #Initialize input
 #' x3 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #' 
-#' # Transpiration according to Cochard's model
-#' t3 <- transp_transpirationCochard(x3, examplemeteo, 1, 
+#' # Transpiration according to Sureau model
+#' t3 <- transp_transpirationSureau(x3, examplemeteo, 1, 
 #'                                   latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
 #'                                   modifyInput = FALSE)
 #'                                 

@@ -4,8 +4,8 @@
   } else {
     input = x$growthInput
   }
-  if(!(input$control$transpirationMode %in% c("Sperry", "Cochard"))) {
-    stop("Resistances can only be calculated when transpirationMode = 'Sperry' or 'Cochard'.")
+  if(!(input$control$transpirationMode %in% c("Sperry", "Sureau"))) {
+    stop("Resistances can only be calculated when transpirationMode = 'Sperry' or 'Sureau'.")
   }
   cn = row.names(input$cohorts)
   if(!(cohort %in% cn)) stop("'cohort' must be a string identifying a cohort name")

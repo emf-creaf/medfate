@@ -16,7 +16,7 @@
 #include "root.h"
 #include "soil.h"
 #include "inner_sperry.h"
-#include "inner_cochard.h"
+#include "inner_sureau.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -34,7 +34,7 @@ const double Cp_Jmol = 29.37152; // J * mol^-1 * ºC^-1
 // STEP 4. Hydraulics: determine layers where the plant is connected and supply functions (Sperry mode)
 // STEP 5. Sub-daily (e.g. hourly) loop
 // STEP 5.1 Long-wave radiation balance
-// STEP 5.2 Leaf energy balance, stomatal conductance and plant hydraulics  (Sperry or Cochard inner functions)
+// STEP 5.2 Leaf energy balance, stomatal conductance and plant hydraulics  (Sperry or Sureau inner functions)
 // STEP 5.3 Soil and canopy energy balances (single or multiple canopy layers)
 // STEP 6. Update plant drought stress (relative whole-plant conductance), cavitation and live fuel moisture
 List transpirationAdvanced(List x, NumericVector meteovec, 
@@ -524,8 +524,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                     sapFluidityDay, control);
         hydraulicNetwork[c] = HN;
         supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
-      } else if(transpirationMode == "Cochard") {
-        hydraulicNetwork[c] = initCochardNetwork(c, LAI,
+      } else if(transpirationMode == "Sureau") {
+        hydraulicNetwork[c] = initSureauNetwork(c, LAI,
                                                 internalWater, 
                                                 paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                                 VCroot_kmax(c,_), VGrhizo_kmax(c,_),
@@ -593,8 +593,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                     sapFluidityDay, control);
         hydraulicNetwork[c] = HN;
         supply[c] = supplyFunctionNetwork(HN, 0.0, 0.001); 
-      } else if(transpirationMode == "Cochard") {
-        hydraulicNetwork[c] = initCochardNetwork(c, LAI,
+      } else if(transpirationMode == "Sureau") {
+        hydraulicNetwork[c] = initSureauNetwork(c, LAI,
                                                 internalWater, 
                                                 paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                                 VCroot_kmaxc, VGrhizo_kmaxc,
@@ -837,7 +837,7 @@ List transpirationAdvanced(List x, NumericVector meteovec,
                                 _["layerConnected"] = layerConnected,
                                 _["layerConnectedPools"] = layerConnectedPools,
                                 _["supply"] = supply);
-    } else if(transpirationMode =="Cochard") {
+    } else if(transpirationMode =="Sureau") {
       //To do, create initial plant state
       innerInput = List::create(_["Patm"] = Patm,
                                 _["zWind"] = zWind,
@@ -892,8 +892,8 @@ List transpirationAdvanced(List x, NumericVector meteovec,
     if(transpirationMode == "Sperry") {
       innerSperry(x, innerInput, innerOutput, n, tstep, 
                   verbose, stepFunctions);
-    } else if(transpirationMode == "Cochard"){
-      innerCochard(x, innerInput, innerOutput, n, tstep,
+    } else if(transpirationMode == "Sureau"){
+      innerSureau(x, innerInput, innerOutput, n, tstep,
                    verbose);
     }
 
@@ -1311,14 +1311,14 @@ List transpirationSperry(List x, DataFrame meteo, int day,
 } 
 
 //' @rdname transp_modes
-// [[Rcpp::export("transp_transpirationCochard")]]
-List transpirationCochard(List x, DataFrame meteo, int day,
+// [[Rcpp::export("transp_transpirationSureau")]]
+List transpirationSureau(List x, DataFrame meteo, int day,
                          double latitude, double elevation, double slope, double aspect,
                          double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0, double herbTranspiration = 0.0,
                          bool modifyInput = true) {
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
-  if(transpirationMode != "Cochard") stop("Transpiration mode in 'x' must be 'Cochard'");
+  if(transpirationMode != "Sureau") stop("Transpiration mode in 'x' must be 'Sureau'");
   if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
   NumericVector MinTemperature = meteo["MinTemperature"];
   if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");

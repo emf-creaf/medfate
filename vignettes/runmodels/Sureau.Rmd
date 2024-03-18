@@ -24,8 +24,8 @@ examplesoil <- soil(defaultSoilParams(n = 4))
 # Load example plot plant data
 data(exampleforest)
 
-# Prepare input for 'Cochard' transpiration mode
-control <- defaultControl("Cochard")
+# Prepare input for 'Sureau' transpiration mode
+control <- defaultControl("Sureau")
 
 # Create input for spwb
 x <- forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
@@ -34,9 +34,9 @@ x <- forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 
 ### Sureau network input
 
-Create Cochard network (similar) for each of the three plant cohort in `x`. This returns a list with three elements:
+Create Sureau network (similar) for each of the three plant cohort in `x`. This returns a list with three elements:
 ```{r}
-cn <- initCochardNetworks(x)
+cn <- initSureauNetworks(x)
 length(cn)
 ```
 

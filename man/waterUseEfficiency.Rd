@@ -18,10 +18,10 @@ waterUseEfficiency(
 
 \item{type}{A string to indicate the scale of WUE calculation. Either:
 \itemize{
-  \item{\code{"Leaf iWUE"}: Leaf intrinsic WUE, i.e. instantaneous ratio between photosynthesis and stomatal conductance (only for simulations with \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"} and \code{subdailyResults = TRUE}). }
-  \item{\code{"Leaf Ci"}: Leaf intercellular CO2 concentration (only for simulations with \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"} and \code{subdailyResults = TRUE}).}
-  \item{\code{"Plant An/E"}: Plant (cohort) net photosynthesis over plant transpiration (only for simulations with \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"})}
-  \item{\code{"Stand An/E"}: Stand net photosynthesis over stand transpiration (only for simulations with \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"})}
+  \item{\code{"Leaf iWUE"}: Leaf intrinsic WUE, i.e. instantaneous ratio between photosynthesis and stomatal conductance (only for simulations with \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"} and \code{subdailyResults = TRUE}). }
+  \item{\code{"Leaf Ci"}: Leaf intercellular CO2 concentration (only for simulations with \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"} and \code{subdailyResults = TRUE}).}
+  \item{\code{"Plant An/E"}: Plant (cohort) net photosynthesis over plant transpiration (only for simulations with \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"})}
+  \item{\code{"Stand An/E"}: Stand net photosynthesis over stand transpiration (only for simulations with \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"})}
   \item{\code{"Plant Ag/E"}: Plant (cohort) gross photosynthesis over plant transpiration}
   \item{\code{"Stand Ag/E"}: Stand gross photosynthesis over stand transpiration}
 }}

@@ -411,7 +411,7 @@ List spwbDay_basic(List x, NumericVector meteovec,
 
 
 
-// Soil water balance with Sperry or Cochard hydraulic and stomatal conductance models
+// Soil water balance with Sperry or Sureau hydraulic and stomatal conductance models
 List spwbDay_advanced(List x, NumericVector meteovec, 
              double latitude, double elevation, double slope, double aspect,
              double solarConstant, double delta, 
@@ -715,9 +715,9 @@ List spwbDay_advanced(List x, NumericVector meteovec,
 //'   and implements an approach originally described in Granier et al. (1999).} 
 //'   \item{The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function \code{\link{transp_transpirationSperry}} and was described in De Caceres et al. (2021), and
 //'   implements a modelling approach originally described in Sperry et al. (2017).}  
-//'   \item{The sub-model corresponding to 'Cochard' transpiration mode is illustrated by function \code{\link{transp_transpirationCochard}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
+//'   \item{The sub-model corresponding to 'Sureau' transpiration mode is illustrated by function \code{\link{transp_transpirationSureau}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
 //' }
-//' Simulations using the 'Sperry' or 'Cochard' transpiration mode are computationally much more expensive than 'Granier'.
+//' Simulations using the 'Sperry' or 'Sureau' transpiration mode are computationally much more expensive than 'Granier'.
 //' 
 //' @return
 //' Function \code{spwb_day()} returns a list of class \code{spwb_day} with the 
@@ -739,7 +739,7 @@ List spwbDay_advanced(List x, NumericVector meteovec,
 //'   \item{\code{"Stand"}: A named vector with with stand values for the simulated day, equivalent to one row of 'Stand' object returned by \code{\link{spwb}}.}
 //'   \item{\code{"Plants"}: A data frame of results for each plant cohort (see \code{\link{transp_transpirationGranier}} or \code{\link{transp_transpirationSperry}}).}
 //' }
-//' The following items are only returned when \code{transpirationMode = "Sperry"} or  \code{transpirationMode = "Cochard"}:
+//' The following items are only returned when \code{transpirationMode = "Sperry"} or  \code{transpirationMode = "Sureau"}:
 //' \itemize{
 //'   \item{\code{"EnergyBalance"}: Energy balance of the stand (see \code{\link{transp_transpirationSperry}}).}
 //'   \item{\code{"RhizoPsi"}: Minimum water potential (in MPa) inside roots, after crossing rhizosphere, per cohort and soil layer.}
@@ -806,8 +806,8 @@ List spwbDay_advanced(List x, NumericVector meteovec,
 //' #Plot plant transpiration (see function 'plot.swb.day()')
 //' plot(sd2)
 //' 
-//' #Simulate water balance for one day only (Cochard mode)
-//' control <- defaultControl("Cochard")
+//' #Simulate water balance for one day only (Sureau mode)
+//' control <- defaultControl("Sureau")
 //' x3 <- forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 //' sd3 <-spwb_day(x3, date, meteovec,
 //'               latitude = 41.82592, elevation = 100, slope=0, aspect=0)
@@ -1867,9 +1867,9 @@ void printWaterBalanceResult(List outputList, List x,
 //'   and implements an approach originally described in Granier et al. (1999).} 
 //'   \item{The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function \code{\link{transp_transpirationSperry}} and was described in De Caceres et al. (2021), and
 //'   implements a modelling approach originally described in Sperry et al. (2017).}  
-//'   \item{The sub-model corresponding to 'Cochard' transpiration mode is illustrated by function \code{\link{transp_transpirationCochard}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
+//'   \item{The sub-model corresponding to 'Sureau' transpiration mode is illustrated by function \code{\link{transp_transpirationSureau}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
 //' }
-//' Simulations using the 'Sperry' or 'Cochard' transpiration mode are computationally much more expensive than 'Granier'.
+//' Simulations using the 'Sperry' or 'Sureau' transpiration mode are computationally much more expensive than 'Granier'.
 //' 
 //' @return
 //' Function \code{spwb} returns a list of class 'spwb' whereas function \code{pwb} returns a list of class 'pwb'. 
@@ -1897,8 +1897,8 @@ void printWaterBalanceResult(List outputList, List x,
 //'     \item{\code{"Transpiration"}: Woody plant transpiration (in mm).}
 //'     \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network.}
 //'   }
-//'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).}
-//'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).}
+//'   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).}
+//'   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).}
 //'   \item{\code{"Soil"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
 //'   \itemize{
 //'     \item{\code{"W.1"}, \code{...}, \code{"W.k"}: Relative soil moisture content (relative to field capacity) in each soil layer.}
@@ -1941,7 +1941,7 @@ void printWaterBalanceResult(List outputList, List x,
 //'     \item{\code{"LFMC"}: A data frame with the daily live fuel moisture content (in percent of dry weight).}
 //'     \item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance).}
 //'   }
-//' If \code{transpirationMode="Sperry"} or \code{transpirationMode="Cochard"}, element \code{"Plants"} is a list with the following subelements:
+//' If \code{transpirationMode="Sperry"} or \code{transpirationMode="Sureau"}, element \code{"Plants"} is a list with the following subelements:
 //'   \itemize{
 //'     \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
 //'     \item{\code{"AbsorbedSWR"}: A data frame with the daily SWR absorbed by each plant cohort.}
@@ -2025,8 +2025,8 @@ void printWaterBalanceResult(List outputList, List x,
 //' #Call simulation function
 //' S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 //' 
-//' #Switch to 'Cochard' transpiration mode
-//' control <- defaultControl("Cochard")
+//' #Switch to 'Sureau' transpiration mode
+//' control <- defaultControl("Sureau")
 //' 
 //' # Makes leaf/root xylem vulnerability equal to stem xylem vulnerability
 //' control$segmentedXylemVulnerability = FALSE 

@@ -55,7 +55,7 @@ test_that("Can produce all basic spwb plots and summaries",{
 })
 
 test_that("Can produce all advanced spwb plots and summaries",{
-  for(transpirationMode in c("Sperry", "Cochard")) {
+  for(transpirationMode in c("Sperry", "Sureau")) {
     control = defaultControl(transpirationMode)
     control$verbose = FALSE
     x2 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
@@ -131,7 +131,7 @@ test_that("Can produce all advanced spwb plots and summaries",{
 })
 
 test_that("Can produce all advanced subdaily spwb plots",{
-  for(transpirationMode in c("Sperry", "Cochard")) {
+  for(transpirationMode in c("Sperry", "Sureau")) {
     control = defaultControl(transpirationMode)
     control$verbose = FALSE
     control$subdailyResults = TRUE
@@ -201,7 +201,7 @@ test_that("Can produce all advanced subdaily spwb plots",{
 })
 
 test_that("Can produce all advanced spwb_day plots",{
-  for(transpirationMode in c("Sperry", "Cochard")) {
+  for(transpirationMode in c("Sperry", "Sureau")) {
     control = defaultControl(transpirationMode)
     control$verbose = FALSE
     x2 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
@@ -304,7 +304,7 @@ test_that("Can produce all basic growth plots and summaries",{
 })
 
 test_that("Can produce all advanced growth plots and summaries",{
-  for(transpirationMode in c("Sperry", "Cochard")) {
+  for(transpirationMode in c("Sperry", "Sureau")) {
     control = defaultControl(transpirationMode)
     control$verbose = FALSE
     x2 = forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
@@ -326,7 +326,7 @@ test_that("Can produce all advanced growth plots and summaries",{
 })
 
 test_that("Can produce all advanced subdaily growth plots",{
-  for(transpirationMode in c("Sperry", "Cochard")) {
+  for(transpirationMode in c("Sperry", "Sureau")) {
     control = defaultControl(transpirationMode)
     control$verbose = FALSE
     control$subdailyResults = TRUE
@@ -362,7 +362,7 @@ test_that("Can produce all advanced subdaily growth plots",{
 })
 
 test_that("Can produce all advanced growth_day plots",{
-  for(transpirationMode in c("Sperry", "Cochard")) {
+  for(transpirationMode in c("Sperry", "Sureau")) {
     control = defaultControl(transpirationMode)
     control$verbose <- FALSE
     control$subdailyCarbonBalance <- TRUE

@@ -2,7 +2,7 @@
 #' 
 #' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.
 #' @param segment Segment whose relative water content curve to plot, either \code{"stem"} or \code{"leaf"}
-#'                (the latter only available if \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).
+#'                (the latter only available if \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).
 #' @param fraction  Tissue fraction, either \code{"symplastic"}, \code{"apoplastic"} or \code{"all"}.
 #' @param psiVec Vector of water potential values to evaluate for the pressure-volume curve.
 #' @param speciesNames A flag to indicate the use of species names instead of cohort names in plots.

@@ -5,9 +5,9 @@
 # Version 4.0.0
 - Options leafCavitationEffects and stemCavitationEffects for Sperry
 - New taxonomic treatment (Name/AcceptedName)
-- Revision of Cochard sub-model
+- Revision of Sureau sub-model
 - Replacement of vulnerability curve parameters by P12, P50 and P88
-- New parameters for Jarvis-type stomatal conductance in Cochard sub-model
+- New parameters for Jarvis-type stomatal conductance in Sureau sub-model
 - XFT traits for vulnerability curves
 - Recording of leaf PLC for all sub-models
 - Richard-type soil water movement
@@ -21,13 +21,13 @@
 - New functions "tree2forest"/"shrub2forest" to create forest objects with single cohorts
 - Van Genuchten parameters and Ksat can be specified directly when initializing soil
 - Saturation excess in soil flows
-- Evaluation of GPP and LE
+- Evaluation of GPP, H and LE
 
 # Version 3.2.0
 - Correction of a bug arisen in old Rcpp versions
 - Functions for seed production and bank dynamics (new parameter SeedLongevity)
 - New parameters for dispersal (SeedMass, DispersalType, DispersalDistance, DispersalShape)
-- Recording of leaf PLC for Sperry and Cochard sub-models
+- Recording of leaf PLC for Sperry and Sureau sub-models
 
 # Version 3.1.4
 - Fixing memory access errors
@@ -57,7 +57,7 @@
 - No calculation mode forest structure (US mode removed)
 - Control flag options to restrict output in 'spwb()' 'pwb()' and 'growth()'
 - Control flag to calculate fire hazard during 'spwb()' 'pwb()' and 'growth()' simulations
-- Integration of SurEau-Ecos v2.0 code as new transpiration mode ('Cochard')
+- Integration of SurEau-Ecos v2.0 code as new transpiration mode ('Sureau')
 - Bug correction tissue moisture and water balance in granier's model
 - Tree biomass allometries revised. 
 - Tree foliar biomass corrected for high density. Shrub foliar biomass/fuel limited by tree basal area.

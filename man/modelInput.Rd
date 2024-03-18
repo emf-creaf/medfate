@@ -58,7 +58,7 @@ Function \code{forest2spwbInput()} returns a list of class \code{spwbInput} with
         \item{\code{L}: A matrix with the length of coarse roots of each cohort (in rows) in each soil layer (in columns).}
         \item{\code{Wpool}: A matrix with the soil moisture relative to field capacity around the rhizosphere of each cohort (in rows) in each soil layer (in columns).}
       }
-      If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Cochard"} there are the following additional elements:
+      If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Sureau"} there are the following additional elements:
       \itemize{
         \item{\code{VGrhizo_kmax}: A matrix with maximum rhizosphere conductance values of each cohort (in rows) in each soil layer (in columns).}
         \item{\code{VGroot_kmax}: A matrix with maximum root xylem conductance values of each cohort (in rows) in each soil layer (in columns).}
@@ -97,7 +97,7 @@ Function \code{forest2spwbInput()} returns a list of class \code{spwbInput} with
         \item{\code{kPAR}: PAR extinction coefficient.}
         \item{\code{g}: Canopy water retention capacity per LAI unit (mm/LAI).}
       }
-    If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Cochard"} additional columns are:
+    If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Sureau"} additional columns are:
       \itemize{
         \item{\code{gammaSWR}: Reflectance (albedo) coefficient for SWR .}
         \item{\code{alphaSWR}: Absorbance coefficient for SWR .}
@@ -131,7 +131,7 @@ Function \code{forest2spwbInput()} returns a list of class \code{spwbInput} with
         \item{\code{VCroot_c}, \code{VCroot_d}: Parameters of the root xylem vulnerability curve.}
         \item{\code{Plant_kmax}: Maximum whole-plant conductance.}
       }
-      If \code{control$transpirationMode = "Cochard"} columns are:
+      If \code{control$transpirationMode = "Sureau"} columns are:
       \itemize{
         \item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
         \item{\code{Gswmax}: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
@@ -235,7 +235,7 @@ Function \code{forest2belowground} calculates belowground variables such as fine
 Function \code{forest2aboveground} extract height and species identity from plant cohorts of \code{x}, 
 and calculate leaf area index and crown ratio. Functions \code{forest2spwbInput} and \code{forest2growthInput} also calculate the distribution of fine roots 
 across soil, and finds parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. 
-If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Cochard"},
+If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Sureau"},
 the \code{forest2spwbInput} and \code{forest2growthInput} also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
 }
 \examples{
@@ -269,8 +269,8 @@ forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 control <- defaultControl("Sperry")
 forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 
-# Prepare input for 'Cochard' transpiration mode
-control <- defaultControl("Cochard")
+# Prepare input for 'Sureau' transpiration mode
+control <- defaultControl("Sureau")
 forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 
 # Example of initialization from a forest 

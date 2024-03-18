@@ -71,7 +71,7 @@ moisture_pressureVolumeCurvePlot(
 \item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.}
 
 \item{segment}{Segment whose relative water content curve to plot, either \code{"stem"} or \code{"leaf"}
-(the latter only available if \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).}
+(the latter only available if \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).}
 
 \item{fraction}{Tissue fraction, either \code{"symplastic"}, \code{"apoplastic"} or \code{"all"}.}
 

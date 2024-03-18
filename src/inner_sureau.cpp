@@ -193,7 +193,7 @@ double gsJarvis(List params, double PAR, double Temp, int option = 1){
   return(gs_bound);
 }
 
-List initCochardNetwork(int c, NumericVector LAIphe,
+List initSureauNetwork(int c, NumericVector LAIphe,
                        DataFrame internalWater, 
                        DataFrame paramsAnatomy, DataFrame paramsTranspiration, DataFrame paramsWaterStorage,
                        NumericVector VCroot_kmax, NumericVector VGrhizo_kmax,
@@ -375,12 +375,12 @@ List initCochardNetwork(int c, NumericVector LAIphe,
 
 //' Sureau-ECOS inner functions for testing only
 //' 
-//' Function \code{initCochardNetworks} initializes hydraulic networks for all plant cohorts in x
+//' Function \code{initSureauNetworks} initializes hydraulic networks for all plant cohorts in x
 //' Function \code{semi_implicit_integration} updates water potentials and cavitation across the hydraulic network
 //' 
-//' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}} created using \code{transpirationMode = "Cochard"}.
+//' @param x An object of class \code{\link{spwbInput}} or \code{\link{growthInput}} created using \code{transpirationMode = "Sureau"}.
 //'  
-//' @return Function \code{initCochardNetworks} returns a vector of length equal to the number of cohorts. Each element is a list with Sureau-ECOS parameters.
+//' @return Function \code{initSureauNetworks} returns a vector of length equal to the number of cohorts. Each element is a list with Sureau-ECOS parameters.
 //' Function \code{semi_implicit_integration} does not return anything, but modifies input parameter \code{network}.
 //' 
 //' @author
@@ -398,8 +398,8 @@ List initCochardNetwork(int c, NumericVector LAIphe,
 //' @seealso  \code{\link{spwb}}
 //' 
 //' @name sureau_ecos
-// [[Rcpp::export("initCochardNetworks")]]
-List initCochardNetworks(List x) {
+// [[Rcpp::export("initSureauNetworks")]]
+List initSureauNetworks(List x) {
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
   
@@ -420,7 +420,7 @@ List initCochardNetworks(List x) {
   int numCohorts = internalWater.nrow();
   List networks(numCohorts);
   for(int c = 0;c<numCohorts;c++) {
-    networks[c] = initCochardNetwork(c, LAIphe,
+    networks[c] = initSureauNetwork(c, LAIphe,
                                      internalWater, 
                                      paramsAnatomy, paramsTranspiration, paramsWaterStorage,
                                      VCroot_kmax(c,_), VGrhizo_kmax(c,_),
@@ -486,7 +486,7 @@ void calculateRhizoPsi(int c,
 }
 
 //' @rdname sureau_ecos
-//' @param network A hydraulic network element of the list returned by \code{initCochardNetworks}
+//' @param network A hydraulic network element of the list returned by \code{initSureauNetworks}
 //' @param dt Smallest time step (seconds)
 //' @param opt Option flag vector
 //' @param stemCavitationRecovery,leafCavitationRecovery A string indicating how refilling of embolized conduits is done:
@@ -665,7 +665,7 @@ void semi_implicit_integration(List network, double dt, NumericVector opt,
   }
 }
 
-void innerCochard(List x, List input, List output, int n, double tstep, 
+void innerSureau(List x, List input, List output, int n, double tstep, 
                  bool verbose = false) {
   
   // Extract hydraulic networks

@@ -34,14 +34,14 @@ A list of class 'growth' with the following elements:
   \item{\code{"growthInput"}: A copy of the object \code{x} of class \code{\link{growthInput}} given as input.}
   \item{\code{"growthOutput"}: An copy of the final state of the object \code{x} of class \code{\link{growthInput}}.}
   \item{\code{"WaterBalance"}: A data frame where different water balance variables (see \code{\link{spwb}}).}
-  \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}; see \code{\link{spwb}}).}
+  \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
   \item{\code{"CarbonBalance"}: A data frame where different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration and net primary production), all in g C · m-2.}
   \item{\code{"BiomassBalance"}: A data frame with the daily values of stand biomass balance components (in g dry · m-2.}
-  \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}; see \code{\link{spwb}}).}
+  \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
   \item{\code{"Soil"}: A data frame where different soil variables  (see \code{\link{spwb}}).}
   \item{\code{"Stand"}: A data frame where different stand-level variables (see \code{\link{spwb}}).}
   \item{\code{"Plants"}: A list of daily results for plant cohorts (see \code{\link{spwb}}).}
-  \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: A list with daily results for sunlit and shade leaves (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}; see \code{\link{spwb}}).}
+  \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: A list with daily results for sunlit and shade leaves (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}; see \code{\link{spwb}}).}
   \item{\code{"LabileCarbonBalance"}: A list of daily labile carbon balance results for plant cohorts, with elements:}
   \itemize{
     \item{\code{"GrossPhotosynthesis"}: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).}
@@ -96,7 +96,7 @@ during a period specified in the input climatic data.
 }
 \details{
 Detailed model description is available in the medfate book. 
-Simulations using the 'Sperry' or 'Cochard' transpiration modes are computationally much more expensive 
+Simulations using the 'Sperry' or 'Sureau' transpiration modes are computationally much more expensive 
 than those using the 'Granier' transpiration mode.
 }
 \examples{
@@ -131,8 +131,8 @@ x2 <- forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
 #Call simulation function
 G2 <-growth(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 
-#Switch to 'Cochard' transpiration mode
-control <- defaultControl("Cochard")
+#Switch to 'Sureau' transpiration mode
+control <- defaultControl("Sureau")
 
 #Makes leaf xylem vulnerability equal to stem xylem vulnerability
 control$segmentedXylemVulnerability = FALSE 

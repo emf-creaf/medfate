@@ -17,21 +17,21 @@ df_all_REW |>
 ```{r, fig.height=3, fig.width=8, fig.align="center"}
 pa<-medfate::evaluation_plot(df_site$Result[[1]], df_site$SiteData[[1]]$measuredData, type= "REW", plotType = "scatter")+labs(subtitle="Granier")+xlab("Modelled REW (%)")+ylab("Observed REW (%)")
 pb<-medfate::evaluation_plot(df_site$Result[[2]], df_site$SiteData[[2]]$measuredData, type= "REW", plotType = "scatter")+labs(subtitle="Sperry")+xlab("Modelled REW (%)")+ylab("Observed REW (%)")
-pc<-medfate::evaluation_plot(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData, type= "REW", plotType = "scatter")+labs(subtitle="Cochard")+xlab("Modelled REW (%)")+ylab("Observed REW (%)")
+pc<-medfate::evaluation_plot(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData, type= "REW", plotType = "scatter")+labs(subtitle="Sureau")+xlab("Modelled REW (%)")+ylab("Observed REW (%)")
 cowplot::plot_grid(pa,pb,pc, ncol = 3)
 ```
 
 ```{r, fig.height=3, fig.width=9, fig.align="center"}
 eval_table_granier <- medfate::evaluation_table(df_site$Result[[1]], df_site$SiteData[[1]]$measuredData, type= "REW")
 eval_table_sperry <- medfate::evaluation_table(df_site$Result[[2]], df_site$SiteData[[2]]$measuredData, type= "REW")
-eval_table_cochard <- medfate::evaluation_table(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData, type= "REW")
+eval_table_sureau <- medfate::evaluation_table(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData, type= "REW")
 eval_all <- eval_table_granier[,c(1,2)]
 eval_all$Granier <- eval_table_granier$Modelled
 eval_all$Sperry <- eval_table_sperry$Modelled
-eval_all$Cochard <- eval_table_cochard$Modelled
+eval_all$Sureau <- eval_table_sureau$Modelled
 eval_all_long <- eval_all |>
   tidyr::pivot_longer(cols = 2:5, names_to = "Mode", values_to="REW") |>
-  dplyr::mutate(Mode = factor(Mode, levels = c("Observed", "Granier", "Sperry", "Cochard")))
+  dplyr::mutate(Mode = factor(Mode, levels = c("Observed", "Granier", "Sperry", "Sureau")))
 ggplot(eval_all_long, mapping = aes(x=Dates, y=REW))+
   geom_line(mapping=aes(col = Mode, alpha = Mode))+
   geom_point(aes(x= Dates, y=REW), size = 0.5, data = eval_all_long[eval_all_long$Mode=="Observed",])+

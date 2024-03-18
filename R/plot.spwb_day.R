@@ -1,7 +1,7 @@
 #' Plots simulation results for one day
 #' 
 #' Functions to plot the sub-daily simulation results of \code{\link{spwb_day}}, \code{\link{growth_day}} 
-#' or the transpiration calculations of \code{\link{transp_transpirationSperry}} or \code{\link{transp_transpirationCochard}}.
+#' or the transpiration calculations of \code{\link{transp_transpirationSperry}} or \code{\link{transp_transpirationSureau}}.
 #'
 #' @param x An object of class \code{spwb_day}, \code{growth_day} or \code{pwb_day}.
 #' @param type The information to be plotted (see details).
@@ -62,7 +62,7 @@
 #'     \item{\code{"SugarTransport"}: Phloem sugar transport rate.}
 #'   }
 #'   
-#' @note Only for soil plant water balance simulations using \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}. This function can be used to display subdaily dynamics of corresponding to single days on \code{\link{spwb}} runs, if control option \code{subdailyResults} is set to \code{TRUE}. See also option \code{subdaily} in \code{\link{plot.spwb}}.
+#' @note Only for soil plant water balance simulations using \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}. This function can be used to display subdaily dynamics of corresponding to single days on \code{\link{spwb}} runs, if control option \code{subdailyResults} is set to \code{TRUE}. See also option \code{subdaily} in \code{\link{plot.spwb}}.
 #' 
 #' @author Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 #' 

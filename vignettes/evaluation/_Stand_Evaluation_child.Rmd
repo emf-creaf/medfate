@@ -61,6 +61,12 @@ as.data.frame(df_site$SiteData[[1]]$remarks)|>
   kable_styling()
 ```
 
+## Climate
+```{r, fig.height=4, fig.width=8, fig.align="center"}
+cowplot::plot_grid(plot(df_site$Result[[1]], "PET_Precipitation"),
+                   plot(df_site$Result[[2]], type = "TemperatureRange"), nrow=2)
+```
+
 ## Evaluation results
 
 <!-- Stand-level evapotranspiration -->

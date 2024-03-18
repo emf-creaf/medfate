@@ -64,7 +64,7 @@ following elements:
   \item{\code{"Stand"}: A named vector with with stand values for the simulated day, equivalent to one row of 'Stand' object returned by \code{\link{spwb}}.}
   \item{\code{"Plants"}: A data frame of results for each plant cohort (see \code{\link{transp_transpirationGranier}} or \code{\link{transp_transpirationSperry}}).}
 }
-The following items are only returned when \code{transpirationMode = "Sperry"} or  \code{transpirationMode = "Cochard"}:
+The following items are only returned when \code{transpirationMode = "Sperry"} or  \code{transpirationMode = "Sureau"}:
 \itemize{
   \item{\code{"EnergyBalance"}: Energy balance of the stand (see \code{\link{transp_transpirationSperry}}).}
   \item{\code{"RhizoPsi"}: Minimum water potential (in MPa) inside roots, after crossing rhizosphere, per cohort and soil layer.}
@@ -86,9 +86,9 @@ The simulation functions allow using three different sub-models of transpiration
   and implements an approach originally described in Granier et al. (1999).} 
   \item{The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function \code{\link{transp_transpirationSperry}} and was described in De Caceres et al. (2021), and
   implements a modelling approach originally described in Sperry et al. (2017).}  
-  \item{The sub-model corresponding to 'Cochard' transpiration mode is illustrated by function \code{\link{transp_transpirationCochard}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
+  \item{The sub-model corresponding to 'Sureau' transpiration mode is illustrated by function \code{\link{transp_transpirationSureau}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
 }
-Simulations using the 'Sperry' or 'Cochard' transpiration mode are computationally much more expensive than 'Granier'.
+Simulations using the 'Sperry' or 'Sureau' transpiration mode are computationally much more expensive than 'Granier'.
 }
 \examples{
 #Load example daily meteorological data
@@ -123,8 +123,8 @@ sd2 <-spwb_day(x2, date, meteovec,
 #Plot plant transpiration (see function 'plot.swb.day()')
 plot(sd2)
 
-#Simulate water balance for one day only (Cochard mode)
-control <- defaultControl("Cochard")
+#Simulate water balance for one day only (Sureau mode)
+control <- defaultControl("Sureau")
 x3 <- forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 sd3 <-spwb_day(x3, date, meteovec,
               latitude = 41.82592, elevation = 100, slope=0, aspect=0)

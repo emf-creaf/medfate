@@ -2,11 +2,11 @@
 % Please edit documentation in R/RcppExports.R
 \name{sureau_ecos}
 \alias{sureau_ecos}
-\alias{initCochardNetworks}
+\alias{initSureauNetworks}
 \alias{semi_implicit_integration}
 \title{Sureau-ECOS inner functions for testing only}
 \usage{
-initCochardNetworks(x)
+initSureauNetworks(x)
 
 semi_implicit_integration(
   network,
@@ -17,9 +17,9 @@ semi_implicit_integration(
 )
 }
 \arguments{
-\item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}} created using \code{transpirationMode = "Cochard"}.}
+\item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}} created using \code{transpirationMode = "Sureau"}.}
 
-\item{network}{A hydraulic network element of the list returned by \code{initCochardNetworks}}
+\item{network}{A hydraulic network element of the list returned by \code{initSureauNetworks}}
 
 \item{dt}{Smallest time step (seconds)}
 
@@ -34,11 +34,11 @@ semi_implicit_integration(
 }}
 }
 \value{
-Function \code{initCochardNetworks} returns a vector of length equal to the number of cohorts. Each element is a list with Sureau-ECOS parameters.
+Function \code{initSureauNetworks} returns a vector of length equal to the number of cohorts. Each element is a list with Sureau-ECOS parameters.
 Function \code{semi_implicit_integration} does not return anything, but modifies input parameter \code{network}.
 }
 \description{
-Function \code{initCochardNetworks} initializes hydraulic networks for all plant cohorts in x
+Function \code{initSureauNetworks} initializes hydraulic networks for all plant cohorts in x
 Function \code{semi_implicit_integration} updates water potentials and cavitation across the hydraulic network
 }
 \references{

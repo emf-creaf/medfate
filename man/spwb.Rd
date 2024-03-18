@@ -97,8 +97,8 @@ There are many elements in common in these lists, so they are listed here togeth
     \item{\code{"Transpiration"}: Woody plant transpiration (in mm).}
     \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network.}
   }
-  \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).}
-  \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Cochard"}).}
+  \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).}
+  \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"} or \code{transpirationMode = "Sureau"}).}
   \item{\code{"Soil"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
   \itemize{
     \item{\code{"W.1"}, \code{...}, \code{"W.k"}: Relative soil moisture content (relative to field capacity) in each soil layer.}
@@ -141,7 +141,7 @@ When \code{transpirationMode = "Granier"}, element \code{"Plants"} is a list wit
     \item{\code{"LFMC"}: A data frame with the daily live fuel moisture content (in percent of dry weight).}
     \item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance).}
   }
-If \code{transpirationMode="Sperry"} or \code{transpirationMode="Cochard"}, element \code{"Plants"} is a list with the following subelements:
+If \code{transpirationMode="Sperry"} or \code{transpirationMode="Sureau"}, element \code{"Plants"} is a list with the following subelements:
   \itemize{
     \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
     \item{\code{"AbsorbedSWR"}: A data frame with the daily SWR absorbed by each plant cohort.}
@@ -185,9 +185,9 @@ The simulation functions allow using three different sub-models of transpiration
   and implements an approach originally described in Granier et al. (1999).} 
   \item{The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function \code{\link{transp_transpirationSperry}} and was described in De Caceres et al. (2021), and
   implements a modelling approach originally described in Sperry et al. (2017).}  
-  \item{The sub-model corresponding to 'Cochard' transpiration mode is illustrated by function \code{\link{transp_transpirationCochard}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
+  \item{The sub-model corresponding to 'Sureau' transpiration mode is illustrated by function \code{\link{transp_transpirationSureau}} and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).} 
 }
-Simulations using the 'Sperry' or 'Cochard' transpiration mode are computationally much more expensive than 'Granier'.
+Simulations using the 'Sperry' or 'Sureau' transpiration mode are computationally much more expensive than 'Granier'.
 }
 \examples{
 #Load example daily meteorological data
@@ -221,8 +221,8 @@ x2 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 #Call simulation function
 S2 <- spwb(x2, examplemeteo, latitude = 41.82592, elevation = 100)
 
-#Switch to 'Cochard' transpiration mode
-control <- defaultControl("Cochard")
+#Switch to 'Sureau' transpiration mode
+control <- defaultControl("Sureau")
 
 # Makes leaf/root xylem vulnerability equal to stem xylem vulnerability
 control$segmentedXylemVulnerability = FALSE 

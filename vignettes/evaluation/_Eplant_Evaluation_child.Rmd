@@ -50,18 +50,18 @@ for(i in 1:length(cohNames)) {
                                                     type= "E", cohort = cohNames[i])
     eval_table_sperry <- medfate::evaluation_table(df_site$Result[[2]], df_site$SiteData[[2]]$measuredData, 
                                                    type= "E",cohort = cohNames[i])
-    eval_table_cochard <- medfate::evaluation_table(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData, 
+    eval_table_sureau <- medfate::evaluation_table(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData, 
                                                     type= "E", cohort = cohNames[i])
     eval_all <- eval_table_granier[,c(1,2)]
     eval_all$Granier <- eval_table_granier$Modelled
     eval_all$Sperry <- eval_table_sperry$Modelled
-    eval_all$Cochard <- eval_table_cochard$Modelled
+    eval_all$Sureau <- eval_table_sureau$Modelled
     eval_all_long <- eval_all |>
       tidyr::pivot_longer(cols = 2:5, names_to = "Mode", values_to="E") |>
-      dplyr::mutate(Mode = factor(Mode, levels = c("Observed", "Granier", "Sperry", "Cochard")))
+      dplyr::mutate(Mode = factor(Mode, levels = c("Observed", "Granier", "Sperry", "Sureau")))
     pa<-medfate::evaluation_plot(df_site$Result[[1]], df_site$SiteData[[1]]$measuredData, type= "E", plotType = "scatter", cohort = cohNames[i])+labs(subtitle="Granier")+xlab("Modelled E (l/m2)")+ylab("Observed E (l/m2)")
     pb<-medfate::evaluation_plot(df_site$Result[[2]], df_site$SiteData[[2]]$measuredData, type= "E", plotType = "scatter", cohort = cohNames[i])+labs(subtitle="Sperry", title="")+xlab("Modelled E (l/m2)")+ylab("Observed E (l/m2)")
-    pc<-medfate::evaluation_plot(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData, type= "E", plotType = "scatter", cohort = cohNames[i])+labs(subtitle="Cochard", title="")+xlab("Modelled E (l/m2)")+ylab("Observed E (l/m2)")
+    pc<-medfate::evaluation_plot(df_site$Result[[3]], df_site$SiteData[[3]]$measuredData, type= "E", plotType = "scatter", cohort = cohNames[i])+labs(subtitle="Sureau", title="")+xlab("Modelled E (l/m2)")+ylab("Observed E (l/m2)")
     p1 <- cowplot::plot_grid(pa,pb,pc, ncol = 3)
     print(p1)
     p2<-ggplot(eval_all_long, mapping = aes(x=Dates, y=E))+

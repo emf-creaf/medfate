@@ -126,7 +126,7 @@
   forest_dynamics_plot_choices = .getUniqueFORDYNPlotTypes(transpirationMode)
   
   plot_main_choices = c("Water balance", "Soil", "Stand", "Plants")
-  if(transpirationMode %in% c("Sperry","Cochard")) {
+  if(transpirationMode %in% c("Sperry","Sureau")) {
     plot_main_choices = c(plot_main_choices,"Sunlit/Shade", "Energy balance")
   }
   if(type_out %in% c("growth", "fordyn")) {

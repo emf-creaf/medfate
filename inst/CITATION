@@ -37,7 +37,7 @@ c(
          doi = "10.1016/j.agrformet.2020.108233"),
 
   bibentry("Article",
-         header = "For simulations with transpirationMode = 'Cochard' you should cite:",
+         header = "For simulations with transpirationMode = 'Sureau' you should cite:",
          title = "SurEau-Ecos v2.0: a trait-based plant hydraulics model for simulations of plant water status and drought-induced mortality",
          author = c(person("Julien", "Ruffault"),
                     person("François", "Pimont"),

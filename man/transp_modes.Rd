@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{transp_transpirationSperry}
 \alias{transp_transpirationSperry}
-\alias{transp_transpirationCochard}
+\alias{transp_transpirationSureau}
 \alias{transp_modes}
 \alias{transp_transpirationGranier}
 \title{Transpiration modes}
@@ -23,7 +23,7 @@ transp_transpirationSperry(
   modifyInput = TRUE
 )
 
-transp_transpirationCochard(
+transp_transpirationSureau(
   x,
   meteo,
   day,
@@ -50,7 +50,7 @@ transp_transpirationGranier(
 )
 }
 \arguments{
-\item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}, built using the 'Granier', 'Sperry' or 'Cochard' transpiration modes.}
+\item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}, built using the 'Granier', 'Sperry' or 'Sureau' transpiration modes.}
 
 \item{meteo}{A data frame with daily meteorological data series (see \code{\link{spwb}}).}
 
@@ -87,7 +87,7 @@ A list with the following elements:
       \item{\code{"psi"}: Water potential (in MPa) of the plant cohort (average over soil layers).}
       \item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
     }
-  When using \code{transp_transpirationSperry} or \code{transp_transpirationCochard}, element \code{"Plants"} includes:
+  When using \code{transp_transpirationSperry} or \code{transp_transpirationSureau}, element \code{"Plants"} includes:
     \itemize{
       \item{\code{"LAI"}: Leaf area index of the plant cohort.}
       \item{\code{"LAIlive"}: Leaf area index of the plant cohort, assuming all leaves are unfolded.}
@@ -114,7 +114,7 @@ A list with the following elements:
   }
   \item{\code{"Extraction"}: A data frame with mm of water extracted from each soil layer (in columns) by each cohort (in rows).}
 
-  The remaining items are only given by \code{transp_transpirationSperry} or \code{transp_transpirationCochard}:
+  The remaining items are only given by \code{transp_transpirationSperry} or \code{transp_transpirationSureau}:
   \item{\code{"EnergyBalance"}: A list with the following elements:
     \itemize{
       \item{\code{"Temperature"}: A data frame with the temperature of the atmosphere ('Tatm'), canopy ('Tcan') and soil ('Tsoil.1', 'Tsoil.2', ...) for each time step.}
@@ -176,7 +176,7 @@ Three sub-models are available:
   and implements an approach originally described in Granier et al. (1999).} 
   \item{Sub-model in function \code{transp_transpirationSperry} was described in De \enc{Cáceres}{Caceres} et al. (2021), and
   implements a modelling approach originally described in Sperry et al. (2017).} 
-  \item{Sub-model in function \code{transp_transpirationCochard} was described for SurEau-Ecos v2.0 model in Ruffault et al. (2022).} 
+  \item{Sub-model in function \code{transp_transpirationSureau} was described for SurEau-Ecos v2.0 model in Ruffault et al. (2022).} 
 }
 }
 \examples{
@@ -215,14 +215,14 @@ t2 <- transp_transpirationSperry(x2, examplemeteo, 1,
                                 latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
                                 modifyInput = FALSE)
                                 
-#Switch to 'Cochard' transpiration mode
-control <- defaultControl("Cochard")
+#Switch to 'Sureau' transpiration mode
+control <- defaultControl("Sureau")
 
 #Initialize input
 x3 <- forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
-# Transpiration according to Cochard's model
-t3 <- transp_transpirationCochard(x3, examplemeteo, 1, 
+# Transpiration according to Sureau model
+t3 <- transp_transpirationSureau(x3, examplemeteo, 1, 
                                   latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
                                   modifyInput = FALSE)
                                 

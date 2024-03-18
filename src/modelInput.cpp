@@ -361,7 +361,7 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericVector Z95, List soi
   paramsTranspirationdf.attr("row.names") = above.attr("row.names");
   return(paramsTranspirationdf);
 }
-DataFrame paramsTranspirationCochard(DataFrame above, NumericVector Z95, List soil, DataFrame SpParams, 
+DataFrame paramsTranspirationSureau(DataFrame above, NumericVector Z95, List soil, DataFrame SpParams, 
                                     DataFrame paramsAnatomydf, List control) {
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
@@ -1028,7 +1028,7 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
                            Named("StemSympPsi") = NumericVector(numCohorts, -0.033),
                            Named("LeafPLC") = NumericVector(numCohorts, 0.0),
                            Named("StemPLC") = NumericVector(numCohorts, 0.0));
-  } else if(transpirationMode =="Cochard") {
+  } else if(transpirationMode =="Sureau") {
     df = DataFrame::create(Named("Einst") = NumericVector(numCohorts, 0.0),
                            Named("Elim") = NumericVector(numCohorts, 0.0),
                            Named("Emin_L") = NumericVector(numCohorts, 0.0),
@@ -1090,7 +1090,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   NumericVector CR = above["CR"];
   
   String transpirationMode = control["transpirationMode"];
-  if((transpirationMode!="Granier") && (transpirationMode!="Sperry") && (transpirationMode!="Cochard")) stop("Wrong Transpiration mode ('transpirationMode' should be 'Granier', 'Sperry' or 'Cochard')");
+  if((transpirationMode!="Granier") && (transpirationMode!="Sperry") && (transpirationMode!="Sureau")) stop("Wrong Transpiration mode ('transpirationMode' should be 'Granier', 'Sperry' or 'Sureau')");
 
   bool fillMissingSpParams = control["fillMissingSpParams"];
   bool fillWithGenus = control["fillMissingWithGenusParams"];
@@ -1124,8 +1124,8 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
     paramsTranspirationdf = paramsTranspirationGranier(above, SpParams, control);
   } else if(transpirationMode=="Sperry") {
     paramsTranspirationdf = paramsTranspirationSperry(above, Z95, soil, SpParams, paramsAnatomydf, control);
-  } else if(transpirationMode=="Cochard") {
-    paramsTranspirationdf = paramsTranspirationCochard(above, Z95, soil, SpParams, paramsAnatomydf, control);
+  } else if(transpirationMode=="Sureau") {
+    paramsTranspirationdf = paramsTranspirationSureau(above, Z95, soil, SpParams, paramsAnatomydf, control);
   }
 
   List below = paramsBelow(above, Z50, Z95, soil, 
@@ -1192,7 +1192,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   NumericVector Loading = above["Loading"];
   
   String transpirationMode = control["transpirationMode"];
-  if((transpirationMode!="Granier") && (transpirationMode!="Sperry") && (transpirationMode!="Cochard")) stop("Wrong Transpiration mode ('transpirationMode' should be 'Granier', 'Sperry' or 'Cochard')");
+  if((transpirationMode!="Granier") && (transpirationMode!="Sperry") && (transpirationMode!="Sureau")) stop("Wrong Transpiration mode ('transpirationMode' should be 'Granier', 'Sperry' or 'Sureau')");
   
   bool fillMissingSpParams = control["fillMissingSpParams"];
   bool fillWithGenus = control["fillMissingWithGenusParams"];
@@ -1217,8 +1217,8 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
     paramsTranspirationdf = paramsTranspirationGranier(above,SpParams, control);
   } else if(transpirationMode=="Sperry") {
     paramsTranspirationdf = paramsTranspirationSperry(above, Z95, soil, SpParams, paramsAnatomydf, control);
-  } else if(transpirationMode=="Cochard") {
-    paramsTranspirationdf = paramsTranspirationCochard(above, Z95, soil, SpParams, paramsAnatomydf, control);
+  } else if(transpirationMode=="Sureau") {
+    paramsTranspirationdf = paramsTranspirationSureau(above, Z95, soil, SpParams, paramsAnatomydf, control);
   }
 
 
@@ -1387,7 +1387,7 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //' Function \code{forest2aboveground} extract height and species identity from plant cohorts of \code{x}, 
 //' and calculate leaf area index and crown ratio. Functions \code{forest2spwbInput} and \code{forest2growthInput} also calculate the distribution of fine roots 
 //' across soil, and finds parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. 
-//' If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Cochard"},
+//' If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Sureau"},
 //' the \code{forest2spwbInput} and \code{forest2growthInput} also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
 //' 
 //' @return 
@@ -1417,7 +1417,7 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //'         \item{\code{L}: A matrix with the length of coarse roots of each cohort (in rows) in each soil layer (in columns).}
 //'         \item{\code{Wpool}: A matrix with the soil moisture relative to field capacity around the rhizosphere of each cohort (in rows) in each soil layer (in columns).}
 //'       }
-//'       If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Cochard"} there are the following additional elements:
+//'       If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Sureau"} there are the following additional elements:
 //'       \itemize{
 //'         \item{\code{VGrhizo_kmax}: A matrix with maximum rhizosphere conductance values of each cohort (in rows) in each soil layer (in columns).}
 //'         \item{\code{VGroot_kmax}: A matrix with maximum root xylem conductance values of each cohort (in rows) in each soil layer (in columns).}
@@ -1456,7 +1456,7 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //'         \item{\code{kPAR}: PAR extinction coefficient.}
 //'         \item{\code{g}: Canopy water retention capacity per LAI unit (mm/LAI).}
 //'       }
-//'     If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Cochard"} additional columns are:
+//'     If \code{control$transpirationMode = "Sperry"} or \code{control$transpirationMode = "Sureau"} additional columns are:
 //'       \itemize{
 //'         \item{\code{gammaSWR}: Reflectance (albedo) coefficient for SWR .}
 //'         \item{\code{alphaSWR}: Absorbance coefficient for SWR .}
@@ -1490,7 +1490,7 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //'         \item{\code{VCroot_c}, \code{VCroot_d}: Parameters of the root xylem vulnerability curve.}
 //'         \item{\code{Plant_kmax}: Maximum whole-plant conductance.}
 //'       }
-//'       If \code{control$transpirationMode = "Cochard"} columns are:
+//'       If \code{control$transpirationMode = "Sureau"} columns are:
 //'       \itemize{
 //'         \item{\code{Gswmin}: Minimum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
 //'         \item{\code{Gswmax}: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
@@ -1620,8 +1620,8 @@ List rootDistributionComplete(List x, DataFrame SpParams, bool fillMissingRootPa
 //' control <- defaultControl("Sperry")
 //' forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 //' 
-//' # Prepare input for 'Cochard' transpiration mode
-//' control <- defaultControl("Cochard")
+//' # Prepare input for 'Sureau' transpiration mode
+//' control <- defaultControl("Sureau")
 //' forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 //' 
 //' # Example of initialization from a forest 
@@ -1994,7 +1994,7 @@ void modifyInputParam(List x, String paramType, String paramName,
       multiplyInputParamSingle(x, "paramsTranspiration", "Jmax298", cohort, f);
     }
   } else if(paramName=="VC_P50") {
-    if(transpirationMode=="Cochard") {
+    if(transpirationMode=="Sureau") {
       if(message) modifyMessage(paramName, "VCstem_P50", newValue);
       modifyInputParamSingle(x, "paramsTranspiration", "VCstem_P50", cohort, newValue);
       if(message) modifyMessage(paramName, "VCroot_P50", newValue);

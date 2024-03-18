@@ -13,8 +13,8 @@ output:
 ```{r setup, include=FALSE}
 params = list(wd='/home/miquel/OneDrive/mcaceres_work/model_development/medfate_development/StandLevelEvaluation/',
               model='spwb',
-              names = c("Puéchabon"),
-              codes = c("FRAPUE"),
+              # names = c("Font-Blanche"),
+              # codes = c("FONBLA"),
               names=c("Wombat","Euc-FACE",
                       "Puéchabon", "Hesse","Fontainebleau-Barbeau",  "Font-Blanche",
                       "Yatir",
@@ -29,7 +29,7 @@ params = list(wd='/home/miquel/OneDrive/mcaceres_work/model_development/medfate_
                       "ESPRIN", "QVALLCEBRE", "PVALLCEBRE", "PRADES", "CANBALASC", "ESPALTARM", "RONDA",
                       "DAVOS",
                       "USAMORSF", "SEVILLETA"),
-              confs=c('granier','sperry', 'cochard'),
+              confs=c('granier','sperry', 'sureau'),
               save_plots = FALSE)
 
 knitr::opts_chunk$set(echo = FALSE)
@@ -111,7 +111,7 @@ df_general_sites |>
 
 ## Parametrization and simulations
 
-Forest water balance simulations (i.e. function `spwb()`) have been conducted using the three transpiration modes (i.e. `Granier`, `Sperry` or `Cochard`). 
+Forest water balance simulations (i.e. function `spwb()`) have been conducted using the three transpiration modes (i.e. `Granier`, `Sperry` or `Sureau`). 
 
 The set of control parameters modified from defaults in simulations are the following:
 
@@ -120,11 +120,13 @@ control_granier <- yaml::yaml.load_file(system.file("yaml_configurations", "gran
                                           package = "medfatereports"))
 control_sperry <- yaml::yaml.load_file(system.file("yaml_configurations", "sperry.yaml",
                                           package = "medfatereports"))
-control_cochard <- yaml::yaml.load_file(system.file("yaml_configurations", "cochard.yaml",
+control_sureau <- yaml::yaml.load_file(system.file("yaml_configurations", "sureau.yaml",
                                           package = "medfatereports"))
 dplyr::bind_rows(as.data.frame(control_granier),
                  as.data.frame(control_sperry),
-                 as.data.frame(control_cochard))
+                 as.data.frame(control_sureau))|> 
+  kbl() |>
+  kable_styling()
 ```
 
 Soil characteristics have been tuned to modulate total available water and fit observed saturation and residual moisture values, but calibration exercises have not been conducted. When available, however, local leaf area to sapwood area ratios have been used. Thus, the evaluation exercise is meant to be more or less representative of simulations with default species-level trait data.
@@ -150,7 +152,8 @@ The following contains as many sections as forest stands included in the evaluat
 
  1. **General information**: General information about the site, topography, soil and climate, as well as data sources used.
  2. **Model inputs**: Description of model inputs (vegetation, soil, custom species parameters and parameterization remarks). 
- 3. **Evaluation results**: Evaluation results are presented for variables with available measurements.
+ 3. **Climate**: Graphical description of climate inputs and predicted soil/canopy temperatures (under Sperry).
+ 4. **Evaluation results**: Evaluation results are presented for variables with available measurements.
 
 ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
  for(i_code in 1:length(params$codes)) {

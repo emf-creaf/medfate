@@ -2685,31 +2685,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// initCochardNetworks
-List initCochardNetworks(List x);
-RcppExport SEXP _medfate_initCochardNetworks(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(initCochardNetworks(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// semi_implicit_integration
-void semi_implicit_integration(List network, double dt, NumericVector opt, String stemCavitationRecovery, String leafCavitationRecovery);
-RcppExport SEXP _medfate_semi_implicit_integration(SEXP networkSEXP, SEXP dtSEXP, SEXP optSEXP, SEXP stemCavitationRecoverySEXP, SEXP leafCavitationRecoverySEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type network(networkSEXP);
-    Rcpp::traits::input_parameter< double >::type dt(dtSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type opt(optSEXP);
-    Rcpp::traits::input_parameter< String >::type stemCavitationRecovery(stemCavitationRecoverySEXP);
-    Rcpp::traits::input_parameter< String >::type leafCavitationRecovery(leafCavitationRecoverySEXP);
-    semi_implicit_integration(network, dt, opt, stemCavitationRecovery, leafCavitationRecovery);
-    return R_NilValue;
-END_RCPP
-}
 // initSperryNetworks
 List initSperryNetworks(List x);
 RcppExport SEXP _medfate_initSperryNetworks(SEXP xSEXP) {
@@ -2733,6 +2708,31 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type Gswmax(GswmaxSEXP);
     rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction, Gswmin, Gswmax));
     return rcpp_result_gen;
+END_RCPP
+}
+// initSureauNetworks
+List initSureauNetworks(List x);
+RcppExport SEXP _medfate_initSureauNetworks(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(initSureauNetworks(x));
+    return rcpp_result_gen;
+END_RCPP
+}
+// semi_implicit_integration
+void semi_implicit_integration(List network, double dt, NumericVector opt, String stemCavitationRecovery, String leafCavitationRecovery);
+RcppExport SEXP _medfate_semi_implicit_integration(SEXP networkSEXP, SEXP dtSEXP, SEXP optSEXP, SEXP stemCavitationRecoverySEXP, SEXP leafCavitationRecoverySEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type network(networkSEXP);
+    Rcpp::traits::input_parameter< double >::type dt(dtSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type opt(optSEXP);
+    Rcpp::traits::input_parameter< String >::type stemCavitationRecovery(stemCavitationRecoverySEXP);
+    Rcpp::traits::input_parameter< String >::type leafCavitationRecovery(leafCavitationRecoverySEXP);
+    semi_implicit_integration(network, dt, opt, stemCavitationRecovery, leafCavitationRecovery);
+    return R_NilValue;
 END_RCPP
 }
 // leafAngleCDF
@@ -5280,9 +5280,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// transpirationCochard
-List transpirationCochard(List x, DataFrame meteo, int day, double latitude, double elevation, double slope, double aspect, double canopyEvaporation, double snowMelt, double soilEvaporation, double herbTranspiration, bool modifyInput);
-RcppExport SEXP _medfate_transpirationCochard(SEXP xSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP canopyEvaporationSEXP, SEXP snowMeltSEXP, SEXP soilEvaporationSEXP, SEXP herbTranspirationSEXP, SEXP modifyInputSEXP) {
+// transpirationSureau
+List transpirationSureau(List x, DataFrame meteo, int day, double latitude, double elevation, double slope, double aspect, double canopyEvaporation, double snowMelt, double soilEvaporation, double herbTranspiration, bool modifyInput);
+RcppExport SEXP _medfate_transpirationSureau(SEXP xSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP canopyEvaporationSEXP, SEXP snowMeltSEXP, SEXP soilEvaporationSEXP, SEXP herbTranspirationSEXP, SEXP modifyInputSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -5298,7 +5298,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type soilEvaporation(soilEvaporationSEXP);
     Rcpp::traits::input_parameter< double >::type herbTranspiration(herbTranspirationSEXP);
     Rcpp::traits::input_parameter< bool >::type modifyInput(modifyInputSEXP);
-    rcpp_result_gen = Rcpp::wrap(transpirationCochard(x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration, modifyInput));
+    rcpp_result_gen = Rcpp::wrap(transpirationSureau(x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, herbTranspiration, modifyInput));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -5779,10 +5779,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_incgam", (DL_FUNC) &_medfate_incgam, 2},
     {"_medfate_invincgam", (DL_FUNC) &_medfate_invincgam, 3},
     {"_medfate_gammds", (DL_FUNC) &_medfate_gammds, 2},
-    {"_medfate_initCochardNetworks", (DL_FUNC) &_medfate_initCochardNetworks, 1},
-    {"_medfate_semi_implicit_integration", (DL_FUNC) &_medfate_semi_implicit_integration, 5},
     {"_medfate_initSperryNetworks", (DL_FUNC) &_medfate_initSperryNetworks, 1},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 4},
+    {"_medfate_initSureauNetworks", (DL_FUNC) &_medfate_initSureauNetworks, 1},
+    {"_medfate_semi_implicit_integration", (DL_FUNC) &_medfate_semi_implicit_integration, 5},
     {"_medfate_leafAngleCDF", (DL_FUNC) &_medfate_leafAngleCDF, 3},
     {"_medfate_leafAngleBetaParameters", (DL_FUNC) &_medfate_leafAngleBetaParameters, 2},
     {"_medfate_directionalExtinctionCoefficient", (DL_FUNC) &_medfate_directionalExtinctionCoefficient, 3},
@@ -5899,7 +5899,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 7},
     {"_medfate_plantWaterContent", (DL_FUNC) &_medfate_plantWaterContent, 1},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 13},
-    {"_medfate_transpirationCochard", (DL_FUNC) &_medfate_transpirationCochard, 12},
+    {"_medfate_transpirationSureau", (DL_FUNC) &_medfate_transpirationSureau, 12},
     {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 8},
     {"_medfate_windCanopyTurbulenceModel", (DL_FUNC) &_medfate_windCanopyTurbulenceModel, 6},
     {"_medfate_windCanopyTurbulence", (DL_FUNC) &_medfate_windCanopyTurbulence, 6},
