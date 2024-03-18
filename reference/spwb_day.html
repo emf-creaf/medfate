@@ -131,7 +131,7 @@ following elements:</p><ul><li><p><code>"cohorts"</code>: A data frame with coho
 </ul></li>
 <li><p><code>"Stand"</code>: A named vector with with stand values for the simulated day, equivalent to one row of 'Stand' object returned by <code><a href="spwb.html">spwb</a></code>.</p></li>
 <li><p><code>"Plants"</code>: A data frame of results for each plant cohort (see <code><a href="transp_modes.html">transp_transpirationGranier</a></code> or <code><a href="transp_modes.html">transp_transpirationSperry</a></code>).</p></li>
-</ul><p>The following items are only returned when <code>transpirationMode = "Sperry"</code> or  <code>transpirationMode = "Cochard"</code>:</p><ul><li><p><code>"EnergyBalance"</code>: Energy balance of the stand (see <code><a href="transp_modes.html">transp_transpirationSperry</a></code>).</p></li>
+</ul><p>The following items are only returned when <code>transpirationMode = "Sperry"</code> or  <code>transpirationMode = "Sureau"</code>:</p><ul><li><p><code>"EnergyBalance"</code>: Energy balance of the stand (see <code><a href="transp_modes.html">transp_transpirationSperry</a></code>).</p></li>
 <li><p><code>"RhizoPsi"</code>: Minimum water potential (in MPa) inside roots, after crossing rhizosphere, per cohort and soil layer.</p></li>
 <li><p><code>"SunlitLeaves"</code> and <code>"ShadeLeaves"</code>: For each leaf type, a data frame with values of LAI, Vmax298 and Jmax298 for leaves of this type in each plant cohort.</p></li>
 <li><p><code>"ExtractionInst"</code>: Water extracted by each plant cohort during each time step.</p></li>
@@ -145,8 +145,8 @@ following elements:</p><ul><li><p><code>"cohorts"</code>: A data frame with coho
   and implements an approach originally described in Granier et al. (1999).</p></li>
 <li><p>The sub-model corresponding to 'Sperry' transpiration mode is illustrated by function <code><a href="transp_modes.html">transp_transpirationSperry</a></code> and was described in De Caceres et al. (2021), and
   implements a modelling approach originally described in Sperry et al. (2017).</p></li>
-<li><p>The sub-model corresponding to 'Cochard' transpiration mode is illustrated by function <code><a href="transp_modes.html">transp_transpirationCochard</a></code> and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).</p></li>
-</ul><p>Simulations using the 'Sperry' or 'Cochard' transpiration mode are computationally much more expensive than 'Granier'.</p>
+<li><p>The sub-model corresponding to 'Sureau' transpiration mode is illustrated by function <code><a href="transp_modes.html">transp_transpirationSureau</a></code> and was described for model SurEau-Ecos v2.0 in Ruffault et al. (2022).</p></li>
+</ul><p>Simulations using the 'Sperry' or 'Sureau' transpiration mode are computationally much more expensive than 'Granier'.</p>
     </div>
     <div id="references">
     <h2>References</h2>
@@ -205,8 +205,8 @@ Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).</p
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">sd2</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="spwb_day-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Simulate water balance for one day only (Cochard mode)</span></span></span>
-<span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Cochard"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#Simulate water balance for one day only (Sureau mode)</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sureau"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x3</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforest</span>, <span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">sd3</span> <span class="op">&lt;-</span><span class="fu">spwb_day</span><span class="op">(</span><span class="va">x3</span>, <span class="va">date</span>, <span class="va">meteovec</span>,</span></span>
 <span class="r-in"><span>              latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, slope<span class="op">=</span><span class="fl">0</span>, aspect<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></span>

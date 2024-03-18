@@ -75,7 +75,7 @@
 Cáceres (CREAF), Víctor Granda (CREAF), Rafael Poyatos (CREAF), Teresa
 Gimeno (CREAF), Nicolas Martin-StPaul (INRAE), Antoine Cabon (WSL)</h4>
             
-            <h4 data-toc-skip class="date">2024-03-14</h4>
+            <h4 data-toc-skip class="date">2024-03-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/HEAD/vignettes/evaluation/StandLevelEvaluation.Rmd" class="external-link"><code>vignettes/evaluation/StandLevelEvaluation.Rmd</code></a></small>
       <div class="hidden name"><code>StandLevelEvaluation.Rmd</code></div>
@@ -424,7 +424,7 @@ USA_PJS_P04_AMB
 <p>Forest water balance simulations (i.e. function <code><a href="../../reference/spwb.html">spwb()</a></code>)
 have been conducted using the three transpiration modes
 (i.e. <code>Granier</code>, <code>Sperry</code> or
-<code>Cochard</code>).</p>
+<code>Sureau</code>).</p>
 <p>The set of control parameters modified from defaults in simulations
 are the following:</p>
 <table class="table table" style="margin-left: auto; margin-right: auto;">
@@ -439,9 +439,6 @@ stemCavitationRecovery
 leafCavitationRecovery
 </th>
 <th style="text-align:left;">
-rhizosphereOverlap
-</th>
-<th style="text-align:left;">
 segmentedXylemVulnerability
 </th>
 </tr></thead>
@@ -452,9 +449,6 @@ Granier
 </td>
 <td style="text-align:left;">
 rate
-</td>
-<td style="text-align:left;">
-total
 </td>
 <td style="text-align:left;">
 total
@@ -474,24 +468,18 @@ rate
 total
 </td>
 <td style="text-align:left;">
-total
-</td>
-<td style="text-align:left;">
 TRUE
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-Cochard
+Sureau
 </td>
 <td style="text-align:left;">
 rate
 </td>
 <td style="text-align:left;">
 rate
-</td>
-<td style="text-align:left;">
-total
 </td>
 <td style="text-align:left;">
 FALSE
@@ -1172,7 +1160,7 @@ sperry
 WOMBAT
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 730
@@ -1279,7 +1267,7 @@ sperry
 WOMBAT
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 730
@@ -1418,7 +1406,7 @@ sperry
 WOMBAT
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 730
@@ -1557,7 +1545,7 @@ sperry
 WOMBAT
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1035
@@ -1708,7 +1696,7 @@ WOMBAT
 T1_7420
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1035
@@ -1813,7 +1801,7 @@ WOMBAT
 T2_7515
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1035
@@ -2444,7 +2432,7 @@ sperry
 EUCFACE
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 884
@@ -2551,7 +2539,7 @@ sperry
 EUCFACE
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 884
@@ -2690,7 +2678,7 @@ sperry
 EUCFACE
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 884
@@ -2829,7 +2817,7 @@ sperry
 EUCFACE
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 710
@@ -2980,7 +2968,7 @@ EUCFACE
 T1_7578
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 708
@@ -3104,7 +3092,7 @@ T1_7578
 Midday
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 15
@@ -3180,7 +3168,7 @@ T1_7578
 Predawn
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 8
@@ -4035,7 +4023,7 @@ sperry
 FRAPUE
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1096
@@ -4142,7 +4130,7 @@ sperry
 FRAPUE
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1096
@@ -4281,7 +4269,7 @@ sperry
 FRAPUE
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1096
@@ -4420,7 +4408,7 @@ sperry
 FRAPUE
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1021
@@ -4571,7 +4559,7 @@ FRAPUE
 T1_2854
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1096
@@ -4695,7 +4683,7 @@ T1_2854
 Midday
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 28
@@ -4771,7 +4759,7 @@ T1_2854
 Predawn
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 28
@@ -5357,7 +5345,7 @@ sperry
 FRAHES
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1070
@@ -5464,7 +5452,7 @@ sperry
 FRAHES
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1064
@@ -5604,7 +5592,7 @@ sperry
 FRAHES
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 43
@@ -5755,7 +5743,7 @@ FRAHES
 T1_1396
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 559
@@ -6345,7 +6333,7 @@ sperry
 FONTAINEBLEAU
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 842
@@ -6452,7 +6440,7 @@ sperry
 FONTAINEBLEAU
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 842
@@ -6591,7 +6579,7 @@ sperry
 FONTAINEBLEAU
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 842
@@ -6743,7 +6731,7 @@ FONTAINEBLEAU
 T1_2856
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 740
@@ -6848,7 +6836,7 @@ FONTAINEBLEAU
 T2_730
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 732
@@ -7678,25 +7666,25 @@ sperry
 1004
 </td>
 <td style="text-align:right;">
--0.5713501
+-0.5487484
 </td>
 <td style="text-align:right;">
--11.65557
+-11.19449
 </td>
 <td style="text-align:right;">
-4.096386
+4.091394
 </td>
 <td style="text-align:right;">
-83.56646
+83.46462
 </td>
 <td style="text-align:right;">
-0.6892794
+0.6868683
 </td>
 <td style="text-align:right;">
--0.0084182
+-0.0064532
 </td>
 <td style="text-align:right;">
-0.1146686
+0.1157475
 </td>
 </tr>
 <tr>
@@ -7704,31 +7692,31 @@ sperry
 FONBLA
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1004
 </td>
 <td style="text-align:right;">
--0.5567370
+-0.5413073
 </td>
 <td style="text-align:right;">
--11.35746
+-11.04269
 </td>
 <td style="text-align:right;">
-4.036039
+4.032682
 </td>
 <td style="text-align:right;">
-82.33538
+82.26690
 </td>
 <td style="text-align:right;">
-0.6772704
+0.6743113
 </td>
 <td style="text-align:right;">
-0.0191186
+0.0209301
 </td>
 <td style="text-align:right;">
-0.1277110
+0.1284365
 </td>
 </tr>
 </tbody>
@@ -7785,25 +7773,25 @@ sperry
 1026
 </td>
 <td style="text-align:right;">
--0.4042162
+-0.4301834
 </td>
 <td style="text-align:right;">
--13.78628
+-14.67193
 </td>
 <td style="text-align:right;">
-1.707307
+1.673680
 </td>
 <td style="text-align:right;">
-58.22979
+57.08290
 </td>
 <td style="text-align:right;">
-0.4129439
+0.4313514
 </td>
 <td style="text-align:right;">
--0.4243090
+-0.3448110
 </td>
 <td style="text-align:right;">
--0.1287353
+-0.1065039
 </td>
 </tr>
 <tr>
@@ -7811,31 +7799,31 @@ sperry
 FONBLA
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1026
 </td>
 <td style="text-align:right;">
--0.4129189
+-0.4302535
 </td>
 <td style="text-align:right;">
--14.08310
+-14.67432
 </td>
 <td style="text-align:right;">
-1.732478
+1.708134
 </td>
 <td style="text-align:right;">
-59.08825
+58.25798
 </td>
 <td style="text-align:right;">
-0.4170577
+0.4350643
 </td>
 <td style="text-align:right;">
--0.4275641
+-0.3615861
 </td>
 <td style="text-align:right;">
--0.1453759
+-0.1292819
 </td>
 </tr>
 </tbody>
@@ -7893,25 +7881,25 @@ granier
 1760
 </td>
 <td style="text-align:right;">
--0.1554450
+-0.1537591
 </td>
 <td style="text-align:right;">
--34.87873
+-34.50045
 </td>
 <td style="text-align:right;">
-0.1572825
+0.1556923
 </td>
 <td style="text-align:right;">
-35.29104
+34.93424
 </td>
 <td style="text-align:right;">
-0.8331625
+0.8312496
 </td>
 <td style="text-align:right;">
--0.5190961
+-0.4997775
 </td>
 <td style="text-align:right;">
--0.2305497
+-0.2181086
 </td>
 </tr>
 <tr>
@@ -7925,25 +7913,25 @@ sperry
 1760
 </td>
 <td style="text-align:right;">
--0.1823114
+-0.1814693
 </td>
 <td style="text-align:right;">
--40.90701
+-40.71808
 </td>
 <td style="text-align:right;">
-0.1823615
+0.1815275
 </td>
 <td style="text-align:right;">
-40.91827
+40.73112
 </td>
 <td style="text-align:right;">
-0.8341993
+0.8342181
 </td>
 <td style="text-align:right;">
--0.9178919
+-0.9046300
 </td>
 <td style="text-align:right;">
--0.4267634
+-0.4202379
 </td>
 </tr>
 <tr>
@@ -7951,31 +7939,31 @@ sperry
 FONBLA
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1760
 </td>
 <td style="text-align:right;">
--0.1789122
+-0.1783402
 </td>
 <td style="text-align:right;">
--40.14430
+-40.01596
 </td>
 <td style="text-align:right;">
-0.1792388
+0.1786984
 </td>
 <td style="text-align:right;">
-40.21759
+40.09634
 </td>
 <td style="text-align:right;">
-0.8110667
+0.8098519
 </td>
 <td style="text-align:right;">
--0.8811447
+-0.8737530
 </td>
 <td style="text-align:right;">
--0.4023317
+-0.3981039
 </td>
 </tr>
 </tbody>
@@ -8038,25 +8026,25 @@ granier
 300
 </td>
 <td style="text-align:right;">
-0.1831538
+0.1863858
 </td>
 <td style="text-align:right;">
-89.051564
+90.623000
 </td>
 <td style="text-align:right;">
-0.2057822
+0.2082673
 </td>
 <td style="text-align:right;">
-100.05375
+101.26205
 </td>
 <td style="text-align:right;">
-0.4288326
+0.4217217
 </td>
 <td style="text-align:right;">
--6.0267066
+-6.1605354
 </td>
 <td style="text-align:right;">
--1.0795351
+-1.1046485
 </td>
 </tr>
 <tr>
@@ -8073,25 +8061,25 @@ sperry
 300
 </td>
 <td style="text-align:right;">
-0.0815454
+0.0849063
 </td>
 <td style="text-align:right;">
-39.648354
+41.282477
 </td>
 <td style="text-align:right;">
-0.1316498
+0.1327509
 </td>
 <td style="text-align:right;">
-64.00971
+64.54506
 </td>
 <td style="text-align:right;">
-0.6417778
+0.6349902
 </td>
 <td style="text-align:right;">
--1.6746318
+-1.7629820
 </td>
 <td style="text-align:right;">
--0.3303891
+-0.3415161
 </td>
 </tr>
 <tr>
@@ -8102,31 +8090,31 @@ FONBLA
 T2_2630
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 300
 </td>
 <td style="text-align:right;">
-0.1643770
+0.1671235
 </td>
 <td style="text-align:right;">
-79.922040
+81.257423
 </td>
 <td style="text-align:right;">
-0.2155582
+0.2173486
 </td>
 <td style="text-align:right;">
-104.80695
+105.67748
 </td>
 <td style="text-align:right;">
-0.3458909
+0.3415027
 </td>
 <td style="text-align:right;">
--9.5324648
+-9.6840882
 </td>
 <td style="text-align:right;">
--1.1783264
+-1.1964196
 </td>
 </tr>
 <tr>
@@ -8143,25 +8131,25 @@ granier
 309
 </td>
 <td style="text-align:right;">
--0.0116864
+-0.0087995
 </td>
 <td style="text-align:right;">
--4.037320
+-3.039973
 </td>
 <td style="text-align:right;">
-0.0728350
+0.0733483
 </td>
 <td style="text-align:right;">
-25.16250
+25.33983
 </td>
 <td style="text-align:right;">
-0.8575422
+0.8537849
 </td>
 <td style="text-align:right;">
-0.7110843
+0.7045401
 </td>
 <td style="text-align:right;">
-0.5037903
+0.5002932
 </td>
 </tr>
 <tr>
@@ -8178,25 +8166,25 @@ sperry
 309
 </td>
 <td style="text-align:right;">
-0.0944578
+0.0987349
 </td>
 <td style="text-align:right;">
-32.632565
+34.110182
 </td>
 <td style="text-align:right;">
-0.1157819
+0.1187421
 </td>
 <td style="text-align:right;">
-39.99945
+41.02213
 </td>
 <td style="text-align:right;">
-0.8880898
+0.8868822
 </td>
 <td style="text-align:right;">
-0.1669628
+0.1273591
 </td>
 <td style="text-align:right;">
-0.2112025
+0.1910351
 </td>
 </tr>
 <tr>
@@ -8207,31 +8195,31 @@ FONBLA
 T3_2854
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 309
 </td>
 <td style="text-align:right;">
-0.0142499
+0.0167910
 </td>
 <td style="text-align:right;">
-4.922934
+5.800845
 </td>
 <td style="text-align:right;">
-0.0918054
+0.0928790
 </td>
 <td style="text-align:right;">
-31.71623
+32.08713
 </td>
 <td style="text-align:right;">
-0.8490015
+0.8446375
 </td>
 <td style="text-align:right;">
-0.4649168
+0.4445584
 </td>
 <td style="text-align:right;">
-0.3745494
+0.3672352
 </td>
 </tr>
 </tbody>
@@ -8299,25 +8287,25 @@ sperry
 3
 </td>
 <td style="text-align:right;">
-0.6955281
+0.6883751
 </td>
 <td style="text-align:right;">
-26.07144
+25.80332
 </td>
 <td style="text-align:right;">
-0.6955281
+0.6883751
 </td>
 <td style="text-align:right;">
-26.07144
+25.80332
 </td>
 <td style="text-align:right;">
-0.9881458
+0.9897871
 </td>
 <td style="text-align:right;">
--8.5777350
+-8.3338366
 </td>
 <td style="text-align:right;">
--2.7186651
+-2.6804215
 </td>
 </tr>
 <tr>
@@ -8331,31 +8319,31 @@ T2_2630
 Midday
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 3
 </td>
 <td style="text-align:right;">
-0.8699148
+0.8986287
 </td>
 <td style="text-align:right;">
-32.60822
+33.68454
 </td>
 <td style="text-align:right;">
-0.8699148
+0.8986287
 </td>
 <td style="text-align:right;">
-32.60822
+33.68454
 </td>
 <td style="text-align:right;">
-0.9959325
+0.9956066
 </td>
 <td style="text-align:right;">
--15.1928883
+-16.0505745
 </td>
 <td style="text-align:right;">
--3.6510296
+-3.8045495
 </td>
 </tr>
 <tr>
@@ -8375,25 +8363,25 @@ sperry
 3
 </td>
 <td style="text-align:right;">
-0.6284447
+0.6729063
 </td>
 <td style="text-align:right;">
-32.31078
+34.59673
 </td>
 <td style="text-align:right;">
-0.6284447
+0.6729063
 </td>
 <td style="text-align:right;">
-32.31078
+34.59673
 </td>
 <td style="text-align:right;">
-0.9909294
+0.9928607
 </td>
 <td style="text-align:right;">
--1.3319253
+-1.5850957
 </td>
 <td style="text-align:right;">
--0.7675007
+-0.8925491
 </td>
 </tr>
 <tr>
@@ -8407,31 +8395,31 @@ T2_2630
 Predawn
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 3
 </td>
 <td style="text-align:right;">
-0.6135358
+0.6541631
 </td>
 <td style="text-align:right;">
-31.54425
+33.63306
 </td>
 <td style="text-align:right;">
-0.6135358
+0.6541631
 </td>
 <td style="text-align:right;">
-31.54425
+33.63306
 </td>
 <td style="text-align:right;">
-0.9815636
+0.9797255
 </td>
 <td style="text-align:right;">
--1.5492000
+-1.7709013
 </td>
 <td style="text-align:right;">
--0.7255693
+-0.8398336
 </td>
 </tr>
 <tr>
@@ -8451,25 +8439,25 @@ sperry
 3
 </td>
 <td style="text-align:right;">
-0.5902793
+0.6035159
 </td>
 <td style="text-align:right;">
-21.63076
+22.11581
 </td>
 <td style="text-align:right;">
-0.5902793
+0.6035159
 </td>
 <td style="text-align:right;">
-21.63076
+22.11581
 </td>
 <td style="text-align:right;">
-0.9656041
+0.9766564
 </td>
 <td style="text-align:right;">
--1.5371569
+-1.5995153
 </td>
 <td style="text-align:right;">
--0.8235174
+-0.8644082
 </td>
 </tr>
 <tr>
@@ -8483,31 +8471,31 @@ T3_2854
 Midday
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 3
 </td>
 <td style="text-align:right;">
-1.1647869
+1.2065035
 </td>
 <td style="text-align:right;">
-42.68356
+44.21226
 </td>
 <td style="text-align:right;">
-1.1647869
+1.2065035
 </td>
 <td style="text-align:right;">
-42.68356
+44.21226
 </td>
 <td style="text-align:right;">
-0.9801978
+0.9789430
 </td>
 <td style="text-align:right;">
--8.7627860
+-9.3389062
 </td>
 <td style="text-align:right;">
--2.5983121
+-2.7271847
 </td>
 </tr>
 <tr>
@@ -8527,25 +8515,25 @@ sperry
 3
 </td>
 <td style="text-align:right;">
-0.2473608
+0.2894424
 </td>
 <td style="text-align:right;">
-16.29756
+19.07014
 </td>
 <td style="text-align:right;">
-0.2473608
+0.2894424
 </td>
 <td style="text-align:right;">
-16.29756
+19.07014
 </td>
 <td style="text-align:right;">
-0.9989327
+0.9994315
 </td>
 <td style="text-align:right;">
-0.7602298
+0.6870372
 </td>
 <td style="text-align:right;">
-0.4411095
+0.3460298
 </td>
 </tr>
 <tr>
@@ -8559,31 +8547,31 @@ T3_2854
 Predawn
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 3
 </td>
 <td style="text-align:right;">
-0.2824449
+0.3260943
 </td>
 <td style="text-align:right;">
-18.60911
+21.48498
 </td>
 <td style="text-align:right;">
-0.3244761
+0.3260943
 </td>
 <td style="text-align:right;">
-21.37836
+21.48498
 </td>
 <td style="text-align:right;">
-0.9917165
+0.9907372
 </td>
 <td style="text-align:right;">
-0.4874550
+0.4247914
 </td>
 <td style="text-align:right;">
-0.2668742
+0.2632178
 </td>
 </tr>
 </tbody>
@@ -9201,25 +9189,25 @@ sperry
 365
 </td>
 <td style="text-align:right;">
--0.6913328
+-0.6927409
 </td>
 <td style="text-align:right;">
--8.285668
+-8.302544
 </td>
 <td style="text-align:right;">
-2.679974
+2.681382
 </td>
 <td style="text-align:right;">
-32.11966
+32.13654
 </td>
 <td style="text-align:right;">
-0.8053547
+0.8053168
 </td>
 <td style="text-align:right;">
-0.5251511
+0.5247881
 </td>
 <td style="text-align:right;">
-0.3761072
+0.3757794
 </td>
 </tr>
 <tr>
@@ -9227,31 +9215,31 @@ sperry
 ISRYAT
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 365
 </td>
 <td style="text-align:right;">
--0.7786812
+-0.7800888
 </td>
 <td style="text-align:right;">
--9.332544
+-9.349414
 </td>
 <td style="text-align:right;">
-2.759491
+2.760898
 </td>
 <td style="text-align:right;">
-33.07267
+33.08954
 </td>
 <td style="text-align:right;">
-0.7774154
+0.7773655
 </td>
 <td style="text-align:right;">
-0.4945792
+0.4941894
 </td>
 <td style="text-align:right;">
-0.3575959
+0.3572682
 </td>
 </tr>
 </tbody>
@@ -9334,31 +9322,31 @@ sperry
 ISRYAT
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 365
 </td>
 <td style="text-align:right;">
--0.2582864
+-0.2582838
 </td>
 <td style="text-align:right;">
--11.81148
+-11.81136
 </td>
 <td style="text-align:right;">
-1.221164
+1.221161
 </td>
 <td style="text-align:right;">
-55.84404
+55.84392
 </td>
 <td style="text-align:right;">
-0.4740621
+0.4740616
 </td>
 <td style="text-align:right;">
--0.5733650
+-0.5733641
 </td>
 <td style="text-align:right;">
--0.3011134
+-0.3011106
 </td>
 </tr>
 </tbody>
@@ -9473,7 +9461,7 @@ sperry
 ISRYAT
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 365
@@ -9612,7 +9600,7 @@ sperry
 ISRYAT
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 300
@@ -9763,31 +9751,31 @@ ISRYAT
 T1_342
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 309
 </td>
 <td style="text-align:right;">
--0.0549083
+-0.0549076
 </td>
 <td style="text-align:right;">
--12.24107
+-12.24090
 </td>
 <td style="text-align:right;">
-0.2013314
+0.2013307
 </td>
 <td style="text-align:right;">
-44.88413
+44.88396
 </td>
 <td style="text-align:right;">
-0.7323512
+0.7323509
 </td>
 <td style="text-align:right;">
-0.3661936
+0.3661940
 </td>
 <td style="text-align:right;">
-0.2611025
+0.2611053
 </td>
 </tr>
 </tbody>
@@ -10542,7 +10530,7 @@ MITRA
 T1_381
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1060
@@ -11235,7 +11223,7 @@ sperry
 ESPRIN
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 28
@@ -11386,7 +11374,7 @@ ESPRIN
 T1_389
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 103
@@ -11510,7 +11498,7 @@ T1_389
 Midday
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 15
@@ -11586,7 +11574,7 @@ T1_389
 Predawn
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 15
@@ -12236,7 +12224,7 @@ sperry
 QVALLCEBRE
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 445
@@ -12387,7 +12375,7 @@ QVALLCEBRE
 T1_387
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 279
@@ -13019,7 +13007,7 @@ sperry
 PVALLCEBRE
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 743
@@ -13170,7 +13158,7 @@ PVALLCEBRE
 T1_347
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 733
@@ -13961,25 +13949,25 @@ granier
 1219
 </td>
 <td style="text-align:right;">
-0.0398782
+0.0401265
 </td>
 <td style="text-align:right;">
-20.929547
+21.059887
 </td>
 <td style="text-align:right;">
-0.0525993
+0.0527996
 </td>
 <td style="text-align:right;">
-27.60608
+27.71119
 </td>
 <td style="text-align:right;">
-0.7872128
+0.7857728
 </td>
 <td style="text-align:right;">
-0.3021133
+0.2960417
 </td>
 <td style="text-align:right;">
-0.1195612
+0.1162088
 </td>
 </tr>
 <tr>
@@ -13993,25 +13981,25 @@ sperry
 1219
 </td>
 <td style="text-align:right;">
--0.0364164
+-0.0365384
 </td>
 <td style="text-align:right;">
--19.112673
+-19.176698
 </td>
 <td style="text-align:right;">
-0.0491996
+0.0492188
 </td>
 <td style="text-align:right;">
-25.82176
+25.83184
 </td>
 <td style="text-align:right;">
-0.7720322
+0.7716302
 </td>
 <td style="text-align:right;">
-0.2469994
+0.2454704
 </td>
 <td style="text-align:right;">
-0.1764684
+0.1761470
 </td>
 </tr>
 <tr>
@@ -14019,31 +14007,31 @@ sperry
 PRADES
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1219
 </td>
 <td style="text-align:right;">
-0.0062407
+0.0081243
 </td>
 <td style="text-align:right;">
-3.275337
+4.263917
 </td>
 <td style="text-align:right;">
-0.0344945
+0.0348261
 </td>
 <td style="text-align:right;">
-18.10400
+18.27804
 </td>
 <td style="text-align:right;">
-0.8319403
+0.8400889
 </td>
 <td style="text-align:right;">
-0.6168856
+0.6170576
 </td>
 <td style="text-align:right;">
-0.4226105
+0.4170598
 </td>
 </tr>
 </tbody>
@@ -14106,25 +14094,25 @@ granier
 1157
 </td>
 <td style="text-align:right;">
-0.1949463
+0.1892415
 </td>
 <td style="text-align:right;">
-74.2402478
+72.067742
 </td>
 <td style="text-align:right;">
-0.2556095
+0.2505318
 </td>
 <td style="text-align:right;">
-97.34225
+95.40857
 </td>
 <td style="text-align:right;">
-0.5521992
+0.5549570
 </td>
 <td style="text-align:right;">
--0.9762312
+-0.9049772
 </td>
 <td style="text-align:right;">
--0.3035230
+-0.2776287
 </td>
 </tr>
 <tr>
@@ -14141,25 +14129,25 @@ sperry
 1157
 </td>
 <td style="text-align:right;">
--0.1635923
+-0.1592433
 </td>
 <td style="text-align:right;">
--62.2998787
+-60.643706
 </td>
 <td style="text-align:right;">
-0.1748373
+0.1721694
 </td>
 <td style="text-align:right;">
-66.58225
+65.56627
 </td>
 <td style="text-align:right;">
-0.6193290
+0.6185761
 </td>
 <td style="text-align:right;">
--0.0238401
+0.0001635
 </td>
 <td style="text-align:right;">
-0.1083884
+0.1219934
 </td>
 </tr>
 <tr>
@@ -14170,31 +14158,31 @@ PRADES
 T1_347
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1157
 </td>
 <td style="text-align:right;">
--0.0018652
+0.0200740
 </td>
 <td style="text-align:right;">
--0.7103001
+7.644664
 </td>
 <td style="text-align:right;">
-0.1500609
+0.1458273
 </td>
 <td style="text-align:right;">
-57.14683
+55.53456
 </td>
 <td style="text-align:right;">
-0.6968479
+0.6987788
 </td>
 <td style="text-align:right;">
-0.0692738
+0.0542087
 </td>
 <td style="text-align:right;">
-0.2347393
+0.2563294
 </td>
 </tr>
 <tr>
@@ -14211,25 +14199,25 @@ granier
 908
 </td>
 <td style="text-align:right;">
-0.0177963
+0.0178908
 </td>
 <td style="text-align:right;">
-10.7552117
+10.812365
 </td>
 <td style="text-align:right;">
-0.0694607
+0.0695463
 </td>
 <td style="text-align:right;">
-41.97870
+42.03045
 </td>
 <td style="text-align:right;">
-0.7312927
+0.7306428
 </td>
 <td style="text-align:right;">
-0.4445612
+0.4428368
 </td>
 <td style="text-align:right;">
-0.3145888
+0.3137438
 </td>
 </tr>
 <tr>
@@ -14246,25 +14234,25 @@ sperry
 908
 </td>
 <td style="text-align:right;">
-0.2089013
+0.2080787
 </td>
 <td style="text-align:right;">
-126.2499513
+125.752766
 </td>
 <td style="text-align:right;">
-0.2999619
+0.2990613
 </td>
 <td style="text-align:right;">
-181.28261
+180.73834
 </td>
 <td style="text-align:right;">
-0.3499821
+0.3495558
 </td>
 <td style="text-align:right;">
--13.7864755
+-13.6960574
 </td>
 <td style="text-align:right;">
--1.9599092
+-1.9510227
 </td>
 </tr>
 <tr>
@@ -14275,31 +14263,31 @@ PRADES
 T2_381
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 908
 </td>
 <td style="text-align:right;">
-0.1365121
+0.1386467
 </td>
 <td style="text-align:right;">
-82.5013890
+83.791411
 </td>
 <td style="text-align:right;">
-0.1539374
+0.1559606
 </td>
 <td style="text-align:right;">
-93.03237
+94.25514
 </td>
 <td style="text-align:right;">
-0.7850876
+0.7865583
 </td>
 <td style="text-align:right;">
--1.9416425
+-2.0793398
 </td>
 <td style="text-align:right;">
--0.5189950
+-0.5389598
 </td>
 </tr>
 </tbody>
@@ -14367,25 +14355,25 @@ sperry
 13
 </td>
 <td style="text-align:right;">
--2.7161798
+-2.6888842
 </td>
 <td style="text-align:right;">
--158.482482
+-156.889849
 </td>
 <td style="text-align:right;">
-2.849733
+2.8517568
 </td>
 <td style="text-align:right;">
-166.27496
+166.39307
 </td>
 <td style="text-align:right;">
-0.8418925
+0.8420565
 </td>
 <td style="text-align:right;">
--111.092042
+-110.4642519
 </td>
 <td style="text-align:right;">
--11.2614837
+-11.2701931
 </td>
 </tr>
 <tr>
@@ -14399,31 +14387,31 @@ T1_347
 Midday
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 13
 </td>
 <td style="text-align:right;">
--0.8025711
+-0.6318633
 </td>
 <td style="text-align:right;">
--46.828073
+-36.867685
 </td>
 <td style="text-align:right;">
-1.178966
+1.0811350
 </td>
 <td style="text-align:right;">
-68.78980
+63.08160
 </td>
 <td style="text-align:right;">
-0.7448164
+0.7703811
 </td>
 <td style="text-align:right;">
--31.554780
+-25.1416247
 </td>
 <td style="text-align:right;">
--4.0727119
+-3.6517764
 </td>
 </tr>
 <tr>
@@ -14443,25 +14431,25 @@ sperry
 13
 </td>
 <td style="text-align:right;">
--2.9728951
+-2.9653729
 </td>
 <td style="text-align:right;">
--248.523583
+-247.894752
 </td>
 <td style="text-align:right;">
-3.157789
+3.1497394
 </td>
 <td style="text-align:right;">
-263.98003
+263.30715
 </td>
 <td style="text-align:right;">
-0.8772487
+0.8772922
 </td>
 <td style="text-align:right;">
--70.333011
+-70.0258102
 </td>
 <td style="text-align:right;">
--7.9193910
+-7.8966554
 </td>
 </tr>
 <tr>
@@ -14475,31 +14463,31 @@ T1_347
 Predawn
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 13
 </td>
 <td style="text-align:right;">
--0.8963822
+-0.7535062
 </td>
 <td style="text-align:right;">
--74.934406
+-62.990472
 </td>
 <td style="text-align:right;">
-1.241761
+1.1102681
 </td>
 <td style="text-align:right;">
-103.80686
+92.81451
 </td>
 <td style="text-align:right;">
-0.8493628
+0.8921504
 </td>
 <td style="text-align:right;">
--17.125908
+-13.6135669
 </td>
 <td style="text-align:right;">
--2.5074396
+-2.1360286
 </td>
 </tr>
 <tr>
@@ -14519,25 +14507,25 @@ sperry
 9
 </td>
 <td style="text-align:right;">
--1.9495274
+-1.9499206
 </td>
 <td style="text-align:right;">
--67.716182
+-67.729840
 </td>
 <td style="text-align:right;">
-2.120095
+2.1191427
 </td>
 <td style="text-align:right;">
-73.64080
+73.60771
 </td>
 <td style="text-align:right;">
-0.5524972
+0.5498138
 </td>
 <td style="text-align:right;">
--4.659646
+-4.6768759
 </td>
 <td style="text-align:right;">
--1.4923550
+-1.4912352
 </td>
 </tr>
 <tr>
@@ -14551,31 +14539,31 @@ T2_381
 Midday
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 9
 </td>
 <td style="text-align:right;">
-0.5944377
+0.5221157
 </td>
 <td style="text-align:right;">
-20.647596
+18.135513
 </td>
 <td style="text-align:right;">
-1.142751
+1.2119973
 </td>
 <td style="text-align:right;">
-39.69307
+42.09832
 </td>
 <td style="text-align:right;">
-0.9857055
+0.9698498
 </td>
 <td style="text-align:right;">
--0.456851
+-0.4039190
 </td>
 <td style="text-align:right;">
--0.3434024
+-0.4248075
 </td>
 </tr>
 <tr>
@@ -14595,25 +14583,25 @@ sperry
 9
 </td>
 <td style="text-align:right;">
--1.8566085
+-1.8408337
 </td>
 <td style="text-align:right;">
--87.885966
+-87.139237
 </td>
 <td style="text-align:right;">
-2.149962
+2.1331162
 </td>
 <td style="text-align:right;">
-101.77239
+100.97497
 </td>
 <td style="text-align:right;">
-0.7300366
+0.7346201
 </td>
 <td style="text-align:right;">
--3.304539
+-3.2252070
 </td>
 <td style="text-align:right;">
--1.3648069
+-1.3462778
 </td>
 </tr>
 <tr>
@@ -14627,31 +14615,31 @@ T2_381
 Predawn
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 9
 </td>
 <td style="text-align:right;">
-0.1963477
+0.1978042
 </td>
 <td style="text-align:right;">
-9.294477
+9.363424
 </td>
 <td style="text-align:right;">
-0.975210
+0.7788393
 </td>
 <td style="text-align:right;">
-46.16335
+36.86779
 </td>
 <td style="text-align:right;">
-0.9545051
+0.9903582
 </td>
 <td style="text-align:right;">
-0.026088
+0.4037394
 </td>
 <td style="text-align:right;">
--0.0726624
+0.1433315
 </td>
 </tr>
 </tbody>
@@ -15865,25 +15853,25 @@ granier
 676
 </td>
 <td style="text-align:right;">
-0.0941693
+0.0935880
 </td>
 <td style="text-align:right;">
-59.93123
+59.56133
 </td>
 <td style="text-align:right;">
-0.1002083
+0.0997541
 </td>
 <td style="text-align:right;">
-63.77463
+63.48556
 </td>
 <td style="text-align:right;">
-0.4169441
+0.4164099
 </td>
 <td style="text-align:right;">
--5.025964
+-4.973128
 </td>
 <td style="text-align:right;">
--1.895060
+-1.881937
 </td>
 </tr>
 <tr>
@@ -15897,25 +15885,25 @@ sperry
 676
 </td>
 <td style="text-align:right;">
--0.0829361
+-0.1123167
 </td>
 <td style="text-align:right;">
--52.78222
+-71.48066
 </td>
 <td style="text-align:right;">
-0.1152432
+0.1369082
 </td>
 <td style="text-align:right;">
-73.34313
+87.13118
 </td>
 <td style="text-align:right;">
-0.1982632
+0.1782522
 </td>
 <td style="text-align:right;">
--8.226045
+-10.305784
 </td>
 <td style="text-align:right;">
--2.329423
+-2.955334
 </td>
 </tr>
 <tr>
@@ -15923,31 +15911,31 @@ sperry
 CANBALASC
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 676
 </td>
 <td style="text-align:right;">
-0.0601489
+0.0584845
 </td>
 <td style="text-align:right;">
-38.27999
+37.22075
 </td>
 <td style="text-align:right;">
-0.0735272
+0.0722867
 </td>
 <td style="text-align:right;">
-46.79423
+46.00470
 </td>
 <td style="text-align:right;">
-0.6291015
+0.6272589
 </td>
 <td style="text-align:right;">
--2.775221
+-2.678466
 </td>
 <td style="text-align:right;">
--1.124232
+-1.088391
 </td>
 </tr>
 </tbody>
@@ -16010,60 +15998,25 @@ granier
 644
 </td>
 <td style="text-align:right;">
-0.0755853
+0.0754890
 </td>
 <td style="text-align:right;">
-25.4412620
+25.4088609
 </td>
 <td style="text-align:right;">
-0.1690615
+0.1687798
 </td>
 <td style="text-align:right;">
-56.90443
+56.80961
 </td>
 <td style="text-align:right;">
-0.4743693
+0.4750538
 </td>
 <td style="text-align:right;">
--0.6802278
+-0.6757334
 </td>
 <td style="text-align:right;">
--0.1961766
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CANBALASC
-</td>
-<td style="text-align:left;">
-T1_35
-</td>
-<td style="text-align:left;">
-sperry
-</td>
-<td style="text-align:right;">
-644
-</td>
-<td style="text-align:right;">
--0.2183061
-</td>
-<td style="text-align:right;">
--73.4796896
-</td>
-<td style="text-align:right;">
-0.2188846
-</td>
-<td style="text-align:right;">
-73.67442
-</td>
-<td style="text-align:right;">
-0.7612935
-</td>
-<td style="text-align:right;">
--1.0762804
-</td>
-<td style="text-align:right;">
--0.5486953
+-0.1941835
 </td>
 </tr>
 <tr>
@@ -16074,31 +16027,66 @@ CANBALASC
 T1_35
 </td>
 <td style="text-align:left;">
-cochard
+sperry
 </td>
 <td style="text-align:right;">
 644
 </td>
 <td style="text-align:right;">
--0.0619477
+-0.2568241
 </td>
 <td style="text-align:right;">
--20.8509996
+-86.4444621
 </td>
 <td style="text-align:right;">
-0.1709010
+0.2568365
 </td>
 <td style="text-align:right;">
-57.52361
+86.44866
 </td>
 <td style="text-align:right;">
-0.5441777
+0.5382559
 </td>
 <td style="text-align:right;">
--0.3523082
+-2.0001463
 </td>
 <td style="text-align:right;">
--0.2091923
+-0.8172198
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CANBALASC
+</td>
+<td style="text-align:left;">
+T1_35
+</td>
+<td style="text-align:left;">
+sureau
+</td>
+<td style="text-align:right;">
+644
+</td>
+<td style="text-align:right;">
+-0.0651181
+</td>
+<td style="text-align:right;">
+-21.9181285
+</td>
+<td style="text-align:right;">
+0.1705002
+</td>
+<td style="text-align:right;">
+57.38871
+</td>
+<td style="text-align:right;">
+0.5546216
+</td>
+<td style="text-align:right;">
+-0.3421970
+</td>
+<td style="text-align:right;">
+-0.2063565
 </td>
 </tr>
 <tr>
@@ -16115,25 +16103,25 @@ granier
 611
 </td>
 <td style="text-align:right;">
-0.3049149
+0.3052581
 </td>
 <td style="text-align:right;">
-117.5756603
+117.7080028
 </td>
 <td style="text-align:right;">
-0.3581893
+0.3582037
 </td>
 <td style="text-align:right;">
-138.11837
+138.12393
 </td>
 <td style="text-align:right;">
-0.0683440
+0.0686783
 </td>
 <td style="text-align:right;">
--7.5217448
+-7.5254317
 </td>
 <td style="text-align:right;">
--1.6852435
+-1.6853516
 </td>
 </tr>
 <tr>
@@ -16150,25 +16138,25 @@ sperry
 611
 </td>
 <td style="text-align:right;">
--0.0929609
+-0.1729344
 </td>
 <td style="text-align:right;">
--35.8458582
+-66.6837952
 </td>
 <td style="text-align:right;">
-0.2041444
+0.2096588
 </td>
 <td style="text-align:right;">
-78.71842
+80.84477
 </td>
 <td style="text-align:right;">
-0.6126818
+0.5312157
 </td>
 <td style="text-align:right;">
--1.2555835
+-1.3443550
 </td>
 <td style="text-align:right;">
--0.5304129
+-0.5717526
 </td>
 </tr>
 <tr>
@@ -16179,31 +16167,31 @@ CANBALASC
 T2_342
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 611
 </td>
 <td style="text-align:right;">
-0.1444980
+0.1436810
 </td>
 <td style="text-align:right;">
-55.7186510
+55.4036254
 </td>
 <td style="text-align:right;">
-0.2950354
+0.2931332
 </td>
 <td style="text-align:right;">
-113.76612
+113.03264
 </td>
 <td style="text-align:right;">
-0.2323904
+0.2429617
 </td>
 <td style="text-align:right;">
--5.6379017
+-5.5710583
 </td>
 <td style="text-align:right;">
--1.2117965
+-1.1975366
 </td>
 </tr>
 <tr>
@@ -16220,25 +16208,25 @@ granier
 679
 </td>
 <td style="text-align:right;">
--0.1077112
+-0.1074172
 </td>
 <td style="text-align:right;">
--27.1635569
+-27.0894201
 </td>
 <td style="text-align:right;">
-0.2481486
+0.2478671
 </td>
 <td style="text-align:right;">
-62.58032
+62.50933
 </td>
 <td style="text-align:right;">
-0.2605855
+0.2609914
 </td>
 <td style="text-align:right;">
--0.8275709
+-0.8242723
 </td>
 <td style="text-align:right;">
--0.4387297
+-0.4370974
 </td>
 </tr>
 <tr>
@@ -16255,25 +16243,25 @@ sperry
 679
 </td>
 <td style="text-align:right;">
--0.1271616
+-0.2797186
 </td>
 <td style="text-align:right;">
--32.0687474
+-70.5419278
 </td>
 <td style="text-align:right;">
-0.4013550
+0.3871142
 </td>
 <td style="text-align:right;">
-101.21726
+97.62590
 </td>
 <td style="text-align:right;">
-0.3584811
+0.2626823
 </td>
 <td style="text-align:right;">
--4.0638108
+-3.3536036
 </td>
 <td style="text-align:right;">
--1.3269979
+-1.2444318
 </td>
 </tr>
 <tr>
@@ -16284,31 +16272,31 @@ CANBALASC
 T3_387
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 679
 </td>
 <td style="text-align:right;">
-0.0034542
+-0.0019620
 </td>
 <td style="text-align:right;">
-0.8711225
+-0.4947982
 </td>
 <td style="text-align:right;">
-0.3596878
+0.3579516
 </td>
 <td style="text-align:right;">
-90.70927
+90.27141
 </td>
 <td style="text-align:right;">
-0.3348001
+0.3442291
 </td>
 <td style="text-align:right;">
--2.9657314
+-2.9270012
 </td>
 <td style="text-align:right;">
--1.0854177
+-1.0753513
 </td>
 </tr>
 <tr>
@@ -16325,25 +16313,25 @@ granier
 644
 </td>
 <td style="text-align:right;">
--0.1154258
+-0.1153129
 </td>
 <td style="text-align:right;">
--39.2849505
+-39.2465435
 </td>
 <td style="text-align:right;">
-0.1395908
+0.1395077
 </td>
 <td style="text-align:right;">
-47.50948
+47.48118
 </td>
 <td style="text-align:right;">
-0.7004862
+0.7006640
 </td>
 <td style="text-align:right;">
-0.1775119
+0.1781585
 </td>
 <td style="text-align:right;">
-0.2384319
+0.2388856
 </td>
 </tr>
 <tr>
@@ -16360,25 +16348,25 @@ sperry
 644
 </td>
 <td style="text-align:right;">
--0.0693008
+-0.1915575
 </td>
 <td style="text-align:right;">
--23.5864139
+-65.1962277
 </td>
 <td style="text-align:right;">
-0.1973150
+0.2704399
 </td>
 <td style="text-align:right;">
-67.15581
+92.04371
 </td>
 <td style="text-align:right;">
-0.8302002
+0.3334503
 </td>
 <td style="text-align:right;">
--0.0460572
+-1.2504506
 </td>
 <td style="text-align:right;">
--0.0764950
+-0.4754433
 </td>
 </tr>
 <tr>
@@ -16389,31 +16377,31 @@ CANBALASC
 T4_381
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 644
 </td>
 <td style="text-align:right;">
-0.0254548
+0.0252406
 </td>
 <td style="text-align:right;">
-8.6634993
+8.5905869
 </td>
 <td style="text-align:right;">
-0.1347518
+0.1333488
 </td>
 <td style="text-align:right;">
-45.86251
+45.38501
 </td>
 <td style="text-align:right;">
-0.7399164
+0.7446616
 </td>
 <td style="text-align:right;">
-0.3269677
+0.3399534
 </td>
 <td style="text-align:right;">
-0.2648325
+0.2724868
 </td>
 </tr>
 </tbody>
@@ -17341,7 +17329,7 @@ sperry
 ESPALTARM
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 715
@@ -17492,7 +17480,7 @@ ESPALTARM
 T1_343
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 627
@@ -17597,7 +17585,7 @@ ESPALTARM
 T2_379
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 537
@@ -17702,7 +17690,7 @@ ESPALTARM
 T3_381
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 628
@@ -17826,7 +17814,7 @@ T1_343
 Midday
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 2
@@ -17902,7 +17890,7 @@ T1_343
 Predawn
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 2
@@ -17978,7 +17966,7 @@ T2_379
 Midday
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 4
@@ -18054,7 +18042,7 @@ T2_379
 Predawn
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 4
@@ -18130,7 +18118,7 @@ T3_381
 Midday
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 4
@@ -18206,7 +18194,7 @@ T3_381
 Predawn
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 4
@@ -18881,7 +18869,7 @@ sperry
 RONDA
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 731
@@ -19032,7 +19020,7 @@ RONDA
 T1_2
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 730
@@ -19137,7 +19125,7 @@ RONDA
 T2_475
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 712
@@ -19683,7 +19671,7 @@ sperry
 DAVOS
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1065
@@ -19790,7 +19778,7 @@ sperry
 DAVOS
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1065
@@ -19929,7 +19917,7 @@ sperry
 DAVOS
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1065
@@ -20068,7 +20056,7 @@ sperry
 DAVOS
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 365
@@ -20219,7 +20207,7 @@ DAVOS
 T1_2601
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 364
@@ -20910,7 +20898,7 @@ sperry
 USAMORSF
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1096
@@ -21017,7 +21005,7 @@ sperry
 USAMORSF
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1096
@@ -21156,7 +21144,7 @@ sperry
 USAMORSF
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1096
@@ -21295,7 +21283,7 @@ sperry
 USAMORSF
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1096
@@ -21446,7 +21434,7 @@ USAMORSF
 T1_56
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 159
@@ -21551,7 +21539,7 @@ USAMORSF
 T2_1639
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 154
@@ -21656,7 +21644,7 @@ USAMORSF
 T3_2583
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 119
@@ -21761,7 +21749,7 @@ USAMORSF
 T4_2528
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 119
@@ -22424,7 +22412,7 @@ sperry
 SEVILLETA
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 2178
@@ -22575,7 +22563,7 @@ SEVILLETA
 T1_2214
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1787
@@ -22680,7 +22668,7 @@ SEVILLETA
 T2_1542
 </td>
 <td style="text-align:left;">
-cochard
+sureau
 </td>
 <td style="text-align:right;">
 1776

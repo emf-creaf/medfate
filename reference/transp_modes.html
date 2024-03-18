@@ -74,7 +74,7 @@ within plants.</p>
 <span>  modifyInput <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">transp_transpirationCochard</span><span class="op">(</span></span>
+<span><span class="fu">transp_transpirationSureau</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">meteo</span>,</span>
 <span>  <span class="va">day</span>,</span>
@@ -104,7 +104,7 @@ within plants.</p>
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
-<dd><p>An object of class <code><a href="modelInput.html">spwbInput</a></code> or <code><a href="modelInput.html">growthInput</a></code>, built using the 'Granier', 'Sperry' or 'Cochard' transpiration modes.</p></dd>
+<dd><p>An object of class <code><a href="modelInput.html">spwbInput</a></code> or <code><a href="modelInput.html">growthInput</a></code>, built using the 'Granier', 'Sperry' or 'Sureau' transpiration modes.</p></dd>
 
 
 <dt>meteo</dt>
@@ -162,7 +162,7 @@ within plants.</p>
 <li><p><code>"psi"</code>: Water potential (in MPa) of the plant cohort (average over soil layers).</p></li>
 <li><p><code>"DDS"</code>: Daily drought stress [0-1] (relative whole-plant conductance).</p></li>
 </ul>
-  When using <code>transp_transpirationSperry</code> or <code>transp_transpirationCochard</code>, element <code>"Plants"</code> includes:
+  When using <code>transp_transpirationSperry</code> or <code>transp_transpirationSureau</code>, element <code>"Plants"</code> includes:
     <ul><li><p><code>"LAI"</code>: Leaf area index of the plant cohort.</p></li>
 <li><p><code>"LAIlive"</code>: Leaf area index of the plant cohort, assuming all leaves are unfolded.</p></li>
 <li><p><code>"Extraction"</code>: Water extracted from the soil (in mm) for each cohort.</p></li>
@@ -186,7 +186,7 @@ within plants.</p>
 <li><p><code>"WaterBalance"</code>: Plant water balance (extraction - transpiration).</p></li>
 </ul></li>
 <li><p><code>"Extraction"</code>: A data frame with mm of water extracted from each soil layer (in columns) by each cohort (in rows).</p>
-<p>The remaining items are only given by <code>transp_transpirationSperry</code> or <code>transp_transpirationCochard</code>:</p></li>
+<p>The remaining items are only given by <code>transp_transpirationSperry</code> or <code>transp_transpirationSureau</code>:</p></li>
 <li><p><code>"EnergyBalance"</code>: A list with the following elements:
     </p><ul><li><p><code>"Temperature"</code>: A data frame with the temperature of the atmosphere ('Tatm'), canopy ('Tcan') and soil ('Tsoil.1', 'Tsoil.2', ...) for each time step.</p></li>
 <li><p><code>"CanopyEnergyBalance"</code>: A data frame with the components of the canopy energy balance (in W/m2) for each time step.</p></li>
@@ -234,7 +234,7 @@ within plants.</p>
   and implements an approach originally described in Granier et al. (1999).</p></li>
 <li><p>Sub-model in function <code>transp_transpirationSperry</code> was described in De Cáceres et al. (2021), and
   implements a modelling approach originally described in Sperry et al. (2017).</p></li>
-<li><p>Sub-model in function <code>transp_transpirationCochard</code> was described for SurEau-Ecos v2.0 model in Ruffault et al. (2022).</p></li>
+<li><p>Sub-model in function <code>transp_transpirationSureau</code> was described for SurEau-Ecos v2.0 model in Ruffault et al. (2022).</p></li>
 </ul></div>
     <div id="references">
     <h2>References</h2>
@@ -294,14 +294,14 @@ Geoscientific Model Development 15, 5593-5626 (doi:10.5194/gmd-15-5593-2022).</p
 <span class="r-in"><span>                                latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, slope <span class="op">=</span> <span class="fl">0</span>, aspect <span class="op">=</span> <span class="fl">0</span>,</span></span>
 <span class="r-in"><span>                                modifyInput <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span>                                </span></span>
-<span class="r-in"><span><span class="co">#Switch to 'Cochard' transpiration mode</span></span></span>
-<span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Cochard"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#Switch to 'Sureau' transpiration mode</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sureau"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Initialize input</span></span></span>
 <span class="r-in"><span><span class="va">x3</span> <span class="op">&lt;-</span> <span class="fu"><a href="modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforest</span>,<span class="va">examplesoil</span>, <span class="va">SpParamsMED</span>, <span class="va">control</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Transpiration according to Cochard's model</span></span></span>
-<span class="r-in"><span><span class="va">t3</span> <span class="op">&lt;-</span> <span class="fu">transp_transpirationCochard</span><span class="op">(</span><span class="va">x3</span>, <span class="va">examplemeteo</span>, <span class="fl">1</span>, </span></span>
+<span class="r-in"><span><span class="co"># Transpiration according to Sureau model</span></span></span>
+<span class="r-in"><span><span class="va">t3</span> <span class="op">&lt;-</span> <span class="fu">transp_transpirationSureau</span><span class="op">(</span><span class="va">x3</span>, <span class="va">examplemeteo</span>, <span class="fl">1</span>, </span></span>
 <span class="r-in"><span>                                  latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, slope <span class="op">=</span> <span class="fl">0</span>, aspect <span class="op">=</span> <span class="fl">0</span>,</span></span>
 <span class="r-in"><span>                                  modifyInput <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span>                                </span></span>

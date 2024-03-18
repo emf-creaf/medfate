@@ -105,14 +105,14 @@ during a period specified in the input climatic data.</p>
 <li><p><code>"growthInput"</code>: A copy of the object <code>x</code> of class <code><a href="modelInput.html">growthInput</a></code> given as input.</p></li>
 <li><p><code>"growthOutput"</code>: An copy of the final state of the object <code>x</code> of class <code><a href="modelInput.html">growthInput</a></code>.</p></li>
 <li><p><code>"WaterBalance"</code>: A data frame where different water balance variables (see <code><a href="spwb.html">spwb</a></code>).</p></li>
-<li><p><code>"EnergyBalance"</code>: A data frame with the daily values of energy balance components for the soil and the canopy (only for <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Cochard"</code>; see <code><a href="spwb.html">spwb</a></code>).</p></li>
+<li><p><code>"EnergyBalance"</code>: A data frame with the daily values of energy balance components for the soil and the canopy (only for <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Sureau"</code>; see <code><a href="spwb.html">spwb</a></code>).</p></li>
 <li><p><code>"CarbonBalance"</code>: A data frame where different stand-level carbon balance components (gross primary production, maintenance respiration, synthesis respiration and net primary production), all in g C · m-2.</p></li>
 <li><p><code>"BiomassBalance"</code>: A data frame with the daily values of stand biomass balance components (in g dry · m-2.</p></li>
-<li><p><code>"Temperature"</code>: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Cochard"</code>; see <code><a href="spwb.html">spwb</a></code>).</p></li>
+<li><p><code>"Temperature"</code>: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Sureau"</code>; see <code><a href="spwb.html">spwb</a></code>).</p></li>
 <li><p><code>"Soil"</code>: A data frame where different soil variables  (see <code><a href="spwb.html">spwb</a></code>).</p></li>
 <li><p><code>"Stand"</code>: A data frame where different stand-level variables (see <code><a href="spwb.html">spwb</a></code>).</p></li>
 <li><p><code>"Plants"</code>: A list of daily results for plant cohorts (see <code><a href="spwb.html">spwb</a></code>).</p></li>
-<li><p><code>"SunlitLeaves"</code> and <code>"ShadeLeaves"</code>: A list with daily results for sunlit and shade leaves (only for <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Cochard"</code>; see <code><a href="spwb.html">spwb</a></code>).</p></li>
+<li><p><code>"SunlitLeaves"</code> and <code>"ShadeLeaves"</code>: A list with daily results for sunlit and shade leaves (only for <code>transpirationMode = "Sperry"</code> or <code>transpirationMode = "Sureau"</code>; see <code><a href="spwb.html">spwb</a></code>).</p></li>
 <li><p><code>"LabileCarbonBalance"</code>: A list of daily labile carbon balance results for plant cohorts, with elements:</p><ul><li><p><code>"GrossPhotosynthesis"</code>: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).</p></li>
 <li><p><code>"MaintentanceRespiration"</code>: Daily maintenance respiration per dry weight of living biomass (g gluc · g dry-1).</p></li>
 <li><p><code>"GrowthCosts"</code>: Daily growth costs per dry weight of living biomass (g gluc · g dry-1).</p></li>
@@ -153,7 +153,7 @@ during a period specified in the input climatic data.</p>
     <div id="details">
     <h2>Details</h2>
     <p>Detailed model description is available in the medfate book. 
-Simulations using the 'Sperry' or 'Cochard' transpiration modes are computationally much more expensive 
+Simulations using the 'Sperry' or 'Sureau' transpiration modes are computationally much more expensive 
 than those using the 'Granier' transpiration mode.</p>
     </div>
     <div id="references">
@@ -265,8 +265,8 @@ Geoscientific Model Development 16: 3165-3201 (https://doi.org/10.5194/gmd-16-31
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Soil evaporation (mm) 16  Herbaceous transpiration (mm) 14 Woody plant transpiration (mm) 178</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Plant extraction from soil (mm) 178  Plant water balance (mm) -0 Hydraulic redistribution (mm) 1</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">#Switch to 'Cochard' transpiration mode</span></span></span>
-<span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Cochard"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#Switch to 'Sureau' transpiration mode</span></span></span>
+<span class="r-in"><span><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="st">"Sureau"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Makes leaf xylem vulnerability equal to stem xylem vulnerability</span></span></span>
 <span class="r-in"><span><span class="va">control</span><span class="op">$</span><span class="va">segmentedXylemVulnerability</span> <span class="op">=</span> <span class="cn">FALSE</span> </span></span>
