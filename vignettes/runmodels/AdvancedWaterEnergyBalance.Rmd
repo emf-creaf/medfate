@@ -61,7 +61,7 @@ Apart from data inputs, the behaviour of simulation models is controlled using a
 control <- defaultControl("Sperry")
 ```
 
-To use the advanced water balance model we must change the values of `transpirationMode` to switch from `"Granier"` to either `"Sperry"` or `"Cochard"`. 
+To use the advanced water balance model we must change the values of `transpirationMode` to switch from `"Granier"` to either `"Sperry"` or `"Sureau"`. 
 
 ### Water balance input object
 A last object is needed before calling simulation functions, called `spwbInput`. It consists in the compilation of aboveground, belowground parameters and the specification of additional parameter values for each plant cohort. This is done by calling function `forest2spwbInput()`:

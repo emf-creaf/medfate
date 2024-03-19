@@ -117,7 +117,7 @@ eval_SWC <- "SWC" %in% names(df_site$SiteData[[1]]$measuredData)
 
 <!-- Plant transpiration -->
 ```{r, echo=FALSE, results='asis', warning = FALSE, message=FALSE}
-eval_Eplant <- TRUE
+eval_Eplant <- any(startsWith(names(df_site$SiteData[[1]]$measuredData),"E_"))
  if(eval_Eplant) {
    res <- knitr::knit_child(file.path(this_path,'_Eplant_Evaluation_child.Rmd'), quiet = TRUE)
    cat(res, sep = '\n')

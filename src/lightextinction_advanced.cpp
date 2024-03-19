@@ -353,7 +353,7 @@ NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd,
     double s2=0.0;
     for(int j = 0;j<ncoh;j++) {
       s1 += kb[j]*ClumpingIndex[j]*(LAIme(i,j)+LAImd(i,j));
-      s2 += kb[j]*ClumpingIndex[j]*(LAIme(i,j)+LAImd(i,j));
+      s2 += kb[j]*ClumpingIndex[j]*0.5*(LAIme(i,j)+LAImd(i,j));
     }
     fSL[i] = exp(-1.0*s1)*exp(-1.0*s2);
   }
